@@ -12,6 +12,7 @@ export class ProxyStatus extends Component {
     setup() {
         super.setup();
         this.pos = usePos();
+        this.ui = useState(useService("ui"));
         const hardwareProxy = useService("hardware_proxy");
         this.connectionInfo = useState(hardwareProxy.connectionInfo);
     }

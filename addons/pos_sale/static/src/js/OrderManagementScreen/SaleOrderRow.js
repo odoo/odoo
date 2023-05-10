@@ -1,5 +1,6 @@
 /** @odoo-module */
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 /**
  * @props {models.Order} order
@@ -9,6 +10,9 @@ import { Component } from "@odoo/owl";
 export class SaleOrderRow extends Component {
     static template = "SaleOrderRow";
 
+    setup() {
+        this.ui = useState(useService("ui"));
+    }
     get order() {
         return this.props.order;
     }

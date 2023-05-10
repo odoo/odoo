@@ -1,6 +1,7 @@
 /** @odoo-module */
 
-import { Component, useExternalListener } from "@odoo/owl";
+import { Component, useExternalListener, useState } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 export class EditBar extends Component {
     static template = "pos_restaurant.EditBar";
@@ -24,6 +25,7 @@ export class EditBar extends Component {
 
     setup() {
         super.setup();
+        this.ui = useState(useService("ui"));
         useExternalListener(window, "click", this.onOutsideClick);
     }
 
@@ -34,12 +36,12 @@ export class EditBar extends Component {
     }
 
     getSelectedTablesShape() {
-        let shape = 'round';
+        let shape = "round";
         this.props.selectedTables.forEach((table) => {
-            if (table.shape == 'square') {
-                shape = 'square';
+            if (table.shape == "square") {
+                shape = "square";
             }
         });
-        return shape; 
+        return shape;
     }
 }

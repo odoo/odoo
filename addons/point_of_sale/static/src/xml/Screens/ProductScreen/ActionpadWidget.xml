@@ -5,7 +5,7 @@
         <div class="actionpad">
             <button class="button set-partner" t-att-class="{'decentered': isLongName}"
                     t-on-click="() => this.pos.selectPartner()">
-                <t t-if="!env.isMobile"><i class="fa fa-user" role="img" aria-label="Customer" title="Customer" /></t>
+                <t t-if="!ui.isSmall"><i class="fa fa-user" role="img" aria-label="Customer" title="Customer" /></t>
                 <t t-if="props.partner">
                     <t t-esc="props.partner.name" />
                 </t>
@@ -19,7 +19,7 @@
                 </div>
                 <t t-esc="props.actionName" />
             </button>
-            <button t-if="env.isMobile" class="button back-button" t-on-click="props.onSwitchPane">
+            <button t-if="ui.isSmall" class="button back-button" t-on-click="props.onSwitchPane">
                 <i class="fa fa-angle-double-left"/>
                 Back
             </button>

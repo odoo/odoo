@@ -4,7 +4,7 @@
     <t t-name="PaymentScreen" owl="1">
         <div class="payment-screen screen" t-att-class="{ oe_hidden: !props.isShown }">
             <div class="screen-content">
-                <t t-if="!env.isMobile">
+                <t t-if="!ui.isSmall">
                     <div class="top-content">
                         <div class="button back"
                               t-on-click="() => pos.showScreen('ProductScreen')">
@@ -16,7 +16,7 @@
                 </t>
                 <div class="main-content">
                     <div class="left-content">
-                        <t t-if="env.isMobile">
+                        <t t-if="ui.isSmall">
                             <section class="paymentlines-container">
                                 <PaymentScreenStatus order="currentOrder" />
                             </section>
@@ -44,7 +44,7 @@
                                 sendPaymentRequest.bind="sendPaymentRequest"
                                 selectLine.bind="selectPaymentLine"/>
                         </div>
-                        <div t-if="!env.isMobile" class="button next validation" t-att-class="{ highlight: currentOrder.is_paid() and currentOrder._isValidEmptyOrder() }"
+                        <div t-if="!ui.isSmall" class="button next validation" t-att-class="{ highlight: currentOrder.is_paid() and currentOrder._isValidEmptyOrder() }"
                             t-on-click="() => this.validateOrder()">
                             <div class="pay-circle">
                                 <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
@@ -53,7 +53,7 @@
                         </div>
                     </div>
                     <div class="center-content">
-                        <t t-if="!env.isMobile">
+                        <t t-if="!ui.isSmall">
                             <section class="paymentlines-container">
                                 <PaymentScreenStatus order="currentOrder" />
                             </section>
@@ -108,7 +108,7 @@
                         </div>
                     </div>
                 </div>
-                <t t-if="env.isMobile">
+                <t t-if="ui.isSmall">
                     <div class="switchpane">
                         <button class="btn-switchpane"
                             t-att-class="{ secondary: !(currentOrder.is_paid() and currentOrder._isValidEmptyOrder()) }"

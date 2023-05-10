@@ -8,7 +8,7 @@
             t-on-click="backToFloorScreen"
         >
             <i class="fa fa-angle-double-left" role="img" aria-label="Back to floor" title="Back to floor" />
-            <t t-if="env.isMobile">
+            <t t-if="ui.isSmall">
                 <span class="table-name" t-esc="table.name"/>
             </t>
             <t t-else="">

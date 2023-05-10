@@ -4,7 +4,7 @@
     <t t-name="point_of_sale.SearchBar" owl="1">
         <div class="pos-search-bar">
             <div class="search">
-                <span class="search-icon" t-if="!env.isMobile"><i class="fa fa-search"></i></span>
+                <span class="search-icon" t-if="!ui.isSmall"><i class="fa fa-search"></i></span>
                 <input class="radius-left" t-ref="autofocus" t-att-class="{ 'radius-right': !props.config.filter.show }"
                     t-model="state.searchInput" t-on-keydown="onSearchInputKeydown" t-on-keyup="onSearchInputKeyup" type="text" t-att-placeholder="props.placeholder" />
                 <div t-if="state.showSearchFields and state.searchInput" class="fields">

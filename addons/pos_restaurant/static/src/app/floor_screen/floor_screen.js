@@ -36,13 +36,8 @@ export class FloorScreen extends Component {
             floorMapScrollTop: 0,
             isColorPicker: false,
         });
-        if (!this.pos.globalState.floorPlanStyle) {
-            if (this.env.isMobile) {
-                this.pos.globalState.floorPlanStyle = "kanban";
-            } else {
-                this.pos.globalState.floorPlanStyle = "default";
-            }
-        }
+        const ui = useState(useService("ui"));
+        this.pos.globalState.floorPlanStyle ||= ui.isSmall ? "kanban" : "default";
         this.floorMapRef = useRef("floor-map-ref");
         this.addFloorRef = useRef("add-floor-ref");
         this.map = useRef("map");

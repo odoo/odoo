@@ -9,12 +9,12 @@
         <xpath expr="//div[hasclass('order-row')]//div[@name='delete']" position="before">
             <div t-if="pos.globalState.config.module_pos_restaurant" class="col" name="table">
                 <t t-if="order.tableId">
-                    <div t-if="env.isMobile">Table</div>
+                    <div t-if="ui.isSmall">Table</div>
                     <div><t t-esc="getTable(order)"></t></div>
                 </t>
             </div>
             <div t-if="_state.ui.filter == 'TIPPING'" class="col end narrow" name="tip">
-                <div t-if="env.isMobile">Tip</div>
+                <div t-if="ui.isSmall">Tip</div>
                 <div><TipCell order="order" /></div>
             </div>
         </xpath>

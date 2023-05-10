@@ -5,7 +5,7 @@
         <div class="pos-topheader">
             <div t-if="pos.tempScreen" class="block-top-header" />
             <div class="pos-branding">
-                <img t-if="!env.isMobile" class="pos-logo" t-on-click="() => debug.toggleWidget()" src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
+                <img t-if="!ui.isSmall" class="pos-logo" t-on-click="() => debug.toggleWidget()" src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
             </div>
             <div class="pos-rightheader">
                 <div class="status-buttons">

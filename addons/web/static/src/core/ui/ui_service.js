@@ -2,13 +2,13 @@
 
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { debounce } from "@web/core/utils/timing";
+import { throttleForAnimation } from "@web/core/utils/timing";
 import { BlockUI } from "./block_ui";
 import { browser } from "@web/core/browser/browser";
 import { getTabableElements } from "@web/core/utils/ui";
 import { getActiveHotkey } from "../hotkeys/hotkey_service";
 
-import { EventBus, useEffect, useRef } from "@odoo/owl";
+import { EventBus, reactive, useEffect, useRef } from "@odoo/owl";
 
 export const SIZES = { XS: 0, VSM: 1, SM: 2, MD: 3, LG: 4, XL: 5, XXL: 6 };
 
@@ -173,7 +173,7 @@ export const uiService = {
             }
         }
 
-        const ui = {
+        const ui = reactive({
             bus,
             size: utils.getSize(),
             get activeElement() {
@@ -182,25 +182,24 @@ export const uiService = {
             get isBlocked() {
                 return blockCount > 0;
             },
-            get isSmall() {
-                return utils.isSmall(ui);
-            },
+            isSmall: utils.isSmall(),
             block,
             unblock,
             activateElement,
             deactivateElement,
             getActiveElementOf,
-        };
+        });
 
         // listen to media query status changes
         const updateSize = () => {
             const prevSize = ui.size;
             ui.size = utils.getSize();
             if (ui.size !== prevSize) {
+                ui.isSmall = utils.isSmall(ui);
                 bus.trigger("resize");
             }
         };
-        browser.addEventListener("resize", debounce(updateSize, 100));
+        browser.addEventListener("resize", throttleForAnimation(updateSize));
 
         Object.defineProperty(env, "isSmall", {
             get() {

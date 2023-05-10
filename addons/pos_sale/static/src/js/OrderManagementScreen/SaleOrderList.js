@@ -2,6 +2,7 @@
 
 import { Component, useState } from "@odoo/owl";
 import { SaleOrderRow } from "./SaleOrderRow";
+import { useService } from "@web/core/utils/hooks";
 
 /**
  * @props {models.Order} [initHighlightedOrder] initially highligted order
@@ -12,7 +13,7 @@ export class SaleOrderList extends Component {
     static template = "SaleOrderList";
 
     setup() {
-        super.setup();
+        this.ui = useState(useService("ui"));
         this.state = useState({ highlightedOrder: this.props.initHighlightedOrder || null });
     }
     get highlightedOrder() {
