@@ -231,6 +231,7 @@ class PropertiesCase(TestPropertiesMixin):
                        "test_new_api_message"."important",
                        "test_new_api_message"."label"->>'en_US',
                        "test_new_api_message"."priority",
+                       "test_new_api_message"."active",
                        "test_new_api_message"."create_uid",
                        "test_new_api_message"."create_date",
                        "test_new_api_message"."write_uid",
