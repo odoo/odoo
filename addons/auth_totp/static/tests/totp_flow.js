@@ -242,7 +242,7 @@ registry.category("web_tour.tours").add('totp_login_device', {
             secret: $secret.text()
         });
         helpers.text(token, '[name=code] input');
-        helpers.click('button.btn-primary:contains(Activate)');
+        helpers.click('button.btn-primary:contains(Confirm Code)');
         $('body').addClass('got-token')
     }
 },
