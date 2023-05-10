@@ -21,6 +21,7 @@ import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 import { useSetupView } from "@web/views/view_hook";
 import { ListConfirmationDialog } from "./list_confirmation_dialog";
 import { SearchBar } from "@web/search/search_bar/search_bar";
+import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
@@ -144,6 +145,7 @@ export class ListController extends Component {
             },
             () => [this.model.root.selection.length]
         );
+        this.searchBarToggler = useSearchBarToggler();
     }
 
     get modelParams() {
@@ -594,7 +596,17 @@ export class ListController extends Component {
 }
 
 ListController.template = `web.ListView`;
-ListController.components = { ActionMenus, Layout, ViewButton, MultiRecordViewButton, SearchBar, Dropdown, DropdownItem, CogMenu, ActionMenusItems };
+ListController.components = {
+    ActionMenus,
+    Layout,
+    ViewButton,
+    MultiRecordViewButton,
+    SearchBar,
+    Dropdown,
+    DropdownItem,
+    CogMenu,
+    ActionMenusItems,
+};
 ListController.props = {
     ...standardViewProps,
     allowSelectors: { type: Boolean, optional: true },
