@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import Command
+from odoo import Command, fields
 from odoo.tests.common import Form
 from odoo.tools.float_utils import float_round, float_compare
 
@@ -266,3 +266,48 @@ class TestBomPriceSubcontracting(TestBomPrice):
         self.Product.browse([self.dining_table.id, self.table_head.id]).action_bom_cost()
         self.assertEqual(float_compare(self.table_head.standard_price, 478.75, precision_digits=2), 0, "After computing price from BoM price should be 878.75")
         self.assertEqual(float_compare(self.dining_table.standard_price, 878.75, precision_digits=2), 0, "After computing price from BoM price should be 878.75")
+
+    def test_02_compute_price_subcontracting_cost(self):
+        """Test calculation of bom cost with subcontracting and supplier in different currency."""
+        currency_a = self.env['res.currency'].create({
+            'name': 'ZEN',
+            'symbol': 'Z',
+            'rounding': 0.01,
+            'currency_unit_label': 'Zenny',
+            'rate_ids': [(0, 0, {
+                'name': fields.Date.today(),
+                'company_rate': 0.5,
+            })],
+        })
+
+        partner = self.env['res.partner'].create({
+            'name': 'supplier',
+        })
+        product = self.env['product.product'].create({
+            'name': 'product',
+            'type': 'product',
+            'standard_price': 100,
+            'company_id': self.env.company.id,
+        })
+        supplier = self.env['product.supplierinfo'].create([{
+                'name': partner.id,
+                'product_tmpl_id': product.product_tmpl_id.id,
+                'price': 120.0,
+                'currency_id': currency_a.id,
+        }])
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1,
+            'type': 'subcontract',
+            'subcontractor_ids': [Command.link(partner.id)],
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.table_head.id, 'product_qty': 1}),
+            ],
+        })
+        self.table_head.standard_price = 100
+        self.assertEqual(supplier.is_subcontractor, True)
+        self.assertEqual(product.standard_price, 100, "Initial price of the Product should be 100")
+        product.button_bom_cost()
+        # 120 Zen = 240 USD (120 * 2)
+        # price = 240 + 100 (1 unit of component "table_head") = 340
+        self.assertEqual(product.standard_price, 340, "After computing price from BoM price should be 340")
