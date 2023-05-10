@@ -159,7 +159,7 @@ const PosResTicketScreen = (TicketScreen) =>
             return result;
         }
         async _onDoRefund() {
-            if (this.env.pos.config.iface_floorplan) {
+            if (this.env.pos.config.iface_floorplan && !this.env.pos.table) {
                 this.env.pos.setTable(
                     this.getSelectedSyncedOrder().table
                         ? this.getSelectedSyncedOrder().table
