@@ -1,20 +1,12 @@
 /** @odoo-module */
 
 import { useService } from "@web/core/utils/hooks";
-import { throttleForAnimation } from "@web/core/utils/timing";
 import { Transition } from "@web/core/transition";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { ErrorHandler } from "@web/core/utils/components";
 import { Navbar } from "@point_of_sale/app/navbar/navbar";
 import { usePos } from "@point_of_sale/app/pos_hook";
-import {
-    useExternalListener,
-    useSubEnv,
-    reactive,
-    onWillUnmount,
-    Component,
-    onMounted,
-} from "@odoo/owl";
+import { reactive, Component, onMounted } from "@odoo/owl";
 
 /**
  * Chrome is the root component of the PoS App.
@@ -30,22 +22,6 @@ export class Chrome extends Component {
         const reactivePos = reactive(this.pos.globalState);
         // TODO: Should we continue on exposing posmodel as global variable?
         window.posmodel = reactivePos;
-        // FIXME POSREF: remove
-        useSubEnv({
-            get isMobile() {
-                return window.innerWidth <= 768;
-            },
-        });
-        let currentIsMobile = this.env.isMobile;
-        const updateUI = throttleForAnimation(() => {
-            if (this.env.isMobile !== currentIsMobile) {
-                currentIsMobile = this.env.isMobile;
-                // FIXME POSREF use reactive mobile instead
-                this.render(true);
-            }
-        });
-        useExternalListener(window, "resize", updateUI);
-        onWillUnmount(updateUI.cancel);
 
         // prevent backspace from performing a 'back' navigation
         document.addEventListener("keydown", (ev) => {

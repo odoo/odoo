@@ -3,7 +3,7 @@
 
     <t t-name="pos_restaurant.EditBar" owl="1">
         <div class="edit-bar-top">
-            <span class="edit-button first-button" t-if="!env.isMobile"></span>
+            <span class="edit-button first-button" t-if="!ui.isSmall"></span>
             <span class="edit-button" t-on-click.stop="props.createTable">
                 <i class="fa fa-plus icon-button" role="img" aria-label="Add" title="Add"></i>
                 <span class="text-button">ADD</span>

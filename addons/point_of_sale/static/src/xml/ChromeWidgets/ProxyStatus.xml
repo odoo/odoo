@@ -3,7 +3,7 @@
 
     <t t-name="ProxyStatus" owl="1">
         <div class="oe_status js_proxy" t-on-click="() => this.pos.connectToProxy()">
-            <span t-if="this.message and !env.isMobile" class="js_msg">
+            <span t-if="this.message and !ui.isSmall" class="js_msg">
                 <t t-esc="this.message" />
             </span>
             <span t-if="connectionInfo.status === 'connected' and !this.message" class="js_connected oe_green">

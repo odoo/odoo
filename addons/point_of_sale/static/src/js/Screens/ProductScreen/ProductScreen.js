@@ -37,6 +37,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     setup() {
         super.setup();
         this.pos = usePos();
+        this.ui = useState(useService("ui"));
         this.popup = useService("popup");
         this.orm = useService("orm");
         this.notification = useService("pos_notification");

@@ -15,6 +15,7 @@ export class ProductsWidgetControlPanel extends Component {
     setup() {
         super.setup();
         this.pos = usePos();
+        this.ui = useState(useService("ui"));
         this.notification = useService("pos_notification");
         this.orm = useService("orm");
         this.updateSearch = debounce(this.updateSearch, 100);
@@ -29,7 +30,7 @@ export class ProductsWidgetControlPanel extends Component {
     }
     get displayCategImages() {
         return (
-            !this.env.isMobile &&
+            !this.ui.isSmall &&
             Object.values(this.pos.globalState.db.category_by_id).some((categ) => categ.has_image)
         );
     }

@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Component, useExternalListener, useState } from "@odoo/owl";
-import { useAutofocus } from "@web/core/utils/hooks";
+import { useAutofocus, useService } from "@web/core/utils/hooks";
 
 /**
  * This is a simple configurable search bar component. It has search fields
@@ -29,7 +29,7 @@ export class SearchBar extends Component {
     static template = "point_of_sale.SearchBar";
 
     setup() {
-        super.setup();
+        this.ui = useState(useService("ui"));
         useAutofocus();
         useExternalListener(window, "click", this._hideOptions);
         this.filterOptionsList = [...this.props.config.filter.options.keys()];
@@ -65,9 +65,7 @@ export class SearchBar extends Component {
         if (["ArrowUp", "ArrowDown"].includes(event.key)) {
             this.state.selectedSearchFieldId = this._fieldIdToSelect(event.key);
         } else if (event.key === "Enter" || this.state.searchInput == "") {
-            this._onClickSearchField(
-                this.searchFieldsList[this.state.selectedSearchFieldId],
-            );
+            this._onClickSearchField(this.searchFieldsList[this.state.selectedSearchFieldId]);
         } else {
             if (this.state.selectedSearchFieldId === -1 && this.searchFieldsList.length) {
                 this.state.selectedSearchFieldId = 0;

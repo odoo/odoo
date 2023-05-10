@@ -31,6 +31,7 @@ export class Navbar extends Component {
     };
     setup() {
         this.pos = usePos();
+        this.ui = useState(useService("ui"));
         this.debug = useService("debug");
         this.popup = useService("popup");
         this.notification = useService("pos_notification");
