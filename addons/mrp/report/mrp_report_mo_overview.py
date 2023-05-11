@@ -124,8 +124,8 @@ class ReportMoOverview(models.AbstractModel):
         total_current_cost = 0.0
         for index, workorder in enumerate(production.workorder_ids):
             wo_duration = workorder.duration + workorder.get_working_duration()  # Add duration of ongoing work sessions.
-            expected_cost = (workorder.duration_expected / 60.0) * workorder.workcenter_id.costs_hour
-            current_cost = (wo_duration / 60.0) * workorder.workcenter_id.costs_hour
+            expected_cost = workorder._compute_expected_operation_cost()
+            current_cost = workorder._compute_current_operation_cost()
             operations.append({
                 'level': level,
                 'index': f"{current_index}W{index}",
