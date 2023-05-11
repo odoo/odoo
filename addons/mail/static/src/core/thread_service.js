@@ -58,21 +58,13 @@ export class ThreadService {
      * @returns {Thread}
      */
     createChannelThread(serverData) {
-        const { id, name, description, channel, uuid, authorizedGroupFullName } = serverData;
-        const type = channel.channel_type;
-        const channelType = serverData.channel.channel_type;
-        const isAdmin =
-            channelType !== "group" && serverData.create_uid === this.store.user?.user?.id;
         const thread = this.insert({
-            id,
+            ...serverData,
             model: "discuss.channel",
-            name,
-            type,
-            description,
-            serverData: serverData,
-            isAdmin,
-            uuid,
-            authorizedGroupFullName,
+            type: serverData.channel.channel_type,
+            isAdmin:
+                serverData.channel.channel_type !== "group" &&
+                serverData.create_uid === this.store.user?.user?.id,
         });
         return thread;
     }
@@ -582,7 +574,7 @@ export class ThreadService {
             model: "discuss.channel",
             name,
             type: "channel",
-            serverData: { channel: { avatarCacheKey: "hello" } },
+            channel: { avatarCacheKey: "hello" },
         });
         this.sortChannels();
         this.open(thread);
@@ -594,11 +586,9 @@ export class ThreadService {
             partners_to: [id],
         });
         return this.insert({
-            id: data.id,
+            ...data,
             model: "discuss.channel",
-            name: undefined,
             type: "chat",
-            serverData: data,
         });
     }
 
@@ -681,8 +671,8 @@ export class ThreadService {
      * @param {Object} data
      */
     update(thread, data) {
-        const { attachments, serverData, ...remainingData } = data;
-        assignDefined(thread, remainingData);
+        const { id, name, attachments, description, ...serverData } = data;
+        assignDefined(thread, { id, name, description });
         if (attachments) {
             // smart process to avoid triggering reactives when there is no change between the 2 arrays
             replaceArrayWithCompare(
@@ -698,10 +688,15 @@ export class ThreadService {
                 "description",
                 "hasWriteAccess",
                 "is_pinned",
+                "isLoaded",
+                "isLoadingAttachments",
+                "mainAttachment",
+                "message_unread_counter",
                 "message_needaction_counter",
                 "name",
                 "seen_message_id",
                 "state",
+                "type",
                 "group_based_subscription",
                 "last_interest_dt",
                 "defaultDisplayMode",
@@ -845,7 +840,7 @@ export class ThreadService {
             this.update(thread, data);
             return thread;
         }
-        let thread = new Thread(this.store, data);
+        const thread = new Thread(this.store, data);
         onChange(thread, "isLoaded", () => thread.isLoadedDeferred.resolve());
         onChange(thread, "channelMembers", () => this.store.updateBusSubscription());
         onChange(thread, "is_pinned", () => {
@@ -853,7 +848,6 @@ export class ThreadService {
                 this.store.discuss.threadLocalId = null;
             }
         });
-        thread = this.store.threads[thread.localId] = thread;
         this.update(thread, data);
         this.insertComposer({ thread });
         return thread;
