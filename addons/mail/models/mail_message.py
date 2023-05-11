@@ -904,11 +904,13 @@ class Message(models.Model):
                 }
             elif message_sudo.author_id:
                 author = message_sudo.author_id.mail_partner_format({'id': True, 'name': True, 'is_company': True, 'user': {"id": True}}).get(message_sudo.author_id)
+            record_sudo = False
             if message_sudo.model and message_sudo.res_id:
                 record_sudo = self.env[message_sudo.model].browse(message_sudo.res_id).sudo()
                 record_name = record_sudo.with_prefetch(thread_ids_by_model_name[message_sudo.model]).display_name
-                # if not a thread, display_name is the default subject
-                default_subject = record_sudo._message_compute_subject() if hasattr(record_sudo, '_message_compute_subject') else record_name
+                default_subject = record_name
+                if hasattr(record_sudo, '_message_compute_subject'):
+                    default_subject = record_sudo._message_compute_subject()
             else:
                 record_name = False
                 default_subject = False
@@ -922,13 +924,16 @@ class Message(models.Model):
                 'message': {'id': message_sudo.id},
             } for content, reactions in reactions_per_content.items()]
             allowed_tracking_ids = message_sudo.tracking_value_ids.filtered(lambda tracking: not tracking.field_groups or self.env.is_superuser() or self.user_has_groups(tracking.field_groups))
+            displayed_tracking_ids = allowed_tracking_ids
+            if record_sudo and hasattr(record_sudo, '_track_filter_for_display'):
+                displayed_tracking_ids = record_sudo._track_filter_for_display(displayed_tracking_ids)
             vals.update(message_sudo._message_format_extras(format_reply))
             vals.update({
                 'author': author,
                 'default_subject': default_subject,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
                 'attachments': sorted(message_sudo.attachment_ids._attachment_format(), key=lambda a: a["id"]),
-                'trackingValues': allowed_tracking_ids._tracking_value_format(),
+                'trackingValues': displayed_tracking_ids._tracking_value_format(),
                 'linkPreviews': message_sudo.link_preview_ids._link_preview_format(),
                 'reactions': reaction_groups,
                 'pinned_at': message_sudo.pinned_at,

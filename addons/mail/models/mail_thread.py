@@ -511,6 +511,11 @@ class MailThread(models.AbstractModel):
         for id_ in self.ids:
             initial_values[id_] = None
 
+    def _track_filter_for_display(self, tracking_values):
+        """Filter out tracking values from being displayed."""
+        self.ensure_one()
+        return tracking_values
+
     def _track_finalize(self):
         """ Generate the tracking messages for the records that have been
         prepared with ``_tracking_prepare``.
@@ -552,6 +557,15 @@ class MailThread(models.AbstractModel):
         body_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.message.{self._name}', {})
         for id_ in self.ids:
             body_values[id_] = message
+
+    def _track_get_default_log_message(self, tracked_fields):
+        """Get a default log message based on the changed fields.
+
+        :param List[str] tracked_fields: Name of the tracked fields being evaluated;
+
+        :return str: A message to log when these changes happen for this record;
+        """
+        return ''
 
     @tools.ormcache('self.env.uid', 'self.env.su')
     def _track_get_fields(self):
@@ -613,19 +627,21 @@ class MailThread(models.AbstractModel):
                      for col_name in changes)
             )
             author_id = authors[record.id].id if record.id in authors else None
+            # _set_log_message takes priority over _track_get_default_log_message even if it's an empty string
+            body = bodies[record.id] if record.id in bodies else record._track_get_default_log_message(changes)
             if subtype:
                 if not subtype.exists():
                     _logger.debug('subtype "%s" not found' % subtype.name)
                     continue
                 record.message_post(
-                    body=bodies.get(record.id) or '',
+                    body=body,
                     author_id=author_id,
                     subtype_id=subtype.id,
                     tracking_value_ids=tracking_value_ids
                 )
             elif tracking_value_ids:
                 record._message_log(
-                    body=bodies.get(record.id) or '',
+                    body=body,
                     author_id=author_id,
                     tracking_value_ids=tracking_value_ids
                 )
@@ -3394,6 +3410,8 @@ class MailThread(models.AbstractModel):
             ).filtered(
                 lambda track: not track.field_groups or self.env.is_superuser() or self.user_has_groups(track.field_groups)
             )
+            if tracking_values and hasattr(record_wlang, '_track_filter_for_display'):
+                tracking_values = record_wlang._track_filter_for_display(tracking_values)
             tracking = [
                 (
                     fmt_vals['changedField'],
