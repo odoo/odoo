@@ -12915,7 +12915,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test('Add a line, click on "Save & New" with an invalid form', async function (assert) {
-        await makeView({
+        const form = await makeView({
             type: "form",
             resModel: "partner",
             serverData,
@@ -12931,6 +12931,13 @@ QUnit.module("Fields", (hooks) => {
                     </field>
                 </form>`,
         });
+        patchWithCleanup(form.env.services.notification, {
+            add: (message, params) => {
+                assert.step(params.type);
+                assert.strictEqual(params.title, "Invalid fields: ");
+                assert.strictEqual(message.toString(), "<ul><li>Displayed name</li></ul>");
+            },
+        });
 
         assert.containsNone(target, ".o_data_row");
         // Add a new record
@@ -12940,6 +12947,7 @@ QUnit.module("Fields", (hooks) => {
         // Click on "Save & New" with an invalid form
         await click(target, ".o_dialog .o_form_button_save_new");
         assert.containsOnce(target, ".o_dialog .o_form_view");
+        assert.verifySteps(["danger"]);
 
         // Check that no buttons are disabled
         assert.hasAttrValue(
