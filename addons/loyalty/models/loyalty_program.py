@@ -50,7 +50,14 @@ class LoyaltyProgram(models.Model):
         ('next_order_coupons', 'Next Order Coupons')],
         default='promotion', required=True,
     )
-    date_to = fields.Date(string='Validity')
+    date_from = fields.Date(
+        string="Start Date",
+        help="The start date is included in the validity period of this program",
+    )
+    date_to = fields.Date(
+        string="End date",
+        help="The end date is included in the validity period of this program",
+    )
     limit_usage = fields.Boolean(string='Limit Usage')
     max_usage = fields.Integer()
     # Dictates when the points can be used:
@@ -92,6 +99,13 @@ class LoyaltyProgram(models.Model):
         ('check_max_usage', 'CHECK (limit_usage = False OR max_usage > 0)',
             'Max usage must be strictly positive if a limit is used.'),
     ]
+
+    @api.constrains('date_from', 'date_to')
+    def _check_date_from_date_to(self):
+        if any(p.date_to and p.date_from and p.date_from > p.date_to for p in self):
+            raise UserError(_(
+                "The validity period's start date must be anterior or equal to its end date."
+            ))
 
     @api.constrains('reward_ids')
     def _constrains_reward_ids(self):
