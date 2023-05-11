@@ -603,10 +603,10 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         const { model } = await createSpreadsheetWithList({
             linesNumber: 4,
         });
-        const leftBorder = { left: ["thin", "#000"] };
-        const rightBorder = { right: ["thin", "#000"] };
-        const topBorder = { top: ["thin", "#000"] };
-        const bottomBorder = { bottom: ["thin", "#000"] };
+        const leftBorder = { left: { style: "thin", color: "#2D7E84" } };
+        const rightBorder = { right: { style: "thin", color: "#2D7E84" } };
+        const topBorder = { top: { style: "thin", color: "#2D7E84" } };
+        const bottomBorder = { bottom: { style: "thin", color: "#2D7E84" } };
         assert.deepEqual(getBorders(model, "A1"), { ...topBorder, ...bottomBorder, ...leftBorder });
         assert.deepEqual(getBorders(model, "B1"), { ...topBorder, ...bottomBorder });
         assert.deepEqual(getBorders(model, "D1"), {
