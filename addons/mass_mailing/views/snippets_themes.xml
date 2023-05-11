@@ -300,12 +300,16 @@
     </xpath>
 </template>
 
+<!--
+TODO these next two templates should have been removed in 16.0 as they were
+emptied pre-release while waiting for a proper upgrade script to remove them
+after backport. They will now be removed in master.
+-->
 <template id="snippet_options_extra_shapes" inherit_id="web_editor.snippet_options">
-    <div><!-- TODO remove me in 16.0 post-backport --></div>
+    <xpath expr="//div"><!-- TODO remove me in master (do not xpath this) --></xpath>
 </template>
-
 <template id="snippet_options_image_styles" inherit_id="web_editor.snippet_options">
-    <div><!-- TODO remove me in 16.0 post-backport --></div>
+    <xpath expr="//div"><!-- TODO remove me in master (do not xpath this) --></xpath>
 </template>
 
 <!-- Mass Mailing Snippet Options -->
