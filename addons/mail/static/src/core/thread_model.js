@@ -133,6 +133,7 @@ export class Thread {
             _store: store,
         });
         store.threads[this.localId] = this;
+        return store.threads[this.localId];
     }
 
     get accessRestrictedToGroupText() {

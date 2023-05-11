@@ -221,9 +221,7 @@ export class Messaging {
                         ...channel,
                         model: "discuss.channel",
                         rtcSessions: undefined,
-                        serverData: {
-                            channel: channel.channel,
-                        },
+                        channel: channel.channel,
                         type: channel.channel.channel_type,
                     });
                     const rtcSessions = channel.rtcSessions;
@@ -243,8 +241,8 @@ export class Messaging {
                     this.threadService.insert({
                         id: notif.payload.channel.id,
                         model: "discuss.channel",
-                        serverData: notif.payload,
                         type: notif.payload.channel.channel_type,
+                        ...notif.payload,
                     });
                     break;
                 case "discuss.channel/transient_message": {
@@ -459,7 +457,7 @@ export class Messaging {
         const { id, last_interest_dt } = notif.payload;
         const channel = this.store.threads[createLocalId("discuss.channel", id)];
         if (channel) {
-            this.threadService.update(channel, { serverData: { last_interest_dt } });
+            this.threadService.update(channel, { last_interest_dt });
         }
         if (["chat", "group"].includes(channel?.type)) {
             this.threadService.sortChannels();
@@ -472,10 +470,9 @@ export class Messaging {
         if (!channel || !channel.type) {
             const [channelData] = await this.orm.call("discuss.channel", "channel_info", [id]);
             channel = this.threadService.insert({
-                id: channelData.id,
                 model: "discuss.channel",
                 type: channelData.channel.channel_type,
-                serverData: channelData,
+                ...channelData,
             });
         }
         if (!channel.is_pinned) {
@@ -544,23 +541,14 @@ export class Messaging {
 
     _handleNotificationRecordInsert(notif) {
         if (notif.payload.Thread) {
-            this.threadService.insert({
-                id: notif.payload.Thread.id,
-                model: notif.payload.Thread.model,
-                serverData: notif.payload.Thread,
-            });
+            this.threadService.insert(notif.payload.Thread);
         }
 
         if (notif.payload.Channel) {
             this.threadService.insert({
                 id: notif.payload.Channel.id,
                 model: "discuss.channel",
-                serverData: {
-                    channel: {
-                        avatarCacheKey: notif.payload.Channel.avatarCacheKey,
-                        ...notif.payload.Channel,
-                    },
-                },
+                channel: notif.payload.Channel,
             });
         }
         if (notif.payload.RtcSession) {

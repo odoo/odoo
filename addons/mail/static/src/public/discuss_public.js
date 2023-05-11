@@ -54,7 +54,7 @@ export class DiscussPublic extends Component {
             id: this.props.data.channelData.id,
             model: "discuss.channel",
             type: this.props.data.channelData.channel.channel_type,
-            serverData: { uuid: this.props.data.channelData.uuid },
+            uuid: this.props.data.channelData.uuid,
         });
     }
 }

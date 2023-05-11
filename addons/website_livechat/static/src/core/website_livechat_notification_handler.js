@@ -17,7 +17,6 @@ export const websiteLivechatNotifications = {
                 ...payload,
                 id: payload.id,
                 model: "discuss.channel",
-                serverData: payload,
                 type: payload.channel.channel_type,
             });
             const chatWindow = chatWindowService.insert({ thread: channel });

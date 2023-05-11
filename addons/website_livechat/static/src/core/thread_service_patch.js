@@ -7,9 +7,9 @@ import { patch } from "@web/core/utils/patch";
 patch(ThreadService.prototype, "website_livechat", {
     update(thread, data) {
         this._super(thread, data);
-        if (data.serverData?.visitor) {
+        if (data?.visitor) {
             thread.visitor = this.personaService.insert({
-                ...data.serverData.visitor,
+                ...data.visitor,
                 type: "visitor",
             });
         }
