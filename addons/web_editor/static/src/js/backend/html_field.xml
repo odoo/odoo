@@ -2,9 +2,9 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="web_editor.HtmlField" owl="1">
-        <t t-if="props.readonly || props.notEditable || (containsComplexHTML and !state.showCodeView)">
+        <t t-if="props.readonly || props.notEditable || (sandboxedPreview and !state.showCodeView)">
             <t t-if="this.showIframe">
-                <iframe t-ref="iframe" t-att-class="{'d-none': !this.state.iframeVisible, 'o_readonly': true}"></iframe>
+                <iframe t-ref="iframe" t-att-class="{'d-none': !this.state.iframeVisible, 'o_readonly': true}" t-att-sandbox="sandboxedPreview ? 'allow-same-origin' : null"></iframe>
             </t>
             <t t-else="">
                 <div  t-ref="readonlyElement" class="o_readonly" t-out="markupValue" />
@@ -29,7 +29,7 @@
                 </span>
             </t>
         </div>
-        <div t-if="state.showCodeView || (containsComplexHTML and !props.readonly and !props.notEditable)" t-ref="codeViewButton" id="codeview-btn-group" class="btn-group" t-on-click="toggleCodeView">
+        <div t-if="state.showCodeView || (sandboxedPreview and !props.readonly and !props.notEditable)" t-ref="codeViewButton" id="codeview-btn-group" class="btn-group" t-on-click="toggleCodeView">
             <button class="o_codeview_btn btn btn-primary">
                 <i class="fa fa-code" />
             </button>
