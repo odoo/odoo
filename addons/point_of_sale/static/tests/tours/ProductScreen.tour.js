@@ -158,3 +158,15 @@ ProductScreen.do.confirmOpeningPopup();
 ProductScreen.check.checkSecondCashClosingDetailsLineAmount('10.00', '-');
 
 Tour.register('CashClosingDetails', { test: true, url: '/pos/ui' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.do.clickDisplayedProduct('Test Product');
+ProductScreen.check.selectedOrderlineHas('Test Product', '1.0', '100.0');
+ProductScreen.check.totalAmountIs('110.0');
+
+Tour.register('ShowTaxExcludedTour', { test: true, url: '/pos/ui' }, getSteps());
