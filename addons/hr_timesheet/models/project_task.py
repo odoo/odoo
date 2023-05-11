@@ -65,12 +65,12 @@ class Task(models.Model):
     def _compute_effective_hours(self):
         if not any(self._ids):
             for task in self:
-                task.effective_hours = round(sum(task.timesheet_ids.mapped('unit_amount')), 2)
+                task.effective_hours = sum(task.timesheet_ids.mapped('unit_amount'))
             return
         timesheet_read_group = self.env['account.analytic.line']._read_group([('task_id', 'in', self.ids)], ['task_id'], ['unit_amount:sum'])
         timesheets_per_task = {task.id: amount for task, amount in timesheet_read_group}
         for task in self:
-            task.effective_hours = round(timesheets_per_task.get(task.id, 0.0), 2)
+            task.effective_hours = timesheets_per_task.get(task.id, 0.0)
 
     @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
     def _compute_progress_hours(self):
