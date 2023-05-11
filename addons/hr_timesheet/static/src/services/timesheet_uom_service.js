@@ -48,6 +48,9 @@ export const timesheetUOMService = {
         if (!registry.category("formatters").contains("timesheet_uom")) {
             registry.category("formatters").add("timesheet_uom", service.formatter);
         }
+        if (!registry.category("formatters").contains("timesheet_uom_no_toggle")) {
+            registry.category("formatters").add("timesheet_uom_no_toggle", service.formatter);
+        }
         return service;
     },
 };
