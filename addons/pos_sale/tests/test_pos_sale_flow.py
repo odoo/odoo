@@ -159,3 +159,31 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(orderline_product_a.move_ids.product_uom_qty, 0)
         # 1 item to deliver for product b.
         self.assertEqual(orderline_product_b.move_ids.product_uom_qty, 1)
+
+    def test_downpayment_refund(self):
+        #create a sale order
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.res_partner_2').id,
+            'order_line': [(0, 0, {
+                'product_id': self.product_a.id,
+                'name': self.product_a.name,
+                'product_uom_qty': 1,
+                'price_unit': 100,
+                'product_uom': self.product_a.uom_id.id
+            })],
+        })
+        sale_order.action_confirm()
+        #set downpayment product in pos config
+        self.downpayment_product = self.env['product.product'].create({
+            'name': 'Down Payment',
+            'available_in_pos': True,
+            'type': 'service',
+        })
+        self.main_pos_config.write({
+            'down_payment_product_id': self.downpayment_product.id,
+        })
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosRefundDownpayment', login="accountman")
+        self.assertEqual(len(sale_order.order_line), 3)
+        self.assertEqual(sale_order.order_line[1].qty_invoiced, 1)
+        self.assertEqual(sale_order.order_line[2].qty_invoiced, -1)

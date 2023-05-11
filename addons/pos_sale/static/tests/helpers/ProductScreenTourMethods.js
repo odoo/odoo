@@ -37,6 +37,27 @@ class DoExt extends Do {
             }
         ];
     }
+
+    downPaymentFirstOrder() {
+        return [
+            {
+                content: `select order`,
+                trigger: `.order-row .col.name:first`,
+            },
+            {
+                content: `click on select the order`,
+                trigger: `.selection-item:contains('Apply a down payment')`,
+            },
+            {
+                content: `click on +10 button`,
+                trigger: `.mode-button.add:contains('+10')`,
+            },
+            {
+                content: `click on ok button`,
+                trigger: `.button.confirm`,
+            }
+        ];
+    }
 }
 class CheckExt extends Check {}
 
