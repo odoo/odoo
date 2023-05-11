@@ -51,8 +51,8 @@
                     <i class="fa fa-caret-right lh-lg" role="img" aria-label="Unfold" title="Unfold" />
                 </button>
             </div>
-            <div t-if="(env.isSmall or !group.isFolded) and group.progressBars.length" class="o_kanban_counter position-relative d-flex align-items-center justify-content-between" t-att-class="{ 'opacity-25': !group.count }">
-                <ColumnProgress group="group" aggregate="groupAggregate" onBarClicked="props.scrollTop" />
+            <div t-if="(env.isSmall or !group.isFolded) and progressBar" class="o_kanban_counter position-relative d-flex align-items-center justify-content-between" t-att-class="{ 'opacity-25': !group.count }">
+                <ColumnProgress group="group" progressBar="progressBar" aggregate="groupAggregate" onBarClicked.bind="onBarClicked" />
             </div>
         </div>
     </t>

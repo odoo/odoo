@@ -30,6 +30,7 @@ export class KanbanHeader extends Component {
         quickCreateState: { type: Object },
         scrollTop: { type: Function },
         tooltipInfo: { type: Object },
+        progressBarState: { type: true, optional: true },
     };
 
     setup() {
@@ -59,6 +60,10 @@ export class KanbanHeader extends Component {
     // Getters
     // ------------------------------------------------------------------------
 
+    get progressBar() {
+        return this.props.progressBarState?.getGroupInfo(this.group);
+    }
+
     get group() {
         return this.props.group;
     }
@@ -82,10 +87,9 @@ export class KanbanHeader extends Component {
     }
 
     get groupAggregate() {
-        const { sumField } = this.group.model.progressAttributes;
-        const value = this.group.getAggregates(sumField && sumField.name);
-        const title = sumField ? sumField.string : this.env._t("Count");
-        return { value, title };
+        const { group, progressBarState } = this.props;
+        const { sumField } = progressBarState.progressAttributes;
+        return progressBarState.getAggregateValue(group, sumField);
     }
 
     // ------------------------------------------------------------------------
@@ -121,13 +125,17 @@ export class KanbanHeader extends Component {
             body: this.env._t(
                 "Are you sure that you want to archive all the records from this column?"
             ),
-            confirm: () => this.group.list.archive(),
+            confirm: async () => {
+                await this.group.list.archive();
+                this.props.progressBarState?.updateCounts(this.group);
+            },
             cancel: () => {},
         });
     }
 
     unarchiveGroup() {
         this.group.list.unarchive();
+        this.props.progressBarState?.updateCounts(this.group);
     }
 
     deleteGroup() {
@@ -189,5 +197,10 @@ export class KanbanHeader extends Component {
 
     canQuickCreate() {
         return this.props.canQuickCreate;
+    }
+
+    async onBarClicked(value) {
+        await this.props.progressBarState.selectBar(this.props.group.id, value);
+        this.props.scrollTop();
     }
 }

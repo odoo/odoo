@@ -6717,7 +6717,6 @@ QUnit.module("Views", (hooks) => {
                 "read_progress_bar",
                 "web_read_group",
                 "onchange",
-                "onchange",
             ]);
         }
     );
@@ -9269,7 +9268,6 @@ QUnit.module("Views", (hooks) => {
             "read",
             "read_progress_bar",
             "onchange",
-            "onchange",
         ]);
     });
 
@@ -9410,8 +9408,9 @@ QUnit.module("Views", (hooks) => {
             "web_search_read",
             "action_archive",
             "web_read_group",
-            "read_progress_bar",
             "web_search_read",
+            "read_progress_bar",
+            "web_read_group",
         ]);
     });
 
@@ -9464,8 +9463,9 @@ QUnit.module("Views", (hooks) => {
                 "web_search_read",
                 "action_archive",
                 "web_read_group",
-                "read_progress_bar",
                 "web_search_read",
+                "read_progress_bar",
+                "web_read_group",
             ]);
         }
     );
@@ -9551,8 +9551,6 @@ QUnit.module("Views", (hooks) => {
             // activate another filter (switching)
             "web_read_group", // recomputes aggregates
             "web_search_read",
-            // deactivate active filter
-            "web_read_group", // recomputes aggregates
         ]);
     });
 
@@ -9801,7 +9799,6 @@ QUnit.module("Views", (hooks) => {
                 "read_progress_bar",
                 "web_read_group",
                 "onchange",
-                "onchange",
             ]);
         }
     );
@@ -9876,13 +9873,14 @@ QUnit.module("Views", (hooks) => {
                 "read",
                 "read_progress_bar",
                 "web_read_group",
+                "web_read_group",
                 "onchange",
                 "onchange",
                 "create",
                 "read",
                 "read_progress_bar",
                 "web_read_group",
-                "onchange",
+                "web_read_group",
                 "onchange",
             ]);
         }
@@ -11134,8 +11132,8 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps([
             "write",
             "read_progress_bar",
-            "read", // read happens is delayed by the ORM batcher
             "web_search_read",
+            "read", // read happens is delayed by the ORM batcher
             "/web/dataset/resequence",
             "read",
         ]);

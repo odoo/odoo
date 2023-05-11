@@ -24,7 +24,7 @@
                 </div>
                 <div class="o_activity_counter d-flex align-items-center justify-content-between mb-3 h-0 mt24">
                     <t t-set="group" t-value="getGroupInfo(type)"/>
-                    <ColumnProgress t-if="group.data.count" group="group.data" aggregate="group.aggregate" />
+                    <ColumnProgress t-if="group.data.count" group="group.data" aggregate="group.aggregate" progressBar="group.data.progressBar" onBarClicked.bind="group.data.filterProgressValue" />
                 </div>
             </th>
             <th class="align-middle" style="width: 32px; min-width: 32px">

@@ -2,7 +2,7 @@
 <templates>
     <t t-name="crm.CrmKanbanHeader" t-inherit="web.KanbanHeader" t-inherit-mode="primary" owl="1">
         <xpath expr="//ColumnProgress" position="attributes">
-            <attribute name="progressAttributes">props.group.model.progressAttributes</attribute>
+            <attribute name="progressBarState">props.progressBarState</attribute>
         </xpath>
     </t>
 </templates>
