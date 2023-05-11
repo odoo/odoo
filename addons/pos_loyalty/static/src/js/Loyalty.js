@@ -1285,7 +1285,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
             } else if (line.reward_id) {
                 const lineReward = this.pos.reward_by_id[line.reward_id];
                 if (lineReward.id === reward.id) {
-                    continue;
+                    linesToDiscount.push(line);
                 }
                 if (!discountLinesPerReward[line.reward_identifier_code]) {
                     discountLinesPerReward[line.reward_identifier_code] = [];
