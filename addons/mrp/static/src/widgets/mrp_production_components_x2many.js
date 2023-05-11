@@ -19,6 +19,7 @@ MrpProductionComponentsX2ManyField.components = {
     ...X2ManyField.components,
     ListRenderer: MrpProductionComponentsListRenderer
 };
+MrpProductionComponentsX2ManyField.additionalClasses = ["o_field_many2many"];
 
 export const mrpProductionComponentsX2ManyField = {
     ...x2ManyField,
