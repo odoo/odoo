@@ -1,13 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
+from odoo.addons.website.tools import MockRequest
+from odoo.exceptions import ValidationError
+from odoo.service.model import retrying
+from odoo.tests.common import TransactionCase, new_test_user
+from odoo.tools import mute_logger
+
 from psycopg2 import IntegrityError
 from unittest import TestCase
-
-from odoo.tests.common import TransactionCase, new_test_user
-from odoo.exceptions import ValidationError
-from odoo.tools import mute_logger
-from odoo.service.model import retrying
-from odoo.addons.website.tools import MockRequest
 
 
 class TestWebsiteResUsers(TransactionCase):
@@ -110,3 +111,22 @@ class TestWebsiteResUsers(TransactionCase):
         # The company cannot be archived because it has a website linked to it
         with self.assertRaises(ValidationError):
             company.action_archive()
+
+    def test_user_become_internal(self):
+        # This tests if the website_id is correctly removed when a user becomes
+        # an internal user.
+        website = self.env['website'].create({'name': "Awesome Website"})
+        website.write({
+            # Permit uninvited signup for portal users.
+            'auth_signup_uninvited': 'b2c',
+            # Disable cross-website for portal users.
+            'specific_user_account': True,
+        })
+        user = self._create_user_via_website(website, 'Portal_User')
+        self.assertEqual(user.website_id, website)
+        self.assertTrue(user._is_portal())
+        with self.assertRaises(ValidationError):
+            user.groups_id = [
+                Command.link(self.env.ref('base.group_user').id),
+                Command.unlink(self.env.ref('base.group_portal').id),
+            ]
