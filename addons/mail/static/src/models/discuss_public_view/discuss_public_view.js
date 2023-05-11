@@ -2,7 +2,7 @@
 
 import { attr, one } from '@mail/model/model_field';
 import { registerModel } from '@mail/model/model_core';
-import { clear, insertAndReplace, link } from '@mail/model/model_field_command';
+import { clear, insertAndReplace, link, replace } from '@mail/model/model_field_command';
 
 registerModel({
     name: 'DiscussPublicView',
@@ -49,6 +49,9 @@ registerModel({
                 this.welcomeView.mediaPreview.enableVideo();
             }
         },
+        _computeMessagingAsPublicView() {
+            return replace(this.messaging);
+        },
     },
     fields: {
         /**
@@ -60,6 +63,11 @@ registerModel({
         }),
         isChannelTokenSecret: attr({
             default: true,
+        }),
+        messagingAsPublicView: one('Messaging', {
+            compute: '_computeMessagingAsPublicView',
+            inverse: 'discussPublicView',
+            readonly: true,
         }),
         shouldAddGuestAsMemberOnJoin: attr({
             default: false,

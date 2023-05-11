@@ -287,7 +287,7 @@ registerModel({
             const HIDDEN_MENU_WIDTH = 200; // max width, including width of dropup list items
             const START_GAP_WIDTH = device.isMobile ? 0 : 10;
             const chatWindows = this.allOrdered;
-            if (!device.isMobile && discuss.discussView) {
+            if ((!device.isMobile && discuss.discussView) || this.messaging.discussPublicView) {
                 return visual;
             }
             if (!chatWindows.length) {
