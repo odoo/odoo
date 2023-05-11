@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { Domain } from "@web/core/domain";
 import {
     DynamicGroupList,
     DynamicRecordList,
@@ -9,17 +8,7 @@ import {
 } from "@web/views/relational_model";
 import { isRelational } from "@web/views/utils";
 
-/**
- * @typedef ProgressBar
- * @property {number} count
- * @property {any} value
- * @property {string} color
- * @property {string} string
- */
-
-import { EventBus, markRaw } from "@odoo/owl";
-
-const FALSE = Symbol("false");
+import { EventBus } from "@odoo/owl";
 
 class TransactionInProgress extends Error {}
 
@@ -65,206 +54,17 @@ class KanbanGroup extends Group {
     setup(_params, state = {}) {
         super.setup(...arguments);
 
-        /** @type {ProgressBar[]} */
-        this.progressBars = this._generateProgressBars();
-        this.progressValue = markRaw(state.progressValue || { active: null });
-        this.list.domain = this.getProgressBarDomain();
         this.tooltip = [];
 
         this.model.transaction.register({
             onStart: () => ({
                 count: this.count,
-                progressBars: [...this.progressBars],
                 records: [...this.list.records],
             }),
-            onAbort: ({ count, progressBars, records }) => {
+            onAbort: ({ count, records }) => {
                 this.count = count;
-                this.progressBars = progressBars;
                 this.list.records = records;
             },
-        });
-
-        this.model.bus.addEventListener("record-updated", ({ detail }) => {
-            const { record, relatedRecords } = detail;
-            const localIds = this.records.map((r) => r.id);
-            const updatedIds = [record, ...relatedRecords].map((r) => r.id);
-            if (localIds.some((id) => updatedIds.includes(id))) {
-                this.model.bus.trigger("group-updated", {
-                    group: this,
-                    withProgressBars: true,
-                });
-            }
-        });
-    }
-
-    get activeProgressBar() {
-        return (
-            this.hasActiveProgressValue &&
-            this.progressBars.find((pv) => pv.value === this.progressValue.active)
-        );
-    }
-
-    get hasActiveProgressValue() {
-        return this.model.hasProgressBars && this.progressValue.active !== null;
-    }
-
-    /**
-     * @override
-     */
-    async deleteRecords() {
-        const records = await super.deleteRecords(...arguments);
-        this.model.bus.trigger("group-updated", {
-            group: this,
-            withProgressBars: true,
-        });
-        return records;
-    }
-
-    /**
-     * @override
-     */
-    empty() {
-        super.empty();
-
-        this.progressValue.active = null;
-        for (const progressBar of this.progressBars) {
-            progressBar.count = 0;
-        }
-    }
-
-    /**
-     * @override
-     */
-    exportState() {
-        return {
-            ...super.exportState(),
-            progressValue: this.progressValue,
-        };
-    }
-
-    /**
-     * Checks if the current active progress bar value contains records, and
-     * deactivates it if not.
-     * @returns {Promise<void>}
-     */
-    async checkActiveValue() {
-        if (!this.hasActiveProgressValue) {
-            return;
-        }
-        if (this.activeProgressBar.count === 0) {
-            await this.filterProgressValue(null);
-        }
-    }
-
-    async filterProgressValue(value) {
-        this.progressValue.active = this.progressValue.active === value ? null : value;
-        this.list.domain = this.getProgressBarDomain();
-
-        // Do not update progress bars data when filtering on them.
-        await Promise.all([this.list.load()]);
-        this.model.bus.trigger("group-updated", { group: this, withProgressBars: false });
-    }
-
-    /**
-     * @param {Object} record
-     * @returns {ProgressBar}
-     */
-    findProgressValueFromRecord(record) {
-        const { fieldName } = this.model.progressAttributes;
-        const value = record.data[fieldName];
-        return (
-            this.progressBars.find((pv) => pv.value === value) ||
-            this.progressBars.find((pv) => pv.value === FALSE)
-        );
-    }
-
-    /**
-     * @override
-     */
-    getAggregates(fieldName) {
-        if (!this.hasActiveProgressValue) {
-            return super.getAggregates(...arguments);
-        }
-        return fieldName ? this.aggregates[fieldName] : this.activeProgressBar.count;
-    }
-
-    getProgressBarDomain() {
-        const { fieldName } = this.model.progressAttributes;
-        const domains = [this.groupDomain];
-        if (this.hasActiveProgressValue) {
-            if (this.progressValue.active === FALSE) {
-                const values = this.progressBars
-                    .map((pv) => pv.value)
-                    .filter((val) => val !== this.progressValue.active);
-                domains.push(["!", [fieldName, "in", values]]);
-            } else {
-                domains.push([[fieldName, "=", this.progressValue.active]]);
-            }
-        }
-        return Domain.and(domains).toList();
-    }
-
-    updateAggregates(groupData) {
-        const fname = this.groupByField.name;
-        const { sumField } = this.model.progressAttributes;
-        const group = groupData.find((g) => this.valueEquals(g[fname]));
-        if (sumField) {
-            this.aggregates[sumField.name] = group ? group[sumField.name] : 0;
-        }
-    }
-
-    /**
-     * @param {Object} [progressData]
-     * @returns {Promise<void>}
-     */
-    async updateProgressData(progressData) {
-        let value = this.displayName || this.value;
-        if (value === true) {
-            value = "True";
-        } else if (value === false) {
-            value = "False";
-        }
-        /** @type {Record<string, number>} */
-        const groupProgressData = progressData[value] || {};
-        /** @type {Map<string | symbol, number>} */
-        const counts = new Map(
-            groupProgressData ? Object.entries(groupProgressData) : [[FALSE, this.count]]
-        );
-        const total = [...counts.values()].reduce((acc, c) => acc + c, 0);
-        counts.set(FALSE, this.count - total);
-        for (const pv of this.progressBars) {
-            pv.count = counts.get(pv.value) || 0;
-        }
-        await this.checkActiveValue();
-    }
-
-    // ------------------------------------------------------------------------
-    // Protected
-    // ------------------------------------------------------------------------
-
-    /**
-     * @returns {ProgressBar[]}
-     */
-    _generateProgressBars() {
-        if (!this.model.hasProgressBars) {
-            return [];
-        }
-        const { colors, fieldName } = this.model.progressAttributes;
-        const { selection: fieldSelection } = this.fields[fieldName];
-        /** @type {[string | typeof FALSE, string][]} */
-        const colorEntries = Object.entries(colors);
-        const selection = fieldSelection && Object.fromEntries(fieldSelection);
-        colorEntries.push([FALSE, "200"]);
-        return colorEntries.map(([value, color]) => {
-            let string;
-            if (value === FALSE) {
-                string = this.model.env._t("Other");
-            } else if (selection) {
-                string = selection[value];
-            } else {
-                string = String(value);
-            }
-            return { count: 0, value, string, color };
         });
     }
 }
@@ -276,25 +76,6 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
 
         this.groupBy = this.groupBy.slice(0, 1);
         this.limit = null;
-
-        this.model.bus.addEventListener("group-updated", async ({ detail }) => {
-            if (this.groups.some((g) => g.id === detail.group.id)) {
-                await this.updateGroupProgressData([detail.group], detail.withProgressBars);
-                this.model.notify();
-            }
-        });
-    }
-
-    get sumFields() {
-        const { sumField } = this.model.progressAttributes;
-        return sumField ? [sumField.name] : [];
-    }
-
-    /**
-     * @override
-     */
-    get fieldNames() {
-        return [...super.fieldNames, ...this.sumFields];
     }
 
     get currentParams() {
@@ -316,68 +97,16 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
      * @override
      */
     async load() {
-        const load = async () => {
-            const previousGroups = this.groups.map((g, i) => [g, i]);
-            await super.load();
-            if (this.previousParams === this.currentParams) {
-                for (const [group, index] of previousGroups) {
-                    const newGroup = this.groups.find((g) => group.valueEquals(g.value));
-                    if (!group.deleted && !newGroup) {
-                        group.empty();
-                        this.groups.splice(index, 0, group);
-                    }
+        const previousGroups = this.groups.map((g, i) => [g, i]);
+        await super.load();
+        if (this.previousParams === this.currentParams) {
+            for (const [group, index] of previousGroups) {
+                const newGroup = this.groups.find((g) => group.valueEquals(g.value));
+                if (!group.deleted && !newGroup) {
+                    group.empty();
+                    this.groups.splice(index, 0, group);
                 }
             }
-        };
-        await this._loadWithProgressData(load());
-    }
-
-    /**
-     * @param {KanbanGroup[]} groups
-     * @param {boolean} withProgressBars
-     * @returns {Promise<void>}
-     */
-    async updateGroupProgressData(groups, withProgressBars) {
-        if (!this.model.hasProgressBars) {
-            return;
-        }
-
-        const gbFieldName = this.groupByField.name;
-        const promises = {};
-
-        if (withProgressBars) {
-            const domain = Domain.or(groups.map((g) => g.groupDomain)).toList();
-            promises.readProgressBar = this._fetchProgressData(domain);
-        }
-        // If we have a sumField, the aggregates must be re-fetched
-        if (this.sumFields.length) {
-            const domain = Domain.or(groups.map((g) => g.getProgressBarDomain())).toList();
-            promises.webReadGroup = this.model.orm.webReadGroup(
-                this.resModel,
-                domain,
-                this.sumFields,
-                this.groupBy,
-                { lazy: true }
-            );
-        }
-
-        await Promise.all(Object.values(promises));
-
-        // Update the aggregates for each group
-        if (promises.webReadGroup) {
-            const result = await promises.webReadGroup;
-            const groupData = result.groups.map((group) => ({
-                ...group,
-                [gbFieldName]: this._getValueFromGroupData(group, this.firstGroupBy),
-            }));
-            for (const group of groups) {
-                group.updateAggregates(groupData);
-            }
-        }
-        // Update the progress bar data for each group
-        if (promises.readProgressBar) {
-            const result = await promises.readProgressBar;
-            await Promise.all(groups.map((group) => group.updateProgressData(result)));
         }
     }
 
@@ -439,7 +168,6 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
                 groupsToReload.push(targetGroup);
                 promises.push(record.load());
             }
-            promises.push(this.updateGroupProgressData(groupsToReload, true));
             await Promise.all(promises);
         }
 
@@ -452,40 +180,6 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
         this.model.transaction.commit(dataRecordId);
 
         return true;
-    }
-
-    // ------------------------------------------------------------------------
-    // Protected
-    // ------------------------------------------------------------------------
-
-    /**
-     * @param {any[]} [domain]
-     * @returns {Promise<Object>}
-     */
-    async _fetchProgressData(domain) {
-        const { colors, fieldName, help } = this.model.progressAttributes;
-        return this.model.orm.call(this.resModel, "read_progress_bar", [], {
-            domain,
-            group_by: this.firstGroupBy,
-            progress_bar: { colors, field: fieldName, help },
-            context: this.context,
-        });
-    }
-
-    /**
-     * @param {Promise<any>} loadPromise
-     * @returns {Promise<void>}
-     */
-    async _loadWithProgressData(loadPromise) {
-        if (!this.model.hasProgressBars) {
-            // No progress attributes : normal load
-            return loadPromise;
-        }
-        const [progressData] = await Promise.all([
-            this._fetchProgressData(this.domain),
-            loadPromise,
-        ]);
-        await Promise.all(this.groups.map((group) => group.updateProgressData(progressData)));
     }
 }
 
@@ -511,12 +205,7 @@ export class KanbanModel extends RelationalModel {
     setup(params) {
         super.setup(...arguments);
 
-        this.progressAttributes = params.progressAttributes;
         this.transaction = makeTransactionManager();
-    }
-
-    get hasProgressBars() {
-        return Boolean(this.progressAttributes);
     }
 
     /**

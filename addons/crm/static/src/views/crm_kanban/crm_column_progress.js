@@ -9,7 +9,7 @@ import { getCurrency } from "@web/core/currency";
 export class CrmColumnProgress extends ColumnProgress {
     static props = {
         ...ColumnProgress.props,
-        progressAttributes: true,
+        progressBarState: { type: Object },
     };
     static template = "crm.ColumnProgress";
     setup() {
@@ -18,20 +18,19 @@ export class CrmColumnProgress extends ColumnProgress {
         this.showRecurringRevenue = false;
 
         onWillStart(async () => {
-            if (this.props.progressAttributes.recurring_revenue_sum_field) {
+            if (this.props.progressBarState.progressAttributes.recurring_revenue_sum_field) {
                 this.showRecurringRevenue = await this.user.hasGroup("crm.group_use_recurring_revenues");
             }
         });
     }
 
     getRecurringRevenueGroupAggregate(group) {
-        const rrField = this.props.progressAttributes.recurring_revenue_sum_field;
-        const value = group.getAggregates(rrField.name);
-        const title = rrField.string || this.env._t("Count");
+        const rrField = this.props.progressBarState.progressAttributes.recurring_revenue_sum_field;
+        const aggregatedValue = this.props.progressBarState.getAggregateValue(group, rrField);
         let currency = false;
-        if (value && rrField.currency_field) {
+        if (aggregatedValue.value && rrField.currency_field) {
             currency = getCurrency(session.company_currency_id);
         }
-        return { value, currency, title };
+        return { ...aggregatedValue, currency };
     }
 }

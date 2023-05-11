@@ -75,7 +75,7 @@ export class ActivityRenderer extends Component {
         };
         const typeId = group[0];
         const isColumnFiltered = this.activeFilter.activityTypeId === group[0];
-        const progressValue = isColumnFiltered ? this.activeFilter.progressValue : {active: null};
+        const progressValue = isColumnFiltered ? this.activeFilter.progressValue : { active: null };
 
         let totalCount = 0;
         for (const activities of Object.values(this.props.groupedActivities)) {
@@ -85,9 +85,11 @@ export class ActivityRenderer extends Component {
             }
         }
 
-        const progressBars = [];
+        const progressBar = {
+            bars: [],
+        };
         for (const [value, count] of Object.entries(types)) {
-            progressBars.push({
+            progressBar.bars.push({
                 count: count.value,
                 value,
                 string: this.props.fields.activity_state.selection.find((e) => e[0] === value)[1],
@@ -103,7 +105,7 @@ export class ActivityRenderer extends Component {
             data: {
                 count: totalCount,
                 filterProgressValue: (name) => this.onSetProgressBarState(typeId, name),
-                progressBars,
+                progressBar,
                 progressValue,
             },
         };
@@ -113,7 +115,8 @@ export class ActivityRenderer extends Component {
         return this.props.records.find((r) => r.resId === resId);
     }
 
-    onSetProgressBarState(typeId, name) {
+    onSetProgressBarState(typeId, bar) {
+        const name = bar.value;
         if (this.activeFilter.progressValue.active === name) {
             this.activeFilter.progressValue.active = null;
             this.activeFilter.activityTypeId = null;

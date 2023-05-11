@@ -12,13 +12,13 @@ export class ColumnProgress extends Component {
         aggregate: { type: Object },
         group: { type: Object },
         onBarClicked: { type: Function, optional: true },
+        progressBar: { type: Object },
     };
     static defaultProps = {
         onBarClicked: () => {},
     };
 
-    async onBarClick(progressBar) {
-        await this.props.group.filterProgressValue(progressBar.value);
-        this.props.onBarClicked();
+    async onBarClick(bar) {
+        await this.props.onBarClicked(bar);
     }
 }

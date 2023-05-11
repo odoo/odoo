@@ -9,11 +9,13 @@ import { MultiRecordViewButton } from "@web/views/view_button/multi_record_view_
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
 import { KanbanRenderer } from "./kanban_renderer";
+import { useProgressBar } from "./progress_bar_hook";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
 
 import { Component, reactive, useRef } from "@odoo/owl";
+import { addDependencies } from "../utils";
 
 const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "many2many"];
 
@@ -24,6 +26,15 @@ export class KanbanController extends Component {
         this.actionService = useService("action");
         const { Model, archInfo } = this.props;
         this.model = useModel(Model, this.modelParams);
+        if (archInfo.progressAttributes) {
+            const { activeBars } = this.props.state || {};
+            this.progressBarState = useProgressBar(
+                archInfo.progressAttributes,
+                this.model,
+                this.progressBarAggregateFields,
+                activeBars
+            );
+        }
         this.headerButtons = archInfo.headerButtons;
 
         const self = this;
@@ -56,6 +67,7 @@ export class KanbanController extends Component {
             },
             getLocalState: () => {
                 return {
+                    activeBars: this.progressBarState?.activeBars,
                     rootState: this.model.root.exportState(),
                 };
             },
@@ -85,9 +97,12 @@ export class KanbanController extends Component {
     get modelParams() {
         const { resModel, fields, archInfo, limit, defaultGroupBy, state } = this.props;
         const { rootState } = state || {};
+
+        const activeFields = archInfo.activeFields;
+        addDependencies(this.progressBarAggregateFields, activeFields, fields);
+
         return {
-            activeFields: archInfo.activeFields,
-            progressAttributes: archInfo.progressAttributes,
+            activeFields,
             fields: { ...fields },
             resModel,
             handleField: archInfo.handleField,
@@ -97,8 +112,18 @@ export class KanbanController extends Component {
             defaultOrder: archInfo.defaultOrder,
             viewMode: "kanban",
             openGroupsByDefault: true,
+            onRecordSaved: this.onRecordSaved.bind(this),
             rootState,
         };
+    }
+
+    get progressBarAggregateFields() {
+        const res = [];
+        const { progressAttributes } = this.props.archInfo;
+        if (progressAttributes && progressAttributes.sumField) {
+            res.push(progressAttributes.sumField);
+        }
+        return res;
     }
 
     get className() {
@@ -160,6 +185,15 @@ export class KanbanController extends Component {
         }
 
         return this.isQuickCreateField(list.groupByField);
+    }
+
+    onRecordSaved(record) {
+        if (this.model.root.isGrouped) {
+            const group = this.model.root.groups.find((l) =>
+                l.records.find((r) => r.id === record.id)
+            );
+            this.progressBarState?.updateCounts(group);
+        }
     }
 
     async beforeExecuteActionButton(clickParams) {}

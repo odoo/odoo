@@ -234,7 +234,7 @@ export class KanbanRecord extends Component {
     }
 
     getRecordClasses() {
-        const { archInfo, canResequence, forceGlobalClick, group, record } = this.props;
+        const { archInfo, canResequence, forceGlobalClick, record, progressBarState } = this.props;
         const classes = ["o_kanban_record d-flex"];
         if (canResequence) {
             classes.push("o_draggable");
@@ -242,9 +242,11 @@ export class KanbanRecord extends Component {
         if (forceGlobalClick || archInfo.openAction) {
             classes.push("oe_kanban_global_click");
         }
-        if (group && record.model.hasProgressBars) {
-            const progressBar = group.findProgressValueFromRecord(record);
-            classes.push(`oe_kanban_card_${progressBar.color}`);
+        if (progressBarState) {
+            const { fieldName, colors } = progressBarState.progressAttributes;
+            const value = record.data[fieldName];
+            const color = colors[value];
+            classes.push(`oe_kanban_card_${color}`);
         }
         if (archInfo.cardColorField) {
             const value = record.data[archInfo.cardColorField];
@@ -399,6 +401,7 @@ KanbanRecord.props = [
     "readonly?",
     "record",
     "templates",
+    "progressBarState?",
 ];
 KanbanRecord.Compiler = KanbanCompiler;
 KanbanRecord.KANBAN_BOX_ATTRIBUTE = KANBAN_BOX_ATTRIBUTE;

@@ -26,6 +26,7 @@
                             quickCreateState="props.quickCreateState"
                             scrollTop="props.scrollTop"
                             tooltipInfo="props.archInfo.tooltipInfo"
+                            progressBarState="props.progressBarState"
                         />
                         <t t-if="!group.isFolded">
                             <t t-if="group.id === props.quickCreateState.groupId">
@@ -50,6 +51,7 @@
                                     readonly="props.readonly"
                                     record="record"
                                     templates="props.archInfo.templateDocs"
+                                    progressBarState="props.progressBarState"
                                 />
                             </t>
                             <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)" />
