@@ -121,10 +121,17 @@ class TestItEdi(AccountEdiTestCommon):
             "".join([f"<xpath expr='{x}' position='replace'>{y}</xpath>" for x, y in xpaths.items()])
         )
 
-    def _assert_import_invoice(self, filename, expected_values_list):
+    def _assert_import_invoice(self, filename, expected_values_list, xml_to_apply=None):
         path = f'{self.module}/tests/import_xmls/{filename}'
         with tools.file_open(path, mode='rb') as fd:
             import_content = fd.read()
+
+        if xml_to_apply:
+            tree = self.with_applied_xpath(
+                etree.fromstring(import_content),
+                xml_to_apply
+            )
+            import_content = etree.tostring(tree)
 
         attachment = self.env['ir.attachment'].create({
             'name': filename,

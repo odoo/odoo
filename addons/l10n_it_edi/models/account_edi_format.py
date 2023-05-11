@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields, _, _lt
+from odoo import Command, api, models, fields, _, _lt
 from odoo.exceptions import UserError
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
@@ -631,11 +631,11 @@ class AccountEdiFormat(models.Model):
             general_discount = discounted_amount - taxable_amount
             sequence = len(elements) + 1
 
-            with invoice.invoice_line_ids.new() as invoice_line_global_discount:
-                invoice_line_global_discount.tax_ids.clear()
-                invoice_line_global_discount.sequence = sequence
-                invoice_line_global_discount.name = 'SCONTO' if general_discount < 0 else 'MAGGIORAZIONE'
-                invoice_line_global_discount.price_unit = general_discount
+            invoice.invoice_line_ids = [Command.create({
+                'sequence': sequence,
+                'name': 'SCONTO' if general_discount < 0 else 'MAGGIORAZIONE',
+                'price_unit': general_discount,
+            })]
 
         elements = tree.xpath('.//Allegati')
         if elements:
