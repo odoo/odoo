@@ -861,6 +861,7 @@ class SaleOrder(models.Model):
         self.order_line._validate_analytic_distribution()
 
         for order in self:
+            order.validate_taxes_on_sales_order()
             if order.partner_id in order.message_partner_ids:
                 continue
             order.message_subscribe([order.partner_id.id])
