@@ -223,7 +223,7 @@
                                 <div class="col-12 col-md-6">
                                     <div t-if="project_accessible"><strong>Project:</strong> <a t-attf-href="/my/projects/#{task.project_id.id}" t-field="task.project_id"/></div>
                                     <div t-else=""><strong>Project:</strong> <a t-field="task.project_id"/></div>
-                                    <div t-if="task.date_deadline"><strong>Deadline:</strong> <span t-field="task.date_deadline" t-options='{"widget": "date"}'/></div>
+                                    <div t-if="task.date_deadline"><strong>Deadline:</strong> <span t-field="task.date_deadline" t-options='{"widget": "datetime"}'/></div>
                                     <div t-if="task.milestone_id and task.allow_milestones"><strong>Milestone:</strong> <span t-field="task.milestone_id"/></div>
                                     <div name="portal_my_task_allocated_hours">
                                     <strong t-if="task.allocated_hours > 0">Allocated Time:</strong>
