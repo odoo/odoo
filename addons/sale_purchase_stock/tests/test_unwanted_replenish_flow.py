@@ -64,14 +64,14 @@ class TestWarnUnwantedReplenish(common.TransactionCase):
         orderpoint_form = Form(cls.env['stock.warehouse.orderpoint'])
         orderpoint_form.product_id = cls.product_A
         orderpoint_form.product_min_qty = 0.0
-        orderpoint_form.product_max_qty = 1.0
+        orderpoint_form.product_max_qty = 0.0
         cls.orderpoint_A = orderpoint_form.save()
         cls.orderpoint_A.trigger = 'manual'
 
         orderpoint_form = Form(cls.env['stock.warehouse.orderpoint'])
         orderpoint_form.product_id = cls.product_B
         orderpoint_form.product_min_qty = 0.0
-        orderpoint_form.product_max_qty = 1.0
+        orderpoint_form.product_max_qty = 0.0
         cls.orderpoint_B = orderpoint_form.save()
         cls.orderpoint_B.trigger = 'manual'
 
