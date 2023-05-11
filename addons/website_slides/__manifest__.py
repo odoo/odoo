@@ -72,6 +72,7 @@ Featuring
     'assets': {
         'web.assets_backend': [
             'website_slides/static/src/activity/**/*',
+            'website_slides/static/src/client_actions/website_preview/website_preview.js',
             'website_slides/static/src/slide_category_one2many_field.js',
             'website_slides/static/src/slide_category_list_renderer.js',
             'website_slides/static/src/scss/slide_views.scss',
