@@ -95,6 +95,7 @@
                             <field name="applies_on" string="Use points on" groups="base.group_no_one" widget="radio" readonly="1" force_save="1"/>
                         </group>
                         <group>
+                            <field name="date_from" attrs="{'invisible': [('program_type', 'in', ('gift_card', 'ewallet'))]}"/>
                             <field name="date_to" attrs="{'invisible': [('program_type', 'in', ('gift_card', 'ewallet'))]}"/>
                             <label for="limit_usage" attrs="{'invisible': [('program_type', 'in', ('gift_card', 'ewallet'))]}"/>
                             <span attrs="{'invisible': [('program_type', 'in', ('gift_card', 'ewallet'))]}">

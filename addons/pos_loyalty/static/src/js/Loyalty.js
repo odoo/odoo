@@ -146,6 +146,9 @@ patch(PosGlobalState.prototype, "pos_loyalty.PosGlobalState", {
 
         for (const program of this.programs) {
             this.program_by_id[program.id] = program;
+            if (program.date_from) {
+                program.date_from = new Date(program.date_from);
+            }
             if (program.date_to) {
                 program.date_to = new Date(program.date_to);
             }
@@ -868,7 +871,10 @@ patch(Order.prototype, "pos_loyalty.Order", {
         if (program.is_nominative && !this.get_partner()) {
             return false;
         }
-        if (program.date_to && program.date_to <= new Date()) {
+        if (program.date_from && program.date_from > new Date()) {
+            return false;
+        }
+        if (program.date_to && program.date_to < new Date()) {
             return false;
         }
         if (program.limit_usage && program.total_order_count >= program.max_usage) {
