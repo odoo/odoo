@@ -886,3 +886,9 @@ class MrpWorkorder(models.Model):
     def action_mass_pause(self):
         for wo in self:
             wo.button_pending()
+
+    def _compute_expected_operation_cost(self):
+        return (self.duration_expected / 60.0) * self.workcenter_id.costs_hour
+
+    def _compute_current_operation_cost(self):
+        return (self.get_duration() / 60.0) * self.workcenter_id.costs_hour
