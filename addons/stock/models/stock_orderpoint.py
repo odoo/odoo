@@ -174,7 +174,7 @@ class StockWarehouseOrderpoint(models.Model):
     @api.depends('product_id', 'qty_to_order', 'product_max_qty')
     def _compute_unwanted_replenish(self):
         for orderpoint in self:
-            if not orderpoint.product_id or float_is_zero(orderpoint.qty_to_order, precision_rounding=orderpoint.product_uom.rounding) or float_is_zero(orderpoint.product_max_qty, precision_rounding=orderpoint.product_uom.rounding):
+            if not orderpoint.product_id or float_is_zero(orderpoint.qty_to_order, precision_rounding=orderpoint.product_uom.rounding) or float_compare(orderpoint.product_max_qty, 0, precision_rounding=orderpoint.product_uom.rounding) == -1:
                 orderpoint.unwanted_replenish = False
             else:
                 after_replenish_qty = orderpoint.product_id.with_context(company_id=orderpoint.company_id.id, location=orderpoint.location_id.id).virtual_available + orderpoint.qty_to_order
