@@ -104,7 +104,6 @@ class MailTestRatingThread(models.Model):
      - partner_id: value returned by the base _rating_get_partner method
      - user_id: value returned by the base _rating_get_operator method
      """
-
     _description = 'Model for testing rating without the rating mixin'
     _name = 'mail.test.rating.thread'
     _inherit = 'mail.thread'
