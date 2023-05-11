@@ -17,7 +17,7 @@ class ReportProjectTaskUser(models.Model):
     create_date = fields.Datetime("Create Date", readonly=True)
     date_assign = fields.Datetime(string='Assignment Date', readonly=True)
     date_end = fields.Datetime(string='Ending Date', readonly=True)
-    date_deadline = fields.Date(string='Deadline', readonly=True)
+    date_deadline = fields.Datetime(string='Deadline', readonly=True)
     date_last_stage_update = fields.Datetime(string='Last Stage Update', readonly=True)
     project_id = fields.Many2one('project.project', string='Project', readonly=True)
     working_days_close = fields.Float(string='Working Days to Close',

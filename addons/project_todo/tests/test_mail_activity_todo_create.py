@@ -26,4 +26,4 @@ class TestMailActivityTodo(TransactionCase):
         self.assertTrue(activity_1.exists(), 'An Activity should have been created')
         self.assertEqual(activity_1.summary, todo_1.name, 'The Todo and The Activity should have the same name/summary')
         self.assertEqual(activity_1.user_id, todo_1.user_ids, 'The Todo and The Activity should have the same user')
-        self.assertEqual(activity_1.date_deadline, todo_1.date_deadline, 'The Todo and The Activity should have the same date deadline')
+        self.assertEqual(activity_1.date_deadline, todo_1.date_deadline.date(), 'The Todo and The Activity should have the same date deadline')
