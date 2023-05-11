@@ -75,7 +75,7 @@
                 <t t-if="line.get('quantity_reserved', False) is not False" t-out="line['quantity_reserved']" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/>
             </td>
             <td t-if="data['show_receipts']" t-attf-class="text-end {{ 'text-' + line['receipt']['decorator'] if line.get('receipt', {}).get('decorator') else '' }}">
-                <span t-if="line.get('receipt')" t-attf-class="{{ 'text-' + line['receipt']['decorator'] }}" t-out="line['receipt']['display']"/>
+                <span t-if="line.get('receipt')" t-attf-class="{{ 'text-' + line['receipt']['decorator'] if line.get('receipt', {}).get('decorator') else '' }}" t-out="line['receipt']['display']"/>
             </td>
             <td t-if="data['show_mo_costs']" t-attf-class="text-end {{ 'text-' + line['mo_cost_decorator'] if line.get('mo_cost_decorator') else '' }}">
                 <t t-out="line['mo_cost']" t-options="{'widget': 'monetary', 'display_currency': line['currency']}"/>
