@@ -45,7 +45,23 @@ export class TimeOffCalendarModel extends CalendarModel {
 
     async updateData(data) {
         await super.updateData(data);
+
         data.stressDays = await this.fetchStressDays(data);
+    }
+
+    /**
+     * @override
+     */
+    fetchUnusualDays(data) {
+        return this.orm.call(this.meta.resModel, "get_unusual_days", [
+            serializeDateTime(data.range.start),
+            serializeDateTime(data.range.end),
+        ],
+        {
+            context: {
+                'employee_id': this.employeeId,
+            }
+        });
     }
 
     async fetchStressDays(data) {
