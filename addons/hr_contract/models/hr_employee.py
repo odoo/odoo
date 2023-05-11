@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import date
+from pytz import UTC
+from datetime import date, datetime, time
+
 from odoo import api, fields, models
 from odoo.osv import expression
 
@@ -28,6 +30,7 @@ class Employee(models.Model):
 
     def _get_first_contract_date(self, no_gap=True):
         self.ensure_one()
+
         def remove_gap(contracts):
             # We do not consider a gap of more than 4 days to be a same occupation
             # contracts are considered to be ordered correctly
@@ -93,6 +96,29 @@ class Employee(models.Model):
         Returns the contracts of all employees between date_from and date_to
         """
         return self.search(['|', ('active', '=', True), ('active', '=', False)])._get_contracts(date_from, date_to, states=states)
+
+    def _get_unusual_days(self, date_from, date_to=None):
+        employee_contracts = self.env['hr.contract'].search([
+            ('state', '!=', 'cancel'),
+            ('employee_id', '=', self.id),
+            ('date_start', '<=', date_to),
+            '|',
+            ('date_end', '=', False),
+            ('date_end', '>=', date_from),
+        ])
+        if not employee_contracts:
+            return super()._get_unusual_days(date_from, date_to)
+        unusual_days = {}
+        date_from_date = datetime.strptime(date_from, '%Y-%m-%d %H:%M:%S').date()
+        date_to_date = datetime.strptime(date_to, '%Y-%m-%d %H:%M:%S').date() if date_to else None
+        for contract in employee_contracts:
+            tmp_date_from = max(date_from_date, contract.date_start)
+            tmp_date_to = min(date_to_date, contract.date_end) if contract.date_end else date_to_date
+            unusual_days.update(contract.resource_calendar_id._get_unusual_days(
+                datetime.combine(fields.Date.from_string(tmp_date_from), time.min).replace(tzinfo=UTC),
+                datetime.combine(fields.Date.from_string(tmp_date_to), time.max).replace(tzinfo=UTC)
+            ))
+        return unusual_days
 
     def write(self, vals):
         res = super().write(vals)
