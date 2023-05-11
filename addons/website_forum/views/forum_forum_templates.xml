@@ -240,7 +240,7 @@
 </template>
 
 <!-- Edition: edit a post -->
-<template id="edit_post">
+<template id="edit_post" name="Edit Post">
     <t t-call="website_forum.header">
         <div t-if="is_answer" class="fw-bold mb-1">Question by <t t-esc="post.parent_id.create_uid.sudo().name"/></div>
         <article t-if="is_answer" class="alert border pb-0 o_wforum_readable">
