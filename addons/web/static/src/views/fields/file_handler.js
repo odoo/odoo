@@ -53,14 +53,17 @@ export class FileUploader extends Component {
                     }
                 );
             }
-            await this.props.onUploaded({
-                name: file.name,
-                size: file.size,
-                type: file.type,
-                data: data.split(",")[1],
-                objectUrl: file.type === "application/pdf" ? URL.createObjectURL(file) : null,
-            });
-            this.state.isUploading = false;
+            try {
+                await this.props.onUploaded({
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    data: data.split(",")[1],
+                    objectUrl: file.type === "application/pdf" ? URL.createObjectURL(file) : null,
+                });
+            } finally {
+                this.state.isUploading = false;
+            }
         }
         ev.target.value = null;
         if (this.props.multiUpload && this.props.onUploadComplete) {
