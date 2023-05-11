@@ -5,6 +5,8 @@ import config from "web.config";
 import utils from "web.utils";
 import Widget from "web.Widget";
 import { debounce } from "@web/core/utils/timing";
+import { uniqueId } from "@web/core/utils/functions";
+import { pick } from "@web/core/utils/objects";
 
 
 /**
@@ -64,7 +66,7 @@ var NameAndSignature = Widget.extend({
     init: function (parent, options) {
         this._super.apply(this, arguments);
         options = options || {};
-        this.htmlId = _.uniqueId();
+        this.htmlId = uniqueId();
         this.defaultName = options.defaultName || '';
         this.defaultFont = options.defaultFont || '';
         this.fontColor = options.fontColor || 'DarkBlue';
@@ -423,7 +425,7 @@ var NameAndSignature = Widget.extend({
                     width = parseInt(height * ratio);
                 }
                 self.$signatureField.jSignature('reset');
-                var ignoredContext = _.pick(context, ['shadowOffsetX', 'shadowOffsetY']);
+                var ignoredContext = pick(context, 'shadowOffsetX', 'shadowOffsetY');
                 Object.assign(context, {shadowOffsetX: 0, shadowOffsetY: 0});
                 context.drawImage(image,
                     0,

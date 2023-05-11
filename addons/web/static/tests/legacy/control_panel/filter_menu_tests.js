@@ -5,6 +5,7 @@
     import testUtils from "web.test_utils";
 
     import * as cpHelpers from "@web/../tests/search/helpers";
+    import { escapeHTML } from "@web/core/utils/strings";
     
     const { createControlPanel, mock } = testUtils;
     const { patchDate } = mock;
@@ -349,7 +350,7 @@
 
             const arch =
                 `<search>
-                    <filter string="Foo" name="gently_weeps" domain="${_.escape(xml_domain)}"/>
+                    <filter string="Foo" name="gently_weeps" domain="${escapeHTML(xml_domain)}"/>
                 </search>`;
             const params = {
                 cpModelConfig: {

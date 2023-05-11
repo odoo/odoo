@@ -29,6 +29,7 @@ import { _t } from "@web/core/l10n/translation";
 
 const serviceRegistry = registry.category("services");
 import { Component, App, whenReady } from "@odoo/owl";
+import { omit } from '@web/core/utils/objects';
 
 // Load localizations outside the PublicRoot to not wait for DOM ready (but
 // wait for them in PublicRoot)
@@ -189,11 +190,10 @@ export const PublicRoot = publicWidget.RootWidget.extend({
 
         this._stopWidgets($from);
 
-        var defs = _.map(this._getPublicWidgetsRegistry(options), function (PublicWidget) {
+        var defs = Object.values(this._getPublicWidgetsRegistry(options)).map((PublicWidget) => {
             var selector = PublicWidget.prototype.selector || '';
             var $target = dom.cssFind($from, selector, true);
-
-            var defs = _.map($target, function (el) {
+            var defs = Array.from($target).map((el) => {
                 var widget = new PublicWidget(self, options);
                 self.publicWidgets.push(widget);
                 return widget.attachTo($(el));
@@ -212,7 +212,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
      *        of its descendants
      */
     _stopWidgets: function ($from) {
-        var removedWidgets = _.map(this.publicWidgets, function (widget) {
+        var removedWidgets = this.publicWidgets.map((widget) => {
             if (!$from
                 || $from.filter(widget.el).length
                 || $from.find(widget.el).length) {
@@ -221,7 +221,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
             }
             return null;
         });
-        this.publicWidgets = _.difference(this.publicWidgets, removedWidgets);
+        this.publicWidgets = this.publicWidgets.filter((x) => removedWidgets.indexOf(x) < 0);
     },
 
     //--------------------------------------------------------------------------
@@ -239,7 +239,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
         function _computeContext(context, noContextKeys) {
             context = Object.assign({}, this._getContext(), context);
             if (noContextKeys) {
-                context = _.omit(context, noContextKeys);
+                context = omit(context, ...noContextKeys);
             }
             return JSON.parse(JSON.stringify(context));
         }
@@ -257,7 +257,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
                 var noContextKeys;
                 if (options) {
                     noContextKeys = options.noContextKeys;
-                    args[2] = _.omit(options, 'noContextKeys');
+                    args[2] = omit(options, 'noContextKeys');
                 }
                 params.kwargs.context = _computeContext.call(this, params.kwargs.context, noContextKeys);
             }

@@ -3,6 +3,7 @@
 import {_t} from "web.core";
 import options from "web_editor.snippets.options";
 import "website.editor.snippets.options";
+import { uniqueId } from "@web/core/utils/functions";
 
 const NEW_TAG_PREFIX = 'new-blog-tag-';
 
@@ -121,7 +122,7 @@ options.registry.BlogPostTagSelection = options.Class.extend({
                 message: _t("This tag already exists"),
             });
         }
-        const newTagID = _.uniqueId(NEW_TAG_PREFIX);
+        const newTagID = uniqueId(NEW_TAG_PREFIX);
         this.allTagsByID[newTagID] = {
             'id': newTagID,
             'name': widgetValue,

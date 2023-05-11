@@ -1,5 +1,6 @@
 /** @odoo-module alias=web.DomainSelector **/
 
+import { pick } from "@web/core/utils/objects";
 import core from "web.core";
 import datepicker from "web.datepicker";
 import dom from "web.dom";
@@ -230,7 +231,7 @@ var DomainTree = DomainNode.extend({
             }
         });
         var nbChildRequired = this.operator === "!" ? 1 : 2;
-        var operators = _.times(nbChildren - nbChildRequired + 1, _.constant(this.operator));
+        var operators = new Array(nbChildren - nbChildRequired + 1).fill(this.operator);
         return operators.concat(childDomains);
     },
 
@@ -379,9 +380,13 @@ var DomainTree = DomainNode.extend({
     _renderChildrenTo: function ($to) {
         var $div = $("<div/>");
         const children = this.children;
-        return Promise.all(_.map(children, (function (child) {
-            return child.appendTo($div);
-        }).bind(this))).then((function () {
+        return Promise.all(
+            children.map(
+                ((child) => {
+                    return child.appendTo($div);
+                }).bind(this)
+            )
+        ).then((function () {
             children.forEach((child) => {
                 child.$el.appendTo($to); // Forced to do it this way so that the
                                          // children are not misordered
@@ -861,7 +866,7 @@ var DomainLeaf = DomainNode.extend({
                 this.value = !!parseFloat(this.value);
             }
         } else if (selectedField.type === "selection") {
-            if (!_.some(selectedField.selection, (function (option) { return option[0] === this.value; }).bind(this))) {
+            if (!selectedField.selection.some((option) => option[0] === this.value)) {
                 this.value = selectedField.selection[0][0];
             }
         } else if (["date", "datetime"].includes(selectedField.type)) {
@@ -874,7 +879,7 @@ var DomainLeaf = DomainNode.extend({
             // Never display "true" or "false" strings from boolean value
             if (typeof this.value === "boolean") {
                 this.value = "";
-            } else if (_.isObject(this.value) && !Array.isArray(this.value)) { // Can be object if parsed to x2x representation
+            } else if (typeof this.value === "object" && !Array.isArray(this.value)) { // Can be object if parsed to x2x representation
                 this.value = this.value.id || value || "";
             }
         }
@@ -903,28 +908,28 @@ var DomainLeaf = DomainNode.extend({
             case "char":
             case "text":
             case "html":
-                operators = _.pick(operator_mapping, "=", "!=", "ilike", "not ilike", "set", "not set", "in", "not in");
+                operators = pick(operator_mapping, "=", "!=", "ilike", "not ilike", "set", "not set", "in", "not in");
                 break;
 
             case "many2many":
             case "one2many":
             case "many2one":
-                operators = _.pick(operator_mapping, "=", "!=", "ilike", "not ilike", "set", "not set");
+                operators = pick(operator_mapping, "=", "!=", "ilike", "not ilike", "set", "not set");
                 break;
 
             case "integer":
             case "float":
             case "monetary":
-                operators = _.pick(operator_mapping, "=", "!=", ">", "<", ">=", "<=", "ilike", "not ilike", "set", "not set");
+                operators = pick(operator_mapping, "=", "!=", ">", "<", ">=", "<=", "ilike", "not ilike", "set", "not set");
                 break;
 
             case "selection":
-                operators = _.pick(operator_mapping, "=", "!=", "set", "not set");
+                operators = pick(operator_mapping, "=", "!=", "set", "not set");
                 break;
 
             case "date":
             case "datetime":
-                operators = _.pick(operator_mapping, "=", "!=", ">", "<", ">=", "<=", "set", "not set");
+                operators = pick(operator_mapping, "=", "!=", ">", "<", ">=", "<=", "set", "not set");
                 break;
 
             default:
@@ -933,7 +938,7 @@ var DomainLeaf = DomainNode.extend({
         }
 
         if (this.options.operators) {
-            operators = _.pick.apply(_, [operators].concat(this.options.operators));
+            operators = pick(operators, ...Object.keys(operators).concat(this.options.operators));
         }
 
         return operators;
@@ -983,7 +988,7 @@ var DomainLeaf = DomainNode.extend({
         var val = $input.val().trim();
         if (val && values.indexOf(val) < 0) {
             values.push(val);
-            _.defer(this._changeValue.bind(this, values));
+            setTimeout(() => this._changeValue.bind(this, values));
             $input.focus();
         }
     },
@@ -994,7 +999,7 @@ var DomainLeaf = DomainNode.extend({
         var index = values.indexOf(val);
         if (index >= 0) {
             values.splice(index, 1);
-            _.defer(this._changeValue.bind(this, values));
+            setTimeout(() => this._changeValue.bind(this, values));
         }
     },
 });

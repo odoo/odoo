@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { uniqueId } from "@web/core/utils/functions";
 import options from "web_editor.snippets.options";
 
 options.registry.TableOfContent = options.Class.extend({
@@ -99,7 +100,7 @@ options.registry.TableOfContent = options.Class.extend({
         $nav.empty();
         headingsEls.forEach((el) => {
             const $el = $(el);
-            const id = 'table_of_content_heading_' + _.now() + '_' + _.uniqueId();
+            const id = uniqueId("table_of_content_heading_" + new Date().getTime() + "_");
             $('<a>').attr('href', "#" + id)
                     .addClass('table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0')
                     .text($el.text())

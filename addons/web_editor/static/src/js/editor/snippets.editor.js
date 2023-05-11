@@ -14,7 +14,10 @@ import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
 import { sprintf, escape } from "@web/core/utils/strings";
 const QWeb = core.qweb;
 import {closestElement} from "@web_editor/js/editor/odoo-editor/src/utils/utils";
-import { debounce } from "@web/core/utils/timing";
+import { debounce, throttleForAnimation } from "@web/core/utils/timing";
+import { uniqueId } from "@web/core/utils/functions";
+import { sortBy, unique } from "@web/core/utils/arrays";
+import { browser } from "@web/core/browser/browser";
 
 var _t = core._t;
 
@@ -245,7 +248,7 @@ var SnippetEditor = Widget.extend({
         }
 
         var _animationsCount = 0;
-        var postAnimationCover = _.throttle(() => {
+        this.postAnimationCover = debounce(() => {
             this.trigger_up('cover_update', {
                 overlayVisible: true,
             });
@@ -261,7 +264,7 @@ var SnippetEditor = Widget.extend({
             _animationsCount++;
             setTimeout(() => {
                 if (!--_animationsCount) {
-                    postAnimationCover();
+                    this.postAnimationCover();
                 }
             }, 500); // This delay have to be huge enough to take care of long
                      // animations which will not trigger an animation end event
@@ -271,7 +274,7 @@ var SnippetEditor = Widget.extend({
         // On top of what is explained above, do the post animation cover for
         // each detected transition/animation end so that the user does not see
         // a flickering when not needed.
-        this.$target.on('transitionend.snippet_editor, animationend.snippet_editor', postAnimationCover);
+        this.$target.on('transitionend.snippet_editor, animationend.snippet_editor', this.postAnimationCover);
 
         return Promise.all(defs).then(() => {
             this.__isStartedResolveFunc(this);
@@ -286,6 +289,9 @@ var SnippetEditor = Widget.extend({
         this.trigger_up('snippet_editor_destroyed');
         if (this.$optionsSection) {
             this.$optionsSection.remove();
+        }
+        if (this.postAnimationCover) {
+            this.postAnimationCover.cancel();
         }
         this._super(...arguments);
         this.$target.removeData('snippet-editor');
@@ -326,7 +332,7 @@ var SnippetEditor = Widget.extend({
         await this.toggleTargetVisibility(!this.$target.hasClass('o_snippet_invisible')
             && !this.$target.hasClass('o_snippet_mobile_invisible')
             && !this.$target.hasClass('o_snippet_desktop_invisible'));
-        const proms = _.map(this.styles, option => {
+        const proms = Object.values(this.styles).map((option) => {
             return option.cleanForSave();
         });
         await Promise.all(proms);
@@ -650,11 +656,7 @@ var SnippetEditor = Widget.extend({
             };
         for (const $el of this._customize$Elements) {
             const editor = $el.data('editor');
-            const styles = _.chain(editor.styles)
-                .values()
-                .sortBy('__order')
-                .value();
-
+            const styles = sortBy(Object.values(editor.styles || {}), "__order");
             await focusOrBlur(editor, styles);
         }
         await Promise.all(editorUIsToUpdate.map(editor => editor.updateOptionsUI()));
@@ -678,7 +680,7 @@ var SnippetEditor = Widget.extend({
     toggleTargetVisibility: async function (show) {
         show = this._toggleVisibilityStatus(show);
         var styles = Object.values(this.styles);
-        const proms = _.sortBy(styles, '__order').map(style => {
+        const proms = sortBy(styles, "__order").map((style) => {
             return show ? style.onTargetShow() : style.onTargetHide();
         });
         await Promise.all(proms);
@@ -806,7 +808,7 @@ var SnippetEditor = Widget.extend({
         this.$el.data('$optionsSection', $optionsSection);
 
         var i = 0;
-        var defs = _.map(this.templateOptions, val => {
+        var defs = this.templateOptions.map((val) => {
             if (!val.selector.is(this.$target)) {
                 return;
             }
@@ -832,12 +834,12 @@ var SnippetEditor = Widget.extend({
                 }, val.data),
                 this.options
             );
-            var key = optionName || _.uniqueId('option');
+            var key = optionName || uniqueId("option");
             if (this.styles[key]) {
                 // If two snippet options use the same option name (and so use
                 // the same JS option), store the subsequent ones with a unique
                 // ID (TODO improve)
-                key = _.uniqueId(key);
+                key = uniqueId(key);
             }
             this.styles[key] = option;
             option.__order = i++;
@@ -858,7 +860,7 @@ var SnippetEditor = Widget.extend({
         this.$el.find('[data-bs-toggle="dropdown"]').dropdown();
 
         return Promise.all(defs).then(async () => {
-            const options = _.sortBy(this.styles, '__order');
+            const options = sortBy(Object.values(this.styles), "__order");
             const firstOptions = [];
             options.forEach(option => {
                 if (option.isTopOption) {
@@ -1943,12 +1945,15 @@ var SnippetsMenu = Widget.extend({
         core.bus.on('deactivate_snippet', this, this._onDeactivateSnippet);
 
         // Adapt overlay covering when the window is resized / content changes
-        var debouncedCoverUpdate = _.throttle(() => {
+        this.debouncedCoverUpdate = debounce(() => {
             this.updateCurrentSnippetEditorOverlay();
         }, 50);
-        this.$window.on('resize.snippets_menu', debouncedCoverUpdate);
-        this.$body.on('content_changed.snippets_menu', debouncedCoverUpdate);
-        $(this.$body[0].ownerDocument.defaultView).on('resize.snippets_menu', debouncedCoverUpdate);
+        this.$window.on("resize.snippets_menu", this.debouncedCoverUpdate);
+        this.$body.on("content_changed.snippets_menu", this.debouncedCoverUpdate);
+        $(this.$body[0].ownerDocument.defaultView).on(
+            "resize.snippets_menu",
+            this.debouncedCoverUpdate
+        );
 
         // On keydown add a class on the active overlay to hide it and show it
         // again when the mouse moves
@@ -1958,7 +1963,7 @@ var SnippetsMenu = Widget.extend({
                 editor.toggleOverlayVisibility(false);
             });
         });
-        this.$body.on('mousemove.snippets_menu, mousedown.snippets_menu', _.throttle(() => {
+        this.$body.on('mousemove.snippets_menu, mousedown.snippets_menu', throttleForAnimation(() => {
             if (!this.__overlayKeyWasDown) {
                 return;
             }
@@ -1967,7 +1972,7 @@ var SnippetsMenu = Widget.extend({
                 editor.toggleOverlayVisibility(true);
                 editor.cover();
             });
-        }, 250));
+        }));
 
         // Hide the active overlay when scrolling.
         // Show it again and recompute all the overlays after the scroll.
@@ -1978,7 +1983,7 @@ var SnippetsMenu = Widget.extend({
         this.$scrollingTarget = this.$scrollingElement.is(this.$body[0].ownerDocument.scrollingElement)
             ? $(this.$body[0].ownerDocument.defaultView)
             : this.$scrollingElement;
-        this._onScrollingElementScroll = _.throttle(() => {
+        this._onScrollingElementScroll = throttleForAnimation(() => {
             for (const editor of this.snippetEditors) {
                 editor.toggleOverlayVisibility(false);
             }
@@ -1990,7 +1995,7 @@ var SnippetsMenu = Widget.extend({
                     editor.cover();
                 }
             }, 250);
-        }, 50);
+        });
         // We use addEventListener instead of jQuery because we need 'capture'.
         // Setting capture to true allows to take advantage of event bubbling
         // for events that otherwise don’t support it. (e.g. useful when
@@ -2074,6 +2079,9 @@ var SnippetsMenu = Widget.extend({
             if (this.$scrollingTarget) {
                 this.$scrollingTarget[0].removeEventListener('scroll', this._onScrollingElementScroll, {capture: true});
             }
+        }
+        if (this.debouncedCoverUpdate) {
+            this.debouncedCoverUpdate.cancel();
         }
         core.bus.off('deactivate_snippet', this, this._onDeactivateSnippet);
         $(document.body).off('click', this._checkEditorToolbarVisibilityCallback);
@@ -2367,7 +2375,7 @@ var SnippetsMenu = Widget.extend({
             });
 
             // add children near drop zone
-            $selectorSiblings = $(_.uniq(($selectorSiblings || $()).add($selectorChildren.children()).get()));
+            $selectorSiblings = $(unique(($selectorSiblings || $()).add($selectorChildren.children()).get()));
         }
 
         var noDropZonesSelector = '[data-invisible="1"], .o_we_no_overlay, :not(:visible), :not(:o_editable)';
@@ -2480,7 +2488,7 @@ var SnippetsMenu = Widget.extend({
 
             $invisibleDOMPanelEl.toggleClass('d-none', !$invisibleSnippets.length);
 
-            const proms = _.map($invisibleSnippets, async el => {
+            const proms = Array.from($invisibleSnippets).map(async (el) => {
                 const editor = await this._createSnippetEditor($(el));
                 const $invisEntry = $('<div/>', {
                     class: 'o_we_invisible_entry d-flex align-items-center justify-content-between',
@@ -2682,7 +2690,7 @@ var SnippetsMenu = Widget.extend({
      */
     _callForEachChildSnippet: function ($snippet, callback) {
         var self = this;
-        var defs = _.map($snippet.add(globalSelector.all($snippet)), function (el) {
+        var defs = Array.from($snippet.add(globalSelector.all($snippet))).map((el) => {
             var $snippet = $(el);
             return self._createSnippetEditor($snippet).then(function (editor) {
                 if (editor) {
@@ -3362,8 +3370,7 @@ var SnippetsMenu = Widget.extend({
                         await self._scrollToSnippet($target, self.$scrollable);
                         self.options.wysiwyg.odooEditor.observerActive('dragAndDropCreateSnippet');
 
-
-                        _.defer(async function () {
+                        browser.setTimeout(async () => {
                             // Free the mutex now to allow following operations
                             // (mutexed as well).
                             dragAndDropResolve();
@@ -3594,7 +3601,7 @@ var SnippetsMenu = Widget.extend({
             return;
         }
         this.lastElement = srcElement;
-        _.defer(() => {
+        browser.setTimeout(() => {
             this.lastElement = false;
         });
 

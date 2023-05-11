@@ -18,12 +18,12 @@ var ExhibitorConnectClosedDialog = Dialog.extend({
      *   display (see .xml for details);
      */
     init: function (parent, options) {
-        options = _.defaults(options || {}, {
+        options = Object.assign({
             size: 'medium',
             renderHeader: false,
             renderFooter: false,
             backdrop: true,
-        });
+        }, options || {});
         this.sponsorId = options.sponsorId;
         this._super(parent, options);
     },

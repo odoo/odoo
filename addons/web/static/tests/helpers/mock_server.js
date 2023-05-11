@@ -13,7 +13,7 @@ import {
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { intersection } from "@web/core/utils/arrays";
-import { deepCopy } from "@web/core/utils/objects";
+import { deepCopy, pick } from "@web/core/utils/objects";
 import { makeFakeRPCService, makeMockFetch } from "./mock_services";
 import { patchWithCleanup } from "./utils";
 
@@ -785,7 +785,7 @@ export class MockServer {
     mockFieldsGet(modelName, fieldNames) {
         let fields = this.models[modelName].fields;
         if (fieldNames) {
-            fields = _.pick(this.models[modelName].fields, fieldNames);
+            fields = pick(this.models[modelName].fields, ...fieldNames);
         }
         return fields;
     }

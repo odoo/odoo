@@ -17,6 +17,7 @@ import field_utils from "web.field_utils";
 import utils from "web.utils";
 import { sprintf } from "@web/core/utils/strings";
 import { debounce } from "@web/core/utils/timing";
+import { uniqueId } from "@web/core/utils/functions";
 
 var _t = core._t;
 var _lt = core._lt;
@@ -766,10 +767,9 @@ var FieldDate = InputField.extend({
         this._super.apply(this, arguments);
         // use the session timezone when formatting dates
         this.formatOptions.timezone = true;
-        this.datepickerOptions = _.defaults(
-            {},
-            this.nodeOptions.datepicker || {},
-            {defaultDate: this.value}
+        this.datepickerOptions = Object.assign(
+            { defaultDate: this.value },
+            this.nodeOptions.datepicker || {}
         );
     },
     /**
@@ -1520,7 +1520,7 @@ var AbstractFieldBinary = AbstractField.extend({
         this.accepted_file_extensions = (this.nodeOptions && this.nodeOptions.accepted_file_extensions) || this.accepted_file_extensions || '*';
         if (!this.useFileAPI) {
             var self = this;
-            this.fileupload_id = _.uniqueId('o_fileupload');
+            this.fileupload_id = uniqueId("o_fileupload");
             $(window).on(this.fileupload_id, function () {
                 var args = [].slice.call(arguments).slice(1);
                 self.on_file_uploaded.apply(self, args);

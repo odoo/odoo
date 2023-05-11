@@ -60,7 +60,7 @@ var RootWidget = Widget.extend({
     _attachComponent: function (childInfo, $from) {
         var self = this;
         var $elements = dom.cssFind($from || this.$el, childInfo.selector);
-        var defs = _.map($elements, function (element) {
+        var defs = Array.from($elements).map((element) => {
             var w = new childInfo.Widget(self);
             self._widgets.push(w);
             return w.attachTo(element);
@@ -79,7 +79,7 @@ var RootWidget = Widget.extend({
     _attachComponents: function ($from) {
         var self = this;
         var childInfos = this._getRegistry().getAll();
-        var defs = _.map(childInfos, function (childInfo) {
+        var defs = childInfos.map((childInfo) => {
             return self._attachComponent(childInfo, $from);
         });
         return Promise.all(defs);

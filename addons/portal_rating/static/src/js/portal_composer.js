@@ -32,13 +32,13 @@ PortalComposer.include({
         }
 
         // default options
-        this.options = _.defaults(this.options, {
+        this.options = Object.assign({
             'rate_with_void_content': false,
             'default_message': false,
             'default_message_id': false,
             'default_rating_value': 4.0,
             'force_submit_url': false,
-        });
+        }, this.options);
         // star input widget
         this.labels = {
             '0': "",

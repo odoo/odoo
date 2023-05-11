@@ -2,6 +2,7 @@
 
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
+import { sortBy } from "@web/core/utils/arrays";
 
 patch(MockServer.prototype, "mail/models/mail_activity", {
     async _performRPC(route, args) {
@@ -177,11 +178,9 @@ patch(MockServer.prototype, "mail/models/mail_activity", {
                 }
                 return [type.id, type.display_name, mailTemplates];
             }),
-            activity_res_ids: _.sortBy(
+            activity_res_ids: sortBy(
                 records.map((x) => x.id),
-                function (id) {
-                    return moment(resIdToDeadline[id]);
-                }
+                (id) => moment(resIdToDeadline[id])
             ),
             grouped_activities: groupedActivities,
         };

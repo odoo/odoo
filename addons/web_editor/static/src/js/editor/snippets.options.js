@@ -35,6 +35,8 @@ import {
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import {SIZES, MEDIAS_BREAKPOINTS} from "@web/core/ui/ui_service";
 import { sprintf } from "@web/core/utils/strings";
+import { uniqueId } from "@web/core/utils/functions";
+import { pick } from "@web/core/utils/objects";
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -1835,7 +1837,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     start: async function () {
         await this._super(...arguments);
 
-        const datetimePickerId = _.uniqueId('datetimepicker');
+        const datetimePickerId = uniqueId("datetimepicker");
         this.el.classList.add('o_we_large');
         this.inputEl.classList.add('datetimepicker-input', 'mx-0', 'text-start');
         this.inputEl.setAttribute('id', datetimePickerId);
@@ -4118,7 +4120,7 @@ const SnippetOptionWidget = Widget.extend({
                 if (!$applyTo) {
                     $applyTo = this.$(params.applyTo);
                 }
-                const proms = _.map($applyTo, subTargetEl => {
+                const proms = Array.from($applyTo).map((subTargetEl) => {
                     const proxy = createPropertyProxy(this, '$target', $(subTargetEl));
                     return this[methodName].call(proxy, previewMode, widgetValue, params);
                 });
@@ -7253,7 +7255,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         }
         const defaultKeys = Object.keys(defaultColors);
         colors = Object.assign(defaultColors, colors);
-        return _.pick(colors, defaultKeys);
+        return pick(colors, ...defaultKeys);
     },
     /**
      * Toggles whether there is a shape or not, to be called from bg toggler.

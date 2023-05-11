@@ -8,6 +8,7 @@ import {
     insertRecords,
 } from "@bus/../tests/helpers/model_definitions_helpers";
 import { Command } from "@mail/../tests/helpers/command";
+import { uniqueId } from "@web/core/utils/functions";
 
 //--------------------------------------------------------------------------
 // Models
@@ -72,7 +73,7 @@ insertModelFields("discuss.channel", {
             return TEST_GROUP_IDS.groupUserId;
         },
     },
-    uuid: { default: () => _.uniqueId("discuss.channel_uuid-") },
+    uuid: { default: () => uniqueId("discuss.channel_uuid-") },
 });
 insertModelFields("discuss.channel.member", {
     fold_state: { default: "open" },

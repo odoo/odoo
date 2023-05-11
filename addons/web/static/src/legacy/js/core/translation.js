@@ -21,8 +21,8 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
         this.multi_lang = translation_bundle.multi_lang
         var modules = Object.keys(translation_bundle.modules);
         modules.sort();
-        if (_.include(modules, "web")) {
-            modules = ["web"].concat(_.without(modules, "web"));
+        if (modules.includes("web")) {
+            modules = ["web"].concat(modules.filter((module) => module !== "web"));
         }
         modules.forEach((name) => {
             self.add_module_translation(translation_bundle.modules[name]);

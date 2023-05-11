@@ -1027,7 +1027,7 @@ var py = {};
             return this.__len__ > 0 ? py.True : py.False;
         },
     });
-    _.defaults(py.list, py.tuple) // Copy attributes not redefined in type list
+    py.list = Object.assign({}, py.tuple, py.list); // Copy attributes not redefined in type list
     py.dict = py.type('dict', null, {
         __init__: function () {
             this._store = {};

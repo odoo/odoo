@@ -11,7 +11,7 @@ var SlideArchiveDialog = Dialog.extend({
      * @override
      */
     init: function (parent, options) {
-        options = _.defaults(options || {}, {
+        options = Object.assign({
             title: _t('Archive Content'),
             size: 'medium',
             buttons: [{
@@ -22,7 +22,7 @@ var SlideArchiveDialog = Dialog.extend({
                 text: _t('Cancel'),
                 close: true
             }]
-        });
+        }, options || {});
 
         this.$slideTarget = options.slideTarget;
         this.slideId = this.$slideTarget.data('slideId');

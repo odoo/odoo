@@ -554,7 +554,7 @@
             <span class="oe_tooltip_technical_title">Domain:</span>
             <t t-esc="widget.attrs.domain || JSON.stringify(widget.field.domain)"/>
         </li>
-        <li t-if="widget.attrs.modifiers and !_.isEmpty(widget.attrs.modifiers)" data-item="modifiers">
+        <li t-if="widget.attrs.modifiers and Object.keys(widget.attrs.modifiers || {}).length > 0" data-item="modifiers">
             <span class="oe_tooltip_technical_title">Modifiers:</span>
             <t t-esc="JSON.stringify(widget.attrs.modifiers)"/>
         </li>
@@ -603,7 +603,7 @@
             <span class="oe_tooltip_technical_title">Context:</span>
             <t t-esc="node.attrs.context || widget.field.context"/>
         </li>
-        <li t-if="node.attrs.modifiers and !_.isEmpty(node.attrs.modifiers)" data-item="modifiers">
+        <li t-if="node.attrs.modifiers and Object.keys(node.attrs.modifiers || {}).length > 0" data-item="modifiers">
             <span class="oe_tooltip_technical_title">Modifiers:</span>
             <t t-esc="JSON.stringify(node.attrs.modifiers)"/>
         </li>
@@ -718,18 +718,18 @@
                 </option>
             </select>
         </div>
-        <div t-attf-class="o_ds_value_cell#{_.contains(['set', 'not set'], widget.displayOperator) ? ' d-none' : ''}">
+        <div t-attf-class="o_ds_value_cell#{['set', 'not set'].includes(widget.displayOperator) ? ' d-none' : ''}">
             <t t-if="widget.selectionChoices !== null">
                 <select class="o_domain_leaf_value_input o_input">
                     <option t-foreach="widget.selectionChoices" t-as="val" t-key="val_index"
                             t-att-value="val[0]"
-                            t-att-selected="_.contains(val, widget.displayValue) ? 'selected' : None">
+                            t-att-selected="val.includes(widget.displayValue) ? 'selected' : None">
                         <t t-esc="val[1]"/>
                     </option>
                 </select>
             </t>
             <t t-else="">
-                <t t-if="_.contains(['in', 'not in'], widget.operator)">
+                <t t-if="['in', 'not in'].includes(widget.operator)">
                     <div class="o_domain_leaf_value_input">
                         <span class="badge rounded-pill" t-foreach="widget.displayValue" t-as="val" t-key="val_index">
                             <t t-esc="val"/> <i class="o_domain_leaf_value_remove_tag_button fa fa-times" t-att-data-value="val" role="img" aria-label="Remove tag" title="Remove tag"/>
@@ -748,22 +748,22 @@
     </div>
     <div t-else="" class="o_domain_leaf_info">
         <!-- field selector will be instantiated here -->
-        <t t-if="_.isString(widget.value)">
+        <t t-if="typeof(widget.value) === 'string'">
             <span class="o_domain_leaf_operator"><t t-esc="widget.operator_mapping[widget.operator]"/></span>
             <span class="o_domain_leaf_value text-primary">"<t t-esc="widget.value"/>"</span>
         </t>
-        <t t-if="_.isArray(widget.value)">
+        <t t-if="Array.isArray(widget.value)">
             <span class="o_domain_leaf_operator"><t t-esc="widget.operator_mapping[widget.operator]"/></span>
             <t t-foreach="widget.value" t-as="v" t-key="v_index">
                 <span class="o_domain_leaf_value text-primary">"<t t-esc="v"/>"</span>
                 <t t-if="!v_last"> or </t>
             </t>
         </t>
-        <t t-if="_.isNumber(widget.value)">
+        <t t-if="typeof(widget.value) === 'number'">
             <span class="o_domain_leaf_operator"><t t-esc="widget.operator_mapping[widget.operator]"/></span>
             <span class="o_domain_leaf_value text-primary"><t t-esc="widget.value"></t></span>
         </t>
-        <t t-if="_.isBoolean(widget.value)">
+        <t t-if="typeof(widget.value) === 'boolean'">
             is
             <t t-if="widget.operator === '=' &amp;&amp; widget.value === false || widget.operator === '!=' &amp;&amp; widget.value === true">not</t>
             set

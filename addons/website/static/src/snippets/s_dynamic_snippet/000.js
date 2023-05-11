@@ -4,6 +4,7 @@ import core from "web.core";
 import config from "web.config";
 import publicWidget from "web.public.widget";
 import {Markup} from "web.utils";
+import { uniqueId } from "@web/core/utils/functions";
 const DEFAULT_NUMBER_OF_ELEMENTS = 4;
 const DEFAULT_NUMBER_OF_ELEMENTS_SM = 1;
 
@@ -30,7 +31,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
         this.data = [];
         this.renderedContent = '';
         this.isDesplayedAsMobile = config.device.isMobile;
-        this.uniqueId = _.uniqueId('s_dynamic_snippet_');
+        this.uniqueId = uniqueId("s_dynamic_snippet_");
         this.template_key = 'website.s_dynamic_snippet.grid';
     },
     /**

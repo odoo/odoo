@@ -53,7 +53,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
                     model: 'account.tax',
                     method: 'create',
                     args: [{
-                      'name':'15% tax incl ' + _.now(),
+                      'name':'15% tax incl ' + new Date().getTime(),
                       'amount': 15,
                     }],
                     kwargs: {},

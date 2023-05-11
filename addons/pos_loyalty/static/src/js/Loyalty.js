@@ -431,7 +431,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
     },
     wait_for_push_order() {
         return (
-            !_.isEmpty(this.couponPointChanges) ||
+            Object.keys(this.couponPointChanges || {}).length > 0 ||
             this._get_reward_lines().length ||
             this._super(...arguments)
         );

@@ -1,5 +1,6 @@
 /** @odoo-module alias=website.s_image_gallery **/
 
+import { uniqueId } from "@web/core/utils/functions";
 import core from "web.core";
 import publicWidget from "web.public.widget";
 
@@ -49,7 +50,7 @@ const GalleryWidget = publicWidget.Widget.extend({
             index: $images.index($img),
             dim: dimensions,
             interval: milliseconds || 0,
-            id: _.uniqueId('slideshow_'),
+            id: uniqueId("slideshow_"),
         }));
         this.$modal.on('hidden.bs.modal', function () {
             $(this).hide();

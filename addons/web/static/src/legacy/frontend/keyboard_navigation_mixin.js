@@ -172,7 +172,7 @@ import BrowserDetection from "web.BrowserDetection";
                         for (var letterIndex = 0; letterIndex < buttonString.length; letterIndex++) {
                             var candidateAccessKey = buttonString[letterIndex].toUpperCase();
                             if (candidateAccessKey >= 'A' && candidateAccessKey <= 'Z' &&
-                                !_.includes(usedAccessKey, candidateAccessKey)) {
+                                !usedAccessKey.includes(candidateAccessKey)) {
                                 elem.accessKey = candidateAccessKey;
                                 usedAccessKey.push(candidateAccessKey);
                                 break;

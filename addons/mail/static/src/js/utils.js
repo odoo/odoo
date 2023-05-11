@@ -50,7 +50,7 @@ function _parseAndTransform(nodes, transformFunction) {
 }
 
 /**
- * Escape < > & as html entities (copy from _.escape with less escaped characters)
+ * Escape < > & as html entities (copy from underscore escape function with less escaped characters)
  *
  * @param {string}
  * @return {string}

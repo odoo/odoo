@@ -51,14 +51,17 @@ const PublicLivechatView = Widget.extend({
         this.messaging = messaging;
         // options when the thread is enabled (e.g. can send message,
         // interact on messages, etc.)
-        this._enabledOptions = _.defaults(options || {}, {
-            displayOrder: ORDER.ASC,
-            displayMarkAsRead: true,
-            displayDocumentLinks: true,
-            displayAvatars: true,
-            squashCloseMessages: true,
-            loadMoreOnScroll: false,
-        });
+        this._enabledOptions = Object.assign(
+            {
+                displayOrder: ORDER.ASC,
+                displayMarkAsRead: true,
+                displayDocumentLinks: true,
+                displayAvatars: true,
+                squashCloseMessages: true,
+                loadMoreOnScroll: false,
+            },
+            options || {}
+        );
         this._selectedMessageID = null;
         this._currentThreadID = null;
     },
@@ -95,9 +98,9 @@ const PublicLivechatView = Widget.extend({
         this._currentThreadID = this.messaging.publicLivechatGlobal.publicLivechat.id;
 
         // copy so that reverse do not alter order in the thread object
-        const messages = _.clone(
-            this.messaging.publicLivechatGlobal.publicLivechat.widget.getMessages()
-        );
+        const messages = [
+            ...this.messaging.publicLivechatGlobal.publicLivechat.widget.getMessages(),
+        ];
 
         const modeOptions = this._enabledOptions;
 

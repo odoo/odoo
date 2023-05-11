@@ -31,7 +31,7 @@ var Quiz = publicWidget.Widget.extend({
     */
     init: function (parent, data, quizData) {
         this._super.apply(this, arguments);
-        this.track = _.defaults(data, {
+        this.track = Object.assign({
             id: 0,
             name: '',
             eventId: '',
@@ -40,7 +40,7 @@ var Quiz = publicWidget.Widget.extend({
             progressBar: false,
             isEventUser: false,
             repeatable: false
-        });
+        }, data);
         this.quiz = quizData || false;
         if (this.quiz) {
             this.quiz.questionsCount = quizData.questions.length;

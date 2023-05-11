@@ -5,8 +5,9 @@
  */
 
 import { loadJS } from "@web/core/assets";
+import { uniqueId } from "@web/core/utils/functions";
 import { escape } from "@web/core/utils/strings";
-import { debounce } from "@web/core/utils/timing";
+import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 import Class from "web.Class";
 import config from "web.config";
 import core from "web.core";
@@ -160,7 +161,7 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
         this._getStateCallback = this._getStateCallback.bind(parent);
 
         // Add a namespace to events using the generated uid
-        this._uid = '_animationEffect' + _.uniqueId();
+        this._uid = uniqueId("_animationEffect");
         this.startEvents = _processEvents(this.startEvents, this._uid);
         if (this.endEvents) {
             this.endEvents = _processEvents(this.endEvents, this._uid);
@@ -206,12 +207,12 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
              */
             this.$startTarget.on(this.startEvents, (function (e) {
                 if (this._paused) {
-                    _.defer(this.play.bind(this, e));
+                    setTimeout(() => this.play.bind(this, e));
                 }
             }).bind(this));
             this.$endTarget.on(this.endEvents, (function () {
                 if (!this._paused) {
-                    _.defer(this.pause.bind(this));
+                    setTimeout(() => this.pause.bind(this));
                 }
             }).bind(this));
         } else {
@@ -226,16 +227,21 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
              * must be playing *during* an event (scroll, mousemove, resize,
              * repeated clicks, ...).
              */
+            this.throttleOnStartEvents = throttleForAnimation(
+                ((e) => {
+                    this.play(e);
+                    clearTimeout(pauseTimer);
+                    pauseTimer = setTimeout(
+                        (() => {
+                            this.pause();
+                            pauseTimer = null;
+                        }).bind(this),
+                        2000
+                    );
+                }).bind(this)
+            );
             var pauseTimer = null;
-            this.$startTarget.on(this.startEvents, _.throttle((function (e) {
-                this.play(e);
-
-                clearTimeout(pauseTimer);
-                pauseTimer = setTimeout((() => {
-                    this.pause();
-                    pauseTimer = null;
-                }).bind(this), 2000);
-            }).bind(this), 250, {trailing: false}));
+            this.$startTarget.on(this.startEvents, this.throttleOnStartEvents);
         }
     },
     /**
@@ -760,7 +766,7 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
         var proms = [this._super(...arguments)];
 
         this.videoSrc = this.el.dataset.bgVideoSrc;
-        this.iframeID = _.uniqueId('o_bg_video_iframe_');
+        this.iframeID = uniqueId("o_bg_video_iframe_");
         proms.push(this._setupAutoplay(this.videoSrc));
         if (this.isYoutubeVideo && this.isMobileEnv && !this.videoSrc.includes('enablejsapi=1')) {
             // Compatibility: when choosing an autoplay youtube video via the
@@ -770,15 +776,15 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
             this.videoSrc += '&enablejsapi=1';
         }
 
-        var throttledUpdate = _.throttle(() => this._adjustIframe(), 50);
+        this.throttledUpdate = throttleForAnimation(() => this._adjustIframe());
 
         var $dropdownMenu = this.$el.closest('.dropdown-menu');
         if ($dropdownMenu.length) {
             this.$dropdownParent = $dropdownMenu.parent();
-            this.$dropdownParent.on('shown.bs.dropdown.backgroundVideo', throttledUpdate);
+            this.$dropdownParent.on("shown.bs.dropdown.backgroundVideo", this.throttledUpdate);
         }
 
-        $(window).on('resize.' + this.iframeID, throttledUpdate);
+        $(window).on("resize." + this.iframeID, this.throttledUpdate);
 
         const $modal = this.$el.closest('.modal');
         if ($modal.length) {
@@ -805,6 +811,8 @@ registry.backgroundVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin
         }
 
         $(window).off('resize.' + this.iframeID);
+
+        this.throttledUpdate.cancel();
 
         if (this.$bgVideoContainer) {
             this.$bgVideoContainer.remove();
@@ -1286,7 +1294,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
         // Setting capture to true allows to take advantage of event bubbling
         // for events that otherwise don’t support it. (e.g. useful when
         // scrolling a modal)
-        this.__onScrollWebsiteAnimate = _.throttle(this._onScrollWebsiteAnimate.bind(this), 10);
+        this.__onScrollWebsiteAnimate = throttleForAnimation(this._onScrollWebsiteAnimate.bind(this));
         this.$scrollingElement[0].addEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
 
         $(window).on('resize.o_animate, shown.bs.modal.o_animate, slid.bs.carousel.o_animate, shown.bs.tab.o_animate, shown.bs.collapse.o_animate', () => {
@@ -1309,6 +1317,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
                 'visibility': '',
             });
         $(window).off('.o_animate');
+        this.__onScrollWebsiteAnimate.cancel();
         this.$scrollingElement[0].removeEventListener('scroll', this.__onScrollWebsiteAnimate, {capture: true});
         this.$scrollingElement[0].classList.remove('o_wanim_overflow_xy_hidden');
     },
@@ -1565,7 +1574,7 @@ registry.ZoomedBackgroundShape = publicWidget.Widget.extend({
      */
     start() {
         this._onBackgroundShapeResize();
-        this.throttledShapeResize = _.throttle(() => this._onBackgroundShapeResize(), 25);
+        this.throttledShapeResize = throttleForAnimation(() => this._onBackgroundShapeResize());
         window.addEventListener('resize', this.throttledShapeResize);
         return this._super(...arguments);
     },
@@ -1574,6 +1583,7 @@ registry.ZoomedBackgroundShape = publicWidget.Widget.extend({
      */
     destroy() {
         this._updateShapePosition();
+        this.throttledShapeResize.cancel();
         window.removeEventListener('resize', this.throttledShapeResize);
         this._super(...arguments);
     },

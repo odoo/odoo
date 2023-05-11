@@ -9,6 +9,8 @@ import Widget from "web.Widget";
 import localStorage from "web.local_storage";
 import { sprintf } from "@web/core/utils/strings";
 import { debounce } from "@web/core/utils/timing";
+import { sortBy } from "@web/core/utils/arrays";
+import { pick } from "@web/core/utils/objects";
 
 var _t = core._t;
 
@@ -192,7 +194,7 @@ var ViewEditor = Widget.extend({
         this.context = options.context;
 
         this.viewKey = viewKey;
-        this.options = _.defaults({}, options, {
+        this.options = Object.assign({
             position: 'right',
             doNotLoadViews: false,
             doNotLoadSCSS: false,
@@ -200,7 +202,7 @@ var ViewEditor = Widget.extend({
             includeBundles: false,
             filesFilter: 'custom',
             defaultBundlesRestriction: [],
-        });
+        }, options);
 
         this.resources = {xml: {}, scss: {}, js: {}};
         this.editingSessions = {xml: {}, scss: {}, js: {}};
@@ -299,7 +301,7 @@ var ViewEditor = Widget.extend({
         }
 
         if (!this.sortedViews.length || !this.sortedSCSS.length) {
-            _.defer((function () {
+            setTimeout((function () {
                 this._switchType(this.sortedViews.length ? 'xml' : 'scss');
                 this.$typeSwitcherBtn.parent('.btn-group').addClass('d-none');
             }).bind(this));
@@ -394,7 +396,7 @@ var ViewEditor = Widget.extend({
         editingSession.setMode('ace/mode/' + (mode === 'xml' ? 'qweb' : mode));
         editingSession.setUndoManager(new window.ace.UndoManager());
         editingSession.on('change', function () {
-            _.defer(function () {
+            setTimeout(function () {
                 self._toggleDirtyInfo(resID);
                 self._showErrorLine();
             });
@@ -522,7 +524,13 @@ var ViewEditor = Widget.extend({
 
         function _processViews(views) {
             // Only keep the active views and index them by ID.
-            Object.assign(this.views, _.indexBy(views.filter(view => view.active), 'id'));
+            const indexedById = {};
+            views
+                .filter((view) => view.active)
+                .forEach((view) => {
+                    indexedById[view.id] = view;
+                });
+            Object.assign(this.views, indexedById);
 
             // Initialize a 0 level for each view and assign them an array containing their children.
             var self = this;
@@ -567,10 +575,12 @@ var ViewEditor = Widget.extend({
             // Store the URL ungrouped by bundle and use the URL as key (resource ID)
             var resources = type === 'scss' ? this.scss : this.js;
             data.forEach((bundleInfos) => {
+                const indexedByUrl = {};
                 bundleInfos[1].forEach((info) => {
                     info.bundle = bundleInfos[0];
+                    indexedByUrl[info.url] = info;
                 });
-                Object.assign(resources, _.indexBy(bundleInfos[1], 'url'));
+                Object.assign(resources, indexedByUrl);
             });
         }
     },
@@ -611,7 +621,7 @@ var ViewEditor = Widget.extend({
      */
     _saveSCSSorJS: function (session) {
         var self = this;
-        var sessionIdEndsWithJS = _.string.endsWith(session.id, '.js');
+        var sessionIdEndsWithJS = String(session.id).endsWith(".js");
         var bundle = sessionIdEndsWithJS ? this.js[session.id].bundle : this.scss[session.id].bundle;
         var fileType = sessionIdEndsWithJS ? 'js' : 'scss';
         return self._rpc({
@@ -637,11 +647,13 @@ var ViewEditor = Widget.extend({
         Object.entries(this.editingSessions || {}).forEach(
             (([type, editingSessions]) => {
                 if (errorFound) return;
-
-                var dirtySessions = _.pick(editingSessions, function (session) {
-                    return session.getUndoManager().hasUndo();
-                });
-                toSave[type] = _.map(dirtySessions, function (session, resID) {
+                const dirtySessionsKeys = Object.entries(editingSessions)
+                    .map(([key, session]) => {
+                        return session.getUndoManager().hasUndo() ? key : false;
+                    })
+                    .filter((x) => !!x);
+                const dirtySessions = pick(editingSessions, ...dirtySessionsKeys);
+                toSave[type] = Object.entries(dirtySessions).map(([resID, session]) => {
                     return {
                         id: parseInt(resID, 10) || resID,
                         text: session.getValue(),
@@ -665,7 +677,7 @@ var ViewEditor = Widget.extend({
         Object.entries(toSave || {}).forEach(
             (([type, _toSave]) => {
                 // Child views first as COW on a parent would delete them
-                _toSave = _.sortBy(_toSave, 'id').reverse();
+                _toSave = sortBy(_toSave, "id").reverse();
                 _toSave.forEach((session) => {
                     defs.push(mutex.exec(function () {
                         return (type === 'xml' ? self._saveView(session) : self._saveSCSSorJS(session));

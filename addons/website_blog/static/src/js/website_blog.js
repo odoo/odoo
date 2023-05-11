@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { sprintf } from "@web/core/utils/strings";
 import core from "web.core";
 import dom from "web.dom";
 import publicWidget from "web.public.widget";
@@ -41,9 +42,9 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         placeholder.style.minHeight = '100vh';
         this.$('#o_wblog_next_container').append(placeholder);
 
-        // Use _.defer to calculate the 'offset()'' only after that size classes
+        // Use setTimeout() to calculate the 'offset()'' only after that size classes
         // have been applyed and that $el has been resized.
-        _.defer(function () {
+        setTimeout(() => {
             self._forumScrollAction($el, 300, function () {
                 window.location.href = nexInfo.url;
             });
@@ -74,7 +75,7 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         var articleURL = window.location.href;
         if ($element.hasClass('o_twitter')) {
             var twitterText = core._t("Amazing blog article: %s! Check it live: %s");
-            var tweetText = _.string.sprintf(twitterText, blogPostTitle, articleURL);
+            var tweetText = sprintf(twitterText, blogPostTitle, articleURL);
             url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=' + encodeURIComponent(tweetText);
         } else if ($element.hasClass('o_facebook')) {
             url = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(articleURL);

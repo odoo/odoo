@@ -44,7 +44,7 @@ var EventRegistrationForm = Widget.extend({
         $('#registration_form select').each(function () {
             post[$(this).attr('name')] = $(this).val();
         });
-        var tickets_ordered = _.some(Object.values(post).map((value) => parseInt(value)));
+        var tickets_ordered = Object.values(post).map((value) => parseInt(value))?.length > 0;
         if (!tickets_ordered) {
             $('<div class="alert alert-info"/>')
                 .text(_t('Please select at least one ticket.'))

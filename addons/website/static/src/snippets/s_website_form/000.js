@@ -422,7 +422,7 @@
                         // checking the validity of the group of checkbox is
                         // currently done for each checkbox of that group...
                         var checkboxes = inputs.filter(input => input.required && input.type === 'checkbox');
-                        return !_.any(checkboxes, checkbox => checkbox.checkValidity());
+                        return !checkboxes.some((checkbox) => checkbox.checkValidity());
 
                     // Special cases for dates and datetimes
                     // FIXME this seems like dead code, the inputs do not use

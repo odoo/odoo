@@ -5,8 +5,7 @@ import { registry } from "@web/core/registry";
 import { BoardController } from "./board_controller";
 import { XMLParser } from "@web/core/utils/xml";
 import { Domain } from "@web/core/domain";
-import { escape } from "@web/core/utils/strings";
-
+import { escape, unescapeHTML } from "@web/core/utils/strings";
 export class BoardArchParser extends XMLParser {
     parse(arch, customViewId) {
         let nextId = 1;
@@ -47,7 +46,7 @@ export class BoardArchParser extends XMLParser {
                     };
                     if (node.hasAttribute("domain")) {
                         action.domain = new Domain(
-                            _.unescape(node.getAttribute("domain"))
+                            unescapeHTML(node.getAttribute("domain"))
                         ).toList();
                         // so it can be serialized when reexporting board xml
                         // we unescape before re-escaping, to avoid double escaping due to subsequent layout change

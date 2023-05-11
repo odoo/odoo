@@ -9,7 +9,7 @@
 import translation from "web.translation";
 
 import { Component } from "@odoo/owl";
-import { sprintf } from "@web/core/utils/strings";
+import { escape, escapeHTML, escapeMethod, sprintf } from "@web/core/utils/strings";
 
 var _t = translation._t;
 var id = -1;
@@ -229,6 +229,40 @@ function _getExtractorFrom(criterion) {
     }
 }
 
+function boolMatch(s, matchers) {
+    var i,
+        matcher,
+        down = s.toLowerCase();
+    matchers = [].concat(matchers);
+    for (i = 0; i < matchers.length; i += 1) {
+        matcher = matchers[i];
+        if (!matcher) {
+            continue;
+        }
+        if (matcher.test && matcher.test(s)) {
+            return true;
+        }
+        if (matcher.toLowerCase() === down) {
+            return true;
+        }
+    }
+}
+
+function toBoolean(str, trueValues, falseValues) {
+    if (typeof str === "number") {
+        str = ("" + str).trim();
+    }
+    if (typeof str !== "string") {
+        return !!str;
+    }
+    if (boolMatch(str, trueValues || ["true", "1"])) {
+        return true;
+    }
+    if (boolMatch(str, falseValues || ["false", "0"])) {
+        return false;
+    }
+}
+
 class AlreadyDefinedPatchError extends Error {
     constructor() {
         super(...arguments);
@@ -242,12 +276,6 @@ class UnknownPatchError extends Error {
     }
 }
 
-const __escape = _.escape;
-_.escapeMethod = Symbol('html')
-_.escape = function escape(s) {
-    return s[_.escapeMethod] ? s[_.escapeMethod]() : __escape(s);
-}
-
 // notable issues:
 // * objects can't be negative in JS, so !!"" -> false but
 //   !!(new String) -> true, likewise markup
@@ -257,16 +285,17 @@ _.escape = function escape(s) {
 
 // get a reference to the internalMarkup class from owl
 const _Markup = owl.markup('').constructor; 
-_Markup.prototype[_.escapeMethod] = function () {
+_Markup.prototype[escapeMethod] = function () {
     return this;
 }
 
 // exposed for qweb2.js
 window._Markup = _Markup;
+window._escape = escapeHTML;
 
 /**
  * Returns a markup object, which acts like a String but is considered safe by
- * `_.escape`, and will therefore be injected as-is (without additional
+ * `escape`, and will therefore be injected as-is (without additional
  * escaping) in templates. Can be used to inject dynamic HTML in templates
  * (where the template itself can't), see first example.
  *
@@ -306,7 +335,7 @@ function Markup(v, ...exprs) {
     const elements = [];
     let i = 0;
     for(; i < exprs.length; ++i) {
-        elements.push(v[i], _.escape(exprs[i]));
+        elements.push(v[i], escape(exprs[i]));
     }
     elements.push(v[i]);
 
@@ -887,7 +916,7 @@ const utils = {
         if (string instanceof _Markup) {
             string = String(string);
             finalizer = Markup;
-            mapper = _.escape;
+            mapper = escape;
         }
         if (values.length === 1 && typeof values[0] === 'object') {
             const valuesDict = values[0];
@@ -953,7 +982,7 @@ const utils = {
      * @returns
      */
     toBoolElse: function (str, elseValues, trueValues, falseValues) {
-        var ret = _.str.toBool(str, trueValues, falseValues);
+        const ret = toBoolean(str, trueValues, falseValues);
         if (typeof ret === "undefined") {
             return elseValues;
         }
@@ -1040,9 +1069,11 @@ const utils = {
                 return {
                     tag: node.tagName.toLowerCase(),
                     attrs: attrs,
-                    children: _.compact(_.map(node.childNodes, function (node) {
-                        return utils.xml_to_json(node, strip_whitespace);
-                    })),
+                    children: Object.values(node.childNodes || {})
+                        .map((node) => {
+                            return utils.xml_to_json(node, strip_whitespace);
+                        })
+                        .filter((x) => !!x),
                 };
         }
     },

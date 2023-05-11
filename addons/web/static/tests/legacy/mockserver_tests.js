@@ -85,8 +85,11 @@ QUnit.module("Legacy MockServer", {
             },
         });
         const expectedFields = ["id", "email", "name", "display_name"];
-        assert.strictEqual(_.difference(expectedFields, Object.keys(result[0])).length, 0,
-            "should contains all the fields");
+                assert.strictEqual(
+                    expectedFields.filter((x) => Object.keys(result[0]).indexOf(x) < 0).length,
+                    0,
+                    "should contains all the fields"
+                );
     });
 
     QUnit.test("performRpc: search_read without fields", async function (assert) {
@@ -99,8 +102,11 @@ QUnit.module("Legacy MockServer", {
             kwargs: {},
         });
         const expectedFields = ["id", "email", "name", "display_name"];
-        assert.strictEqual(_.difference(expectedFields, Object.keys(result[0])).length, 0,
-            "should contains all the fields");
+            assert.strictEqual(
+                expectedFields.filter((x) => Object.keys(result[0]).indexOf(x) < 0).length,
+                0,
+                "should contains all the fields"
+            );
     });
 
     QUnit.test("performRpc: name_get with no args", async function (assert) {

@@ -297,7 +297,7 @@ publicWidget.registry.portalSecurity = publicWidget.Widget.extend({
  */
 function handleCheckIdentity(rpc, wrapped) {
     return wrapped.then((r) => {
-        if (!_.isMatch(r, {type: 'ir.actions.act_window', res_model: 'res.users.identitycheck'})) {
+        if (!(r.type === "ir.actions.act_window" && r.res_model === "res.users.identitycheck")) {
             return r;
         }
         const check_id = r.res_id;

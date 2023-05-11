@@ -83,14 +83,18 @@ export default {
      * @type Array
      */
     fontIcons: [{base: 'fa', parser: /\.(fa-(?:\w|-)+)::?before/i}],
+    computedFonts: false,
     /**
      * Searches the fonts described by the @see fontIcons variable.
      */
-    computeFonts: _.once(function () {
-        var self = this;
-        this.fontIcons.forEach((data) => {
-            data.cssData = self.getCssSelectors(data.parser);
-            data.alias = _.map(data.cssData, _.property('names')).flat();
-        });
-    }),
+    computeFonts: function () {
+        if (!this.computedFonts) {
+            var self = this;
+            this.fontIcons.forEach((data) => {
+                data.cssData = self.getCssSelectors(data.parser);
+                data.alias = data.cssData.map((x) => x.names).flat();
+            });
+            this.computedFonts = true;
+        }
+    },
 };

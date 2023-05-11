@@ -8,10 +8,10 @@ WebsiteBackend.include({
         '/web/static/lib/Chart/Chart.js',
     ],
 
-    events: _.defaults({
-        'click tr.o_product_template': 'on_product_template',
-        'click .js_utm_selector': '_onClickUtmButton',
-    }, WebsiteBackend.prototype.events),
+    events: Object.assign(WebsiteBackend.prototype.events, {
+        "click tr.o_product_template": "on_product_template",
+        "click .js_utm_selector": "_onClickUtmButton",
+    }),
 
     init: function (parent, context) {
         this._super(parent, context);

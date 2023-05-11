@@ -140,7 +140,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         const fontEls = [];
         const methodName = this.el.dataset.methodName || 'customizeWebsiteVariable';
         const variable = this.el.dataset.variable;
-        _.times(nbFonts, fontNb => {
+        for (let fontNb = 0; fontNb < nbFonts; fontNb++) {
             const realFontNb = fontNb + 1;
             const fontKey = weUtils.getCSSVariableValue(`font-number-${realFontNb}`, style);
             let fontName = fontKey.slice(1, -1); // Unquote
@@ -156,7 +156,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             fontEl.dataset.fontFamily = fontFamily;
             fontEls.push(fontEl);
             this.menuEl.appendChild(fontEl);
-        });
+        };
 
         if (this.googleLocalFonts.length) {
             const googleLocalFontsEls = fontEls.splice(-this.googleLocalFonts.length);
@@ -807,10 +807,13 @@ options.Class.include({
      * @private
      */
     _makeSCSSCusto: async function (url, values, defaultValue = 'null') {
+        Object.keys(values).forEach((key) => {
+            values[key] = values[key] || defaultValue;
+        });
         return this._rpc({
             model: 'web_editor.assets',
             method: 'make_scss_customization',
-            args: [url, _.mapObject(values, v => v || defaultValue)],
+            args: [url, values],
         });
     },
     /**
@@ -862,7 +865,7 @@ options.Class.include({
      * @param {OdooEvent} ev
      */
     _onGoogleFontsCustoRequest: function (ev) {
-        const values = ev.data.values ? _.clone(ev.data.values) : {};
+        const values = ev.data.values ? Object.assign({}, ev.data.values) : {};
         const googleFonts = ev.data.googleFonts;
         const googleLocalFonts = ev.data.googleLocalFonts;
         if (googleFonts.length) {

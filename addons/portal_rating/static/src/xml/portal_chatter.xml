@@ -4,7 +4,7 @@
         Inherited templates from portal to custom chatter with rating
     -->
     <t t-extend="portal.Composer">
-        <t t-jquery="textarea" t-operation="inner"><t t-esc="widget.options['default_message'] ? _.str.trim(widget.options['default_message']) : ''"/></t><!-- need to be one line to avoid \t in textarea -->
+        <t t-jquery="textarea" t-operation="inner"><t t-esc="widget.options['default_message'] ? widget.options['default_message'].trim() : ''"/></t><!-- need to be one line to avoid \t in textarea -->
         <t t-jquery="button.o_portal_chatter_composer_btn" t-operation="attributes">
             <attribute name="t-attf-data-action">#{widget.options['force_submit_url'] || '/mail/chatter_post'}</attribute>
         </t>

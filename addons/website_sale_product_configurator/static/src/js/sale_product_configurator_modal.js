@@ -5,6 +5,7 @@ import Dialog from 'web.Dialog';
 import OwlDialog from 'web.OwlDialog';
 import ServicesMixin from 'web.ServicesMixin';
 import VariantMixin from 'website_sale.SaleVariantMixin';
+import { uniqueId } from '@web/core/utils/functions';
 
 export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, {
     events:  Object.assign({}, Dialog.prototype.events, VariantMixin.events, {
@@ -518,7 +519,7 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
      */
     _getUniqueId: function (el) {
         if (!el.dataset.uniqueId) {
-            el.dataset.uniqueId = parseInt(_.uniqueId(), 10);
+            el.dataset.uniqueId = parseInt(uniqueId(), 10);
         }
         return el.dataset.uniqueId;
     },

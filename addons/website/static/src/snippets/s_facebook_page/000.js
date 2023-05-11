@@ -1,5 +1,6 @@
 /** @odoo-module alias=website.s_facebook_page **/
 
+import { pick } from "@web/core/utils/objects";
 import publicWidget from "web.public.widget";
 import utils from "web.utils";
 
@@ -15,7 +16,7 @@ const FacebookPageWidget = publicWidget.Widget.extend({
 
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
 
-        var params = _.pick(this.$el[0].dataset, 'href', 'height', 'tabs', 'small_header', 'hide_cover');
+        var params = pick(this.$el[0].dataset, 'href', 'height', 'tabs', 'small_header', 'hide_cover');
         if (!params.href) {
             return def;
         }

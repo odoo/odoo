@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { memoize } from "@web/core/utils/functions";
+import { memoize, uniqueId } from "@web/core/utils/functions";
 
 QUnit.module("utils", () => {
     QUnit.module("Functions");
@@ -67,5 +67,15 @@ QUnit.module("utils", () => {
 
         const memoized2 = memoize(function () {});
         assert.strictEqual(memoized2.name, "memoized");
+    });
+
+    QUnit.test("uniqueId", (assert) => {
+        assert.strictEqual(uniqueId("test_"), "test_1");
+        assert.strictEqual(uniqueId("bla"), "bla2");
+        assert.strictEqual(uniqueId("test_"), "test_3");
+        assert.strictEqual(uniqueId("bla"), "bla4");
+        assert.strictEqual(uniqueId("test_"), "test_5");
+        assert.strictEqual(uniqueId("test_"), "test_6");
+        assert.strictEqual(uniqueId("bla"), "bla7");
     });
 });

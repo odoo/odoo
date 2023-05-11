@@ -118,7 +118,7 @@
 
     <t t-name="portal.pager">
         <div class="o_portal_chatter_pager">
-            <t t-if="!_.isEmpty(widget.get('pager'))">
+            <t t-if="Object.keys(widget.get('pager') || {}).length > 0">
                 <ul class="pagination" t-if="widget.get('pager')['pages'].length &gt; 1">
                     <li t-if="widget.get('pager')['page'] != widget.get('pager')['page_previous']" t-att-data-page="widget.get('pager')['page_previous']" class="page-item o_portal_chatter_pager_btn">
                         <a href="#" class="page-link"><i class="oi oi-chevron-left" role="img" aria-label="Previous" title="Previous"/></a>

@@ -265,6 +265,10 @@ var normalize_format_table = {
     'x': 'MM/DD/YY',
     'X': 'HH:mm:ss'
 };
+var inverse_normalize_format_table = {};
+Object.entries(normalize_format_table).forEach(([key, val]) => {
+    inverse_normalize_format_table[val] = key;
+});
 
 /**
  * Get date format of the user's language

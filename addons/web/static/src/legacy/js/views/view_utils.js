@@ -2,6 +2,7 @@
 
 
 import { unique } from '@web/core/utils/arrays';
+import { omit } from '@web/core/utils/objects';
 import * as dom from 'web.dom';
 import * as utils from 'web.utils';
 
@@ -89,7 +90,7 @@ var viewUtils = {
      */
     renderButtonFromNode: function (node, options) {
         var btnOptions = {
-            attrs: _.omit(node.attrs, 'icon', 'string', 'type', 'attrs', 'modifiers', 'options', 'effect'),
+            attrs: omit(node.attrs, 'icon', 'string', 'type', 'attrs', 'modifiers', 'options', 'effect'),
             icon: node.attrs.icon,
         };
         if (options && options.extraClass) {

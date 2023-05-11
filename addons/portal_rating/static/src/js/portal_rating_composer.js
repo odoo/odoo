@@ -26,7 +26,7 @@ const RatingPopupComposer = publicWidget.Widget.extend({
         this.rating_avg = Math.round(options['rating_avg'] * 100) / 100 || 0.0;
         this.rating_count = options['rating_count'] || 0.0;
 
-        this.options = _.defaults({}, options, {
+        this.options = Object.assign({
             'token': false,
             'res_model': false,
             'res_id': false,
@@ -34,7 +34,7 @@ const RatingPopupComposer = publicWidget.Widget.extend({
             'display_rating': true,
             'csrf_token': odoo.csrf_token,
             'user_id': session.user_id,
-        });
+        }, options, {});
 
         return def;
     },

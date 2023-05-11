@@ -7,7 +7,7 @@
 
 // Check the browser and its version and add the info as an attribute of the
 // HTML element so that css selectors can match it
-var browser = _.findKey($.browser, function (v) { return v === true; });
+var browser = Object.entries($.browser).map(([key, val]) => val === true && key)[0]
 if ($.browser.mozilla && +$.browser.version.replace(/^([0-9]+\.[0-9]+).*/, '\$1') < 20) {
     browser = 'msie';
 }

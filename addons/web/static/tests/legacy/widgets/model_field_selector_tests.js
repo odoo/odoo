@@ -164,7 +164,7 @@ QUnit.module('ModelFieldSelector', {
         fieldSelector.destroy();
 
         function getValueFromDOM($dom) {
-            return _.map($dom.find(".o_field_selector_chain_part"), function (part) {
+            return Array.from($dom.find(".o_field_selector_chain_part")).map((part) => {
                 return $(part).text().trim();
             }).join(" -> ");
         }

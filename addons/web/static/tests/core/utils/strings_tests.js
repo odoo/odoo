@@ -1,6 +1,12 @@
 /** @odoo-module **/
 
-import { escapeRegExp, intersperse, sprintf } from "@web/core/utils/strings";
+import {
+    escapeHTML,
+    escapeRegExp,
+    intersperse,
+    sprintf,
+    unescapeHTML,
+} from "@web/core/utils/strings";
 import { _lt, translatedTerms } from "@web/core/l10n/translation";
 import { patchWithCleanup } from "../../helpers/utils";
 
@@ -96,5 +102,28 @@ QUnit.module("utils", () => {
             two: _lt("two"),
         };
         assert.deepEqual(sprintf("Hello %(two)s %(one)s", vals), "Hello två en");
+    });
+
+    QUnit.test("escapeHTML && unescapeHTML", (assert) => {
+        assert.strictEqual(
+            escapeHTML("<a>this is a link</a>"),
+            "&lt;a&gt;this is a link&lt;/a&gt;"
+        );
+        assert.strictEqual(
+            unescapeHTML("&lt;a&gt;this is a link&lt;/a&gt;"),
+            "<a>this is a link</a>"
+        );
+        assert.strictEqual(
+            escapeHTML(`<a href="https://www.odoo.com">odoo<a>`),
+            "&lt;a href=&quot;https://www.odoo.com&quot;&gt;odoo&lt;a&gt;"
+        );
+        assert.strictEqual(
+            unescapeHTML(escapeHTML(`<a href="https://www.odoo.com">Odoo<a>`)),
+            `<a href="https://www.odoo.com">Odoo<a>`
+        );
+        assert.strictEqual(
+            unescapeHTML(escapeHTML`<a href="https://www.odoo.com">Odoo<a>`),
+            `<a href="https://www.odoo.com">Odoo<a>`
+        );
     });
 });

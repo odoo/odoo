@@ -6,6 +6,7 @@ import { SplitOrderline } from "./SplitOrderline";
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { Component, useState } from "@odoo/owl";
+import { groupBy } from "@web/core/utils/arrays";
 
 export class SplitBillScreen extends Component {
     static template = "SplitBillScreen";
@@ -140,7 +141,7 @@ export class SplitBillScreen extends Component {
         const order = this.pos.globalState.get_order();
         let full = true;
         const splitlines = this.splitlines;
-        const groupedLines = _.groupBy(order.get_orderlines(), (line) => line.get_product().id);
+        const groupedLines = groupBy(order.get_orderlines(), (line) => line.get_product().id);
 
         Object.keys(groupedLines).forEach(function (lineId) {
             var maxQuantity = groupedLines[lineId].reduce(

@@ -1,5 +1,6 @@
 /** @odoo-module alias=mass_mailing.fix.LinkDialog **/
 
+import { pick } from "@web/core/utils/objects";
 import LinkDialog from "wysiwyg.widgets.LinkDialog";
 
 /**
@@ -37,7 +38,7 @@ LinkDialog.include({
                 $el.remove();
 
                 this.$('label > .o_btn_preview.btn-' + type)
-                    .css(_.pick(this.__realMMColors[type], 'background-color', 'color'));
+                    .css(pick(this.__realMMColors[type], 'background-color', 'color'));
             });
             $previewArea.remove();
 

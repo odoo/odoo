@@ -1172,7 +1172,7 @@ export class RelationalModel extends Model {
         const legRec = this.__bm__.get(record.__bm_handle__);
         const viewType = params.viewMode;
         const viewFields = Object.keys(legRec.fieldsInfo[viewType]);
-        const fieldNames = _.difference(viewFields, Object.keys(legRec.data));
+        const fieldNames = viewFields.filter((x) => Object.keys(legRec.data).indexOf(x) < 0);
         const legFieldsInfo = legRec.fieldsInfo[viewType];
 
         // Suppose that in a form view, there is an x2many list view with
@@ -1219,9 +1219,9 @@ export class RelationalModel extends Model {
                             const fieldViews = fieldInfo.views || fieldInfo.fieldsInfo || {};
                             const defaultFieldInfo = legRec.data[name].fieldsInfo.default;
                             Object.values(fieldViews).forEach((fieldView) => {
-                                _.defaults(fieldView.fields, defaultFieldInfo);
+                                Object.assign(defaultFieldInfo, fieldView.fields);
                                 Object.values(fieldView.fieldsInfo).forEach((x2mFieldInfo) => {
-                                    _.defaults(x2mFieldInfo, defaultFieldInfo);
+                                    Object.assign(defaultFieldInfo, x2mFieldInfo);
                                 });
                             });
                         }

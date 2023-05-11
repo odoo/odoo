@@ -8,6 +8,7 @@ import dom from "web.dom";
 import {generateHTMLId} from "web_editor.utils";
 import "website.editor.snippets.options";
 import { sprintf } from "@web/core/utils/strings";
+import { unique } from "@web/core/utils/arrays";
 
 const qweb = core.qweb;
 const _t = core._t;
@@ -360,7 +361,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                 this._rpc({
                     model: 'ir.model.fields',
                     method: 'formbuilder_whitelist',
-                    args: [model, _.uniq(fields)],
+                    args: [model, unique(fields)],
                 });
             }
         }

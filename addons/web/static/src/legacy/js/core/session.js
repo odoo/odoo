@@ -246,7 +246,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      */
     rpc: function (url, params, options) {
         var self = this;
-        options = _.clone(options || {});
+        options = Object.assign({}, options || {});
         options.headers = Object.assign({}, options.headers);
 
         // we add here the user context for ALL queries, mainly to pass
@@ -271,7 +271,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         var qs = $.param(params);
         if (qs.length > 0)
             qs = "?" + qs;
-        var prefix = _.any(['http://', 'https://', '//'], function (el) {
+        var prefix = ['http://', 'https://', '//'].some((el) => {
             return path.length >= el.length && path.slice(0, el.length) === el;
         }) ? '' : this.prefix;
         return prefix + path + qs;
