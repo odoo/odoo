@@ -64,7 +64,7 @@
         <field name="arch" type="xml">
             <form string="Move Lines" create="0" edit="0">
                 <header>
-                    <field name="state" widget="statusbar"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done"/>
                 </header>
                 <sheet>
                     <field name="company_id" invisible="1"/>

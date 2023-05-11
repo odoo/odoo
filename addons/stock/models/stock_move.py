@@ -99,12 +99,13 @@ class StockMove(models.Model):
         help="Optional: previous stock move when chaining them")
     picking_id = fields.Many2one('stock.picking', 'Transfer', index=True, states={'done': [('readonly', True)]}, check_company=True)
     state = fields.Selection([
-        ('draft', 'New'), ('cancel', 'Cancelled'),
+        ('draft', 'New'),
         ('waiting', 'Waiting Another Move'),
         ('confirmed', 'Waiting Availability'),
         ('partially_available', 'Partially Available'),
         ('assigned', 'Available'),
-        ('done', 'Done')], string='Status',
+        ('done', 'Done'),
+        ('cancel', 'Cancelled')], string='Status',
         copy=False, default='draft', index=True, readonly=True,
         help="* New: When the stock move is created and not yet confirmed.\n"
              "* Waiting Another Move: This state can be seen when a move is waiting for another one, for example in a chained flow.\n"
