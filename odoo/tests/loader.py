@@ -2,8 +2,10 @@ import importlib
 import importlib.util
 import inspect
 import itertools
+import sys
 import threading
 import unittest
+from pathlib import Path
 
 from .. import tools
 from .tag_selector import TagsSelector
@@ -18,7 +20,7 @@ def get_test_modules(module):
 
     upgrade_spec = importlib.util.find_spec(f'odoo.upgrade.{module}')
     if upgrade_spec:
-        results += _get_tests_modules(upgrade_spec)
+        results += list(_get_upgrade_test_modules(module))
 
     return results
 
@@ -34,6 +36,19 @@ def _get_tests_modules(mod):
         for name, mod_obj in inspect.getmembers(tests_mod, inspect.ismodule)
         if name.startswith('test_')
     ]
+
+
+def _get_upgrade_test_modules(module):
+    upg = importlib.import_module("odoo.upgrade")
+    for path in map(Path, upg.__path__):
+        for test in (path / module / "tests").glob("test_*.py"):
+            spec = importlib.util.spec_from_file_location(f"odoo.upgrade.{module}.tests.{test.stem}", test)
+            if not spec:
+                continue
+            pymod = importlib.util.module_from_spec(spec)
+            sys.modules[spec.name] = pymod
+            spec.loader.exec_module(pymod)
+            yield pymod
 
 
 def make_suite(module_names, position='at_install'):
