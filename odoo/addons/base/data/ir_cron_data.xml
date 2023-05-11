@@ -19,4 +19,20 @@
         <field name='interval_type'>days</field>
         <field name="numbercall">-1</field>
     </record>
+
+    <record id="ir_cron_language_update" model="ir.cron">
+        <field name="name">Base: Update installed language translations</field>
+        <field name="model_id" ref="base.model_base_language_install"/>
+        <field name="state">code</field>
+        <field name="code">
+installed_langs = env['res.lang'].search([])
+model.create({
+    'overwrite': True,
+    'lang_ids': installed_langs.ids,
+}).lang_install()
+        </field>
+        <field name='interval_number'>1</field>
+        <field name='interval_type'>weeks</field>
+        <field name="numbercall">-1</field>
+    </record>
 </odoo>
