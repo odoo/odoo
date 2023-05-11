@@ -3027,6 +3027,28 @@ options.registry.ScrollButton = options.Class.extend({
             this.$button.detach();
         }
     },
+    /**
+     * @override
+     */
+    async selectClass(previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        // If a "d-lg-block" class exists on the section (e.g., for mobile
+        // visibility option), it should be replaced with a "d-lg-flex" class.
+        // This ensures that the section has the "display: flex" property
+        // applied, which is the default rule for both "height" option classes.
+        if (params.possibleValues.includes("o_half_screen_height")) {
+            if (widgetValue) {
+                this.$target[0].classList.replace("d-lg-block", "d-lg-flex");
+            } else if (this.$target[0].classList.contains("d-lg-flex")) {
+                // There are no known cases, but we still make sure that the
+                // <section> element doesn't have a "display: flex" originally.
+                this.$target[0].classList.remove("d-lg-flex");
+                const sectionStyle = window.getComputedStyle(this.$target[0]);
+                const hasDisplayFlex = sectionStyle.getPropertyValue("display") === "flex";
+                this.$target[0].classList.add(hasDisplayFlex ? "d-lg-flex" : "d-lg-block");
+            }
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
