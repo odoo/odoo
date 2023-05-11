@@ -324,6 +324,14 @@ class Meeting(models.Model):
             attendee = mapped_attendees[meeting.id]
             meeting.attendee_status = attendee.state if attendee else 'needsAction'
 
+    @api.onchange('start', 'stop')
+    def _check_all_events_update(self):
+        if self.recurrence_update == "all_events" and \
+           (self.start.date() != self._origin.start.date() or self.stop.date() != self._origin.stop.date()):
+            raise ValidationError(
+                _('While editing a recurrence in "All events" mode, it is not possible to ') +
+                _('change the date of the record, only time changes within the same day are allowed.'))
+
     @api.constrains('start', 'stop', 'start_date', 'stop_date')
     def _check_closing_date(self):
         for meeting in self:

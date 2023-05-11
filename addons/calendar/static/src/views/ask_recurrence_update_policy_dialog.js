@@ -6,20 +6,24 @@ const { Component } = owl;
 
 export class AskRecurrenceUpdatePolicyDialog extends Component {
     setup() {
-        this.possibleValues = {
-            self_only: {
+        let acceptedUpdates = this.props.acceptedUpdates;
+        this.possibleValues = {};
+
+        if (acceptedUpdates.includes('self_only'))
+            this.possibleValues['self_only'] = {
                 checked: true,
                 label: this.env._t("This event"),
-            },
-            future_events: {
+            }
+        if (acceptedUpdates.includes('future_events'))
+            this.possibleValues['future_events'] = {
                 checked: false,
                 label: this.env._t("This and following events"),
-            },
-            all_events: {
+            }
+        if (acceptedUpdates.includes('all_events'))
+            this.possibleValues['all_events'] = {
                 checked: false,
                 label: this.env._t("All events"),
-            },
-        };
+            }
     }
 
     get selected() {

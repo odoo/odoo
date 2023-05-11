@@ -4,6 +4,16 @@ import { CalendarModel } from "@web/views/calendar/calendar_model";
 import { askRecurrenceUpdatePolicy } from "@calendar/views/ask_recurrence_update_policy_hook";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
+function isSameDay(oldStartDate, oldEndDate, newStartDate, newEndDate) {
+    let oldStart = new Date(oldStartDate);
+    let newStart = new Date(newStartDate);
+    let oldEnd = new Date(oldEndDate);
+    let newEnd = new Date(newEndDate);
+
+    return oldStart.toDateString() == newStart.toDateString() &&
+           oldEnd.toDateString() == newEnd.toDateString();
+}
+
 export class AttendeeCalendarModel extends CalendarModel {
     setup(params, { dialog }) {
         super.setup(...arguments);
@@ -22,7 +32,14 @@ export class AttendeeCalendarModel extends CalendarModel {
     async updateRecord(record) {
         const rec = this.records[record.id];
         if (rec.rawRecord.recurrency) {
-            const recurrenceUpdate = await askRecurrenceUpdatePolicy(this.dialog);
+            let newStart = arguments[0].start;
+            let newEnd = arguments[0].end;
+            let acceptedUpdates = ['self_only', 'future_events'];
+            if (isSameDay(rec.start, rec.end, newStart, newEnd))
+                acceptedUpdates.push('all_events')
+
+            const recurrenceUpdate = await askRecurrenceUpdatePolicy(this.dialog, acceptedUpdates);
+
             if (!recurrenceUpdate) {
                 return this.notify();
             }
@@ -134,7 +151,8 @@ export class AttendeeCalendarModel extends CalendarModel {
     async archiveRecord(record) {
         let recurrenceUpdate = false;
         if (record.rawRecord.recurrency) {
-            recurrenceUpdate = await askRecurrenceUpdatePolicy(this.dialog);
+            let acceptedUpdates = ['self_only', 'future_events', 'all_events'];
+            recurrenceUpdate = await askRecurrenceUpdatePolicy(this.dialog, acceptedUpdates);
             if (!recurrenceUpdate) {
                 return;
             }
