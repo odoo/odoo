@@ -957,6 +957,62 @@ export class PosStore extends Reactive {
         return this.orders;
     }
 
+    computePriceAfterFp(price, taxes){
+        const order = this.get_order();
+        if(order && order.fiscal_position) {
+            let mapped_included_taxes = [];
+            let new_included_taxes = [];
+            taxes.forEach(tax => {
+                const line_taxes = this.get_taxes_after_fp([tax.id], order.fiscal_position);
+                if (line_taxes.length && line_taxes[0].price_include){
+                    new_included_taxes = new_included_taxes.concat(line_taxes);
+                }
+                if(tax.price_include && !line_taxes.includes(tax)){
+                    mapped_included_taxes.push(tax);
+                }
+            });
+
+            if (mapped_included_taxes.length > 0) {
+                if (new_included_taxes.length > 0) {
+                    const price_without_taxes = this.compute_all(
+                        mapped_included_taxes,
+                        price,
+                        1,
+                        this.currency.rounding,
+                        true
+                    ).total_excluded
+                    return this.compute_all(
+                        new_included_taxes,
+                        price_without_taxes,
+                        1,
+                        this.currency.rounding,
+                        false
+                    ).total_included
+                }
+                else{
+                    return this.compute_all(
+                        mapped_included_taxes,
+                        price,
+                        1,
+                        this.currency.rounding,
+                        true
+                    ).total_excluded;
+                }
+            }
+        }
+        return price;
+    }
+
+    getTaxesByIds(taxIds) {
+        let taxes = [];
+        for (let i = 0; i < taxIds.length; i++) {
+            if (this.taxes_by_id[taxIds[i]]) {
+                taxes.push(this.taxes_by_id[taxIds[i]]);
+            }
+        }
+        return taxes;
+    }
+
     /**
      * Renders the HTML for the customer display and returns it as a string.
      *

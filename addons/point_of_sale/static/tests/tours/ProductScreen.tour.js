@@ -175,3 +175,20 @@ registry.category("web_tour.tours").add("CashClosingDetails", {
         return getSteps()
     }
 });
+
+registry.category("web_tour.tours").add("ShowTaxExcludedTour", { 
+    test: true, 
+    url: "/pos/ui", 
+    steps: () => {
+        startSteps();
+        
+        ProductScreen.do.confirmOpeningPopup();
+
+        ProductScreen.do.clickHomeCategory();
+
+        ProductScreen.do.clickDisplayedProduct('Test Product');
+        ProductScreen.check.selectedOrderlineHas('Test Product', '1.0', '100.0');
+        ProductScreen.check.totalAmountIs('110.0');
+        return getSteps()
+    }
+});
