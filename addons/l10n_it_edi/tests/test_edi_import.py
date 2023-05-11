@@ -129,3 +129,21 @@ class TestItEdiImport(TestItEdi):
         self.assertEqual(len(attachments), 1)
         invoices = self.env['account.move'].search([('payment_reference', '=', 'TWICE_TEST')])
         self.assertEqual(len(invoices), 1)
+
+    def test_receive_bill_with_global_discount(self):
+        content = self.with_applied_xpath(
+            etree.fromstring(self.invoice_content),
+            '''
+                <xpath expr="//FatturaElettronicaBody/DatiGenerali/DatiGeneraliDocumento" position="inside">
+                    <ScontoMaggiorazione>
+                        <Tipo>SC</Tipo>
+                        <Importo>10</Importo>
+                    </ScontoMaggiorazione>
+                </xpath>
+            ''')
+        invoices = self.edi_format._create_invoice_from_xml_tree(self.invoice_filename2, content)
+
+        discount_line = invoices.invoice_line_ids.filtered(lambda line: line.name == 'SCONTO')
+        self.assertRecordValues(discount_line, [{
+            'price_unit': -10,
+        }])
