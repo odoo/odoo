@@ -3082,9 +3082,10 @@ class AccountMove(models.Model):
 
             try:
                 if decoder and not success:
-                    with self.env.cr.savepoint(), self._get_edi_creation() as invoice:
-                        # pylint: disable=not-callable
-                        success = decoder(invoice, file_data, new)
+                    with self.env.cr.savepoint():
+                        with self._get_edi_creation() as invoice:
+                            # pylint: disable=not-callable
+                            success = decoder(invoice, file_data, new)
                         if success:
                             invoice._link_bill_origin_to_purchase_orders(timeout=4)
 
