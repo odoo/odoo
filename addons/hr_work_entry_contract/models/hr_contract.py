@@ -302,7 +302,12 @@ class HrContract(models.Model):
 
         for interval, contracts in intervals_to_generate.items():
             date_from, date_to = interval
-            vals_list.extend(contracts._get_work_entries_values(date_from, date_to))
+            timezones = contracts.resource_calendar_id.mapped('tz')
+            for timezone in timezones:
+                tz = pytz.timezone(timezone)
+                date_from = tz.localize(date_from) if not date_from.tzinfo else date_from
+                date_to = tz.localize(date_to) if not date_to.tzinfo else date_to
+                vals_list.extend(contracts.filtered(lambda c: c.resource_calendar_id.tz == timezone)._get_work_entries_values(date_from, date_to))
 
         if not vals_list:
             return self.env['hr.work.entry']
