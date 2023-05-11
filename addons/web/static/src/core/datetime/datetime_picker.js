@@ -1,12 +1,6 @@
 /** @odoo-module **/
 
-import {
-    Component,
-    onWillRender,
-    onWillUpdateProps,
-    useExternalListener,
-    useState,
-} from "@odoo/owl";
+import { Component, onWillRender, onWillUpdateProps, useState } from "@odoo/owl";
 import { _lt } from "@web/core/l10n/translation";
 import {
     MAX_VALID_DATE,
@@ -320,10 +314,6 @@ export class DateTimePicker extends Component {
         return PRECISION_LEVELS.get(this.state.precision);
     }
 
-    get isKeynavEnabled() {
-        return this.isRange || this.props.type === "datetime";
-    }
-
     get isLastPrecisionLevel() {
         return (
             this.allowedPrecisionLevels.indexOf(this.state.precision) ===
@@ -365,12 +355,6 @@ export class DateTimePicker extends Component {
         onWillUpdateProps((nextProps) => this.onPropsUpdated(nextProps));
 
         onWillRender(() => this.onWillRender());
-
-        useExternalListener(
-            window,
-            "keydown",
-            (ev) => this.isKeynavEnabled && this.onWindowKeyDown(ev)
-        );
     }
 
     /**
@@ -548,23 +532,12 @@ export class DateTimePicker extends Component {
     }
 
     /**
-     * Softly moves the selected date by the given duration.
-     * @param {import("luxon").DurationLike} duration
-     */
-    navigate(duration) {
-        const { focusedDateIndex } = this.props;
-        const value = (this.values[focusedDateIndex] || today()).plus(duration);
-
-        this.shouldAdjustFocusDate = this.validateAndSelect(value, focusedDateIndex);
-    }
-
-    /**
      * Goes to the next panel (e.g. next month if precision is "days").
      * If an event is given it will be prevented.
-     * @param {Event} [ev]
+     * @param {PointerEvent} ev
      */
     next(ev) {
-        ev?.preventDefault();
+        ev.preventDefault();
         const { step } = this.activePrecisionLevel;
         this.state.focusDate = this.clamp(this.state.focusDate.plus(step));
     }
@@ -572,10 +545,10 @@ export class DateTimePicker extends Component {
     /**
      * Goes to the previous panel (e.g. previous month if precision is "days").
      * If an event is given it will be prevented.
-     * @param {Event} [ev]
+     * @param {PointerEvent} ev
      */
     previous(ev) {
-        ev?.preventDefault();
+        ev.preventDefault();
         const { step } = this.activePrecisionLevel;
         this.state.focusDate = this.clamp(this.state.focusDate.minus(step));
     }
@@ -665,42 +638,5 @@ export class DateTimePicker extends Component {
         const valueIndex = this.props.focusedDateIndex;
         const isValid = this.validateAndSelect(value, valueIndex);
         this.shouldAdjustFocusDate = isValid && !this.isRange;
-    }
-
-    //-------------------------------------------------------------------------
-    // Handlers
-    //-------------------------------------------------------------------------
-
-    /**
-     * @param {KeyboardEvent} ev
-     */
-    onWindowKeyDown(ev) {
-        const preventAnd = () => ev.preventDefault();
-
-        switch (ev.key) {
-            case "n": {
-                return preventAnd(this.next(ev));
-            }
-            case "p": {
-                return preventAnd(this.previous(ev));
-            }
-        }
-
-        if (this.state.precision === "days" && ev.ctrlKey) {
-            switch (ev.key) {
-                case "ArrowDown": {
-                    return preventAnd(this.navigate({ week: +1 }));
-                }
-                case "ArrowLeft": {
-                    return preventAnd(this.navigate({ day: -1 }));
-                }
-                case "ArrowRight": {
-                    return preventAnd(this.navigate({ day: +1 }));
-                }
-                case "ArrowUp": {
-                    return preventAnd(this.navigate({ week: -1 }));
-                }
-            }
-        }
     }
 }
