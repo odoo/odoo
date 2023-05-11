@@ -145,7 +145,7 @@ class Task(models.Model):
     date_end = fields.Datetime(string='Ending Date', index=True, copy=False)
     date_assign = fields.Datetime(string='Assigning Date', copy=False, readonly=True,
         help="Date on which this task was last assigned (or unassigned). Based on this, you can get statistics on the time it usually takes to assign tasks.")
-    date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True)
+    date_deadline = fields.Datetime(string='Deadline', index=True, copy=False, tracking=True)
 
     date_last_stage_update = fields.Datetime(string='Last Stage Update',
         index=True,
