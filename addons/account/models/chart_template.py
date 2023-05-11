@@ -244,6 +244,7 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
         _notify_accountant_managers(outdated_taxes)
     if hasattr(chart_template, 'spoken_languages') and chart_template.spoken_languages:
         _process_taxes_translations(chart_template, new_template2tax)
+    return new_template2tax
 
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
