@@ -238,6 +238,21 @@ export class Record extends DataPoint {
         return !this._invalidFields.size;
     }
 
+    openInvalidFieldsNotification() {
+        if (this._invalidFields.size) {
+            const invalidFields = [...this._invalidFields].map((fieldName) => {
+                return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
+            }, this);
+            this._closeInvalidFieldsNotification = this.model.notificationService.add(
+                markup(`<ul>${invalidFields.join("")}</ul>`),
+                {
+                    title: this.model.env._t("Invalid fields: "),
+                    type: "danger",
+                }
+            );
+        }
+    }
+
     async switchMode(mode, options) {
         if (this.mode === mode) {
             return true;
@@ -594,16 +609,7 @@ export class Record extends DataPoint {
         });
         this._closeInvalidFieldsNotification();
         if (!(await this.checkValidity())) {
-            const invalidFields = [...this._invalidFields].map((fieldName) => {
-                return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
-            }, this);
-            this._closeInvalidFieldsNotification = this.model.notificationService.add(
-                markup(`<ul>${invalidFields.join("")}</ul>`),
-                {
-                    title: this.model.env._t("Invalid fields: "),
-                    type: "danger",
-                }
-            );
+            this.openInvalidFieldsNotification();
             resolveSavePromise();
             return false;
         }
