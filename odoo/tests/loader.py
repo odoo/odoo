@@ -2,8 +2,10 @@ import importlib
 import inspect
 import itertools
 import logging
+import sys
 import threading
 import unittest
+from pathlib import Path
 
 from .. import tools
 from .common import TagsSelector, OdooSuite
@@ -22,7 +24,7 @@ def get_test_modules(module):
     except ImportError:
         pass
     else:
-        results += _get_tests_modules('odoo.upgrade', module)
+        results += list(_get_upgrade_test_modules(module))
 
     return results
 
@@ -49,6 +51,19 @@ def _get_tests_modules(path, module):
     result = [mod_obj for name, mod_obj in inspect.getmembers(mod, inspect.ismodule)
               if name.startswith('test_')]
     return result
+
+def _get_upgrade_test_modules(module):
+    upg = importlib.import_module("odoo.upgrade")
+    for path in map(Path, upg.__path__):
+        for test in (path / module / "tests").glob("test_*.py"):
+            spec = importlib.util.spec_from_file_location(f"odoo.upgrade.{module}.tests.{test.stem}", test)
+            if not spec:
+                continue
+            pymod = importlib.util.module_from_spec(spec)
+            sys.modules[spec.name] = pymod
+            spec.loader.exec_module(pymod)
+            yield pymod
+
 
 def make_suite(module_name, position='at_install'):
     mods = get_test_modules(module_name)
