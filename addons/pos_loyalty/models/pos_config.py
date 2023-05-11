@@ -87,22 +87,30 @@ class PosConfig(models.Model):
                 },
             }
         check_date = fields.Date.from_string(creation_date[:11])
-        if (coupon.expiration_date and coupon.expiration_date < check_date) or\
-            (coupon.program_id.date_to and coupon.program_id.date_to < fields.Date.context_today(self)) or\
-            (coupon.program_id.limit_usage and coupon.program_id.total_order_count >= coupon.program_id.max_usage):
+        today_date = fields.Date.context_today(self)
+        error_message = False
+        if (
+            (coupon.expiration_date and coupon.expiration_date < check_date)
+            or (coupon.program_id.date_to and coupon.program_id.date_to < today_date)
+            or (coupon.program_id.limit_usage and coupon.program_id.total_order_count >= coupon.program_id.max_usage)
+        ):
+            error_message = _("This coupon is expired (%s).", code)
+        elif coupon.program_id.date_from and coupon.program_id.date_from > today_date:
+            error_message = _("This coupon is not yet valid (%s).", code)
+        elif (
+            not coupon.program_id.reward_ids or
+            not any(r.required_points <= coupon.points for r in coupon.program_id.reward_ids)
+        ):
+            error_message = _("No reward can be claimed with this coupon.")
+
+        if error_message:
             return {
                 'successful': False,
                 'payload': {
-                    'error_message': _('This coupon is expired (%s).', code),
+                    'error_message': error_message,
                 },
             }
-        if not coupon.program_id.reward_ids or not any(reward.required_points <= coupon.points for reward in coupon.program_id.reward_ids):
-            return {
-                'successful': False,
-                'payload': {
-                    'error_message': _('No reward can be claimed with this coupon.'),
-                },
-            }
+
         return {
             'successful': True,
             'payload': {

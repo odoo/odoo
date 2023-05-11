@@ -21,7 +21,7 @@ class PosSession(models.Model):
         return {
             'search_params': {
                 'domain': [('id', 'in', self.config_id._get_program_ids().ids)],
-                'fields': ['name', 'trigger', 'applies_on', 'program_type', 'date_to',
+                'fields': ['name', 'trigger', 'applies_on', 'program_type', 'date_from', 'date_to',
                     'limit_usage', 'max_usage', 'is_nominative', 'portal_visible', 'portal_point_name', 'trigger_product_ids'],
             },
         }

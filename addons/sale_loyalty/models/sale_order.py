@@ -381,18 +381,22 @@ class SaleOrder(models.Model):
         Returns the base domain that all programs have to comply to.
         """
         self.ensure_one()
+        today = fields.Date.context_today(self)
         return [('active', '=', True), ('sale_ok', '=', True),
                 ('company_id', 'in', (self.company_id.id, False)),
-                '|', ('date_to', '=', False), ('date_to', '>=', fields.Date.context_today(self))]
+                '|', ('date_from', '=', False), ('date_from', '<=', today),
+                '|', ('date_to', '=', False), ('date_to', '>=', today)]
 
     def _get_trigger_domain(self):
         """
         Returns the base domain that all triggers have to comply to.
         """
         self.ensure_one()
+        today = fields.Date.context_today(self)
         return [('active', '=', True), ('program_id.sale_ok', '=', True),
                 ('company_id', 'in', (self.company_id.id, False)),
-                '|', ('program_id.date_to', '=', False), ('program_id.date_to', '>=', fields.Date.context_today(self))]
+                '|', ('program_id.date_from', '=', False), ('program_id.date_from', '<=', today),
+                '|', ('program_id.date_to', '=', False), ('program_id.date_to', '>=', today)]
 
     def _get_applicable_program_points(self, domain=None):
         """
@@ -991,8 +995,7 @@ class SaleOrder(models.Model):
 
         if not program or not program.active:
             return {'error': _('This code is invalid (%s).', code), 'not_found': True}
-        elif (program.limit_usage and program.total_order_count >= program.max_usage) or\
-            (program.date_to and program.date_to < fields.Date.context_today(self)):
+        elif (program.limit_usage and program.total_order_count >= program.max_usage):
             return {'error': _('This code is expired (%s).', code)}
 
         # Rule will count the next time the points are updated
