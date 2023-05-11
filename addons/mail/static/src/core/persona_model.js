@@ -30,7 +30,6 @@ export class Persona {
     /** @type {ImStatus} */
     im_status;
     isAdmin = false;
-    channelId;
     /** @type {import("@mail/core/store_service").Store} */
     _store;
 
