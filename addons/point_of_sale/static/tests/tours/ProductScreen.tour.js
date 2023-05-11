@@ -160,3 +160,15 @@ ProductScreen.do.confirmOpeningPopup();
 ProductScreen.check.checkSecondCashClosingDetailsLineAmount('10.00', '-');
 
 registry.category("web_tour.tours").add("CashClosingDetails", { test: true, url: "/pos/ui", steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.do.clickDisplayedProduct('Test Product');
+ProductScreen.check.selectedOrderlineHas('Test Product', '1.0', '100.0');
+ProductScreen.check.totalAmountIs('110.0');
+
+registry.category("web_tour.tours").add('ShowTaxExcludedTour', { test: true, url: "/pos/ui", steps: getSteps() });
