@@ -41,7 +41,7 @@
 
     <t t-name="mail.LinkPreviewImage" owl="1">
         <div class="o-mail-LinkPreviewImage position-relative mb-2" t-att-class="{ 'me-2': env.inChatter }" t-attf-class="{{ className }}">
-            <a t-if="props.linkPreview.imageUrl" t-att-href="imageUrl" target="_blank">
+            <a t-if="props.linkPreview.imageUrl" t-att-href="props.linkPreview.imageUrl" target="_blank">
                 <img class="h-auto w-auto rounded" t-att-src="props.linkPreview.imageUrl"/>
             </a>
             <t t-if="props.deletable" t-call="mail.LinkPreview.aside">
