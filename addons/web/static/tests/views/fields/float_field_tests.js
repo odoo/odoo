@@ -251,8 +251,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         // switch to edit mode
-        var cell = target.querySelector("tr.o_data_row td:not(.o_list_record_selector)");
-        await click(cell);
+        await click(target.querySelector("tr.o_data_row td:not(.o_list_record_selector)"));
 
         assert.containsOnce(
             target,
@@ -392,6 +391,81 @@ QUnit.module("Fields", (hooks) => {
             "Float value must be formatted if input type isn't number."
         );
     });
+
+    QUnit.test("field with enable_formatting option as false", async function (assert) {
+        registry.category("services").remove("localization");
+        registry
+            .category("services")
+            .add(
+                "localization",
+                makeFakeLocalizationService({ thousandsSep: ",", grouping: [3, 0] })
+            );
+
+        await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 1,
+            arch: `<form><field name="float_field" options="{'enable_formatting': false}"/></form>`,
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget input").value,
+            "0.36",
+            "Integer value must not be formatted"
+        );
+
+        await editInput(target, ".o_field_widget[name=float_field] input", "123456.789");
+        await clickSave(target);
+        assert.strictEqual(
+            target.querySelector(".o_field_widget input").value,
+            "123456.789",
+            "Integer value must be not formatted if input type is number."
+        );
+    });
+
+    QUnit.test(
+        "field with enable_formatting option as false in editable list view",
+        async function (assert) {
+            await makeView({
+                serverData,
+                type: "list",
+                resModel: "partner",
+                arch: `
+                <tree editable="bottom">
+                    <field name="float_field" widget="float" digits="[5,3]" options="{'enable_formatting': false}" />
+                </tree>`,
+            });
+
+            // switch to edit mode
+            await click(target.querySelector("tr.o_data_row td:not(.o_list_record_selector)"));
+
+            assert.containsOnce(
+                target,
+                'div[name="float_field"] input',
+                "The view should have 1 input for editable float."
+            );
+
+            await editInput(target, 'div[name="float_field"] input', "108.2458938598598");
+            assert.strictEqual(
+                target.querySelector('div[name="float_field"] input').value,
+                "108.2458938598598",
+                "The value should not be formatted on blur."
+            );
+
+            await editInput(target, 'div[name="float_field"] input', "18.8958938598598");
+            await click(
+                target.querySelector(
+                    ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_save"
+                )
+            );
+            assert.strictEqual(
+                target.querySelector(".o_field_widget").textContent,
+                "18.8958938598598",
+                "The new value should not be rounded as well."
+            );
+        }
+    );
 
     QUnit.test("float_field field with placeholder", async function (assert) {
         await makeView({

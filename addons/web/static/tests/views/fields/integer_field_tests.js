@@ -290,4 +290,30 @@ QUnit.module("Fields", (hooks) => {
             "Placeholder"
         );
     });
+
+    QUnit.test("IntegerField with enable_formatting option as false", async function (assert) {
+        patchWithCleanup(localization, { ...defaultLocalization, grouping: [3, 0] });
+
+        await makeView({
+            type: "form",
+            serverData,
+            resModel: "partner",
+            resId: 3,
+            arch: `<form><field name="int_field" options="{'enable_formatting': false}"/></form>`,
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_widget input").value,
+            "8069",
+            "Integer value must not be formatted"
+        );
+
+        await editInput(target, ".o_field_widget[name=int_field] input", "1234567890");
+        await clickSave(target);
+        assert.strictEqual(
+            target.querySelector(".o_field_widget input").value,
+            "1234567890",
+            "Integer value must be not formatted if input type is number."
+        );
+    });
 });
