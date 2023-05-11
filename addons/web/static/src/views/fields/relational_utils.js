@@ -530,6 +530,7 @@ export class X2ManyFieldDialog extends Component {
         if (await this.record.checkValidity()) {
             this.record = (await this.props.save(this.record, { saveAndNew })) || this.record;
         } else {
+            this.record.openInvalidFieldsNotification();
             return false;
         }
         if (!saveAndNew) {
