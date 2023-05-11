@@ -7,7 +7,6 @@ import { assets, templates } from "@web/core/assets";
 import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
 import { nextTick, patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { memoize } from "@web/core/utils/functions";
-import { legacyProm } from "web.test_legacy";
 import { registerCleanup } from "./helpers/cleanup";
 import { utils } from "./helpers/mock_env";
 import { session as sessionInfo } from "@web/session";
@@ -19,6 +18,7 @@ transitionConfig.disabled = true;
 import { patch } from "@web/core/utils/patch";
 import { App, whenReady } from "@odoo/owl";
 import { currencies } from "@web/core/currency";
+import "./helpers/session";
 
 const { prepareRegistriesWithCleanup } = utils;
 
@@ -300,59 +300,52 @@ function removeUnwantedAttrsFromTemplates(attrs) {
     }
 }
 
-// alt attribute causes issues with scroll tests. Indeed, alt is
-// displayed between the time we scroll programatically and the time
-// we assert for the scroll position. The src attribute is removed
-// as well to make sure images won't trigger a GET request on the
-// server.
-
-// Clean up templates that have already been added.
-removeUnwantedAttrsFromTemplates(["alt", "src"]);
-
-const { loadXML, getBundle, loadJS, loadCSS } = assets;
-patch(assets, "TestAssetsLoadXML", {
-    loadXML: function (templates) {
-        console.log("%c[assets] fetch XML ressource", "color: #66e; font-weight: bold;");
-        // Clean up new templates that might be added later.
-        loadXML(templates);
-        removeUnwantedAttrsFromTemplates(["alt", "src"]);
-    },
-    getBundle: memoize(async function (xmlID) {
-        console.log(
-            "%c[assets] fetch libs from xmlID: " + xmlID,
-            "color: #66e; font-weight: bold;"
-        );
-        return getBundle(xmlID);
-    }),
-    loadJS: memoize(async function (ressource) {
-        if (ressource.match(/\/static(\/\S+\/|\/)libs?/)) {
+function patchAssets() {
+    const { loadXML, getBundle, loadJS, loadCSS } = assets;
+    patch(assets, "TestAssetsLoadXML", {
+        loadXML: function (templates) {
+            console.log("%c[assets] fetch XML ressource", "color: #66e; font-weight: bold;");
+            // Clean up new templates that might be added later.
+            loadXML(templates);
+            removeUnwantedAttrsFromTemplates(["alt", "src"]);
+        },
+        getBundle: memoize(async function (xmlID) {
             console.log(
-                "%c[assets] fetch (mock) JS ressource: " + ressource,
+                "%c[assets] fetch libs from xmlID: " + xmlID,
                 "color: #66e; font-weight: bold;"
             );
-            return nextTick();
-        }
-        console.log(
-            "%c[assets] fetch JS ressource: " + ressource,
-            "color: #66e; font-weight: bold;"
-        );
-        return loadJS(ressource);
-    }),
-    loadCSS: memoize(async function (ressource) {
-        if (ressource.match(/\/static(\/\S+\/|\/)libs?/)) {
+            return getBundle(xmlID);
+        }),
+        loadJS: memoize(async function (ressource) {
+            if (ressource.match(/\/static(\/\S+\/|\/)libs?/)) {
+                console.log(
+                    "%c[assets] fetch (mock) JS ressource: " + ressource,
+                    "color: #66e; font-weight: bold;"
+                );
+                return nextTick();
+            }
             console.log(
-                "%c[assets] fetch (mock) CSS ressource: " + ressource,
+                "%c[assets] fetch JS ressource: " + ressource,
                 "color: #66e; font-weight: bold;"
             );
-            return nextTick();
-        }
-        console.log(
-            "%c[assets] fetch CSS ressource: " + ressource,
-            "color: #66e; font-weight: bold;"
-        );
-        return loadCSS(ressource);
-    }),
-});
+            return loadJS(ressource);
+        }),
+        loadCSS: memoize(async function (ressource) {
+            if (ressource.match(/\/static(\/\S+\/|\/)libs?/)) {
+                console.log(
+                    "%c[assets] fetch (mock) CSS ressource: " + ressource,
+                    "color: #66e; font-weight: bold;"
+                );
+                return nextTick();
+            }
+            console.log(
+                "%c[assets] fetch CSS ressource: " + ressource,
+                "color: #66e; font-weight: bold;"
+            );
+            return loadCSS(ressource);
+        }),
+    });
+}
 
 export async function setupTests() {
     // uncomment to debug memory leaks in qunit suite
@@ -389,7 +382,16 @@ export async function setupTests() {
         patchOwlApp();
     });
 
-    await Promise.all([whenReady(), legacyProm]);
+    await Promise.all([whenReady(), session.is_bound]);
+
+    // alt attribute causes issues with scroll tests. Indeed, alt is
+    // displayed between the time we scroll programatically and the time
+    // we assert for the scroll position. The src attribute is removed
+    // as well to make sure images won't trigger a GET request on the
+    // server.
+    // Clean up templates that have already been added.
+    removeUnwantedAttrsFromTemplates(["alt", "src"]);
+    patchAssets();
 
     // make sure images do not trigger a GET on the server
     new MutationObserver((mutations) => {

@@ -19,10 +19,6 @@ import { effectService } from "@web/core/effects/effect_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { menuService } from "@web/webclient/menus/menu_service";
 import { WebClient } from "@web/webclient/webclient";
-// This import is needed because of it's sideeffects, for exemple :
-// web.test_utils easyload xml templates at line : 124:130.
-// Also it set the autocomplete delay time for the field Many2One at 0 for the tests at line : 132:137
-import "web.test_legacy";
 import AbstractService from "web.AbstractService";
 import ActionMenus from "web.ActionMenus";
 import basicFields from "web.basic_fields";
