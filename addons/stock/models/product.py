@@ -566,7 +566,7 @@ class Product(models.Model):
         warehouse = location.warehouse_id
         if not warehouse and seen_rules:
             warehouse = seen_rules[-1].propagate_warehouse_id
-        rule = self.env['procurement.group']._get_rule(self, location, {
+        rule = self.env['procurement.group'].with_context(active_test=True)._get_rule(self, location, {
             'route_ids': route_ids,
             'warehouse_id': warehouse,
         })
