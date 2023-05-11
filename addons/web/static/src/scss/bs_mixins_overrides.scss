@@ -44,6 +44,12 @@ $o-color-extras-nesting-selector: '&' !default;
     }
 }
 
+@mixin o-border-color($color, $important: true) {
+    @if ($color) {
+        border-color: $color#{if($important, ' !important', '')};
+    }
+}
+
 // Override background utilities so that they come with a default contrasted
 // color (especially useful in the frontend editor for example). Also modifies
 // the way .text-muted elements are rendered in those environments.
@@ -56,6 +62,11 @@ $o-color-extras-nesting-selector: '&' !default;
         &:hover, &:focus {
             @include o-bg-color(darken($color, 10%), $text-color, false);
         }
+    }
+}
+@mixin border-variant($parent, $color) {
+    #{$parent} {
+        @include o-border-color($color);
     }
 }
 @mixin bg-gradient-variant($parent, $color, $text-color: null) {

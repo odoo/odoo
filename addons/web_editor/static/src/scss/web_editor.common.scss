@@ -645,6 +645,7 @@ blockquote {
     $-color-name: 'o-color-#{$index}';
     $-color: map-get($colors, $-color-name);
     @include bg-variant(".bg-#{$-color-name}", $-color);
+    @include border-variant(".border-#{$-color-name}", $-color);
     @include text-emphasis-variant(".text-#{$-color-name}", $-color);
 }
 
