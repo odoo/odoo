@@ -160,6 +160,8 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
         Those languages are the intersection of the spoken_languages of the chart_template
         and installed languages.
         """
+        if not new_template_x_taxes:
+            return
         langs = chart_template._get_langs()
         if langs:
             template_ids, tax_ids = zip(*new_template_x_taxes)
