@@ -14,12 +14,14 @@ export class FloatField extends Component {
     static template = "web.FloatField";
     static props = {
         ...standardFieldProps,
+        formatNumber: { type: Boolean, optional: true },
         inputType: { type: String, optional: true },
         step: { type: Number, optional: true },
         digits: { type: Array, optional: true },
         placeholder: { type: String, optional: true },
     };
     static defaultProps = {
+        formatNumber: true,
         inputType: "text",
     };
 
@@ -41,7 +43,10 @@ export class FloatField extends Component {
         return !this.props.digits && Array.isArray(fieldDigits) ? fieldDigits : this.props.digits;
     }
     get formattedValue() {
-        if (this.props.inputType === "number" && !this.props.readonly && this.value) {
+        if (
+            !this.props.formatNumber ||
+            (this.props.inputType === "number" && !this.props.readonly && this.value)
+        ) {
             return this.value;
         }
         return formatFloat(this.value, { digits: this.digits });
@@ -56,6 +61,13 @@ export const floatField = {
     component: FloatField,
     displayName: _lt("Float"),
     supportedOptions: [
+        {
+            label: _lt("Format number"),
+            name: "enable_formatting",
+            type: "boolean",
+            help: _lt("Format the value according to your language setup - e.g. thousand separators, rounding, etc."),
+            default: true,
+        },
         {
             label: _lt("Digits"),
             name: "digits",
@@ -85,6 +97,10 @@ export const floatField = {
         }
 
         return {
+            formatNumber:
+                options?.enable_formatting !== undefined
+                    ? Boolean(options.enable_formatting)
+                    : true,
             inputType: options.type,
             step: options.step,
             digits,
