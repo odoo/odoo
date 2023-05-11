@@ -10,10 +10,10 @@ class ResumeLine(models.Model):
     _order = "line_type_id, date_end desc, date_start desc"
 
     employee_id = fields.Many2one('hr.employee', required=True, ondelete='cascade')
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     date_start = fields.Date(required=True)
     date_end = fields.Date()
-    description = fields.Text(string="Description")
+    description = fields.Text(string="Description", translate=True)
     line_type_id = fields.Many2one('hr.resume.line.type', string="Type")
 
     # Used to apply specific template on a line
