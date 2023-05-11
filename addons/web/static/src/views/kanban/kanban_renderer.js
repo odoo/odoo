@@ -56,6 +56,7 @@ export class KanbanRenderer extends Component {
         "scrollTop?",
         "canQuickCreate?",
         "quickCreateState?",
+        "progressBarState?",
     ];
 
     static defaultProps = {
@@ -297,10 +298,12 @@ export class KanbanRenderer extends Component {
         if (!this.env.isSmall && group.isFolded) {
             classes.push("o_column_folded", "flex-basis-0");
         }
-        if (group.progressBars.length) {
-            classes.push("o_kanban_has_progressbar");
-            if (!group.isFolded && group.hasActiveProgressValue) {
-                const progressBar = group.activeProgressBar;
+        if (this.props.progressBarState && !group.isFolded) {
+            const progressBarInfo = this.props.progressBarState.getGroupInfo(group);
+            if (progressBarInfo.activeBar) {
+                const progressBar = progressBarInfo.bars.find(
+                    (b) => b.value === progressBarInfo.activeBar
+                );
                 classes.push("o_kanban_group_show", `o_kanban_group_show_${progressBar.color}`);
             }
         }
@@ -308,9 +311,9 @@ export class KanbanRenderer extends Component {
     }
 
     getGroupUnloadedCount(group) {
-        const progressBar = group.activeProgressBar;
         const records = group.list.records.filter((r) => !r.isInQuickCreation);
-        return (progressBar ? progressBar.count : group.count) - records.length;
+        const count = this.props.progressBarState?.getGroupCount(group) || group.count;
+        return count - records.length;
     }
 
     generateGhostColumns() {
@@ -367,6 +370,8 @@ export class KanbanRenderer extends Component {
         });
         if (mode === "edit") {
             await this.props.openRecord(record, "edit");
+        } else {
+            this.props.progressBarState?.updateCounts(group);
         }
     }
 
@@ -457,6 +462,10 @@ export class KanbanRenderer extends Component {
             const refId = previous ? previous.dataset.id : null;
             const targetGroupId = parent?.dataset.id;
             await this.props.list.moveRecord(dataRecordId, dataGroupId, refId, targetGroupId);
+            if (dataGroupId !== targetGroupId) {
+                const group = this.props.list.groups.find((g) => g.id === dataGroupId);
+                this.props.progressBarState?.updateAggreagteGroup(group);
+            }
 
             this.toggleProcessing(dataRecordId, false);
         }

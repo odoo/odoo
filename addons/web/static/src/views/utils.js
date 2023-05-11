@@ -53,6 +53,10 @@ export function addFieldDependencies(info, activeFields, fields) {
     const { fieldDependencies } = info.field || info.widget;
     const deps =
         typeof fieldDependencies === "function" ? fieldDependencies(info) : fieldDependencies;
+    addDependencies(deps, activeFields, fields);
+}
+
+export function addDependencies(deps, activeFields, fields) {
     for (const dependency of deps || []) {
         const { name } = dependency;
         if (!(name in activeFields)) {

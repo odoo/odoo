@@ -330,9 +330,13 @@ class DataPoint {
                 const commands = [];
                 for (const command of value) {
                     const code = command[0];
-                    if(code === CREATE){
-                        commands.push([code, command[1], this._cache[field.name]._parseServerValues(command[2])]);
-                    }else{
+                    if (code === CREATE) {
+                        commands.push([
+                            code,
+                            command[1],
+                            this._cache[field.name]._parseServerValues(command[2]),
+                        ]);
+                    } else {
                         commands.push(command);
                     }
                 }
@@ -2041,6 +2045,7 @@ export class DynamicRecordList extends DynamicList {
     async load(params = {}) {
         this.limit = params.limit === undefined ? this.limit : params.limit;
         this.offset = params.offset === undefined ? this.offset : params.offset;
+        this.domain = params.domain === undefined ? this.domain : params.domain;
         this.records = await this._loadRecords();
         await this._adjustOffset();
     }
@@ -2557,6 +2562,9 @@ export class Group extends DataPoint {
         } else {
             this.isFolded = true;
         }
+        if ("groupFilterDomain" in state) {
+            this.groupFilterDomain = state.groupFilterDomain;
+        }
         if (isRelational(this.groupByField)) {
             // If the groupBy field is a relational field, the group model must
             // then be the relation of that field.
@@ -2568,7 +2576,9 @@ export class Group extends DataPoint {
         }
         const listParams = {
             data: params.data,
-            domain: this.groupDomain,
+            domain: this.groupFilterDomain
+                ? Domain.and([this.groupDomain, this.groupFilterDomain]).toList()
+                : this.groupDomain,
             groupBy: params.groupBy,
             rawContext: params.rawContext,
             orderBy: params.orderBy,
@@ -2600,6 +2610,17 @@ export class Group extends DataPoint {
     // ------------------------------------------------------------------------
     // Public
     // ------------------------------------------------------------------------
+
+    applyFilter(filter) {
+        this.groupFilterDomain = filter;
+        if (this.groupFilterDomain) {
+            return this.list.load({
+                domain: Domain.and([this.groupDomain, this.groupFilterDomain]).toList(),
+            });
+        } else {
+            return this.list.load({ domain: this.groupDomain });
+        }
+    }
 
     /**
      * @see DynamicRecordList.addRecord
@@ -2649,11 +2670,8 @@ export class Group extends DataPoint {
         return {
             isFolded: this.isFolded,
             listState: this.list.exportState(),
+            groupFilterDomain: this.groupFilterDomain,
         };
-    }
-
-    getAggregates(fieldName) {
-        return fieldName ? this.aggregates[fieldName] || 0 : this.count;
     }
 
     getServerValue() {
