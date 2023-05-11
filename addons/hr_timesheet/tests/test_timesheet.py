@@ -598,3 +598,31 @@ class TestTimesheet(TestCommonTimesheet):
         self.env.company.timesheet_encode_uom_id = self.env.ref('uom.product_uom_day')
         self.assertEqual(project.total_timesheet_time, 8, "Total timesheet time should be 8 hours")
         self.assertEqual(project.timesheet_encode_uom_id.name, 'Days', "Timesheet encode uom should be 'Days'")
+
+    def test_percentage_of_planned_hours(self):
+        """ Test the percentage of planned hours on a task. """
+        self.task1.planned_hours = round(11/60, 2)
+        self.assertEqual(self.task1.effective_hours, 0, 'No timesheet should be created yet.')
+        self.assertEqual(self.task1.progress, 0, 'No timesheet should be created yet.')
+        self.env['account.analytic.line'].create([
+            {
+                'name': 'Timesheet',
+                'project_id': self.project_customer.id,
+                'task_id': self.task1.id,
+                'unit_amount': 3/60,
+                'employee_id': self.empl_employee.id,
+            }, {
+                'name': 'Timesheet',
+                'project_id': self.project_customer.id,
+                'task_id': self.task1.id,
+                'unit_amount': 4/60,
+                'employee_id': self.empl_employee.id,
+            }, {
+                'name': 'Timesheet',
+                'project_id': self.project_customer.id,
+                'task_id': self.task1.id,
+                'unit_amount': 4/60,
+                'employee_id': self.empl_employee.id,
+            },
+        ])
+        self.assertEqual(self.task1.progress, 100, 'The percentage of planned hours should be 100%.')
