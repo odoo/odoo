@@ -273,6 +273,10 @@ registerModel({
             isCausal: true,
             readonly: true,
         }),
+        discussPublicView: one('DiscussPublicView', {
+            inverse: 'messagingAsPublicView',
+            isCausal: true,
+        }),
         focusedRtcSession: one('RtcSession'),
         /**
          * Mailbox History.
