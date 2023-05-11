@@ -14405,6 +14405,99 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(document.activeElement, getDataRow(3).querySelector("[name=foo] input"));
     });
 
+    QUnit.test("keyboard navigation with date range", async (assert) => {
+        serverData.models.foo.fields.date_end = { string: "Date End", type: "date" };
+        serverData.models.foo.records[0].date_end = "2017-01-26";
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="foo"/>
+                    <field name="date" widget="daterange" options="{'end_date_field': 'date_end'}" />
+                    <field name="int_field"/>
+                </tree>
+            `,
+        });
+
+        await click(target, ".o_data_row:first-child [name=foo]");
+
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector(".o_data_row:first-child [name=foo] input")
+        );
+
+        triggerHotkey("Tab");
+        await nextTick();
+
+        const [startDateInput, endDateInput] = target.querySelectorAll(
+            ".o_data_row:first-child [name=date] input"
+        );
+
+        assert.strictEqual(document.activeElement, startDateInput);
+
+        triggerHotkey("Tab");
+        await nextTick();
+
+        assert.strictEqual(
+            document.activeElement,
+            startDateInput,
+            "programmatic tab shouldn't toggle focus"
+        );
+
+        await click(endDateInput);
+
+        assert.strictEqual(document.activeElement, endDateInput);
+
+        triggerHotkey("Tab");
+        await nextTick();
+
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector(".o_data_row:first-child [name=int_field] input")
+        );
+    });
+
+    QUnit.test("keyboard navigation with Many2One field", async (assert) => {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom">
+                    <field name="foo"/>
+                    <field name="m2o"/>
+                    <field name="int_field"/>
+                </tree>
+            `,
+        });
+
+        await click(target, ".o_data_row:first-child [name=foo]");
+
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector(".o_data_row:first-child [name=foo] input")
+        );
+
+        triggerHotkey("Tab");
+        await nextTick();
+
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector(".o_data_row:first-child [name=m2o] input")
+        );
+
+        triggerHotkey("Tab");
+        await nextTick();
+
+        assert.strictEqual(
+            document.activeElement,
+            target.querySelector(".o_data_row:first-child [name=int_field] input")
+        );
+    });
+
     QUnit.test("multi-edit records with ENTER does not crash", async (assert) => {
         serviceRegistry.add("error", errorService);
 

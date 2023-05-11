@@ -6,7 +6,7 @@
             <TagsList tags="this.tags"/>
             <div t-if="!props.readonly" class="o_input_dropdown d-inline-flex w-100" tabindex="0" t-ref="mainElement" t-on-focus="onMainElementFocus" t-on-click="onMainElementFocus">
                 <span class="analytic_distribution_placeholder"/>
-                <a role="button" class="o_dropdown_button" draggable="false"/>
+                <span class="o_dropdown_button" />
                 <t t-call="analytic.AnalyticDistributionPopup"/>
             </div>
         </div>
