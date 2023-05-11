@@ -4,6 +4,7 @@ import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods"
 import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import { ProductScreen } from "@pos_sale/../tests/helpers/ProductScreenTourMethods";
 import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
+import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
 import Tour from "web_tour.tour";
 
@@ -60,3 +61,25 @@ PaymentScreen.do.clickValidate();
 ReceiptScreen.check.isShown();
 
 Tour.register('PosSettleOrder2', { test: true, url: '/pos/ui' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.clickQuotationButton();
+ProductScreen.do.downPaymentFirstOrder();
+ProductScreen.do.clickPayButton();
+PaymentScreen.do.clickPaymentMethod('Cash');
+PaymentScreen.do.clickValidate();
+ReceiptScreen.do.clickNextOrder();
+ProductScreen.do.clickRefund();
+// Filter should be automatically 'Paid'.
+TicketScreen.check.filterIs('Paid');
+TicketScreen.do.selectOrder('-0001');
+TicketScreen.do.clickOrderline('Down Payment');
+TicketScreen.do.pressNumpad('1');
+TicketScreen.do.confirmRefund();
+ProductScreen.do.clickPayButton();
+PaymentScreen.do.clickPaymentMethod('Cash');
+PaymentScreen.do.clickValidate();
+ReceiptScreen.do.clickNextOrder();
+
+Tour.register('PosRefundDownpayment', { test: true, url: '/pos/ui' }, getSteps());
