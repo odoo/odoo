@@ -8,7 +8,7 @@
                     <t t-esc="groupName"></t>
                     <span class="badge text-bg-500 rounded-pill lh-1 ms-2" t-esc="group.count"></span>
                 </div>
-                <span t-if="!env.isSmall and !group.isFolded"
+                <span t-if="!group.isFolded"
                     t-esc="groupName"
                     class="o_column_title flex-grow-1 d-inline-block mw-100 text-truncate fs-4 fw-bold align-top text-900"
                     />
