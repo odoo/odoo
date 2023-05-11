@@ -78,9 +78,9 @@ class StockValuationLayer(models.Model):
         #  inventory at a given date.
         context = {}
         if ("default_product_id" in self.env.context):
-            context.product_id = self.env.context.default_product_id
-        elif ("product_tmpl_id" in self.env.context):
-            context.product_tmpl_id = self.env.context.product_tmpl_id
+            context["product_id"] = self.env.context["default_product_id"]
+        elif ("default_product_tmpl_id" in self.env.context):
+            context["product_tmpl_id"] = self.env.context["default_product_tmpl_id"]
 
         return {
             "res_model": "stock.quantity.history",
