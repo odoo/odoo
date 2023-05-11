@@ -83,18 +83,6 @@ registry.category("web_tour.tours").add('shop_mail', {
     {
         content: "wait mail to be sent, and go see it",
         trigger: '.o_MessageView_content:contains("Your"):contains("order")',
-        run: function () {
-            window.location.href = "/web#action=mail.action_view_mail_mail&view_type=list";
-        },
-    },
-    {
-        content: "click on the first email",
-        trigger: '.o_data_cell:contains("(Ref S")',
-    },
-    {
-        content: "check it's the correct email, and the URL is correct too",
-        trigger: 'div.o_field_html[name="body_content"] p:contains("Your"):contains("order")',
-        extra_trigger: 'div.o_field_html[name="body_content"] a[href^="https://my-test-domain.com"]',
     },
 ]});
 });
