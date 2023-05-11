@@ -363,11 +363,14 @@ class AccountTestInvoicingCommon(SavepointCase):
         })
 
     @classmethod
-    def init_invoice(cls, move_type, partner=None, invoice_date=None, post=False, products=[], amounts=[], taxes=None):
+    def init_invoice(cls, move_type, partner=None, invoice_date=None, post=False, products=None, amounts=None, taxes=None, currency=None):
+        products = [] if products is None else products
+        amounts = [] if amounts is None else amounts
         move_form = Form(cls.env['account.move'].with_context(default_move_type=move_type, account_predictive_bills_disable_prediction=True))
         move_form.invoice_date = invoice_date or fields.Date.from_string('2019-01-01')
         move_form.date = move_form.invoice_date
         move_form.partner_id = partner or cls.partner_a
+        move_form.currency_id = currency if currency else cls.company_data['currency']
 
         for product in products:
             with move_form.invoice_line_ids.new() as line_form:
