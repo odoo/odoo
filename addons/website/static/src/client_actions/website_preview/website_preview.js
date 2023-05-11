@@ -419,6 +419,21 @@ export class WebsitePreview extends Component {
         });
     }
 
+    /**
+     * This method is called when the page is unloaded to clean
+     * the iframefallback content.
+     */
+    _cleanIframeFallback() {
+        // Remove autoplay in all media video iframes urls so videos are not
+        // playing in the background
+        const iframesEl = this.iframefallback.el.contentDocument.querySelectorAll(".media_iframe_video iframe");
+        for (const iframeEl of iframesEl) {
+            const url = new URL(iframeEl.src);
+            url.searchParams.delete('autoplay');
+            iframeEl.src = url.toString();
+        }
+    }
+
     _onPageUnload() {
         this.iframe.el.setAttribute('is-ready', 'false');
         // Before leaving the iframe, its content is replicated on an
@@ -431,6 +446,7 @@ export class WebsitePreview extends Component {
             this.iframefallback.el.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
             this.iframefallback.el.classList.remove('d-none');
             $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
+            this._cleanIframeFallback();
         }
     }
     _onPageHide() {
