@@ -164,7 +164,7 @@ class WebsiteMultiMixin(models.AbstractModel):
         "website",
         string="Website",
         ondelete="restrict",
-        help="Restrict publishing to this website.",
+        help="Restrict to a specific website.",
         index=True,
     )
 
