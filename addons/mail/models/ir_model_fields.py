@@ -10,7 +10,7 @@ class IrModelField(models.Model):
 
     tracking = fields.Integer(
         string="Enable Ordered Tracking",
-        help="If set every modification done to this field is tracked in the chatter. Value is used to order tracking values.",
+        help="If set every modification done to this field is tracked. Value is used to order tracking values.",
     )
 
     def _reflect_field_params(self, field, model_id):

@@ -39,6 +39,95 @@ class TestTracking(MailCommon):
 
         self.assertEqual(self.record.message_ids.author_id, self.partner_admin)
 
+    @users('employee')
+    def test_message_track_default_message(self):
+        """Check that the default tracking log message defined on the model is used
+        and that setting a log message overrides it. See `_track_get_default_log_message`"""
+
+        record = self.env['mail.test.track'].with_context(self._test_context).create({
+            'name': 'Test',
+            'track_enable_default_log': True,
+        }).with_context(mail_notrack=False)
+        self.flush_tracking()
+
+        with self.mock_mail_gateway():
+            record.user_id = self.user_admin
+            self.flush_tracking()
+
+        messages = record.message_ids
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages.body, '<p>There was a change on Test for fields "user_id"</p>',
+                         'Default message should be used')
+
+        with self.mock_mail_gateway():
+            record._track_set_log_message('Hi')
+            record.user_id = False
+            self.flush_tracking()
+
+        messages = record.message_ids - messages
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages.body, '<p>Hi</p>', '_track_set_log_message should take priority over default message')
+
+    @users('employee')
+    def test_message_track_filter_for_display(self):
+        """Check that tracked fields filtered for display are not present
+        in the front-end and email formatting methods. See `_track_filter_for_display`"""
+        field_dname = 'Responsible'
+        field_name = 'user_id'
+        field_type = 'many2one'
+        original_user = self.user_admin
+        new_user = self.user_employee
+
+        records = self.env['mail.test.track'].create([{
+            'name': 'TestTrack Hide User Field',
+            'user_id': original_user.id,
+            'track_fields_tofilter': 'user_id',
+        }, {
+            'name': 'TestTrack Show All Fields',
+            'user_id': original_user.id,
+            'track_fields_tofilter': '',
+        }])
+        self.flush_tracking()
+
+        records.write({'user_id': new_user.id})
+        self.flush_tracking()
+
+        for record in records:
+            self.assertEqual(len(record.message_ids), 2, 'Should be a creation message and a tracking message')
+            self.assertTracking(
+                record.message_ids[0],
+                [('user_id', 'many2one', original_user, new_user)]
+            )
+        # first record: tracking value should be hidden
+        message_0 = records[0].message_ids[0]
+        formatted = message_0.message_format()[0]
+        self.assertEqual(formatted['trackingValues'], [], 'Hidden values should not be formatted')
+        mail_render = records[0]._notify_by_email_prepare_rendering_context(message_0, {})
+        self.assertEqual(mail_render['tracking_values'], [])
+
+        # second record: all values displayed
+        message_1 = records[1].message_ids[0]
+        formatted = message_1.message_format()[0]
+        self.assertEqual(len(formatted['trackingValues']), 1)
+        self.assertDictEqual(
+            formatted['trackingValues'][0],
+            {
+                'changedField': field_dname,
+                'fieldName': field_name,
+                'fieldType': field_type,
+                'id': message_1.tracking_value_ids.id,
+                'newValue': {
+                    'currencyId': False,
+                    'value': new_user.display_name,
+                },
+                'oldValue': {
+                    'currencyId': False,
+                    'value': original_user.display_name,
+                },
+            })
+        mail_render = records[1]._notify_by_email_prepare_rendering_context(message_1, {})
+        self.assertEqual(mail_render['tracking_values'], [(field_dname, original_user.display_name, new_user.display_name)])
+
     def test_message_track_message_type(self):
         """Check that the right message type is applied for track templates."""
         self.record.message_subscribe(
