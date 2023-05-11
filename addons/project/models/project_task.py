@@ -151,7 +151,7 @@ class Task(models.Model):
     project_id = fields.Many2one('project.project', string='Project',
         index=True, tracking=True, check_company=True, change_default=True)
     task_properties = fields.Properties('Properties', definition='project_id.task_properties_definition', copy=True)
-    planned_hours = fields.Float("Allocated Time", tracking=True)
+    planned_hours = fields.Floattime("Allocated Time", tracking=True)
     subtask_planned_hours = fields.Float("Sub-tasks Planned Hours", compute='_compute_subtask_planned_hours',
         help="Sum of the hours allocated for all the sub-tasks (and their own sub-tasks) linked to this task. Usually less than or equal to the allocated hours of this task.")
     # Tracking of this field is done in the write function
