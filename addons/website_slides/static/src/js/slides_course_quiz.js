@@ -55,14 +55,14 @@
         */
         init: function (parent, slide_data, channel_data, quiz_data) {
             this._super.apply(this, arguments);
-            this.slide = _.defaults(slide_data, {
+            this.slide = Object.assign({
                 id: 0,
                 name: '',
                 hasNext: false,
                 completed: false,
                 isMember: false,
                 isMemberOrInvited: false,
-            });
+            }, slide_data);
             this.quiz = quiz_data || false;
             if (this.quiz) {
                 this.quiz.questionsCount = quiz_data.questions.length;
@@ -659,14 +659,14 @@
          * @param options
          */
         init: function (parent, options) {
-            options = _.defaults(options || {}, {
+            options = Object.assign({
                 title: _t('Delete Question'),
                 buttons: [
                     { text: _t('Yes'), classes: 'btn-primary', click: this._onConfirmClick },
                     { text: _t('No'), close: true}
                 ],
                 size: 'medium'
-            });
+            }, options || {});
             this.questionId = options.questionId;
             this.questionTitle = options.questionTitle;
             this._super.apply(this, arguments);

@@ -3,6 +3,7 @@
 import core from "web.core";
 import Widget from "web.Widget";
 import { fuzzyLookup } from "@web/core/utils/search";
+import { sortBy } from "@web/core/utils/arrays";
 
 var _t = core._t;
 
@@ -149,7 +150,7 @@ var ModelFieldSelectorPopover = Widget.extend({
      * @returns {Object}
      */
     getSelectedField: function () {
-        return _.findWhere(this.pages[this.chain.length - 1], {name: this.chain.at(-1)});
+        return this.pages[this.chain.length - 1].find((page) => page.name === this.chain.at(-1));
     },
     /**
      * Saves a new field chain (array) and re-render.
@@ -213,9 +214,7 @@ var ModelFieldSelectorPopover = Widget.extend({
      *                   to its name
      /*/
     _getLastPageField: function (name) {
-        return _.findWhere(this.pages.at(-1) , {
-            name: name,
-        });
+        return this.pages.at(-1).find((page) => page.name === name);
     },
     /**
      * Searches the cache for the given model fields, according to the given
@@ -403,8 +402,10 @@ var ModelFieldSelectorPopover = Widget.extend({
     _getTitle: function () {
         var title = "";
         if (this.pages.length > 1) {
-            var prevField = _.findWhere(this.pages[this.pages.length - 2], {
-                name: (this.chain.length === this.pages.length) ? this.chain[this.chain.length - 2] : this.chain.at(-1),
+            var prevField = this.pages[this.pages.length - 2].find((page) => {
+                return page.name === (this.chain.length === this.pages.length)
+                    ? this.chain[this.chain.length - 2]
+                    : this.chain.at(-1);
             });
             if (prevField) {
                 this.titlesNames[this.chain.at(-1)] = prevField.string;
@@ -543,7 +544,7 @@ var ModelFieldSelectorPopover = Widget.extend({
      */
     _onFocusOut: function () {
         clearTimeout(this._hidePopoverTimeout);
-        this._hidePopoverTimeout = _.defer(() => this._hidePopover(this.options.cancelOnEscape));
+        this._hidePopoverTimeout = setTimeout(() => this._hidePopover(this.options.cancelOnEscape));
     },
     /**
      * Called when the popover "cross" icon is clicked -> closes the popover
@@ -714,22 +715,20 @@ export default ModelFieldSelectorPopover;
  * the final array contain an additional key "name" with the field name.
  *
  * @param {Object} fields - the mapping field name -> field info
- * @param {string} model
+ * @param {string} model - IE : "partner"
  * @returns {Object[]} the field infos sorted by field "string" (field infos
  *                     contain additional keys "model" and "name" with the field
  *                     name)
  */
 function sortFields(fields, model, order) {
-    var array = _.chain(fields)
-        .pairs()
-        .sortBy(function (p) { return p[1].string; });
-    if (order !== 'string') {
-        array = array.sortBy(function (p) {return p[1][order]; });
-    }
-    return array.map(function (p) {
-            return Object.assign({
-                name: p[0],
+    const fieldsArray = Object.entries(fields).map(([key, value]) => {
+        return Object.assign(
+            {
+                name: key,
                 model: model,
-            }, p[1]);
-        }).value();
+            },
+            value
+        );
+    });
+    return sortBy(fieldsArray, (field) => field[order]);
 }

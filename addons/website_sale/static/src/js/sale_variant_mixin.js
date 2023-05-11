@@ -5,7 +5,8 @@ import core from "web.core";
 import utils from "web.utils";
 import ajax from "web.ajax";
 import { sprintf } from "@web/core/utils/strings";
-import { memoize } from "@web/core/utils/functions";
+import { memoize, uniqueId } from "@web/core/utils/functions";
+import { throttleForAnimation } from "@web/core/utils/timing";
 
 var _t = core._t;
 
@@ -39,7 +40,7 @@ var VariantMixin = {
     onChangeVariant: function (ev) {
         var $parent = $(ev.target).closest('.js_product');
         if (!$parent.data('uniqueId')) {
-            $parent.data('uniqueId', _.uniqueId());
+            $parent.data('uniqueId', uniqueId());
         }
         this._throttledGetCombinationInfo(this, $parent.data('uniqueId'))(ev);
     },
@@ -632,7 +633,7 @@ var VariantMixin = {
      */
     _throttledGetCombinationInfo: memoize(function (self, uniqueId) {
         var dropMisordered = new concurrency.DropMisordered();
-        var _getCombinationInfo = _.throttle(self._getCombinationInfo.bind(self), 500);
+        var _getCombinationInfo = throttleForAnimation(self._getCombinationInfo.bind(self));
         return (ev, params) => dropMisordered.add(_getCombinationInfo(ev, params));
     }),
     /**

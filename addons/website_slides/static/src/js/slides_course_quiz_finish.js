@@ -19,13 +19,13 @@ var SlideQuizFinishModal = Dialog.extend({
         this.quiz = options.quiz;
         this.hasNext = options.hasNext;
         this.userId = options.userId;
-        options = _.defaults(options || {}, {
+        options = Object.assign({
             size: 'medium',
             dialogClass: 'd-flex p-0',
             technical: false,
             renderHeader: false,
             renderFooter: false
-        });
+        }, options || {});
         this._super.apply(this, arguments);
         this.opened(function () {
             self._animateProgressBar();
@@ -106,7 +106,7 @@ var SlideQuizFinishModal = Dialog.extend({
                 self.$('.o_wslides_quiz_modal_rank_upper_bound')
                     .text(self.quiz.rankProgress.new_rank.upper_bound || "");
 
-                // we need to use _.delay to force DOM re-rendering between 0 and new percentage
+                // we need to use delay to force DOM re-rendering between 0 and new percentage
                 setTimeout(() => {
                     $progressBar.addClass('no-transition').width('0%');
                 }, 1);

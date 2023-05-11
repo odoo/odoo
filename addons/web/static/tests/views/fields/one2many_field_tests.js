@@ -32,6 +32,7 @@ import { session } from "@web/session";
 import { RelationalModel } from "@web/views/relational_model";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { rpcService } from "@web/core/network/rpc_service";
+import { pick } from "@web/core/utils/objects";
 import BasicModel from "web.BasicModel";
 import { getPickerCell } from "../../core/datetime/datetime_test_helpers";
 
@@ -8851,15 +8852,17 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.turtle.records[0].partner_ids = [1];
         serverData.models.partner.onchanges = {
             turtles: function (obj) {
-                var res = _.map(obj.turtles, function (command) {
+                var res = obj.turtles.map((command) => {
                     if (command[0] === 1) {
                         // already an UPDATE command: do nothing
                         return command;
                     }
                     // convert LINK_TO commands to UPDATE commands
                     var id = command[1];
-                    var record = _.findWhere(serverData.models.turtle.records, { id: id });
-                    return [1, id, _.pick(record, ["turtle_int", "turtle_foo", "partner_ids"])];
+                    var record = serverData.models.turtle.records.find(
+                        (record) => record.id === id
+                    );
+                    return [1, id, pick(record, "turtle_int", "turtle_foo", "partner_ids")];
                 });
                 obj.turtles = [[5]].concat(res);
             },
@@ -11382,7 +11385,7 @@ QUnit.module("Fields", (hooks) => {
             partner_ids: function (obj) {
                 // simulate actual server onchange after save of modal with new record
                 if (numUserOnchange === 0) {
-                    obj.partner_ids = _.clone(obj.partner_ids);
+                    obj.partner_ids = [...obj.partner_ids];
                     obj.partner_ids.unshift([5]);
                     obj.partner_ids[1][2].turtles.unshift([5]);
                     obj.partner_ids[2] = [
@@ -11395,7 +11398,7 @@ QUnit.module("Fields", (hooks) => {
                         },
                     ];
                 } else if (numUserOnchange === 1) {
-                    obj.partner_ids = _.clone(obj.partner_ids);
+                    obj.partner_ids = [...obj.partner_ids];
                     obj.partner_ids.unshift([5]);
                     obj.partner_ids[1][2].turtles.unshift([5]);
                     obj.partner_ids[2][2].turtles.unshift([5]);

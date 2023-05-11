@@ -8,6 +8,7 @@ import pyUtils from "web.py_utils";
 import session from "web.session";
 import time from "web.time";
 import web_client from "web.web_client";
+import { uniqueId } from "@web/core/utils/functions";
 
 var QWeb = core.qweb;
 
@@ -209,7 +210,7 @@ var Dashboard = AbstractAction.extend({
                 var renderGraph = self.groups[e.group] &&
                                     self.dashboards_data[e.name].summary.order_count;
                 if (!self.chartIds[e.name]) {
-                    self.chartIds[e.name] = _.uniqueId('chart_' + e.name);
+                    self.chartIds[e.name] = uniqueId("chart_" + e.name);
                 }
                 var chart_id = self.chartIds[e.name];
                 if (renderGraph) {

@@ -12,7 +12,7 @@ import dom from "web.dom";
 import { cartesian } from "@web/core/utils/arrays";
 import { ComponentWrapper } from "web.OwlCompatibility";
 import { ProductImageViewerWrapper } from "@website_sale/js/components/website_sale_image_viewer";
-import { debounce } from "@web/core/utils/timing";
+import { debounce, throttleForAnimation } from "@web/core/utils/timing";
 
 publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
     selector: '.oe_website_sale',
@@ -892,10 +892,11 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
     async start() {
         await this._super(...arguments);
         this._updateCarouselPosition();
+        this.throttleOnResize = throttleForAnimation(this._onSlideCarouselProduct.bind(this));
         extraMenuUpdateCallbacks.push(this._updateCarouselPosition.bind(this));
         if (this.$el.find('.carousel-indicators').length > 0) {
             this.$el.on('slide.bs.carousel.carousel_product_slider', this._onSlideCarouselProduct.bind(this));
-            $(window).on('resize.carousel_product_slider', _.throttle(this._onSlideCarouselProduct.bind(this), 150));
+            $(window).on('resize.carousel_product_slider', this.throttleOnResize);
             this._updateJustifyContent();
         }
     },
@@ -905,6 +906,9 @@ publicWidget.registry.websiteSaleCarouselProduct = publicWidget.Widget.extend({
     destroy() {
         this.$el.css('top', '');
         this.$el.off('.carousel_product_slider');
+        if (this.throttleOnResize) {
+            this.throttleOnResize.cancel();
+        }
         this._super(...arguments);
     },
 

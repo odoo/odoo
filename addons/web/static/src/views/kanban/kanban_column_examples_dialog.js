@@ -23,7 +23,8 @@ class KanbanExamplesNotebookTemplate extends Component {
             for (let i = 0; i < random(1, 5); i++) {
                 const rec = { id: i };
                 if (hasBullet && Math.random() > 0.3) {
-                    rec.bullet = _.sample(this.props.bullets);
+                    const sampleId = Math.floor(Math.random() * this.props.bullets.length);
+                    rec.bullet = this.props.bullets[sampleId];
                 }
                 col.records.push(rec);
             }

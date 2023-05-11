@@ -11,7 +11,7 @@ var CategoryAddDialog = Dialog.extend({
      * @override
      */
     init: function (parent, options) {
-        options = _.defaults(options || {}, {
+        options = Object.assign({
             title: _t('Add a section'),
             size: 'medium',
             buttons: [{
@@ -22,7 +22,7 @@ var CategoryAddDialog = Dialog.extend({
                 text: _t('Back'),
                 close: true
             }]
-        });
+        }, options || {});
 
         this.channelId = options.channelId;
         this._super(parent, options);

@@ -1,6 +1,6 @@
 /** @odoo-module alias=portal.composer **/
 
-import { sprintf } from "@web/core/utils/strings";
+import { escape, sprintf } from "@web/core/utils/strings";
 import ajax from "web.ajax";
 import core from "web.core";
 import publicWidget from "web.public.widget";
@@ -28,14 +28,14 @@ var PortalComposer = publicWidget.Widget.extend({
      */
     init: function (parent, options) {
         this._super.apply(this, arguments);
-        this.options = _.defaults(options || {}, {
+        this.options = Object.assign({
             'allow_composer': true,
             'display_composer': false,
             'csrf_token': odoo.csrf_token,
             'token': false,
             'res_model': false,
             'res_id': false,
-        });
+        }, options || {});
         this.attachments = [];
     },
     /**
@@ -115,7 +115,7 @@ var PortalComposer = publicWidget.Widget.extend({
 
         this.$sendButton.prop('disabled', true);
 
-        return Promise.all(_.map(this.$fileInput[0].files, function (file) {
+        return Promise.all(this.$fileInput[0].files.map((file) => {
             return new Promise(function (resolve, reject) {
                 var data = self._prepareAttachmentData(file);
                 ajax.post('/portal/attachment/add', data).then(function (attachment) {
@@ -126,7 +126,7 @@ var PortalComposer = publicWidget.Widget.extend({
                 }).guardedCatch(function (error) {
                     self.displayNotification({
                         message: sprintf(_t("Could not save file <strong>%s</strong>"),
-                            _.escape(file.name)),
+                            escape(file.name)),
                         type: 'warning',
                         sticky: true,
                     });

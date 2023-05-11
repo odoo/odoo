@@ -1,30 +1,10 @@
 /** @odoo-module alias=payment.payment_form_mixin **/
 
-    import { sprintf } from "@web/core/utils/strings";
+    import { escape, sprintf } from "@web/core/utils/strings";
     import core from "web.core";
     import Dialog from "web.Dialog";
 
     const _t = core._t;
-
-    /**
-     * Replace HTML character with ASCII character
-     *
-     * @param {string} str string
-     * @returns {string} ASCII string
-     */
-    function escapeHTML(str) {
-        const htmlCaracters = {
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            "'": "&#39;",
-            '"': "&quot;",
-        };
-        for (const [key, value] of Object.entries(htmlCaracters)) {
-            str = String(str).replace(new RegExp(key, "g"), value);
-        }
-        return str;
-    }
 
     export default {
 
@@ -97,7 +77,7 @@
                 return new Dialog(null, {
                     title: sprintf(_t("Error: %s"), title),
                     size: 'medium',
-                    $content: `<p>${escapeHTML(description) || ''}</p>`,
+                    $content: `<p>${escape(description) || ''}</p>`,
                     buttons: [{text: _t("Ok"), close: true}]
                 }).open();
             } else { // Show error in inline form
@@ -105,12 +85,12 @@
 
                 // Build the html for the error
                 let errorHtml = `<div class="alert alert-danger mb4" name="o_payment_error">
-                                 <b>${escapeHTML(title)}</b>`;
+                                 <b>${escape(title)}</b>`;
                 if (description !== '') {
-                    errorHtml += `</br>${escapeHTML(description)}`;
+                    errorHtml += `</br>${escape(description)}`;
                 }
                 if (error !== '') {
-                    errorHtml += `</br>${escapeHTML(error)}`;
+                    errorHtml += `</br>${escape(error)}`;
                 }
                 errorHtml += '</div>';
 

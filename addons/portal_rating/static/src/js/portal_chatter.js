@@ -33,10 +33,10 @@ PortalChatter.include({
         this._super.apply(this, arguments);
         // options
         if (!Object.keys(this.options).includes("display_rating")) {
-            this.options = _.defaults(this.options, {
+            this.options = Object.assign({
                 'display_rating': false,
                 'rating_default_value': 0.0,
-            });
+            }, this.options);
         }
         // rating card
         this.set('rating_card_values', {});
@@ -136,7 +136,8 @@ PortalChatter.include({
             'avg': Math.round(result['rating_stats']['avg'] * 100) / 100,
             'percent': [],
         };
-        _.sortBy(Object.keys(result["rating_stats"]["percent"]))
+        Object.keys(result["rating_stats"]["percent"])
+            .sort()
             .reverse()
             .forEach((rating) => {
                 ratingData["percent"].push({

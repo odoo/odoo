@@ -69,7 +69,7 @@ var QWeb2 = {
             if (s == null) {
                 return '';
             }
-            return _.escape(s);
+            return _escape(s);
         },
         markup(s) {
             return new _Markup(s);
@@ -203,7 +203,7 @@ var QWeb2 = {
                       }
                 }
 
-                _.each(Object.keys(old_dict), function(z) {
+                Object.keys(old_dict).forEach((z) => {
                     old_dict[z] = new_dict[z];
                 });
             } else {

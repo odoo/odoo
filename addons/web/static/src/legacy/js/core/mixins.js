@@ -30,8 +30,10 @@ var ParentedMixin = {
     setParent : function (parent) {
         if (this.getParent()) {
             if (this.getParent().__parentedMixin) {
-                this.getParent().__parentedChildren = _.without(this
-                        .getParent().getChildren(), this);
+                const children = this.getParent().getChildren();
+                this.getParent().__parentedChildren = children.filter(
+                    (child) => child.$el !== this.$el
+                );
             }
         }
         this.__parentedParent = parent;
@@ -49,7 +51,7 @@ var ParentedMixin = {
      * Return a list of the children of the current object.
      */
     getChildren : function () {
-        return _.clone(this.__parentedChildren);
+        return [...this.__parentedChildren];
     },
     /**
      * Returns true if destroy() was called on the current object.
@@ -251,7 +253,7 @@ var EventDispatcherMixin = Object.assign({}, ParentedMixin, {
      * Proxies a method of the object, in order to keep the right ``this`` on
      * method invocations.
      *
-     * This method is similar to ``Function.prototype.bind`` or ``_.bind``, and
+     * This method is similar to ``Function.prototype.bind``, and
      * even more so to ``jQuery.proxy`` with a fundamental difference: its
      * resolution of the method being called is lazy, meaning it will use the
      * method as it is when the proxy is called, not when the proxy is created.

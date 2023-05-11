@@ -44,7 +44,7 @@ function _genericJsonRpc (fct_name, params, settings, fct) {
             return result.result;
         }
     }, function() {
-        //console.error("JsonRPC communication error", _.toArray(arguments));
+        //console.error("JsonRPC communication error", [...arguments]);
         var reason = {
             type: 'communication',
             error: arguments[0],

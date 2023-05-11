@@ -22,6 +22,9 @@ import Link from "wysiwyg.widgets.Link";
 import * as wysiwygUtils from "@web_editor/js/common/wysiwyg_utils";
 import weUtils from "web_editor.utils";
 import { PeerToPeer } from "@web_editor/js/wysiwyg/PeerToPeer";
+import { uniqueId } from "@web/core/utils/functions";
+import { groupBy } from "@web/core/utils/arrays";
+import { debounce } from "@web/core/utils/timing";
 
 var _t = core._t;
 const QWeb = core.qweb;
@@ -670,7 +673,7 @@ const Wysiwyg = Widget.extend({
                 if (!this.ptp) return;
                 this.ptp.notifyAllClients('oe_history_step', historyStep, { transport: 'rtc' });
             },
-            onCollaborativeSelectionChange: _.throttle((collaborativeSelection) => {
+            onCollaborativeSelectionChange: debounce((collaborativeSelection) => {
                 if (!this.ptp) return;
                 this.ptp.notifyAllClients('oe_history_set_selection', collaborativeSelection, { transport: 'rtc' });
             }, 50),
@@ -955,7 +958,7 @@ const Wysiwyg = Widget.extend({
      * @returns {Promise}
      */
     savePendingImages($editable = this.$editable) {
-        const defs = _.map($editable, async editableEl => {
+        const defs = Array.from($editable).map(async (editableEl) => {
             const {oeModel: resModel, oeId: resId} = editableEl.dataset;
             const b64Proms = [...editableEl.querySelectorAll('.o_b64_image_to_save')].map(async el => {
                 const attachment = await this._rpc({
@@ -2320,7 +2323,7 @@ const Wysiwyg = Widget.extend({
             : '_saveElement';
 
         // Group elements to save if possible.
-        const groupedElements = _.groupBy($allBlocks.toArray(), el => {
+        const groupedElements = groupBy($allBlocks.toArray(), el => {
             const model = el.dataset.oeModel;
             const field = el.dataset.oeField;
 
@@ -2329,14 +2332,14 @@ const Wysiwyg = Widget.extend({
             // `_saveElement` which is expected to be called for each unique
             // dirty element). In that case, do not group those elements.
             if (!model) {
-                return _.uniqueId('special-element-to-save-');
+                return uniqueId("special-element-to-save-");
             }
 
             // Do not group elements which are parts of views, unless we are
             // in translate mode.
             if (!this.options.enableTranslation
                     && (model === 'ir.ui.view' && field === 'arch')) {
-                return _.uniqueId('view-part-to-save-');
+                return uniqueId("view-part-to-save-");
             }
 
             // Otherwise, group elements which are from the same field of the
@@ -2363,7 +2366,7 @@ const Wysiwyg = Widget.extend({
                     // setup the popover here as everything will be destroyed by
                     // the DOM regeneration. Add markings instead, and returns a
                     // new rejection with all relevant info
-                    var id = _.uniqueId('carlos_danger_');
+                    var id = uniqueId("carlos_danger_");
                     $els.addClass('o_dirty o_editable oe_carlos_danger ' + id);
                     $('.o_editable.' + id)
                         .removeClass(id)

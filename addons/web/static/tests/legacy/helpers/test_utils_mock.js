@@ -26,6 +26,7 @@ import { assets } from "@web/core/assets";
 import { processArch } from "@web/legacy/legacy_load_views";
 
 import { Component } from "@odoo/owl";
+import { uniqueId } from "@web/core/utils/functions";
 const DebouncedField = basic_fields.DebouncedField;
 
 
@@ -84,7 +85,7 @@ async function _getMockedOwlEnv(params, mockServer) {
                     method: 'get_views',
                     model: params.model,
                 }).then(function (views) {
-                    views = _.mapObject(views, viewParams => {
+                    views = Object.values(views).map((viewParams) => {
                         return getView(mockServer, viewParams);
                     });
                     if (favoriteFilters && 'search' in views) {
@@ -317,10 +318,6 @@ function intercept(widget, eventName, fn, propagate) {
  * @param {function} [params.mockRPC]
  * @param {number} [params.fieldDebounce=0] the value of the DEBOUNCE attribute
  *   of fields
- * @param {boolean} [params.debounce=true] if false, patch _.debounce to remove
- *   its behavior
- * @param {boolean} [params.throttle=false] by default, _.throttle is patched to
- *   remove its behavior, except if this params is set to true
  * @param {boolean} [params.mockSRC=false] if true, redirect src GET requests to
  *   the mockServer
  * @param {MockServer} [mockServer]
@@ -386,20 +383,6 @@ async function addMockEnvironmentOwl(Component, params, mockServer) {
     const initialDOMDebounceValue = dom.DEBOUNCE;
     dom.DEBOUNCE = 0;
 
-    // patch underscore debounce/throttle functions
-    const initialDebounce = _.debounce;
-    if (params.debounce === false) {
-        _.debounce = function (func) {
-            return func;
-        };
-    }
-    // fixme: throttle is inactive by default, should we make it explicit ?
-    const initialThrottle = _.throttle;
-    if (!('throttle' in params) || !params.throttle) {
-        _.throttle = function (func) {
-            return func;
-        };
-    }
 
     // mock global objects for legacy widgets (session, config...)
     const restoreMockedGlobalObjects = _mockGlobalObjects(params);
@@ -433,8 +416,6 @@ async function addMockEnvironmentOwl(Component, params, mockServer) {
 
         DebouncedField.prototype.DEBOUNCE = initialDebounceValue;
         dom.DEBOUNCE = initialDOMDebounceValue;
-        _.debounce = initialDebounce;
-        _.throttle = initialThrottle;
 
         // clear the caches (e.g. data_manager, ModelFieldSelector) at the end
         // of each test to avoid collisions
@@ -455,13 +436,6 @@ async function addMockEnvironmentOwl(Component, params, mockServer) {
  * Add a mock environment to a widget.  This helper function can simulate
  * various kind of side effects, such as mocking RPCs, changing the session,
  * or the translation settings.
- *
- * The simulated environment lasts for the lifecycle of the widget, meaning it
- * disappears when the widget is destroyed.  It is particularly relevant for the
- * session mocks, because the previous session is restored during the destroy
- * call.  So, it means that you have to be careful and make sure that it is
- * properly destroyed before another test is run, otherwise you risk having
- * interferences between tests.
  *
  * @param {Widget} widget
  * @param {Object} params
@@ -624,7 +598,7 @@ var patches = {};
  * @param {Object} props
  */
 function patch(target, props) {
-    var patchID = _.uniqueId('patch_');
+    var patchID = uniqueId("patch_");
     target.__patchID = patchID;
     patches[patchID] = {
         target: target,

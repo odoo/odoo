@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { groupBy } from '@web/core/utils/arrays';
 import publicWidget from 'web.public.widget';
 import DynamicSnippet from 'website.s_dynamic_snippet';
 
@@ -15,7 +16,7 @@ const DynamicSnippetEvents = DynamicSnippet.extend({
         let searchDomain = this._super.apply(this, arguments);
         const filterByTagIds = this.$el.get(0).dataset.filterByTagIds;
         if (filterByTagIds) {
-            let tagGroupedByCategory = _.groupBy(JSON.parse(filterByTagIds), 'category_id');
+            let tagGroupedByCategory = groupBy(JSON.parse(filterByTagIds), 'category_id');
             for (const category in tagGroupedByCategory) {
                 searchDomain = searchDomain.concat(
                     [['tag_ids', 'in', tagGroupedByCategory[category].map(e => e.id)]]);

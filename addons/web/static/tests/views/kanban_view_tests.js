@@ -45,6 +45,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 
 import { Component, onWillRender, xml } from "@odoo/owl";
 import { SampleServer } from "@web/views/sample_server";
+import { pick } from "@web/core/utils/objects";
 import { KanbanDynamicGroupList } from "@web/views/kanban/kanban_model";
 
 const serviceRegistry = registry.category("services");
@@ -3206,7 +3207,7 @@ QUnit.module("Views", (hooks) => {
                     }
                     if (args.method === "create") {
                         assert.step("create");
-                        assert.deepEqual(_.pick(args.args[0], "foo", "int_field"), {
+                        assert.deepEqual(pick(args.args[0], "foo", "int_field"), {
                             foo: "new partner",
                             int_field: 3,
                         });

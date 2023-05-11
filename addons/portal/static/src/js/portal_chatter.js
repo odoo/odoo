@@ -138,12 +138,16 @@ var PortalChatter = publicWidget.Widget.extend({
             'two_columns': false,
         }, this.options || {});
 
-        this.options = Object.entries(options).reduce(
-            (acc, [key, value]) => {
-                acc[_.str.underscored(key)] = value;
-                return acc;
-            },
-            defaultOptions);
+        this.options = Object.entries(options).reduce((acc, [key, value]) => {
+            acc[
+                //Camelized to Underscored key
+                key
+                    .split(/\.?(?=[A-Z])/)
+                    .join("_")
+                    .toLowerCase()
+            ] = value;
+            return acc;
+        }, defaultOptions);
     },
 
     /**
@@ -196,7 +200,7 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     _changeCurrentPage: function (page, domain) {
         this._currentPage = page;
-        var d = domain ? domain : _.clone(this.get('domain'));
+        var d = domain ? domain : Object.assign({}, this.get("domain"));
         this.set('domain', d); // trigger fetch message
     },
     _messageFetchPrepareParams: function () {

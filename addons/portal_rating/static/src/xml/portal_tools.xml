@@ -23,7 +23,7 @@
     <t t-name="portal_rating.rating_card">
         <t t-set="two_columns" t-value="widget.options['two_columns']"/>
         <div class="row o_website_rating_card_container justify-content-center">
-            <div t-attf-class="#{two_columns and 'col-lg-12' or 'col-lg-5'}" t-if="!_.isEmpty(widget.get('rating_card_values'))">
+            <div t-attf-class="#{two_columns and 'col-lg-12' or 'col-lg-5'}" t-if="Object.keys(widget.get('rating_card_values') || {}).length > 0">
                 <p t-if="!two_columns" class="text-center"><strong>Average</strong></p>
                 <div t-attf-class="o_website_rating_avg #{two_columns and 'mb-2' or 'text-center'}">
                     <h1><t t-esc="widget.get('rating_card_values')['avg']"/></h1>
@@ -33,7 +33,7 @@
                     <t t-call="portal.chatter_message_count"/>
                 </div>
             </div>
-            <div t-attf-class="#{two_columns and 'col-lg-12' or 'col-lg-7'}" t-if="!_.isEmpty(widget.get('rating_card_values'))">
+            <div t-attf-class="#{two_columns and 'col-lg-12' or 'col-lg-7'}" t-if="Object.keys(widget.get('rating_card_values') || {}).length > 0">
                 <hr t-if="two_columns"/>
                 <p t-if="!two_columns"><strong>Details</strong></p>
                 <t t-set="selected_rating" t-value="widget.get('rating_value')"/>

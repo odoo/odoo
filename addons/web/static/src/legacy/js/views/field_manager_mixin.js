@@ -7,6 +7,7 @@
  * calling the correct methods on the model.  This is the field_manager's job.
  */
 
+import { pick } from '@web/core/utils/objects';
 import BasicModel from 'web.BasicModel';
 import concurrency from 'web.concurrency';
 
@@ -45,7 +46,7 @@ var FieldManagerMixin = {
      */
     _applyChanges: function (dataPointID, changes, event) {
         var self = this;
-        var options = _.pick(event.data, 'context', 'doNotSetDirty', 'notifyChange', 'viewType', 'allowWarning');
+        var options = pick(event.data, 'context', 'doNotSetDirty', 'notifyChange', 'viewType', 'allowWarning');
         return this.model.notifyChanges(dataPointID, changes, options)
             .then(function (result) {
                 if (event.data.force_save) {

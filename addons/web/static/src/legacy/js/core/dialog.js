@@ -73,7 +73,7 @@ var Dialog = Widget.extend({
         if (this.on_attach_callback) {
             this._opened = this.opened(this.on_attach_callback);
         }
-        options = _.defaults(options || {}, {
+        options = Object.assign({
             title: _t('Odoo'), subtitle: '',
             size: 'large',
             fullscreen: false,
@@ -86,7 +86,7 @@ var Dialog = Widget.extend({
             renderHeader: true,
             renderFooter: true,
             onForceClose: false,
-        });
+        }, options || {});
 
         this.$content = options.$content;
         this.title = options.title;

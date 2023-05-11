@@ -25,12 +25,12 @@
 </t>
 
 <t t-name="mail.KanbanActivityDropdown">
-    <span role="menuitem" t-if="_.isEmpty(records)" class="dropdown-item-text text-center p-3 cursor-default">
+    <span role="menuitem" t-if="Object.keys(records || {}).length === 0" class="dropdown-item-text text-center p-3 cursor-default">
         <i>Schedule activities to help you get things done.</i>
     </span>
     <div t-else="" aria-haspopup="true" role="menu" class="o_activity_log_container dropdown-item bg-100 p-0">
         <ul class="o_activity_log list-group list-group-flush mb-2" role="menu">
-            <t t-foreach="_.keys(records)" t-as="key">
+            <t t-foreach="Object.keys(records)" t-as="key">
                 <t t-set="logs" t-value="records[key]" />
                 <t t-set="contextual_class" t-value="key == 'planned' ? 'success' : (key == 'today' ? 'warning' : 'danger') "/>
 
