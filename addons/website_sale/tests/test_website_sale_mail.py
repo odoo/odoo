@@ -4,6 +4,7 @@
 from unittest.mock import patch
 
 import odoo
+from odoo import fields
 from odoo.tests import tagged
 from odoo.tests.common import HttpCase
 
@@ -29,4 +30,11 @@ class TestWebsiteSaleMail(HttpCase):
         self.env['ir.config_parameter'].sudo().set_param('mail_mobile.disable_redirect_firebase_dynamic_link', True)
 
         with patch.object(MailMail, 'unlink', lambda self: None):
+            start_time = fields.Datetime.now()
             self.start_tour("/", 'shop_mail', login="admin")
+            new_mail = self.env['mail.mail'].search([('create_date', '>=', start_time),
+                                                     ('body_html', 'ilike', 'https://my-test-domain.com')],
+                                                    order='create_date DESC', limit=1)
+            self.assertTrue(new_mail)
+            self.assertIn('Your', new_mail.body_html)
+            self.assertIn('Order', new_mail.body_html)
