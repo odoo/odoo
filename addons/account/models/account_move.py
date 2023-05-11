@@ -392,7 +392,7 @@ class AccountMove(models.Model):
 
         if self.is_sale_document(include_receipts=True):
             return invoice_date
-        elif self.is_purchase_document(include_receipts=True):
+        else:
             highest_name = self.highest_name or self._get_last_sequence(relaxed=True, lock=False)
             number_reset = self._deduce_sequence_number_reset(highest_name)
             if not highest_name or number_reset == 'month':

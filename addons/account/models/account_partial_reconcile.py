@@ -117,9 +117,8 @@ class AccountPartialReconcile(models.Model):
         res = super().unlink()
 
         # Reverse CABA entries.
-        today = fields.Date.context_today(self)
         default_values_list = [{
-            'date': move.date if move.date > (move.company_id.period_lock_date or date.min) else today,
+            'date': move._get_accounting_date(move.date, move._affect_tax_report()),
             'ref': _('Reversal of: %s') % move.name,
         } for move in moves_to_reverse]
         moves_to_reverse._reverse_moves(default_values_list, cancel=True)
