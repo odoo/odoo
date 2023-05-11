@@ -270,14 +270,17 @@ export class MassMailingHtmlField extends HtmlField {
                 const name = $theme.data("name");
                 const classname = "o_" + name + "_theme";
                 this._themeClassNames += " " + classname;
-                const imagesInfo = _.defaults($theme.data("imagesInfo") || {}, {
+                const imagesInfo = Object.assign({
                     all: {}
-                });
+                }, $theme.data("imagesInfo") || {});
                 for (const info of Object.values(imagesInfo)) {
-                    _.defaults(info, imagesInfo.all, {
+                    Object.assign({
                         module: "mass_mailing",
                         format: "jpg"
-                    });
+                        },
+                        imagesInfo.all,
+                        info
+                    );
                 }
                 return {
                     name: name,

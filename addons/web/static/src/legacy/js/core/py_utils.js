@@ -182,7 +182,7 @@ function get_normalized_domain(domain_array) {
             expected--;
         }
     });
-    var new_explicit_ands = _.times(-expected, _.constant("&"));
+    var new_explicit_ands = new Array(-expected).fill("&");
     return new_explicit_ands.concat(domain_array);
 }
 
@@ -381,9 +381,7 @@ function assembleDomains(domains, operator) {
     if (normalizedDomains.length > 0) {
         result.first = normalizedDomains.reduce(function (acc, ast) {
             return acc.concat(ast.first);
-        },
-        _.times(normalizedDomains.length - 1, _.constant(operator))
-        );
+        }, new Array(normalizedDomains.length - 1).fill(operator));
     }
     return _formatAST(result);
 }
@@ -540,7 +538,7 @@ function _normalizeDomainAST(domain) {
     var andOperator = py.tokenize("'&'")[0];
 
     if (expected < 0) {
-        domain.first.unshift.apply(domain.first, _.times(Math.abs(expected), _.constant(andOperator)));
+        domain.first.unshift.apply(domain.first, new Array(Math.abs(expected)).fill(andOperator));
     }
 
     return domain;

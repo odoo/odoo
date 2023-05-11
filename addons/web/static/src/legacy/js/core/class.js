@@ -61,9 +61,13 @@ var fnTest = /xyz/.test(function(){xyz();}) ? /\b_super\b/ : /.*/;
 OdooClass.extend = function() {
     var _super = this.prototype;
     // Support mixins arguments
-    var args = _.toArray(arguments);
+    var args = [...arguments];
     args.unshift({});
-    var prop = _.extend.apply(_,args);
+
+    const prop = {};
+    args.forEach((arg) => {
+        Object.assign(prop, arg);
+    });
 
     // Instantiate a web class (but only create the instance,
     // don't run the init constructor)

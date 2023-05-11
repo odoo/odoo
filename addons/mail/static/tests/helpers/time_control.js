@@ -2,6 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { uniqueId } from "@web/core/utils/functions";
 
 /**
  * Wait a task tick, so that anything in micro-task queue that can be processed
@@ -22,7 +23,7 @@ export function getAdvanceTime() {
             timedOutIds = timedOutIds.filter((i) => i !== id);
         },
         setTimeout: (func, duration) => {
-            const timeoutId = _.uniqueId("timeout_");
+            const timeoutId = uniqueId("timeout_");
             const timeout = {
                 id: timeoutId,
                 isTimedOut: false,

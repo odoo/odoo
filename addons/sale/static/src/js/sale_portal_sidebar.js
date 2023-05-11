@@ -2,6 +2,7 @@
 
 import publicWidget from "web.public.widget";
 import PortalSidebar from "portal.PortalSidebar";
+import { uniqueId } from "@web/core/utils/functions";
 
 publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
     selector: '.o_portal_sale_sidebar',
@@ -44,7 +45,7 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
      *
      */
     _setElementId: function (prefix, $el) {
-        var id = _.uniqueId(prefix);
+        var id = uniqueId(prefix);
         this.spyWatched.find($el).attr('id', id);
         return id;
     },

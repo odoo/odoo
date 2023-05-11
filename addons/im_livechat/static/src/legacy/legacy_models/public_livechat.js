@@ -9,6 +9,7 @@ import { _t } from "web.core";
 import session from "web.session";
 import Mixins from "web.mixins";
 import { sprintf } from "web.utils";
+import { sortBy } from "@web/core/utils/arrays";
 
 /**
  * Thread model that represents a livechat on the website-side. This livechat
@@ -180,7 +181,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
             )
                 ? [this.messaging.publicLivechatGlobal.publicLivechat.operator]
                 : [];
-        const sortedTypingMembers = _.sortBy(typingMembers, function (member) {
+        const sortedTypingMembers = sortBy(typingMembers, (member) => {
             return typingPartnerIDs.indexOf(member.id);
         });
         const displayableTypingMembers = sortedTypingMembers.slice(0, 3);

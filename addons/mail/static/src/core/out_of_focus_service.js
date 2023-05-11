@@ -3,7 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { escape, sprintf } from "@web/core/utils/strings";
+import { escape, sprintf, unescapeHTML } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
 import { htmlToTextContentInline } from "../utils/format";
 
@@ -120,9 +120,9 @@ export class OutOfFocusService {
         const notification = new Notification(
             // The native Notification API works with plain text and not HTML
             // unescaping is safe because done only at the **last** step
-            _.unescape(title),
+            unescapeHTML(title),
             {
-                body: _.unescape(message),
+                body: unescapeHTML(message),
                 icon: "/mail/static/src/img/odoobot_transparent.png",
             }
         );

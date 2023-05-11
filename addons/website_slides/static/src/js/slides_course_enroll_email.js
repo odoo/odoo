@@ -8,7 +8,7 @@ var SlideEnrollDialog = Dialog.extend({
     template: 'slide.course.join.request',
 
     init: function (parent, options, modalOptions) {
-        modalOptions = _.defaults(modalOptions || {}, {
+        modalOptions = Object.assign({
             title: _t('Request Access.'),
             size: 'medium',
             buttons: [{
@@ -19,7 +19,7 @@ var SlideEnrollDialog = Dialog.extend({
                 text: _t('Cancel'),
                 close: true
             }]
-        });
+        }, modalOptions || {});
         this.$element = options.$element;
         this.channelId = options.channelId;
         this._super(parent, modalOptions);

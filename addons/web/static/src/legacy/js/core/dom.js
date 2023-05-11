@@ -9,6 +9,7 @@
  * something happens in the DOM.
  */
 
+import { uniqueId } from "@web/core/utils/functions";
 import concurrency from "web.concurrency";
 import core from "web.core";
 var _t = core._t;
@@ -461,7 +462,7 @@ var dom = {
      * @returns {jQuery}
      */
     renderCheckbox: function (options) {
-        var id = _.uniqueId('checkbox-');
+        var id = uniqueId('checkbox-');
         var $container = $('<div/>', {
             class: 'form-check',
         });

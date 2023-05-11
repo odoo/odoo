@@ -891,7 +891,10 @@
             var resultID = await model.load(this.params);
             var record = model.get(resultID);
             var category_value = record.data.category;
-            assert.ok(_.isObject(category_value), "category field should have been fetched");
+            assert.ok(
+                typeof category_value === "object",
+                "category field should have been fetched"
+            );
             assert.strictEqual(category_value.data.length, 1, "category field should contain one record");
             await model.notifyChanges(resultID, {
                 category: {
@@ -1068,12 +1071,12 @@
             var dataPoint = model.get(resultID);
             assert.strictEqual(dataPoint.data.length, 2, "should have two groups");
 
-            var groupFalse = _.findWhere(dataPoint.data, { value: false });
+            var groupFalse = dataPoint.data.find((point) => point.value === false);
             assert.ok(groupFalse, "should have a group for value false");
             assert.deepEqual(groupFalse.domain, [['selection', '=', false]],
                 "group's domain should be correct");
 
-            var groupA = _.findWhere(dataPoint.data, { value: 'A' });
+            var groupA = dataPoint.data.find((point) => point.value === "A");
             assert.ok(groupA, "should have a group for value 'a'");
             assert.deepEqual(groupA.domain, [['selection', '=', 'a']],
                 "group's domain should be correct");
@@ -2177,7 +2180,7 @@
 
             var resultID = await model.load(this.params);
             var list = model.get(resultID);
-            assert.deepEqual(_.map(list.data, 'res_id'), [12, 15, 14],
+            assert.deepEqual(list.data.map((l) => l.res_id), [12, 15, 14],
                 "should have kept the order from the server");
             model.destroy();
         });

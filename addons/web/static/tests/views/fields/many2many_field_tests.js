@@ -281,13 +281,12 @@ QUnit.module("Fields", (hooks) => {
                         "generated command should be REPLACE WITH"
                     );
                     // get the created type's id
-                    var createdType = _.findWhere(serverData.models.partner_type.records, {
-                        display_name: "A new type",
+                    var createdType = serverData.models.partner_type.records.find((record) => {
+                        return record.display_name === "A new type";
                     });
-                    var ids = _.sortBy([12, 15, 18].concat(createdType.id), _.identity.bind(_));
+                    var ids = [12, 15, 18].concat(createdType.id).sort();
                     assert.ok(
-                        JSON.stringify(_.sortBy(commands[0][2], _.identity.bind(_))) ===
-                            JSON.stringify(ids),
+                        JSON.stringify(commands[0][2].sort()) === JSON.stringify(ids),
                         "new value should be " + ids
                     );
                 }

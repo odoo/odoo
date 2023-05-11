@@ -183,7 +183,7 @@ function unpatch() {
  * @returns {object}
  */
 function wysiwygData(data) {
-    return _.defaults({}, data, {
+    return Object.assign({
         'ir.ui.view': {
             fields: {
                 display_name: {
@@ -281,7 +281,7 @@ function wysiwygData(data) {
                 return;
             },
         },
-    });
+    }, data);
 }
 
 /**
@@ -386,17 +386,18 @@ range(40, 127).forEach((keyCode) => {
  * @param {Number} addTests
  */
 var testKeyboard = function ($editable, assert, keyboardTests, addTests) {
-    var tests = _.compact(keyboardTests.map((k) => k.test));
-    var testNumber = _.compact(tests.map((test) => test.start)).length +
-        _.compact(tests.map((test) => test.content)).length +
-        _.compact(tests.map((test) => test.check)).length +
+    var tests = keyboardTests.map((k) => k.test).map((x) => !!x);
+    var testNumber =
+        tests.map((test) => test.start).map((x) => !!x).length +
+        tests.map((test) => test.content).map((x) => !!x).length +
+        tests.map((test) => test.check.map((x) => !!x)).length +
         (addTests | 0);
     assert.expect(testNumber);
 
     function keydown(target, keypress) {
         var $target = $(target.tagName ? target : target.parentNode);
         if (!keypress.keyCode) {
-            keypress.keyCode = +_.findKey(keyboardMap, function (key) {
+            keypress.keyCode = +Object.keys(keyboardMap).find((key) => {
                 return key === keypress.key;
             });
         } else {
@@ -667,7 +668,7 @@ var keydown = function (key, $editable, options) {
     var keyPress = {};
     if (typeof key === 'string') {
         keyPress.key = key;
-        keyPress.keyCode = +_.findKey(keyboardMap, function (k) {
+        keyPress.keyCode = +Object.keys(keyboardMap).find((k) => {
             return k === key;
         });
     } else {

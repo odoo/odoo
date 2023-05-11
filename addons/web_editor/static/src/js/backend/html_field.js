@@ -34,6 +34,7 @@ import {
     useEffect,
     onWillUnmount,
 } from "@odoo/owl";
+import { uniqueId } from '@web/core/utils/functions';
 
 export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
     setup() {
@@ -108,7 +109,7 @@ export class HtmlField extends Component {
 
         useSpellCheck();
 
-        this._onUpdateIframeId = 'onLoad_' + _.uniqueId('FieldHtml');
+        this._onUpdateIframeId = "onLoad_" + uniqueId("FieldHtml");
 
         onWillStart(async () => {
             this.Wysiwyg = await this._getWysiwygClass();
@@ -562,10 +563,12 @@ export class HtmlField extends Component {
         if (!(this.props.record.fieldNames.includes('attachment_ids') && this.props.record.resModel === 'mail.compose.message')) {
             return;
         }
-        this.props.record.update(_.object(['attachment_ids'], [{
-            operation: 'ADD_M2M',
-            ids: attachment
-        }]));
+        this.props.record.update({
+            attachment_ids: {
+                operation: "ADD_M2M",
+                ids: attachment,
+            },
+        });
     }
     _onWysiwygBlur() {
         this.commitChanges();

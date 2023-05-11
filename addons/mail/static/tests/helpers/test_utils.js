@@ -370,11 +370,6 @@ async function addSwitchTabDropdownItem(rootTarget, tabTarget) {
  * @returns {Object}
  */
 async function start(param0 = {}) {
-    // patch _.debounce and _.throttle to be fast and synchronous.
-    patchWithCleanup(_, {
-        debounce: (func) => func,
-        throttle: (func) => func,
-    });
     const { discuss = {}, hasTimeControl } = param0;
     const advanceTime = hasTimeControl ? getAdvanceTime() : undefined;
     let target = param0["target"] || getFixture();

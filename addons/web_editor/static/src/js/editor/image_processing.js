@@ -1,5 +1,6 @@
 /** @odoo-module alias=web_editor.image_processing **/
 
+import { pick } from "@web/core/utils/objects";
 import {getAffineApproximation, getProjective} from "@web_editor/js/editor/perspective_utils";
 
 // Fields returned by cropperjs 'getData' method, also need to be passed when
@@ -407,7 +408,7 @@ async function activateCropper(image, aspectRatio, dataset) {
         dragMode: 'move',
         autoCropArea: 1.0,
         aspectRatio: aspectRatio,
-        data: _.mapObject(_.pick(dataset, ...cropperDataFields), value => parseFloat(value)),
+        data: Object.values(pick(dataset, ...cropperDataFields)).map((value) => parseFloat(value)),
         // Can't use 0 because it's falsy and cropperjs will then use its defaults (200x100)
         minContainerWidth: 1,
         minContainerHeight: 1,

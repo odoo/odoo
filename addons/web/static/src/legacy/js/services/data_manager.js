@@ -196,12 +196,12 @@ const DataManager = core.Class.extend({
      * Private function that generates a cache key from its arguments
      */
     _gen_key: function () {
-        return _.map(Array.prototype.slice.call(arguments), function (arg) {
+        return Array.prototype.slice.call(arguments).map((arg) => {
             if (!arg) {
                 return false;
             }
-            return _.isObject(arg) ? JSON.stringify(arg) : arg;
-        }).join(',');
+            return typeof arg === "object" ? JSON.stringify(arg) : arg;
+        }).join(",");
     },
 
     /**

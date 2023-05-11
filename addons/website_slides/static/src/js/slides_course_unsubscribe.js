@@ -21,10 +21,10 @@ var SlideUnsubscribeDialog = Dialog.extend({
      * @param {Object} options
      */
     init: function (parent, options) {
-        options = _.defaults(options || {}, {
+        options = Object.assign({
             title: options.isFollower === 'True' ? this._texts.titleSubscribe : this._texts.titleUnsubscribe,
             size: 'medium',
-        });
+        }, options || {});
         this._super(parent, options);
 
         this.set('state', '_subscription');

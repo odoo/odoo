@@ -2,6 +2,49 @@
 
 export const nbsp = "\u00a0";
 
+export const escapeMethod = Symbol("html");
+
+const htmlCaracters = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    "'": "&#39;",
+    '"': "&quot;",
+    "`": "&#x60;",
+};
+
+/**
+ * Replace ASCII character with HTML character
+ * Do exactly the same as underscore function
+ *
+ * @param {string} [str] string to unescape
+ * @returns {string} the unescaped string
+ */
+export function unescapeHTML(str) {
+    for (const [key, value] of Object.entries(htmlCaracters)) {
+        str = String(str).replace(new RegExp(value, "g"), key);
+    }
+    return str;
+}
+
+/**
+ * Replace HTML character with ASCII character
+ * Do exactly the same as underscore function
+ *
+ * @param {string | number} [str] the string to escape
+ * @returns {string} the escaped string
+ */
+export function escapeHTML(str) {
+    if (typeof str === "object" && str[escapeMethod]) {
+        return str[escapeMethod]();
+    } else {
+        for (const [key, value] of Object.entries(htmlCaracters)) {
+            str = String(str).replace(new RegExp(key, "g"), value);
+        }
+        return str;
+    }
+}
+
 /**
  * Escapes a string for HTML.
  * Note that it doesn't work for escaping node attributes.
@@ -10,15 +53,19 @@ export const nbsp = "\u00a0";
  * @returns {string} an escaped string
  */
 export function escape(str) {
-    if (str === undefined) {
-        return "";
+    if (typeof str === "object" && str[escapeMethod]) {
+        return str[escapeMethod]();
+    } else {
+        if (str === undefined) {
+            return "";
+        }
+        if (typeof str === "number") {
+            return String(str);
+        }
+        const p = document.createElement("p");
+        p.textContent = str;
+        return p.innerHTML;
     }
-    if (typeof str === "number") {
-        return String(str);
-    }
-    const p = document.createElement("p");
-    p.textContent = str;
-    return p.innerHTML;
 }
 
 /**

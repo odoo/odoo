@@ -151,7 +151,7 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
             $(tr).hide();
         });
 
-        this.wishlistProductIDs = _.without(this.wishlistProductIDs, product);
+        this.wishlistProductIDs = this.wishlistProductIDs.filter((p) => p !== product);
         sessionStorage.setItem('website_sale_wishlist_product_ids', JSON.stringify(this.wishlistProductIDs));
         if (this.wishlistProductIDs.length === 0) {
             if (deferred_redirect) {

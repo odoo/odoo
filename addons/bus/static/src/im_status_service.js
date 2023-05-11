@@ -2,6 +2,7 @@
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { throttleForAnimation } from "@web/core/utils/timing";
 
 export const UPDATE_BUS_PRESENCE_DELAY = 60000;
 /**
@@ -17,7 +18,7 @@ export const imStatusService = {
     start(env, { bus_service, multi_tab, presence }) {
         const imStatusModelToIds = {};
         let updateBusPresenceTimeout;
-        const throttledUpdateBusPresence = _.throttle(function updateBusPresence() {
+        const throttledUpdateBusPresence = throttleForAnimation(function updateBusPresence() {
             clearTimeout(updateBusPresenceTimeout);
             if (!multi_tab.isOnMainTab()) {
                 return;
