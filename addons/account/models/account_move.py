@@ -1530,7 +1530,7 @@ class AccountMove(models.Model):
         ])
         move_vals = {att.res_id: att for att in attachments}
         for move in self:
-            move[attachment_field] = move_vals.get(move.id, False)
+            move[attachment_field] = move_vals.get(move._origin.id, False)
 
     # -------------------------------------------------------------------------
     # INVERSE METHODS
