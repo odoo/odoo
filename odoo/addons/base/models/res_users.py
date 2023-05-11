@@ -1920,10 +1920,7 @@ class CheckMFA(models.TransientModel):
         assert request, "This method can only be accessed over HTTP"
         try:
             user = self.create_uid
-            if user._mfa_type() == 'totp':
-                user._totp_check(int(re.sub(r'\s', '', self.code)))
-            elif user._mfa_type() == 'totp_mail':
-                user._totp_check(int(re.sub(r'\s', '', self.code)))
+            user._totp_check(int(re.sub(r'\s', '', self.code)))
         except AccessDenied:
             raise UserError(_("Incorrect code, please try again."))
         request.session['mfa-check-last'] = time.time()
