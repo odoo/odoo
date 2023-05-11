@@ -627,7 +627,7 @@ class Website(Home):
         template = template and dict(template=template) or {}
         website_id = kwargs.get('website_id')
         if website_id:
-            website = request.env['website'].browse(website_id)
+            website = request.env['website'].browse(int(website_id))
             website._force()
         page = request.env['website'].new_page(path, add_menu=add_menu, **template)
         url = page['url']
