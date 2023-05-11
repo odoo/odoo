@@ -171,6 +171,16 @@ export const progressBarField = {
             type: "field",
             availableTypes: ["integer", "float"],
         },
+        {
+            label: _lt("Overflow style"),
+            name: "overflow_class",
+            type: "string",
+            availableTypes: ["integer", "float"],
+            help: _lt(
+                "Bootstrap classname to customize the style of the progress bar when the maximum value is exceeded"
+            ),
+            default: "bg-secondary",
+        },
     ],
     supportedTypes: ["integer", "float"],
     extractProps: ({ attrs, options }) => ({

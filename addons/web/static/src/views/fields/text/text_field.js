@@ -67,6 +67,14 @@ export class TextField extends Component {
 export const textField = {
     component: TextField,
     displayName: _lt("Multiline Text"),
+    supportedOptions: [
+        {
+            label: _lt("Enable line breaks"),
+            name: "line_breaks",
+            type: "boolean",
+            default: true,
+        },
+    ],
     supportedTypes: ["html", "text"],
     extractProps: ({ attrs, options }) => ({
         placeholder: attrs.placeholder,
