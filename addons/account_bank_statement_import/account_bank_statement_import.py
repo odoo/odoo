@@ -172,7 +172,7 @@ class AccountBankStatementImport(models.TransientModel):
 
         # If importing into an existing journal, its currency must be the same as the bank statement
         if journal:
-            journal_currency = journal.currency_id
+            journal_currency = journal.currency_id or journal.company_id.currency_id
             if currency is None:
                 currency = journal_currency
             if currency and currency != journal_currency:
