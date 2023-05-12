@@ -97,7 +97,7 @@ const SelectTranslateDialog = Dialog.extend({
             this.optionEl.textContent = inputEl.value;
             const translationUpdated = inputEl.value !== this.optionEl.dataset.initialTranslationValue;
             this.translationObject.classList.toggle('o_dirty', translationUpdated);
-            this.optionEl.classList.add('o_option_translated');
+            this.optionEl.classList.toggle('oe_translated', translationUpdated);
         });
         this.el.appendChild(inputEl);
         return this._super(...arguments);
@@ -276,7 +276,12 @@ var WysiwygTranslate = WysiwygMultizone.extend({
             $p.after($p.html()).remove();
         });
         var trans = this._getTranlationObject($node[0]);
-        $node.toggleClass('o_dirty', trans.value !== $node.html().replace(/[ \t\n\r]+/, ' '));
+        const updated = trans.value !== $node.html().replace(/[ \t\n\r]+/, ' ');
+        $node.toggleClass('o_dirty', updated);
+        const $target = $node.data('$node');
+        if ($target) {
+            $target.toggleClass('oe_translated', updated);
+        }
     },
     /**
      * Returns a translation object.
@@ -325,6 +330,7 @@ var WysiwygTranslate = WysiwygMultizone.extend({
             _.each(translation, function (node, attr) {
                 var trans = self._getTranlationObject(node);
                 trans.value = (trans.value ? trans.value : $node.html() ).replace(/[ \t\n\r]+/, ' ');
+                trans.state = node.dataset.oeTranslationState;
                 $node.attr('data-oe-translation-state', (trans.state || 'to_translate'));
             });
         });
