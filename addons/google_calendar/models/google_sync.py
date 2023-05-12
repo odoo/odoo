@@ -223,10 +223,10 @@ class GoogleSync(models.AbstractModel):
                 )
 
     @after_commit
-    def _google_delete(self, google_service: GoogleCalendarService, google_id, timeout=TIMEOUT):
+    def _google_delete(self, google_service: GoogleCalendarService, google_id, is_recurrence=False, timeout=TIMEOUT):
         with google_calendar_token(self.env.user.sudo()) as token:
             if token:
-                google_service.delete(google_id, token=token, timeout=timeout)
+                google_service.delete(google_id, token=token, is_recurrence=is_recurrence, timeout=timeout)
                 # When the record has been deleted on our side, we need to delete it on google but we don't want
                 # to raise an error because the record don't exists anymore.
                 self.exists().with_context(dont_notify=True).need_sync = False

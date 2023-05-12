@@ -10,6 +10,8 @@ from uuid import uuid4
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
 
+from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
+
 
 class Meeting(models.Model):
     _name = 'calendar.event'
@@ -283,6 +285,20 @@ class Meeting(models.Model):
                 old_recurrence.calendar_event_ids = [(4, base_event.id)]
                 (linked_events - base_event).write({'need_sync': False, 'active': False})
                 old_recurrence._apply_recurrence()
+
+    def action_mass_archive(self, recurrence_update_setting):
+        """
+        The aim of this action purpose is to be called from sync calendar module when mass deletion is not possible.
+        Override to make archive in Google Calendar in a single request: no spam is sent and outside users are notified.
+        """
+        self.ensure_one()
+        google_service = GoogleCalendarService(self.env['google.service'])
+        if recurrence_update_setting == 'all_events':
+            self.recurrence_id._google_delete(google_service, self.recurrence_id.google_id, is_recurrence=True)
+            self.recurrence_id.calendar_event_ids.write({'active': False, 'need_sync': False})
+        elif recurrence_update_setting == 'future_events':
+            detached_events = self.recurrence_id._stop_at(self)
+            detached_events.write({'active': False})
 
     def _google_values(self):
         if self.allday:

@@ -81,10 +81,13 @@ class GoogleCalendarService():
         self.google_service._do_request(url, json.dumps(values), headers, method='PATCH', timeout=timeout)
 
     @requires_auth_token
-    def delete(self, event_id, token=None, timeout=TIMEOUT):
+    def delete(self, event_id, token=None, timeout=TIMEOUT, is_recurrence=False):
         url = "/calendar/v3/calendars/primary/events/%s?sendUpdates=all" % event_id
         headers = {'Content-type': 'application/json'}
         params = {'access_token': token}
+        # Delete all single events from recurrence in one request.
+        if is_recurrence:
+            params = {**params, **{'singleEvents': 'true'}}
         try:
             self.google_service._do_request(url, params, headers=headers, method='DELETE', timeout=timeout)
         except requests.HTTPError as e:
