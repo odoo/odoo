@@ -256,8 +256,8 @@
                                 <div class="col-12 col-md-12 pb-2" t-if="task.user_ids">
                                     <strong>Assignees</strong>
                                     <t t-foreach="task.user_ids" t-as="user">
-                                        <div class="d-flex mb-3 flex-nowrap">
-                                            <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(user.avatar_128)" alt="Contact"/>
+                                        <div class="d-flex mb-3 flex-nowrap mt-1">
+                                            <img class="rounded-circle o_portal_contact_img" t-att-src="image_data_uri(user.avatar_128)" alt="Contact"/>
                                             <div class="ms-2">
                                                 <div t-esc="user" t-options='{"widget": "contact", "fields": ["name"]}'/>
                                                 <a t-attf-href="tel:{{user.phone}}" t-if="user.phone"><div t-esc="user" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
@@ -270,8 +270,8 @@
                                 </div>
                                 <div class="col-12 col-md-12 pb-2" t-if="task.partner_id">
                                     <strong>Customer</strong>
-                                    <div class="d-flex flex-nowrap">
-                                        <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(task.partner_id.avatar_128)" alt="Contact"/>
+                                    <div class="d-flex flex-nowrap mt-1">
+                                        <img class="rounded-circle o_portal_contact_img" t-att-src="image_data_uri(task.partner_id.avatar_128)" alt="Contact"/>
                                         <div class="ms-2">
                                             <div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["name"]}'/>
                                             <a t-attf-href="tel:{{task.partner_id.phone}}" t-if="task.partner_id.phone"><div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
