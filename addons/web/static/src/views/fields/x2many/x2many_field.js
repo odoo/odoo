@@ -44,8 +44,11 @@ export class X2ManyField extends Component {
             this.isMany2Many
         );
 
-        this.archInfo = this.props.views[this.props.viewMode] || {};
-        this.className = computeViewClassName(this.props.viewMode, this.archInfo.xmlDoc);
+        this.archInfo = this.props.views?.[this.props.viewMode] || {};
+        const classes = this.props.viewMode
+            ? ["o_field_x2many", `o_field_x2many_${this.props.viewMode}`]
+            : ["o_field_x2many"];
+        this.className = computeViewClassName(this.props.viewMode, this.archInfo.xmlDoc, classes);
 
         const { activeActions, creates } = this.archInfo;
         if (this.props.viewMode === "kanban") {
