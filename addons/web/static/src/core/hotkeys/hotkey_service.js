@@ -18,7 +18,7 @@ import { getVisibleElements } from "../utils/ui";
  *  allow registration to perform no matter the UI active element
  * @property {() => HTMLElement} [area]
  *  adds a restricted operating area for this hotkey
- * @property {(target: EventTarget) => boolean} [validate]
+ * @property {() => boolean} [isAvailable]
  *  adds a validation before calling the hotkey registration's callback
  *
  * @typedef {HotkeyOptions & {
@@ -233,7 +233,7 @@ export const hotkeyService = {
                     (reg.allowRepeat || !isRepeated) &&
                     (reg.bypassEditableProtection || !shouldProtectEditable) &&
                     (reg.global || reg.activeElement === activeElement) &&
-                    (!reg.validate || reg.validate(target)) &&
+                    (!reg.isAvailable || reg.isAvailable()) &&
                     (!reg.area ||
                         (target instanceof Node && reg.area() && reg.area().contains(target)))
             );
@@ -400,7 +400,7 @@ export const hotkeyService = {
                 bypassEditableProtection: options && options.bypassEditableProtection,
                 global: options && options.global,
                 area: options && options.area,
-                validate: options && options.validate,
+                isAvailable: options && options.isAvailable,
             };
 
             // Due to the way elements are mounted in the DOM by Owl (bottom-to-top),
