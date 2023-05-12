@@ -72,6 +72,19 @@ class TestProductConfiguratorUi(HttpCase, TestProductConfiguratorCommon):
             'attribute_id': product_attribute.id
         } for i in range(1, 11) for product_attribute in product_attributes])
 
+        product_attribute_no_variant_single_pav = self.env['product.attribute'].create({
+            'name': 'PA9',
+            'display_type': 'radio',
+            'create_variant': 'no_variant'
+        })
+
+        self.env['product.attribute.value'].create({
+            'name': 'Single PAV',
+            'attribute_id': product_attribute_no_variant_single_pav.id
+        })
+
+        product_attributes += product_attribute_no_variant_single_pav
+
         product_template = self.product_product_custo_desk
 
         self.env['product.template.attribute.line'].create([{
