@@ -13,10 +13,6 @@
                         </button>
                     </t>
                 </t>
-                <t t-elif="node.children.length === 1">
-                    Match records with the following rule:
-                    <t t-call="web._DomainSelector.branch.children" />
-                </t>
                 <t t-else="">
                     <span>Match records with </span>
                     <t t-call="web._DomainSelector.branch.connector" />
