@@ -240,9 +240,14 @@
     // No sheet
     &.o_form_nosheet, .o_form_nosheet {
         @include o-webclient-padding($top: $o-sheet-vpadding, $bottom: $o-sheet-vpadding);
+        background-color: var(--formView-sheet-background);
 
         .o_form_statusbar {
-            margin: (-$o-sheet-vpadding) (-$o-horizontal-padding) $o-sheet-vpadding (-$o-horizontal-padding);
+            @include o-form-nosheet-negative-margin;
+            margin-top: (-$o-sheet-vpadding);
+            padding-top: var(--formView-sheetBg-padding-top);
+            border-bottom: $border-width solid $border-color;
+            background-color: $o-webclient-background-color;
         }
         .oe_button_box {
             @include o-form-nosheet-negative-margin;
@@ -269,6 +274,12 @@
 
         @include media-breakpoint-down(md) {
             --formView-sheetBg-padding-x: var(--formView-sheetBg-padding-x-sm, 0);
+        }
+
+        .o_form_statusbar{
+            @include media-breakpoint-up(md) {
+                @include o-form-nosheet-negative-margin;
+            }
         }
     }
 
@@ -1015,7 +1026,6 @@
              * Reset all paddings and margins to 0.
              * Make the view fill all available room.
              */
-            --formView-sheetBg-padding-top: 0;
             --formView-sheetBg-padding-x: 0;
             --formView-sheet-padding: 0;
             --formView-sheet-border-radius: 0;
