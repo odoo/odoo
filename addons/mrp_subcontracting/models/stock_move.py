@@ -157,10 +157,6 @@ class StockMove(models.Model):
                 'is_subcontract': True,
                 'location_id': move.picking_id.partner_id.with_company(move.company_id).property_stock_subcontractor.id
             })
-            if float_compare(move.product_qty, 0, precision_rounding=move.product_uom.rounding) <= 0:
-                # If a subcontracted amount is decreased, don't create a MO that would be for a negative value.
-                # We don't care if the MO decreases even when done since everything is handled through picking
-                continue
         res = super()._action_confirm(merge=merge, merge_into=merge_into)
         for move in res:
             if move.is_subcontract:
