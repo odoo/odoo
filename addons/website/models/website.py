@@ -442,12 +442,16 @@ class Website(models.Model):
 
             pages_views = {}
             modules = self.env['ir.module.module']
+            modules_background = self.env['ir.module.module']
             module_data = {}
             for feature in features:
                 add_menu = bool(feature.menu_sequence)
                 if feature.module_id:
                     if feature.module_id.state != 'installed':
-                        modules += feature.module_id
+                        if feature.background_installation:
+                            modules_background += feature.module_id
+                        else:
+                            modules += feature.module_id
                     if add_menu:
                         if feature.module_id.name != 'website_blog':
                             module_data[feature.feature_url] = {'sequence': feature.menu_sequence}
@@ -472,9 +476,12 @@ class Website(models.Model):
                 modules.button_immediate_install()
                 assert self.env.registry is registry()
 
+            if modules_background:
+                modules_background.button_install()
+
             self.env['website'].browse(website.id).configurator_set_menu_links(menu_company, module_data)
 
-            return pages_views
+            return pages_views, bool(modules_background)
 
         def configure_page(page_code, snippet_list, pages_views, cta_data):
             if page_code == 'homepage':
@@ -605,7 +612,7 @@ class Website(models.Model):
                 logger.warning(e)
 
         # modules
-        pages_views = set_features(kwargs.get('selected_features'))
+        pages_views, background_installation = set_features(kwargs.get('selected_features'))
         # We need to refresh the environment of website because set_features installed some new module
         # and we need the overrides of these new menus e.g. for .get_cta_data()
         website = self.env['website'].browse(website.id)
@@ -648,7 +655,7 @@ class Website(models.Model):
 
         images = custom_resources.get('images', {})
         set_images(images)
-        return {'url': url, 'website_id': website.id}
+        return {'url': url, 'website_id': website.id, 'background_installation': 1 if background_installation else 0}
 
     # ----------------------------------------------------------
     # Page Management

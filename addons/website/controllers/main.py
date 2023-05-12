@@ -7,6 +7,7 @@ import os
 import logging
 import re
 import requests
+import time
 import werkzeug.urls
 import werkzeug.utils
 import werkzeug.wrappers
@@ -320,6 +321,13 @@ class Website(Home):
         if step > 1:
             action_url += '&step=' + str(step)
         return request.redirect(action_url)
+
+    @http.route('/website/background_installation', type='json', auth='user', website=True)
+    def background_installation(self):
+        # wait a little bit to avoid blocking assets loading in website editor
+        time.sleep(10)
+        request.env["ir.module.module"].button_immediate_install()
+        return "done"
 
     @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
     def social(self, social, **kwargs):

@@ -13,7 +13,7 @@ import { routeToUrl } from "@web/core/browser/router_service";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import wUtils from 'website.utils';
 
-const { Component, onWillStart, onMounted, onWillUnmount, useRef, useEffect, useState } = owl;
+const { Component, onWillStart, onMounted, onRendered, onWillUnmount, useRef, useEffect, useState } = owl;
 
 class BlockPreview extends Component {}
 BlockPreview.template = 'website.BlockPreview';
@@ -27,6 +27,7 @@ export class WebsitePreview extends Component {
         this.router = useService('router');
         this.action = useService('action');
         this.orm = useService('orm');
+        this.rpc = useService("rpc");
 
         this.iframeFallbackUrl = '/website/iframefallback';
 
@@ -42,6 +43,7 @@ export class WebsitePreview extends Component {
         // action is restored (example: click on the breadcrumb).
         this.isRestored = this.props.action.jsId === this.websiteService.actionJsId;
         this.websiteService.actionJsId = this.props.action.jsId;
+        this.background_installation = this.props.action.context.params && this.props.action.context.params.background_installation;
 
         useBus(this.websiteService.bus, 'BLOCK', (event) => this.block(event.detail));
         useBus(this.websiteService.bus, 'UNBLOCK', () => this.unblock());
@@ -65,7 +67,7 @@ export class WebsitePreview extends Component {
                 // URL (event if it wasn't, it wouldn't be an issue as those are
                 // really considered as the same domain, the user will share the
                 // same session and CORS errors won't be a thing in such a case)
-                window.location.href = `${encodeURI(this.websiteDomain)}/web#action=website.website_preview&path=${encodedPath}&website_id=${encodeURIComponent(this.websiteId)}`;
+                window.location.href = `${encodeURI(this.websiteDomain)}/web#action=website.website_preview&path=${encodedPath}&website_id=${encodeURIComponent(this.websiteId)}&background_installation=${this.background_installation}`;
             } else {
                 this.initialUrl = `/website/force/${encodeURIComponent(this.websiteId)}?path=${encodedPath}`;
             }
@@ -96,7 +98,19 @@ export class WebsitePreview extends Component {
             // For a frontend page, it is better to use the
             // OdooFrameContentLoaded event to unblock the iframe, as it is
             // triggered faster than the load event.
-            this.iframe.el.addEventListener('OdooFrameContentLoaded', () => this.websiteService.unblockPreview('load-iframe'), { once: true });
+            this.iframe.el.addEventListener('OdooFrameContentLoaded', () => {
+                this.websiteService.unblockPreview('load-iframe');
+                if (this.background_installation == "1") {
+                    // install modules marked for installation
+                    // TODO: maybe show progress somewhere?
+                    this.rpc('/website/background_installation', {}, { silent: true });
+                    /*
+                    let self = this;
+                    // use timeout to don't block requests on page initialization (assets loading, etc.)
+                    setTimeout(() => self.orm.call('ir.module.module', 'button_immediate_install', [[]]), 10000);
+                    */
+                }
+            }, { once: true });
         });
 
         onWillUnmount(() => {

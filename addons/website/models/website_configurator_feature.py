@@ -25,6 +25,7 @@ class WebsiteConfiguratorFeature(models.Model):
     feature_url = fields.Char()
     menu_sequence = fields.Integer(help='If set, a website menu will be created for the feature.')
     menu_company = fields.Boolean(help='If set, add the menu as a second level menu, as a child of "Company" menu.')
+    background_installation = fields.Boolean(help='If set, user is redirected to next step without waiting module installation')
 
     @api.constrains('module_id', 'page_view_id')
     def _check_module_xor_page_view(self):
