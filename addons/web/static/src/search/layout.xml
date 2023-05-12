@@ -7,7 +7,7 @@
         </t>
         <t t-component="components.ControlPanel" slots="controlPanelSlots" t-if="display.controlPanel" display="display.controlPanel"/>
         <t t-component="components.Banner" t-if="display.banner"/>
-        <div t-ref="content" class="o_content" t-attf-class="{{props.className}}" t-att-class="{ 'o_component_with_search_panel bg-200': display.searchPanel }">
+        <div t-ref="content" class="o_content" t-attf-class="{{props.className}}" t-att-class="{ 'o_component_with_search_panel': display.searchPanel }">
             <t t-component="components.SearchPanel" t-if="display.searchPanel"/>
             <t t-slot="default" contentRef="contentRef" />
         </div>
