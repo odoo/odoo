@@ -21,7 +21,7 @@ import { ButtonBox } from "./button_box/button_box";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { Field } from "@web/views/fields/field";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
-import { ActionMenusItems } from "@web/search/cog_menu/action_menus_items";
+import { STATIC_ACTIONS_GROUP_NUMBER } from "@web/search/action_menus/action_menus";
 
 import { Component, onRendered, useEffect, useRef } from "@odoo/owl";
 import { useViewCompiler } from "../view_compiler";
@@ -327,6 +327,7 @@ export class FormController extends Component {
                 isAvailable: () => this.archiveEnabled && this.model.root.isActive,
                 sequence: 10,
                 description: this.env._t("Archive"),
+                icon: "oi oi-archive",
                 callback: () => {
                     const dialogProps = {
                         body: this.env._t("Are you sure that you want to archive this record?"),
@@ -340,18 +341,21 @@ export class FormController extends Component {
             unarchive: {
                 isAvailable: () => this.archiveEnabled && !this.model.root.isActive,
                 sequence: 20,
+                icon: "oi oi-unarchive",
                 description: this.env._t("Unarchive"),
                 callback: () => this.model.root.unarchive(),
             },
             duplicate: {
                 isAvailable: () => activeActions.create && activeActions.duplicate,
                 sequence: 30,
+                icon: "fa fa-clone",
                 description: this.env._t("Duplicate"),
                 callback: () => this.duplicateRecord(),
             },
             delete: {
                 isAvailable: () => activeActions.delete && !this.model.root.isNew,
                 sequence: 40,
+                icon: "fa fa-trash-o",
                 description: this.env._t("Delete"),
                 callback: () => this.deleteRecord(),
                 skipSave: true,
@@ -364,7 +368,11 @@ export class FormController extends Component {
         const staticActionItems = Object.entries(this.getStaticActionMenuItems())
             .filter(([key, item]) => item.isAvailable === undefined || item.isAvailable())
             .sort(([k1, item1], [k2, item2]) => (item1.sequence || 0) - (item2.sequence || 0))
-            .map(([key, item]) => Object.assign({ key }, omit(item, "isAvailable", "sequence")));
+            .map(([key, item]) =>
+                Object.assign({ key }, omit(item, "isAvailable", "sequence"), {
+                    groupNumber: STATIC_ACTIONS_GROUP_NUMBER,
+                })
+            );
 
         return {
             action: [...staticActionItems, ...(actionMenus.action || [])],
@@ -511,7 +519,6 @@ FormController.components = {
     ViewButton,
     Field,
     CogMenu,
-    ActionMenusItems,
 };
 FormController.props = {
     ...standardViewProps,

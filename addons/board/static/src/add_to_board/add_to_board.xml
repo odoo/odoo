@@ -3,11 +3,13 @@
 
     <t t-name="board.AddToBoard" owl="1">
         <Dropdown class="'o_add_to_board'">
-            <t t-set-slot="toggler">Add to my dashboard</t>
-            <div class="px-3 py-2">
-                <input type="text" class="o_input" t-ref="autofocus" t-model.trim="state.name" t-on-keydown="onInputKeydown" />
-            </div>
-            <div class="px-3 py-2">
+            <t t-set-slot="toggler">
+                <img src="/board/static/description/icon.svg" alt="Dashboard Icon" class="o_cp_action_app_icon oi-large me-1"/>
+                Dashboard
+            </t>
+            <div class="px-3 pb-2">
+                <label class="mb-2">Add to my dashboard</label>
+                <input type="text" class="o_input mb-3" t-ref="autofocus" t-model.trim="state.name" t-on-keydown="onInputKeydown" />
                 <button type="button" class="btn btn-primary" t-on-click="addToBoard">Add</button>
             </div>
         </Dropdown>

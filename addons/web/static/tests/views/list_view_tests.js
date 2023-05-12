@@ -573,7 +573,7 @@ QUnit.module("Views", (hooks) => {
                 arch: '<tree><field name="foo"/></tree>',
             });
 
-            assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
+            assert.containsNone(target, "div.o_control_panel .o_cp_action_menus");
             assert.ok(
                 $(target).find("tbody td.o_list_record_selector").length,
                 "should have at least one record"

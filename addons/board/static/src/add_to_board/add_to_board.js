@@ -95,7 +95,7 @@ AddToBoard.components = { Dropdown };
 
 export const addToBoardItem = {
     Component: AddToBoard,
-    groupNumber: 4,
+    groupNumber: 20,
     isDisplayed: ({ config }) => config.actionType === "ir.actions.act_window" && config.actionId,
 };
 

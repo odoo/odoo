@@ -38,6 +38,7 @@ export class PageListController extends PageControllerMixin(listView.Controller)
         const menuItems = super.getStaticActionMenuItems();
         menuItems.publish = {
             sequence: 15,
+            icon: "fa fa-globe",
             description: this.env._t("Publish"),
             callback: async () => {
                 this.dialogService.add(ConfirmationDialog, {
@@ -54,6 +55,7 @@ export class PageListController extends PageControllerMixin(listView.Controller)
         };
         menuItems.unpublish = {
             sequence: 16,
+            icon: "fa fa-chain-broken",
             description: this.env._t("Unpublish"),
             callback: async () => this.togglePublished(false),
         };

@@ -8057,7 +8057,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("display toolbar", async function (assert) {
-        assert.expect(7);
+        assert.expect(6);
 
         const actionService = {
             start() {
@@ -8092,7 +8092,6 @@ QUnit.module("Views", (hooks) => {
 
         await toggleActionMenu(target);
         assert.containsNone(target, ".o_cp_action_menus .dropdown-menu_group:contains(Print)");
-        assert.containsOnce(target, ".o_cp_action_menus .dropdown-menu_group:contains(Action)");
         assert.containsN(
             target,
             ".o_cp_action_menus .dropdown-item",
