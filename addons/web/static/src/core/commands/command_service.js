@@ -7,6 +7,7 @@ import { Component, xml, EventBus } from "@odoo/owl";
 
 /**
  * @typedef {import("./command_palette").CommandPaletteConfig} CommandPaletteConfig
+ * @typedef {import("../hotkeys/hotkey_service").HotkeyOptions} HotkeyOptions
  */
 
 /**
@@ -19,9 +20,12 @@ import { Component, xml, EventBus } from "@odoo/owl";
  */
 
 /**
- * @typedef {import("../hotkeys/hotkey_service").HotkeyOptions & {
+ * @typedef {{
  *  category?: string;
- *  isAvailable: ()=>(boolean);
+ *  isAvailable?: ()=>(boolean);
+ *  global?: boolean;
+ *  hotkey?: string;
+ *  hotkeyOptions?: HotkeyOptions
  * }} CommandOptions
  */
 
@@ -174,9 +178,18 @@ export const commandService = {
                     }
                 };
                 registration.removeHotkey = hotkeyService.add(registration.hotkey, action, {
-                    activeElement: registration.activeElement,
+                    ...options.hotkeyOptions,
                     global: registration.global,
-                    validate: registration.isAvailable,
+                    isAvailable: (...args) => {
+                        let available = true;
+                        if (registration.isAvailable) {
+                            available = registration.isAvailable(...args);
+                        }
+                        if (available && options.hotkeyOptions?.isAvailable) {
+                            available = options.hotkeyOptions?.isAvailable(...args);
+                        }
+                        return available;
+                    },
                 });
             }
 
