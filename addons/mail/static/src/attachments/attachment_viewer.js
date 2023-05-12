@@ -226,7 +226,7 @@ export class AttachmentViewer extends Component {
                         </script>
                     </head>
                     <body onload='onloadImage()'>
-                        <img src="${this.state.attachment.imageUrl}" alt=""/>
+                        <img src="${this.state.attachment.defaultSource}" alt=""/>
                     </body>
                 </html>`);
         printWindow.document.close();

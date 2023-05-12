@@ -1,5 +1,8 @@
 /* @odoo-module */
 
+import { assignDefined } from "@mail/utils/misc";
+import { url } from "@web/core/utils/urls";
+
 export class Attachment {
     /** @type {import("@mail/core/store_service").Store} */
     _store;
@@ -85,28 +88,10 @@ export class Attachment {
         );
     }
 
-    get imageUrl() {
-        if (!this.isImage) {
-            return "";
-        }
-        if (!this.accessToken && this.originThread?.model === "discuss.channel") {
-            return `/discuss/channel/${this.originThread.id}/image/${this.id}`;
-        }
-        const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : "";
-        return `/web/image/${this.id}${accessToken}`;
-    }
-
     get defaultSource() {
-        if (this.isImage) {
-            return `/web/image/${this.id}?signature=${this.checksum}`;
-        }
+        const route = url(this.urlRoute, this.urlQueryParams);
         if (this.isPdf) {
-            const pdf_lib = "/web/static/lib/pdfjs/web/viewer.html?file=";
-            if (!this.accessToken && this.originThread?.model === "discuss.channel") {
-                return `${pdf_lib}/discuss/channel/${this.originThread.id}/attachment/${this.id}#pagemode=none`;
-            }
-            const accessToken = this.accessToken ? `?access_token%3D${this.accessToken}` : "";
-            return `${pdf_lib}/web/content/${this.id}${accessToken}#pagemode=none`;
+            return `/web/static/lib/pdfjs/web/viewer.html?file=${route}#pagemode=none`;
         }
         if (this.isUrlYoutube) {
             const urlArr = this.url.split("/");
@@ -120,18 +105,42 @@ export class Attachment {
             }
             return `https://www.youtube.com/embed/${token}`;
         }
-        if (!this.accessToken && this.originThread?.model === "discuss.channel") {
-            return `/discuss/channel/${this.originThread.id}/attachment/${this.id}`;
-        }
-        const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : "";
-        return `/web/content/${this.id}${accessToken}`;
+        return route;
     }
 
     get downloadUrl() {
-        if (!this.accessToken && this.originThread?.model === "discuss.channel") {
-            return `/discuss/channel/${this.originThread.id}/attachment/${this.id}?download=true`;
+        return url(this.urlRoute, { ...this.urlQueryParams, download: true });
+    }
+
+    /**
+     * @returns {string}
+     */
+    get urlRoute() {
+        if (this.uploading && this.tmpUrl) {
+            return this.tmpUrl;
         }
-        const accessToken = this.accessToken ? `access_token=${this.accessToken}&` : "";
-        return `/web/content/ir.attachment/${this.id}/datas?${accessToken}download=true`;
+        if (!this.accessToken && this.originThread?.model === "discuss.channel") {
+            return this.isImage
+                ? `/discuss/channel/${this.originThread.id}/image/${this.id}`
+                : `/discuss/channel/${this.originThread.id}/attachment/${this.id}`;
+        }
+        return this.isImage ? `/web/image/${this.id}` : `/web/content/ir.attachment/${this.id}`;
+    }
+
+    /**
+     * @returns {Object}
+     */
+    get urlQueryParams() {
+        if (this.uploading && this.tmpUrl) {
+            return {};
+        }
+        return assignDefined(
+            {},
+            {
+                access_token: this.accessToken,
+                filename: this.name || undefined,
+                unique: this.checksum,
+            }
+        );
     }
 }

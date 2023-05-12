@@ -31,7 +31,7 @@
                         <div t-if="!state.imageLoaded" class="position-absolute">
                             <i class="fa fa-3x fa-circle-o-notch fa-fw fa-spin text-white" role="img" title="Loading"/>
                         </div>
-                        <img t-on-click.stop="" t-on-load="onImageLoaded" t-on-wheel="onWheelImage" t-on-mousedown.stop="onMousedownImage" t-on-mouseup.stop="onMouseupImage" class="o-mail-AttachmentViewer-view o-mail-AttachmentViewer-viewImage mw-100 mh-100 transition-base" t-att-src="state.attachment.imageUrl" t-att-style="imageStyle" draggable="false" alt="Viewer" t-ref="image"/>
+                        <img t-on-click.stop="" t-on-load="onImageLoaded" t-on-wheel="onWheelImage" t-on-mousedown.stop="onMousedownImage" t-on-mouseup.stop="onMouseupImage" class="o-mail-AttachmentViewer-view o-mail-AttachmentViewer-viewImage mw-100 mh-100 transition-base" t-att-src="state.attachment.defaultSource" t-att-style="imageStyle" draggable="false" alt="Viewer" t-ref="image"/>
                     </div>
                     <iframe t-if="state.attachment.isPdf" class="o-mail-AttachmentViewer-view w-75 h-100 border-0" t-ref="iframeViewerPdf" t-att-class="{ 'w-100': env.isSmall }" t-att-src="state.attachment.defaultSource"/>
                     <iframe t-if="state.attachment.isText" class="o-mail-AttachmentViewer-view o-isText o_text w-75 h-100 border-0" t-att-src="state.attachment.defaultSource"/>

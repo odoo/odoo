@@ -8,6 +8,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { useAttachmentViewer } from "./attachment_viewer_hook";
 
 import { _t } from "@web/core/l10n/translation";
+import { url } from "@web/core/utils/urls";
 
 /**
  * @typedef {Object} Props
@@ -45,20 +46,14 @@ export class AttachmentList extends Component {
      * @param {import("@mail/attachments/attachment_model").Attachment} attachment
      */
     getImageUrl(attachment) {
-        const { imagesHeight } = this.props;
         if (attachment.uploading && attachment.tmpUrl) {
             return attachment.tmpUrl;
         }
-        if (
-            !this.env.inComposer &&
-            !this.env.inChatter &&
-            !attachment.accessToken &&
-            attachment.originThread?.model === "discuss.channel"
-        ) {
-            return `/discuss/channel/${attachment.originThread?.id}/image/${attachment.id}/${this.imagesWidth}x${imagesHeight}`;
-        }
-        const accessToken = attachment.accessToken ? `?access_token=${attachment.accessToken}` : "";
-        return `/web/image/${attachment.id}/${this.imagesWidth}x${imagesHeight}${accessToken}`;
+        return url(attachment.urlRoute, {
+            ...attachment.urlQueryParams,
+            width: this.imagesWidth,
+            height: this.props.imagesHeight,
+        });
     }
 
     /**
