@@ -186,15 +186,36 @@
                                 <div class="col-12" t-if="task.user_ids">
                                     <h6 class="flex-basis-100"><small class="text-muted">Assignees</small></h6>
                                     <t t-foreach="task.user_ids" t-as="user">
+<<<<<<< HEAD
                                         <div t-attf-class="o_portal_contact_details d-flex flex-column gap-2 {{ 'mb-3' if len(task.user_ids) > 1 else '' }}">
                                             <div class="d-flex justify-content-start align-items-center gap-2">
                                                 <img class="o_avatar o_portal_contact_img rounded" t-att-src="image_data_uri(user.avatar_128)"/>
                                                 <h6 class="mb-0" t-field="user.name"></h6>
+||||||| parent of 76e3974d99b5 (temp)
+                                        <div class="d-flex mb-3 flex-nowrap">
+                                            <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(user.avatar_128)" alt="Contact"/>
+                                            <div class="ms-2">
+                                                <div t-esc="user" t-options='{"widget": "contact", "fields": ["name"]}'/>
+                                                <a t-attf-href="tel:{{user.phone}}" t-if="user.phone"><div t-esc="user" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
+                                                <a t-if="user.email" class="text-break" t-attf-href="mailto:{{user.email}}">
+                                                    <div t-out="user" t-options='{"widget": "contact", "fields": ["email"]}'/>
+                                                </a>
+=======
+                                        <div class="d-flex mb-3 flex-nowrap mt-1">
+                                            <img class="rounded-circle o_portal_contact_img" t-att-src="image_data_uri(user.avatar_128)" alt="Contact"/>
+                                            <div class="ms-2">
+                                                <div t-esc="user" t-options='{"widget": "contact", "fields": ["name"]}'/>
+                                                <a t-attf-href="tel:{{user.phone}}" t-if="user.phone"><div t-esc="user" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
+                                                <a t-if="user.email" class="text-break" t-attf-href="mailto:{{user.email}}">
+                                                    <div t-out="user" t-options='{"widget": "contact", "fields": ["email"]}'/>
+                                                </a>
+>>>>>>> 76e3974d99b5 (temp)
                                             </div>
                                             <div t-out="user" t-options='{"widget": "contact", "fields": ["email", "phone"]}'/>
                                         </div>
                                     </t>
                                 </div>
+<<<<<<< HEAD
                                 <div class="col-12 d-flex flex-column" t-if="task.partner_id">
                                     <h6><small class="text-muted">Customer</small></h6>
                                     <t t-if="task.partner_id">
@@ -204,6 +225,29 @@
                                                 <h6 class="mb-0" t-out="task.partner_id.name"></h6>
                                             </div>
                                             <div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone"]}'/>
+||||||| parent of 76e3974d99b5 (temp)
+                                <div class="col-12 col-md-12 pb-2" t-if="task.partner_id">
+                                    <strong>Customer</strong>
+                                    <div class="d-flex flex-nowrap">
+                                        <img class="rounded-circle mt-1 o_portal_contact_img" t-att-src="image_data_uri(task.partner_id.avatar_128)" alt="Contact"/>
+                                        <div class="ms-2">
+                                            <div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["name"]}'/>
+                                            <a t-attf-href="tel:{{task.partner_id.phone}}" t-if="task.partner_id.phone"><div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
+                                            <a t-if="task.partner_id.email" class="text-break" t-attf-href="mailto:{{task.partner_id.email}}">
+                                                <div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["email"]}'/>
+                                            </a>
+=======
+                                <div class="col-12 col-md-12 pb-2" t-if="task.partner_id">
+                                    <strong>Customer</strong>
+                                    <div class="d-flex flex-nowrap mt-1">
+                                        <img class="rounded-circle o_portal_contact_img" t-att-src="image_data_uri(task.partner_id.avatar_128)" alt="Contact"/>
+                                        <div class="ms-2">
+                                            <div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["name"]}'/>
+                                            <a t-attf-href="tel:{{task.partner_id.phone}}" t-if="task.partner_id.phone"><div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["phone"]}'/></a>
+                                            <a t-if="task.partner_id.email" class="text-break" t-attf-href="mailto:{{task.partner_id.email}}">
+                                                <div t-field="task.partner_id" t-options='{"widget": "contact", "fields": ["email"]}'/>
+                                            </a>
+>>>>>>> 76e3974d99b5 (temp)
                                         </div>
                                     </t>
                                 </div>
