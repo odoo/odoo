@@ -564,8 +564,8 @@ class IrActionsServer(models.Model):
             res = act.run() or res
         return res
 
-    def _run_action_object_write(self, eval_context=None):
-        """Apply specified write changes to active_id."""
+    def _run_action_object_write_multi(self, eval_context=None):
+        """Apply specified write changes to active_ids."""
         vals = self.fields_lines.eval_value(eval_context=eval_context)
         res = {line.col1.name: vals[line.id] for line in self.fields_lines}
 
@@ -574,7 +574,8 @@ class IrActionsServer(models.Model):
             for field, new_value in res.items():
                 record_cached[field] = new_value
         else:
-            self.env[self.model_id.model].browse(self._context.get('active_id')).write(res)
+            record_ids = self._context.get('active_ids', self._context.get('active_id', []))
+            self.env[self.model_id.model].browse(record_ids).write(res)
 
     def _run_action_object_create(self, eval_context=None):
         """Create specified model object with specified values.
@@ -587,11 +588,12 @@ class IrActionsServer(models.Model):
         res = self.env[self.crud_model_id.model].create(res)
 
         if self.link_field_id:
-            record = self.env[self.model_id.model].browse(self._context.get('active_id'))
+            record_ids = self._context.get('active_ids', self._context.get('active_id', []))
+            records = self.env[self.model_id.model].browse(record_ids)
             if self.link_field_id.ttype in ['one2many', 'many2many']:
-                record.write({self.link_field_id.name: [Command.link(res.id)]})
+                records.write({self.link_field_id.name: [Command.link(res.id)]})
             else:
-                record.write({self.link_field_id.name: res.id})
+                records.write({self.link_field_id.name: res.id})
 
     def _get_eval_context(self, action=None):
         """ Prepare the context used when evaluating python code, like the
