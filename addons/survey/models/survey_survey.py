@@ -978,7 +978,7 @@ class Survey(models.Model):
         return {
             'type': 'ir.actions.act_url',
             'name': "Print Survey",
-            'target': 'self',
+            'target': 'new',
             'url': url
         }
 
