@@ -1782,7 +1782,7 @@
           class="o-btn o-remove-selection"
           t-if="ranges.length > 1"
           t-on-click="() => this.removeInput(range.id)">
-          ✖
+          ✕
         </button>
       </div>
 
@@ -3073,7 +3073,7 @@
     <div class="o-sidePanel">
       <div class="o-sidePanelHeader">
         <div class="o-sidePanelTitle" t-esc="getTitle()"/>
-        <div class="o-sidePanelClose" t-on-click="() => this.props.onCloseSidePanel()">×</div>
+        <div class="o-sidePanelClose" t-on-click="() => this.props.onCloseSidePanel()">✕</div>
       </div>
       <div class="o-sidePanelBody">
         <t
@@ -3505,7 +3505,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.2.5';
-  __info__.date = '2023-04-28T12:37:19.675Z';
-  __info__.hash = 'cc60a52';
+  __info__.version = '16.2.6';
+  __info__.date = '2023-05-12T11:52:07.641Z';
+  __info__.hash = '6848d25';
 -->
