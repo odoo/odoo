@@ -15143,7 +15143,11 @@
                 : getNormalizedValueFromRowRange;
             const rangeLength = verticalSearch ? nbRow : nbCol;
             const index = dichotomicSearch(searchArray, _searchKey, "nextSmaller", "asc", rangeLength, getElement);
-            assertAvailable(searchArray[0][index], searchKey);
+            if (index === -1)
+                assertAvailable(undefined, searchKey);
+            verticalSearch
+                ? assertAvailable(searchArray[0][index], searchKey)
+                : assertAvailable(searchArray[index][nbRow - 1], searchKey);
             if (resultRange === undefined) {
                 return (verticalSearch ? searchArray[nbCol - 1][index] : searchArray[index][nbRow - 1]);
             }
@@ -15526,7 +15530,7 @@
             arg("base (number)", _lt("The number to raise to the exponent power.")),
             arg("exponent (number)", _lt("The exponent to raise base to.")),
         ],
-        returns: ["BOOLEAN"],
+        returns: ["NUMBER"],
         compute: function (base, exponent) {
             return POWER.compute(base, exponent);
         },
@@ -16664,6 +16668,12 @@
         height: 25px;
       }
     }
+    /** Make the character a bit bigger
+    compared to its neighbor INPUT box  */
+    .o-remove-selection {
+      font-weight: bold;
+      font-size: calc(100% + 4px);
+    }
   }
 `;
     /**
@@ -16762,6 +16772,9 @@
                 this.confirm();
             }
         }
+        extractRanges(value) {
+            return this.props.hasSingleRange ? value.split(",")[0] : value;
+        }
         focus(rangeId) {
             this.state.isMissing = false;
             this.state.mode = "select-range";
@@ -16781,10 +16794,11 @@
         }
         onInputChanged(rangeId, ev) {
             const target = ev.target;
+            const value = this.extractRanges(target.value);
             this.env.model.dispatch("CHANGE_RANGE", {
                 id: this.id,
                 rangeId,
-                value: target.value,
+                value,
             });
             this.triggerChange();
         }
@@ -19476,14 +19490,31 @@
          * */
         getCurrentSelection() {
             let { startElement, endElement, startSelectionOffset, endSelectionOffset } = this.getStartAndEndSelection();
-            let startSizeBefore = this.findSizeBeforeElement(startElement);
-            let endSizeBefore = this.findSizeBeforeElement(endElement);
+            let startSizeBefore = this.findSelectionIndex(startElement, startSelectionOffset);
+            let endSizeBefore = this.findSelectionIndex(endElement, endSelectionOffset);
             return {
-                start: startSizeBefore + startSelectionOffset,
-                end: endSizeBefore + endSelectionOffset,
+                start: startSizeBefore,
+                end: endSizeBefore,
             };
         }
-        findSizeBeforeElement(nodeToFind) {
+        /**
+         * Computes the text 'index' inside this.el based on the currently selected node and its offset.
+         * The selected node is either a Text node or an Element node.
+         *
+         * case 1 -Text node:
+         * the offset is the number of characters from the start of the node. We have to add this offset to the
+         * content length of all previous nodes.
+         *
+         * case 2 - Element node:
+         * the offset is the number of child nodes before the selected node. We have to add the content length of
+         * all the bnodes prior to the selected node as well as the content of the child node before the offset.
+         *
+         * See the MDN documentation for more details.
+         * https://developer.mozilla.org/en-US/docs/Web/API/Range/startOffset
+         * https://developer.mozilla.org/en-US/docs/Web/API/Range/endOffset
+         *
+         */
+        findSelectionIndex(nodeToFind, nodeOffset) {
             let usedCharacters = 0;
             let it = iterateChildren(this.el);
             let current = it.next();
@@ -19509,6 +19540,28 @@
             }
             if (current.value !== nodeToFind) {
                 throw new Error("Cannot find the node in the children of the element");
+            }
+            else {
+                if (!current.value.hasChildNodes()) {
+                    usedCharacters += nodeOffset;
+                }
+                else {
+                    const children = [...current.value.childNodes].slice(0, nodeOffset);
+                    usedCharacters += children.reduce((acc, child, index) => {
+                        if (child.textContent !== null) {
+                            // need to account for paragraph nodes that implicitely add a new line
+                            // except for the last paragraph
+                            let chars = child.textContent.length;
+                            if (child.nodeName === "P" && index !== children.length - 1) {
+                                chars++;
+                            }
+                            return acc + chars;
+                        }
+                        else {
+                            return acc;
+                        }
+                    }, 0);
+                }
             }
             if (nodeToFind.nodeName === "P" && !isFirstParagraph && nodeToFind.textContent == "") {
                 usedCharacters++;
@@ -23512,6 +23565,1030 @@
         }
     }
 
+    class FunctionCodeBuilder {
+        constructor(scope = new Scope()) {
+            this.scope = scope;
+            this.code = "";
+        }
+        append(...lines) {
+            this.code += lines.map((line) => line.toString()).join("\n") + "\n";
+        }
+        return(expression) {
+            return new FunctionCodeImpl(this.scope, this.code, expression);
+        }
+        toString() {
+            return indentCode(this.code);
+        }
+    }
+    class FunctionCodeImpl {
+        constructor(scope, code, returnExpression) {
+            this.scope = scope;
+            this.returnExpression = returnExpression;
+            this.code = indentCode(code);
+        }
+        toString() {
+            return this.code;
+        }
+        wrapInClosure() {
+            const closureName = this.scope.nextVariableName();
+            const code = new FunctionCodeBuilder(this.scope);
+            code.append(`const ${closureName} = () => {`);
+            code.append(this.code);
+            code.append(`return ${this.returnExpression};`);
+            code.append(`}`);
+            return code.return(closureName);
+        }
+        assignResultToVariable() {
+            if (this.scope.isAlreadyDeclared(this.returnExpression)) {
+                return this;
+            }
+            const variableName = this.scope.nextVariableName();
+            const code = new FunctionCodeBuilder(this.scope);
+            code.append(this.code);
+            code.append(`const ${variableName} = ${this.returnExpression};`);
+            return code.return(variableName);
+        }
+    }
+    class Scope {
+        constructor() {
+            this.nextId = 1;
+            this.declaredVariables = new Set();
+        }
+        nextVariableName() {
+            const name = `_${this.nextId++}`;
+            this.declaredVariables.add(name);
+            return name;
+        }
+        isAlreadyDeclared(name) {
+            return this.declaredVariables.has(name);
+        }
+    }
+    /**
+     * Takes a list of strings that might be single or multiline
+     * and maps them in a list of single line strings.
+     */
+    function splitLines(str) {
+        return str
+            .split("\n")
+            .map((line) => line.trim())
+            .filter((line) => line !== "");
+    }
+    function indentCode(code) {
+        let result = "";
+        let indentLevel = 0;
+        const lines = splitLines(code);
+        for (const line of lines) {
+            if (line.startsWith("}")) {
+                indentLevel--;
+            }
+            result += "\t".repeat(indentLevel) + line + "\n";
+            if (line.endsWith("{")) {
+                indentLevel++;
+            }
+        }
+        return result.trim();
+    }
+
+    /**
+     * Tokenizer
+     *
+     * A tokenizer is a piece of code whose job is to transform a string into a list
+     * of "tokens". For example, "(12+" is converted into:
+     *   [{type: "LEFT_PAREN", value: "("},
+     *    {type: "NUMBER", value: "12"},
+     *    {type: "OPERATOR", value: "+"}]
+     *
+     * As the example shows, a tokenizer does not care about the meaning behind those
+     * tokens. It only cares about the structure.
+     *
+     * The tokenizer is usually the first step in a compilation pipeline.  Also, it
+     * is useful for the composer, which needs to be able to work with incomplete
+     * formulas.
+     */
+    const functions$1 = functionRegistry.content;
+    const POSTFIX_UNARY_OPERATORS = ["%"];
+    const OPERATORS = "+,-,*,/,:,=,<>,>=,>,<=,<,^,&".split(",").concat(POSTFIX_UNARY_OPERATORS);
+    function tokenize(str) {
+        str = replaceSpecialSpaces(str);
+        const chars = str.split("");
+        const result = [];
+        while (chars.length) {
+            let token = tokenizeSpace(chars) ||
+                tokenizeMisc(chars) ||
+                tokenizeOperator(chars) ||
+                tokenizeString(chars) ||
+                tokenizeDebugger(chars) ||
+                tokenizeInvalidRange(chars) ||
+                tokenizeNumber(chars) ||
+                tokenizeSymbol(chars);
+            if (!token) {
+                token = { type: "UNKNOWN", value: chars.shift() };
+            }
+            result.push(token);
+        }
+        return result;
+    }
+    function tokenizeDebugger(chars) {
+        if (chars[0] === "?") {
+            chars.shift();
+            return { type: "DEBUGGER", value: "?" };
+        }
+        return null;
+    }
+    const misc = {
+        ",": "COMMA",
+        "(": "LEFT_PAREN",
+        ")": "RIGHT_PAREN",
+    };
+    function tokenizeMisc(chars) {
+        if (chars[0] in misc) {
+            const value = chars.shift();
+            const type = misc[value];
+            return { type, value };
+        }
+        return null;
+    }
+    function startsWith(chars, op) {
+        for (let i = 0; i < op.length; i++) {
+            if (op[i] !== chars[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+    function tokenizeOperator(chars) {
+        for (let op of OPERATORS) {
+            if (startsWith(chars, op)) {
+                chars.splice(0, op.length);
+                return { type: "OPERATOR", value: op };
+            }
+        }
+        return null;
+    }
+    function tokenizeNumber(chars) {
+        const match = concat(chars).match(formulaNumberRegexp);
+        if (match) {
+            chars.splice(0, match[0].length);
+            return { type: "NUMBER", value: match[0] };
+        }
+        return null;
+    }
+    function tokenizeString(chars) {
+        if (chars[0] === '"') {
+            const startChar = chars.shift();
+            let letters = startChar;
+            while (chars[0] && (chars[0] !== startChar || letters[letters.length - 1] === "\\")) {
+                letters += chars.shift();
+            }
+            if (chars[0] === '"') {
+                letters += chars.shift();
+            }
+            return {
+                type: "STRING",
+                value: letters,
+            };
+        }
+        return null;
+    }
+    const separatorRegexp = /\w|\.|!|\$/;
+    /**
+     * A "Symbol" is just basically any word-like element that can appear in a
+     * formula, which is not a string. So:
+     *   A1
+     *   SUM
+     *   CEILING.MATH
+     *   A$1
+     *   Sheet2!A2
+     *   'Sheet 2'!A2
+     *
+     * are examples of symbols
+     */
+    function tokenizeSymbol(chars) {
+        let result = "";
+        // there are two main cases to manage: either something which starts with
+        // a ', like 'Sheet 2'A2, or a word-like element.
+        if (chars[0] === "'") {
+            let lastChar = chars.shift();
+            result += lastChar;
+            while (chars[0]) {
+                lastChar = chars.shift();
+                result += lastChar;
+                if (lastChar === "'") {
+                    if (chars[0] && chars[0] === "'") {
+                        lastChar = chars.shift();
+                        result += lastChar;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            if (lastChar !== "'") {
+                return {
+                    type: "UNKNOWN",
+                    value: result,
+                };
+            }
+        }
+        while (chars[0] && chars[0].match(separatorRegexp)) {
+            result += chars.shift();
+        }
+        if (result.length) {
+            const value = result;
+            const isFunction = value.toUpperCase() in functions$1;
+            if (isFunction) {
+                return { type: "FUNCTION", value };
+            }
+            const isReference = value.match(rangeReference);
+            if (isReference) {
+                return { type: "REFERENCE", value };
+            }
+            else {
+                return { type: "SYMBOL", value };
+            }
+        }
+        return null;
+    }
+    function tokenizeSpace(chars) {
+        let length = 0;
+        while (chars[0] === NEWLINE) {
+            length++;
+            chars.shift();
+        }
+        if (length) {
+            return { type: "SPACE", value: NEWLINE.repeat(length) };
+        }
+        while (chars[0] === " ") {
+            length++;
+            chars.shift();
+        }
+        if (length) {
+            return { type: "SPACE", value: " ".repeat(length) };
+        }
+        return null;
+    }
+    function tokenizeInvalidRange(chars) {
+        if (startsWith(chars, INCORRECT_RANGE_STRING)) {
+            chars.splice(0, INCORRECT_RANGE_STRING.length);
+            return { type: "INVALID_REFERENCE", value: INCORRECT_RANGE_STRING };
+        }
+        return null;
+    }
+
+    const functionRegex = /[a-zA-Z0-9\_]+(\.[a-zA-Z0-9\_]+)*/;
+    const UNARY_OPERATORS_PREFIX = ["-", "+"];
+    const UNARY_OPERATORS_POSTFIX = ["%"];
+    const ASSOCIATIVE_OPERATORS = ["*", "+", "&"];
+    const OP_PRIORITY = {
+        "^": 30,
+        "%": 30,
+        "*": 20,
+        "/": 20,
+        "+": 15,
+        "-": 15,
+        "&": 13,
+        ">": 10,
+        "<>": 10,
+        ">=": 10,
+        "<": 10,
+        "<=": 10,
+        "=": 10,
+    };
+    /**
+     * Parse the next operand in an arithmetic expression.
+     * e.g.
+     *  for 1+2*3, the next operand is 1
+     *  for (1+2)*3, the next operand is (1+2)
+     *  for SUM(1,2)+3, the next operand is SUM(1,2)
+     */
+    function parseOperand(tokens) {
+        var _a, _b, _c;
+        const current = tokens.shift();
+        if (!current) {
+            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
+        }
+        switch (current.type) {
+            case "DEBUGGER":
+                const next = parseExpression(tokens, 1000);
+                next.debug = true;
+                return next;
+            case "NUMBER":
+                return { type: "NUMBER", value: parseNumber(current.value) };
+            case "STRING":
+                return { type: "STRING", value: removeStringQuotes(current.value) };
+            case "FUNCTION":
+                const args = parseFunctionArgs(tokens);
+                return { type: "FUNCALL", value: current.value, args };
+            case "INVALID_REFERENCE":
+                throw new InvalidReferenceError();
+            case "REFERENCE":
+                if (((_a = tokens[0]) === null || _a === void 0 ? void 0 : _a.value) === ":" && ((_b = tokens[1]) === null || _b === void 0 ? void 0 : _b.type) === "REFERENCE") {
+                    tokens.shift();
+                    const rightReference = tokens.shift();
+                    return {
+                        type: "REFERENCE",
+                        value: `${current.value}:${rightReference === null || rightReference === void 0 ? void 0 : rightReference.value}`,
+                    };
+                }
+                return {
+                    type: "REFERENCE",
+                    value: current.value,
+                };
+            case "SYMBOL":
+                if (["TRUE", "FALSE"].includes(current.value.toUpperCase())) {
+                    return { type: "BOOLEAN", value: current.value.toUpperCase() === "TRUE" };
+                }
+                if (current.value) {
+                    if (functionRegex.test(current.value) && ((_c = tokens[0]) === null || _c === void 0 ? void 0 : _c.type) === "LEFT_PAREN") {
+                        throw new UnknownFunctionError(current.value);
+                    }
+                }
+                throw new BadExpressionError(_lt("Invalid formula"));
+            case "LEFT_PAREN":
+                const result = parseExpression(tokens);
+                consumeOrThrow(tokens, "RIGHT_PAREN", _lt("Missing closing parenthesis"));
+                return result;
+            case "OPERATOR":
+                const operator = current.value;
+                if (UNARY_OPERATORS_PREFIX.includes(operator)) {
+                    return {
+                        type: "UNARY_OPERATION",
+                        value: operator,
+                        operand: parseExpression(tokens, OP_PRIORITY[operator]),
+                    };
+                }
+                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
+            default:
+                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
+        }
+    }
+    function parseFunctionArgs(tokens) {
+        var _a;
+        consumeOrThrow(tokens, "LEFT_PAREN", _lt("Missing opening parenthesis"));
+        const nextToken = tokens[0];
+        if ((nextToken === null || nextToken === void 0 ? void 0 : nextToken.type) === "RIGHT_PAREN") {
+            consumeOrThrow(tokens, "RIGHT_PAREN");
+            return [];
+        }
+        const args = [];
+        args.push(parseOneFunctionArg(tokens));
+        while (((_a = tokens[0]) === null || _a === void 0 ? void 0 : _a.type) !== "RIGHT_PAREN") {
+            consumeOrThrow(tokens, "COMMA", _lt("Wrong function call"));
+            args.push(parseOneFunctionArg(tokens));
+        }
+        consumeOrThrow(tokens, "RIGHT_PAREN");
+        return args;
+    }
+    function parseOneFunctionArg(tokens) {
+        const nextToken = tokens[0];
+        if ((nextToken === null || nextToken === void 0 ? void 0 : nextToken.type) === "COMMA" || (nextToken === null || nextToken === void 0 ? void 0 : nextToken.type) === "RIGHT_PAREN") {
+            // arg is empty: "sum(1,,2)" "sum(,1)" "sum(1,)"
+            return { type: "EMPTY", value: "" };
+        }
+        return parseExpression(tokens);
+    }
+    function consumeOrThrow(tokens, type, message = DEFAULT_ERROR_MESSAGE) {
+        const token = tokens.shift();
+        if (!token || token.type !== type) {
+            throw new BadExpressionError(message);
+        }
+    }
+    function parseExpression(tokens, parent_priority = 0) {
+        var _a;
+        if (tokens.length === 0) {
+            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
+        }
+        let left = parseOperand(tokens);
+        // as long as we have operators with higher priority than the parent one,
+        // continue parsing the expression because it is a child sub-expression
+        while (((_a = tokens[0]) === null || _a === void 0 ? void 0 : _a.type) === "OPERATOR" && OP_PRIORITY[tokens[0].value] > parent_priority) {
+            const operator = tokens.shift().value;
+            if (UNARY_OPERATORS_POSTFIX.includes(operator)) {
+                left = {
+                    type: "UNARY_OPERATION",
+                    value: operator,
+                    operand: left,
+                    postfix: true,
+                };
+            }
+            else {
+                const right = parseExpression(tokens, OP_PRIORITY[operator]);
+                left = {
+                    type: "BIN_OPERATION",
+                    value: operator,
+                    left,
+                    right,
+                };
+            }
+        }
+        return left;
+    }
+    /**
+     * Parse an expression (as a string) into an AST.
+     */
+    function parse(str) {
+        return parseTokens(tokenize(str));
+    }
+    function parseTokens(tokens) {
+        tokens = tokens.filter((x) => x.type !== "SPACE");
+        if (tokens[0].value === "=") {
+            tokens.splice(0, 1);
+        }
+        const result = parseExpression(tokens);
+        if (tokens.length) {
+            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
+        }
+        return result;
+    }
+    /**
+     * Allows to visit all nodes of an AST and apply a mapping function
+     * to nodes of a specific type.
+     * Useful if you want to convert some part of a formula.
+     *
+     * e.g.
+     * ```ts
+     * convertAstNodes(ast, "FUNCALL", convertFormulaToExcel)
+     *
+     * function convertFormulaToExcel(ast: ASTFuncall) {
+     *   // ...
+     *   return modifiedAst
+     * }
+     * ```
+     */
+    function convertAstNodes(ast, type, fn) {
+        if (type === ast.type) {
+            ast = fn(ast);
+        }
+        switch (ast.type) {
+            case "FUNCALL":
+                return {
+                    ...ast,
+                    args: ast.args.map((child) => convertAstNodes(child, type, fn)),
+                };
+            case "UNARY_OPERATION":
+                return {
+                    ...ast,
+                    operand: convertAstNodes(ast.operand, type, fn),
+                };
+            case "BIN_OPERATION":
+                return {
+                    ...ast,
+                    right: convertAstNodes(ast.right, type, fn),
+                    left: convertAstNodes(ast.left, type, fn),
+                };
+            default:
+                return ast;
+        }
+    }
+    /**
+     * Converts an ast formula to the corresponding string
+     */
+    function astToFormula(ast) {
+        switch (ast.type) {
+            case "FUNCALL":
+                const args = ast.args.map((arg) => astToFormula(arg));
+                return `${ast.value}(${args.join(",")})`;
+            case "NUMBER":
+                return ast.value.toString();
+            case "REFERENCE":
+                return ast.value;
+            case "STRING":
+                return `"${ast.value}"`;
+            case "BOOLEAN":
+                return ast.value ? "TRUE" : "FALSE";
+            case "UNARY_OPERATION":
+                return ast.postfix
+                    ? leftOperandToFormula(ast) + ast.value
+                    : ast.value + rightOperandToFormula(ast);
+            case "BIN_OPERATION":
+                return leftOperandToFormula(ast) + ast.value + rightOperandToFormula(ast);
+            default:
+                return ast.value;
+        }
+    }
+    /**
+     * Convert the left operand of a binary operation to the corresponding string
+     * and enclose the result inside parenthesis if necessary.
+     */
+    function leftOperandToFormula(operationAST) {
+        const mainOperator = operationAST.value;
+        const leftOperation = "left" in operationAST ? operationAST.left : operationAST.operand;
+        const leftOperator = leftOperation.value;
+        const needParenthesis = leftOperation.type === "BIN_OPERATION" && OP_PRIORITY[leftOperator] < OP_PRIORITY[mainOperator];
+        return needParenthesis ? `(${astToFormula(leftOperation)})` : astToFormula(leftOperation);
+    }
+    /**
+     * Convert the right operand of a binary or unary operation to the corresponding string
+     * and enclose the result inside parenthesis if necessary.
+     */
+    function rightOperandToFormula(operationAST) {
+        const mainOperator = operationAST.value;
+        const rightOperation = "right" in operationAST ? operationAST.right : operationAST.operand;
+        const rightPriority = OP_PRIORITY[rightOperation.value];
+        const mainPriority = OP_PRIORITY[mainOperator];
+        let needParenthesis = false;
+        if (rightOperation.type !== "BIN_OPERATION") {
+            needParenthesis = false;
+        }
+        else if (rightPriority < mainPriority) {
+            needParenthesis = true;
+        }
+        else if (rightPriority === mainPriority && !ASSOCIATIVE_OPERATORS.includes(mainOperator)) {
+            needParenthesis = true;
+        }
+        return needParenthesis ? `(${astToFormula(rightOperation)})` : astToFormula(rightOperation);
+    }
+
+    var State;
+    (function (State) {
+        /**
+         * Initial state.
+         * Expecting any reference for the left part of a range
+         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
+         */
+        State[State["LeftRef"] = 0] = "LeftRef";
+        /**
+         * Expecting any reference for the right part of a range
+         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
+         */
+        State[State["RightRef"] = 1] = "RightRef";
+        /**
+         * Expecting the separator without any constraint on the right part
+         */
+        State[State["Separator"] = 2] = "Separator";
+        /**
+         * Expecting the separator for a full column range
+         */
+        State[State["FullColumnSeparator"] = 3] = "FullColumnSeparator";
+        /**
+         * Expecting the separator for a full row range
+         */
+        State[State["FullRowSeparator"] = 4] = "FullRowSeparator";
+        /**
+         * Expecting the right part of a full column range
+         * e.g. "1", "A1"
+         */
+        State[State["RightColumnRef"] = 5] = "RightColumnRef";
+        /**
+         * Expecting the right part of a full row range
+         * e.g. "A", "A1"
+         */
+        State[State["RightRowRef"] = 6] = "RightRowRef";
+        /**
+         * Final state. A range has been matched
+         */
+        State[State["Found"] = 7] = "Found";
+    })(State || (State = {}));
+    const goTo = (state, guard = () => true) => [
+        {
+            goTo: state,
+            guard,
+        },
+    ];
+    const goToMulti = (state, guard = () => true) => ({
+        goTo: state,
+        guard,
+    });
+    const machine = {
+        [State.LeftRef]: {
+            REFERENCE: goTo(State.Separator),
+            NUMBER: goTo(State.FullRowSeparator),
+            SYMBOL: [
+                goToMulti(State.FullColumnSeparator, (token) => isColReference(token.value)),
+                goToMulti(State.FullRowSeparator, (token) => isRowReference(token.value)),
+            ],
+        },
+        [State.FullColumnSeparator]: {
+            SPACE: goTo(State.FullColumnSeparator),
+            OPERATOR: goTo(State.RightColumnRef, (token) => token.value === ":"),
+        },
+        [State.FullRowSeparator]: {
+            SPACE: goTo(State.FullRowSeparator),
+            OPERATOR: goTo(State.RightRowRef, (token) => token.value === ":"),
+        },
+        [State.Separator]: {
+            SPACE: goTo(State.Separator),
+            OPERATOR: goTo(State.RightRef, (token) => token.value === ":"),
+        },
+        [State.RightRef]: {
+            SPACE: goTo(State.RightRef),
+            NUMBER: goTo(State.Found),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
+        },
+        [State.RightColumnRef]: {
+            SPACE: goTo(State.RightColumnRef),
+            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+        },
+        [State.RightRowRef]: {
+            SPACE: goTo(State.RightRowRef),
+            NUMBER: goTo(State.Found),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+        },
+        [State.Found]: {},
+    };
+    /**
+     * Check if the list of tokens starts with a sequence of tokens representing
+     * a range.
+     * If a range is found, the sequence is removed from the list and is returned
+     * as a single token.
+     */
+    function matchReference(tokens) {
+        var _a;
+        let head = 0;
+        let transitions = machine[State.LeftRef];
+        const matchedTokens = [];
+        while (transitions !== undefined) {
+            const token = tokens[head++];
+            if (!token) {
+                return null;
+            }
+            const transition = (_a = transitions[token.type]) === null || _a === void 0 ? void 0 : _a.find((transition) => transition.guard(token));
+            const nextState = transition ? transition.goTo : undefined;
+            switch (nextState) {
+                case undefined:
+                    return null;
+                case State.Found:
+                    matchedTokens.push(token);
+                    tokens.splice(0, head);
+                    return {
+                        type: "REFERENCE",
+                        value: concat(matchedTokens.map((token) => token.value)),
+                    };
+                default:
+                    transitions = machine[nextState];
+                    matchedTokens.push(token);
+                    break;
+            }
+        }
+        return null;
+    }
+    /**
+     * Take the result of the tokenizer and transform it to be usable in the
+     * manipulations of range
+     *
+     * @param formula
+     */
+    function rangeTokenize(formula) {
+        const tokens = tokenize(formula);
+        const result = [];
+        while (tokens.length) {
+            result.push(matchReference(tokens) || tokens.shift());
+        }
+        return result;
+    }
+
+    const functions = functionRegistry.content;
+    const OPERATOR_MAP = {
+        "=": "EQ",
+        "+": "ADD",
+        "-": "MINUS",
+        "*": "MULTIPLY",
+        "/": "DIVIDE",
+        ">=": "GTE",
+        "<>": "NE",
+        ">": "GT",
+        "<=": "LTE",
+        "<": "LT",
+        "^": "POWER",
+        "&": "CONCATENATE",
+    };
+    const UNARY_OPERATOR_MAP = {
+        "-": "UMINUS",
+        "+": "UPLUS",
+        "%": "UNARY.PERCENT",
+    };
+    // this cache contains all compiled function code, grouped by "structure". For
+    // example, "=2*sum(A1:A4)" and "=2*sum(B1:B4)" are compiled into the same
+    // structural function.
+    // It is only exported for testing purposes
+    const functionCache = {};
+    // -----------------------------------------------------------------------------
+    // COMPILER
+    // -----------------------------------------------------------------------------
+    function compile(formula) {
+        const tokens = rangeTokenize(formula);
+        const { dependencies, constantValues } = formulaArguments(tokens);
+        const cacheKey = compilationCacheKey(tokens, dependencies, constantValues);
+        if (!functionCache[cacheKey]) {
+            const ast = parseTokens([...tokens]);
+            const scope = new Scope();
+            if (ast.type === "BIN_OPERATION" && ast.value === ":") {
+                throw new BadExpressionError(_lt("Invalid formula"));
+            }
+            if (ast.type === "EMPTY") {
+                throw new BadExpressionError(_lt("Invalid formula"));
+            }
+            const compiledAST = compileAST(ast);
+            const code = new FunctionCodeBuilder();
+            code.append(`// ${cacheKey}`);
+            code.append(compiledAST);
+            code.append(`return ${compiledAST.returnExpression};`);
+            let baseFunction = new Function("deps", // the dependencies in the current formula
+            "ref", // a function to access a certain dependency at a given index
+            "range", // same as above, but guarantee that the result is in the form of a range
+            "ctx", code.toString());
+            functionCache[cacheKey] = {
+                // @ts-ignore
+                execute: baseFunction,
+            };
+            /**
+             * This function compile the function arguments. It is mostly straightforward,
+             * except that there is a non trivial transformation in one situation:
+             *
+             * If a function argument is asking for a range, and get a cell, we transform
+             * the cell value into a range. This allow the grid model to differentiate
+             * between a cell value and a non cell value.
+             */
+            function compileFunctionArgs(ast) {
+                const functionDefinition = functions[ast.value.toUpperCase()];
+                const currentFunctionArguments = ast.args;
+                // check if arguments are supplied in the correct quantities
+                const nbrArg = currentFunctionArguments.length;
+                if (nbrArg < functionDefinition.minArgRequired) {
+                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s minimum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.minArgRequired.toString(), nbrArg.toString()));
+                }
+                if (nbrArg > functionDefinition.maxArgPossible) {
+                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s maximum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.maxArgPossible.toString(), nbrArg.toString()));
+                }
+                const repeatingArg = functionDefinition.nbrArgRepeating;
+                if (repeatingArg > 1) {
+                    const argBeforeRepeat = functionDefinition.args.length - repeatingArg;
+                    const nbrRepeatingArg = nbrArg - argBeforeRepeat;
+                    if (nbrRepeatingArg % repeatingArg !== 0) {
+                        throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected all arguments after position %s to be supplied by groups of %s arguments", ast.value.toUpperCase(), argBeforeRepeat.toString(), repeatingArg.toString()));
+                    }
+                }
+                let compiledArgs = [];
+                for (let i = 0; i < nbrArg; i++) {
+                    const argPosition = functionDefinition.getArgToFocus(i + 1) - 1;
+                    if (0 <= argPosition && argPosition < functionDefinition.args.length) {
+                        const currentArg = currentFunctionArguments[i];
+                        const argDefinition = functionDefinition.args[argPosition];
+                        const argTypes = argDefinition.type || [];
+                        // detect when an argument need to be evaluated as a meta argument
+                        const isMeta = argTypes.includes("META");
+                        // detect when an argument need to be evaluated as a lazy argument
+                        const isLazy = argDefinition.lazy;
+                        const hasRange = argTypes.some((t) => t === "RANGE" ||
+                            t === "RANGE<BOOLEAN>" ||
+                            t === "RANGE<DATE>" ||
+                            t === "RANGE<NUMBER>" ||
+                            t === "RANGE<STRING>");
+                        const isRangeOnly = argTypes.every((t) => t === "RANGE" ||
+                            t === "RANGE<BOOLEAN>" ||
+                            t === "RANGE<DATE>" ||
+                            t === "RANGE<NUMBER>" ||
+                            t === "RANGE<STRING>");
+                        if (isRangeOnly) {
+                            if (currentArg.type !== "REFERENCE") {
+                                throw new BadExpressionError(_lt("Function %s expects the parameter %s to be reference to a cell or range, not a %s.", ast.value.toUpperCase(), (i + 1).toString(), currentArg.type.toLowerCase()));
+                            }
+                        }
+                        const compiledAST = compileAST(currentArg, isMeta, hasRange, {
+                            functionName: ast.value.toUpperCase(),
+                            paramIndex: i + 1,
+                        });
+                        compiledArgs.push(isLazy ? compiledAST.wrapInClosure() : compiledAST);
+                    }
+                }
+                return compiledArgs;
+            }
+            /**
+             * This function compiles all the information extracted by the parser into an
+             * executable code for the evaluation of the cells content. It uses a cash to
+             * not reevaluate identical code structures.
+             *
+             * The function is sensitive to parameter “isMeta”. This
+             * parameter may vary when compiling function arguments:
+             * isMeta: In some cases the function arguments expects information on the
+             * cell/range other than the associated value(s). For example the COLUMN
+             * function needs to receive as argument the coordinates of a cell rather
+             * than its value. For this we have meta arguments.
+             */
+            function compileAST(ast, isMeta = false, hasRange = false, referenceVerification = {}) {
+                const code = new FunctionCodeBuilder(scope);
+                if (ast.type !== "REFERENCE" && !(ast.type === "BIN_OPERATION" && ast.value === ":")) {
+                    if (isMeta) {
+                        throw new BadExpressionError(_lt(`Argument must be a reference to a cell or range.`));
+                    }
+                }
+                if (ast.debug) {
+                    code.append("debugger;");
+                }
+                switch (ast.type) {
+                    case "BOOLEAN":
+                        return code.return(`{ value: ${ast.value} }`);
+                    case "NUMBER":
+                        return code.return(`{ value: this.constantValues.numbers[${constantValues.numbers.indexOf(ast.value)}] }`);
+                    case "STRING":
+                        return code.return(`{ value: this.constantValues.strings[${constantValues.strings.indexOf(ast.value)}] }`);
+                    case "REFERENCE":
+                        const referenceIndex = dependencies.indexOf(ast.value);
+                        if (hasRange) {
+                            return code.return(`range(deps[${referenceIndex}])`);
+                        }
+                        else {
+                            return code.return(`ref(deps[${referenceIndex}], ${isMeta ? "true" : "false"}, "${referenceVerification.functionName || OPERATOR_MAP["="]}",  ${referenceVerification.paramIndex})`);
+                        }
+                    case "FUNCALL":
+                        const args = compileFunctionArgs(ast).map((arg) => arg.assignResultToVariable());
+                        code.append(...args);
+                        const fnName = ast.value.toUpperCase();
+                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
+                        return code.return(`ctx['${fnName}'](${args.map((arg) => arg.returnExpression)})`);
+                    case "UNARY_OPERATION": {
+                        const fnName = UNARY_OPERATOR_MAP[ast.value];
+                        const operand = compileAST(ast.operand, false, false, {
+                            functionName: fnName,
+                        }).assignResultToVariable();
+                        code.append(operand);
+                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
+                        return code.return(`ctx['${fnName}'](${operand.returnExpression})`);
+                    }
+                    case "BIN_OPERATION": {
+                        const fnName = OPERATOR_MAP[ast.value];
+                        const left = compileAST(ast.left, false, false, {
+                            functionName: fnName,
+                        }).assignResultToVariable();
+                        const right = compileAST(ast.right, false, false, {
+                            functionName: fnName,
+                        }).assignResultToVariable();
+                        code.append(left);
+                        code.append(right);
+                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
+                        return code.return(`ctx['${fnName}'](${left.returnExpression}, ${right.returnExpression})`);
+                    }
+                    case "EMPTY":
+                        return code.return("undefined");
+                }
+            }
+        }
+        const compiledFormula = {
+            execute: functionCache[cacheKey].execute,
+            dependencies,
+            constantValues,
+            tokens,
+        };
+        return compiledFormula;
+    }
+    /**
+     * Compute a cache key for the formula.
+     * References, numbers and strings are replaced with placeholders because
+     * the compiled formula does not depend on their actual value.
+     * Both `=A1+1+"2"` and `=A2+2+"3"` are compiled to the exact same function.
+     *
+     * Spaces are also ignored to compute the cache key.
+     *
+     * A formula `=A1+A2+SUM(2, 2, "2")` have the cache key `=|0|+|1|+SUM(|N0|,|N0|,|S0|)`
+     */
+    function compilationCacheKey(tokens, dependencies, constantValues) {
+        return concat(tokens.map((token) => {
+            switch (token.type) {
+                case "STRING":
+                    const value = removeStringQuotes(token.value);
+                    return `|S${constantValues.strings.indexOf(value)}|`;
+                case "NUMBER":
+                    return `|N${constantValues.numbers.indexOf(parseNumber(token.value))}|`;
+                case "REFERENCE":
+                case "INVALID_REFERENCE":
+                    return `|${dependencies.indexOf(token.value)}|`;
+                case "SPACE":
+                    return "";
+                default:
+                    return token.value;
+            }
+        }));
+    }
+    /**
+     * Return formula arguments which are references, strings and numbers.
+     */
+    function formulaArguments(tokens) {
+        const constantValues = {
+            numbers: [],
+            strings: [],
+        };
+        const dependencies = [];
+        for (const token of tokens) {
+            switch (token.type) {
+                case "INVALID_REFERENCE":
+                case "REFERENCE":
+                    dependencies.push(token.value);
+                    break;
+                case "STRING":
+                    const value = removeStringQuotes(token.value);
+                    if (!constantValues.strings.includes(value)) {
+                        constantValues.strings.push(value);
+                    }
+                    break;
+                case "NUMBER": {
+                    const value = parseNumber(token.value);
+                    if (!constantValues.numbers.includes(value)) {
+                        constantValues.numbers.push(value);
+                    }
+                    break;
+                }
+            }
+        }
+        return {
+            dependencies,
+            constantValues,
+        };
+    }
+
+    /**
+     * Add the following information on tokens:
+     * - length
+     * - start
+     * - end
+     */
+    function enrichTokens(tokens) {
+        let current = 0;
+        return tokens.map((x) => {
+            const len = x.value.toString().length;
+            const token = Object.assign({}, x, {
+                start: current,
+                end: current + len,
+                length: len,
+            });
+            current = token.end;
+            return token;
+        });
+    }
+    /**
+     * add on each token the length, start and end
+     * also matches the opening to its closing parenthesis (using the same number)
+     */
+    function mapParenthesis(tokens) {
+        let maxParen = 1;
+        const stack = [];
+        return tokens.map((token) => {
+            if (token.type === "LEFT_PAREN") {
+                stack.push(maxParen);
+                token.parenIndex = maxParen;
+                maxParen++;
+            }
+            else if (token.type === "RIGHT_PAREN") {
+                token.parenIndex = stack.pop();
+            }
+            return token;
+        });
+    }
+    /**
+     * add on each token its parent function and the index corresponding to
+     * its position as an argument of the function.
+     * In this example "=MIN(42,SUM(MAX(1,2),3))":
+     * - the parent function of the token correspond to number 42 is the MIN function
+     * - the argument position of the token correspond to number 42 is 0
+     * - the parent function of the token correspond to number 3 is the SUM function
+     * - the argument position of the token correspond to number 3 is 1
+     */
+    function mapParentFunction(tokens) {
+        let stack = [];
+        let functionStarted = "";
+        const res = tokens.map((token, i) => {
+            if (!["SPACE", "LEFT_PAREN"].includes(token.type)) {
+                functionStarted = "";
+            }
+            switch (token.type) {
+                case "FUNCTION":
+                    functionStarted = token.value;
+                    break;
+                case "LEFT_PAREN":
+                    stack.push({ parent: functionStarted, argPosition: 0 });
+                    functionStarted = "";
+                    break;
+                case "RIGHT_PAREN":
+                    stack.pop();
+                    break;
+                case "COMMA":
+                    if (stack.length) {
+                        // increment position on current function
+                        stack[stack.length - 1].argPosition++;
+                    }
+                    break;
+            }
+            if (stack.length) {
+                const functionContext = stack[stack.length - 1];
+                if (functionContext.parent) {
+                    token.functionContext = Object.assign({}, functionContext);
+                }
+            }
+            return token;
+        });
+        return res;
+    }
+    /**
+     * Take the result of the tokenizer and transform it to be usable in the composer.
+     *
+     * @param formula
+     */
+    function composerTokenize(formula) {
+        const tokens = rangeTokenize(formula);
+        return mapParentFunction(mapParenthesis(enrichTokens(tokens)));
+    }
+
     // -------------------------------------
     //            CF HELPERS
     // -------------------------------------
@@ -23574,7 +24651,7 @@
         if (cell.style) {
             style = data.styles[cell.style];
         }
-        const format = cell.format ? data.formats[cell.format] : undefined;
+        const format = extractFormat(cell, data);
         const exportedBorder = {};
         if (cell.border) {
             const border = data.borders[cell.border];
@@ -23607,6 +24684,22 @@
         styles.font["bold"] = !!(style === null || style === void 0 ? void 0 : style.bold) || undefined;
         styles.font["italic"] = !!(style === null || style === void 0 ? void 0 : style.italic) || undefined;
         return styles;
+    }
+    function extractFormat(cell, data) {
+        if (cell.format) {
+            return data.formats[cell.format];
+        }
+        if (cell.isFormula) {
+            const tokens = tokenize(cell.content || "");
+            const functions = functionRegistry.content;
+            const isExported = tokens
+                .filter((tk) => tk.type === "FUNCTION")
+                .every((tk) => functions[tk.value.toUpperCase()].isExported);
+            if (!isExported) {
+                return cell.computedFormat;
+            }
+        }
+        return undefined;
     }
     function normalizeStyle(construct, styles) {
         const { id: fontId } = pushElement(styles["font"], construct.fonts);
@@ -25650,332 +26743,6 @@
     }
 
     /**
-     * Tokenizer
-     *
-     * A tokenizer is a piece of code whose job is to transform a string into a list
-     * of "tokens". For example, "(12+" is converted into:
-     *   [{type: "LEFT_PAREN", value: "("},
-     *    {type: "NUMBER", value: "12"},
-     *    {type: "OPERATOR", value: "+"}]
-     *
-     * As the example shows, a tokenizer does not care about the meaning behind those
-     * tokens. It only cares about the structure.
-     *
-     * The tokenizer is usually the first step in a compilation pipeline.  Also, it
-     * is useful for the composer, which needs to be able to work with incomplete
-     * formulas.
-     */
-    const functions$1 = functionRegistry.content;
-    const POSTFIX_UNARY_OPERATORS = ["%"];
-    const OPERATORS = "+,-,*,/,:,=,<>,>=,>,<=,<,^,&".split(",").concat(POSTFIX_UNARY_OPERATORS);
-    function tokenize(str) {
-        str = replaceSpecialSpaces(str);
-        const chars = str.split("");
-        const result = [];
-        while (chars.length) {
-            let token = tokenizeSpace(chars) ||
-                tokenizeMisc(chars) ||
-                tokenizeOperator(chars) ||
-                tokenizeString(chars) ||
-                tokenizeDebugger(chars) ||
-                tokenizeInvalidRange(chars) ||
-                tokenizeNumber(chars) ||
-                tokenizeSymbol(chars);
-            if (!token) {
-                token = { type: "UNKNOWN", value: chars.shift() };
-            }
-            result.push(token);
-        }
-        return result;
-    }
-    function tokenizeDebugger(chars) {
-        if (chars[0] === "?") {
-            chars.shift();
-            return { type: "DEBUGGER", value: "?" };
-        }
-        return null;
-    }
-    const misc = {
-        ",": "COMMA",
-        "(": "LEFT_PAREN",
-        ")": "RIGHT_PAREN",
-    };
-    function tokenizeMisc(chars) {
-        if (chars[0] in misc) {
-            const value = chars.shift();
-            const type = misc[value];
-            return { type, value };
-        }
-        return null;
-    }
-    function startsWith(chars, op) {
-        for (let i = 0; i < op.length; i++) {
-            if (op[i] !== chars[i]) {
-                return false;
-            }
-        }
-        return true;
-    }
-    function tokenizeOperator(chars) {
-        for (let op of OPERATORS) {
-            if (startsWith(chars, op)) {
-                chars.splice(0, op.length);
-                return { type: "OPERATOR", value: op };
-            }
-        }
-        return null;
-    }
-    function tokenizeNumber(chars) {
-        const match = concat(chars).match(formulaNumberRegexp);
-        if (match) {
-            chars.splice(0, match[0].length);
-            return { type: "NUMBER", value: match[0] };
-        }
-        return null;
-    }
-    function tokenizeString(chars) {
-        if (chars[0] === '"') {
-            const startChar = chars.shift();
-            let letters = startChar;
-            while (chars[0] && (chars[0] !== startChar || letters[letters.length - 1] === "\\")) {
-                letters += chars.shift();
-            }
-            if (chars[0] === '"') {
-                letters += chars.shift();
-            }
-            return {
-                type: "STRING",
-                value: letters,
-            };
-        }
-        return null;
-    }
-    const separatorRegexp = /\w|\.|!|\$/;
-    /**
-     * A "Symbol" is just basically any word-like element that can appear in a
-     * formula, which is not a string. So:
-     *   A1
-     *   SUM
-     *   CEILING.MATH
-     *   A$1
-     *   Sheet2!A2
-     *   'Sheet 2'!A2
-     *
-     * are examples of symbols
-     */
-    function tokenizeSymbol(chars) {
-        let result = "";
-        // there are two main cases to manage: either something which starts with
-        // a ', like 'Sheet 2'A2, or a word-like element.
-        if (chars[0] === "'") {
-            let lastChar = chars.shift();
-            result += lastChar;
-            while (chars[0]) {
-                lastChar = chars.shift();
-                result += lastChar;
-                if (lastChar === "'") {
-                    if (chars[0] && chars[0] === "'") {
-                        lastChar = chars.shift();
-                        result += lastChar;
-                    }
-                    else {
-                        break;
-                    }
-                }
-            }
-            if (lastChar !== "'") {
-                return {
-                    type: "UNKNOWN",
-                    value: result,
-                };
-            }
-        }
-        while (chars[0] && chars[0].match(separatorRegexp)) {
-            result += chars.shift();
-        }
-        if (result.length) {
-            const value = result;
-            const isFunction = value.toUpperCase() in functions$1;
-            if (isFunction) {
-                return { type: "FUNCTION", value };
-            }
-            const isReference = value.match(rangeReference);
-            if (isReference) {
-                return { type: "REFERENCE", value };
-            }
-            else {
-                return { type: "SYMBOL", value };
-            }
-        }
-        return null;
-    }
-    function tokenizeSpace(chars) {
-        let length = 0;
-        while (chars[0] === NEWLINE) {
-            length++;
-            chars.shift();
-        }
-        if (length) {
-            return { type: "SPACE", value: NEWLINE.repeat(length) };
-        }
-        while (chars[0] === " ") {
-            length++;
-            chars.shift();
-        }
-        if (length) {
-            return { type: "SPACE", value: " ".repeat(length) };
-        }
-        return null;
-    }
-    function tokenizeInvalidRange(chars) {
-        if (startsWith(chars, INCORRECT_RANGE_STRING)) {
-            chars.splice(0, INCORRECT_RANGE_STRING.length);
-            return { type: "INVALID_REFERENCE", value: INCORRECT_RANGE_STRING };
-        }
-        return null;
-    }
-
-    var State;
-    (function (State) {
-        /**
-         * Initial state.
-         * Expecting any reference for the left part of a range
-         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
-         */
-        State[State["LeftRef"] = 0] = "LeftRef";
-        /**
-         * Expecting any reference for the right part of a range
-         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
-         */
-        State[State["RightRef"] = 1] = "RightRef";
-        /**
-         * Expecting the separator without any constraint on the right part
-         */
-        State[State["Separator"] = 2] = "Separator";
-        /**
-         * Expecting the separator for a full column range
-         */
-        State[State["FullColumnSeparator"] = 3] = "FullColumnSeparator";
-        /**
-         * Expecting the separator for a full row range
-         */
-        State[State["FullRowSeparator"] = 4] = "FullRowSeparator";
-        /**
-         * Expecting the right part of a full column range
-         * e.g. "1", "A1"
-         */
-        State[State["RightColumnRef"] = 5] = "RightColumnRef";
-        /**
-         * Expecting the right part of a full row range
-         * e.g. "A", "A1"
-         */
-        State[State["RightRowRef"] = 6] = "RightRowRef";
-        /**
-         * Final state. A range has been matched
-         */
-        State[State["Found"] = 7] = "Found";
-    })(State || (State = {}));
-    const goTo = (state, guard = () => true) => [
-        {
-            goTo: state,
-            guard,
-        },
-    ];
-    const goToMulti = (state, guard = () => true) => ({
-        goTo: state,
-        guard,
-    });
-    const machine = {
-        [State.LeftRef]: {
-            REFERENCE: goTo(State.Separator),
-            NUMBER: goTo(State.FullRowSeparator),
-            SYMBOL: [
-                goToMulti(State.FullColumnSeparator, (token) => isColReference(token.value)),
-                goToMulti(State.FullRowSeparator, (token) => isRowReference(token.value)),
-            ],
-        },
-        [State.FullColumnSeparator]: {
-            SPACE: goTo(State.FullColumnSeparator),
-            OPERATOR: goTo(State.RightColumnRef, (token) => token.value === ":"),
-        },
-        [State.FullRowSeparator]: {
-            SPACE: goTo(State.FullRowSeparator),
-            OPERATOR: goTo(State.RightRowRef, (token) => token.value === ":"),
-        },
-        [State.Separator]: {
-            SPACE: goTo(State.Separator),
-            OPERATOR: goTo(State.RightRef, (token) => token.value === ":"),
-        },
-        [State.RightRef]: {
-            SPACE: goTo(State.RightRef),
-            NUMBER: goTo(State.Found),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
-        },
-        [State.RightColumnRef]: {
-            SPACE: goTo(State.RightColumnRef),
-            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-        },
-        [State.RightRowRef]: {
-            SPACE: goTo(State.RightRowRef),
-            NUMBER: goTo(State.Found),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-        },
-        [State.Found]: {},
-    };
-    /**
-     * Check if the list of tokens starts with a sequence of tokens representing
-     * a range.
-     * If a range is found, the sequence is removed from the list and is returned
-     * as a single token.
-     */
-    function matchReference(tokens) {
-        var _a;
-        let head = 0;
-        let transitions = machine[State.LeftRef];
-        const matchedTokens = [];
-        while (transitions !== undefined) {
-            const token = tokens[head++];
-            if (!token) {
-                return null;
-            }
-            const transition = (_a = transitions[token.type]) === null || _a === void 0 ? void 0 : _a.find((transition) => transition.guard(token));
-            const nextState = transition ? transition.goTo : undefined;
-            switch (nextState) {
-                case undefined:
-                    return null;
-                case State.Found:
-                    matchedTokens.push(token);
-                    tokens.splice(0, head);
-                    return {
-                        type: "REFERENCE",
-                        value: concat(matchedTokens.map((token) => token.value)),
-                    };
-                default:
-                    transitions = machine[nextState];
-                    matchedTokens.push(token);
-                    break;
-            }
-        }
-        return null;
-    }
-    /**
-     * Take the result of the tokenizer and transform it to be usable in the
-     * manipulations of range
-     *
-     * @param formula
-     */
-    function rangeTokenize(formula) {
-        const tokens = tokenize(formula);
-        const result = [];
-        while (tokens.length) {
-            result.push(matchReference(tokens) || tokens.shift());
-        }
-        return result;
-    }
-
-    /**
      * parses a formula (as a string) into the same formula,
      * but with the references to other cells extracted
      *
@@ -27072,704 +27839,6 @@
         }
     }
     BordersPlugin.getters = ["getCellBorder"];
-
-    class FunctionCodeBuilder {
-        constructor(scope = new Scope()) {
-            this.scope = scope;
-            this.code = "";
-        }
-        append(...lines) {
-            this.code += lines.map((line) => line.toString()).join("\n") + "\n";
-        }
-        return(expression) {
-            return new FunctionCodeImpl(this.scope, this.code, expression);
-        }
-        toString() {
-            return indentCode(this.code);
-        }
-    }
-    class FunctionCodeImpl {
-        constructor(scope, code, returnExpression) {
-            this.scope = scope;
-            this.returnExpression = returnExpression;
-            this.code = indentCode(code);
-        }
-        toString() {
-            return this.code;
-        }
-        wrapInClosure() {
-            const closureName = this.scope.nextVariableName();
-            const code = new FunctionCodeBuilder(this.scope);
-            code.append(`const ${closureName} = () => {`);
-            code.append(this.code);
-            code.append(`return ${this.returnExpression};`);
-            code.append(`}`);
-            return code.return(closureName);
-        }
-        assignResultToVariable() {
-            if (this.scope.isAlreadyDeclared(this.returnExpression)) {
-                return this;
-            }
-            const variableName = this.scope.nextVariableName();
-            const code = new FunctionCodeBuilder(this.scope);
-            code.append(this.code);
-            code.append(`const ${variableName} = ${this.returnExpression};`);
-            return code.return(variableName);
-        }
-    }
-    class Scope {
-        constructor() {
-            this.nextId = 1;
-            this.declaredVariables = new Set();
-        }
-        nextVariableName() {
-            const name = `_${this.nextId++}`;
-            this.declaredVariables.add(name);
-            return name;
-        }
-        isAlreadyDeclared(name) {
-            return this.declaredVariables.has(name);
-        }
-    }
-    /**
-     * Takes a list of strings that might be single or multiline
-     * and maps them in a list of single line strings.
-     */
-    function splitLines(str) {
-        return str
-            .split("\n")
-            .map((line) => line.trim())
-            .filter((line) => line !== "");
-    }
-    function indentCode(code) {
-        let result = "";
-        let indentLevel = 0;
-        const lines = splitLines(code);
-        for (const line of lines) {
-            if (line.startsWith("}")) {
-                indentLevel--;
-            }
-            result += "\t".repeat(indentLevel) + line + "\n";
-            if (line.endsWith("{")) {
-                indentLevel++;
-            }
-        }
-        return result.trim();
-    }
-
-    const functionRegex = /[a-zA-Z0-9\_]+(\.[a-zA-Z0-9\_]+)*/;
-    const UNARY_OPERATORS_PREFIX = ["-", "+"];
-    const UNARY_OPERATORS_POSTFIX = ["%"];
-    const ASSOCIATIVE_OPERATORS = ["*", "+", "&"];
-    const OP_PRIORITY = {
-        "^": 30,
-        "%": 30,
-        "*": 20,
-        "/": 20,
-        "+": 15,
-        "-": 15,
-        "&": 13,
-        ">": 10,
-        "<>": 10,
-        ">=": 10,
-        "<": 10,
-        "<=": 10,
-        "=": 10,
-    };
-    /**
-     * Parse the next operand in an arithmetic expression.
-     * e.g.
-     *  for 1+2*3, the next operand is 1
-     *  for (1+2)*3, the next operand is (1+2)
-     *  for SUM(1,2)+3, the next operand is SUM(1,2)
-     */
-    function parseOperand(tokens) {
-        var _a, _b, _c;
-        const current = tokens.shift();
-        if (!current) {
-            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
-        }
-        switch (current.type) {
-            case "DEBUGGER":
-                const next = parseExpression(tokens, 1000);
-                next.debug = true;
-                return next;
-            case "NUMBER":
-                return { type: "NUMBER", value: parseNumber(current.value) };
-            case "STRING":
-                return { type: "STRING", value: removeStringQuotes(current.value) };
-            case "FUNCTION":
-                const args = parseFunctionArgs(tokens);
-                return { type: "FUNCALL", value: current.value, args };
-            case "INVALID_REFERENCE":
-                throw new InvalidReferenceError();
-            case "REFERENCE":
-                if (((_a = tokens[0]) === null || _a === void 0 ? void 0 : _a.value) === ":" && ((_b = tokens[1]) === null || _b === void 0 ? void 0 : _b.type) === "REFERENCE") {
-                    tokens.shift();
-                    const rightReference = tokens.shift();
-                    return {
-                        type: "REFERENCE",
-                        value: `${current.value}:${rightReference === null || rightReference === void 0 ? void 0 : rightReference.value}`,
-                    };
-                }
-                return {
-                    type: "REFERENCE",
-                    value: current.value,
-                };
-            case "SYMBOL":
-                if (["TRUE", "FALSE"].includes(current.value.toUpperCase())) {
-                    return { type: "BOOLEAN", value: current.value.toUpperCase() === "TRUE" };
-                }
-                if (current.value) {
-                    if (functionRegex.test(current.value) && ((_c = tokens[0]) === null || _c === void 0 ? void 0 : _c.type) === "LEFT_PAREN") {
-                        throw new UnknownFunctionError(current.value);
-                    }
-                }
-                throw new BadExpressionError(_lt("Invalid formula"));
-            case "LEFT_PAREN":
-                const result = parseExpression(tokens);
-                consumeOrThrow(tokens, "RIGHT_PAREN", _lt("Missing closing parenthesis"));
-                return result;
-            case "OPERATOR":
-                const operator = current.value;
-                if (UNARY_OPERATORS_PREFIX.includes(operator)) {
-                    return {
-                        type: "UNARY_OPERATION",
-                        value: operator,
-                        operand: parseExpression(tokens, OP_PRIORITY[operator]),
-                    };
-                }
-                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
-            default:
-                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
-        }
-    }
-    function parseFunctionArgs(tokens) {
-        var _a;
-        consumeOrThrow(tokens, "LEFT_PAREN", _lt("Missing opening parenthesis"));
-        const nextToken = tokens[0];
-        if ((nextToken === null || nextToken === void 0 ? void 0 : nextToken.type) === "RIGHT_PAREN") {
-            consumeOrThrow(tokens, "RIGHT_PAREN");
-            return [];
-        }
-        const args = [];
-        args.push(parseOneFunctionArg(tokens));
-        while (((_a = tokens[0]) === null || _a === void 0 ? void 0 : _a.type) !== "RIGHT_PAREN") {
-            consumeOrThrow(tokens, "COMMA", _lt("Wrong function call"));
-            args.push(parseOneFunctionArg(tokens));
-        }
-        consumeOrThrow(tokens, "RIGHT_PAREN");
-        return args;
-    }
-    function parseOneFunctionArg(tokens) {
-        const nextToken = tokens[0];
-        if ((nextToken === null || nextToken === void 0 ? void 0 : nextToken.type) === "COMMA" || (nextToken === null || nextToken === void 0 ? void 0 : nextToken.type) === "RIGHT_PAREN") {
-            // arg is empty: "sum(1,,2)" "sum(,1)" "sum(1,)"
-            return { type: "EMPTY", value: "" };
-        }
-        return parseExpression(tokens);
-    }
-    function consumeOrThrow(tokens, type, message = DEFAULT_ERROR_MESSAGE) {
-        const token = tokens.shift();
-        if (!token || token.type !== type) {
-            throw new BadExpressionError(message);
-        }
-    }
-    function parseExpression(tokens, parent_priority = 0) {
-        var _a;
-        if (tokens.length === 0) {
-            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
-        }
-        let left = parseOperand(tokens);
-        // as long as we have operators with higher priority than the parent one,
-        // continue parsing the expression because it is a child sub-expression
-        while (((_a = tokens[0]) === null || _a === void 0 ? void 0 : _a.type) === "OPERATOR" && OP_PRIORITY[tokens[0].value] > parent_priority) {
-            const operator = tokens.shift().value;
-            if (UNARY_OPERATORS_POSTFIX.includes(operator)) {
-                left = {
-                    type: "UNARY_OPERATION",
-                    value: operator,
-                    operand: left,
-                    postfix: true,
-                };
-            }
-            else {
-                const right = parseExpression(tokens, OP_PRIORITY[operator]);
-                left = {
-                    type: "BIN_OPERATION",
-                    value: operator,
-                    left,
-                    right,
-                };
-            }
-        }
-        return left;
-    }
-    /**
-     * Parse an expression (as a string) into an AST.
-     */
-    function parse(str) {
-        return parseTokens(tokenize(str));
-    }
-    function parseTokens(tokens) {
-        tokens = tokens.filter((x) => x.type !== "SPACE");
-        if (tokens[0].value === "=") {
-            tokens.splice(0, 1);
-        }
-        const result = parseExpression(tokens);
-        if (tokens.length) {
-            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
-        }
-        return result;
-    }
-    /**
-     * Allows to visit all nodes of an AST and apply a mapping function
-     * to nodes of a specific type.
-     * Useful if you want to convert some part of a formula.
-     *
-     * e.g.
-     * ```ts
-     * convertAstNodes(ast, "FUNCALL", convertFormulaToExcel)
-     *
-     * function convertFormulaToExcel(ast: ASTFuncall) {
-     *   // ...
-     *   return modifiedAst
-     * }
-     * ```
-     */
-    function convertAstNodes(ast, type, fn) {
-        if (type === ast.type) {
-            ast = fn(ast);
-        }
-        switch (ast.type) {
-            case "FUNCALL":
-                return {
-                    ...ast,
-                    args: ast.args.map((child) => convertAstNodes(child, type, fn)),
-                };
-            case "UNARY_OPERATION":
-                return {
-                    ...ast,
-                    operand: convertAstNodes(ast.operand, type, fn),
-                };
-            case "BIN_OPERATION":
-                return {
-                    ...ast,
-                    right: convertAstNodes(ast.right, type, fn),
-                    left: convertAstNodes(ast.left, type, fn),
-                };
-            default:
-                return ast;
-        }
-    }
-    /**
-     * Converts an ast formula to the corresponding string
-     */
-    function astToFormula(ast) {
-        switch (ast.type) {
-            case "FUNCALL":
-                const args = ast.args.map((arg) => astToFormula(arg));
-                return `${ast.value}(${args.join(",")})`;
-            case "NUMBER":
-                return ast.value.toString();
-            case "REFERENCE":
-                return ast.value;
-            case "STRING":
-                return `"${ast.value}"`;
-            case "BOOLEAN":
-                return ast.value ? "TRUE" : "FALSE";
-            case "UNARY_OPERATION":
-                return ast.postfix
-                    ? leftOperandToFormula(ast) + ast.value
-                    : ast.value + rightOperandToFormula(ast);
-            case "BIN_OPERATION":
-                return leftOperandToFormula(ast) + ast.value + rightOperandToFormula(ast);
-            default:
-                return ast.value;
-        }
-    }
-    /**
-     * Convert the left operand of a binary operation to the corresponding string
-     * and enclose the result inside parenthesis if necessary.
-     */
-    function leftOperandToFormula(operationAST) {
-        const mainOperator = operationAST.value;
-        const leftOperation = "left" in operationAST ? operationAST.left : operationAST.operand;
-        const leftOperator = leftOperation.value;
-        const needParenthesis = leftOperation.type === "BIN_OPERATION" && OP_PRIORITY[leftOperator] < OP_PRIORITY[mainOperator];
-        return needParenthesis ? `(${astToFormula(leftOperation)})` : astToFormula(leftOperation);
-    }
-    /**
-     * Convert the right operand of a binary or unary operation to the corresponding string
-     * and enclose the result inside parenthesis if necessary.
-     */
-    function rightOperandToFormula(operationAST) {
-        const mainOperator = operationAST.value;
-        const rightOperation = "right" in operationAST ? operationAST.right : operationAST.operand;
-        const rightPriority = OP_PRIORITY[rightOperation.value];
-        const mainPriority = OP_PRIORITY[mainOperator];
-        let needParenthesis = false;
-        if (rightOperation.type !== "BIN_OPERATION") {
-            needParenthesis = false;
-        }
-        else if (rightPriority < mainPriority) {
-            needParenthesis = true;
-        }
-        else if (rightPriority === mainPriority && !ASSOCIATIVE_OPERATORS.includes(mainOperator)) {
-            needParenthesis = true;
-        }
-        return needParenthesis ? `(${astToFormula(rightOperation)})` : astToFormula(rightOperation);
-    }
-
-    const functions = functionRegistry.content;
-    const OPERATOR_MAP = {
-        "=": "EQ",
-        "+": "ADD",
-        "-": "MINUS",
-        "*": "MULTIPLY",
-        "/": "DIVIDE",
-        ">=": "GTE",
-        "<>": "NE",
-        ">": "GT",
-        "<=": "LTE",
-        "<": "LT",
-        "^": "POWER",
-        "&": "CONCATENATE",
-    };
-    const UNARY_OPERATOR_MAP = {
-        "-": "UMINUS",
-        "+": "UPLUS",
-        "%": "UNARY.PERCENT",
-    };
-    // this cache contains all compiled function code, grouped by "structure". For
-    // example, "=2*sum(A1:A4)" and "=2*sum(B1:B4)" are compiled into the same
-    // structural function.
-    // It is only exported for testing purposes
-    const functionCache = {};
-    // -----------------------------------------------------------------------------
-    // COMPILER
-    // -----------------------------------------------------------------------------
-    function compile(formula) {
-        const tokens = rangeTokenize(formula);
-        const { dependencies, constantValues } = formulaArguments(tokens);
-        const cacheKey = compilationCacheKey(tokens, dependencies, constantValues);
-        if (!functionCache[cacheKey]) {
-            const ast = parseTokens([...tokens]);
-            const scope = new Scope();
-            if (ast.type === "BIN_OPERATION" && ast.value === ":") {
-                throw new BadExpressionError(_lt("Invalid formula"));
-            }
-            if (ast.type === "EMPTY") {
-                throw new BadExpressionError(_lt("Invalid formula"));
-            }
-            const compiledAST = compileAST(ast);
-            const code = new FunctionCodeBuilder();
-            code.append(`// ${cacheKey}`);
-            code.append(compiledAST);
-            code.append(`return ${compiledAST.returnExpression};`);
-            let baseFunction = new Function("deps", // the dependencies in the current formula
-            "ref", // a function to access a certain dependency at a given index
-            "range", // same as above, but guarantee that the result is in the form of a range
-            "ctx", code.toString());
-            functionCache[cacheKey] = {
-                // @ts-ignore
-                execute: baseFunction,
-            };
-            /**
-             * This function compile the function arguments. It is mostly straightforward,
-             * except that there is a non trivial transformation in one situation:
-             *
-             * If a function argument is asking for a range, and get a cell, we transform
-             * the cell value into a range. This allow the grid model to differentiate
-             * between a cell value and a non cell value.
-             */
-            function compileFunctionArgs(ast) {
-                const functionDefinition = functions[ast.value.toUpperCase()];
-                const currentFunctionArguments = ast.args;
-                // check if arguments are supplied in the correct quantities
-                const nbrArg = currentFunctionArguments.length;
-                if (nbrArg < functionDefinition.minArgRequired) {
-                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s minimum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.minArgRequired.toString(), nbrArg.toString()));
-                }
-                if (nbrArg > functionDefinition.maxArgPossible) {
-                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s maximum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.maxArgPossible.toString(), nbrArg.toString()));
-                }
-                const repeatingArg = functionDefinition.nbrArgRepeating;
-                if (repeatingArg > 1) {
-                    const argBeforeRepeat = functionDefinition.args.length - repeatingArg;
-                    const nbrRepeatingArg = nbrArg - argBeforeRepeat;
-                    if (nbrRepeatingArg % repeatingArg !== 0) {
-                        throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected all arguments after position %s to be supplied by groups of %s arguments", ast.value.toUpperCase(), argBeforeRepeat.toString(), repeatingArg.toString()));
-                    }
-                }
-                let compiledArgs = [];
-                for (let i = 0; i < nbrArg; i++) {
-                    const argPosition = functionDefinition.getArgToFocus(i + 1) - 1;
-                    if (0 <= argPosition && argPosition < functionDefinition.args.length) {
-                        const currentArg = currentFunctionArguments[i];
-                        const argDefinition = functionDefinition.args[argPosition];
-                        const argTypes = argDefinition.type || [];
-                        // detect when an argument need to be evaluated as a meta argument
-                        const isMeta = argTypes.includes("META");
-                        // detect when an argument need to be evaluated as a lazy argument
-                        const isLazy = argDefinition.lazy;
-                        const hasRange = argTypes.some((t) => t === "RANGE" ||
-                            t === "RANGE<BOOLEAN>" ||
-                            t === "RANGE<DATE>" ||
-                            t === "RANGE<NUMBER>" ||
-                            t === "RANGE<STRING>");
-                        const isRangeOnly = argTypes.every((t) => t === "RANGE" ||
-                            t === "RANGE<BOOLEAN>" ||
-                            t === "RANGE<DATE>" ||
-                            t === "RANGE<NUMBER>" ||
-                            t === "RANGE<STRING>");
-                        if (isRangeOnly) {
-                            if (currentArg.type !== "REFERENCE") {
-                                throw new BadExpressionError(_lt("Function %s expects the parameter %s to be reference to a cell or range, not a %s.", ast.value.toUpperCase(), (i + 1).toString(), currentArg.type.toLowerCase()));
-                            }
-                        }
-                        const compiledAST = compileAST(currentArg, isMeta, hasRange, {
-                            functionName: ast.value.toUpperCase(),
-                            paramIndex: i + 1,
-                        });
-                        compiledArgs.push(isLazy ? compiledAST.wrapInClosure() : compiledAST);
-                    }
-                }
-                return compiledArgs;
-            }
-            /**
-             * This function compiles all the information extracted by the parser into an
-             * executable code for the evaluation of the cells content. It uses a cash to
-             * not reevaluate identical code structures.
-             *
-             * The function is sensitive to parameter “isMeta”. This
-             * parameter may vary when compiling function arguments:
-             * isMeta: In some cases the function arguments expects information on the
-             * cell/range other than the associated value(s). For example the COLUMN
-             * function needs to receive as argument the coordinates of a cell rather
-             * than its value. For this we have meta arguments.
-             */
-            function compileAST(ast, isMeta = false, hasRange = false, referenceVerification = {}) {
-                const code = new FunctionCodeBuilder(scope);
-                if (ast.type !== "REFERENCE" && !(ast.type === "BIN_OPERATION" && ast.value === ":")) {
-                    if (isMeta) {
-                        throw new BadExpressionError(_lt(`Argument must be a reference to a cell or range.`));
-                    }
-                }
-                if (ast.debug) {
-                    code.append("debugger;");
-                }
-                switch (ast.type) {
-                    case "BOOLEAN":
-                        return code.return(`{ value: ${ast.value} }`);
-                    case "NUMBER":
-                        return code.return(`{ value: this.constantValues.numbers[${constantValues.numbers.indexOf(ast.value)}] }`);
-                    case "STRING":
-                        return code.return(`{ value: this.constantValues.strings[${constantValues.strings.indexOf(ast.value)}] }`);
-                    case "REFERENCE":
-                        const referenceIndex = dependencies.indexOf(ast.value);
-                        if (hasRange) {
-                            return code.return(`range(deps[${referenceIndex}])`);
-                        }
-                        else {
-                            return code.return(`ref(deps[${referenceIndex}], ${isMeta ? "true" : "false"}, "${referenceVerification.functionName || OPERATOR_MAP["="]}",  ${referenceVerification.paramIndex})`);
-                        }
-                    case "FUNCALL":
-                        const args = compileFunctionArgs(ast).map((arg) => arg.assignResultToVariable());
-                        code.append(...args);
-                        const fnName = ast.value.toUpperCase();
-                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
-                        return code.return(`ctx['${fnName}'](${args.map((arg) => arg.returnExpression)})`);
-                    case "UNARY_OPERATION": {
-                        const fnName = UNARY_OPERATOR_MAP[ast.value];
-                        const operand = compileAST(ast.operand, false, false, {
-                            functionName: fnName,
-                        }).assignResultToVariable();
-                        code.append(operand);
-                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
-                        return code.return(`ctx['${fnName}'](${operand.returnExpression})`);
-                    }
-                    case "BIN_OPERATION": {
-                        const fnName = OPERATOR_MAP[ast.value];
-                        const left = compileAST(ast.left, false, false, {
-                            functionName: fnName,
-                        }).assignResultToVariable();
-                        const right = compileAST(ast.right, false, false, {
-                            functionName: fnName,
-                        }).assignResultToVariable();
-                        code.append(left);
-                        code.append(right);
-                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
-                        return code.return(`ctx['${fnName}'](${left.returnExpression}, ${right.returnExpression})`);
-                    }
-                    case "EMPTY":
-                        return code.return("undefined");
-                }
-            }
-        }
-        const compiledFormula = {
-            execute: functionCache[cacheKey].execute,
-            dependencies,
-            constantValues,
-            tokens,
-        };
-        return compiledFormula;
-    }
-    /**
-     * Compute a cache key for the formula.
-     * References, numbers and strings are replaced with placeholders because
-     * the compiled formula does not depend on their actual value.
-     * Both `=A1+1+"2"` and `=A2+2+"3"` are compiled to the exact same function.
-     *
-     * Spaces are also ignored to compute the cache key.
-     *
-     * A formula `=A1+A2+SUM(2, 2, "2")` have the cache key `=|0|+|1|+SUM(|N0|,|N0|,|S0|)`
-     */
-    function compilationCacheKey(tokens, dependencies, constantValues) {
-        return concat(tokens.map((token) => {
-            switch (token.type) {
-                case "STRING":
-                    const value = removeStringQuotes(token.value);
-                    return `|S${constantValues.strings.indexOf(value)}|`;
-                case "NUMBER":
-                    return `|N${constantValues.numbers.indexOf(parseNumber(token.value))}|`;
-                case "REFERENCE":
-                case "INVALID_REFERENCE":
-                    return `|${dependencies.indexOf(token.value)}|`;
-                case "SPACE":
-                    return "";
-                default:
-                    return token.value;
-            }
-        }));
-    }
-    /**
-     * Return formula arguments which are references, strings and numbers.
-     */
-    function formulaArguments(tokens) {
-        const constantValues = {
-            numbers: [],
-            strings: [],
-        };
-        const dependencies = [];
-        for (const token of tokens) {
-            switch (token.type) {
-                case "INVALID_REFERENCE":
-                case "REFERENCE":
-                    dependencies.push(token.value);
-                    break;
-                case "STRING":
-                    const value = removeStringQuotes(token.value);
-                    if (!constantValues.strings.includes(value)) {
-                        constantValues.strings.push(value);
-                    }
-                    break;
-                case "NUMBER": {
-                    const value = parseNumber(token.value);
-                    if (!constantValues.numbers.includes(value)) {
-                        constantValues.numbers.push(value);
-                    }
-                    break;
-                }
-            }
-        }
-        return {
-            dependencies,
-            constantValues,
-        };
-    }
-
-    /**
-     * Add the following information on tokens:
-     * - length
-     * - start
-     * - end
-     */
-    function enrichTokens(tokens) {
-        let current = 0;
-        return tokens.map((x) => {
-            const len = x.value.toString().length;
-            const token = Object.assign({}, x, {
-                start: current,
-                end: current + len,
-                length: len,
-            });
-            current = token.end;
-            return token;
-        });
-    }
-    /**
-     * add on each token the length, start and end
-     * also matches the opening to its closing parenthesis (using the same number)
-     */
-    function mapParenthesis(tokens) {
-        let maxParen = 1;
-        const stack = [];
-        return tokens.map((token) => {
-            if (token.type === "LEFT_PAREN") {
-                stack.push(maxParen);
-                token.parenIndex = maxParen;
-                maxParen++;
-            }
-            else if (token.type === "RIGHT_PAREN") {
-                token.parenIndex = stack.pop();
-            }
-            return token;
-        });
-    }
-    /**
-     * add on each token its parent function and the index corresponding to
-     * its position as an argument of the function.
-     * In this example "=MIN(42,SUM(MAX(1,2),3))":
-     * - the parent function of the token correspond to number 42 is the MIN function
-     * - the argument position of the token correspond to number 42 is 0
-     * - the parent function of the token correspond to number 3 is the SUM function
-     * - the argument position of the token correspond to number 3 is 1
-     */
-    function mapParentFunction(tokens) {
-        let stack = [];
-        let functionStarted = "";
-        const res = tokens.map((token, i) => {
-            if (!["SPACE", "LEFT_PAREN"].includes(token.type)) {
-                functionStarted = "";
-            }
-            switch (token.type) {
-                case "FUNCTION":
-                    functionStarted = token.value;
-                    break;
-                case "LEFT_PAREN":
-                    stack.push({ parent: functionStarted, argPosition: 0 });
-                    functionStarted = "";
-                    break;
-                case "RIGHT_PAREN":
-                    stack.pop();
-                    break;
-                case "COMMA":
-                    if (stack.length) {
-                        // increment position on current function
-                        stack[stack.length - 1].argPosition++;
-                    }
-                    break;
-            }
-            if (stack.length) {
-                const functionContext = stack[stack.length - 1];
-                if (functionContext.parent) {
-                    token.functionContext = Object.assign({}, functionContext);
-                }
-            }
-            return token;
-        });
-        return res;
-    }
-    /**
-     * Take the result of the tokenizer and transform it to be usable in the composer.
-     *
-     * @param formula
-     */
-    function composerTokenize(formula) {
-        const tokens = rangeTokenize(formula);
-        return mapParentFunction(mapParenthesis(enrichTokens(tokens)));
-    }
 
     /**
      * Core Plugin
@@ -31872,7 +31941,7 @@
                     // magic "empty" value
                     // Returning {value: null} instead of undefined will ensure that we don't
                     // fall back on the default value of the argument provided to the formula's compute function
-                    return { value: null };
+                    return { value: null, format: cell === null || cell === void 0 ? void 0 : cell.format };
                 }
                 return getEvaluatedCell(cell);
             }
@@ -31955,8 +32024,12 @@
                     const cell = this.getters.getCell(position);
                     if (cell) {
                         const exportedCellData = sheet.cells[xc];
-                        exportedCellData.value = this.getEvaluatedCell(position).value;
+                        const evaluatedCell = this.getEvaluatedCell(position);
+                        exportedCellData.value = evaluatedCell.value;
                         exportedCellData.isFormula = cell.isFormula && !this.isBadExpression(cell.content);
+                        if (cell.format !== evaluatedCell.format) {
+                            exportedCellData.computedFormat = evaluatedCell.format;
+                        }
                     }
                 }
             }
@@ -35421,6 +35494,9 @@
      */
     class SelectionInputPlugin extends UIPlugin {
         constructor(config, initialRanges, inputHasSingleRange) {
+            if (inputHasSingleRange && initialRanges.length > 1) {
+                throw new Error("Input with a single range cannot be instantiated with several range references.");
+            }
             super(config);
             this.inputHasSingleRange = inputHasSingleRange;
             this.ranges = [];
@@ -35440,6 +35516,11 @@
             switch (cmd.type) {
                 case "ADD_EMPTY_RANGE":
                     if (this.inputHasSingleRange && this.ranges.length === 1) {
+                        return 30 /* CommandResult.MaximumRangesReached */;
+                    }
+                    break;
+                case "CHANGE_RANGE":
+                    if (this.inputHasSingleRange && cmd.value.split(",").length > 1) {
                         return 30 /* CommandResult.MaximumRangesReached */;
                     }
                     break;
@@ -36263,13 +36344,9 @@
         }
         loadInitialMessages(messages) {
             this.isReplayingInitialRevisions = true;
-            this.on("unexpected-revision-id", this, ({ revisionId }) => {
-                throw new Error(`The spreadsheet could not be loaded. Revision ${revisionId} is corrupted.`);
-            });
             for (const message of messages) {
                 this.onMessageReceived(message);
             }
-            this.off("unexpected-revision-id", this);
             this.isReplayingInitialRevisions = false;
         }
         /**
@@ -36341,6 +36418,10 @@
         onMessageReceived(message) {
             if (this.isAlreadyProcessed(message))
                 return;
+            if (this.isWrongServerRevisionId(message)) {
+                this.trigger("unexpected-revision-id");
+                return;
+            }
             switch (message.type) {
                 case "CLIENT_MOVED":
                     this.onClientMoved(message);
@@ -36367,10 +36448,6 @@
                     });
                     break;
                 case "REMOTE_REVISION":
-                    if (message.serverRevisionId !== this.serverRevisionId) {
-                        this.trigger("unexpected-revision-id", { revisionId: message.serverRevisionId });
-                        return;
-                    }
                     const { clientId, commands } = message;
                     const revision = new Revision(message.nextRevisionId, clientId, commands);
                     if (revision.clientId !== this.clientId) {
@@ -36498,6 +36575,17 @@
                 case "REVISION_REDONE":
                 case "REVISION_UNDONE":
                     return this.processedRevisions.has(message.nextRevisionId);
+                default:
+                    return false;
+            }
+        }
+        isWrongServerRevisionId(message) {
+            switch (message.type) {
+                case "REMOTE_REVISION":
+                case "REVISION_REDONE":
+                case "REVISION_UNDONE":
+                case "SNAPSHOT_CREATED":
+                    return message.serverRevisionId !== this.serverRevisionId;
                 default:
                     return false;
             }
@@ -40503,7 +40591,6 @@
         color: dimgrey;
       }
       .o-sidePanelClose {
-        font-size: 1.5rem;
         padding: 5px 10px;
         cursor: pointer;
         &:hover {
@@ -43549,12 +43636,9 @@
         else {
             // Shouldn't we always output the value then ?
             const value = cell.value;
-            // what if value = 0? Is this condition correct?
-            if (value) {
-                const type = getCellType(value);
-                attrs.push(["t", type]);
-                node = escapeXml /*xml*/ `<v>${value}</v>`;
-            }
+            const type = getCellType(value);
+            attrs.push(["t", type]);
+            node = escapeXml /*xml*/ `<v>${value}</v>`;
             return { attrs, node };
         }
     }
@@ -45234,9 +45318,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.2.5';
-    __info__.date = '2023-04-28T12:37:16.042Z';
-    __info__.hash = 'cc60a52';
+    __info__.version = '16.2.6';
+    __info__.date = '2023-05-12T11:52:03.912Z';
+    __info__.hash = '6848d25';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
