@@ -82,7 +82,7 @@ Dialog.props = {
     fullscreen: { type: Boolean, optional: true },
     footer: { type: Boolean, optional: true },
     header: { type: Boolean, optional: true },
-    size: { type: String, optional: true, validate: (s) => ["sm", "md", "lg", "xl"].includes(s) },
+    size: { type: String, optional: true, validate: (s) => ["sm", "md", "lg", "xl", "fs"].includes(s) },
     technical: { type: Boolean, optional: true },
     title: { type: String, optional: true },
     modalRef: { type: Function, optional: true },
