@@ -158,7 +158,10 @@ class Team(models.Model):
         commit_bundle_size = int(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.commit.bundle', 100))
         while population:
             counter += 1
-            member_id = random.choices(population, weights=weights, k=1)[0]
+            if any(weights):
+                member_id = random.choices(population, weights=weights, k=1)[0]
+            else:
+                member_id = random.choices(population)
             member_index = population.index(member_id)
             member_data = members_data[member_id]
 
