@@ -101,9 +101,13 @@ export class AttachmentService {
     async delete(attachment) {
         this.remove(attachment);
         if (attachment.id > 0) {
-            await this.rpc("/mail/attachment/delete", {
-                attachment_id: attachment.id,
-            });
+            await this.rpc(
+                "/mail/attachment/delete",
+                assignDefined(
+                    { attachment_id: attachment.id },
+                    { access_token: attachment.accessToken }
+                )
+            );
         }
     }
 }
