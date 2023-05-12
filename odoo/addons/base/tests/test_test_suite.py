@@ -18,6 +18,7 @@ _logger = logging.getLogger(__name__)
 class TestTestSuite(TestCase):
     test_tags = {'standard', 'at_install'}
     test_module = 'base'
+    test_sequence = 0
 
     def test_test_suite(self):
         """ Check that OdooSuite handles unittest.TestCase correctly. """
