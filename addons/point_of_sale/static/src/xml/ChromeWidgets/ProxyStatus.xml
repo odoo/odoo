@@ -3,8 +3,13 @@
 
     <t t-name="ProxyStatus" owl="1">
         <div class="oe_status js_proxy" t-on-click="() => this.pos.connectToProxy()">
+<<<<<<< HEAD
             <span t-if="this.message and !env.isMobile" class="js_msg">
                 <t t-esc="this.message" />
+=======
+            <span t-if="state.msg and !env.isMobile" class="js_msg">
+                <t t-esc="state.msg" />
+>>>>>>> [FIX] point_of_sale: IoT status button error fixed
             </span>
             <span t-if="connectionInfo.status === 'connected' and !this.message" class="js_connected oe_green">
                 <i class="fa fa-fw fa-sitemap" role="img" aria-label="Proxy Connected"
