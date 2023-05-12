@@ -1,8 +1,9 @@
 /** @odoo-module */
 
 import { getLimits, useMovable, constrain } from "@point_of_sale/app/movable_hook";
-import { onWillUnmount, useEffect, useRef, Component } from "@odoo/owl";
+import { useEffect, useRef, Component } from "@odoo/owl";
 import { Table } from "./table";
+import { useService } from "@web/core/utils/hooks";
 import { usePos } from "@point_of_sale/app/pos_hook";
 
 const MIN_TABLE_SIZE = 30; // px
@@ -10,16 +11,17 @@ const MIN_TABLE_SIZE = 30; // px
 export class EditableTable extends Component {
     static template = "pos_restaurant.EditableTable";
     static props = {
-        onSaveTable: Function,
         limit: { type: Object, shape: { el: [HTMLElement, { value: null }] } },
         table: Table.props.table,
         selectedTables: Array,
+        updateTables: Function,
     };
 
     setup() {
         this.pos = usePos();
         useEffect(this._setElementStyle.bind(this));
         this.root = useRef("root");
+        this.orm = useService("orm");
         this.handles = {
             "top left": ["minX", "minY"],
             "top right": ["maxX", "minY"],
@@ -40,7 +42,6 @@ export class EditableTable extends Component {
                 onMove: (delta) => this.onResizeHandleMove(toMove, delta),
             });
         }
-        onWillUnmount(() => this.props.onSaveTable(this.props.table));
     }
 
     onMoveStart() {
@@ -63,16 +64,21 @@ export class EditableTable extends Component {
         if (this.pos.globalState.floorPlanStyle == "kanban") {
             return;
         }
+        const newTables = [];
         const { minX, minY, maxX, maxY } = getLimits(this.root.el, this.props.limit.el);
 
-        for (const [index, table] of Object.entries(this.selectedTablesCopy)) {
+        for (const table of Object.values(this.selectedTablesCopy)) {
             const position_h = table.position_h;
             const position_v = table.position_v;
-            this.props.selectedTables[index].position_h = constrain(position_h + dx, minX, maxX);
-            this.props.selectedTables[index].position_v = constrain(position_v + dy, minY, maxY);
+            newTables.push({
+                id: table.id,
+                position_h: constrain(position_h + dx, minX, maxX),
+                position_v: constrain(position_v + dy, minY, maxY),
+            });
         }
 
         this._setElementStyle();
+        this.props.updateTables(newTables);
     }
 
     onResizeHandleMove([moveX, moveY], { dx, dy }) {
@@ -94,11 +100,15 @@ export class EditableTable extends Component {
         newTable[moveX] = constrain(newTable[moveX] + dx, ...bounds[moveX]);
         newTable[moveY] = constrain(newTable[moveY] + dy, ...bounds[moveY]);
 
-        // Convert back to server format at the end
-        this.props.table.position_h = newTable.minX;
-        this.props.table.position_v = newTable.minY;
-        this.props.table.width = newTable.maxX - newTable.minX;
-        this.props.table.height = newTable.maxY - newTable.minY;
+        this.props.updateTables([
+            {
+                id: this.props.table.id,
+                position_h: newTable.minX,
+                position_v: newTable.minY,
+                width: newTable.maxX - newTable.minX,
+                height: newTable.maxY - newTable.minY,
+            },
+        ]);
         this._setElementStyle();
     }
     /**

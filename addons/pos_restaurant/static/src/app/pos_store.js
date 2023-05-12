@@ -41,7 +41,7 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
     // the websocket and dispatch them to the different utility functions.
     handleBusMessages(detail) {
         this._super(...arguments);
-
+        console.debug("socketMessage", detail);
         if (detail.type === "table_order_count") {
             this.ws_syncTableCount(detail.payload);
         } else if (detail.type === "table_changed") {
@@ -68,10 +68,6 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
             }
         }
 
-        floor.table_ids.forEach((tableId) => {
-            delete this.globalState.tables_by_id[tableId];
-        });
-
         delete this.globalState.floors_by_id[floorId];
 
         this.globalState.floors = this.globalState.floors.filter((floor) => floor.id != floorId);
@@ -83,15 +79,27 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
     // Will fetch all the floors plan from the server when
     // an action message will be sent to it.
     async ws_syncTableChanges(data) {
-        return;
         const newTable = data.changes;
-        const table = this.globalState.tables_by_id[newTable.id];
+        const floor = this.globalState.floors_by_id[newTable.floor_id];
+        const table = floor.tables.find((table) => table.id === newTable.id);
+        newTable.floor = floor;
 
-        if (!newTable.active) {
-            delete this.globalState.tables_by_id[newTable.id];
-        } else if (table) {
+        // Is a new table
+        if (!table) {
+            newTable.active = true;
+            floor.tables.push(newTable);
+        } else {
+            if (!newTable.active) {
+                table.active = false;
+                return;
+            }
+
+            // Is a table update
             for (const key in table) {
                 if (table[key] !== newTable[key]) {
+                    console.debug(
+                        `table ${table.id} changed ${key} from ${table[key]} to ${newTable[key]}`
+                    );
                     table[key] = newTable[key];
                 }
             }
@@ -102,7 +110,7 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
     // using the same floorplan.
     async ws_syncTableCount(data) {
         for (const table of data) {
-            const table_obj = this.globalState.tables_by_id[table.id];
+            const table_obj = this.globalState.getTableById(table.id);
             if (table_obj) {
                 table_obj.order_count = table.orders;
             }

@@ -3,20 +3,14 @@
 
     <t t-name="pos_restaurant.FloorScreen" owl="1">
         <div class="floor-screen screen">
-            <EditBar t-if="pos.globalState.isEditMode" selectedTables="selectedTables" nbrFloors="nbrFloors" 
-                        floorMapScrollTop="state.floorMapScrollTop" isColorPicker="state.isColorPicker" toggleColorPicker.bind="toggleColorPicker"
-                        createTable.bind="createTable" duplicateTableOrFloor.bind="duplicateTableOrFloor" renameTable.bind="renameTable"
-                        changeSeatsNum.bind="changeSeatsNum" changeToCircle.bind="changeToCircle" changeToSquare.bind="changeToSquare" 
-                        setTableColor.bind="setTableColor" setFloorColor.bind="setFloorColor" deleteFloorOrTable.bind="deleteFloorOrTable"
-                        toggleEditMode.bind="toggleEditMode"
-            />
+            <t t-if="pos.globalState.isEditMode" t-call="pos_restaurant.EditBar" />
             <div class="floor-selector">
                 <t t-foreach="pos.globalState.floors" t-as="floor" t-key="floor.id">
                     <span class="button button-floor" t-att-class="{ active: floor.id === state.selectedFloorId }" t-on-click="() => this.selectFloor(floor)">
                         <t t-esc="floor.name" />
                     </span>
                 </t>
-                <span class="button button-add" t-ref="add-floor-ref" t-on-click="addFloor">
+                <span class="button button-add" t-on-click="addFloor" t-if="this.pos.globalState.isEditMode">
                     ADD FLOOR
                 </span>
             </div>
@@ -27,6 +21,7 @@
                 t-on-touchmove="_onPinchMove"
                 t-on-touchend="_onPinchEnd"
                 class="floor-map"
+                t-attf-style="background-color:{{state.floorBackground}}"
                 t-ref="floor-map-ref"
             >
                 <t t-if="pos.globalState.floors.length > 0">
@@ -36,7 +31,7 @@
                     <div t-else="" t-ref="map">
                         <t t-foreach="activeTables" t-as="table" t-key="table.id">
                             <Table t-if="!state.selectedTableIds.includes(table.id)" onClick.bind="onSelectTable" table="table" />
-                            <EditableTable t-else="" table="table" selectedTables="selectedTables" onSaveTable.bind="onSaveTable" limit="floorMapRef" />
+                            <EditableTable t-else="" table="table" selectedTables="selectedTables" updateTables.bind="updateTables" limit="floorMapRef" />
                         </t>
                     </div>
                 </t>
@@ -46,6 +41,58 @@
                     </div>
                 </t>
             </div>
+        </div>
+    </t>
+
+    <t t-name="pos_restaurant.EditBar" owl="1">
+        <div class="edit-bar-top">
+            <span class="edit-button first-button" t-if="!env.isMobile"></span>
+            <span class="edit-button" t-on-click.stop="createTable">
+                <i class="fa fa-plus icon-button" role="img" aria-label="Add" title="Add"></i>
+                <span class="text-button">ADD</span>
+            </span>
+            <span class="edit-button" t-att-class="{ disabled: selectedTables.length == 0 }" t-on-click.stop="changeSeatsNum">
+                <i class="fa fa-user icon-button" role="img" aria-label="Seats" title="Seats"></i>
+                <span class="text-button">SEATS</span>
+            </span>
+            <span class="edit-button" t-att-class="{ disabled: selectedTables.length == 0 }" t-on-click.stop="changeShape">
+                <span class="button-option round">
+                    <i class="fa icon-button" t-att-class="{ 'fa-circle-o round': selectedTables[0]?.shape == 'square', 'fa-square-o square': selectedTables[0]?.shape != 'square' }" role="img" aria-label="Shape" title="Shape"></i>
+                </span>
+                <span class="text-button">SHAPE</span>
+            </span>
+            <span class="edit-button" t-att-class="{ 'is-active': state.isColorPicker }" t-on-click.stop="() => { this.state.isColorPicker = !this.state.isColorPicker }">
+                <i class="fa fa-paint-brush icon-button" role="img" aria-label="Tint" title="Tint"></i>
+                <span class="text-button">FILL</span>
+            </span>
+            <span class="edit-button" t-att-class="{ disabled: selectedTables.length > 1 }" t-on-click.stop="selectedTables.length > 0 ? renameTable : renameFloor">
+                <i class="fa fa-pencil-square-o icon-button" role="img" aria-label="Rename" title="Rename"></i>
+                <span class="text-button">RENAME</span>
+            </span>
+            <span class="edit-button" t-on-click.stop="duplicateTableOrFloor">
+                <i class="fa fa-clone icon-button" role="img" aria-label="Copy" title="Copy"></i>
+                <span class="text-button">COPY</span>
+            </span>
+            <span class="edit-button trash" t-on-click.stop="selectedTables.length > 0 ? deleteTable : deleteFloor">
+                <i class="fa fa-trash icon-button" role="img" aria-label="Delete" title="Delete"></i>
+                <span class="text-button">DELETE</span>
+            </span>
+            <span class="edit-button" t-on-click.stop="() => { this.pos.globalState.isEditMode = false; this.state.selectedTableIds = []}">
+                <div class="close-edit-button">
+                    <i class="fa fa-times icon-button" role="img" aria-label="Close" title="Close"></i>
+                    <span class="text-button">CLOSE</span>
+                </div>
+            </span>
+        </div>
+        <div t-if="state.isColorPicker and selectedTables.length > 0" class="color-picker">
+            <t t-foreach="constructor.colors" t-as="color" t-key="color.tableColor">
+                <span class="color"  t-attf-style="background-color:{{color.tableColor}}" role="img" t-att-aria-label="color.label" t-att-title="color.label" t-on-click.stop="() => this.setTableColor(color.tableColor)" />
+            </t>
+        </div>
+        <div t-if="state.isColorPicker and selectedTables.length == 0" class="color-picker">
+            <t t-foreach="constructor.colors" t-as="color" t-key="color.floorColor">
+                <span class="color"  t-attf-style="background-color:{{color.floorColor}}" role="img" t-att-aria-label="color.label" t-att-title="color.label" t-on-click.stop="() => this.setFloorColor(color.floorColor)" />
+            </t>
         </div>
     </t>
 </templates>

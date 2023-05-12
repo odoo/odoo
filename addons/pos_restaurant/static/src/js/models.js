@@ -10,6 +10,7 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
         this.transferredOrdersSet = new Set(); // used to know which orders has been transferred but not sent to the back end yet
         this.floorPlanStyle = "default";
         this.isEditMode = false;
+        this.floors_by_id = {};
     },
     //@override
     async _processData(loadedData) {
@@ -127,14 +128,22 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
         // we do this in the front end due to the circular/recursive reference needed
         // Ignore floorplan features if no floor specified.
         this.floors_by_id = {};
-        this.tables_by_id = {};
         for (const floor of this.floors) {
-            this.floors_by_id[floor.id] = floor;
             for (const table of floor.tables) {
-                this.tables_by_id[table.id] = table;
                 table.floor = floor;
+                table.floor_id = floor.id;
             }
+            this.floors_by_id[floor.id] = floor;
         }
+    },
+    getTableById(tableId) {
+        return this.floors
+            .map((floor) => floor.tables)
+            .flat()
+            .find((table) => table.id === tableId);
+    },
+    getTables() {
+        return this.floors.map((floor) => floor.tables).flat();
     },
     async setTable(table, orderUid = null) {
         this.table = table;
@@ -238,7 +247,7 @@ patch(Order.prototype, "pos_restaurant.Order", {
     },
     getTable() {
         if (this.pos.config.module_pos_restaurant) {
-            return this.pos.tables_by_id[this.tableId];
+            return this.pos.getTableById(this.tableId);
         }
         return null;
     },

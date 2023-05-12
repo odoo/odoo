@@ -94,35 +94,43 @@ class RestaurantTable(models.Model):
     color = fields.Char('Color', help="The table's color, expressed as a valid 'background' CSS property value")
     active = fields.Boolean('Active', default=True, help='If false, the table is deactivated and will not be available in the point of sale')
 
+    # multi talbe compute
     def are_orders_still_in_draft(self):
-        draft_orders = self.env['pos.order'].search([('table_id', '=', self.id), ('state', '=', 'draft')])
+        draft_orders = self.env['pos.order'].search([('table_id', 'in', self.ids), ('state', '=', 'draft')])
         return len(draft_orders) > 0
 
-    @api.model
-    def create_from_ui(self, table):
-        """ create or modify a table from the point of sale UI.
-            table contains the table's fields. If it contains an
-            id, it will modify the existing table. It then
-            returns the id of the table.
-        """
-        if table.get('id'):
-            table_id = table['id']
+    def multi_write(self, table_list):
+        for table in self:
+            table.write(table_list[str(table.id)])
+            table.sendBusMessage(table)
 
-        if table.get('floor_id'):
-            table['floor_id'] = table['floor_id'][0]
+    @api.model_create_multi
+    def create(self, table_list):
+        records = super().create(table_list)
+        for table in records:
+            self.sendBusMessage(table)
+        return records
 
-        sanitized_table = dict([(key, val) for key, val in table.items() if key in self._fields and val is not None])
-        table_id = sanitized_table.pop('id', False)
-        if table_id:
-            self.browse(table_id).write(sanitized_table)
-        else:
-            table_id = self.create(sanitized_table).id
+    def sendBusMessage(self, table):
+        pos_config_ids = self.env['pos.config'].search([('floor_ids.table_ids', 'in', table.id)])
+        values = {
+            'id': table.id,
+            'name': table.name,
+            'floor_id': table.floor_id.id,
+            'shape': table.shape,
+            'position_h': table.position_h,
+            'position_v': table.position_v,
+            'width': table.width,
+            'height': table.height,
+            'seats': table.seats,
+            'color': table.color,
+            'active': table.active,
+        }
 
-        sanitized_table['id'] = table_id
-        for config_id in self.env['pos.config'].search([('floor_ids.table_ids', 'in', table_id)]):
-            self.env['bus.bus']._sendone(f'pos_config-{config_id.id}', 'table_changed', {'changes': sanitized_table})
-
-        return table_id
+        for config_id in pos_config_ids:
+            self.env['bus.bus']._sendone(f'pos_config-{config_id.id}', 'table_changed', {
+                'changes': values
+            })
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):

@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { ConnectionLostError } from "@web/core/network/rpc_service";
-import { debounce } from "@web/core/utils/timing";
+import { debounce, useDebounced } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 
 import { TextInputPopup } from "@point_of_sale/js/Popups/TextInputPopup";
@@ -10,18 +10,29 @@ import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 
 import { EditableTable } from "./editable_table";
-import { EditBar } from "./edit_bar";
 import { Table } from "./table";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onPatched, onMounted, onWillUnmount, useRef, useState } from "@odoo/owl";
+import { Component, onPatched, onMounted, useRef, useState } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
 
 export class FloorScreen extends Component {
-    static components = { EditableTable, EditBar, Table };
+    static components = { EditableTable, Table };
     static template = "pos_restaurant.FloorScreen";
     static props = { isShown: Boolean, floor: { type: true, optional: true } };
     static storeOnOrder = false;
+    static colors = [
+        { tableColor: "#FFFFFF", floorColor: "#FFFFFF", label: "White" },
+        { tableColor: "#EB6D6D", floorColor: "#F49595", label: "Red" },
+        { tableColor: "#35D374", floorColor: "#82E9AB", label: "Green" },
+        { tableColor: "#6C6DEC", floorColor: "#8889F2", label: "Blue" },
+        { tableColor: "#EBBF6D", floorColor: "#FFD688", label: "Orange" },
+        { tableColor: "#EBEC6D", floorColor: "#FEFF9A", label: "Yellow" },
+        { tableColor: "#AC6DAD", floorColor: "#D1ABD2", label: "Purple" },
+        { tableColor: "#6C6D6D", floorColor: "#4B4B4B", label: "Grey" },
+        { tableColor: "#ACADAD", floorColor: "#D2D2D2", label: "Light grey" },
+        { tableColor: "#4ED2BE", floorColor: "#7FDDEC", label: "Turquoise" },
+    ];
 
     setup() {
         super.setup();
@@ -39,22 +50,15 @@ export class FloorScreen extends Component {
         const ui = useState(useService("ui"));
         this.pos.globalState.floorPlanStyle ||= ui.isSmall ? "kanban" : "default";
         this.floorMapRef = useRef("floor-map-ref");
-        this.addFloorRef = useRef("add-floor-ref");
         this.map = useRef("map");
         onPatched(this.onPatched);
         onMounted(this.onMounted);
-        onWillUnmount(this.onWillUnmount);
+        this.debouncedUpdateTables = useDebounced((tableIds, tableValues) => {
+            this.orm.call("restaurant.table", "multi_write", [tableIds, tableValues], {});
+        }, 200);
     }
     onPatched() {
-        this.floorMapRef.el.style.background = this.state.floorBackground;
-        this.addFloorRef.el.style.background = this.state.floorBackground;
-        if (!this.pos.globalState.isEditMode && this.pos.globalState.floors.length > 0) {
-            this.addFloorRef.el.style.display = "none";
-        } else {
-            this.addFloorRef.el.style.display = "initial";
-        }
         this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
-
         const floorIds = Object.keys(this.pos.globalState.floors_by_id);
         if (floorIds.length && !floorIds.includes(this.state.selectedFloorId.toString())) {
             this.selectFloor(this.pos.globalState.floors[0]);
@@ -62,17 +66,7 @@ export class FloorScreen extends Component {
     }
     onMounted() {
         this.pos.openCashControl();
-        this.floorMapRef.el.style.background = this.state.floorBackground;
-        this.addFloorRef.el.style.background = this.state.floorBackground;
-        if (!this.pos.globalState.isEditMode && this.pos.globalState.floors.length > 0) {
-            this.addFloorRef.el.style.display = "none";
-        } else {
-            this.addFloorRef.el.style.display = "initial";
-        }
         this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
-    }
-    onWillUnmount() {
-        clearInterval(this.tableLongpolling);
     }
     _computePinchHypo(ev, callbackFunction) {
         const touches = ev.touches;
@@ -217,11 +211,20 @@ export class FloorScreen extends Component {
         if (!duplicateFloor) {
             newTable.name = this._getNewTableName();
         }
-        newTable.floor_id = [this.activeFloor.id, ""];
+        newTable.floor_id = this.activeFloor.id;
         newTable.floor = this.activeFloor;
-        await this._save(newTable);
-        this.activeFloor.tables.push(newTable);
-        this.activeFloor.table_ids.push(newTable.id);
+        const tableId = await this.orm.create("restaurant.table", [
+            this.formatTableObjectForServer(newTable),
+        ]);
+        if (tableId.length) {
+            newTable.id = tableId[0];
+            newTable.active = true;
+            this.pos.globalState.floors_by_id[this.state.selectedFloorId].tables.push(newTable);
+            this.pos.globalState.floors_by_id[this.state.selectedFloorId].table_ids.push(
+                tableId[0]
+            );
+        }
+
         return newTable;
     }
     _getNewTableName() {
@@ -241,12 +244,48 @@ export class FloorScreen extends Component {
         }
         return firstNum.toString();
     }
-    async _save(table) {
-        const tableCopy = { ...table };
-        delete tableCopy.floor;
-        const tableId = await this.orm.call("restaurant.table", "create_from_ui", [tableCopy]);
-        table.id = tableId;
-        this.pos.globalState.tables_by_id[tableId] = table;
+    formatTableObjectForServer(table) {
+        const tableServerKeys = [
+            "position_v",
+            "position_h",
+            "width",
+            "height",
+            "shape",
+            "seats",
+            "name",
+            "floor_id",
+            "color",
+            "active",
+        ];
+
+        const tableFormatted = {};
+        for (const key in table) {
+            if (tableServerKeys.includes(key)) {
+                tableFormatted[key] = table[key];
+            }
+        }
+        return tableFormatted;
+    }
+    async updateTables(tables) {
+        const tableIds = [];
+        const tableValues = tables.reduce((acc, table) => {
+            tableIds.push(table.id);
+            acc[table.id] = this.formatTableObjectForServer(table);
+            return acc;
+        }, {});
+
+        for (const idx in tableValues) {
+            const selectedTable = this.selectedTables.find((table) => table.id == idx);
+            for (const key of Object.keys(tableValues[idx])) {
+                if (tableValues[idx][key] !== selectedTable[key]) {
+                    selectedTable[key] = tableValues[idx][key];
+                }
+            }
+        }
+
+        if (tableIds.length) {
+            this.debouncedUpdateTables(tableIds, tableValues);
+        }
     }
     async _renameFloor(floorId, newName) {
         await this.orm.call("restaurant.floor", "rename_floor", [floorId, newName]);
@@ -263,11 +302,7 @@ export class FloorScreen extends Component {
         return this.activeTables ? this.activeTables.length === 0 : true;
     }
     get selectedTables() {
-        const tables = [];
-        this.state.selectedTableIds.forEach((id) => {
-            tables.push(this.pos.globalState.tables_by_id[id]);
-        });
-        return tables;
+        return this.state.selectedTableIds.map((id) => this.pos.globalState.getTableById(id));
     }
     get nbrFloors() {
         return this.pos.globalState.floors.length;
@@ -297,23 +332,13 @@ export class FloorScreen extends Component {
         this.state.floorBackground = this.activeFloor.background_color;
         this.state.selectedTableIds = [];
     }
-    toggleEditMode() {
-        this.pos.globalState.toggleEditMode();
-        if (!this.pos.globalState.isEditMode && this.pos.globalState.floors.length > 0) {
-            this.addFloorRef.el.style.display = "none";
-        } else {
-            this.addFloorRef.el.style.display = "initial";
-        }
-        this.state.selectedTableIds = [];
-    }
     async onSelectTable(table, ev) {
         const { globalState } = this.pos;
         if (globalState.isEditMode) {
             if (ev.ctrlKey || ev.metaKey) {
                 this.state.selectedTableIds.push(table.id);
             } else {
-                this.state.selectedTableIds = [];
-                this.state.selectedTableIds.push(table.id);
+                this.state.selectedTableIds = [table.id];
             }
         } else {
             if (globalState.orderToTransfer) {
@@ -332,9 +357,6 @@ export class FloorScreen extends Component {
             const order = globalState.get_order();
             this.pos.showScreen(order.get_screen_data().name);
         }
-    }
-    async onSaveTable(table) {
-        await this._save(table);
     }
     async addFloor() {
         const { confirmed, payload: newName } = await this.popup.add(TextInputPopup, {
@@ -357,8 +379,7 @@ export class FloorScreen extends Component {
     async createTable() {
         const newTable = await this._createTableHelper();
         if (newTable) {
-            this.state.selectedTableIds = [];
-            this.state.selectedTableIds.push(newTable.id);
+            this.state.selectedTableIds = [newTable.id];
         }
     }
     async duplicateTableOrFloor() {
@@ -390,83 +411,89 @@ export class FloorScreen extends Component {
             }
         }
     }
-    async renameTable() {
-        const selectedTables = this.selectedTables;
+    async renameFloor() {
         const selectedFloor = this.activeFloor;
-        if (selectedTables.length > 1) {
-            return;
-        }
-        if (selectedTables.length == 0) {
-            const { confirmed, payload: newName } = await this.popup.add(TextInputPopup, {
-                startingValue: selectedFloor.name,
-                title: this.env._t("Floor Name ?"),
-            });
-            if (!confirmed) {
-                return;
-            }
-            if (newName !== selectedFloor.name) {
-                selectedFloor.name = newName;
-                await this._renameFloor(selectedFloor.id, newName);
-            }
-            return;
-        }
-        const selectedTable = selectedTables[0];
         const { confirmed, payload: newName } = await this.popup.add(TextInputPopup, {
-            startingValue: selectedTable.name,
-            title: this.env._t("Table Name?"),
+            startingValue: selectedFloor.name,
+            title: this.env._t("Floor Name ?"),
         });
         if (!confirmed) {
             return;
         }
-        if (newName !== selectedTable.name) {
-            selectedTable.name = newName;
-            await this._save(selectedTable);
+        if (newName !== selectedFloor.name) {
+            selectedFloor.name = newName;
+            await this._renameFloor(selectedFloor.id, newName);
+        }
+        return;
+    }
+    async renameTable() {
+        const selectedTables = this.selectedTables;
+        const selectedTable = selectedTables[0];
+
+        if (selectedTables.length !== 1) {
+            return;
+        }
+
+        const { confirmed, payload: newName } = await this.popup.add(TextInputPopup, {
+            startingValue: selectedTable.name,
+            title: this.env._t("Table Name?"),
+        });
+
+        if (confirmed) {
+            this.updateTables([
+                {
+                    id: selectedTable.id,
+                    name: newName,
+                },
+            ]);
         }
     }
     async changeSeatsNum() {
-        const selectedTables = this.selectedTables;
-        if (selectedTables.length == 0) {
+        if (this.selectedTables.length == 0) {
             return;
         }
+
         const { confirmed, payload: inputNumber } = await this.popup.add(NumberPopup, {
             startingValue: 0,
             cheap: true,
             title: this.env._t("Number of Seats?"),
             isInputSelected: true,
         });
-        if (!confirmed) {
-            return;
-        }
-        const newSeatsNum = parseInt(inputNumber, 10);
-        selectedTables.forEach(async (selectedTable) => {
-            if (newSeatsNum !== selectedTable.seats) {
-                selectedTable.seats = newSeatsNum;
-                await this._save(selectedTable);
-            }
+
+        const updatedTables = this.selectedTables.map((table) => {
+            return {
+                id: table.id,
+                seats: parseInt(inputNumber),
+            };
         });
-    }
-    async changeToCircle() {
-        await this.changeShape("round");
-    }
-    async changeToSquare() {
-        await this.changeShape("square");
-    }
-    async changeShape(form) {
-        if (this.selectedTables.length == 0) {
-            return;
+
+        if (confirmed) {
+            this.updateTables(updatedTables);
         }
-        this.selectedTables.forEach(async (selectedTable) => {
-            selectedTable.shape = form;
-            await this._save(selectedTable);
+    }
+    async changeShape() {
+        const shape = this.selectedTables.find((table) => table.shape === "square")
+            ? "round"
+            : "square";
+
+        const updatedTables = this.selectedTables.map((table) => {
+            return {
+                id: table.id,
+                shape: shape,
+            };
         });
+
+        this.updateTables(updatedTables);
     }
     async setTableColor(color) {
-        const selectedTables = this.selectedTables;
-        selectedTables.forEach(async (selectedTable) => {
-            selectedTable.color = color;
-            await this._save(selectedTable);
+        const updatedTables = this.selectedTables.map((table) => {
+            return {
+                id: table.id,
+                color: color,
+            };
         });
-        this.state.isColorPicker = false;
+
+        this.updateTables(updatedTables);
     }
     async setFloorColor(color) {
         this.state.floorBackground = color;
@@ -476,84 +503,62 @@ export class FloorScreen extends Component {
         });
         this.state.isColorPicker = false;
     }
-    toggleColorPicker() {
-        this.state.isColorPicker = !this.state.isColorPicker;
-    }
-    async deleteFloorOrTable() {
-        const { globalState } = this.pos;
-        if (this.selectedTables.length == 0) {
-            const { confirmed } = await this.popup.add(ConfirmPopup, {
-                title: `Removing floor ${this.activeFloor.name}`,
-                body: sprintf(
-                    this.env._t("Removing a floor cannot be undone. Do you still wanna remove %s?"),
-                    this.activeFloor.name
-                ),
-            });
-            if (!confirmed) {
-                return;
-            }
-            const originalSelectedFloorId = this.activeFloor.id;
-            await this.orm.call("restaurant.floor", "deactivate_floor", [
-                originalSelectedFloorId,
-                globalState.pos_session.id,
-            ]);
-            return;
-        }
-
-        // Delete table
+    async deleteTable() {
+        const updatedTables = [];
         const { confirmed } = await this.popup.add(ConfirmPopup, {
             title: this.env._t("Are you sure?"),
             body: this.env._t("Removing a table cannot be undone"),
         });
-        if (!confirmed) {
+
+        const response = await this.orm.call("restaurant.table", "are_orders_still_in_draft", [
+            this.selectedTableIds,
+        ]);
+
+        if (response) {
+            await this.popup.add(ErrorPopup, {
+                title: this.env._t("Delete Error"),
+                body: this.env._t(
+                    "You cannot delete a table with orders still in draft for this table."
+                ),
+            });
             return;
         }
-        const originalSelectedTableIds = [...this.state.selectedTableIds];
 
-        for (const tableId of originalSelectedTableIds) {
-            const table = this.pos.globalState.tables_by_id[tableId];
-            const response = await this.orm.call("restaurant.table", "are_orders_still_in_draft", [
-                table.id,
-            ]);
-            if (!response) {
-                table.active = false;
-                this.activeFloor.tables = this.activeTables.filter((t) => t.id !== table.id);
-
-                //remove order not send to server
-                for (const order of globalState.get_order_list()) {
-                    if (order.tableId == id) {
-                        globalState.removeOrder(order, false);
-                    }
+        for (const table of this.selectedTables) {
+            for (const order of this.pos.globalState.get_order_list()) {
+                if (order.tableId == table.id) {
+                    this.pos.globalState.removeOrder(order, false);
                 }
-                globalState.tables_by_id[id].active = false;
-                await this.orm.call("restaurant.table", "create_from_ui", [
-                    { active: false, id: id },
-                ]);
-                this.activeFloor.tables = this.activeTables.filter((table) => table.id !== id);
-                delete globalState.tables_by_id[id];
-            } else {
-                await this.popup.add(ErrorPopup, {
-                    title: this.env._t("Delete Error"),
-                    body: this.env._t(
-                        "You cannot delete a table with orders still in draft for this table."
-                    ),
-                });
             }
+
+            updatedTables.push({
+                id: table.id,
+                active: false,
+            });
         }
 
-        // Value of an object can change inside async function call.
-        //   Which means that in this code block, the value of `state.selectedTableId`
-        //   before the await call can be different after the finishing the await call.
-        // Since we wanted to disable the selected table after deletion, we should be
-        //   setting the selectedTableId to null. However, we only do this if nothing
-        //   else is selected during the rpc call.
-        const equalsCheck = (a, b) => {
-            return JSON.stringify(a) === JSON.stringify(b);
-        };
-        if (equalsCheck(this.state.selectedTableIds, originalSelectedTableIds)) {
-            this.state.selectedTableIds = [];
+        if (confirmed) {
+            this.updateTables(updatedTables);
         }
-        globalState.TICKET_SCREEN_STATE.syncedOrders.cache = {};
+    }
+    async deleteFloor() {
+        const { globalState } = this.pos;
+        const { confirmed } = await this.popup.add(ConfirmPopup, {
+            title: `Removing floor ${this.activeFloor.name}`,
+            body: sprintf(
+                this.env._t("Removing a floor cannot be undone. Do you still wanna remove %s?"),
+                this.activeFloor.name
+            ),
+        });
+
+        if (confirmed) {
+            await this.orm.call("restaurant.floor", "deactivate_floor", [
+                this.activeFloor.id,
+                globalState.pos_session.id,
+            ]);
+        }
+
+        return;
     }
 }
 
