@@ -21,6 +21,7 @@ import {
     toggleMenuItem,
     toggleMenuItemOption,
     toggleSaveFavorite,
+    validateSearch,
 } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
@@ -28,6 +29,8 @@ import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { getBorderWhite, DEFAULT_BG, getColors, hexToRGBA } from "@web/core/colors/colors";
 import { GraphArchParser } from "@web/views/graph/graph_arch_parser";
+import { GraphRenderer } from "@web/views/graph/graph_renderer";
+import { onRendered } from "@odoo/owl";
 import { patchWithCleanup } from "../helpers/utils";
 import { fakeCookieService } from "@web/../tests/helpers/mock_services";
 import { Domain } from "@web/core/domain";
@@ -4179,4 +4182,23 @@ QUnit.module("Views", (hooks) => {
             assert.notOk(getChart(graph).data.datasets.length);
         }
     );
+
+    QUnit.test("single chart rendering on search", async function (assert) {
+        patchWithCleanup(GraphRenderer.prototype, {
+            setup() {
+                this._super(...arguments);
+                onRendered(() => {
+                    assert.step("rendering")
+                });
+            }
+        })
+        await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+        });
+        assert.verifySteps(["rendering"]);
+        await validateSearch(target);
+        assert.verifySteps(["rendering"]);
+    });
 });
