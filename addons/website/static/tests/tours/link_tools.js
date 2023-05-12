@@ -137,4 +137,43 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: 'iframe .s_text_image div > img',
         run: () => {}, // It's a check.
     },
+    // 6. Add mega menu with Cards template and edit URL on text-selected card.
+    wTourUtils.clickOnElement("menu link", "iframe header .nav-item a"),
+    wTourUtils.clickOnElement("'Edit menu' icon", "iframe .o_edit_menu_popover .fa-sitemap"),
+    {
+        content: "Click on 'Add Mega Menu Item' link",
+        extra_trigger: '.o_website_dialog:visible',
+        trigger: ".modal-body a:contains('Add Mega Menu Item')",
+    },
+    {
+        content: "Enter mega menu name",
+        trigger: ".modal-body input",
+        run: "text Mega",
+    },
+    wTourUtils.clickOnElement("OK button", ".btn-primary"),
+    {
+        content: "Drag Mega at the top",
+        trigger: '.oe_menu_editor li:contains("Mega") .fa-bars',
+        run: "drag_move_and_drop [0,0]@.oe_menu_editor li:contains('Home') .fa-bars => .oe_menu_editor li",
+    },
+    {
+        content: "Wait for drop",
+        trigger: '.oe_menu_editor:first-child:contains("Mega")',
+        run: () => {}, // This is a check.
+    },
+    wTourUtils.clickOnElement("Save button", ".btn-primary:contains('Save')"),
+    wTourUtils.clickOnElement("mega menu", "iframe header .o_mega_menu_toggle"),
+    wTourUtils.changeOption("MegaMenuLayout", "we-toggler"),
+    wTourUtils.changeOption("MegaMenuLayout", '[data-select-label="Cards"]'),
+    wTourUtils.clickOnElement("card's text", "iframe header .s_mega_menu_cards font"),
+    {
+        content: "Enter an URL",
+        trigger: "#o_link_dialog_url_input",
+        run: "text https://www.odoo.com",
+    },
+    {
+        content: "Check nothing is lost",
+        trigger: "iframe header .s_mega_menu_cards a[href='https://www.odoo.com']:has(img):has(h4):has(p font)",
+        run: () => {}, // This is a check.
+    },
 ]);
