@@ -6414,6 +6414,12 @@
         height: 25px;
       }
     }
+    /** Make the character a bit bigger
+    compared to its neighbor INPUT box  */
+    .o-remove-selection {
+      font-weight: bold;
+      font-size: calc(100% + 4px);
+    }
   }
 `;
     /**
@@ -6490,6 +6496,9 @@
             (_b = (_a = this.props).onSelectionChanged) === null || _b === void 0 ? void 0 : _b.call(_a, ranges);
             this.previousRanges = ranges;
         }
+        extractRanges(value) {
+            return this.props.hasSingleRange ? value.split(",")[0] : value;
+        }
         focus(rangeId) {
             this.state.isMissing = false;
             this.env.model.dispatch("FOCUS_RANGE", {
@@ -6508,15 +6517,16 @@
         }
         onInputChanged(rangeId, ev) {
             const target = ev.target;
+            const value = this.extractRanges(target.value);
             this.env.model.dispatch("CHANGE_RANGE", {
                 id: this.id,
                 rangeId,
-                value: target.value,
+                value,
             });
             target.blur();
             this.triggerChange();
         }
-        disable() {
+        confirm() {
             var _a, _b;
             this.env.model.dispatch("UNFOCUS_SELECTION_INPUT");
             const ranges = this.env.model.getters.getSelectionInputValue(this.id);
@@ -32478,7 +32488,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     // magic "empty" value
                     // Returning {value: null} instead of undefined will ensure that we don't
                     // fall back on the default value of the argument provided to the formula's compute function
-                    return { value: null };
+                    return { value: null, format: cell === null || cell === void 0 ? void 0 : cell.format };
                 }
                 return getEvaluatedCell(cell);
             }
@@ -34893,6 +34903,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
      */
     class SelectionInputPlugin extends UIPlugin {
         constructor(getters, state, dispatch, config, selection, initialRanges, inputHasSingleRange) {
+            if (inputHasSingleRange && initialRanges.length > 1) {
+                throw new Error("Input with a single range cannot be instantiated with several range references.");
+            }
             super(getters, state, dispatch, config, selection);
             this.inputHasSingleRange = inputHasSingleRange;
             this.ranges = [];
@@ -34912,6 +34925,11 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             switch (cmd.type) {
                 case "ADD_EMPTY_RANGE":
                     if (this.inputHasSingleRange && this.ranges.length === 1) {
+                        return 29 /* CommandResult.MaximumRangesReached */;
+                    }
+                    break;
+                case "CHANGE_RANGE":
+                    if (this.inputHasSingleRange && cmd.value.split(",").length > 1) {
                         return 29 /* CommandResult.MaximumRangesReached */;
                     }
                     break;
@@ -35728,13 +35746,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         }
         loadInitialMessages(messages) {
             this.isReplayingInitialRevisions = true;
-            this.on("unexpected-revision-id", this, ({ revisionId }) => {
-                throw new Error(`The spreadsheet could not be loaded. Revision ${revisionId} is corrupted.`);
-            });
             for (const message of messages) {
                 this.onMessageReceived(message);
             }
-            this.off("unexpected-revision-id", this);
             this.isReplayingInitialRevisions = false;
         }
         /**
@@ -35806,6 +35820,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         onMessageReceived(message) {
             if (this.isAlreadyProcessed(message))
                 return;
+            if (this.isWrongServerRevisionId(message)) {
+                this.trigger("unexpected-revision-id");
+                return;
+            }
             switch (message.type) {
                 case "CLIENT_MOVED":
                     this.onClientMoved(message);
@@ -35832,10 +35850,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     });
                     break;
                 case "REMOTE_REVISION":
-                    if (message.serverRevisionId !== this.serverRevisionId) {
-                        this.trigger("unexpected-revision-id", { revisionId: message.serverRevisionId });
-                        return;
-                    }
                     const { clientId, commands } = message;
                     const revision = new Revision(message.nextRevisionId, clientId, commands);
                     if (revision.clientId !== this.clientId) {
@@ -35963,6 +35977,17 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 case "REVISION_REDONE":
                 case "REVISION_UNDONE":
                     return this.processedRevisions.has(message.nextRevisionId);
+                default:
+                    return false;
+            }
+        }
+        isWrongServerRevisionId(message) {
+            switch (message.type) {
+                case "REMOTE_REVISION":
+                case "REVISION_REDONE":
+                case "REVISION_UNDONE":
+                case "SNAPSHOT_CREATED":
+                    return message.serverRevisionId !== this.serverRevisionId;
                 default:
                     return false;
             }
@@ -37930,7 +37955,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         color: dimgrey;
       }
       .o-sidePanelClose {
-        font-size: 1.5rem;
         padding: 5px 10px;
         cursor: pointer;
         &:hover {
@@ -42778,9 +42802,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.9';
-    __info__.date = '2023-04-28T12:35:06.357Z';
-    __info__.hash = 'e06ca83';
+    __info__.version = '16.0.10';
+    __info__.date = '2023-05-12T11:48:50.641Z';
+    __info__.hash = '115eda7';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
