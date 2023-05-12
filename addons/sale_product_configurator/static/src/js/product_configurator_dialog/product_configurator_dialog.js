@@ -400,7 +400,7 @@ export class ProductConfiguratorDialog extends Component {
 
         let noVariantCommands = [{ operation: "DELETE_ALL" }];
         const noVariantPTAVIds = product.attribute_lines.filter(
-            ptal => ptal.create_variant === "no_variant"
+            ptal => ptal.create_variant === "no_variant" && ptal.attribute_values.length > 1
         ).map(ptal => { return {id: ptal.selected_attribute_value_id}});
         if (noVariantPTAVIds.length) noVariantCommands.push({
             operation: "ADD_M2M",
