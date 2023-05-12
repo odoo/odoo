@@ -522,6 +522,15 @@ describe('Link', () => {
                     contentAfter: '<p>a]bc[<a href="exist">de</a>f</p>',
                 });
             });
+            it('should not unlink selected non-editable links', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p><a href="exist">[ab</a><a contenteditable="false" href="exist">cd</a>ef]</p>',
+                    stepFunction: async editor => {
+                        await unlink(editor);
+                    },
+                    contentAfter: '<p>[ab<a contenteditable="false" href="exist">cd</a>ef]</p>',
+                });
+            });
         });
     });
     describe('isolated link', () => {
