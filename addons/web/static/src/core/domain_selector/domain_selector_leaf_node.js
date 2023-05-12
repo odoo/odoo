@@ -87,10 +87,17 @@ export class DomainSelectorLeafNode extends Component {
     }
 
     async onFieldChange(fieldName) {
-        const changes = { fieldName };
         const fieldInfo = await this.loadField(this.props.resModel, fieldName);
         const component = this.getFieldComponent(fieldInfo.type);
-        Object.assign(changes, component.onDidTypeChange(fieldInfo));
+        const operatorInfo = component.getOperators()[parseInt(0, 10)];
+        const changes = { fieldName, operator: operatorInfo.value  };
+        Object.assign(
+            changes,
+            operatorInfo.onDidChange(this.getOperatorInfo(this.props.node.operator), () =>
+                component.onDidTypeChange(fieldInfo)
+            ),
+            component.onDidTypeChange(fieldInfo)
+        );
         this.props.node.update(changes);
     }
     onOperatorChange(ev) {
