@@ -162,12 +162,7 @@ function execute(op, source, target) {
  * @param {Object} pathsInfo
  * @returns {string}
  */
-export function getDomainTreeDescription(
-    tree,
-    pathFieldDefs,
-    pathDescriptions,
-    isSubExpression = true
-) {
+function getDomainTreeDescription(tree, pathFieldDefs, pathDescriptions, isSubExpression = true) {
     if (tree.type === "connector") {
         // we assume that the domain tree is normalized (--> there is at least two children)
         const childDescriptions = tree.children.map((c) =>
@@ -221,7 +216,7 @@ export function getDomainTreeDescription(
     return description;
 }
 
-export function useGetDomainTreeDescription(fieldService) {
+function useGetDomainTreeDescription(fieldService) {
     const loadFieldInfo = useLoadFieldInfo(fieldService);
     const loadPathDescription = useLoadPathDescription(fieldService);
     return async (resModel, tree) => {
