@@ -206,7 +206,7 @@ export function getDomainTreeDescription(
         const values = Array.isArray(value) ? value : [value];
         const formatValue = (value) => {
             if (typeof value === "string") {
-                return `"${value}"`;
+                return `${value}`;
             } else if (value instanceof DomainValueExpr) {
                 return value.expr;
             } else if (Array.isArray(value)) {

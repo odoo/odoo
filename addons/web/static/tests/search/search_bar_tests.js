@@ -1507,7 +1507,7 @@ QUnit.module("Search", (hooks) => {
             await click(target, ".o_facet_with_domain .o_searchview_facet_label");
             await click(target.querySelector(".modal footer button"));
 
-            assert.deepEqual(getFacetTexts(target), [`Foo = "abc"`]);
+            assert.deepEqual(getFacetTexts(target), [`Foo = abc`]);
             assert.deepEqual(getContext(controlPanel).specialKey, "abc");
         }
     );
@@ -1562,7 +1562,7 @@ QUnit.module("Search", (hooks) => {
 
         await click(target.querySelector(".modal footer button"));
         assert.containsNone(target, ".modal");
-        assert.deepEqual(getFacetTexts(target), ["Bool\n>\nCompany", 'Foo contains "abc"']);
+        assert.deepEqual(getFacetTexts(target), ["Bool\n>\nCompany", "Foo contains abc"]);
     });
 
     QUnit.test("edit a date filter with comparison active", async function (assert) {
@@ -1619,9 +1619,7 @@ QUnit.module("Search", (hooks) => {
 
         await click(target.querySelector(".modal footer button"));
         assert.containsNone(target, ".modal");
-        assert.deepEqual(getFacetTexts(target), [
-            `Birthday is between "2023-04-01" and "2023-04-30"`,
-        ]);
+        assert.deepEqual(getFacetTexts(target), [`Birthday is between 2023-04-01 and 2023-04-30`]);
     });
 
     QUnit.test("edit a field", async function (assert) {
@@ -1687,6 +1685,6 @@ QUnit.module("Search", (hooks) => {
 
         await click(target.querySelector(".modal footer button"));
 
-        assert.deepEqual(getFacetTexts(target), [`Foo contains "abc" or Foo contains "def"`]);
+        assert.deepEqual(getFacetTexts(target), [`Foo contains abc or Foo contains def`]);
     });
 });
