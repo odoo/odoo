@@ -1640,7 +1640,7 @@ QUnit.module("Search", (hooks) => {
                 "Filter",
                 "ID = 1",
                 "ID = 1",
-                "ID = 1 or ID = 1 or ( ID = 1 and ID = 1 )",
+                "( ID = 1 and ID = 1 ) or ID in 1 or 1",
             ]);
             assert.deepEqual(getDomain(controlPanel), [
                 "&",

@@ -159,6 +159,64 @@ function execute(op, source, target) {
 
 /**
  * @param {Tree} tree
+ * @returns {tree}
+ */
+function simplifyTree(tree, isRoot = true) {
+    if (tree.type === "condition") {
+        return tree;
+    }
+    const processedChildren = tree.children.map((c) => simplifyTree(c, false));
+    if (tree.value === "&") {
+        return { ...tree, children: processedChildren };
+    }
+    const children = [];
+    const childrenByPath = {};
+    for (const child of processedChildren) {
+        if (
+            child.type === "connector" ||
+            [0, 1].includes(child.path) ||
+            !["=", "in"].includes(child.operator)
+        ) {
+            children.push(child);
+        } else {
+            if (!childrenByPath[child.path]) {
+                childrenByPath[child.path] = [];
+            }
+            childrenByPath[child.path].push(child);
+        }
+    }
+    for (const path in childrenByPath) {
+        if (childrenByPath[path].length === 1) {
+            children.push(childrenByPath[path][0]);
+            continue;
+        }
+        const value = [];
+        for (const child of childrenByPath[path]) {
+            if (child.operator === "=") {
+                value.push(child.valueAST);
+            } else {
+                value.push(...child.valueAST.value);
+            }
+        }
+        children.push({
+            type: "condition",
+            negate: false,
+            operator: "in",
+            path,
+            valueAST: {
+                type: 4,
+                value,
+            },
+        });
+    }
+    if (children.length === 1 && !isRoot) {
+        return { ...children[0] };
+    }
+    return { ...tree, children };
+}
+
+/**
+ * @param {Tree} tree
  * @param {Object} pathsInfo
  * @returns {string}
  */
@@ -220,6 +278,7 @@ function useGetDomainTreeDescription(fieldService) {
     const loadFieldInfo = useLoadFieldInfo(fieldService);
     const loadPathDescription = useLoadPathDescription(fieldService);
     return async (resModel, tree) => {
+        tree = simplifyTree(tree);
         const domain = toDomain(tree);
         const paths = extractPathsFromDomain(domain);
         const promises = [];
