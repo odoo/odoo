@@ -119,12 +119,7 @@ export class Attachment {
         if (this.uploading && this.tmpUrl) {
             return this.tmpUrl;
         }
-        if (!this.accessToken && this.originThread?.model === "discuss.channel") {
-            return this.isImage
-                ? `/discuss/channel/${this.originThread.id}/image/${this.id}`
-                : `/discuss/channel/${this.originThread.id}/attachment/${this.id}`;
-        }
-        return this.isImage ? `/web/image/${this.id}` : `/web/content/ir.attachment/${this.id}`;
+        return this.isImage ? `/web/image/${this.id}` : `/web/content/${this.id}`;
     }
 
     /**
