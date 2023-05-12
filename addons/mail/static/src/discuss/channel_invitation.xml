@@ -33,7 +33,7 @@
                 </div>
                 <div t-if="state.selectedPartners.length > 0" class="mx-3 mt-3">
                     <h4>Selected users:</h4>
-                    <div class="o-discuss-ChannelInvitation-selectedList overflow-auto">
+                    <div class="o-discuss-ChannelInvitation-selectedList d-flex flex-wrap gap-1 overflow-auto">
                         <t t-foreach="state.selectedPartners" t-as="selectedPartner" t-key="selectedPartner.id">
                             <button class="btn btn-secondary" t-on-click="() => this.onClickSelectedPartner(selectedPartner)">
                                 <t t-esc="selectedPartner.name"/> <i class="fa fa-times"/>
