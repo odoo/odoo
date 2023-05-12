@@ -1,0 +1,12 @@
+.o_cp_action_menus {
+    .o_cp_action_app_icon {
+        width: var(--oi-font-size, 1em);
+        vertical-align: -0.2em;
+    }
+
+    .dropdown-item:not(.focus) > .o_cp_action_app_icon {
+        // Temporary workaround until we'll support inline SVGs icons
+        // globally (eg. Spreadsheet's toolbar icons)
+        filter: saturate(0%) brightness(0%) invert(23%) sepia(7%) saturate(1896%) hue-rotate(179deg) brightness(91%) contrast(88%);
+    }
+}

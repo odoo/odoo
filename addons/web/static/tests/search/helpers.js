@@ -144,7 +144,7 @@ function getNode(target) {
     return target instanceof Component ? target.el : target;
 }
 
-function findItem(target, selector, finder = 0) {
+export function findItem(target, selector, finder = 0) {
     const el = getNode(target);
     const elems = [...el.querySelectorAll(selector)];
     if (Number.isInteger(finder)) {

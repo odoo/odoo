@@ -18,11 +18,12 @@
             <Dropdown t-if="actionItems.length" class="'d-inline-block'" togglerClass="'btn btn-secondary'" hotkey="'u'">
                 <t t-set-slot="toggler">
                     <i class="me-md-1 fa fa-cog"/>
-                    <span class="o_dropdown_title">Action</span>
+                    <span class="o_dropdown_title">Actions</span>
                 </t>
                 <t t-foreach="actionItems" t-as="item" t-key="item.key">
                     <t t-if="item.Component" t-component="item.Component" t-props="item.props" />
                     <DropdownItem t-else="" class="'o_menu_item'" onSelected="() => this.onItemSelected(item)">
+                        <i t-if="item.icon" t-att-class="item.icon + ' me-1 fa-fw oi-fw'"/>
                         <t t-esc="item.description"/>
                     </DropdownItem>
                 </t>
