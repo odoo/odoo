@@ -712,9 +712,15 @@ class TransactionCase(BaseCase):
         super().setUpClass()
 
         cls.addClassCleanup(cls._gc_filestore)
-
         cls.registry = odoo.registry(get_db_name())
-        cls.addClassCleanup(cls.registry.reset_changes)
+        cls.registry_start_sequence = cls.registry.registry_sequence
+        def reset_changes():
+            if (cls.registry_start_sequence != cls.registry.registry_sequence) or cls.registry.registry_invalidated:
+                with cls.registry.cursor() as cr:
+                    cls.registry.setup_models(cr)
+                    cls.registry.registry_invalidated = False
+
+        cls.addClassCleanup(reset_changes)
         cls.addClassCleanup(cls.registry.clear_caches)
 
         cls.cr = cls.registry.cursor()
