@@ -449,7 +449,7 @@ export default class PivotCorePlugin extends CorePlugin {
             left: anchorLeft,
             right: anchorLeft + colWidth,
         };
-        this.dispatch("SET_FORMATTING", {
+        this.dispatch("SET_ZONE_BORDERS", {
             sheetId,
             target: [
                 headerAndMeasureZone,
@@ -466,7 +466,10 @@ export default class PivotCorePlugin extends CorePlugin {
                     bottom: totalRow,
                 },
             ],
-            border: "external",
+            border: {
+                position: "external",
+                color: "#2D7E84",
+            },
         });
     }
 

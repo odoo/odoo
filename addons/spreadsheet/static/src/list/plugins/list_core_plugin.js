@@ -288,7 +288,21 @@ export default class ListCorePlugin extends CorePlugin {
                     right: anchor[0] + columns.length - 1,
                 },
             ],
-            border: "external",
+        });
+        this.dispatch("SET_ZONE_BORDERS", {
+            sheetId,
+            target: [
+                {
+                    top: anchor[1],
+                    bottom: anchor[1],
+                    left: anchor[0],
+                    right: anchor[0] + columns.length - 1,
+                },
+            ],
+            border: {
+                position: "external",
+                color: "#2D7E84",
+            },
         });
     }
 
@@ -308,7 +322,7 @@ export default class ListCorePlugin extends CorePlugin {
             }
             row++;
         }
-        this.dispatch("SET_FORMATTING", {
+        this.dispatch("SET_ZONE_BORDERS", {
             sheetId,
             target: [
                 {
@@ -318,7 +332,10 @@ export default class ListCorePlugin extends CorePlugin {
                     right: anchor[0] + columns.length - 1,
                 },
             ],
-            border: "external",
+            border: {
+                position: "external",
+                color: "#2D7E84",
+            },
         });
     }
 

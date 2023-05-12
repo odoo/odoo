@@ -55,6 +55,107 @@
     </div>
   </t>
 
+  <t t-name="o-spreadsheet-BorderEditor" owl="1">
+    <Popover t-props="popoverProps">
+      <div
+        class="d-flex bg-white o-border-selector"
+        t-on-click.stop=""
+        t-att-class="props.class ? props.class : ''">
+        <div class="o-border-selector-section">
+          <div
+            t-foreach="BORDER_POSITIONS"
+            t-as="borderPositionsRow"
+            t-key="borderPositionsRow"
+            class="d-flex o-dropdown-button o-dropdown-line">
+            <span
+              t-foreach="borderPositionsRow"
+              t-as="borderPosition"
+              t-key="borderPosition"
+              class="o-line-item o-hoverable-button"
+              t-att-class="{active:props.currentBorderPosition === borderPosition[0]}"
+              t-att-name="borderPosition[0]"
+              t-on-click.stop="() => this.setBorderPosition(borderPosition[0])">
+              <t t-call="{{borderPosition[1]}}"/>
+            </span>
+          </div>
+        </div>
+        <div class="o-divider"/>
+        <div class="o-border-selector-section">
+          <div
+            class="m-0 p-0 d-flex align-items-center justify-content-center o-with-color o-hoverable-button"
+            title="Border color"
+            t-on-click.stop="(ev) => this.toggleDropdownTool('borderColorTool')">
+            <ColorPickerWidget
+              currentColor="props.currentBorderColor"
+              toggleColorPicker="(ev) => this.toggleDropdownTool('borderColorTool')"
+              showColorPicker="state.activeTool === 'borderColorTool'"
+              onColorPicked="(color) => this.setBorderColor(color)"
+              title="env._t('Border Color')"
+              icon="props.currentBorderColor === '' ? 'o-spreadsheet-Icon.BORDER_NO_COLOR' : 'o-spreadsheet-Icon.BORDER_COLOR'"
+              dropdownMaxHeight="this.props.dropdownMaxHeight"
+              class="'o-dropdown-button o-border-picker-button'"
+            />
+            <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+          </div>
+          <div
+            class="o-border-style-tool d-flex align-items-center justify-content-center o-hoverable-button"
+            title="Line style"
+            t-ref="lineStyleButton"
+            t-on-click.stop="(ev) => this.toggleDropdownTool('borderTypeTool')">
+            <t t-call="o-spreadsheet-Icon.BORDER_TYPE"/>
+            <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+            <Popover
+              t-props="lineStylePickerPopoverProps"
+              t-if="state.activeTool === 'borderTypeTool'">
+              <div class="o-border-style-dropdown">
+                <t t-foreach="borderStyles" t-as="borderStyle" t-key="borderStyle">
+                  <div
+                    t-att-title="borderStyle"
+                    t-on-click.stop="() => this.setBorderStyle(borderStyle)">
+                    <div class="d-flex o-dropdown-border-type">
+                      <div class="o-dropdown-border-check">
+                        <t
+                          t-if="props.currentBorderStyle === borderStyle"
+                          t-call="o-spreadsheet-Icon.CHECK"
+                        />
+                      </div>
+                      <div t-attf-class="o-style-preview o-style-{{borderStyle}}"/>
+                    </div>
+                  </div>
+                </t>
+              </div>
+            </Popover>
+          </div>
+        </div>
+      </div>
+    </Popover>
+  </t>
+
+  <t t-name="o-spreadsheet-BorderEditorWidget" owl="1">
+    <div class="d-flex position-relative" title="Borders">
+      <span
+        t-ref="borderEditorButton"
+        t-on-click.stop="props.toggleBorderEditor"
+        t-att-class="props.class ? props.class : ''"
+        t-att-disabled="props.disabled">
+        <span t-att-style="iconStyle">
+          <t t-call="o-spreadsheet-Icon.BORDERS"/>
+        </span>
+      </span>
+      <BorderEditor
+        t-if="props.showBorderEditor"
+        onBorderColorPicked.bind="onBorderColorPicked"
+        onBorderStylePicked.bind="onBorderStylePicked"
+        onBorderPositionPicked.bind="onBorderPositionPicked"
+        currentBorderColor="state.currentColor"
+        currentBorderStyle="state.currentStyle"
+        currentBorderPosition="state.currentPosition"
+        maxHeight="props.dropdownMaxHeight"
+        anchorRect="borderEditorAnchorRect"
+      />
+    </div>
+  </t>
+
   <t t-name="o-spreadsheet-BottomBar" owl="1">
     <div
       class="o-spreadsheet-bottom-bar o-two-columns d-flex align-items-center overflow-hidden"
@@ -321,7 +422,7 @@
     <div class="o-composer-container w-100 h-100">
       <div
         class="o-composer w-100 text-start"
-        t-att-class="{ 'text-muted': env.model.getters.isReadonly(), 'unfocusable': env.model.getters.isReadonly() }"
+        t-att-class="{ 'text-muted': env.model.getters.isReadonly(), 'unfocusable': env.model.getters.isReadonly(), 'active': props.focus !== 'inactive' }"
         t-att-style="props.inputStyle"
         t-ref="o_composer"
         tabindex="1"
@@ -1207,6 +1308,13 @@
       />
     </svg>
   </t>
+  <t t-name="o-spreadsheet-Icon.CLEAR" owl="1">
+    <svg class="o-icon">
+      <path
+        d="M1.5 15a.75.75 0 0 0 0 1.5h15a.75.75 0 0 0 0-1.5M5.3 12.75c.1.1.3.2.5.2h4c.2 0 .4-.1.5-.2l5.5-5.5c.2-.3.2-.6 0-.8l-4.4-4.4c-.3-.2-.6-.2-.8 0l-4.8 4.8c-2.7 2.9-3.1 2.8-2.4 4M7 7.25l3.6 3.6-1 1-3.6.1-1.8-1.9"
+      />
+    </svg>
+  </t>
   <t t-name="o-spreadsheet-Icon.FREEZE" owl="1">
     <svg class="o-icon">
       <path
@@ -1231,11 +1339,43 @@
       />
     </svg>
   </t>
+  <t t-name="o-spreadsheet-Icon.HIDE_ROW" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="currentColor"
+        d="M.5 2A1.5 1.5 0 0 1 2 .5h14A1.5 1.5 0 0 1 17.5 2v14a1.5 1.5 0 0 1-1.5 1.5H2A1.5 1.5 0 0 1 .5 16V2H2v3.5h14V2H2v9h14V7H2v9h14v-3.5H2M1 12l4-5h2l-4 5m2 0 4-5h2l-4 5m2 0 4-5h2l-4 5m2 0 4-5v4"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.HIDE_COL" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="currentColor"
+        d="M16 .5A1.5 1.5 0 0 1 17.5 2v14a1.5 1.5 0 0 1-1.5 1.5H2A1.5 1.5 0 0 1 .5 16V2A1.5 1.5 0 0 1 2 .5h14V2h-3.5v14H16V2H7v14h4V2H2v14h3.5V2M6 1l5 4v2L6 3m0 2 5 4v2L6 7m0 2 5 4v2l-5-4m0 2 5 4H"
+      />
+    </svg>
+  </t>
   <t t-name="o-spreadsheet-Icon.INSERT_ROW" owl="1">
     <svg class="o-icon">
       <path
         fill="currentColor"
         d="M.5 2A1.5 1.5 0 0 1 2 .5h14A1.5 1.5 0 0 1 17.5 2v14a1.5 1.5 0 0 1-1.5 1.5H2A1.5 1.5 0 0 1 .5 16V2H2v3.5h14V2H2v9h14V7H2v9h14v-3.5H2"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.INSERT_ROW_BEFORE" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="currentColor"
+        d="M3.5 14.5A1.5 1.5 0 0 0 5 16h10a1.5 1.5 0 0 0 1.5-1.5v-7h-3V5h3V1.5A1.5 1.5 0 0 0 15 0H5a1.5 1.5 0 0 0-1.5 1.5v2h-3V9h3M15 12.5v2H5v-2M15 9v2H5V9m10-7.5v2H5v-2M12 5v2.5H2V5"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.INSERT_ROW_AFTER" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="currentColor"
+        d="M3.5 1.5A1.5 1.5 0 0 1 5 0h10a1.5 1.5 0 0 1 1.5 1.5v7h-3V11h3v3.5A1.5 1.5 0 0 1 15 16H5a1.5 1.5 0 0 1-1.5-1.5v-2h-3V7h3M15 3.5v-2H5v2M15 7V5H5v2m10 7.5v-2H5v2m7-3.5V8.5H2V11"
       />
     </svg>
   </t>
@@ -1247,6 +1387,22 @@
       />
     </svg>
   </t>
+  <t t-name="o-spreadsheet-Icon.INSERT_COL_AFTER" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="currentColor"
+        d="M2.5 3A1.5 1.5 0 0 0 1 4.5v10A1.5 1.5 0 0 0 2.5 16h7v-3H12v3h3.5a1.5 1.5 0 0 0 1.5-1.5v-10A1.5 1.5 0 0 0 15.5 3h-2V0H8v3M4.5 14.5h-2v-10h2m3.5 10H6v-10h2m7.5 10h-2v-10h2m-3.5 7H9.5v-10H12"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.INSERT_COL_BEFORE" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="currentColor"
+        d="M15.5 3A1.5 1.5 0 0 1 17 4.5v10a1.5 1.5 0 0 1-1.5 1.5h-7v-3H6v3H2.5A1.5 1.5 0 0 1 1 14.5v-10A1.5 1.5 0 0 1 2.5 3h2V0H10v3m3.5 11.5h2v-10h-2m-3.5 10h2v-10h-2m-7.5 10h2v-10h-2m3.5 7h2.5v-10H6"
+      />
+    </svg>
+  </t>
   <t t-name="o-spreadsheet-Icon.INSERT_CELL" owl="1">
     <svg class="o-icon">
       <path
@@ -1255,16 +1411,34 @@
       />
     </svg>
   </t>
-  <t t-name="o-spreadsheet-Icon.DELETE_CELL_SHIFT_UP" owl="1">
-    <svg class="o-icon" fill="currentColor">
+  <t t-name="o-spreadsheet-Icon.INSERT_CELL_SHIFT_DOWN" owl="1">
+    <svg class="o-icon">
       <path
+        fill="currentColor"
+        d="M5 2.5A1.5 1.5 0 0 1 6.5 1h10A1.5 1.5 0 0 1 18 2.5v13a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 5 15.5v-5h5.25v-3H5m11.5-2v-3h-4.75v3m-1.5 0v-3H6.5v3m10 5v-3h-4.75v3m-1.5 5v-3H6.5v3m10 0v-3h-4.75v3M0 12.5l2.5 4 2.5-4H3.25v-6h-1.5v6"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.INSERT_CELL_SHIFT_RIGHT" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="currentColor"
+        d="M2.5 5A1.5 1.5 0 0 0 1 6.5v10A1.5 1.5 0 0 0 2.5 18h13a1.5 1.5 0 0 0 1.5-1.5v-10A1.5 1.5 0 0 0 15.5 5h-5v5.25h-3V5m-2 11.5h-3v-4.75h3m0-1.5h-3V6.5h3m5 10h-3v-4.75h3m5-1.5h-3V6.5h3m0 10h-3v-4.75h3M12.5 0l4 2.5-4 2.5V3.25h-6v-1.5h6"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.DELETE_CELL_SHIFT_UP" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="currentColor"
         d="M5 2.5A1.5 1.5 0 0 1 6.5 1h10A1.5 1.5 0 0 1 18 2.5v13a1.5 1.5 0 0 1-1.5 1.5h-10A1.5 1.5 0 0 1 5 15.5v-5h5.25v-3H5m11.5-2v-3h-4.75v3m-1.5 0v-3H6.5v3m10 5v-3h-4.75v3m-1.5 5v-3H6.5v3m10 0v-3h-4.75v3M0 10l2.5-4L5 10H3.25v6h-1.5v-6"
       />
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.DELETE_CELL_SHIFT_LEFT" owl="1">
-    <svg class="o-icon" fill="currentColor">
+    <svg class="o-icon">
       <path
+        fill="currentColor"
         d="M2.5 5A1.5 1.5 0 0 0 1 6.5v10A1.5 1.5 0 0 0 2.5 18h13a1.5 1.5 0 0 0 1.5-1.5v-10A1.5 1.5 0 0 0 15.5 5h-5v5.25h-3V5m-2 11.5h-3v-4.75h3m0-1.5h-3V6.5h3m5 10h-3v-4.75h3m5-1.5h-3V6.5h3m0 10h-3v-4.75h3M10 0 6 2.5 10 5V3.25h6v-1.5h-6"
       />
     </svg>
@@ -1533,6 +1707,38 @@
       />
     </svg>
   </t>
+  <t t-name="o-spreadsheet-Icon.BORDER_TYPE" owl="1">
+    <svg class="o-icon">
+      <g fill="#000000" transform="translate(2 2)">
+        <polygon points="0 0 0 2 14 2 14 0"/>
+        <polygon points="0 6 0 8 5 8 5 6"/>
+        <polygon points="9 6 9 8 14 8 14 6"/>
+        <polygon points="0 12 0 14 2 14 2 12"/>
+        <polygon points="4 12 4 14 6 14 6 12"/>
+        <polygon points="8 12 8 14 10 14 10 12"/>
+        <polygon points="12 12 12 14 14 14 14 12"/>
+      </g>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.BORDER_COLOR" owl="1">
+    <svg class="o-icon">
+      <g fill="#000000" transform="translate(4 2)">
+        <polygon points="0 12 0 9 7 2 10 5 3 12"/>
+        <polygon points="8 1 9 0 12 3 11 4"/>
+      </g>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.BORDER_NO_COLOR" owl="1">
+    <svg class="o-icon">
+      <g fill="#000000">
+        <polygon points="4 12 4 9 11 2 14 5 7 12"/>
+        <polygon points="12 1 13 0 16 3 15 4"/>
+      </g>
+      <g>
+        <rect x="0" y="14" width="18" height="4" stroke="black" fill="none"/>
+      </g>
+    </svg>
+  </t>
 
   <t t-name="o-spreadsheet-Icon.PLUS" owl="1">
     <svg class="o-icon">
@@ -1723,7 +1929,7 @@
       </style>
       <path d="m3 13-1-1-1 1 3 3 3-3-1-1-1 1V0H3"/>
       <text x="9" y="7" class="small">A</text>
-      <text x="9" y="15" class="small">Z</text>
+      <text x="9.3" y="15" class="small">Z</text>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.SORT_DESCENDING" owl="1">
@@ -1734,8 +1940,8 @@
         }
       </style>
       <path d="m3 13.9-1-1-1 1 3 3 3-3-1-1-1 1V.9H3"/>
-      <text x="9" y="7.9" class="small">A</text>
-      <text x="9.25" y="15.9" class="small">Z</text>
+      <text x="9.3" y="7.9" class="small">Z</text>
+      <text x="9" y="15.9" class="small">A</text>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.FILTER_ICON" owl="1">
@@ -1746,6 +1952,7 @@
       focusable="false"
       viewBox="0 0 850 850">
       <path
+        fill="currentColor"
         d="M 339.667 681 L 510.333 681 L 510.333 595.667 L 339.667 595.667 L 339.667 681 Z M 41 169 L 41 254.333 L 809 254.333 L 809 169 L 41 169 Z M 169 467.667 L 681 467.667 L 681 382.333 L 169 382.333 L 169 467.667 Z"
       />
     </svg>
@@ -1835,6 +2042,14 @@
       <path
         fill="currentColor"
         d="M256 32c14.2 0 27.3 7.5 34.5 19.8l216 368c7.3 12.4 7.3 27.7 .2 40.1S486.3 480 472 480H40c-14.3 0-27.6-7.7-34.7-20.1s-7-27.8 .2-40.1l216-368C228.7 39.5 241.8 32 256 32zm0 128c-13.3 0-24 10.7-24 24V296c0 13.3 10.7 24 24 24s24-10.7 24-24V184c0-13.3-10.7-24-24-24zm32 224a32 32 0 1 0 -64 0 32 32 0 1 0 64 0z"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.SPLIT_TEXT" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="currentColor"
+        d="M14 6v2h-4v2h4v2l3-3m-9 1V8H4V6L1 9l3 3v-2m3.5-6.5h3V7H12V3.5h3V2H3v1.5h3V7h1.5m3 7.5h-3V11H6v3.5H3V16h12v-1.5h-3V11h-1.5"
       />
     </svg>
   </t>
@@ -1950,22 +2165,22 @@
               class="o-menu-item"
               t-att-class="{ 'o-menu-root': isMenuRoot, 'disabled': !isMenuEnabled, 'o-menu-item-active': isParentMenu(subMenu, menuItem)}"
               t-att-style="getColor(menuItem)">
-              <span>
-                <span t-if="childrenHaveIcon" class="o-menu-item-icon align-middle">
+              <div class="d-flex w-100">
+                <div t-if="childrenHaveIcon" class="o-menu-item-icon align-middle">
                   <t t-if="getIconName(menuItem)" t-call="{{getIconName(menuItem)}}"/>
-                </span>
-                <span class="o-menu-item-name align-middle" t-esc="getName(menuItem)"/>
-              </span>
-              <span
-                t-if="menuItem.description"
-                class="o-menu-item-description"
-                t-esc="menuItem.description"
-              />
-              <span
-                t-if="isMenuRoot"
-                class="o-menu-item-root align-middle"
-                t-call="o-spreadsheet-Icon.TRIANGLE_RIGHT"
-              />
+                </div>
+                <div class="o-menu-item-name align-middle text-truncate" t-esc="getName(menuItem)"/>
+                <div
+                  t-if="menuItem.description"
+                  class="o-menu-item-description ms-auto"
+                  t-esc="menuItem.description"
+                />
+                <div
+                  t-if="isMenuRoot"
+                  class="o-menu-item-root align-middle ms-auto"
+                  t-call="o-spreadsheet-Icon.TRIANGLE_RIGHT"
+                />
+              </div>
             </div>
           </t>
         </t>
@@ -2030,7 +2245,7 @@
           class="o-btn o-remove-selection"
           t-if="ranges.length > 1"
           t-on-click="() => this.removeInput(range.id)">
-          ✖
+          ✕
         </button>
       </div>
 
@@ -3333,7 +3548,7 @@
     <div class="o-sidePanel">
       <div class="o-sidePanelHeader">
         <div class="o-sidePanelTitle" t-esc="getTitle()"/>
-        <div class="o-sidePanelClose" t-on-click="() => this.props.onCloseSidePanel()">×</div>
+        <div class="o-sidePanelClose" t-on-click="() => this.props.onCloseSidePanel()">✕</div>
       </div>
       <div class="o-sidePanelBody">
         <t
@@ -3459,7 +3674,7 @@
           <t t-foreach="menus" t-as="menu" t-key="menu_index">
             <div
               t-if="menu.children.length !== 0"
-              class="o-topbar-menu o-topbar-hoverable rounded"
+              class="o-topbar-menu o-hoverable-button rounded"
               t-att-class="{'active': state.menuState.parentMenu and state.menuState.parentMenu.id === menu.id}"
               t-on-click="(ev) => this.toggleContextMenu(menu, ev)"
               t-on-mouseover="(ev) => this.onMenuMouseOver(menu, ev)"
@@ -3487,21 +3702,21 @@
             </span>
           </div>
           <div t-else="" class="o-toolbar-tools d-flex flex-shrink-0 ms-4">
-            <ActionButton action="EDIT.undo" class="'o-topbar-hoverable'"/>
-            <ActionButton action="EDIT.redo" class="'o-topbar-hoverable'"/>
-            <ActionButton action="FORMAT.paintFormat" class="'o-topbar-hoverable'"/>
-            <ActionButton action="FORMAT.clearFormat" class="'o-topbar-hoverable'"/>
+            <ActionButton action="EDIT.undo" class="'o-hoverable-button'"/>
+            <ActionButton action="EDIT.redo" class="'o-hoverable-button'"/>
+            <ActionButton action="FORMAT.paintFormat" class="'o-hoverable-button'"/>
+            <ActionButton action="FORMAT.clearFormat" class="'o-hoverable-button'"/>
 
             <div class="o-divider"/>
 
-            <ActionButton action="FORMAT.formatPercent" class="'o-topbar-hoverable'"/>
-            <ActionButton action="FORMAT.decraseDecimalPlaces" class="'o-topbar-hoverable'"/>
-            <ActionButton action="FORMAT.incraseDecimalPlaces" class="'o-topbar-hoverable'"/>
+            <ActionButton action="FORMAT.formatPercent" class="'o-hoverable-button'"/>
+            <ActionButton action="FORMAT.decraseDecimalPlaces" class="'o-hoverable-button'"/>
+            <ActionButton action="FORMAT.incraseDecimalPlaces" class="'o-hoverable-button'"/>
             <ActionButton
               action="formatNumberMenuItemSpec"
               onClick="(ev) => this.toggleToolbarContextMenu(formatNumberMenuItemSpec, ev)"
               hasTriangleDownIcon="true"
-              class="'o-topbar-hoverable'"
+              class="'o-hoverable-button'"
             />
 
             <div class="o-divider"/>
@@ -3510,9 +3725,9 @@
 
             <div class="o-divider"/>
 
-            <ActionButton action="FORMAT.formatBold" class="'o-topbar-hoverable'"/>
-            <ActionButton action="FORMAT.formatItalic" class="'o-topbar-hoverable'"/>
-            <ActionButton action="FORMAT.formatStrikethrough" class="'o-topbar-hoverable'"/>
+            <ActionButton action="FORMAT.formatBold" class="'o-hoverable-button'"/>
+            <ActionButton action="FORMAT.formatItalic" class="'o-hoverable-button'"/>
+            <ActionButton action="FORMAT.formatStrikethrough" class="'o-hoverable-button'"/>
 
             <ColorPickerWidget
               currentColor="state.textColor"
@@ -3522,7 +3737,7 @@
               title="env._t('Text Color')"
               icon="'o-spreadsheet-Icon.TEXT_COLOR'"
               dropdownMaxHeight="this.props.dropdownMaxHeight"
-              class="'o-topbar-hoverable o-menu-item-button'"
+              class="'o-hoverable-button o-menu-item-button'"
             />
 
             <div class="o-divider"/>
@@ -3535,38 +3750,16 @@
               title="env._t('Fill Color')"
               icon="'o-spreadsheet-Icon.FILL_COLOR'"
               dropdownMaxHeight="this.props.dropdownMaxHeight"
-              class="'o-topbar-hoverable o-menu-item-button'"
+              class="'o-hoverable-button o-menu-item-button'"
             />
 
-            <div class="o-dropdown">
-              <ActionButton
-                action="FORMAT.borders"
-                t-on-click="(ev) => this.toggleDropdownTool('borderTool', ev)"
-                class="'o-topbar-hoverable'"
-              />
-              <div
-                class="o-dropdown-content"
-                t-if="state.activeTool === 'borderTool'"
-                t-att-style="dropdownStyle"
-                t-on-click.stop="">
-                <div class="o-dropdown-line">
-                  <ActionButton action="FORMAT.bordersAll" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.bordersInner" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.bordersHorizontal" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.bordersVertical" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.bordersExternal" class="'o-topbar-hoverable'"/>
-                </div>
-                <div class="o-dropdown-line">
-                  <ActionButton action="FORMAT.bordersLeft" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.bordersTop" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.bordersRight" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.bordersBottom" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.bordersClear" class="'o-topbar-hoverable'"/>
-                </div>
-              </div>
-            </div>
-            <ActionButton action="EDIT.mergeCells" class="'o-topbar-hoverable'"/>
-
+            <BorderEditorWidget
+              class="'o-hoverable-button o-menu-item-button'"
+              toggleBorderEditor="(ev) => this.toggleDropdownTool('borderTool', ev)"
+              showBorderEditor="state.activeTool === 'borderTool'"
+              dropdownMaxHeight="this.props.dropdownMaxHeight"
+            />
+            <ActionButton action="EDIT.mergeCells" class="'o-hoverable-button'"/>
             <div class="o-divider"/>
 
             <div class="o-dropdown">
@@ -3574,7 +3767,7 @@
                 action="FORMAT.formatAlignmentHorizontal"
                 hasTriangleDownIcon="true"
                 t-on-click="(ev) => this.toggleDropdownTool('horizontalAlignTool', ev)"
-                class="'o-topbar-hoverable'"
+                class="'o-hoverable-button'"
               />
               <div
                 class="o-dropdown-content"
@@ -3582,9 +3775,9 @@
                 t-att-style="dropdownStyle"
                 t-on-click.stop="">
                 <div class="o-dropdown-line">
-                  <ActionButton action="FORMAT.formatAlignmentLeft" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.formatAlignmentCenter" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.formatAlignmentRight" class="'o-topbar-hoverable'"/>
+                  <ActionButton action="FORMAT.formatAlignmentLeft" class="'o-hoverable-button'"/>
+                  <ActionButton action="FORMAT.formatAlignmentCenter" class="'o-hoverable-button'"/>
+                  <ActionButton action="FORMAT.formatAlignmentRight" class="'o-hoverable-button'"/>
                 </div>
               </div>
             </div>
@@ -3593,7 +3786,7 @@
                 action="FORMAT.formatAlignmentVertical"
                 hasTriangleDownIcon="true"
                 t-on-click="(ev) => this.toggleDropdownTool('verticalAlignTool', ev)"
-                class="'o-topbar-hoverable'"
+                class="'o-hoverable-button'"
               />
               <div
                 class="o-dropdown-content"
@@ -3601,9 +3794,9 @@
                 t-if="state.activeTool === 'verticalAlignTool'"
                 t-on-click.stop="">
                 <div class="o-dropdown-line">
-                  <ActionButton action="FORMAT.formatAlignmentTop" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.formatAlignmentMiddle" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.formatAlignmentBottom" class="'o-topbar-hoverable'"/>
+                  <ActionButton action="FORMAT.formatAlignmentTop" class="'o-hoverable-button'"/>
+                  <ActionButton action="FORMAT.formatAlignmentMiddle" class="'o-hoverable-button'"/>
+                  <ActionButton action="FORMAT.formatAlignmentBottom" class="'o-hoverable-button'"/>
                 </div>
               </div>
             </div>
@@ -3612,7 +3805,7 @@
                 action="FORMAT.formatWrapping"
                 hasTriangleDownIcon="true"
                 t-on-click="(ev) => this.toggleDropdownTool('textWrappingTool', ev)"
-                class="'o-topbar-hoverable'"
+                class="'o-hoverable-button'"
               />
               <div
                 class="o-dropdown-content"
@@ -3622,17 +3815,17 @@
                 <div class="o-dropdown-line">
                   <ActionButton
                     action="FORMAT.formatWrappingOverflow"
-                    class="'o-topbar-hoverable'"
+                    class="'o-hoverable-button'"
                   />
-                  <ActionButton action="FORMAT.formatWrappingWrap" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.formatWrappingClip" class="'o-topbar-hoverable'"/>
+                  <ActionButton action="FORMAT.formatWrappingWrap" class="'o-hoverable-button'"/>
+                  <ActionButton action="FORMAT.formatWrappingClip" class="'o-hoverable-button'"/>
                 </div>
               </div>
             </div>
 
             <div class="o-divider"/>
 
-            <ActionButton action="VIEW.createRemoveFilter" class="'o-topbar-hoverable'"/>
+            <ActionButton action="VIEW.createRemoveFilter" class="'o-hoverable-button'"/>
           </div>
         </div>
         <TopBarComposer
@@ -3650,7 +3843,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.3.0-alpha.7';
-  __info__.date = '2023-05-02T13:11:48.592Z';
-  __info__.hash = '77c8f5f';
+  __info__.version = '16.3.0-alpha.8';
+  __info__.date = '2023-05-12T11:53:11.552Z';
+  __info__.hash = 'afee7d5';
 -->

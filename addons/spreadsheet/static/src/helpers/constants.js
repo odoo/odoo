@@ -12,9 +12,9 @@ export const FORMATS = {
     year: { out: "YYYY", display: "YYYY", interval: "y" },
 };
 
-export const HEADER_STYLE = { fillColor: "#f2f2f2" };
-export const TOP_LEVEL_STYLE = { bold: true, fillColor: "#f2f2f2" };
-export const MEASURE_STYLE = { fillColor: "#f2f2f2", textColor: "#756f6f" };
+export const HEADER_STYLE = { fillColor: "#E6F2F3" };
+export const TOP_LEVEL_STYLE = { bold: true, fillColor: "#E6F2F3" };
+export const MEASURE_STYLE = { fillColor: "#E6F2F3", textColor: "#756f6f" };
 
 export const UNTITLED_SPREADSHEET_NAME = _lt("Untitled spreadsheet");
 
