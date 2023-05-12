@@ -8,6 +8,10 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useService } from "@web/core/utils/hooks";
 
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
+
+export const STATIC_ACTIONS_GROUP_NUMBER = 1;
+export const ACTIONS_GROUP_NUMBER = 100;
+
 /**
  * Action menus (or Action/Print bar, previously called 'Sidebar')
  *
@@ -46,12 +50,16 @@ export class ActionMenus extends Component {
     async getActionItems(props) {
         return (props.items.action || []).map((action) => {
             if (action.callback) {
-                return Object.assign({ key: `action-${action.description}` }, action);
+                return Object.assign(
+                    { key: `action-${action.description}`, groupNumber: ACTIONS_GROUP_NUMBER },
+                    action
+                );
             } else {
                 return {
                     action,
                     description: action.name,
                     key: action.id,
+                    groupNumber: action.groupNumber || ACTIONS_GROUP_NUMBER,
                 };
             }
         });

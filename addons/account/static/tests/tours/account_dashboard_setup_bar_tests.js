@@ -21,6 +21,11 @@
         trigger: '.o_control_panel .o_cp_action_menus .dropdown-toggle',
         extra_trigger: '.o_breadcrumb .active:contains("INV/")',
     }, {
+        trigger: `.o_control_panel .o_cp_action_menus .dropdown-toggle:contains("${_t("Print")}")`,
+        run: function () {
+            this.$anchor[0].dispatchEvent(new MouseEvent("mouseenter"));
+        },
+    }, {
         trigger: '.o_control_panel .o_cp_action_menus .o_menu_item:contains("' + _t('Invoices without Payment') + '")',
     }, {
         trigger: 'iframe .o_report_layout_standard h2',
