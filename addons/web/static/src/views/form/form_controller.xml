@@ -29,20 +29,16 @@
                     </t>
 
                     <t t-set-slot="control-panel-additional-actions">
-                        <t t-if="props.info.actionMenus">
-                            <CogMenu>
-                                <ActionMenusItems
-                                    getActiveIds="() => model.root.isNew ? [] : [model.root.resId]"
-                                    context="props.context"
-                                    items="actionMenuItems"
-                                    isDomainSelected="model.root.isDomainSelected"
-                                    resModel="model.root.resModel"
-                                    domain="props.domain"
-                                    onActionExecuted="() => model.load({ resId: model.root.resId, resIds: model.root.resIds })"
-                                    shouldExecuteAction.bind="shouldExecuteAction"
-                                />
-                            </CogMenu>
-                        </t>
+                        <CogMenu
+                            getActiveIds="() => model.root.isNew ? [] : [model.root.resId]"
+                            context="props.context"
+                            items="props.info.actionMenus ? actionMenuItems : {}"
+                            isDomainSelected="model.root.isDomainSelected"
+                            resModel="model.root.resModel"
+                            domain="props.domain"
+                            onActionExecuted="() => model.load({ resId: model.root.resId, resIds: model.root.resIds })"
+                            shouldExecuteAction.bind="shouldExecuteAction"
+                        />
                     </t>
 
                     <t t-set-slot="control-panel-status-indicator">
