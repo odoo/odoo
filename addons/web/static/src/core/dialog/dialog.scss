@@ -17,3 +17,10 @@
         margin: 0; // Reset boostrap.
     }
 }
+
+@include media-breakpoint-up(sm) {
+    .modal-fs {
+        width: calc(100% - #{2 * $modal-dialog-margin-y-sm-up});
+        max-width: none;
+    }
+}
