@@ -2,8 +2,9 @@
 
 import { registry } from "@web/core/registry";
 import { Dropdown } from "@web/core/dropdown/dropdown";
+import { ActionMenus } from "@web/search/action_menus/action_menus";
 
-import { Component } from "@odoo/owl";
+import { onWillStart, onWillUpdateProps } from "@odoo/owl";
 
 const cogMenuRegistry = registry.category("cogMenu");
 
@@ -17,32 +18,61 @@ const cogMenuRegistry = registry.category("cogMenu");
  * type and selected records and to execute a set of actions on active records.
  * It is made out of 2 dropdown: Print and Action.
  *
- * @extends Component
+ * @extends ActionMenus
  */
-export class CogMenu extends Component {
+export class CogMenu extends ActionMenus {
     static template = "web.CogMenu";
     static components = {
+        ...ActionMenus.components,
         Dropdown,
     };
     static props = {
-        slots: { type: Object, optional: true },
+        ...ActionMenus.props,
+        getActiveIds: { type: ActionMenus.props.getActiveIds, optional: true },
+        context: { type: ActionMenus.props.context, optional: true },
+        resModel: { type: ActionMenus.props.resModel, optional: true },
+        items: { ...ActionMenus.props.items, optional: true },
+    };
+    static defaultProps = {
+        ...ActionMenus.defaultProps,
+        items: {},
     };
 
-    get hasItems() {
-        return this.cogItems.length || !!this.props.slots?.default;
+    setup() {
+        super.setup();
+        onWillStart(async () => {
+            this.registryItems = await this._registryItems();
+        });
+        onWillUpdateProps(async () => {
+            this.registryItems = await this._registryItems();
+        });
     }
 
-    get cogItems() {
-        const registryMenus = [];
+    get hasItems() {
+        return this.cogItems.length || this.printItems.length;
+    }
+
+    async _registryItems() {
+        const items = [];
         for (const item of cogMenuRegistry.getAll()) {
-            if ("isDisplayed" in item ? item.isDisplayed(this.env) : true) {
-                registryMenus.push({
+            if ("isDisplayed" in item ? await item.isDisplayed(this.env) : true) {
+                items.push({
                     Component: item.Component,
                     groupNumber: item.groupNumber,
                     key: item.Component.name,
                 });
             }
         }
-        return registryMenus;
+        return items;
+    }
+
+    get cogItems() {
+        return [...this.actionItems, ...this.registryItems].sort((item1, item2) => {
+            const grp = (item1.groupNumber || 0) - (item2.groupNumber || 0);
+            if (grp !== 0) {
+                return grp;
+            }
+            return (item1.sequence || 0) - (item2.sequence || 0);
+        });
     }
 }

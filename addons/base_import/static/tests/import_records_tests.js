@@ -76,8 +76,7 @@ QUnit.module("Base Import Tests", (hooks) => {
                 },
             });
 
-            await toggleActionMenu(target);
-            assert.containsOnce(target, ".o_cp_action_menus .o-dropdown--menu");
+            assert.containsNone(target, ".o_cp_action_menus");
             assert.containsNone(target, ".o_import_menu");
         }
     );
@@ -95,8 +94,7 @@ QUnit.module("Base Import Tests", (hooks) => {
                 },
             });
 
-            await toggleActionMenu(target);
-            assert.containsOnce(target, ".o_cp_action_menus .o-dropdown--menu");
+            assert.containsNone(target, ".o_cp_action_menus");
             assert.containsNone(target, ".o_import_menu");
         }
     );
@@ -239,8 +237,7 @@ QUnit.module("Base Import Tests", (hooks) => {
 
             await selectDropdownItem(target, "m2o", "Search More...");
             const dialog = target.querySelector(".modal");
-            await toggleActionMenu(dialog);
-            assert.containsOnce(dialog, ".o_cp_action_menus .o-dropdown--menu");
+            assert.containsNone(dialog, ".o_cp_action_menus");
             assert.containsNone(dialog, ".o_import_menu");
         }
     );
