@@ -73,17 +73,33 @@ export function archParseBoolean(str, trueIfEmpty = false) {
     return str ? !/^false|0$/i.test(str) : trueIfEmpty;
 }
 
+/**
+ * @param {string?} type
+ * @returns {string | false}
+ */
+function getViewClass(type) {
+    const isValidType = Boolean(type) && registry.category("views").contains(type);
+    return isValidType && `o_${type}_view`;
+}
+
+/**
+ * @param {string?} viewType
+ * @param {Element?} rootNode
+ * @param {string[]} additionalClassList
+ * @returns {string}
+ */
 export function computeViewClassName(viewType, rootNode, additionalClassList = []) {
-    const subType = rootNode.getAttribute("js_class");
-    const isValidSubType = subType && registry.category("views").contains(subType);
-    const subTypeClass = isValidSubType ? `o_${subType}_view` : "";
-    const classList = [
-        `o_${viewType}_view`,
-        subTypeClass,
-        ...(rootNode.getAttribute("class") || "").split(" "),
+    const subType = rootNode?.getAttribute("js_class");
+    const classList = rootNode?.getAttribute("class")?.split(" ") || [];
+    const uniqueClasses = new Set([
+        getViewClass(viewType),
+        getViewClass(subType),
+        ...classList,
         ...additionalClassList,
-    ];
-    return [...new Set(classList)].filter((c) => c).join(" ");
+    ]);
+    return Array.from(uniqueClasses)
+        .filter((c) => c) // remove falsy values
+        .join(" ");
 }
 
 /**
