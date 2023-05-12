@@ -325,7 +325,8 @@ export const editorCommands = {
         const range = getDeepRange(editor.editable, { correctTripleClick: true });
         const selectedBlocks = [...new Set(getTraversedNodes(editor.editable, range).map(closestBlock))];
         const deepestSelectedBlocks = selectedBlocks.filter(block => (
-            !descendants(block).some(descendant => selectedBlocks.includes(descendant))
+            !descendants(block).some(descendant => selectedBlocks.includes(descendant)) &&
+            block.isContentEditable
         ));
         for (const block of deepestSelectedBlocks) {
             if (
@@ -372,7 +373,7 @@ export const editorCommands = {
         getDeepRange(editor.editable, { splitText: true, select: true, correctTripleClick: true });
         const selection = editor.document.getSelection();
         const selectedTextNodes = [selection.anchorNode, ...getSelectedNodes(editor.editable), selection.focusNode]
-            .filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim().length);
+            .filter(n => n.nodeType === Node.TEXT_NODE && closestElement(n).isContentEditable && n.nodeValue.trim().length);
 
         const changedElements = [];
         const defaultDirection = editor.options.direction;
@@ -457,7 +458,7 @@ export const editorCommands = {
             }
         }
         const targetedNodes = isCollapsed ? [sel.anchorNode] : getSelectedNodes(editor.editable);
-        const links = new Set(targetedNodes.map(node => closestElement(node, 'a')).filter(a => a));
+        const links = new Set(targetedNodes.map(node => closestElement(node, 'a')).filter(a => a && a.isContentEditable));
         if (links.size) {
             const cr = preserveCursor(editor.document);
             for (const link of links) {
@@ -478,7 +479,8 @@ export const editorCommands = {
                 cli &&
                 cli.tagName == 'LI' &&
                 !li.has(cli) &&
-                !cli.classList.contains('oe-nested')
+                !cli.classList.contains('oe-nested') &&
+                cli.isContentEditable
             ) {
                 li.add(cli);
             }
@@ -498,11 +500,11 @@ export const editorCommands = {
         const blocks = new Set();
 
         for (const node of getTraversedNodes(editor.editable)) {
-            if (node.nodeType === Node.TEXT_NODE && isWhitespace(node)) {
+            if (node.nodeType === Node.TEXT_NODE && isWhitespace(node) && closestElement(node).isContentEditable) {
                 node.remove();
             } else {
                 let block = closestBlock(node);
-                if (!['OL', 'UL'].includes(block.tagName)) {
+                if (!['OL', 'UL'].includes(block.tagName) && block.isContentEditable) {
                     block = block.closest('li') || block;
                     const ublock = block.closest('ol, ul');
                     ublock && getListMode(ublock) == mode ? li.add(block) : blocks.add(block);
@@ -530,7 +532,9 @@ export const editorCommands = {
      * @param {Element} [element]
      */
     applyColor: (editor, color, mode, element) => {
-        const selectedTds = editor.editable.querySelectorAll('td.o_selected_td');
+        const selectedTds = [...editor.editable.querySelectorAll('td.o_selected_td')].filter(
+            node => closestElement(node).isContentEditable
+        );
         let coloredTds = [];
         if (selectedTds.length) {
             for (const td of selectedTds) {
@@ -551,7 +555,7 @@ export const editorCommands = {
         if (!range) return;
         const restoreCursor = preserveCursor(editor.document);
         // Get the <font> nodes to color
-        const selectionNodes = getSelectedNodes(editor.editable);
+        const selectionNodes = getSelectedNodes(editor.editable).filter(node => closestElement(node).isContentEditable);
         if (isEmptyBlock(range.endContainer)) {
             selectionNodes.push(range.endContainer, ...descendants(range.endContainer));
         }
