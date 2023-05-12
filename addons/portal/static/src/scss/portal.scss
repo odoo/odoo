@@ -284,13 +284,6 @@ img, .media_iframe_video, .o_image {
 }
 
 // Portal specific
-// ===  Page custom bg ===
-// To be applied to all portal pages if bg-color is white (default).
-@if ($o-portal-use-default-colors) {
-    #wrapwrap.o_portal {
-        @include o-bg-color($o-portal-bg-color, $with-extras: false);
-    }
-}
 
 .o_portal {
     .breadcrumb {
@@ -319,62 +312,6 @@ img, .media_iframe_video, .o_image {
         }
     }
 
-    .o_portal_my_doc_table {
-        th {
-            padding-top: $o-portal-table-th-pt;
-            padding-bottom: $o-portal-table-th-pb;
-            max-width: 500px;
-        }
-
-        td {
-            padding-top: $o-portal-table-td-pt;
-            padding-bottom: $o-portal-table-td-pb;
-            max-width: 10rem;
-
-        }
-
-        tr:last-child td {
-            padding-bottom: $o-portal-table-td-pb * 1.5;
-        }
-
-        td, th {
-            vertical-align: middle;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-    }
-
-    address {
-        span[itemprop="name"] {
-            margin-bottom: 0.3em;
-        }
-
-        div[itemprop="address"] > div {
-            position: relative;
-
-            span[itemprop="streetAddress"] {
-                line-height: 1.2;
-                margin-bottom: 0.3em;
-            }
-
-            .fa {
-                @include o-position-absolute(0, $left: 0);
-                line-height: $line-height-base;
-
-                + span, + div {
-                    display: block;
-                    // FontAwesome '.fa-fw' fixed-with + margin
-                    padding-left: 1.28571429em + 0.5em;
-                }
-            }
-        }
-    }
-
-    .o_my_sidebar div[itemprop="address"] > div {
-        margin-top: 0.5em;
-    }
-
     @if ($o-portal-mobile-toolbar) {
         #o_portal_navbar_content {
             @include media-breakpoint-down(lg) {
@@ -388,6 +325,30 @@ img, .media_iframe_video, .o_image {
 
     table.table tr {
         word-wrap: break-word;
+    }
+}
+
+address {
+    span[itemprop="name"] {
+        margin-bottom: 0.3em;
+    }
+
+    div[itemprop="address"] > div {
+        position: relative;
+
+        span[itemprop="streetAddress"] {
+            line-height: 1.2;
+            margin-bottom: 0.3em;
+        }
+
+        .fa {
+            line-height: $line-height-base;
+            color: $o-gray-500;
+
+            + span, + div {
+                display: block;
+            }
+        }
     }
 }
 
@@ -405,9 +366,12 @@ form label {
 }
 
 .o_portal_contact_img {
-    width: 2.3em;
-    height: 2.3em;
     object-fit: cover;
+}
+.o_portal_icon {
+    img{
+        width: 50px;
+    }
 }
 
 .o_portal_sidebar {

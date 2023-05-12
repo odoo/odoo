@@ -202,14 +202,16 @@
     <template id="portal_my_home_lead" name="Show Leads / Opps" inherit_id="portal.portal_my_home" priority="15">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/website_crm_partner_assign/static/src/img/leads.svg'"/>
+                <t t-set="text">Follow and convert your leads</t>
                 <t t-set="title">Leads</t>
                 <t t-set="url" t-value="'/my/leads'"/>
-                <t t-set="placeholder_count" t-value="'lead_count'"/>
             </t>
             <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/website_crm_partner_assign/static/src/img/quotation.svg'"/>
+                <t t-set="text">Follow and convert your opportunities</t>
                 <t t-set="title">Opportunities</t>
                 <t t-set="url" t-value="'/my/opportunities'"/>
-                <t t-set="placeholder_count" t-value="'opp_count'"/>
             </t>
         </xpath>
     </template>
@@ -221,7 +223,7 @@
             <t t-call="portal.portal_searchbar">
                 <t t-set="title">Leads</t>
             </t>
-            <div t-if="not leads" class="alert alert-warning mt8" role="alert">
+            <div t-if="not leads" class="alert alert-warning" role="alert">
                 There are no leads.
             </div>
             <t t-if="leads" t-call="portal.portal_table">
@@ -289,7 +291,7 @@
                 </div>
             </div>
             <t t-if="not opportunities">
-                <div class="alert alert-warning mt8" role="alert">
+                <div class="alert alert-warning" role="alert">
                     There are no opportunities.
                 </div>
             </t>
@@ -327,26 +329,24 @@
 
     <template id="portal_my_lead" name="My Lead">
         <t t-call="portal.portal_layout">
-            <div class="card">
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <span class="float-end" title="Rating" role="img" t-attf-aria-label="Rating: #{lead.priority} on 3">
-                                <t t-foreach="range(1, 4)" t-as="i">
-                                    <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(lead.priority) else '-o'}"/>
-                                </t>
-                            </span>
-                            <h4>
-                                Lead - <span t-field="lead.name"/>
-                            </h4>
-                        </div>
+            <div class="card border-0">
+                <div class="card-header bg-view">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4>
+                            Lead - <span t-field="lead.name"/>
+                        </h4>
+                        <span title="Rating" role="img" t-attf-aria-label="Rating: #{lead.priority} on 3">
+                            <t t-foreach="range(1, 4)" t-as="i">
+                                <span t-attf-class="fa fa-lg fa-star#{'' if i &lt;= int(lead.priority) else '-o'}"/>
+                            </t>
+                        </span>
                     </div>
                 </div>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="row" t-if="lead.partner_name or lead.email_from or lead.partner_id">
-                                <label class="col-4">Customer</label>
+                                <label class="col-4 fw-bold">Customer</label>
                                 <address class="col-8">
                                     <div>
                                         <span t-if="lead.partner_name" itemprop="name" t-field="lead.partner_name" />
@@ -364,7 +364,7 @@
                                 </address>
                             </div>
                             <div class="row" t-if="lead.street or lead.street2 or lead.city or lead.state_id or lead.country_id">
-                                <label class="col-4">Address</label>
+                                <label class="col-4 fw-bold">Address</label>
                                 <address class="col-8">
                                     <div t-if="lead.street"><span t-field="lead.street"/></div>
                                     <div t-if="lead.street2"><span t-field="lead.street2"/></div>
@@ -377,44 +377,44 @@
                                 </address>
                             </div>
                             <div class="row" t-if="lead.user_id">
-                                <label class="col-4">Salesperson</label>
+                                <label class="col-4 fw-bold">Salesperson</label>
                                 <span class="col-8" t-field="lead.user_id" />
                             </div>
                             <div class="row" t-if="lead.team_id">
-                                <label class="col-4">Sales Team</label>
+                                <label class="col-4 fw-bold">Sales Team</label>
                                 <span class="col-8" t-field="lead.team_id" />
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="row" t-if="lead.date_deadline">
-                                <label class="col-4">Expected Closing</label>
+                                <label class="col-4 fw-bold">Expected Closing</label>
                                 <span class="col-8" t-field="lead.date_deadline" />
                             </div>
                             <div class="row" groups="!base.group_portal" t-if="lead.tag_ids">
-                                <label class="col-4">Tags</label>
+                                <label class="col-4 fw-bold">Tags</label>
                                 <span class="col-8">
                                     <t t-foreach="lead.tag_ids" t-as="tag">
                                         <span class="badge text-bg-info" t-esc="tag.name" />
                                     </t>
                                 </span>
                             </div>
-                            <div class="row mt16" t-if="lead.partner_assigned_id">
-                                <label class="col-4">Assigned Partner</label>
+                            <div class="row" t-if="lead.partner_assigned_id">
+                                <label class="col-4 fw-bold">Assigned Partner</label>
                                 <address class="col-8" t-field="lead.partner_assigned_id" t-options='{"widget": "contact", "fields": ["name", "email", "phone"], "no_marker": True}'/>
                             </div>
-                            <div class="row mt16" t-if="lead.campaign_id">
-                                <label class="col-4">Campaign</label>
+                            <div class="row" t-if="lead.campaign_id">
+                                <label class="col-4 fw-bold">Campaign</label>
                                 <span class="col-8" t-field="lead.campaign_id" />
                             </div>
                             <div class="row" t-if="lead.medium_id">
-                                <label class="col-4">Medium</label>
+                                <label class="col-4 fw-bold">Medium</label>
                                 <span class="col-8" t-field="lead.medium_id" />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class='mt8'>
+            <div class='d-flex justify-content-center gap-2'>
                 <a role="button" href="#" class="btn btn-primary btn" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_interested"><i class="fa fa-file-text-o"/> I'm interested</a>
                 <a role="button" href="#" class="btn btn-primary btn" data-bs-toggle="modal" data-bs-target=".modal_partner_assign_desinterested"><i class="fa fa-fw fa-times"/> I'm not interested</a>
                 <div class="modal fade modal_partner_assign_interested" role="form">
@@ -480,11 +480,10 @@
                     </div>
                 </div>
             </div>
-            <div class="row mt32">
-                <div class="col-lg-12">
-                    <h4><strong>Message and communication history</strong></h4>
-                </div>
-                <div class="col-lg-10 offset-lg-1 mt16">
+            <hr/>
+            <div>
+                <h4>Message and communication history</h4>
+                <div>
                     <t t-call="portal.message_thread">
                         <t t-set="object" t-value="lead"/>
                     </t>
@@ -497,22 +496,19 @@
         <t t-call="portal.portal_layout">
             <t t-call="portal.portal_record_layout">
                 <t t-set="card_header">
-                    <div class="row g-0">
-                        <div class="col-md">
-                            <h5 class="mb-2 mb-md-0">
-                                <small class="text-muted">Opportunity - </small>
-                                <span t-field="opportunity.name"/>
-                            </h5>
-                        </div>
-                        <div class="col-md text-md-end">
-                            <div class="d-inline-block">
-                                <small class="me-2 mt-1 float-start"><b>Stage:</b></small>
-                                <div t-foreach="stages[::-1]" t-as="stage" class="float-start">
-                                    <i t-if="not stage_first" class="fa fa-chevron-right ms-2 me-1 small" style="opacity: 0.5"/>
-                                    <button type="button" t-att-data="stage.id" t-att-opp="opportunity.id" t-attf-class="btn btn-sm px-2 opp-stage-button #{'btn-secondary' if opportunity.stage_id.name != stage.name else 'btn-primary disabled'}">
-                                        <span t-field="stage.name"/>
-                                    </button>
-                                </div>
+                    <div class="d-flex justify-content-between flex-wrap">
+                        <h4 class="mb-2 mb-md-0">
+                            Opportunity - 
+                            <span t-field="opportunity.name"/>
+                        </h4>
+                        <!-- todo: replace by design system wizard -->
+                        <div class="d-flex justify-content-between align-items-center gap-2">
+                            <p class="mb-0 fw-bold">Stage:</p>
+                            <div t-foreach="stages[::-1]" t-as="stage" class="d-flex justify-content-between align-items-center gap-2">
+                                <i t-if="not stage_first" class="fa fa-chevron-right small" style="opacity: 0.5"/>
+                                <button type="button" t-att-data="stage.id" t-att-opp="opportunity.id" t-attf-class="btn btn-sm px-2 opp-stage-button #{'btn-secondary' if opportunity.stage_id.name != stage.name else 'btn-primary disabled'}">
+                                    <span t-field="stage.name"/>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -522,10 +518,8 @@
                     <div class="row">
                         <div class="col-lg-5 mb-4 mb-lg-0">
                             <div class="border-bottom d-flex justify-content-between py-2 mb-3 align-items-center">
-                                <h5 class="mb-0">
-                                    <span t-if="opportunity.company_currency" class="text-nowrap" t-esc="opportunity.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/>
-                                    <span t-else="" class="text-nowrap" t-esc="opportunity.expected_revenue"/>
-                                    <span> at </span>
+                                <h5 class="d-flex align-items-center justify-content-between gap-2 mb-0 ">
+                                    <span><t t-if="opportunity.company_currency" t-out="opportunity.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/> <t t-else="" t-out="opportunity.expected_revenue"/> at  </span>
                                     <span class="badge text-bg-info rounded-pill"><span t-field="opportunity.probability"/>%</span>
                                 </h5>
                                 <button type="button" data-bs-toggle="modal" data-bs-target=".modal_edit_opp" class="btn btn-link btn-sm"><i class="fa fa-pencil me-1"/>Edit</button>
@@ -569,42 +563,37 @@
                             <div class="row mb-3" t-if="opportunity.partner_name or opportunity.email_from or opportunity.contact_name">
                                 <strong class="col-12 col-sm-3">Customer</strong>
                                 <div class="col">
-                                    <div t-if="opportunity.partner_name or opportunity.contact_name">
-                                        <span class="fa fa-user fa-fw" role="img" aria-label="User" title="User"/>
-                                        <strong class="fst-italic" t-if="opportunity.partner_name" itemprop="name" t-field="opportunity.partner_name" />
-                                        <strong class="fst-italic" t-else="" itemprop="name" t-field="opportunity.contact_name" />
+                                    <div class="d-flex justify-content-start align-items-center gap-3 mb-2" t-if="opportunity.partner_name or opportunity.contact_name">
+                                        <img t-if="opportunity.partner_id.avatar_1024" class="rounded-circle o_portal_contact_img" t-att-src="image_data_uri(opportunity.partner_id.avatar_1024)"
+                                        alt="Contact" width="50"/>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h5 class="mb-0" t-out="user_id.name"/>
+                                            <p class="mb-0 text-muted" t-if="opportunity.partner_name" t-out="opportunity.partner_name"/>
+                                            <p class="mb-0 text-muted" t-else="" t-out="opportunity.contact_name"/>
+                                        </div>
                                     </div>
-                                    <div t-if="opportunity.phone">
-                                        <span class="fa fa-phone fa-fw" role="img" aria-label="Phone" title="Phone"/>
-                                        <span itemprop="telephone" t-field="opportunity.phone"/>
-                                    </div>
-                                    <div t-if="opportunity.mobile">
-                                        <span class="fa fa-mobile fa-fw" role="img" aria-label="Mobile" title="Mobile"/>
-                                        <span itemprop="mobile" t-field="opportunity.mobile"/>
-                                    </div>
-                                    <div t-if="opportunity.email_from">
-                                        <span class="fa fa-envelope fa-fw" role="img" aria-label="Email" title="Email"/>
-                                        <span itemprop="email" t-field="opportunity.email_from"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <strong class="col-12 col-sm-3">Address</strong>
-                                <address t-if="opportunity.street or opportunity.street2 or opportunity.city or opportunity.zip or opportunity.state_id or opportunity.country_id"
-                                    class="col d-flex align-items-baseline mb-0">
-                                    <span class="fa fa-map-marker fa-fw" role="img" aria-label="Address" title="Address"/>
+                                    
                                     <div>
-                                        <div t-if="opportunity.street"><span t-field="opportunity.street"/></div>
-                                        <span t-else="" class="text-muted"> - </span>
-                                        <div t-if="opportunity.street2"><span t-field="opportunity.street2"/></div>
-                                        <div t-if="opportunity.city or opportunity.zip">
-                                            <span t-field="opportunity.city"/> <span t-field="opportunity.zip"/>
-                                        </div>
-                                        <div t-if="opportunity.state_id or opportunity.country_id">
-                                            <span t-field="opportunity.state_id"/> <span t-field="opportunity.country_id"/>
-                                        </div>
+                                        <div t-field="opportunity.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "mobile"]}'/>
                                     </div>
-                                </address>
+                                    <address t-if="opportunity.street or opportunity.street2 or opportunity.city or opportunity.zip or opportunity.state_id or opportunity.country_id"
+                                    class="col d-flex align-items-baseline mb-0 mt-2">
+                                        <div class="d-flex flex-nowrap gap-3">
+                                            <div class="fa fa-map-marker fa-fw text-muted"></div>
+                                            <div>
+                                                <div t-if="opportunity.street"><span t-field="opportunity.street"/></div>
+                                                <span t-else="" class="text-muted"> - </span>
+                                                <div t-if="opportunity.street2"><span t-field="opportunity.street2"/></div>
+                                                <div t-if="opportunity.city or opportunity.zip">
+                                                    <span t-field="opportunity.city"/> <span t-field="opportunity.zip"/>
+                                                </div>
+                                                <div t-if="opportunity.state_id or opportunity.country_id">
+                                                    <span t-field="opportunity.state_id"/> <span t-field="opportunity.country_id"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </address>
+                                </div>
                             </div>
                         </div>
 
@@ -798,9 +787,11 @@
                 </t>
             </t>
 
-            <div class="mt32">
-                <h4><strong>Message and communication history</strong></h4>
-                <div class="mt16">
+            <hr/>
+
+            <div>
+                <h4>Message and communication history</h4>
+                <div>
                     <t t-call="portal.message_thread">
                         <t t-set="object" t-value="opportunity"/>
                     </t>

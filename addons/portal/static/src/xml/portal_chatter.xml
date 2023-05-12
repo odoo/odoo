@@ -32,20 +32,23 @@
                     Oops! Something went wrong. Try to reload the page and log in.
                 </div>
                 <div class="d-flex">
-                    <img alt="Avatar" class="o_portal_chatter_avatar o_object_fit_cover align-self-start" t-attf-src="/web/image/res.partner/#{widget.options['partner_id']}/avatar_128"
+                    <img alt="Avatar" class="o_portal_chatter_avatar rounded-circle o_object_fit_cover align-self-start" t-attf-src="/web/image/res.partner/#{widget.options['partner_id']}/avatar_128"
                          t-if="!widget.options['is_user_public'] or !widget.options['token']"/>
                     <div class="flex-grow-1">
                         <div class="o_portal_chatter_composer_input">
-                            <div class="o_portal_chatter_composer_body mb32">
-                                <textarea rows="4" name="message" class="form-control" placeholder="Write a message..."></textarea>
-                                <div class="o_portal_chatter_attachments mt-3"/>
-                                <div class="mt8">
-                                    <button t-attf-data-action="/mail/chatter_post" class="o_portal_chatter_composer_btn btn btn-primary" type="submit">Send</button>
-                                    <button class="o_portal_chatter_attachment_btn btn btn-secondary" type="button" title="Add attachment">
-                                        <i class="fa fa-paperclip"/>
-                                    </button>
+                            <div class="o_portal_chatter_composer_body mb32 d-flex flex-nowrap align-items-start flex-grow-1">
+                                <div class="d-flex flex-grow-1 border border-end-0 rounded-start-3 bg-view">
+                                    <div class="position-relative flex-grow-1">
+                                        <textarea rows="4" name="message" class="form-control px-3 border-0 rounded-3 shadow-none overflow-auto bg-view" placeholder="Write a message..." style="height:40px; resize:none;"></textarea>
+                                    </div>
+                                    <div class="d-flex mx-3 px-1 bg-view">
+                                        <button class="o_portal_chatter_attachment_btn btn fa fa-paperclip border-0 rounded-pill" type="button" title="Add attachment">
+                                        </button>
+                                    </div>
                                 </div>
+                                <button t-attf-data-action="/mail/chatter_post" class="o_portal_chatter_composer_btn btn btn-primary o-last border-start-0 rounded-0 rounded-end-3 align-self-stretch" type="submit">Send</button>
                             </div>
+                            <div class="o_portal_chatter_attachments mt-3"/>
                         </div>
                         <div class="d-none">
                             <input type="file" class="o_portal_chatter_file_input" multiple="multiple"/>
@@ -140,13 +143,11 @@
         <t t-set="two_columns" t-value="widget.options['two_columns']"/>
         <div t-attf-class="o_portal_chatter p-0 #{two_columns and 'row' or ''}">
             <div t-attf-class="#{two_columns and 'col-lg-5' or ''}">
-                <div class="o_portal_chatter_header">
+                <div class="o_portal_chatter_header pb-2 text-muted">
                     <t t-call="portal.chatter_message_count"/>
                 </div>
-                <hr t-if="widget.options['allow_composer']"/>
                 <div class="o_portal_chatter_composer"/>
             </div>
-            <hr t-if="!two_columns"/>
             <div t-attf-class="#{two_columns and 'offset-lg-1 col-lg-6' or ''}">
                 <t t-call="portal.chatter_messages"/>
                 <div class="o_portal_chatter_footer">

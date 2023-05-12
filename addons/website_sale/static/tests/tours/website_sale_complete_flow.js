@@ -152,7 +152,7 @@
     },
     {
         content: "See Quotations",
-        trigger: '.o_portal_docs a:contains("Quotations")',
+        trigger: '.o_portal_docs a:contains("Quotation(s) to review")',
     },
     // Sign in as admin change config auth_signup -> b2b, sale_show_tax -> total and Logout
     {
@@ -293,10 +293,6 @@
         content: "My account",
         extra_trigger: '#top_menu li.dropdown .js_usermenu.show',
         trigger: '#top_menu .dropdown-menu a[href="/my/home"]:visible',
-    },
-    {
-        content: "See Quotations",
-        trigger: '.o_portal_docs a:contains("Quotations") .badge:containsExact(2)',
     },
 
     // enable extra step on website checkout and check extra step on checkout process
