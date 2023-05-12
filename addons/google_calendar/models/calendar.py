@@ -2,11 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
+from datetime import datetime
 from dateutil.parser import parse
 from dateutil.relativedelta import relativedelta
 from uuid import uuid4
 
 from odoo import api, fields, models, tools, _
+from odoo.exceptions import UserError
 
 
 class Meeting(models.Model):
@@ -208,6 +210,79 @@ class Meeting(models.Model):
                     )
                 commands += [(0, 0, {'duration': duration, 'interval': interval, 'name': name, 'alarm_type': alarm_type})]
         return commands
+
+    def _rewrite_recurrence(self, values, time_values, recurrence_values):
+        """ Update the events when changing time information within the same day.
+        When changing recurrence values, patch the recurrence and recreate events locally.
+        The base event is kept in all situations.
+        """
+        self.ensure_one()
+        base_event = self.recurrence_id.base_event_id
+        if not base_event:
+            raise UserError(_("You can't update a recurrence without base event."))
+        [base_time_values] = self.recurrence_id.base_event_id.read(['start', 'stop', 'allday'])
+        update_dict = {}
+        start_update = fields.Datetime.to_datetime(time_values.get('start'))
+        stop_update = fields.Datetime.to_datetime(time_values.get('stop'))
+        # Convert the base_event_id hours according to new values: time shift
+        if start_update or stop_update:
+            if start_update:
+                start = base_time_values['start'] + (start_update - self.start)
+                stop = base_time_values['stop'] + (start_update - self.start)
+                start_date = base_time_values['start'].date() + (start_update.date() - self.start.date())
+                stop_date = base_time_values['stop'].date() + (start_update.date() - self.start.date())
+                update_dict.update({'start': start, 'start_date': start_date, 'stop': stop, 'stop_date': stop_date})
+            if stop_update:
+                if not start_update:
+                    # Apply the same shift for start
+                    start = base_time_values['start'] + (stop_update - self.stop)
+                    start_date = base_time_values['start'].date() + (stop_update.date() - self.stop.date())
+                    update_dict.update({'start': start, 'start_date': start_date})
+                stop = base_time_values['stop'] + (stop_update - self.stop)
+                stop_date = base_time_values['stop'].date() + (stop_update.date() - self.stop.date())
+                update_dict.update({'stop': stop, 'stop_date': stop_date})
+
+        time_values.update(update_dict)
+        if values or time_values or recurrence_values:
+            rec_fields = list(super(Meeting, self)._get_recurrent_fields())
+            [rec_vals] = base_event.read(rec_fields)
+
+            # Get recurrence information
+            old_recurrence = self.env['calendar.recurrence']
+            old_recurrence |= self.recurrence_id
+            old_recurrence_values = {field: rec_vals.pop(field) for field in rec_fields if field in rec_vals}
+            linked_events = self.env['calendar.event']
+            linked_events |= old_recurrence.calendar_event_ids
+
+            # Get start date from parameters or base_event and update recurrence
+            start_date = time_values['start'].date() if 'start' in time_values else base_event.start.date()
+            new_values = {
+                **old_recurrence_values,
+                **super(Meeting, base_event)._get_recurrence_params_by_date(start_date),
+                **recurrence_values,
+            }
+            new_values.pop('rrule')
+            old_recurrence.write(new_values)
+
+            # Optimization: if there are recurrence_values, only base_event won't be archived
+            events_to_patch = linked_events if not recurrence_values else base_event
+
+            # Update events info (time, description, etc)
+            for record in events_to_patch:
+                record.need_sync = False
+                # Only time updates within the same day are allowed: combine new time with current day
+                if 'start' in time_values:
+                    time_values['start'] = datetime.combine(record.start, time_values['start'].time())
+
+                if 'stop' in time_values:
+                    time_values['stop'] = datetime.combine(record.stop, time_values['stop'].time())
+                record.write({**values, **time_values, **{'need_sync': False}})
+
+            # Update the recurrence structure, reconstruct events except for the base_event
+            if recurrence_values:
+                old_recurrence.calendar_event_ids = [(4, base_event.id)]
+                (linked_events - base_event).write({'need_sync': False, 'active': False})
+                old_recurrence._apply_recurrence()
 
     def _google_values(self):
         if self.allday:

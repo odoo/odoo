@@ -1201,6 +1201,19 @@ class Meeting(models.Model):
 
         return result
 
+    def _get_recurrence_params_by_date(self, event_date):
+        """ Return the recurrence parameters from an event date.
+        """
+        if not self:
+            return {}
+        weekday_field_name = weekday_to_field(event_date.weekday())
+        return {
+            weekday_field_name: True,
+            'weekday': weekday_field_name.upper(),
+            'byday': str(get_weekday_occurence(event_date)),
+            'day': event_date.day,
+        }
+
     def convert_online_event_desc_to_text(self, description):
         """
         We can sync the calendar events with google calendar, iCal and Outlook, and we
