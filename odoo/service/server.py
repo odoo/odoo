@@ -1278,8 +1278,19 @@ def preload_registries(dbnames):
                                 sorted(registry._init_modules))
                 _logger.info("Starting post tests")
                 tests_before = registry._assertion_report.testsRun
+<<<<<<< HEAD
                 result = loader.run_suite(loader.make_suite(module_names, 'post_install'))
                 registry._assertion_report.update(result)
+||||||| parent of 03a1dc2d3a4 (temp)
+                with odoo.api.Environment.manage():
+                    for module_name in module_names:
+                        result = loader.run_suite(loader.make_suite(module_name, 'post_install'), module_name)
+                        registry._assertion_report.update(result)
+=======
+                with odoo.api.Environment.manage():
+                    result = loader.run_suite(loader.make_suite(module_names, 'post_install'))
+                    registry._assertion_report.update(result)
+>>>>>>> 03a1dc2d3a4 (temp)
                 _logger.info("%d post-tests in %.2fs, %s queries",
                              registry._assertion_report.testsRun - tests_before,
                              time.time() - t0,

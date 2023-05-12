@@ -18,8 +18,19 @@ _logger = logging.getLogger(__name__)
 
 from odoo.tests import MetaCase
 
+<<<<<<< HEAD
 
 class TestTestSuite(TestCase, metaclass=MetaCase):
+||||||| parent of 03a1dc2d3a4 (temp)
+class TestTestSuite(TestCase):
+    test_tags = {'standard', 'at_install'}
+    test_module = 'base'
+=======
+class TestTestSuite(TestCase):
+    test_tags = {'standard', 'at_install'}
+    test_module = 'base'
+    test_sequence = 0
+>>>>>>> 03a1dc2d3a4 (temp)
 
     def test_test_suite(self):
         """ Check that OdooSuite handles unittest.TestCase correctly. """

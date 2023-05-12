@@ -353,8 +353,89 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
         self.addTypeEqualityFunc(etree._Element, self.assertTreesEqual)
         self.addTypeEqualityFunc(html.HtmlElement, self.assertTreesEqual)
 
+<<<<<<< HEAD
     def shortDescription(self):
         return None
+||||||| parent of 03a1dc2d3a4 (temp)
+    def assertTreesEqual(self, n1, n2, msg=None):
+        self.assertIsNotNone(n1, msg)
+        self.assertIsNotNone(n2, msg)
+        self.assertEqual(n1.tag, n2.tag, msg)
+        # Because lxml.attrib is an ordereddict for which order is important
+        # to equality, even though *we* don't care
+        self.assertEqual(dict(n1.attrib), dict(n2.attrib), msg)
+
+        self.assertEqual((n1.text or u'').strip(), (n2.text or u'').strip(), msg)
+        self.assertEqual((n1.tail or u'').strip(), (n2.tail or u'').strip(), msg)
+
+        for c1, c2 in izip_longest(n1, n2):
+            self.assertTreesEqual(c1, c2, msg)
+
+
+class MetaCase(type):
+    """ Metaclass of test case classes to assign default 'test_tags':
+        'standard', 'at_install' and the name of the module.
+    """
+    def __init__(cls, name, bases, attrs):
+        super(MetaCase, cls).__init__(name, bases, attrs)
+        # assign default test tags
+        if cls.__module__.startswith('odoo.addons.'):
+            cls.test_tags = {'standard', 'at_install'}
+            cls.test_module = cls.__module__.split('.')[2]
+            cls.test_class = cls.__name__
+
+
+class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
+    """
+    Subclass of TestCase for common OpenERP-specific code.
+
+    This class is abstract and expects self.registry, self.cr and self.uid to be
+    initialized by subclasses.
+    """
+
+    longMessage = True      # more verbose error message by default: https://www.odoo.com/r/Vmh
+    warm = True             # False during warm-up phase (see :func:`warmup`)
+=======
+    def assertTreesEqual(self, n1, n2, msg=None):
+        self.assertIsNotNone(n1, msg)
+        self.assertIsNotNone(n2, msg)
+        self.assertEqual(n1.tag, n2.tag, msg)
+        # Because lxml.attrib is an ordereddict for which order is important
+        # to equality, even though *we* don't care
+        self.assertEqual(dict(n1.attrib), dict(n2.attrib), msg)
+
+        self.assertEqual((n1.text or u'').strip(), (n2.text or u'').strip(), msg)
+        self.assertEqual((n1.tail or u'').strip(), (n2.tail or u'').strip(), msg)
+
+        for c1, c2 in izip_longest(n1, n2):
+            self.assertTreesEqual(c1, c2, msg)
+
+
+class MetaCase(type):
+    """ Metaclass of test case classes to assign default 'test_tags':
+        'standard', 'at_install' and the name of the module.
+    """
+    def __init__(cls, name, bases, attrs):
+        super(MetaCase, cls).__init__(name, bases, attrs)
+        # assign default test tags
+        if cls.__module__.startswith('odoo.addons.'):
+            cls.test_tags = {'standard', 'at_install'}
+            cls.test_module = cls.__module__.split('.')[2]
+            cls.test_class = cls.__name__
+            cls.test_sequence = 0
+
+
+class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
+    """
+    Subclass of TestCase for common OpenERP-specific code.
+
+    This class is abstract and expects self.registry, self.cr and self.uid to be
+    initialized by subclasses.
+    """
+
+    longMessage = True      # more verbose error message by default: https://www.odoo.com/r/Vmh
+    warm = True             # False during warm-up phase (see :func:`warmup`)
+>>>>>>> 03a1dc2d3a4 (temp)
 
     def cursor(self):
         return self.registry.cursor()

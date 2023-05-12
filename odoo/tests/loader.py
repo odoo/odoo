@@ -65,8 +65,17 @@ def _get_upgrade_test_modules(module):
             yield pymod
 
 
+<<<<<<< HEAD
 def make_suite(module_names, position='at_install'):
     """ Creates a test suite for all the tests in the specified modules,
+||||||| parent of 03a1dc2d3a4 (temp)
+def make_suite(module_name, position='at_install'):
+    mods = get_test_modules(module_name)
+    """ Creates a test suite for all the tests in the specified module,
+=======
+def make_suite(module_names, position='at_install'):
+    """ Creates a test suite for all the tests in the specified module,
+>>>>>>> 03a1dc2d3a4 (temp)
     filtered by the provided ``position`` and the current test tags
 
     :param list[str] module_names: modules to load tests from
