@@ -63,9 +63,11 @@ export class FormCompiler extends ViewCompiler {
         );
     }
 
-    compile() {
+    compile(key, params = {}) {
         const compiled = super.compile(...arguments);
-        compiled.children[0].setAttribute("t-ref", "compiled_view_root");
+        if (!params.isSubView) {
+            compiled.children[0].setAttribute("t-ref", "compiled_view_root");
+        }
         return compiled;
     }
 
@@ -151,17 +153,10 @@ export class FormCompiler extends ViewCompiler {
             if (child.tagName === "button" || child.children.tagName === "button") {
                 child.classList.add(
                     "oe_stat_button",
-                    "btn-light",
-                    "flex-shrink-0",
-                    "mb-0",
-                    "py-0",
-                    "border-0",
-                    "border-start",
-                    "border-bottom",
-                    "rounded-0",
-                    "text-start",
-                    "text-nowrap",
-                    "text-capitalize"
+                    "btn",
+                    "btn-outline-secondary",
+                    "flex-grow-1",
+                    "flex-lg-grow-0"
                 );
             }
             if (child.tagName === "field") {
@@ -175,10 +170,7 @@ export class FormCompiler extends ViewCompiler {
     }
 
     compileButton(el, params) {
-        const compiled = super.compileButton(el, params);
-        compiled.setAttribute("disable", "__comp__.props.disableViewButtons");
-        compiled.setAttribute("enable", "__comp__.props.enableViewButtons");
-        return compiled;
+        return super.compileButton(el, params);
     }
 
     /**
@@ -230,7 +222,11 @@ export class FormCompiler extends ViewCompiler {
         });
         if (!sheetNode) {
             for (const child of el.childNodes) {
-                append(form, this.compileNode(child, params));
+                // ButtonBox are already compiled for the control panel and should not
+                // be recompiled for the renderer of the view
+                if (child.attributes?.name?.value !== "button_box") {
+                    append(form, this.compileNode(child, params));
+                }
             }
             form.classList.add("o_form_nosheet");
         } else {
@@ -407,7 +403,7 @@ export class FormCompiler extends ViewCompiler {
     compileHeader(el, params) {
         const statusBar = createElement("div");
         statusBar.className =
-            "o_form_statusbar position-relative d-flex justify-content-between border-bottom";
+            "o_form_statusbar position-relative d-flex justify-content-between mb-2 px-3 pb-2 pb-md-0 px-md-0";
         const buttons = [];
         const others = [];
         for (const child of el.childNodes) {
@@ -644,13 +640,16 @@ export class FormCompiler extends ViewCompiler {
         sheetBG.className = "o_form_sheet_bg";
 
         const sheetFG = createElement("div");
-        sheetFG.className = "o_form_sheet position-relative clearfix";
+        sheetFG.className = "o_form_sheet position-relative";
 
         append(sheetBG, sheetFG);
         for (const child of el.childNodes) {
             const compiled = this.compileNode(child, params);
             if (!compiled) {
                 continue;
+            }
+            if (compiled.nodeName === "ButtonBox") {
+                compiled.setAttribute("t-if", "__comp__.env.inDialog");
             }
             if (getTag(child, true) === "field") {
                 compiled.setAttribute("showTooltip", true);

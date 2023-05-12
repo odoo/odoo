@@ -27,7 +27,7 @@
             this.model.dispatch("toggleComparison", itemId);
         }
     }
-    ComparisonMenu.template = "web.ComparisonMenu";
+    ComparisonMenu.template = "web.legacy.ComparisonMenu";
     ComparisonMenu.components = { Dropdown, SearchDropdownItem };
 
     export default ComparisonMenu;

@@ -6,14 +6,14 @@
     <t t-set="normal" t-value="props.mode === 'normal'"/>
     <t t-set="extended" t-value="props.mode === 'extended'"/>
     <div t-ref="composer">
-        <div class="o-mail-Composer d-grid flex-shrink-0 bg-view"
+        <div class="o-mail-Composer d-grid flex-shrink-0"
                 t-att-class="{
                     'px-3 py-4 o-extended': extended,
                     'p-3': normal,
                     'o-hasSelfAvatar px-3': !env.inChatWindow and thread,
                 }" t-attf-class="{{ props.className }}">
             <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="!compact">
-                <img class="o-mail-Composer-avatar mt-1 rounded-circle" t-att-src="threadService.avatarUrl(store.self, props.composer.thread)" alt="Avatar of user"/>
+                <img class="o-mail-Composer-avatar o_avatar rounded" t-att-src="threadService.avatarUrl(store.self, props.composer.thread)" alt="Avatar of user"/>
             </div>
             <div class="o-mail-Composer-coreHeader text-truncate small p-2" t-if="props.composer.thread and props.messageToReplyTo?.thread === props.composer.thread">
                 <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.messageToReplyTo.message.id, props.composer.thread)">
@@ -77,8 +77,8 @@
                         <button t-if="thread and thread.type === 'chatter'" class="btn btn-light fa fa-expand mx-1 border-0 rounded-pill" title="Full composer" aria-label="Full composer" type="button" t-on-click="onClickFullComposer"/>
                     </div>
                 </div>
-                <button t-if="!compact or store.isSmall" class="o-mail-Composer-send btn btn-primary o-last border-start-0"
-                    t-att-class="{'mt-2': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'align-self-stretch': !extended}"
+                <button t-if="!compact or store.isSmall" class="o-mail-Composer-send btn btn-secondary o-last border-start-0"
+                    t-att-class="{'mt-2': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'align-self-stretch': !extended, 'border border-start-0': env.inDiscussApp}"
                     t-on-click="sendMessage"
                     type="button"
                     t-att-disabled="isSendButtonDisabled"

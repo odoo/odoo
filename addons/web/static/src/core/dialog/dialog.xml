@@ -38,7 +38,7 @@
 
     <t t-name="web.Dialog.header" owl="1">
         <t t-if="fullscreen">
-            <button class="btn fa fa-arrow-left" data-bs-dismiss="modal" aria-label="Close" t-on-click="close" />
+            <button class="btn oi oi-arrow-left" data-bs-dismiss="modal" aria-label="Close" t-on-click="close" />
         </t>
         <h4 class="modal-title text-break" t-att-class="{ 'me-auto': fullscreen }">
             <t t-esc="props.title"/>

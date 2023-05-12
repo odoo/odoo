@@ -18,8 +18,8 @@
 }
 
 .o_field_widget:focus-within {
-    @include print-variable(o-input-border-color, $o-brand-primary);
-    @include print-variable(o-caret-color, $o-brand-primary);
+    @include print-variable(o-input-border-color, $o-action);
+    @include print-variable(o-caret-color, $o-action);
 }
 
 .o_field_invalid {
@@ -35,7 +35,7 @@
     border:$input-border-width solid var(--o-input-border-color);
     border-width: 0 0 $input-border-width 0;
     padding: $o-input-padding-y $o-input-padding-x;
-    background-color: var(--o-input-background-color, #{$input-bg});
+    background-color: var(--o-input-background-color, #{$o-view-background-color});
 
     // -- Nested o_input(s)
     .o_input {
@@ -151,22 +151,6 @@
     .o_external_button {
         padding-top: 0;
         padding-bottom: 0;
-    }
-
-    // Many2OneAvatar
-    &.o_field_many2one_avatar {
-        .o_m2o_avatar > img, .o_m2o_avatar > .o_m2o_avatar_empty {
-            border-radius: 50%;
-            width: 19px;
-            height: 19px;
-            object-fit: cover;
-            margin-right: 4px;
-        }
-        .o_m2o_avatar_empty {
-            display: block;
-            background: $o-black;
-            opacity: .1;
-        }
     }
 
     // Many2many tags
@@ -370,24 +354,6 @@
         }
     }
 
-    &.o_field_selection_badge {
-        .o_selection_badge {
-            display: inline-block;
-            margin: 0px 0px 4px 4px;
-            padding: 1px 6px;
-            color: $o-main-color-muted;
-            border: 1px solid map-get($grays, '300');
-            cursor: pointer;
-            &.active {
-                color: $o-brand-primary;
-                border-color: $o-brand-primary;
-            }
-            &:hover:not(.active) {
-                color: $o-gray-600;
-                border-color: $o-gray-600;
-            }
-        }
-    }
     // Radio buttons
     &.o_field_radio {
         @include media-breakpoint-down(md) {
@@ -418,46 +384,6 @@
     // Percent pie
     &.o_field_percent_pie {
         align-items: center;
-
-        > .o_pie {
-            position: relative;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 10px;
-            border-radius: 100%;
-            overflow: hidden;
-            background-color: $o-brand-primary;
-
-            &:after { // Outside pie border to go over border-radius irregularities
-                content: " ";
-                @include o-position-absolute(0, 0);
-                width: 100%;
-                height: 100%;
-                border-radius: 100%;
-            }
-
-            .o_mask {
-                @include o-position-absolute(0, 0);
-                transform-origin: 0;
-                width: 50%;
-                height: 100%;
-                background-color: $o-view-background-color;
-                &.o_full {
-                    background-color: inherit;
-                }
-            }
-
-            .o_pie_value {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-
-                border-radius: 100%;
-
-                font-weight: 700;
-                color: $o-brand-odoo;
-            }
-        }
     }
 
     // Ace editor

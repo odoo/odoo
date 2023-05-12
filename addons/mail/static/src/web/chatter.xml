@@ -2,27 +2,27 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.Chatter" owl="1">
-    <div class="o-mail-Chatter bg-view h-100 flex-grow-1 d-flex flex-column" t-att-class="{ 'overflow-auto': props.hasMessageListScrollAdjust, 'o-chatter-disabled': props.threadId === false }" t-ref="root">
-        <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0">
-            <button t-if="props.hasMessageList" class="o-mail-Chatter-sendMessage btn text-nowrap me-2" t-att-class="{ 'btn-odoo': state.thread.composer.type !== 'note', 'btn-light': state.thread.composer.type === 'note', 'o-active': state.thread.composer.type === 'message', 'my-2': !props.compactHeight }" t-att-disabled="!state.thread.hasWriteAccess and !(state.thread.hasReadAccess and state.thread.canPostOnReadonly) and props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
+    <div class="o-mail-Chatter w-100 h-100 flex-grow-1 d-flex flex-column" t-att-class="{ 'overflow-auto': props.hasMessageListScrollAdjust, 'o-chatter-disabled': props.threadId === false }" t-ref="root">
+        <div class="o-mail-Chatter-topbar d-flex flex-shrink-0 flex-grow-0 px-3 overflow-x-auto">
+            <button t-if="props.hasMessageList" class="o-mail-Chatter-sendMessage btn text-nowrap me-1" t-att-class="{ 'btn-primary': state.thread.composer.type !== 'note', 'btn-secondary': state.thread.composer.type === 'note', 'o-active': state.thread.composer.type === 'message', 'my-2': !props.compactHeight }" t-att-disabled="!state.thread.hasWriteAccess and !(state.thread.hasReadAccess and state.thread.canPostOnReadonly) and props.threadId" data-hotkey="m" t-on-click="() => this.toggleComposer('message')">
                 Send message
             </button>
-            <button t-if="props.hasMessageList" class="o-mail-Chatter-logNote btn text-nowrap me-2" t-att-class="{ 'btn-odoo o-active': state.thread.composer.type === 'note', 'btn-light': state.thread.composer.type !== 'note', 'my-2': !props.compactHeight }" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
+            <button t-if="props.hasMessageList" class="o-mail-Chatter-logNote btn text-nowrap me-2" t-att-class="{ 'btn-primary o-active': state.thread.composer.type === 'note', 'btn-secondary': state.thread.composer.type !== 'note', 'my-2': !props.compactHeight }" data-hotkey="shift+m" t-on-click="() => this.toggleComposer('note')">
                 Log note
             </button>
-            <div class="border-bottom flex-grow-1 d-flex" t-att-class="{ 'border-start ps-2 pe-4': props.hasActivities }">
-                <button t-if="props.hasActivities" class="btn btn-light text-nowrap" t-att-class="{ 'my-2': !props.compactHeight }" data-hotkey="shift+a" t-on-click="scheduleActivity">
+            <div class="flex-grow-1 d-flex">
+                <button t-if="props.hasActivities" class="btn btn-secondary text-nowrap" t-att-class="{ 'my-2': !props.compactHeight }" data-hotkey="shift+a" t-on-click="scheduleActivity">
                     <i class="fa fa-clock-o me-1"/>
                     <span>Activities</span>
                 </button>
-                <span class="o-mail-Chatter-topbarGrow flex-grow-1 border-start pe-2" t-att-class="{ 'ms-2': props.hasActivities }"/>
+                <span class="o-mail-Chatter-topbarGrow flex-grow-1 pe-2"/>
                 <FileUploader t-if="attachments.length === 0" fileUploadClass="'o-mail-Chatter-fileUploader'" multiUpload="true" onUploaded.bind="onUploaded" onClick="(ev) => this.onClickAttachFile(ev)">
                     <t t-set-slot="toggler">
                         <t t-call="mail.Chatter.attachFiles"/>
                     </t>
                 </FileUploader>
                 <t t-else="" t-call="mail.Chatter.attachFiles"/>
-                <Dropdown t-if="props.hasFollowers" position="'bottom-end'" disabled="isDisabled" class="'o-mail-Followers d-flex'" menuClass="'o-mail-Followers-dropdown flex-column p-0'" menuDisplay="'d-flex'" title="followerButtonLabel" togglerClass="'o-mail-Followers-button btn btn-light px-2 ' + (props.compactHeight ? '' : 'my-2')">
+                <Dropdown t-if="props.hasFollowers" position="'bottom-end'" disabled="isDisabled" class="'o-mail-Followers d-flex me-1'" menuClass="'o-mail-Followers-dropdown flex-column p-0'" menuDisplay="'d-flex'" title="followerButtonLabel" togglerClass="'o-mail-Followers-button btn btn-link text-action px-1 ' + (props.compactHeight ? '' : 'my-2')">
                     <t t-set-slot="toggler">
                         <i class="fa fa-user-o" role="img"/>
                         <span class="o-mail-Followers-counter ps-1" t-esc="state.thread.followers.length"/>
@@ -58,7 +58,7 @@
                 <button t-if="props.hasFollowers and state.thread.followerOfSelf" class="btn px-0" t-att-class="{ 'text-success': !unfollowHover.isHover, 'text-warning': unfollowHover.isHover, 'my-2': !props.compactHeight }" t-att-disabled="!props.threadId" t-on-click="onClickUnfollow" t-ref="unfollow">
                     <div class="position-relative">
                         <!-- Hidden element used to set the button maximum size -->
-                        <span class="invisible">
+                        <span class="d-flex invisible text-nowrap">
                             <i class="me-1 fa fa-fw fa-eye-slash"/><t t-out="followingText.length > unfollowText.length ? followingText : unfollowText"/>
                         </span>
                         <span class="position-absolute end-0 top-0" t-att-class="{ 'text-warning': unfollowHover.isHover }">
@@ -66,7 +66,16 @@
                         </span>
                     </div>
                 </button>
-                <button t-if="!state.thread.followerOfSelf" class="o-mail-Chatter-follow btn btn-link text-600" t-on-click="onClickFollow">Follow</button>
+                <button t-if="!state.thread.followerOfSelf" class="o-mail-Chatter-follow btn btn-link  px-0 text-600" t-on-click="onClickFollow">
+                    <div class="position-relative">
+                        <span class="d-flex invisible text-nowrap">
+                            <i class="me-1 fa fa-fw fa-eye-slash"/><t t-out="followingText.length > unfollowText.length ? followingText : unfollowText"/>
+                        </span>
+                        <span class="position-absolute end-0 top-0">
+                            Follow
+                        </span>
+                    </div>
+                </button>
             </div>
             <button t-if="props.close" class="o-mail-Chatter-close btn btn-dark flex-shrink-0 rounded-bottom-3" aria-label="Close" t-on-click="props.close">
                 <i class="oi oi-large oi-close"/>
@@ -136,7 +145,7 @@
 </t>
 
 <t t-name="mail.Chatter.attachFiles" owl="1">
-    <button class="btn btn-light" aria-label="Attach files" t-att-class="{ 'my-2': !props.compactHeight }" t-on-click="onClickAddAttachments">
+    <button class="btn btn-link text-action px-1" aria-label="Attach files" t-att-class="{ 'my-2': !props.compactHeight }" t-on-click="onClickAddAttachments">
         <i class="fa fa-paperclip fa-lg me-1"/>
         <span t-if="attachments.length > 0" t-esc="attachments.length"/>
         <i t-if="!state.thread.areAttachmentsLoaded and state.thread.isLoadingAttachments" class="fa fa-circle-o-notch fa-spin" aria-label="Attachment counter loading..."/>

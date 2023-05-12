@@ -1,15 +1,47 @@
 /** @odoo-module */
 
-import { GroupByMenu } from "@web/search/group_by_menu/group_by_menu";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { sortBy } from "@web/core/utils/arrays";
+import { useBus } from "@web/core/utils/hooks";
+import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group_by_item";
+import { SearchDropdownItem } from "@web/search/search_dropdown_item/search_dropdown_item";
 import { getIntervalOptions } from "@web/search/utils/dates";
+import { FACET_ICONS, GROUPABLE_TYPES } from "@web/search/utils/misc";
 
-export class PivotGroupByMenu extends GroupByMenu {
+import { Component } from "@odoo/owl";
+
+export class PivotGroupByMenu extends Component {
+    setup() {
+        this.icon = FACET_ICONS.groupBy;
+        this.dropdownProps = Object.keys(this.props)
+            .filter((key) => key in Dropdown.props)
+            .reduce((obj, key) => ({ ...obj, [key]: this.props[key] }), {});
+        const fields = [];
+        for (const [fieldName, field] of Object.entries(this.env.searchModel.searchViewFields)) {
+            if (this.validateField(fieldName, field)) {
+                fields.push(Object.assign({ name: fieldName }, field));
+            }
+        }
+        this.fields = sortBy(fields, "string");
+
+        useBus(this.env.searchModel, "update", this.render);
+    }
+
     /**
-     * @override
+     * @returns {boolean}
+     */
+    get hideCustomGroupBy() {
+        return this.env.searchModel.hideCustomGroupBy || false;
+    }
+
+    /**
      * @returns {Object[]}
      */
     get items() {
-        let items = super.items.filter((i) => !i.custom);
+        let items = this.env.searchModel.getSearchItems((searchItem) =>
+            ["groupBy", "dateGroupBy"].includes(searchItem.type)
+        );
+        items = items.filter((i) => !i.custom);
         if (items.length === 0) {
             items = this.fields;
         }
@@ -32,13 +64,21 @@ export class PivotGroupByMenu extends GroupByMenu {
                     : undefined,
         }));
     }
+
     /**
-     * @override
      * @param {string} fieldName
+     * @param {Object} field
+     * @returns {boolean}
      */
-    onAddCustomGroup(fieldName) {
-        this.props.onAddCustomGroupBy(fieldName);
+    validateField(fieldName, field) {
+        const { sortable, store, type } = field;
+        return (
+            (type === "many2many" ? store : sortable) &&
+            fieldName !== "id" &&
+            GROUPABLE_TYPES.includes(type)
+        );
     }
+
     /**
      * @override
      * @param {Object} param0
@@ -57,9 +97,22 @@ export class PivotGroupByMenu extends GroupByMenu {
             groupId: this.props.cell.groupId,
         });
     }
+
+    /**
+     * @param {string} fieldName
+     */
+    onAddCustomGroup(fieldName) {
+        this.props.onAddCustomGroupBy(fieldName);
+    }
 }
+PivotGroupByMenu.components = { CustomGroupByItem, Dropdown, SearchDropdownItem };
+PivotGroupByMenu.template = "web.PivotGroupByMenu";
+PivotGroupByMenu.defaultProps = {
+    showCaretDown: false,
+};
 PivotGroupByMenu.props = {
-    ...GroupByMenu.props,
+    ...Dropdown.props,
+    showCaretDown: { type: Boolean, optional: true },
     cell: Object,
     customGroupBys: Object,
     onAddCustomGroupBy: Function,

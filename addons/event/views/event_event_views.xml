@@ -13,9 +13,11 @@
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
                         <button name="%(event.event_registration_action_stats_from_event)d"
                                 type="action" class="oe_stat_button" icon="fa-line-chart">
-                            <span class="o_stat_text">
-                                Registration statistics
-                            </span>
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">
+                                    Registration statistics
+                                </span>
+                            </div>
                         </button>
                         <button name="%(event.act_event_registration_from_event)d"
                                 type="action"
@@ -31,7 +33,7 @@
                     <field name="legend_blocked" invisible="1"/>
                     <field name="legend_normal" invisible="1"/>
                     <field name="legend_done" invisible="1"/>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" text="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="kanban_state" widget="state_selection" class="ms-auto float-end"/>
                     <div class="oe_title">
                         <label for="name" string="Event Name"/>
@@ -184,7 +186,7 @@
                                     </div>
                                     <div><t t-esc="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('t')"/></div>
                                         <div t-if="record.date_begin.raw_value !== record.date_end.raw_value">
-                                            <i class="fa fa-arrow-right me-2 o_event_fontsize_09" title="End date"/>
+                                            <i class="oi oi-arrow-right me-2 o_event_fontsize_09" title="End date"/>
                                             <t t-esc="luxon.DateTime.fromISO(record.date_end.raw_value).toFormat('d MMM')"/>
                                         </div>
                                 </div>

@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo
 import odoo.tests
-import unittest
 
 class BaseTestUi(odoo.tests.HttpCase):
 

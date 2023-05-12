@@ -111,7 +111,7 @@
                                         <field name="name"/>
                                     </em>
                                     <div class="col-2 text-end">
-                                        <img t-att-src="kanban_image('res.partner', 'avatar_128', record.partner_id.raw_value)" t-att-title="record.partner_id.value" t-att-alt="record.partner_id.value" class="oe_kanban_avatar o_image_24_cover"/>
+                                        <img t-att-src="kanban_image('res.partner', 'avatar_128', record.partner_id.raw_value)" t-att-title="record.partner_id.value" t-att-alt="record.partner_id.value" class="oe_kanban_avatar o_avatar rounded"/>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -683,22 +683,28 @@
                                     class="oe_stat_button"
                                     icon="fa-bars"
                                     type="object"
-                                    attrs="{'invisible': ['|', '|', ('move_type', '!=', 'entry'), ('id', '=', False), ('payment_id', '=', False)]}"
-                                    string="1 Payment">
+                                    attrs="{'invisible': ['|', '|', ('move_type', '!=', 'entry'), ('id', '=', False), ('payment_id', '=', False)]}">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">1 Payment</span>
+                                    </div>
                             </button>
                             <button name="open_reconcile_view"
                                     class="oe_stat_button"
                                     icon="fa-bars"
                                     type="object"
-                                    attrs="{'invisible': ['|', '|', ('move_type', '!=', 'entry'), ('id', '=', False), ('has_reconciled_entries', '=', False)]}"
-                                    string="Reconciled Items">
+                                    attrs="{'invisible': ['|', '|', ('move_type', '!=', 'entry'), ('id', '=', False), ('has_reconciled_entries', '=', False)]}">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Reconciled Items</span>
+                                    </div>
                             </button>
                             <button name="open_created_caba_entries"
                                     class="oe_stat_button"
                                     icon="fa-usd"
                                     type="object"
-                                    attrs="{'invisible': [('tax_cash_basis_created_move_ids', '=', [])]}"
-                                    string="Cash Basis Entries">
+                                    attrs="{'invisible': [('tax_cash_basis_created_move_ids', '=', [])]}">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Cash Basis Entries</span>
+                                    </div>
                             </button>
                         </div>
 
@@ -710,10 +716,10 @@
                         <widget name="web_ribbon" title="Partial"
                                 attrs="{'invisible': ['|', ('payment_state', '!=', 'partial'), ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
                         <widget name="web_ribbon" title="Reversed"
-                                bg_color="bg-danger"
+                                bg_color="text-bg-danger"
                                 attrs="{'invisible': [('payment_state', '!=', 'reversed')]}"/>
                          <widget name="web_ribbon" text="Invoicing App Legacy"
-                                bg_color="bg-info"
+                                bg_color="text-bg-info"
                                 attrs="{'invisible': [('payment_state', '!=', 'invoicing_legacy')]}"
                                 tooltip="This entry has been generated through the Invoicing app, before installing Accounting. It has been disabled by the 'Invoicing Switch Threshold Date' setting so that it does not impact your accounting."/>
 

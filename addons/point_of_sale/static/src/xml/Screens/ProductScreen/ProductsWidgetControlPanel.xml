@@ -6,7 +6,7 @@
             <div class="rightpane-header">
                 <div class="search-bar-container sb-product">
                     <span t-if="env.isMobile" class="oe_status oe_icon icon" t-on-click="toggleMobileSearchBar">
-                        <i t-attf-class="fa {{state.mobileSearchBarIsShown ? 'fa-arrow-left' : 'fa-search'}}"/>
+                        <i t-attf-class="fa oi {{state.mobileSearchBarIsShown ? 'oi-arrow-left' : 'fa-search'}}"/>
                     </span>
                     <t t-if="!env.isMobile || state.mobileSearchBarIsShown">
                         <div class="pos-search-bar">

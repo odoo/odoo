@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Model">
                 <sheet>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" text="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_model_vehicle" type="object" icon="fa-car" class="oe_stat_button"
                             attrs="{'invisible': [('vehicle_count', '=', 0)]}">

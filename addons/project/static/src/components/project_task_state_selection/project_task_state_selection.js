@@ -33,12 +33,12 @@ export class ProjectTaskStateSelection extends StateSelectionField {
             "04_waiting_normal": "",
         };
         this.colorButton = {
-            "01_in_progress": "btn-light border-2 border-dark",
-            "03_approved": "btn-light border-2 border-success",
-            "02_changes_requested": "btn-light border-2 border-warning",
-            "1_done": "btn-success",
-            "1_canceled": "btn-danger",
-            "04_waiting_normal": "btn-light border-2 border-dark",
+            "01_in_progress": "btn-outline-secondary",
+            "03_approved": "btn-outline-success",
+            "02_changes_requested": "btn-outline-warning",
+            "1_done": "btn-outline-success",
+            "1_canceled": "btn-outline-danger",
+            "04_waiting_normal": "btn-outline-secondary",
         };
         if (this.props.viewType != 'form') {
             super.setup();

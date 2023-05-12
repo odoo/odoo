@@ -278,11 +278,10 @@
                         <button name="action_open_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" string="Parent Task" attrs="{'invisible': [('parent_id', '=', False)]}"/>
                         <button name="action_recurring_tasks" type="object" attrs="{'invisible': ['|', ('active', '=', False), ('recurrence_id', '=', False)]}" class="oe_stat_button" icon="fa-repeat" groups="project.group_project_recurring_tasks">
                             <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Recurring Tasks</span>
                                 <span class="o_stat_value">
                                     <field name="recurring_count" widget="statinfo" nolabel="1" />
-                                    Tasks
                                 </span>
-                                <span class="o_stat_text">in Recurrence</span>
                             </div>
                         </button>
                         <button name="%(project_task_action_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
@@ -306,7 +305,7 @@
                         <!-- Dummy tag used to organize buttons -->
                         <span id="end_button_box" invisible="1"/>
                     </div>
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title pe-0">
                         <h1 class="d-flex justify-content-between align-items-center">
                             <div class="d-flex w-100">

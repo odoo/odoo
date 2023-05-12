@@ -584,7 +584,11 @@ QUnit.module("Fields", (hooks) => {
             arch: '<tree editable="top"><field name="foo"/></tree>',
         });
 
-        await click(target.querySelector(".o_list_button_add"));
+        await click(
+            target.querySelector(
+                ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_add"
+            )
+        );
 
         assert.strictEqual(
             target.querySelector("textarea"),

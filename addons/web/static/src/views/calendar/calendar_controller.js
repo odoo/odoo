@@ -1,18 +1,21 @@
 /** @odoo-module **/
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
-import { _lt, _t } from "@web/core/l10n/translation";
+import { _t, _lt } from "@web/core/l10n/translation";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { Layout } from "@web/search/layout";
 import { useModel } from "@web/views/model";
-import { ViewScaleSelector } from "@web/views/view_components/view_scale_selector";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useSetupView } from "@web/views/view_hook";
 import { CalendarDatePicker } from "./date_picker/calendar_date_picker";
 import { CalendarFilterPanel } from "./filter_panel/calendar_filter_panel";
 import { CalendarMobileFilterPanel } from "./mobile_filter_panel/calendar_mobile_filter_panel";
 import { CalendarQuickCreate } from "./quick_create/calendar_quick_create";
+import { SearchBar } from "@web/search/search_bar/search_bar";
+import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
+import { ViewScaleSelector } from "@web/views/view_components/view_scale_selector";
+import { CogMenu } from "@web/search/cog_menu/cog_menu";
 
 import { Component, useState } from "@odoo/owl";
 
@@ -55,6 +58,8 @@ export class CalendarController extends Component {
         this.state = useState({
             showSideBar: !this.env.isSmall,
         });
+
+        this.searchBarToggler = useSearchBarToggler();
     }
 
     get rendererProps() {
@@ -89,11 +94,7 @@ export class CalendarController extends Component {
             toggleSideBar: () => (this.state.showSideBar = !this.state.showSideBar),
         };
     }
-    get scales() {
-        return Object.fromEntries(
-            this.model.scales.map((s) => [s, { description: SCALE_LABELS[s] }])
-        );
-    }
+
     get showCalendar() {
         return !this.env.isSmall || !this.state.showSideBar;
     }
@@ -104,29 +105,6 @@ export class CalendarController extends Component {
 
     get className() {
         return this.props.className;
-    }
-
-    getTodayDay() {
-        return luxon.DateTime.local().day;
-    }
-
-    async setDate(move) {
-        let date = null;
-        switch (move) {
-            case "next":
-                date = this.model.date.plus({ [`${this.model.scale}s`]: 1 });
-                break;
-            case "previous":
-                date = this.model.date.minus({ [`${this.model.scale}s`]: 1 });
-                break;
-            case "today":
-                date = luxon.DateTime.local().startOf("day");
-                break;
-        }
-        await this.model.load({ date });
-    }
-    async setScale(scale) {
-        await this.model.load({ scale });
     }
 
     getQuickCreateProps(record) {
@@ -213,6 +191,31 @@ export class CalendarController extends Component {
             },
         });
     }
+    async setDate(move) {
+        let date = null;
+        switch (move) {
+            case "next":
+                date = this.model.date.plus({ [`${this.model.scale}s`]: 1 });
+                break;
+            case "previous":
+                date = this.model.date.minus({ [`${this.model.scale}s`]: 1 });
+                break;
+            case "today":
+                date = luxon.DateTime.local().startOf("day");
+                break;
+        }
+        await this.model.load({ date });
+    }
+
+    get scales() {
+        return Object.fromEntries(
+            this.model.scales.map((s) => [s, { description: SCALE_LABELS[s] }])
+        );
+    }
+
+    async setScale(scale) {
+        await this.model.load({ scale });
+    }
 }
 CalendarController.components = {
     DatePicker: CalendarDatePicker,
@@ -220,6 +223,8 @@ CalendarController.components = {
     MobileFilterPanel: CalendarMobileFilterPanel,
     QuickCreate: CalendarQuickCreate,
     Layout,
+    SearchBar,
     ViewScaleSelector,
+    CogMenu,
 };
 CalendarController.template = "web.CalendarController";

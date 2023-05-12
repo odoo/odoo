@@ -3,6 +3,7 @@
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { CalendarController } from '@web/views/calendar/calendar_controller';
 import { FormViewDialog } from '@web/views/view_dialogs/form_view_dialog';
+import { Dropdown, DropdownItem } from "@web/core/dropdown/dropdown";
 
 import { serializeDate } from "@web/core/l10n/dates";
 
@@ -111,8 +112,10 @@ export class TimeOffCalendarController extends CalendarController {
         });
     }
 }
-TimeOffCalendarController.template = "hr_holidays.CalendarController";
 TimeOffCalendarController.components = {
     ...TimeOffCalendarController.components,
+    Dropdown,
+    DropdownItem,
     FilterPanel: TimeOffCalendarFilterPanel,
 }
+TimeOffCalendarController.template = "hr_holidays.CalendarController"

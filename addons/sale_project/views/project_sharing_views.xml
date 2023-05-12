@@ -12,8 +12,11 @@
                 <field name="allow_billable" invisible="1"/>
                 <button class="oe_stat_button"
                         type="object" name="action_project_sharing_view_so" icon="fa-dollar"
-                        attrs="{'invisible': [('display_sale_order_button', '=', False)]}"
-                        string="Sales Order"/>
+                        attrs="{'invisible': [('display_sale_order_button', '=', False)]}">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Sales Order</span>
+                        </div>
+                </button>
             </div>
             <xpath expr="//field[@name='partner_id']" position="attributes">
                 <attribute name="attrs">{'invisible': [('allow_billable', '=', False)]}</attribute>

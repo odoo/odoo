@@ -3,41 +3,45 @@
 
     <t t-name="web.SearchBar.Facets" owl="1">
         <t t-foreach="env.searchModel.facets" t-as="facet" t-key="facet_index">
-            <div class="o_searchview_facet"
+            <div class="o_searchview_facet d-inline-flex align-items-stretch text-nowrap position-relative"
                 t-att-class="{o_facet_with_domain: facet.domain }"
-                role="img"
+                role="listitem"
                 aria-label="search"
                 tabindex="0"
                 t-on-keydown="ev => this.onFacetKeydown(facet, facet_index, ev)"
-                t-on-click="(ev) => this.onFacetClick(ev.target, facet)"
                 >
-                <t t-if="facet.icon">
-                    <span t-attf-class="o_searchview_facet_label {{ facet.icon }}"/>
-                </t>
-                <t t-else="">
-                    <span class="o_searchview_facet_label" t-esc="facet.title"/>
-                </t>
-                <div class="o_facet_values border-start-0">
-                    <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
-                        <t t-if="!facetValue_first">
-                            <span class="o_facet_values_sep" t-esc="facet.separator"/>
-                        </t>
-                        <span class="o_facet_value" t-esc="facetValue"/>
-                    </t>
+                <div class="o_searchview_facet_label rounded-start-2"
+                    t-on-click="(ev) => this.onFacetLabelClick(ev.target, facet)"
+                    t-att-role="facet.type != 'groupBy' ? 'button' : 'img'"
+                    t-att-class="{
+                        'text-bg-action d-flex align-items-center': facet.type == 'groupBy',
+                        'btn btn-primary rounded-end-0 p-0': facet.type == 'field' || facet.type == 'filter',
+                        'btn btn-favourite rounded-end-0 p-0': facet.type == 'favorite'
+                    }"
+                    >
+                    <i t-if="facet.icon" class="px-1 small" t-att-class="facet.icon" role="image"/>
+                    <small t-else="" class="px-2" t-esc="facet.title"/>
                 </div>
-                <i class="o_facet_remove oi oi-close btn btn-link opacity-50 opacity-100-hover text-900"
-                    role="img"
-                    aria-label="Remove"
-                    title="Remove"
-                    t-on-click="() => this.onFacetRemove(facet)"
-                />
+
+                <div class="o_facet_values d-flex align-items-center ps-2 bg-200 rounded-end-2">
+                    <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
+                        <em t-if="!facetValue_first" class="o_facet_values_sep small fw-bold mx-1 opacity-50" t-esc="facet.separator"/>
+                        <small class="o_facet_value" t-esc="facetValue"/>
+                    </t>
+                    <button class="o_facet_remove oi oi-close btn btn-link py-0 px-2 opacity-50 opacity-100-hover text-900"
+                        role="button"
+                        aria-label="Remove"
+                        title="Remove"
+                        t-on-click="() => this.onFacetRemove(facet)"
+                    />
+                </div>
             </div>
         </t>
     </t>
 
     <t t-name="web.SearchBar.Input" owl="1">
         <input type="text"
-            class="o_searchview_input"
+            class="o_searchview_input d-print-none flex-grow-1 w-auto border-0"
             accesskey="Q"
             placeholder="Search..."
             role="searchbox"
@@ -76,14 +80,14 @@
     </t>
 
     <t t-name="web.SearchBar" owl="1">
-        <div class="o_cp_searchview d-flex flex-grow-1" role="search" t-ref="root">
-            <div class="o_searchview pb-1 align-self-center border-bottom flex-grow-1" role="search" aria-autocomplete="list">
-                <i class="o_searchview_icon oi oi-search"
+        <div class="o_cp_searchview d-flex input-group" role="search" t-ref="root">
+            <div class="o_searchview form-control d-print-contents d-flex align-items-center py-1 border-end-0" role="search" aria-autocomplete="list">
+                <i class="o_searchview_icon d-print-none oi oi-search me-2"
                     role="img"
                     aria-label="Search..."
                     title="Search..."
                 />
-                <div class="o_searchview_input_container">
+                <div class="o_searchview_input_container d-flex flex-grow-1 flex-wrap gap-1">
                     <t t-call="web.SearchBar.Facets"/>
                     <t t-call="web.SearchBar.Input"/>
                     <t t-if="items.length">
@@ -91,6 +95,7 @@
                     </t>
                 </div>
             </div>
+            <SearchBarMenu/>
         </div>
     </t>
 

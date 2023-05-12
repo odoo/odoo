@@ -37,7 +37,7 @@
                                 type="object"
                                 icon="fa-globe">
                             <div class="o_stat_info o_field_widget">
-                                <span class="text-success">Published</span>
+                                <span class="o_stat_text text-success">Published</span>
                             </div>
                         </button>
                         <button name="action_toggle_is_published"
@@ -46,14 +46,14 @@
                                 type="object"
                                 icon="fa-eye-slash">
                             <div class="o_stat_info o_field_widget">
-                                <span class="text-danger">Unpublished</span>
+                                <span class="o_stat_text text-danger">Unpublished</span>
                             </div>
                         </button>
                     </div>
                     <field name="image_128" widget="image" class="oe_avatar"
                            attrs="{'readonly': [('module_state', '!=', 'installed')]}"/>
-                    <widget name="web_ribbon" title="Disabled" bg_color="bg-danger" attrs="{'invisible': ['|', ('module_state', '!=', 'installed'), ('state', '!=', 'disabled')]}"/>
-                    <widget name="web_ribbon" title="Test Mode" bg_color="bg-warning" attrs="{'invisible': ['|', ('module_state', '!=', 'installed'), ('state', '!=', 'test')]}"/>
+                    <widget name="web_ribbon" title="Disabled" bg_color="text-bg-danger" attrs="{'invisible': ['|', ('module_state', '!=', 'installed'), ('state', '!=', 'disabled')]}"/>
+                    <widget name="web_ribbon" title="Test Mode" bg_color="text-bg-warning" attrs="{'invisible': ['|', ('module_state', '!=', 'installed'), ('state', '!=', 'test')]}"/>
                     <div class="oe_title">
                         <h1><field name="name" placeholder="Name"/></h1>
                         <div attrs="{'invisible': ['|', ('module_state', '=', 'installed'), ('module_id', '=', False)]}">

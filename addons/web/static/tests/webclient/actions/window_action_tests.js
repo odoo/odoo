@@ -32,6 +32,18 @@ let serverData;
 let target;
 const serviceRegistry = registry.category("services");
 
+function getBreadCrumbTexts(target) {
+    return getNodesTextContent(target.querySelectorAll(".breadcrumb-item, .o_breadcrumb .active"));
+}
+
+async function clickKanbanNew(target) {
+    await click(target.querySelectorAll(".o_control_panel .o-kanban-button-new")[1]);
+}
+
+async function clickListNew(target) {
+    await click(target.querySelectorAll(".o_control_panel .o_list_button_add")[1]);
+}
+
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
         serverData = getActionManagerServerData();
@@ -78,7 +90,8 @@ QUnit.module("ActionManager", (hooks) => {
         };
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
-        assert.containsNone(target, ".o_cp_action_menus");
+
+        assert.containsNone(target, ".o_cp_action_menus .o_dropdown_title"); // no action menu
         await click(target.querySelector("input.form-check-input"));
         assert.isVisible(
             $(target).find('.o_cp_action_menus button.dropdown-toggle:contains("Print")')[0]
@@ -160,7 +173,7 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 1);
         assert.containsOnce(target, ".o_kanban_view", "should display the kanban view");
         // quick create record
-        await testUtils.dom.click(target.querySelector(".o-kanban-button-new"));
+        await clickKanbanNew(target);
         await editInput(target, ".o_field_widget[name=display_name] input", "New name");
 
         // edit quick-created record
@@ -236,98 +249,41 @@ QUnit.module("ActionManager", (hooks) => {
     );
 
     QUnit.test("breadcrumbs are updated when switching between views", async function (assert) {
-        assert.expect(15);
+        assert.expect(10);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
-        assert.containsOnce(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            "there should be one controller in the breadcrumbs"
-        );
+
+        assert.containsNone(target, ".o_control_panel .breadcrumb-item");
         assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item").text(),
-            "Partners",
-            "breadcrumbs should display the display_name of the action"
+            target.querySelector(".o_control_panel .o_breadcrumb .active").innerText,
+            "Partners"
         );
         // switch to kanban view
         await cpHelpers.switchView(target, "kanban");
         await legacyExtraNextTick();
-        assert.containsOnce(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            "there should still be one controller in the breadcrumbs"
-        );
+        assert.containsNone(target, ".o_control_panel .breadcrumb-item");
         assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item").text(),
-            "Partners",
-            "breadcrumbs should still display the display_name of the action"
+            target.querySelector(".o_control_panel .o_breadcrumb .active").innerText,
+            "Partners"
         );
         // open a record in form view
         await testUtils.dom.click(target.querySelector(".o_kanban_view .o_kanban_record"));
-        await legacyExtraNextTick();
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            2,
-            "there should be two controllers in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item:last").text(),
-            "First record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "First record"]);
         // go back to kanban view using the breadcrumbs
         await testUtils.dom.click(target.querySelector(".o_control_panel .breadcrumb a"));
-        await legacyExtraNextTick();
-        assert.containsOnce(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            "there should be one controller in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item").text(),
-            "Partners",
-            "breadcrumbs should display the display_name of the action"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners"]);
+
         // switch back to list view
         await cpHelpers.switchView(target, "list");
-        await legacyExtraNextTick();
-        assert.containsOnce(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            "there should still be one controller in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item").text(),
-            "Partners",
-            "breadcrumbs should still display the display_name of the action"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners"]);
         // open a record in form view
         await testUtils.dom.click(target.querySelector(".o_list_view .o_data_cell"));
-        await legacyExtraNextTick();
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            2,
-            "there should be two controllers in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item:last").text(),
-            "First record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "First record"]);
+
         // go back to list view using the breadcrumbs
         await testUtils.dom.click(target.querySelector(".o_control_panel .breadcrumb a"));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_list_view", "should be back on list view");
-        assert.containsOnce(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            "there should be one controller in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item").text(),
-            "Partners",
-            "breadcrumbs should display the display_name of the action"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners"]);
     });
 
     QUnit.test("switch buttons are updated when switching between views", async function (assert) {
@@ -562,7 +518,7 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 3);
         assert.containsN(target, ".o_data_row", 5);
         // activate a domain
-        await cpHelpers.toggleFilterMenu(target);
+        await cpHelpers.toggleSearchBarMenu(target);
         await cpHelpers.toggleMenuItem(target, "Bar");
         await legacyExtraNextTick();
         assert.containsN(target, ".o_data_row", 2);
@@ -596,7 +552,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_form_view", "The form view should be displayed");
 
         // Delete the current record
-        await testUtils.controlPanel.toggleActionMenu(target);
+        await click(target, ".o_cp_action_menus .fa-cog");
         await testUtils.dom.click(
             Array.from(document.querySelectorAll(".o_menu_item")).find(
                 (e) => e.textContent === "Delete"
@@ -649,103 +605,56 @@ QUnit.module("ActionManager", (hooks) => {
         // switch to kanban view
         def = testUtils.makeTestPromise();
         await cpHelpers.switchView(target, "kanban");
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_list_view", "should still display the list view");
         assert.containsNone(target, ".o_kanban_view", "shouldn't display the kanban view yet");
         def.resolve();
         await testUtils.nextTick();
-        await legacyExtraNextTick();
         assert.containsNone(target, ".o_list_view", "shouldn't display the list view anymore");
         assert.containsOnce(target, ".o_kanban_view", "should now display the kanban view");
         // switch back to list view
         def = testUtils.makeTestPromise();
         await cpHelpers.switchView(target, "list");
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_kanban_view", "should still display the kanban view");
         assert.containsNone(target, ".o_list_view", "shouldn't display the list view yet");
         def.resolve();
         await testUtils.nextTick();
-        await legacyExtraNextTick();
         assert.containsNone(target, ".o_kanban_view", "shouldn't display the kanban view anymore");
         assert.containsOnce(target, ".o_list_view", "should now display the list view");
         // open a record in form view
         def = testUtils.makeTestPromise();
         await click(target.querySelector(".o_list_view .o_data_cell"));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_list_view", "should still display the list view");
         assert.containsNone(target, ".o_form_view", "shouldn't display the form view yet");
-        assert.containsOnce(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            "there should still be one controller in the breadcrumbs"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners"]);
         def.resolve();
         await testUtils.nextTick();
-        await legacyExtraNextTick();
         assert.containsNone(target, ".o_list_view", "should no longer display the list view");
         assert.containsOnce(target, ".o_form_view", "should display the form view");
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            2,
-            "there should be two controllers in the breadcrumbs"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "First record"]);
         // go back to list view using the breadcrumbs
         def = testUtils.makeTestPromise();
         await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb a"));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view", "should still display the form view");
         assert.containsNone(target, ".o_list_view", "shouldn't display the list view yet");
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            2,
-            "there should still be two controllers in the breadcrumbs"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "First record"]);
         def.resolve();
         await testUtils.nextTick();
-        await legacyExtraNextTick();
         assert.containsNone(target, ".o_form_view", "should no longer display the form view");
         assert.containsOnce(target, ".o_list_view", "should display the list view");
-        assert.containsOnce(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            "there should be one controller in the breadcrumbs"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners"]);
     });
 
     QUnit.test("breadcrumbs are updated when display_name changes", async function (assert) {
-        assert.expect(4);
+        assert.expect(2);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         // open a record in form view
         await click(target.querySelector(".o_list_view .o_data_cell"));
-        await legacyExtraNextTick();
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            2,
-            "there should be two controllers in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item:last").text(),
-            "First record",
-            "breadcrumbs should contain the display_name of the opened record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "First record"]);
         // switch to edit mode and change the display_name
         await editInput(target, ".o_field_widget[name=display_name] input", "New name");
         await clickSave(target);
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            2,
-            "there should still be two controllers in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item:last").text(),
-            "New name",
-            "breadcrumbs should contain the display_name of the opened record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "New name"]);
     });
 
     QUnit.test('reverse breadcrumb works on accesskey "b"', async function (assert) {
@@ -754,20 +663,23 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 3);
         // open a record in form view
         await click(target.querySelector(".o_list_view .o_data_cell"));
-        await legacyExtraNextTick();
         await testUtils.dom.click($(target).find(".o_form_view button:contains(Execute action)"));
-        assert.containsN(target, ".o_control_panel .breadcrumb li", 3);
-        let $previousBreadcrumb = $(target).find(".o_control_panel .breadcrumb li.active").prev();
+        assert.deepEqual(getBreadCrumbTexts(target), [
+            "Partners",
+            "First record",
+            "Partners Action 4",
+        ]);
+        let previousBreadcrumb = target.querySelector(".breadcrumb-item.o_back_button");
         assert.strictEqual(
-            $previousBreadcrumb.attr("data-hotkey"),
+            previousBreadcrumb.getAttribute("data-hotkey"),
             "b",
             "previous breadcrumb should have accessKey 'b'"
         );
-        await testUtils.dom.click($previousBreadcrumb);
-        assert.containsN(target, ".o_control_panel .breadcrumb li", 2);
-        $previousBreadcrumb = $(target).find(".o_control_panel .breadcrumb li.active").prev();
+        await testUtils.dom.click(previousBreadcrumb);
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "First record"]);
+        previousBreadcrumb = target.querySelector(".breadcrumb-item.o_back_button");
         assert.strictEqual(
-            $previousBreadcrumb.attr("data-hotkey"),
+            previousBreadcrumb.getAttribute("data-hotkey"),
             "b",
             "previous breadcrumb should have accessKey 'b'"
         );
@@ -781,8 +693,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 3);
         // create a new record
-        await testUtils.dom.click($(target).find(".o_control_panel .o_list_button_add"));
-        await legacyExtraNextTick();
+        await clickListNew(target);
         assert.containsOnce(
             target,
             ".o_form_view .o_form_editable",
@@ -790,7 +701,6 @@ QUnit.module("ActionManager", (hooks) => {
         );
         // discard
         await testUtils.dom.click($(target).find(".o_control_panel .o_form_button_cancel"));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_list_view", "should have switched back to the list view");
         assert.verifySteps([
             "/web/webclient/load_menus",
@@ -978,22 +888,14 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 3);
         // open a record in form view
         await click(target.querySelector(".o_list_view .o_data_cell"));
-        await legacyExtraNextTick();
         // click on 'Execute action' button (should execute an action)
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            2,
-            "there should be two parts in the breadcrumbs"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "First record"]);
         await testUtils.dom.click($(target).find(".o_form_view button:contains(Execute action)"));
-        await legacyExtraNextTick();
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            3,
-            "the returned action should have been stacked over the previous one"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), [
+            "Partners",
+            "First record",
+            "Partners Action 4",
+        ]);
         assert.containsOnce(
             target,
             ".o_kanban_view",
@@ -1025,14 +927,14 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 24);
         assert.containsOnce(target, ".o_form_view");
-        assert.containsOnce(target, ".o_form_button_create:not([disabled])");
+        assert.containsOnce(target, ".o_form_button_create:not([disabled]):visible");
         await testUtils.dom.click(target.querySelector(".oe_stat_button"));
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_kanban_view");
         await testUtils.dom.click(target.querySelector(".breadcrumb-item"));
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view");
-        assert.containsOnce(target, ".o_form_button_create:not([disabled])");
+        assert.containsOnce(target, ".o_form_button_create:not([disabled]):visible");
         assert.verifySteps(["read", "web_search_read", "read"]);
     });
 
@@ -1047,11 +949,11 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 24);
         assert.containsOnce(target, ".o_form_view");
-        assert.containsOnce(target, ".o_form_button_create:not([disabled])");
+        assert.containsOnce(target, ".o_form_button_create:not([disabled]):visible");
         await testUtils.dom.click(target.querySelector(".oe_stat_button"));
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view");
-        assert.containsOnce(target, ".o_form_button_create:not([disabled])");
+        assert.containsOnce(target, ".o_form_button_create:not([disabled]):visible");
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
@@ -1138,9 +1040,8 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 3);
         // open the first record in form view
         await click(target.querySelector(".o_list_view .o_data_cell"));
-        await legacyExtraNextTick();
         assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item:last").text(),
+            target.querySelector(".o_breadcrumb .active").innerText,
             "First record",
             "breadcrumbs should contain the display_name of the opened record"
         );
@@ -1151,14 +1052,12 @@ QUnit.module("ActionManager", (hooks) => {
         );
         // go back to list view using the breadcrumbs
         await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb a"));
-        await legacyExtraNextTick();
         // open the second record in form view
         await testUtils.dom.click(
             $(target).find(".o_list_view .o_data_row:nth(1) .o_data_cell:first")
         );
-        await legacyExtraNextTick();
         assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item:last").text(),
+            target.querySelector(".o_breadcrumb .active").innerText,
             "Second record",
             "breadcrumbs should contain the display_name of the opened record"
         );
@@ -1179,45 +1078,24 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("restore previous view state when switching back", async function (assert) {
-        assert.expect(5);
         registry.category("services").add("cookie", fakeCookieService);
         serverData.actions[3].views.unshift([false, "graph"]);
         serverData.views["partner,false,graph"] = "<graph/>";
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
-        assert.hasClass(
-            $(target).find(".o_control_panel [data-mode='bar']")[0],
-            "active",
-            "bar chart button is active"
-        );
+        assert.hasClass(target.querySelector(".o_graph_renderer [data-mode='bar']"), "active");
         assert.doesNotHaveClass(
-            $(target).find(".o_control_panel [data-mode='line']")[0],
-            "active",
-            "line chart button is not active"
+            target.querySelector(".o_graph_renderer [data-mode='line']"),
+            "active"
         );
         // display line chart
-        await testUtils.dom.click($(target).find(".o_control_panel [data-mode='line']"));
-        await legacyExtraNextTick();
-        assert.hasClass(
-            $(target).find(".o_control_panel [data-mode='line']")[0],
-            "active",
-            "line chart button is now active"
-        );
+        await testUtils.dom.click(target.querySelector(".o_graph_renderer [data-mode='line']"));
+        assert.hasClass(target.querySelector(".o_graph_renderer [data-mode='line']"), "active");
         // switch to kanban and back to graph view
         await cpHelpers.switchView(target, "kanban");
-        await legacyExtraNextTick();
-        assert.containsNone(
-            target,
-            ".o_control_panel [data-mode='line']",
-            "graph buttons are no longer in control panel"
-        );
+        assert.containsNone(target, ".o_graph_renderer [data-mode='line']");
         await cpHelpers.switchView(target, "graph");
-        await legacyExtraNextTick();
-        assert.hasClass(
-            $(target).find(".o_control_panel [data-mode='line']")[0],
-            "active",
-            "line chart button is still active"
-        );
+        assert.hasClass(target.querySelector(".o_graph_renderer [data-mode='line']"), "active");
     });
 
     QUnit.test("can't restore previous action if form is invalid", async function (assert) {
@@ -1227,7 +1105,7 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 3);
         assert.containsOnce(target, ".o_list_view");
 
-        await click(target.querySelector(".o_list_button_add"));
+        await clickListNew(target);
         assert.containsOnce(target, ".o_form_view");
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_required_modifier");
 
@@ -1287,7 +1165,7 @@ QUnit.module("ActionManager", (hooks) => {
             "list view is not grouped"
         );
         // open group by dropdown
-        await cpHelpers.toggleGroupByMenu(target);
+        await cpHelpers.toggleSearchBarMenu(target);
         // click on foo link
         await cpHelpers.toggleMenuItem(target, "foo");
         await legacyExtraNextTick();
@@ -1367,77 +1245,32 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("go back to a previous action using the breadcrumbs", async function (assert) {
-        assert.expect(10);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         // open a record in form view
         await click(target.querySelector(".o_list_view .o_data_cell"));
-        await legacyExtraNextTick();
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            2,
-            "there should be two controllers in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item:last").text(),
-            "First record",
-            "breadcrumbs should contain the display_name of the opened record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "First record"]);
         // push another action on top of the first one, and come back to the form view
         await doAction(webClient, 4);
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            3,
-            "there should be three controllers in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item:last").text(),
+        assert.deepEqual(getBreadCrumbTexts(target), [
+            "Partners",
+            "First record",
             "Partners Action 4",
-            "breadcrumbs should contain the name of the current action"
-        );
+        ]);
+
         // go back using the breadcrumbs
         await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb a:nth(1)"));
-        await legacyExtraNextTick();
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            2,
-            "there should be two controllers in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item:last").text(),
-            "First record",
-            "breadcrumbs should contain the display_name of the opened record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "First record"]);
         // push again the other action on top of the first one, and come back to the list view
         await doAction(webClient, 4);
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            3,
-            "there should be three controllers in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item:last").text(),
+        assert.deepEqual(getBreadCrumbTexts(target), [
+            "Partners",
+            "First record",
             "Partners Action 4",
-            "breadcrumbs should contain the name of the current action"
-        );
+        ]);
         // go back using the breadcrumbs
         await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb a:first"));
-        await legacyExtraNextTick();
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            1,
-            "there should be one controller in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item:last").text(),
-            "Partners",
-            "breadcrumbs should contain the name of the current action"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners"]);
     });
 
     QUnit.test(
@@ -1481,14 +1314,14 @@ QUnit.module("ActionManager", (hooks) => {
     );
 
     QUnit.test("honor group_by specified in actions context", async function (assert) {
-        assert.expect(5);
         serverData.actions[3].context = "{'group_by': 'bar'}";
         serverData.views["partner,false,search"] = `
-      <search>
-        <group>
-          <filter name="foo" string="foo" context="{'group_by': 'foo'}"/>
-        </group>
-      </search>`;
+            <search>
+                <group>
+                <filter name="foo" string="Foo" context="{'group_by': 'foo'}"/>
+                </group>
+            </search>
+        `;
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         assert.containsOnce(target, ".o_list_table_grouped", "should be grouped");
@@ -1498,9 +1331,9 @@ QUnit.module("ActionManager", (hooks) => {
             2,
             "should be grouped by 'bar' (two groups) at first load"
         );
-        // groupby 'bar' using the searchview
-        await click(target.querySelectorAll(".o_control_panel .o_cp_bottom_right button")[1]);
-        await click(target.querySelector(".o_control_panel .o_group_by_menu .o_menu_item"));
+        // groupby 'foo' using the searchview
+        await cpHelpers.toggleSearchBarMenu(target);
+        await cpHelpers.toggleMenuItem(target, "Foo");
         assert.containsN(target, ".o_group_header", 5, "should be grouped by 'foo' (five groups)");
         // remove the groupby in the searchview
         await click(target.querySelector(".o_control_panel .o_searchview .o_facet_remove"));
@@ -1561,7 +1394,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 33);
         assert.containsOnce(target, ".o_list_view");
-        assert.containsN(target, ".o_cp_switch_buttons button", 2);
+        assert.containsN(target, "nav.o_cp_switch_buttons button", 2);
     });
 
     QUnit.test("flags field of ir.actions.act_window is used", async function (assert) {
@@ -1631,7 +1464,7 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 33);
         assert.containsN(target, ".o_data_row", 5, "should contain 5 records");
         // filter on bar
-        await cpHelpers.toggleFilterMenu(target);
+        await cpHelpers.toggleSearchBarMenu(target);
         await cpHelpers.toggleMenuItem(target, "Bar");
         assert.containsN(target, ".o_data_row", 2);
         // save filter
@@ -1674,7 +1507,7 @@ QUnit.module("ActionManager", (hooks) => {
                 "record should be in descending order as default_order applies"
             );
 
-            await cpHelpers.toggleFavoriteMenu(target);
+            await cpHelpers.toggleSearchBarMenu(target);
             await cpHelpers.toggleMenuItem(target, "favorite filter");
             assert.strictEqual(
                 target.querySelector(".o_control_panel .o_facet_values").innerText.trim(),
@@ -1736,25 +1569,19 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test(
         "search menus are still available when switching between actions",
         async function (assert) {
-            assert.expect(3);
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, 1);
-            assert.isVisible(
-                target.querySelector(".o_search_options .dropdown.o_filter_menu"),
-                "the search options should be available"
-            );
+            assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 1"]);
+            assert.containsOnce(target, ".o_searchview_dropdown_toggler");
+
             await doAction(webClient, 3);
-            assert.isVisible(
-                target.querySelector(".o_search_options .dropdown.o_filter_menu"),
-                "the search options should be available"
-            );
+            assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 1", "Partners"]);
+            assert.containsOnce(target, ".o_searchview_dropdown_toggler");
+
             // go back using the breadcrumbs
-            await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb a:first"));
-            await legacyExtraNextTick();
-            assert.isVisible(
-                target.querySelector(".o_search_options .dropdown.o_filter_menu"),
-                "the search options should be available"
-            );
+            await click(target, ".o_control_panel .breadcrumb-item a");
+            assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 1"]);
+            assert.containsOnce(target, ".o_searchview_dropdown_toggler");
         }
     );
 
@@ -1791,7 +1618,6 @@ QUnit.module("ActionManager", (hooks) => {
     );
 
     QUnit.test("destroy action with lazy loaded controller", async function (assert) {
-        assert.expect(6);
         const webClient = await createWebClient({ serverData });
         await loadState(webClient, {
             action: 3,
@@ -1800,17 +1626,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
         assert.containsNone(target, ".o_list_view");
         assert.containsOnce(target, ".o_form_view");
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            2,
-            "there should be two controllers in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item:last").text(),
-            "Second record",
-            "breadcrumbs should contain the display_name of the opened record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "Second record"]);
         await doAction(webClient, 1, { clearBreadcrumbs: true });
         assert.containsNone(target, ".o_form_view");
         assert.containsOnce(target, ".o_kanban_view");
@@ -1839,32 +1655,23 @@ QUnit.module("ActionManager", (hooks) => {
 
         // execute an action and create a new record
         await doAction(webClient, 3);
-        await click(target.querySelector(".o_list_button_add"));
+        await clickListNew(target);
         assert.containsOnce(target, ".o_form_view .o_form_editable");
         assert.containsOnce(target, ".o_form_uri:contains(First record)");
-        assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_control_panel .breadcrumb-item")),
-            ["Partners", "New"]
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "New"]);
 
         // set form view dirty and open m2o record
         await editInput(target, '.o_field_widget[name="display_name"] input', "test");
         await editInput(target, ".o_field_widget[name=foo] input", "val");
         await click(target.querySelector(".o_form_uri"));
         assert.containsOnce(target, ".o_form_view .o_form_editable");
-        assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_control_panel .breadcrumb-item")),
-            ["Partners", "test", "First record"]
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "test", "First record"]);
         // go back to test using the breadcrumbs
         await testUtils.dom.click(
             target.querySelectorAll(".o_control_panel .breadcrumb-item a")[1]
         );
         assert.containsOnce(target, ".o_form_view .o_form_editable");
-        assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_control_panel .breadcrumb-item")),
-            ["Partners", "test"]
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "test"]);
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
@@ -1903,7 +1710,7 @@ QUnit.module("ActionManager", (hooks) => {
         await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.containsOnce(target, ".o_form_view");
         // execute the custom action from the action menu
-        await cpHelpers.toggleActionMenu(target);
+        await click(target, ".o_cp_action_menus .fa-cog");
         await cpHelpers.toggleMenuItem(target, "Favorite Ponies");
         assert.containsOnce(target, ".o_list_view");
     });
@@ -1933,23 +1740,14 @@ QUnit.module("ActionManager", (hooks) => {
             const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 999);
             assert.containsOnce(target, ".o_form_view .o_form_editable");
-            assert.strictEqual(
-                target.querySelector(".o_control_panel .breadcrumb").textContent,
-                "Second record"
-            );
+            assert.deepEqual(getBreadCrumbTexts(target), ["Second record"]);
             // push another action in the breadcrumb
             await click(target, ".o_field_many2one .o_external_button");
-            assert.strictEqual(
-                target.querySelector(".o_control_panel .breadcrumb").textContent,
-                "Second recordThird record"
-            );
+            assert.deepEqual(getBreadCrumbTexts(target), ["Second record", "Third record"]);
             // go back to the form view
             await click(target.querySelector(".o_control_panel .breadcrumb a"));
             assert.containsOnce(target, ".o_form_view .o_form_editable");
-            assert.strictEqual(
-                target.querySelector(".o_control_panel .breadcrumb-item").textContent,
-                "Second record"
-            );
+            assert.deepEqual(getBreadCrumbTexts(target), ["Second record"]);
         }
     );
 
@@ -1973,10 +1771,7 @@ QUnit.module("ActionManager", (hooks) => {
             const webClient = await createWebClient({ serverData, mockRPC });
             await doAction(webClient, 999, { props: { resIds: [1, 2] } });
             assert.containsOnce(target, ".o_form_view .o_form_editable");
-            assert.strictEqual(
-                target.querySelector(".o_control_panel .breadcrumb").textContent,
-                "First record"
-            );
+            assert.deepEqual(getBreadCrumbTexts(target), ["First record"]);
             assert.strictEqual(
                 target.querySelector(".o_control_panel .o_pager_counter").textContent,
                 "1 / 2"
@@ -1984,10 +1779,7 @@ QUnit.module("ActionManager", (hooks) => {
 
             // load another id on current action (through pager)
             await click(target.querySelector(".o_pager_next"));
-            assert.strictEqual(
-                target.querySelector(".o_control_panel .breadcrumb").textContent,
-                "Second record"
-            );
+            assert.deepEqual(getBreadCrumbTexts(target), ["Second record"]);
             assert.strictEqual(
                 target.querySelector(".o_control_panel .o_pager_counter").textContent,
                 "2 / 2"
@@ -1995,17 +1787,11 @@ QUnit.module("ActionManager", (hooks) => {
 
             // push another action in the breadcrumb
             await click(target, ".o_field_many2one .o_external_button");
-            assert.strictEqual(
-                target.querySelector(".o_control_panel .breadcrumb").textContent,
-                "Second recordThird record"
-            );
+            assert.deepEqual(getBreadCrumbTexts(target), ["Second record", "Third record"]);
 
             // restore previous action through breadcrumb
             await click(target.querySelector(".o_control_panel .breadcrumb a"));
-            assert.strictEqual(
-                target.querySelector(".o_control_panel .breadcrumb").textContent,
-                "Second record"
-            );
+            assert.deepEqual(getBreadCrumbTexts(target), ["Second record"]);
             assert.strictEqual(
                 target.querySelector(".o_control_panel .o_pager_counter").textContent,
                 "2 / 2"
@@ -2027,7 +1813,7 @@ QUnit.module("ActionManager", (hooks) => {
         await click(target.querySelector(".o_control_panel .breadcrumb-item a"));
         assert.containsOnce(target, ".o_list_view");
         // create a new record
-        await click(target.querySelector(".o_list_button_add"));
+        await clickListNew(target);
         assert.containsOnce(target, ".o_form_view");
         assert.containsOnce(target, ".o_form_view .o_form_editable");
     });
@@ -2074,7 +1860,7 @@ QUnit.module("ActionManager", (hooks) => {
             // execute an action and create a new record
             await doAction(webClient, 3);
             assert.containsOnce(target, ".o_list_view");
-            await click(target.querySelector(".o_list_button_add"));
+            await clickListNew(target);
             assert.containsOnce(target, ".o_form_view");
             assert.containsOnce(target, ".o_form_view .o_form_editable");
             await editInput(target, ".o_field_widget[name=display_name] input", "another record");
@@ -2191,7 +1977,7 @@ QUnit.module("ActionManager", (hooks) => {
 
             await doAction(webClient, 3);
 
-            await click(target.querySelector(".o_list_button_add"));
+            await clickListNew(target);
             assert.containsOnce(
                 document.body,
                 ".modal.o_technical_modal",
@@ -2633,36 +2419,42 @@ QUnit.module("ActionManager", (hooks) => {
         await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb-item")), [
-            "Partners",
+            "",
             "First record",
             "Partners",
-            "First record",
         ]);
-
+        assert.strictEqual(target.querySelector(".o_breadcrumb .active").innerText, "First record");
         // open action menu and delete
-        await cpHelpers.toggleActionMenu(target);
+        await click(target, ".o_cp_action_menus .fa-cog");
         await cpHelpers.toggleMenuItem(target, "Delete");
         assert.containsOnce(target, ".o_dialog");
 
         // confirm
         await click(target.querySelector(".o_dialog .modal-footer .btn-primary"));
+
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb-item")), [
-            "Partners",
+            "",
             "First record",
             "Partners",
-            "Second record",
         ]);
+        assert.strictEqual(
+            target.querySelector(".o_breadcrumb .active").innerText,
+            "Second record"
+        );
 
         // click on "First record" in breadcrumbs, which doesn't exist anymore
-        await click(target.querySelectorAll(".breadcrumb-item a")[1]);
+        await click(target.querySelectorAll(".breadcrumb-item a")[0]);
         await nextTick();
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb-item")), [
+            "",
             "Partners",
             "Partners",
-            "Partners",
-            "Second record",
         ]);
+        assert.strictEqual(
+            target.querySelector(".o_breadcrumb .active").innerText,
+            "Second record"
+        );
     });
 });

@@ -46,7 +46,7 @@
           </t>
         </div>
 
-        <div t-if="state.FooterComponent" class="o_command_palette_footer mt-2 px-4 py-2 border-top bg-100 text-muted">
+        <div t-if="state.FooterComponent" class="o_command_palette_footer mt-2 px-4 py-2 border-top rounded-bottom bg-100 text-muted">
           <t t-component="state.FooterComponent" switchNamespace="(namespace) => this.debounceSearch(namespace.concat(this.state.searchValue))"/>
         </div>
       </div>

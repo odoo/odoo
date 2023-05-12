@@ -14,6 +14,7 @@ import {
 } from "@web/../tests/helpers/utils";
 import { doAction } from "@web/../tests/webclient/helpers";
 import { session } from "@web/session";
+import { toggleSearchBarMenu } from "@web/../tests/search/helpers";
 
 let serverData;
 let pyEnv;
@@ -511,19 +512,19 @@ QUnit.module("test_mail", {}, function () {
         const { webClient } = await start({ serverData, mockRPC });
 
         await doAction(webClient, 1);
-
+        await toggleSearchBarMenu(document);
         assert.containsN(
             document.body,
-            ".o_search_options .dropdown button:visible",
+            ".o_cp_searchview .o_dropdown_container",
             2,
             "only two elements should be available in view search"
         );
         assert.isVisible(
-            document.querySelector(".o_search_options .dropdown.o_filter_menu > button"),
+            document.querySelector(".o_cp_searchview .o_dropdown_container.o_filter_menu"),
             "filter should be available in view search"
         );
         assert.isVisible(
-            document.querySelector(".o_search_options .dropdown.o_favorite_menu > button"),
+            document.querySelector(".o_cp_searchview .o_dropdown_container.o_favorite_menu"),
             "favorites should be available in view search"
         );
     });

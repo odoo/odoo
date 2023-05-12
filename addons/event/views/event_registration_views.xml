@@ -58,7 +58,7 @@
                 </header>
                 <sheet string="Registration">
                     <div class="oe_button_box" name="button_box"/>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" text="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
                         <group string="Attendee" name="attendee">
                             <field class="o_text_overflow" name="name"/>
@@ -141,14 +141,14 @@
                         </div>
                     </t>
                     <t t-name="kanban-box">
-                        <div t-attf-class="#{!record.active.raw_value ? 'oe_kanban_card_ribbon' : ''} oe_kanban_global_click o_event_registration_kanban container-fluid p-0">
+                        <div t-attf-class="#{!record.active.raw_value ? 'oe_kanban_card_ribbon' : ''} oe_kanban_global_click o_event_registration_kanban container-fluid">
                             <div t-if="!record.active.raw_value" class="ribbon ribbon-top-right">
-                                <span class="bg-danger">Archived</span>
+                                <span class="text-bg-danger">Archived</span>
                             </div>
-                            <div class="row h-100">
-                                <div class="col-9 pe-0">
+                            <div class="row g-0 h-100">
+                                <div class="col-9">
                                     <div class="oe_kanban_content h-100">
-                                        <div class="o_kanban_record_body pt-1 ps-2 h-100 d-flex flex-column">
+                                        <div class="o_kanban_record_body h-100 d-flex flex-column">
                                             <b class="o_kanban_record_title"><field name="name"/></b>
                                             <field class="o_text_overflow" name="event_id" invisible="context.get('default_event_id')" />
                                             <span class="o_text_overflow" attrs="{'invisible': [('partner_id', '=', False)]}">Booked by <field name="partner_id" /></span>
@@ -162,7 +162,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div id="event_attendees_kanban_icons" class="col-3 ps-0">
+                                <div id="event_attendees_kanban_icons" class="col-3">
                                     <t t-call="event_attendees_kanban_icons_desktop"/>
                                     <t t-call="event_attendees_kanban_icons_mobile"/>
                                 </div>

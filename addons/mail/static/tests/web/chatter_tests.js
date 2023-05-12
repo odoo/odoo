@@ -190,10 +190,10 @@ QUnit.test("Composer type is kept when switching from aside to bottom", async (a
     });
     assert.hasClass(
         $("button:contains(Log note)"),
-        "btn-odoo",
+        "btn-primary",
         "Active button should be the log note button"
     );
-    assert.doesNotHaveClass($("button:contains(Send message)"), "btn-odoo");
+    assert.doesNotHaveClass($("button:contains(Send message)"), "btn-primary");
 });
 
 QUnit.test("chatter: drop attachments", async (assert) => {

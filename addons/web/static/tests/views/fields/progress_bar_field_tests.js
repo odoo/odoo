@@ -1,9 +1,6 @@
 /** @odoo-module **/
 
-import {
-    makeFakeLocalizationService,
-    makeFakeNotificationService,
-} from "@web/../tests/helpers/mock_services";
+import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import {
     click,
     clickSave,
@@ -507,13 +504,6 @@ QUnit.module("Fields", (hooks) => {
         "ProgressBarField: write gibbrish instead of int throws warning",
         async function (assert) {
             serverData.models.partner.records[0].int_field = 99;
-            const mock = () => {
-                assert.step("Show error message");
-                return () => {};
-            };
-            registry.category("services").add("notification", makeFakeNotificationService(mock), {
-                force: true,
-            });
 
             await makeView({
                 serverData,
@@ -535,7 +525,11 @@ QUnit.module("Fields", (hooks) => {
             await editInput(target, ".o_progressbar_value .o_input", "trente sept virgule neuf");
             await clickSave(target);
             assert.containsOnce(target, ".o_form_dirty", "The form has not been saved");
-            assert.verifySteps(["Show error message"], "The error message was shown correctly");
+            assert.strictEqual(
+                target.querySelector(".o_form_button_save").disabled,
+                true,
+                "save button is disabled"
+            );
         }
     );
 
@@ -555,7 +549,8 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.containsOnce(
-                target, ".o_progressbar .bg-warning",
+                target,
+                ".o_progressbar .bg-warning",
                 "As the value has excedded the max value, the color should be set to bg-warning"
             );
         }

@@ -27,7 +27,7 @@
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
                     <div class="o-mail-Message-sidebar d-flex flex-shrink-0" t-att-class="{ 'justify-content-end': isAlignedRight, 'align-items-center': props.squashed }">
                         <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view" t-on-click="ev => this.onClickAuthor(ev)">
-                            <img class="o-mail-Message-avatar w-100 h-100 rounded-circle o_object_fit_cover"
+                            <img class="o-mail-Message-avatar w-100 h-100 rounded o_object_fit_cover"
                                 t-att-title="authorText"
                                 t-att-src="authorAvatarUrl"
                                 t-att-class="{ 'o_redirect cursor-pointer': hasAuthorClickable }"/>
@@ -116,7 +116,7 @@
                                     </t>
                                 </t>
                             </div>
-                            <div t-if="props.hasActions and !message.isTransient" class="o-mail-Message-actions bg-view"
+                            <div t-if="props.hasActions and !message.isTransient" class="o-mail-Message-actions"
                                 t-att-class="{
                                     'position-absolute top-0': !env.inDiscussApp,
                                     'start-0 ms-3': isAlignedRight,
@@ -130,7 +130,7 @@
                                     'o-expanded': state.expandOptions
                                 }"
                             >
-                                <div class="d-flex rounded-1 shadow-sm overflow-hidden" t-att-class="{
+                                <div class="d-flex rounded-1 bg-view shadow-sm overflow-hidden" t-att-class="{
                                         'mt-3': env.inChatter and !(message.isDiscussion or message.isNotification),
                                         'flex-row-reverse': env.inChatWindow and isAlignedRight,
                                     }"

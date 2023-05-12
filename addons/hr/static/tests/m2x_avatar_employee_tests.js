@@ -214,22 +214,22 @@ QUnit.test("many2many_avatar_employee widget in form view", async function (asse
     });
     assert.containsN(
         document.body,
-        ".o_field_many2many_avatar_employee .badge",
+        ".o_field_many2many_avatar_employee .o_tag",
         2,
         "should have 2 records"
     );
     assert.strictEqual(
         document
-            .querySelector(".o_field_many2many_avatar_employee .badge img")
+            .querySelector(".o_field_many2many_avatar_employee .o_tag img")
             .getAttribute("data-src"),
         `/web/image/hr.employee.public/${employeeId_1}/avatar_128`
     );
 
     await dom.click(
-        document.querySelector(".o_field_many2many_avatar_employee .badge .o_m2m_avatar")
+        document.querySelector(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")
     );
     await dom.click(
-        document.querySelectorAll(".o_field_many2many_avatar_employee .badge .o_m2m_avatar")[1]
+        document.querySelectorAll(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")[1]
     );
     assert.verifySteps([
         `read m2x.avatar.employee ${avatarId_1}`,
@@ -413,19 +413,19 @@ QUnit.test(
             res_id: avatarId,
             views: [[false, "form"]],
         });
-        assert.containsN(document.body, ".o_field_many2many_avatar_employee .badge", 2);
+        assert.containsN(document.body, ".o_field_many2many_avatar_employee .o_tag", 2);
         assert.strictEqual(
             document
-                .querySelector(".o_field_many2many_avatar_employee .badge img")
+                .querySelector(".o_field_many2many_avatar_employee .o_tag img")
                 .getAttribute("data-src"),
             `/web/image/hr.employee.public/${employeeId_1}/avatar_128`
         );
 
         await dom.click(
-            document.querySelector(".o_field_many2many_avatar_employee .badge .o_m2m_avatar")
+            document.querySelector(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")
         );
         await dom.click(
-            document.querySelectorAll(".o_field_many2many_avatar_employee .badge .o_m2m_avatar")[1]
+            document.querySelectorAll(".o_field_many2many_avatar_employee .o_tag .o_m2m_avatar")[1]
         );
         assert.verifySteps([
             `read m2x.avatar.employee ${employeeId_1}`,

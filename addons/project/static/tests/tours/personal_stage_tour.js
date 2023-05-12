@@ -35,7 +35,7 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
     trigger: '.o_column_quick_create .o_quick_create_folded'
 }, {
     content: "Create a new personal stage",
-    trigger: 'input.form-control.o_input',
+    trigger: 'input.form-control',
     run: 'text Never',
 }, {
     content: "Confirm create",

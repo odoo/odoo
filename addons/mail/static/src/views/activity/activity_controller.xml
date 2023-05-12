@@ -3,6 +3,12 @@
     <t t-name="mail.ActivityController" owl="1">
         <div t-att-class="props.className + (env.isSmall ? ' o_action_delegate_scroll': '')">
             <Layout display="props.display">
+                <t t-set-slot="control-panel-additional-actions">
+                    <CogMenu/>
+                </t>
+                <t t-set-slot="layout-actions">
+                    <SearchBar/>
+                </t>
                 <t t-component="props.Renderer" t-props="rendererProps" />
             </Layout>
         </div>

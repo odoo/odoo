@@ -30,7 +30,11 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button type="object" icon="fa-sign-out" name="action_visit_page"
-                                string="Visit Page" class="oe_stat_button"/>
+                                string="Visit Page" class="oe_stat_button">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Visit Page</span>
+                                </div>
+                            </button>
 
                             <button type="object" class="oe_stat_button" name="action_view_statistics" icon="fa-bar-chart-o">
                                 <field name="count" string="Clicks" widget="statinfo"/>

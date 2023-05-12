@@ -61,13 +61,13 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
 
         assert.containsN(fixture, ".o_data_row", 4);
         assert.containsNone(fixture, ".o_list_selection_box");
-        assert.containsOnce(fixture, ".o_control_panel .o_cp_bottom_right");
+        assert.containsOnce(fixture, ".o_control_panel .fa-search");
 
         // select a record
         await triggerEvents(fixture, ".o_data_row:nth-child(1)", ["touchstart", "touchend"]);
         assert.containsOnce(fixture, ".o_list_selection_box");
         assert.containsNone(fixture, ".o_list_selection_box .o_list_select_domain");
-        assert.containsNone(fixture, ".o_control_panel .o_cp_bottom_right");
+        assert.containsNone(fixture, ".o_control_panel .o_cp_searchview");
         assert.ok(
             fixture.querySelector(".o_list_selection_box").textContent.includes("1 selected")
         );
@@ -94,7 +94,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
         // unselect all
         await click(fixture, ".o_list_unselect_all");
         assert.containsNone(fixture, ".o_list_selection_box");
-        assert.containsOnce(fixture, ".o_control_panel .o_cp_bottom_right");
+        assert.containsOnce(fixture, ".o_control_panel .fa-search");
     });
 
     QUnit.test("selection box is properly displayed (multi pages)", async function (assert) {

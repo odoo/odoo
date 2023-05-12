@@ -30,6 +30,9 @@
         .o_kanban_record {
             width: 100%;
             margin: 0px;
+        }
+
+        .o_survey_kanban_card {
             border-top: 0px !important;
         }
     }
@@ -78,54 +81,10 @@
     // Ungrouped specific
     .o_survey_kanban_card_ungrouped {
         .ribbon {
-            // Desktop: finishes on next kanban card line
-            height: 77px;
-            width: 130px;
+            --Ribbon-wrapper-width: 6rem;
 
-            // Mobile: is in a corner, takes more place
             @include media-breakpoint-down(md) {
-                height: 100px;
-                width: 100px;
-            }
-
-            &-top-right {
-                margin-top: -$o-kanban-inside-vgutter;
-                right: 0;
-
-                & span {
-                    left: -8px;
-                    top: 24px;
-                }
-            }
-
-            & span {
-                font-size: 1rem;
-                width: 150px;
-                height: 32px;
-            }
-        }
-    }
-    // Grouped specific
-    .o_survey_kanban_card_grouped {
-        .ribbon {
-            height: 90px;
-            width: 98px;
-
-            &-top-right {
-                margin-top: -$o-kanban-inside-vgutter;
-                right: 0;
-
-                & span {
-                    left: -8px;
-                    top: 16px;
-                }
-            }
-
-            & span {
-                font-size: 1rem;
-                width: 150px;
-                height: 32px;
-                padding: 0 8px;
+                --Ribbon-wrapper-width: 6.5rem;
             }
         }
     }
@@ -137,7 +96,7 @@
     background-color: var(--SurveyForm__section-background-color, #DDD);
     border-top: 1px solid #BBB;
     border-bottom: 1px solid #BBB;
-    
+
     > td {
         background: transparent;
     }

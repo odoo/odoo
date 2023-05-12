@@ -17,7 +17,7 @@
           t-if="currentApp"
           href="getMenuItemHref(currentApp)"
           t-esc="currentApp.name"
-          class="'o_menu_brand d-none d-md-block'"
+          class="'o_menu_brand d-none d-md-flex'"
           dataset="{ menuXmlid: currentApp.xmlid, section: currentApp.id }"
           onSelected="() => this.onNavBarDropdownItemSelection(currentApp)"
         />
@@ -60,7 +60,7 @@
   </t>
 
   <t t-name="web.NavBar.SectionsMenu" owl="1">
-    <div class="o_menu_sections d-none d-md-flex flex-grow-1 flex-shrink-1" t-ref="appSubMenus" role="menu">
+    <div class="o_menu_sections d-none d-md-flex flex-grow-1 flex-shrink-1 w-0" t-ref="appSubMenus" role="menu">
 
       <t t-foreach="sections" t-as="section" t-key="section.id">
         <t

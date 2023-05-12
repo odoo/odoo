@@ -7,12 +7,12 @@ const checkKanbanGroupBy = [{
     content: "Click on Kanban View",
     trigger: '.o_cp_switch_buttons .o_kanban',
 }, {
-    content: "Click on Group By",
+    content: "Open search panel menu",
     extra_trigger: '.o_kanban_renderer',
-    trigger: '.o_search_options .o_group_by_menu button',
+    trigger: '.o_control_panel .o_searchview_dropdown_toggler',
 }, {
     content: "Click on Add Custom Group",
-    trigger: '.o_search_options .o_add_custom_group_menu button',
+    trigger: '.o_add_custom_group_menu button',
     run: function (actions) {
         this.$anchor[0].dispatchEvent(new MouseEvent('mouseenter'));
     },

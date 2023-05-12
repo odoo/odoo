@@ -1,63 +1,57 @@
 .ribbon {
-    width: 150px;
-    height: 150px;
+    --Ribbon-wrapper-width-default: 10rem;
+    --Ribbon-wrapper-height: var(--Ribbon-wrapper-width, var(--Ribbon-wrapper-width-default));
+
+    width: var(--Ribbon-wrapper-width, var(--Ribbon-wrapper-width-default));
+    height: var(--Ribbon-wrapper-height);
     overflow: hidden;
     position: absolute;
 
-    &::before, &::after {
-        position: absolute;
-        z-index: -1;
-        content: '';
-        display: block;
-        border: 5px solid #2980b9;
-    }
-
     & span {
-        z-index: 1;
+        --Ribbon-font-size-default: #{$font-size-lg};
+        --Ribbon-height-default: calc(var(--Ribbon-font-size, var(--Ribbon-font-size-default)) * 2.5);
+        --Ribbon-shadow-distance: .25rem;
+        --Ribbon-shadow-blur: .5rem;
+        --Ribbon-z-index: 1;
+
+        z-index: var( --Ribbon-z-index);
         position: absolute;
-        display: grid;
-        align-items: center;
-        width: 225px;
-        height: 48px;
-        padding: 0 44px;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, .1);
-        color: #fff;
-        font: 700 18px/1 'Lato', sans-serif;
+        width: 141.421%; //Square root of 2 to get the diagonal of the parent
+        height: var(--Ribbon-height, var(--Ribbon-height-default));
+        box-shadow: 0 var(--Ribbon-shadow-distance) var(--Ribbon-shadow-blur) rgba(0, 0, 0, .1);
+        color: $white;
+        font-size: var(--Ribbon-font-size, var(--Ribbon-font-size-default));
+        line-height: var(--Ribbon-height, var(--Ribbon-height-default));
+        font-weight: $font-weight-bolder;
+        font-family: 'Lato', sans-serif;
         text-shadow: 0 1px 1px rgba(0, 0, 0, .2);
         text-transform: uppercase;
         text-align: center;
         overflow: hidden;
         user-select: none;
+        transform-origin: left bottom;
+        pointer-events: none;
         &.o_small {
-            font-size: 12px;
+            font-size: $font-size-sm
         }
         &.o_medium {
-            font-size: 15px;
+            font-size: $font-size-base;
         }
     }
 
     &-top-right {
-        margin-top: -$o-sheet-vpadding;
-        right: 0;
+        --Ribbon-gap-top-default: calc(var(--formView-sheet-padding-y, 0) * -1 - #{$border-width});
+        --Ribbon-gap-right-default: -#{$border-width};
 
-        &::before, &::after {
-            border-top-color: black;
-            border-right-color: black;
-        }
-
-        &::before {
-            top: 0;
-            left: 0;
-        }
-
-        &::after {
-            bottom: 0;
-            right: 0;
-        }
+        margin-top: var(--Ribbon-gap-top, var(--Ribbon-gap-top-default));
+        right: var(--Ribbon-gap-right, var(--Ribbon-gap-right-default));
 
         & span {
-            left: -15px;
-            top: 30px;
+            --Ribbon-top-position-default: calc((var(--Ribbon-height-default) * -1));
+            --Ribbon-left-position-default: calc(var(--Ribbon-shadow-distance) + var(--Ribbon-shadow-blur));
+
+            left: var(--Ribbon-left-position, var(--Ribbon-left-position-default));
+            top: var(--Ribbon-top-position, var(--Ribbon-top-position-default));
             transform: rotate(45deg);
         }
     }

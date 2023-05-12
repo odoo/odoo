@@ -5,7 +5,6 @@ import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { patch } from "@web/core/utils/patch";
 import { append, createElement, setAttributes } from "@web/core/utils/xml";
-import { ViewCompiler, getModifier } from "@web/views/view_compiler";
 import { FormCompiler } from "@web/views/form/form_compiler";
 
 function compileChatter(node, params) {
@@ -37,8 +36,9 @@ function compileChatter(node, params) {
                 break;
         }
     }
-    const chatterContainerXml = createElement("Chatter");
+    const chatterContainerXml = createElement("t");
     setAttributes(chatterContainerXml, {
+        "t-component": "__comp__.mailComponents.Chatter",
         hasActivities,
         hasFollowers,
         hasMessageList,
@@ -46,9 +46,9 @@ function compileChatter(node, params) {
         hasParentReloadOnFollowersUpdate,
         hasParentReloadOnMessagePosted,
         isAttachmentBoxVisibleInitially,
-        threadId: params.threadId,
-        threadModel: params.threadModel,
-        webRecord: params.webRecord,
+        threadId: "__comp__.props.record.resId or undefined",
+        threadModel: "__comp__.props.record.resModel",
+        webRecord: "__comp__.props.record",
         saveRecord: "() => __comp__.saveButtonClicked and __comp__.saveButtonClicked()",
     });
     const chatterContainerHookXml = createElement("div");
@@ -60,92 +60,24 @@ function compileChatter(node, params) {
 function compileAttachmentPreview(node, params) {
     const webClientViewAttachmentViewContainerHookXml = createElement("div");
     webClientViewAttachmentViewContainerHookXml.classList.add("o_attachment_preview");
-    const webClientViewAttachmentViewContainerXml = createElement("AttachmentView");
+    const webClientViewAttachmentViewContainerXml = createElement("t");
     setAttributes(webClientViewAttachmentViewContainerXml, {
-        threadId: params.threadId,
-        threadModel: params.threadModel,
+        "t-component": "__comp__.mailComponents.AttachmentView",
+        threadId: "__comp__.props.record.resId or undefined",
+        threadModel: "__comp__.props.record.resModel",
     });
     append(webClientViewAttachmentViewContainerHookXml, webClientViewAttachmentViewContainerXml);
     return webClientViewAttachmentViewContainerHookXml;
 }
 
-export class MailFormCompiler extends ViewCompiler {
-    setup() {
-        this.compilers.push({ selector: "t", fn: this.compileT });
-        this.compilers.push({ selector: "div.oe_chatter", fn: this.compileChatter });
-        this.compilers.push({
-            selector: "div.o_attachment_preview",
-            fn: this.compileAttachmentPreview,
-        });
-    }
-
-    compile(node, params) {
-        const res = super.compile(node, params).children[0];
-        const chatterContainerHookXml = res.querySelector(".o-mail-Form-chatter");
-        if (chatterContainerHookXml) {
-            setAttributes(chatterContainerHookXml, {
-                "t-if": `!__comp__.hasAttachmentViewer() and __comp__.uiService.size >= ${SIZES.XXL}`,
-                "t-attf-class": "o-aside",
-            });
-            const chatterContainerXml = chatterContainerHookXml.querySelector("Chatter");
-            setAttributes(chatterContainerXml, {
-                hasMessageListScrollAdjust: "true",
-                isInFormSheetBg: "false",
-            });
-        }
-        const attachmentViewHookXml = res.querySelector(".o_attachment_preview");
-        if (attachmentViewHookXml) {
-            setAttributes(attachmentViewHookXml, {
-                "t-if": `__comp__.hasAttachmentViewer()`,
-            });
-        }
-        return res;
-    }
-
-    compileT(node, params) {
-        const compiledRoot = createElement("t");
-        for (const child of node.childNodes) {
-            const invisible = getModifier(child, "invisible");
-            let compiledChild = this.compileNode(child, params, false);
-            compiledChild = this.applyInvisible(invisible, compiledChild, {
-                ...params,
-                recordExpr: "__comp__.model.root",
-            });
-            append(compiledRoot, compiledChild);
-        }
-        return compiledRoot;
-    }
-
-    compileChatter(node) {
-        return compileChatter(node, {
-            chatter: "__comp__.chatter",
-            threadId: "__comp__.model.root.resId or undefined",
-            threadModel: "__comp__.model.root.resModel",
-            webRecord: "__comp__.model.root",
-        });
-    }
-
-    compileAttachmentPreview(node) {
-        return compileAttachmentPreview(node, {
-            threadId: "__comp__.model.root.resId or undefined",
-            threadModel: "__comp__.model.root.resModel",
-        });
-    }
-}
-
 registry.category("form_compilers").add("chatter_compiler", {
     selector: "div.oe_chatter",
-    fn: (node) =>
-        compileChatter(node, {
-            threadId: "__comp__.props.record.resId or undefined",
-            threadModel: "__comp__.props.record.resModel",
-            webRecord: "__comp__.props.record",
-        }),
+    fn: compileChatter,
 });
 
 registry.category("form_compilers").add("attachment_preview_compiler", {
     selector: "div.o_attachment_preview",
-    fn: () => createElement("t"),
+    fn: compileAttachmentPreview,
 });
 
 patch(FormCompiler.prototype, "mail", {
@@ -156,7 +88,9 @@ patch(FormCompiler.prototype, "mail", {
         if (!chatterContainerHookXml) {
             return res; // no chatter, keep the result as it is
         }
-        const chatterContainerXml = chatterContainerHookXml.querySelector("Chatter");
+        const chatterContainerXml = chatterContainerHookXml.querySelector(
+            "t[t-component='__comp__.mailComponents.Chatter']"
+        );
         setAttributes(chatterContainerXml, {
             hasMessageListScrollAdjust: "false",
             isInFormSheetBg: "false",
@@ -170,24 +104,46 @@ patch(FormCompiler.prototype, "mail", {
         if (!parentXml) {
             return res; // miss-config: a sheet-bg is required for the rest
         }
-        if (params.hasAttachmentViewerInArch) {
+
+        const webClientViewAttachmentViewHookXml = res.querySelector(".o_attachment_preview");
+        if (webClientViewAttachmentViewHookXml) {
             // in sheet bg (attachment viewer present)
+            setAttributes(webClientViewAttachmentViewHookXml, {
+                "t-if": `__comp__.hasAttachmentViewer() and __comp__.uiService.size >= ${SIZES.XXL}`,
+            });
             const sheetBgChatterContainerHookXml = chatterContainerHookXml.cloneNode(true);
             sheetBgChatterContainerHookXml.classList.add("o-isInFormSheetBg");
             setAttributes(sheetBgChatterContainerHookXml, {
-                "t-if": `__comp__.props.hasAttachmentViewer`,
+                "t-if": `__comp__.hasAttachmentViewer() and __comp__.uiService.size >= ${SIZES.XXL}`,
             });
             append(formSheetBgXml, sheetBgChatterContainerHookXml);
-            const sheetBgChatterContainerXml =
-                sheetBgChatterContainerHookXml.querySelector("Chatter");
+            const sheetBgChatterContainerXml = sheetBgChatterContainerHookXml.querySelector(
+                "t[t-component='__comp__.mailComponents.Chatter']"
+            );
             setAttributes(sheetBgChatterContainerXml, {
                 isInFormSheetBg: "true",
+                hasMessageListScrollAdjust: "false",
             });
         }
-        // after sheet bg (standard position, below form)
-        setAttributes(chatterContainerHookXml, {
-            "t-if": `!__comp__.props.hasAttachmentViewer and __comp__.uiService.size < ${SIZES.XXL}`,
-        });
+        // after sheet bg (standard position, either aside or below)
+        if (webClientViewAttachmentViewHookXml) {
+            setAttributes(chatterContainerHookXml, {
+                "t-if": `!(__comp__.hasAttachmentViewer() and __comp__.uiService.size >= ${SIZES.XXL})`,
+                "t-attf-class": `{{ __comp__.uiService.size >= ${SIZES.XXL} and !(__comp__.hasAttachmentViewer() and __comp__.uiService.size >= ${SIZES.XXL}) ? "o-aside" : "" }}`,
+            });
+            setAttributes(chatterContainerXml, {
+                isInFormSheetBg: "__comp__.hasAttachmentViewer()",
+                hasMessageListScrollAdjust: `__comp__.uiService.size >= ${SIZES.XXL} and !(__comp__.hasAttachmentViewer() and __comp__.uiService.size >= ${SIZES.XXL})`,
+            });
+        } else {
+            setAttributes(chatterContainerXml, {
+                isInFormSheetBg: "false",
+                hasMessageListScrollAdjust: `__comp__.uiService.size >= ${SIZES.XXL}`,
+            });
+            setAttributes(chatterContainerHookXml, {
+                "t-attf-class": `{{ __comp__.uiService.size >= ${SIZES.XXL} ? "o-aside" : "mt-4 mt-md-0" }}`,
+            });
+        }
         append(parentXml, chatterContainerHookXml);
         return res;
     },
