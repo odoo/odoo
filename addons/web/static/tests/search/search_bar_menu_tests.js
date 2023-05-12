@@ -1678,7 +1678,7 @@ QUnit.module("Search", (hooks) => {
             await editInput(target, ".o_domain_debug_input", `[("foo", "in", [uid, 1, "a"])]`);
             await click(target.querySelector(".modal footer button"));
 
-            assert.deepEqual(getFacetTexts(target), [`Foo in uid or 1 or "a"`]);
+            assert.deepEqual(getFacetTexts(target), [`Foo in uid or 1 or a`]);
             assert.deepEqual(getDomain(controlPanel), [
                 ["foo", "in", [7, 1, "a"]], // uid = 7
             ]);
