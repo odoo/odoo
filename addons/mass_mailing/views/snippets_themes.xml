@@ -191,21 +191,21 @@
 </template>
 
 <template id="s_mail_block_footer_social" name="Footer Center">
-    <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200">
+    <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_center o_mail_snippet_general bg-200 pt16">
         <div class="container">
             <div class="row">
-                <div class="col-lg o_mail_footer_social">
+                <div class="col-lg o_mail_footer_social" style="text-align: center;">
                     <t t-call="mass_mailing.social_links"/>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg o_mail_footer_links">
+                <div class="col-lg o_mail_footer_links" style="text-align: center;">
                     <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
                 </div>
             </div>
             <div class="row">
                 <div class="col-lg">
-                    <p>
+                    <p style="text-align: center;">
                         © <t t-esc="datetime.datetime.now().year"/> All Rights Reserved
                     </p>
                 </div>
@@ -215,7 +215,7 @@
 </template>
 
 <template id="s_mail_block_footer_social_left" name="Footer Left">
-    <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general">
+    <div class="s_footer_social o_mail_block_footer_social o_mail_footer_social_left o_mail_snippet_general pt16">
         <div class="container">
             <div class="row">
                 <div class="col-lg o_mail_footer_description">
