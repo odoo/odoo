@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     "name": "Ecuadorian Accounting",
-    "version": "3.4",
+    "version": "3.1",
     "description": """
 Functional
 ----------
