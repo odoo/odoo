@@ -1785,7 +1785,7 @@ class _String(Field):
             if not old_translations:
                 new_translations_list.append({'en_US': cache_value, lang: cache_value})
                 continue
-            from_lang_value = old_translations.get(lang, old_translations.get('en_US'))
+            from_lang_value = old_translations.get(lang, old_translations['en_US'])
             translation_dictionary = self.get_translation_dictionary(from_lang_value, old_translations)
             text2terms = defaultdict(list)
             for term in new_terms:
@@ -1804,7 +1804,8 @@ class _String(Field):
                 for l in old_translations.keys()
             }
             new_translations[lang] = cache_value
-            new_translations.setdefault('en_US', cache_value)
+            if not records.env['res.lang']._lang_get_id('en_US'):
+                new_translations['en_US'] = cache_value
             new_translations_list.append(new_translations)
         # Maybe we can use Cache.update(records.with_context(cache_update_raw=True), self, new_translations_list, dirty=True)
         cache.update_raw(records, self, new_translations_list, dirty=True)
