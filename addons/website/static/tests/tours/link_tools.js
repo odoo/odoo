@@ -71,6 +71,7 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     ...wTourUtils.clickOnSave(),
     // 3. Edit a link after saving the page.
     ...wTourUtils.clickOnEditAndWaitEditMode(),
+    clickOnImgStep,
     {
         content: "The new link content should be odoo website and url odoo.be",
         trigger: 'iframe .s_text_image a[href="http://odoo.be"]:contains("odoo website")',
