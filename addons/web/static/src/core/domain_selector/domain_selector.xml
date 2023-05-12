@@ -13,10 +13,6 @@
                         </button>
                     </t>
                 </t>
-                <t t-elif="node.children.length === 1">
-                    Match records with the following rule:
-                    <t t-call="web._DomainSelector.branch.children" />
-                </t>
                 <t t-else="">
                     <span>Match records with </span>
                     <t t-call="web._DomainSelector.branch.connector" />
@@ -95,7 +91,7 @@
         </t>
         <t t-else="">
             <div class="d-inline-flex o_domain_tree_connector_selector" aria-atomic="true">
-                <Dropdown togglerClass="'btn btn-link btn-sm btn-primary py-0 px-1 o_domain_tree_connector_caret'">
+                <Dropdown togglerClass="'btn btn-link btn-primary py-0 px-1 o_domain_tree_connector_caret'">
                     <t t-set-slot="toggler">
                         <t t-esc="node.title"/>
                     </t>

@@ -82,7 +82,7 @@ QUnit.module("Components", (hooks) => {
                         },
                         datetime: { string: "Date Time", type: "datetime", searchable: true },
                         int: { string: "Integer", type: "integer", searchable: true },
-                        json_field: { string: "Json Field", type: "json", searchable: true},
+                        json_field: { string: "Json Field", type: "json", searchable: true },
                     },
                     records: [
                         { id: 1, foo: "yop", bar: true, product_id: 37 },
@@ -622,9 +622,11 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("json field with operator change from 'equal' to 'ilike'", async (assert) => {
-
         await makeDomainSelector({ domain: `[['json_field', '=', "hey"]]` });
-        assert.strictEqual(target.querySelector(".o_model_field_selector_chain_part").innerText, `Json Field`);
+        assert.strictEqual(
+            target.querySelector(".o_model_field_selector_chain_part").innerText,
+            `Json Field`
+        );
         assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "equal"); // option "="
         assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, `hey`);
 
@@ -923,15 +925,15 @@ QUnit.module("Components", (hooks) => {
         const toTest = [
             {
                 domain: `["!", ("foo", "=", "abc")]`,
-                result: `Match records with the following rule:\nFoo\n!= "abc"`,
+                result: `Match records with all of the following rules:\nFoo\n!= "abc"`,
             },
             {
                 domain: `["!", "!", ("foo", "=", "abc")]`,
-                result: `Match records with the following rule:\nFoo\n= "abc"`,
+                result: `Match records with all of the following rules:\nFoo\n= "abc"`,
             },
             {
                 domain: `["!", "!", "!", ("foo", "=", "abc")]`,
-                result: `Match records with the following rule:\nFoo\n!= "abc"`,
+                result: `Match records with all of the following rules:\nFoo\n!= "abc"`,
             },
             {
                 domain: `["!", "&", ("foo", "=", "abc"), ("foo", "=", "def")]`,
@@ -1040,15 +1042,15 @@ QUnit.module("Components", (hooks) => {
         const toTest = [
             {
                 domain: `["!", ("foo", "=", "abc")]`,
-                result: `Match records with the following rule:\nFoo\n!= "abc"`,
+                result: `Match records with all of the following rules:\nFoo\n!= "abc"`,
             },
             {
                 domain: `["!", "!", ("foo", "=", "abc")]`,
-                result: `Match records with the following rule:\nFoo\n= "abc"`,
+                result: `Match records with all of the following rules:\nFoo\n= "abc"`,
             },
             {
                 domain: `["!", "!", "!", ("foo", "=", "abc")]`,
-                result: `Match records with the following rule:\nFoo\n!= "abc"`,
+                result: `Match records with all of the following rules:\nFoo\n!= "abc"`,
             },
             {
                 domain: `["!", "&", ("foo", "=", "abc"), ("foo", "=", "def")]`,

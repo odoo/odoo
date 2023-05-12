@@ -1586,7 +1586,7 @@ QUnit.module("Search", (hooks) => {
                 target.querySelector(".o_domain_leaf .o_model_field_selector_chain_part").innerText,
                 "ID"
             );
-            assert.containsNone(target, "button.o_domain_tree_connector_caret");
+            assert.containsOnce(target, "button.o_domain_tree_connector_caret");
 
             await click(target, ".o_domain_add_node_button .fa-plus");
             assert.containsOnce(target, "button.o_domain_tree_connector_caret");
