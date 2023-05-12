@@ -188,12 +188,16 @@
                 <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button o_stat_button_info" disabled="1" attrs="{'invisible': [('is_connected', '=', False)]}">
-                            <i class="fa fa-fw o_button_icon fa-circle text-success"/>
-                            <span>Connected</span>
+                            <i class="fa fa-fw o_button_icon fa-circle text-success" title="Connected"/>
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Connected</span>
+                            </div>
                         </button>
                         <button class="oe_stat_button o_stat_button_info" disabled="1" attrs="{'invisible': [('is_connected', '=', True)]}">
-                            <i class="fa fa-fw o_button_icon fa-circle text-danger"/>
-                            <span>Offline</span>
+                            <i class="fa fa-fw o_button_icon fa-circle text-danger" title="Offline"/>
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Offline</span>
+                            </div>
                         </button>
                         <button id="w_visitor_visit_counter" class="oe_stat_button o_stat_button_info" disabled="1" icon="fa-globe">
                             <field name="visit_count" widget="statinfo" string="Visits"/>

@@ -26,8 +26,6 @@ export class Layout extends Component {
     }
     get controlPanelSlots() {
         const slots = { ...this.props.slots };
-        slots["control-panel-bottom-left-buttons"] = slots["layout-buttons"];
-        delete slots["layout-buttons"];
         delete slots.default;
         return slots;
     }
@@ -38,11 +36,7 @@ export class Layout extends Component {
         }
         return {
             ...this.props.display,
-            controlPanel: {
-                ...controlPanel,
-                "top-left": false,
-                "bottom-left-buttons": false,
-            },
+            controlPanel,
         };
     }
 }

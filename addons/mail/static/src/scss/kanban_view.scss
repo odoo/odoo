@@ -4,26 +4,6 @@ $o-kanban-attachement-image-size: 80px;
     .o_module_desc_short {
         max-width: 90%;
     }
-    .ribbon {
-        &::before, &::after {
-            display: none;
-        }
-
-        span {
-            padding: 5px;
-            font-size: x-small;
-            z-index: unset;
-            height: auto;
-        }
-    }
-    .ribbon-top-right {
-        margin-top: 54px;
-
-        span {
-            top: 15px;
-            left: 10px;
-        }
-    }
 }
 
 .o_kanban_renderer {
@@ -83,7 +63,6 @@ $o-kanban-attachement-image-size: 80px;
                 }
 
                 .oe_kanban_avatar {
-                    border-radius: 4px;
                     border: 1px solid $component-active-color;
                 }
             }

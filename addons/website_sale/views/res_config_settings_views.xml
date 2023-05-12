@@ -10,7 +10,7 @@
                 <div class="mt8" attrs="{'invisible': [('terms_type', '!=', 'html')]}" groups="website.group_website_designer">
                     <strong class="align-top">URL: </strong><field name="terms_url"/>
                     <div>
-                        <button name='action_update_terms' icon="fa-arrow-right" type="object" string="Edit in Website Builder" class="btn-link"/>
+                        <button name='action_update_terms' icon="oi-arrow-right" type="object" string="Edit in Website Builder" class="btn-link"/>
                     </div>
                 </div>
             </button>
@@ -49,7 +49,7 @@
                     <setting help="Add a customizable form during checkout (after address)">
                         <field name="enabled_extra_checkout_step"/>
                         <div class="row mt8 ms-4" attrs="{'invisible': [('enabled_extra_checkout_step', '=', False)]}">
-                            <button type="object" name="action_open_extra_info" string="Configure Form " class="btn-link" icon="fa-arrow-right"/>
+                            <button type="object" name="action_open_extra_info" string="Configure Form " class="btn-link" icon="oi-arrow-right"/>
                         </div>
                     </setting>
                     <setting id="digital_content_setting" title="Provide customers with product-specific links or downloadable content in the confirmation page of the checkout process if the payment gets through. To do so, attach some files to a product using the new Files button and publish them." help="Add download link for customers at the end of checkout">
@@ -88,7 +88,7 @@
                             <field name="product_pricelist_setting" class="o_light_label w-75" widget="radio"/>
                         </div>
                         <div attrs="{'invisible': [('group_product_pricelist', '=', False)]}">
-                            <button type="action" name="%(product.product_pricelist_action2)d" string="Pricelists" class="btn-link" icon="fa-arrow-right"/>
+                            <button type="action" name="%(product.product_pricelist_action2)d" string="Pricelists" class="btn-link" icon="oi-arrow-right"/>
                         </div>
                     </setting>
                     <setting help="Add a strikethrough price, as a comparison">
@@ -101,7 +101,7 @@
                         <field name="group_product_variant"/>
                         <div class="content-group" attrs="{'invisible': [('group_product_variant', '=', False)]}">
                             <div class="mt8">
-                                <button type="action" name="%(product.attribute_action)d" string="Attributes" class="btn-link" icon="fa-arrow-right"/>
+                                <button type="action" name="%(product.attribute_action)d" string="Attributes" class="btn-link" icon="oi-arrow-right"/>
                             </div>
                         </div>
                     </setting>
@@ -133,7 +133,7 @@
                              documentation="/applications/inventory_and_mrp/inventory/shipping/setup/third_party_shipper.html">
                         <div class="content-group">
                             <div class="mt16">
-                                <button type="action" name="%(delivery.action_delivery_carrier_form)d" string="Shipping Methods" class="btn-link" icon="fa-arrow-right"/>
+                                <button type="action" name="%(delivery.action_delivery_carrier_form)d" string="Shipping Methods" class="btn-link" icon="oi-arrow-right"/>
                             </div>
                         </div>
                     </setting>
@@ -146,7 +146,7 @@
                         <field name="module_delivery_dhl" widget="upgrade_boolean"/>
                         <div class="content-group">
                             <div class="mt8" attrs="{'invisible': [('module_delivery_dhl', '=', False)]}">
-                                <button name="%(delivery.action_delivery_carrier_form)d" icon="fa-arrow-right" type="action" string="DHL Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'dhl'}"/>
+                                <button name="%(delivery.action_delivery_carrier_form)d" icon="oi-arrow-right" type="action" string="DHL Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'dhl'}"/>
                             </div>
                         </div>
                     </setting>
@@ -155,7 +155,7 @@
                         <field name="module_delivery_fedex" widget="upgrade_boolean"/>
                         <div class="content-group">
                             <div class="mt8" attrs="{'invisible': [('module_delivery_fedex', '=', False)]}">
-                                <button name="%(delivery.action_delivery_carrier_form)d" icon="fa-arrow-right" type="action" string="FedEx Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'fedex'}"/>
+                                <button name="%(delivery.action_delivery_carrier_form)d" icon="oi-arrow-right" type="action" string="FedEx Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'fedex'}"/>
                             </div>
                         </div>
                     </setting>
@@ -164,7 +164,7 @@
                         <field name="module_delivery_usps" widget="upgrade_boolean"/>
                         <div class="content-group">
                             <div class="mt8" attrs="{'invisible': [('module_delivery_usps', '=', False)]}">
-                                <button name="%(delivery.action_delivery_carrier_form)d" icon="fa-arrow-right" type="action" string="USPS Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'usps'}"/>
+                                <button name="%(delivery.action_delivery_carrier_form)d" icon="oi-arrow-right" type="action" string="USPS Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'usps'}"/>
                             </div>
                         </div>
                     </setting>
@@ -173,7 +173,7 @@
                         <field name="module_delivery_bpost" widget="upgrade_boolean"/>
                         <div class="content-group">
                             <div class="mt8" attrs="{'invisible': [('module_delivery_bpost', '=', False)]}">
-                                <button name="%(delivery.action_delivery_carrier_form)d" icon="fa-arrow-right" type="action" string="bpost Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'bpost'}"/>
+                                <button name="%(delivery.action_delivery_carrier_form)d" icon="oi-arrow-right" type="action" string="bpost Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'bpost'}"/>
                             </div>
                         </div>
                     </setting>
@@ -182,7 +182,7 @@
                         <field name="module_delivery_easypost" widget="upgrade_boolean"/>
                         <div class="content-group">
                             <div class="mt8" attrs="{'invisible': [('module_delivery_easypost', '=', False)]}">
-                                <button name="%(delivery.action_delivery_carrier_form)d" icon="fa-arrow-right" type="action" string="Easypost Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'easypost'}"/>
+                                <button name="%(delivery.action_delivery_carrier_form)d" icon="oi-arrow-right" type="action" string="Easypost Shipping Methods" class="btn-link" context="{'search_default_delivery_type': 'easypost'}"/>
                             </div>
                         </div>
                     </setting>
@@ -245,7 +245,7 @@
                         </div>
                     </div>
                     <div attrs="{'invisible': [('send_abandoned_cart_email', '=', False)]}" class="mt8">
-                        <button type="object" name="action_open_abandoned_cart_mail_template" string="Customize Abandoned Email Template" class="btn-link" icon="fa-arrow-right"/>
+                        <button type="object" name="action_open_abandoned_cart_mail_template" string="Customize Abandoned Email Template" class="btn-link" icon="oi-arrow-right"/>
                     </div>
                 </setting>
             </setting>

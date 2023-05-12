@@ -9,7 +9,7 @@
                 <!-- Stripe -->
                 <field name="stripe_serial_number" attrs="{'invisible': [('use_payment_terminal', '!=', 'stripe')], 'required': [('use_payment_terminal', '=', 'stripe')]}"/>
                 <div colspan="2" class="mt16" attrs="{'invisible': [('use_payment_terminal', '!=', 'stripe')], 'required': [('use_payment_terminal', '=', 'stripe')]}">
-                    <button name="action_stripe_key" type="object" icon="fa-arrow-right" string="Don't forget to complete Stripe connect before using this payment method." class="btn-link"/>
+                    <button name="action_stripe_key" type="object" icon="oi-arrow-right" string="Don't forget to complete Stripe connect before using this payment method." class="btn-link"/>
                 </div>
             </xpath>
         </field>

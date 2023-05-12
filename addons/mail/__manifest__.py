@@ -160,7 +160,7 @@ For more specific needs, you may also assign custom-defined actions
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
             ('include', 'web.assets_common'),
-            ('include', 'web._assets_bootstrap'),
+            ('include', 'web._assets_bootstrap_backend'),
             'web/static/src/scss/bootstrap_overridden.scss',
             'web/static/src/webclient/webclient.scss',
             'web/static/src/core/utils/transitions.scss',  # included early because used by other files

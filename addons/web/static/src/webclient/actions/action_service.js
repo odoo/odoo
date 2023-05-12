@@ -514,7 +514,8 @@ function makeActionManager(env) {
             viewProps.resId = action.res_id;
         }
 
-        viewProps.noBreadcrumbs = action.context.no_breadcrumbs;
+        viewProps.noBreadcrumbs =
+            "no_breadcrumbs" in action.context ? action.context.no_breadcrumbs : target === "new";
         delete action.context.no_breadcrumbs;
         return {
             props: viewProps,

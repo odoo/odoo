@@ -29,7 +29,7 @@ QUnit.module("Mobile Fields", ({ beforeEach }) => {
 
     QUnit.module("StatusBarField");
 
-    QUnit.test("statusbar is rendered correclty on small devices", async (assert) => {
+    QUnit.test("statusbar is rendered correctly on small devices", async (assert) => {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -75,20 +75,20 @@ QUnit.module("Mobile Fields", ({ beforeEach }) => {
         );
         assert.containsN(
             fixture,
-            ".o_statusbar_status .dropdown-menu .btn",
+            ".o_statusbar_status .dropdown-menu .dropdown-item",
             3,
             "should have 3 status"
         );
         assert.containsN(
             fixture,
-            ".o_statusbar_status .btn.disabled",
+            ".o_statusbar_status .dropdown-item.disabled",
             3,
             "all status should be disabled"
         );
         assert.hasClass(
-            fixture.querySelector(".o_statusbar_status .btn:nth-child(3)"),
-            "btn-primary",
-            "active status should be btn-primary"
+            fixture.querySelector(".o_statusbar_status .dropdown-item:nth-child(3)"),
+            "active",
+            "active status should be set"
         );
     });
 
@@ -131,30 +131,30 @@ QUnit.module("Mobile Fields", ({ beforeEach }) => {
         );
         assert.containsN(
             fixture,
-            ".o_statusbar_status .dropdown-menu .btn",
+            ".o_statusbar_status .dropdown-menu .dropdown-item",
             3,
-            "statusbar widget dropdown menu should have 3 buttons"
+            "statusbar widget dropdown menu should have 3 items"
         );
         assert.strictEqual(
             fixture
-                .querySelectorAll(".o_statusbar_status .dropdown-menu .btn")[0]
+                .querySelectorAll(".o_statusbar_status .dropdown-menu .dropdown-item")[0]
                 .textContent.trim(),
             "first record",
-            "statusbar widget dropdown first button should display the first record display_name"
+            "statusbar widget dropdown first item should display the first record display_name"
         );
         assert.strictEqual(
             fixture
-                .querySelectorAll(".o_statusbar_status .dropdown-menu .btn")[1]
+                .querySelectorAll(".o_statusbar_status .dropdown-menu .dropdown-item")[1]
                 .textContent.trim(),
             "second record",
-            "statusbar widget dropdown second button should display the second record display_name"
+            "statusbar widget dropdown second item should display the second record display_name"
         );
         assert.strictEqual(
             fixture
-                .querySelectorAll(".o_statusbar_status .dropdown-menu .btn")[2]
+                .querySelectorAll(".o_statusbar_status .dropdown-menu .dropdown-item")[2]
                 .textContent.trim(),
             "aaa",
-            "statusbar widget dropdown third button should display the third record display_name"
+            "statusbar widget dropdown third item should display the third record display_name"
         );
     });
 
@@ -175,34 +175,34 @@ QUnit.module("Mobile Fields", ({ beforeEach }) => {
 
         await click(fixture, ".o_statusbar_status .dropdown-toggle");
         assert.hasClass(
-            fixture.querySelector(".o_statusbar_status .dropdown-menu .btn:nth-child(3)"),
-            "btn-primary"
+            fixture.querySelector(".o_statusbar_status .dropdown-menu .dropdown-item:nth-child(3)"),
+            "active"
         );
         assert.hasClass(
-            fixture.querySelector(".o_statusbar_status .dropdown-menu .btn:nth-child(3)"),
+            fixture.querySelector(".o_statusbar_status .dropdown-menu .dropdown-item:nth-child(3)"),
             "disabled"
         );
 
         assert.containsN(
             fixture,
-            ".o_statusbar_status .btn-secondary:not(.dropdown-toggle):not(.disabled)",
+            ".o_statusbar_status .dropdown-item:not(.dropdown-toggle):not(.disabled):not(.active)",
             2,
-            "other status should be btn-secondary and not disabled"
+            "other status should be active and not disabled"
         );
 
         await click(
             fixture.querySelector(
-                ".o_statusbar_status .btn-secondary:not(.dropdown-toggle):not(.disabled)"
+                ".o_statusbar_status .dropdown-item:not(.dropdown-toggle):not(.disabled):not(.active)"
             )
         );
 
         await click(fixture, ".o_statusbar_status .dropdown-toggle");
         assert.hasClass(
-            fixture.querySelector(".o_statusbar_status .dropdown-menu .btn:nth-child(1)"),
-            "btn-primary"
+            fixture.querySelector(".o_statusbar_status .dropdown-menu .dropdown-item:nth-child(1)"),
+            "active"
         );
         assert.hasClass(
-            fixture.querySelector(".o_statusbar_status .dropdown-menu .btn:nth-child(1)"),
+            fixture.querySelector(".o_statusbar_status .dropdown-menu .dropdown-item:nth-child(1)"),
             "disabled"
         );
     });

@@ -16,7 +16,8 @@ import {
     rankInterval,
     yearSelected,
 } from "./utils/dates";
-import { FACET_ICONS } from "./utils/misc";
+import { FACET_ICONS, FACET_COLORS } from "./utils/misc";
+
 import { EventBus, toRaw } from "@odoo/owl";
 import { toDomain, toTree } from "@web/core/domain_tree";
 import { extractPathsFromDomain } from "@web/core/domain_selector/utils";
@@ -1752,6 +1753,7 @@ export class SearchModel extends EventBus {
                 facet.title = title;
             } else {
                 facet.icon = FACET_ICONS[type];
+                facet.color = FACET_COLORS[type];
             }
             if (groupActiveItemDomains.length) {
                 facet.domain = Domain.or(groupActiveItemDomains).toString();

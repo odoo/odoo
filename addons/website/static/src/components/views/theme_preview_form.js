@@ -93,10 +93,7 @@ ThemePreviewFormControlPanel.template = 'website.ThemePreviewForm.ControlPanel';
 const ThemePreviewFormView = {
     ...formView,
     display: {
-        controlPanel: {
-            'top-right': false,
-            'bottom-right': true,
-        }
+        controlPanel: {}
     },
     buttonTemplate: 'website.ThemePreview.Buttons',
     Controller: ThemePreviewFormController,

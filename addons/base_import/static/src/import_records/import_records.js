@@ -5,7 +5,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
 
-const favoriteMenuRegistry = registry.category("favoriteMenu");
+const cogMenuRegistry = registry.category("cogMenu");
 
 /**
  * 'Import records' menu
@@ -46,4 +46,4 @@ export const importRecordsItem = {
         !!JSON.parse(config.viewArch.getAttribute("create") || "1"),
 };
 
-favoriteMenuRegistry.add("import-menu", importRecordsItem, { sequence: 1 });
+cogMenuRegistry.add("import-menu", importRecordsItem, { sequence: 1 });

@@ -139,10 +139,10 @@ var DateTimePicker = function ($, moment) {
         icons: {
             time: 'fa fa-clock-o',
             date: 'fa fa-calendar',
-            up: 'fa fa-arrow-up',
-            down: 'fa fa-arrow-down',
-            previous: 'fa fa-chevron-left',
-            next: 'fa fa-chevron-right',
+            up: 'oi oi-arrow-up',
+            down: 'oi oi-arrow-down',
+            previous: 'oi oi-chevron-left',
+            next: 'oi oi-chevron-right',
             today: 'fa fa-calendar-check-o',
             clear: 'fa fa-trash',
             close: 'fa fa-times'

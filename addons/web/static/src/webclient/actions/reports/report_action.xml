@@ -4,7 +4,7 @@
     <t t-name="web.ReportAction" owl="1">
         <div class="o_action">
             <Layout display="{ controlPanel: { 'top-right' : false, 'bottom-right': false } }">
-                <t t-set-slot="control-panel-bottom-left">
+                <t t-set-slot="control-panel-create-button">
                     <button t-on-click="print" type="button" class="btn btn-primary" title="Print">Print</button>
                 </t>
                 <iframe t-ref="iframe" t-on-load="onIframeLoaded" class="h-100 w-100" t-att-src="reportUrl" />

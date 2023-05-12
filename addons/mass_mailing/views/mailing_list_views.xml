@@ -51,42 +51,18 @@
                         </button>
                         <button name="action_view_contacts_bouncing"
                                 type="object" icon="fa-exchange" class="oe_stat_button">
-                            <div class="o_field_widget o_stat_info">
-                                <div class="oe_inline">
-                                    <span class="o_stat_value">
-                                        <field name="contact_pct_bounce" widget="statinfo" nolabel="1"/>
-                                    </span>
-                                    <span class="o_stat_value">%</span>
-                                </div>
-                                <span class="o_stat_text">Bounce</span>
-                            </div>
+                                <field name="contact_pct_bounce" widget="statinfo" string="% Bounce"/>
                         </button>
                         <button name="action_view_contacts_opt_out"
                                 type="object" icon="fa-bell-slash-o" class="oe_stat_button">
-                            <div class="o_field_widget o_stat_info">
-                                <div class="oe_inline">
-                                    <span class="o_stat_value">
-                                        <field name="contact_pct_opt_out" widget="statinfo" nolabel="1"/>
-                                    </span>
-                                    <span class="o_stat_value">%</span>
-                                </div>
-                                <span class="o_stat_text">Opt-out</span>
-                            </div>
+                                <field name="contact_pct_opt_out" widget="statinfo" string="% Opt-out"/>
                         </button>
                         <button name="action_view_contacts_blacklisted"
                                 type="object" icon="fa-ban" class="oe_stat_button">
-                            <div class="o_field_widget o_stat_info">
-                                <div class="oe_inline">
-                                    <span class="o_stat_value">
-                                        <field name="contact_pct_blacklisted" widget="statinfo" nolabel="1"/>
-                                    </span>
-                                    <span class="o_stat_value">%</span>
-                                </div>
-                                <span class="o_stat_text">Blacklist</span>
-                            </div>
+                                <field name="contact_pct_blacklisted" widget="statinfo" string="% Blacklist"/>
                         </button>
                     </div>
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
                         <label for="name"/>
                         <h1>
@@ -225,7 +201,7 @@
                                         <field name="contact_count_email"/>
                                     </span>
                                     <br/>
-                                    <span class="text-secondary">
+                                    <span class="text-muted">
                                         <i class="fa fa-envelope-o"/> Contacts
                                     </span>
                                 </a>
@@ -235,7 +211,7 @@
                                         <field name="mailing_count"/>
                                     </span>
                                     <br/>
-                                    <span class="text-secondary">Mailings</span>
+                                    <span class="text-muted">Mailings</span>
                                 </a>
                                 <hr class="w-100 d-block d-sm-none opacity-0 m-0 p-0"/>
                                 <a class="me-sm-0 me-3 text-large" tabindex="-1"
@@ -244,7 +220,7 @@
                                         <field name="contact_pct_bounce"/> %
                                     </span>
                                     <br/>
-                                    <span class="text-secondary">Bounce</span>
+                                    <span class="text-muted">Bounce</span>
                                 </a>
                                 <a class="me-sm-0 me-3 text-large" tabindex="-1"
                                     name="action_view_contacts_opt_out" type="object">
@@ -252,7 +228,7 @@
                                         <field name="contact_pct_opt_out"/> %
                                     </span>
                                     <br/>
-                                    <span class="text-secondary">Opt-Out</span>
+                                    <span class="text-muted">Opt-Out</span>
                                 </a>
                                 <a class="me-sm-0 me-3 text-large" tabindex="-1"
                                     name="action_view_contacts_blacklisted" type="object">
@@ -260,7 +236,7 @@
                                         <field name="contact_pct_blacklisted"/> %
                                     </span>
                                     <br/>
-                                    <span class="text-secondary">Blacklist</span>
+                                    <span class="text-muted">Blacklist</span>
                                 </a>
                             </div>
                             <div class="o_kanban_ungrouped_action_buttons col-12 col-lg-2 py-0 pe-2 ps-md-2 my-md-auto my-2 d-none d-md-flex flex-wrap justify-content-lg-end">

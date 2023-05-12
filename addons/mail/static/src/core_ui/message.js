@@ -465,7 +465,7 @@ export class Message extends Component {
     }
 
     get imStatusClassName() {
-        let res = "position-absolute bottom-0 end-0";
+        let res = "position-absolute";
         if (this.hasOpenChatFeature) {
             res += " cursor-pointer";
         }

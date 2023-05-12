@@ -500,7 +500,7 @@
             <field name="arch" type="xml">
                 <form string="Expense Categories">
                     <sheet>
-                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name='product_variant_count' invisible='1'/>
                         <field name="id" invisible="1"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'image_preview': 'image_128'}"/>
@@ -727,7 +727,9 @@
                             type="object"
                             attrs="{'invisible': ['|', ('state', 'not in', ['post', 'done']), ('account_move_id', '=', False)]}"
                             groups="account.group_account_invoice">
-                            Journal Entry
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Journal Entry</span>
+                            </div>
                         </button>
                         <button name="action_open_expense_view"
                             class="oe_stat_button"
@@ -737,8 +739,8 @@
                             <field name="expense_number" widget="statinfo" string="Expenses"/>
                         </button>
                     </div>
-                    <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': [('payment_state', '!=', 'paid')]}"/>
-                    <widget name="web_ribbon" title="Partial" bg_color="bg-info" attrs="{'invisible': [('payment_state', '!=', 'partial')]}"/>
+                    <widget name="web_ribbon" title="Paid" bg_color="text-bg-success" attrs="{'invisible': [('payment_state', '!=', 'paid')]}"/>
+                    <widget name="web_ribbon" title="Partial" bg_color="text-bg-info" attrs="{'invisible': [('payment_state', '!=', 'partial')]}"/>
                     <widget name="web_ribbon" title="In Payment" attrs="{'invisible': [('payment_state', '!=', 'in_payment')]}"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>

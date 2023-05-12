@@ -1,18 +1,17 @@
 /** @odoo-module **/
 
-import { Dropdown } from "@web/core/dropdown/dropdown";
-import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-import { useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
 import { useModel } from "@web/views/model";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { useSetupView } from "@web/views/view_hook";
+import { SearchBar } from "@web/search/search_bar/search_bar";
+import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
+import { CogMenu } from "@web/search/cog_menu/cog_menu";
 
 import { Component, useRef } from "@odoo/owl";
 
 export class GraphController extends Component {
     setup() {
-        this.actionService = useService("action");
         this.model = useModel(this.props.Model, this.props.modelParams);
 
         useSetupView({
@@ -22,6 +21,7 @@ export class GraphController extends Component {
             },
             getContext: () => this.getContext(),
         });
+        this.searchBarToggler = useSearchBarToggler();
     }
 
     /**
@@ -44,90 +44,10 @@ export class GraphController extends Component {
         }
         return context;
     }
-
-    /**
-     * Execute the action to open the view on the current model.
-     *
-     * @param {Array} domain
-     * @param {Array} views
-     * @param {Object} context
-     */
-    openView(domain, views, context) {
-        this.actionService.doAction(
-            {
-                context,
-                domain,
-                name: this.model.metaData.title,
-                res_model: this.model.metaData.resModel,
-                target: "current",
-                type: "ir.actions.act_window",
-                views,
-            },
-            {
-                viewType: "list",
-            }
-        );
-    }
-    /**
-     * @param {string} domain the domain of the clicked area
-     */
-    onGraphClicked(domain) {
-        const { context } = this.model.metaData;
-
-        Object.keys(context).forEach((x) => {
-            if (x === "group_by" || x.startsWith("search_default_")) {
-                delete context[x];
-            }
-        });
-
-        const views = {};
-        for (const [viewId, viewType] of this.env.config.views || []) {
-            views[viewType] = viewId;
-        }
-        function getView(viewType) {
-            return [views[viewType] || false, viewType];
-        }
-        const actionViews = [getView("list"), getView("form")];
-        this.openView(domain, actionViews, context);
-    }
-
-    /**
-     * @param {Object} param0
-     * @param {string} param0.measure
-     */
-    onMeasureSelected({ measure }) {
-        this.model.updateMetaData({ measure });
-    }
-
-    /**
-     * @param {"bar"|"line"|"pie"} mode
-     */
-    onModeSelected(mode) {
-        this.model.updateMetaData({ mode });
-    }
-
-    /**
-     * @param {"ASC"|"DESC"} order
-     */
-    toggleOrder(order) {
-        const { order: currentOrder } = this.model.metaData;
-        const nextOrder = currentOrder === order ? null : order;
-        this.model.updateMetaData({ order: nextOrder });
-    }
-
-    toggleStacked() {
-        const { stacked } = this.model.metaData;
-        this.model.updateMetaData({ stacked: !stacked });
-    }
-
-    toggleCumulated() {
-        const { cumulated } = this.model.metaData;
-        this.model.updateMetaData({ cumulated: !cumulated });
-    }
 }
 
 GraphController.template = "web.GraphView";
-GraphController.components = { Dropdown, DropdownItem, Layout };
+GraphController.components = { Layout, SearchBar, CogMenu };
 
 GraphController.props = {
     ...standardViewProps,

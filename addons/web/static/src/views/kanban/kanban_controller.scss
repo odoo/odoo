@@ -1,8 +1,20 @@
+// ------- Kanban View -------
+.o_kanban_view {
+    @include media-breakpoint-down(md) {
+        --ControlPanel-border-bottom: none;
+    }
+}
+
 // ------- Kanban renderer -------
 .o_kanban_renderer {
     // ----------------------------------------------------------------------------
     // Default KanbanView values
 
+    --Kanban-background: #{$o-kanban-background};
+    --Kanban-gap: unset;
+    --Kanban-padding: 0;
+
+    --KanbanGroup-background: var(--Kanban-background);
     --KanbanGroup-padding-h: #{$o-kanban-group-padding};
     --KanbanGroup-padding-bottom: #{$o-kanban-group-padding};
 
@@ -20,20 +32,35 @@
 
     --KanbanRecord__dropdown-gap: #{$border-width};
 
-    --KanbanColumn__highlight-background: #{rgba($o-info, 0.05)};
-    --KanbanColumn__highlight-border: #{$o-info};
+    --KanbanColumn__highlight-background: #{tint-color($o-action, 90%)};
+    --KanbanColumn__highlight-border: #{$o-action};
 
     --o-view-nocontent-zindex: 1;
+
     // ----------------------------------------------------------------------------
+    // Inner components contextual adaptations
+
+    --Ribbon-font-size: #{$font-size-sm};
+    --Ribbon-gap-top: calc(var(--KanbanRecord-padding-v) * -1 - #{$border-width});
+    --Ribbon-gap-right: 0;
+    --Ribbon-wrapper-width: 6.5rem;
+    --Ribbon-height:  calc(var(--Ribbon-font-size) * 2);
+    --Ribbon-z-index: 0;
+
+    // ----------------------------------------------------------------------------
+
+    border-top: $border-width solid var(--Kanban-background);
+    background: var(--Kanban-background);
+    padding: var(--Kanban-padding);
+    gap: var(--Kanban-gap);
 
     @include media-breakpoint-down(md) {
         --KanbanRecord-padding-h: #{$o-kanban-inside-hgutter * 2};
-        padding: 0px !important;
     }
 
     .o_kanban_record > div:not(.o_dropdown_kanban),
     .o_kanban_quick_create {
-        border: 1px solid $border-color;
+        border: $border-width solid $border-color;
         background-color: $o-view-background-color;
     }
 
@@ -50,7 +77,7 @@
     .o_kanban_record {
         position: relative;
         min-width: 150px;
-        margin: 0 0 -1px;
+        margin: 0 0 (-$border-width);
 
         > div:not(.o_dropdown_kanban) {
             padding: var(--KanbanRecord-padding-v) var(--KanbanRecord-padding-h);
@@ -58,16 +85,11 @@
             height: 100%;
         }
 
-        &:focus,
-        &:focus-within {
-            margin-bottom: 0; // show the shadow on top of the previous & next cards in grouped mode
-        }
-
         // ------- Kanban Record, v11 Layout -------
         // Records colours
         > div::after {
             content: "";
-            @include o-position-absolute($border-width * 2, auto, $border-width * 2, $border-width);
+            @include o-position-absolute(0, auto, 0, 0);
             width: $o-kanban-color-border-width;
         }
 
@@ -103,7 +125,7 @@
         }
 
         .o_kanban_record_title {
-            @include o-kanban-record-title($font-size: 13px);
+            @include o-kanban-record-title();
             overflow-wrap: break-word;
             word-wrap: break-word;
         }
@@ -124,6 +146,7 @@
                 display: flex;
                 align-items: center;
                 min-height: 20px;
+                gap: map-get($map: $spacers, $key: 1);
             }
             .oe_kanban_bottom_left {
                 flex: 1 1 auto;
@@ -144,17 +167,6 @@
             }
             .oe_kanban_bottom_right {
                 flex: 0 1 auto;
-
-                .oe_kanban_avatar {
-                    border-radius: 50%;
-                    object-fit: cover;
-                }
-                .oe_kanban_avatar,
-                .o_field_many2one_avatar > div > .o_m2o_avatar {
-                    width: 20px;
-                    height: 20px;
-                    margin-left: 6px;
-                }
             }
             .o_link_muted {
                 color: $body-color;
@@ -311,7 +323,6 @@
         .o_field_many2many_tags {
             display: block;
             margin-bottom: var(--KanbanRecord-gap-v);
-            line-height: 1.2;
             word-break: break-all;
 
             &.avatar {
@@ -323,22 +334,9 @@
             }
 
             .o_tag {
-                display: inline-block;
-                margin-right: 4px;
-                font-size: 11px;
-                font-weight: 500;
-                background-color: transparent;
-                color: inherit;
-                box-shadow: none;
+                --Tag-max-width: MAX(200px, 100%);
+                --Tag-font-size: #{$o-font-size-base-smaller};
                 @include o-kanban-tag-color;
-
-                span {
-                    display: inline-block;
-                    width: 6px;
-                    height: 6px;
-                    margin-right: 4px;
-                    border-radius: 100%;
-                }
             }
         }
 
@@ -384,10 +382,10 @@
             cursor: pointer;
         }
 
-        &:focus,
+        &:focus-visible,
         &:focus-within {
             @include global-click-selector {
-                outline: thin solid mix(map-get($theme-colors, "primary"), map-get($grays, "400"));
+                outline: thin solid mix($o-main-link-color, map-get($grays, "300"));
                 outline-offset: -1px;
 
                 &:after {
@@ -464,23 +462,29 @@
 
     // Kanban Grouped Layout
     &.o_kanban_grouped {
+        --KanbanGroup-width: calc(var(--KanbanRecord--small-width) + (2 * var(--KanbanGroup-padding-h)));
+
         min-height: 100%;
 
         @include media-breakpoint-down(md) {
+            --KanbanGroup-width: 90%; // don't take full width to give a hint of next/previous column on smaller screens
+
             min-height: initial;
             height: 100%;
             overflow: scroll hidden !important;
             scroll-snap-type: x mandatory;
         }
 
+        @include media-breakpoint-up(lg) {
+            --KanbanGroup-width: calc(var(--KanbanRecord-width) + (2 * var(--KanbanGroup-padding-h)));
+        }
+
         .o_kanban_record {
             width: 100%;
         }
 
-        --KanbanGroup-width: 90%; // don't take full width to give a hint of next/previous column on smaller screens
-
-        @include media-breakpoint-up(md) {
-            --KanbanGroup-width: calc(var(--KanbanRecord-width) + (2 * var(--KanbanGroup-padding-h)));
+        .o_kanban_group {
+            background: var(--KanbanGroup-background);
         }
 
         .o_kanban_group,
@@ -495,8 +499,6 @@
 
     // Kanban Grouped Layout - Column default
     .o_kanban_group {
-        padding: 0 var(--KanbanGroup-padding-h) var(--KanbanGroup-padding-bottom);
-
         .o_kanban_header > .o_kanban_header_title {
             &:hover .o_kanban_config,
             .o_kanban_config.show {
@@ -527,15 +529,15 @@
         }
     }
 
-    .o_kanban_group .o_kanban_header,
-    .o_quick_create_folded {
-        position: sticky; // keep it visible
-        z-index: 1;
+    .o_kanban_group, .o_column_quick_create {
+        padding: 0 var(--KanbanGroup-padding-h) var(--KanbanGroup-padding-bottom);
+    }
+
+    .o_kanban_group .o_kanban_header, .o_quick_create_folded {
+        background: inherit;
     }
 
     .o_kanban_group:not(.o_column_folded) .o_kanban_header {
-        background-color: $o-webclient-background-color;
-
         .dropdown-item {
             max-width: calc(var(--KanbanRecord-width) * 0.75);
             text-overflow: ellipsis;
@@ -544,7 +546,7 @@
     }
 
     .o_quick_create_folded {
-        top: 1rem;
+        top: map-get($spacers, 3);
     }
 
     .o_column_quick_create,
@@ -554,38 +556,57 @@
     }
 
     .o_group_draggable .o_column_title {
-        cursor: move;
+        cursor: grab;
+
+        &:active {
+            cursor: grabbing;
+        }
     }
 
     // Kanban Grouped Layout - Column Folded
     .o_kanban_group.o_column_folded {
+
         // don't fill the width of record for a folded column
         .o_kanban_record.o_draggable {
             display: none !important;
         }
         // don't visually fold on smaller screens (aka. mobile)
         @include media-breakpoint-up(md) {
-            @include o-kanban-slim-col;
+            --KanbanGroup-padding-h: 0;
 
-            background-color: var(--KanbanGroup-grouped-bg, #{$gray-200});
+            &, .o_column_unfold {
+                cursor: col-resize;
+            }
 
             & + .o_kanban_group.o_column_folded {
                 margin-left: 1px;
             }
 
-            .o_kanban_header_title {
-                opacity: 0.5;
+            .o_kanban_header {
+                padding: 0 floor($o-kanban-group-padding * 0.7);
+            }
 
-                .o_column_title {
-                    @include o-kanban-v-title;
+            button.o_column_unfold {
+                padding: 0 .15rem;
+
+                .fa-caret-left {
+                    margin-right: 0.2rem;
                 }
             }
 
-            &:hover,
-            &.o_kanban_hover {
-                .o_kanban_header_title {
-                    opacity: 1;
+            &:hover button.o_column_unfold {
+                padding: 0;
+
+                .fa-caret-left {
+                    margin-right: 0.5rem;
                 }
+            }
+
+            .o_column_title {
+                @include o-position-absolute(map-get($spacers, 4));
+                transform-origin: left bottom 0;
+                transform: rotate(90deg);
+                overflow: visible;
             }
         }
     }
@@ -601,14 +622,17 @@
     // Kanban UN-grouped Layout
     &.o_kanban_ungrouped {
         min-height: 100%;
-        padding: var(--KanbanRecord-margin-v) var(--KanbanRecord-margin-h);
+
+        @include media-breakpoint-up(md) {
+            --Kanban-padding:  var(--KanbanRecord-margin-v) var(--KanbanRecord-margin-h);
+        }
 
         .o_kanban_record {
             width: var(--KanbanRecord-width);
             margin: calc(var(--KanbanRecord-margin-v) * 0.5) var(--KanbanRecord-margin-h);
 
             @include media-breakpoint-down(md) {
-                margin: 0 0 -1px 0;
+                margin: 0 0 #{-$border-width};
                 flex-basis: 100%;
             }
 

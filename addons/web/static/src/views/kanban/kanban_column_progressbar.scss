@@ -1,14 +1,10 @@
 @mixin o-kanban-css-filter($class, $accent-color) {
     // Provide CSS reordering and highlight
     &.o_kanban_group_show_#{$class} {
-        $mix-soft: mix($accent-color, $o-webclient-background-color, 5%);
-        $mix-full: mix($accent-color, $o-webclient-background-color);
+        --KanbanGroup-background: #{mix($accent-color, $o-kanban-background, 5%)};
 
-        &,
-        .o_kanban_header {
-            background-color: $mix-soft;
-            border-color: $mix-full;
-        }
+        outline: $border-width solid $o-view-background-color;
+        box-shadow: inset 2px 0 0 $accent-color, inset -2px 0 0 $accent-color;
 
         .oe_kanban_card_#{$class} {
             order: 1;
@@ -22,7 +18,6 @@
         .o_kanban_record:not(.oe_kanban_card_#{$class}) {
             order: 3;
             @include o-hover-opacity(0.5);
-            box-shadow: none;
         }
     }
 }
@@ -34,6 +29,10 @@
 
         > .o_column_progress {
             height: $font-size-sm;
+
+            .bg-200 {
+                --background-color: RGBA(#{to-rgb($o-gray-300)}, var(--bg-opacity, 1))
+            }
         }
     }
 
@@ -43,5 +42,6 @@
         @include o-kanban-css-filter(danger, map-get($theme-colors, "danger"));
         @include o-kanban-css-filter(muted, map-get($theme-colors, "dark"));
         @include o-kanban-css-filter(info, map-get($theme-colors, "info"));
+        @include o-kanban-css-filter(purple, purple);
     }
 }

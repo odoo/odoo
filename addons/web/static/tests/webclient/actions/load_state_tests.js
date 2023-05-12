@@ -17,8 +17,9 @@ import {
     nextTick,
     makeDeferred,
     editInput,
+    getNodesTextContent,
 } from "../../helpers/utils";
-import { pagerNext, toggleFilterMenu, toggleMenuItem } from "@web/../tests/search/helpers";
+import { pagerNext, toggleMenuItem, toggleSearchBarMenu } from "@web/../tests/search/helpers";
 import { session } from "@web/session";
 import {
     createWebClient,
@@ -30,6 +31,10 @@ import {
 import { errorService } from "@web/core/errors/error_service";
 
 import { Component, xml } from "@odoo/owl";
+
+function getBreadCrumbTexts(target) {
+    return getNodesTextContent(target.querySelectorAll(".breadcrumb-item, .o_breadcrumb .active"));
+}
 
 let serverData;
 let target;
@@ -233,13 +238,8 @@ QUnit.module("ActionManager", (hooks) => {
             model: "partner",
         });
         await testUtils.nextTick();
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view");
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item").text(),
-            "Second record",
-            "should have opened the second record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Second record"]);
         assert.verifySteps(["/web/webclient/load_menus", "get_views", "read"]);
     });
 
@@ -261,11 +261,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         await testUtils.nextTick();
         assert.containsOnce(target, ".o_form_view");
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item").text(),
-            "Second record",
-            "should have opened the second record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Second record"]);
         assert.containsNone(target, ".o_menu_brand");
         assert.verifySteps(["/web/webclient/load_menus", "get_views", "read"]);
     });
@@ -318,7 +314,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test(
         "lazy load multi record view if mono record one is requested",
         async function (assert) {
-            assert.expect(12);
+            assert.expect(11);
             const mockRPC = async function (route, args) {
                 assert.step((args && args.method) || route);
             };
@@ -332,15 +328,9 @@ QUnit.module("ActionManager", (hooks) => {
             await legacyExtraNextTick();
             assert.containsNone(target, ".o_list_view");
             assert.containsOnce(target, ".o_form_view");
-            assert.containsN(target, ".o_control_panel .breadcrumb-item", 2);
-            assert.strictEqual(
-                $(target).find(".o_control_panel .breadcrumb-item:last").text(),
-                "Second record",
-                "breadcrumbs should contain the display_name of the opened record"
-            );
+            assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "Second record"]);
             // go back to List
             await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb a"));
-            await legacyExtraNextTick();
             assert.containsOnce(target, ".o_list_view");
             assert.containsNone(target, ".o_form_view");
             assert.verifySteps([
@@ -354,48 +344,21 @@ QUnit.module("ActionManager", (hooks) => {
     );
 
     QUnit.test("lazy load multi record view with previous action", async function (assert) {
-        assert.expect(6);
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 4);
-        assert.containsOnce(
-            target,
-            ".o_control_panel .breadcrumb li",
-            "there should be one controller in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb li").text(),
-            "Partners Action 4",
-            "breadcrumbs should contain the display_name of the opened record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 4"]);
         await doAction(webClient, 3, {
             props: { resId: 2 },
             viewType: "form",
         });
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb li",
-            3,
-            "there should be three controllers in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb li").text(),
-            "Partners Action 4PartnersSecond record",
-            "the breadcrumb elements should be correctly ordered"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), [
+            "Partners Action 4",
+            "Partners",
+            "Second record",
+        ]);
         // go back to List
         await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb a:last"));
-        await legacyExtraNextTick();
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb li",
-            2,
-            "there should be two controllers in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb li").text(),
-            "Partners Action 4Partners",
-            "the breadcrumb elements should be correctly ordered"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 4", "Partners"]);
     });
 
     QUnit.test(
@@ -421,7 +384,7 @@ QUnit.module("ActionManager", (hooks) => {
     );
 
     QUnit.test("change the viewType of the current action", async function (assert) {
-        assert.expect(14);
+        assert.expect(13);
         const mockRPC = async function (route, args) {
             assert.step((args && args.method) || route);
         };
@@ -447,17 +410,7 @@ QUnit.module("ActionManager", (hooks) => {
         await legacyExtraNextTick();
         assert.containsNone(target, ".o_kanban_view");
         assert.containsOnce(target, ".o_form_view");
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            2,
-            "there should be two controllers in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item:last").text(),
-            "Fourth record",
-            "should have opened the requested record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "Fourth record"]);
         // verify steps to ensure that the whole action hasn't been re-executed
         // (if it would have been, /web/action/load and get_views would appear
         // several times)
@@ -472,7 +425,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("change the id of the current action", async function (assert) {
-        assert.expect(12);
+        assert.expect(11);
         const mockRPC = async function (route, args) {
             assert.step((args && args.method) || route);
         };
@@ -480,13 +433,8 @@ QUnit.module("ActionManager", (hooks) => {
         // execute action 3 and open the first record in a form view
         await doAction(webClient, 3);
         await testUtils.dom.click($(target).find(".o_list_view .o_data_cell:first"));
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view");
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item:last").text(),
-            "First record",
-            "should have opened the first record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "First record"]);
         // switch to record 4
         webClient.env.bus.trigger("test:hashchange", {
             action: 3,
@@ -494,19 +442,8 @@ QUnit.module("ActionManager", (hooks) => {
             view_type: "form",
         });
         await testUtils.nextTick();
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view");
-        assert.containsN(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            2,
-            "there should be two controllers in the breadcrumbs"
-        );
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item:last").text(),
-            "Fourth record",
-            "should have switched to the requested record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "Fourth record"]);
         // verify steps to ensure that the whole action hasn't been re-executed
         // (if it would have been, /web/action/load and get_views would appear
         // twice)
@@ -699,20 +636,12 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 4);
         assert.containsOnce(target, ".o_kanban_view", "should display a kanban view");
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item").text(),
-            "Partners Action 4",
-            "breadcrumbs should display the display_name of the action"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 4"]);
         await loadState(webClient, {
             model: "partner",
             view_type: "list",
         });
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item").text(),
-            "Partners Action 4",
-            "should still be in the same action"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 4"]);
         assert.containsNone(target, ".o_kanban_view", "should no longer display a kanban view");
         assert.containsOnce(target, ".o_list_view", "should display a list view");
         assert.verifySteps([
@@ -742,11 +671,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await loadState(webClient, { menu_id: 666 });
         assert.containsOnce(target, ".o_kanban_view", "should display a kanban view");
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item").text(),
-            "Partners Action 1",
-            "breadcrumbs should display the display_name of the action"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 1"]);
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
@@ -762,21 +687,14 @@ QUnit.module("ActionManager", (hooks) => {
             1: { id: 1, children: [], name: "App1", appID: 1, actionID: 1 },
         };
         const webClient = await createWebClient({ serverData });
-        await legacyExtraNextTick();
         assert.containsOnce(target, ".o_kanban_view"); // action 1 (default app)
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item").text(),
-            "Partners Action 1"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 1"]);
         await loadState(webClient, { action: 3 });
         assert.containsOnce(target, ".o_list_view"); // action 3
-        assert.strictEqual($(target).find(".o_control_panel .breadcrumb-item").text(), "Partners");
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners"]);
         await loadState(webClient, { home: 1 });
         assert.containsOnce(target, ".o_kanban_view"); // action 1 (default app)
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item").text(),
-            "Partners Action 1"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 1"]);
     });
 
     QUnit.test("load state supports #home as initial state", async function (assert) {
@@ -793,10 +711,7 @@ QUnit.module("ActionManager", (hooks) => {
         await createWebClient({ serverData, mockRPC });
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_kanban_view", "should display a kanban view");
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item").text(),
-            "Partners Action 1"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 1"]);
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
@@ -806,7 +721,7 @@ QUnit.module("ActionManager", (hooks) => {
     });
 
     QUnit.test("load state: in a form view, remove the id from the state", async function (assert) {
-        assert.expect(13);
+        assert.expect(11);
         serverData.actions[999] = {
             id: 999,
             name: "Partner",
@@ -823,11 +738,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 999, { viewType: "form", props: { resId: 2 } });
         assert.containsOnce(target, ".o_form_view");
-        assert.containsN(target, ".breadcrumb-item", 2);
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item.active").text(),
-            "Second record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partner", "Second record"]);
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
@@ -841,11 +752,7 @@ QUnit.module("ActionManager", (hooks) => {
         });
         assert.verifySteps(["/web/dataset/call_kw/partner/onchange"]);
         assert.containsOnce(target, ".o_form_view .o_form_editable");
-        assert.containsN(target, ".breadcrumb-item", 2);
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item.active").text(),
-            "New"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partner", "New"]);
     });
 
     QUnit.test("hashchange does not trigger canberemoved right away", async function (assert) {
@@ -957,11 +864,10 @@ QUnit.module("ActionManager", (hooks) => {
             });
 
             await click(target.querySelector(".o_control_panel .breadcrumb-item"));
-            await legacyExtraNextTick();
 
             assert.containsN(target, ".o_list_view .o_data_row", 5);
 
-            await toggleFilterMenu(target);
+            await toggleSearchBarMenu(target);
             await toggleMenuItem(target, "Filter");
 
             assert.containsN(target, ".o_list_view .o_data_row", 1);
@@ -982,18 +888,18 @@ QUnit.module("ActionManager", (hooks) => {
             },
             { props: { resIds: [1, 2] } }
         );
-        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "First record");
+        assert.deepEqual(getBreadCrumbTexts(target), ["First record"]);
         await pagerNext(target);
-        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "Second record");
+        assert.deepEqual(getBreadCrumbTexts(target), ["Second record"]);
         await editInput(target, "[name=display_name] input", "new name");
 
         // without saving we now make a loadState which should commit changes
         await loadState(webClient, { action: 1337, id: 1, model: "partner", view_type: "form" });
-        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "First record");
+        assert.deepEqual(getBreadCrumbTexts(target), ["First record"]);
 
         // loadState again just to check if changes were commited
         await loadState(webClient, { action: 1337, id: 2, model: "partner", view_type: "form" });
-        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "new name");
+        assert.deepEqual(getBreadCrumbTexts(target), ["new name"]);
     });
 
     QUnit.test("initial action crashes", async (assert) => {

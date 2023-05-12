@@ -29,7 +29,7 @@ $gray-900: $o-gray-900 !default;
 $black:    $o-black !default;
 
 $primary: $o-brand-primary !default;
-$secondary: $white !default;
+$secondary: $gray-300 !default;
 $dark: $o-gray-900 !default;
 
 $success: $o-success !default;
@@ -37,13 +37,6 @@ $info: $o-info !default;
 $warning: $o-warning !default;
 $danger: $o-danger !default;
 
-$theme-colors: () !default;
-$theme-colors: map-merge(
-    (
-        "odoo": $o-brand-odoo,
-    ),
-    $theme-colors
-);
 
 // The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
 // See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
@@ -64,7 +57,7 @@ $enable-negative-margins: true !default;
 $enable-cssgrid: true !default;
 
 // Spacing
-$spacer: 1rem !default;
+$spacer: $o-spacer !default;
 
 // Body
 //
@@ -105,8 +98,8 @@ $border-radius-sm: $o-border-radius-sm !default;
 $border-radius-lg: $o-border-radius-lg !default;
 $border-color: $o-gray-300 !default;
 
-$component-active-color: $o-brand-primary !default;
-$component-active-bg: $gray-200 !default;
+$component-active-color: $o-component-active-color !default;
+$component-active-bg: $o-component-active-bg !default;
 
 $caret-width: 4px !default;
 
@@ -121,6 +114,9 @@ $font-weight-bolder: 700 !default;
 $font-family-sans-serif: $o-font-family-sans-serif !default;
 
 $font-size-base: $o-font-size-base !default;
+$font-size-sm: $o-font-size-base-small !default;
+$small-font-size: $font-size-sm !default;
+
 $line-height-base: $o-line-height-base !default;
 
 $h1-font-size: $font-size-base * 2.0 !default;
@@ -137,10 +133,11 @@ $headings-color: $o-main-headings-color !default;
 //
 // Customizes the `.table` component with basic values, each used across all table variations.
 
+$table-bg: transparent !default;
 $table-striped-color: inherit !default;
-$table-striped-bg-factor: .01 !default;
+$table-striped-bg-factor: 0.01 !default;
 $table-hover-bg-factor: .055 !default;
-$table-border-color: $gray-200 !default;
+$table-border-color: $border-color !default;
 $table-group-separator-color: $gray-200 !default;
 $table-cell-padding-x: .75rem !default;
 $table-cell-padding-y: .75rem !default;
@@ -152,8 +149,22 @@ $table-active-bg-factor: .05 !default;
 $table-active-color: $headings-color !default;
 $table-th-font-weight: $headings-font-weight !default;
 
+// Buttons + Forms
+//
+// Shared variables that are reassigned to `$input-` and `$btn-` specific variables.
+
+$input-btn-padding-y: o-to-rem(5) !default;
+$input-btn-padding-x: o-to-rem(10) !default;
+
+$input-btn-padding-y-sm: o-to-rem(3) !default;
+$input-btn-padding-x-sm: o-to-rem(8) !default;
+
+$input-btn-padding-y-lg: o-to-rem(6) !default;
+$input-btn-padding-x-lg: o-to-rem(12) !default;
+
 // Buttons
 //
+// For each of Bootstrap's buttons, define text, background, and border color.
 
 $btn-font-weight: $font-weight-bold !default;
 $btn-disabled-opacity: $o-opacity-disabled !default;
@@ -178,6 +189,9 @@ $dropdown-item-padding-y: $o-dropdown-vpadding !default;
 $dropdown-item-padding-x: $o-dropdown-hpadding !default;
 
 // List group
+
+$list-group-bg: $o-view-background-color !default;
+$list-group-hover-bg: $dropdown-link-hover-bg !default;
 
 $list-group-active-color: $o-list-group-active-color !default;
 $list-group-active-bg: $o-list-group-active-bg !default;
@@ -209,9 +223,19 @@ $nav-pills-border-radius: 0 !default;
 $nav-pills-link-active-color: $white !default;
 $nav-pills-link-active-bg: $o-brand-primary !default;
 
+// Tooltips
+
+$tooltip-font-size: $font-size-sm !default;
+$tooltip-max-width: 400px !default;
+$tooltip-color: $o-gray-200 !default;
+$tooltip-opacity: 1 !default;
+
 // Popovers
 
+$popover-bg: $white !default;
+$popover-border-width: 0 !default;
 $popover-border-radius: $border-radius !default;
+$popover-arrow-color: var(--popover-arrow-color, #{$popover-bg}) !default;
 
 // Toasts
 
@@ -262,13 +286,14 @@ $form-check-input-checked-border-color: $o-brand-primary !default;
 $form-check-input-checked-bg-color: $o-brand-primary !default;
 $form-switch-checked-color: $input-bg !default;
 $form-switch-circle-bg-color: $input-bg !default;
+$form-switch-focus-color: mix($o-success, $input-bg) !default;
 
 $form-range-thumb-bg: $primary !default;
 
 // Badge
 $badge-color: inherit !default;
 $badge-padding-y: 0.25em !default;
-$badge-padding-x: 0.4em !default;
+$badge-padding-x: 0.82em !default;
 
 // Placeholder color 
 $input-placeholder-color: $gray-300 !default;

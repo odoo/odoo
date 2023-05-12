@@ -229,7 +229,7 @@
                             <t t-set="url" t-value="'/forum/' + slug(forum) + '/question/' + slug(question) + '/reopen'"/>
                             <t t-set="label">Reopen</t>
                             <t t-set="inDropdown" t-value="False"/>
-                            <t t-set="icon" t-value="'fa-arrow-right'"/>
+                            <t t-set="icon" t-value="'oi oi-arrow-right'"/>
                             <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
                         </t>
                     </div>

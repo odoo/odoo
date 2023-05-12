@@ -44,7 +44,7 @@ registry.category("web_tour.tours").add('shop_cart_recovery', {
     },
     {
         content: "click action",
-        trigger: '.dropdown-toggle:contains("Action")',
+        trigger: '.o_cp_action_menus .dropdown-toggle',
     },
     {
         content: "click Send a Cart Recovery Email",

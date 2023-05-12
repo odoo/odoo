@@ -69,8 +69,8 @@ Docs & License: https://fullcalendar.io/
     BootstrapTheme.prototype.baseIconClass = 'fa';
     BootstrapTheme.prototype.iconClasses = {
         close: 'fa-times',
-        prev: 'fa-chevron-left',
-        next: 'fa-chevron-right',
+        prev: 'oi-chevron-left',
+        next: 'oi-chevron-right',
         prevYear: 'fa-angle-double-left',
         nextYear: 'fa-angle-double-right'
     };

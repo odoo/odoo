@@ -48,8 +48,7 @@
 }
 
 .o-mail-Composer-avatar {
-    width: $o-mail-Avatar-size;
-    height: $o-mail-Avatar-size;
+    --Avatar-size: #{$o-mail-Avatar-size};
 }
 
 .o-fast-popover {
@@ -64,8 +63,4 @@
     top: -10000px;
     padding-top: 10px;
     padding-bottom: 10px;
-}
-
-.o-mail-Composer-send {
-    border: 1px solid darken($primary, 5%);
 }

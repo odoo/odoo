@@ -51,13 +51,13 @@
     </t>
 
     <t t-name="account.ListView.Buttons" t-inherit="web.ListView.Buttons" t-inherit-mode="primary" owl="1">
-        <xpath expr="//*[@class='btn btn-primary o_list_button_add']" position="after">
+        <xpath expr="//div[hasclass('o_list_buttons')]" position="inside">
             <t t-call="account.AccountViewUploadButton"/>
         </xpath>
     </t>
 
     <t t-name="account.KanbanView.Buttons" t-inherit="web.KanbanView.Buttons" t-inherit-mode="primary" owl="1">
-        <xpath expr="//*[@class='btn btn-primary o-kanban-button-new']" position="after">
+        <xpath expr="//div[hasclass('o_cp_buttons')]" position="inside">
             <t t-call="account.AccountViewUploadButton"/>
         </xpath>
     </t>

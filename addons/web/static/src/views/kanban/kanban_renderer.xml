@@ -12,6 +12,7 @@
                     <t t-set="isGroupProcessing" t-value="isProcessing(group.id)" />
                     <div class="o_kanban_group flex-shrink-0 flex-grow-1 flex-md-grow-0"
                         t-att-class="getGroupClasses(group, isGroupProcessing)"
+                        t-attf-class="{{ !env.isSmall and group.isFolded ? 'opacity-trigger-hover' : '' }}"
                         t-att-data-id="group.id"
                         t-on-click="(ev) => this.onGroupClick(group, ev)"
                     >

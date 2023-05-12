@@ -6,7 +6,7 @@
             <div class="o_model_field_selector_value flex-grow-1 h-100" tabindex="0" t-att-data-tooltip="state.displayNames.join(' > ')" data-tooltip-position="top">
                 <t t-foreach="state.displayNames" t-as="displayName" t-key="displayName_index">
                     <t t-if="!displayName_first">
-                        <i class="fa fa-chevron-right m-1" role="img" aria-label="Followed by" title="Followed by" />
+                        <i class="oi oi-chevron-right m-1" role="img" aria-label="Followed by" title="Followed by" />
                     </t>
                     <span class="o_model_field_selector_chain_part p-1 mb-1">
                         <t t-esc="displayName" />

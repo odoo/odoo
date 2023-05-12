@@ -14,8 +14,8 @@ PurchaseAdditionalTourSteps.include({
     _get_purchase_stock_steps: function () {
         this._super.apply(this, arguments);
         return [{
-            trigger: ".oe_button_box button[name='action_view_picking']",
-            extra_trigger: ".oe_button_box button[name='action_view_picking']",
+            trigger: ".o-form-buttonbox button[name='action_view_picking']",
+            extra_trigger: ".o-form-buttonbox button[name='action_view_picking']",
             content: _t("Receive the ordered products."),
             position: "bottom",
             run: 'click',

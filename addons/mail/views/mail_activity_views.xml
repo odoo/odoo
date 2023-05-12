@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Activities">
                 <sheet>
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name" placeholder="e.g. Schedule a meeting"/></h1>
@@ -99,9 +99,13 @@
             <form string="Log an Activity" create="false">
                 <sheet string="Activity">
                     <div class="oe_button_box" name="button_box" invisible="1">
-                        <button name="action_open_document" string="Open Document"
+                        <button name="action_open_document"
                                 type="object" class="oe_link" icon="fa-file-text-o"
-                                attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', 0)]}"/>
+                                attrs="{'invisible': ['|', ('res_model', '=', False), ('res_id', '=', 0)]}">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Open Document</span>
+                                </div>
+                        </button>
                     </div>
                     <group invisible="1">
                         <field name="activity_category" invisible="1" />

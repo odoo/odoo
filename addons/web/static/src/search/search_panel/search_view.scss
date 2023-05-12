@@ -1,80 +1,28 @@
 .o_searchview {
-    align-items: flex-end;
-    padding: 0 20px 1px 0;
-    position: relative;
+    background-color: $input-focus-bg;
+    border: $input-border-width solid $border-color;
 
-    @include media-breakpoint-up(md) {
-        border-bottom: 1px solid $border-color;
-        padding-bottom: 3px;
+    &:focus-within {
+        background-color: $input-focus-bg;
+        border-color: $input-focus-border-color;
+        color: $input-focus-color;
 
-        &:focus-within {
-            border-bottom-color: $primary;
-        }
-    }
-
-    @include media-breakpoint-down(md) {
-        margin-right: 5px; // o_switch_view_button_icon alignment
-        padding-right: 0;
-    }
-
-    .o_searchview_input_container {
-        display: flex;
-        flex-flow: row wrap;
-        position: relative;
-    }
-
-    .o_searchview_facet {
-        display: flex;
-        flex: 0 0 auto;
-        margin: 1px 3px 0 0;
-        max-width: 100%;
-        position: relative;
-        $o-searchview-facet-remove-width: 18px;
-
-        @include media-breakpoint-down(md) {
-            flex-flow: row wrap;
-        }
-
-        .o_searchview_facet_label {
-            align-items: center;
-            flex: 0 0 auto;
-            padding: 0 3px;
-            @include o-text-overflow($display: flex);
-        }
-
-        .o_facet_values {
-            direction: ltr#{"/*rtl:ignore*/"};
-            padding: 0 $o-searchview-facet-remove-width 0 5px;
-
-            .o_facet_values_sep {
-                font-style: italic;
-                margin: 0 0.3rem;
-            }
-        }
-
-        .o_facet_remove {
-            align-items: center;
-            cursor: pointer;
-            display: flex;
-            flex: 0 0 auto;
-            justify-content: center;
-            width: $o-searchview-facet-remove-width;
-            @include o-position-absolute(0, 0, 0);
-            @include o-hover-text-color($text-muted, $o-brand-odoo);
+        + .o-dropdown .o_searchview_dropdown_toggler {
+            border-top-color: $input-focus-border-color;
+            border-right-color: $input-focus-border-color;
+            border-bottom-color: $input-focus-border-color;
         }
     }
 
     .o_searchview_input {
-        flex: 1 0 auto;
-        width: 75px;
-        border: none;
-        outline: none;
-        background-color: var(--o-input-background-color, #{$input-bg});
+        appearance: none;
+        color: inherit;
+        background: inherit;
     }
 
     .o_searchview_autocomplete {
+        @include o-position-absolute(calc(100% + #{$border-width * 3}), 0);
         width: 100%;
-        @include o-position-absolute(100%, $left: auto);
 
         .o_menu_item {
             align-items: center;
@@ -96,10 +44,6 @@
                 }
             }
         }
-    }
-
-    .o_searchview_icon {
-        @include o-position-absolute($top: 4px, $right: 0);
     }
 }
 

@@ -10,7 +10,7 @@
                 <div class="oe_button_box" name="button_box" attrs="{'invisible': [('active', '=', False)]}">
                     <field name="is_published" widget="website_redirect_button"/>
                 </div>
-                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                 <group name="blog_details">
                     <field name="blog_id"/>
                     <field name="active" invisible="1"/>
@@ -76,7 +76,7 @@
                                 <img t-if="record.author_id.raw_value"
                                      t-att-title="record.author_id.value"
                                      t-att-alt="record.author_id.value"
-                                     class="oe_kanban_avatar o_image_24_cover rounded-circle"
+                                     class="oe_kanban_avatar o_avatar rounded"
                                      t-att-src="kanban_image('res.partner', 'avatar_128', record.author_id.raw_value)"/>
                             </div>
                         </div>

@@ -23,6 +23,10 @@
 .o_search_panel {
     width: var(--SearchPanel-width, #{$o-search-panel-width});
     font-size: var(--SearchPanel-fontSize, #{$o-search-panel-font-size});
+    
+    @include media-breakpoint-up(md) {
+        border-right: $border-width solid $border-color;
+    }
 
     .o_search_panel_category_value,
     .o_search_panel_filter_value input,

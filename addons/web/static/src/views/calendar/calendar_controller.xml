@@ -4,13 +4,30 @@
     <t t-name="web.CalendarController" owl="1">
         <div t-att-class="className" t-ref="root">
             <Layout className="model.useSampleModel ? 'o_view_sample_data' : ''" display="props.display">
+                <t t-set-slot="control-panel-additional-actions">
+                    <CogMenu/>
+                </t>
                 <t t-set-slot="layout-buttons">
                     <t t-call="{{ props.buttonTemplate }}"/>
                 </t>
-
+                <t t-set-slot="layout-actions">
+                    <SearchBar t-if="searchBarToggler.state.showSearchBar"/>
+                </t>
+                <t t-set-slot="control-panel-navigation-additional">
+                    <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
+                </t>
                 <div class="o_calendar_container">
                     <MobileFilterPanel t-if="env.isSmall" t-props="mobileFilterPanelProps" />
                     <div t-if="showSideBar" class="o_calendar_sidebar_container d-md-block">
+                        <div class="d-flex justify-content-between">
+                            <button
+                                class="btn btn-secondary mx-1 o_calendar_button_today"
+                                t-on-click.stop="() => this.setDate('today')"
+                            >
+                                Today
+                            </button>
+                            <ViewScaleSelector scales="scales" currentScale="model.scale" setScale.bind="setScale" />
+                        </div>
                         <div class="o_calendar_sidebar">
                             <DatePicker t-if="!env.isSmall" t-props="datePickerProps" />
                             <FilterPanel t-props="filterPanelProps" />
@@ -22,40 +39,6 @@
         </div>
     </t>
 
-    <t t-name="web.CalendarController.controlButtons" owl="1">
-        <div class="o_calendar_buttons">
-            <span t-if="!env.isSmall" class="o_calendar_navigation_buttons me-1">
-                <button
-                    class="btn btn-primary o_calendar_button_prev"
-                    title="Previous"
-                    aria-label="Previous"
-                    t-on-click.stop="() => this.setDate('previous')"
-                >
-                    <i class="fa fa-arrow-left" />
-                </button>
-                <button
-                    class="btn btn-primary mx-1 o_calendar_button_today"
-                    t-on-click.stop="() => this.setDate('today')"
-                >
-                    Today
-                </button>
-                <button
-                    class="btn btn-primary o_calendar_button_next"
-                    title="Next"
-                    aria-label="Next"
-                    t-on-click.stop="() => this.setDate('next')"
-                >
-                    <i class="fa fa-arrow-right" />
-                </button>
-            </span>
-            <ViewScaleSelector scales="scales" currentScale="model.scale" setScale.bind="setScale" />
-            <button t-if="env.isSmall" class="o_cp_today_button btn btn-sm btn-link" t-on-click="() => this.setDate('today')">
-                <span class="fa-stack o_calendar_button_today">
-                    <i class="fa fa-calendar-o fa-stack-2x" role="img" aria-label="Today" title="Today" />
-                    <strong class="o_calendar_text fa-stack-1x" t-esc="getTodayDay()" />
-                </span>
-            </button>
-        </div>
-    </t>
+    <t t-name="web.CalendarController.controlButtons" owl="1"/>
 
 </templates>

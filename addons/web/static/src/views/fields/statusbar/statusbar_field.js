@@ -130,11 +130,10 @@ export class StatusBarField extends Component {
     }
 
     getDropdownItemClassNames(item) {
-        const classNames = [
-            "btn",
-            item.isSelected ? "btn-primary" : "btn-secondary",
-            "o_arrow_button",
-        ];
+        const classNames = [];
+        if (item.isSelected) {
+            classNames.push("active");
+        }
         if (item.isSelected || this.props.isDisabled) {
             classNames.push("disabled");
         }

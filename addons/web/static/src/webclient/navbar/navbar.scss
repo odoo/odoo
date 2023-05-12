@@ -2,17 +2,16 @@
 // = Main Navbar
 // ============================================================================
 .o_main_navbar {
-    @include print-variable(o-navbar-height, $o-navbar-height-xs);
-
-    @include media-breakpoint-up(lg) {
-        @include print-variable(o-navbar-height, $o-navbar-height-lg);
-    }
+    @include print-variable(o-navbar-height, $o-navbar-height);
 
     display: flex;
     height: var(--o-navbar-height);
     min-width: min-content;
+    padding-top: $o-navbar-padding-v;
+    padding-bottom: $o-navbar-padding-v;
     border-bottom: $o-navbar-border-bottom;
     background: $o-navbar-background;
+    font-size: $o-navbar-font-size;
 
     // = Reset browsers defaults
     // --------------------------------------------------------------------------
@@ -24,27 +23,39 @@
 
     // = General components & behaviours
     // --------------------------------------------------------------------------
-    .dropdown.show > .dropdown-toggle {
-        @extend %-main-navbar-entry-active;
-    }
 
-    .o_nav_entry {
+    .o_nav_entry, .dropdown-toggle {
         @extend %-main-navbar-entry-base;
         @extend %-main-navbar-entry-spacing;
-        @extend %-main-navbar-entry-bg-hover;
-    }
-
-    .dropdown-toggle {
-        @extend %-main-navbar-entry-base;
-        @extend %-main-navbar-entry-spacing;
-        @extend %-main-navbar-entry-bg-hover;
         border: 0;
     }
 
+    .o_menu_sections {
+        .o_nav_entry, .dropdown-toggle {
+            @extend %-main-navbar-entry-bg-hover;
+        }
+
+        .dropdown.show > .dropdown-toggle {
+            @extend %-main-navbar-entry-active;
+        }
+    }
+
+    @if (not $o-navbar-use-pills) {
+        .o_menu_systray {
+            .o_nav_entry, .dropdown-toggle {
+                @extend %-main-navbar-entry-bg-hover;
+            }
+
+            .dropdown.show > .dropdown-toggle {
+                @extend %-main-navbar-entry-active;
+            }
+        }
+    }
+
     .dropdown-menu {
-        margin-top: 0;
         border-top: 0;
-        @include border-top-radius(0);
+        margin-top: $o-navbar-dropdown-menu-margin-top;
+        border-radius: $o-navbar-dropdown-menu-border-radius;
     }
 
     .o_dropdown_menu_group_entry.dropdown-item {
@@ -58,8 +69,9 @@
     // = Navbar Sections & Children
     // --------------------------------------------------------------------------
     .o_navbar_apps_menu .dropdown-toggle {
+        --NavBar-entry-padding-left: #{$o-horizontal-padding};
+
         @extend %-main-navbar-entry-base;
-        padding-left: $o-horizontal-padding;
         font-size: $o-navbar-brand-font-size;
     }
 
@@ -68,6 +80,7 @@
         @extend %-main-navbar-entry-spacing;
         padding-left: 0;
         font-size: $o-navbar-brand-font-size;
+        color: var(--NavBar-brand-color, #{$o-navbar-brand-color});
 
         &:hover {
             background: none;
@@ -75,8 +88,6 @@
     }
 
     .o_menu_sections {
-        width: 0;
-
         .o_more_dropdown_section_group {
             margin-top: .8em;
 
@@ -87,27 +98,16 @@
         }
     }
 
-    .o_menu_systray > * {
-        > a, > .dropdown > a, > button, > label { // <label> is required by website
-            @extend %-main-navbar-entry-base;
-            @extend %-main-navbar-entry-spacing;
-            @extend %-main-navbar-entry-bg-hover;
-
-            @include media-breakpoint-up(lg) {
-                padding: 0 $o-horizontal-padding * .6;
-            }
-
-            .badge {
-                margin-right: -.5em;
-                border: 0;
-                height: $o-navbar-badge-size + $o-navbar-badge-padding + $o-navbar-badge-size-adjust;
-                padding: ($o-navbar-badge-padding * .5) $o-navbar-badge-padding;
-                background-color: var(--o-navbar-badge-bg, #{$o-navbar-badge-bg});
-                font-size: $o-navbar-badge-size;
-                color: var(--o-navbar-badge-color, inherit);
-                text-shadow: var(--o-navbar-badge-text-shadow, #{1px 1px 0 rgba($black, .3)});
-                transform: translate(-10%, -30%);
-            }
+    .o_menu_systray {
+        .badge {
+            margin-right: -.5em;
+            border: 0;
+            padding: ($o-navbar-badge-padding * .5) $o-navbar-badge-padding;
+            background-color: var(--o-navbar-badge-bg, #{$o-navbar-badge-bg});
+            font-size: $o-navbar-badge-size;
+            color: var(--o-navbar-badge-color, $o-navbar-badge-color);
+            text-shadow: var(--o-navbar-badge-text-shadow, #{$o-navbar-badge-text-shadow});
+            transform: translate(-0.6em, -30%);
         }
     }
 }

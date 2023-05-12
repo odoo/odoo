@@ -172,7 +172,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
 
-            ('include', 'web._assets_bootstrap'),
+            ('include', 'web._assets_bootstrap_backend'),
 
             'base/static/src/css/modules.css',
 
@@ -278,7 +278,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/lib/luxon/luxon.js',
 
-            ('include', 'web._assets_bootstrap'),
+            ('include', 'web._assets_bootstrap_frontend'),
 
             'web/static/src/legacy/scss/tempusdominus_overridden.scss',
             'web/static/lib/tempusdominus/tempusdominus.scss',
@@ -448,7 +448,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
 
-            ('include', 'web._assets_bootstrap'),
+            ('include', 'web._assets_bootstrap_backend'),
 
             'base/static/src/css/description.css',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
@@ -515,6 +515,7 @@ This module provides the core of the Odoo Web Client.
         'web._assets_helpers': [
             'web/static/lib/bootstrap/scss/_functions.scss',
             'web/static/lib/bootstrap/scss/_mixins.scss',
+            'web/static/src/scss/functions.scss',
             'web/static/src/scss/mixins_forwardport.scss',
             'web/static/src/scss/bs_mixins_overrides.scss',
             'web/static/src/legacy/scss/utils.scss',
@@ -528,6 +529,15 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/scss/utilities_custom.scss',
             'web/static/lib/bootstrap/scss/utilities/_api.scss',
             'web/static/src/scss/bootstrap_review.scss',
+        ],
+        'web._assets_bootstrap_backend': [
+            ('include', 'web._assets_bootstrap'),
+            ('after', 'web/static/src/scss/utilities_custom.scss', 'web/static/src/scss/utilities_custom_backend.scss'),
+            'web/static/src/scss/bootstrap_review_backend.scss',
+        ],
+        'web._assets_bootstrap_frontend': [
+            ('include', 'web._assets_bootstrap'),
+            'web/static/src/scss/bootstrap_review_frontend.scss',
         ],
         'web._assets_backend_helpers': [
             'web/static/src/scss/bootstrap_overridden.scss',

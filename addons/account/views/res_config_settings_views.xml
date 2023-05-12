@@ -87,7 +87,7 @@
                                         <field name="group_multi_currency" invisible="1"/>
                                     </div>
                                     <div class="mt8">
-                                        <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="fa-arrow-right"/>
+                                        <button type="action" name="%(base.action_currency_form)d" string="Currencies" class="btn-link" icon="oi-arrow-right"/>
                                     </div>
                                 </div>
                             </setting>
@@ -128,7 +128,7 @@
                                 documentation="/applications/finance/accounting/receivables/customer_invoices/cash_rounding.html">
                                 <field name="group_cash_rounding"/>
                                 <div class="mt8">
-                                    <button name="%(account.rounding_list_action)d" icon="fa-arrow-right"
+                                    <button name="%(account.rounding_list_action)d" icon="oi-arrow-right"
                                             type="action" string="Cash Roundings" class="btn-link"
                                             attrs="{'invisible': [('group_cash_rounding', '=', False)]}"/>
                                 </div>
@@ -155,12 +155,12 @@
                                                     placeholder="Insert your terms &amp; conditions here..."/>
                                         </div>
                                         <div class="mt8" attrs="{'invisible': [('terms_type', '!=', 'html')]}">
-                                            <button name="action_update_terms" icon="fa-arrow-right" type="object" string="Update Terms" class="btn-link"/>
+                                            <button name="action_update_terms" icon="oi-arrow-right" type="object" string="Update Terms" class="btn-link"/>
                                         </div>
                                         <field name="preview_ready" invisible="1"/>
                                         <div class="mt4 ms-1" attrs="{'invisible': [('preview_ready', '=', False)]}">
                                             <a class="btn-link" href="/terms" role="button">
-                                                <i class="fa fa-arrow-right"></i>
+                                                <i class="oi oi-arrow-right"></i>
                                                 Preview
                                             </a>
                                         </div>

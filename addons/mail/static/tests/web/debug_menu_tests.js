@@ -54,5 +54,8 @@ QUnit.test("Manage Messages", async (assert) => {
     await click(dropdownItems[0]);
     await legacyExtraNextTick();
     assert.verifySteps(["message_read"]);
-    assert.strictEqual($(".breadcrumb-item.active")[0].innerText.trim(), "Manage Messages");
+    assert.strictEqual(
+        target.querySelector(".o_breadcrumb .active > span").innerText.trim(),
+        "Manage Messages"
+    );
 });

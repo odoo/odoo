@@ -343,7 +343,10 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(['write [[1],{"selection":"1"}]']);
         assert.containsOnce(target, ".o_kanban_record .fa-star");
 
-        await click(target, ".o-kanban-button-new");
+        await click(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o-kanban-button-new"
+        );
         await click(target, ".o_kanban_quick_create .o_kanban_add");
         await click(target.querySelector(".o_priority a.o_priority_star.fa-star-o"), null, true);
         assert.verifySteps(['write [[6],{"selection":"1"}]']);
@@ -404,7 +407,10 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // save
-        await click(target, ".o_list_button_save");
+        await click(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_save"
+        );
 
         assert.containsN(
             target.querySelectorAll(".o_data_row")[0],
@@ -514,7 +520,10 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // save
-        await click(target, ".o_list_button_save");
+        await click(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_save"
+        );
         rows = target.querySelectorAll(".o_data_row");
 
         assert.containsN(

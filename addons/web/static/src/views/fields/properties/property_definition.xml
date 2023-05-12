@@ -18,12 +18,12 @@
                     <button
                         t-attf-class="btn btn-link p-0 m-0 me-2 {{this.isFirst ? 'disabled' : ''}}"
                         t-on-click="() => this.onPropertyMove('up')">
-                        <i class="fa fa-chevron-up"/>
+                        <i class="oi oi-chevron-up"/>
                     </button>
                     <button
                         t-attf-class="btn btn-link p-0 m-0 {{this.isLast ? 'disabled' : ''}}"
                         t-on-click="() => this.onPropertyMove('down')">
-                        <i class="fa fa-chevron-down"/>
+                        <i class="oi oi-chevron-down"/>
                     </button>
                     <button
                         t-if="!props.readonly and props.canChangeDefinition"
@@ -140,7 +140,7 @@
                             className="'d-inline-block me-2'"
                         />
                         <div t-if="state.matchingRecordsCount !== undefined" class="d-inline-block">
-                            <i class="fa fa-arrow-right" role="img" title="Domain"/>
+                            <i class="oi oi-arrow-right" role="img" title="Domain"/>
                             <button class="btn btn-sm btn-secondary" type="button"
                                 t-on-click.stop="onButtonDomainClick">
                                 <t t-out="state.matchingRecordsCount"/> record(s)

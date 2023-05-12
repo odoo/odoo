@@ -7,7 +7,6 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { status, useEnv, useSubEnv } from "@odoo/owl";
 
 function disableButtons(el) {
-    // WOWL: can we do this non-imperatively?
     const btns = [...el.querySelectorAll("button:not([disabled])")];
     for (const btn of btns) {
         btn.setAttribute("disabled", "1");
@@ -15,14 +14,11 @@ function disableButtons(el) {
     return btns;
 }
 
-function enableButtons(el, manuallyDisabledButtons, enableAction) {
+function enableButtons(el, manuallyDisabledButtons) {
     if (el) {
         for (const btn of manuallyDisabledButtons) {
             btn.removeAttribute("disabled");
         }
-    }
-    if (enableAction) {
-        enableAction();
     }
 }
 
@@ -41,17 +37,8 @@ export function useViewButtons(model, ref, options = {}) {
         });
     const afterExecuteAction = options.afterExecuteAction || (() => {});
     useSubEnv({
-        async onClickViewButton({
-            clickParams,
-            getResParams,
-            beforeExecute,
-            disableAction,
-            enableAction,
-        }) {
+        async onClickViewButton({ clickParams, getResParams, beforeExecute }) {
             const manuallyDisabledButtons = disableButtons(getEl());
-            if (disableAction) {
-                disableAction();
-            }
 
             async function execute() {
                 let _continue = true;
@@ -61,7 +48,7 @@ export function useViewButtons(model, ref, options = {}) {
 
                 _continue = _continue && undefinedAsTrue(await beforeExecuteAction(clickParams));
                 if (!_continue) {
-                    enableButtons(getEl(), manuallyDisabledButtons, enableAction);
+                    enableButtons(getEl(), manuallyDisabledButtons);
                     return;
                 }
                 const closeDialog = clickParams.close && env.closeDialog;
@@ -103,7 +90,7 @@ export function useViewButtons(model, ref, options = {}) {
                 if (closeDialog) {
                     closeDialog();
                 }
-                enableButtons(getEl(), manuallyDisabledButtons, enableAction);
+                enableButtons(getEl(), manuallyDisabledButtons);
                 if (error) {
                     return Promise.reject(error);
                 }
@@ -124,7 +111,7 @@ export function useViewButtons(model, ref, options = {}) {
                     };
                     dialog.add(ConfirmationDialog, dialogProps, { onClose: resolve });
                 });
-                enableButtons(getEl(), manuallyDisabledButtons, enableAction);
+                enableButtons(getEl(), manuallyDisabledButtons);
             } else {
                 return execute();
             }

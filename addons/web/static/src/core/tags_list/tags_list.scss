@@ -1,63 +1,24 @@
 .o_tag {
-    user-select: none;
+    font-size: var(--Tag-font-size, #{$font-size-sm});
+    max-width: var(--Tag-max-width, 100%);
 
     .o_badge_text, a {
-        color: inherit;
         line-height: 1.1;
     }
 
-    .o_tag_badge_text {
-        font-size: 12px;
-    }
-
-    img {
-        height: 1.6em;
-        aspect-ratio: 1/1;
-
-        + .o_tag_badge_text {
-            padding: 0.25em 0;
-        }
+    a {
+        color: inherit;
     }
 
     @for $size from 1 through length($o-colors) {
         &.o_tag_color_#{$size - 1} {
-            @if $size == 1 {
-                & {
-                    background-color: $o-view-background-color;
-                    color: nth($o-colors, $size);
-                    box-shadow: inset 0 0 0 1px;
-                }
-                &:focus-within {
-                    color: darken(nth($o-colors, $size), 40%) ;
-                }
-                &::after {
-                    background-color: nth($o-colors, $size);
-                }
-            } @else {
-                &, &::after {
-                    background-color: nth($o-colors, $size);
-                    color: color-contrast(nth($o-colors, $size));
-                }
+            $-bg: adjust-color(nth($o-colors, $size), $lightness: 25%, $saturation: 15%);
+            $-color: adjust-color(nth($o-colors, $size), $lightness: -40%, $saturation: -15%);
+
+            &, &::after {
+                @include o-print-color($-bg, background-color, bg-opacity);
+                @include o-print-color($-color, color, text-opacity);
             }
         }
-    }
-}
-
-.o_kanban_view .o_kanban_record .o_tag {
-    display: inline-block;
-    margin-right: 4px;
-    font-size: 11px;
-    font-weight: 500;
-    background-color: transparent;
-    color: inherit;
-    box-shadow: none;
-    @include o-kanban-tag-color;
-
-    span {
-        display: inline-block;
-        width: 6px;
-        height: 6px;
-        margin-right: 4px;
-        border-radius: 100%;
     }
 }

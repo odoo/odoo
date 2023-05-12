@@ -1,3 +1,9 @@
 .o_user_menu .dropdown-toggle {
-    padding-right: $o-horizontal-padding;
+    --NavBar-entry-padding-right: 0;
+
+    margin-right: $o-horizontal-padding;
+
+    .o_user_avatar {
+        height: calc(var(--o-navbar-height) - 20px);
+    }
 }

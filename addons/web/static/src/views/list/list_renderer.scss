@@ -1,11 +1,10 @@
 // ------- List renderer -------
 .o_list_renderer {
-    --ListRenderer-table-padding-h: #{$table-cell-padding-x-sm};
-
-    --ListRenderer-thead-padding-v: #{$table-cell-padding-y * 1.25};
-    --ListRenderer-thead-bg-color: #{$gray-200};
+    --ListRenderer-table-padding-y: #{$table-cell-padding-x-sm};
+    --ListRenderer-thead-padding-y: #{map-get($spacers, 4)};
+    --ListRenderer-thead-bg-color:  #{$o-webclient-background-color};
     --ListRenderer-thead-border-end-color: #{$border-color};
-    --ListRenderer-thead-shadow: linear-gradient(180deg, rgba(0, 0, 0, 0.08), transparent);
+    --ListRenderer-tfoot-bg-color: #{$o-list-footer-bg-color};
 
     // sticky header on desktop
     @include media-breakpoint-up(md) {
@@ -14,26 +13,23 @@
         .o_list_table thead {
             @include o-position-sticky(0);
             z-index: 1;
-
-            &:after {
-                @include o-position-absolute($left: 0, $right: 0);
-                height: map-get($spacers, 3);
-                border-top: $border-width solid $border-color;
-                background-image: var(--ListRenderer-thead-shadow);
-                transform: translateY(-#{$border-width}); // Compensate rendering misplacement
-                -moz-transform: translateY(0); // Firefox doesn't need rendering adjustments
-                pointer-events: none;
-                content: '';
-            }
         }
     }
 
+    th, td {
+        // This fixes a bug that was hidding part of cell borders on Firefox.
+        background-clip: padding-box;
+    }
+
     .o_list_view &  {
-        --ListRenderer-table-padding-h: #{$o-horizontal-padding};
+        --ListRenderer-thead-padding-y: #{$table-cell-padding-y-sm};
+        --ListRenderer-table-padding-y: #{$o-horizontal-padding};
     }
 
     .o_list_table {
-        background-color: $o-view-background-color;
+        --table-bg: #{$o-view-background-color};
+
+
         // We need this to be collapse because we want to add a border on the rows
         // for sale order/invoice lines of type section.
         border-collapse: collapse;
@@ -41,11 +37,11 @@
 
         > thead, > tbody, > tfoot {
             > tr > :first-child {
-                padding-left: var(--ListRenderer-table-padding-h);
+                padding-left: var(--ListRenderer-table-padding-y);
             }
 
             > tr > :last-child {
-                padding-right: var(--ListRenderer-table-padding-h);
+                padding-right: var(--ListRenderer-table-padding-y);
             }
 
             > tr > :empty {
@@ -53,16 +49,14 @@
             }
         }
 
-        :not(.o_field_x2many_list) > & thead, tfoot {
-            tr > :not(:empty) {
-                padding-top: var(--ListRenderer-thead-padding-v);
-                padding-bottom: var(--ListRenderer-thead-padding-v);
-            }
-        }
-
         thead {
             background-color: var(--ListRenderer-thead-bg-color);
-            color: $headings-color;
+
+            th {
+                padding-top: var(--ListRenderer-thead-padding-y);
+                background-color: transparent;
+                color: $headings-color;
+            }
         }
 
         // Override BS default
@@ -120,15 +114,10 @@
         }
 
         tfoot {
-            // cursor: default;
-            color: $o-list-footer-color;
-            background-color: $o-list-footer-bg-color;
-            font-weight: $o-list-footer-font-weight;
-            border-top: 1px solid $table-border-color;
-            border-bottom: 1px solid $table-border-color;
-
-
             > tr > td {
+                color: $o-list-footer-color;
+                background-color: $o-list-footer-bg-color;
+                font-weight: $o-list-footer-font-weight;
                 @include o-text-overflow(table-cell);
             }
         }
@@ -138,7 +127,7 @@
         }
 
         .o_list_record_selector {
-            width: 40px;
+            width: 40px !important; // Force to 40px regardless by the font-size
         }
 
         .o_list_record_remove, .o_handle_cell {
@@ -448,7 +437,7 @@
 
             // first-child will be hidden so add left padding to second child
             & + * {
-                padding-left: var(--ListRenderer-table-padding-h);
+                padding-left: var(--ListRenderer-table-padding-y);
             }
         }
     }

@@ -25,7 +25,10 @@ function iconFromString(iconString) {
     const icon = {};
     if (iconString.startsWith("fa-")) {
         icon.tag = "i";
-        icon.class = `fa fa-fw o_button_icon ${iconString}`;
+        icon.class = `o_button_icon fa ${iconString}`;
+    } else if (iconString.startsWith("oi-")) {
+        icon.tag = "i";
+        icon.class = `o_button_icon oi ${iconString}`;
     } else {
         icon.tag = "img";
         icon.src = iconString;
@@ -97,8 +100,6 @@ export class ViewButton extends Component {
                     this.env[DROPDOWN].close();
                 }
             },
-            disableAction: this.props.disable,
-            enableAction: this.props.enable,
         });
     }
 
@@ -140,9 +141,7 @@ ViewButton.props = [
     "clickParams?",
     "icon?",
     "defaultRank?",
-    "disable?",
     "disabled?",
-    "enable?",
     "size?",
     "tabindex?",
     "title?",
@@ -155,6 +154,4 @@ ViewButton.defaultProps = {
     tag: "button",
     className: "",
     clickParams: {},
-    disable: () => {},
-    enable: () => {},
 };

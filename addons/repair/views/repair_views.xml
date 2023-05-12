@@ -51,7 +51,11 @@
                <sheet string="Repairs order">
                     <div class="oe_button_box" name="button_box">
                         <field name="invoice_id" invisible="1"/>
-                        <button name="%(action_repair_move_lines)d" type="action" string="Product Moves" class="oe_stat_button" icon="fa-exchange" attrs="{'invisible': [('state', 'not in', ['done', 'cancel'])]}"/>
+                        <button name="%(action_repair_move_lines)d" type="action" string="Product Moves" class="oe_stat_button" icon="fa-exchange" attrs="{'invisible': [('state', 'not in', ['done', 'cancel'])]}">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Product Moves</span>
+                            </div>
+                        </button>
                         <button name="action_created_invoice"
                             type="object"
                             class="oe_stat_button"

@@ -3,7 +3,7 @@
     <t t-name="ImportAction" owl="1">
         <div class="h-100 d-flex flex-column">
             <Layout className="'o_import_action d-flex h-100 overflow-auto bg-white'" display="display">
-                <t t-set-slot="layout-buttons">
+                <t t-set-slot="control-panel-create-button">
                     <t t-if="isPreviewing">
                         <button t-if="!state.isPaused" type="button" class="btn btn-primary m-1" t-on-click="() => this.handleImport(false)">Import</button>
                         <button t-else="" type="button" class="btn btn-primary m-1" t-on-click="() => this.handleImport(false)">Resume</button>

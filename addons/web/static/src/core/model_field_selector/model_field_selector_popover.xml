@@ -5,7 +5,7 @@
         <div class="o_model_field_selector_popover" tabindex="0" t-ref="root" t-on-keydown="onInputKeydown">
             <div class="o_model_field_selector_popover_header text-center">
                 <t t-if="state.page.previousPage">
-                    <i class="fa fa-arrow-left o_model_field_selector_popover_option o_model_field_selector_popover_prev_page"
+                    <i class="oi oi-arrow-left o_model_field_selector_popover_option o_model_field_selector_popover_prev_page"
                        title="Previous"
                        role="img"
                        aria-label="Previous"
@@ -43,7 +43,7 @@
                             </button>
                             <t t-if="(!fieldDef.is_property and fieldDef.relation and props.followRelations) or fieldDef.type === 'properties'">
                                 <button class="o_model_field_selector_popover_item_relation btn btn-link" t-on-click.stop="() => this.followRelation(fieldDef)">
-                                    <i class="fa fa-chevron-right o_model_field_selector_popover_relation_icon" role="img" aria-label="Relation to follow" title="Relation to follow" />
+                                    <i class="oi oi-chevron-right o_model_field_selector_popover_relation_icon" role="img" aria-label="Relation to follow" title="Relation to follow" />
                                 </button>
                             </t>
                         </li>

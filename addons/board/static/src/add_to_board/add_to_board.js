@@ -6,7 +6,7 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 
 const { Component, useState } = owl;
-const favoriteMenuRegistry = registry.category("favoriteMenu");
+const cogMenuRegistry = registry.category("cogMenu");
 
 /**
  * 'Add to board' menu
@@ -99,4 +99,4 @@ export const addToBoardItem = {
     isDisplayed: ({ config }) => config.actionType === "ir.actions.act_window" && config.actionId,
 };
 
-favoriteMenuRegistry.add("add-to-board", addToBoardItem, { sequence: 10 });
+cogMenuRegistry.add("add-to-board", addToBoardItem, { sequence: 10 });

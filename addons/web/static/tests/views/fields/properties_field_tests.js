@@ -685,7 +685,7 @@ QUnit.module("Fields", (hooks) => {
         assert.ok(popover, "Should have opened the definition popover");
 
         // Move the property up
-        await click(popover, ".fa-chevron-up");
+        await click(popover, ".oi-chevron-up");
         assert.deepEqual(
             getLabels(),
             ["My Selection", "My Char", "My Char 3", "My Char 4"],
@@ -697,16 +697,16 @@ QUnit.module("Fields", (hooks) => {
         assert.ok(movedProperty, "Should highlight the moved property");
 
         // Move the property up again, should have no effect
-        await click(popover, ".fa-chevron-up");
+        await click(popover, ".oi-chevron-up");
         assert.deepEqual(getLabels(), ["My Selection", "My Char", "My Char 3", "My Char 4"]);
 
         // Move the property down
-        await click(popover, ".fa-chevron-down");
+        await click(popover, ".oi-chevron-down");
         assert.deepEqual(getLabels(), ["My Char", "My Selection", "My Char 3", "My Char 4"]);
 
         // Move the property at the bottom
-        await click(popover, ".fa-chevron-down");
-        await click(popover, ".fa-chevron-down");
+        await click(popover, ".oi-chevron-down");
+        await click(popover, ".oi-chevron-down");
         assert.deepEqual(getLabels(), ["My Char", "My Char 3", "My Char 4", "My Selection"]);
 
         await closePopover(target);

@@ -29,8 +29,8 @@
                 <sheet string="Project">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
                         <button class="oe_stat_button" name="project_update_all_action" type="object" groups="project.group_project_manager">
-                            <div>
-                                <field name="last_update_color" invisible="1"/>
+                            <field name="last_update_color" invisible="1"/>
+                            <div class="o_stat_info">
                                 <field name="last_update_status" readonly="1" widget="status_with_color" status_label="Project Status"/>
                             </div>
                         </button>
@@ -51,7 +51,7 @@
                             </div>
                         </button>
                     </div>
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
                         <h1 class="d-flex flex-row">
                             <field name="is_favorite" nolabel="1" widget="boolean_favorite" class="me-2"/>
@@ -134,7 +134,7 @@
                                                 </div>
                                                 <div class="content-group">
                                                     <div class="mt8">
-                                                        <button name="%(project.open_task_type_form_domain)d" context="{'project_id':id}" icon="fa-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link"/>
+                                                        <button name="%(project.open_task_type_form_domain)d" context="{'project_id':id}" icon="oi-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link"/>
                                                     </div>
                                                 </div>
                                             </div>
@@ -486,7 +486,7 @@
                                         <field name="activity_ids" widget="kanban_activity"/>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
-                                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]" style="padding-right: 4px;"/>
+                                        <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                                         <field t-if="record.last_update_status.value &amp;&amp; widget.editable" name="last_update_status" widget="project_state_selection"/>
                                         <span t-if="record.last_update_status.value &amp;&amp; !widget.editable" t-att-class="'o_status_bubble mx-0 o_color_bubble_' + record.last_update_color.value" t-att-title="record.last_update_status.value"></span>
                                     </div>

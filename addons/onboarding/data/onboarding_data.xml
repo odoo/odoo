@@ -9,6 +9,8 @@
                     <t t-set="done_icon" t-value="step.done_icon"/>
                     <t t-set="btn_text" t-value="step.button_text"/>
                     <t t-set="done_text" t-value="step.done_text"/>
+                    <t t-set="image" t-value="'/web/image/onboarding.onboarding.step/'+str(step.id)+'/step_image'"/>
+                    <t t-set="alt" t-value="step.step_image_alt"/>
                     <!-- Model/method used by JS implementation of banners for each step-->
                     <t t-set="method" t-value="step.panel_step_open_action_name"/>
                     <t t-set="model">onboarding.onboarding.step</t>

@@ -10,45 +10,18 @@
 
     <t t-name="project.ProjectControlPanelContent" owl="1">
         <t t-if="showProjectUpdate">
-            <li t-if="isProjectUser" class="o_project_updates_breadcrumb ps-3" t-on-click="onStatusClick">
+            <div t-if="isProjectUser" class="o_project_updates_breadcrumb z-index-1" t-on-click="onStatusClick">
                 <t t-call="project.ProjectControlPanelContentBadge"></t>
-            </li>
-            <li t-else="" class="o_project_updates_breadcrumb ps-3">
+            </div>
+            <div t-else="" class="o_project_updates_breadcrumb z-index-1">
                 <t t-call="project.ProjectControlPanelContentBadge"></t>
-            </li>
+            </div>
         </t>
     </t>
 
-    <t t-name="project.Breadcrumbs" t-inherit="web.Breadcrumbs" t-inherit-mode="primary" owl="1">
-        <xpath expr="//ol" position="inside">
-            <t t-call="project.ProjectControlPanelContent"/>
-        </xpath>
-    </t>
-
-    <t t-name="project.Breadcrumbs.Small" t-inherit="web.Breadcrumbs.Small" t-inherit-mode="primary" owl="1">
-        <xpath expr="//ol" position="inside">
-            <t t-call="project.ProjectControlPanelContent"/>
-        </xpath>
-    </t>
-
-    <t t-name="project.ProjectControlPanel.Regular" t-inherit="web.ControlPanel.Regular" t-inherit-mode="primary" owl="1">
-        <xpath expr="//t[@t-call='web.Breadcrumbs']" position="replace">
-            <t t-call="project.Breadcrumbs"/>
-        </xpath>
-    </t>
-
-    <t t-name="project.ProjectControlPanel.Small" t-inherit="web.ControlPanel.Small" t-inherit-mode="primary" owl="1">
-        <xpath expr="//t[@t-call='web.Breadcrumbs.Small']" position="replace">
-            <t t-call="project.Breadcrumbs.Small"/>
-        </xpath>
-    </t>
-
     <t t-name="project.ProjectControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary" owl="1">
-        <xpath expr="//t[@t-call='web.ControlPanel.Regular']" position="replace">
-            <t t-call="project.ProjectControlPanel.Regular"/>
-        </xpath>
-        <xpath expr="//t[@t-call='web.ControlPanel.Small']" position="replace">
-            <t t-call="project.ProjectControlPanel.Small"/>
+        <xpath expr="//t[@t-call='web.Breadcrumbs']" position="after">
+            <t t-call="project.ProjectControlPanelContent"/>
         </xpath>
     </t>
 

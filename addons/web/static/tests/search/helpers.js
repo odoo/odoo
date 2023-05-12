@@ -19,7 +19,7 @@ import { notificationService } from "@web/core/notifications/notification_servic
 import { ormService } from "@web/core/orm_service";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
-import { CustomFavoriteItem } from "@web/search/favorite_menu/custom_favorite_item";
+import { CustomFavoriteItem } from "@web/search/custom_favorite_item/custom_favorite_item";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { getDefaultConfig } from "@web/views/view";
 import { viewService } from "@web/views/view_service";
@@ -196,7 +196,18 @@ export function getMenuItemTexts(target) {
 }
 
 export function getButtons(el) {
-    return [...el.querySelector(`div.o_cp_bottom div.o_cp_buttons`).children];
+    return [...el.querySelectorAll(`div.o_control_panel_breadcrumbs button`)];
+}
+
+export function getVisibleButtons(el) {
+    return [
+        ...$(el).find(
+            [
+                "div.o_control_panel_breadcrumbs button:visible", // button in the breadcrumbs
+                "div.o_control_panel_actions button:visible", // buttons for list selection
+            ].join(",")
+        ),
+    ];
 }
 
 /** Filter menu */
@@ -280,7 +291,7 @@ export async function applyGroup(el) {
 }
 
 export async function groupByMenu(el, fieldName) {
-    await toggleGroupByMenu(el);
+    await toggleSearchBarMenu(el);
     await toggleAddCustomGroup(el);
     await selectGroup(el, fieldName);
     await applyGroup(el);
@@ -331,7 +342,7 @@ export function getFacetTexts(target) {
 
 export async function removeFacet(el, facetFinder = 0) {
     const facet = findItem(el, `div.o_searchview_facet`, facetFinder);
-    await click(facet.querySelector("i.o_facet_remove"));
+    await click(facet.querySelector(".o_facet_remove"));
 }
 
 export async function editSearch(el, value) {
@@ -384,7 +395,11 @@ export async function editPager(el, value) {
  * @param {string} [menuFinder="Action"]
  * @returns {Promise}
  */
-export async function toggleActionMenu(el, menuFinder = "Action") {
-    const dropdown = findItem(el, `.o_cp_action_menus button`, menuFinder);
-    await click(dropdown);
+export async function toggleActionMenu(el) {
+    await click(el.querySelector(".o_cp_action_menus .dropdown-toggle"));
+}
+
+/** SearchBarMenu */
+export async function toggleSearchBarMenu(el) {
+    await click(findItem(el, `.o_searchview_dropdown_toggler`));
 }

@@ -80,7 +80,7 @@
     <template id="survey_button_form_view" name="Survey: back to form view">
         <div groups="survey.group_survey_manager" t-ignore="true" class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_editable_mode_hidden mb-0">
             <div t-ignore="true" class="text-center">
-                <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form"><span t-if="answer and answer.test_entry">This is a Test Survey. </span><i class="fa fa-fw fa-arrow-right"/>Edit Survey</a>
+                <a t-attf-href="/web#view_type=form&amp;model=survey.survey&amp;id=#{survey.id}&amp;action=survey.action_survey_form"><span t-if="answer and answer.test_entry">This is a Test Survey. </span><i class="oi oi-fw oi-arrow-right"/>Edit Survey</a>
             </div>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -146,14 +146,14 @@
                 t-if="survey and survey.users_can_go_back"
                 t-att-disabled="not can_go_back"
                 type="submit" class="btn border-start p-0 shadow-none o_survey_navigation_submit" name="button_submit" value="previous" t-att-data-previous-page-id="previous_page_id">
-                <i class="fa fa-chevron-left p-2" />
+                <i class="oi oi-chevron-left p-2" />
             </button>
             <t t-set="can_go_forward"
                 t-value="survey and survey.questions_layout in ['page_per_question', 'page_per_section'] and answer and answer.state != 'done' and not answer.is_session_answer"/>
             <button
                 t-att-disabled="not can_go_forward"
                 type="submit" class="btn border-start p-0 shadow-none o_survey_navigation_submit" t-att-value="'next' if not survey_last else 'finish'">
-                <i class="fa fa-chevron-right p-2" />
+                <i class="oi oi-chevron-right p-2" />
             </button>
         </div>
     </template>

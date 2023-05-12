@@ -9,7 +9,6 @@ import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { createElement } from "@web/core/utils/xml";
-import { ActionMenus } from "@web/search/action_menus/action_menus";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { useModel } from "@web/views/model";
@@ -18,8 +17,16 @@ import { isX2Many } from "@web/views/utils";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
+import { ButtonBox } from "./button_box/button_box";
+import { ViewButton } from "@web/views/view_button/view_button";
+import { Field } from "@web/views/fields/field";
+import { CogMenu } from "@web/search/cog_menu/cog_menu";
+import { ActionMenusItems } from "@web/search/cog_menu/action_menus_items";
 
-import { Component, onRendered, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onRendered, useEffect, useRef } from "@odoo/owl";
+import { useViewCompiler } from "../view_compiler";
+import { FormCompiler } from "./form_compiler";
+import { evalDomain } from "../utils";
 
 const viewRegistry = registry.category("views");
 
@@ -101,9 +108,6 @@ export class FormController extends Component {
         this.user = useService("user");
         this.viewService = useService("view");
         this.ui = useService("ui");
-        this.state = useState({
-            isDisabled: false,
-        });
         useBus(this.ui.bus, "resize", this.render);
 
         this.archInfo = this.props.archInfo;
@@ -112,6 +116,8 @@ export class FormController extends Component {
         const { create, edit } = this.archInfo.activeActions;
         this.canCreate = create && !this.props.preventCreate;
         this.canEdit = edit && !this.props.preventEdit;
+
+        this.disabledButtons = null;
 
         let mode = this.props.mode || "edit";
         if (!this.canEdit) {
@@ -180,8 +186,19 @@ export class FormController extends Component {
             this.archInfo.arch = this.archInfo.xmlDoc.outerHTML;
         }
 
-        const rootRef = useRef("root");
-        useViewButtons(this.model, rootRef, {
+        const xmlDocButtonBox = this.archInfo.xmlDoc.querySelector("div[name='button_box']");
+        if (xmlDocButtonBox) {
+            const buttonBoxTemplates = useViewCompiler(
+                this.props.Compiler || FormCompiler,
+                xmlDocButtonBox.outerHTML,
+                { ButtonBox: xmlDocButtonBox },
+                { isSubView: true }
+            );
+            this.buttonBoxTemplate = buttonBoxTemplates.ButtonBox;
+        }
+
+        this.rootRef = useRef("root");
+        useViewButtons(this.model, this.rootRef, {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
         });
@@ -195,7 +212,7 @@ export class FormController extends Component {
         };
 
         useSetupView({
-            rootRef,
+            rootRef: this.rootRef,
             beforeLeave: () => this.beforeLeave(),
             beforeUnload: (ev) => this.beforeUnload(ev),
             getLocalState: () => {
@@ -230,9 +247,11 @@ export class FormController extends Component {
                 (isInEdition) => {
                     if (
                         !isInEdition &&
-                        !rootRef.el.querySelector(".o_content").contains(document.activeElement)
+                        !this.rootRef.el
+                            .querySelector(".o_content")
+                            .contains(document.activeElement)
                     ) {
-                        const elementToFocus = rootRef.el.querySelector(
+                        const elementToFocus = this.rootRef.el.querySelector(
                             ".o_content button.btn-primary"
                         );
                         if (elementToFocus) {
@@ -380,11 +399,18 @@ export class FormController extends Component {
     }
 
     disableButtons() {
-        this.state.isDisabled = true;
+        const btns = [...this.rootRef.el.querySelectorAll("button:not([disabled])")];
+        for (const btn of btns) {
+            btn.setAttribute("disabled", "1");
+        }
+        this.disabledButtons = btns;
     }
 
     enableButtons() {
-        this.state.isDisabled = false;
+        for (const btn of this.disabledButtons) {
+            btn.removeAttribute("disabled");
+        }
+        this.disabledButtons = null;
     }
 
     async beforeExecuteActionButton(clickParams) {
@@ -471,10 +497,22 @@ export class FormController extends Component {
         result["o_field_highlight"] = size < SIZES.SM || hasTouch();
         return result;
     }
+
+    evalDomainFromRecord(record, expr) {
+        return evalDomain(expr, record.evalContext);
+    }
 }
 
 FormController.template = `web.FormView`;
-FormController.components = { ActionMenus, FormStatusIndicator, Layout };
+FormController.components = {
+    FormStatusIndicator,
+    Layout,
+    ButtonBox,
+    ViewButton,
+    Field,
+    CogMenu,
+    ActionMenusItems,
+};
 FormController.props = {
     ...standardViewProps,
     discardRecord: { type: Function, optional: true },

@@ -19,8 +19,7 @@ import {
     editFavoriteName,
     removeFacet,
     saveFavorite,
-    toggleFavoriteMenu,
-    toggleFilterMenu,
+    toggleSearchBarMenu,
     toggleMenuItem,
     toggleSaveFavorite,
 } from "@web/../tests/search/helpers";
@@ -401,13 +400,12 @@ QUnit.module("ViewDialogs", (hooks) => {
         assert.containsN(target, ".o_data_row", 3, "should contain 3 records");
 
         // filter on bar
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Bar");
 
         assert.containsN(target, ".o_data_row", 2, "should contain 2 records");
 
         // save filter
-        await toggleFavoriteMenu(target);
         await toggleSaveFavorite(target);
         await editFavoriteName(target, "some name");
         await saveFavorite(target);

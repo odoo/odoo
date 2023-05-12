@@ -5,7 +5,7 @@
     <Dropdown t-if="!env.inDiscussApp" autoOpen="false" beforeOpen.bind="beforeOpen" onStateChanged="state => this.state.isOpen = state.open" position="'bottom-end'" menuClass="`p-0 ${ store.isSmall ? 'start-0 w-100 mh-100 bottom-0 d-flex flex-column' : ''}`">
         <t t-set-slot="toggler">
             <i class="fa fa-lg fa-comments" role="img" aria-label="Messages" t-on-click="() => store.discuss.activeTab = store.isSmall and store.discuss.activeTab === 'mailbox' ? 'all' : store.discuss.activeTab"></i>
-            <span t-if="counter" class="o-mail-MessagingMenu-counter badge"><t t-esc="counter"/></span>
+            <span t-if="counter" class="o-mail-MessagingMenu-counter badge rounded-pill"><t t-esc="counter"/></span>
         </t>
         <t t-set-slot="default">
             <t t-call="mail.MessagingMenu.content"/>
@@ -57,7 +57,7 @@
                 onClick="() => notification.requestPermission()"
             >
                 <t t-set-slot="icon">
-                    <ImStatus className="'position-absolute bottom-0 end-0'" persona="notificationRequest.partner"/>
+                    <ImStatus persona="notificationRequest.partner"/>
                 </t>
             </NotificationItem>
             <t t-if="store.discuss.activeTab === 'all'">
@@ -89,7 +89,7 @@
                     onSwipeLeft="hasTouch() and threadService.canUnpin(thread) ? { action: () => this.threadService.unpin(thread), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
                 >
                     <t t-set-slot="icon">
-                        <ImStatus t-if="thread.type === 'chat'" className="'position-absolute bottom-0 end-0'" persona="thread.correspondent"/>
+                        <ImStatus t-if="thread.type === 'chat'" persona="thread.correspondent"/>
                     </t>
                     <t t-if="message" t-set-slot="body-icon">
                         <t t-if="message.isSelfAuthored">

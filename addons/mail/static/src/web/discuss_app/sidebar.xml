@@ -54,7 +54,7 @@
     <t t-set="hover_class" t-value="'btn p-0 text-start text-700 opacity-100-hover opacity-75'"/>
     <div class="o-mail-DiscussCategory d-flex align-items-center my-1" t-att-class="category.extraClass">
         <div t-attf-class="d-flex align-items-baseline mx-1 {{ hover_class }}" t-on-click="() => this.toggleCategory(category)">
-            <i class="o-mail-DiscussCategory-icon small" t-att-class="category.isOpen ? 'fa fa-chevron-down' : 'fa fa-chevron-right'"/>
+            <i class="o-mail-DiscussCategory-icon small" t-att-class="category.isOpen ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
             <span class="btn-sm p-0 text-uppercase fw-bolder"><t t-esc="category.name"/></span>
         </div>
         <div class="flex-grow-1"/>
@@ -91,8 +91,8 @@
         t-on-click="(ev) => this.openThread(ev, thread)"
     >
         <div class="o-bg-inherit position-relative d-flex ms-4 flex-shrink-0" style="width:30px;height:30px">
-            <img class="w-100 h-100 rounded-circle" t-att-src="thread.imgUrl" alt="Thread Image"/>
-            <ThreadIcon t-if="thread.type === 'chat' or (thread.type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussCategoryItem-threadIcon position-absolute bottom-0 end-0 d-flex align-items-center justify-content-center rounded-circle bg-100'"/>
+            <img class="w-100 h-100 rounded" t-att-src="thread.imgUrl" alt="Thread Image"/>
+            <ThreadIcon t-if="thread.type === 'chat' or (thread.type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussCategoryItem-threadIcon position-absolute bottom-0 end-0 p-1 me-n1 mb-n1 d-flex align-items-center justify-content-center rounded-circle bg-100'"/>
         </div>
         <span class="ms-3 me-2 text-truncate" t-att-class="{ 'o-item-unread fw-bolder': thread.message_unread_counter > 0 }">
             <t t-esc="thread.displayName"/>

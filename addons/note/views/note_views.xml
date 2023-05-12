@@ -122,7 +122,7 @@
                         <img
                             t-if="follower_index &lt; 5"
                             t-att-src="kanban_image('res.partner', 'avatar_128', follower)"
-                            class="oe_kanban_avatar o_image_24_cover rounded-circle border border-white bg-white ml-n2"
+                            class="oe_kanban_avatar o_avatar rounded border border-white bg-white ml-n2"
                             t-att-data-member_id="follower"
                             alt="Follower"/>
                         <small
@@ -163,9 +163,13 @@
         <field name="arch" type="xml">
             <form string="Note" class="o_note_form_view">
                 <header>
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" options="{'clickable': '1'}"/>
+                  <div class="py-1 px-2 border rounded bg-view">
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags" class="mb-0"/>
+                  </div>
+                  <div class="py-1 px-2 border rounded bg-view">
+                    <field name="company_id" groups="base.group_multi_company" class="mb-0"/>
+                  </div>
+                  <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
                     <field name="memo" type="html" class="oe_memo" default_focus="1" options="{'resizable': false, 'collaborative': true}"/>

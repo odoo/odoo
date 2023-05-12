@@ -10,9 +10,11 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
 import { sprintf } from "@web/core/utils/strings";
 import { useModel } from "@web/views/model";
 import { useService } from "@web/core/utils/hooks";
+import { SearchBar } from "@web/search/search_bar/search_bar";
+import { CogMenu } from "@web/search/cog_menu/cog_menu";
 
 export class ActivityController extends Component {
-    static components = { Layout };
+    static components = { Layout, SearchBar, CogMenu };
     static props = {
         ...standardViewProps,
         Model: Function,

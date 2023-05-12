@@ -508,7 +508,7 @@ export async function changeScale(target, scale) {
 }
 
 export async function navigate(target, direction) {
-    await click(target, `.o_calendar_navigation_buttons .o_calendar_button_${direction}`);
+    await click(target, `.o_calendar_mini .ui-datepicker-${direction}`);
 }
 
 export function findFilterPanelSection(target, sectionName) {

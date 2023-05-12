@@ -13,8 +13,7 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button
-                                icon="fa-eye"
+                            <button icon="fa-eye"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer"
                                 attrs="{'invisible': [('total_views', '=', 0)]}">
@@ -25,10 +24,7 @@
                                 icon="fa-files-o"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer">
-                                <span>
-                                    <field name="total_slides" widget="statinfo" nolabel="1"/>
-                                    Published Contents
-                                </span>
+                                <field name="total_slides" widget="statinfo" string="Published Contents"/>
                             </button>
                             <button name="action_redirect_to_completed_members"
                                 type="object"
@@ -60,7 +56,7 @@
                             </button>
                             <field name="is_published" widget="website_redirect_button"/>
                         </div>
-                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                         <div class="oe_title">
                             <label for="name" string="Course Title"/>
@@ -267,12 +263,12 @@
                                 <div class="ribbon ribbon-top-right"
                                     attrs="{'invisible': [('active', '=', True)]}">
                                     <field name="active" invisible="1"/>
-                                    <span class="bg-danger">Archived</span>
+                                    <span class="text-bg-danger">Archived</span>
                                 </div>
                                 <div class="ribbon ribbon-top-right"
                                     attrs="{'invisible': ['|', ('website_published', '!=', True), ('active', '=', False)]}">
                                     <field name="website_published" invisible="1"/>
-                                    <span class="bg-odoo">Published</span>
+                                    <span class="text-bg-success">Published</span>
                                 </div>
                                 <div class="o_kanban_card_header">
                                     <div class="o_kanban_card_header_title mb16">

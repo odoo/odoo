@@ -29,7 +29,7 @@
         t-att-aria-expanded="state.open ? 'true' : 'false'"
         t-ref="togglerRef"
       >
-        <t t-slot="toggler" />
+        <t t-slot="toggler" open="state.open"/>
       </button>
       <div
         t-if="state.open"

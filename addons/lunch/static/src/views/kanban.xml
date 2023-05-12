@@ -4,7 +4,7 @@
         <div class="o_lunch_content d-flex flex-column h-100">
             <LunchDashboard openOrderLine.bind="openOrderLine"/>
 
-            <div class="overflow-auto">
+            <div class="overflow-auto border-top border-bottom">
                 <t t-call="web.KanbanRenderer"/>
             </div>
         </div>

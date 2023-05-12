@@ -261,17 +261,9 @@
             border-left-color: nth($o-colors, $size);
             &:after {
                 background-color: nth($o-colors, $size);
-                outline: 1px solid nth($o-colors, $size);
             }
         }
     }
-}
-@mixin o-kanban-slim-col {
-    position: relative;
-    flex: 0 0 auto;
-    margin: 0;
-    padding: 0 floor($o-kanban-group-padding * 0.7);
-    cursor: pointer;
 }
 @mixin o-kanban-header-title {
     display: flex;
@@ -280,15 +272,9 @@
     line-height: 2.2;
     color: $headings-color;
 }
-@mixin o-kanban-v-title {
-    @include o-position-absolute($o-kanban-inside-vgutter * 2, $left: floor(-$o-kanban-inside-vgutter * 1.2));
-    transform-origin: left bottom 0;
-    transform: rotate(90deg);
-    overflow: visible;
-}
 
 // ------- Kanban records mixins -------
-@mixin o-kanban-record-title($font-size) {
+@mixin o-kanban-record-title($font-size: $h5-font-size) {
     color: $headings-color;
     font-size: $font-size;
     font-weight: 500;
@@ -296,10 +282,8 @@
     margin-top: 0;
 }
 @mixin o-kanban-dropdown($padding-base: $o-kanban-inside-vgutter) {
-    margin: -1px -1px 1px;
+    margin: 1px 1px 0 0;
     padding: if(type-of($padding-base) == 'string', calc(#{$padding-base}/2) $padding-base, $padding-base/2 $padding-base);
-    border: 1px solid transparent;
-    border-bottom: none;
     vertical-align: top;
     @include o-hover-text-color($body-color, $headings-color);
 
@@ -311,8 +295,14 @@
 @mixin o-kanban-dropdown-open {
     position: relative;
     background: $dropdown-bg;
-    border-color: $border-color;
     z-index: $zindex-dropdown + 1;
+
+    &:before {
+        @include o-position-absolute(100%, 0, auto, 0);
+        height: $dropdown-border-radius;
+        background-color: $dropdown-bg;
+        content: "";
+    }
 }
 @mixin o-kanban-colorpicker {
     max-width: 150px;
@@ -336,20 +326,8 @@
         }
 
         // No Color
-        &:first-child > a {
-            position: relative;
-            &::before {
-                content: "";
-                @include o-position-absolute(-2px, $left: 10px);
-                display: block;
-                width: 1px;
-                height: 20px;
-                transform: rotate(45deg);
-                background-color: red;
-            }
-            &::after {
-                background-color: white;
-            }
+        &:first-child > a:after {
+            background: linear-gradient(45deg, rgba($dropdown-bg, 0) 0%, rgba($dropdown-bg, 0) 48%, $danger 48%, $danger 52%, rgba($dropdown-bg, 0) 52%, rgba($dropdown-bg, 0) 100%);
         }
     }
 }
@@ -383,12 +361,12 @@
     padding: 15px;
     z-index: 1000;
     text-align: center;
-    color: $o-tooltip-text-color;
+    color: $body-color;
     font-size: 115%;
 
     > p:first-of-type {
         margin-top: 0;
-        color: $o-tooltip-title-text-color;
+        color: $headings-color;
         font-weight: bold;
         font-size: 125%;
     }
