@@ -646,10 +646,10 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             const { model } = await createSpreadsheetWithPivot({
                 arch: getBasicPivotArch(),
             });
-            const leftBorder = { left: ["thin", "#000"] };
-            const rightBorder = { right: ["thin", "#000"] };
-            const topBorder = { top: ["thin", "#000"] };
-            const bottomBorder = { bottom: ["thin", "#000"] };
+            const leftBorder = { left: { style: "thin", color: "#2D7E84" } };
+            const rightBorder = { right: { style: "thin", color: "#2D7E84" } };
+            const topBorder = { top: { style: "thin", color: "#2D7E84" } };
+            const bottomBorder = { bottom: { style: "thin", color: "#2D7E84" } };
             assert.deepEqual(getBorders(model, "A1"), { ...leftBorder, ...topBorder });
             assert.deepEqual(getBorders(model, "A2"), { ...leftBorder, ...bottomBorder });
             assert.deepEqual(getBorders(model, "A3"), { ...leftBorder, ...topBorder });
