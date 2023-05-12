@@ -553,6 +553,13 @@ describe('List', () => {
                             contentAfter: '<ul><li>a[b</li><li>cd</li><li>e]f</li><li>gh</li></ul>',
                         });
                     });
+                    it('should not turn a non-editable paragraph into a list', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: '<p>[ab</p><p contenteditable="false">cd</p><p>ef]</p>',
+                            stepFunction: toggleUnorderedList,
+                            contentAfter: '<ul><li>[ab</li></ul><p contenteditable="false">cd</p><ul><li>ef]</li></ul>',
+                        });
+                    });
                 });
                 describe('Remove', () => {
                     it('should turn a list into a paragraph', async () => {
@@ -581,6 +588,15 @@ describe('List', () => {
                             contentBefore: '<p>ab</p><ul><li>cd</li><li>ef[gh]ij</li></ul>',
                             stepFunction: toggleUnorderedList,
                             contentAfter: '<p>ab</p><ul><li>cd</li></ul><p>ef[gh]ij</p>',
+                        });
+                    });
+                    it('should not turn a non-editable list into a paragraph', async () => {
+                        it('should not turn a non-editable list into a paragraph', async () => {
+                            await testEditor(BasicEditor, {
+                                contentBefore: '<ul><li>[ab</li></ul><p contenteditable="false">cd</p><ul><li>ef]</li></ul>',
+                                stepFunction: toggleUnorderedList,
+                                contentAfter: '<p>[ab</p><p contenteditable="false">cd</p><p>ef]</p>',
+                            });
                         });
                     });
                 });
@@ -7445,6 +7461,33 @@ describe('List', () => {
                         </ul>`),
                 });
             });
+            it('should not intent a non-editable list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                    <p>[before</p>
+                    <ul>
+                        <li>a</li>
+                    </ul>
+                    <ul contenteditable="false">
+                        <li>a</li>
+                    </ul>
+                    <p>after]</p>`),
+                    stepFunction: indentList,
+                    contentAfter: unformat(`
+                    <p>[before</p>
+                    <ul>
+                        <li class="oe-nested">
+                            <ul>
+                                <li>a</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul contenteditable="false">
+                        <li>a</li>
+                    </ul>
+                    <p>after]</p>`),
+                });
+            });
         });
     });
     describe('outdent', () => {
@@ -7745,6 +7788,33 @@ describe('List', () => {
                             <li>h]</li>
                             <li>i</li>
                         </ul>`),
+                });
+            });
+            it('should not outdent a non-editable list', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                    <p>[before</p>
+                    <ul>
+                        <li class="oe-nested">
+                            <ul>
+                                <li>a</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul contenteditable="false">
+                        <li>a</li>
+                    </ul>
+                    <p>after]</p>`),
+                    stepFunction: outdentList,
+                    contentAfter: unformat(`
+                    <p>[before</p>
+                    <ul>
+                        <li>a</li>
+                    </ul>
+                    <ul contenteditable="false">
+                        <li>a</li>
+                    </ul>
+                    <p>after]</p>`),
                 });
             });
         });
