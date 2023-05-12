@@ -30,13 +30,13 @@
 # Martin Trigaux, 2022
 # Silvija Butko <silvija.butko@gmail.com>, 2022
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2022
-# Jonas Zinkevicius <jozi@odoo.com>, 2022
 # Mantas Kriaučiūnas Baltix <mantas@akl.lt>, 2022
 # Arunas V. <arunas@devoro.com>, 2023
 # Mantas, 2023
 # Raimondas Z., 2023
 # Donatas <donatasvaliulis16@gmail.com>, 2023
 # Linas Versada <linaskrisiukenas@gmail.com>, 2023
+# Jonas Zinkevicius <jozi@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -44,7 +44,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2023\n"
+"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2023\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -370,7 +370,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
 msgid "<b>Early Payment Discount applied.</b>"
-msgstr ""
+msgstr "<b>Išankstinio Apmokėjimo Nuolaida Pritaikyta.</b>"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_credit_note
@@ -10541,18 +10541,18 @@ msgstr "Apmokėjimo terminas: 15 dienų"
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_2months
 msgid "Payment terms: 2 Months"
-msgstr "Mokėjimo sąlygos: 2 mėnesiai"
+msgstr " Apmokėjimo terminas: 2 mėnesiai"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_21days
 msgid "Payment terms: 21 Days"
-msgstr ""
+msgstr " Apmokėjimo terminas: 21 diena"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30days
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "Payment terms: 30 Days"
-msgstr ""
+msgstr " Apmokėjimo terminas: 30 dienų"
 
 #. module: account
 #: model_terms:account.payment.term,note:account.account_payment_term_30days_early_discount
@@ -10687,6 +10687,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check the fiscal country of company %s. (Settings > Accounting > "
+"Fiscal Country)Taxes can only be updated if they are in the company's fiscal"
+" country (%s) or the localization's country (%s)."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""

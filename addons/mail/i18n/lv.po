@@ -149,14 +149,14 @@ msgstr ""
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "%s connected"
-msgstr ""
+msgstr "%s savienots"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "%s created"
-msgstr "%s created"
+msgstr "%s izveidoja"
 
 #. module: mail
 #. odoo-javascript
@@ -667,7 +667,7 @@ msgid ""
 "<div class=\"o_mail_notification\">created <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 msgstr ""
-"<div class=\"o_mail_notification\">created <a href=\"#\" "
+"<div class=\"o_mail_notification\">izveidoja <a href=\"#\" "
 "class=\"o_channel_redirect\" data-oe-id=\"%s\">#%s</a></div>"
 
 #. module: mail
@@ -847,8 +847,8 @@ msgid ""
 "A Python dictionary that will be evaluated to provide default values when "
 "creating new records for this alias."
 msgstr ""
-"A Python dictionary that will be evaluated to provide default values when "
-"creating new records for this alias."
+"Python vārdnīca, kas tiks novērtēta, lai nodrošinātu noklusējuma vērtības, "
+"izveidojot jaunus ierakstus šiem aizstājvārdiem."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_bus_presence_partner_or_guest_exists
@@ -2597,7 +2597,7 @@ msgstr "Izveidots"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 msgid "Created By"
-msgstr "Created By"
+msgstr "Izveidoja"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__create_uid
@@ -2666,7 +2666,7 @@ msgstr "Izveidots"
 #: code:addons/mail/static/src/models/chatter.js:0
 #, python-format
 msgid "Creating a new record..."
-msgstr ""
+msgstr "Izveido jaunu ierakstu..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
@@ -2985,7 +2985,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_rtc_session_view_tree
 #, python-format
 msgid "Disconnect"
-msgstr ""
+msgstr "Atvienot"
 
 #. module: mail
 #. odoo-javascript
@@ -2997,6 +2997,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -7411,18 +7412,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_rtc_session_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_rtc_session_view_tree
 msgid "RTC Session"
-msgstr ""
+msgstr "RTC sesija"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_member__rtc_session_ids
 msgid "RTC Sessions"
-msgstr "RTC sessijas"
+msgstr "RTC sesijas"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_rtc_session_action
 #: model:ir.ui.menu,name:mail.mail_channel_rtc_session_menu
 msgid "RTC sessions"
-msgstr "RTC sessijas"
+msgstr "RTC sesijas"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_users_settings_volumes__volume
@@ -7905,6 +7906,13 @@ msgstr "SSL"
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
 msgid "SSL/TLS"
 msgstr "SSL/TLS"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "SSL might not be set up properly"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -9098,7 +9106,7 @@ msgstr ""
 #: code:addons/mail/models/fetchmail.py:0
 #, python-format
 msgid "The server \"%s\" cannot be used because it is archived."
-msgstr ""
+msgstr "Serveris \"%s\" nevar tikt izmantots tāpēc, ka tas ir arhivēts."
 
 #. module: mail
 #. odoo-javascript
@@ -20141,7 +20149,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
 msgid "has been created from:"
-msgstr ""
+msgstr "tika izveidots no:"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_origin_link
@@ -23894,6 +23902,13 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "medal"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "Media devices unobtainable"
 msgstr ""
 
 #. module: mail

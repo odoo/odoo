@@ -9,6 +9,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const { useBarcodeReader } = require('point_of_sale.custom_hooks');
     const { isConnectionError } = require('point_of_sale.utils');
     const { parse } = require('web.field_utils');
+    const { _lt } = require('@web/core/l10n/translation');
 
     const { onMounted, useState } = owl;
 
@@ -379,6 +380,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         }
     }
     ProductScreen.template = 'ProductScreen';
+    ProductScreen.numpadActionName = _lt('Payment');
 
     Registries.Component.add(ProductScreen);
 

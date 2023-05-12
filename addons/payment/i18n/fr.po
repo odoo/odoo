@@ -659,7 +659,7 @@ msgstr "Annuler"
 #: model:ir.model.fields,field_description:payment.field_payment_token__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom d'affichage"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__display_as
@@ -2097,6 +2097,15 @@ msgstr ""
 #: model:payment.provider,name:payment.payment_provider_transfer
 msgid "Wire Transfer"
 msgstr "Virement bancaire"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid "You cannot delete the payment provider %s; archive it instead."
+msgstr ""
+"Vous ne pouvez pas supprimer l'acquéreur de paiement %s ; archivez-le "
+"plutôt."
 
 #. module: payment
 #. odoo-python

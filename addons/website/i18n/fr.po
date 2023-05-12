@@ -15,7 +15,6 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -3828,7 +3827,7 @@ msgstr "Afficher inline"
 #: model:ir.model.fields,field_description:website.field_website_track__display_name
 #: model:ir.model.fields,field_description:website.field_website_visitor__display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom d'affichage"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -8154,6 +8153,13 @@ msgid "Redirect to URL in a new tab"
 msgstr "Rediriger vers l'URL dans un nouvel onglet"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/website_preview/website_preview.js:0
+#, python-format
+msgid "Redirecting..."
+msgstr "En cours de redirection..."
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
 msgid "Redirection Type"
 msgstr "Type de redirection"
@@ -10079,6 +10085,13 @@ msgstr "Attributs de traduction"
 #. odoo-javascript
 #: code:addons/website/static/src/components/translator/translator.js:0
 #, python-format
+msgid "Translate Selection Option"
+msgstr "Option de sélection de la traduction"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/translator/translator.js:0
+#, python-format
 msgid "Translate header in the text. Menu is generated automatically."
 msgstr "Traduire l'en-tête dans le texte. Le menu est généré automatiquement."
 
@@ -11200,6 +11213,20 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_options
 msgid "Year"
 msgstr "Année"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/website_preview/website_preview.js:0
+#, python-format
+msgid ""
+"You are about to be redirected to the domain configured for your website ( "
+"%s ). This is necessary to edit or view your website from the Website app. "
+"You might need to log back in."
+msgstr ""
+"Vous êtes sur le point d'être redirigé vers le domaine configuré pour votre "
+"site web ( %s ). Cela est nécessaire pour éditer ou visualiser votre site "
+"web depuis l'application Site Web. Il se peut que vous deviez vous "
+"reconnecter."
 
 #. module: website
 #. odoo-javascript

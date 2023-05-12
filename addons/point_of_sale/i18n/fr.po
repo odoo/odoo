@@ -6,8 +6,8 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Pierre Delacroix <pde@odoo.com>, 2022
 # Logan Gônet <logan.gonet.perso@outlook.com>, 2022
-# Jolien De Paepe, 2023
 # Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -462,7 +462,7 @@ msgstr "Ajouter"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/OrderlineCustomerNoteButton.js:0
 #, python-format
 msgid "Add Customer Note"
-msgstr "Ajouter une note pour le client"
+msgstr "Ajouter une note au client"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1748,7 +1748,7 @@ msgstr "Facture client"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__customer_note
 #, python-format
 msgid "Customer Note"
-msgstr "Note pour le client"
+msgstr "Note au client"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__access_url
@@ -2097,7 +2097,7 @@ msgstr "Annuler"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session_check_product_wizard__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom d'affichage"
 
 #. module: point_of_sale
 #. odoo-python
@@ -2116,7 +2116,7 @@ msgid ""
 "Do you want to accept payments difference and post a profit/loss journal "
 "entry?"
 msgstr ""
-"Voulez-vous accepter un écart de paiement et l'enregistrer au compte de "
+"Voulez-vous accepter un écart de règlement et l'enregistrer au compte de "
 "résultat ?"
 
 #. module: point_of_sale
@@ -2448,7 +2448,7 @@ msgstr "Forcer la validation"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__force_outstanding_account_id
 msgid "Forced Outstanding Account"
-msgstr "Forcer le compte en souffrance"
+msgstr "Forcer le compte en suspens"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__split_transactions
@@ -3109,7 +3109,7 @@ msgid ""
 "Account used as outstanding account when creating accounting payment records for bank payments."
 msgstr ""
 "Laisser vide pour utiliser le compte par défaut défini dans les paramètres de la société.\n"
-"Compte utilisé comme compte en souffrance lors de la création des lignes comptables pour les paiements."
+"Compte utilisé comme compte en suspens lors de la création des lignes comptables pour les paiements."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__receivable_account_id
@@ -3137,7 +3137,7 @@ msgstr ""
 "Laisser vide pour utiliser le compte débiteur du client.\n"
 "Définit le journal où seront comptabilisés les paiements cumulés (ou les paiements individuels si l'identifiant du client est vrai) après avoir fermé la session. \n"
 "Pour le journal de caisse, nous écrivons directement dans le compte par défaut du journal par des lignes de relevé.\n"
-"Pour le journal bancaire, nous écrivons dans le compte en souffrance défini pour ce mode de paiement.\n"
+"Pour le journal bancaire, nous écrivons dans le compte en suspens défini pour ce mode de paiement.\n"
 "Seuls les journaux de caisse et de banque sont autorisés. "
 
 #. module: point_of_sale
@@ -4019,7 +4019,7 @@ msgstr "Autres"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__outstanding_account_id
 msgid "Outstanding Account"
-msgstr "Compte en souffrance"
+msgstr "Compte en suspens"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_procurement_group__pos_order_id
@@ -4256,7 +4256,7 @@ msgstr "Paiements"
 #: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
 #, python-format
 msgid "Payments Difference"
-msgstr "Écart de paiement"
+msgstr "Écart de règlement"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_payment_methods_tree
@@ -5003,7 +5003,7 @@ msgstr "Variantes de produit"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Product information"
-msgstr "Information du produit"
+msgstr "Informations sur le produit"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6595,7 +6595,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
 msgid "Theoretical Closing Balance"
-msgstr "Solde de fermeture théorique"
+msgstr "Solde de clôture théorique"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -6715,10 +6715,10 @@ msgid ""
 "of his session saying that he needs to contact his manager."
 msgstr ""
 "Ce champ montre l'écart maximum autorisé entre le solde final et le solde "
-"théorique à la fermeture d'une session, pour ceux qui ne sont pas managers "
-"du PdV. Si ce maximum est atteint, l'utilisateur verra apparaître un message"
-" d'erreur à la fermeture de la session lui indiquant qu'il doit contacter "
-"son manager."
+"théorique à la clôture d'une session, pour ceux qui ne sont pas managers du "
+"PdV. Si ce maximum est atteint, l'utilisateur verra apparaître un message "
+"d'erreur à la fermeture de la session lui indiquant qu'il doit contacter son"
+" manager."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_manager_id

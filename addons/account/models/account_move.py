@@ -39,8 +39,8 @@ TYPE_REVERSE_MAP = {
     'out_refund': 'entry',
     'in_invoice': 'in_refund',
     'in_refund': 'entry',
-    'out_receipt': 'entry',
-    'in_receipt': 'entry',
+    'out_receipt': 'out_refund',
+    'in_receipt': 'in_refund',
 }
 
 EMPTY = object()
@@ -682,22 +682,19 @@ class AccountMove(models.Model):
         highest_name = self[0]._get_last_sequence(lock=False) if self else False
 
         for move in self:
-            if not highest_name and move == self[0] and not move.posted_before and move.date and (not move.name or move.name == '/'):
+            name_not_set = not move.name or move.name == '/'
+            if not highest_name and move == self[0] and not move.posted_before and move.date and name_not_set:
                 # In the form view, we need to compute a default sequence so that the user can edit
                 # it. We only check the first move as an approximation (enough for new in form view)
                 move._set_next_sequence()
             elif move.quick_edit_mode and not move.posted_before:
                 # We always suggest the next sequence as the default name of the new move
-                move._set_next_sequence()
-            elif (move.name and move.name != '/') or move.state != 'posted':
-                try:
-                    move._constrains_date_sequence()
-                    # The name matches the date: we don't recompute
-                except ValidationError:
-                    # Has never been posted and the name doesn't match the date: recompute it
+                if name_not_set or not move._sequence_matches_date():
                     move._set_next_sequence()
-            else:
-                # The name is not set yet and it is posted
+            elif not move.posted_before and not move._sequence_matches_date():
+                # The date changed before posting on first move of period
+                move._set_next_sequence()
+            elif (name_not_set and move.state == 'posted'):
                 move._set_next_sequence()
 
         self.filtered(lambda m: not m.name).name = '/'
@@ -889,12 +886,10 @@ class AccountMove(models.Model):
                         source_line.id AS source_line_id,
                         source_line.move_id AS source_move_id,
                         account.account_type AS source_line_account_type,
-                        ARRAY_AGG(counterpart_move.reversed_entry_id)
-                            FILTER (WHERE counterpart_move.reversed_entry_id IS NOT NULL) AS counterpart_reversed_entry_ids,
-                        ARRAY_AGG(counterpart_move.move_type)
-                            FILTER (WHERE counterpart_move.reversed_entry_id IS NOT NULL) AS counterpart_move_types,
+                        ARRAY_AGG(counterpart_move.move_type) AS counterpart_move_types,
                         COALESCE(BOOL_AND(COALESCE(pay.is_matched, FALSE))
-                            FILTER (WHERE counterpart_move.payment_id IS NOT NULL), TRUE) AS all_payments_matched
+                            FILTER (WHERE counterpart_move.payment_id IS NOT NULL), TRUE) AS all_payments_matched,
+                        BOOL_OR(COALESCE(BOOL(pay.id), FALSE)) as has_payment
                     FROM account_partial_reconcile part
                     JOIN account_move_line source_line ON source_line.id = part.{source_field}_move_id
                     JOIN account_account account ON account.id = source_line.account_id
@@ -937,26 +932,29 @@ class AccountMove(models.Model):
                 if payment_state_matters:
 
                     if currency.is_zero(invoice.amount_residual):
-                        # Check if the invoice/expense entry is fully paid or 'in_payment'.
-                        if all(x['all_payments_matched'] for x in reconciliation_vals):
-                            new_pmt_state = 'paid'
+                        if any(x['has_payment'] for x in reconciliation_vals):
+
+                            # Check if the invoice/expense entry is fully paid or 'in_payment'.
+                            if all(x['all_payments_matched'] for x in reconciliation_vals):
+                                new_pmt_state = 'paid'
+                            else:
+                                new_pmt_state = invoice._get_invoice_in_payment_state()
+
                         else:
-                            new_pmt_state = invoice._get_invoice_in_payment_state()
+                            new_pmt_state = 'paid'
+
+                            reverse_move_types = set()
+                            for x in reconciliation_vals:
+                                for move_type in x['counterpart_move_types']:
+                                    reverse_move_types.add(move_type)
+
+                            if (invoice.move_type in ('in_invoice', 'in_receipt') and reverse_move_types == {'in_refund'}) \
+                              or (invoice.move_type in ('out_invoice', 'out_receipt') and reverse_move_types == {'out_refund'}) \
+                              or (invoice.move_type in ('entry', 'out_refund', 'in_refund') and reverse_move_types == {'entry'}):
+                                new_pmt_state = 'reversed'
+
                     elif reconciliation_vals:
                         new_pmt_state = 'partial'
-
-                # Check if the journal entry is 'reversed' (1 on 1 full reconciliation with entries being of the opposite types)
-                if new_pmt_state == 'paid':
-                    reverse_move_types = []
-                    for x in reconciliation_vals:
-                        for rec_move_type, rec_reversed_entry_id in zip(x['counterpart_move_types'] or [], x['counterpart_reversed_entry_ids'] or []):
-                            if rec_reversed_entry_id == invoice.id:
-                                reverse_move_types.append(rec_move_type)
-
-                    if (invoice.move_type in ('in_invoice', 'in_receipt') and reverse_move_types == ['in_refund']) \
-                      or (invoice.move_type in ('out_invoice', 'out_receipt') and reverse_move_types == ['out_refund']) \
-                      or (invoice.move_type in ('entry', 'out_refund', 'in_refund') and reverse_move_types == ['entry']):
-                        new_pmt_state = 'reversed'
 
             invoice.payment_state = new_pmt_state
 
@@ -2599,9 +2597,11 @@ class AccountMove(models.Model):
             taxes = self.env['account.tax'].browse(tax_ids)
         else:
             account_id = self.journal_id.default_account_id.id
-            if self.journal_id.default_account_id.tax_ids:
-                taxes = self.journal_id.default_account_id.tax_ids
+            if self.is_sale_document(include_receipts=True):
+                taxes = self.journal_id.default_account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'sale')
             else:
+                taxes = self.journal_id.default_account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'purchase')
+            if not taxes:
                 taxes = (
                     self.journal_id.company_id.account_sale_tax_id
                     if self.journal_id.type == 'sale' else
@@ -4123,7 +4123,7 @@ class AccountMove(models.Model):
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
         subtitles = [render_context['record'].name]
-        if self.invoice_date_due:
+        if self.invoice_date_due and self.payment_state not in ('in_payment', 'paid'):
             subtitles.append(_('%(amount)s due\N{NO-BREAK SPACE}%(date)s',
                            amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
                            date=format_date(self.env, self.invoice_date_due, date_format='short', lang_code=render_context.get('lang'))

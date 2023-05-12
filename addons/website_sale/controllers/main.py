@@ -128,6 +128,13 @@ class WebsiteSaleForm(WebsiteForm):
 
 
 class Website(main.Website):
+
+    def _login_redirect(self, uid, redirect=None):
+        # If we are logging in, clear the current pricelist to be able to find
+        # the pricelist that corresponds to the user afterwards.
+        request.session.pop('website_sale_current_pl', None)
+        return super()._login_redirect(uid, redirect=redirect)
+
     @http.route()
     def autocomplete(self, search_type=None, term=None, order=None, limit=5, max_nb_chars=999, options=None):
         options = options or {}
@@ -1474,7 +1481,7 @@ class WebsiteSale(http.Controller):
         return {
             'website_sale_order': order,
             'errors': [],
-            'partner': order.partner_id,
+            'partner': order.partner_invoice_id,
             'order': order,
             'payment_action_id': request.env.ref('payment.action_payment_provider').id,
             # Payment form common (checkout and manage) values
@@ -1747,7 +1754,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
-            'partner_id': order_sudo.partner_id.id,
+            'partner_id': order_sudo.partner_invoice_id.id,
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions to tokenize the tx
         })
         kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values

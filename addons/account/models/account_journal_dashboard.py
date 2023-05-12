@@ -351,7 +351,7 @@ class account_journal(models.Model):
                       SELECT id
                         FROM account_bank_statement
                        WHERE journal_id = journal.id
-                    ORDER BY date DESC
+                    ORDER BY first_line_index DESC
                        LIMIT 1
                    ) statement ON TRUE
              WHERE journal.id = ANY(%s)

@@ -1280,7 +1280,9 @@ msgstr "从BOM计算"
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
 "buying or manufacturing the components and/or subassemblies."
-msgstr "通过购买或制造物料和/或子物料,计算从物料清单重新供应所有物料所需的天数."
+"                                       Also note that purchase security lead"
+" times will be added when appropriate."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1470,11 +1472,9 @@ msgstr "创建工单效能"
 #: model:ir.model.fields,help:mrp.field_product_product__days_to_prepare_mo
 #: model:ir.model.fields,help:mrp.field_product_template__days_to_prepare_mo
 msgid ""
-"Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
-"Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism."
+"Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+"Note that security lead times will also be considered when appropriate."
 msgstr ""
-"提前这么多天创建并确认制造订单,以便有足够的时间补充物料或制造半成品.\n"
-"请注意,这不会影响 MO 排定日期,它仍然遵循准时制机制."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form

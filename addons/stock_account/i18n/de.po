@@ -33,7 +33,7 @@ msgstr " Produktkosten aktualisiert von %(previous)s zu %(new_cost)s."
 #: code:addons/stock_account/models/stock_quant.py:0
 #, python-format
 msgid " [Accounted on %s]"
-msgstr ""
+msgstr " [Gebucht am %s]"
 
 #. module: stock_account
 #. odoo-python
@@ -265,6 +265,8 @@ msgid ""
 "Counterpart journal items for all incoming stock moves will be posted in this account, unless there is a specific valuation account\n"
 "                set on the source location. This is the default value for all products in this category. It can also directly be set on each product."
 msgstr ""
+"Die Gegenbuchungen für alle eingehenden Bestandsbewegungen werden auf diesem Konto verbucht, es sei denn, es ist ein spezielles Bewertungskonto\n"
+"                für den Ursprungsstandort festgelegt. Dies ist der Standardwert für alle Produkte in dieser Kategorie. Er kann auch direkt für jedes Produkt festgelegt werden."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_picking__country_code
@@ -515,7 +517,7 @@ msgstr "Neuer Wert nach Menge"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 msgid "Open Valuation Layer"
-msgstr ""
+msgstr "Offene ewertungsebene"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -578,7 +580,7 @@ msgstr "Menge"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__quantity_svl
 msgid "Quantity Svl"
-msgstr ""
+msgstr "Menge der Bestandsbewertungsstufe"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_quant
@@ -623,7 +625,7 @@ msgstr "Rücklieferschein"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
 msgid "Return Picking Line"
-msgstr ""
+msgstr "Retourenkommissionierungslinie"
 
 #. module: stock_account
 #. odoo-python
@@ -694,7 +696,7 @@ msgstr "Bestandsauffüllbericht"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_request_count
 msgid "Stock Request an Inventory Count"
-msgstr ""
+msgstr "Bestand Lagerzählungsanfrage"
 
 #. module: stock_account
 #. odoo-javascript
@@ -731,7 +733,7 @@ msgstr "Lagerbewertungskonto (Ausgehend)"
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__stock_valuation_layer_ids
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr ""
+msgstr "Bestandsbewertungsebene"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_product__company_currency_id
@@ -739,6 +741,8 @@ msgid ""
 "Technical field to correctly show the currently selected company's currency "
 "that corresponds to the totaled value of the product's valuation layers"
 msgstr ""
+"Technisches Feld zur korrekten Anzeige der Währung des aktuell ausgewählten "
+"Unternehmen, die dem Gesamtwert der Bewertungsebenen des Produkts entspricht"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_picking__country_code
@@ -757,6 +761,8 @@ msgid ""
 "The Stock Input and/or Output accounts cannot be the same as the Stock "
 "Valuation account."
 msgstr ""
+"Die Bestandseingangs- und/oder -ausgangskonten können nicht mit dem "
+"Bestandsbewertungskonto identisch sein."
 
 #. module: stock_account
 #. odoo-python
@@ -785,6 +791,8 @@ msgid ""
 "The move lines are not in a consistent state: some are entering and other "
 "are leaving the company."
 msgstr ""
+"Die Bewegungszeilen sind nicht in einem einheitlichen Zustand: einige gehen "
+"im Unternehmen ein und andere gehen aus."
 
 #. module: stock_account
 #. odoo-python
@@ -1095,4 +1103,4 @@ msgstr "für"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "locations"
-msgstr ""
+msgstr "Standorte"

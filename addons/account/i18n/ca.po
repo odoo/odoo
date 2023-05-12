@@ -26,13 +26,13 @@
 # Quim - eccit <quim@eccit.com>, 2022
 # Jonatan Gk, 2022
 # Harcogourmet, 2022
-# jabelchi, 2022
 # ericrolo, 2022
 # Guspy12, 2022
 # jabiri7, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # Ivan Espinola, 2023
 # Martin Trigaux, 2023
+# jabelchi, 2023
 # 
 msgid ""
 msgstr ""
@@ -40,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: jabelchi, 2023\n"
 "Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11118,6 +11118,18 @@ msgstr "Comparació del període"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check the fiscal country of company %s. (Settings > Accounting > "
+"Fiscal Country)Taxes can only be updated if they are in the company's fiscal"
+" country (%s) or the localization's country (%s)."
+msgstr ""
+"Si us plau, comproveu el país fiscal de l'empresa %s. (Configuració > "
+"Comptabilitat > País fiscal) Només es poden actualitzar els impostos si són "
+"al país filscal de l'empresa (%s) o al país de la localització (%s)."
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""

@@ -3270,6 +3270,8 @@
         CommandResult[CommandResult["InvalidSelectionStep"] = 82] = "InvalidSelectionStep";
         CommandResult[CommandResult["DuplicatedChartId"] = 83] = "DuplicatedChartId";
         CommandResult[CommandResult["ChartDoesNotExist"] = 84] = "ChartDoesNotExist";
+        CommandResult[CommandResult["InvalidHeaderIndex"] = 85] = "InvalidHeaderIndex";
+        CommandResult[CommandResult["InvalidQuantity"] = 86] = "InvalidQuantity";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     var DIRECTION;
@@ -17408,7 +17410,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       base (number) ${_lt("The number to raise to the exponent power.")}
       exponent (number) ${_lt("The exponent to raise base to.")}
     `),
-        returns: ["BOOLEAN"],
+        returns: ["NUMBER"],
         compute: function (base, exponent) {
             return POWER.compute(base, exponent);
         },
@@ -24352,7 +24354,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         if (cell.style) {
             style = data.styles[cell.style];
         }
-        const format = cell.format ? data.formats[cell.format] : undefined;
+        const format = extractFormat(cell, data);
         const exportedBorder = {};
         if (cell.border) {
             const border = data.borders[cell.border];
@@ -24385,6 +24387,22 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         styles.font["bold"] = !!(style === null || style === void 0 ? void 0 : style.bold) || undefined;
         styles.font["italic"] = !!(style === null || style === void 0 ? void 0 : style.italic) || undefined;
         return styles;
+    }
+    function extractFormat(cell, data) {
+        if (cell.format) {
+            return data.formats[cell.format];
+        }
+        if (cell.isFormula) {
+            const tokens = tokenize(cell.content || "");
+            const functions = functionRegistry.content;
+            const isExported = tokens
+                .filter((tk) => tk.type === "FUNCTION")
+                .every((tk) => functions[tk.value.toUpperCase()].isExported);
+            if (!isExported) {
+                return cell.computedFormat;
+            }
+        }
+        return undefined;
     }
     function normalizeStyle(construct, styles) {
         const { id: fontId } = pushElement(styles["font"], construct.fonts);
@@ -27608,6 +27626,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const exportedCellData = sheet.cells[xc];
                     exportedCellData.value = cell.evaluated.value;
                     exportedCellData.isFormula = cell.isFormula();
+                    if (cell.format !== cell.evaluated.format) {
+                        exportedCellData.computedFormat = cell.evaluated.format;
+                    }
                 }
             }
         }
@@ -29060,9 +29081,16 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     const elements = cmd.dimension === "COL"
                         ? this.getters.getNumberCols(cmd.sheetId)
                         : this.getters.getNumberRows(cmd.sheetId);
-                    return (hiddenGroup || []).flat().concat(cmd.elements).length < elements
-                        ? 0 /* CommandResult.Success */
-                        : 65 /* CommandResult.TooManyHiddenElements */;
+                    const hiddenElements = new Set((hiddenGroup || []).flat().concat(cmd.elements));
+                    if (hiddenElements.size >= elements) {
+                        return 65 /* CommandResult.TooManyHiddenElements */;
+                    }
+                    else if (Math.min(...cmd.elements) < 0 || Math.max(...cmd.elements) > elements) {
+                        return 85 /* CommandResult.InvalidHeaderIndex */;
+                    }
+                    else {
+                        return 0 /* CommandResult.Success */;
+                    }
                 }
                 case "REMOVE_COLUMNS_ROWS":
                     if (!this.getters.tryGetSheet(cmd.sheetId)) {
@@ -29717,6 +29745,28 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     return this.orderedSheetIds.length > 1
                         ? 0 /* CommandResult.Success */
                         : 9 /* CommandResult.NotEnoughSheets */;
+                case "ADD_COLUMNS_ROWS":
+                    const elements = cmd.dimension === "COL"
+                        ? this.getNumberCols(cmd.sheetId)
+                        : this.getNumberRows(cmd.sheetId);
+                    if (cmd.base < 0 || cmd.base > elements) {
+                        return 85 /* CommandResult.InvalidHeaderIndex */;
+                    }
+                    else if (cmd.quantity <= 0) {
+                        return 86 /* CommandResult.InvalidQuantity */;
+                    }
+                    return 0 /* CommandResult.Success */;
+                case "REMOVE_COLUMNS_ROWS": {
+                    const elements = cmd.dimension === "COL"
+                        ? this.getNumberCols(cmd.sheetId)
+                        : this.getNumberRows(cmd.sheetId);
+                    if (Math.min(...cmd.elements) < 0 || Math.max(...cmd.elements) > elements) {
+                        return 85 /* CommandResult.InvalidHeaderIndex */;
+                    }
+                    else {
+                        return 0 /* CommandResult.Success */;
+                    }
+                }
                 case "FREEZE_ROWS": {
                     return this.checkValidations(cmd, this.checkRowFreezeQuantity, this.checkRowFreezeOverlapMerge);
                 }
@@ -41164,12 +41214,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         else {
             // Shouldn't we always output the value then ?
             const value = cell.value;
-            // what if value = 0? Is this condition correct?
-            if (value) {
-                const type = getCellType(value);
-                attrs.push(["t", type]);
-                node = escapeXml /*xml*/ `<v>${value}</v>`;
-            }
+            const type = getCellType(value);
+            attrs.push(["t", type]);
+            node = escapeXml /*xml*/ `<v>${value}</v>`;
             return { attrs, node };
         }
     }
@@ -42731,9 +42778,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.8';
-    __info__.date = '2023-04-21T07:59:07.851Z';
-    __info__.hash = 'dbd7aa4';
+    __info__.version = '16.0.9';
+    __info__.date = '2023-04-28T12:35:06.357Z';
+    __info__.hash = 'e06ca83';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);

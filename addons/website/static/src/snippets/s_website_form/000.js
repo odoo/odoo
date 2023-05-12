@@ -466,7 +466,8 @@ odoo.define('website.s_website_form', function (require) {
                     if (_.isString(error_fields[field_name])) {
                         $field.popover({content: error_fields[field_name], trigger: 'hover', container: 'body', placement: 'top'});
                         // update error message and show it.
-                        $field.data("bs.popover").config.content = error_fields[field_name];
+                        const popover = Popover.getInstance($field);
+                        popover._config.content = error_fields[field_name];
                         $field.popover('show');
                     }
                     form_valid = false;

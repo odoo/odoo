@@ -2758,6 +2758,15 @@ X[]
                     contentAfter: '<p>a[]l</p>',
                 });
             });
+            it('should delete nothing when in an empty table cell', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore:
+                        '<table><tbody><tr><td>abc</td><td>[]<br></td><td>abc</td></tr></tbody></table>',
+                    stepFunction: deleteBackward,
+                    contentAfter:
+                        '<table><tbody><tr><td>abc</td><td>[]<br></td><td>abc</td></tr></tbody></table>',
+                });
+            });
             it('should only remove the text content of cells in a partly selected table', async () => {
                 await testEditor(BasicEditor, {
                     contentBefore: unformat(

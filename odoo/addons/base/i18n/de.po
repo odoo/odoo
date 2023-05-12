@@ -11,7 +11,9 @@
 # Chris Egal <sodaswed@web.de>, 2023
 # Caroline Renson <car@odoo.com>, 2023
 # Martin Trigaux, 2023
+# Stephanie Speiser, 2023
 # Larissa Manderfeld, 2023
+# Stefan Reisich <nafex@gmx.net>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 06:17+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Larissa Manderfeld, 2023\n"
+"Last-Translator: Stefan Reisich <nafex@gmx.net>, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10812,6 +10814,15 @@ msgid ""
 "    Please also update the Italian Accounting module (l10n_it) when you install this module.\n"
 "    "
 msgstr ""
+"\n"
+"Behandlung von Quellensteuer und Pensionsfonds bei der Implementierung der elektronischen Rechnung für Italien.\n"
+"\n"
+"    Die Quellensteuer und die Pensionsfondssteuer werden wie jede andere Steuer nach der\n"
+"    Sequenzreihenfolge berechnet, also achten Sie bitte auf die Reihenfolge der Steuern\n"
+"    in Ihrer Steuerkonfiguration.\n"
+"\n"
+"    Bitte aktualisieren Sie auch das italienische Buchhaltungsmodul (l10n_it), wenn Sie dieses Modul installieren.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_livechat
@@ -14267,7 +14278,7 @@ msgstr "Arch Dateiname"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__arch_to_compare
 msgid "Arch To Compare To"
-msgstr ""
+msgstr "Arch zu vergleichen mit"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -15600,7 +15611,7 @@ msgstr "Standardmäßig verwendet das Widget die Feldinformationen"
 #. module: base
 #: model:res.groups,name:base.group_sanitize_override
 msgid "Bypass HTML Field Sanitize"
-msgstr ""
+msgstr "HTML-Feldbereinigung umgehen"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_C
@@ -16195,12 +16206,12 @@ msgstr "Klient Aktion Merkmal"
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_update
 #: model_terms:ir.ui.view,arch_db:base.wizard_lang_export
 msgid "Close"
-msgstr "Abschließen"
+msgstr "Schließen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Close the onboarding panel"
-msgstr ""
+msgstr "Die Einführungstafel schließen"
 
 #. module: base
 #: model:res.country,name:base.cc
@@ -18578,6 +18589,8 @@ msgid ""
 "Domain on non-relational field \"%(name)s\" makes no sense "
 "(domain:%(domain)s)"
 msgstr ""
+"Domain auf nichtrelationalem Feld „%(name)s“ macht keinen Sinn "
+"(Domain:%(domain)s)"
 
 #. module: base
 #: model:res.country,name:base.dm
@@ -19069,7 +19082,7 @@ msgstr "Mitarbeiter Mobil"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment_hr
 msgid "Employees on Appointments"
-msgstr ""
+msgstr "Mitarbeiter bei Terminen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder_hr
@@ -19741,7 +19754,7 @@ msgstr "FEDEX-Standorte für Website-Lieferung"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_mail_server__from_filter
 msgid "FROM Filtering"
-msgstr ""
+msgstr "VON-Filterung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sms
@@ -19938,6 +19951,8 @@ msgstr "Das Feld \"Typ\" kann auf Modellen nicht bearbeitet werden."
 msgid ""
 "Field %(name)r used in %(use)s is present in view but is in select multi."
 msgstr ""
+"Das Feld %(Name)r, das in %(use)s verwendet wird, ist in der Ansicht "
+"vorhanden, befindet sich aber in select mult"
 
 #. module: base
 #. odoo-python
@@ -20308,7 +20323,7 @@ msgstr "Markieren"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__flag_image_url
 msgid "Flag Image Url"
-msgstr ""
+msgstr "URL des Flaggenbilds"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_fleet
@@ -21127,7 +21142,7 @@ msgstr "Gulf Cooperation Council - Kassensystem"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gcc_invoice_stock_account
 msgid "Gulf Cooperation Council WMS Accounting"
-msgstr ""
+msgstr "WMS-Buchhaltung des Golf-Kooperationsrates"
 
 #. module: base
 #: model:res.country,name:base.gy
@@ -21599,7 +21614,7 @@ msgstr "Operazione di ricerca non supportata"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_extract
 msgid "Hr Recruitment Extract"
-msgstr ""
+msgstr "Auszug Personalbeschaffung"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_survey
@@ -21842,6 +21857,11 @@ msgid ""
 "of the field contains a lot of records; usually used on models with\n"
 "few records (e.g. Stages, Job Positions, Event Types, etc.)."
 msgstr ""
+"Wenn diese Option aktiviert ist, werden alle Datensätze des Zielmodells\n"
+"in ein gruppiertes Ergebnis aufgenommen (z. B. „Gruppieren nach“-Filter, Kanban-Spalten usw.).\n"
+"Beachten Sie, dass dies die Leistung erheblich beeinträchtigen kann,\n"
+"wenn das Zielmodell des Feldes viele Datensätze enthält; normalerweise wird es bei\n"
+"Modellen mit wenigen Datensätzen (z. B. Stages, Jobpositionen, Ereignistypen usw.)."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_debug
@@ -22307,7 +22327,7 @@ msgstr "Indisch - E-waybill"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_gstr
 msgid "Indian - GSTR India eFiling"
-msgstr ""
+msgstr "Indisch - Elektronische Einreichung der MwSt.-Erklärung in Indien"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_gstr_pos
@@ -22427,6 +22447,9 @@ msgid ""
 "Inherited view cannot have 'Groups' define on the record. Use 'groups' "
 "attributes inside the view definition"
 msgstr ""
+"In der vererbten Ansicht können keine „Gruppen“ für den Datensatz definiert "
+"werden. Verwenden Sie die „Gruppen“-Attribute innerhalb der "
+"Ansichtsdefinition"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__implied_ids
@@ -22539,6 +22562,7 @@ msgstr "Integrieren Sie SMS-Marketing in Marketing-Kampagnen"
 #: model:ir.module.module,description:base.module_sale_loyalty
 msgid "Integrate discount and loyalty programs mechanisms in sales orders."
 msgstr ""
+"Mechanismen für Rabatte und Treueprogramme in Verkaufsaufträge integrieren."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_loyalty_delivery
@@ -22861,12 +22885,12 @@ msgstr "Bestand, Logistik, Bewertung, Buchhaltung"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency_rate__inverse_company_rate
 msgid "Inverse Company Rate"
-msgstr ""
+msgstr "Inverser Unternehmenskurs"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_currency__inverse_rate
 msgid "Inverse Rate"
-msgstr ""
+msgstr "Inverser Kurs"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__invoice
@@ -23846,7 +23870,7 @@ msgstr "Liste der Module, in denen das Feld definiert ist"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__modules
 msgid "List of modules in which the object is defined or inherited"
-msgstr "List der Module, in denen ein Objekt definiert oder geerbt wird."
+msgstr "Liste der Module, in denen ein Objekt definiert oder geerbt wird."
 
 #. module: base
 #: model:res.country,name:base.lt
@@ -25723,7 +25747,7 @@ msgstr "Nicht updatefähig"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Non-relational field %(field)r in path %(field_path)r in %(use)s)"
-msgstr ""
+msgstr "Nichtrelationales Feld %(field)r in Pfad %(field_path)r in %(use)s)"
 
 #. module: base
 #. odoo-python
@@ -28975,7 +28999,7 @@ msgstr "Partner-Modul für Website"
 #: model:ir.model.fields,field_description:base.field_res_partner__same_company_registry_partner_id
 #: model:ir.model.fields,field_description:base.field_res_users__same_company_registry_partner_id
 msgid "Partner with same Company Registry"
-msgstr ""
+msgstr "Partner mit selber Unternehmensregistrierung"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__same_vat_partner_id
@@ -29075,7 +29099,7 @@ msgstr "Zahlung – Konto"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_payment_invoice_online_payment_patch
 msgid "Payment - Account / Invoice Online Payment Patch"
-msgstr ""
+msgstr "Zahlung - Konto/Rechnung Online-Zahlungspatch"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
@@ -30270,7 +30294,7 @@ msgstr "QWeb"
 #. module: base
 #: model:ir.model,name:base.model_ir_qweb_field_time
 msgid "QWeb Field Time"
-msgstr ""
+msgstr "QWeb-Feldzeit"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
@@ -33971,6 +33995,9 @@ msgid ""
 "The m2o field %s is required but declares its ondelete policy as being 'set "
 "null'. Only 'restrict' and 'cascade' make sense."
 msgstr ""
+"Das m2o-Feld %s ist obligatorisch, aber seine ondelete-Richtlinie ist als "
+"„Null eingestellt“ angegeben. Nur „einschränken“ und „Absturz“ sind "
+"sinnvoll."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__action_id
@@ -34095,7 +34122,7 @@ msgstr "Der nächste Schritt ist abhängig vom Dateiformat:"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "The ondelete policy %r is not valid for field %r"
-msgstr ""
+msgstr "Die ondelete-Richtlinie %r ist nicht für das Feld %r gültig"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -34451,6 +34478,7 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_l10n_latam_check
 msgid "Third Party and Deferred/Electronic Checks Management"
 msgstr ""
+"Verwaltung von Drittparteien und aufgeschobenen/elektronischen Schecks"
 
 #. module: base
 #: model:ir.actions.act_url,name:base.action_third_party
@@ -35242,6 +35270,8 @@ msgstr "Übersetzungen"
 msgid ""
 "Translations for model translated fields only accept falsy values and str"
 msgstr ""
+"Die Übersetzungen der vom Modell übersetzten Felder akzeptieren nur falsy-"
+"Werte und Zeichenketten."
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_H
@@ -36608,7 +36638,7 @@ msgstr "Web Gantt"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_web_gantt
 msgid "Web Gantt Tests"
-msgstr ""
+msgstr "Web-Gantt-Tests"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_web_gantt
@@ -38019,7 +38049,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__properties
 msgid "properties"
-msgstr ""
+msgstr "Eigenschaften"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__properties_definition

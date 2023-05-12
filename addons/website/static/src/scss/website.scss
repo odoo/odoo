@@ -285,6 +285,10 @@ $-header-nav-link-height: $nav-link-height;
         @include o-apply-colors('copyright-custom', $background: $-footer-color);
         @include o-add-gradient('copyright-gradient');
     }
+    .s_popup {
+        // The colors of the footer must not impact the "all pages" popup.
+        @include o-apply-colors(1);
+    }
 }
 
 h2, h3, h4, h5, h6 {
@@ -1400,6 +1404,7 @@ header {
     height: 1em;
     margin-right: 0.2em;
     border-radius: $border-radius-pill;
+    object-fit: cover;
 }
 a.js_change_lang:hover, a.o_add_language:hover {
     text-decoration: none;
@@ -1598,6 +1603,21 @@ ul.o_checklist > li.o_checked::after {
 input[value*="data-oe-translation-initial-sha"] {
     @extend .o_text_content_invisible;
 }
+[data-oe-translation-initial-sha] {
+    > .o_translation_select {
+        border: $input-border-width solid $input-border-color;
+        @include border-radius($input-border-radius, 0);
+
+        // Hide translatable `<select/>`s since we use `.o_translation_select`
+        // elements to handle translations.
+        + select {
+            display: none !important;
+        }
+        > div:not(:last-child) {
+            border-bottom: inherit;
+        }
+    }
+}
 
 //------------------------------------------------------------------------------
 // Website Animate
@@ -1629,6 +1649,17 @@ input[value*="data-oe-translation-initial-sha"] {
 }
 .o_wanim_overflow_xy_hidden {
     overflow-x: hidden !important;
+
+    &.o_rtl {
+        // Fix for Chrome and Edge bug: resolves slow/stuck scrolling during
+        // left-overflowing animations on RTL web pages. Note: using overflow on
+        // the main element hides animated elements outside of it (e.g. "Framed"
+        // page layout). This may not be the ideal solution but could be the
+        // best workaround for now.
+        > main {
+            overflow-x: hidden;
+        }
+    }
     .o_footer_slideout {
         overflow-y: hidden !important;
     }

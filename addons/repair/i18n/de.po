@@ -27,6 +27,9 @@ msgid ""
 "                object.state == 'draft' and 'Repair Quotation - %s' % (object.name) or\n"
 "                'Repair Order - %s' % (object.name))"
 msgstr ""
+"(\n"
+"                object.state == 'draft' und 'Reparaturangebot - %s' % (object.name) oder\n"
+"                'Reparaturauftrag - %s' % (object.name))"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -49,6 +52,13 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* Der Status „Entwurf“ wird verwendet, wenn ein Benutzer einen neuen und unbestätigten Reparaturauftrag erfasst.\n"
+"* Der Status „Bestätigt“ wird verwendet, wenn ein Benutzer den Reparaturauftrag bestätigt.\n"
+"* Der Status „Bereit zur Reparatur“ wird verwendet, um mit der Reparatur zu beginnen, der Benutzer kann erst anfangen, wenn der Reparaturauftrag bestätigt wurde.\n"
+"* Der Status „In Reparatur” wird verwendet, wenn die Reparatur im Gange ist.\n"
+"* Der Status „Abzurechnen“ wird verwendet, um vor oder nach der Reparatur die Rechnung zu erstellen.\n"
+"* Der Status „Erledigt“ wird eingestellt, wenn die Reparatur abgeschlossen ist.\n"
+"* Der Status „Storniert“ wird verwendet, wenn Reparaturaufträge von Benutzern storniert werden."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -218,7 +228,7 @@ msgstr "Nach Reparatur"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__allowed_picking_type_ids
 msgid "Allowed Picking Type"
-msgstr ""
+msgstr "Zugelassene Kommissionierungsart"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_attachment_count
@@ -543,6 +553,8 @@ msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
 msgid ""
 "If ticked, you will be able to directly create repair orders from a return."
 msgstr ""
+"Wenn angekreuzt, können Sie einen Reparaturauftrag direkt aus einer Retoure "
+"erstellen."
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -770,6 +782,8 @@ msgstr "Normal"
 msgid ""
 "Note that the warehouses of the return and repair locations don't match!"
 msgstr ""
+"Bitte beachten Sie, dass die Retourenlager und die Reparaturstandort nicht "
+"übereinstimmen."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction_counter
@@ -794,7 +808,7 @@ msgstr "Anzahl der Nachrichten mit einem Fehler beim Senden."
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking__nbr_repairs
 msgid "Number of repairs linked to this picking"
-msgstr ""
+msgstr "Anzahl der Reparaturen im Zusammenhang mit dieser Kommissionierung"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -1124,12 +1138,12 @@ msgstr "Retoure ausführen"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__picking_id
 msgid "Return Order from which the product to be repaired comes from."
-msgstr ""
+msgstr "Retourenauftrag, von dem das zu reparierende Produkt kommt."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_picking_type__return_type_of_ids
 msgid "Return Type Of"
-msgstr ""
+msgstr "Retourentyp von"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__is_returned
@@ -1342,6 +1356,8 @@ msgid ""
 "True if this repair is linked to a Return Order and the order is 'Done'. "
 "False otherwise."
 msgstr ""
+"True, wenn diese Reparatur mit einem Retourenauftrag verbunden ist und der "
+"Auftrag ist „Erledigt“. Anderenfalls False."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__type

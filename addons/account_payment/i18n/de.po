@@ -132,6 +132,9 @@ msgid ""
 "                        Wait a moment for it to be processed. If the refund is still pending in a\n"
 "                        few minutes, please check your payment provider configuration."
 msgstr ""
+"<strong>Achtung!</strong> Für diese Zahlung steht eine Erstattung an.\n"
+"                        Warten Sie einen Moment, bis sie bearbeitet wird. Wenn die Erstattung in ein paar Minuten immer noch aussteht,\n"
+"                        überprüfen Sie bitte die Konfiguration Ihres Zahlungsanbieters."
 
 #. module: account_payment
 #. odoo-python
@@ -303,6 +306,8 @@ msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
 msgstr ""
+"Beachten Sie, dass nur Token von Anbietern verfügbar sind, die die Erfassung"
+" des Betrags ermöglichen."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
@@ -310,6 +315,9 @@ msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
+"Beachten Sie, dass Token von Zahlungsanbietern, die nur für die "
+"Autorisierung von Transaktionen festgelegt wurden (anstatt die Menge zu "
+"erfassen) nicht verfügbar sind."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -452,7 +460,7 @@ msgstr "Zahlungs-Token gespeichert"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr ""
+msgstr "Ursprüngliche Zahlung"
 
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_account_payment_method_line__payment_provider_state
@@ -567,6 +575,8 @@ msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
 "Linked provider(s): %s"
 msgstr ""
+"Sie können keine Zahlungsmethode löschen, die mit einem Anbieter im aktivierten oder Teststatus verknüpft ist.\n"
+"Verknüpfte(r) Anbieter: %s"
 
 #. module: account_payment
 #. odoo-python

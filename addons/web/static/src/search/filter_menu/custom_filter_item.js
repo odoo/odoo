@@ -23,6 +23,7 @@ const FIELD_TYPES = {
     float: "number",
     id: "id",
     integer: "number",
+    json: "json",
     html: "char",
     many2many: "char",
     many2one: "char",
@@ -43,6 +44,14 @@ const FIELD_OPERATORS = {
         { symbol: "!=", description: _lt("is No"), value: true },
     ],
     char: [
+        { symbol: "ilike", description: _lt("contains") },
+        { symbol: "not ilike", description: _lt("doesn't contain") },
+        { symbol: "=", description: _lt("is equal to") },
+        { symbol: "!=", description: _lt("is not equal to") },
+        { symbol: "!=", description: _lt("is set"), value: false },
+        { symbol: "=", description: _lt("is not set"), value: false },
+    ],
+    json: [
         { symbol: "ilike", description: _lt("contains") },
         { symbol: "not ilike", description: _lt("doesn't contain") },
         { symbol: "=", description: _lt("is equal to") },
@@ -234,7 +243,13 @@ export class CustomFilterItem extends Component {
                 );
             } else {
                 domainValue = [condition.value];
-                descriptionArray.push(`"${condition.value}"`);
+                if (field.type === "selection") {
+                    descriptionArray.push(
+                        `"${field.selection.find((v) => v[0] === condition.value)[1]}"`
+                    );
+                } else {
+                    descriptionArray.push(`"${condition.value}"`);
+                }
             }
             // Operator specifics
             if (operator.symbol === "between") {

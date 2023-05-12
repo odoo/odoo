@@ -32,7 +32,7 @@
     
     <template id="sale_purchased_gift_card">
         <t t-set="gift_cards" t-value="order.coupon_point_ids.filtered(lambda pe: pe.coupon_id.program_id.program_type == 'gift_card').coupon_id"/>
-        <div class="card mt-3 " t-if="gift_cards">
+        <div class="card mt-3 " t-if="gift_cards and order.state in ('sale', 'done')">
             <div class="card-body">
                 <span t-if="not hide_intro">You will find below your gift cards code. An email has been sent with it. You can use it starting right now.</span>
                 <table class="table text-center table-borderless">

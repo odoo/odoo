@@ -334,7 +334,7 @@ class Partner(models.Model):
             return "base/static/img/money.png"
         return super()._avatar_get_placeholder_path()
 
-    @api.depends('is_company', 'name', 'parent_id.display_name', 'type', 'company_name')
+    @api.depends('is_company', 'name', 'parent_id.display_name', 'type', 'company_name', 'commercial_company_name')
     def _compute_display_name(self):
         # retrieve name_get() without any fancy feature
         names = dict(self.with_context({}).name_get())
@@ -887,7 +887,7 @@ class Partner(models.Model):
             self = self.with_context(context)
         name, email = self._parse_partner_name(name)
         if self._context.get('force_email') and not email:
-            raise UserError(_("Couldn't create contact without email address!"))
+            raise ValidationError(_("Couldn't create contact without email address!"))
 
         create_values = {self._rec_name: name or email}
         if email:  # keep default_email in context

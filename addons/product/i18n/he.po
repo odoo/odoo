@@ -3239,10 +3239,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"אינך יכול למחוק את הערך %s מכיוון שהוא בשימוש במוצרים הבאים:\n"
-"%s"
 
 #. module: product
 #. odoo-python
@@ -3267,6 +3266,13 @@ msgstr ""
 "(%s)\n"
 ", הם משמשים במחירון(נים) אחרים:\n"
 "%s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
 
 #. module: product
 #. odoo-python

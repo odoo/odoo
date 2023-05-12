@@ -3,8 +3,9 @@
 # 	* mrp
 # 
 # Translators:
-# Niyas Raphy, 2023
 # Nikhil Krishnan, 2023
+# Hasna, 2023
+# Niyas Raphy, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Nikhil Krishnan, 2023\n"
+"Last-Translator: Niyas Raphy, 2023\n"
 "Language-Team: Malayalam (https://app.transifex.com/odoo/teams/41243/ml/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -163,7 +164,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_kanban
@@ -308,7 +309,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>Reporting</span>"
-msgstr ""
+msgstr "<span>റിപ്പോർട്ടിംഗ്</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -1250,6 +1251,8 @@ msgstr ""
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
 "buying or manufacturing the components and/or subassemblies."
+"                                       Also note that purchase security lead"
+" times will be added when appropriate."
 msgstr ""
 
 #. module: mrp
@@ -1283,7 +1286,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__state__confirmed
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Confirmed"
-msgstr ""
+msgstr "സ്ഥിരീകരിച്ചു"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_production_action
@@ -1442,8 +1445,8 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_product_product__days_to_prepare_mo
 #: model:ir.model.fields,help:mrp.field_product_template__days_to_prepare_mo
 msgid ""
-"Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
-"Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism."
+"Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+"Note that security lead times will also be considered when appropriate."
 msgstr ""
 
 #. module: mrp
@@ -2030,7 +2033,7 @@ msgstr "ഫോള്ളോവെഴ്‌സ് "
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_partner_ids
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "അനുയായികൾ (പങ്കാളികൾ)"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__activity_type_icon
@@ -2104,7 +2107,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
 msgid "General Information"
-msgstr ""
+msgstr "പൊതുവിവരം"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
@@ -2184,7 +2187,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__has_message
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "സന്ദേശമുണ്ട്"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_document__priority__2
@@ -2394,7 +2397,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__message_is_follower
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "അനുയായിയാണ്"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__is_kits
@@ -3475,7 +3478,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
 msgid "Pause"
-msgstr ""
+msgstr "താൽക്കാലികമായി നിർത്തുക"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_work_order_search
@@ -4295,7 +4298,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Search Production"
-msgstr ""
+msgstr "സെർച്ച് പ്രൊഡക്ഷൻ"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
@@ -4558,7 +4561,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_form
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
 msgid "Split Production"
-msgstr ""
+msgstr "സ്പ്ലിറ്റ് പ്രൊഡക്ഷൻ"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_line
@@ -4569,17 +4572,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_split_multi_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_split_multi_form
 msgid "Split Productions"
-msgstr ""
+msgstr "സ്പ്ലിറ്റ് പ്രൊഡക്ഷൻസ്"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_split
 msgid "Split production"
-msgstr ""
+msgstr "സ്പ്ലിറ്റ് പ്രൊഡക്ഷൻ"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_split_multi
 msgid "Split productions"
-msgstr ""
+msgstr "സ്പ്ലിറ്റ് പ്രൊഡക്ഷൻസ്"
 
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_computer_desk_screw_product_template

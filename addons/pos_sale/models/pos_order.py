@@ -32,13 +32,16 @@ class PosOrder(models.Model):
         invoice_vals = super(PosOrder, self)._prepare_invoice_vals()
         invoice_vals['team_id'] = self.crm_team_id.id
         sale_orders = self.lines.mapped('sale_order_origin_id')
-        if sale_orders and (sale_orders.partner_invoice_id.id != sale_orders.partner_shipping_id.id):
-            invoice_vals['partner_shipping_id'] = sale_orders.partner_shipping_id.id
-        else:
-            addr = self.partner_id.address_get(['delivery'])
-            invoice_vals['partner_shipping_id'] = addr['delivery']
-        if sale_orders and sale_orders[0].payment_term_id:
-            invoice_vals['invoice_payment_term_id'] = sale_orders[0].payment_term_id.id,
+        if sale_orders:
+            if sale_orders[0].partner_invoice_id.id != sale_orders[0].partner_shipping_id.id:
+                invoice_vals['partner_shipping_id'] = sale_orders[0].partner_shipping_id.id
+            else:
+                addr = self.partner_id.address_get(['delivery'])
+                invoice_vals['partner_shipping_id'] = addr['delivery']
+            if sale_orders[0].payment_term_id:
+                invoice_vals['invoice_payment_term_id'] = sale_orders[0].payment_term_id.id
+            if sale_orders[0].partner_invoice_id != sale_orders[0].partner_id:
+                invoice_vals['partner_id'] = sale_orders[0].partner_invoice_id.id
         return invoice_vals
 
     @api.model
@@ -73,7 +76,8 @@ class PosOrder(models.Model):
             # track the waiting pickings
             waiting_picking_ids = set()
             for so_line in so_lines:
-                for stock_move in so_line.move_ids.group_id.stock_move_ids:
+                so_line_stock_move_ids = so_line.move_ids.group_id.stock_move_ids
+                for stock_move in so_line.move_ids:
                     picking = stock_move.picking_id
                     if not picking.state in ['waiting', 'confirmed', 'assigned']:
                         continue
@@ -81,6 +85,9 @@ class PosOrder(models.Model):
                     if float_compare(new_qty, 0, precision_rounding=stock_move.product_uom.rounding) <= 0:
                         new_qty = 0
                     stock_move.product_uom_qty = so_line.compute_uom_qty(new_qty, stock_move, False)
+                    #If the product is delivered with more than one step, we need to update the quantity of the other steps
+                    for move in so_line_stock_move_ids.filtered(lambda m: m.state in ['waiting', 'confirmed'] and m.product_id == stock_move.product_id):
+                        move.product_uom_qty = stock_move.product_uom_qty
                     waiting_picking_ids.add(picking.id)
 
             def is_product_uom_qty_zero(move):

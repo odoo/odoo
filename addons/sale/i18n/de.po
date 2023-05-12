@@ -7,8 +7,9 @@
 # Felix Schubert <felix.schubert@go-erp.com>, 2022
 # Michael Hofer, 2022
 # Thomas, 2023
-# Larissa Manderfeld, 2023
 # Martin Trigaux, 2023
+# Larissa Manderfeld, 2023
+# Stefan Reisich <nafex@gmx.net>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:52+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Stefan Reisich <nafex@gmx.net>, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1313,7 +1314,7 @@ msgstr "Klicken Sie hier, um ein Fakturierungsziel zu definieren."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Close"
-msgstr "Abschließen"
+msgstr "Schließen"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_quotation_onboarding_state__closed
@@ -2091,7 +2092,7 @@ msgstr "Gruppieren"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__show_update_fpos
 msgid "Has Fiscal Position Changed"
-msgstr ""
+msgstr "Hat geänderte Steuerposition"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__has_message
@@ -2930,7 +2931,7 @@ msgstr "Auftragsdatum:"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Order Date: Last 365 Days"
-msgstr ""
+msgstr "Auftragsdatum: letzte 365 Tage"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
@@ -3122,7 +3123,7 @@ msgstr "Reduzierter Preis zzgl. MwSt"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
 msgid "Price Reduce Tax incl"
-msgstr ""
+msgstr "Preisminderung inkl. Steuern"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__pricelist_id
@@ -3243,6 +3244,7 @@ msgstr "Die Produktpreise wurden gemäß der Preisliste %s neu berechnet."
 #, python-format
 msgid "Product taxes have been recomputed according to fiscal position %s."
 msgstr ""
+"Die Produktsteuern wurden entsprechend der Steuerposition %s neu berechnet."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3449,7 +3451,7 @@ msgstr "Berechnen Sie alle Preise auf der Grundlage dieser Preisliste neu"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Recompute all taxes based on this fiscal position"
-msgstr ""
+msgstr "Alle Steuern auf der Grundlage dieser Steuerposition neu berechnen"
 
 #. module: sale
 #. odoo-python
@@ -3462,6 +3464,7 @@ msgstr "Referenz"
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
 msgstr ""
+"Referenz des Dokuments, das diese Verkaufsauftragsanfrage generiert hat"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
@@ -3573,7 +3576,7 @@ msgstr "Aufträge"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_payment_provider_onboarding_wizard
 msgid "Sale Payment provider onboarding wizard"
-msgstr ""
+msgstr "Einarbeitungsassistent für Zahlungsanbieter für den Verkauf"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3741,6 +3744,10 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
+"Verkaufsauftragsposition, zu der die aufgewendete Zeit hinzugefügt wird, "
+"damit sie Ihrem Kunden in Rechnung gestellt werden kann. Entfernen Sie die "
+"Verkaufsauftragsposition, damit der Zeiterfassungsbogen nicht abrechenbar "
+"ist."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__sales_price
@@ -3876,7 +3883,7 @@ msgstr "Senden Sie ein Angebot, um das Kundenportal zu testen."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_cancel_view_form
 msgid "Send and cancel"
-msgstr ""
+msgstr "Senden und stornieren"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4132,7 +4139,7 @@ msgstr "Total Steuern"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__tax_totals
 msgid "Tax Totals"
-msgstr ""
+msgstr "Steuern insgesamt"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__amount_tax

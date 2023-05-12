@@ -236,7 +236,7 @@ class Meeting(models.Model):
             'start': start,
             'end': end,
             'summary': self.name,
-            'description': tools.html2plaintext(self.description) if not tools.is_html_empty(self.description) else '',
+            'description': tools.html_sanitize(self.description) if not tools.is_html_empty(self.description) else '',
             'location': self.location or '',
             'guestsCanModify': True,
             'organizer': {'email': self.user_id.email, 'self': self.user_id == self.env.user},

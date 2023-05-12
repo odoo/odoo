@@ -791,26 +791,3 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyFreeProductTour2",
             login="accountman",
         )
-
-    def test_gift_card_value_with_discount(self):
-        """When selling a gift card with a discount, the value of the gift card
-        should be the amount before the discount."""
-        LoyaltyProgram = self.env['loyalty.program']
-        # Deactivate all other programs to avoid interference
-        (LoyaltyProgram.search([])).write({'pos_ok': False})
-        # But activate the gift_card_product_50 and ewallet_product_50 because they're shared among new programs.
-        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
-        self.env.ref('loyalty.ewallet_product_50').write({'active': True})
-        # Create programs
-        programs = self.create_programs([
-            ('gift_card_1', 'gift_card'),
-        ])
-        # Run the tour to topup ewallets.
-        self.start_tour(
-            "/pos/web?config_id=%d" % self.main_pos_config.id,
-            "GiftCardWithDiscountTour",
-            login="accountman",
-        )
-        # Check the created gift cards.
-        self.assertEqual(len(programs['gift_card_1'].coupon_ids), 1)
-        self.assertEqual(programs['gift_card_1'].coupon_ids.points, 50)

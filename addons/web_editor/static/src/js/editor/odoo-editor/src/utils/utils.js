@@ -509,9 +509,11 @@ export function getNormalizedCursorPosition(node, offset, full = true) {
             if (!leftInlineNode || leftVisibleEmpty) {
                 const rightInlineNode = rightLeafOnlyInScopeNotBlockPath(el, elOffset).next().value;
                 if (rightInlineNode) {
+                    const closest = closestElement(rightInlineNode);
                     const rightVisibleEmpty =
                         isVisibleEmpty(rightInlineNode) ||
-                        !closestElement(rightInlineNode).isContentEditable;
+                        !closest ||
+                        !closest.isContentEditable;
                     if (!(leftVisibleEmpty && rightVisibleEmpty)) {
                         [node, offset] = rightVisibleEmpty
                             ? leftPos(rightInlineNode)
@@ -1726,7 +1728,7 @@ export function isEmptyBlock(blockEl) {
     for (const node of nodes) {
         // There is no text and no double BR, the only thing that could make
         // this visible is a "visible empty" node like an image.
-        if (node.nodeName != 'BR' && isVisibleEmpty(node)) {
+        if (node.nodeName != 'BR' && (isVisibleEmpty(node) || isFontAwesome(node))) {
             return false;
         }
     }

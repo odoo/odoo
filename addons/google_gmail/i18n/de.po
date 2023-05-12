@@ -28,6 +28,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                        Connect your Gmail account"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Verbinden Sie Ihr Gmail-Konto"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.fetchmail_server_view_form
@@ -42,6 +44,9 @@ msgid ""
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('server_type', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                        Gmail-Token Gültig\n"
+"                    </span>"
 
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.ir_mail_server_view_form
@@ -50,6 +55,9 @@ msgid ""
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                        Gmail-Token Gültig\n"
+"                    </span>"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_access_token
@@ -70,13 +78,13 @@ msgstr "Ablaufdatum des Outlook-Zugriffstokens"
 #: code:addons/google_gmail/controllers/main.py:0
 #, python-format
 msgid "An error occur during the authentication process."
-msgstr ""
+msgstr "Während des Authentifizierungsprozesses ist ein Fehler aufgetreten."
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token."
-msgstr ""
+msgstr "Beim Abrufen des Zugangstokens ist ein Fehler aufgetreten."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_ir_mail_server__smtp_authentication
@@ -102,6 +110,8 @@ msgid ""
 "Connect your Gmail account with the OAuth Authentication process. \n"
 "You will be redirected to the Gmail login page where you will need to accept the permission."
 msgstr ""
+"Verbinden Sie Ihr Gmail-Konto mit dem OAuth-Authentifizierungsverfahren. \n"
+"Sie werden zur Gmail-Anmeldeseite weitergeleitet, wo Sie die Genehmigung akzeptieren müssen."
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/ir_mail_server.py:0
@@ -110,6 +120,8 @@ msgid ""
 "Connect your Gmail account with the OAuth Authentication process.  \n"
 "By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
 msgstr ""
+"Verbinden Sie Ihr Gmail-Konto mit dem OAuth-Authentifizierungsverfahren. \n"
+"Standardmäßig kann nur ein Benutzer mit einer passenden E-Mail-Adresse diesen Server verwenden. Um die Nutzung zu erweitern, sollten Sie einen Systemparameter „mail.default.from“ festlegen."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_res_config_settings__google_gmail_client_identifier
@@ -204,7 +216,7 @@ msgstr "Geheimnis"
 #. module: google_gmail
 #: model_terms:ir.ui.view,arch_db:google_gmail.res_config_settings_view_form
 msgid "Secret of your Google app"
-msgstr ""
+msgstr "Geheimnis Ihrer Google-App"
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__server_type

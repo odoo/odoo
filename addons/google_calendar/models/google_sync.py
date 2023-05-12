@@ -208,7 +208,7 @@ class GoogleSync(models.AbstractModel):
             error_log += "The event (%(id)s - %(name)s at %(start)s) could not be synced. It will not be synced while " \
                          "it is not updated. Reason: %(reason)s" % {'id': event_ids, 'start': start, 'name': name,
                                                                     'reason': reason}
-            _logger.error(error_log)
+            _logger.warning(error_log)
 
             body = _(
                 "The following event could not be synced with Google Calendar. </br>"

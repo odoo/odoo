@@ -555,7 +555,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Credentials"
-msgstr ""
+msgstr "Tunnistetiedot"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_stripe
@@ -1248,7 +1248,7 @@ msgstr ""
 #: model:ir.model,name:payment.model_payment_token
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__token_id
 msgid "Payment Token"
-msgstr ""
+msgstr "Maksutunniste"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
@@ -2030,6 +2030,13 @@ msgstr ""
 #: model:payment.provider,name:payment.payment_provider_transfer
 msgid "Wire Transfer"
 msgstr "Tilisiirto"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid "You cannot delete the payment provider %s; archive it instead."
+msgstr ""
 
 #. module: payment
 #. odoo-python

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.tools import mute_logger
 from odoo.tools.translate import html_translate
@@ -34,6 +34,14 @@ class Job(models.Model):
             <span class="text-muted small">Days to get an Offer</span>
             <h6>4 Days after Interview</h6>
         """)
+
+    @api.onchange('website_published')
+    def _onchange_website_published(self):
+        if self.website_published:
+            self.is_published = True
+        else:
+            self.is_published = False
+            self.website_id = False
 
     def _compute_website_url(self):
         super(Job, self)._compute_website_url()

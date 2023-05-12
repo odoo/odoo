@@ -3,8 +3,9 @@
 # 	* payment
 # 
 # Translators:
-# Niyas Raphy, 2023
 # Nikhil Krishnan, 2023
+# Hasna, 2023
+# Niyas Raphy, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:52+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Nikhil Krishnan, 2023\n"
+"Last-Translator: Niyas Raphy, 2023\n"
 "Language-Team: Malayalam (https://app.transifex.com/odoo/teams/41243/ml/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -390,7 +391,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
 msgid "Choose a payment method"
-msgstr ""
+msgstr "ഒരു പേയ്‌മെന്റ് രീതി തിരഞ്ഞെടുക്കുക"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
@@ -460,7 +461,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__done
 msgid "Confirmed"
-msgstr ""
+msgstr "സ്ഥിരീകരിച്ചു"
 
 #. module: payment
 #: model:ir.model,name:payment.model_res_partner
@@ -470,7 +471,7 @@ msgstr "കോൺടാക്ട് "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__module_id
 msgid "Corresponding Module"
-msgstr ""
+msgstr "അനുബന്ധ മൊഡ്യൂൾ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__available_country_ids
@@ -486,22 +487,22 @@ msgstr "രാജ്യം"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__tokenize
 msgid "Create Token"
-msgstr ""
+msgstr "ടോക്കൺ സൃഷ്ടിക്കുക"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "Create a new payment provider"
-msgstr ""
+msgstr "ഒരു പുതിയ പേയ്‌മെന്റ് പ്രൊവൈഡർ സൃഷ്ടിക്കുക"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
 msgid "Create a new payment token"
-msgstr ""
+msgstr "ഒരു പുതിയ പേയ്‌മെന്റ് ടോക്കൺ സൃഷ്‌ടിക്കുക"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_icon
 msgid "Create a payment icon"
-msgstr ""
+msgstr "ഒരു പേയ്‌മെന്റ് ഐക്കൺ സൃഷ്‌ടിക്കുക"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__create_uid
@@ -529,31 +530,34 @@ msgstr "സൃഷ്ടിച്ചത്"
 #, python-format
 msgid "Creating a transaction from an archived token is forbidden."
 msgstr ""
+"ആർക്കൈവുചെയ്‌ത ടോക്കണിൽ നിന്ന് ഒരു ഇടപാട് സൃഷ്‌ടിക്കുന്നത് "
+"നിരോധിച്ചിരിക്കുന്നു."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Credentials"
-msgstr ""
+msgstr "ക്രെഡൻഷ്യലുകൾ"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_stripe
 msgid "Credit & Debit Card"
-msgstr ""
+msgstr "ക്രെഡിറ്റ് & ഡെബിറ്റ് കാർഡ്"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_razorpay
 msgid "Credit & Debit Card, UPI (Powered by Razorpay)"
 msgstr ""
+"ക്രെഡിറ്റ് & ഡെബിറ്റ് കാർഡ്, UPI (Razorpay ഉപയോഗിച്ച് പ്രവർത്തിക്കുന്നത്)"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__stripe
 msgid "Credit & Debit card (via Stripe)"
-msgstr ""
+msgstr "ക്രെഡിറ്റ് & ഡെബിറ്റ് കാർഡ് (സ്ട്രൈപ്പ് വഴി)"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_adyen
 msgid "Credit Card (powered by Adyen)"
-msgstr ""
+msgstr "ക്രെഡിറ്റ് കാർഡ് (Adyen അധികാരപ്പെടുത്തിയത്)"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_asiapay
@@ -605,7 +609,7 @@ msgstr ""
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_demo
 msgid "Demo"
-msgstr ""
+msgstr "ഡെമോ"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__display_as
@@ -707,22 +711,22 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Fees"
-msgstr ""
+msgstr "ഫീസ്"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_fees
 msgid "Fees Supported"
-msgstr ""
+msgstr "ഫീസ് പിന്തുണയ്ക്കുന്നു"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr ""
+msgstr "നിശ്ചിത ആഭ്യന്തര ഫീസ്"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__fees_int_fixed
 msgid "Fixed international fees"
-msgstr ""
+msgstr "നിശ്ചിത അന്താരാഷ്ട്ര ഫീസ്"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_flutterwave
@@ -742,7 +746,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
-msgstr ""
+msgstr "പേയ്‌മെന്റ് ലിങ്ക് സൃഷ്‌ടിക്കുക"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_link_wizard
@@ -774,17 +778,17 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__pre_msg
 msgid "Help Message"
-msgstr ""
+msgstr "സഹായ സന്ദേശം"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__paypal_user_type__new_user
 msgid "I don't have a Paypal account"
-msgstr ""
+msgstr "എനിക്ക് പേപാൽ അക്കൗണ്ട് ഇല്ല"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__paypal_user_type__existing_user
 msgid "I have a Paypal account"
-msgstr ""
+msgstr "എനിക്ക് ഒരു പേപാൽ അക്കൗണ്ട് ഉണ്ട്"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__id
@@ -822,6 +826,8 @@ msgid ""
 "If you believe that it is an error, please contact the website "
 "administrator."
 msgstr ""
+"ഇതൊരു പിശകാണെന്ന് നിങ്ങൾ വിശ്വസിക്കുന്നുവെങ്കിൽ, ദയവായി വെബ്‌സൈറ്റ് "
+"അഡ്‌മിനിസ്‌ട്രേറ്ററെ ബന്ധപ്പെടുക."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__image
@@ -1416,7 +1422,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__refund
 #, python-format
 msgid "Refund"
-msgstr ""
+msgstr "റീഫണ്ട്"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -1576,7 +1582,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_icon_ids
 msgid "Supported Payment Icons"
-msgstr ""
+msgstr "പിന്തുണയ്ക്കുന്ന പേയ്‌മെന്റ് ഐക്കണുകൾ"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__test
@@ -1584,7 +1590,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.manage
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Test Mode"
-msgstr ""
+msgstr "ടെസ്റ്റ് മോഡ്"
 
 #. module: payment
 #. odoo-python
@@ -1715,7 +1721,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_token__provider_code
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_code
 msgid "The technical code of this payment provider."
-msgstr ""
+msgstr "ഈ പേയ്‌മെന്റ് ദാതാവിന്റെ സാങ്കേതിക കോഡ്."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__redirect_form_view_id
@@ -1830,7 +1836,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "This payment has been canceled."
-msgstr ""
+msgstr "ഈ പേയ്‌മെന്റ് റദ്ദാക്കി."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
@@ -1884,7 +1890,7 @@ msgstr "പ്രസിദ്ധീകരിക്കാത്തത്"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 msgid "Upgrade"
-msgstr ""
+msgstr "അപ്ഗ്രേഡ്"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation
@@ -1916,7 +1922,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Void Transaction"
-msgstr ""
+msgstr "അസാധുവായ ഇടപാട്"
 
 #. module: payment
 #. odoo-javascript
@@ -2004,6 +2010,13 @@ msgstr ""
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
 msgid "Wire Transfer"
+msgstr "വയർ ട്രാൻസ്ഫർ"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid "You cannot delete the payment provider %s; archive it instead."
 msgstr ""
 
 #. module: payment
@@ -2090,7 +2103,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment has been processed."
-msgstr ""
+msgstr "നിങ്ങളുടെ പേയ്‌മെന്റ് പ്രോസസ്സ് ചെയ്തു."
 
 #. module: payment
 #. odoo-javascript
@@ -2153,7 +2166,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment is being processed, please wait..."
-msgstr ""
+msgstr "നിങ്ങളുടെ പേയ്‌മെന്റ് പ്രോസസ്സ് ചെയ്യുകയാണ്, ദയവായി കാത്തിരിക്കൂ..."
 
 #. module: payment
 #. odoo-javascript

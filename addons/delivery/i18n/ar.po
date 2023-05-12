@@ -16,7 +16,7 @@ msgstr ""
 "POT-Creation-Date: 2022-12-15 12:50+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -168,7 +168,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__integration_level
 msgid "Action while validating Delivery Orders"
-msgstr "الإجراء المتبع عند اعتماد أوامر التسليم"
+msgstr "الإجراء المتبع عند تصديق أوامر التوصيل  "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__active
@@ -204,8 +204,8 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
-"إجمالي قيمة الطلب التي تؤهله للحصول على الشحن المجاني، معبرًا عنها بعملة "
-"المؤسسة"
+"إجمالي قيمة الطلب التي تؤهله للحصول على الشحن المجاني، معبر عنها بعملة "
+"الشركة "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -226,7 +226,7 @@ msgstr "حسب القواعد"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_stock_picking__weight_bulk
 msgid "Bulk Weight"
-msgstr "الوزن السائب"
+msgstr "الوزن بالجملة "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__can_generate_return
@@ -464,7 +464,7 @@ msgstr "تحديد ترتيب العرض"
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Discard"
-msgstr "تجاهل"
+msgstr "إهمال "
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__display_name
@@ -721,7 +721,7 @@ msgstr "لم يتم اختيار شركة شحن"
 #, python-format
 msgid "No price rule matching this order; delivery cost cannot be computed."
 msgstr ""
-"لا يوجد قاعدة تسعير مطابقة لهذا الطلب؛ لذا لا يمكن حساب تكلفة التسليم."
+"لا توجد قاعدة تسعير مطابقة لهذا الطلب؛ لذا لا يمكن احتساب تكلفة التوصيل. "
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
@@ -747,21 +747,21 @@ msgstr "أصل البضائع "
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_package_view_form
 msgid "Package"
-msgstr "حزمة"
+msgstr "الطرد "
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/models/stock_picking.py:0
 #, python-format
 msgid "Package Details"
-msgstr "تفاصيل الحزمة"
+msgstr "تفاصيل الطرد "
 
 #. module: delivery
 #. odoo-python
 #: code:addons/delivery/wizard/choose_delivery_package.py:0
 #, python-format
 msgid "Package too heavy!"
-msgstr "الحزمة ثقيلة جدًا!"
+msgstr "الطرد ثقيل جداً! "
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_quant_package
@@ -792,6 +792,10 @@ msgid ""
 "i.e. '$' can be added to end of prefix to match the exact zip (e.g. '100$' "
 "will only match '100' and not '1000')"
 msgstr ""
+"بادئات الرموز البريدية التي ينطبق عليها موصل الشحن هذا. يرجى العلم بأن "
+"التعابير النمطية يمكن استخدامها لدعم الدول التي تحتوي على رموز بريدية ذات "
+"أطوال متفاوتة، مثال: \"$\" يمكن إضافتها إلى نهاية البادئة لتطابق الرمز "
+"البريدي (مثال: \"100$\" ستطابق فقط \"100\" وليس \"1000\") "
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_price_rule__variable__price
@@ -1057,7 +1061,7 @@ msgstr "البريد الفرنسي La Poste"
 msgid ""
 "The package cannot be created because the total weight of the products in "
 "the picking is 0.0 %s"
-msgstr ""
+msgstr "لا يمكن إنشاء الطرد لأن إجمالي وزن المنتجات عند الانتقاء هو 0.0 %s "
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal

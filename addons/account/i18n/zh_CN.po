@@ -11,13 +11,13 @@
 # Ryan Zhang <so_happy_boy@hotmail.com>, 2022
 # lonely落叶 <liu--qiong@hotmail.com>, 2022
 # YIMIN XUAN, 2022
-# 稀饭~~ <wangwhai@qq.com>, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Benson <Benson.Dr@Gmail.com>, 2023
-# Pierre Masereel, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Emily Jia <eji@odoo.com>, 2023
+# 稀饭~~ <wangwhai@qq.com>, 2023
+# Ryan <ouyang.em@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -25,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
+"Last-Translator: Ryan <ouyang.em@gmail.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,7 +80,7 @@ msgstr ""
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid " (<b>%(amount)s</b> if paid before <b>%(date)s</b>)"
-msgstr ""
+msgstr " (<b>%(amount)s</b>预付款<b>%(date)s</b>)"
 
 #. module: account
 #. odoo-python
@@ -147,7 +147,7 @@ msgstr "%d凭证"
 #: code:addons/account/models/account_account_tag.py:0
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #. module: account
 #. odoo-python
@@ -367,6 +367,8 @@ msgid ""
 "<b>%(count)s#</b> Installment of <b>%(amount)s</b> on <b style='color: "
 "#704A66;'>%(date)s</b>"
 msgstr ""
+"<b>%(count)s#</b> 分期付款 <b>%(amount)s</b> on <b style='color: "
+"#704A66;'>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -412,7 +414,7 @@ msgstr ""
 " <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 " 亲爱的\n"
 " <t t-if=\"object.partner_id.parent_id\">\n"
-" <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object .partner_id.parent_id.name 或 ''\">Azure 内部</t>)，\n"
+" <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object .partner_id.parent_id.name or ''\">Azure 内部</t>)，\n"
 " </t>\n"
 " <t t-else=\"\">\n"
 " <t t-out=\"object .partner_id.name or ''\">Brandon Freeman</t>，\n"
@@ -552,14 +554,14 @@ msgstr ""
 " 亲爱的<t t-out =\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
 " 感谢您的支付。\n"
 " 这是您的支付收据 <span style=\"font -weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> \n"
-" 到 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> from <t t- out=\"object.company_id.name 或 ''\">YourCompany</t>。\n"
+" 到 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> from <t t- out=\"object.company_id.name or ''\">YourCompany</t>。\n"
 " <br/><br/>\n"
 " 如果您有任何问题，请随时与我们联系。\n"
 " <br/ ><br/>\n"
 " 最好的问候，\n"
 " <t t-if=\"not is_html_empty(user.signature)\">\n"
 " <br/><br/>\n"
-" <t t-out=\" user.signature 或 ''\">--<br/>Mitchell 管理员</t>\n"
+" <t t-out=\" user.signature or ''\">--<br/>Mitchell 管理员</t>\n"
 " </t>\n"
 " </p>\n"
 "</div>\n"
@@ -4292,7 +4294,7 @@ msgstr "对应分录"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Countries for which the company has a VAT number"
-msgstr ""
+msgstr "公司拥有增值税号的国家/地区"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -4829,7 +4831,7 @@ msgstr "流动负债"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__current_statement_balance
 msgid "Current Statement Balance"
-msgstr ""
+msgstr "当前报表余额"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity_unaffected
@@ -5744,7 +5746,7 @@ msgstr "下载"
 #: code:addons/account/static/src/components/settings_form_view/res_config_dev_tool.xml:0
 #, python-format
 msgid "Download XSD files (XML validation)"
-msgstr ""
+msgstr "下载 XSD 文件（XML 验证）"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__property_advance_tax_payment_account_id
@@ -5899,7 +5901,7 @@ msgstr "动态报告"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
 msgid "Dynamic domain used for the tag that can be set on tax"
-msgstr ""
+msgstr "用于可在税务上设置的代码的动态域"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
@@ -6636,7 +6638,7 @@ msgstr "外国税务ID"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Foreign VAT countries"
-msgstr ""
+msgstr "国外增值税国家"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -6928,7 +6930,7 @@ msgstr "有序列孔洞"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_statement_lines
 msgid "Has Statement Lines"
-msgstr ""
+msgstr "具有关联行"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
@@ -9415,7 +9417,7 @@ msgstr "否"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "No Bank Matching"
-msgstr ""
+msgstr "无银行匹配"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
@@ -10742,6 +10744,15 @@ msgstr "期间比较"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check the fiscal country of company %s. (Settings > Accounting > "
+"Fiscal Country)Taxes can only be updated if they are in the company's fiscal"
+" country (%s) or the localization's country (%s)."
+msgstr "请检查公司 %s 的财务国家。(设置 > 会计 > 财务国家) 只有在公司的财务国家 (%s) 或本地化国家 (%s) 中的税收才能更新。"
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -16635,7 +16646,7 @@ msgstr "保留要求支付剩余金额10%的固定利息的权利。"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
 msgid "tag domain"
-msgstr ""
+msgstr "标记域"
 
 #. module: account
 #. odoo-python

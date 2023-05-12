@@ -252,7 +252,7 @@ msgstr ""
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"middle\">\n"
-"                    <span style=\"font-size: 10px;\">Pesanan Makan Siang</span><br/>\n"
+"                    <span style=\"font-size: 10px;\">Makan Siang</span><br/>\n"
 "                </td><td valign=\"middle\" align=\"right\">\n"
 "                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
 "                </td></tr>\n"
@@ -275,7 +275,7 @@ msgstr ""
 "        <p>\n"
 "        Yth <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
 "        </p><p>\n"
-"        Pesanan hari ini untuk <t t-out=\"order.get('company_name', '')\">LunchCompany</t>:\n"
+"        Pesanan hari ini untuk <t t-out=\"order.get('company_name', '')\">MakanSiangPerusahaan</t>:\n"
 "        </p>\n"
 "\n"
 "        <t t-if=\"sites\">\n"
@@ -1246,7 +1246,7 @@ msgstr ""
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order
 msgid "Lunch Order"
-msgstr "Makan Siang Order"
+msgstr "Makan Siang"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product

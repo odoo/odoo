@@ -77,8 +77,7 @@ class ProductProduct(models.Model):
                 continue
 
             duration_expected = (
-                opt.workcenter_id.time_start +
-                opt.workcenter_id.time_stop +
+                opt.workcenter_id._get_expected_duration(self) +
                 opt.time_cycle * 100 / opt.workcenter_id.time_efficiency)
             total += (duration_expected / 60) * opt._total_cost_per_hour()
 

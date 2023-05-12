@@ -651,7 +651,7 @@ msgstr "Wyłączone"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "Dismiss"
-msgstr ""
+msgstr "Odrzuć"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__display_name
@@ -2037,6 +2037,13 @@ msgstr ""
 #: model:payment.provider,name:payment.payment_provider_transfer
 msgid "Wire Transfer"
 msgstr "Przelew bankowy"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid "You cannot delete the payment provider %s; archive it instead."
+msgstr ""
 
 #. module: payment
 #. odoo-python

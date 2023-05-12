@@ -16,8 +16,8 @@
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
 # Leaanika Randmets, 2023
+# JanaAvalah, 2023
 # Anna, 2023
-# Jana Jaakson, 2023
 # 
 msgid ""
 msgstr ""
@@ -25,8 +25,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Jana Jaakson, 2023\n"
-"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+"Last-Translator: Anna, 2023\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -49,7 +49,7 @@ msgstr "%s võttis väljakutse vastu"
 #: code:addons/gamification/models/gamification_challenge.py:0
 #, python-format
 msgid "%s has refused the challenge"
-msgstr ""
+msgstr "%s on väljakutsest keeldunud"
 
 #. module: gamification
 #: code:addons/gamification/models/gamification_challenge.py:0
@@ -703,7 +703,7 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__users
 msgid "A selected list of users"
-msgstr "Valitud kasutajarühm"
+msgstr "Valitud kasutajad"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__action_id
@@ -1103,7 +1103,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Describe what they did and why it matters (will be public)"
-msgstr "Kirjelda, mida töötaja tegi ja miks see on oluline (info on avalik)"
+msgstr "Kirjelda, mille eest premeerid töötajat tunnustusmärgiga"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__description
@@ -1271,17 +1271,17 @@ msgstr ""
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge
 msgid "Gamification Badge"
-msgstr "Mängustamise märk"
+msgstr "Tunnustusmärk"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge
 msgid "Gamification Challenge"
-msgstr "Mängustamise väljakutse"
+msgstr "Väljakutse"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal
 msgid "Gamification Goal"
-msgstr ""
+msgstr "Eesmärk"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal_definition
@@ -1291,27 +1291,27 @@ msgstr "Püstitatud mänguline eesmärk"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal_wizard
 msgid "Gamification Goal Wizard"
-msgstr ""
+msgstr "Juhend \"Eesmärgid\""
 
 #. module: gamification
 #: model:ir.ui.menu,name:gamification.gamification_menu
 msgid "Gamification Tools"
-msgstr "Muuda protsess mängulisemaks"
+msgstr "Mängustamise tööriistad "
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user
 msgid "Gamification User Badge"
-msgstr "Mängustamise kasutaja märk"
+msgstr "Kasutaja tunnustusmärgid"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_badge_user_wizard
 msgid "Gamification User Badge Wizard"
-msgstr "Mängustamise kasutaja märgi viisard"
+msgstr "Juhend \"Kasutaja tunnustusmärgid\""
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
 msgid "Gamification generic goal for challenge"
-msgstr ""
+msgstr "Üldine väljakutse eesmärk"
 
 #. module: gamification
 #: model:mail.template,name:gamification.email_template_badge_received
@@ -1321,14 +1321,14 @@ msgstr "Mängustamine: Märk on saadud"
 #. module: gamification
 #: model:mail.template,name:gamification.simple_report_template
 msgid "Gamification: Challenge Report"
-msgstr "Mängustamine: aruanne"
+msgstr "Mängustamine: Aruanne"
 
 #. module: gamification
 #: model:ir.actions.server,name:gamification.ir_cron_check_challenge_ir_actions_server
 #: model:ir.cron,cron_name:gamification.ir_cron_check_challenge
 #: model:ir.cron,name:gamification.ir_cron_check_challenge
 msgid "Gamification: Goal Challenge Check"
-msgstr ""
+msgstr "Kontrolli kaugel oled eesmärgini"
 
 #. module: gamification
 #: model:ir.actions.server,name:gamification.ir_cron_consolidate_last_month_ir_actions_server
@@ -1345,7 +1345,7 @@ msgstr "Mängustamine: Uus tase on saavutatud"
 #. module: gamification
 #: model:mail.template,name:gamification.email_template_goal_reminder
 msgid "Gamification: Reminder For Goal Update"
-msgstr ""
+msgstr "Mängustamine: Meeldetuletus eesmärgi uuendamiseks"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__goal_id
@@ -1424,24 +1424,24 @@ msgstr "Hea töö!"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Grant"
-msgstr "Anna märk"
+msgstr "Anna tunnustusmärk"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_grant_wizard
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Grant Badge"
-msgstr "Anna märk"
+msgstr "Anna tunnustusmärk"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 #: model_terms:ir.ui.view,arch_db:gamification.view_goal_wizard_update_current
 msgid "Grant Badge To"
-msgstr "Anna märk "
+msgstr "Anna tunnustusmärk "
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Grant this Badge"
-msgstr "Anna see märk"
+msgstr "Anna see tunnustusmärk"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_user_kanban_view
@@ -1485,7 +1485,7 @@ msgstr "Varjatud"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "How is the goal computed?"
-msgstr ""
+msgstr "Kuidas eesmärki arvutatakse?"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__challenge_category__hr
@@ -1947,7 +1947,7 @@ msgstr "Osalejad"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__having
 msgid "People having some badges"
-msgstr "Kasutajad, kellel on juba märgid"
+msgstr "Kasutajad, kellele on väljastatud tunnustusmärgid"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -2655,7 +2655,7 @@ msgstr ""
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.view_badge_wizard_grant
 msgid "Who would you like to reward?"
-msgstr "Kellele sa sooviksid märgi anda?"
+msgstr "Keda soovid tunnustada?"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__reward_realtime

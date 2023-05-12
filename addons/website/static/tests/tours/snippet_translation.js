@@ -40,15 +40,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_translation_changing_lang', {
         trigger: '.modal-footer .btn-primary',
     },
     ...wTourUtils.clickOnSave(),
-    {
-        content: "Click on edit in master",
-        trigger: '.o_edit_website_container a',
-    },
-    {
-        content: "Wait for edit mode to start",
-        trigger: '.o_website_preview.editor_enable.editor_has_snippets',
-        timeout: '30000',
-    },
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
     wTourUtils.dragNDrop({name: 'Cover'}),
     {
         content: "Check that contact us contain Parseltongue",
