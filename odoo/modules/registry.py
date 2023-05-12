@@ -783,7 +783,16 @@ class Registry(Mapping):
 
     def signal_changes(self):
         """ Notifies other processes if registry or cache has been invalidated. """
-        if self.registry_invalidated and not self.in_test_mode():
+        if self.in_test_mode():
+            if self.registry_invalidated:
+                self.registry_sequence += 1
+            if self.cache_invalidated:
+                self.cache_sequence += 1
+            self.registry_invalidated = False
+            self.cache_invalidated = False
+            return
+
+        if self.registry_invalidated:
             _logger.info("Registry changed, signaling through the database")
             with closing(self.cursor()) as cr:
                 cr.execute("select nextval('base_registry_signaling')")
@@ -791,7 +800,7 @@ class Registry(Mapping):
 
         # no need to notify cache invalidation in case of registry invalidation,
         # because reloading the registry implies starting with an empty cache
-        elif self.cache_invalidated and not self.in_test_mode():
+        elif self.cache_invalidated:
             _logger.info("At least one model cache has been invalidated, signaling through the database.")
             with closing(self.cursor()) as cr:
                 cr.execute("select nextval('base_cache_signaling')")
