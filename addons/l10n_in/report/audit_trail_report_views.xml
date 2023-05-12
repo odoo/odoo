@@ -6,13 +6,12 @@
         <field name="model">mail.message</field>
         <field name="priority">99</field>
         <field name="arch" type="xml">
-            <tree edit="0" delete="0" create="0">
+            <tree edit="0" delete="0" create="0" action="action_open_document" type="object">
                 <field name="res_id" invisible="1"/>
                 <field name="date"/>
                 <field name="author_id" widget="many2one_avatar"/>
                 <field name="l10n_in_audit_log_account_move_id"/>
                 <field name="l10n_in_audit_log_preview"/>
-                <button name="action_open_document" type="object" icon="fa-arrow-right" string="View Related Document" attrs="{'invisible': [('res_id', 'in', (0, False, ''))]}" />
             </tree>
         </field>
     </record>
