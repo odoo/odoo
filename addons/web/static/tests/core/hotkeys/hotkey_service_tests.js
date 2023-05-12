@@ -1075,7 +1075,7 @@ QUnit.test("operating area and UI active element", async (assert) => {
 });
 
 QUnit.test("validating option", async (assert) => {
-    let isValid = false;
+    let isAvailable = false;
     class A extends Component {
         setup() {
             useHotkey(
@@ -1084,10 +1084,7 @@ QUnit.test("validating option", async (assert) => {
                     assert.step("RGNTDJÛ!");
                 },
                 {
-                    validate: (eventTarget) => {
-                        assert.strictEqual(eventTarget, document.activeElement);
-                        return isValid;
-                    },
+                    isAvailable: () => isAvailable,
                 }
             );
         }
@@ -1099,14 +1096,14 @@ QUnit.test("validating option", async (assert) => {
     await nextTick();
     assert.verifySteps([]);
 
-    isValid = true;
+    isAvailable = true;
     triggerHotkey("Space");
     await nextTick();
     assert.verifySteps(["RGNTDJÛ!"]);
 });
 
 QUnit.test("operation area with validating option", async (assert) => {
-    let isValid;
+    let isAvailable;
     class A extends Component {
         setup() {
             const areaRef = useRef("area");
@@ -1115,7 +1112,7 @@ QUnit.test("operation area with validating option", async (assert) => {
                 () => {
                     assert.step("RGNTDJÛ!");
                 },
-                { area: () => areaRef.el, validate: () => isValid }
+                { area: () => areaRef.el, isAvailable: () => isAvailable }
             );
         }
     }
@@ -1128,12 +1125,12 @@ QUnit.test("operation area with validating option", async (assert) => {
     // Trigger hotkeys from the 'one'
     target.querySelector(".one").focus();
 
-    isValid = false;
+    isAvailable = false;
     triggerHotkey("Space");
     await nextTick();
     assert.verifySteps([]);
 
-    isValid = true;
+    isAvailable = true;
     triggerHotkey("Space");
     await nextTick();
     assert.verifySteps([]);
@@ -1141,12 +1138,12 @@ QUnit.test("operation area with validating option", async (assert) => {
     // Trigger hotkeys from the 'two'
     target.querySelector(".two").focus();
 
-    isValid = false;
+    isAvailable = false;
     triggerHotkey("Space");
     await nextTick();
     assert.verifySteps([]);
 
-    isValid = true;
+    isAvailable = true;
     triggerHotkey("Space");
     await nextTick();
     assert.verifySteps(["RGNTDJÛ!"]);
