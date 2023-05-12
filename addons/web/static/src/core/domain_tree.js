@@ -176,6 +176,7 @@ function createBetweenOperators(tree, isRoot = true) {
         ) {
             children.push({
                 type: "condition",
+                negate: false,
                 path: child1.path,
                 operator: "between",
                 valueAST: {
@@ -206,6 +207,7 @@ function removeBetweenOperators(tree) {
         const { path, valueAST } = tree;
         return {
             type: "connector",
+            negate: false,
             value: "&",
             children: [
                 { type: "condition", path, operator: ">=", valueAST: valueAST.value[0] },
