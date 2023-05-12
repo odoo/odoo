@@ -119,7 +119,7 @@ class AccountChartTemplate(models.AbstractModel):
     # Loading
     # --------------------------------------------------------------------------------
 
-    def try_loading(self, template_code, company, install_demo=True):
+    def try_loading(self, template_code, company, install_demo=True, update=False):
         """Check if the chart template can be loaded then proceeds installing it.
 
         :param template_code: code of the chart template to be loaded.
@@ -130,6 +130,9 @@ class AccountChartTemplate(models.AbstractModel):
         :param install_demo: whether or not we should load demo data right after loading the
             chart template.
         :type install_demo: bool
+        :param update: whether or not we are upgrading the module or installing it for
+            the first time.
+        :type update: bool
         """
         if not company:
             company = self.env.company
@@ -138,9 +141,9 @@ class AccountChartTemplate(models.AbstractModel):
 
         template_code = template_code or company and self._guess_chart_template(company.country_id)
 
-        return self._load(template_code, company, install_demo)
+        return self._load(template_code, company, install_demo, update)
 
-    def _load(self, template_code, company, install_demo):
+    def _load(self, template_code, company, install_demo, update=False):
         """Install this chart of accounts for the current company.
 
         :param template_code: code of the chart template to be loaded.
@@ -148,6 +151,8 @@ class AccountChartTemplate(models.AbstractModel):
             If not provided, it is retrieved from the context.
         :param install_demo: whether or not we should load demo data right after loading the
             chart template.
+        :param update: whether or not we are upgrading the module or installing it for
+        the first time.
         """
         # Ensure that the context is the correct one, even if not called by try_loading
         if not self.env.is_system():
@@ -182,7 +187,7 @@ class AccountChartTemplate(models.AbstractModel):
             self._pre_reload_data(company, template_data, data)
             install_demo = False
         data = self._pre_load_data(template_code, company, template_data, data)
-        self._load_data(data)
+        self._load_data(data, update)
         self._load_translations(companies=company)
         self._post_load_data(template_code, company, template_data)
 
@@ -290,6 +295,19 @@ class AccountChartTemplate(models.AbstractModel):
                                 repartition_line.clear()
                                 if tags:
                                     repartition_line['tag_ids'] = tags
+                elif model_name == 'account.account':
+                    # create xmlids for existing records                    
+                    if not self.ref(xmlid, raise_if_not_found=False):
+                        account = self.env['account.account'].search([
+                            ('code', '=', values['code']),
+                            ('company_id', '=', company.id),
+                        ])
+                        if account:
+                            self.env['ir.model.data']._update_xmlids([{
+                                'xml_id': f"account.{company.id}_{xmlid}",
+                                'record': account,
+                                'noupdate': True,
+                            }])
 
         if obsolete_xmlid:
             self.env['ir.model.data'].search([
@@ -337,7 +355,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         return data
 
-    def _load_data(self, data):
+    def _load_data(self, data, update=False):
         """Load all the data linked to the template into the database.
 
         The data can contain translation values (i.e. `name@fr_FR` to translate the name in French)
@@ -347,6 +365,9 @@ class AccountChartTemplate(models.AbstractModel):
         :param data: Basically all the final data of records to create/update for the chart
                      of accounts. It is a mapping {model: {xml_id: values}}.
         :type data: dict[str, dict[(str, int), dict]]
+        :param update: whether or not we are upgrading the module or installing it for
+            the first time.
+        :type update: bool
         """
         def deref(values, model):
             """Replace xml_id references by database ids.
@@ -441,7 +462,7 @@ class AccountChartTemplate(models.AbstractModel):
                     'values': deref(record, self.env[model]),
                     'noupdate': True,
                 })
-            created_vals[model] = self.with_context(lang='en_US').env[model]._load_records(create_vals)
+            created_vals[model] = self.with_context(lang='en_US').env[model]._load_records(create_vals, update)
         return created_vals
 
     def _post_load_data(self, template_code, company, template_data):
