@@ -151,9 +151,10 @@ class StockMove(models.Model):
         self.write({'created_purchase_line_id': False})
 
     def _get_upstream_documents_and_responsibles(self, visited):
-        if self.created_purchase_line_id and self.created_purchase_line_id.state not in ('done', 'cancel') \
-                and (self.created_purchase_line_id.state != 'draft' or self._context.get('include_draft_documents')):
-            return [(self.created_purchase_line_id.order_id, self.created_purchase_line_id.order_id.user_id, visited)]
+        created_purchase_line_id = self.created_purchase_line_id.sudo()
+        if created_purchase_line_id and created_purchase_line_id.state not in ('done', 'cancel') \
+                and (created_purchase_line_id.state != 'draft' or self._context.get('include_draft_documents')):
+            return [(created_purchase_line_id.order_id, created_purchase_line_id.order_id.user_id, visited)]
         elif self.purchase_line_id and self.purchase_line_id.state not in ('done', 'cancel'):
             return[(self.purchase_line_id.order_id, self.purchase_line_id.order_id.user_id, visited)]
         else:

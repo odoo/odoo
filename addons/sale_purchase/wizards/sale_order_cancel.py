@@ -13,5 +13,5 @@ class SaleOrderCancel(models.TransientModel):
     def _compute_display_purchase_orders_alert(self):
         for wizard in self:
             wizard.display_purchase_orders_alert = bool(
-                wizard.order_id.purchase_order_count
+                wizard.sudo().order_id.purchase_order_count
             )
