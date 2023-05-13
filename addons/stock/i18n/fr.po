@@ -8170,6 +8170,16 @@ msgstr ""
 "quantités de ce produit appartenant à une autre société."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+"La société de ce produit ne peut pas être modifiée tant qu'il y a des "
+"mouvements de stock de ce produit appartenant à une autre société."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -9731,3 +9741,13 @@ msgstr ""
 #, python-format
 msgid "Global Visibility Days"
 msgstr "Jours de visibilité globale"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allow to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
+"Il n'est pas autorisé d'importer une quantité réservée, vous devez utiliser "
+"la quantité directement."
