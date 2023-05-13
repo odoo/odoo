@@ -1183,7 +1183,7 @@ msgid ""
 " exchange of X credits."
 msgstr ""
 "Verleen 1 krediet voor elk gekocht item en beloon de klant met Y-items in "
-"ruil voor X kredieten."
+"ruil voor X credits."
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__has_message
@@ -1938,6 +1938,18 @@ msgstr "Met een promotiecode"
 #, python-format
 msgid "You can not delete a program in an active state"
 msgstr "Je kunt een programma in een actieve staat niet verwijderen"
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/product_product.py:0
+#: code:addons/loyalty/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot delete %(name)s as it is used in 'Coupons & Loyalty'. Please "
+"archive it instead."
+msgstr ""
+"Je kunt %(name)s niet verwijderen omdat deze wordt gebruikt in 'Coupons & "
+"Loyalty'. Archiveer het in plaats daarvan."
 
 #. module: loyalty
 #: model:mail.template,report_name:loyalty.mail_template_loyalty_card

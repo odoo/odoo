@@ -16,10 +16,10 @@
 # Joni Winsten, 2022
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
 # Konsta Aavaranta, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Miku Laitinen <miku.laitinen@gmail.com>, 2023
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:52+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Miku Laitinen <miku.laitinen@gmail.com>, 2023\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -150,6 +150,12 @@ msgstr "Analyyttinen jakomalli"
 #: model:ir.actions.act_window,name:analytic.action_analytic_distribution_model
 msgid "Analytic Distribution Models"
 msgstr "Analyyttiset jakomallit"
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution_search
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution_search
+msgid "Analytic Distribution Search"
+msgstr ""
 
 #. module: analytic
 #. odoo-javascript
@@ -675,6 +681,13 @@ msgstr "Yksi tai useampi rivi edellyttää 100% analytiikkajakelua."
 #: model:account.analytic.account,name:analytic.analytic_internal
 msgid "Operating Costs"
 msgstr "Käyttökustannukset"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_mixin.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "Toiminto ei ole tuettu"
 
 #. module: analytic
 #. odoo-javascript
