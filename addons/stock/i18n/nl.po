@@ -8239,6 +8239,16 @@ msgstr ""
 " van een ander bedrijf zijn."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+"Het bedrijf van dit product kan niet worden gewijzigd zolang er "
+"voorraadverplaatsingen van zijn die bij een ander bedrijf horen."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -9798,3 +9808,13 @@ msgstr "{{ object.company_id.name }} Pakbon (Ref {{ object.name or 'n/b' }})"
 #, python-format
 msgid "Global Visibility Days"
 msgstr "Globale zichtbaarheidsdagen"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allow to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
+"Het is niet mogelijk een gereserveerde hoeveelheid te importeren, je moet "
+"het aantal onmiddellijk gebruiken."
