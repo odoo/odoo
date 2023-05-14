@@ -237,8 +237,8 @@
     const DEFAULT_FONT = "'Roboto', arial";
     const DEFAULT_VERTICAL_ALIGN = "bottom";
     // Borders
-    const DEFAULT_BORDER_DESC = ["thin", "#000"];
-    const DEFAULT_FILTER_BORDER_DESC = ["thin", FILTERS_COLOR];
+    const DEFAULT_BORDER_DESC = { style: "thin", color: "#000000" };
+    const DEFAULT_FILTER_BORDER_DESC = { style: "thin", color: FILTERS_COLOR };
     // Ranges
     const INCORRECT_RANGE_STRING = CellErrorType.InvalidReference;
     // Max Number of history steps kept in memory
@@ -1102,6 +1102,18 @@
         text = text.replace(whiteSpaceRegexp, " ");
         text = text.replace(newLineRegex, NEWLINE);
         return text;
+    }
+    /**
+     * Determine if the numbers are consecutive.
+     */
+    function isConsecutive(iterable) {
+        const array = Array.from(iterable).sort((a, b) => a - b); // sort numerically rather than lexicographically
+        for (let i = 1; i < array.length; i++) {
+            if (array[i] - array[i - 1] !== 1) {
+                return false;
+            }
+        }
+        return true;
     }
 
     const RBA_REGEX = /rgba?\(|\s+|\)/gi;
@@ -4244,6 +4256,7 @@
         "SET_FORMATTING",
         "CLEAR_FORMATTING",
         "SET_BORDER",
+        "SET_ZONE_BORDERS",
         /** CHART */
         "CREATE_CHART",
         "UPDATE_CHART",
@@ -4386,6 +4399,7 @@
         CommandResult[CommandResult["NoSplitSeparatorInSelection"] = 91] = "NoSplitSeparatorInSelection";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
+    const borderStyles = ["thin", "medium", "thick", "dashed", "dotted"];
     var DIRECTION;
     (function (DIRECTION) {
         DIRECTION["UP"] = "up";
@@ -6328,8 +6342,14 @@
                         : undefined));
                 }
             }
+            else if (zone.left === zone.right && zone.top === zone.bottom) {
+                // A single cell. If it's only the title, the dataset is not added.
+                if (!dataSetsHaveTitle) {
+                    dataSets.push(createDataSet(getters, dataSetSheetId, zone, undefined));
+                }
+            }
             else {
-                /* 1 cell, 1 row or 1 column */
+                /* 1 row or 1 column */
                 dataSets.push(createDataSet(getters, dataSetSheetId, zone, dataSetsHaveTitle
                     ? {
                         top: zone.top,
@@ -8940,7 +8960,7 @@
         handlePasteResult(env, result);
     };
     const MENU_INSERT_ROWS_NAME = (env) => {
-        const number = getColumnsNumber(env);
+        const number = getRowsNumber(env);
         return number === 1 ? _lt("Insert row") : _lt("Insert %s rows", number.toString());
     };
     const MENU_INSERT_ROWS_BEFORE_NAME = (env) => {
@@ -15305,7 +15325,11 @@
                 : getNormalizedValueFromRowRange;
             const rangeLength = verticalSearch ? nbRow : nbCol;
             const index = dichotomicSearch(searchArray, _searchKey, "nextSmaller", "asc", rangeLength, getElement);
-            assertAvailable(searchArray[0][index], searchKey);
+            if (index === -1)
+                assertAvailable(undefined, searchKey);
+            verticalSearch
+                ? assertAvailable(searchArray[0][index], searchKey)
+                : assertAvailable(searchArray[index][nbRow - 1], searchKey);
             if (resultRange === undefined) {
                 return (verticalSearch ? searchArray[nbCol - 1][index] : searchArray[index][nbRow - 1]);
             }
@@ -16212,75 +16236,89 @@
 
     const insertRow = {
         name: MENU_INSERT_ROWS_NAME,
-        isVisible: IS_ONLY_ONE_RANGE,
+        isVisible: (env) => isConsecutive(env.model.getters.getActiveRows()) &&
+            IS_ONLY_ONE_RANGE(env) &&
+            env.model.getters.getActiveCols().size === 0,
         icon: "o-spreadsheet-Icon.INSERT_ROW",
     };
     const rowInsertRowBefore = {
         name: ROW_INSERT_ROWS_BEFORE_NAME,
         execute: INSERT_ROWS_BEFORE_ACTION,
+        isVisible: (env) => isConsecutive(env.model.getters.getActiveRows()) &&
+            IS_ONLY_ONE_RANGE(env) &&
+            env.model.getters.getActiveCols().size === 0,
     };
     const topBarInsertRowsBefore = {
         ...rowInsertRowBefore,
         name: MENU_INSERT_ROWS_BEFORE_NAME,
-        isVisible: (env) => env.model.getters.getActiveCols().size === 0,
     };
     const cellInsertRowsBefore = {
         ...rowInsertRowBefore,
         name: CELL_INSERT_ROWS_BEFORE_NAME,
-        isVisible: IS_ONLY_ONE_RANGE,
         icon: "o-spreadsheet-Icon.INSERT_ROW",
     };
     const rowInsertRowsAfter = {
         execute: INSERT_ROWS_AFTER_ACTION,
         name: ROW_INSERT_ROWS_AFTER_NAME,
+        isVisible: (env) => isConsecutive(env.model.getters.getActiveRows()) &&
+            IS_ONLY_ONE_RANGE(env) &&
+            env.model.getters.getActiveCols().size === 0,
     };
     const topBarInsertRowsAfter = {
         ...rowInsertRowsAfter,
         name: MENU_INSERT_ROWS_AFTER_NAME,
-        isVisible: (env) => env.model.getters.getActiveCols().size === 0,
     };
     const insertCol = {
         name: MENU_INSERT_COLUMNS_NAME,
-        isVisible: IS_ONLY_ONE_RANGE,
+        isVisible: (env) => isConsecutive(env.model.getters.getActiveCols()) &&
+            IS_ONLY_ONE_RANGE(env) &&
+            env.model.getters.getActiveRows().size === 0,
         icon: "o-spreadsheet-Icon.INSERT_COL",
     };
     const colInsertColsBefore = {
         name: COLUMN_INSERT_COLUMNS_BEFORE_NAME,
         execute: INSERT_COLUMNS_BEFORE_ACTION,
+        isVisible: (env) => isConsecutive(env.model.getters.getActiveCols()) &&
+            IS_ONLY_ONE_RANGE(env) &&
+            env.model.getters.getActiveRows().size === 0,
     };
     const topBarInsertColsBefore = {
         ...colInsertColsBefore,
         name: MENU_INSERT_COLUMNS_BEFORE_NAME,
-        isVisible: (env) => env.model.getters.getActiveRows().size === 0,
     };
     const cellInsertColsBefore = {
         ...colInsertColsBefore,
         name: CELL_INSERT_COLUMNS_BEFORE_NAME,
-        isVisible: IS_ONLY_ONE_RANGE,
         icon: "o-spreadsheet-Icon.INSERT_COL",
     };
     const colInsertColsAfter = {
         name: COLUMN_INSERT_COLUMNS_AFTER_NAME,
         execute: INSERT_COLUMNS_AFTER_ACTION,
+        isVisible: (env) => isConsecutive(env.model.getters.getActiveCols()) &&
+            IS_ONLY_ONE_RANGE(env) &&
+            env.model.getters.getActiveRows().size === 0,
     };
     const topBarInsertColsAfter = {
         ...colInsertColsAfter,
         name: MENU_INSERT_COLUMNS_AFTER_NAME,
         execute: INSERT_COLUMNS_AFTER_ACTION,
-        isVisible: (env) => env.model.getters.getActiveRows().size === 0,
     };
     const insertCell = {
         name: _lt("Insert cells"),
-        isVisible: IS_ONLY_ONE_RANGE,
+        isVisible: (env) => IS_ONLY_ONE_RANGE(env) &&
+            env.model.getters.getActiveCols().size === 0 &&
+            env.model.getters.getActiveRows().size === 0,
         icon: "o-spreadsheet-Icon.INSERT_CELL",
     };
     const insertCellShiftDown = {
         name: _lt("Insert cells and shift down"),
         execute: INSERT_CELL_SHIFT_DOWN,
+        isVisible: (env) => env.model.getters.getActiveRows().size === 0 && env.model.getters.getActiveCols().size === 0,
     };
     const insertCellShiftRight = {
         name: _lt("Insert cells and shift right"),
         execute: INSERT_CELL_SHIFT_RIGHT,
+        isVisible: (env) => env.model.getters.getActiveRows().size === 0 && env.model.getters.getActiveCols().size === 0,
     };
     const insertChart = {
         name: _lt("Chart"),
@@ -16693,60 +16731,6 @@
         execute: FORMAT_CLEARFORMAT_ACTION,
         icon: "o-spreadsheet-Icon.CLEAR_FORMAT",
     };
-    const borders = {
-        name: _lt("Borders"),
-        icon: "o-spreadsheet-Icon.BORDERS",
-    };
-    const bordersAll = {
-        name: _lt("All borders"),
-        execute: (env) => setBorder(env, "all"),
-        icon: "o-spreadsheet-Icon.BORDERS",
-    };
-    const bordersInner = {
-        name: _lt("Inner borders"),
-        execute: (env) => setBorder(env, "hv"),
-        icon: "o-spreadsheet-Icon.BORDER_HV",
-    };
-    const bordersHorizontal = {
-        name: _lt("Horizontal borders"),
-        execute: (env) => setBorder(env, "h"),
-        icon: "o-spreadsheet-Icon.BORDER_H",
-    };
-    const bordersVertical = {
-        name: _lt("Vertical borders"),
-        execute: (env) => setBorder(env, "v"),
-        icon: "o-spreadsheet-Icon.BORDER_V",
-    };
-    const bordersExternal = {
-        name: _lt("External borders"),
-        execute: (env) => setBorder(env, "external"),
-        icon: "o-spreadsheet-Icon.BORDER_EXTERNAL",
-    };
-    const bordersLeft = {
-        name: _lt("Left borders"),
-        execute: (env) => setBorder(env, "left"),
-        icon: "o-spreadsheet-Icon.BORDER_LEFT",
-    };
-    const bordersTop = {
-        name: _lt("Top borders"),
-        execute: (env) => setBorder(env, "top"),
-        icon: "o-spreadsheet-Icon.BORDER_TOP",
-    };
-    const bordersRight = {
-        name: _lt("Right borders"),
-        execute: (env) => setBorder(env, "right"),
-        icon: "o-spreadsheet-Icon.BORDER_RIGHT",
-    };
-    const bordersBottom = {
-        name: _lt("Bottom borders"),
-        execute: (env) => setBorder(env, "bottom"),
-        icon: "o-spreadsheet-Icon.BORDER_BOTTOM",
-    };
-    const bordersClear = {
-        name: _lt("Clear borders"),
-        execute: (env) => setBorder(env, "clear"),
-        icon: "o-spreadsheet-Icon.BORDER_CLEAR",
-    };
     function fontSizeMenuBuilder() {
         return FONT_SIZES.map((fs) => {
             return {
@@ -16769,13 +16753,6 @@
     function isFontSizeSelected(env, fontSize) {
         const currentFontSize = env.model.getters.getCurrentStyle().fontSize || DEFAULT_FONT_SIZE;
         return currentFontSize === fontSize;
-    }
-    function setBorder(env, command) {
-        env.model.dispatch("SET_FORMATTING", {
-            sheetId: env.model.getters.getActiveSheetId(),
-            target: env.model.getters.getSelectedZones(),
-            border: command,
-        });
     }
     function getHorizontalAlign(env) {
         const style = env.model.getters.getCurrentStyle();
@@ -16823,18 +16800,7 @@
         fillColor: fillColor,
         formatCF: formatCF,
         paintFormat: paintFormat,
-        clearFormat: clearFormat,
-        borders: borders,
-        bordersAll: bordersAll,
-        bordersInner: bordersInner,
-        bordersHorizontal: bordersHorizontal,
-        bordersVertical: bordersVertical,
-        bordersExternal: bordersExternal,
-        bordersLeft: bordersLeft,
-        bordersTop: bordersTop,
-        bordersRight: bordersRight,
-        bordersBottom: bordersBottom,
-        bordersClear: bordersClear
+        clearFormat: clearFormat
     });
 
     function interactiveFreezeColumnsRows(env, dimension, base) {
@@ -20565,14 +20531,31 @@
          * */
         getCurrentSelection() {
             let { startElement, endElement, startSelectionOffset, endSelectionOffset } = this.getStartAndEndSelection();
-            let startSizeBefore = this.findSizeBeforeElement(startElement);
-            let endSizeBefore = this.findSizeBeforeElement(endElement);
+            let startSizeBefore = this.findSelectionIndex(startElement, startSelectionOffset);
+            let endSizeBefore = this.findSelectionIndex(endElement, endSelectionOffset);
             return {
-                start: startSizeBefore + startSelectionOffset,
-                end: endSizeBefore + endSelectionOffset,
+                start: startSizeBefore,
+                end: endSizeBefore,
             };
         }
-        findSizeBeforeElement(nodeToFind) {
+        /**
+         * Computes the text 'index' inside this.el based on the currently selected node and its offset.
+         * The selected node is either a Text node or an Element node.
+         *
+         * case 1 -Text node:
+         * the offset is the number of characters from the start of the node. We have to add this offset to the
+         * content length of all previous nodes.
+         *
+         * case 2 - Element node:
+         * the offset is the number of child nodes before the selected node. We have to add the content length of
+         * all the bnodes prior to the selected node as well as the content of the child node before the offset.
+         *
+         * See the MDN documentation for more details.
+         * https://developer.mozilla.org/en-US/docs/Web/API/Range/startOffset
+         * https://developer.mozilla.org/en-US/docs/Web/API/Range/endOffset
+         *
+         */
+        findSelectionIndex(nodeToFind, nodeOffset) {
             let usedCharacters = 0;
             let it = iterateChildren(this.el);
             let current = it.next();
@@ -20598,6 +20581,28 @@
             }
             if (current.value !== nodeToFind) {
                 throw new Error("Cannot find the node in the children of the element");
+            }
+            else {
+                if (!current.value.hasChildNodes()) {
+                    usedCharacters += nodeOffset;
+                }
+                else {
+                    const children = [...current.value.childNodes].slice(0, nodeOffset);
+                    usedCharacters += children.reduce((acc, child, index) => {
+                        if (child.textContent !== null) {
+                            // need to account for paragraph nodes that implicitely add a new line
+                            // except for the last paragraph
+                            let chars = child.textContent.length;
+                            if (child.nodeName === "P" && index !== children.length - 1) {
+                                chars++;
+                            }
+                            return acc + chars;
+                        }
+                        else {
+                            return acc;
+                        }
+                    }, 0);
+                }
             }
             if (nodeToFind.nodeName === "P" && !isFirstParagraph && nodeToFind.textContent == "") {
                 usedCharacters++;
@@ -24136,17 +24141,17 @@
     const BORDER_STYLE_CONVERSION_MAP = {
         dashDot: "thin",
         dashDotDot: "thin",
-        dashed: "thin",
-        dotted: "thin",
+        dashed: "dashed",
+        dotted: "dotted",
         double: "thin",
         hair: "thin",
-        medium: "thin",
+        medium: "medium",
         mediumDashDot: "thin",
         mediumDashDotDot: "thin",
         mediumDashed: "thin",
         none: undefined,
         slantDashDot: "thin",
-        thick: "thin",
+        thick: "thick",
         thin: "thin",
     };
     /** Conversion map Horizontal Alignment in XLSX <=> Horizontal Alignment in o_spreadsheet*/
@@ -24645,7 +24650,7 @@
             return undefined;
         addBorderDescrWarnings(borderDescr, warningManager);
         const style = BORDER_STYLE_CONVERSION_MAP[borderDescr.style];
-        return style ? [style, convertColor(borderDescr.color)] : undefined;
+        return style ? { style, color: convertColor(borderDescr.color) } : undefined;
     }
     function convertStyles(data, warningManager) {
         const stylesArray = data.styles.map((style) => {
@@ -26043,8 +26048,8 @@
             return undefined;
         }
         return {
-            style: descr[0],
-            color: { rgb: descr[1] },
+            style: descr.style,
+            color: { rgb: descr.color },
         };
     }
     function extractStyle(cell, data) {
@@ -26622,7 +26627,7 @@
     const TABLE_HIGHLIGHTED_CELL_STYLE = {
         bold: true,
     };
-    const TABLE_BORDER_STYLE = ["thin", "#000000FF"];
+    const TABLE_BORDER_STYLE = { style: "thin", color: "#000000FF" };
     /**
      * Convert the imported XLSX tables.
      *
@@ -28191,7 +28196,7 @@
      * a breaking change is made in the way the state is handled, and an upgrade
      * function should be defined
      */
-    const CURRENT_VERSION = 12;
+    const CURRENT_VERSION = 13;
     const INITIAL_SHEET_ID = "Sheet1";
     /**
      * This function tries to load anything that could look like a valid
@@ -28451,6 +28456,25 @@
             applyMigration(data) {
                 for (let sheet of data.sheets || []) {
                     sheet.isVisible = true;
+                }
+                return data;
+            },
+        },
+        {
+            description: "Change Border description structure",
+            from: 12,
+            to: 13,
+            applyMigration(data) {
+                for (const borderId in data.borders) {
+                    const border = data.borders[borderId];
+                    for (const position in border) {
+                        if (Array.isArray(border[position])) {
+                            border[position] = {
+                                style: border[position][0],
+                                color: border[position][1],
+                            };
+                        }
+                    }
                 }
                 return data;
             },
@@ -28790,7 +28814,7 @@
      * - borders
      */
     class BordersPlugin extends CorePlugin {
-        static getters = ["getCellBorder"];
+        static getters = ["getCellBorder", "getBordersColors"];
         borders = {};
         // ---------------------------------------------------------------------------
         // Command Handling
@@ -28821,10 +28845,15 @@
                 case "SET_BORDER":
                     this.setBorder(cmd.sheetId, cmd.col, cmd.row, cmd.border);
                     break;
-                case "SET_FORMATTING":
+                case "SET_ZONE_BORDERS":
                     if (cmd.border) {
                         const target = cmd.target.map((zone) => this.getters.expandZone(cmd.sheetId, zone));
-                        this.setBorders(cmd.sheetId, target, cmd.border);
+                        this.setBorders(cmd.sheetId, target, cmd.border.position, cmd.border.color === ""
+                            ? undefined
+                            : {
+                                style: cmd.border.style || DEFAULT_BORDER_DESC.style,
+                                color: cmd.border.color || DEFAULT_BORDER_DESC.color,
+                            });
                     }
                     break;
                 case "CLEAR_FORMATTING":
@@ -28912,6 +28941,23 @@
                 return null;
             }
             return border;
+        }
+        getBordersColors(sheetId) {
+            const colors = [];
+            const sheetBorders = this.borders[sheetId];
+            if (sheetBorders) {
+                for (const borders of sheetBorders.filter(isDefined$1)) {
+                    for (const cellBorder of borders) {
+                        if (cellBorder?.horizontal) {
+                            colors.push(cellBorder.horizontal.color);
+                        }
+                        if (cellBorder?.vertical) {
+                            colors.push(cellBorder.vertical.color);
+                        }
+                    }
+                }
+            }
+            return colors;
         }
         // ---------------------------------------------------------------------------
         // Private
@@ -29124,43 +29170,43 @@
          * Set the borders of a zone by computing the borders to add from the given
          * command
          */
-        setBorders(sheetId, zones, command) {
-            if (command === "clear") {
+        setBorders(sheetId, zones, position, border) {
+            if (position === "clear") {
                 return this.clearBorders(sheetId, zones);
             }
             for (let zone of zones) {
-                if (command === "h" || command === "hv" || command === "all") {
+                if (position === "h" || position === "hv" || position === "all") {
                     for (let row = zone.top + 1; row <= zone.bottom; row++) {
                         for (let col = zone.left; col <= zone.right; col++) {
-                            this.addBorder(sheetId, col, row, { top: DEFAULT_BORDER_DESC });
+                            this.addBorder(sheetId, col, row, { top: border });
                         }
                     }
                 }
-                if (command === "v" || command === "hv" || command === "all") {
+                if (position === "v" || position === "hv" || position === "all") {
                     for (let row = zone.top; row <= zone.bottom; row++) {
                         for (let col = zone.left + 1; col <= zone.right; col++) {
-                            this.addBorder(sheetId, col, row, { left: DEFAULT_BORDER_DESC });
+                            this.addBorder(sheetId, col, row, { left: border });
                         }
                     }
                 }
-                if (command === "left" || command === "all" || command === "external") {
+                if (position === "left" || position === "all" || position === "external") {
                     for (let row = zone.top; row <= zone.bottom; row++) {
-                        this.addBorder(sheetId, zone.left, row, { left: DEFAULT_BORDER_DESC });
+                        this.addBorder(sheetId, zone.left, row, { left: border });
                     }
                 }
-                if (command === "right" || command === "all" || command === "external") {
+                if (position === "right" || position === "all" || position === "external") {
                     for (let row = zone.top; row <= zone.bottom; row++) {
-                        this.addBorder(sheetId, zone.right + 1, row, { left: DEFAULT_BORDER_DESC });
+                        this.addBorder(sheetId, zone.right + 1, row, { left: border });
                     }
                 }
-                if (command === "top" || command === "all" || command === "external") {
+                if (position === "top" || position === "all" || position === "external") {
                     for (let col = zone.left; col <= zone.right; col++) {
-                        this.addBorder(sheetId, col, zone.top, { top: DEFAULT_BORDER_DESC });
+                        this.addBorder(sheetId, col, zone.top, { top: border });
                     }
                 }
-                if (command === "bottom" || command === "all" || command === "external") {
+                if (position === "bottom" || position === "all" || position === "external") {
                     for (let col = zone.left; col <= zone.right; col++) {
-                        this.addBorder(sheetId, col, zone.bottom + 1, { top: DEFAULT_BORDER_DESC });
+                        this.addBorder(sheetId, col, zone.bottom + 1, { top: border });
                     }
                 }
             }
@@ -29174,16 +29220,22 @@
             const bordersBottomRight = this.getCellBorder({ sheetId, col: right, row: bottom });
             this.clearBorders(sheetId, [zone]);
             if (bordersTopLeft?.top) {
-                this.setBorders(sheetId, [{ ...zone, bottom: top }], "top");
+                this.setBorders(sheetId, [{ ...zone, bottom: top }], "top", bordersTopLeft.top);
             }
             if (bordersTopLeft?.left) {
-                this.setBorders(sheetId, [{ ...zone, right: left }], "left");
+                this.setBorders(sheetId, [{ ...zone, right: left }], "left", bordersTopLeft.left);
             }
-            if (bordersBottomRight?.bottom || bordersTopLeft?.bottom) {
-                this.setBorders(sheetId, [{ ...zone, top: bottom }], "bottom");
+            if (bordersBottomRight?.bottom) {
+                this.setBorders(sheetId, [{ ...zone, top: bottom }], "bottom", bordersBottomRight.bottom);
             }
-            if (bordersBottomRight?.right || bordersTopLeft?.right) {
-                this.setBorders(sheetId, [{ ...zone, left: right }], "right");
+            else if (bordersTopLeft?.bottom) {
+                this.setBorders(sheetId, [{ ...zone, top: bottom }], "bottom", bordersTopLeft.bottom);
+            }
+            if (bordersBottomRight?.right) {
+                this.setBorders(sheetId, [{ ...zone, left: right }], "right", bordersBottomRight.right);
+            }
+            else if (bordersTopLeft?.right) {
+                this.setBorders(sheetId, [{ ...zone, left: right }], "right", bordersTopLeft.right);
             }
         }
         // ---------------------------------------------------------------------------
@@ -33036,6 +33088,9 @@
                 case "UPDATE_CHART":
                 case "CREATE_CHART":
                 case "ADD_CONDITIONAL_FORMAT":
+                case "SET_BORDER":
+                case "SET_ZONE_BORDERS":
+                case "SET_FORMATTING":
                     this.shouldUpdateColors = true;
             }
         }
@@ -33050,8 +33105,7 @@
         getCustomColors() {
             let usedColors = [];
             for (const sheetId of this.getters.getSheetIds()) {
-                const cells = Object.values(this.getters.getCells(sheetId));
-                usedColors = usedColors.concat(this.getColorsFromCells(cells), this.getFormattingColors(sheetId), this.getChartColors(sheetId));
+                usedColors = usedColors.concat(this.getColorsFromCells(sheetId), this.getFormattingColors(sheetId), this.getChartColors(sheetId));
             }
             return sortWithClusters([
                 ...new Set(
@@ -33061,7 +33115,8 @@
                 [...new Set([...usedColors, ...this.customColors])].filter(isColorValid).map(toHex)),
             ]).filter((color) => !COLOR_PICKER_DEFAULTS.includes(color));
         }
-        getColorsFromCells(cells) {
+        getColorsFromCells(sheetId) {
+            const cells = Object.values(this.getters.getCells(sheetId));
             const colors = new Set();
             for (const cell of cells) {
                 if (cell.style?.textColor) {
@@ -33070,6 +33125,9 @@
                 if (cell.style?.fillColor) {
                     colors.add(cell.style.fillColor);
                 }
+            }
+            for (const color of this.getters.getBordersColors(sheetId)) {
+                colors.add(color);
             }
             return [...colors];
         }
@@ -36310,13 +36368,9 @@
         }
         loadInitialMessages(messages) {
             this.isReplayingInitialRevisions = true;
-            this.on("unexpected-revision-id", this, ({ revisionId }) => {
-                throw new Error(`The spreadsheet could not be loaded. Revision ${revisionId} is corrupted.`);
-            });
             for (const message of messages) {
                 this.onMessageReceived(message);
             }
-            this.off("unexpected-revision-id", this);
             this.isReplayingInitialRevisions = false;
         }
         /**
@@ -36402,6 +36456,10 @@
         onMessageReceived(message) {
             if (this.isAlreadyProcessed(message))
                 return;
+            if (this.isWrongServerRevisionId(message)) {
+                this.trigger("unexpected-revision-id");
+                return;
+            }
             switch (message.type) {
                 case "CLIENT_MOVED":
                     this.onClientMoved(message);
@@ -36428,10 +36486,6 @@
                     });
                     break;
                 case "REMOTE_REVISION":
-                    if (message.serverRevisionId !== this.serverRevisionId) {
-                        this.trigger("unexpected-revision-id", { revisionId: message.serverRevisionId });
-                        return;
-                    }
                     const { clientId, commands } = message;
                     const revision = new Revision(message.nextRevisionId, clientId, commands, "REMOTE");
                     if (revision.clientId !== this.clientId) {
@@ -36559,6 +36613,17 @@
                 case "REVISION_REDONE":
                 case "REVISION_UNDONE":
                     return this.processedRevisions.has(message.nextRevisionId);
+                default:
+                    return false;
+            }
+        }
+        isWrongServerRevisionId(message) {
+            switch (message.type) {
+                case "REMOTE_REVISION":
+                case "REVISION_REDONE":
+                case "REVISION_UNDONE":
+                case "SNAPSHOT_CREATED":
+                    return message.serverRevisionId !== this.serverRevisionId;
                 default:
                     return false;
             }
@@ -37278,7 +37343,7 @@
             }
         }
         drawBorders(renderingContext) {
-            const { ctx, thinLineWidth } = renderingContext;
+            const { ctx } = renderingContext;
             for (let box of this.boxes) {
                 const border = box.border;
                 if (border) {
@@ -37297,13 +37362,66 @@
                     }
                 }
             }
-            function drawBorder([style, color], x1, y1, x2, y2) {
+            /**
+             * Following https://usefulangle.com/post/17/html5-canvas-drawing-1px-crisp-straight-lines,
+             * we need to make sure that a "single" pixel line is drawn on a "half" pixel coordinate,
+             * while a "double" pixel line is drawn on a "full" pixel coordinate. As, in the rendering
+             * process, we always had 0.5 before rendering line (to make sure it is drawn on a "half"
+             * pixel), we need to correct this behavior for the "medium" and the "dotted" styles, as
+             * they are drawing a two pixels width line.
+             * We also adapt here the coordinates of the line to make sure corner are correctly drawn,
+             * avoiding a "round corners" effect. This is done by subtracting 1 pixel to the origin of
+             * each line and adding 1 pixel to the end of each line (depending on the direction of the
+             * line).
+             */
+            function drawBorder({ style, color }, x1, y1, x2, y2) {
                 ctx.strokeStyle = color;
-                ctx.lineWidth = (style === "thin" ? 2 : 3) * thinLineWidth;
+                switch (style) {
+                    case "medium":
+                        ctx.lineWidth = 2;
+                        x1 += y1 === y2 ? -0.5 : 0.5;
+                        x2 += y1 === y2 ? 1.5 : 0.5;
+                        y1 += x1 === x2 ? -0.5 : 0.5;
+                        y2 += x1 === x2 ? 1.5 : 0.5;
+                        break;
+                    case "thick":
+                        ctx.lineWidth = 3;
+                        if (y1 === y2) {
+                            x1--;
+                            x2++;
+                        }
+                        if (x1 === x2) {
+                            y1--;
+                            y2++;
+                        }
+                        break;
+                    case "dashed":
+                        ctx.lineWidth = 1;
+                        ctx.setLineDash([1, 3]);
+                        break;
+                    case "dotted":
+                        ctx.lineWidth = 1;
+                        if (y1 === y2) {
+                            x1 += 0.5;
+                            x2 += 0.5;
+                        }
+                        if (x1 === x2) {
+                            y1 += 0.5;
+                            y2 += 0.5;
+                        }
+                        ctx.setLineDash([1, 1]);
+                        break;
+                    case "thin":
+                    default:
+                        ctx.lineWidth = 1;
+                        break;
+                }
                 ctx.beginPath();
                 ctx.moveTo(x1, y1);
                 ctx.lineTo(x2, y2);
                 ctx.stroke();
+                ctx.lineWidth = 1;
+                ctx.setLineDash([]);
             }
         }
         drawTexts(renderingContext) {
@@ -41286,7 +41404,8 @@
                 },
                 zone: selectedZone,
             };
-            this.setSelectionMixin(anchor, [selectedZone]);
+            const selections = this.gridSelection.zones.map((zone) => updateSelectionOnDeletion(zone, "left", [...cmd.elements]));
+            this.setSelectionMixin(anchor, selections);
         }
         onRowsRemoved(cmd) {
             const { cell, zone } = this.gridSelection.anchor;
@@ -41300,13 +41419,18 @@
                 },
                 zone: selectedZone,
             };
-            this.setSelectionMixin(anchor, [selectedZone]);
+            const selections = this.gridSelection.zones.map((zone) => updateSelectionOnDeletion(zone, "top", [...cmd.elements]));
+            this.setSelectionMixin(anchor, selections);
         }
         onAddElements(cmd) {
-            const selection = this.gridSelection.anchor.zone;
-            const zone = updateSelectionOnInsertion(selection, cmd.dimension === "COL" ? "left" : "top", cmd.base, cmd.position, cmd.quantity);
-            const anchor = { cell: { col: zone.left, row: zone.top }, zone };
-            this.setSelectionMixin(anchor, [zone]);
+            const start = cmd.dimension === "COL" ? "left" : "top";
+            const anchorZone = updateSelectionOnInsertion(this.gridSelection.anchor.zone, start, cmd.base, cmd.position, cmd.quantity);
+            const selection = this.gridSelection.zones.map((zone) => updateSelectionOnInsertion(zone, start, cmd.base, cmd.position, cmd.quantity));
+            const anchor = {
+                cell: { col: anchorZone.left, row: anchorZone.top },
+                zone: anchorZone,
+            };
+            this.setSelectionMixin(anchor, selection);
         }
         onMoveElements(cmd) {
             const thickness = cmd.elements.length;
@@ -42737,7 +42861,6 @@
     justify-content: center;
     align-items: center;
     margin: 2px;
-    padding: 0px 3px;
     border-radius: 2px;
     min-width: 20px;
   }
@@ -42792,6 +42915,221 @@
         selectedColor: { type: String, optional: true },
         class: { type: String, optional: true },
         onClick: { type: Function, optional: true },
+    };
+
+    /**
+     * List the available borders positions and the corresponding icons.
+     * The structure of this array is defined to match the order/lines we want
+     * to display in the topbar's border tool.
+     */
+    const BORDER_POSITIONS = [
+        [
+            ["all", "o-spreadsheet-Icon.BORDERS"],
+            ["hv", "o-spreadsheet-Icon.BORDER_HV"],
+            ["h", "o-spreadsheet-Icon.BORDER_H"],
+            ["v", "o-spreadsheet-Icon.BORDER_V"],
+            ["external", "o-spreadsheet-Icon.BORDER_EXTERNAL"],
+        ],
+        [
+            ["left", "o-spreadsheet-Icon.BORDER_LEFT"],
+            ["top", "o-spreadsheet-Icon.BORDER_TOP"],
+            ["right", "o-spreadsheet-Icon.BORDER_RIGHT"],
+            ["bottom", "o-spreadsheet-Icon.BORDER_BOTTOM"],
+            ["clear", "o-spreadsheet-Icon.BORDER_CLEAR"],
+        ],
+    ];
+    // -----------------------------------------------------------------------------
+    // Border Editor
+    // -----------------------------------------------------------------------------
+    css /* scss */ `
+  .o-border-selector {
+    padding: 4px;
+  }
+  .o-divider {
+    border-right: 1px solid #e0e2e4;
+    margin: 0 6px;
+  }
+  .o-border-selector-section {
+    .o-dropdown-line {
+      height: 30px;
+      margin: 1px;
+      .o-line-item {
+        padding: 4px;
+        width: 18px;
+        height: 18px;
+      }
+    }
+    .o-border-style-tool {
+      padding: 0px 3px;
+      margin: 2px;
+      height: 25px;
+    }
+  }
+  .o-style-preview {
+    margin: 7px 5px 7px 5px;
+    width: 60px;
+    height: 5px;
+  }
+  .o-style-thin {
+    border-bottom: 1px solid #000000;
+  }
+  .o-style-medium {
+    border-bottom: 2px solid #000000;
+  }
+  .o-style-thick {
+    border-bottom: 3px solid #000000;
+  }
+  .o-style-dashed {
+    border-bottom: 1px dashed #000000;
+  }
+  .o-style-dotted {
+    border-bottom: 1px dotted #000000;
+  }
+  .o-dropdown-border-type {
+    &:not(.o-disabled):not(.active):hover {
+      background-color: ${BG_HOVER_COLOR};
+    }
+  }
+  .o-dropdown-border-check {
+    width: 20px;
+    font-size: 12px;
+  }
+  .o-border-style-dropdown {
+    background: #ffffff;
+    padding: 4px;
+    .o-dropdown-line {
+      .o-line-item.active {
+        background-color: rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+  .o-border-picker-button {
+    padding: 0px !important;
+    margin: 5px 0px 0px 0px !important;
+    height: 25px !important;
+  }
+`;
+    class BorderEditor extends owl.Component {
+        static template = "o-spreadsheet-BorderEditor";
+        static components = { ColorPickerWidget, Popover };
+        BORDER_POSITIONS = BORDER_POSITIONS;
+        lineStyleButtonRef = owl.useRef("lineStyleButton");
+        borderStyles = borderStyles;
+        state = owl.useState({
+            activeTool: undefined,
+        });
+        toggleDropdownTool(tool) {
+            const isOpen = this.state.activeTool === tool;
+            this.state.activeTool = isOpen ? undefined : tool;
+        }
+        closeDropdown() {
+            this.state.activeTool = undefined;
+        }
+        setBorderPosition(position) {
+            this.props.onBorderPositionPicked(position);
+            this.closeDropdown();
+        }
+        setBorderColor(color) {
+            this.props.onBorderColorPicked(color);
+            this.closeDropdown();
+        }
+        setBorderStyle(style) {
+            this.props.onBorderStylePicked(style);
+            this.closeDropdown();
+        }
+        get lineStylePickerPopoverProps() {
+            return {
+                anchorRect: this.lineStylePickerAnchorRect,
+                positioning: "BottomLeft",
+                verticalOffset: 0,
+            };
+        }
+        get popoverProps() {
+            return {
+                anchorRect: this.props.anchorRect,
+                maxHeight: this.props.maxHeight,
+                positioning: "BottomLeft",
+                verticalOffset: 0,
+            };
+        }
+        get lineStylePickerAnchorRect() {
+            const button = this.lineStyleButtonRef.el;
+            if (button === null) {
+                return { x: 0, y: 0, width: 0, height: 0 };
+            }
+            const buttonRect = button.getBoundingClientRect();
+            return {
+                x: buttonRect.x,
+                y: buttonRect.y,
+                width: buttonRect.width,
+                height: buttonRect.height,
+            };
+        }
+    }
+    BorderEditor.props = {
+        class: { type: String, optional: true },
+        currentBorderColor: { type: String, optional: false },
+        currentBorderStyle: { type: String, optional: false },
+        currentBorderPosition: { type: String, optional: true },
+        onBorderColorPicked: Function,
+        onBorderStylePicked: Function,
+        onBorderPositionPicked: Function,
+        maxHeight: { type: Number, optional: true },
+        anchorRect: Object,
+    };
+
+    class BorderEditorWidget extends owl.Component {
+        static template = "o-spreadsheet-BorderEditorWidget";
+        static components = { BorderEditor };
+        borderEditorButtonRef = owl.useRef("borderEditorButton");
+        state = owl.useState({
+            currentColor: DEFAULT_BORDER_DESC.color,
+            currentStyle: DEFAULT_BORDER_DESC.style,
+            currentPosition: undefined,
+        });
+        get borderEditorAnchorRect() {
+            const button = this.borderEditorButtonRef.el;
+            const buttonRect = button.getBoundingClientRect();
+            return {
+                x: buttonRect.x,
+                y: buttonRect.y,
+                width: buttonRect.width,
+                height: buttonRect.height,
+            };
+        }
+        onBorderPositionPicked(position) {
+            this.state.currentPosition = position;
+            this.updateBorder();
+        }
+        onBorderColorPicked(color) {
+            this.state.currentColor = color;
+            this.updateBorder();
+        }
+        onBorderStylePicked(style) {
+            this.state.currentStyle = style;
+            this.updateBorder();
+        }
+        updateBorder() {
+            if (this.state.currentPosition === undefined) {
+                return;
+            }
+            this.env.model.dispatch("SET_ZONE_BORDERS", {
+                sheetId: this.env.model.getters.getActiveSheetId(),
+                target: this.env.model.getters.getSelectedZones(),
+                border: {
+                    position: this.state.currentPosition,
+                    color: this.state.currentColor,
+                    style: this.state.currentStyle,
+                },
+            });
+        }
+    }
+    BorderEditorWidget.props = {
+        toggleBorderEditor: Function,
+        showBorderEditor: Boolean,
+        disabled: { type: Boolean, optional: true },
+        dropdownMaxHeight: { type: Number, optional: true },
+        class: { type: String, optional: true },
     };
 
     const COMPOSER_MAX_HEIGHT = 100;
@@ -42927,11 +43265,6 @@
         dropdownStyle: String,
     };
 
-    // If we ever change these colors, make sure the filter tool stays green to match the icon in the grid
-    const ACTIVE_BG_COLOR = BACKGROUND_HEADER_FILTER_COLOR;
-    const ACTIVE_FONT_COLOR = FILTERS_COLOR;
-    const HOVERED_BG_COLOR = BG_HOVER_COLOR;
-    const HOVERED_FONT_COLOR = "#000";
     // -----------------------------------------------------------------------------
     // TopBar
     // -----------------------------------------------------------------------------
@@ -42940,27 +43273,6 @@
     line-height: 1.2;
     font-size: 13px;
     font-weight: 500;
-
-    .o-topbar-hoverable {
-      cursor: pointer;
-      .o-icon {
-        color: ${ICONS_COLOR};
-      }
-      &:not(.o-disabled):not(.active):hover {
-        background-color: ${HOVERED_BG_COLOR};
-        color: ${HOVERED_FONT_COLOR};
-        .o-icon {
-          color: ${HOVERED_FONT_COLOR};
-        }
-      }
-      &.active {
-        background-color: ${ACTIVE_BG_COLOR};
-        color: ${ACTIVE_FONT_COLOR};
-        .o-icon {
-          color: ${ACTIVE_FONT_COLOR};
-        }
-      }
-    }
 
     .o-topbar-top {
       border-bottom: 1px solid ${SEPARATOR_COLOR};
@@ -42971,6 +43283,11 @@
         .o-topbar-menu {
           padding: 4px 6px;
           margin: 0 2px;
+
+          &.active {
+            background-color: ${BG_HOVER_COLOR};
+            color: #000;
+          }
         }
       }
     }
@@ -43048,6 +43365,7 @@
             TopBarComposer,
             FontSizeEditor,
             ActionButton,
+            BorderEditorWidget,
         };
         state = owl.useState({
             menuState: { isOpen: false, position: null, menuItems: [] },
@@ -43209,6 +43527,11 @@
         }
     }
 
+    // If we ever change these colors, make sure the filter tool stays green to match the icon in the grid
+    const ACTIVE_BG_COLOR = BACKGROUND_HEADER_FILTER_COLOR;
+    const ACTIVE_FONT_COLOR = FILTERS_COLOR;
+    const HOVERED_BG_COLOR = BG_HOVER_COLOR;
+    const HOVERED_FONT_COLOR = "#000";
     css /* scss */ `
   .o-spreadsheet {
     position: relative;
@@ -43240,6 +43563,27 @@
       border-bottom: ${MENU_SEPARATOR_BORDER_WIDTH}px solid ${SEPARATOR_COLOR};
       margin-top: ${MENU_SEPARATOR_PADDING}px;
       margin-bottom: ${MENU_SEPARATOR_PADDING}px;
+    }
+    .o-hoverable-button {
+      border-radius: 2px;
+      cursor: pointer;
+      .o-icon {
+        color: ${ICONS_COLOR};
+      }
+      &:not(.o-disabled):not(.active):hover {
+        background-color: ${HOVERED_BG_COLOR};
+        color: ${HOVERED_FONT_COLOR};
+        .o-icon {
+          color: ${HOVERED_FONT_COLOR};
+        }
+      }
+      &.active {
+        background-color: ${ACTIVE_BG_COLOR};
+        color: ${ACTIVE_FONT_COLOR};
+        .o-icon {
+          color: ${ACTIVE_FONT_COLOR};
+        }
+      }
     }
   }
 
@@ -44099,13 +44443,13 @@
     }
 
     class SelectiveHistory {
+        HEAD_BRANCH;
+        HEAD_OPERATION;
+        tree;
         applyOperation;
         revertOperation;
         buildEmpty;
         buildTransformation;
-        HEAD_BRANCH;
-        HEAD_OPERATION;
-        tree;
         /**
          * The selective history is a data structure used to register changes/updates of a state.
          * Each change/update is called an "operation".
@@ -44126,14 +44470,15 @@
          *                    (used for internal implementation)
          * @param buildTransformation Factory used to build transformations
          */
-        constructor(initialOperationId, applyOperation, revertOperation, buildEmpty, buildTransformation) {
-            this.applyOperation = applyOperation;
-            this.revertOperation = revertOperation;
-            this.buildEmpty = buildEmpty;
-            this.buildTransformation = buildTransformation;
+        constructor(args) {
+            this.applyOperation = args.applyOperation;
+            this.revertOperation = args.revertOperation;
+            this.buildEmpty = args.buildEmpty;
+            this.buildTransformation = args.buildTransformation;
             this.HEAD_BRANCH = new Branch(this.buildTransformation);
-            this.tree = new Tree(buildTransformation, this.HEAD_BRANCH);
-            const initial = new Operation(initialOperationId, buildEmpty(initialOperationId));
+            this.tree = new Tree(this.buildTransformation, this.HEAD_BRANCH);
+            const initialOperationId = args.initialOperationId;
+            const initial = new Operation(initialOperationId, this.buildEmpty(initialOperationId));
             this.tree.insertOperationLast(this.HEAD_BRANCH, initial);
             this.HEAD_OPERATION = initial;
         }
@@ -44247,21 +44592,27 @@
         }
     }
 
-    function buildRevisionLog(initialRevisionId, recordChanges, dispatch) {
-        return new SelectiveHistory(initialRevisionId, (revision) => {
-            const commands = revision.commands.slice();
-            const { changes } = recordChanges(() => {
-                for (const command of commands) {
-                    dispatch(command);
-                }
-            });
-            revision.setChanges(changes);
-        }, (revision) => revertChanges([revision]), (id) => new Revision(id, "empty", []), {
-            with: (revision) => (toTransform) => {
-                return new Revision(toTransform.id, toTransform.clientId, transformAll(toTransform.commands, revision.commands), toTransform.rootCommand);
+    function buildRevisionLog(args) {
+        return new SelectiveHistory({
+            initialOperationId: args.initialRevisionId,
+            applyOperation: (revision) => {
+                const commands = revision.commands.slice();
+                const { changes } = args.recordChanges(() => {
+                    for (const command of commands) {
+                        args.dispatch(command);
+                    }
+                });
+                revision.setChanges(changes);
             },
-            without: (revision) => (toTransform) => {
-                return new Revision(toTransform.id, toTransform.clientId, transformAll(toTransform.commands, revision.commands.map(inverseCommand).flat()), toTransform.rootCommand);
+            revertOperation: (revision) => revertChanges([revision]),
+            buildEmpty: (id) => new Revision(id, "empty", []),
+            buildTransformation: {
+                with: (revision) => (toTransform) => {
+                    return new Revision(toTransform.id, toTransform.clientId, transformAll(toTransform.commands, revision.commands), toTransform.rootCommand);
+                },
+                without: (revision) => (toTransform) => {
+                    return new Revision(toTransform.id, toTransform.clientId, transformAll(toTransform.commands, revision.commands.map(inverseCommand).flat()), toTransform.rootCommand);
+                },
             },
         });
     }
@@ -45934,11 +46285,21 @@
         for (let border of Object.values(borders)) {
             borderNodes.push(escapeXml /*xml*/ `
       <border>
-        <left ${formatBorderAttribute(border["left"])} />
-        <right ${formatBorderAttribute(border["right"])} />
-        <top ${formatBorderAttribute(border["top"])} />
-        <bottom ${formatBorderAttribute(border["bottom"])} />
-        <diagonal ${formatBorderAttribute(border["diagonal"])} />
+        <left ${formatBorderAttribute(border["left"])}>
+          ${addBorderColor(border["left"])}
+        </left>
+        <right ${formatBorderAttribute(border["right"])}>
+          ${addBorderColor(border["right"])}
+        </right>
+        <top ${formatBorderAttribute(border["top"])}>
+          ${addBorderColor(border["top"])}
+        </top>
+        <bottom ${formatBorderAttribute(border["bottom"])}>
+          ${addBorderColor(border["bottom"])}
+        </bottom>
+        <diagonal ${formatBorderAttribute(border["diagonal"])}>
+          ${addBorderColor(border["diagonal"])}
+        </diagonal>
       </border>
     `);
         }
@@ -45952,10 +46313,15 @@
         if (!description) {
             return escapeXml ``;
         }
-        return formatAttributes([
-            ["style", description.style],
-            ["color", toXlsxHexColor(description.color.rgb)],
-        ]);
+        return formatAttributes([["style", description.style]]);
+    }
+    function addBorderColor(description) {
+        if (!description) {
+            return escapeXml ``;
+        }
+        return escapeXml /*xml*/ `
+    <color ${formatAttributes([["rgb", toXlsxHexColor(description.color.rgb)]])}/>
+  `;
     }
     function addStyles(styles) {
         const styleNodes = [];
@@ -46599,6 +46965,7 @@
                 this.setupCorePlugin(Plugin, workbookData);
             }
             Object.assign(this.getters, this.coreGetters);
+            this.session.loadInitialMessages(stateUpdateMessages);
             for (let Plugin of statefulUIPluginRegistry.getAll()) {
                 const plugin = this.setupUiPlugin(Plugin);
                 this.statefulUIPlugins.push(plugin);
@@ -46626,8 +46993,6 @@
             // This should be done after construction of LocalHistory due to order of
             // events
             this.setupSessionEvents();
-            // Load the initial revisions
-            this.session.loadInitialMessages(stateUpdateMessages);
             this.joinSession();
             if (config.snapshotRequested) {
                 this.session.snapshot(this.exportData());
@@ -46691,14 +47056,18 @@
             this.finalize();
         }
         setupSession(revisionId) {
-            const session = new Session(buildRevisionLog(revisionId, this.state.recordChanges.bind(this.state), (command) => {
-                const result = this.checkDispatchAllowed(command);
-                if (!result.isSuccessful) {
-                    return;
-                }
-                this.isReplayingCommand = true;
-                this.dispatchToHandlers(this.coreHandlers, command);
-                this.isReplayingCommand = false;
+            const session = new Session(buildRevisionLog({
+                initialRevisionId: revisionId,
+                recordChanges: this.state.recordChanges.bind(this.state),
+                dispatch: (command) => {
+                    const result = this.checkDispatchAllowed(command);
+                    if (!result.isSuccessful) {
+                        return;
+                    }
+                    this.isReplayingCommand = true;
+                    this.dispatchToHandlers(this.coreHandlers, command);
+                    this.isReplayingCommand = false;
+                },
             }), this.config.transportService, revisionId);
             return session;
         }
@@ -47100,8 +47469,8 @@
 
 
     __info__.version = '16.3.0-alpha.7';
-    __info__.date = '2023-05-02T13:11:44.262Z';
-    __info__.hash = '77c8f5f';
+    __info__.date = '2023-05-11T06:06:13.226Z';
+    __info__.hash = '661b829';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);

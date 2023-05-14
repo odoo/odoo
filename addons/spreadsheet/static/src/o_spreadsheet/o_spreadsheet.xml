@@ -55,6 +55,107 @@
     </div>
   </t>
 
+  <t t-name="o-spreadsheet-BorderEditor" owl="1">
+    <Popover t-props="popoverProps">
+      <div
+        class="d-flex bg-white o-border-selector"
+        t-on-click.stop=""
+        t-att-class="props.class ? props.class : ''">
+        <div class="o-border-selector-section">
+          <div
+            t-foreach="BORDER_POSITIONS"
+            t-as="borderPositionsRow"
+            t-key="borderPositionsRow"
+            class="d-flex o-dropdown-button o-dropdown-line">
+            <span
+              t-foreach="borderPositionsRow"
+              t-as="borderPosition"
+              t-key="borderPosition"
+              class="o-line-item o-hoverable-button"
+              t-att-class="{active:props.currentBorderPosition === borderPosition[0]}"
+              t-att-name="borderPosition[0]"
+              t-on-click.stop="() => this.setBorderPosition(borderPosition[0])">
+              <t t-call="{{borderPosition[1]}}"/>
+            </span>
+          </div>
+        </div>
+        <div class="o-divider"/>
+        <div class="o-border-selector-section">
+          <div
+            class="m-0 p-0 d-flex align-items-center justify-content-center o-with-color o-hoverable-button"
+            title="Border color"
+            t-on-click.stop="(ev) => this.toggleDropdownTool('borderColorTool')">
+            <ColorPickerWidget
+              currentColor="props.currentBorderColor"
+              toggleColorPicker="(ev) => this.toggleDropdownTool('borderColorTool')"
+              showColorPicker="state.activeTool === 'borderColorTool'"
+              onColorPicked="(color) => this.setBorderColor(color)"
+              title="env._t('Border Color')"
+              icon="props.currentBorderColor === '' ? 'o-spreadsheet-Icon.BORDER_NO_COLOR' : 'o-spreadsheet-Icon.BORDER_COLOR'"
+              dropdownMaxHeight="this.props.dropdownMaxHeight"
+              class="'o-dropdown-button o-border-picker-button'"
+            />
+            <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+          </div>
+          <div
+            class="o-border-style-tool d-flex align-items-center justify-content-center o-hoverable-button"
+            title="Line style"
+            t-ref="lineStyleButton"
+            t-on-click.stop="(ev) => this.toggleDropdownTool('borderTypeTool')">
+            <t t-call="o-spreadsheet-Icon.BORDER_TYPE"/>
+            <t t-call="o-spreadsheet-Icon.TRIANGLE_DOWN"/>
+            <Popover
+              t-props="lineStylePickerPopoverProps"
+              t-if="state.activeTool === 'borderTypeTool'">
+              <div class="o-border-style-dropdown">
+                <t t-foreach="borderStyles" t-as="borderStyle" t-key="borderStyle">
+                  <div
+                    t-att-title="borderStyle"
+                    t-on-click.stop="() => this.setBorderStyle(borderStyle)">
+                    <div class="d-flex o-dropdown-border-type">
+                      <div class="o-dropdown-border-check">
+                        <t
+                          t-if="props.currentBorderStyle === borderStyle"
+                          t-call="o-spreadsheet-Icon.CHECK"
+                        />
+                      </div>
+                      <div t-attf-class="o-style-preview o-style-{{borderStyle}}"/>
+                    </div>
+                  </div>
+                </t>
+              </div>
+            </Popover>
+          </div>
+        </div>
+      </div>
+    </Popover>
+  </t>
+
+  <t t-name="o-spreadsheet-BorderEditorWidget" owl="1">
+    <div class="d-flex position-relative" title="Borders">
+      <span
+        t-ref="borderEditorButton"
+        t-on-click.stop="props.toggleBorderEditor"
+        t-att-class="props.class ? props.class : ''"
+        t-att-disabled="props.disabled">
+        <span t-att-style="iconStyle">
+          <t t-call="o-spreadsheet-Icon.BORDERS"/>
+        </span>
+      </span>
+      <BorderEditor
+        t-if="props.showBorderEditor"
+        onBorderColorPicked.bind="onBorderColorPicked"
+        onBorderStylePicked.bind="onBorderStylePicked"
+        onBorderPositionPicked.bind="onBorderPositionPicked"
+        currentBorderColor="state.currentColor"
+        currentBorderStyle="state.currentStyle"
+        currentBorderPosition="state.currentPosition"
+        maxHeight="props.dropdownMaxHeight"
+        anchorRect="borderEditorAnchorRect"
+      />
+    </div>
+  </t>
+
   <t t-name="o-spreadsheet-BottomBar" owl="1">
     <div
       class="o-spreadsheet-bottom-bar o-two-columns d-flex align-items-center overflow-hidden"
@@ -1531,6 +1632,38 @@
         d="M8 16h2v-2H8v2m-3-6h2V8H5v2m0-6h2V2H5v2m3 9h2v-2H8v2m-3 3h2v-2H5v2M2 7h2V5H2v2m0 9h2v-2H2v2M2 4h2V2H2v2m0 6h2V8H2v2m6 0h2V8H8v2m-6 3h2v-2H2v2m12 0h2v-2h-2v2m0 3h2v-2h-2v2m0-6h2V8h-2v2m0-3h2V5h-2v2m0-5v2h2V2h-2M8 4h2V2H8v2m3 0h2V2h-2v2M8 7h2V5H8v2m3 9h2v-2h-2v2m0-6h2V8h-2v2"
         opacity=".54"
       />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.BORDER_TYPE" owl="1">
+    <svg class="o-icon">
+      <g fill="#000000" transform="translate(2 2)">
+        <polygon points="0 0 0 2 14 2 14 0"/>
+        <polygon points="0 6 0 8 5 8 5 6"/>
+        <polygon points="9 6 9 8 14 8 14 6"/>
+        <polygon points="0 12 0 14 2 14 2 12"/>
+        <polygon points="4 12 4 14 6 14 6 12"/>
+        <polygon points="8 12 8 14 10 14 10 12"/>
+        <polygon points="12 12 12 14 14 14 14 12"/>
+      </g>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.BORDER_COLOR" owl="1">
+    <svg class="o-icon">
+      <g fill="#000000" transform="translate(4 2)">
+        <polygon points="0 12 0 9 7 2 10 5 3 12"/>
+        <polygon points="8 1 9 0 12 3 11 4"/>
+      </g>
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.BORDER_NO_COLOR" owl="1">
+    <svg class="o-icon">
+      <g fill="#000000">
+        <polygon points="4 12 4 9 11 2 14 5 7 12"/>
+        <polygon points="12 1 13 0 16 3 15 4"/>
+      </g>
+      <g>
+        <rect x="0" y="14" width="18" height="4" stroke="black" fill="none"/>
+      </g>
     </svg>
   </t>
 
@@ -3459,7 +3592,7 @@
           <t t-foreach="menus" t-as="menu" t-key="menu_index">
             <div
               t-if="menu.children.length !== 0"
-              class="o-topbar-menu o-topbar-hoverable rounded"
+              class="o-topbar-menu o-hoverable-button rounded"
               t-att-class="{'active': state.menuState.parentMenu and state.menuState.parentMenu.id === menu.id}"
               t-on-click="(ev) => this.toggleContextMenu(menu, ev)"
               t-on-mouseover="(ev) => this.onMenuMouseOver(menu, ev)"
@@ -3487,21 +3620,21 @@
             </span>
           </div>
           <div t-else="" class="o-toolbar-tools d-flex flex-shrink-0 ms-4">
-            <ActionButton action="EDIT.undo" class="'o-topbar-hoverable'"/>
-            <ActionButton action="EDIT.redo" class="'o-topbar-hoverable'"/>
-            <ActionButton action="FORMAT.paintFormat" class="'o-topbar-hoverable'"/>
-            <ActionButton action="FORMAT.clearFormat" class="'o-topbar-hoverable'"/>
+            <ActionButton action="EDIT.undo" class="'o-hoverable-button'"/>
+            <ActionButton action="EDIT.redo" class="'o-hoverable-button'"/>
+            <ActionButton action="FORMAT.paintFormat" class="'o-hoverable-button'"/>
+            <ActionButton action="FORMAT.clearFormat" class="'o-hoverable-button'"/>
 
             <div class="o-divider"/>
 
-            <ActionButton action="FORMAT.formatPercent" class="'o-topbar-hoverable'"/>
-            <ActionButton action="FORMAT.decraseDecimalPlaces" class="'o-topbar-hoverable'"/>
-            <ActionButton action="FORMAT.incraseDecimalPlaces" class="'o-topbar-hoverable'"/>
+            <ActionButton action="FORMAT.formatPercent" class="'o-hoverable-button'"/>
+            <ActionButton action="FORMAT.decraseDecimalPlaces" class="'o-hoverable-button'"/>
+            <ActionButton action="FORMAT.incraseDecimalPlaces" class="'o-hoverable-button'"/>
             <ActionButton
               action="formatNumberMenuItemSpec"
               onClick="(ev) => this.toggleToolbarContextMenu(formatNumberMenuItemSpec, ev)"
               hasTriangleDownIcon="true"
-              class="'o-topbar-hoverable'"
+              class="'o-hoverable-button'"
             />
 
             <div class="o-divider"/>
@@ -3510,9 +3643,9 @@
 
             <div class="o-divider"/>
 
-            <ActionButton action="FORMAT.formatBold" class="'o-topbar-hoverable'"/>
-            <ActionButton action="FORMAT.formatItalic" class="'o-topbar-hoverable'"/>
-            <ActionButton action="FORMAT.formatStrikethrough" class="'o-topbar-hoverable'"/>
+            <ActionButton action="FORMAT.formatBold" class="'o-hoverable-button'"/>
+            <ActionButton action="FORMAT.formatItalic" class="'o-hoverable-button'"/>
+            <ActionButton action="FORMAT.formatStrikethrough" class="'o-hoverable-button'"/>
 
             <ColorPickerWidget
               currentColor="state.textColor"
@@ -3522,7 +3655,7 @@
               title="env._t('Text Color')"
               icon="'o-spreadsheet-Icon.TEXT_COLOR'"
               dropdownMaxHeight="this.props.dropdownMaxHeight"
-              class="'o-topbar-hoverable o-menu-item-button'"
+              class="'o-hoverable-button o-menu-item-button'"
             />
 
             <div class="o-divider"/>
@@ -3535,38 +3668,16 @@
               title="env._t('Fill Color')"
               icon="'o-spreadsheet-Icon.FILL_COLOR'"
               dropdownMaxHeight="this.props.dropdownMaxHeight"
-              class="'o-topbar-hoverable o-menu-item-button'"
+              class="'o-hoverable-button o-menu-item-button'"
             />
 
-            <div class="o-dropdown">
-              <ActionButton
-                action="FORMAT.borders"
-                t-on-click="(ev) => this.toggleDropdownTool('borderTool', ev)"
-                class="'o-topbar-hoverable'"
-              />
-              <div
-                class="o-dropdown-content"
-                t-if="state.activeTool === 'borderTool'"
-                t-att-style="dropdownStyle"
-                t-on-click.stop="">
-                <div class="o-dropdown-line">
-                  <ActionButton action="FORMAT.bordersAll" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.bordersInner" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.bordersHorizontal" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.bordersVertical" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.bordersExternal" class="'o-topbar-hoverable'"/>
-                </div>
-                <div class="o-dropdown-line">
-                  <ActionButton action="FORMAT.bordersLeft" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.bordersTop" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.bordersRight" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.bordersBottom" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.bordersClear" class="'o-topbar-hoverable'"/>
-                </div>
-              </div>
-            </div>
-            <ActionButton action="EDIT.mergeCells" class="'o-topbar-hoverable'"/>
-
+            <BorderEditorWidget
+              class="'o-hoverable-button o-menu-item-button'"
+              toggleBorderEditor="(ev) => this.toggleDropdownTool('borderTool', ev)"
+              showBorderEditor="state.activeTool === 'borderTool'"
+              dropdownMaxHeight="this.props.dropdownMaxHeight"
+            />
+            <ActionButton action="EDIT.mergeCells" class="'o-hoverable-button'"/>
             <div class="o-divider"/>
 
             <div class="o-dropdown">
@@ -3574,7 +3685,7 @@
                 action="FORMAT.formatAlignmentHorizontal"
                 hasTriangleDownIcon="true"
                 t-on-click="(ev) => this.toggleDropdownTool('horizontalAlignTool', ev)"
-                class="'o-topbar-hoverable'"
+                class="'o-hoverable-button'"
               />
               <div
                 class="o-dropdown-content"
@@ -3582,9 +3693,9 @@
                 t-att-style="dropdownStyle"
                 t-on-click.stop="">
                 <div class="o-dropdown-line">
-                  <ActionButton action="FORMAT.formatAlignmentLeft" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.formatAlignmentCenter" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.formatAlignmentRight" class="'o-topbar-hoverable'"/>
+                  <ActionButton action="FORMAT.formatAlignmentLeft" class="'o-hoverable-button'"/>
+                  <ActionButton action="FORMAT.formatAlignmentCenter" class="'o-hoverable-button'"/>
+                  <ActionButton action="FORMAT.formatAlignmentRight" class="'o-hoverable-button'"/>
                 </div>
               </div>
             </div>
@@ -3593,7 +3704,7 @@
                 action="FORMAT.formatAlignmentVertical"
                 hasTriangleDownIcon="true"
                 t-on-click="(ev) => this.toggleDropdownTool('verticalAlignTool', ev)"
-                class="'o-topbar-hoverable'"
+                class="'o-hoverable-button'"
               />
               <div
                 class="o-dropdown-content"
@@ -3601,9 +3712,9 @@
                 t-if="state.activeTool === 'verticalAlignTool'"
                 t-on-click.stop="">
                 <div class="o-dropdown-line">
-                  <ActionButton action="FORMAT.formatAlignmentTop" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.formatAlignmentMiddle" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.formatAlignmentBottom" class="'o-topbar-hoverable'"/>
+                  <ActionButton action="FORMAT.formatAlignmentTop" class="'o-hoverable-button'"/>
+                  <ActionButton action="FORMAT.formatAlignmentMiddle" class="'o-hoverable-button'"/>
+                  <ActionButton action="FORMAT.formatAlignmentBottom" class="'o-hoverable-button'"/>
                 </div>
               </div>
             </div>
@@ -3612,7 +3723,7 @@
                 action="FORMAT.formatWrapping"
                 hasTriangleDownIcon="true"
                 t-on-click="(ev) => this.toggleDropdownTool('textWrappingTool', ev)"
-                class="'o-topbar-hoverable'"
+                class="'o-hoverable-button'"
               />
               <div
                 class="o-dropdown-content"
@@ -3622,17 +3733,17 @@
                 <div class="o-dropdown-line">
                   <ActionButton
                     action="FORMAT.formatWrappingOverflow"
-                    class="'o-topbar-hoverable'"
+                    class="'o-hoverable-button'"
                   />
-                  <ActionButton action="FORMAT.formatWrappingWrap" class="'o-topbar-hoverable'"/>
-                  <ActionButton action="FORMAT.formatWrappingClip" class="'o-topbar-hoverable'"/>
+                  <ActionButton action="FORMAT.formatWrappingWrap" class="'o-hoverable-button'"/>
+                  <ActionButton action="FORMAT.formatWrappingClip" class="'o-hoverable-button'"/>
                 </div>
               </div>
             </div>
 
             <div class="o-divider"/>
 
-            <ActionButton action="VIEW.createRemoveFilter" class="'o-topbar-hoverable'"/>
+            <ActionButton action="VIEW.createRemoveFilter" class="'o-hoverable-button'"/>
           </div>
         </div>
         <TopBarComposer
@@ -3651,6 +3762,6 @@
 </odoo>
 <!--
   __info__.version = '16.3.0-alpha.7';
-  __info__.date = '2023-05-02T13:11:48.592Z';
-  __info__.hash = '77c8f5f';
+  __info__.date = '2023-05-11T06:06:16.531Z';
+  __info__.hash = '661b829';
 -->
