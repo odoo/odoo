@@ -30,6 +30,7 @@ class RecurrenceRule(models.Model):
         # of those events with the original google id. The next sync will then correctly
         # delete those events from Google.
         vals = []
+        future_events_update = self._context.get('future_events_update', False)
         for event in events.filtered('google_id'):
             if event.active and event.google_id != event.recurrence_id._get_event_google_id(event):
                 vals += [{
@@ -40,7 +41,8 @@ class RecurrenceRule(models.Model):
                     'active': False,
                     'need_sync': True,
                 }]
-                event._google_delete(google_service, event.google_id)
+                if not future_events_update:
+                    event._google_delete(google_service, event.google_id)
                 event.google_id = False
         self.env['calendar.event'].create(vals)
 
@@ -64,8 +66,8 @@ class RecurrenceRule(models.Model):
 
     def _write_events(self, values, dtstart=None):
         values.pop('google_id', False)
-        # If only some events are updated, sync those events.
-        values['need_sync'] = bool(dtstart)
+        # Do not sync events, they are already updated in patch requests.
+        values['need_sync'] = False
         return super()._write_events(values, dtstart=dtstart)
 
     def _cancel(self):

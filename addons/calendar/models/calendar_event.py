@@ -579,15 +579,12 @@ class Meeting(models.Model):
                     self._rewrite_recurrence(values, time_values, recurrence_values)
                 else:
                     # Update future events
-                    detached_events |= self._split_recurrence(time_values)
-                    self.recurrence_id._write_events(values, dtstart=future_update_start)
+                    detached_events |= self._update_future_events(values, time_values, recurrence_values, future_update_start)
         else:
             super().write(values)
             self._sync_activities(fields=values.keys())
 
-        # We reapply recurrence for future events and when we add a rrule and 'recurrency' == True on the event
-        if recurrence_update_setting not in ['self_only', 'all_events'] and not break_recurrence:
-            detached_events |= self._apply_recurrence_values(recurrence_values, future=recurrence_update_setting == 'future_events')
+        detached_events |= self._handle_apply_recurrence_values(recurrence_values, recurrence_update_setting, break_recurrence)
 
         (detached_events & self).active = False
         (detached_events - self).with_context(archive_on_error=True).unlink()
@@ -620,6 +617,21 @@ class Meeting(models.Model):
                 )
 
         return True
+
+    def _update_future_events(self, values, time_values, recurrence_values, future_update_start):
+        """ Method to update future events. It can be overriden on inherited modules to change its behavior.
+        """
+        detached_events = self.env['calendar.event']
+        detached_events |= self._split_recurrence(time_values)
+        self.recurrence_id._write_events(values, dtstart=future_update_start)
+        return detached_events
+
+    def _handle_apply_recurrence_values(self, recurrence_values, recurrence_update_setting, break_recurrence):
+        """ Method to apply recurrence values. It can be overriden on inherited modules to change its behavior.
+        """
+        # We reapply recurrence for future events and when we add a rrule and 'recurrency' == True on the event
+        if recurrence_update_setting not in ['self_only', 'all_events'] and not break_recurrence:
+            return self._apply_recurrence_values(recurrence_values, future=recurrence_update_setting == 'future_events')
 
     def name_get(self):
         """ Hide private events' name for events which don't belong to the current user

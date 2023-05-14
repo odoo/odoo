@@ -213,6 +213,30 @@ class Meeting(models.Model):
                 commands += [(0, 0, {'duration': duration, 'interval': interval, 'name': name, 'alarm_type': alarm_type})]
         return commands
 
+    def _update_future_events(self, values, time_values, recurrence_values, future_update_start):
+        """ Update future events time and info and create a new recurrence for them.
+        """
+        detached_events = self.env['calendar.event']
+        if time_values:
+            parsed_start = parse(time_values['start']) if isinstance(time_values['start'], str) else time_values['start']
+            parsed_stop = parse(time_values['stop']) if isinstance(time_values['stop'], str) else time_values['stop']
+
+        for record in self.recurrence_id._get_events_from(self.start):
+            if time_values:
+                    time_values['start'] = datetime.combine(record.start, parsed_start.time())
+                    time_values['stop'] = datetime.combine(record.start, parsed_stop.time())
+            record.write({**values, **time_values, **{'need_sync': False}})
+
+        recurrence = self.recurrence_id._split_from(self, recurrence_values)
+        # recurrence.with_context(future_events_update=True)._apply_recurrence()
+
+        return detached_events
+
+    def _handle_apply_recurrence_values(self, recurrence_values, recurrence_update_setting, break_recurrence):
+        """ Override to skip this method in parent module 'calendar'.
+        """
+        return self.env['calendar.event']
+
     def _rewrite_recurrence(self, values, time_values, recurrence_values):
         """ Update the events when changing time information within the same day.
         When changing recurrence values, patch the recurrence and recreate events locally.
@@ -298,7 +322,8 @@ class Meeting(models.Model):
             self.recurrence_id.calendar_event_ids.write({'active': False, 'need_sync': False})
         elif recurrence_update_setting == 'future_events':
             detached_events = self.recurrence_id._stop_at(self)
-            detached_events.write({'active': False})
+            # Do not sync the deletion to avoid spam, the patch method above already deletes them in Google.
+            detached_events.write({'active': False, 'need_sync': False})
 
     def _google_values(self):
         if self.allday:
