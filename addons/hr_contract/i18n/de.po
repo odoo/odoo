@@ -85,7 +85,7 @@ msgid ""
 "                                    In Contract Since\n"
 "                                </span>"
 msgstr ""
-"<span class=\"o_stat_text text-danger\" attrs=\"{'invisible' : [('contract_warning', '=', False)]}\" title=\"Unter Vertrag seit\">\n"
+"<span class=\"o_stat_text text-danger\" attrs=\"{'invisible' : [('contract_warning', '=', False)]}\" title=\"In Contract Since\">\n"
 "                                  Unter Vertrag seit\n"
 "                                </span>"
 
@@ -97,7 +97,7 @@ msgid ""
 "Contract Since</span>"
 msgstr ""
 "<span class=\"o_stat_text text-success\" attrs=\"{'invisible' : "
-"[('contract_warning', '=', True)]}\" title=\"Unter Vertrag seit\"> Unter "
+"[('contract_warning', '=', True)]}\" title=\"In Contract Since\"> Unter "
 "Vertrag seit</span>"
 
 #. module: hr_contract
@@ -139,7 +139,7 @@ msgstr "Aktivitäten"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivität Ausnahme Dekoration"
+msgstr "Aktivitätsausnahme-Dekoration"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_state
@@ -250,18 +250,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contracts_count
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contracts_count
 msgid "Contract Count"
-msgstr "Anzahl der Verträge"
+msgstr "Anzahl Verträge"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Details"
-msgstr "Vertragsdetails"
+msgstr "Vertragseinzelheiten"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_departure_wizard_view_form
 msgid "Contract End Date"
-msgstr "Datum des Vertragsendes"
+msgstr "Enddatum des Vertrags"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
@@ -289,7 +289,7 @@ msgstr "Datum Vertragsbeginn"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_type_id
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__contract_type_id
 msgid "Contract Type"
-msgstr "Arbeitsvertragstyp"
+msgstr "Vertragsart"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__contract_wage
@@ -340,7 +340,7 @@ msgstr "Verträge"
 #: model:ir.actions.act_window,name:hr_contract.hr_contract_history_to_review_view_list_action
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_search
 msgid "Contracts to Review"
-msgstr "zu prüfende Verträge"
+msgstr "Zu prüfende Verträge"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__under_contract_state
@@ -356,7 +356,7 @@ msgstr "Land"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__country_code
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract_history__country_code
 msgid "Country Code"
-msgstr "Landescode"
+msgstr "Ländercode"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_history_view_form
@@ -434,7 +434,8 @@ msgstr "Austrittassistent"
 #, python-format
 msgid ""
 "Departure date can't be earlier than the start date of current contract."
-msgstr "Austrittsdatum kann nicht vor dem Vertragsstart liegen."
+msgstr ""
+"Austrittsdatum kann nicht vor dem Startdatun des aktuellen Vertrags liegen."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__display_name
@@ -451,7 +452,7 @@ msgstr "Vertrag bearbeiten"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Employed"
-msgstr "Angestellt"
+msgstr "Beschäftigt"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee

@@ -46,10 +46,10 @@ msgstr ""
 "            <p class=\"o_view_nocontent_smiling_face\">\n"
 "                Fügen Sie der Berechtigungsliste Adressen hinzu.\n"
 "            </p><p>\n"
-"                Um Sie vor Spam und Antwortschleifen zu schützen, blockiert Odoo automatisch E-Mails E-Mails,\n"
-"                die an Ihrem Gateway ankommen, ab einer Grenze von <b>%(threshold)i</b> E-Mails pro <b>%(minutes)i</b>\n"
-"                Minuten. Wenn es Adressen gibt, von denen Sie sehr häufig Nachrichten erhalten müssen,\n"
-"                können Sie diese unten hinzufügen, und Odoo wird sie dann weiterleiten..\n"
+"                Um Sie vor Spam und Antwortschleifen zu schützen, blockiert Odoo automatisch E-Mails,\n"
+"                die mit einer Häufigkeit von <b>%(threshold)i</b> E-Mails pro <b>%(minutes)i</b>\n"
+"                Minuten an Ihrem Gateway ankommen. Wenn es Adressen gibt, von denen Sie sehr häufig Nachrichten erhalten müssen,\n"
+"                können Sie diese unten hinzufügen, und Odoo wird sie dann nicht blockieren.\n"
 "            </p>"
 
 #. module: mail
@@ -57,21 +57,21 @@ msgstr ""
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "\"%(activity_name)s: %(summary)s\" assigned to you"
-msgstr "\"%(activity_name)s: %(summary)s\" an Sie zugewiesen"
+msgstr "„%(activity_name)s: %(summary)s“ an Sie zugewiesen"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/rtc.js:0
 #, python-format
 msgid "\"%s\" requires \"%s\" access"
-msgstr "„%s“ erfordert „%s“ Zugang"
+msgstr "„%s“ erfordert „%s“-Zugriff"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/rtc.js:0
 #, python-format
 msgid "\"%s\" requires microphone access"
-msgstr "„%s“ erfordert Zugang zum Mikrofon"
+msgstr "„%s“ erfordert Zugriff aufs Mikrofon"
 
 #. module: mail
 #. odoo-javascript
@@ -103,7 +103,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/notification_request_view.js:0
 #, python-format
 msgid "%(odoobotName)s has a request"
-msgstr "%(odoobotName)s hat ein Anliegen"
+msgstr "%(odoobotName)s hat eine Anfrage"
 
 #. module: mail
 #. odoo-python
@@ -111,7 +111,7 @@ msgstr "%(odoobotName)s hat ein Anliegen"
 #, python-format
 msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
 msgstr ""
-"%(user_name)s hat Sie eingeladen %(document)s Dokument zu beobachten: "
+"%(user_name)s hat Sie eingeladen, dem Dokument %(document)s zu folgen: "
 "%(title)s"
 
 #. module: mail
@@ -183,7 +183,7 @@ msgstr "%s erstellt"
 #: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #, python-format
 msgid "%s days overdue"
-msgstr "%s überfällige Tage"
+msgstr "%s Tage überfällig"
 
 #. module: mail
 #. odoo-javascript
@@ -287,7 +287,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "0 Future"
-msgstr "0 zukünftig"
+msgstr "0 Zukünftig"
 
 #. module: mail
 #. odoo-javascript
@@ -728,9 +728,9 @@ msgid ""
 "messages.</p><p><i>You might need to invite users from the Settings app "
 "first.</i></p>"
 msgstr ""
-"<p><b>Mit Mitarbeitern austauschen</b>, in Echtzeit, mithilfe von "
-"Direktnachrichten.</p><p><i>Möglicherweise müssen Sie dafür zunächst die "
-"Benutzer im Menü „Einstellungen“ einladen.</i></p>"
+"<p><b>Tauschen Sie sich</b> mithilfe von Direktnachrichten in Echtzeit <b> "
+"mit Kollegen aus</b>.</p><p><i>Möglicherweise müssen Sie dafür zunächst die "
+"Benutzer in den Einstellungen einladen.</i></p>"
 
 #. module: mail
 #. odoo-javascript
@@ -741,10 +741,11 @@ msgid ""
 " notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. "
 "Start your message with <i>'/'</i> to get the list of possible commands.</p>"
 msgstr ""
-"<p><b>Schreiben Sie eine Mitteilung</b> an die Mitglieder dieses Kanals.</p>"
-" <p>Benachrichtigen Sie eine Person mit <i>„@“</i> oder verknüpfen Sie einen"
-" anderen Kanal mit <i>„#“</i>. Beginnen Sie Ihre Mitteilung mit <i>„/“</i>, "
-"um die Liste mit möglichen Befehlen anzuzeigen.</p>"
+"<p><b>Schreiben Sie hier eine Mitteilung</b> an die Mitglieder dieses "
+"Kanals.</p> <p>Benachrichtigen Sie eine Person mit <i>„@“</i> oder "
+"verknüpfen Sie einen anderen Kanal mit <i>„#“</i>. Beginnen Sie Ihre "
+"Mitteilung mit <i>„/“</i>, um die Liste mit möglichen Befehlen "
+"anzuzeigen.</p>"
 
 #. module: mail
 #. odoo-javascript
@@ -757,22 +758,22 @@ msgid ""
 msgstr ""
 "<p>Mit Kanälen können Informationen mühelos für verschiedene Themen und "
 "Gruppen organisiert werden.</p> <p>Sie können <b>Ihren ersten Kanal "
-"erstellen</b> (z. B. Vertrieb, Marketing, Produkt XYZ, After-Work-Party, und"
-" mehr).</p>"
+"erstellen</b> (z. B. Verkauf, Marketing, Produkt XYZ, After-Work-Party und "
+"mehr).</p>"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "<p>Create a channel here.</p>"
-msgstr "<p>Erstelle hier einen Kanal.</p>"
+msgstr "<p>Erstellen Sie hier einen Kanal.</p>"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "<p>Create a public or private channel.</p>"
-msgstr "<p>Einen öffentlichen oder privaten Kanal erstellen.</p>"
+msgstr "<p>Erstellen Sie einen öffentlichen oder privaten Kanal.</p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -836,7 +837,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
 msgid "<strong>Original note:</strong>"
-msgstr "<strong>Originale Notiz:</strong>"
+msgstr "<strong>Originalnotiz:</strong>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -878,7 +879,7 @@ msgstr "Ein Kanal-Mitglied muss ein Partner oder ein Gast sein."
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "A channel of type 'chat' cannot have more than two users."
-msgstr "Ein Kanal vom Typ \"Chat\" kann nicht mehr als zwei Benutzer haben."
+msgstr "Ein Kanal vom Typ „Chat“ kann nicht mehr als zwei Benutzer haben."
 
 #. module: mail
 #. odoo-python
@@ -913,8 +914,8 @@ msgid ""
 "A shortcode is a keyboard shortcut. For instance, you type #gm and it will "
 "be transformed into \"Good Morning\"."
 msgstr ""
-"Ein Kurzbefehl ist ein Tastatur-Kürzel. Zum Beispiel wird #gm in „Good "
-"Morning“ umgewandelt."
+"Ein Kurzbefehl ist ein Tastaturkürzel. Zum Beispiel wird #gm in „Guten "
+"Morgen“ umgewandelt."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_users_settings_volumes_partner_or_guest_exists
@@ -1024,7 +1025,7 @@ msgstr "Folgeaktion"
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr "Aktive Fenster ansicht"
+msgstr "Ansicht des Aktionsfensters"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__activity_category
@@ -1033,8 +1034,9 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
-"Aktion führt gegebenfalls zu weiteren Funktionen wie Kalenderansicht oder "
-"automatischer Ausführung wenn ein Dokument hochgeladen wurde."
+"Aktionen führen gegebenfalls zu weiteren Funktionen wie zur Öffnung der "
+"Kalenderansicht oder zur automatischen „Erledigt“-Markierung, wenn ein "
+"Dokument hochgeladen wurde."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_form
@@ -1117,12 +1119,12 @@ msgstr "Aktivität"
 #: model:ir.model.fields,field_description:mail.field_res_partner__activity_exception_decoration
 #: model:ir.model.fields,field_description:mail.field_res_users__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivität Ausnahme-Dekoration"
+msgstr "Aktivitätsausnahme-Dekoration"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
 msgid "Activity Mixin"
-msgstr "Aktivität Mixin"
+msgstr "Aktivitäts-Mixin"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
@@ -1554,7 +1556,7 @@ msgstr "Mir zuweisen/Nicht mir zuweisen"
 #: code:addons/mail/static/src/js/m2x_avatar_user.js:0
 #, python-format
 msgid "Assign/unassign to me"
-msgstr "Zuweisung an mich (aufheben)"
+msgstr "Mir zuweisen/Nicht mir zuweisen"
 
 #. module: mail
 #. odoo-javascript
@@ -1611,7 +1613,7 @@ msgstr "Anzahl Anhänge"
 #: code:addons/mail/static/src/components/chatter/chatter.xml:0
 #, python-format
 msgid "Attachment counter loading..."
-msgstr "Anhangzähler laden..."
+msgstr "Anhangzähler lädt ..."
 
 #. module: mail
 #. odoo-javascript
@@ -1674,7 +1676,7 @@ msgstr "Autorisierte Gruppe"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__auto_delete
 #: model:ir.model.fields,field_description:mail.field_mail_template__auto_delete
 msgid "Auto Delete"
-msgstr "Autom. Löschen"
+msgstr "Automatisch löschen"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
@@ -1926,7 +1928,7 @@ msgstr "Farbe der Schaltflächen"
 #: code:addons/mail/models/mail_thread_cc.py:0
 #, python-format
 msgid "CC Email"
-msgstr "CC E-mail"
+msgstr "E-mail-CC"
 
 #. module: mail
 #. odoo-javascript
@@ -1968,7 +1970,7 @@ msgstr "COOL-Taste"
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_call
 msgid "Call"
-msgstr "Anrufe"
+msgstr "Anruf"
 
 #. module: mail
 #. odoo-javascript
@@ -1986,18 +1988,18 @@ msgstr "Darf stornieren"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__can_edit_body
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__can_edit_body
 msgid "Can Edit Body"
-msgstr "Darf Körper bearbeiten"
+msgstr "Darf Inhalt bearbeiten"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_resend
 msgid "Can Resend"
-msgstr "Kann erneut gesendet werden"
+msgstr "Darf erneut senden"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__can_write
 #: model:ir.model.fields,field_description:mail.field_mail_template__can_write
 msgid "Can Write"
-msgstr "Kann schreiben"
+msgstr "Darf schreiben"
 
 #. module: mail
 #. odoo-python
@@ -2082,7 +2084,7 @@ msgstr "Steinbock"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__email_cc
 msgid "Carbon copy message recipients"
-msgstr "CC-Nachrichten-Empfänger"
+msgstr "CC-Empfänger"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_cc
@@ -2092,7 +2094,7 @@ msgstr "CC-Empfänger"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_cc
 msgid "Carbon copy recipients (placeholders may be used here)"
-msgstr "CC-Empfänger  (Platzhalter können verwendet werden)"
+msgstr "CC-Empfänger (Platzhalter können verwendet werden)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall_formatted
@@ -2102,7 +2104,7 @@ msgstr "Catch-All"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__catchall_email
 msgid "Catchall Email"
-msgstr "Catchall-E-Mail"
+msgstr "Catcha-All-E-Mail"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_cc
@@ -2137,7 +2139,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/tracking_value/tracking_value.xml:0
 #, python-format
 msgid "Changed"
-msgstr "geändert"
+msgstr "Geändert"
 
 #. module: mail
 #. odoo-javascript
@@ -2227,7 +2229,7 @@ msgstr "Chat"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_shortcode_action
 msgid "Chat Shortcode"
-msgstr "Chat Kurzbefehl"
+msgstr "Kurzbefehl für Chat"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__channel_type
@@ -2250,7 +2252,7 @@ msgstr "Chats"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__child_ids
 msgid "Child Messages"
-msgstr "Kommentare"
+msgstr "Untergeordnete Nachrichten"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -2265,7 +2267,11 @@ msgid ""
 "EMail: send directly emails\n"
 "Post as Message: post on document and notify followers\n"
 "Post as Note: log a note on document"
-msgstr "Methode für E-Mail-Versand wählen:"
+msgstr ""
+"Methode für E-Mail-Versand wählen:\n"
+"E-Mail: E-Mails direkt versenden\n"
+"Als Nachricht hinterlassen: in Dokument hinterlassen und Follower benachrichtigen\n"
+"Als Notiz hinterlassen: eine Notiz im Dokument hinterlassen"
 
 #. module: mail
 #. odoo-javascript
@@ -2367,32 +2373,33 @@ msgstr "Antworten auf einer bestimmten E-Mail-Adresse sammeln"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated carbon copy recipients addresses"
-msgstr "Komma separierte Carbon-Copy Emailempfängerliste"
+msgstr "Durch Komma getrennte E-Mail-Adresse der Empfänger im CC"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated ids of recipient partners"
-msgstr "Komma separierte ID's Liste der Emailempfänger"
+msgstr "Durch Komma getrennte Empfänger-IDs der Partner"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__partner_to
 msgid ""
 "Comma-separated ids of recipient partners (placeholders may be used here)"
 msgstr ""
-"Kommagetrennte Liste mit ids der verbundenen Partner (Platzhalter müssen "
-"eingesetzt werden)."
+"Durch Komma getrennte Empfänger-IDs der Partner (Platzhalter können "
+"verwendet werden)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_to
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "Comma-separated recipient addresses"
-msgstr "Komma separierte Emailempfängeradressen"
+msgstr "Durch Komma getrennte E-Mail-Adresse der Empfänger"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_to
 msgid "Comma-separated recipient addresses (placeholders may be used here)"
 msgstr ""
-"Komma-getrennte Empfängeradressen (Platzhalter können verwendet werden)"
+"Durch Komma getrennte E-Mail-Adresse der Empfänger (Platzhalter können "
+"verwendet werden)"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__message_type__comment
@@ -3263,7 +3270,7 @@ msgstr "Dateien hierher ziehen"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
 msgid "Due Date"
-msgstr "Fälligkeit"
+msgstr "Fälligkeitsdatum"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_date_deadline_range
@@ -3399,7 +3406,7 @@ msgstr "E-Mail-Adresse"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
 msgid "Email Aliases"
-msgstr "E-Mail Aliases"
+msgstr "E-Mail-Aliases"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
@@ -6307,7 +6314,7 @@ msgstr "Neue Nachricht"
 #: code:addons/mail/static/src/components/message_list/message_list.xml:0
 #, python-format
 msgid "New messages"
-msgstr "Neue Nachricht"
+msgstr "Neue Nachrichten"
 
 #. module: mail
 #. odoo-javascript
@@ -6405,7 +6412,7 @@ msgstr "Kein Datensatz"
 #: code:addons/mail/static/src/webclient/commands/mail_providers.js:0
 #, python-format
 msgid "No channel found"
-msgstr "Kein Channel gefunden"
+msgstr "Kein Kanal gefunden"
 
 #. module: mail
 #. odoo-javascript
@@ -6789,8 +6796,8 @@ msgid ""
 "Once a message has been starred, you can come back and review it at any time"
 " here."
 msgstr ""
-"Wenn Sie eine Nachricht markiert haben, können Sie jederzeit hierher "
-"zurückkehren und sie prüfen."
+"Wenn Sie eine Nachricht mit einem Sternchen versehen haben, können Sie "
+"jederzeit hierher zurückkehren und sie ansehen."
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_users_settings_unique_user_id
@@ -6990,10 +6997,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
-"Optionale Übersetzung (ISO Code) zur Auswahl beim E-Mailversand. Falls es "
-"keinen Eintrag gibt, wird die Englische Version verwendet. Es sollte sich "
-"normalerweise um einen Platzhalter Ausdruck handeln, der die passende "
-"Sprache enthält, z. B. {{ object.partner_id.lang }}."
+"Optionale Übersetzung (ISO-Code) zur Auswahl beim E-Mailversand. Falls es "
+"keinen Eintrag gibt, wird die englische Version verwendet. Es sollte sich "
+"normalerweise um einen Platzhalterausdruck handeln, der die passende Sprache"
+" enthält, z. B. {{ object.partner_id.lang }}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_mode
@@ -7121,7 +7128,7 @@ msgstr "Übergeordnete Nachricht"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_model_id
 msgid "Parent Model"
-msgstr "Hauptvorlage"
+msgstr "Übergeordnetes Modell"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_thread_id
@@ -8355,7 +8362,7 @@ msgstr "Senden als"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
 msgid "Send email"
-msgstr "E-Mail senden"
+msgstr "E-Mail versenden"
 
 #. module: mail
 #. odoo-javascript
@@ -10162,7 +10169,7 @@ msgstr "Bild ansehen"
 #: code:addons/mail/static/src/components/discuss_sidebar_category/discuss_sidebar_category.xml:0
 #, python-format
 msgid "View or join channels"
-msgstr "Channel ansehen oder beitreten"
+msgstr "Kanal ansehen oder beitreten"
 
 #. module: mail
 #. odoo-javascript

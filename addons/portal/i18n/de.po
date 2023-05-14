@@ -311,7 +311,7 @@ msgstr "Zugriffswarnung"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "Account Security"
-msgstr "Account Sicherheit"
+msgstr "Kontosicherheit"
 
 #. module: portal
 #. odoo-python
@@ -700,7 +700,7 @@ msgid ""
 "                Your login is still necessary for interactive usage."
 msgstr ""
 "Hier ist Ihr neuer API-Schlüssel, verwenden Sie ihn anstelle eines Passworts für den RPC-Zugang.\n"
-"                Ihr Login ist für die interaktive Nutzung weiterhin erforderlich."
+"                Ihr Anmeldung ist für die interaktive Nutzung weiterhin erforderlich."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_breadcrumbs
@@ -726,7 +726,7 @@ msgstr "Wichtig:"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Internal Note"
-msgstr "Interne Mitteilung"
+msgstr "Interne Notiz"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -756,7 +756,8 @@ msgstr "Ungültige E-Mail-Adresse"
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
 msgstr ""
-"E-mail Addresse ungültig. Bitte geben Sie eine gültige E-mail Adresse ein."
+"Ungültige E-Mail-Adresse! Bitte geben Sie eine gültige E-mail E-Mail-"
+"Adresse."
 
 #. module: portal
 #. odoo-python
@@ -840,8 +841,8 @@ msgid ""
 "Model %(model_name)s does not support token signature, as it does not have "
 "%(field_name)s field."
 msgstr ""
-"Das Modell %(model_name)s unterstützt die Token-Signatur nicht, da es "
-"kein%(field_name)s Feld hat."
+"Das Modell %(model_name)s unterstützt die Token-Signatur nicht, da es kein "
+"%(field_name)s-Feld hat."
 
 #. module: portal
 #. odoo-python
@@ -873,7 +874,7 @@ msgstr "Neuer API-Schlüssel"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "New Password:"
-msgstr "Neues Passwort: "
+msgstr "Neues Passwort:"
 
 #. module: portal
 #. odoo-javascript
@@ -933,7 +934,7 @@ msgstr "Passwort aktualisiert!"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password:"
-msgstr "Passwort: "
+msgstr "Passwort:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -1033,22 +1034,22 @@ msgstr "Empfänger"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__resource_ref
 msgid "Related Document"
-msgstr "Verbundenes Dokument"
+msgstr "Zugehöriges Dokument"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_id
 msgid "Related Document ID"
-msgstr "Zugehörige Dokumenten-ID"
+msgstr "Zugehörige Dokument-ID"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_model
 msgid "Related Document Model"
-msgstr "Zugehöriges Dokumenten-Modell"
+msgstr "Zugehöriges Dokumentmodell"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Revoke Access"
-msgstr "Zugang widerrufen"
+msgstr "Zugriff widerrufen"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -1128,7 +1129,7 @@ msgstr ""
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Some required fields are empty."
-msgstr "Einige benötigte Felder sind leer."
+msgstr "Einige erforderliche Felder sind leer."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details_fields
@@ -1190,7 +1191,7 @@ msgstr "Der Anhang existiert nicht oder Sie besitzen keine Zugriffsrechte."
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The contact \"%s\" does not have a valid email."
-msgstr "Der Kontakt \"%s\" hat keine gültige E-Mail-Adresse."
+msgstr "Der Kontakt „%s“ hat keine gültige E-Mail-Adresse."
 
 #. module: portal
 #. odoo-python
@@ -1207,9 +1208,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The document does not exist or you do not have the rights to access it."
-msgstr ""
-"Das Dokument existiert nicht oder Sie verfügen nicht über eine "
-"Zugriffsberechtigung."
+msgstr "Das Dokument existiert nicht oder Sie besitzen keine Zugriffsrechte."
 
 #. module: portal
 #. odoo-javascript
@@ -1240,7 +1239,7 @@ msgstr ""
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "The partner \"%s\" already has the portal access."
-msgstr "Der Partner \"%s\" hat bereits Zugang zum Portal."
+msgstr "Der Partner „%s“ hat bereits Zugang zum Portal."
 
 #. module: portal
 #. odoo-python
@@ -1257,7 +1256,7 @@ msgid ""
 "The template \"Portal: new user\" not found for sending email to the portal "
 "user."
 msgstr ""
-"Die Vorlage \"Portal: neuer Benutzer\" für den Versand von E-Mails an den "
+"Die Vorlage „Portal: neuer Benutzer“ für den Versand von E-Mails an den "
 "Portalbenutzer wurde nicht gefunden."
 
 #. module: portal
@@ -1300,7 +1299,7 @@ msgstr ""
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
-"Dieser Text wird an jede E-Mail angehängt, die an neue Benutzer des Portals "
+"Dieser Text wird in jede E-Mail eingefügt, die an neue Benutzer des Portals "
 "geschickt werden."
 
 #. module: portal
@@ -1459,7 +1458,7 @@ msgstr "Falsches Passwort."
 #: code:addons/portal/wizard/portal_share.py:0
 #, python-format
 msgid "You are invited to access %s"
-msgstr "Sie sind eingeladen, darauf zuzugreifen %s"
+msgstr "Sie sind eingeladen, auf %s zuzugreifen "
 
 #. module: portal
 #. odoo-python
@@ -1490,7 +1489,7 @@ msgstr "Sie sollten „"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "You should first grant the portal access to the partner \"%s\"."
-msgstr "Sie sollten dem Partner \"%s\" erst Zugang zum Portal gewähren."
+msgstr "Sie sollten dem Partner „%s“ erst Zugang zum Portal gewähren."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome

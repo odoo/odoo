@@ -5,9 +5,11 @@
 # Translators:
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
-# Lucia Pacheco <lpo@odoo.com>, 2023
+# Lucia Pacheco, 2023
 # Martin Trigaux, 2023
 # Fernanda Alvarez, 2023
+# Iran Villalobos López, 2023
+# Aimée Mendoza Sánchez, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-17 06:42+0000\n"
 "PO-Revision-Date: 2023-01-17 14:59+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1059,6 +1061,9 @@ msgid ""
 "All conditional display questions need a triggering question.\n"
 "Please disable \"Conditional Display\" or specify a triggering question."
 msgstr ""
+"Todas las preguntas de visualización condicional necesitan una pregunta "
+"desencadenante. Inhabilite la opción \"visualización condicional\" o "
+"especifíque una pregunta desencadenante."
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__all
@@ -1071,6 +1076,9 @@ msgid ""
 "All questions triggered by another need a triggering answer.\n"
 "Please disable \"Conditional Display\" or specify a triggering answer."
 msgstr ""
+"Todas las preguntas desencadenadas necesitan una pregunta que las habilite. "
+"Inhabilite la opción \"visualización condicional\" o especifíque una "
+"pregunta desencadenante."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -1080,7 +1088,7 @@ msgstr "Todas las encuestas"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__allowed_triggering_question_ids
 msgid "Allowed Triggering Questions"
-msgstr ""
+msgstr "Preguntas desencadenantes permitidas"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug2
@@ -1596,6 +1604,8 @@ msgstr "Visualización condicional"
 msgid ""
 "Conditional display is not available when questions are randomly picked."
 msgstr ""
+"La visualización condicional no está disponible cuando las preguntas se "
+"eligen al azar."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_3
@@ -1919,12 +1929,12 @@ msgstr "Mostrar progreso como"
 #: code:addons/survey/static/src/views/widgets/survey_question_trigger/survey_question_trigger.js:0
 #, python-format
 msgid "Displayed if \"%s: %s\""
-msgstr ""
+msgstr "Mostrado si \"%s: %s\""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Displayed when the answer entered is not valid."
-msgstr ""
+msgstr "Mostrrado cuando la respuesta proporcionada no es válida."
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_1
@@ -1969,7 +1979,7 @@ msgstr "Cajón"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Duplicate Question"
-msgstr ""
+msgstr "Pregunta duplicada"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -4425,7 +4435,7 @@ msgstr "Etiqueta de la encuesta"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Survey Link"
-msgstr ""
+msgstr "Enlace de la encuesta "
 
 #. module: survey
 #. odoo-python
@@ -4825,6 +4835,7 @@ msgstr "Este mensaje aparecerá cuando se termine la encuesta"
 msgid ""
 "This question is positioned before its trigger (\"%s\") and will be skipped."
 msgstr ""
+"Esta pregunta esta colocada antes de su activador (\"%s\") y será omitida. "
 
 #. module: survey
 #. odoo-python
@@ -5550,6 +5561,7 @@ msgstr "dropdown-item d-flex align-items-center justify-content-between"
 msgid ""
 "e.g.  'Rick Sanchez' <rick_sanchez@example.com>, hictor_vugo@example.com"
 msgstr ""
+"e.g.  'Rick Sanchez' <rick_sanchez@example.com>, hictor_vugo@example.com"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -5683,4 +5695,4 @@ msgstr "a"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "⚠️ This question is positioned before its trigger and will be skipped."
-msgstr ""
+msgstr "⚠️ Esta pregunta esta colocada antes de su activador y será omitida. "
