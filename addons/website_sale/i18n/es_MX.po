@@ -10,8 +10,9 @@
 # Martin Trigaux, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Kevin Harrings <kha@odoo.com>, 2023
-# Lucia Pacheco <lpo@odoo.com>, 2023
+# Lucia Pacheco, 2023
 # Fernanda Alvarez, 2023
+# Aimée Mendoza Sánchez, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-23 09:08+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -334,6 +335,12 @@ msgid ""
 "                </span>\n"
 "                <span class=\"fa fa-times ms-2 o_remove_order_location\" aria-label=\"Remove this location\" title=\"Remove this location\"/>"
 msgstr ""
+"<span class=\"o_order_location\">\n"
+"                    <b class=\"o_order_location_name\"/>\n"
+"                    <br/>\n"
+"                    <i class=\"o_order_location_address\"/>\n"
+"                </span>\n"
+"                <span class=\"fa fa-times ms-2 o_remove_order_location\" aria-label=\"Remover esta ubicación\" title=\"Remover esta ubicación\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -416,6 +423,8 @@ msgid ""
 "<span>Sign In</span>\n"
 "                                                    <span class=\"fa fa-sign-in\"/>"
 msgstr ""
+"<span>Iniciar sesión</span>\n"
+"                                                    <span class=\"fa fa-sign-in\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
@@ -423,6 +432,8 @@ msgid ""
 "<span>Sign In</span>\n"
 "                            <span class=\"fa fa-sign-in\"/>"
 msgstr ""
+"<span>Iniciar sesión</span>\n"
+"                            <span class=\"fa fa-sign-in\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -868,7 +879,7 @@ msgstr "Aplicar"
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:0
 #, python-format
 msgid "Are you sure you want to delete this badge?"
-msgstr ""
+msgstr "¿Está seguro de que quiere borrar esta insignia?"
 
 #. module: website_sale
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_1
@@ -921,7 +932,7 @@ msgstr "Atributos"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Automatically send abandoned checkout emails"
-msgstr ""
+msgstr "Envío automático de correos electrónicos de pagos abandonados"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1636,7 +1647,7 @@ msgstr "Divisa predeterminada"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_id
 msgid "Default Pricelist if any"
-msgstr ""
+msgstr "Lista de precios predeterminada si existe"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1671,7 +1682,7 @@ msgstr "Gastos de envío"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__access_point_address
 msgid "Delivery Point Address"
-msgstr ""
+msgstr "Dirección del punto de entrega"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_delivery
@@ -1917,7 +1928,7 @@ msgstr "Insertar código"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__enabled_delivery
 msgid "Enable Shipping"
-msgstr ""
+msgstr "Activar envío"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1938,7 +1949,7 @@ msgstr "Ergonómico"
 #: code:addons/website_sale/models/product_public_category.py:0
 #, python-format
 msgid "Error! You cannot create recursive categories."
-msgstr ""
+msgstr "¡Error! No puede crear categorías recursivas."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2694,7 +2705,7 @@ msgstr "No se encontró ningún carrito abandonado"
 #: code:addons/website_sale/controllers/delivery.py:0
 #, python-format
 msgid "No pick-up point available for that shipping address"
-msgstr ""
+msgstr "No hay puntos de recogida disponibles para esa dirección de envío"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -3863,7 +3874,7 @@ msgstr "Seleccionar cantidad"
 #: code:addons/website_sale/static/src/js/website_sale_delivery.js:0
 #, python-format
 msgid "Select a pick-up point"
-msgstr ""
+msgstr "Seleccione un punto de recogida"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban

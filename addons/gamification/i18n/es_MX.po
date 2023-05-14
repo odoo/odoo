@@ -5,7 +5,7 @@
 # Translators:
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
-# Lucia Pacheco <lpo@odoo.com>, 2023
+# Lucia Pacheco, 2023
 # Martin Trigaux, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Fernanda Alvarez, 2023
@@ -59,8 +59,8 @@ msgid ""
 "<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this"
 " challenge."
 msgstr ""
-"<br/>Nadie logró alcanzar todas las metas, por lo que no se otorgará la "
-"insignia como recompensa de este desafío."
+"<br/>Nadie logró alcanzar todas las metas, así que no se otorgará la "
+"insignia de este desafío."
 
 #. module: gamification
 #. odoo-python
@@ -847,7 +847,7 @@ msgid ""
 "A rank correspond to a fixed karma level. The more you have karma, the more your rank is high.\n"
 "                    This is used to quickly know which user is new or old or highly or not active."
 msgstr ""
-"Un rango corresponde a un nivel de karma fijo. Cuanto más karma tiene, más alto es su rango.\n"
+"Un rango corresponde a un nivel de recompensa fijo. Cuantas más recompensas tiene, más alto es su rango.\n"
 "                    Esto se utiliza para saber rápidamente qué usuario es nuevo o tiene más antigüedad, o si es muy o poco activo."
 
 #. module: gamification
@@ -1366,7 +1366,7 @@ msgstr "¡Gane sus primeros puntos y únase a la aventura!"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__end_date
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "End Date"
-msgstr "Fecha final"
+msgstr "Fecha de finalización"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal_definition__batch_mode
@@ -1525,7 +1525,7 @@ msgstr "Ludificación: comprobación de metas del reto"
 #. module: gamification
 #: model:ir.actions.server,name:gamification.ir_cron_consolidate_ir_actions_server
 msgid "Gamification: Karma tracking consolidation"
-msgstr "Ludificación: consolidación del seguimiento de karma"
+msgstr "Ludificación: consolidación del seguimiento de recompensas"
 
 #. module: gamification
 #: model:mail.template,name:gamification.mail_template_data_new_rank_reached
@@ -1685,7 +1685,7 @@ msgstr "¿Cómo se calcula la meta?"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__challenge_category__hr
 msgid "Human Resources / Engagement"
-msgstr "Recursos humanos / Compromiso"
+msgstr "Recursos humanos / participación"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__id
@@ -1731,7 +1731,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_1920
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_1920
 msgid "Image"
-msgstr "Image"
+msgstr "Imagen"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_1024
@@ -1822,32 +1822,32 @@ msgstr "Es un seguidor"
 #: model:ir.model.fields,field_description:gamification.field_res_users__karma
 #: model_terms:ir.ui.view,arch_db:gamification.res_users_view_form
 msgid "Karma"
-msgstr "Karma"
+msgstr "Recompensas"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_res_users__karma_tracking_ids
 msgid "Karma Changes"
-msgstr "Cambios de karma"
+msgstr "Cambios de recompensas"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_form
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_tree
 msgid "Karma Owner"
-msgstr ""
+msgstr "Propietario de las recompensas"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.gamification_karma_tracking_action
 #: model:ir.ui.menu,name:gamification.gamification_karma_tracking_menu
 msgid "Karma Tracking"
-msgstr ""
+msgstr "Rastreo de las recompensas"
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/res_users.py:0
 #, python-format
 msgid "Karma Updates"
-msgstr ""
+msgstr "Actualizaciones de las recompensas"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__last_report_date
@@ -1985,7 +1985,7 @@ msgstr "Mis metas"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_search
 msgid "My Karma"
-msgstr ""
+msgstr "Mis recompensas"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__stat_my_monthly_sending
@@ -2020,7 +2020,7 @@ msgstr "No mandar recordartorio si no hay valor o si es 0."
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__new_value
 msgid "New Karma Value"
-msgstr "Nuevo valor de karma"
+msgstr "Nuevo valor de recompensas"
 
 #. module: gamification
 #: model:mail.template,subject:gamification.email_template_badge_received
@@ -2050,7 +2050,7 @@ msgstr "Próxima fecha de reporte"
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_tracking_action
 msgid "No Karma Tracking"
-msgstr ""
+msgstr "Sin rastreo de recompensas"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goals_from_challenge_act
@@ -2127,7 +2127,7 @@ msgstr "Número de usuarios"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__old_value
 msgid "Old Karma Value"
-msgstr "Antiguo valor de karma"
+msgstr "Antiguo valor de recompensas"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__onchange
@@ -2216,7 +2216,7 @@ msgid ""
 "Python code to be executed for each user. 'result' should contains the new "
 "current value. Evaluated user can be access through object.user_id."
 msgstr ""
-"El código Python a ejecutar para cada usuario. 'result' debe contener el "
+"El código Python a ejecutar para cada usuario. \"result\" debe contener el "
 "nuevo valor actual. Se puede acceder al registro del usuario evaluado "
 "mediante object_user_id."
 
@@ -2234,7 +2234,7 @@ msgstr "Nombre de rango"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_karma_rank
 msgid "Rank based on karma"
-msgstr "Rango basado en karma"
+msgstr "Rango basado en recompensas"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.gamification_karma_ranks_action
@@ -2336,7 +2336,7 @@ msgstr "Insignias requeridas"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__karma_min
 msgid "Required Karma"
-msgstr "Karma requerido"
+msgstr "Recompensas requeridas"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
@@ -2777,7 +2777,7 @@ msgstr "El número de veces que esta insignia ha sido recibida."
 #. module: gamification
 #: model:ir.model.constraint,message:gamification.constraint_gamification_karma_rank_karma_min_check
 msgid "The required karma has to be above 0."
-msgstr "El karma requerido tiene que ser mayor a 0."
+msgstr "La recompensa requerida tiene que ser mayor a 0."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_monetary
@@ -2851,12 +2851,12 @@ msgstr "Total"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_karma_tracking
 msgid "Track Karma Changes"
-msgstr "Seguimiento de cambios de karma"
+msgstr "Seguimiento de cambios de recompensas"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_tracking_action
 msgid "Track the sources of the users karma and monitor"
-msgstr ""
+msgstr "Rastree las fuentes de las recompensas de los usuarios y monitoree"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_tracking_view_form

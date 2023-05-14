@@ -7,6 +7,7 @@
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Fernanda Alvarez, 2023
+# Aimée Mendoza Sánchez, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-23 09:10+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,7 +36,7 @@ msgstr "<strong>Nombre de piso: </strong>"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Point of Sales: </strong>"
-msgstr ""
+msgstr "<strong>Punto de venta: </strong>"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -90,12 +91,12 @@ msgstr "Agregar botón"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/OrderlineNoteButton.js:0
 #, python-format
 msgid "Add kitchen Note"
-msgstr ""
+msgstr "Añadir notas de cocina"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Add kitchen notes on order lines for the kitchen"
-msgstr ""
+msgstr "Añadir notas de cocina en líneas de comandas para dicha área"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -128,6 +129,7 @@ msgstr "Permitir dividir la cuenta"
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
 msgid "Allow custom kitchen notes on Orderlines."
 msgstr ""
+"Permitir la personalización de las notas de cocina en Líneas de comandas"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -172,7 +174,7 @@ msgstr "Archivado"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Are you sure?"
-msgstr ""
+msgstr "¿Está seguro?"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -257,7 +259,7 @@ msgstr "CANCELADO"
 #: code:addons/pos_restaurant/models/pos_config.py:0
 #, python-format
 msgid "Cash Bar"
-msgstr ""
+msgstr "Barra de pago"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
@@ -312,6 +314,7 @@ msgstr "Ajustes de configuración"
 #, python-format
 msgid "Couldn't synchronize the orders for the tables because you are offline"
 msgstr ""
+"No pudo sincronizar las comandas para las mesas porque está sin conexión"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_uid
@@ -504,7 +507,7 @@ msgstr "Comensales:"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "Guests?"
-msgstr ""
+msgstr "¿Tiene invitados?"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__height
@@ -549,12 +552,12 @@ msgstr "Mantener abierto"
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/OrderlineNoteButton.xml:0
 #, python-format
 msgid "Kitchen Note"
-msgstr ""
+msgstr "Nota de cocina"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__note
 msgid "Kitchen Note added by the waiter."
-msgstr ""
+msgstr "Nota de cocina agregada por el mesero."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_orderline_notes
@@ -673,7 +676,7 @@ msgstr "Nota"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Number of Seats?"
-msgstr ""
+msgstr "¿Número de asientos?"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -799,22 +802,22 @@ msgstr "Punto de venta"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 msgid "Pos Iface Orderline Notes"
-msgstr ""
+msgstr "Notas de línea de comandas en la interfaz del PdV"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
 msgid "Pos Iface Printbill"
-msgstr ""
+msgstr "Factura impresa en la interfaz del PdV"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_splitbill
 msgid "Pos Iface Splitbill"
-msgstr ""
+msgstr "Factura dividida en la intefaz del PdV"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_order_printer
 msgid "Pos Is Order Printer"
-msgstr ""
+msgstr "PdV es la impresora de pedidos"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_table_management
@@ -935,7 +938,7 @@ msgstr "Volver a imprimir recibos"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Restaurant & Bar"
-msgstr ""
+msgstr "Restaurant y bar"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor
@@ -1106,7 +1109,7 @@ msgstr "Nombre de la mesa"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Table Name?"
-msgstr ""
+msgstr "¿Nombre de la mesa?"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__table_ids
@@ -1148,6 +1151,7 @@ msgstr "El número por defecto de clientes atendidos en esta mesa."
 #, python-format
 msgid "The orders for the table could not be loaded because you are offline"
 msgstr ""
+"Las comandas para la mesa no se pudieron guardar porque está sin conexión"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids

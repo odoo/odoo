@@ -5,10 +5,11 @@
 # Translators:
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
-# Lucia Pacheco <lpo@odoo.com>, 2023
+# Lucia Pacheco, 2023
 # Martin Trigaux, 2023
-# Iran Villalobos López, 2023
 # Fernanda Alvarez, 2023
+# Iran Villalobos López, 2023
+# Aimée Mendoza Sánchez, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-23 09:10+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -264,6 +265,32 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <!-- Utilizamos el logo de la compañía que creó la encuesta (para manejar casos de varias empresas) -->\n"
+"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    Certificación: <t t-out=\"object.survey_id.display_name or ''\">Retroalimentación de</t>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>Apreciable <span t-out=\"object.partner_id.name or 'participant'\">participante</span></p>\n"
+"                <p>\n"
+"                    Encontrará adjunto su certificación en\n"
+"                        <strong t-out=\"object.survey_id.display_name or ''\">creación de mobiliario</strong>\n"
+"                    \n"
+"                </p>\n"
+"                <p>Felicitaciones por pasar la prueba con una calificación de <strong t-out=\"object.scoring_percentage\"/>%!</p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -771,12 +798,14 @@ msgstr "<span>Número de intentos restantes</span>:"
 #. module: survey
 #: model:survey.question,description:survey.survey_demo_quiz_p2_q1
 msgid "<span>Our famous Leader!</span>"
-msgstr ""
+msgstr "<span>¡Nuestro famoso líder!</span>"
 
 #. module: survey
 #: model:survey.question,description:survey.survey_demo_quiz_p3_q3
 msgid "<span>Our sales people have an advantage, but you can do it!</span>"
 msgstr ""
+"<span>Nuestro personal de ventas tiene ventaja, ¡pero usted también lo puede"
+" lograr!</span>"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -971,6 +1000,8 @@ msgid ""
 "After watching this video, will you swear that you are not going to "
 "procrastinate to trim your hedge this year?"
 msgstr ""
+"Después de ver este video, ¿promete que va a dejar de aplazar el podar su "
+"arbusto este año?"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_feedback_p2_q2_col3
@@ -1001,6 +1032,9 @@ msgid ""
 "All conditional display questions need a triggering question.\n"
 "Please disable \"Conditional Display\" or specify a triggering question."
 msgstr ""
+"Todas las preguntas de visualización condicional necesitan una pregunta "
+"desencadenante. Inhabilite la opción \"visualización condicional\" o "
+"especifíque una pregunta desencadenante."
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__questions_selection__all
@@ -1013,6 +1047,9 @@ msgid ""
 "All questions triggered by another need a triggering answer.\n"
 "Please disable \"Conditional Display\" or specify a triggering answer."
 msgstr ""
+"Todas las preguntas desencadenadas necesitan una pregunta que las habilite. "
+"Inhabilite la opción \"visualización condicional\" o especifíque una "
+"pregunta desencadenante."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
@@ -1022,7 +1059,7 @@ msgstr "Todas las encuestas"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__allowed_triggering_question_ids
 msgid "Allowed Triggering Questions"
-msgstr ""
+msgstr "Preguntas desencadenantes permitidas"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_burger_quiz_p3_q2_sug2
@@ -1249,7 +1286,7 @@ msgstr "Abejas"
 #. module: survey
 #: model:survey.question,question_placeholder:survey.vendor_certification_page_3_question_3
 msgid "Beware of leap years!"
-msgstr ""
+msgstr "¡Tenga en cuenta los años bisiestos!"
 
 #. module: survey
 #. odoo-python
@@ -1308,7 +1345,7 @@ msgstr "Puede editar el cuerpo"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4_q3
 msgid "Can Humans ever directly see a photon?"
-msgstr ""
+msgstr "¿Pueden los humanos llegar a ver directamente un fotón?"
 
 #. module: survey
 #. odoo-python
@@ -1430,7 +1467,7 @@ msgstr "Opciones"
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_demo_burger_quiz
 msgid "Choose your favourite subject and show how good you are. Ready?"
-msgstr ""
+msgstr "Elija su tema favorito y demuestre lo bueno que es en ello. ¿Listo?"
 
 #. module: survey
 #: model:ir.model.fields.selection,name:survey.selection__survey_survey__certification_report_layout__classic_blue
@@ -1543,6 +1580,8 @@ msgstr "Visualización condicional"
 msgid ""
 "Conditional display is not available when questions are randomly picked."
 msgstr ""
+"La visualización condicional no está disponible cuando las preguntas se "
+"eligen al azar."
 
 #. module: survey
 #: model:survey.question.answer,value:survey.vendor_certification_page_1_question_2_choice_3
@@ -1866,12 +1905,12 @@ msgstr "Mostrar progreso como"
 #: code:addons/survey/static/src/views/widgets/survey_question_trigger/survey_question_trigger.js:0
 #, python-format
 msgid "Displayed if \"%s: %s\""
-msgstr ""
+msgstr "Mostrado si \"%s: %s\""
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "Displayed when the answer entered is not valid."
-msgstr ""
+msgstr "Mostrrado cuando la respuesta proporcionada no es válida."
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_1
@@ -1881,7 +1920,7 @@ msgstr "¿Vendemos biombos acústicos?"
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2_q3
 msgid "Do you have any other comments, questions, or concerns?"
-msgstr ""
+msgstr "¿Tiene algún otro comentario, pregunta o duda?"
 
 #. module: survey
 #: model:survey.question,title:survey.vendor_certification_page_1_question_5
@@ -1896,7 +1935,7 @@ msgstr "Perros"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p4_q1
 msgid "Dogwood is from which family of trees?"
-msgstr ""
+msgstr "¿A cuál familia de árboles pertenece el cornejo?"
 
 #. module: survey
 #: model:survey.question,question_placeholder:survey.survey_demo_quiz_p1_q2
@@ -1916,7 +1955,7 @@ msgstr "Cajón"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
 msgid "Duplicate Question"
-msgstr ""
+msgstr "Pregunta duplicada"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_kanban
@@ -4370,7 +4409,7 @@ msgstr "Etiqueta de la encuesta"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
 msgid "Survey Link"
-msgstr ""
+msgstr "Enlace de la encuesta "
 
 #. module: survey
 #. odoo-python
@@ -4465,7 +4504,7 @@ msgstr "Entrada de prueba"
 #. module: survey
 #: model_terms:survey.survey,description:survey.vendor_certification
 msgid "Test your vendor skills!"
-msgstr ""
+msgstr "¡Ponga a prueba sus habilidades como vendedor! "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_search
@@ -4494,7 +4533,7 @@ msgstr "Gracias por su participación, espero lo haya disfrutado."
 #: code:addons/survey/models/survey_survey_template.py:0
 #, python-format
 msgid "Thank you very much for your feedback. We highly value your opinion!"
-msgstr ""
+msgstr "Muchas gracias por su retroalimentación. ¡Valoramos mucho su opinión!"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_fill_form_done
@@ -4775,6 +4814,7 @@ msgstr "Este mensaje aparecerá cuando se termine la encuesta"
 msgid ""
 "This question is positioned before its trigger (\"%s\") and will be skipped."
 msgstr ""
+"Esta pregunta esta colocada antes de su activador (\"%s\") y será omitida. "
 
 #. module: survey
 #. odoo-python
@@ -4797,6 +4837,8 @@ msgstr "Saltaron esta pregunta"
 msgid ""
 "This small quiz will test your knowledge about our Company. Be prepared!"
 msgstr ""
+"Este pequeño cuestionario pondrá a prueba sus conocimientos sobre nuestra "
+"empresa. ¡Prepárese!"
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.survey_feedback
@@ -4804,6 +4846,8 @@ msgid ""
 "This survey allows you to give a feedback about your experience with our products.\n"
 "    Filling it helps us improving your experience."
 msgstr ""
+"Esta encuesta le permite dar su opinión sobre su experiencia con nuestros productos .\n"
+"    Responderlo nos ayuda a mejorar su experiencia. "
 
 #. module: survey
 #. odoo-python
@@ -4819,7 +4863,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_closed_expired
 msgid "This survey is now closed. Thank you for your interest!"
-msgstr ""
+msgstr "La encuesta ya terminó. ¡Gracias por su interés! "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_auth_required
@@ -5152,7 +5196,7 @@ msgstr "¿Qué opina de nuestros precios? (sin puntos)"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p5_q1
 msgid "What do you think about this survey?"
-msgstr ""
+msgstr "¿Qué opina de esta encuesta? "
 
 #. module: survey
 #. odoo-python
@@ -5187,22 +5231,22 @@ msgstr "¿Cuál es la mejor manera de captar la atención del público?"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p2_q2
 msgid "What is the biggest city in the world?"
-msgstr ""
+msgstr "¿Cuál es la ciudad más grande del mundo? "
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q1
 msgid "What is your email?"
-msgstr ""
+msgstr "¿Cuál es su correo electrónico? "
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q2
 msgid "What is your nickname?"
-msgstr ""
+msgstr "¿Cúal es su apodo?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4_q2
 msgid "What is, approximately, the critical mass of plutonium-239?"
-msgstr ""
+msgstr "¿Cuál es, aproximadamente, la masa crítica del plutonio-239? "
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p3_q1
@@ -5212,7 +5256,7 @@ msgstr "¿Cuándo murió Genghis Khan?"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p2_q2
 msgid "When did precisely Marc Demo crop its first apple tree?"
-msgstr ""
+msgstr "¿Exactamente, cuándo fue que Marc Demo cultivó su primer manzano? "
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q6
@@ -5222,12 +5266,12 @@ msgstr "¿Cuándo cosecha esas frutas?"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p2_q1
 msgid "When is Mitchell Admin born?"
-msgstr ""
+msgstr "¿Cuándo nació Mitchell Admin?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q2
 msgid "When is your date of birth?"
-msgstr ""
+msgstr "¿Cuál es su fecha de nacimiento?"
 
 #. module: survey
 #. odoo-javascript
@@ -5239,12 +5283,12 @@ msgstr "Cada vez que elija una respuesta, Odoo la guardará."
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1_q3
 msgid "Where are you from?"
-msgstr ""
+msgstr "¿De dónde es?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p1_q1
 msgid "Where do you live?"
-msgstr ""
+msgstr "¿Dónde vive?"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__session_show_leaderboard
@@ -5257,7 +5301,7 @@ msgstr ""
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5_q1
 msgid "Which Musician is not in the 27th Club?"
-msgstr ""
+msgstr "¿Qué músico no está en el Club de los 27?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q1
@@ -5267,12 +5311,13 @@ msgstr "¿A qué categoría pertenece un tomate?"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p2_q3
 msgid "Which is the highest volcano in Europe?"
-msgstr ""
+msgstr "¿Cuál es el volcán más alto de Europa?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_feedback_p2_q1
 msgid "Which of the following words would you use to describe our products?"
 msgstr ""
+"¿Cuál de las siguientes palabras usaría para describir nuestros productos?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p3_q2
@@ -5282,7 +5327,7 @@ msgstr "¿Cuál de las siguientes opciones usaría para polinizar?"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5_q2
 msgid "Which painting/drawing was not made by Pablo Picasso?"
-msgstr ""
+msgstr "¿Qué pintura/dibujo no es obra de Pablo Picasso?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p5_q3
@@ -5292,12 +5337,12 @@ msgstr "¿Qué cita es de Jean-Claude Van Damme?"
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_quiz_p1
 msgid "Who are you?"
-msgstr ""
+msgstr "¿Quién es usted?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p3_q2
 msgid "Who is the architect of the Great Pyramid of Giza?"
-msgstr ""
+msgstr "¿Quién es el arquitecto de la Gran Pirámide de Giza?"
 
 #. module: survey
 #: model:survey.question,title:survey.survey_demo_burger_quiz_p4_q1
@@ -5305,6 +5350,8 @@ msgid ""
 "Who received a Nobel prize in Physics for the discovery of neutrino "
 "oscillations, which shows that neutrinos have mass?"
 msgstr ""
+"¿Quién recibió un premio Nobel de Física por el descubrimiento de las "
+"oscilaciones de neutrinos, que demuestra que los neutrinos tienen masa?"
 
 #. module: survey
 #. odoo-python
@@ -5501,6 +5548,8 @@ msgstr "dropdown-item d-flex align-items-center justify-content-between"
 msgid ""
 "e.g.  'Rick Sanchez' <rick_sanchez@example.com>, hictor_vugo@example.com"
 msgstr ""
+"por ejemplo,   'Rick Sanchez' <rick_sanchez@example.com>, "
+"hictor_vugo@example.com"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_form
@@ -5634,4 +5683,4 @@ msgstr "para"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
 msgid "⚠️ This question is positioned before its trigger and will be skipped."
-msgstr ""
+msgstr "⚠️ Esta pregunta esta colocada antes de su activador y será omitida. "
