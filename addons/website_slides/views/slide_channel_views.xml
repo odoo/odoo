@@ -41,7 +41,12 @@
                                 icon="fa-graduation-cap"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer">
-                                <field name="members_all_count" string="Attendees" widget="statinfo"/>
+                                <div class="o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="members_all_count" nolabel="1"/>
+                                    </span>
+                                    <span class="o_stat_text">Attendees</span>
+                                </div>
                             </button>
                              <button name="action_view_ratings"
                                 type="object"
