@@ -2498,7 +2498,9 @@ class MailThread(models.AbstractModel):
             return True
         force_send = self.env.context.get('mail_notify_force_send', force_send)
 
-        template_values = self._notify_by_email_prepare_rendering_context(
+        lang = self._get_rendered_lang(force_email_lang)
+
+        template_values = self.with_context(lang=lang)._notify_by_email_prepare_rendering_context(
             message, msg_vals=msg_vals, model_description=model_description,
             force_email_company=force_email_company,
             force_email_lang=force_email_lang,
@@ -2652,17 +2654,7 @@ class MailThread(models.AbstractModel):
         else:
             website_url = False
 
-        # compute lang in which content was rendered or typed
-        lang = False
-        if force_email_lang:
-            lang = force_email_lang
-        elif {'default_template_id', 'default_model', 'default_res_id'} <= self.env.context.keys():
-            # TDE FIXME: this whole brol should be cleaned !
-            template = self.env['mail.template'].browse(self.env.context['default_template_id'])
-            if template and template.lang:
-                lang = template._render_lang([self.env.context['default_res_id']])[self.env.context['default_res_id']]
-        if not lang:
-            lang = self.env.context.get('lang')
+        lang = force_email_lang if force_email_lang else self.env.context.get('lang')
 
         # record, model
         if not model_description:
@@ -3359,3 +3351,31 @@ class MailThread(models.AbstractModel):
         if 'suggestedRecipients' in request_list:
             res['suggestedRecipients'] = self._message_get_suggested_recipients()[self.id]
         return res
+
+    def _get_rendered_lang(self, force_email_lang=None):
+        """
+        Get the language in which the content was rendered or typed.
+        A wild guess is done
+        based on templates to try to retrieve the recipient's language when a flow
+        like "send by email" is performed. Lang is used to try to have the
+        notification layout in the same language as the email content.
+
+        :param force_email_lang: A specific language to be forced (optional).
+        :type force_email_lang: str
+
+        :return: The language in which the content was rendered or typed.
+        :rtype: str
+        """
+        lang = False
+
+        if force_email_lang:
+            lang = force_email_lang
+        elif {'default_template_id', 'default_model', 'default_res_id'} <= self.env.context.keys():
+            # TDE FIXME: this whole brol should be cleaned !
+            template = self.env['mail.template'].browse(self.env.context['default_template_id'])
+            if template and template.lang:
+                lang = template._render_lang([self.env.context['default_res_id']])[self.env.context['default_res_id']]
+        if not lang:
+            lang = self.env.context.get('lang')
+
+        return lang
