@@ -82,6 +82,12 @@
             border-color: transparent;
             border-bottom-color: $border-color;
             padding: 3px 0 5px;
+
+            // The left padding must be equal to that of '.fc-axis.fc-time'
+            // This realigns the headers with their cells
+            .fc-week-number {
+                padding-left: 4px;
+            }
         }
 
         hr.fc-widget-header {
