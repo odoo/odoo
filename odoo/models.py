@@ -1689,8 +1689,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     @api.returns('self',
         upgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else self.browse(value),
         downgrade=lambda self, value, args, offset=0, limit=None, order=None, count=False: value if count else value.ids)
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        """ search(args[, offset=0][, limit=None][, order=None][, count=False])
+    def search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        """ search(args[, offset=0][, limit=None][, order=None][, count=False][, access_rights_uid=None])
 
         Searches for records based on the ``args``
         :ref:`search domain <reference/orm/domains>`.
@@ -1701,11 +1701,13 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :param int limit: maximum number of records to return (default: all)
         :param str order: sort string
         :param bool count: if True, only counts and returns the number of matching records (default: False)
+        :param access_rights_uid: optional user ID to use when checking access rights
+                                  (not for ir.rules, this is only for ir.model.access)
         :returns: at most ``limit`` records matching the search criteria
 
         :raise AccessError: * if user tries to bypass access rules for read on the requested object.
         """
-        res = self._search(args, offset=offset, limit=limit, order=order, count=count)
+        res = self._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
         return res if count else self.browse(res)
 
     #
