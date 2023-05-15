@@ -60,6 +60,12 @@ Model({
          */
         channel: one("Thread", { readonly: true, required: true }),
         isChannelTokenSecret: attr({ default: true }),
+        messagingAsPublicView: one("Messaging", {
+            compute() {
+                return this.messaging;
+            },
+            inverse: "discussPublicView",
+        }),
         shouldAddGuestAsMemberOnJoin: attr({ default: false, readonly: true }),
         shouldDisplayWelcomeViewInitially: attr({ default: false, readonly: true }),
         /**
