@@ -8,7 +8,7 @@
                 Start a meeting
             </button>
         </div>
-        <hr class="w-100 border-top"/>
+        <hr class="w-100"/>
         <div class="d-flex flex-column flex-grow-0">
             <t t-call="mail.Mailbox">
                 <t t-set="mailbox" t-value="store.discuss.inbox"/>
@@ -20,7 +20,7 @@
                 <t t-set="mailbox" t-value="store.discuss.history"/>
             </t>
         </div>
-        <hr class="w-100 border-top"/>
+        <hr class="w-100"/>
         <input t-if="hasQuickSearch" class="form-control mx-4 mb-2 rounded-3 w-auto" placeholder="Quick search..." t-model="state.quickSearchVal"/>
         <t t-call="mail.DiscussCategory">
             <t t-set="category" t-value="store.discuss.channels"/>

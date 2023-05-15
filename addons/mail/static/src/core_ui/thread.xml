@@ -20,9 +20,9 @@
                 <t t-foreach="props.order === 'asc' ? props.thread.nonEmptyMessages : [...props.thread.nonEmptyMessages].reverse()" t-as="msg" t-key="msg.id">
                     <t t-if="msg.dateDay !== currentDay">
                         <div class="o-mail-Thread-date d-flex align-items-center fw-bolder pt-4">
-                            <hr class="flex-grow-1 border-top"/>
+                            <hr class="flex-grow-1"/>
                             <span class="px-3"><t t-esc="msg.dateDay"/></span>
-                            <hr class="flex-grow-1 border-top"/>
+                            <hr class="flex-grow-1"/>
                         </div>
                         <t t-set="currentDay" t-value="msg.dateDay"/>
                     </t>

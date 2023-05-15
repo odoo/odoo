@@ -128,13 +128,13 @@
 <t t-name="mail.ActivityList" owl="1">
     <div class="o-mail-ActivityList">
         <div class="d-flex pt-4 cursor-pointer fw-bolder" t-on-click="toggleActivities">
-            <hr class="flex-grow-1 border-top"/>
-            <div class="px-3">
+            <hr class="flex-grow-1"/>
+            <div class="d-flex align-items-center px-3">
                 <i class="fa fa-fw" t-att-class="state.showActivities ? 'fa-caret-down' : 'fa-caret-right'"/>
                 Planned Activities
                 <span t-if="!state.showActivities" class="badge text-bg-success"><t t-esc="activities.length"/></span>
             </div>
-            <hr class="flex-grow-1 border-top"/>
+            <hr class="flex-grow-1"/>
         </div>
         <t t-if="state.showActivities">
             <t t-foreach="activities" t-as="activity" t-key="activity.id">
