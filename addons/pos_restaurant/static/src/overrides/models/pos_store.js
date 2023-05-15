@@ -25,15 +25,15 @@ patch(PosStore.prototype, {
      * @override
      */
     async setup() {
+        this.orderToTransfer = null; // table transfer feature
+        this.transferredOrdersSet = new Set(); // used to know which orders has been transferred but not sent to the back end yet
+        this.floorPlanStyle = "default";
+        this.isEditMode = false;
         await super.setup(...arguments);
         if (this.config.module_pos_restaurant) {
             this.setActivityListeners();
             this.showScreen("FloorScreen", { floor: this.table?.floor || null });
         }
-        this.orderToTransfer = null; // table transfer feature
-        this.transferredOrdersSet = new Set(); // used to know which orders has been transferred but not sent to the back end yet
-        this.floorPlanStyle = "default";
-        this.isEditMode = false;
     },
     setActivityListeners() {
         IDLE_TIMER_SETTER = this.setIdleTimer.bind(this);
@@ -287,5 +287,26 @@ patch(PosStore.prototype, {
     },
     toggleEditMode() {
         this.isEditMode = !this.isEditMode;
+    },
+    async updateModelsData(models_data) {
+        const floors = models_data["restaurant.floor"];
+        if (floors) {
+            this.floors = floors;
+            this.loadRestaurantFloor();
+            const result = await this.orm.call(
+                "pos.config",
+                "get_tables_order_count_and_printing_changes",
+                [this.config.id]
+            );
+            for (const table of result) {
+                const table_obj = this.tables_by_id[table.id];
+                if (table_obj) {
+                    table_obj.order_count = table.orders;
+                    table_obj.changes_count = table.changes;
+                    table_obj.skip_changes = table.skip_changes;
+                }
+            }
+        }
+        return super.updateModelsData(models_data);
     },
 });

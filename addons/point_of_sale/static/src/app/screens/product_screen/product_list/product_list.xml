@@ -29,11 +29,15 @@
                             <p>There are no products in this category.</p>
                         </t>
                         <t t-else="">
-                            <div>
-                                <p>No products here, but don't worry, we've got your back.</p>
-                                <p>Play with <a role="button" class="text-primary" t-on-click="loadDemoDataProducts">our demo products</a> or <a role="button" class="text-primary" t-on-click="createNewProducts">create your own products</a></p>
-                                <div t-if="state.showReloadMessage" class="info-load-product-message">
-                                    Please reload this page once products have been created
+                            <div t-if="!state.loadingDemo">
+                                <p class="text-large">No products available. Explore <a role="button" class="fw-bold text-muted" t-on-click="loadDemoDataProducts">demo data</a> or <a role="button" class="fw-bold text-muted" t-on-click="createNewProducts">create your own</a></p>
+                            </div>
+                            <div t-else="" class="block-top-header position-absolute top-0 start-0 bg-black opacity-50 w-100 h-100 z-1000">
+                                <div class="d-flex h-100 w-100 text-white flex-row align-items-center justify-content-center">
+                                    <div class="o_spinner d-flex flex-column mb-4">
+                                        <img src="/web/static/img/spin.svg" alt="Loading..."/>
+                                        Loading...
+                                    </div>
                                 </div>
                             </div>
                         </t>

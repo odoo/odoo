@@ -24,7 +24,7 @@ export class ProductsWidget extends Component {
         this.state = useState({
             previousSearchWord: "",
             currentOffset: 0,
-            showReloadMessage: false,
+            loadingDemo: false,
         });
         this.pos = usePos();
         this.popup = useService("popup");
@@ -144,31 +144,36 @@ export class ProductsWidget extends Component {
         }
     }
     async loadDemoDataProducts() {
-        const { models_data, successful } = await this.orm.call(
-            "pos.session",
-            "load_product_frontend",
-            [this.pos.pos_session.id]
-        );
-        if (!successful) {
-            this.popup.add(ErrorPopup, {
-                title: _t("Demo products are no longer available"),
-                body: _t(
-                    "A valid product already exists for Point of Sale. Therefore, demonstration products cannot be loaded."
-                ),
-            });
-            // But the received models_data is still used to update the current session.
-        }
-        if (!models_data) {
-            this._showLoadDemoDataMissingDataError("models_data");
-            return;
-        }
-        for (const dataName of ["pos.category", "product.product"]) {
-            if (!models_data[dataName]) {
-                this._showLoadDemoDataMissingDataError(dataName);
+        try {
+            this.state.loadingDemo = true;
+            const { models_data, successful } = await this.orm.call(
+                "pos.session",
+                "load_product_frontend",
+                [this.pos.pos_session.id]
+            );
+            if (!successful) {
+                this.popup.add(ErrorPopup, {
+                    title: _t("Demo products are no longer available"),
+                    body: _t(
+                        "A valid product already exists for Point of Sale. Therefore, demonstration products cannot be loaded."
+                    ),
+                });
+                // But the received models_data is still used to update the current session.
+            }
+            if (!models_data) {
+                this._showLoadDemoDataMissingDataError("models_data");
                 return;
             }
+            for (const dataName of ["pos.category", "product.product", "pos.order"]) {
+                if (!models_data[dataName]) {
+                    this._showLoadDemoDataMissingDataError(dataName);
+                    return;
+                }
+            }
+            this.pos.updateModelsData(models_data);
+        } finally {
+            this.state.loadingDemo = false;
         }
-        this.pos.updateModelsData(models_data);
     }
     _showLoadDemoDataMissingDataError(missingData) {
         console.error(
@@ -180,6 +185,5 @@ export class ProductsWidget extends Component {
 
     createNewProducts() {
         window.open("/web#action=point_of_sale.action_client_product_menu", "_self");
-        this.state.showReloadMessage = true;
     }
 }
