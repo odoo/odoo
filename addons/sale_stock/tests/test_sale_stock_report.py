@@ -394,11 +394,11 @@ class TestSaleStockInvoices(TestSaleCommon):
 
         # Refund the invoice
         refund_wizard = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice01.ids).create({
-            'refund_method': 'cancel',
             'journal_id': invoice01.journal_id.id,
         })
-        res = refund_wizard.reverse_moves()
+        res = refund_wizard.refund_moves()
         refund_invoice = self.env['account.move'].browse(res['res_id'])
+        refund_invoice.action_post()
 
         # recieve the returned product
         stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(active_ids=picking.ids, active_id=picking.sorted().ids[0], active_model='stock.picking'))
@@ -454,10 +454,9 @@ class TestSaleStockInvoices(TestSaleCommon):
 
         # Refund the invoice with full refund and new draft invoice
         refund_wizard = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice01.ids).create({
-            'refund_method': 'modify',
             'journal_id': invoice01.journal_id.id,
         })
-        res = refund_wizard.reverse_moves()
+        res = refund_wizard.modify_moves()
         invoice02 = self.env['account.move'].browse(res['res_id'])
         invoice02.action_post()
 

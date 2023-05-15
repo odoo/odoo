@@ -350,10 +350,9 @@ class TestReInvoice(TestCommonSaleTimesheet):
         }
         refund_invoice_wiz = self.env['account.move.reversal'].with_context(wiz_context).create({
             'reason': 'please reverse :c',
-            'refund_method': 'refund',
             'date': today,
         })
-        refund_invoice = self.env['account.move'].browse(refund_invoice_wiz.reverse_moves()['res_id'])
+        refund_invoice = self.env['account.move'].browse(refund_invoice_wiz.refund_moves()['res_id'])
         refund_invoice.action_post()
         # reversing with action_reverse and then action_post does not reset the invoice_status to 'to invoice' in tests
 

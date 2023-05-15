@@ -49,9 +49,8 @@ class TestAccountMoveDateAlgorithm(AccountTestInvoicingCommon):
             .create({
                 'journal_id': invoice.journal_id.id,
                 'reason': "no reason",
-                'refund_method': 'cancel',
             })
-        reversal = move_reversal.reverse_moves()
+        reversal = move_reversal.refund_moves()
         return self.env['account.move'].browse(reversal['res_id'])
 
     # -------------------------------------------------------------------------

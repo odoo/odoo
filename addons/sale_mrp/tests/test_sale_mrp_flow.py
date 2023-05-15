@@ -2220,10 +2220,9 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         invoice01.action_post()
 
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice01.ids).create({
-            'refund_method': 'modify',
             'journal_id': invoice01.journal_id.id,
         })
-        reversal = move_reversal.reverse_moves()
+        reversal = move_reversal.modify_moves()
         invoice02 = self.env['account.move'].browse(reversal['res_id'])
         invoice02.action_post()
 

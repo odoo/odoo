@@ -606,10 +606,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=move.ids).create({
             'date': fields.Date.from_string('2021-02-01'),
-            'refund_method': 'refund',
             'journal_id': move.journal_id.id,
         })
-        reversal = move_reversal.reverse_moves()
+        reversal = move_reversal.refund_moves()
         reversed_move = self.env['account.move'].browse(reversal['res_id'])
         self.assertRecordValues(reversed_move.line_ids, [
             {

@@ -71,10 +71,9 @@ class TestSEPAQRCode(AccountTestInvoicingCommon):
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.sepa_qr_invoice.ids).create({
             'date': fields.Date.from_string('2019-02-01'),
             'reason': 'no reason',
-            'refund_method': 'refund',
             'journal_id': self.sepa_qr_invoice.journal_id.id,
         })
-        reversal = move_reversal.reverse_moves()
+        reversal = move_reversal.refund_moves()
         reverse_move = self.env['account.move'].browse(reversal['res_id'])
 
         self.assertFalse(reverse_move.qr_code_method, "qr_code_method for credit note should be None")

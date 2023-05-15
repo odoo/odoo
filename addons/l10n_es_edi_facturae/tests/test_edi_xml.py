@@ -207,11 +207,10 @@ class TestEdiFacturaeXmls(AccountEdiTestCommon):
                 'move_ids': invoice.ids,
                 'journal_id': invoice.journal_id.id,
                 'date': self.frozen_today,
-                'refund_method': 'modify',
                 'company_id': self.company_data['company'].id,
                 'l10n_es_edi_facturae_reason_code': '01'
             })
-            reversal_wizard.reverse_moves()
+            reversal_wizard.modify_moves()
             refund = invoice.reversal_move_id
             generated_file = refund._l10n_es_edi_facturae_render_facturae()
             self.assertTrue(generated_file)

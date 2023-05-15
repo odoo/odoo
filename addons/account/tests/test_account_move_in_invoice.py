@@ -1116,10 +1116,9 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
             'date': fields.Date.from_string('2019-02-01'),
             'reason': 'no reason',
-            'refund_method': 'refund',
             'journal_id': self.invoice.journal_id.id,
         })
-        reversal = move_reversal.reverse_moves()
+        reversal = move_reversal.refund_moves()
         reverse_move = self.env['account.move'].browse(reversal['res_id'])
 
         self.assertEqual(self.invoice.payment_state, 'not_paid', "Refunding with a draft credit note should keep the invoice 'not_paid'.")
@@ -1168,10 +1167,9 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
             'date': fields.Date.from_string('2019-02-01'),
             'reason': 'no reason again',
-            'refund_method': 'modify',
             'journal_id': self.invoice.journal_id.id,
         })
-        reversal = move_reversal.reverse_moves()
+        reversal = move_reversal.modify_moves()
         new_move = self.env['account.move'].browse(reversal['res_id'])
 
         self.assertEqual(self.invoice.payment_state, 'reversed', "After cancelling it with a reverse invoice, an invoice should be in 'reversed' state.")
@@ -1231,10 +1229,9 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
             'date': fields.Date.from_string('2017-01-01'),
             'reason': 'no reason',
-            'refund_method': 'refund',
             'journal_id': self.invoice.journal_id.id,
         })
-        reversal = move_reversal.reverse_moves()
+        reversal = move_reversal.refund_moves()
         reverse_move = self.env['account.move'].browse(reversal['res_id'])
 
         self.assertEqual(self.invoice.payment_state, 'not_paid', "Refunding with a draft credit note should keep the invoice 'not_paid'.")
@@ -1289,10 +1286,9 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
             'date': fields.Date.from_string('2017-01-01'),
             'reason': 'no reason again',
-            'refund_method': 'modify',
             'journal_id': self.invoice.journal_id.id,
         })
-        reversal = move_reversal.reverse_moves()
+        reversal = move_reversal.modify_moves()
         new_move = self.env['account.move'].browse(reversal['res_id'])
 
         self.assertEqual(self.invoice.payment_state, 'reversed', "After cancelling it with a reverse invoice, an invoice should be in 'reversed' state.")
@@ -2182,10 +2178,9 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 .with_context(active_model='account.move', active_ids=move.ids)\
                 .create({
                     'reason': 'no reason',
-                    'refund_method': 'refund',
                     'journal_id': move.journal_id.id,
                 })
-            reversal = move_reversal.reverse_moves()
+            reversal = move_reversal.refund_moves()
             reverse_move = self.env['account.move'].browse(reversal['res_id'])
             if reverse_move.move_type in ('out_refund', 'in_refund'):
                 reverse_move.write({
@@ -2202,9 +2197,6 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
                 })
 
             reverse_move.action_post()
-            (move + reverse_move).line_ids\
-                .filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable'))\
-                .reconcile()
 
         move = create_move(move_type, amount)
         line = move.line_ids.filtered(lambda line: line.account_type in ('asset_receivable', 'liability_payable'))

@@ -3342,6 +3342,23 @@ class AccountMove(models.Model):
                 exchange_diff_moves.append(partial.exchange_move_id.id)
         return invoice_partials, exchange_diff_moves
 
+    def _reconcile_reversed_moves(self, reverse_moves, move_reverse_cancel):
+        ''' Reconciles moves in self and reverse moves
+        :param move_reverse_cancel: parameter used when lines are reconciled
+                                    will determine whether the tax cash basis journal entries should be created
+        :param reverse_moves:       An account.move recordset, reverse of the current self.
+        :return:                    An account.move recordset, reverse of the current self.
+        '''
+        for move, reverse_move in zip(self, reverse_moves):
+            group = (move.line_ids + reverse_move.line_ids) \
+                .filtered(lambda l: not l.reconciled) \
+                .grouped(lambda l: (l.account_id, l.currency_id))
+            for (account, _currency), lines in group.items():
+                if account.reconcile or account.account_type in ('asset_cash', 'liability_credit_card'):
+                    lines.with_context(move_reverse_cancel=move_reverse_cancel).reconcile()
+        return reverse_moves
+
+
     def _reverse_moves(self, default_values_list=None, cancel=False):
         ''' Reverse a recordset of account.move.
         If cancel parameter is true, the reconcilable or liquidity lines
@@ -3383,13 +3400,7 @@ class AccountMove(models.Model):
         # Reconcile moves together to cancel the previous one.
         if cancel:
             reverse_moves.with_context(move_reverse_cancel=cancel)._post(soft=False)
-            for move, reverse_move in zip(self, reverse_moves):
-                group = (move.line_ids + reverse_move.line_ids)\
-                    .filtered(lambda l: not l.reconciled)\
-                    .grouped(lambda l: (l.account_id, l.currency_id))
-                for (account, _currency), lines in group.items():
-                    if account.reconcile or account.account_type in ('asset_cash', 'liability_credit_card'):
-                        lines.with_context(move_reverse_cancel=cancel).reconcile()
+            reverse_moves = self._reconcile_reversed_moves(reverse_moves, cancel)
 
         return reverse_moves
 
@@ -3456,8 +3467,8 @@ class AccountMove(models.Model):
             to_post = self
 
         for move in to_post:
-            if move.state == 'posted':
-                raise UserError(_('The entry %s (id %s) is already posted.') % (move.name, move.id))
+            if move.state in ['posted', 'cancel']:
+                raise UserError(_('The entry %s (id %s) must be in draft.') % (move.name, move.id))
             if not move.line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note')):
                 raise UserError(_('You need to add a line before posting.'))
             if move.auto_post != 'no' and move.date > fields.Date.context_today(self):
@@ -3498,10 +3509,15 @@ class AccountMove(models.Model):
             if wrong_lines:
                 wrong_lines.write({'partner_id': invoice.commercial_partner_id.id})
 
+        # reconcile if state is in draft and move has reversal_entry_id set
+        draft_reverse_moves = to_post.filtered(lambda move: move.reversed_entry_id)
+
         to_post.write({
             'state': 'posted',
             'posted_before': True,
         })
+
+        draft_reverse_moves.reversed_entry_id._reconcile_reversed_moves(draft_reverse_moves, False)
 
         for invoice in to_post:
             invoice.message_subscribe([
