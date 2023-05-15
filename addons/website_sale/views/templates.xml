@@ -137,7 +137,7 @@
     </template>
 
     <!-- Search Bar input-group template -->
-    <template id="search" name="Search Box">
+    <template id="search" name="Search Box" active="True">
         <t t-call="website.website_search_box_input">
             <t t-set="_form_classes" t-valuef="o_wsale_products_searchbar_form me-auto flex-grow-1 {{_form_classes}}"/>
             <t t-set="_submit_classes" t-valuef="btn btn-{{navClass}}"/>
@@ -308,13 +308,13 @@
                                 <t t-set="_classes" t-valuef="d-none d-lg-flex w-100 p-0 small"/>
                             </t>
                             <div class="products_header btn-toolbar flex-nowrap align-items-center justify-content-between mb-3">
-                                <t t-call="website_sale.search">
+                                <t t-if="is_view_active('website_sale.search')" t-call="website_sale.search">
                                     <t t-set="search" t-value="original_search or search"/>
                                     <t t-set="_form_classes" t-valuef="d-lg-inline {{'d-inline' if not category else 'd-none'}}"/>
                                 </t>
 
                                 <t t-call="website_sale.pricelist_list" t-cache="pricelist">
-                                    <t t-set="_classes" t-valuef="d-none d-lg-inline ms-3"/>
+                                    <t t-set="_classes" t-valuef="d-none d-lg-inline {{'ms-3' if is_view_active('website_sale.search') else ''}}"/>
                                 </t>
 
                                 <t t-if="is_view_active('website_sale.sort')" t-call="website_sale.sort">
@@ -332,7 +332,7 @@
                                 </div>
 
                                 <t t-if="is_view_active('website_sale.add_grid_or_list_option')" t-call="website_sale.add_grid_or_list_option">
-                                    <t t-set="_classes" t-valuef="d-flex ms-3"/>
+                                    <t t-set="_classes" t-valuef="d-flex ms-3 ms-auto"/>
                                 </t>
 
                                 <button t-if="is_view_active('website_sale.sort') or opt_wsale_categories or opt_wsale_attributes or opt_wsale_attributes_top"
@@ -896,7 +896,7 @@
                     <div class="row align-items-center">
                         <div class="col-lg-6 d-flex align-items-center">
                             <div class="d-flex justify-content-between w-100">
-                                <t t-call="website_sale.search">
+                                <t t-if="is_view_active('website_sale.search')" t-call="website_sale.search">
                                     <t t-set="search" t-value="False"/>
                                     <t t-set="_form_classes" t-valuef="mb-2 mb-lg-0"/>
                                     <t t-set="_classes" t-value="'me-sm-2'"/>
