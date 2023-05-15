@@ -67,8 +67,9 @@ class ProductLabelLayout(models.TransientModel):
     def process(self):
         self.ensure_one()
         xml_id, data = self._prepare_report_data()
-        if not xml_id:
+        try:
+            report_action = self.env.ref(xml_id).report_action(None, data=data)
+            report_action.update({'close_on_report_download': True})
+        except(ValueError):
             raise UserError(_('Unable to find report template for %s format', self.print_format))
-        report_action = self.env.ref(xml_id).report_action(None, data=data)
-        report_action.update({'close_on_report_download': True})
         return report_action
