@@ -1785,53 +1785,53 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
             'date': fields.Date.from_string('2019-02-01'),
             'reason': 'no reason',
-            'refund_method': 'cancel',
+            'refund_method': 'modify',
             'journal_id': self.invoice.journal_id.id,
         })
         reversal = move_reversal.reverse_moves()
-        reverse_move = self.env['account.move'].browse(reversal['res_id'])
+        new_move = self.env['account.move'].browse(reversal['res_id'])
 
         self.assertEqual(self.invoice.payment_state, 'reversed', "After cancelling it with a reverse invoice, an invoice should be in 'reversed' state.")
-        self.assertInvoiceValues(reverse_move, [
+        self.assertInvoiceValues(new_move, [
             {
                 **self.product_line_vals_1,
-                'amount_currency': 1000.0,
-                'debit': 1000.0,
-                'credit': 0.0,
+                'amount_currency': -1000.0,
+                'debit': 0.0,
+                'credit': 1000.0,
             },
             {
                 **self.product_line_vals_2,
-                'amount_currency': 200.0,
-                'debit': 200.0,
-                'credit': 0.0,
+                'amount_currency': -200.0,
+                'debit': 0.0,
+                'credit': 200.0,
             },
             {
                 **self.tax_line_vals_1,
-                'amount_currency': 180.0,
-                'debit': 180.0,
-                'credit': 0.0,
+                'amount_currency': -180.0,
+                'debit': 0.0,
+                'credit': 180.0,
             },
             {
                 **self.tax_line_vals_2,
-                'amount_currency': 30.0,
-                'debit': 30.0,
-                'credit': 0.0,
+                'amount_currency': -30.0,
+                'debit': 0.0,
+                'credit': 30.0,
             },
             {
                 **self.term_line_vals_1,
                 'name': '',
-                'amount_currency': -1410.0,
-                'debit': 0.0,
-                'credit': 1410.0,
+                'amount_currency': 1410.0,
+                'debit': 1410.0,
+                'credit': 0.0,
                 'date_maturity': move_reversal.date,
             },
         ], {
             **self.move_vals,
-            'invoice_payment_term_id': None,
+            'invoice_payment_term_id': self.pay_terms_a.id,
             'date': move_reversal.date,
-            'state': 'posted',
-            'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
-            'payment_state': 'paid',
+            'state': 'draft',
+            'ref': False,
+            'payment_state': 'not_paid',
         })
 
     def test_out_invoice_create_refund_multi_currency(self):
@@ -1906,59 +1906,59 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
             'date': fields.Date.from_string('2017-01-01'),
             'reason': 'no reason',
-            'refund_method': 'cancel',
+            'refund_method': 'modify',
             'journal_id': self.invoice.journal_id.id,
         })
         reversal = move_reversal.reverse_moves()
-        reverse_move = self.env['account.move'].browse(reversal['res_id'])
+        new_move = self.env['account.move'].browse(reversal['res_id'])
 
         self.assertEqual(self.invoice.payment_state, 'reversed', "After cancelling it with a reverse invoice, an invoice should be in 'reversed' state.")
-        self.assertInvoiceValues(reverse_move, [
+        self.assertInvoiceValues(new_move, [
             {
                 **self.product_line_vals_1,
-                'amount_currency': 1000.0,
+                'amount_currency': -1000.0,
                 'currency_id': self.currency_data['currency'].id,
-                'debit': 500.0,
-                'credit': 0.0,
+                'debit': 0.0,
+                'credit': 500.0,
             },
             {
                 **self.product_line_vals_2,
-                'amount_currency': 200.0,
+                'amount_currency': -200.0,
                 'currency_id': self.currency_data['currency'].id,
-                'debit': 100.0,
-                'credit': 0.0,
+                'debit': 0.0,
+                'credit': 100.0,
             },
             {
                 **self.tax_line_vals_1,
-                'amount_currency': 180.0,
+                'amount_currency': -180.0,
                 'currency_id': self.currency_data['currency'].id,
-                'debit': 90.0,
-                'credit': 0.0,
+                'debit': 0.0,
+                'credit': 90.0,
             },
             {
                 **self.tax_line_vals_2,
-                'amount_currency': 30.0,
+                'amount_currency': -30.0,
                 'currency_id': self.currency_data['currency'].id,
-                'debit': 15.0,
-                'credit': 0.0,
+                'debit': 0.0,
+                'credit': 15.0,
             },
             {
                 **self.term_line_vals_1,
                 'name': '',
-                'amount_currency': -1410.0,
+                'amount_currency': 1410.0,
                 'currency_id': self.currency_data['currency'].id,
-                'debit': 0.0,
-                'credit': 705.0,
+                'debit': 705.0,
+                'credit': 0.0,
                 'date_maturity': move_reversal.date,
             },
         ], {
             **self.move_vals,
-            'invoice_payment_term_id': None,
+            'invoice_payment_term_id': self.pay_terms_a.id,
             'currency_id': self.currency_data['currency'].id,
             'date': move_reversal.date,
-            'state': 'posted',
-            'ref': 'Reversal of: %s, %s' % (self.invoice.name, move_reversal.reason),
-            'payment_state': 'paid',
+            'state': 'draft',
+            'ref': False,
+            'payment_state': 'not_paid',
         })
 
     def test_out_invoice_create_refund_auto_post(self):

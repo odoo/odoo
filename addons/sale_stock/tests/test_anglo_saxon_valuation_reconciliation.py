@@ -116,13 +116,14 @@ class TestValuationReconciliation(TestValuationReconciliationCommon):
         return_pick._action_done()
         refund_invoice_wiz = self.env['account.move.reversal'].with_context(active_model='account.move', active_ids=[invoice.id]).create({
             'reason': 'test_invoice_shipment_refund',
-            'refund_method': 'cancel',
+            'refund_method': 'modify',
             'journal_id': invoice.journal_id.id,
         })
-        refund_invoice = self.env['account.move'].browse(refund_invoice_wiz.reverse_moves()['res_id'])
+        new_invoice = self.env['account.move'].browse(refund_invoice_wiz.reverse_moves()['res_id'])
         self.assertEqual(invoice.payment_state, 'reversed', "Invoice should be in 'reversed' state.")
-        self.assertEqual(refund_invoice.payment_state, 'paid', "Refund should be in 'paid' state.")
-        self.check_reconciliation(refund_invoice, return_pick, operation='sale')
+        self.assertEqual(invoice.reversal_move_id.payment_state, 'paid', "Refund should be in 'paid' state.")
+        self.assertEqual(new_invoice.state, 'draft', "New invoice should be in 'draft' state.")
+        self.check_reconciliation(invoice.reversal_move_id, return_pick, operation='sale')
 
     def test_multiple_shipments_invoices(self):
         """ Tests the case into which we deliver part of the goods first, then 2 invoices at different rates, and finally the remaining quantities
