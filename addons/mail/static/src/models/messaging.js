@@ -335,6 +335,10 @@ Patch({
          */
         disableAnimation: attr({ default: false }),
         discuss: one("Discuss", { default: {}, isCausal: true, readonly: true }),
+        discussPublicView: one("DiscussPublicView", {
+            inverse: "messagingAsPublicView",
+            isCausal: true,
+        }),
         emojiRegistry: one("EmojiRegistry", { default: {}, isCausal: true, readonly: true }),
         hasLinkPreviewFeature: attr(),
         history: one("Mailbox", { default: {}, inverse: "messagingAsHistory" }),
