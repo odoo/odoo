@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { useRtc } from "@mail/rtc/rtc_hook";
+import { useRtc } from "@mail/discuss/rtc/rtc_hook";
 import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
@@ -8,7 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 
 export class CallSettings extends Component {
     static template = "discuss.CallSettings";
-    static props = ["thread", "className?"];
+    static props = ["channel", "className?"];
 
     setup() {
         this.notification = useService("notification");
@@ -104,10 +104,10 @@ export class CallSettings extends Component {
 
     onChangeVideoFilterCheckbox(ev) {
         const showOnlyVideo = ev.target.checked;
-        this.props.thread.showOnlyVideo = showOnlyVideo;
-        const activeRtcSession = this.props.thread.activeRtcSession;
+        this.props.channel.showOnlyVideo = showOnlyVideo;
+        const activeRtcSession = this.props.channel.activeRtcSession;
         if (showOnlyVideo && activeRtcSession && !activeRtcSession.videoStream) {
-            this.props.thread.activeRtcSession = undefined;
+            this.props.channel.activeRtcSession = undefined;
         }
     }
 

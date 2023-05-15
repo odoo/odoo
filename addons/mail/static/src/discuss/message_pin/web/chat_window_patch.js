@@ -1,7 +1,8 @@
 /* @odoo-module */
 
 import { PinnedMessagesPanel } from "@mail/discuss/message_pin/pinned_messages_panel";
-import { ChatWindow, MODES } from "@mail/chat_window/chat_window";
+import { ChatWindow, MODES } from "@mail/web/chat_window/chat_window";
+import { createLocalId } from "@mail/utils/misc";
 import { useChildSubEnv } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
@@ -30,9 +31,15 @@ patch(ChatWindow.prototype, "discuss/message_pin", {
         this.state.activeMode =
             this.state.activeMode === MODES.PINNED_MESSAGES ? MODES.NONE : MODES.PINNED_MESSAGES;
     },
+    getChannel() {
+        return this.discussStore.channels[
+            createLocalId("discuss.channel", this.props.chatWindow.thread?.id)
+        ];
+    },
     get actions() {
         const acts = this._super();
-        if (this.thread?.model === "discuss.channel" && this.props.chatWindow.isOpen) {
+        const channel = this.getChannel();
+        if (channel?.model === "discuss.channel" && this.props.chatWindow.isOpen) {
             acts.push({
                 id: "pinned",
                 name: _t("Pinned Messages"),

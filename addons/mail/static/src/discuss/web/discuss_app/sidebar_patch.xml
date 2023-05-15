@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussSidebar" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='mailBoxes']" position="before">
+            <div class="d-flex justify-content-center">
+                <button t-on-click="onClickStartMeeting" class="btn btn-primary rounded" title="Start a meeting">
+                    Start a meeting
+                </button>
+            </div>
+        </xpath>
+    </t>
+    <t t-inherit="mail.DiscussCategoryItem" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='commands']" position="after">
+            <div t-if="channel and Object.keys(channel.rtcSessions).length > 0" class="fa fa-volume-up ms-1 me-3" t-att-class="{ 'text-danger': rtc.state.channel?.id === thread.id }"/>
+        </xpath>
+    </t>
+</templates>

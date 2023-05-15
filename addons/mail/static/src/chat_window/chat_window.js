@@ -1,10 +1,8 @@
 /* @odoo-module */
 
-import { Call } from "@mail/rtc/call";
 import { Thread } from "@mail/core_ui/thread";
 import { Composer } from "@mail/composer/composer";
 import { useStore } from "@mail/core/messaging_hook";
-import { useRtc } from "@mail/rtc/rtc_hook";
 import { useMessageEdition, useMessageHighlight, useMessageToReplyTo } from "@mail/utils/hooks";
 import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
@@ -28,7 +26,6 @@ export const MODES = {
  */
 export class ChatWindow extends Component {
     static components = {
-        Call,
         Dropdown,
         DropdownItem,
         Thread,
@@ -46,7 +43,6 @@ export class ChatWindow extends Component {
         this.chatWindowService = useState(useService("mail.chat_window"));
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
-        this.rtc = useRtc();
         this.messageEdition = useMessageEdition();
         this.messageHighlight = useMessageHighlight();
         this.messageToReplyTo = useMessageToReplyTo();
@@ -131,19 +127,6 @@ export class ChatWindow extends Component {
 
     get actions() {
         const acts = [];
-        if (
-            this.thread?.allowCalls &&
-            this.thread !== this.rtc.state.channel &&
-            !this.props.chatWindow.hidden
-        ) {
-            acts.push({
-                id: "call",
-                name: _t("Start a Call"),
-                icon: "fa fa-fw fa-phone",
-                onSelect: () => this.rtc.toggleCall(this.props.chatWindow.thread),
-                sequence: 10,
-            });
-        }
         acts.push({
             id: "close",
             name: _t("Close Chat Window"),

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Thread" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-mail-Thread')]" position="before">
+            <t t-set="channel" t-value="getChannel()"/>
+            <div t-if="channel and personaService.outOfOfficeText(channel.correspondent)" class="alert alert-primary rounded-0" t-esc="personaService.outOfOfficeText(channel.correspondent)" role="alert"/>
+        </xpath>
+    </t>
+</templates>

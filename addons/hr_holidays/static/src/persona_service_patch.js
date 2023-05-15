@@ -19,7 +19,7 @@ patch(PersonaService.prototype, "hr_holidays", {
     },
 
     outOfOfficeText(persona) {
-        if (!persona.out_of_office_date_end) {
+        if (!persona?.out_of_office_date_end) {
             return "";
         }
         const currentDate = new Date();

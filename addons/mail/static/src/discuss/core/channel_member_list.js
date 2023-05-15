@@ -7,17 +7,17 @@ import { useService } from "@web/core/utils/hooks";
 
 export class ChannelMemberList extends Component {
     static components = { ImStatus };
-    static props = ["thread", "className"];
+    static props = ["channel", "className"];
     static template = "discuss.ChannelMemberList";
 
     setup() {
         this.messaging = useMessaging();
         this.store = useStore();
         this.threadService = useState(useService("mail.thread"));
-        onWillStart(() => this.threadService.fetchChannelMembers(this.props.thread));
+        onWillStart(() => this.threadService.fetchChannelMembers(this.props.channel));
         onWillUpdateProps((nextProps) => {
-            if (nextProps.thread.channelMembers.length === 0) {
-                this.threadService.fetchChannelMembers(nextProps.thread);
+            if (nextProps.channel.channelMembers.length === 0) {
+                this.threadService.fetchChannelMembers(nextProps.channel);
             }
         });
     }

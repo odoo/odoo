@@ -3,7 +3,6 @@
 import { reactive } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
-import { onChange } from "@mail/utils/misc";
 
 export class Store {
     constructor(env, { "mail.context": context }) {
@@ -15,23 +14,6 @@ export class Store {
     setup(env) {
         this.env = env;
         this.discuss.activeTab = this.env.services.ui.isSmall ? "mailbox" : "all";
-    }
-
-    async updateBusSubscription() {
-        await new Promise(setTimeout); // Wait for thread fully inserted.
-        const channelIds = [];
-        const ids = Object.keys(this.threads).sort(); // Ensure channels processed in same order.
-        for (const id of ids) {
-            const thread = this.threads[id];
-            if (thread.model === "discuss.channel" && thread.hasSelfAsMember) {
-                channelIds.push(id);
-            }
-        }
-        const channels = JSON.stringify(channelIds);
-        if (this.isMessagingReady && this.lastChannelSubscription !== channels) {
-            this.env.services["bus_service"].forceUpdateChannels();
-        }
-        this.lastChannelSubscription = channels;
     }
 
     get self() {
@@ -59,8 +41,6 @@ export class Store {
      */
     inPublicPage = false;
 
-    /** @type {Object.<number, import("@mail/core/channel_member_model").ChannelMember>} */
-    channelMembers = {};
     companyName = "";
 
     /** @type {Object.<number, import("@mail/core/notification_model").Notification>} */
@@ -75,12 +55,9 @@ export class Store {
     /** @type {Object.<number, import("@mail/core/persona_model").Persona>} */
     personas = {};
 
-    /** @type {import("@mail/rtc/rtc_session_model").rtcSession{}} */
-    rtcSessions = {};
     users = {};
     internalUserGroupId = null;
     registeredImStatusPartners = null;
-    ringingThreads = null;
 
     hasLinkPreviewFeature = true;
 
@@ -148,7 +125,6 @@ export const storeService = {
     dependencies: ["bus_service", "ui", "mail.context"],
     start(env, services) {
         const res = reactive(new Store(env, services));
-        onChange(res, "threads", () => res.updateBusSubscription());
         services.ui.bus.addEventListener("resize", () => {
             if (!services.ui.isSmall) {
                 res.discuss.activeTab = "all";

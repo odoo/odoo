@@ -1,9 +1,16 @@
 /** @odoo-module */
 
 import { Thread } from "@mail/core/thread_model";
+import { createLocalId } from "@mail/utils/misc";
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, "im_livechat", {
+    setup() {
+        this._super();
+        /** @type {import("@mail/discuss/discuss_store_service").Discusstore} */
+        this.discussStore = this._store.env.services["discuss.store"];
+    },
+
     get isChannel() {
         return this.type === "livechat" || this._super();
     },
@@ -28,22 +35,37 @@ patch(Thread.prototype, "im_livechat", {
         return this.type === "livechat" ? false : this._super();
     },
 
+    get discussChannel() {
+        return this.discussStore.channels[createLocalId("discuss.channel", this.id)];
+    },
+
     get displayName() {
-        if (this.type !== "livechat" || !this.correspondent) {
+        if (this.type !== "livechat" || !this.discussChannel.correspondent) {
             return this._super();
         }
-        if (!this.correspondent.is_public && this.correspondent.country) {
-            return `${this.getMemberName(this.correspondent)} (${this.correspondent.country.name})`;
+        if (
+            !this.discussChannel.correspondent.is_public &&
+            this.discussChannel.correspondent.country
+        ) {
+            return `${this.getMemberName(this.discussChannel.correspondent)} (${
+                this.discussChannel.correspondent.country.name
+            })`;
         }
         if (this.anonymous_country) {
-            return `${this.getMemberName(this.correspondent)} (${this.anonymous_country.name})`;
+            return `${this.getMemberName(this.discussChannel.correspondent)} (${
+                this.anonymous_country.name
+            })`;
         }
-        return this.getMemberName(this.correspondent);
+        return this.getMemberName(this.discussChannel.correspondent);
     },
 
     get imgUrl() {
-        if (this.type === "livechat" && this.correspondent && !this.correspondent.is_public) {
-            return `/web/image/res.partner/${this.correspondent.id}/avatar_128`;
+        if (
+            this.type === "livechat" &&
+            this.discussChannel.correspondent &&
+            !this.discussChannel.correspondent.is_public
+        ) {
+            return `/web/image/res.partner/${this.discussChannel.correspondent.id}/avatar_128`;
         }
         return this._super();
     },

@@ -3,24 +3,24 @@
 
     <t t-name="discuss.ChannelMemberList" owl="1">
         <div class="o-discuss-ChannelMemberList d-flex flex-column overflow-auto bg-view" t-att-class="props.className">
-            <t t-if="props.thread.onlineMembers.length > 0">
+            <t t-if="props.channel.onlineMembers.length > 0">
                 <h6 class="m-2">
                     Online -
-                    <t t-esc="props.thread.onlineMembers.length"/>
+                    <t t-esc="props.channel.onlineMembers.length"/>
                 </h6>
-                <t t-foreach="props.thread.onlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
+                <t t-foreach="props.channel.onlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
             </t>
-            <t t-if="props.thread.offlineMembers.length > 0">
+            <t t-if="props.channel.offlineMembers.length > 0">
                 <h6 class="m-2">
                     Offline -
-                    <t t-esc="props.thread.offlineMembers.length"/>
+                    <t t-esc="props.channel.offlineMembers.length"/>
                 </h6>
-                <t t-foreach="props.thread.offlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
+                <t t-foreach="props.channel.offlineMembers" t-as="member" t-key="member.id" t-call="discuss.channel_member"/>
             </t>
-            <span t-if="props.thread.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>
-            <span t-if="props.thread.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-esc="props.thread.unknownMembersCount"/> other members.</span>
-            <div t-if="!props.thread.areAllMembersLoaded" class="mx-2 my-1">
-                <button class="btn btn-secondary" title="Load more" t-on-click.stop="() => threadService.fetchChannelMembers(props.thread)">Load more</button>
+            <span t-if="props.channel.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>
+            <span t-if="props.channel.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-esc="props.channel.unknownMembersCount"/> other members.</span>
+            <div t-if="!props.channel.areAllMembersLoaded" class="mx-2 my-1">
+                <button class="btn btn-secondary" title="Load more" t-on-click.stop="() => threadService.fetchChannelMembers(props.channel)">Load more</button>
             </div>
         </div>
     </t>
@@ -29,12 +29,12 @@
         <div class="o-discuss-ChannelMember d-flex align-items-center p-2 bg-view" t-att-class="{ 'cursor-pointer': canOpenChatWith(member) }" t-on-click.stop="() => this.openChatAvatar(member)">
             <div class="o-bg-inherit o-discuss-ChannelMember-avatar position-relative d-flex ms-4 flex-shrink-0">
                 <img class="w-100 h-100 rounded o_object_fit_cover o_redirect"
-                     t-att-src="threadService.avatarUrl(member.persona, props.thread)"/>
+                     t-att-src="threadService.avatarUrl(member.persona, props.channel)"/>
                 <ImStatus persona="member.persona" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
             </div>
             <span class="ms-2 text-truncate" t-esc="member.persona.name"/>
             <span class="ms-auto">
-                <span t-if="props.thread.invitedMemberIds.has(member.id)" class="p-1 fa fa-user-plus"/>
+                <span t-if="props.channel.invitedMemberIds.has(member.id)" class="p-1 fa fa-user-plus"/>
                 <span t-if="member.rtcSession?.isSelfMuted and !member.rtcSession?.isDeaf" class="p-1 fa fa-microphone-slash"/>
                 <span t-elif="member.rtcSession?.isDeaf" class="p-1 fa fa-deaf"/>
                 <span t-if="member.rtcSession?.raisingHand" class="p-1 fa fa-hand-paper-o"/>

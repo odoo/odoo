@@ -42,10 +42,10 @@ export class Typing {
      * @param {import("@mail/core/channel_member_model").ChannelMember} member
      */
     addTypingMember(member) {
-        if (!this.memberIdsByChannelId.has(member.thread.id)) {
-            this.memberIdsByChannelId.set(member.thread.id, new Set());
+        if (!this.memberIdsByChannelId.has(member.channel.id)) {
+            this.memberIdsByChannelId.set(member.channel.id, new Set());
         }
-        const memberIds = this.memberIdsByChannelId.get(member.thread.id);
+        const memberIds = this.memberIdsByChannelId.get(member.channel.id);
         memberIds.add(member.id);
         browser.clearTimeout(this.timerByMemberId.get(member.id));
         this.timerByMemberId.set(
@@ -76,11 +76,11 @@ export class Typing {
      * @param {import("@mail/core/channel_member_model").ChannelMember} member
      */
     removeTypingMember(member) {
-        const memberIds = this.memberIdsByChannelId.get(member.thread.id);
+        const memberIds = this.memberIdsByChannelId.get(member.channel.id);
         if (memberIds) {
             memberIds.delete(member.id);
             if (memberIds.size === 0) {
-                this.memberIdsByChannelId.delete(member.thread.id);
+                this.memberIdsByChannelId.delete(member.channel.id);
             }
         }
         browser.clearTimeout(this.timerByMemberId.get(member.id));

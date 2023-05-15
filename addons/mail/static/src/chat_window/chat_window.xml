@@ -23,7 +23,6 @@
             <t t-else="">
                 <ThreadIcon t-if="thread" thread="thread" className="'ms-3 me-1 my-0'"/>
             </t>
-            <ImStatus t-if="thread and thread.type === 'chat' and thread.correspondent" className="'me-1'" persona="thread.correspondent"/>
             <span class="o-mail-ChatWindow-name text-truncate fw-bold" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="{
                     'ms-3 me-1 my-0': !thread,
                 }"
@@ -59,7 +58,6 @@
             <button t-if="state.activeMode" class="o-mail-ChatWindow-closePanel btn position-absolute top-0 end-0 btn opacity-75 opacity-100-hover" title="Close panel" t-on-click.stop="() => state.activeMode = ''"><i class="fa fa-close"/></button>
             <t t-if="thread" name="thread content">
                 <t t-if="state.activeMode === MODES.NONE">
-                    <Call t-if="Object.keys(thread.rtcSessions).length > 0" thread="thread" compact="true"/>
                     <Thread isInChatWindow="true" thread="thread" t-key="thread.localId" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
                     <Composer composer="thread.composer" autofocus="props.chatWindow.autofocus" mode="'compact'" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" dropzoneRef="contentRef"/>
                 </t>

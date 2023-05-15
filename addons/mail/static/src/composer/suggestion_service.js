@@ -5,6 +5,10 @@ import { registry } from "@web/core/registry";
 
 export class SuggestionService {
     constructor(env, services) {
+        this.setup(env, services);
+    }
+
+    setup(env, services) {
         this.orm = services.orm;
         /** @type {import("@mail/core/store_service").Store} */
         this.store = services["mail.store"];
@@ -12,8 +16,6 @@ export class SuggestionService {
         this.threadService = services["mail.thread"];
         /** @type {import("@mail/core/persona_service").PersonaService} */
         this.personaService = services["mail.persona"];
-        /** @type {import("@mail/core/channel_member_service").ChannelMemberService} */
-        this.channelMemberService = services["discuss.channel.member"];
     }
 
     getSupportedDelimiters(thread) {
@@ -35,26 +37,18 @@ export class SuggestionService {
 
     /**
      * @param {string} term
-     * @param {import("@mail/core/thread_model").Thread} thread
+     * @param {import("@mail/core/thread_model").Thread} thread to override the function in case of fetch partners in channels
      */
     async fetchPartners(term, thread) {
         const kwargs = { search: term };
-        if (thread.model === "discuss.channel") {
-            kwargs.channel_id = thread.id;
-        }
         const suggestedPartners = await this.orm.call(
             "res.partner",
-            thread.model === "discuss.channel"
-                ? "get_mention_suggestions_from_channel"
-                : "get_mention_suggestions",
+            "get_mention_suggestions",
             [],
             kwargs
         );
         suggestedPartners.map((data) => {
             this.personaService.insert({ ...data, type: "partner" });
-            if (data.persona?.channelMembers) {
-                this.channelMemberService.insert(...data.persona.channelMembers);
-            }
         });
     }
 
@@ -85,13 +79,8 @@ export class SuggestionService {
      * @returns {[mainSuggestion[], extraSuggestion[]]}
      */
     searchSuggestions({ delimiter, term }, { thread } = {}, sort = false) {
-        const cleanedSearchTerm = cleanTerm(term);
-        switch (delimiter) {
-            case "@": {
-                return this.searchPartnerSuggestions(cleanedSearchTerm, thread, sort);
-            }
-            case "#":
-                return this.searchChannelSuggestions(cleanedSearchTerm, thread, sort);
+        if (delimiter === "@") {
+            return this.searchPartnerSuggestions(cleanTerm(term), thread, sort);
         }
         return {
             type: undefined,
@@ -101,26 +90,7 @@ export class SuggestionService {
     }
 
     searchPartnerSuggestions(cleanedSearchTerm, thread, sort) {
-        let partners;
-        const isNonPublicChannel =
-            thread &&
-            (thread.type === "group" ||
-                thread.type === "chat" ||
-                (thread.type === "channel" && thread.group_based_subscription));
-        if (isNonPublicChannel) {
-            // Only return the channel members when in the context of a
-            // group restricted channel. Indeed, the message with the mention
-            // would be notified to the mentioned partner, so this prevents
-            // from inadvertently leaking the private message to the
-            // mentioned partner.
-            partners = thread.channelMembers
-                .map((member) => member.persona)
-                .filter((persona) => persona.type === "partner");
-        } else {
-            partners = Object.values(this.store.personas).filter(
-                (persona) => persona.type === "partner"
-            );
-        }
+        const partners = this.partnersToSearch();
         const mainSuggestionList = [];
         const extraSuggestionList = [];
         for (const partner of partners) {
@@ -145,185 +115,91 @@ export class SuggestionService {
         return {
             type: "Partner",
             mainSuggestions: sort
-                ? this.sortPartnerSuggestions(mainSuggestionList, cleanedSearchTerm, thread)
+                ? mainSuggestionList.sort((p1, p2) =>
+                      this.compareSuggestions(p1, p2, thread, cleanedSearchTerm)
+                  )
                 : mainSuggestionList,
             extraSuggestions: sort
-                ? this.sortPartnerSuggestions(extraSuggestionList, cleanedSearchTerm, thread)
+                ? extraSuggestionList.sort((p1, p2) =>
+                      this.compareSuggestions(p1, p2, thread, cleanedSearchTerm)
+                  )
                 : extraSuggestionList,
         };
     }
 
     /**
-     * @param {[import("@mail/core/persona_model").Persona]} [partners]
-     * @param {String} [searchTerm]
-     * @param {import("@mail/core/thread_model").Thread} thread
-     * @returns {[import("@mail/core/persona_model").Persona]}
+     * @param {import("@mail/core/thread_model").Thread} thread to override the function in case of fetch partners in channels
      */
-    sortPartnerSuggestions(partners, searchTerm = "", thread = undefined) {
-        const cleanedSearchTerm = cleanTerm(searchTerm);
-        /**
-         * Ordering:
-         * - recent chat partners
-         * - internal users
-         * - channel members
-         * - thread followers
-         * - longgest match of name, alphabetically if having same length of match
-         * - longgest match of email, alphabetically if having same length of match
-         * - id
-         */
-        return partners.sort((p1, p2) => {
-            const recentChatPartnerIds = this.personaService.getRecentChatPartnerIds();
-            const recentChatIndex_p1 = recentChatPartnerIds.findIndex(
-                (partnerId) => partnerId === p1.id
-            );
-            const recentChatIndex_p2 = recentChatPartnerIds.findIndex(
-                (partnerId) => partnerId === p2.id
-            );
-            if (recentChatIndex_p1 !== -1 && recentChatIndex_p2 === -1) {
-                return -1;
-            } else if (recentChatIndex_p1 === -1 && recentChatIndex_p2 !== -1) {
-                return 1;
-            } else if (recentChatIndex_p1 < recentChatIndex_p2) {
-                return -1;
-            } else if (recentChatIndex_p1 > recentChatIndex_p2) {
-                return 1;
-            }
-            const isAInternalUser = p1.user?.isInternalUser;
-            const isBInternalUser = p2.user?.isInternalUser;
-            if (isAInternalUser && !isBInternalUser) {
-                return -1;
-            }
-            if (!isAInternalUser && isBInternalUser) {
-                return 1;
-            }
-            if (thread?.model === "discuss.channel") {
-                const isMember1 = thread.channelMembers.some((member) => member.persona === p1);
-                const isMember2 = thread.channelMembers.some((member) => member.persona === p2);
-                if (isMember1 && !isMember2) {
-                    return -1;
-                }
-                if (!isMember1 && isMember2) {
-                    return 1;
-                }
-            }
-            if (thread) {
-                const isFollower1 = thread.followers.some((follower) => follower.partner === p1);
-                const isFollower2 = thread.followers.some((follower) => follower.partner === p2);
-                if (isFollower1 && !isFollower2) {
-                    return -1;
-                }
-                if (!isFollower1 && isFollower2) {
-                    return 1;
-                }
-            }
-            const cleanedName1 = cleanTerm(p1.name ?? "");
-            const cleanedName2 = cleanTerm(p2.name ?? "");
-            if (
-                cleanedName1.startsWith(cleanedSearchTerm) &&
-                !cleanedName2.startsWith(cleanedSearchTerm)
-            ) {
-                return -1;
-            }
-            if (
-                !cleanedName1.startsWith(cleanedSearchTerm) &&
-                cleanedName2.startsWith(cleanedSearchTerm)
-            ) {
-                return 1;
-            }
-            if (cleanedName1 < cleanedName2) {
-                return -1;
-            }
-            if (cleanedName1 > cleanedName2) {
-                return 1;
-            }
-            const cleanedEmail1 = cleanTerm(p1.email ?? "");
-            const cleanedEmail2 = cleanTerm(p2.email ?? "");
-            if (
-                cleanedEmail1.startsWith(cleanedSearchTerm) &&
-                !cleanedEmail1.startsWith(cleanedSearchTerm)
-            ) {
-                return -1;
-            }
-            if (
-                !cleanedEmail2.startsWith(cleanedSearchTerm) &&
-                cleanedEmail2.startsWith(cleanedSearchTerm)
-            ) {
-                return 1;
-            }
-            if (cleanedEmail1 < cleanedEmail2) {
-                return -1;
-            }
-            if (cleanedEmail1 > cleanedEmail2) {
-                return 1;
-            }
-            return p1.id - p2.id;
-        });
+    partnersToSearch(thread) {
+        return Object.values(this.store.personas).filter((persona) => persona.type === "partner");
     }
 
-    searchChannelSuggestions(cleanedSearchTerm, thread, sort) {
-        let threads;
-        if (
-            thread &&
-            (thread.type === "group" ||
-                thread.type === "chat" ||
-                (thread.type === "channel" && thread.authorizedGroupFullName))
-        ) {
-            // Only return the current channel when in the context of a
-            // group restricted channel or group or chat. Indeed, the message with the mention
-            // would appear in the target channel, so this prevents from
-            // inadvertently leaking the private message into the mentioned
-            // channel.
-            threads = [thread];
-        } else {
-            threads = Object.values(this.store.threads);
+    /**
+     * @param {import("@mail/core/thread_model").Thread} thread
+     * @param {import('@mail/core/persona_model').Persona} p1
+     * @param {import('@mail/core/persona_model').Persona} p2
+     * @param {string} cleanedSearchTerm
+     */
+    compareSuggestions(p1, p2, thread, cleanedSearchTerm) {
+        const isAInternalUser = p1.user?.isInternalUser;
+        const isBInternalUser = p2.user?.isInternalUser;
+        if (isAInternalUser && !isBInternalUser) {
+            return -1;
         }
-        const suggestionList = threads.filter(
-            (thread) =>
-                thread.type === "channel" &&
-                thread.displayName &&
-                cleanTerm(thread.displayName).includes(cleanedSearchTerm)
-        );
-        const sortFunc = (c1, c2) => {
-            const isPublicChannel1 = c1.type === "channel" && !c2.authorizedGroupFullName;
-            const isPublicChannel2 = c2.type === "channel" && !c2.authorizedGroupFullName;
-            if (isPublicChannel1 && !isPublicChannel2) {
+        if (!isAInternalUser && isBInternalUser) {
+            return 1;
+        }
+        if (thread) {
+            const isFollower1 = thread.followers.some((follower) => follower.partner === p1);
+            const isFollower2 = thread.followers.some((follower) => follower.partner === p2);
+            if (isFollower1 && !isFollower2) {
                 return -1;
             }
-            if (!isPublicChannel1 && isPublicChannel2) {
+            if (!isFollower1 && isFollower2) {
                 return 1;
             }
-            if (c1.hasSelfAsMember && !c2.hasSelfAsMember) {
-                return -1;
-            }
-            if (!c1.hasSelfAsMember && c2.hasSelfAsMember) {
-                return 1;
-            }
-            const cleanedDisplayName1 = cleanTerm(c1.displayName ?? "");
-            const cleanedDisplayName2 = cleanTerm(c2.displayName ?? "");
-            if (
-                cleanedDisplayName1.startsWith(cleanedSearchTerm) &&
-                !cleanedDisplayName2.startsWith(cleanedSearchTerm)
-            ) {
-                return -1;
-            }
-            if (
-                !cleanedDisplayName1.startsWith(cleanedSearchTerm) &&
-                cleanedDisplayName2.startsWith(cleanedSearchTerm)
-            ) {
-                return 1;
-            }
-            if (cleanedDisplayName1 < cleanedDisplayName2) {
-                return -1;
-            }
-            if (cleanedDisplayName1 > cleanedDisplayName2) {
-                return 1;
-            }
-            return c1.id - c2.id;
-        };
-        return {
-            type: "Thread",
-            mainSuggestions: sort ? suggestionList.sort(sortFunc) : suggestionList,
-        };
+        }
+        const cleanedName1 = cleanTerm(p1.name ?? "");
+        const cleanedName2 = cleanTerm(p2.name ?? "");
+        if (
+            cleanedName1.startsWith(cleanedSearchTerm) &&
+            !cleanedName2.startsWith(cleanedSearchTerm)
+        ) {
+            return -1;
+        }
+        if (
+            !cleanedName1.startsWith(cleanedSearchTerm) &&
+            cleanedName2.startsWith(cleanedSearchTerm)
+        ) {
+            return 1;
+        }
+        if (cleanedName1 < cleanedName2) {
+            return -1;
+        }
+        if (cleanedName1 > cleanedName2) {
+            return 1;
+        }
+        const cleanedEmail1 = cleanTerm(p1.email ?? "");
+        const cleanedEmail2 = cleanTerm(p2.email ?? "");
+        if (
+            cleanedEmail1.startsWith(cleanedSearchTerm) &&
+            !cleanedEmail1.startsWith(cleanedSearchTerm)
+        ) {
+            return -1;
+        }
+        if (
+            !cleanedEmail2.startsWith(cleanedSearchTerm) &&
+            cleanedEmail2.startsWith(cleanedSearchTerm)
+        ) {
+            return 1;
+        }
+        if (cleanedEmail1 < cleanedEmail2) {
+            return -1;
+        }
+        if (cleanedEmail1 > cleanedEmail2) {
+            return 1;
+        }
+        return p1.id - p2.id;
     }
 }
 

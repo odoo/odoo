@@ -154,13 +154,14 @@ QUnit.test("Channel member count update after user joined", async (assert) => {
     pyEnv["res.partner"].create({ name: "Harry", user_ids: [userId] });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    const thread = env.services["mail.store"].threads[createLocalId("discuss.channel", channelId)];
-    assert.strictEqual(thread.memberCount, 1);
+    const channel =
+        env.services["discuss.store"].channels[createLocalId("discuss.channel", channelId)];
+    assert.strictEqual(channel.memberCount, 1);
     await click("[title='Show Member List']");
     await click("[title='Add Users']");
     await click(".o-discuss-ChannelInvitation-selectable:contains(Harry)");
     await click("[title='Invite to Channel']");
-    assert.strictEqual(thread.memberCount, 2);
+    assert.strictEqual(channel.memberCount, 2);
 });
 
 QUnit.test("Channel member count update after user left", async (assert) => {
@@ -176,11 +177,12 @@ QUnit.test("Channel member count update after user left", async (assert) => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    const thread = env.services["mail.store"].threads[createLocalId("discuss.channel", channelId)];
-    assert.strictEqual(thread.memberCount, 2);
+    const channel =
+        env.services["discuss.store"].channels[createLocalId("discuss.channel", channelId)];
+    assert.strictEqual(channel.memberCount, 2);
     await env.services.orm.call("discuss.channel", "action_unfollow", [channelId], {
         context: { mockedUserId: userId },
     });
     await nextTick();
-    assert.strictEqual(thread.memberCount, 1);
+    assert.strictEqual(channel.memberCount, 1);
 });

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Discuss" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='mobileTopbar']" position="before">
+            <t t-set="channel" t-value="getChannel()"/>
+        </xpath>
+        <xpath expr="//*[@t-ref='autoresizeInput']" position="after">
+            <button t-if="channel?.allowCalls and thread.type !== 'mailbox' and channel.localId !== rtc.state.channel?.localId" class="btn rounded px-2 shadow-none" title="Start a Call" t-on-click="() => this.rtc.toggleCall(channel)" t-ref="startCall">
+                <i class="fa fa-lg fa-phone text-700"/>
+            </button>
+        </xpath>
+        <xpath expr="//Thread" position="before">
+            <Call t-if="channel and Object.keys(channel.rtcSessions).length > 0" channel="channel"/>
+        </xpath>
+    </t>
+</templates>

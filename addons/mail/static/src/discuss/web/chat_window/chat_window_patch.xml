@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('o-mail-ChatWindow-header')]" position="before">
+            <t t-set="channel" t-value="getChannel()"/>
+        </xpath>
+        <xpath expr="//span[hasclass('o-mail-ChatWindow-name')]" position="before">
+            <ImStatus t-if="channel and channel.type === 'chat' and channel.correspondent" className="'me-1'" persona="channel.correspondent"/>
+        </xpath>
+        <xpath expr="//t[@name='thread content']" position="inside">
+            <CallSettings t-if="state.activeMode === 'in-settings'" channel="channel" className="'flex-grow-1'"/>
+            <ChannelMemberList t-if="state.activeMode === 'member-list'" channel="channel" className="'flex-shrink-0 w-100 h-100'"/>
+            <ChannelInvitation t-if="state.activeMode === 'add-users'" thread="thread" chatState="state"/>
+        </xpath>
+        <xpath expr="//Thread" position="before">
+            <Call t-if="channel and Object.keys(channel.rtcSessions).length > 0" channel="channel" compact="true"/>
+        </xpath>
+    </t>
+</templates>

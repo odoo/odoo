@@ -77,7 +77,7 @@
                     <hr t-if="threads.length !== 0 or !failure_last" class="my-0"/>
                 </t>
             </t>
-            <t t-foreach="threads" t-as="thread" t-key="thread.localId">
+            <t t-foreach="threads" t-as="thread" t-key="thread.localId" t-ref="threads">
                 <t t-set="message" t-value="thread.isChatChannel or (thread.type === 'channel' and !thread.hasNeedactionMessages) ? thread.newestMessage : thread.newestNeedactionMessage"/>
                 <NotificationItem
                     body="message?.inlineBody"
@@ -90,9 +90,6 @@
                     onSwipeRight="hasTouch() and thread.isUnread ? { action: () => this.markAsRead(thread), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
                     onSwipeLeft="hasTouch() and threadService.canUnpin(thread) ? { action: () => this.threadService.unpin(thread), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
                 >
-                    <t t-set-slot="icon">
-                        <ImStatus t-if="thread.type === 'chat'" persona="thread.correspondent" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
-                    </t>
                     <t t-if="message" t-set-slot="body-icon">
                         <t t-if="message.isSelfAuthored">
                             <i class="fa fa-mail-reply me-1"/>You:

@@ -112,45 +112,40 @@ export class MessagingMenu extends Component {
         if (tab !== "all") {
             threads = threads.filter(({ type }) => this.tabToThreadType(tab).includes(type));
         }
-        return threads.sort((a, b) => {
-            /**
-             * Ordering:
-             * - threads with needaction
-             * - unread channels
-             * - read channels
-             * - odoobot chat
-             *
-             * In each group, thread with most recent message comes first
-             */
-            if (a.correspondent === this.store.odoobot && b.correspondent !== this.store.odoobot) {
-                return 1;
-            }
-            if (b.correspondent === this.store.odoobot && a.correspondent !== this.store.odoobot) {
-                return -1;
-            }
-            if (a.hasNeedactionMessages && !b.hasNeedactionMessages) {
-                return -1;
-            }
-            if (b.hasNeedactionMessages && !a.hasNeedactionMessages) {
-                return 1;
-            }
-            if (a.message_unread_counter > 0 && b.message_unread_counter === 0) {
-                return -1;
-            }
-            if (b.message_unread_counter > 0 && a.message_unread_counter === 0) {
-                return 1;
-            }
-            if (!a.newestPersistentMessage?.datetime && b.newestPersistentMessage?.datetime) {
-                return 1;
-            }
-            if (!b.newestPersistentMessage?.datetime && a.newestPersistentMessage?.datetime) {
-                return -1;
-            }
-            if (a.newestPersistentMessage?.datetime && b.newestPersistentMessage?.datetime) {
-                return b.newestPersistentMessage.datetime - a.newestPersistentMessage.datetime;
-            }
-            return b.localId > a.localId ? 1 : -1;
-        });
+        return threads.sort((a, b) => this.comparethreads(a, b));
+    }
+    comparethreads(a, b) {
+        /**
+         * Ordering:
+         * - threads with needaction
+         * - unread channels
+         * - read channels
+         * - odoobot chat
+         *
+         * In each group, thread with most recent message comes first
+         */
+        if (a.hasNeedactionMessages && !b.hasNeedactionMessages) {
+            return -1;
+        }
+        if (b.hasNeedactionMessages && !a.hasNeedactionMessages) {
+            return 1;
+        }
+        if (a.message_unread_counter > 0 && b.message_unread_counter === 0) {
+            return -1;
+        }
+        if (b.message_unread_counter > 0 && a.message_unread_counter === 0) {
+            return 1;
+        }
+        if (!a.newestPersistentMessage?.datetime && b.newestPersistentMessage?.datetime) {
+            return 1;
+        }
+        if (!b.newestPersistentMessage?.datetime && a.newestPersistentMessage?.datetime) {
+            return -1;
+        }
+        if (a.newestPersistentMessage?.datetime && b.newestPersistentMessage?.datetime) {
+            return b.newestPersistentMessage.datetime - a.newestPersistentMessage.datetime;
+        }
+        return b.localId > a.localId ? 1 : -1;
     }
 
     /**

@@ -29,8 +29,6 @@ export class ThreadService {
 
     setup(env, services) {
         this.env = env;
-        /** @type {import("@mail/core/channel_member_service").ChannelMemberService} */
-        this.channelMemberService = services["discuss.channel.member"];
         /** @type {import("@mail/attachments/attachment_service").AttachmentService} */
         this.attachmentsService = services["mail.attachment"];
         /** @type {import("@mail/core/store_service").Store} */
@@ -68,28 +66,6 @@ export class ThreadService {
                 serverData.create_uid === this.store.user?.user?.id,
         });
         return thread;
-    }
-
-    async fetchChannelMembers(thread) {
-        const known_member_ids = thread.channelMembers.map((channelMember) => channelMember.id);
-        const results = await this.rpc("/discuss/channel/members", {
-            channel_id: thread.id,
-            known_member_ids: known_member_ids,
-        });
-        let channelMembers = [];
-        if (
-            results["channelMembers"] &&
-            results["channelMembers"][0] &&
-            results["channelMembers"][0][1]
-        ) {
-            channelMembers = results["channelMembers"][0][1];
-        }
-        thread.memberCount = results["memberCount"];
-        for (const channelMember of channelMembers) {
-            if (channelMember.persona || channelMember.partner) {
-                this.channelMemberService.insert({ ...channelMember, threadId: thread.id });
-            }
-        }
     }
 
     /**
@@ -689,85 +665,6 @@ export class ThreadService {
                 thread.channel = assignDefined(thread.channel ?? {}, serverData.channel);
             }
 
-            thread.memberCount = serverData.channel?.memberCount ?? thread.memberCount;
-            if ("rtc_inviting_session" in serverData) {
-                this.env.bus.trigger("THREAD-SERVICE:UPDATE_RTC_SESSIONS", {
-                    thread,
-                    record: serverData.rtc_inviting_session,
-                });
-                thread.invitingRtcSessionId = serverData.rtc_inviting_session.id;
-                if (!this.store.ringingThreads.includes(thread.localId)) {
-                    this.store.ringingThreads.push(thread.localId);
-                }
-            }
-            if ("rtcInvitingSession" in serverData) {
-                if (Array.isArray(serverData.rtcInvitingSession)) {
-                    if (serverData.rtcInvitingSession[0][0] === "unlink") {
-                        thread.invitingRtcSessionId = undefined;
-                        removeFromArray(this.store.ringingThreads, thread.localId);
-                    }
-                    return;
-                }
-                this.env.bus.trigger("THREAD-SERVICE:UPDATE_RTC_SESSIONS", {
-                    thread,
-                    record: serverData.rtcInvitingSession,
-                });
-                thread.invitingRtcSessionId = serverData.rtcInvitingSession.id;
-                this.store.ringingThreads.push(thread.localId);
-            }
-            if (thread.type === "chat" && serverData.channel) {
-                thread.customName = serverData.channel.custom_channel_name;
-            }
-            if (serverData.channel?.channelMembers) {
-                for (const [command, membersData] of serverData.channel.channelMembers) {
-                    const members = Array.isArray(membersData) ? membersData : [membersData];
-                    for (const memberData of members) {
-                        const member = this.channelMemberService.insert([command, memberData]);
-                        if (thread.type !== "chat") {
-                            continue;
-                        }
-                        if (
-                            member.persona.id !== thread._store.user?.id ||
-                            (serverData.channel.channelMembers[0][1].length === 1 &&
-                                member.persona.id === thread._store.user?.id)
-                        ) {
-                            thread.chatPartnerId = member.persona.id;
-                        }
-                    }
-                }
-            }
-            if ("rtcSessions" in serverData) {
-                // FIXME this prevents cyclic dependencies between mail.thread and mail.rtc
-                this.env.bus.trigger("THREAD-SERVICE:UPDATE_RTC_SESSIONS", {
-                    thread,
-                    commands: serverData.rtcSessions,
-                });
-            }
-            if ("invitedMembers" in serverData) {
-                if (!serverData.invitedMembers) {
-                    thread.invitedMemberIds.clear();
-                    return;
-                }
-                const command = serverData.invitedMembers[0][0];
-                const members = serverData.invitedMembers[0][1];
-                switch (command) {
-                    case "insert":
-                        if (members) {
-                            for (const member of members) {
-                                const record = this.channelMemberService.insert(member);
-                                thread.invitedMemberIds.add(record.id);
-                            }
-                        }
-                        break;
-                    case "unlink":
-                    case "insert-and-unlink":
-                        // eslint-disable-next-line no-case-declarations
-                        for (const member of members) {
-                            thread.invitedMemberIds.delete(member.id);
-                        }
-                        break;
-                }
-            }
             if ("seen_partners_info" in serverData) {
                 thread.seenInfos = serverData.seen_partners_info.map(
                     ({ fetched_message_id, partner_id, seen_message_id }) => {
@@ -821,22 +718,18 @@ export class ThreadService {
             return thread;
         }
         const thread = new Thread(this.store, data);
-        onChange(thread, "message_unread_counter", () => {
-            if (thread.channel) {
-                thread.channel.message_unread_counter = thread.message_unread_counter;
-            }
-        });
-        onChange(thread, "isLoaded", () => thread.isLoadedDeferred.resolve());
-        onChange(thread, "channelMembers", () => this.store.updateBusSubscription());
-        onChange(thread, "is_pinned", () => {
-            if (!thread.is_pinned && this.store.discuss.threadLocalId === thread.localId) {
-                this.store.discuss.threadLocalId = null;
-            }
-        });
+        this.onchangeThread(thread);
         this.update(thread, data);
         this.insertComposer({ thread });
         // return reactive version.
         return this.store.threads[thread.localId];
+    }
+
+    /**
+     * @param {import("@mail/core/thread_model").Thread} thread
+     */
+    onchangeThread(thread) {
+        onChange(thread, "isLoaded", () => thread.isLoadedDeferred.resolve());
     }
 
     /**

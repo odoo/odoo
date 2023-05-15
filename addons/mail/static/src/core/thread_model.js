@@ -31,17 +31,8 @@ export class Thread {
     areAttachmentsLoaded = false;
     /** @type {import("@mail/attachments/attachment_model").Attachment[]} */
     attachments = [];
-    /** @type {integer} */
-    activeRtcSessionId;
     /** @type {object|undefined} */
     channel;
-    /** @type {import("@mail/core/channel_member_model").ChannelMember[]} */
-    channelMembers = [];
-    /** @type {RtcSession{}} */
-    rtcSessions = {};
-    invitingRtcSessionId;
-    /** @type {Set<number>} */
-    invitedMemberIds = new Set();
     /** @type {integer} */
     chatPartnerId;
     /** @type {import("@mail/composer/composer_model").Composer} */
@@ -61,7 +52,6 @@ export class Thread {
     isLoaded = false;
     /** @type {import("@mail/attachments/attachment_model").Attachment} */
     mainAttachment;
-    memberCount = 0;
     message_needaction_counter = 0;
     message_unread_counter = 0;
     /**
@@ -130,9 +120,12 @@ export class Thread {
             type: data.type,
             _store: store,
         });
+        this.setup();
         store.threads[this.localId] = this;
         return store.threads[this.localId];
     }
+
+    setup() {} // To override thread model attributes
 
     get accessRestrictedToGroupText() {
         if (!this.authorizedGroupFullName) {
@@ -141,18 +134,6 @@ export class Thread {
         return sprintf(_t('Access restricted to group "%(groupFullName)s"'), {
             groupFullName: this.authorizedGroupFullName,
         });
-    }
-
-    get activeRtcSession() {
-        return this._store.rtcSessions[this.activeRtcSessionId];
-    }
-
-    set activeRtcSession(session) {
-        this.activeRtcSessionId = session?.id;
-    }
-
-    get areAllMembersLoaded() {
-        return this.memberCount === this.channelMembers.length;
     }
 
     get attachmentsInWebClientView() {
@@ -173,17 +154,6 @@ export class Thread {
         return ["chat", "channel", "group"].includes(this.type);
     }
 
-    get allowCalls() {
-        return (
-            ["chat", "channel", "group"].includes(this.type) &&
-            this.correspondent !== this._store.odoobot
-        );
-    }
-
-    get hasMemberList() {
-        return ["channel", "group"].includes(this.type);
-    }
-
     get isChatChannel() {
         return ["chat", "group"].includes(this.type);
     }
@@ -201,45 +171,7 @@ export class Thread {
     }
 
     get displayName() {
-        if (this.type === "chat" && this.chatPartnerId) {
-            return (
-                this.customName ||
-                this._store.personas[createLocalId("partner", this.chatPartnerId)].nameOrDisplayName
-            );
-        }
-        if (this.type === "group" && !this.name) {
-            const listFormatter = new Intl.ListFormat(
-                this._store.env.services["user"].lang?.replace("_", "-"),
-                { type: "conjunction", style: "long" }
-            );
-            return listFormatter.format(
-                this.channelMembers.map((channelMember) => channelMember.persona.name)
-            );
-        }
         return this.name;
-    }
-
-    /** @type {import("@mail/core/persona_model").Persona|undefined} */
-    get correspondent() {
-        if (this.type === "channel") {
-            return undefined;
-        }
-        const correspondents = this.channelMembers
-            .map((member) => member.persona)
-            .filter((persona) => !!persona)
-            .filter(
-                ({ id, type }) =>
-                    id !== (type === "partner" ? this._store.user?.id : this._store.guest?.id)
-            );
-        if (correspondents.length === 1) {
-            // 2 members chat.
-            return correspondents[0];
-        }
-        if (correspondents.length === 0 && this.channelMembers.length === 1) {
-            // Self-chat.
-            return this._store.user;
-        }
-        return undefined;
     }
 
     /**
@@ -305,19 +237,6 @@ export class Thread {
         return this.messages.find((msg) => Number.isInteger(msg.id));
     }
 
-    get hasSelfAsMember() {
-        return this.channelMembers.some(
-            (channelMember) => channelMember.persona === this._store.self
-        );
-    }
-
-    /**
-     * @param {import("@mail/core/message_model").Message} message
-     */
-    hasMessage(message) {
-        return this.messages.some(({ id }) => id === message.id);
-    }
-
     get invitationLink() {
         if (!this.uuid || this.type === "chat") {
             return undefined;
@@ -327,16 +246,6 @@ export class Thread {
 
     get isEmpty() {
         return !this.messages.some((message) => !message.isEmpty);
-    }
-
-    get offlineMembers() {
-        const orderedOnlineMembers = [];
-        for (const member of this.channelMembers) {
-            if (member.persona.im_status !== "online") {
-                orderedOnlineMembers.push(member);
-            }
-        }
-        return orderedOnlineMembers.sort((m1, m2) => (m1.persona.name < m2.persona.name ? -1 : 1));
     }
 
     get nonEmptyMessages() {
@@ -370,48 +279,8 @@ export class Thread {
         return orderedSelfSeenMessages.slice().pop();
     }
 
-    get onlineMembers() {
-        const orderedOnlineMembers = [];
-        for (const member of this.channelMembers) {
-            if (member.persona.im_status === "online") {
-                orderedOnlineMembers.push(member);
-            }
-        }
-        return orderedOnlineMembers.sort((m1, m2) => {
-            const m1HasRtc = Boolean(m1.rtcSession);
-            const m2HasRtc = Boolean(m2.rtcSession);
-            if (m1HasRtc === m2HasRtc) {
-                /**
-                 * If raisingHand is falsy, it gets an Infinity value so that when
-                 * we sort by [oldest/lowest-value]-first, falsy values end up last.
-                 */
-                const m1RaisingValue = m1.rtcSession?.raisingHand || Infinity;
-                const m2RaisingValue = m2.rtcSession?.raisingHand || Infinity;
-                if (m1HasRtc && m1RaisingValue !== m2RaisingValue) {
-                    return m1RaisingValue - m2RaisingValue;
-                } else {
-                    return m1.persona.name?.localeCompare(m2.persona.name) ?? 1;
-                }
-            } else {
-                return m2HasRtc - m1HasRtc;
-            }
-        });
-    }
-
-    get unknownMembersCount() {
-        return this.memberCount - this.channelMembers.length;
-    }
-
-    get rtcInvitingSession() {
-        return this._store.rtcSessions[this.invitingRtcSessionId];
-    }
-
     get hasNeedactionMessages() {
         return this.needactionMessages.length > 0;
-    }
-
-    get videoCount() {
-        return Object.values(this.rtcSessions).filter((session) => session.videoStream).length;
     }
 
     get lastInterestDateTime() {
