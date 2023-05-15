@@ -1597,6 +1597,16 @@ var SnippetsMenu = Widget.extend({
      * - Remove the 'contentEditable' attributes
      */
     cleanForSave: async function () {
+        // TODO remove me in master. This was added as a fix in stable to remove
+        // the "data-snippet" attribute that was added on the "span" element of
+        // the "Cover" snippet when modifying the "Parallax" of the snippet.
+        window.document.querySelectorAll("span[data-snippet='s_cover'][data-name='Cover']")
+                    .forEach(el => {
+            delete el.dataset["snippet"];
+            delete el.dataset["name"];
+            const dirty = el.closest(".o_editable") || el;
+            dirty.classList.add("o_dirty");
+        });
         // First disable the snippet selection, calling options onBlur, closing
         // widgets, etc. Then wait for full resolution of the mutex as widgets
         // may have triggered some final edition requests that need to be
