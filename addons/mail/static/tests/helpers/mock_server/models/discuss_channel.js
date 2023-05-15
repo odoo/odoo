@@ -628,6 +628,22 @@ patch(MockServer.prototype, "mail/models/discuss_channel", {
                     ],
                 ];
             }
+            let is_editable;
+            switch (channel.channel_type) {
+                case "channel":
+                    is_editable = channel.create_uid === this.pyEnv.currentPartnerId;
+                    break;
+                case "chat":
+                    is_editable = true;
+                    break;
+                case "group":
+                    is_editable = memberOfCurrentUser;
+                    break;
+                default:
+                    is_editable = false;
+                    break;
+            }
+            res.is_editable = is_editable;
             res["rtcSessions"] = [
                 [
                     "insert",

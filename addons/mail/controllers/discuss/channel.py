@@ -38,6 +38,13 @@ class ChannelController(http.Controller):
             except UserError:
                 raise NotFound()
 
+    @http.route("/discuss/channel/update_avatar", methods=["POST"], type="json", auth="public")
+    def discuss_channel_avatar_update(self, channel_id, data):
+        channel = request.env["discuss.channel"].browse(int(channel_id)).exists()
+        if not channel or not data:
+            raise NotFound()
+        channel.write({"image_128": data})
+
     @http.route("/discuss/channel/messages", methods=["POST"], type="json", auth="public")
     def discuss_channel_messages(self, channel_id, before=None, after=None, limit=30, around=None):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(

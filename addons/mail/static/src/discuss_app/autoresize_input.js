@@ -8,13 +8,14 @@ export class AutoresizeInput extends Component {
     static template = "mail.AutoresizeInput";
     static props = {
         className: { type: String, optional: true },
-        disabled: { type: Boolean, optional: true },
+        enabled: { optional: true },
         onValidate: { type: Function, optional: true },
         placeholder: { type: String, optional: true },
         value: { type: String },
     };
     static defaultProps = {
         className: "",
+        enabled: true,
         onValidate: () => {},
         placeholder: "",
     };
