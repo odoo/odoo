@@ -156,6 +156,7 @@ export class DomainSelector extends Component {
     }
 
     insertLeaf(parent, node) {
+        this.applyLeafValueUdate();
         parent.insertAfter(
             node.id,
             node instanceof LeafDomainNode ? node.clone() : this.createNewLeaf()
@@ -164,6 +165,7 @@ export class DomainSelector extends Component {
     }
 
     insertBranch(parent, node) {
+        this.applyLeafValueUdate();
         const nextConnector = parent.connector === "AND" ? "OR" : "AND";
         parent.insertAfter(node.id, this.createNewBranch(nextConnector));
         this.notifyChanges();
@@ -171,6 +173,9 @@ export class DomainSelector extends Component {
 
     delete(parent, node) {
         parent.delete(node.id);
+        if (this.leafValueUpdate && node !== this.leafValueUpdate.node) {
+            this.applyLeafValueUdate();
+        }
         this.notifyChanges();
     }
 
@@ -223,9 +228,26 @@ export class DomainSelector extends Component {
         this.notifyChanges();
     }
 
-    updateLeafValue(node, value) {
+    applyLeafValueUdate() {
+        if (!this.leafValueUpdate) {
+            return;
+        }
+        const { node, value } = this.leafValueUpdate;
+        delete this.leafValueUpdate;
         node.value = value;
-        this.notifyChanges();
+    }
+
+    updateLeafValue(node, value) {
+        this.leafValueUpdate = {
+            node,
+            value,
+        };
+        setTimeout(() => {
+            if (this.leafValueUpdate) {
+                this.applyLeafValueUdate();
+                this.notifyChanges();
+            }
+        }, 90);
     }
 
     isExprValue(value) {
