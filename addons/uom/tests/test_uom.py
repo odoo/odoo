@@ -97,3 +97,12 @@ class TestUom(UomCommon):
                 'rounding': 1.0,
                 'category_id': category.id
             })
+
+    def test_50_check_ratio(self):
+        with self.assertRaises(ValidationError):
+            self.env['uom.uom'].create({
+                'name': 'Custom UoM',
+                'uom_type': 'bigger',
+                'ratio': 0,
+                'category_id': self.env.ref('uom.product_uom_categ_unit').id
+            })
