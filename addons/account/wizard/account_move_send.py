@@ -9,7 +9,7 @@ class AccountMoveSend(models.Model):
     _name = 'account.move.send'
     _description = "Account Move Send"
 
-    company_id = fields.Many2one(comodel_name='res.company')
+    company_id = fields.Many2one(comodel_name='res.company', compute='_compute_company_id', store=True)
     move_ids = fields.Many2many(comodel_name='account.move')
     mode = fields.Selection(
         selection=[
@@ -87,12 +87,6 @@ class AccountMoveSend(models.Model):
         if 'move_ids' in fields_list and 'move_ids' not in results:
             results['move_ids'] = [Command.set(self._context.get('active_ids', []))]
 
-        if 'move_ids' in results:
-            moves = self.env['account.move'].browse(results['move_ids'][0][2])
-            if len(moves.company_id) > 1:
-                raise UserError(_("You can only send from the same company."))
-            results['company_id'] = moves.company_id.id
-
         return results
 
     @api.model
@@ -144,6 +138,13 @@ class AccountMoveSend(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('move_ids')
+    def _compute_company_id(self):
+        for wizard in self:
+            if len(wizard.move_ids.company_id) > 1:
+                raise UserError(_("You can only send from the same company."))
+            wizard.company_id = wizard.move_ids.company_id
 
     @api.depends('move_ids')
     def _compute_mode(self):
