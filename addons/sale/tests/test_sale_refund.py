@@ -92,11 +92,10 @@ class TestSaleRefund(TestSaleCommon):
 
         # Make a credit note
         credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': [self.invoice.id], 'active_id': self.invoice.id, 'active_model': 'account.move'}).create({
-            'refund_method': 'refund',  # this is the only mode for which the SO line is linked to the refund (https://github.com/odoo/odoo/commit/e680f29560ac20133c7af0c6364c6ef494662eac)
             'reason': 'reason test create',
             'journal_id': self.invoice.journal_id.id,
         })
-        credit_note_wizard.reverse_moves()
+        credit_note_wizard.refund_moves()
         invoice_refund = self.sale_order.invoice_ids.sorted(key=lambda inv: inv.id, reverse=False)[-1]  # the first invoice, its refund, and the new invoice
 
         # Check invoice's type and number
@@ -153,67 +152,6 @@ class TestSaleRefund(TestSaleCommon):
                     self.assertEqual(line.untaxed_amount_invoiced, 0.0, "Amount invoiced decreased as the refund is now confirmed")
                     self.assertEqual(len(line.invoice_lines), 2, "The line 'ordered service' is invoiced, so it should be linked to 2 invoice lines (invoice and refund)")
 
-    def test_refund_cancel(self):
-        """ Test invoice with a refund in 'cancel' mode, meaning a refund will be created and auto confirm to completely cancel the first
-            customer invoice. The SO will have 2 invoice (customer + refund) in a paid state at the end. """
-        # Increase quantity of an invoice lines
-        with Form(self.invoice) as invoice_form:
-            with invoice_form.invoice_line_ids.edit(0) as line_form:
-                line_form.quantity = 6
-            with invoice_form.invoice_line_ids.edit(1) as line_form:
-                line_form.quantity = 4
-
-        # Validate invoice
-        self.invoice.action_post()
-
-        # Check quantity to invoice on SO lines
-        for line in self.sale_order.order_line:
-            if line.product_id.invoice_policy == 'delivery':
-                self.assertEqual(line.qty_to_invoice, 0.0, "Quantity to invoice should be same as ordered quantity")
-                self.assertEqual(line.qty_invoiced, 0.0, "Invoiced quantity should be zero as no any invoice created for SO")
-                self.assertEqual(line.untaxed_amount_to_invoice, 0.0, "The amount to invoice should be zero, as the line based on delivered quantity")
-                self.assertEqual(line.untaxed_amount_invoiced, 0.0, "The invoiced amount should be zero, as the line based on delivered quantity")
-                self.assertFalse(line.invoice_lines, "The line based on delivered qty are not invoiced, so they should not be linked to invoice line")
-            else:
-                self.assertEqual(line.untaxed_amount_to_invoice, line.price_unit * line.qty_to_invoice, "Amount to invoice is now set as qty to invoice * unit price since no price change on invoice, for ordered products")
-                self.assertEqual(line.untaxed_amount_invoiced, line.price_unit * line.qty_invoiced, "Amount invoiced is now set as qty invoiced * unit price since no price change on invoice, for ordered products")
-                self.assertEqual(len(line.invoice_lines), 1, "The lines 'ordered' qty are invoiced, so it should be linked to 1 invoice lines")
-
-                self.assertEqual(line.qty_invoiced, line.product_uom_qty + 1, "The quantity invoiced is +1 unit from the one of the sale line, as we modified invoice lines (%s)" % (line.name,))
-                self.assertEqual(line.qty_to_invoice, -1, "The quantity to invoice is negative as we invoice more than ordered")
-
-        # Make a credit note
-        credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': self.invoice.ids, 'active_id': self.invoice.id, 'active_model': 'account.move'}).create({
-            'refund_method': 'cancel',
-            'reason': 'reason test cancel',
-            'journal_id': self.invoice.journal_id.id,
-        })
-        invoice_refund = self.env['account.move'].browse(credit_note_wizard.reverse_moves()['res_id'])
-
-        # Check invoice's type and number
-        self.assertEqual(invoice_refund.move_type, 'out_refund', 'The last created invoiced should be a customer invoice')
-        self.assertEqual(invoice_refund.payment_state, 'paid', 'Last Customer creadit note should be in paid state')
-        self.assertEqual(self.sale_order.invoice_count, 2, "The SO should have 3 related invoices: the original, the refund, and the new one")
-        self.assertEqual(len(self.sale_order.invoice_ids.filtered(lambda inv: inv.move_type == 'out_refund')), 1, "The SO should be linked to only one refund")
-        self.assertEqual(len(self.sale_order.invoice_ids.filtered(lambda inv: inv.move_type == 'out_invoice')), 1, "The SO should be linked to only one customer invoices")
-
-        # At this time, the invoice 1 is opened (validated) and its refund validated too, so the amounts invoiced are zero for
-        # all sale line. All invoiceable Sale lines have
-        for line in self.sale_order.order_line:
-            if line.product_id.invoice_policy == 'delivery':
-                self.assertEqual(line.qty_to_invoice, 0.0, "Quantity to invoice should be same as ordered quantity")
-                self.assertEqual(line.qty_invoiced, 0.0, "Invoiced quantity should be zero as no any invoice created for SO line based on delivered qty")
-                self.assertEqual(line.untaxed_amount_to_invoice, 0.0, "The amount to invoice should be zero, as the line based on delivered quantity")
-                self.assertEqual(line.untaxed_amount_invoiced, 0.0, "The invoiced amount should be zero, as the line based on delivered quantity")
-                self.assertFalse(line.invoice_lines, "The line based on delivered are not invoiced, so they should not be linked to invoice line")
-            else:
-                self.assertEqual(line.qty_to_invoice, line.product_uom_qty, "The quantity to invoice should be the ordered quantity")
-                self.assertEqual(line.qty_invoiced, 0, "The quantity invoiced is zero as the refund (paid) completely cancel the first invoice")
-
-                self.assertEqual(line.untaxed_amount_to_invoice, line.price_unit * line.qty_to_invoice, "Amount to invoice is now set as qty to invoice * unit price since no price change on invoice, for ordered products")
-                self.assertEqual(line.untaxed_amount_invoiced, line.price_unit * line.qty_invoiced, "Amount invoiced is now set as qty invoiced * unit price since no price change on invoice, for ordered products")
-                self.assertEqual(len(line.invoice_lines), 2, "The lines 'ordered' qty are invoiced, so it should be linked to 1 invoice lines")
-
     def test_refund_modify(self):
         """ Test invoice with a refund in 'modify' mode, and check customer invoices credit note is created from respective invoice """
         # Decrease quantity of an invoice lines
@@ -247,11 +185,10 @@ class TestSaleRefund(TestSaleCommon):
 
         # Make a credit note
         credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': [self.invoice.id], 'active_id': self.invoice.id, 'active_model': 'account.move'}).create({
-            'refund_method': 'modify',  # this is the only mode for which the SO line is linked to the refund (https://github.com/odoo/odoo/commit/e680f29560ac20133c7af0c6364c6ef494662eac)
             'reason': 'reason test modify',
             'journal_id': self.invoice.journal_id.id,
         })
-        invoice_refund = self.env['account.move'].browse(credit_note_wizard.reverse_moves()['res_id'])
+        invoice_refund = self.env['account.move'].browse(credit_note_wizard.modify_moves()['res_id'])
 
         # Check invoice's type and number
         self.assertEqual(invoice_refund.move_type, 'out_invoice', 'The last created invoiced should be a customer invoice')
@@ -384,11 +321,10 @@ class TestSaleRefund(TestSaleCommon):
         so_invoice.action_post()
 
         credit_note_wizard = self.env['account.move.reversal'].with_context({'active_ids': [so_invoice.id], 'active_id': so_invoice.id, 'active_model': 'account.move'}).create({
-            'refund_method': 'refund',
             'reason': 'reason test refund with downpayment',
             'journal_id': so_invoice.journal_id.id,
         })
-        credit_note_wizard.reverse_moves()
+        credit_note_wizard.refund_moves()
         invoice_refund = sale_order_refund.invoice_ids.sorted(key=lambda inv: inv.id, reverse=False)[-1]
         invoice_refund.action_post()
 

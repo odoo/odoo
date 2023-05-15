@@ -30,8 +30,8 @@ class AccountMoveReversal(models.TransientModel):
             ('85', 'Taxable income modified by unpaid tax assessments. Order of declaration of bankruptcy'),
         ], string='Spanish Facturae EDI Reason Code', default='10')
 
-    def reverse_moves(self):
+    def reverse_moves(self, is_modify=False):
         # Extends account_account
-        res = super(AccountMoveReversal, self).reverse_moves()
+        res = super(AccountMoveReversal, self).reverse_moves(is_modify)
         self.new_move_ids.l10n_es_edi_facturae_reason_code = self.l10n_es_edi_facturae_reason_code
         return res

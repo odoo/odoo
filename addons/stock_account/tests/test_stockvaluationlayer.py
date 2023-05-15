@@ -1144,10 +1144,9 @@ class TestAngloSaxonAccounting(AccountTestInvoicingCommon, TestStockValuationCom
         self.assertEqual(self.product1.standard_price, 15)
 
         refund_wizard = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=invoice.ids).create({
-            'refund_method': 'refund',
             'journal_id': invoice.journal_id.id,
         })
-        action = refund_wizard.reverse_moves()
+        action = refund_wizard.refund_moves()
         reverse_invoice = self.env['account.move'].browse(action['res_id'])
         with Form(reverse_invoice) as reverse_invoice_form:
             with reverse_invoice_form.invoice_line_ids.edit(0) as line:
