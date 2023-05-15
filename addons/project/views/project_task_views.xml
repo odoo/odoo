@@ -276,31 +276,20 @@
                         </button>
                         <!-- Dummy tag used to organize buttons -->
                         <span id="end_rating_buttons" invisible="1"/>
-                        <button name="action_open_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" string="Parent Task" attrs="{'invisible': [('parent_id', '=', False)]}"/>
-                        <button name="action_recurring_tasks" type="object" attrs="{'invisible': ['|', ('active', '=', False), ('recurrence_id', '=', False)]}" class="oe_stat_button" icon="fa-repeat" groups="project.group_project_recurring_tasks">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_text">Recurring Tasks</span>
-                                <span class="o_stat_value">
-                                    <field name="recurring_count" widget="statinfo" nolabel="1" />
-                                </span>
+                        <button name="action_open_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" attrs="{'invisible': [('parent_id', '=', False)]}">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Parent Task</span>
                             </div>
+                        </button>
+                        <button name="action_recurring_tasks" type="object" attrs="{'invisible': ['|', ('active', '=', False), ('recurrence_id', '=', False)]}" class="oe_stat_button" icon="fa-repeat" groups="project.group_project_recurring_tasks">
+                            <field name="recurring_count" widget="statinfo" string="Recurring Tasks"/>
                         </button>
                         <button name="%(project_task_action_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
                             attrs="{'invisible' : ['|', ('id', '=', False), ('subtask_count', '=', 0)]}" context="{'default_user_ids': user_ids, 'default_project_id': project_id}">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value">
-                                    <field name="subtask_count" widget="statinfo" nolabel="1"/>
-                                </span>
-                                <span class="o_stat_text">Sub-tasks</span>
-                            </div>
+                            <field name="subtask_count" widget="statinfo" string="Sub-tasks"/>
                         </button>
                         <button name="action_dependent_tasks" type="object" attrs="{'invisible': [('dependent_tasks_count', '=', 0)]}" class="oe_stat_button" icon="fa-tasks" groups="project.group_project_task_dependencies">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_text">Blocking Tasks</span>
-                                <span class="o_stat_value ">
-                                    <field name="dependent_tasks_count" widget="statinfo" nolabel="1" />
-                                </span>
-                            </div>
+                            <field name="dependent_tasks_count" widget="statinfo" string="Blocking Tasks" />
                         </button>
                         <!-- Dummy tag used to organize buttons -->
                         <span id="end_button_box" invisible="1"/>

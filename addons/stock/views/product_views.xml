@@ -264,7 +264,7 @@
                                 attrs="{'invisible':[('show_on_hand_qty_status_button', '=', False)]}">
                                 <div class="o_field_widget o_stat_info">
                                         <span class="o_stat_value d-flex gap-1">
-                                            <field name="qty_available" widget="statinfo" nolabel="1" class="oe_inline"/>
+                                            <field name="qty_available" nolabel="1" class="oe_inline"/>
                                             <field name="uom_name" class="oe_inline"/>
                                         </span>
                                         <span class="o_stat_text">On Hand</span>
@@ -277,7 +277,7 @@
                                 class="oe_stat_button" icon="fa-cubes">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value d-flex gap-1">
-                                        <field name="virtual_available" widget="statinfo" nolabel="1" class="oe_inline"/>
+                                        <field name="virtual_available" class="oe_inline"/>
                                         <field name="uom_name" class="oe_inline"/>
                                     </span>
                                     <span class="o_stat_text">Forecasted</span>
@@ -319,15 +319,26 @@
                                 class="oe_stat_button" icon="fa-refresh">
                                 <field name="nbr_reordering_rules" widget="statinfo"/>
                             </button>
-                            <button string="Lot/Serial Numbers" type="object"
+                            <button type="object"
                                 name="action_open_product_lot"
                                 attrs="{'invisible': [('tracking', '=', 'none')]}"
-                                class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot"/>
-                            <button string="Putaway Rules" type="object"
+                                class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Lot/Serial Numbers</span>
+                                </div>
+                            </button>
+                            <button type="object"
                                 name="action_view_related_putaway_rules"
                                 class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
                                 attrs="{'invisible': [('type', '=', 'service')]}"
-                                context="{'invisible_handle': True, 'single_product': True}"/>
+                                context="{
+                                    'invisible_handle': True,
+                                    'single_product': product_variant_count == 1,
+                                }">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Putaway Rules</span>
+                                    </div>
+                             </button>
                             <button type="object" string="Storage Capacities"
                                 name="action_view_storage_category_capacity"
                                 groups="stock.group_stock_storage_categories"
@@ -375,7 +386,7 @@
                                 class="oe_stat_button" icon="fa-cubes">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value d-flex gap-1">
-                                        <field name="qty_available" widget="statinfo" nolabel="1" class="oe_inline"/>
+                                        <field name="qty_available" nolabel="1" class="oe_inline"/>
                                         <field name="uom_name" class="oe_inline"/>
                                     </span>
                                     <span class="o_stat_text">On Hand</span>
@@ -388,7 +399,7 @@
                                 class="oe_stat_button" icon="fa-cubes">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_value d-flex gap-1">
-                                        <field name="virtual_available" widget="statinfo" nolabel="1" class="oe_inline"/>
+                                        <field name="virtual_available" nolabel="1" class="oe_inline"/>
                                         <field name="uom_name" class="oe_inline"/>
                                     </span>
                                     <span class="o_stat_text">Forecasted</span>
@@ -452,7 +463,7 @@
                                         <span class="o_stat_text">Putaway Rules</span>
                                     </div>
                              </button>
-                            <button type="object"
+                             <button type="object"
                                 name="action_view_storage_category_capacity"
                                 groups="stock.group_stock_storage_categories"
                                 attrs="{'invisible':[('type', '=', 'service')]}"
