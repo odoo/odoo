@@ -84,6 +84,7 @@
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/fonts/fonts.scss',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
+            'web/static/lib/odoo_ui_icons/*',
             'web/static/src/legacy/scss/fontawesome_overridden.scss',
             # JS framework
             'web/static/src/boot.js',
