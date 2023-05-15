@@ -156,10 +156,10 @@
                         <page string="Definition" name="definition">
                             <div attrs="{'invisible': [('amount_type', '=', 'group')]}">
                                 <field name="country_code" invisible="1"/>
-                                <group string="Distribution for Invoices">
+                                <group string="Distribution for Invoices" class="mw-100">
                                     <field name="invoice_repartition_line_ids" nolabel="1" colspan="2"/>
                                 </group>
-                                <group string="Distribution for Refunds">
+                                <group string="Distribution for Refunds" class="mw-100">
                                     <field name="refund_repartition_line_ids" nolabel="1" colspan="2"/>
                                 </group>
                             </div>
