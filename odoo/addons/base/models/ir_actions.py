@@ -555,7 +555,13 @@ class IrActionsServer(models.Model):
         return True
 
     def _run_action_code_multi(self, eval_context):
-        safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True, filename=str(self))  # nocopy allows to return 'action'
+        try:
+            safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True, filename=str(self))  # nocopy allows to return 'action'
+        except Exception as e:
+            external_id = self.get_external_id().get(self.id)
+            if not external_id or external_id.startswith('__export__'):
+                e.sentry_ignored = True
+            raise
         return eval_context.get('action')
 
     def _run_action_multi(self, eval_context=None):
@@ -764,7 +770,11 @@ class IrServerObjectLines(models.Model):
         for line in self:
             expr = line.value
             if line.evaluation_type == 'equation':
-                expr = safe_eval(line.value, eval_context)
+                try:
+                    expr = safe_eval(line.value, eval_context)
+                except Exception as e:
+                    e.sentry_ignored = True
+                    raise
             elif line.col1.ttype in ['many2one', 'integer']:
                 try:
                     expr = int(line.value)
