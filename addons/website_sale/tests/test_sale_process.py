@@ -275,11 +275,16 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
 
     def test_04_pl_reset_on_login(self):
         """Check that after login, the SO pricelist is correctly recomputed."""
+        self.env['product.pricelist'].search([]).action_archive()
         test_user = self.env['res.users'].create({
             'name': 'Toto',
             'login': 'long_enough_password',
             'password': 'long_enough_password',
         })
+        default_pl = self.env['product.pricelist'].create({
+            'name': 'Public Pricelist',
+        })
+        self.website.user_id.partner_id.property_product_pricelist = default_pl
         eur_pl = self.env['product.pricelist'].create({
             'name': 'EUR_test',
             'website_id': self.website.id,
@@ -289,11 +294,17 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
 
         public_user_env = self.env(user=self.website.user_id)
         so = self._create_so(public_user_env.user.partner_id.id)
+        self.assertEqual(so.pricelist_id, default_pl)
 
-        with MockRequest(self.env, website=self.website, sale_order_id=so.id, website_sale_current_pl=so.pricelist_id.id):
-            order = self.website.sale_get_order()
-            pl = order.pricelist_id
-            self.assertNotEqual(pl, eur_pl)
+        with MockRequest(
+            self.env, website=self.website,
+            sale_order_id=so.id,
+            website_sale_current_pl=so.pricelist_id.id
+        ):
+            self.assertEqual(self.website.pricelist_id, default_pl)
+            order = self.website.with_env(public_user_env).sale_get_order()
+            self.assertEqual(order, so)
+            self.assertEqual(order.pricelist_id, default_pl)
             order_b = self.website.with_user(test_user).sale_get_order()
             self.assertEqual(order, order_b)
             self.assertEqual(order_b.pricelist_id, eur_pl)
