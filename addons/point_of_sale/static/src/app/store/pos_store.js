@@ -212,6 +212,7 @@ export class PosStore extends Reactive {
         );
         const { start_category, iface_start_categ_id } = this.config;
         this.selectedCategoryId = (start_category && iface_start_categ_id?.[0]) || 0;
+        this.load_server_orders();
         // Push orders in background, do not await
         this.push_orders();
         this.markReady();
@@ -261,6 +262,7 @@ export class PosStore extends Reactive {
         this.pos_has_valid_product = loadedData["pos_has_valid_product"];
         await this._loadPictures();
         await this._loadPosPrinters(loadedData["pos.printer"]);
+        this.open_orders_json = loadedData["open_orders"];
     }
     _loadPosSession() {
         // We need to do it here, since only then the local storage has the correct uuid
@@ -413,6 +415,7 @@ export class PosStore extends Reactive {
     async updateModelsData(models_data) {
         const products = models_data["product.product"];
         const categories = models_data["pos.category"];
+        const openOrders = models_data["pos.order"];
 
         let removed_categories_id;
         if (categories) {
@@ -444,6 +447,34 @@ export class PosStore extends Reactive {
 
         if (categories) {
             this.db.remove_categories(removed_categories_id);
+        }
+
+        if (openOrders) {
+            this.loadOpenOrders(openOrders);
+        }
+    }
+
+    loadOpenOrders(openOrders) {
+        for (const json of openOrders) {
+            if (this.orders.find((el) => el.server_id === json.id)) {
+                continue;
+            }
+            this._createOrder(json);
+            const newOrder = this.orders[this.orders.length - 1];
+            if (newOrder.orderlines[0].uuid) {
+                for (const line of newOrder.orderlines) {
+                    newOrder.lastOrderPrepaChange[line.uuid + " - "] = {
+                        line_uuid: line.uuid,
+                        name: line.full_product_name,
+                        note: "",
+                        product_id: line.product.id,
+                        quantity: line.quantity,
+                    };
+                }
+            }
+        }
+        if (openOrders.length > 0) {
+            this.selectedOrder = this.orders[1];
         }
     }
 
@@ -608,6 +639,12 @@ export class PosStore extends Reactive {
             }
         }
         this.loadingOrderState = false;
+    }
+    load_server_orders() {
+        if (!this.open_orders_json) {
+            return;
+        }
+        this.loadOpenOrders(this.open_orders_json);
     }
     async _loadMissingProducts(orders) {
         const missingProductIds = new Set([]);

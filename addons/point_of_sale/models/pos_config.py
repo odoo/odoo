@@ -412,6 +412,7 @@ class PosConfig(models.Model):
             vals['printer_ids'] = [fields.Command.clear()]
 
         bypass_categories_forbidden_change = self.env.context.get('bypass_categories_forbidden_change', False)
+        bypass_payment_method_ids_forbidden_change = self.env.context.get('bypass_payment_method_ids_forbidden_change', False)
 
         opened_session = self.mapped('session_ids').filtered(lambda s: s.state != 'closed')
         if opened_session:
@@ -419,6 +420,8 @@ class PosConfig(models.Model):
             for key in self._get_forbidden_change_fields():
                 if key in vals.keys():
                     if bypass_categories_forbidden_change and key in ('limit_categories', 'iface_available_categ_ids'):
+                        continue
+                    if bypass_payment_method_ids_forbidden_change and key == 'payment_method_ids':
                         continue
                     if key == 'use_pricelist' and vals[key]:
                         continue
@@ -728,3 +731,40 @@ class PosConfig(models.Model):
 
     def _remove_trusted_config_id(self, config_id):
         self.trusted_config_ids -= config_id
+
+    @api.model
+    def add_cash_payment_method(self):
+        companies = self.env['res.company'].search([])
+        for company in companies.filtered('chart_template'):
+            pos_configs = self.search([
+                *self._check_company_domain(company),
+            ])
+            journal_counter = 1
+            for pos_config in pos_configs:
+                if pos_config.payment_method_ids.filtered('is_cash_count'):
+                    continue
+                journal_counter += self.env['account.journal'].search_count([
+                    *self.env['account.journal']._check_company_domain(company),
+                    ('type', '=', 'cash'),
+                    ('pos_payment_method_ids', '=', False),
+                ])
+                cash_journal = self.env['account.journal'].create({
+                    'name': 'Cash %s' % journal_counter,
+                    'code': 'RCSH%s' % journal_counter,
+                    'type': 'cash',
+                    'company_id': company.id
+                })
+                journal_counter += 1
+                payment_methods = pos_config.payment_method_ids
+                payment_methods |= self.env['pos.payment.method'].create({
+                    'name': _('Cash ') + pos_config.name,
+                    'journal_id': cash_journal.id,
+                    'company_id': company.id,
+                })
+                pos_config.with_context(bypass_payment_method_ids_forbidden_change=True).write({'payment_method_ids': [(6, 0, payment_methods.ids)]})
+
+    def _get_payment_method(self, payment_type):
+        for pm in self.payment_method_ids:
+            if pm.type == payment_type:
+                return pm
+        return False
