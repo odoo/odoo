@@ -2717,8 +2717,7 @@ class BaseModel(metaclass=MetaModel):
                 # following specific properties:
                 #  - reading inherited fields should not bypass access rights
                 #  - copy inherited fields iff their original field is copied
-                Field = type(field)
-                self._add_field(name, Field(
+                self._add_field(name, field.new(
                     inherited=True,
                     inherited_field=field,
                     related=f"{parent_fname}.{name}",
@@ -2807,12 +2806,11 @@ class BaseModel(metaclass=MetaModel):
                 if not translate:
                     # patch the field definition by adding an override
                     _logger.debug("Patching %s.%s with translate=True", cls._name, name)
-                    fields_.append(type(fields_[0])(translate=True))
+                    fields_.append(fields_[0].new(translate=True))
             if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == cls._name:
                 cls._fields[name] = fields_[0]
             else:
-                Field = type(fields_[-1])
-                self._add_field(name, Field(_base_fields=tuple(fields_)))
+                self._add_field(name, fields_[-1].new(_base_fields=tuple(fields_)))
 
         # 2. add manual fields
         if self.pool._init_modules:

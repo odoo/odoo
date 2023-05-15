@@ -347,6 +347,14 @@ class Field(MetaField('DummyField', (object,), {}), Generic[_T]):
         self._sequence = next(_global_seq)
         self.args = self._args__ = {key: val for key, val in kwargs.items() if val is not Default}
 
+    def new(self, **kwargs):
+        """ Return a field of the same type as ``self``, with its own parameters. """
+        type_args = typing.get_args(getattr(self, "__orig_class__", None))
+        t = type(self)
+        if type_args:
+            t = t[type_args[0]]
+        return t(**kwargs)
+
     def __str__(self):
         if self.name is None:
             return "<%s.%s>" % (__name__, type(self).__name__)
