@@ -20,8 +20,6 @@
                             <th t-if="column.type === 'field'"
                                 t-att-data-name="column.name"
                                 t-att-class="getColumnClass(column) + ' opacity-trigger-hover'"
-                                t-on-mouseenter="ev => this.onHoverSortColumn(ev, column)"
-                                t-on-mouseleave="ev => this.onHoverSortColumn(ev, column)"
                                 t-on-mouseup="onColumnTitleMouseUp"
                                 t-on-click="() => this.onClickSortColumn(column)"
                                 t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)"
