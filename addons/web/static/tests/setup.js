@@ -11,7 +11,6 @@ import { legacyProm } from "web.test_legacy";
 import { registerCleanup } from "./helpers/cleanup";
 import { utils } from "./helpers/mock_env";
 import { session as sessionInfo } from "@web/session";
-import { prepareLegacyRegistriesWithCleanup } from "./helpers/legacy_env_utils";
 import { config as transitionConfig } from "@web/core/transition";
 import { loadLanguages } from "@web/core/l10n/translation";
 
@@ -380,7 +379,6 @@ export async function setupTests() {
     QUnit.testStart(() => {
         checkGlobalObjectsIntegrity();
         prepareRegistriesWithCleanup();
-        prepareLegacyRegistriesWithCleanup();
         forceLocaleAndTimezoneWithCleanup();
         cleanLoadedLanguages();
         patchBrowserWithCleanup();

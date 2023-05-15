@@ -36,16 +36,6 @@
         contentTemplate: null,
 
         /**
-         * Events built by and managed by Odoo Framework
-         *
-         * It is expected that any Widget Class implementing this mixin
-         * will also implement the ParentedMixin which actually manages those
-         */
-        custom_events: {
-            get_controller_query_params: '_onGetOwnedQueryParams',
-        },
-
-        /**
          * If an action wants to use a control panel, it will be created and
          * registered in this _controlPanel key (the widget).  The way this control
          * panel is created is up to the implementation (so, view controllers or
@@ -101,30 +91,6 @@
          */
         canBeRemoved: function () {
             return Promise.resolve();
-        },
-
-        /**
-         * This function is called when the current state of the action
-         * should be known. For instance, if the action is a view controller,
-         * this may be useful to reinstantiate a view in the same state.
-         *
-         * Typically the state can (and should) be encoded in a query object of
-         * the form::
-         *
-         *     {
-         *          context: {...},
-         *          groupBy: [...],
-         *          domain = [...],
-         *          orderedBy = [...],
-         *     }
-         *
-         * where the context key can contain many information.
-         * This method is mainly called during the creation of a custom filter.
-         *
-         * @returns {Object}
-         */
-        getOwnedQueryParams: function () {
-            return {};
         },
 
         /**
@@ -209,24 +175,6 @@
          */
         _setTitle: function (title) {
             this._title = title;
-        },
-
-        //---------------------------------------------------------------------
-        // Handlers
-        //---------------------------------------------------------------------
-
-        /**
-         * FIXME: this logic should be rethought
-         *
-         * Handles a context request: provides to the caller the state of the
-         * current controller.
-         *
-         * @private
-         * @param {function} callback used to send the requested state
-         */
-        _onGetOwnedQueryParams: function (callback) {
-            const state = this.getOwnedQueryParams();
-            callback(state || {});
         },
     });
 

@@ -11,11 +11,8 @@
 
     import ActionMenus from "web.ActionMenus";
     import concurrency from "web.concurrency";
-    import ControlPanel from "web.ControlPanel";
     import { useListener } from "@web/core/utils/hooks";
     import dom from "web.dom";
-    import makeTestEnvironment from "web.test_env";
-    import ActionModel from "web.ActionModel";
     import Registry from "web.Registry";
     import testUtilsMock from "web.test_utils_mock";
     import Widget from "web.Widget";
@@ -23,7 +20,7 @@
     import { registerCleanup } from "@web/../tests/helpers/cleanup";
     import { LegacyComponent } from "@web/legacy/legacy_component";
 
-    const { Component, onMounted, onWillStart, useState, xml } = owl;
+    const { Component, useState, xml } = owl;
 
     /**
      * Similar as createView, but specific for calendar views. Some calendar
@@ -102,95 +99,6 @@
             destroy(parent);
         });
         return parent.child;
-    }
-
-    /**
-     * Create a Control Panel instance, with an extensible environment and
-     * its related Control Panel Model. Event interception is done through
-     * params['get-controller-query-params'] and params.search, for the two
-     * available event handlers respectively.
-     * @param {Object} [params={}]
-     * @param {Object} [params.cpProps]
-     * @param {Object} [params.cpModelConfig]
-     * @param {boolean} [params.debug]
-     * @param {Object} [params.env]
-     * @returns {Object} useful control panel testing elements:
-     *  - controlPanel: the control panel instance
-     *  - el: the control panel HTML element
-     *  - helpers: a suite of bound helpers (see above functions for all
-     *    available helpers)
-     */
-    async function createControlPanel(params = {}) {
-        const env = makeTestEnvironment(params.env || {});
-        const props = Object.assign({
-            action: {},
-            fields: {},
-        }, params.cpProps);
-        const globalConfig = Object.assign({
-            context: {},
-            domain: [],
-        }, params.cpModelConfig);
-
-        if (globalConfig.arch && globalConfig.fields) {
-            const model = "__mockmodel__";
-            const serverParams = {
-                model,
-                data: { [model]: { fields: globalConfig.fields, records: [] } },
-            };
-            const mockServer = await testUtilsMock.addMockEnvironment(
-                new Widget(),
-                serverParams,
-            );
-            const { arch } = testUtilsMock.getView(mockServer, {
-                arch: globalConfig.arch,
-                fields: globalConfig.fields,
-                model,
-                viewOptions: { context: globalConfig.context },
-            });
-            Object.assign(globalConfig, { arch });
-        }
-
-        globalConfig.env = env;
-        const archs = (globalConfig.arch && { search: globalConfig.arch, }) || {};
-        const { ControlPanel: controlPanelInfo, } = ActionModel.extractArchInfo(archs);
-        const extensions = {
-            ControlPanel: { archNodes: controlPanelInfo.children, },
-        };
-
-        class Parent extends LegacyComponent {
-            setup() {
-                this.searchModel = new ActionModel(extensions, globalConfig);
-                this.state = useState(props);
-                useChild();
-                onWillStart(async () => {
-                    await this.searchModel.load();
-                });
-                onMounted(() => {
-                    if (params['get-controller-query-params']) {
-                        this.searchModel.on('get-controller-query-params', this,
-                            params['get-controller-query-params']);
-                    }
-                    if (params.search) {
-                        this.searchModel.on('search', this, params.search);
-                    }
-                });
-            }
-        }
-        Parent.components = { ControlPanel };
-        Parent.template = xml`
-            <ControlPanel
-                t-props="state"
-                searchModel="searchModel"
-            />`;
-
-        const target = getFixture();
-        const parent = await mount(Parent, target, { env });
-        const controlPanel = parent.child;
-        controlPanel.getQuery = () => parent.searchModel.get("query");
-        registerCleanup(() => {
-            destroy(parent);
-        });
-        return controlPanel;
     }
 
     /**
@@ -393,7 +301,6 @@
     export default {
         createCalendarView,
         createComponent,
-        createControlPanel,
         createModel,
         createParent,
         createView,
