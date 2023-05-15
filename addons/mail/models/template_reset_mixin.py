@@ -74,6 +74,12 @@ class TemplateResetMixin(models.AbstractModel):
                 if base_trans_file:
                     translation_importer.load_file(base_trans_file, code, xmlids=xml_ids)
 
+                # Step 1.5: in case of latin america Spanish variation, load es_MX too
+                if base_lang_code == "es" and lang_code != "es_MX":
+                    mx_trans_file = get_module_resource(module_name, 'i18n', 'es_MX.po')
+                    if mx_trans_file:
+                        translation_importer.load_file(mx_trans_file, code, xmlids=xml_ids)
+
             # Step 2: reset translation file with main language file (can possibly override the
             # terms coming from the base language)
             trans_file = get_module_resource(module_name, 'i18n', lang_code + '.po')
