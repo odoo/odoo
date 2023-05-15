@@ -12,7 +12,17 @@ from odoo.addons.base.models.ir_fields import BOOLEAN_TRANSLATIONS
 
 class TestImport(common.TransactionCase):
 
-    def test_import_code_translation(self):
+    def test_import_code_translation_en_US(self):
+        self.env['res.lang']._activate_lang('en_US')
+
+        # Tip: code translations don't need to be imported explicitly
+        model = self.env['test.translation.import.model1']
+        self.assertEqual(
+            model.with_context(lang='en_US').get_code_translation(),
+            'Translation(Code, English)'
+        )
+
+    def test_import_code_translation_fr_FR(self):
         self.env['res.lang']._activate_lang('fr_FR')
 
         # Tip: code translations don't need to be imported explicitly
@@ -22,7 +32,7 @@ class TestImport(common.TransactionCase):
             'Code, Français'
         )
 
-    def test_import_model_translation(self):
+    def test_import_model_translation_fr_FR(self):
         self.env['res.lang']._activate_lang('fr_FR')
         self.env['ir.module.module']._load_module_terms(['test_translation_import'], ['fr_FR'])
 
@@ -32,7 +42,7 @@ class TestImport(common.TransactionCase):
             'Vaisselle'
         )
 
-    def test_import_model_term_translation(self):
+    def test_import_model_term_translation_fr_FR(self):
         self.env['res.lang']._activate_lang('fr_FR')
         self.env['ir.module.module']._load_module_terms(['test_translation_import'], ['fr_FR'])
 

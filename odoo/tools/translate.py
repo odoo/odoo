@@ -468,7 +468,7 @@ class GettextAlias(object):
         try:
             frame = inspect.currentframe().f_back.f_back
             lang = self._get_lang(frame)
-            if lang and lang != 'en_US':
+            if lang:
                 if not module:
                     path = inspect.getfile(frame)
                     path_info = odoo.modules.get_resource_from_path(path)
