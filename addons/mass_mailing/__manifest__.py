@@ -131,6 +131,9 @@
         'web.assets_frontend': [
             'mass_mailing/static/src/js/tours/**/*',
         ],
+        'web.assets_tests': [
+            'mass_mailing/static/tests/tours/**/*',
+        ],
         'web.qunit_suite_tests': [
             'mass_mailing/static/tests/mass_mailing_favourite_filter_tests.js',
             'mass_mailing/static/src/js/mass_mailing_snippets.js',
