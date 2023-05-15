@@ -576,6 +576,7 @@ class AccountEdiCommon(models.AbstractModel):
                     product_uom_id = self.env.ref(uom_infered_xmlid[0], raise_if_not_found=False)
 
         # allow_charge_amount
+        fixed_taxes_list = []
         allow_charge_amount = 0  # if positive: it's a discount, if negative: it's a charge
         allow_charge_nodes = tree.findall(xpath_dict['allowance_charge'])
         for allow_charge_el in allow_charge_nodes:
@@ -585,8 +586,17 @@ class AccountEdiCommon(models.AbstractModel):
             else:
                 discount_factor = -1  # it's a charge
             amount = allow_charge_el.find(xpath_dict['allowance_charge_amount'])
+            reason_code = allow_charge_el.find(xpath_dict['allowance_charge_reason_code'])
+            reason = allow_charge_el.find(xpath_dict['allowance_charge_reason'])
             if amount is not None:
-                allow_charge_amount += float(amount.text) * discount_factor
+                if reason_code is not None and reason_code.text == 'AEO' and reason is not None:
+                    # Handle Fixed Taxes: when exporting from Odoo, we use the allowance_charge node
+                    fixed_taxes_list.append({
+                        'tax_name': reason.text,
+                        'tax_amount': float(amount.text),
+                    })
+                else:
+                    allow_charge_amount += float(amount.text) * discount_factor
 
         # line_net_subtotal (mandatory)
         price_subtotal = None
@@ -611,8 +621,9 @@ class AccountEdiCommon(models.AbstractModel):
 
         # discount
         discount = 0
+        amount_fixed_taxes = sum(d['tax_amount'] for d in fixed_taxes_list)
         if billed_qty * price_unit != 0 and price_subtotal is not None:
-            discount = 100 * (1 - price_subtotal / (billed_qty * price_unit))
+            discount = 100 * (1 - (price_subtotal - amount_fixed_taxes) / (billed_qty * price_unit))
 
         # Sometimes, the xml received is very bad: unit price = 0, qty = 1, but price_subtotal = -200
         # for instance, when filling a down payment as an invoice line. The equation in the docstring is not
@@ -625,7 +636,30 @@ class AccountEdiCommon(models.AbstractModel):
             'price_unit': price_unit,
             'discount': discount,
             'product_uom_id': product_uom_id,
+            'fixed_taxes_list': fixed_taxes_list,
         }
+
+    def _import_retrieve_fixed_tax(self, invoice_line, fixed_tax_vals):
+        """ Retrieve the fixed tax at import, iteratively search for a tax:
+        1. not price_include matching the name and the amount
+        2. not price_include matching the amount
+        3. price_include matching the name and the amount
+        4. price_include matching the amount
+        """
+        base_domain = [
+            ('company_id', '=', invoice_line.company_id.id),
+            ('amount_type', '=', 'fixed'),
+            ('amount', '=', fixed_tax_vals['tax_amount']),
+        ]
+        for price_include in (False, True):
+            for name in (fixed_tax_vals['tax_name'], False):
+                domain = base_domain + [('price_include', '=', price_include)]
+                if name:
+                    domain.append(('name', '=', name))
+                tax = self.env['account.tax'].search(domain, limit=1)
+                if tax:
+                    return tax
+        return self.env['account.tax']
 
     def _import_fill_invoice_line_taxes(self, tax_nodes, invoice_line, inv_line_vals, logs):
         # Taxes: all amounts are tax excluded, so first try to fetch price_include=False taxes,
@@ -648,13 +682,25 @@ class AccountEdiCommon(models.AbstractModel):
                 inv_line_vals['price_unit'] *= (1 + tax_incl.amount / 100)
             else:
                 logs.append(_("Could not retrieve the tax: %s %% for line '%s'.", amount, invoice_line.name))
+
+        # Handle Fixed Taxes
+        for fixed_tax_vals in inv_line_vals['fixed_taxes_list']:
+            tax = self._import_retrieve_fixed_tax(invoice_line, fixed_tax_vals)
+            if not tax:
+                # Nothing found: fix the price_unit s.t. line subtotal is matching the original invoice
+                inv_line_vals['price_unit'] += fixed_tax_vals['tax_amount']
+            elif tax.price_include:
+                inv_line_vals['taxes'].append(tax.id)
+                inv_line_vals['price_unit'] += tax.amount
+            else:
+                inv_line_vals['taxes'].append(tax.id)
+
         # Set the values on the line_form
         invoice_line.quantity = inv_line_vals['quantity']
         if inv_line_vals.get('product_uom_id'):
             invoice_line.product_uom_id = inv_line_vals['product_uom_id']
         else:
-            logs.append(
-                _("Could not retrieve the unit of measure for line with label '%s'.", invoice_line.name))
+            logs.append(_("Could not retrieve the unit of measure for line with label '%s'.", invoice_line.name))
         invoice_line.price_unit = inv_line_vals['price_unit']
         invoice_line.discount = inv_line_vals['discount']
         invoice_line.tax_ids = inv_line_vals['taxes']
