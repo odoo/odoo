@@ -27,8 +27,7 @@ Pro rules and show the errors.
         'data/cii_22_templates.xml',
         'data/ubl_20_templates.xml',
         'data/ubl_21_templates.xml',
-        'data/res_config_settings_views.xml',
-
+        'views/res_config_settings_views.xml',
         'views/account_move_send_views.xml',
         'views/res_partner_views.xml',
     ],
