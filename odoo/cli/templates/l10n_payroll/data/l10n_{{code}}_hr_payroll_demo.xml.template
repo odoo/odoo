@@ -1,0 +1,147 @@
+{%- set countryPascal = name|pascal -%}
+{%- set codeUpper = code|upper -%}
+<odoo>
+    <record id="l10n_{{code}}_res_company_{{code}}" model="res.company">
+        <field name="name">My ''country-ish'' Company</field>
+        <field name="currency_id" ref="base.EUR"/>
+        <field name="street">34A, Vilijos g.</field>
+        <field name="zip">02243</field>
+        <field name="city">Vilnius</field>
+        <field name="country_id" ref="base.{{code}}"/>
+    </record>
+
+    <record id="base.user_admin" model="res.users">
+        <field name="company_ids" eval="[(4, ref('l10n_{{code}}_hr_payroll.res_company_{{code}}'))]"/>
+    </record>
+
+    <record id="base.user_demo" model="res.users">
+        <field name="company_ids" eval="[(4, ref('l10n_{{code}}_hr_payroll.res_company_{{code}}'))]"/>
+    </record>
+
+    <record id="l10n_{{code}}_hr_department_rd{{code}}" model="hr.department">
+        <field name="name">RD {{codeUpper}}</field>
+        <field name="company_id" ref="l10n_{{code}}_hr_payroll.res_company_{{code}}"/>
+    </record>
+
+    <record id="l10n_{{code}}_job_developer_{{name}}" model="hr.job">
+        <field name="name">Experienced Developer {{codeUpper}}</field>
+        <field name="department_id" ref="hr_department_rd{{code}}"/>
+        <field name="no_of_recruitment">5</field>
+        <field name="company_id" ref="l10n_{{code}}_hr_payroll.res_company_{{code}}"/>
+    </record>
+
+    <record id="l10n_{{code}}_hr_employee_blazej" model="hr.employee">
+        <field name="name">Błażej Czarnecki</field>
+        <field name="job_id" ref="job_developer_{{name}}"/>
+        <field name="country_id" ref="base.{{code}}"/>
+        <field name="company_id" ref="l10n_{{code}}_hr_payroll.res_company_{{code}}"/>
+        <field name="gender">male</field>
+    </record>
+
+    <record id="l10n_{{code}}_res_partner_antonina" model="res.partner">
+        <field name="name">Antonina Kaczmarczyk</field>
+        <field name="street">Wczasowa 84A/39</field>
+        <field name="city">Magdalenka</field>
+        <field name="zip">15584</field>
+        <field name="country_id" ref="base.{{code}}"/>
+        <field name="phone">0048 025 446 527</field>
+        <field name="email">antonina.kaczmarczyk@example.com</field>
+        <field name="company_id" ref="l10n_{{code}}_hr_payroll.res_company_{{code}}"/>
+    </record>
+
+    <record id="l10n_{{code}}_user_antonina" model="res.users">
+        <field name="partner_id" ref="l10n_{{code}}_hr_payroll.res_partner_antonina"/>
+        <field name="login">antoninakaczmarczyk</field>
+        <field name="password">antoninakaczmarczyk</field>
+        <field name="signature" type="html"><span>--<br/>+A. Kaczmarczyk</span></field>
+        <field name="company_ids" eval="[(4, ref('l10n_{{code}}_hr_payroll.res_company_{{code}}'))]"/>
+        <field name="company_id" ref="l10n_{{code}}_hr_payroll.res_company_{{code}}"/>
+        <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+    </record>
+
+    <record id="l10n_{{code}}_res_partner_antonina_work_address" model="res.partner">
+        <field name="name">{{codeUpper}} Offices</field>
+        <field name="street">Bogusławskiego Wojciecha, 61/70</field>
+        <field name="city">Zgorzelec</field>
+        <field name="zip">26200</field>
+        <field name="country_id" ref="base.{{code}}"/>
+        <field name="company_id" ref="l10n_{{code}}_hr_payroll.res_company_{{code}}"/>
+    </record>
+
+    <record id="l10n_{{code}}_res_partner_antonina_private_address" model="res.partner">
+        <field name="name">Antonina Kaczmarczyk</field>
+        <field name="street">Księżycowa 14/69</field>
+        <field name="city">Kamienica Królewska</field>
+        <field name="zip">55616</field>
+        <field name="country_id" ref="base.{{code}}"/>
+        <field name="phone">0048 391 443 088</field>
+        <field name="email">antonina.kaczmarczyk@example.com</field>
+        <field name="company_id" ref="l10n_{{code}}_hr_payroll.res_company_{{code}}"/>
+        <field name="type">private</field>
+    </record>
+
+    <record id="l10n_{{code}}_res_partner_bank_account_norberta" model="res.partner.bank">
+        <field name="acc_number">{{codeUpper}}20002904010518489266398616</field>
+        <field name="bank_id" ref="base.bank_ing"/>
+        <field name="partner_id" ref="l10n_{{code}}_hr_payroll.res_partner_antonina_private_address"/>
+        <field name="company_id" ref="l10n_{{code}}_hr_payroll.res_company_{{code}}"/>
+    </record>
+
+    <record id="l10n_{{code}}_hr_employee_antonina" model="hr.employee">
+        <field name="name">Antonina Kaczmarczyk (fpo)</field>
+        <field name="gender">female</field>
+        <field name="marital">single</field>
+        <field name="job_title">Software Developer</field>
+        <field name="address_home_id" ref="l10n_{{code}}_hr_payroll.res_partner_antonina_private_address"/>
+        <field name="address_id" ref="l10n_{{code}}_hr_payroll.res_partner_antonina_work_address"/>
+        <field name="emergency_contact">Mariusz Kaczmarczyk</field>
+        <field name="emergency_phone">0048(07)4975784</field>
+        <field name="birthday">1991-07-28</field>
+        <field name="km_home_work">25</field>
+        <field name="place_of_birth">{{countryPascal}}</field>
+        <field name="country_of_birth" ref="base.{{code}}"/>
+        <field name="certificate">master</field>
+        <field name="study_field">Civil Engineering</field>
+        <field name="study_school">Université Catholique de Louvain-la-Neuve</field>
+        <field name="parent_id" ref="l10n_{{code}}_hr_payroll.hr_employee_blazej"/>
+        <field name="country_id" ref="base.{{code}}"/>
+        <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+        <field name="identification_id">8752027365496</field>
+        <field name="bank_account_id" ref="l10n_{{code}}_hr_payroll.res_partner_bank_account_norberta"/>
+        <field name="company_id" ref="l10n_{{code}}_hr_payroll.res_company_{{code}}"/>
+        <field name="user_id" ref="l10n_{{code}}_hr_payroll.user_antonina"/>
+    </record>
+
+    <record id="l10n_{{code}}_hr_contract_cdi_antonina_previous" model="hr.contract">
+        <field name="name">CDI - Antonina Kaczmarczyk - Experienced Developer</field>
+        <field name="department_id" ref="hr_department_rd{{code}}"/>
+        <field name="employee_id" ref="hr_employee_antonina"/>
+        <field name="job_id" ref="l10n_{{code}}_hr_payroll.job_developer_{{name}}"/>
+        <field name="structure_type_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_structure_type_employee_{{code}}"/>
+        <field name="wage">3000</field>
+        <field name="state">close</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="l10n_{{code}}_hr_payroll.res_company_{{code}}"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-2, month=1, day=1))"/>
+        <field name="date_end" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-2))"/>
+        <field name="resource_calendar_id" model="resource.calendar" eval="obj().search([('company_id', '=', obj().env.ref('l10n_{{code}}_hr_payroll.res_company_{{code}}').id)], limit=1)"/>
+    </record>
+
+    <record id="l10n_{{code}}_hr_contract_cdi_antonina" model="hr.contract">
+        <field name="name">CDI - Antonina Kaczmarczyk - Experienced Developer</field>
+        <field name="department_id" ref="hr_department_rd{{code}}"/>
+        <field name="employee_id" ref="hr_employee_antonina"/>
+        <field name="job_id" ref="l10n_{{code}}_hr_payroll.job_developer_{{name}}"/>
+        <field name="structure_type_id" ref="l10n_{{code}}_hr_payroll.l10n_{{code}}_structure_type_employee_{{code}}"/>
+        <field name="wage">3600</field>
+        <field name="state">open</field>
+        <field name="hr_responsible_id" ref="base.user_demo"/>
+        <field name="company_id" ref="l10n_{{code}}_hr_payroll.res_company_{{code}}"/>
+        <field name="date_start" eval="(DateTime.today() + relativedelta(years=-1, month=1, day=1, days=-1))"/>
+        <field name="resource_calendar_id" model="resource.calendar" eval="obj().search([('company_id', '=', obj().env.ref('l10n_{{code}}_hr_payroll.res_company_{{code}}').id)], limit=1)"/>
+    </record>
+
+    <record id="l10n_{{code}}_hr_employee_antonina" model="hr.employee">
+        <field name="contract_id" ref="l10n_{{code}}_hr_payroll.hr_contract_cdi_antonina"/>
+    </record>
+</odoo>
