@@ -148,6 +148,7 @@ class AccountTax(models.Model):
     invoice_repartition_line_ids = fields.One2many(
         string="Distribution for Invoices",
         comodel_name="account.tax.repartition.line",
+        compute='_compute_invoice_repartition_line_ids', store=True, readonly=False,
         inverse_name="tax_id",
         domain=[('document_type', '=', 'invoice')],
         help="Distribution when the tax is used on an invoice",
@@ -155,6 +156,7 @@ class AccountTax(models.Model):
     refund_repartition_line_ids = fields.One2many(
         string="Distribution for Refund Invoices",
         comodel_name="account.tax.repartition.line",
+        compute='_compute_refund_repartition_line_ids', store=True, readonly=False,
         inverse_name="tax_id",
         domain=[('document_type', '=', 'refund')],
         help="Distribution when the tax is used on a refund",
@@ -164,7 +166,6 @@ class AccountTax(models.Model):
         comodel_name="account.tax.repartition.line",
         inverse_name="tax_id",
         copy=True,
-        help="Distribution when the tax is used on a refund",
     )
     country_id = fields.Many2one(
         string="Country",
@@ -223,26 +224,23 @@ class AccountTax(models.Model):
                 ('country_id', '=', False),
             ], limit=1)
 
-    @api.model
-    def default_get(self, fields_list):
-        # company_id is added so that we are sure to fetch a default value from it to use in repartition lines, below
-        if 'company_id' not in fields_list and not {
-            'refund_repartition_line_ids',
-            'invoice_repartition_line_ids',
-        }.isdisjoint(fields_list):
-            fields_list += ['company_id']
-        rslt = super().default_get(fields_list)
+    @api.depends('company_id')
+    def _compute_invoice_repartition_line_ids(self):
+        for tax in self:
+            if not tax.invoice_repartition_line_ids:
+                tax.invoice_repartition_line_ids = [
+                    Command.create({'document_type': 'invoice', 'repartition_type': 'base', 'tag_ids': []}),
+                    Command.create({'document_type': 'invoice', 'repartition_type': 'tax', 'tag_ids': []}),
+                ]
 
-        if 'repartition_line_ids' in fields_list and 'repartition_line_ids' not in rslt:
-            company_id = rslt.get('company_id')
-            rslt['repartition_line_ids'] = [
-                Command.create({'document_type': 'invoice', 'repartition_type': 'base', 'tag_ids': [], 'company_id': company_id}),
-                Command.create({'document_type': 'invoice', 'repartition_type': 'tax', 'tag_ids': [], 'company_id': company_id}),
-                Command.create({'document_type': 'refund', 'repartition_type': 'base', 'tag_ids': [], 'company_id': company_id}),
-                Command.create({'document_type': 'refund', 'repartition_type': 'tax', 'tag_ids': [], 'company_id': company_id}),
-            ]
-
-        return rslt
+    @api.depends('company_id')
+    def _compute_refund_repartition_line_ids(self):
+        for tax in self:
+            if not tax.refund_repartition_line_ids:
+                tax.refund_repartition_line_ids = [
+                    Command.create({'document_type': 'refund', 'repartition_type': 'base', 'tag_ids': []}),
+                    Command.create({'document_type': 'refund', 'repartition_type': 'tax', 'tag_ids': []}),
+                ]
 
     @staticmethod
     def _parse_name_search(name):
@@ -286,7 +284,7 @@ class AccountTax(models.Model):
         if len(base_line) != 1:
             raise ValidationError(_("Invoice and credit note distribution should each contain exactly one line for the base."))
 
-    @api.constrains('invoice_repartition_line_ids', 'refund_repartition_line_ids')
+    @api.constrains('invoice_repartition_line_ids', 'refund_repartition_line_ids', 'repartition_line_ids')
     def _validate_repartition_lines(self):
         for record in self:
             # if the tax is an aggregation of its sub-taxes (group) it can have no repartition lines
@@ -339,6 +337,11 @@ class AccountTax(models.Model):
         sanitized = vals.copy()
         # Allow to provide invoice_repartition_line_ids and refund_repartition_line_ids by dispatching them
         # correctly in the repartition_line_ids
+        if 'repartition_line_ids' in sanitized and (
+            'invoice_repartition_line_ids' in sanitized
+            or 'refund_repartition_line_ids' in sanitized
+        ):
+            del sanitized['repartition_line_ids']
         for doc_type in ('invoice', 'refund'):
             fname = f"{doc_type}_repartition_line_ids"
             if fname in sanitized:
@@ -348,6 +351,7 @@ class AccountTax(models.Model):
                     else (command, id, v)
                     for command, id, v in sanitized.pop(fname)
                 ])
+                sanitized[fname] = []
         return sanitized
 
     @api.model_create_multi
