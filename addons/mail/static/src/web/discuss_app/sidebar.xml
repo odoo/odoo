@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.DiscussSidebar" owl="1">
-    <div class="o-mail-DiscussSidebar d-flex flex-column overflow-auto flex-shrink-0 h-100 pt-3 border-end bg-light">
+    <div class="o-mail-DiscussSidebar d-flex flex-column overflow-auto flex-shrink-0 h-100 pt-3 border-end bg-view">
         <div class="d-flex justify-content-center">
             <button t-on-click="onClickStartMeeting" class="btn btn-primary rounded" title="Start a meeting">
                 Start a meeting
@@ -32,10 +32,10 @@
 </t>
 
 <t t-name="mail.Mailbox" owl="1">
-    <button class="btn d-flex align-items-center py-1 px-0 border-0 rounded-0 fw-normal text-dark"
+    <button class="o-mail-DiscussSidebar-item btn d-flex align-items-center py-1 px-0 border-0 rounded-0 fw-normal text-reset"
         t-att-class="{
-            'bg-100': mailbox.localId !== store.discuss.threadLocalId,
-            'o-active bg-200': mailbox.localId === store.discuss.threadLocalId,
+            'o-bg-inherit': mailbox.localId !== store.discuss.threadLocalId,
+            'o-active bg-300': mailbox.localId === store.discuss.threadLocalId,
         }"
         t-on-click="(ev) => this.openThread(ev, mailbox)"
     >
@@ -82,10 +82,10 @@
 
 <t t-name="mail.DiscussCategoryItem" owl="1">
     <t t-set="counter" t-value="threadService.getCounter(thread)"/>
-    <button class="o-mail-DiscussCategoryItem btn d-flex align-items-center w-100 px-0 py-2 border-0 text-reset"
+    <button class="o-mail-DiscussCategoryItem o-mail-DiscussSidebar-item btn btn-secondary d-flex align-items-center w-100 px-0 py-2 border-0 text-reset"
         t-att-class="{
-            'bg-100': threadLocalId !== store.discuss.threadLocalId,
-            'o-active bg-200': threadLocalId === store.discuss.threadLocalId,
+            'o-bg-inherit': threadLocalId !== store.discuss.threadLocalId,
+            'o-active bg-300': threadLocalId === store.discuss.threadLocalId,
             'o-unread': thread.message_unread_counter > 0,
         }"
         t-on-click="(ev) => this.openThread(ev, thread)"

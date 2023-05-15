@@ -31,7 +31,7 @@
                     t-att-class="{
                         'border-top border-bottom': compact and !props.composer.message,
                         'border': props.composer.message,
-                        'border border-end-0 rounded-start-3' : normal,
+                        'border rounded-3' : normal,
                         'border rounded-3 align-self-stretch flex-column' : extended,
                     }"
                 >
@@ -60,33 +60,27 @@
                             disabled="1"
                         />
                     </div>
-                    <div class="d-flex mx-3 bg-view"
+                    <div class="o-mail-Composer-actions d-flex bg-view"
                         t-att-class="{
-                            'px-1' : normal,
-                            'border-top p-1' : extended,
+                            'ms-1' : compact and store.isSmall,
+                            'mx-1 me-2' : compact and !store.isSmall,
+                            'ms-3' : normal,
+                            'mx-3 border-top p-1' : extended,
                         }"
                     >
                         <div class="d-flex flex-grow-1 align-items-center" >
-                            <button class="btn btn-light border-0 fa fa-smile-o rounded-pill" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-picker"/>
+                            <button class="btn border-0 fa fa-smile-o rounded-pill" aria-label="Emojis" t-on-click="onClickAddEmoji" t-ref="emoji-picker"/>
                             <FileUploader t-if="allowUpload" multiUpload="true" onUploaded="(data) => { attachmentUploader.uploadData(data) }">
                                 <t t-set-slot="toggler">
-                                    <button t-att-disabled="!state.active" class="btn btn-light fa fa-paperclip border-0 rounded-pill" title="Attach files" aria-label="Attach files" type="button" t-on-click="onClickAddAttachment"/>
+                                    <button t-att-disabled="!state.active" class="btn fa fa-paperclip border-0 rounded-pill" title="Attach files" aria-label="Attach files" type="button" t-on-click="onClickAddAttachment"/>
                                 </t>
                             </FileUploader>
                         </div>
-                        <button t-if="thread and thread.type === 'chatter'" class="btn btn-light fa fa-expand mx-1 border-0 rounded-pill" title="Full composer" aria-label="Full composer" type="button" t-on-click="onClickFullComposer"/>
+                        <button t-if="thread and thread.type === 'chatter'" class="btn fa fa-expand mx-1 border-0 rounded-pill" title="Full composer" aria-label="Full composer" type="button" t-on-click="onClickFullComposer"/>
                     </div>
+                    <t t-if="!extended" t-call="mail.Composer.sendButton"/>
                 </div>
-                <button t-if="!compact or store.isSmall" class="o-mail-Composer-send btn btn-secondary o-last border-start-0"
-                    t-att-class="{'mt-2': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'align-self-stretch': !extended, 'border border-start-0': env.inDiscussApp}"
-                    t-on-click="sendMessage"
-                    type="button"
-                    t-att-disabled="isSendButtonDisabled"
-                    aria-label="Send"
-                >
-                    <t t-if="store.isSmall"><i class="fa fa-paper-plane-o"/></t>
-                    <t t-else="">Send</t>
-                </button>
+                <t t-if="extended" t-call="mail.Composer.sendButton"/>
             </div>
             <div class="o-mail-Composer-footer overflow-auto">
                 <AttachmentList
@@ -99,6 +93,19 @@
         <span t-if="props.composer.message" class="text-muted">escape to <a href="#" t-on-click="props.onDiscardCallback">cancel</a>, enter to <a href="#" t-on-click="editMessage">save</a></span>
     </div>
     <NavigableList t-if="suggestion" class="'o-mail-Composer-suggestionList'" t-props="navigableListProps"/>
+</t>
+
+<t t-name="mail.Composer.sendButton" owl="1">
+    <button t-if="!compact or store.isSmall" class="o-mail-Composer-send btn btn-link o-last border-start-0"
+        t-att-class="{'mt-2': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'align-self-stretch': !extended, 'border-start-0': env.inDiscussApp}"
+        t-on-click="sendMessage"
+        type="button"
+        t-att-disabled="isSendButtonDisabled"
+        aria-label="Send"
+    >
+        <t t-if="store.isSmall"><i class="fa fa-paper-plane-o"/></t>
+        <t t-else="">Send</t>
+    </button>
 </t>
 
     <t t-name="mail.Composer.suggestionPartner" owl="1">
