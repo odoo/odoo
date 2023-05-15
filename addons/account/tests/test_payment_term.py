@@ -240,7 +240,7 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
                 )
                 for l in computed_term['line_ids']
             ],
-            [(0.035, 0.02), (0.035, 0.01), (0.02, 0.01)],
+            [(0.045, 0.02), (0.045, 0.02), (0.0, 0.0)],
         )
 
     def test_payment_term_residual_amount_on_last_line(self):
@@ -267,4 +267,105 @@ class TestAccountPaymentTerms(AccountTestInvoicingCommon):
         self.assertEqual(
             [self.env.company.currency_id.round(l['foreign_amount']) for l in computed_term['line_ids']],
             [0.02, 0.01],
+        )
+
+    def test_payment_term_last_balance_line_with_fixed(self):
+        pay_term = self.env['account.payment.term'].create({
+            'name': 'test_payment_term_last_balance_line_with_fixed',
+            'line_ids': [
+                Command.create({
+                    'value_amount': 70,
+                    'value': 'percent',
+                    'nb_days': 0,
+                }),
+                Command.create({
+                    'value_amount': 200,
+                    'value': 'fixed',
+                    'nb_days': 0,
+                }),
+                Command.create({
+                    'value_amount': 30,
+                    'value': 'percent',
+                    'nb_days': 0,
+                }),
+            ]
+        })
+
+        computed_term = pay_term._compute_terms(
+            fields.Date.from_string('2016-01-01'), self.env.company.currency_id, self.env.company,
+            0.0, 0.0, 1.0, 1000.0, 1000.0,
+        )
+
+        self.assertEqual(
+            [self.env.company.currency_id.round(l['foreign_amount']) for l in computed_term['line_ids']],
+            [700.0, 200.0, 100.0],
+        )
+
+    def test_payment_term_last_balance_line_with_fixed_negative(self):
+        pay_term = self.env['account.payment.term'].create({
+            'name': 'test_payment_term_last_balance_line_with_fixed_negative',
+            'line_ids': [
+                Command.create({
+                    'value_amount': 70,
+                    'value': 'percent',
+                    'nb_days': 0,
+                }),
+                Command.create({
+                    'value_amount': 500,
+                    'value': 'fixed',
+                    'nb_days': 0,
+                }),
+                Command.create({
+                    'value_amount': 30,
+                    'value': 'percent',
+                    'nb_days': 0,
+                }),
+            ]
+        })
+
+        computed_term = pay_term._compute_terms(
+            fields.Date.from_string('2016-01-01'), self.env.company.currency_id, self.env.company,
+            0.0, 0.0, 1.0, 1000.0, 1000.0,
+        )
+
+        self.assertEqual(
+            [self.env.company.currency_id.round(l['foreign_amount']) for l in computed_term['line_ids']],
+            [700.0, 500.0, -200.0],
+        )
+
+    def test_payment_term_last_balance_line_with_fixed_negative_fixed(self):
+        pay_term = self.env['account.payment.term'].create({
+            'name': 'test_payment_term_last_balance_line_with_fixed_negative_fixed',
+            'line_ids': [
+                Command.create({
+                    'value_amount': 70,
+                    'value': 'percent',
+                    'nb_days': 0,
+                }),
+                Command.create({
+                    'value_amount': 500,
+                    'value': 'fixed',
+                    'nb_days': 0,
+                }),
+                Command.create({
+                    'value_amount': 30,
+                    'value': 'percent',
+                    'nb_days': 0,
+                }),
+                Command.create({
+                    'value_amount': 200,
+                    'value': 'fixed',
+                    'nb_days': 0,
+                }),
+            ]
+        })
+
+        computed_term = pay_term._compute_terms(
+            fields.Date.from_string('2016-01-01'), self.env.company.currency_id, self.env.company,
+            0.0, 0.0, 1.0, 1000.0, 1000.0,
+        )
+
+        self.assertEqual(
+            [self.env.company.currency_id.round(l['foreign_amount']) for l in computed_term['line_ids']],
+            [700.0, 500.0, 300.0, -500.0],
         )

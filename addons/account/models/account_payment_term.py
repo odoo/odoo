@@ -184,39 +184,35 @@ class AccountPaymentTerm(models.Model):
                 pay_term['discount_balance'] = company_currency.round(total_amount * (1 - discount_percentage))
                 pay_term['discount_amount_currency'] = currency.round(total_amount_currency * (1 - discount_percentage))
 
-        # Remove all fixed amounts.
         rate = abs(total_amount_currency / total_amount) if total_amount else 0.0
-        for line in self.line_ids:
-            if line.value == 'fixed':
-                total_amount_currency -= line.value_amount
-                total_amount -= currency.round(line.value_amount / rate) if rate else 0.0
-
         residual_amount = total_amount
         residual_amount_currency = total_amount_currency
 
-        #We sort by the last line of a term
-        term_lines = self.line_ids.sorted(lambda l: l == self.line_ids[-1])
-        last_percent_line = term_lines.filtered(lambda l: l.value == 'percent')[-1:]
-        for line in self.line_ids.sorted(lambda l: l == self.line_ids[-1]):
+        for i, line in enumerate(self.line_ids):
             term_vals = {
                 'date': line._get_due_date(date_ref),
                 'company_amount': 0,
                 'foreign_amount': 0,
             }
-            if line.value == 'fixed':
-                term_vals['company_amount'] = sign * company_currency.round(line.value_amount / rate) if rate else 0.0
-                term_vals['foreign_amount'] = sign * currency.round(line.value_amount)
-            elif line == last_percent_line:
+
+            if i == len(self.line_ids) - 1:
+                # The last line is always the balance, no matter the type
                 term_vals['company_amount'] = residual_amount
                 term_vals['foreign_amount'] = residual_amount_currency
+            elif line.value == 'fixed':
+                # Fixed amounts
+                term_vals['company_amount'] = sign * company_currency.round(line.value_amount / rate) if rate else 0.0
+                term_vals['foreign_amount'] = sign * currency.round(line.value_amount)
             else:
+                # Percentage amounts
                 line_amount = company_currency.round(total_amount * (line.value_amount / 100.0))
                 line_amount_currency = currency.round(total_amount_currency * (line.value_amount / 100.0))
                 term_vals['company_amount'] = line_amount
                 term_vals['foreign_amount'] = line_amount_currency
-                residual_amount -= line_amount
-                residual_amount_currency -= line_amount_currency
-            pay_term["line_ids"].append(term_vals)
+
+            residual_amount -= term_vals['company_amount']
+            residual_amount_currency -= term_vals['foreign_amount']
+            pay_term['line_ids'].append(term_vals)
 
         return pay_term
 
