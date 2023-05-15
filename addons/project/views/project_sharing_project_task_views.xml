@@ -135,15 +135,14 @@
                 <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
                         <field name="display_parent_task_button" invisible="1"/>
-                        <button name="action_project_sharing_view_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" string="Parent Task" attrs="{'invisible': [('display_parent_task_button', '=', False)]}"/>
+                        <button name="action_project_sharing_view_parent_task" type="object" class="oe_stat_button" icon="fa-tasks" attrs="{'invisible': [('display_parent_task_button', '=', False)]}">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Parent Task</span>
+                            </div>
+                        </button>
                         <button name="action_project_sharing_open_subtasks" type="object" class="oe_stat_button" icon="fa-tasks"
                             attrs="{'invisible' : ['|', ('id', '=', False), ('subtask_count', '=', 0)]}" context="{'default_user_ids': [(6, 0, [uid])]}">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value">
-                                    <field name="subtask_count" widget="statinfo" nolabel="1"/>
-                                </span>
-                                <span class="o_stat_text">Sub-tasks</span>
-                            </div>
+                            <field name="subtask_count" widget="statinfo" string="Sub-tasks"/>
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>

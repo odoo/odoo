@@ -14,12 +14,7 @@
                         <button class="oe_stat_button" name="action_lot_open_transfers"
                                 type="object" icon="fa-truck" help="Transfers"
                                 attrs="{'invisible': [('delivery_count', '=', 0)]}">
-                            <div class="o_field_widget o_stat_info">
-                                <span class="o_stat_value">
-                                    <field name="delivery_count" widget="statinfo" nolabel="1" class="mr4"/>
-                                </span>
-                                <span class="o_stat_text">Transfers</span>
-                            </div>
+                            <field name="delivery_count" widget="statinfo" string="Transfers"/>
                         </button>
                         <button name="action_lot_open_quants" icon="fa-arrows" class="oe_stat_button" type="object">
                             <div class="o_stat_info">
