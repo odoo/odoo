@@ -852,12 +852,15 @@ class AccountMove(models.Model):
             )
             currency_id = taxes_map_entry['grouping_dict']['currency_id']
             amount_currency = currency.round(taxes_map_entry['amount'])
+            sign = -1 if self.is_inbound() else 1
             to_write_on_line = {
                 'amount_currency': amount_currency,
                 'currency_id': currency_id,
                 'debit': self._get_debit_from_balance(balance, currency_id),
                 'credit': self._get_credit_from_balance(balance, currency_id),
                 'tax_base_amount': tax_base_amount,
+                'price_total': sign * amount_currency,
+                'price_subtotal': sign * amount_currency,
             }
 
             if taxes_map_entry['tax_line']:
