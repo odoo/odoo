@@ -1839,20 +1839,6 @@ export class ListRenderer extends Component {
         });
     }
 
-    /**
-     * Handles the :hover effect on sortable column headers
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    onHoverSortColumn(ev, column) {
-        if (this.props.list.orderBy.length && this.props.list.orderBy[0].name === column.name) {
-            return;
-        } else if (this.isSortable(column) && column.widget !== "handle") {
-            ev.target.classList.toggle("table-active", ev.type == "mouseenter");
-        }
-    }
-
     onColumnTitleMouseUp() {
         if (this.resizing) {
             this.preventReorder = true;
