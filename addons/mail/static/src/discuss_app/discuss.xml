@@ -5,22 +5,36 @@
     <div class="o-mail-Discuss d-flex h-100 flex-grow-1 border-top" t-att-class="{ 'flex-column align-items-center bg-view': store.isSmall }" t-ref="root">
         <div t-if="store.isSmall and store.discuss.activeTab === 'mailbox'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
         <div t-if="thread and !(store.isSmall and ['chat', 'channel'].includes(store.discuss.activeTab))" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 bg-view overflow-auto" t-ref="content">
-            <div class="o-mail-Discuss-header px-3 bg-100 border-bottom d-flex flex-shrink-0" style="height:42px;">
-                <ThreadIcon className="'me-2 align-self-center'" thread="thread"/>
+            <div class="o-mail-Discuss-header px-3 bg-100 border-bottom d-flex flex-shrink-0 align-items-center" style="height:46px;">
+                <div t-if="thread and thread.model === 'discuss.channel'" class="o-mail-Discuss-threadAvatar position-relative align-self-center align-items-center mt-2 mb-2 me-2">
+                    <img class="rounded" t-att-src="channelAvatar" alt="Thread Image"/>
+                    <FileUploader t-if="thread.is_editable" acceptedFileExtensions="'.bmp, .jpg, .jpeg, .png, .svg'" showUploadingText="false" multiUpload="false" onUploaded="(data) => this.onFileUploaded(data)">
+                        <t t-set-slot="toggler">
+                            <a href="#" class="position-absolute z-index-1 h-100 w-100 rounded start-0 bottom-0" title="Upload Avatar">
+                                <i class="position-absolute top-50 start-50 fa fa-sm fa-pencil text-white"/>
+                            </a>
+                        </t>
+                    </FileUploader>
+                </div>
+                <t t-else="">
+                    <ThreadIcon className="'me-2 align-self-center'" thread="thread"/>
+                </t>
+                <ImStatus t-if="thread and thread.type === 'chat' and thread.correspondent" className="'me-1'" persona="thread.correspondent"/>
                 <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
                     <AutoresizeInput
                         className="'o-mail-Discuss-threadName lead fw-bold flex-shrink-1 text-dark'"
-                        disabled="!thread.isRenameable"
+                        enabled="thread.is_editable"
                         onValidate.bind="renameThread"
                         value="thread.displayName"
                     />
-                    <t t-if="thread.isDescriptionChangeable">
+                    <t t-if="thread.allowDescription and (thread.is_editable or (!thread.is_editable and thread.description))">
                         <div class="flex-shrink-0 mx-2 py-2 border-start"/>
                         <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
                         <AutoresizeInput
                             className="'o-mail-Discuss-threadDescription flex-shrink-1'"
+                            enabled="thread.is_editable"
                             onValidate.bind="updateThreadDescription"
-                            placeholder="autogrowDescriptionPlaceholder"
+                            placeholder="thread.is_editable ? autogrowDescriptionPlaceholder : ''"
                             value="thread.description or ''"
                         />
                     </t>

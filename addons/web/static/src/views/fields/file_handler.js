@@ -92,4 +92,8 @@ FileUploader.props = {
     fileUploadClass: { type: String, optional: true },
     acceptedFileExtensions: { type: String, optional: true },
     slots: { type: Object, optional: true },
+    showUploadingText: { type: Boolean, optional: true },
+};
+FileUploader.defaultProps = {
+    showUploadingText: true,
 };

@@ -699,6 +699,7 @@ export class ThreadService {
                 "type",
                 "group_based_subscription",
                 "last_interest_dt",
+                "is_editable",
                 "defaultDisplayMode",
             ]);
             if (serverData.channel && "message_unread_counter" in serverData.channel) {

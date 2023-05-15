@@ -827,22 +827,25 @@ QUnit.test("rendering of inbox message", async (assert) => {
     assert.containsOnce($message, "[title='Mark as Read']");
 });
 
-QUnit.test('Unfollow message', async function (assert) {
+QUnit.test("Unfollow message", async function (assert) {
     assert.expect(12);
 
     const pyEnv = await startServer();
     const currentPartnerId = pyEnv.currentPartnerId;
-    const [threadFollowedId, threadNotFollowedId] = pyEnv["res.partner"].create([{
-        name: 'Thread followed',
-    }, {
-        name: 'Thread not followed',
-    }]);
+    const [threadFollowedId, threadNotFollowedId] = pyEnv["res.partner"].create([
+        {
+            name: "Thread followed",
+        },
+        {
+            name: "Thread not followed",
+        },
+    ]);
     pyEnv["mail.followers"].create({
         partner_id: currentPartnerId,
         res_id: threadFollowedId,
         res_model: "res.partner",
     });
-    for (let threadId of [threadFollowedId, threadFollowedId, threadNotFollowedId]) {
+    for (const threadId of [threadFollowedId, threadFollowedId, threadNotFollowedId]) {
         const messageId = pyEnv["mail.message"].create({
             body: "not empty",
             model: "res.partner",
@@ -861,14 +864,17 @@ QUnit.test('Unfollow message', async function (assert) {
     await openDiscuss();
     // 2 messages about "Thread followed" with unfollow button and 1 message about "Thread not followed" without it
     assert.containsN($, ".o-mail-Message", 3);
-    for (let messageN of [0, 1]) {
+    for (const messageN of [0, 1]) {
         const $message = $(`.o-mail-Message:eq(${messageN})`);
         assert.containsOnce($message, ".o-mail-Message-header:contains(on Thread followed)");
         await afterNextRender(() => $message.find("[title='Expand']").click());
         assert.containsOnce($message, "[title='Unfollow']");
     }
     const $messageNotFollowed = $(".o-mail-Message:eq(2)");
-    assert.containsOnce($messageNotFollowed, ".o-mail-Message-header:contains(on Thread not followed)");
+    assert.containsOnce(
+        $messageNotFollowed,
+        ".o-mail-Message-header:contains(on Thread not followed)"
+    );
     await afterNextRender(() => $messageNotFollowed.find("[title='Expand']").click());
     assert.containsNone($messageNotFollowed, "[title='Unfollow']");
 
@@ -876,14 +882,22 @@ QUnit.test('Unfollow message', async function (assert) {
     await afterNextRender(() => $message0Followed.find("[title='Expand']").click());
     await afterNextRender(() => $message0Followed.find("[title='Unfollow']").click());
 
-    assert.containsN($, ".o-mail-Message", 2, "Unfollowing message 0 marks it as read -> Message removed");
+    assert.containsN(
+        $,
+        ".o-mail-Message",
+        2,
+        "Unfollowing message 0 marks it as read -> Message removed"
+    );
     assert.containsOnce($, ".o-mail-Message-header:contains(on Thread followed)");
     assert.containsOnce($, ".o-mail-Message-header:contains(on Thread not followed)");
-    for (let messageN of [0, 1]) {
+    for (const messageN of [0, 1]) {
         const $message = $(`.o-mail-Message:eq(${messageN})`);
         await afterNextRender(() => $message.find("[title='Expand']").click());
-        assert.containsNone($, "button[title='Unfollow']",
-            "Unfollowing message 0 -> unfollowing 'Thread followed' -> no more unfollow action on any message");
+        assert.containsNone(
+            $,
+            "button[title='Unfollow']",
+            "Unfollowing message 0 -> unfollowing 'Thread followed' -> no more unfollow action on any message"
+        );
     }
 });
 
@@ -1301,7 +1315,7 @@ QUnit.test(
 );
 
 QUnit.test(
-    "'Hashtag' thread icon is displayed in top bar of channels of type 'channel' limited to a group",
+    "Thread avatar image is displayed in top bar of channels of type 'channel' limited to a group",
     async (assert) => {
         const pyEnv = await startServer();
         const groupId = pyEnv["res.groups"].create({ name: "testGroup" });
@@ -1312,12 +1326,12 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-Discuss-content .fa-hashtag");
+        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-Discuss-threadAvatar");
     }
 );
 
 QUnit.test(
-    "'Globe' thread icon is displayed in top bar of channels of type 'channel' not limited to any group",
+    "Thread avatar image is displayed in top bar of channels of type 'channel' not limited to any group",
     async (assert) => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({
@@ -1327,7 +1341,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-Discuss-content .fa-globe");
+        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-Discuss-threadAvatar");
     }
 );
 
@@ -1338,7 +1352,7 @@ QUnit.test(
         const [partnerId_1, partnerId_2, partnerId_3, partnerId_4] = pyEnv["res.partner"].create([
             { im_status: "online", name: "Michel Online" },
             { im_status: "offline", name: "Jacqueline Offline" },
-            { im_status: "away", name: "Nabuchodonosor Away" },
+            { im_status: "away", name: "Nabuchodonosor Idle" },
             { im_status: "im_partner", name: "Robert Fired" },
         ]);
         pyEnv["discuss.channel"].create([
@@ -1381,29 +1395,29 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss();
         await click(".o-mail-DiscussCategoryItem:contains('Michel Online')");
-        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-ThreadIcon [title='Online']");
+        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-ImStatus [title='Online']");
         await click(".o-mail-DiscussCategoryItem:contains('Jacqueline Offline')");
-        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-ThreadIcon [title='Offline']");
-        await click(".o-mail-DiscussCategoryItem:contains('Nabuchodonosor Away')");
-        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-ThreadIcon [title='Away']");
+        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-ImStatus [title='Offline']");
+        await click(".o-mail-DiscussCategoryItem:contains('Nabuchodonosor Idle')");
+        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-ImStatus [title='Idle']");
         await click(".o-mail-DiscussCategoryItem:contains('Robert Fired')");
         assert.containsOnce(
             $,
-            ".o-mail-Discuss-header .o-mail-ThreadIcon [title='No IM status available']"
+            ".o-mail-Discuss-header .o-mail-ImStatus [title='No IM status available']"
         );
         await click(".o-mail-DiscussCategoryItem:contains('OdooBot')");
-        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-ThreadIcon [title='Bot']");
+        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-ImStatus [title='Bot']");
     }
 );
 
 QUnit.test(
-    "'Users' thread icon is displayed in top bar of channels of type 'group'",
+    "Thread avatar image is displayed in top bar of channels of type 'group'",
     async (assert) => {
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({ channel_type: "group" });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.containsOnce($, ".o-mail-Discuss-header .fa-users[title='Grouped Chat']");
+        assert.containsOnce($, ".o-mail-Discuss-header .o-mail-Discuss-threadAvatar");
     }
 );
 
@@ -1430,7 +1444,10 @@ QUnit.test(
     "Do not trigger channel description server update when channel has no description and editing to empty description",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+        const channelId = pyEnv["discuss.channel"].create({
+            create_uid: pyEnv.currentPartnerId,
+            name: "General",
+        });
         const { openDiscuss } = await start({
             mockRPC(route, args, originalRPC) {
                 if (args.method === "channel_change_description") {

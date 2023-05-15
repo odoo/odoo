@@ -31,7 +31,6 @@
                                 t-att-title="authorText"
                                 t-att-src="authorAvatarUrl"
                                 t-att-class="{ 'o_redirect cursor-pointer': hasAuthorClickable }"/>
-                            <ImStatus t-if="message.author" persona="message.author" className="imStatusClassName"/>
                         </div>
                         <t t-elif="!message.isTransient">
                             <small t-if="isActive" class="o-mail-Message-date text-muted opacity-50 ms-2">

@@ -28,3 +28,24 @@
         background-color: $gray-400;
     }
 }
+
+.o-mail-Discuss-threadAvatar {
+    img {
+        height: 36px;
+        width: 36px;
+    }
+
+    a {
+        i {
+            transform: translate(-50%, -50%);
+            opacity: 0;
+        }
+    
+        &:hover {
+            background-color: rgba($black, 0.5);
+            i {
+                opacity: 1;
+            }
+        }
+    }
+}

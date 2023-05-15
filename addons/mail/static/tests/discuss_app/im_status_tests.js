@@ -11,65 +11,61 @@ QUnit.module("im status");
 
 QUnit.test("initially online", async (assert) => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ im_status: "online" });
-    const channelId = pyEnv["discuss.channel"].create({ name: "TestChanel" });
-    pyEnv["mail.message"].create({
-        author_id: partnerId,
-        body: "not empty",
-        model: "discuss.channel",
-        res_id: channelId,
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "online" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.containsOnce($, ".o-mail-ImStatus i[title='Online']");
 });
 
 QUnit.test("initially offline", async (assert) => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ im_status: "offline" });
-    const channelId = pyEnv["discuss.channel"].create({ name: "TestChannel" });
-    pyEnv["mail.message"].create({
-        author_id: partnerId,
-        body: "not empty",
-        model: "discuss.channel",
-        res_id: channelId,
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "offline" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.containsOnce($, ".o-mail-ImStatus i[title='Offline']");
 });
 
 QUnit.test("initially away", async (assert) => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ im_status: "away" });
-    const channelId = pyEnv["discuss.channel"].create({ name: "TestChanel" });
-    pyEnv["mail.message"].create({
-        author_id: partnerId,
-        body: "not empty",
-        model: "discuss.channel",
-        res_id: channelId,
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "away" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
     });
-    const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
+    const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.containsOnce($, ".o-mail-ImStatus i[title='Idle']");
 });
 
 QUnit.test("change icon on change partner im_status", async (assert) => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ im_status: "online" });
-    const channelId = pyEnv["discuss.channel"].create({ name: "TestChannel" });
-    pyEnv["mail.message"].create({
-        author_id: partnerId,
-        body: "not empty",
-        model: "discuss.channel",
-        res_id: channelId,
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "online" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
     });
     const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
     await openDiscuss(channelId);
-    await afterNextRender(() => advanceTime(UPDATE_BUS_PRESENCE_DELAY));
     assert.containsOnce($, ".o-mail-ImStatus i[title='Online']");
 
     pyEnv["res.partner"].write([partnerId], { im_status: "offline" });

@@ -1,21 +1,26 @@
 .o-mail-ChatWindow {
-    height: 460px;
+    height: 480px;
     width: $o-mail-ChatWindow-width;
     z-index: 999; // messaging menu is dropdown (1000)
-    background-color: var(--o-mail-ChatWindow-header-background-color, #{$o-brand-odoo});
     box-shadow: -5px -5px 10px rgba(#000000, 0.09);
     outline: none;
 
     &.o-folded {
-        height: 36px;
+        height: 48px;
     }
 
     .o-mail-ChatWindow-command:hover {
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: rgba(0, 0, 0, 0.075);
     }
 }
 
 .o-mail-ChatWindow-header {
-    height: 36px;
-    color: #ffffff;
+    height: 48px;
+
+    .o-mail-ChatWindow-threadAvatar {
+        img {
+            height: 28px;
+            width: 28px;
+        }
+    }
 }
