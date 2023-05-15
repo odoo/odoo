@@ -44,6 +44,22 @@ class TestUBLCommon(AccountTestInvoicingCommon):
             'lang': "{{ object.partner_id.lang }}",
         })
 
+        # Fixed Taxes
+        cls.recupel = cls.env['account.tax'].create({
+            'name': "RECUPEL",
+            'amount_type': 'fixed',
+            'amount': 1,
+            'include_base_amount': True,
+            'sequence': 1,
+        })
+        cls.auvibel = cls.env['account.tax'].create({
+            'name': "AUVIBEL",
+            'amount_type': 'fixed',
+            'amount': 1,
+            'include_base_amount': True,
+            'sequence': 2,
+        })
+
     @classmethod
     def setup_company_data(cls, company_name, chart_template=None, **kwargs):
         # OVERRIDE to force the company with EUR currency.
@@ -206,7 +222,7 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         account_move._generate_pdf_and_send_invoice(self.move_template)
         return account_move
 
-    def _assert_invoice_attachment(self, attachment, xpaths, expected_file):
+    def _assert_invoice_attachment(self, attachment, expected_file, xpaths=None):
         """
         Get attachment from a posted account.move, and asserts it's the same as the expected xml file.
         """

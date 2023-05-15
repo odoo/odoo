@@ -202,9 +202,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
         return vals_list
 
-    def _get_invoice_line_allowance_vals_list(self, line):
+    def _get_invoice_line_allowance_vals_list(self, line, taxes_vals):
         # EXTENDS account.edi.xml.ubl_21
-        vals_list = super()._get_invoice_line_allowance_vals_list(line)
+        vals_list = super()._get_invoice_line_allowance_vals_list(line, taxes_vals)
 
         for vals in vals_list:
             vals['currency_dp'] = 2
@@ -304,9 +304,10 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             ) if intracom_delivery else None,
         }
 
-        for line in invoice.line_ids:
-            if len(line.tax_ids) > 1:
+        for line in invoice.invoice_line_ids:
+            if len(line.tax_ids) - len(line.tax_ids.filtered(lambda t: t.amount_type == 'fixed')) != 1:
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
+                # /!\ exception: possible to have any number of ecotaxes (fixed tax) with a regular percentage tax
                 constraints.update({'cen_en16931_tax_line': _("Each invoice line shall have one and only one tax.")})
 
         return constraints

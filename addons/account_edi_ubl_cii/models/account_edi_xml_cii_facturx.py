@@ -125,17 +125,31 @@ class AccountEdiXmlCII(models.AbstractModel):
 
         def grouping_key_generator(base_line, tax_values):
             tax = tax_values['tax_repartition_line'].tax_id
-            return {
+            grouping_key = {
                 **self._get_tax_unece_codes(invoice, tax),
                 'amount': tax.amount,
                 'amount_type': tax.amount_type,
             }
+            # If the tax is fixed, we want to have one group per tax
+            # s.t. when the invoice is imported, we can try to guess the fixed taxes
+            if tax.amount_type == 'fixed':
+                grouping_key['tax_name'] = tax.name
+            return grouping_key
 
         # Validate the structure of the taxes
         self._validate_taxes(invoice)
 
         # Create file content.
         tax_details = invoice._prepare_edi_tax_details(grouping_key_generator=grouping_key_generator)
+
+        # Fixed Taxes: filter them on the document level, and adapt the totals
+        fixed_taxes_keys = [k for k in tax_details['tax_details'] if k['amount_type'] == 'fixed']
+        for key in fixed_taxes_keys:
+            fixed_tax_details = tax_details['tax_details'].pop(key)
+            tax_details['tax_amount_currency'] -= fixed_tax_details['tax_amount_currency']
+            tax_details['tax_amount'] -= fixed_tax_details['tax_amount']
+            tax_details['base_amount_currency'] += fixed_tax_details['tax_amount_currency']
+            tax_details['base_amount'] += fixed_tax_details['tax_amount']
 
         if 'siret' in invoice.company_id._fields and invoice.company_id.siret:
             seller_siret = invoice.company_id.siret
@@ -194,6 +208,24 @@ class AccountEdiXmlCII(models.AbstractModel):
             template_values['document_context_id'] = "urn:cen.eu:en16931:2017#compliant#urn:xoev-de:kosit:standard:xrechnung_2.2"
         else:
             template_values['document_context_id'] = "urn:cen.eu:en16931:2017#conformant#urn:factur-x.eu:1p0:extended"
+
+        # Fixed taxes: add them as charges on the invoice lines
+        for line_vals in template_values['invoice_line_vals_list']:
+            line_vals['allowance_charge_vals_list'] = []
+            for grouping_key, tax_detail in tax_details['tax_details_per_record'][line_vals['line']]['tax_details'].items():
+                if grouping_key['amount_type'] == 'fixed':
+                    line_vals['allowance_charge_vals_list'].append({
+                        'indicator': 'true',
+                        'reason': tax_detail['group_tax_details'][0]['name'],
+                        'reason_code': 'AEO',
+                        'amount': tax_detail['tax_amount_currency'],
+                    })
+            sum_fixed_taxes = sum([e['amount'] for e in line_vals['allowance_charge_vals_list']])
+            line_vals['line_total_amount'] = line_vals['line'].price_subtotal + sum_fixed_taxes
+
+        # Fixed taxes: set the total adjusted amounts on the document level
+        template_values['tax_basis_total_amount'] = tax_details['base_amount_currency']
+        template_values['tax_total_amount'] = tax_details['tax_amount_currency']
 
         return template_values
 
@@ -337,8 +369,10 @@ class AccountEdiXmlCII(models.AbstractModel):
             'net_price_unit': './{*}SpecifiedLineTradeAgreement/{*}NetPriceProductTradePrice/{*}ChargeAmount',
             'billed_qty': './{*}SpecifiedLineTradeDelivery/{*}BilledQuantity',
             'allowance_charge': './/{*}SpecifiedLineTradeSettlement/{*}SpecifiedTradeAllowanceCharge',
-            'allowance_charge_indicator': './{*}ChargeIndicator/{*}Indicator',  # below allowance_charge node
-            'allowance_charge_amount': './{*}ActualAmount',  # below allowance_charge node
+            'allowance_charge_indicator': './{*}ChargeIndicator/{*}Indicator',
+            'allowance_charge_amount': './{*}ActualAmount',
+            'allowance_charge_reason': './{*}Reason',
+            'allowance_charge_reason_code': './{*}ReasonCode',
             'line_total_amount': './{*}SpecifiedLineTradeSettlement/{*}SpecifiedTradeSettlementLineMonetarySummation/{*}LineTotalAmount',
         }
         inv_line_vals = self._import_fill_invoice_line_values(tree, xpath_dict, invoice_line, qty_factor)
