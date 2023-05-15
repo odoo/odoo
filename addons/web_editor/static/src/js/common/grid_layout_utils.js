@@ -2,6 +2,7 @@
 'use strict';
 
 import {qweb} from 'web.core';
+import {descendants} from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 const rowSize = 50; // 50px.
 // Maximum number of rows that can be added when dragging a grid item.
 export const additionalRowLimit = 10;
@@ -84,6 +85,13 @@ export function _gridCleanUp(rowEl, columnEl) {
  */
 export function _toggleGridMode(containerEl) {
     let rowEl = containerEl.querySelector(':scope > .row');
+    // Avoid an unwanted rollback that prevents from deleting the text.
+    const avoidRollback = (el) => {
+        for (const node of descendants(el)) {
+            node.ouid = undefined;
+        }
+    };
+
     // For the snippets having elements outside of the row (and therefore not in
     // a column), create a column and put these elements in it so they can also
     // be placed in the grid.
@@ -94,6 +102,7 @@ export function _toggleGridMode(containerEl) {
         for (let i = outOfRowEls.length - 1; i >= 0; i--) {
             columnEl.prepend(outOfRowEls[i]);
         }
+        avoidRollback(columnEl);
         rowEl.prepend(columnEl);
     }
 
@@ -111,6 +120,7 @@ export function _toggleGridMode(containerEl) {
         for (let i = containerChildren.length - 1; i >= 0; i--) {
             columnEl.prepend(containerChildren[i]);
         }
+        avoidRollback(columnEl);
         rowEl.appendChild(columnEl);
         containerEl.appendChild(rowEl);
     }
