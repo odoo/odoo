@@ -216,21 +216,62 @@ class Meeting(models.Model):
     def _update_future_events(self, values, time_values, recurrence_values, future_update_start):
         """ Update future events time and info and create a new recurrence for them.
         """
-        detached_events = self.env['calendar.event']
-        if time_values:
-            parsed_start = parse(time_values['start']) if isinstance(time_values['start'], str) else time_values['start']
-            parsed_stop = parse(time_values['stop']) if isinstance(time_values['stop'], str) else time_values['stop']
+        [base_time_values] = self.read(['start', 'stop', 'allday'])
+        update_dict = {}
+        start_update = fields.Datetime.to_datetime(time_values.get('start'))
+        stop_update = fields.Datetime.to_datetime(time_values.get('stop'))
+        # Convert the base_event_id hours according to new values: time shift
+        if start_update or stop_update:
+            if start_update:
+                start = base_time_values['start'] + (start_update - self.start)
+                stop = base_time_values['stop'] + (start_update - self.start)
+                start_date = base_time_values['start'].date() + (start_update.date() - self.start.date())
+                stop_date = base_time_values['stop'].date() + (start_update.date() - self.start.date())
+                update_dict.update({'start': start, 'start_date': start_date, 'stop': stop, 'stop_date': stop_date})
+            if stop_update:
+                if not start_update:
+                    # Apply the same shift for start
+                    start = base_time_values['start'] + (stop_update - self.stop)
+                    start_date = base_time_values['start'].date() + (stop_update.date() - self.stop.date())
+                    update_dict.update({'start': start, 'start_date': start_date})
+                stop = base_time_values['stop'] + (stop_update - self.stop)
+                stop_date = base_time_values['stop'].date() + (stop_update.date() - self.stop.date())
+                update_dict.update({'stop': stop, 'stop_date': stop_date})
 
-        for record in self.recurrence_id._get_events_from(self.start):
-            if time_values:
-                    time_values['start'] = datetime.combine(record.start, parsed_start.time())
-                    time_values['stop'] = datetime.combine(record.start, parsed_stop.time())
-            record.write({**values, **time_values, **{'need_sync': False}})
+        time_values.update(update_dict)
 
-        recurrence = self.recurrence_id._split_from(self, recurrence_values)
-        # recurrence.with_context(future_events_update=True)._apply_recurrence()
+        # Get base values from previous recurrence
+        rec_fields = list(super(Meeting, self)._get_recurrent_fields())
+        [rec_vals] = self.read(rec_fields)
+        previous_recurrence_values = {field: rec_vals.pop(field) for field in rec_fields if field in rec_vals}
 
-        return detached_events
+        # Stop previous recurrence at current event
+        detached_events_split = self.recurrence_id._stop_at(self)
+
+        # Detach following events (except current event)
+        for record in (detached_events_split - self):
+            record.write({'google_id': False, 'active': False, 'need_sync': False})
+
+        # Update current event with new information
+        if values:
+            self.write({**time_values, **values, **{'google_id': False, 'need_sync': False}})
+
+        # Generate parameters for the new recurrence and create it
+        start_date = time_values['start'].date() if 'start' in time_values else self.start.date()
+        new_values = {
+            **previous_recurrence_values,
+            **super(Meeting, self)._get_recurrence_params_by_date(start_date),
+            **recurrence_values
+        }
+        new_values.pop('rrule')
+        if 'count' in new_values:
+            new_values['count'] = recurrence_values.get('count', 0) or len(detached_events_split)
+
+        self._apply_recurrence_values(new_values)
+
+        # Return an empty list to avoid running 'continuation' of this method in parent 'calendar'
+        detached_events_empty = self.env['calendar.event']
+        return detached_events_empty
 
     def _handle_apply_recurrence_values(self, recurrence_values, recurrence_update_setting, break_recurrence):
         """ Override to skip this method in parent module 'calendar'.
