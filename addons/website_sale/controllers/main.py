@@ -209,12 +209,13 @@ class WebsiteSale(http.Controller):
     def shop(self, page=0, category=None, search='', ppg=False, **post):
         add_qty = int(post.get('add_qty', 1))
         Category = request.env['product.public.category']
-        if category:
-            category = Category.search([('id', '=', int(category))], limit=1)
+        if category and isinstance(category, str):
+            domain = [('id', '=', int(category))] if category.isnumeric() else [('name', 'ilike', category)]
+            category = Category.search(domain, limit=1)
             if not category or not category.can_access_from_current_website():
                 raise NotFound()
         else:
-            category = Category
+            category = category or Category
 
         if ppg:
             try:
