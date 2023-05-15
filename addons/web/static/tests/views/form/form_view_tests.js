@@ -13043,7 +13043,7 @@ QUnit.module("Views", (hooks) => {
         assert.isVisible(target.querySelector(".o_form_status_indicator_buttons"));
 
         await click(target, ".o_cp_action_menus .dropdown-toggle");
-        await click(target.querySelectorAll(".o_cp_action_menus .dropdown-item")[2]);
+        await click($(target).find(".o_cp_action_menus .dropdown-item:contains(Delete)")[0]);
         assert.containsOnce(target, ".modal");
 
         await click(target, ".modal-footer button.btn-primary");
