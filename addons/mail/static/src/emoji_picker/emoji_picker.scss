@@ -3,18 +3,48 @@
     height: 350px;
 
     display: grid;
+    grid-template-areas:
+    "header"
+    "search"
+    "content";
     grid-template-rows: 34px 35px 1fr;
 
     .o-mail-Emoji {
         width: 30px;
-        font-size: 1.5rem;
+        font-size: 1rem;
         &:hover {
             background-color: $gray-300;
         }
     }
 
-    .o-mail-EmojiPicker-header .o-mail-Emoji:not(:hover):not(.o-isActive) {
-        filter: grayscale(1);
+    .o-mail-EmojiPicker-content {
+        grid-area: content;
+    }
+
+    .o-mail-EmojiPicker-header {
+        grid-area: header;
+        .o-mail-Emoji:not(:hover):not(.o-isActive) {
+            filter: grayscale(1);
+        }
+    }
+
+    .o-mail-EmojiPicker-search {
+        grid-area: search;
+        border-radius: 0%;
+        background-color: $input-focus-bg;
+        border-bottom: $input-border-width solid $border-color !important;
+
+        &:focus-within {
+            background-color: $input-focus-bg;
+            border-color: $input-focus-border-color !important;
+            color: $input-focus-color;
+        }
+
+        input {
+            appearance: none;
+            color: inherit;
+            background: inherit;
+        }
     }
 
     .o-mail-EmojiPicker-empty {
