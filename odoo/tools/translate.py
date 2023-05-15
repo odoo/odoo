@@ -1479,6 +1479,12 @@ class CodeTranslations:
                     get_resource_path(mod, 'i18n', lang + '.po'),
                     get_resource_path(mod, 'i18n_extra', lang_base + '.po'),
                     get_resource_path(mod, 'i18n_extra', lang + '.po')]
+        if lang_base == "es" and lang != "es_MX":
+            # force es_MX as fallback language for the different spanish
+            # es_MX is more actively translated and closer to many languages
+            po_paths = [po_paths[0]] + [get_resource_path(mod, 'i18n', 'es_MX.po')] + \
+                po_paths[1:3] + [get_resource_path(mod, 'i18n_extra', 'es_MX.po')] + \
+                [po_paths[3]]
         return [path for path in po_paths if path]
 
     @staticmethod
