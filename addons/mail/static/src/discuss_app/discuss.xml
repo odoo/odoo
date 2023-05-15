@@ -9,7 +9,7 @@
                 <ThreadIcon className="'me-2 align-self-center'" thread="thread"/>
                 <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
                     <AutoresizeInput
-                        className="'o-mail-Discuss-threadName lead fw-bold flex-shrink-1 text-dark'"
+                        className="'o-mail-Discuss-threadName lead fw-bold flex-shrink-1 text-dark py-0'"
                         disabled="!thread.isRenameable"
                         onValidate.bind="renameThread"
                         value="thread.displayName"
@@ -18,7 +18,7 @@
                         <div class="flex-shrink-0 mx-2 py-2 border-start"/>
                         <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
                         <AutoresizeInput
-                            className="'o-mail-Discuss-threadDescription flex-shrink-1'"
+                            className="'o-mail-Discuss-threadDescription flex-shrink-1 py-1'"
                             onValidate.bind="updateThreadDescription"
                             placeholder="autogrowDescriptionPlaceholder"
                             value="thread.description or ''"
@@ -40,6 +40,7 @@
                             <t t-if="store.user" t-esc="store.user.name"/>
                             <t t-else="">
                                 <AutoresizeInput
+                                    className="'py-1'"
                                     onValidate.bind="renameGuest"
                                     value="store.guest.name"
                                 />
