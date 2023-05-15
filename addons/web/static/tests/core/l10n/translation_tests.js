@@ -152,17 +152,39 @@ QUnit.test("arabic has the correct numbering system (Tunisia)", async (assert) =
 
 QUnit.test("bengalese has the correct numbering system", async (assert) => {
     await patchLang("bn");
+<<<<<<< HEAD
     assert.strictEqual(
         DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss"),
         "১০/১২/২০২১ ১২:০০:০০"
+||||||| parent of 8a0cd1984c7 (temp)
+    assert.strictEqual(
+        DateTime.utc(2021, 12, 10).toFormat("dd MMM, yyyy hh:mm:ss"),
+        "১০ ডিসেম্বর, ২০২১ ১২:০০:০০"
+=======
+    assert.ok(
+        ["১০ ডিসেম্বর, ২০২১ ১২:০০:০০", "১০ ডিসে, ২০২১ ১২:০০:০০"].includes(
+            DateTime.utc(2021, 12, 10).toFormat("dd MMM, yyyy hh:mm:ss")
+        )
+>>>>>>> 8a0cd1984c7 (temp)
     );
 });
 
 QUnit.test("punjabi (gurmukhi) has the correct numbering system", async (assert) => {
     await patchLang("pa_in");
+<<<<<<< HEAD
     assert.strictEqual(
         DateTime.utc(2021, 12, 10).toFormat("dd/MM/yyyy hh:mm:ss"),
         "੧੦/੧੨/੨੦੨੧ ੧੨:੦੦:੦੦"
+||||||| parent of 8a0cd1984c7 (temp)
+    assert.strictEqual(
+        DateTime.utc(2021, 12, 10).toFormat("dd MMM, yyyy hh:mm:ss"),
+        "੧੦ M12, ੨੦੨੧ ੧੨:੦੦:੦੦"
+=======
+    assert.ok(
+        ["੧੦ M12, ੨੦੨੧ ੧੨:੦੦:੦੦", "੧੦ ਦਸੰ, ੨੦੨੧ ੧੨:੦੦:੦੦"].includes(
+            DateTime.utc(2021, 12, 10).toFormat("dd MMM, yyyy hh:mm:ss")
+        )
+>>>>>>> 8a0cd1984c7 (temp)
     );
 });
 
