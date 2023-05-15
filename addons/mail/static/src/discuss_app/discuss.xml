@@ -5,7 +5,7 @@
     <div class="o-mail-Discuss d-flex h-100 flex-grow-1 border-top" t-att-class="{ 'flex-column align-items-center bg-view': store.isSmall }" t-ref="root">
         <div t-if="store.isSmall and store.discuss.activeTab === 'mailbox'" class="w-100 border-bottom" t-call="mail.Discuss.mobileTopbar" t-ref="mobileTopbar"/>
         <div t-if="thread and !(store.isSmall and ['chat', 'channel'].includes(store.discuss.activeTab))" class="o-mail-Discuss-content d-flex flex-column h-100 w-100 bg-view overflow-auto" t-ref="content">
-            <div class="o-mail-Discuss-header px-3 bg-100 border-bottom d-flex flex-shrink-0" style="height:42px;">
+            <div class="o-mail-Discuss-header px-3 bg-view border-bottom d-flex flex-shrink-0" style="height:42px;">
                 <ThreadIcon className="'me-2 align-self-center'" thread="thread"/>
                 <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
                     <AutoresizeInput
@@ -49,7 +49,7 @@
                 </div>
             </div>
             <div class="overflow-auto bg-100 d-flex flex-grow-1">
-                <div class="bg-white d-flex flex-column flex-grow-1">
+                <div class="bg-view d-flex flex-column flex-grow-1">
                     <Call t-if="Object.keys(thread.rtcSessions).length > 0" thread="thread"/>
                     <Thread thread="thread" t-key="thread.localId" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
                     <Composer t-if="thread.type !== 'mailbox' or messageToReplyTo.thread === thread" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" dropzoneRef="contentRef"/>
