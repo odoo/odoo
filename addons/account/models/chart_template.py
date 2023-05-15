@@ -269,23 +269,7 @@ class AccountChartTemplate(models.AbstractModel):
         obsolete_xmlid = set()
         skip_update = set()
         for model_name, records in data.items():
-            _fields = self.env[model_name]._fields
             for xmlid, values in records.items():
-                x2manyfields = [
-                    fname
-                    for fname in values
-                    if fname in _fields
-                    and _fields[fname].type in ('one2many', 'many2many')
-                    and isinstance(values[fname], (list, tuple))
-                ]
-                if x2manyfields:
-                    rec = self.ref(xmlid, raise_if_not_found=False)
-                    if rec:
-                        for fname in x2manyfields:
-                            for i, (line, (command, _id, vals)) in enumerate(zip(rec[fname], values[fname])):
-                                if command == Command.CREATE:
-                                    values[fname][i] = Command.update(line.id, vals)
-
                 if model_name == 'account.fiscal.position':
                     # Only add tax mappings containing new taxes
                     values['tax_ids'] = [
@@ -348,6 +332,28 @@ class AccountChartTemplate(models.AbstractModel):
                 ('name', 'in', [f"{company.id}_{xmlid}" for xmlid in obsolete_xmlid]),
                 ('module', '=', 'account'),
             ]).unlink()
+
+        custom_fields = {  # Don't alter values that can be changed by the users
+            'account.fiscal.position.tax_ids',
+        }
+        for model_name, records in data.items():
+            _fields = self.env[model_name]._fields
+            for xmlid, values in records.items():
+                x2manyfields = [
+                    fname
+                    for fname in values
+                    if fname in _fields
+                    and f"{model_name}.{fname}" not in custom_fields
+                    and _fields[fname].type in ('one2many', 'many2many')
+                    and isinstance(values[fname], (list, tuple))
+                ]
+                if x2manyfields:
+                    rec = self.ref(xmlid, raise_if_not_found=False)
+                    if rec:
+                        for fname in x2manyfields:
+                            for i, (line, (command, _id, vals)) in enumerate(zip(rec[fname], values[fname])):
+                                if command == Command.CREATE:  # converts ORM command `create` into `update`
+                                    values[fname][i] = Command.update(line.id, vals)
 
     def _pre_load_data(self, template_code, company, template_data, data):
         """Pre-process the data and preload some values.
