@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from itertools import product
+
 from odoo import Command, api, models
 from .eu_tag_map import EU_TAG_MAP
 from .eu_tax_map import EU_TAX_MAP
@@ -97,18 +99,14 @@ class Company(models.Model):
 
     def _get_repartition_lines_oss(self):
         self.ensure_one()
-        defaults = self.env['account.tax'].with_company(self).default_get(['repartition_line_ids'])
         oss_account, oss_tags = self._get_oss_account(), self._get_oss_tags()
-        invoice_base_line, invoice_tax_line, refund_base_line, refund_tax_line, vals = 0, 1, 2, 3, 2
-        if oss_account:
-            defaults['repartition_line_ids'][invoice_tax_line][vals]['account_id'] = oss_account.id
-            defaults['repartition_line_ids'][refund_tax_line][vals]['account_id'] = oss_account.id
-        if oss_tags:
-            defaults['repartition_line_ids'][invoice_base_line][vals]['tag_ids'] += [Command.link(tag.id) for tag in oss_tags['invoice_base_tag']]
-            defaults['repartition_line_ids'][invoice_tax_line][vals]['tag_ids'] += [Command.link(tag.id) for tag in oss_tags['invoice_tax_tag']]
-            defaults['repartition_line_ids'][refund_base_line][vals]['tag_ids'] += [Command.link(tag.id) for tag in oss_tags['refund_base_tag']]
-            defaults['repartition_line_ids'][refund_tax_line][vals]['tag_ids'] += [Command.link(tag.id) for tag in oss_tags['refund_tax_tag']]
-        return defaults['repartition_line_ids'][0:2], defaults['repartition_line_ids'][2:4]
+        repartition_line_ids = {}
+        for doc_type, rep_type in product(('invoice', 'refund'), ('base', 'tax')):
+            vals = {'document_type': doc_type, 'repartition_type': rep_type, 'tag_ids': [Command.link(tag.id) for tag in oss_tags[f'{doc_type}_{rep_type}_tag']]}
+            if oss_account:
+                vals['account_id'] = oss_account.id
+            repartition_line_ids.setdefault(doc_type, []).append(Command.create(vals))
+        return repartition_line_ids['invoice'], repartition_line_ids['refund']
 
     def _get_oss_account(self):
         self.ensure_one()
