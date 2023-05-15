@@ -410,7 +410,7 @@
                 <t t-foreach='question.suggested_answer_ids' t-as='label'>
                     <t t-set="item_idx" t-value="label_index"/>
                     <t t-set="answer_selected" t-value="answer_line and answer_line.suggested_answer_id.id == label.id"/>
-                    <t t-set="is_correct" t-value="label.answer_score > 0.0"/>
+                    <t t-set="is_correct" t-value="label.is_correct"/>
 
                     <!--Used for print mode with corrections -->
                     <t t-set="answer_class" t-if="not has_correct_answer" t-value="''" />
@@ -473,7 +473,7 @@
                     <t t-set="item_idx" t-value="label_index"/>
                     <t t-set="answer_line" t-value="answer_lines.filtered(lambda line: line.suggested_answer_id == label)"/>
                     <t t-set="answer_selected" t-value="answer_line and answer_line.suggested_answer_id.id == label.id"/>
-                    <t t-set="is_correct" t-value="label.answer_score > 0.0"/>
+                    <t t-set="is_correct" t-value="label.is_correct"/>
 
                     <!--Used for print mode with corrections -->
                     <t t-set="answer_class" t-if="not has_correct_answer" t-value="''" />
