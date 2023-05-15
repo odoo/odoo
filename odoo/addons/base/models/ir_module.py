@@ -942,6 +942,12 @@ class Module(models.Model):
                         _logger.info('module %s: loading base translation file %s for language %s', module_name, base_lang_code, lang)
                         translation_importer.load_file(base_trans_file, lang)
 
+                    if base_lang_code == "es" and lang != "es_MX":
+                        mx_trans_file = get_module_resource(module_name, 'i18n', 'es_MX.po')
+                        if mx_trans_file:
+                            _logger.info('module %s: loading translation file %s for language %s', module_name, "es_MX", lang)
+                            translation_importer.load_file(mx_trans_file, lang)
+
                     # i18n_extra folder is for additional translations handle manually (eg: for l10n_be)
                     base_trans_extra_file = get_module_resource(module_name, 'i18n_extra', base_lang_code + '.po')
                     if base_trans_extra_file:
