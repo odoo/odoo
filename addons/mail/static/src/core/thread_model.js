@@ -124,6 +124,8 @@ export class Thread {
     last_interest_dt;
     /** @type {number} */
     lastServerMessageId;
+    /** @type {Boolean} */
+    is_editable;
 
     constructor(store, data) {
         Object.assign(this, {
@@ -264,12 +266,8 @@ export class Thread {
         );
     }
 
-    get isDescriptionChangeable() {
-        return !this._store.guest && ["channel", "group"].includes(this.type);
-    }
-
-    get isRenameable() {
-        return !this._store.guest && ["chat", "channel", "group"].includes(this.type);
+    get allowDescription() {
+        return ["channel", "group"].includes(this.type);
     }
 
     get isTransient() {

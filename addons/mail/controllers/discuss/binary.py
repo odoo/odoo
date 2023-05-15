@@ -76,6 +76,26 @@ class BinaryController(http.Controller):
         return request.env["ir.binary"]._get_stream_from(attachment_sudo).get_response(as_attachment=download)
 
     @http.route(
+        "/discuss/channel/<int:channel_id>/avatar_128",
+        methods=["GET"],
+        type="http",
+        auth="public",
+    )
+    def discuss_channel_avatar_128(self, channel_id):
+        channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
+            request=request, channel_id=channel_id
+        )
+        domain = [("id", "=", channel_id)]
+        channel_sudo = channel_member_sudo.env["discuss.channel"].search(domain, limit=1)
+        if not channel_sudo:
+            raise NotFound()
+        return (
+            request.env["ir.binary"]
+            ._get_image_stream_from(channel_sudo, field_name="avatar_128")
+            .get_response()
+        )
+
+    @http.route(
         [
             "/discuss/channel/<int:channel_id>/image/<int:attachment_id>",
             "/discuss/channel/<int:channel_id>/image/<int:attachment_id>/<int:width>x<int:height>",
@@ -86,11 +106,11 @@ class BinaryController(http.Controller):
     )
     def fetch_image(self, channel_id, attachment_id, width=0, height=0, **kwargs):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
-            request=request, channel_id=int(channel_id)
+            request=request, channel_id=channel_id
         )
         domain = [
-            ("id", "=", int(attachment_id)),
-            ("res_id", "=", int(channel_id)),
+            ("id", "=", attachment_id),
+            ("res_id", "=", channel_id),
             ("res_model", "=", "discuss.channel"),
         ]
         attachment_sudo = channel_member_sudo.env["ir.attachment"].search(domain, limit=1)
@@ -98,6 +118,6 @@ class BinaryController(http.Controller):
             raise NotFound()
         return (
             request.env["ir.binary"]
-            ._get_image_stream_from(attachment_sudo, width=int(width), height=int(height))
+            ._get_image_stream_from(attachment_sudo, width=width, height=height)
             .get_response(as_attachment=kwargs.get("download"))
         )

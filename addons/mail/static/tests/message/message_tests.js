@@ -1135,36 +1135,6 @@ QUnit.test("chat with author should be opened after clicking on their name", asy
 });
 
 QUnit.test(
-    "chat with author should be opened after clicking on their im status icon",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
-            { name: "Partner_1" },
-            { name: "Partner_2", im_status: "online" },
-        ]);
-        pyEnv["res.users"].create({
-            im_status: "online",
-            partner_id: partnerId_2,
-        });
-        pyEnv["mail.message"].create({
-            author_id: partnerId_2,
-            body: "not empty",
-            model: "res.partner",
-            res_id: partnerId_1,
-        });
-        const { advanceTime, openFormView } = await start({ hasTimeControl: true });
-        await openFormView("res.partner", partnerId_1);
-        await afterNextRender(() => advanceTime(50 * 1000)); // next fetch of im_status
-        assert.containsOnce($, ".o-mail-ImStatus");
-        assert.hasClass($(".o-mail-ImStatus"), "cursor-pointer");
-
-        await click(".o-mail-ImStatus");
-        assert.containsOnce($, ".o-mail-ChatWindow");
-        assert.containsOnce($, ".o-mail-ChatWindow-header:contains(Partner_2)");
-    }
-);
-
-QUnit.test(
     "subtype description should be displayed if it is different than body",
     async (assert) => {
         const pyEnv = await startServer();

@@ -14,9 +14,7 @@
                         <div t-elif="chatPartner.im_status === 'offline'" class="fa fa-fw fa-circle-o" title="Offline"/>
                         <div t-elif="chatPartner.im_status === 'away'" class="fa fa-fw fa-circle text-warning" title="Away"/>
                         <div t-elif="chatPartner.im_status === 'bot'" class="fa fa-fw fa-heart text-success" title="Bot"/>
-                        <t t-else="" name="noImStatusCondition">
-                            <div class="fa fa-fw fa-question-circle" title="No IM status available"/>
-                        </t>
+                        <div t-else="" class="fa fa-fw fa-question-circle" title="No IM status available"/>
                     </t>
                 </t>
             </t>

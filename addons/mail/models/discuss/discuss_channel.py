@@ -54,6 +54,7 @@ class Channel(models.Model):
         ('group', 'Group')],
         string='Channel Type', required=True, default='channel', readonly=True, help="Chat is private and unique between 2 persons. Group is private among invited persons. Channel can be freely joined (depending on its configuration).")
     is_chat = fields.Boolean(string='Is a chat', compute='_compute_is_chat')
+    is_editable = fields.Boolean('Is Editable', compute='_compute_is_editable')
     default_display_mode = fields.Selection(string="Default Display Mode", selection=[('video_full_screen', "Full screen video")], help="Determines how the channel will be displayed by default when opening it from its invitation link. No value means display text (no voice/video).")
     description = fields.Text('Description')
     image_128 = fields.Image("Image", max_width=128, max_height=128)
@@ -108,6 +109,18 @@ class Channel(models.Model):
     def _compute_is_chat(self):
         for record in self:
             record.is_chat = record.channel_type == 'chat'
+
+    @api.depends('channel_type', 'is_member')
+    def _compute_is_editable(self):
+        for channel in self:
+            if channel.channel_type == 'channel':
+                channel.is_editable = self.sudo(False).env.is_admin() or channel.create_uid.id == self.env.user.id
+            elif channel.channel_type == 'chat':
+                channel.is_editable = True
+            elif channel.channel_type == 'group':
+                channel.is_editable = channel.is_member and not self.sudo(False).env.user._is_public()
+            else:
+                channel.is_editable = False
 
     @api.depends('channel_type', 'image_128', 'uuid')
     def _compute_avatar_128(self):
@@ -776,6 +789,7 @@ class Channel(models.Model):
                 'description': channel.description,
                 'uuid': channel.uuid,
                 'state': 'open',
+                'is_editable': channel.is_editable,
                 'is_minimized': False,
                 'group_based_subscription': bool(channel.group_ids),
                 'create_uid': channel.create_uid.id,

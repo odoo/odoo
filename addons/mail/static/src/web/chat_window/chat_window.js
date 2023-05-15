@@ -10,6 +10,7 @@ import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { localization } from "@web/core/l10n/localization";
 import { ThreadIcon } from "@mail/discuss_app/thread_icon";
+import { ImStatus } from "@mail/discuss_app/im_status";
 import { isEventHandled } from "@mail/utils/misc";
 import { ChannelSelector } from "@mail/discuss_app/channel_selector";
 import { PinnedMessagesPanel } from "@mail/discuss_app/pinned_messages_panel";
@@ -28,6 +29,7 @@ export class ChatWindow extends Component {
         ChannelSelector,
         Composer,
         ThreadIcon,
+        ImStatus,
         PinnedMessagesPanel,
     };
     static props = ["chatWindow", "right?"];

@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { ImStatus } from "./im_status";
 import { AutoresizeInput } from "./autoresize_input";
 import { Thread } from "../core_ui/thread";
 import { ThreadIcon } from "./thread_icon";
@@ -8,6 +9,7 @@ import { useRtc } from "../rtc/rtc_hook";
 import { useMessageEdition, useMessageHighlight, useMessageToReplyTo } from "@mail/utils/hooks";
 import { Composer } from "../composer/composer";
 import { Call } from "../rtc/call";
+import { FileUploader } from "@web/views/fields/file_handler";
 import {
     Component,
     onWillStart,
@@ -20,6 +22,7 @@ import {
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
+import { url } from "@web/core/utils/urls";
 import { PinnedMessagesPanel } from "./pinned_messages_panel";
 
 export class Discuss extends Component {
@@ -30,6 +33,8 @@ export class Discuss extends Component {
         Composer,
         Call,
         PinnedMessagesPanel,
+        FileUploader,
+        ImStatus,
     };
     static props = {
         public: { type: Boolean, optional: true },
@@ -70,6 +75,7 @@ export class Discuss extends Component {
                 },
             },
         });
+        this.notification = useService("notification");
         useEffect(
             () => {
                 if (
@@ -100,11 +106,22 @@ export class Discuss extends Component {
         return this.store.threads[this.store.discuss.threadLocalId];
     }
 
+    get channelAvatar() {
+        return this.props.public
+            ? url(`/discuss/channel/${this.thread.id}/avatar_128`)
+            : this.thread.imgUrl;
+    }
+
     togglePinMenu() {
         this.state.activeMode =
             this.state.activeMode === this.MODES.PINNED_MESSAGES
                 ? this.MODES.NONE
                 : this.MODES.PINNED_MESSAGES;
+    }
+
+    async onFileUploaded(file) {
+        await this.threadService.updateAvatar(this.thread.id, file.data);
+        this.notification.add(_t("The avatar has been updated!"), { type: "success" });
     }
 
     async renameThread({ value: name }) {
