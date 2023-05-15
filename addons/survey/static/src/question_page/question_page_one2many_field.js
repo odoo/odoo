@@ -22,5 +22,5 @@ QuestionPageOneToManyField.defaultProps = {
     ...X2ManyField.defaultProps,
     editable: "bottom",
 };
-
+QuestionPageOneToManyField.additionalClasses = ['o_field_one2many'];
 registry.category("fields").add("question_page_one2many", QuestionPageOneToManyField);

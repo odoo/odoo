@@ -254,7 +254,7 @@ class Forum(models.Model):
 
     def go_to_website(self):
         self.ensure_one()
-        website_url = self._compute_website_url
+        website_url = self._compute_website_url()
         if not website_url:
             return False
         return self.env['website'].get_client_action(website_url)
