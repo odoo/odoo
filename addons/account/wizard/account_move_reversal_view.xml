@@ -12,35 +12,13 @@
                     <field name="move_type" invisible="1"/>
                     <field name="available_journal_ids" invisible="1"/>
                     <group>
-                         <group attrs="{'invisible': ['|',('move_type', 'not in', ('out_invoice', 'in_invoice')),('residual', '=', 0)]}">
-                            <field name="refund_method" widget="radio" attrs="{'readonly': [('residual', '=', 0)]}"/>
-                         </group>
-                         <group attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'in_invoice', 'some_invoice')), ('residual', '=', 0)]}">
-                            <div attrs="{'invisible':[('refund_method', '!=', 'refund')]}" class="oe_grey" colspan="2">
-                               The credit note is created in draft and can be edited before being issued.
-                            </div>
-                            <div attrs="{'invisible':[('refund_method', '!=', 'cancel')]}" class="oe_grey" colspan="2">
-                               The credit note is auto-validated and reconciled with the invoice.
-                            </div>
-                            <div attrs="{'invisible':[('refund_method', '!=', 'modify')]}" class="oe_grey" colspan="2">
-                               The credit note is auto-validated and reconciled with the invoice.
-                               The original invoice is duplicated as a new draft.
-                            </div>
-                         </group>
-                    </group>
-                    <group>
-                        <group>
-                            <field name="reason" attrs="{'invisible': [('move_type', '=', 'entry')]}"/>
-                            <field name="date_mode" string="Reversal Date" widget="radio"/>
-                        </group>
-                        <group>
+                        <field name="reason" attrs="{'invisible': [('move_type', '=', 'entry')]}"/>
                         <field name="journal_id" domain="[('id', 'in', available_journal_ids)]"/>
-                        <field name="date" string="Refund Date" attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'in_invoice')), ('date_mode', '!=', 'custom')], 'required':[('date_mode', '=', 'custom')]}"/>
-                        <field name="date" attrs="{'invisible': ['|', ('move_type', 'in', ('out_invoice', 'in_invoice')), ('date_mode', '!=', 'custom')], 'required':[('date_mode', '=', 'custom')]}"/>
-                        </group>
+                        <field name="date" widget="date" required="1"/>
                     </group>
                     <footer>
-                        <button string='Reverse' name="reverse_moves" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string='Reverse' name="refund_moves" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Reverse and Create Invoice" name="modify_moves" type="object" class="btn-secondary"/>
                         <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
                     </footer>
                </form>

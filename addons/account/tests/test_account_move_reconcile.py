@@ -3835,10 +3835,9 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             .with_context(active_model='account.move', active_ids=invoice.ids)\
             .create({
                 'reason': "test_reconcile_cash_basis_tax_grid_reversal",
-                'refund_method': 'refund',
                 'journal_id': invoice.journal_id.id,
             })
-        refund = self.env['account.move'].browse(reversal_wizard.reverse_moves()['res_id'])
+        refund = self.env['account.move'].browse(reversal_wizard.refund_moves()['res_id'])
         refund.action_post()
 
         self.assertRecordValues(refund.line_ids.sorted('balance'), [
@@ -3851,10 +3850,9 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             .with_context(active_model='account.move', active_ids=refund.ids)\
             .create({
                 'reason': "test_reconcile_cash_basis_tax_grid_reversal",
-                'refund_method': 'refund',
                 'journal_id': refund.journal_id.id,
             })
-        reversed_refund = self.env['account.move'].browse(reversal_wizard.reverse_moves()['res_id'])
+        reversed_refund = self.env['account.move'].browse(reversal_wizard.refund_moves()['res_id'])
 
         self.assertRecordValues(reversed_refund.line_ids.sorted('balance'), [
             {'debit': 0.0,      'credit': 1000.0,   'tax_tag_ids': [],  'account_id': self.company_data['default_account_revenue'].id},

@@ -14,21 +14,11 @@ class AccountMoveReversal(models.TransientModel):
 
     move_ids = fields.Many2many('account.move', 'account_move_reversal_move', 'reversal_id', 'move_id', domain=[('state', '=', 'posted')])
     new_move_ids = fields.Many2many('account.move', 'account_move_reversal_new_move', 'reversal_id', 'new_move_id')
-    date_mode = fields.Selection(selection=[
-            ('custom', 'Specific'),
-            ('entry', 'Journal Entry Date')
-    ], required=True, default='custom')
     date = fields.Date(string='Reversal date', default=fields.Date.context_today)
-    reason = fields.Char(string='Reason')
-    refund_method = fields.Selection(selection=[
-            ('refund', 'Partial Refund'),
-            ('cancel', 'Full Refund'),
-            ('modify', 'Full refund and new draft invoice')
-        ], string='Credit Method', required=True,
-        help='Choose how you want to credit this invoice. You cannot "modify" nor "cancel" if the invoice is already reconciled.')
+    reason = fields.Char(string='Reason displayed on Credit Note')
     journal_id = fields.Many2one(
         comodel_name='account.journal',
-        string='Use Specific Journal',
+        string='Journal',
         required=True,
         compute='_compute_journal_id',
         readonly=False,
@@ -82,8 +72,6 @@ class AccountMoveReversal(models.TransientModel):
             res['company_id'] = move_ids.company_id.id or self.env.company.id
         if 'move_ids' in fields:
             res['move_ids'] = [(6, 0, move_ids.ids)]
-        if 'refund_method' in fields:
-            res['refund_method'] = (len(move_ids) > 1 or move_ids.move_type == 'entry') and 'cancel' or 'refund'
         return res
 
     @api.depends('move_ids')
@@ -95,7 +83,7 @@ class AccountMoveReversal(models.TransientModel):
             record.move_type = move_ids.move_type if len(move_ids) == 1 else (any(move.move_type in ('in_invoice', 'out_invoice') for move in move_ids) and 'some_invoice' or False)
 
     def _prepare_default_reversal(self, move):
-        reverse_date = self.date if self.date_mode == 'custom' else move.date
+        reverse_date = self.date
         return {
             'ref': _('Reversal of: %(move_name)s, %(reason)s', move_name=move.name, reason=self.reason)
                    if self.reason
@@ -109,7 +97,7 @@ class AccountMoveReversal(models.TransientModel):
             'auto_post': 'at_date' if reverse_date > fields.Date.context_today(self) else 'no',
         }
 
-    def reverse_moves(self):
+    def reverse_moves(self, is_modify=False):
         self.ensure_one()
         moves = self.move_ids
 
@@ -124,7 +112,7 @@ class AccountMoveReversal(models.TransientModel):
         ]
         for move, default_vals in zip(moves, default_values_list):
             is_auto_post = default_vals.get('auto_post') != 'no'
-            is_cancel_needed = not is_auto_post and self.refund_method in ('cancel', 'modify')
+            is_cancel_needed = not is_auto_post and is_modify
             batch_index = 0 if is_cancel_needed else 1
             batches[batch_index][0] |= move
             batches[batch_index][1].append(default_vals)
@@ -134,10 +122,10 @@ class AccountMoveReversal(models.TransientModel):
         for moves, default_values_list, is_cancel_needed in batches:
             new_moves = moves._reverse_moves(default_values_list, cancel=is_cancel_needed)
 
-            if self.refund_method == 'modify':
+            if is_modify:
                 moves_vals_list = []
                 for move in moves.with_context(include_business_fields=True):
-                    moves_vals_list.append(move.copy_data({'date': self.date if self.date_mode == 'custom' else move.date})[0])
+                    moves_vals_list.append(move.copy_data({'date': self.date})[0])
                 new_moves = self.env['account.move'].create(moves_vals_list)
 
             moves_to_redirect |= new_moves
@@ -164,3 +152,9 @@ class AccountMoveReversal(models.TransientModel):
             if len(set(moves_to_redirect.mapped('move_type'))) == 1:
                 action['context'] = {'default_move_type':  moves_to_redirect.mapped('move_type').pop()}
         return action
+
+    def refund_moves(self):
+        return self.reverse_moves(is_modify=False)
+
+    def modify_moves(self):
+        return self.reverse_moves(is_modify=True)

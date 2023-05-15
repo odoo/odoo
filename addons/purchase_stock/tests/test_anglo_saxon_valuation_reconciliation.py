@@ -106,11 +106,10 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
         # Refund the invoice
         refund_invoice_wiz = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=[invoice.id]).create({
             'reason': 'test_invoice_shipment_refund',
-            'refund_method': 'modify',
             'date': '2018-03-15',
             'journal_id': invoice.journal_id.id,
         })
-        new_invoice = self.env['account.move'].browse(refund_invoice_wiz.reverse_moves()['res_id'])
+        new_invoice = self.env['account.move'].browse(refund_invoice_wiz.modify_moves()['res_id'])
         refund_invoice = invoice.reversal_move_id
         # Check the result
         self.assertEqual(invoice.payment_state, 'reversed', "Invoice should be in 'reversed' state")
