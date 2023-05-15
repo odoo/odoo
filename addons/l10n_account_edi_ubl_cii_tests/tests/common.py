@@ -44,6 +44,22 @@ class TestUBLCommon(AccountTestInvoicingCommon):
             'lang': "{{ object.partner_id.lang }}",
         })
 
+        # Fixed Taxes
+        cls.recupel = cls.env['account.tax'].create({
+            'name': "RECUPEL",
+            'amount_type': 'fixed',
+            'amount': 1,
+            'include_base_amount': True,
+            'sequence': 1,
+        })
+        cls.auvibel = cls.env['account.tax'].create({
+            'name': "AUVIBEL",
+            'amount_type': 'fixed',
+            'amount': 1,
+            'include_base_amount': True,
+            'sequence': 2,
+        })
+
     @classmethod
     def setup_company_data(cls, company_name, chart_template=None, **kwargs):
         # OVERRIDE to force the company with EUR currency.
@@ -122,8 +138,10 @@ class TestUBLCommon(AccountTestInvoicingCommon):
             currency_id = self.env.ref('base.EUR').id
 
         # Create empty account.move, then update a file
-        journal = self.company_data['default_journal_purchase'] if move_type in self.env['account.move'].get_purchase_types()\
-            else self.company_data['default_journal_sale']
+        if move_type in self.env['account.move'].get_purchase_types():
+            journal = self.company_data['default_journal_purchase']
+        else:
+            journal = self.company_data['default_journal_sale']
 
         invoice = self.env['account.move'].create({
             'move_type': move_type,
