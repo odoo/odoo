@@ -1,123 +1,13 @@
 /** @odoo-module **/
 
-import ActionModel from "@web/legacy/js/views/action_model";
-
-/**
- * @param {string} state
- * @returns {string}
- */
-function searchModelStateFromLegacy(state) {
-    /**
-     * Possible problem if only one of ControlPanelModelExtension or SearchPanelModelExtension is installed.
-     * We might need to do something in SearchModel.
-     * @todo (DAM) check when search panel is reworked.
-     */
-    const parsedState = JSON.parse(state);
-    const newState = {};
-
-    if (parsedState.ControlPanelModelExtension) {
-        const { query, filters, nextGroupId, nextGroupNumber, nextId } =
-            parsedState.ControlPanelModelExtension;
-
-        newState.nextGroupId = nextGroupId;
-        newState.nextGroupNumber = nextGroupNumber;
-        newState.nextId = nextId;
-        newState.query = [];
-        newState.searchItems = {};
-
-        for (const queryElem of query) {
-            const filterId = queryElem.filterId;
-            const filter = filters[filterId];
-            const newQueryElem = { searchItemId: filterId };
-            switch (filter.type) {
-                case "filter":
-                    if (filter.hasOptions) {
-                        newQueryElem.generatorId = queryElem.optionId;
-                    }
-                    break;
-                case "groupBy":
-                    if (filter.hasOptions) {
-                        newQueryElem.intervalId = queryElem.optionId;
-                    }
-                    break;
-                case "field":
-                    newQueryElem.autocompleteValue = {
-                        value: queryElem.value,
-                        label: queryElem.label,
-                        operator: queryElem.operator,
-                    };
-                    break;
-            }
-            newState.query.push(newQueryElem);
-        }
-
-        for (const filter of Object.values(filters)) {
-            const item = Object.assign({}, filter);
-            switch (item.type) {
-                case "groupBy":
-                    if (filter.hasOptions) {
-                        item.type = "dateGroupBy";
-                        item.defaultIntervalId = item.defaultOptionId;
-                        delete item.hasOptions;
-                        delete item.defaultOptionId;
-                    }
-                    break;
-                case "filter":
-                    if (filter.hasOptions) {
-                        item.type = "dateFilter";
-                        item.defaultGeneratorId = item.defaultOptionId;
-                        delete item.hasOptions;
-                        delete item.isDateFilter;
-                        delete item.defaultOptionId;
-                    }
-                    break;
-                case "favorite":
-                    item.orderBy = item.orderedBy;
-                    delete item.orderedBy;
-                    break;
-            }
-            newState.searchItems[filter.id] = item;
-        }
-    }
-
-    if (parsedState.SearchPanelModelExtension) {
-        const { sections, searchPanelInfo } = parsedState.SearchPanelModelExtension;
-        newState.sections = sections;
-        //! Can be undefined. See search_model.__legacyParseSearchPanelArchAnyway
-        newState.searchPanelInfo = searchPanelInfo;
-        if (newState.searchPanelInfo) {
-            newState.searchPanelInfo.loaded = true;
-        }
-    }
-
-    for (const [key, extension] of Object.entries(ActionModel.registry.entries())) {
-        if (
-            !["ControlPanel", "SearchPanel"].includes(key) &&
-            parsedState[extension.name] !== undefined
-        ) {
-            newState[key] = parsedState[extension.name];
-        }
-    }
-
-    if (!Object.keys(newState).length) {
-        return;
-    }
-
-    return JSON.stringify(newState);
-}
-
 function getGlobalState(legacyControllerState) {
-    const { resIds, searchModel, searchPanel } = legacyControllerState;
+    const { resIds, searchPanel } = legacyControllerState;
     const globalState = {};
     if (searchPanel) {
         globalState.searchPanel = searchPanel;
     }
     if (resIds) {
         globalState.resIds = resIds;
-    }
-    const newSearchModel = searchModelStateFromLegacy(searchModel);
-    if (newSearchModel) {
-        globalState.searchModel = newSearchModel;
     }
     return globalState;
 }

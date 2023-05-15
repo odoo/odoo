@@ -31,14 +31,6 @@
                     role="search"
                     t-ref="searchView"
                     >
-                    <div t-if="props.withSearchBar" class="o_searchview" role="search" aria-autocomplete="list" >
-                        <i class="o_searchview_icon oi oi-search"
-                            title="Search..."
-                            role="img"
-                            aria-label="Search..."
-                        />
-                        <SearchBar t-if="props.withSearchBar" fields="fields"/>
-                    </div>
                 </div>
             </div>
         </div>
@@ -56,16 +48,6 @@
                     role="search"
                     t-ref="searchViewButtons"
                     >
-                    <t t-if="props.withSearchBar">
-                        <FilterMenu t-if="props.searchMenuTypes.includes('filter')"
-                            fields="fields"
-                        />
-                        <GroupByMenu t-if="props.searchMenuTypes.includes('groupBy')"
-                            fields="fields"
-                        />
-                        <ComparisonMenu t-if="props.searchMenuTypes.includes('comparison') and model.get('filters', f => f.type === 'comparison').length"/>
-                        <FavoriteMenu t-if="props.searchMenuTypes.includes('favorite')"/>
-                    </t>
                 </div>
                 <div class="o_cp_pager" role="search" t-ref="pager">
                     <Pager t-if="props.pager and props.pager.limit" t-props="props.pager"/>
@@ -93,24 +75,6 @@
             t-on-change="() => this._onFileInputChange()"
         />
     </span>
-</t>
-
-<t t-name="web.Legacy.DatePicker" owl="1">
-    <div class="o_datepicker" aria-atomic="true" t-att-id="datePickerId" data-target-input="nearest">
-        <input type="text" class="o_datepicker_input o_input datetimepicker-input"
-            t-att-name="props.name"
-            t-att-placeholder="props.placeholder"
-            t-attf-data-target="#{ '#' + datePickerId }"
-            t-att-readonly="props.readonly"
-            t-ref="autofocus"
-            t-on-change="_onInputChange"
-            t-on-click="_onInputClick"
-        />
-        <span t-if="props.warn_future and state.warning" class="fa fa-exclamation-triangle text-danger o_tz_warning o_datepicker_warning">
-            <t>This date is on the future. Make sure it is what you expected.</t>
-        </span>
-        <span class="o_datepicker_button"/>
-    </div>
 </t>
 
 <t t-name="web.DialogButton.tooltip" owl="1">
@@ -306,177 +270,6 @@
     </nav>
 </t>
 
-<t t-name="web.Legacy.SearchBar" owl="1">
-    <div class="o_searchview_input_container">
-        <div t-foreach="model.get('facets')" t-as="facet" t-key="facet_index"
-            tabindex="0"
-            class="o_searchview_facet"
-            role="img"
-            aria-label="search"
-            t-on-keydown="(ev) => this._onFacetKeydown(facet, facet_index, ev)">
-            <span t-if="facet.icon" t-attf-class="o_searchview_facet_label text-bg-odoo {{ facet.icon }}"/>
-            <span t-else="" class="o_searchview_facet_label text-bg-odoo" t-esc="facet.title"/>
-            <div class="o_facet_values border border-odoo border-start-0">
-                <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
-                    <span t-if="!facetValue_first" class="o_facet_values_sep" t-esc="facet.separator"/>
-                    <span class="o_facet_value" t-esc="facetValue"/>
-                </t>
-            </div>
-            <i class="o_facet_remove oi oi-close ms-1"
-                role="img"
-                aria-label="Remove"
-                title="Remove"
-                t-on-click="()=>this._onFacetRemove(facet)"
-            />
-        </div>
-        <input type="text"
-            class="o_searchview_input"
-            t-att-autofocus="!env.device.isMobileDevice"
-            accesskey="Q"
-            placeholder="Search..."
-            role="searchbox"
-            title="Search for records"
-            t-ref="autofocus"
-            t-on-keydown="_onSearchKeydown"
-            t-on-input="_onSearchInput"
-        />
-        <ul t-if="state.sources.length" class="dropdown-menu o_searchview_autocomplete dropdown-menu show" role="menu">
-            <li t-foreach="state.sources" t-as="src" t-key="src.id"
-                t-att-id="src.id"
-                class="o_menu_item dropdown-item"
-                t-att-class="{ o_indent: src.parent and !src.parent.selection, focus: src_index === state.focusedItem}"
-                t-on-click="()=>this._selectSource(src)"
-                t-on-mousemove="()=>this._onSourceMousemove(src_index)"
-                >
-                <a t-if="src.expand"
-                    href="#"
-                    class="o_expand"
-                    t-on-click.stop.prevent="()=>this._expandSource(src, !src.expanded)"
-                    >
-                    <i t-attf-class="fa fa-caret-{{ src.expanded ? 'down' : 'right' }}"/>
-                </a>
-                <a href="#" t-on-click.prevent="">
-                    <t t-if="src.parent.selection">
-                        Search <b t-esc="src.parent.description"/>: <b class="fst-italic text-primary" t-esc="src.label"/></t>
-                    <t t-elif="src.label" t-esc="src.label"/>
-                    <t t-elif="['date', 'datetime'].includes(src.type)">
-                        <t>Search <b t-esc="src.description"/> at: <b class="fst-italic text-primary" t-esc="state.inputValue"/></t>
-                    </t>
-                    <t t-else="">Search <b t-esc="src.description"/> for: <b class="fst-italic text-primary" t-esc="state.inputValue"/></t>
-                </a>
-            </li>
-        </ul>
-    </div>
-</t>
-
-<t t-name="web.Legacy.CustomFilterItem" owl="1">
-    <Dropdown class="'o_add_custom_filter_menu'">
-        <t t-set-slot="toggler">
-            Add Custom Filter
-        </t>
-        <t t-foreach="conditions" t-as="condition" t-key="condition_index">
-            <div class=" o_filter_condition dropdown-item-text position-relative">
-                <t t-set="fieldType" t-value="fields[condition.field].type"/>
-                <t t-set="selectedOperator" t-value="OPERATORS[FIELD_TYPES[fieldType]][condition.operator]"/>
-                <span t-if="!condition_first" class="o_or_filter">or</span>
-                <select class="o_input o_generator_menu_field"
-                    t-on-change="ev => this.onFieldSelect(condition, ev)"
-                    >
-                    <option t-foreach="fields" t-as="field" t-key="field_index"
-                        t-att-value="field.name"
-                        t-att-selected="field_index === condition.field"
-                        t-esc="field.string"
-                    />
-                </select>
-                <select class="o_input o_generator_menu_operator"
-                    t-on-change="ev => this.onOperatorSelect(condition, ev)"
-                    >
-                    <option t-foreach="OPERATORS[FIELD_TYPES[fieldType]]" t-as="operator" t-key="operator_index"
-                        t-att-value="operator.symbol"
-                        t-att-selected="operator_index === condition.operator"
-                        t-esc="operator.description"
-                    />
-                </select>
-                <span t-if="!('value' in selectedOperator)" class="o_generator_menu_value">
-                    <t t-if="fieldType === 'date'">
-                        <DatePicker
-                            date="condition.value[0]"
-                            onDateTimeChanged="date => this.onDateTimeChanged(condition, 0, date)"
-                        />
-                        <DatePicker t-if="selectedOperator.symbol === 'between'"
-                            date="condition.value[1]"
-                            onDateTimeChanged="date => this.onDateTimeChanged(condition, 1, date)"
-                        />
-                    </t>
-                    <t t-elif="fieldType === 'datetime'">
-                        <DateTimePicker
-                            date="condition.value[0]"
-                            onDateTimeChanged="date => this.onDateTimeChanged(condition, 0, date)"
-                        />
-                        <DateTimePicker t-if="selectedOperator.symbol === 'between'"
-                            date="condition.value[1]"
-                            onDateTimeChanged="date => this.onDateTimeChanged(condition, 1, date)"
-                        />
-                    </t>
-                    <select t-elif="fieldType === 'selection'" class="o_input"
-                        t-on-change="ev => this.onValueChange(condition, ev)"
-                        >
-                        <option t-foreach="fields[condition.field].selection" t-as="option" t-key="option_index"
-                            t-att-value="option[0]"
-                            t-esc="option[1]"
-                        />
-                    </select>
-                    <!-- @todo (DAM) I think that the localization should be better consisered below -->
-                    <input t-elif="fieldType === 'float'"
-                        class="o_input"
-                        step="0.01"
-                        t-att-type="DECIMAL_POINT === '.' ? 'number' : 'text'"
-                        t-attf-title="Number using {{ DECIMAL_POINT }} as decimal separator."
-                        t-attf-pattern="[0-9]+([\\{{ DECIMAL_POINT }}][0-9]+)?"
-                        t-model="condition.displayedValue"
-                        t-on-change="ev => this.onValueChange(condition, ev)"
-                    />
-                    <input t-elif="['integer', 'id'].includes(fieldType)"
-                        class="o_input"
-                        step="1"
-                        type="number"
-                        t-model="condition.displayedValue"
-                        t-on-change="ev => this.onValueChange(condition, ev)"
-                    />
-                    <input t-else=""
-                        type="text"
-                        class="o_input"
-                        t-model="condition.displayedValue"
-                        t-on-change="ev => this.onValueChange(condition, ev)"
-                    />
-                </span>
-                <i t-if="conditions.length gt 1"
-                    class="fa fa-trash-o o_generator_menu_delete"
-                    role="image"
-                    aria-label="Delete"
-                    title="Delete"
-                    t-on-click="() => this.onRemoveCondition(condition_index)"
-                />
-            </div>
-        </t>
-        <div class="px-3 py-2">
-            <button type="button"
-                class="btn btn-primary o_apply_filter me-2"
-                t-on-click="onApply"
-            >
-                Apply
-            </button>
-            <button type="button"
-                class="btn btn-secondary o_add_condition"
-                t-on-click.stop="addNewCondition"
-            >
-                <i class="fa fa-plus-circle"/>
-                <t>Add a condition</t>
-            </button>
-        </div>
-    </Dropdown>
-</t>
-
 <t t-name="web.Legacy.ActionMenus" owl="1">
     <div class="o_cp_action_menus" t-on-item-selected.stop="_onItemSelected">
         <DropdownMenu t-if="printItems.length"
@@ -512,133 +305,10 @@
 
 <!-- Legacy Templates -->
 
-<t t-name="WidgetLabel.tooltip">
-    <div class="oe_tooltip_string" t-if="widget.string" role="tooltip">
-        <t t-esc="widget.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
-    </div>
-    <p t-if="help" class="oe_tooltip_help" role="tooltip">
-        <t t-esc="help"/>
-    </p>
-    <ul t-if="debug" class="oe_tooltip_technical" role="tooltip">
-        <li data-item="field" t-if="widget.name">
-            <span class="oe_tooltip_technical_title">Field:</span>
-            <t t-esc="widget.name"/>
-        </li>
-        <li data-item="object">
-            <span class="oe_tooltip_technical_title">Object:</span>
-            <t t-esc="widget.model"/>
-        </li>
-        <li data-item="type">
-            <span class="oe_tooltip_technical_title">Type:</span>
-            <t t-esc="widget.field.type"/>
-        </li>
-        <li t-if="widget.attrs.widget" data-item="widget">
-            <span class="oe_tooltip_technical_title">Widget:</span>
-            <t t-set="description" t-value="widget.attrs.Widget.prototype.description"/>
-            <t t-if="description">
-                <t t-esc="description"/> (<t t-esc="widget.attrs.widget"/>)
-            </t>
-            <t t-else="1">
-                <t t-esc="widget.attrs.widget"/>
-            </t>
-        </li>
-        <li t-if="widget.attrs.size || widget.field.size" data-item="size">
-            <span class="oe_tooltip_technical_title">Size:</span>
-            <t t-esc="widget.attrs.size || widget.field.size"/>
-        </li>
-        <li t-if="widget.attrs.context || widget.field.context" data-item="context">
-            <span class="oe_tooltip_technical_title">Context:</span>
-            <t t-esc="widget.attrs.context || JSON.stringify(widget.field.context)"/>
-        </li>
-        <li t-if="widget.attrs.domain || widget.field.domain" data-item="domain">
-            <span class="oe_tooltip_technical_title">Domain:</span>
-            <t t-esc="widget.attrs.domain || JSON.stringify(widget.field.domain)"/>
-        </li>
-        <li t-if="widget.attrs.modifiers and Object.keys(widget.attrs.modifiers || {}).length > 0" data-item="modifiers">
-            <span class="oe_tooltip_technical_title">Modifiers:</span>
-            <t t-esc="JSON.stringify(widget.attrs.modifiers)"/>
-        </li>
-        <li t-if="widget.field and widget.field.change_default" data-item="change_default">
-            <span class="oe_tooltip_technical_title">Change default:</span>
-            Yes
-        </li>
-        <li t-if="widget.attrs.on_change" data-item="on_change">
-            <span class="oe_tooltip_technical_title">On change:</span>
-            <t t-esc="widget.attrs.on_change"/>
-        </li>
-        <li t-if="widget.field and widget.field.relation" data-item="relation">
-            <span class="oe_tooltip_technical_title">Relation:</span>
-            <t t-esc="widget.field.relation"/>
-        </li>
-        <li t-if="widget.field and widget.field.selection" data-item="selection">
-            <span class="oe_tooltip_technical_title">Selection:</span>
-            <ul class="oe_tooltip_technical">
-                <li t-foreach="widget.field.selection" t-as="option" t-key="option_index">
-                    [<t t-esc="option[0]"/>]
-                    <t t-if="option[1]"> - </t>
-                    <t t-esc="option[1]"/>
-                </li>
-            </ul>
-        </li>
-    </ul>
-</t>
-<t t-name="WidgetButton.tooltip">
-    <div class="oe_tooltip_string" t-if="debug || node.attrs.string" role="tooltip">
-        <t t-if="debug">
-            Button
-            <t t-if="node.attrs.string">: </t>
-            <t t-if="!node.attrs.string"> (no string)</t>
-        </t>
-        <t t-esc="node.attrs.string"/>
-    </div>
-    <p t-if="node.attrs.help" class="oe_tooltip_help" role="tooltip">
-        <t t-esc="node.attrs.help"/>
-    </p>
-    <ul t-if="debug" class="oe_tooltip_technical" role="tooltip">
-        <li data-item="object">
-            <span class="oe_tooltip_technical_title">Object:</span>
-            <t t-esc="state.model"/>
-        </li>
-        <li t-if="node.attrs.context" data-item="context">
-            <span class="oe_tooltip_technical_title">Context:</span>
-            <t t-esc="node.attrs.context || widget.field.context"/>
-        </li>
-        <li t-if="node.attrs.modifiers and Object.keys(node.attrs.modifiers || {}).length > 0" data-item="modifiers">
-            <span class="oe_tooltip_technical_title">Modifiers:</span>
-            <t t-esc="JSON.stringify(node.attrs.modifiers)"/>
-        </li>
-        <li t-if="node.attrs.special" data-item="special">
-            <span class="oe_tooltip_technical_title">Special:</span>
-            <t t-esc="node.attrs.special"/>
-        </li>
-        <t t-set="button_type" t-value="node.attrs.type"/>
-        <li t-if="button_type" data-item="button_type">
-            <span class="oe_tooltip_technical_title">Button Type:</span>
-            <t t-esc="button_type"/>
-        </li>
-        <li t-if="button_type === 'object'" data-item="button_method">
-            <span class="oe_tooltip_technical_title">Method:</span>
-            <t t-esc="node.attrs.name"/>
-        </li>
-        <li t-if="button_type === 'action'" data-item="button_action">
-            <span class="oe_tooltip_technical_title">Action ID:</span>
-            <t t-esc="node.attrs.name"/>
-        </li>
-    </ul>
-</t>
-
 <div t-name="Action" class="o_action">
     <div class="o_content"/>
 </div>
 
-<t t-name="CreateButton.tooltip">
-    <div class="oe_tooltip_string" role="tooltip">
-        <div class="tooltip-inner">
-            Hit ENTER to CREATE<br/>
-            Hit DOWN to navigate to the list below
-        </div>
-    </div>
-</t>
 <t t-name="FormButton.tooltip">
     <div class="oe_tooltip_string" role="tooltip">
         <div class="tooltip-inner">

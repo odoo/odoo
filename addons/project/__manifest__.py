@@ -69,7 +69,6 @@
             'project/static/src/utils/**/*',
             'project/static/src/components/**/*',
             'project/static/src/views/**/*',
-            'project/static/src/js/project_control_panel.js',
             'project/static/src/js/project_graph_view.js',
             'project/static/src/js/project_pivot_view.js',
             'project/static/src/js/project_rating_graph_view.js',
@@ -174,7 +173,6 @@
             'web/static/src/legacy/js/fields/field_utils.js',
             'web/static/src/legacy/js/views/abstract_model.js',
             'web/static/src/legacy/js/views/basic/basic_model.js',
-            'web/static/src/legacy/js/views/action_model.js',
             'web/static/src/legacy/js/views/view_utils.js',
             'web/static/src/legacy/js/services/data_manager.js',
             'web/static/src/legacy/js/services/session.js',
@@ -186,7 +184,6 @@
             'web/static/src/legacy/js/widgets/model_field_selector.js',
             'web/static/src/legacy/js/widgets/model_field_selector_popover.js',
             'web/static/src/legacy/js/env.js',
-            'web/static/src/legacy/js/model.js',
             'web/static/src/legacy/js/owl_compatibility.js',
 
             'web_editor/static/src/components/**/*',

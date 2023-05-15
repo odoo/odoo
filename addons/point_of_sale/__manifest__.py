@@ -148,7 +148,6 @@
             ('remove', 'web/static/src/legacy/js/public/**/*'),
             'web/static/src/legacy/action_adapters.js',
             'web/static/src/legacy/backend_utils.js',
-            'web/static/src/legacy/js/views/action_model.js',
             'web/static/src/legacy/legacy_load_views.js',
             'web/static/src/legacy/legacy_service_provider.js',
             'web/static/src/legacy/utils.js',

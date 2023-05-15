@@ -240,7 +240,6 @@ odoo.define('web.test_utils', ["web.session", "web.test_utils_create", "web.test
         },
 
         createComponent: testUtilsCreate.createComponent,
-        createControlPanel: testUtilsCreate.createControlPanel,
         createAsyncView: testUtilsCreate.createView,
         createCalendarView: testUtilsCreate.createCalendarView,
         createView: testUtilsCreate.createView,

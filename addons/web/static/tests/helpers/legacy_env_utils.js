@@ -9,9 +9,6 @@ import core from "web.core";
 import makeTestEnvironment from "web.test_env";
 import { registerCleanup } from "./cleanup";
 import { makeTestEnv } from "./mock_env";
-import { patchWithCleanup } from "./utils";
-import * as FavoriteMenu from "web.FavoriteMenu";
-import * as CustomFavoriteItem from "web.CustomFavoriteItem";
 
 const serviceRegistry = registry.category("services");
 
@@ -44,22 +41,4 @@ export async function makeLegacyDialogMappingTestEnv() {
         legacyEnv,
         env,
     };
-}
-
-function clearLegacyRegistryWithCleanup(r) {
-    const patch = {
-        // To improve? Initial data in registry is ignored.
-        map: Object.create(null),
-        // Preserve onAdd listeners
-        listeners: [...r.listeners],
-        _scoreMapping: Object.create(null),
-        _sortedKeys: null,
-    };
-    patchWithCleanup(r, patch);
-}
-
-export function prepareLegacyRegistriesWithCleanup() {
-    // Clear FavoriteMenu registry and add the "Save favorite" item.
-    clearLegacyRegistryWithCleanup(FavoriteMenu.registry);
-    FavoriteMenu.registry.add("favorite-generator-menu", CustomFavoriteItem, 0);
 }
