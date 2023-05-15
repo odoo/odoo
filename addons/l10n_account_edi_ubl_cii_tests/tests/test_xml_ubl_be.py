@@ -51,6 +51,7 @@ class TestUBLBE(TestUBLCommon):
             'amount': 21,
             'type_tax_use': 'sale',
             'country_id': cls.env.ref('base.be').id,
+            'sequence': 10,
         })
 
         cls.tax_15 = cls.env['account.tax'].create({
@@ -282,7 +283,65 @@ class TestUBLBE(TestUBLCommon):
                 }
             ],
         )
-        self._assert_invoice_attachment(invoice, xpaths=None, expected_file='from_odoo/bis3_out_invoice_rounding.xml')
+        self._assert_invoice_attachment(invoice, None, 'from_odoo/bis3_out_invoice_rounding.xml')
+
+    def test_export_with_fixed_taxes_case1(self):
+        # CASE 1: simple invoice with a recupel tax
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 99,
+                    'tax_ids': [(6, 0, [self.recupel.id, self.tax_21.id])],
+                }
+            ],
+        )
+        self.assertEqual(invoice.amount_total, 121)
+        self._assert_invoice_attachment(invoice, None, 'from_odoo/bis3_ecotaxes_case1.xml')
+
+    def test_export_with_fixed_taxes_case2(self):
+        # CASE 2: Same but with several ecotaxes
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 98,
+                    'tax_ids': [(6, 0, [self.recupel.id, self.auvibel.id, self.tax_21.id])],
+                }
+            ],
+        )
+        self.assertEqual(invoice.amount_total, 121)
+        self._assert_invoice_attachment(invoice, None, 'from_odoo/bis3_ecotaxes_case2.xml')
+
+    def test_export_with_fixed_taxes_case3(self):
+        # CASE 3: same as Case 1 but taxes are Price Included
+        self.recupel.price_include = True
+        self.tax_21.price_include = True
+
+        # Price TTC = 121 = (99 + 1 ) * 1.21
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 1,
+                    'price_unit': 121,
+                    'tax_ids': [(6, 0, [self.recupel.id, self.tax_21.id])],
+                }
+            ],
+        )
+        self.assertEqual(invoice.amount_total, 121)
+        self._assert_invoice_attachment(invoice, None, 'from_odoo/bis3_ecotaxes_case3.xml')
 
     ####################################################
     # Test import
@@ -396,3 +455,27 @@ class TestUBLBE(TestUBLCommon):
             invoice,
         )
         self.assertRecordValues(invoice, [{'move_type': 'out_refund', 'amount_total': 3164.22}])
+
+    def test_import_fixed_taxes(self):
+        """ Tests whether we correctly decode the xml attachments created using fixed taxes.
+        See the tests above to create these xml attachments ('test_export_with_fixed_taxes_case_[X]').
+        NB: use move_type = 'out_invoice' s.t. we can retrieve the taxes used to create the invoices.
+        """
+        subfolder = "tests/test_files/from_odoo"
+        # The tax 21% from l10n_be is retrieved since it's a duplicate of self.tax_21
+        tax_21 = self.env.ref(f'l10n_be.{self.env.company.id}_attn_VAT-OUT-21-L')
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder, filename='bis3_ecotaxes_case1.xml', amount_total=121, amount_tax=22,
+            list_line_subtotals=[99], currency_id=self.currency_data['currency'].id, list_line_price_unit=[99],
+            list_line_discount=[0], list_line_taxes=[tax_21+self.recupel], move_type='out_invoice',
+        )
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder, filename='bis3_ecotaxes_case2.xml', amount_total=121, amount_tax=23,
+            list_line_subtotals=[98], currency_id=self.currency_data['currency'].id, list_line_price_unit=[98],
+            list_line_discount=[0], list_line_taxes=[tax_21+self.recupel+self.auvibel], move_type='out_invoice',
+        )
+        self._assert_imported_invoice_from_file(
+            subfolder=subfolder, filename='bis3_ecotaxes_case3.xml', amount_total=121, amount_tax=22,
+            list_line_subtotals=[99], currency_id=self.currency_data['currency'].id, list_line_price_unit=[99],
+            list_line_discount=[0], list_line_taxes=[tax_21+self.recupel], move_type='out_invoice',
+        )
