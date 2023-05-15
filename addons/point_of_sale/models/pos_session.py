@@ -167,7 +167,8 @@ class PosSession(models.Model):
 
     @api.constrains('config_id')
     def _check_pos_config(self):
-        if self.search_count([
+        onboarding_creation = self.env.context.get('onboarding_creation', False)
+        if not onboarding_creation and self.search_count([
                 ('state', '!=', 'closed'),
                 ('config_id', '=', self.config_id.id),
                 ('rescue', '=', False)
@@ -258,7 +259,8 @@ class PosSession(models.Model):
                 raise UserError(_("You cannot close the POS when orders are still in draft"))
             if session.state == 'closed':
                 raise UserError(_('This session is already closed.'))
-            session.write({'state': 'closing_control', 'stop_at': fields.Datetime.now()})
+            stop_at = self.stop_at or fields.Datetime.now()
+            session.write({'state': 'closing_control', 'stop_at': stop_at})
             if not session.config_id.cash_control:
                 return session.action_pos_session_close(balancing_account, amount_to_balance, bank_payment_method_diffs)
             # If the session is in rescue, we only compute the payments in the cash register
@@ -1582,6 +1584,7 @@ class PosSession(models.Model):
         return {
             'pos.category': self._load_model('pos.category'),
             'product.product': self._load_model('product.product'),
+            'pos.order': self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui()
         }
 
     def _load_model(self, model):
@@ -1654,6 +1657,7 @@ class PosSession(models.Model):
         loaded_data['attributes_by_ptal_id'] = self._get_attributes_by_ptal_id()
         loaded_data['base_url'] = self.get_base_url()
         loaded_data['pos_has_valid_product'] = self._pos_has_valid_product()
+        loaded_data['open_orders'] = self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'draft')]).export_for_ui()
 
     @api.model
     def _pos_ui_models_to_load(self):
@@ -2188,13 +2192,29 @@ class PosSession(models.Model):
     def _pos_has_valid_product(self):
         return self.env['product.product'].sudo().search_count(['&', ('available_in_pos', '=', True), ('list_price', '>', 0)], limit=1) > 0
 
+    @api.model
     def _load_onboarding_data(self):
         convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init', kind='data')
+        shop_config = self.env.ref('point_of_sale.pos_config_main')
+        if len(shop_config.session_ids.filtered(lambda s: s.state == 'opened')) == 0:
+            self.env['pos.session'].create({
+                'config_id': shop_config.id,
+                'user_id': self.env.ref('base.user_admin').id,
+            })
+        convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding_open_session.xml', None, mode='init', kind='data')
+
+    def _after_load_onboarding_data(self):
+        config = self.env.ref('point_of_sale.pos_config_main', raise_if_not_found=False)
+        config.with_context(bypass_categories_forbidden_change=True).write({
+            'limit_categories': True,
+            'iface_available_categ_ids': [Command.link(self.env.ref('point_of_sale.pos_category_miscellaneous').id), Command.link(self.env.ref('point_of_sale.pos_category_desks').id), Command.link(self.env.ref('point_of_sale.pos_category_chairs').id)]
+        })
 
     def load_product_frontend(self):
         allowed = not self._pos_has_valid_product()
         if allowed:
             self.sudo()._load_onboarding_data()
+            self._after_load_onboarding_data()
 
         return {
             'models_data': self.get_onboarding_data(),
