@@ -121,6 +121,25 @@ class TestSMSComposerComment(SMSCommon, TestSMSRecipients):
 
         self.assertSMSNotification([{'partner': self.test_record.customer_id, 'number': self.test_record.mobile_nbr}], 'Dear %s this is an SMS.' % self.test_record.display_name, messages)
 
+    def test_composer_comment_invalid_field(self):
+        """ Test the Send Message in SMS Composer when a Model does not contain a number field name """
+        test_record = self.env['mail.test.sms.partner'].create({
+            'name': 'Test',
+            'customer_id': self.partner_1.id,
+        })
+        sms_composer = self.env['sms.composer'].create({
+            'body': self._test_body,
+            'number_field_name': 'phone_nbr',
+            'recipient_single_number_itf': self.random_numbers_san[0],
+            'res_id': test_record.id,
+            'res_model': 'mail.test.sms.partner'
+        })
+
+        self.assertNotIn(','.join(test_record._fields), 'phone_nbr')
+        with self.mockSMSGateway():
+            sms_composer._action_send_sms()
+        self.assertSMSNotification([{'number': self.random_numbers_san[0]}], self._test_body)
+
     def test_composer_comment_nofield(self):
         """ Test the Send Message in SMS Composer when a Model does not contain any phone number related field """
         test_record = self.env['mail.test.sms.partner'].create({'name': 'Test'})
