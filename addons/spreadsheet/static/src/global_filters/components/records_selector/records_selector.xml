@@ -3,7 +3,9 @@
     <div t-name="spreadsheet.RecordsSelector" class="o_field_widget o_field_many2many_tags" owl="1">
         <div class="o_field_tags d-inline-flex flex-wrap mw-100 o_tags_input o_input">
             <TagsList tags="tags"/>
-            <div class="o_field_many2many_selection d-inline-flex w-100">
+            <div 
+                class="o_field_many2many_selection d-inline-flex w-100"
+                t-on-keydown="onKeydown">
                 <Many2XAutocomplete
                     placeholder="props.placeholder"
                     resModel="props.resModel"
