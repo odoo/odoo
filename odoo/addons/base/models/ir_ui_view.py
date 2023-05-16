@@ -447,9 +447,9 @@ actual arch.
                 combined_arch = view._get_combined_arch()
                 if view.type == 'qweb':
                     continue
-            except ValueError as e:
+            except (etree.ParseError, ValueError) as e:
                 err = ValidationError(_(
-                    "Error while validating view:\n\n%(error)s",
+                    "Error while parsing or validating view:\n\n%(error)s",
                     error=tools.ustr(e),
                 )).with_traceback(e.__traceback__)
                 err.context = getattr(e, 'context', None)
