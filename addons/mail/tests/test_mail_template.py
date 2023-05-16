@@ -49,7 +49,7 @@ class TestMailTemplate(MailCommon):
         values = mail_compose_message.get_mail_values(self.partner_employee.ids)
 
         self.assertEqual(values[self.partner_employee.id]['subject'], '6', 'We must trust mail template values')
-        self.assertIn('13', values[self.partner_employee.id]['body_html'], 'We must trust mail template values')
+        self.assertIn('13', values[self.partner_employee.id]['body'], 'We must trust mail template values')
 
     def test_mail_template_acl(self):
         # Sanity check

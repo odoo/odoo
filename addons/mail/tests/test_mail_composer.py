@@ -233,7 +233,7 @@ class TestMailComposerRendering(TestMailComposer):
 
         self.assertIn(
             self.body_html,
-            values[self.partner_employee.id]['body_html'],
+            values[self.partner_employee.id]['body'],
             'We must preserve (mso) comments in email html'
         )
 
@@ -258,6 +258,6 @@ class TestMailComposerRendering(TestMailComposer):
 
         self.assertIn(
             self.body_html,
-            values[self.partner_employee.id]['body_html'],
+            values[self.partner_employee.id]['body'],
             'We must preserve (mso) comments in email html'
         )

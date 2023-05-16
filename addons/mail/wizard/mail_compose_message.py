@@ -281,7 +281,7 @@ class MailComposer(models.TransientModel):
             # Mass Mailing
             mass_mode = wizard.composition_mode in ('mass_mail', 'mass_post')
 
-            ActiveModel = self.env[wizard.model] if wizard.model and hasattr(self.env[wizard.model], 'message_post') else self.env['mail.thread']
+            ActiveModel = self.env[wizard.model].sudo() if wizard.model and hasattr(self.env[wizard.model], 'message_post') else self.env['mail.thread'].sudo()
             if wizard.composition_mode == 'mass_post':
                 # do not send emails directly but use the queue instead
                 # add context key to avoid subscribing the author
@@ -297,7 +297,7 @@ class MailComposer(models.TransientModel):
             batch_size = int(self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')) or self._batch_size
             sliced_res_ids = [res_ids[i:i + batch_size] for i in range(0, len(res_ids), batch_size)]
 
-            if wizard.composition_mode == 'mass_mail' or wizard.is_log or (wizard.composition_mode == 'mass_post' and not wizard.notify):  # log a note: subtype is False
+            if wizard.is_log or (wizard.composition_mode == 'mass_post' and not wizard.notify):  # log a note: subtype is False
                 subtype_id = False
             elif wizard.subtype_id:
                 subtype_id = wizard.subtype_id.id
@@ -312,28 +312,29 @@ class MailComposer(models.TransientModel):
                 batch_mails_sudo = self.env['mail.mail'].sudo()
                 all_mail_values = wizard.get_mail_values(res_ids)
                 for res_id, mail_values in all_mail_values.items():
-                    if wizard.composition_mode == 'mass_mail':
-                        batch_mails_sudo += self.env['mail.mail'].sudo().create(mail_values)
-                    else:
-                        post_params = dict(
-                            subtype_id=subtype_id,
-                            email_layout_xmlid=wizard.email_layout_xmlid,
-                            email_add_signature=not bool(wizard.template_id) and wizard.email_add_signature,
-                            mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else self._context.get('mail_auto_delete', True),
-                            model_description=model_description)
-                        post_params.update(mail_values)
-                        if ActiveModel._name == 'mail.thread':
-                            if wizard.model:
-                                post_params['model'] = wizard.model
-                                post_params['res_id'] = res_id
-                            if not ActiveModel.message_notify(**post_params):
-                                # if message_notify returns an empty record set, no recipients where found.
-                                raise UserError(_("No recipient found."))
-                        else:
-                            result_messages += ActiveModel.browse(res_id).message_post(**post_params)
+                    post_params = dict(
+                        subtype_id=subtype_id,
+                        email_layout_xmlid=wizard.email_layout_xmlid,
+                        email_add_signature=not bool(wizard.template_id) and wizard.email_add_signature,
+                        mail_auto_delete=wizard.template_id.auto_delete if wizard.template_id else self._context.get('mail_auto_delete', True),
+                        model_description=model_description)
+                    post_params.update(mail_values)
 
-                result_mails_su += batch_mails_sudo
+                    if wizard.composition_mode == 'mass_mail':
+                        post_params['composition_mode'] = "mass_mail"
+
+                    if ActiveModel._name == 'mail.thread':
+                        if wizard.model:
+                            post_params['model'] = wizard.model
+                            post_params['res_id'] = res_id
+                        if not ActiveModel.message_notify(**post_params):
+                            # if message_notify returns an empty record set, no recipients where found.
+                            raise UserError(_("No recipient found."))
+                    else:
+                        result_messages += ActiveModel.browse(res_id).message_post(**post_params)
+
                 if wizard.composition_mode == 'mass_mail':
+                    batch_mails_sudo += result_messages.mail_ids
                     batch_mails_sudo.send(auto_commit=auto_commit)
 
         return result_mails_su, result_messages
@@ -405,15 +406,12 @@ class MailComposer(models.TransientModel):
                 'reply_to_force_new': self.reply_to_force_new,
                 'mail_server_id': self.mail_server_id.id,
                 'mail_activity_type_id': self.mail_activity_type_id.id,
-                'message_type': 'email' if mass_mail_mode else self.message_type,
+                'message_type': self.message_type,
             }
 
             # mass mailing: rendering override wizard static values
             if mass_mail_mode and self.model:
                 record = self.env[self.model].browse(res_id)
-                mail_values['headers'] = repr(record._notify_by_email_get_headers())
-                # keep a copy unless specifically requested, reset record name (avoid browsing records)
-                mail_values.update(is_notification=not self.auto_delete_message, model=self.model, res_id=res_id, record_name=False)
                 # auto deletion of mail_mail
                 if self.auto_delete or self.template_id.auto_delete:
                     mail_values['auto_delete'] = True
@@ -427,22 +425,6 @@ class MailComposer(models.TransientModel):
                         mail_values['reply_to'] = reply_to_value[res_id]
                 if self.reply_to_force_new and not mail_values.get('reply_to'):
                     mail_values['reply_to'] = mail_values['email_from']
-                # mail_mail values: body -> body_html, partner_ids -> recipient_ids
-                mail_values['body_html'] = mail_values.get('body', '')
-                mail_values['recipient_ids'] = [Command.link(id) for id in mail_values.pop('partner_ids', [])]
-
-                # process attachments: should not be encoded before being processed by message_post / mail_mail create
-                mail_values['attachments'] = [(name, base64.b64decode(enc_cont)) for name, enc_cont in email_dict.pop('attachments', list())]
-                attachment_ids = []
-                for attach_id in mail_values.pop('attachment_ids'):
-                    new_attach_id = self.env['ir.attachment'].browse(attach_id).copy({'res_model': self._name, 'res_id': self.id})
-                    attachment_ids.append(new_attach_id.id)
-                attachment_ids.reverse()
-                mail_values['attachment_ids'] = self.env['mail.thread'].with_context(attached_to=record)._message_post_process_attachments(
-                    mail_values.pop('attachments', []),
-                    attachment_ids,
-                    {'model': 'mail.message', 'res_id': 0}
-                )['attachment_ids']
 
             results[res_id] = mail_values
 

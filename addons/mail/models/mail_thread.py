@@ -2583,6 +2583,8 @@ class MailThread(models.AbstractModel):
             # unless asked specifically, send emails after the transaction to
             # avoid side effects due to emails being sent while the transaction fails
             if not test_mode and send_after_commit:
+                if kwargs.get('composition_mode', False) and kwargs['composition_mode'] == "mass_mail":
+                    return emails
                 email_ids = emails.ids
                 dbname = self.env.cr.dbname
                 _context = self._context
