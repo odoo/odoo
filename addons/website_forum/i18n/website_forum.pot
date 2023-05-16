@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:55+0000\n"
-"PO-Revision-Date: 2023-01-17 10:55+0000\n"
+"POT-Creation-Date: 2023-05-16 13:50+0000\n"
+"PO-Revision-Date: 2023-05-16 13:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -32,7 +32,7 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_answers
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_tree
 msgid "# Answers"
 msgstr ""
 
@@ -48,157 +48,157 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__total_views
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_tree
 msgid "# Views"
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to accept or refuse an answer."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to answer a question."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to close or reopen a post."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to comment."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to convert a comment to an answer."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to convert an answer to a comment."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to convert your comment to an answer."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_tag.py:0
 #, python-format
 msgid "%d karma required to create a new Tag."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to create a new question."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to delete or reactivate a post."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post_vote.py:0
 #, python-format
 msgid "%d karma required to downvote."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to edit a post."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to flag a post."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/controllers/main.py:0
-#: code:addons/website_forum/controllers/main.py:0
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/controllers/website_forum.py:0
+#: code:addons/website_forum/controllers/website_forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to mark a post as offensive."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to post an image or link."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to refuse a post."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to retag."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to unlink a comment."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to unlink a post."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post_vote.py:0
 #, python-format
 msgid "%d karma required to upvote."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "%d karma required to validate a post."
 msgstr ""
@@ -215,7 +215,7 @@ msgid "(The above section was adapted from Stackoverflow’s FAQ.)"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "(votes - 1) **"
 msgstr ""
 
@@ -231,7 +231,7 @@ msgid ", consider <b>adding an example</b>."
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "/ (days + 2) **"
 msgstr ""
 
@@ -456,21 +456,6 @@ msgid "<i class=\"fa fa-check-square-o fa-fw\"/> To Validate"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
-msgid "<i class=\"fa fa-chevron-left me-1\"/>Back"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.new_question
-msgid "<i class=\"fa fa-chevron-left me-2\"/>Back to All Topics"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_sub_nav
-msgid "<i class=\"fa fa-chevron-left small\"/> Back"
-msgstr ""
-
-#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
 msgid "<i class=\"fa fa-comments-o me-1\" title=\"Forum\"/>"
 msgstr ""
@@ -574,6 +559,21 @@ msgid "<i class=\"fa fa-user\"/> User"
 msgstr ""
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_nav_header
+msgid "<i class=\"oi oi-chevron-left me-1\"/>Back"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.new_question
+msgid "<i class=\"oi oi-chevron-left me-2\"/>Back to All Topics"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.user_profile_sub_nav
+msgid "<i class=\"oi oi-chevron-left small\"/> Back"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "<small class=\"fw-bold\">Votes</small>"
 msgstr ""
@@ -653,18 +653,18 @@ msgid "<span class=\"navbar-text me-3\">Show Tags Starting By</span>"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "<span class=\"o_stat_text\">Favorites</span>"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_form
 msgid "<span class=\"o_stat_text\">Go to <br/>Website</span>"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "<span class=\"o_stat_text\">Posts</span>"
 msgstr ""
 
@@ -713,8 +713,15 @@ msgid "Accept an answer to all questions"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
 msgid "Accepted Answer"
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
+#, python-format
+msgid "Accepted answer removed"
 msgstr ""
 
 #. module: website_forum
@@ -765,7 +772,7 @@ msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/controllers/main.py:0
+#: code:addons/website_forum/controllers/website_forum.py:0
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 #, python-format
 msgid "All"
@@ -810,7 +817,14 @@ msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post_vote.py:0
+#, python-format
+msgid "Answer %s"
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
 #: model:mail.message.subtype,description:website_forum.mt_answer_edit
 #: model:mail.message.subtype,name:website_forum.mt_answer_edit
 #, python-format
@@ -873,12 +887,12 @@ msgid "Answered"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
 msgid "Answered Posts"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_form
 msgid "Answered by"
 msgstr ""
 
@@ -890,11 +904,11 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__child_count
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_form
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_kanban
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Answers"
 msgstr ""
 
@@ -904,11 +918,25 @@ msgid "Appears in"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_view_search
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_search
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
 msgid "Archived"
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
+#, python-format
+msgid "Ask a new question"
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
+#, python-format
+msgid "Ask a question"
 msgstr ""
 
 #. module: website_forum
@@ -969,7 +997,7 @@ msgid "Attachment Count"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
 msgid "Author"
 msgstr ""
 
@@ -1007,8 +1035,8 @@ msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/controllers/main.py:0
-#: code:addons/website_forum/controllers/main.py:0
+#: code:addons/website_forum/controllers/website_forum.py:0
+#: code:addons/website_forum/controllers/website_forum.py:0
 #, python-format
 msgid "Bad Request"
 msgstr ""
@@ -1281,7 +1309,7 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__content
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
 msgid "Content"
 msgstr ""
 
@@ -1327,7 +1355,7 @@ msgid "Create Date"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.actions.act_window,help:website_forum.action_forum_post
+#: model_terms:ir.actions.act_window,help:website_forum.forum_post_action
 msgid "Create a new forum post"
 msgstr ""
 
@@ -1403,7 +1431,7 @@ msgid "Default"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "Default Sort"
 msgstr ""
 
@@ -1427,6 +1455,13 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_unlink_own
 msgid "Delete own posts"
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
+#, python-format
+msgid "Delete the accepted answer"
 msgstr ""
 
 #. module: website_forum
@@ -1454,7 +1489,7 @@ msgid "Description"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "Description visible on website"
 msgstr ""
 
@@ -1496,6 +1531,13 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_downvote
 msgid "Downvote"
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
+#, python-format
+msgid "Downvote for posting offensive contents"
 msgstr ""
 
 #. module: website_forum
@@ -1548,7 +1590,6 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_editor
-#: model:ir.model.fields,help:website_forum.field_forum_post__can_use_full_editor
 msgid "Editor Features: image and links"
 msgstr ""
 
@@ -1709,11 +1750,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__forum_id
 #: model:ir.ui.menu,name:website_forum.menu_website_forum_global
 #: model:website.menu,name:website_forum.menu_website_forums
-#: model_terms:ir.ui.view,arch_db:website_forum.forum_view_search
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_search
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
+#: model_terms:ir.ui.view,arch_db:website_forum.gamification_karma_tracking_view_search
 #, python-format
 msgid "Forum"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_website__forum_count
+msgid "Forum Count"
 msgstr ""
 
 #. module: website_forum
@@ -1734,12 +1781,12 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.model,name:website_forum.model_forum_post
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_form
 msgid "Forum Post"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.actions.act_window,name:website_forum.action_forum_post
+#: model:ir.actions.act_window,name:website_forum.forum_post_action
 msgid "Forum Post Pages"
 msgstr ""
 
@@ -1754,16 +1801,11 @@ msgid "Forum Tag"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.actions.act_window,name:website_forum.action_forum_forum
+#: model:ir.actions.act_window,name:website_forum.forum_forum_action
 #: model:ir.ui.menu,name:website_forum.menu_forum_global
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_tree
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_searchbar_input_snippet_options
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_list
 msgid "Forums"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_website__forums_count
-msgid "Forums Count"
 msgstr ""
 
 #. module: website_forum
@@ -1796,7 +1838,7 @@ msgid "Good Question"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_graph
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_graph
 msgid "Graph of Posts"
 msgstr ""
 
@@ -1823,7 +1865,7 @@ msgid "Grid"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
 msgid "Group By"
 msgstr ""
 
@@ -1868,7 +1910,10 @@ msgid "Here a table with the privileges and the karma level"
 msgstr ""
 
 #. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_forum.py:0
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
+#, python-format
 msgid "Hide Intro"
 msgstr ""
 
@@ -2014,14 +2059,14 @@ msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post_vote.py:0
 #, python-format
 msgid "It is not allowed to modify someone else's vote."
 msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post_vote.py:0
 #, python-format
 msgid "It is not allowed to vote for its own post."
 msgstr ""
@@ -2039,12 +2084,12 @@ msgid "Karma Error"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "Karma Gains"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "Karma Related Rights"
 msgstr ""
 
@@ -2123,13 +2168,6 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.snippet_options
 msgid "List"
-msgstr ""
-
-#. module: website_forum
-#: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_main_attachment_id
-#: model:ir.model.fields,field_description:website_forum.field_forum_post__message_main_attachment_id
-#: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_main_attachment_id
-msgid "Main Attachment"
 msgstr ""
 
 #. module: website_forum
@@ -2451,12 +2489,12 @@ msgid "Only one answer per question is allowed"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "Options"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "Order and Visibility"
 msgstr ""
 
@@ -2523,13 +2561,12 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__post_id
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
 msgid "Post"
 msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
-#: model_terms:ir.ui.view,arch_db:website_forum.post_reply
 msgid "Post Answer"
 msgstr ""
 
@@ -2539,8 +2576,8 @@ msgid "Post Answers"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.actions.act_window,name:website_forum.forum_post_reasons_action
-msgid "Post Close Reasons"
+#: model:ir.actions.act_window,name:website_forum.forum_post_reason_action
+msgid "Post Close Reason"
 msgstr ""
 
 #. module: website_forum
@@ -2569,6 +2606,20 @@ msgid "Post Your Question"
 msgstr ""
 
 #. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
+#, python-format
+msgid "Post is closed and marked as offensive content"
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
+#, python-format
+msgid "Post is closed and marked as spam"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.mark_as_offensive
 msgid "Post:"
 msgstr ""
@@ -2585,16 +2636,16 @@ msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "Posting answer on a [Deleted] or [Closed] question is not possible."
 msgstr ""
 
 #. module: website_forum
-#: model:ir.actions.act_window,name:website_forum.action_forum_posts
+#: model:ir.actions.act_window,name:website_forum.forum_post_action_forum_main
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__post_ids
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__post_ids
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
 msgid "Posts"
 msgstr ""
 
@@ -2651,7 +2702,14 @@ msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post_vote.py:0
+#, python-format
+msgid "Question %s"
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
 #: model:mail.message.subtype,description:website_forum.mt_question_edit
 #: model:mail.message.subtype,name:website_forum.mt_question_edit
 #, python-format
@@ -2690,7 +2748,7 @@ msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/controllers/main.py:0
+#: code:addons/website_forum/controllers/website_forum.py:0
 #, python-format
 msgid "Question should not be empty."
 msgstr ""
@@ -2743,9 +2801,16 @@ msgid "Ranks"
 msgstr ""
 
 #. module: website_forum
+#: model:ir.model.fields,field_description:website_forum.field_forum_forum__rating_ids
+#: model:ir.model.fields,field_description:website_forum.field_forum_post__rating_ids
+#: model:ir.model.fields,field_description:website_forum.field_forum_tag__rating_ids
+msgid "Ratings"
+msgstr ""
+
+#. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "Re: %s"
 msgstr ""
@@ -2793,7 +2858,10 @@ msgid "Refuse"
 msgstr ""
 
 #. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_forum.py:0
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
+#, python-format
 msgid "Register"
 msgstr ""
 
@@ -2804,8 +2872,15 @@ msgid "Relevance"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "Relevance Computation"
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
+#, python-format
+msgid "Remove validated answer"
 msgstr ""
 
 #. module: website_forum
@@ -2816,7 +2891,14 @@ msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/controllers/main.py:0
+#: code:addons/website_forum/models/forum_post.py:0
+#, python-format
+msgid "Reopen a banned question"
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/controllers/website_forum.py:0
 #, python-format
 msgid "Reply should not be empty."
 msgstr ""
@@ -2879,7 +2961,7 @@ msgid "Search Tips"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
 msgid "Search in Post"
 msgstr ""
 
@@ -2896,6 +2978,13 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "See"
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/res_users.py:0
+#, python-format
+msgid "See our Forum"
 msgstr ""
 
 #. module: website_forum
@@ -2930,6 +3019,15 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__sequence
 msgid "Sequence"
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_forum.py:0
+#, python-format
+msgid ""
+"Share and discuss the best content and new marketing ideas, build your "
+"professional profile and become a better marketer together."
 msgstr ""
 
 #. module: website_forum
@@ -3062,14 +3160,14 @@ msgid "Supporter"
 msgstr ""
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_search
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_tag_view_form
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Tag"
 msgstr ""
 
 #. module: website_forum
 #: model:ir.model.constraint,message:website_forum.constraint_forum_tag_name_uniq
-msgid "Tag name already exists !"
+msgid "Tag name already exists!"
 msgstr ""
 
 #. module: website_forum
@@ -3123,6 +3221,13 @@ msgid "Thanks for posting!"
 msgstr ""
 
 #. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
+#, python-format
+msgid "The accepted answer is deleted"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
 #: model_terms:ir.ui.view,arch_db:website_forum.default_faq
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
@@ -3163,10 +3268,12 @@ msgid ""
 msgstr ""
 
 #. module: website_forum
-#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+#. odoo-python
+#: code:addons/website_forum/models/forum_forum.py:0
+#, python-format
 msgid ""
-"This community is for professionals and enthusiasts of our products and services.\n"
-"                                        <br>Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."
+"This community is for professionals and enthusiasts of our products and "
+"services."
 msgstr ""
 
 #. module: website_forum
@@ -3175,6 +3282,14 @@ msgid ""
 "This community is for professionals and enthusiasts of our products and "
 "services. Share and discuss the best content and new marketing ideas, build "
 "your professional profile and become a better marketer together."
+msgstr ""
+
+#. module: website_forum
+#: model_terms:forum.forum,welcome_message:website_forum.forum_help
+msgid ""
+"This community is for professionals and enthusiasts of our products and "
+"services.<br>Share and discuss the best content and new marketing ideas, "
+"build your professional profile and become a better marketer together."
 msgstr ""
 
 #. module: website_forum
@@ -3208,7 +3323,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid ""
 "This post is currently awaiting moderation and it's not published yet.<br/>\n"
-"                Do you want <b>Accept</b> or <b>Reject</b> this post ?"
+"                Do you want <b>Accept</b> or <b>Reject</b> this post?"
 msgstr ""
 
 #. module: website_forum
@@ -3231,7 +3346,7 @@ msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/controllers/main.py:0
+#: code:addons/website_forum/controllers/website_forum.py:0
 #, python-format
 msgid "Title should not be empty."
 msgstr ""
@@ -3280,24 +3395,29 @@ msgid "Topics"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_tree
 msgid "Total Answers"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_list
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_tree
 msgid "Total Posts"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_list
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_list
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_tree
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_tree
 msgid "Total Views"
 msgstr ""
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__vote_count
 msgid "Total Votes"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.model,name:website_forum.model_gamification_karma_tracking
+msgid "Track Karma Changes"
 msgstr ""
 
 #. module: website_forum
@@ -3387,7 +3507,14 @@ msgid "User"
 msgstr ""
 
 #. module: website_forum
-#: model:ir.actions.act_window,name:website_forum.action_forum_favorites
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
+#, python-format
+msgid "User answer accepted"
+msgstr ""
+
+#. module: website_forum
+#: model:ir.actions.act_window,name:website_forum.forum_post_action_favorites
 msgid "Users favorite posts"
 msgstr ""
 
@@ -3396,6 +3523,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
 #: model_terms:ir.ui.view,arch_db:website_forum.show_flag_validator
 msgid "Validate"
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post.py:0
+#, python-format
+msgid "Validate an answer"
 msgstr ""
 
 #. module: website_forum
@@ -3426,7 +3560,7 @@ msgstr ""
 
 #. module: website_forum
 #: model:ir.model.constraint,message:website_forum.constraint_forum_post_vote_vote_uniq
-msgid "Vote already exists !"
+msgid "Vote already exists!"
 msgstr ""
 
 #. module: website_forum
@@ -3543,7 +3677,7 @@ msgstr ""
 
 #. module: website_forum
 #. odoo-python
-#: code:addons/website_forum/models/forum.py:0
+#: code:addons/website_forum/models/forum_post.py:0
 #, python-format
 msgid "You cannot create recursive forum posts."
 msgstr ""
@@ -3586,11 +3720,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.edit_post
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
 msgid "Your Answer"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.post_reply
-msgid "Your Reply"
 msgstr ""
 
 #. module: website_forum
@@ -3664,7 +3793,14 @@ msgid "downvote"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_forum_form
+#. odoo-python
+#: code:addons/website_forum/models/forum_post_vote.py:0
+#, python-format
+msgid "downvoted"
+msgstr ""
+
+#. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_forum_view_form
 msgid "e.g. Help"
 msgstr ""
 
@@ -3674,7 +3810,7 @@ msgid "e.g. Technical Assistance"
 msgstr ""
 
 #. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_form
+#: model_terms:ir.ui.view,arch_db:website_forum.forum_post_view_form
 msgid "e.g. When should I plant my tomatoes?"
 msgstr ""
 
@@ -3809,6 +3945,27 @@ msgid "newest"
 msgstr ""
 
 #. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post_vote.py:0
+#, python-format
+msgid "no changes"
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post_vote.py:0
+#, python-format
+msgid "no more downvoted"
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post_vote.py:0
+#, python-format
+msgid "no more upvoted"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
@@ -3876,6 +4033,13 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.faq_karma
 msgid "upvote, add comments"
+msgstr ""
+
+#. module: website_forum
+#. odoo-python
+#: code:addons/website_forum/models/forum_post_vote.py:0
+#, python-format
+msgid "upvoted"
 msgstr ""
 
 #. module: website_forum
