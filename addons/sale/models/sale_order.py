@@ -1467,7 +1467,7 @@ class SaleOrder(models.Model):
         return {
             'description': self.name,
             'currency_id': self.currency_id.id,
-            'partner_id': self.partner_id.id,
+            'partner_id': self.partner_invoice_id.id,
             'amount': amount,
             'amount_max': amount,
             'amount_paid': self.amount_paid,
