@@ -108,6 +108,10 @@ class Rating(models.Model):
         for rating in self:
             rating.rating_text = rating_data._rating_to_text(rating.rating)
 
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
+
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
@@ -141,6 +145,10 @@ class Rating(models.Model):
                 data['parent_res_id'] = parent_res_model.id
         return data
 
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
+
     def reset(self):
         for record in self:
             record.write({
@@ -158,3 +166,29 @@ class Rating(models.Model):
             'res_id': self.res_id,
             'views': [[False, 'form']]
         }
+
+    # ------------------------------------------------------------
+    # TOOLS
+    # ------------------------------------------------------------
+
+    def _classify_by_model(self):
+        """ To ease batch computation of various ratings related methods they
+        are classified by model. Ratings not linked to a valid record through
+        res_model / res_id are ignored.
+
+        :return dict: for each model having at least one rating in self, have
+          a sub-dict containing
+            * ratings: ratings related to that model;
+            * record IDs: records linked to the ratings of that model, in same
+              order;
+        """
+        data_by_model = {}
+        for rating in self.filtered(lambda act: act.res_model and act.res_id):
+            if rating.res_model not in data_by_model:
+                data_by_model[rating.res_model] = {
+                    'ratings': self.env['rating.rating'],
+                    'record_ids': [],
+                }
+            data_by_model[rating.res_model]['ratings'] += rating
+            data_by_model[rating.res_model]['record_ids'].append(rating.res_id)
+        return data_by_model
