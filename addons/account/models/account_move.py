@@ -730,23 +730,27 @@ class AccountMove(models.Model):
         self = self.sorted(lambda m: (m.date, m.ref or '', m.id))
 
         for move in self:
-            name_not_set = not move.name or move.name == '/'
-            if not move.highest_name and not move.posted_before and move.date and name_not_set:
-                # In the form view, we need to compute a default sequence so that the user can edit
-                # it. We only check the first move as an approximation (enough for new in form view)
-                move._set_next_sequence()
-            elif move.quick_edit_mode and not move.posted_before:
-                # We always suggest the next sequence as the default name of the new move
-                if name_not_set or not move._sequence_matches_date():
-                    move._set_next_sequence()
-            elif not move.posted_before and not move._sequence_matches_date():
-                # The date changed before posting on first move of period
-                move._set_next_sequence()
-            elif (name_not_set and move.state == 'posted'):
+            move_has_name = move.name and move.name != '/'
+            if move_has_name or move.state != 'posted':
+                if not move.posted_before and not move._sequence_matches_date():
+                    if move._get_last_sequence():
+                        # The name does not match the date and the move is not the first in the period:
+                        # Reset to draft
+                        move.name = '/'
+                        continue
+                else:
+                    if move_has_name and move.posted_before or not move_has_name and move._get_last_sequence():
+                        # The move either
+                        # - has a name and was posted before, or
+                        # - doesn't have a name, but is not the first in the period
+                        # so we don't recompute the name
+                        continue
+            if move.date and (not move_has_name or not move._sequence_matches_date()):
                 move._set_next_sequence()
 
         self.filtered(lambda m: not m.name).name = '/'
         self._inverse_name()
+
 
     @api.depends('journal_id', 'date')
     def _compute_highest_name(self):
