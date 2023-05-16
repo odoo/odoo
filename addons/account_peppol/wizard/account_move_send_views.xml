@@ -17,7 +17,7 @@
                         <field name="peppol_warning"/>
                     </div>
                 </xpath>
-                <xpath expr="//div[@name='option_send_by_post']" position='before'>
+                <xpath expr="//div[@name='option_send_mail']" position='after'>
                     <div name="option_peppol"
                          attrs="{'invisible': ['|', ('peppol_proxy_state', '!=', 'active'), ('enable_ubl_cii_xml', '=', False)]}">
                         <field name="checkbox_send_peppol" attrs="{'readonly': [('checkbox_ubl_cii_xml', '=', False)]}"/>
