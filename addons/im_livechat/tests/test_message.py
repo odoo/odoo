@@ -65,7 +65,7 @@ class TestImLivechatMessage(TransactionCase):
             'message_type': 'notification',
             'messageReactionGroups': [],
             'model': 'discuss.channel',
-            'module_icon': '/mail/static/description/icon.svg',
+            'module_icon': '/mail/static/description/icon.png',
             'needaction_partner_ids': [],
             'notifications': [],
             'pinned_at': False,
