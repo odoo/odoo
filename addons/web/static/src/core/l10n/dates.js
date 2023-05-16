@@ -246,7 +246,7 @@ export const strftimeToLuxonFormat = memoize(function strftimeToLuxonFormat(form
             if (inToken && normalizeFormatTable[character] !== undefined) {
                 character = normalizeFormatTable[character];
             } else {
-                character = "[" + character + "]"; // moment.js escape
+                character = "'" + character + "'";  // luxon escape
             }
         }
         output.push(character);
