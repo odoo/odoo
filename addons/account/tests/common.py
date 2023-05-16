@@ -226,7 +226,15 @@ class AccountTestInvoicingCommon(TransactionCase):
                 ], limit=1),
             'default_account_assets': cls.env['account.account'].search([
                     ('company_id', '=', company.id),
+                    ('account_type', '=', 'asset_fixed')
+                ], limit=1),
+            'default_account_deferred_expense': cls.env['account.account'].search([
+                    ('company_id', '=', company.id),
                     ('account_type', '=', 'asset_current')
+                ], limit=1),
+            'default_account_deferred_revenue': cls.env['account.account'].search([
+                    ('company_id', '=', company.id),
+                    ('account_type', '=', 'liability_current')
                 ], limit=1),
             'default_account_tax_sale': company.account_sale_tax_id.mapped('invoice_repartition_line_ids.account_id'),
             'default_account_tax_purchase': company.account_purchase_tax_id.mapped('invoice_repartition_line_ids.account_id'),

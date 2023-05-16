@@ -240,16 +240,16 @@
                                             <field name="currency_exchange_journal_id"/>
                                         </div>
                                         <div class="row mt8">
-                                            <label for="income_currency_exchange_account_id" class="col-lg-4 o_light_label"/>
+                                            <label for="income_currency_exchange_account_id" string="Gain" class="col-lg-4 o_light_label"/>
                                             <field name="income_currency_exchange_account_id"/>
                                         </div>
                                         <div class="row mt8">
-                                            <label for="expense_currency_exchange_account_id" class="col-lg-4 o_light_label"/>
+                                            <label for="expense_currency_exchange_account_id" string="Loss" class="col-lg-4 o_light_label"/>
                                             <field name="expense_currency_exchange_account_id"/>
                                         </div>
                                     </div>
                                 </setting>
-                                <setting string="The following default accounts are used with certain features.">
+                                <setting id="post_bank_transactions_and_payments_setting" string="Post bank transactions and payments in:">
                                     <div class="content-group">
                                         <div class="row mt8">
                                             <label for="account_journal_suspense_account_id" class="col-lg-5 o_light_label"/>
@@ -267,6 +267,10 @@
                                             <label for="transfer_account_id" class="col-lg-5 o_light_label"/>
                                             <field name="transfer_account_id"/>
                                         </div>
+                                    </div>
+                                </setting>
+                                <setting string="Post discounts in:">
+                                    <div class="content-group">
                                         <div class="row mt8">
                                             <label for="account_journal_early_pay_discount_gain_account_id" class="col-lg-5 o_light_label"/>
                                             <field name="account_journal_early_pay_discount_gain_account_id"/>
