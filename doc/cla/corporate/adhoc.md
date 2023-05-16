@@ -20,3 +20,4 @@ Pablo Santiago Paez Sheridan pp@adhoc.com.ar https://github.com/PabloPaezSherida
 Augusto Weiss awe@adhoc.com.ar https://github.com/augusto-weiss
 Pablo Montenegro pam@adhoc.com.ar https://github.com/pablohmontenegro
 Ignacio Cainelli ica@adhoc.com.ar https://github.com/ica-adhoc
+Martin Quinteros maq@adhoc.com.ar https://github.com/maq-adhoc
