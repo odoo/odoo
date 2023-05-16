@@ -5952,6 +5952,28 @@ X[]
                 contentAfter: '<div><p>a[]</p></div><div data-oe-protected="true"></div>',
             });
         });
+        it('should not select a protected table', async () => {
+            // Individually protected cells are not yet supported for simplicity
+            // since there is no need for that currently.
+            await testEditor(BasicEditor, {
+                contentBefore: unformat(`
+                    <table data-oe-protected="true"><tbody><tr>
+                        <td>[ab</td>
+                    </tr></tbody></table>
+                    <table><tbody><tr>
+                        <td>cd]</td>
+                    </tr></tbody></table>
+                `),
+                contentAfterEdit: unformat(`
+                    <table data-oe-protected="true"><tbody><tr>
+                        <td>[ab</td>
+                    </tr></tbody></table>
+                    <table class="o_selected_table"><tbody><tr>
+                        <td class="o_selected_td">cd]</td>
+                    </tr></tbody></table>
+                `),
+            });
+        });
     });
     describe('selection', () => {
         describe('after an arrow key press', () => {
