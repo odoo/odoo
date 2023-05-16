@@ -276,6 +276,8 @@ class AccountChartTemplate(models.AbstractModel):
                 elif model_name == 'account.tax':
                     # Only update the tags of existing taxes
                     if xmlid not in xmlid2tax or tax_template_changed(xmlid2tax[xmlid], values):
+                        if self._context.get('force_new_tax_active'):
+                            values['active'] = True
                         if xmlid in xmlid2tax:
                             obsolete_xmlid.add(xmlid)
                             oldtax = xmlid2tax[xmlid]
