@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1+e\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-07 13:49+0000\n"
-"PO-Revision-Date: 2023-02-07 13:49+0000\n"
+"POT-Creation-Date: 2023-05-16 13:48+0000\n"
+"PO-Revision-Date: 2023-05-16 13:48+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -145,10 +145,8 @@ msgid ""
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_add
-msgid ""
-"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
-"title=\"Arrow\"/>"
+#: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
+msgid "<i class=\"fa fa-tiktok text-tiktok\" aria-label=\"TikTok\" title=\"TikTok\"/>"
 msgstr ""
 
 #. module: website_event
@@ -239,6 +237,11 @@ msgid "<strong> You ordered more tickets than available seats</strong>"
 msgstr ""
 
 #. module: website_event
+#: model:event.question.answer,name:website_event.event_0_question_2_answer_2
+msgid "A friend"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
 msgid "A past event"
 msgstr ""
@@ -278,13 +281,39 @@ msgid "All countries"
 msgstr ""
 
 #. module: website_event
+#: model:event.question,title:website_event.event_0_question_1
+msgid "Allergies"
+msgstr ""
+
+#. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__website_menu
 msgid "Allows to display and manage event-specific menus on website."
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
-msgid "Ask questions to attendees when registering online"
+#: model:ir.model.fields,field_description:website_event.field_event_question_answer__name
+msgid "Answer"
+msgstr ""
+
+#. module: website_event
+#: model:ir.actions.act_window,name:website_event.action_event_registration_report
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event.event_registration_answer_view_graph
+#: model_terms:ir.ui.view,arch_db:website_event.event_registration_answer_view_pivot
+#: model_terms:ir.ui.view,arch_db:website_event.event_registration_answer_view_tree
+msgid "Answer Breakdown"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_question__answer_ids
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event.event_question_view_form
+msgid "Answers"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_question__once_per_order
+msgid "Ask once per order"
 msgstr ""
 
 #. module: website_event
@@ -297,6 +326,11 @@ msgid ""
 msgstr ""
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_registration__registration_answer_ids
+msgid "Attendee Answers"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Attendees"
 msgstr ""
@@ -304,6 +338,18 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_quotes
 msgid "Author"
+msgstr ""
+
+#. module: website_event
+#: model:event.question.answer,name:website_event.event_1_question_0_answer_1
+#: model:event.question.answer,name:website_event.event_5_question_0_answer_1
+#: model:event.question.answer,name:website_event.event_type_data_sports_question_0_answer_1
+msgid "Blog Post"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_registration_answer__partner_id
+msgid "Booked by"
 msgstr ""
 
 #. module: website_event
@@ -336,6 +382,16 @@ msgid "Close"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.actions.act_window,help:website_event.action_event_registration_report
+msgid "Come back once you have registrations to overview answers."
+msgstr ""
+
+#. module: website_event
+#: model:event.question.answer,name:website_event.event_0_question_2_answer_1
+msgid "Commercials"
+msgstr ""
+
+#. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
@@ -352,6 +408,7 @@ msgid "Community Menu"
 msgstr ""
 
 #. module: website_event
+#: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__company_name
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
 msgid "Company"
 msgstr ""
@@ -365,7 +422,12 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "Continue"
+msgid "Confirm Registration"
+msgstr ""
+
+#. module: website_event
+#: model:event.question.answer,name:website_event.event_7_question_0_answer_0
+msgid "Consumers"
 msgstr ""
 
 #. module: website_event
@@ -379,11 +441,17 @@ msgid "Cover Properties"
 msgstr ""
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_question__create_uid
+#: model:ir.model.fields,field_description:website_event.field_event_question_answer__create_uid
+#: model:ir.model.fields,field_description:website_event.field_event_registration_answer__create_uid
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__create_uid
 msgid "Created by"
 msgstr ""
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_question__create_date
+#: model:ir.model.fields,field_description:website_event.field_event_question_answer__create_date
+#: model:ir.model.fields,field_description:website_event.field_event_registration_answer__create_date
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__create_date
 msgid "Created on"
 msgstr ""
@@ -414,6 +482,9 @@ msgid "Description"
 msgstr ""
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_question__display_name
+#: model:ir.model.fields,field_description:website_event.field_event_question_answer__display_name
+#: model:ir.model.fields,field_description:website_event.field_event_registration_answer__display_name
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__display_name
 msgid "Display Name"
 msgstr ""
@@ -437,8 +508,11 @@ msgid "Don't forget to click <b>save</b> when you're done."
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "Email *"
+#. odoo-python
+#: code:addons/website_event/models/event_type.py:0
+#: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__email
+#, python-format
+msgid "Email"
 msgstr ""
 
 #. module: website_event
@@ -448,6 +522,8 @@ msgstr ""
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
+#: model:ir.model.fields,field_description:website_event.field_event_question__event_id
+#: model:ir.model.fields,field_description:website_event.field_event_registration_answer__event_id
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__event_id
 msgid "Event"
 msgstr ""
@@ -488,8 +564,23 @@ msgid "Event Pages"
 msgstr ""
 
 #. module: website_event
+#: model:ir.model,name:website_event.model_event_question
+msgid "Event Question"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_event_question_answer
+msgid "Event Question Answer"
+msgstr ""
+
+#. module: website_event
 #: model:ir.model,name:website_event.model_event_registration
 msgid "Event Registration"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model,name:website_event.model_event_registration_answer
+msgid "Event Registration Answer"
 msgstr ""
 
 #. module: website_event
@@ -521,6 +612,11 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
 msgid "Event Title"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_question__event_type_id
+msgid "Event Type"
 msgstr ""
 
 #. module: website_event
@@ -592,6 +688,11 @@ msgid "Following content will appear on all events."
 msgstr ""
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__general_question_ids
+msgid "General Questions"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Get the direction"
 msgstr ""
@@ -621,8 +722,32 @@ msgid "Hockey Tournament"
 msgstr ""
 
 #. module: website_event
+#: model:event.question,title:website_event.event_7_question_1
+msgid "How did you hear about us?"
+msgstr ""
+
+#. module: website_event
+#: model:event.question,title:website_event.event_0_question_2
+#: model:event.question,title:website_event.event_1_question_0
+#: model:event.question,title:website_event.event_5_question_0
+#: model:event.question,title:website_event.event_type_data_sports_question_0
+msgid "How did you learn about this event?"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_question__id
+#: model:ir.model.fields,field_description:website_event.field_event_question_answer__id
+#: model:ir.model.fields,field_description:website_event.field_event_registration_answer__id
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__id
 msgid "ID"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,help:website_event.field_event_question__once_per_order
+msgid ""
+"If True, this question will be asked only once and its value will be "
+"propagated to every attendees.If not it will be asked for every attendee of "
+"a reservation."
 msgstr ""
 
 #. module: website_event
@@ -670,11 +795,17 @@ msgid "John DOE"
 msgstr ""
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_question__write_uid
+#: model:ir.model.fields,field_description:website_event.field_event_question_answer__write_uid
+#: model:ir.model.fields,field_description:website_event.field_event_registration_answer__write_uid
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__write_uid
 msgid "Last Updated by"
 msgstr ""
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_question__write_date
+#: model:ir.model.fields,field_description:website_event.field_event_question_answer__write_date
+#: model:ir.model.fields,field_description:website_event.field_event_registration_answer__write_date
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__write_date
 msgid "Last Updated on"
 msgstr ""
@@ -725,6 +856,22 @@ msgid ""
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
+msgid "Mandatory"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_question__is_mandatory_answer
+msgid "Mandatory Answer"
+msgstr ""
+
+#. module: website_event
+#: model:event.question,title:website_event.event_0_question_0
+msgid "Meal Type"
+msgstr ""
+
+#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_website_event_menu__menu_id
 msgid "Menu"
 msgstr ""
@@ -740,13 +887,17 @@ msgid "Menus"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "N/A"
+#: model:event.question.answer,name:website_event.event_0_question_0_answer_0
+msgid "Mixed"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "Name *"
+#. odoo-python
+#: code:addons/website_event/models/event_type.py:0
+#: model:ir.model.fields,field_description:website_event.field_event_event__address_name
+#: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__name
+#, python-format
+msgid "Name"
 msgstr ""
 
 #. module: website_event
@@ -759,6 +910,11 @@ msgstr ""
 #: code:addons/website_event/models/website.py:0
 #, python-format
 msgid "Next Events"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.actions.act_window,help:website_event.action_event_registration_report
+msgid "No Answers yet!"
 msgstr ""
 
 #. module: website_event
@@ -787,6 +943,12 @@ msgid "Not Published"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
+msgid "Once per Order"
+msgstr ""
+
+#. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/website_snippet_filter.py:0
 #, python-format
@@ -804,6 +966,11 @@ msgid "Our Trainings"
 msgstr ""
 
 #. module: website_event
+#: model:event.question.answer,name:website_event.event_0_question_2_answer_0
+msgid "Our website"
+msgstr ""
+
+#. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #, python-format
@@ -811,8 +978,16 @@ msgid "Past Events"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-msgid "Phone <small>(Optional)</small>"
+#: model:event.question.answer,name:website_event.event_0_question_0_answer_2
+msgid "Pastafarian"
+msgstr ""
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/models/event_type.py:0
+#: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__phone
+#, python-format
+msgid "Phone"
 msgstr ""
 
 #. module: website_event
@@ -835,7 +1010,32 @@ msgid "Published"
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
+#: model:ir.model.fields,field_description:website_event.field_event_question_answer__question_id
+#: model:ir.model.fields,field_description:website_event.field_event_registration_answer__question_id
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event.event_question_view_form
+msgid "Question"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_question__question_type
+#: model:ir.model.fields,field_description:website_event.field_event_registration_answer__question_type
+msgid "Question Type"
+msgstr ""
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/models/event_question.py:0
+#, python-format
+msgid "Question cannot belong to both the event category and itself."
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__question_ids
+#: model:ir.model.fields,field_description:website_event.field_event_type__question_ids
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_form
+#: model_terms:ir.ui.view,arch_db:website_event.event_type_view_form
 msgid "Questions"
 msgstr ""
 
@@ -845,13 +1045,20 @@ msgid "Quotes"
 msgstr ""
 
 #. module: website_event
+#: model:event.question.answer,name:website_event.event_1_question_0_answer_2
+#: model:event.question.answer,name:website_event.event_5_question_0_answer_2
+#: model:event.question.answer,name:website_event.event_type_data_sports_question_0_answer_2
+msgid "Radio Ad"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Ref:"
 msgstr ""
 
 #. module: website_event
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/website_event/models/event_event.py:0
 #: code:addons/website_event/static/src/js/register_toaster_widget.js:0
 #: model:ir.model.fields.selection,name:website_event.selection__website_event_menu__menu_type__register
@@ -884,6 +1091,7 @@ msgstr ""
 #. module: website_event
 #. odoo-python
 #: code:addons/website_event/controllers/main.py:0
+#: model:ir.model.fields,field_description:website_event.field_event_registration_answer__registration_id
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 #, python-format
 msgid "Registration"
@@ -928,6 +1136,11 @@ msgid "Remaining time before event starts (minutes)"
 msgstr ""
 
 #. module: website_event
+#: model:event.question.answer,name:website_event.event_7_question_0_answer_2
+msgid "Research"
+msgstr ""
+
+#. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__website_id
 msgid "Restrict publishing to this website."
 msgstr ""
@@ -945,6 +1158,11 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "SHARE"
+msgstr ""
+
+#. module: website_event
+#: model:event.question.answer,name:website_event.event_7_question_0_answer_1
+msgid "Sales"
 msgstr ""
 
 #. module: website_event
@@ -969,8 +1187,30 @@ msgid "Search an event..."
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_search
+#: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_tree
+msgid "Selected Answers"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_registration_answer_view_tree
+msgid "Selected answer"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__simple_choice
+msgid "Selection"
+msgstr ""
+
+#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__seo_name
 msgid "Seo name"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_question__sequence
+#: model:ir.model.fields,field_description:website_event.field_event_question_answer__sequence
+msgid "Sequence"
 msgstr ""
 
 #. module: website_event
@@ -985,6 +1225,13 @@ msgid "Sidebar"
 msgstr ""
 
 #. module: website_event
+#: model:event.question.answer,name:website_event.event_1_question_0_answer_0
+#: model:event.question.answer,name:website_event.event_5_question_0_answer_0
+#: model:event.question.answer,name:website_event.event_type_data_sports_question_0_answer_0
+msgid "Social Media"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Sold Out"
@@ -993,6 +1240,11 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
 msgid "Sorry, the requested event is not available anymore."
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_event__specific_question_ids
+msgid "Specific Questions"
 msgstr ""
 
 #. module: website_event
@@ -1016,8 +1268,18 @@ msgid "Starts <span/>"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+msgid "Stats"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Sub-menu (Specific)"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_registration_answer__value_answer_id
+msgid "Suggested answer"
 msgstr ""
 
 #. module: website_event
@@ -1026,9 +1288,24 @@ msgid "Templates"
 msgstr ""
 
 #. module: website_event
+#: model:ir.model.fields.selection,name:website_event.selection__event_question__question_type__text_box
+msgid "Text Input"
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_registration_answer__value_text_box
+msgid "Text answer"
+msgstr ""
+
+#. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__website_url
 #: model:ir.model.fields,help:website_event.field_event_tag_category__website_url
 msgid "The full URL to access the document through the website."
+msgstr ""
+
+#. module: website_event
+#: model:ir.model.constraint,message:website_event.constraint_event_registration_answer_value_check
+msgid "There must be a suggested value or a text value."
 msgstr ""
 
 #. module: website_event
@@ -1073,6 +1350,11 @@ msgid "Tickets for this Event are <b>Sold Out</b>"
 msgstr ""
 
 #. module: website_event
+#: model:ir.model.fields,field_description:website_event.field_event_question__title
+msgid "Title"
+msgstr ""
+
+#. module: website_event
 #. odoo-python
 #: code:addons/website_event/models/event_event.py:0
 #, python-format
@@ -1087,6 +1369,12 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
 msgid "Top Bar Filter"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event.event_registration_view_form
+msgid "Type"
 msgstr ""
 
 #. module: website_event
@@ -1118,6 +1406,11 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_website_event_menu__view_id
 msgid "Used when not being an url based menu"
+msgstr ""
+
+#. module: website_event
+#: model:event.question.answer,name:website_event.event_0_question_0_answer_1
+msgid "Vegetarian"
 msgstr ""
 
 #. module: website_event
@@ -1213,6 +1506,11 @@ msgid "Website opengraph image"
 msgstr ""
 
 #. module: website_event
+#: model:event.question,title:website_event.event_5_question_1
+msgid "What's your Hockey level?"
+msgstr ""
+
+#. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__is_ongoing
 msgid "Whether event has begun"
 msgstr ""
@@ -1220,6 +1518,11 @@ msgstr ""
 #. module: website_event
 #: model:ir.model.fields,help:website_event.field_event_event__start_today
 msgid "Whether event is going to start today if still not ongoing"
+msgstr ""
+
+#. module: website_event
+#: model:event.question,title:website_event.event_7_question_0
+msgid "Which field are you working in"
 msgstr ""
 
 #. module: website_event
@@ -1232,6 +1535,30 @@ msgid ""
 msgstr ""
 
 #. module: website_event
+#. odoo-python
+#: code:addons/website_event/models/event_question.py:0
+#, python-format
+msgid ""
+"You cannot change the question type of a question that already has answers!"
+msgstr ""
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/models/event_question.py:0
+#, python-format
+msgid ""
+"You cannot delete a question that has already been answered by attendees."
+msgstr ""
+
+#. module: website_event
+#. odoo-python
+#: code:addons/website_event/models/event_question_answer.py:0
+#, python-format
+msgid ""
+"You cannot delete an answer that has already been selected by attendees."
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "available)"
 msgstr ""
@@ -1239,6 +1566,12 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_add
 msgid "e.g. \"Conference for Architects\""
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event.event_question_view_form
+msgid "e.g. \"Do you have any diet restrictions?\""
 msgstr ""
 
 #. module: website_event

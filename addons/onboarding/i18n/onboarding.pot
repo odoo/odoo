@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
-"PO-Revision-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2023-05-16 13:50+0000\n"
+"PO-Revision-Date: 2023-05-16 13:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,13 +26,8 @@ msgid "All related Onboarding Progress Step Records (across companies)"
 msgstr ""
 
 #. module: onboarding
-#: model_terms:ir.ui.view,arch_db:onboarding.onboarding_onboarding_view_form
-msgid "Background color"
-msgstr ""
-
-#. module: onboarding
-#: model:ir.model.fields.selection,name:onboarding.selection__onboarding_onboarding__panel_background_color__blue
-msgid "Blue"
+#: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__step_image_alt
+msgid "Alt Text for the Step Image"
 msgstr ""
 
 #. module: onboarding
@@ -43,11 +38,6 @@ msgstr ""
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__panel_close_action_name
 msgid "Closing action"
-msgstr ""
-
-#. module: onboarding
-#: model:ir.model.fields,help:onboarding.field_onboarding_onboarding__panel_background_color
-msgid "Color gradient added to the panel's background."
 msgstr ""
 
 #. module: onboarding
@@ -120,14 +110,6 @@ msgid "Just done"
 msgstr ""
 
 #. module: onboarding
-#: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding____last_update
-#: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step____last_update
-#: model:ir.model.fields,field_description:onboarding.field_onboarding_progress____last_update
-#: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step____last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__write_uid
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__write_uid
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__write_uid
@@ -144,6 +126,7 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: onboarding
+#. odoo-python
 #: code:addons/onboarding/models/onboarding_step.py:0
 #, python-format
 msgid "Let's do it"
@@ -164,11 +147,6 @@ msgstr ""
 msgid ""
 "Name of the onboarding step model action to execute when opening the step, "
 "e.g. action_open_onboarding_1_step_1"
-msgstr ""
-
-#. module: onboarding
-#: model:ir.model.fields.selection,name:onboarding.selection__onboarding_onboarding__panel_background_color__none
-msgid "None"
 msgstr ""
 
 #. module: onboarding
@@ -276,21 +254,6 @@ msgid "Opening action"
 msgstr ""
 
 #. module: onboarding
-#: model:ir.model.fields.selection,name:onboarding.selection__onboarding_onboarding__panel_background_color__orange
-msgid "Orange"
-msgstr ""
-
-#. module: onboarding
-#: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__panel_background_color
-msgid "Panel's Background color"
-msgstr ""
-
-#. module: onboarding
-#: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__panel_background_image
-msgid "Panel's background image"
-msgstr ""
-
-#. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__progress_step_ids
 msgid "Progress Steps Trackers"
 msgstr ""
@@ -317,9 +280,25 @@ msgid "Should be done per company?"
 msgstr ""
 
 #. module: onboarding
+#: model:ir.model.fields,help:onboarding.field_onboarding_onboarding_step__step_image_alt
+msgid "Show when impossible to load the image"
+msgstr ""
+
+#. module: onboarding
+#. odoo-python
 #: code:addons/onboarding/models/onboarding_step.py:0
 #, python-format
 msgid "Step Completed! - Click to review"
+msgstr ""
+
+#. module: onboarding
+#: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__step_image
+msgid "Step Image"
+msgstr ""
+
+#. module: onboarding
+#: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__step_image_filename
+msgid "Step Image Filename"
 msgstr ""
 
 #. module: onboarding
@@ -338,13 +317,6 @@ msgid "Text to show when step is completed"
 msgstr ""
 
 #. module: onboarding
-#: model:ir.model.constraint,message:onboarding.constraint_onboarding_progress_onboarding_company_uniq
-msgid ""
-"There cannot be multiple records of the same onboarding completion for the "
-"same company."
-msgstr ""
-
-#. module: onboarding
 #: model:ir.model.constraint,message:onboarding.constraint_onboarding_progress_step_progress_step_uniq
 msgid ""
 "There cannot be multiple records of the same onboarding step completion for "
@@ -360,11 +332,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_onboarding_view_form
 #: model_terms:ir.ui.view,arch_db:onboarding.onboarding_onboarding_view_tree
 msgid "Toggle visibility"
-msgstr ""
-
-#. module: onboarding
-#: model:ir.model.fields.selection,name:onboarding.selection__onboarding_onboarding__panel_background_color__violet
-msgid "Violet"
 msgstr ""
 
 #. module: onboarding
