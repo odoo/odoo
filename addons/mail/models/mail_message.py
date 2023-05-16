@@ -866,7 +866,7 @@ class Message(models.Model):
     # MESSAGE READ / FETCH / FAILURE API
     # ------------------------------------------------------
 
-    def _message_format(self, fnames, format_reply=True, legacy=False):
+    def _message_format(self, fnames, format_reply=True):
         """Reads values from messages and formats them for the web client."""
         vals_list = self._read_format(fnames)
         thread_ids_by_model_name = defaultdict(set)
@@ -908,7 +908,7 @@ class Message(models.Model):
                 'default_subject': default_subject,
                 'guestAuthor': guestAuthor,
                 'notifications': message_sudo.notification_ids._filtered_for_web_client()._notification_format(),
-                'attachment_ids': message_sudo.attachment_ids._attachment_format() if not legacy else message_sudo.attachment_ids._attachment_format(legacy=True),
+                'attachment_ids': message_sudo.attachment_ids._attachment_format(),
                 'trackingValues': allowed_tracking_ids._tracking_value_format(),
                 'linkPreviews': message_sudo.link_preview_ids._link_preview_format(),
                 'messageReactionGroups': reaction_groups,

@@ -213,7 +213,7 @@ class PortalChatter(http.Controller):
                 domain = expression.AND([Message._get_search_domain_share(), domain])
             Message = request.env['mail.message'].sudo()
         return {
-            'messages': Message.search(domain, limit=limit, offset=offset).portal_message_format(),
+            'messages': Message.search(domain, limit=limit, offset=offset).portal_message_format(options=kw),
             'message_count': Message.search_count(domain)
         }
 
