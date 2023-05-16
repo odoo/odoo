@@ -347,6 +347,11 @@ export function getBasicData() {
                     sortable: true,
                     searchable: true,
                 },
+                jsonField: {
+                    string: "Json Field",
+                    type: "json",
+                    store: true,
+                },
             },
             records: [
                 {
