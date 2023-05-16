@@ -2,6 +2,7 @@ odoo.define("website_sale.tour_utils", function (require) {
     "use strict";
 
     const core = require("web.core");
+    require("web.legacy_tranlations_loaded");
     const _t = core._t;
     const wTourUtils = require('website.tour_utils');
 

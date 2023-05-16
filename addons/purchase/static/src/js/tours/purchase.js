@@ -26,6 +26,7 @@ odoo.define('purchase.tour', function(require) {
 var core = require('web.core');
 const { registry } = require("@web/core/registry");
 const { stepUtils } = require('@web_tour/js/tour_step_utils');
+require("web.legacy_tranlations_loaded");
 
 var _t = core._t;
 var PurchaseAdditionalTourSteps = require('purchase.purchase_steps');

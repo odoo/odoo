@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { _t } from "web.core";
+import "web.legacy_tranlations_loaded";
 import { Markup } from "web.utils";
 import { registry } from "@web/core/registry";
 

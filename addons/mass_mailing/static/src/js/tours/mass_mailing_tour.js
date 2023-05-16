@@ -4,6 +4,7 @@ odoo.define('mass_mailing.mass_mailing_tour', function (require) {
     const { registry } = require("@web/core/registry");
     const { stepUtils } = require('@web_tour/js/tour_step_utils');
     const {_t} = require('web.core');
+    require("web.legacy_tranlations_loaded");
     const {Markup} = require('web.utils');
     var now = moment();
 

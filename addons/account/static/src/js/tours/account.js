@@ -5,6 +5,7 @@ var core = require('web.core');
 const {Markup} = require('web.utils');
 const { registry } = require("@web/core/registry");
 const { stepUtils } = require('@web_tour/js/tour_step_utils');
+require("web.legacy_tranlations_loaded");
 
 var _t = core._t;
 

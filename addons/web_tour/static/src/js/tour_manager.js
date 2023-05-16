@@ -60,7 +60,13 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             for (let [name, params] of tourRegistry.getEntries()) {
                 register(name, params);
             }
-            tourRegistry.addEventListener("UPDATE", ev => register(ev.detail.key, ev.detail.value));
+            tourRegistry.addEventListener("UPDATE", ev => {
+                if (tourRegistry.contains(ev.detail.key)) {
+                    register(ev.detail.key, ev.detail.value)
+                } else {
+                    delete this.tours[ev.detail.value];
+                }
+            });
         }
         console.log('Tour Manager is ready.  running_tour=' + this.running_tour);
     },

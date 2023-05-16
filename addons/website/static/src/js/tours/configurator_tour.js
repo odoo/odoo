@@ -3,6 +3,7 @@ odoo.define("website.configurator_tour", function (require) {
 
 const wTourUtils = require("website.tour_utils");
 const core = require("web.core");
+require("web.legacy_tranlations_loaded");
 const _t = core._t;
 
 let titleSelector = '#wrap > section:first-child';
