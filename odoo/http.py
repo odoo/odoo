@@ -1897,13 +1897,13 @@ class JsonRPCDispatcher(Dispatcher):
 
         Successful request::
 
-          --> {"jsonrpc": "2.0", "method": "call", "params": {"context": {}, "arg1": "val1" }, "id": null}
+          --> {"jsonrpc": "2.0", "method": "call", "params": {"arg1": "val1" }, "id": null}
 
           <-- {"jsonrpc": "2.0", "result": { "res1": "val1" }, "id": null}
 
         Request producing a error::
 
-          --> {"jsonrpc": "2.0", "method": "call", "params": {"context": {}, "arg1": "val1" }, "id": null}
+          --> {"jsonrpc": "2.0", "method": "call", "params": {"arg1": "val1" }, "id": null}
 
           <-- {"jsonrpc": "2.0", "error": {"code": 1, "message": "End user error message.", "data": {"code": "codestring", "debug": "traceback" } }, "id": null}
 
@@ -1914,9 +1914,6 @@ class JsonRPCDispatcher(Dispatcher):
             raise BadRequest("Invalid JSON data") from exc
 
         self.request.params = dict(self.jsonrequest.get('params', {}), **args)
-        ctx = self.request.params.pop('context', None)
-        if ctx is not None and self.request.db:
-            self.request.update_context(**ctx)
 
         if self.request.db:
             result = self.request.registry['ir.http']._dispatch(endpoint)

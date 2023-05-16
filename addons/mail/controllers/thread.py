@@ -61,7 +61,9 @@ class ThreadController(http.Controller):
         return {"attachment_ids", "body", "message_type", "partner_ids", "subtype_xmlid", "parent_id"}
 
     @http.route("/mail/message/post", methods=["POST"], type="json", auth="public")
-    def mail_message_post(self, thread_model, thread_id, post_data):
+    def mail_message_post(self, thread_model, thread_id, post_data, context=None):
+        if context:
+            request.update_context(**context)
         thread = request.env[thread_model]._get_from_request_or_raise(request, int(thread_id))
         if "body" in post_data:
             post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
