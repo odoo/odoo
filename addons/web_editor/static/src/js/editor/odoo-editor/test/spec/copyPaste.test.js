@@ -302,7 +302,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'x    y');
                     },
-                    contentAfter: '<p>abx    y[]cd</p>',
+                    contentAfter: '<p>abx&nbsp; &nbsp; y[]cd</p>',
                 });
             });
             it('should paste a text in a span', async () => {
@@ -362,7 +362,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'x    y');
                     },
-                    contentAfter: '<p>ax    y[]d</p>',
+                    contentAfter: '<p>ax&nbsp; &nbsp; y[]d</p>',
                 });
             });
             it('should paste a text in a span', async () => {
