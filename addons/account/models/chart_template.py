@@ -738,6 +738,10 @@ class AccountChartTemplate(models.AbstractModel):
         assert re.fullmatch(r"[a-z0-9_]+", module)
 
         res = {}
+        module_id = self.env['ir.module.module'].search([('name', '=', module)], limit=1)
+        if module_id and module_id.state == 'uninstalled':
+            _logger.debug("No file %s found for template '%s'", model, module)
+            return res
         for template in self._get_parent_template(template_code)[::-1] or ['']:
             try:
                 with file_open(f"{module}/data/template/{model}{f'-{template}' if template else ''}.csv", 'r') as csv_file:
