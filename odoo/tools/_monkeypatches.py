@@ -1,3 +1,5 @@
+import ast
+import os
 from shutil import copyfileobj
 
 from werkzeug.datastructures import FileStorage
@@ -22,3 +24,17 @@ else:
     xlsx.Element_has_iter = True
 
 FileStorage.save = lambda self, dst, buffer_size=1<<20: copyfileobj(self.stream, dst, buffer_size)
+
+orig_literal_eval = ast.literal_eval
+
+def literal_eval(expr):
+    # limit the size of the expression to avoid segmentation faults
+    # the default limit is set to 100KiB
+    # can be overridden by setting the ODOO_LIMIT_LITEVAL_BUFFER environment variable
+    buffer_size = os.getenv("ODOO_LIMIT_LITEVAL_BUFFER") or 1.024e5
+    if len(expr) > int(buffer_size):
+        raise ValueError("expression can't exceed buffer limit")
+
+    return orig_literal_eval(expr)
+
+ast.literal_eval = literal_eval
