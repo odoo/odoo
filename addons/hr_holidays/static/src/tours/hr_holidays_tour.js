@@ -1,5 +1,6 @@
 /** @odoo-module **/
 import { _t } from 'web.core';
+import "web.legacy_tranlations_loaded";
 
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
