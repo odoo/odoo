@@ -88,7 +88,15 @@ export class Message {
         if (this.type !== "comment") {
             return false;
         }
-        return this.isNote || this.resModel === "discuss.channel";
+        return this.editableInThread;
+    }
+
+    /**
+     * States whether the current message can be edited according to its thread.
+     * @see editable for global editable status
+     */
+    get editableInThread() {
+        return this.isNote;
     }
 
     get dateDay() {
@@ -121,7 +129,7 @@ export class Message {
     }
 
     get isHighlightedFromMention() {
-        return this.isSelfMentioned && this.resModel === "discuss.channel";
+        return false;
     }
 
     get isSelfAuthored() {
@@ -146,7 +154,7 @@ export class Message {
      * @returns {boolean}
      */
     get isNotification() {
-        return this.type === "notification" && this.resModel === "discuss.channel";
+        return false;
     }
 
     get isSubjectSimilarToOriginThreadName() {
