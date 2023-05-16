@@ -4,10 +4,10 @@
       <!-- Top menu item -->
       <menuitem name="Settings"
           id="menu_administration"
-          web_icon="base,static/description/settings.svg"
+          web_icon="base,static/description/settings.png"
           sequence="550"
           groups="base.group_erp_manager"/>
-          <menuitem id="menu_management" name="Apps" sequence="500" web_icon="base,static/description/modules.svg" groups="base.group_system"/>
+          <menuitem id="menu_management" name="Apps" sequence="500" web_icon="base,static/description/modules.png" groups="base.group_system"/>
           <menuitem id="menu_administration_shortcut" parent="menu_administration" name="Custom Shortcuts" sequence="50"/>
           <!-- FYI The group no_one on 'User & Companies' and 'Translations' is a FP/APR request -->
           <menuitem id="menu_users" name="Users &amp; Companies" parent="menu_administration" sequence="1"/>
@@ -24,7 +24,7 @@
               <menuitem id="menu_security" name="Security" parent="menu_custom" sequence="25"/>
               <menuitem id="menu_ir_property" name="Parameters" parent="menu_custom" sequence="24"/>
 
-          <menuitem id="base.menu_tests" name="Tests" sequence="1000" web_icon="test_exceptions,static/description/icon.svg"/>
+          <menuitem id="base.menu_tests" name="Tests" sequence="1000" web_icon="test_exceptions,static/description/icon.png"/>
 
       <record model="ir.ui.menu" id="base.menu_administration">
           <field name="groups_id" eval="[Command.set([ref('group_system'), ref('group_erp_manager')])]"/>
