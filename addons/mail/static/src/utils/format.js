@@ -9,22 +9,12 @@ const urlRegexp =
 
 /**
  * @param rawBody {string}
- * @param validRecords {Object}
- * @param validRecords.partners {Partner}
  */
-export async function prettifyMessageContent(rawBody, validRecords = []) {
+export async function prettifyMessageContent(rawBody) {
     // Suggested URL Javascript regex of http://stackoverflow.com/questions/3809401/what-is-a-good-regular-expression-to-match-a-url
     // Adapted to make http(s):// not required if (and only if) www. is given. So `should.notmatch` does not match.
     // And further extended to include Latin-1 Supplement, Latin Extended-A, Latin Extended-B and Latin Extended Additional.
-    const escapedAndCompactContent = escapeAndCompactTextContent(rawBody);
-    let body = escapedAndCompactContent.replace(/&nbsp;/g, " ").trim();
-    // This message will be received from the mail composer as html content
-    // subtype but the urls will not be linkified. If the mail composer
-    // takes the responsibility to linkify the urls we end up with double
-    // linkification a bit everywhere. Ideally we want to keep the content
-    // as text internally and only make html enrichment at display time but
-    // the current design makes this quite hard to do.
-    body = generateMentionsLinks(body, validRecords);
+    let body = rawBody.replace(/&nbsp;/g, " ").trim();
     body = parseAndTransform(body, addLink);
     body = await _generateEmojisOnHtml(body);
     return body;
@@ -124,65 +114,44 @@ function addLink(node, transformChildren) {
 }
 
 /**
- * Returns an escaped conversion of a content.
- *
- * @param {string} content
- * @returns {string}
- */
-export function escapeAndCompactTextContent(content) {
-    //Removing unwanted extra spaces from message
-    let value = escape(content).trim();
-    value = value.replace(/(\r|\n){2,}/g, "<br/><br/>");
-    value = value.replace(/(\r|\n)/g, "<br/>");
-
-    // prevent html space collapsing
-    value = value.replace(/ /g, "&nbsp;").replace(/([^>])&nbsp;([^<])/g, "$1 $2");
-    return value;
-}
-
-/**
  * @param body {string}
  * @param validRecords {Object}
  * @param validRecords.partners {Array}
  * @return {string}
  */
-function generateMentionsLinks(body, { partners = [], threads = [] }) {
-    const mentions = [];
-    for (const partner of partners) {
-        const placeholder = `@-mention-partner-${partner.id}`;
-        const text = `@${escape(partner.name)}`;
-        mentions.push({
+export function generateMentionLink({ partner = undefined, thread = undefined }) {
+    let mention;
+    let text;
+    if (partner) {
+        text = `@${escape(partner.name)}`;
+        mention = {
             class: "o_mail_redirect",
             id: partner.id,
             model: "res.partner",
-            placeholder,
             text,
-        });
-        body = body.replace(text, placeholder);
-    }
-    for (const thread of threads) {
-        const placeholder = `#-mention-channel-${thread.id}`;
-        const text = `#${escape(thread.displayName)}`;
-        mentions.push({
+        };
+    } else if (thread) {
+        text = `#${escape(thread.displayName)}`;
+        mention = {
             class: "o_channel_redirect",
             id: thread.id,
             model: "discuss.channel",
-            placeholder,
             text,
-        });
-        body = body.replace(text, placeholder);
+        };
     }
     const baseHREF = url("/web");
-    for (const mention of mentions) {
-        const href = `href='${baseHREF}#model=${mention.model}&id=${mention.id}'`;
-        const attClass = `class='${mention.class}'`;
-        const dataOeId = `data-oe-id='${mention.id}'`;
-        const dataOeModel = `data-oe-model='${mention.model}'`;
-        const target = "target='_blank'";
-        const link = `<a ${href} ${attClass} ${dataOeId} ${dataOeModel} ${target}>${mention.text}</a>`;
-        body = body.replace(mention.placeholder, link);
-    }
-    return body;
+    const href = `${baseHREF}#model=${mention.model}&id=${mention.id}`;
+    const attClass = `${mention.class}`;
+    const dataOeId = `${mention.id}`;
+    const dataOeModel = `${mention.model}`;
+    const target = "_blank";
+    return {
+        href: href,
+        class: attClass,
+        "data-oe-id": dataOeId,
+        "data-oe-model": dataOeModel,
+        target: target,
+    };
 }
 
 /**
@@ -195,7 +164,7 @@ async function _generateEmojisOnHtml(htmlString) {
     for (const emoji of emojis) {
         for (const source of [...emoji.shortcodes, ...emoji.emoticons]) {
             const escapedSource = String(source).replace(/([.*+?=^!:${}()|[\]/\\])/g, "\\$1");
-            const regexp = new RegExp("(\\s|^)(" + escapedSource + ")(?=\\s|$)", "g");
+            const regexp = new RegExp("(<[^>]+>|\\s)(" + escapedSource + ")(?=\\s|</[^>]+>)", "g");
             htmlString = htmlString.replace(regexp, "$1" + emoji.codepoints);
         }
     }
@@ -216,13 +185,6 @@ export function htmlToTextContentInline(htmlString) {
         .trim()
         .replace(/[\n\r]/g, "")
         .replace(/\s\s+/g, " ");
-}
-
-export function convertBrToLineBreak(str) {
-    return new DOMParser().parseFromString(
-        str.replaceAll("<br>", "\n").replaceAll("</br>", "\n"),
-        "text/html"
-    ).body.textContent;
 }
 
 export function cleanTerm(term) {

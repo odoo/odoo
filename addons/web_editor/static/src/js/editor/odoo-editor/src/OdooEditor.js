@@ -649,13 +649,14 @@ export class OdooEditor extends EventTarget {
         // -------
         // Toolbar
         // -------
-
-        if (this.options.toolbar) {
+        if (this.options.disableToolbar) {
+            this.toolbar = null;
+        } else if (this.options.toolbar) {
             this.setupToolbar(this.options.toolbar);
         }
         // placeholder hint
         if (editable.textContent === '' && this.options.placeholder) {
-            this._makeHint(editable.firstChild, this.options.placeholder, true);
+            this._makeHint(editable.firstChild, this.options.placeholder, this.options.isPlaceholderHintTemporary);
         }
     }
     /**
@@ -714,7 +715,7 @@ export class OdooEditor extends EventTarget {
         this._toRollback = false;
         // Placeholder hint.
         if (this.editable.textContent === '' && this.options.placeholder) {
-            this._makeHint(this.editable.firstChild, this.options.placeholder, true);
+            this._makeHint(this.editable.firstChild, this.options.placeholder, this.options.isPlaceholderHintTemporary);
         }
     }
 
@@ -3541,7 +3542,7 @@ export class OdooEditor extends EventTarget {
                     }
                 }
             }
-        } else if (ev.key === 'Tab') {
+        } else if (ev.key === 'Tab' && !this.options.disableTabAction) {
             // Tab
             const tabHtml = '<span class="oe-tabs" contenteditable="false">\u0009</span>\u200B';
             const sel = this.document.getSelection();
@@ -4007,14 +4008,16 @@ export class OdooEditor extends EventTarget {
         }
 
         const block = this.options.getPowerboxElement();
-        if (block) {
+        if (this.options.placeholder && this.options.isPlaceholderHintPriority){
+            this._makeHint(block, this.options.placeholder, this.options.isPlaceholderHintTemporary);
+        } else if (block) {
             this._makeHint(block, this.options._t('Type "/" for commands'), true);
         }
 
         // placeholder hint
         const sel = this.document.getSelection();
         if (this.editable.textContent.trim() === '' && this.options.placeholder && this.editable.firstChild && this.editable.firstChild.innerHTML && !this.editable.contains(sel.focusNode)) {
-            this._makeHint(this.editable.firstChild, this.options.placeholder, true);
+            this._makeHint(this.editable.firstChild, this.options.placeholder, this.options.isPlaceholderHintTemporary);
         }
     }
     _makeHint(block, text, temporary = false) {
@@ -4454,7 +4457,7 @@ export class OdooEditor extends EventTarget {
             if (fragment.hasChildNodes()) {
                 this._applyCommand('insert', fragment);
             }
-        } else if ((files.length || clipboardHtml) && targetSupportsHtmlContent) {
+        } else if ((files.length || clipboardHtml) && targetSupportsHtmlContent && !this.options.disbaleImagesOnPaste) {
             const clipboardElem = this._prepareClipboardData(clipboardHtml);
             // When copy pasting a table from the outside, a picture of the
             // table can be included in the clipboard as an image file. In that

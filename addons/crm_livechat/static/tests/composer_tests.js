@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { afterNextRender, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 
 QUnit.module("composer");
@@ -18,9 +18,8 @@ QUnit.test("Can execute lead command", async function (assert) {
         },
     });
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "/lead great lead");
-    await afterNextRender(() => {
-        triggerHotkey("Enter");
-    });
+    await insertText(".o-mail-Composer .odoo-editor-editable", "/lead great lead");
+    triggerHotkey("Enter");
+    triggerHotkey("Enter");
     assert.verifySteps(["execute_command_lead"]);
 });

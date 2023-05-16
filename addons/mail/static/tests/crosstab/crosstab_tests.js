@@ -22,7 +22,7 @@ QUnit.test("Messages are received cross-tab", async (assert) => {
     const tab2 = await start({ asTab: true });
     await tab1.openDiscuss(channelId);
     await tab2.openDiscuss(channelId);
-    await tab1.insertText(".o-mail-Composer-input", "Hello World!");
+    await tab1.insertText(".o-mail-Composer .odoo-editor-editable", "Hello World!");
     await tab1.click("button:contains(Send)");
     assert.containsOnce(tab1.target, ".o-mail-Message:contains(Hello World!)");
     assert.containsOnce(tab2.target, ".o-mail-Message:contains(Hello World!)");

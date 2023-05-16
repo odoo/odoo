@@ -10,17 +10,16 @@ export class Composer {
         threadIds: new Set(),
     };
     /** @type {string} */
-    textInputContent;
+    wysiwygValue = {
+        body: undefined,
+        textContent: undefined,
+    };
+    /** @type {string} */
+    textContent;
     /** @type {import("@mail/core/thread_model").Thread */
     thread;
-    /** @type {{ start: number, end: number, direction: "forward" | "backward" | "none"}}*/
-    selection = {
-        start: 0,
-        end: 0,
-        direction: "none",
-    };
-    /** @type {boolean} */
-    forceCursorMove;
+    /** @type {Range} */
+    range = undefined;
     /** @typedef {'message' | 'note' | false} */
     type;
     /** @type {import("@mail/core/store_service").Store} */
@@ -37,7 +36,10 @@ export class Composer {
             message.composer = this;
         }
         Object.assign(this, {
-            textInputContent: "",
+            wysiwygValue: {
+                body: "<p><br/></p>",
+                textContent: "",
+            },
             type: thread?.type === "chatter" ? false : "message",
             _store: store,
         });

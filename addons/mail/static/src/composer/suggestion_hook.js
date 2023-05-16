@@ -2,6 +2,8 @@
 
 import { useComponent, useEffect, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { generateMentionLink } from "@mail/utils/format";
+import { setCursorEnd } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 
 export function useSuggestion() {
     const comp = useComponent();
@@ -21,48 +23,48 @@ export function useSuggestion() {
             self.state.items = undefined;
         },
         detect() {
-            const selectionEnd = comp.props.composer.selection.end;
-            const selectionStart = comp.props.composer.selection.start;
-            const content = comp.props.composer.textInputContent;
-            if (selectionStart !== selectionEnd) {
+            const range = comp.props.composer.range;
+            if (!range) {
+                return;
+            }
+            if (!range?.collapsed) {
                 // avoid interfering with multi-char selection
                 self.clearSearch();
             }
-            const candidatePositions = [];
+            const candidateRanges = [];
             // keep the current delimiter if it is still valid
-            if (self.search.position !== undefined && self.search.position < selectionStart) {
-                candidatePositions.push(self.search.position);
+            if (self.search.position !== undefined) {
+                candidateRanges.push(self.search.position);
             }
             // consider the char before the current cursor position if the
             // current delimiter is no longer valid (or if there is none)
-            if (selectionStart > 0) {
-                candidatePositions.push(selectionStart - 1);
+            if (range.startOffset > 0) {
+                candidateRanges.push(range);
             }
             const supportedDelimiters = suggestionService.getSupportedDelimiters(
                 comp.props.composer.thread
             );
-            for (const candidatePosition of candidatePositions) {
-                if (candidatePosition < 0 || candidatePosition >= content.length) {
-                    continue;
-                }
-                const candidateChar = content[candidatePosition];
+            const content = range.startContainer.textContent;
+            for (const candidateRange of candidateRanges) {
+                const candidateChar = content[candidateRange.startOffset - 1];
                 if (
                     !supportedDelimiters.find(
                         ([delimiter, allowedPosition]) =>
                             delimiter === candidateChar &&
-                            (allowedPosition === undefined || allowedPosition === candidatePosition)
+                            (allowedPosition === undefined ||
+                                allowedPosition === candidateRange.startOffset - 1)
                     )
                 ) {
                     continue;
                 }
-                const charBeforeCandidate = content[candidatePosition - 1];
+                const charBeforeCandidate = content[candidateRange.startOffset - 2];
                 if (charBeforeCandidate && !/\s/.test(charBeforeCandidate)) {
                     continue;
                 }
                 Object.assign(self.search, {
                     delimiter: candidateChar,
-                    position: candidatePosition,
-                    term: content.substring(candidatePosition + 1, selectionStart),
+                    position: candidateRange,
+                    term: content.substring(candidateRange.startOffset, range.startOffset),
                 });
                 self.state.count++;
                 return;
@@ -73,27 +75,54 @@ export function useSuggestion() {
             inProgress: false,
             rpcFunction: undefined,
         },
-        insert(option) {
-            const cursorPosition = comp.props.composer.selection.start;
-            const content = comp.props.composer.textInputContent;
-            let textLeft = content.substring(0, self.search.position + 1);
-            let textRight = content.substring(cursorPosition, content.length);
-            if (self.search.delimiter === ":") {
-                textLeft = content.substring(0, self.search.position);
-                textRight = content.substring(cursorPosition, content.length);
-            }
-            const recordReplacement = option.label;
+        insert(option, callback = () => {}) {
+            const wysiwyg = comp.wysiwyg;
+            let recordReplacement = option.label;
             if (option.partner) {
                 comp.props.composer.rawMentions.partnerIds.add(option.partner.id);
+                recordReplacement = "@" + recordReplacement;
             }
             if (option.thread) {
                 comp.props.composer.rawMentions.threadIds.add(option.thread.id);
+                recordReplacement = "#" + recordReplacement;
             }
+            if (option.help) {
+                recordReplacement = "/" + recordReplacement;
+            }
+            const replaceRange = new Range();
+            replaceRange.setStart(
+                self.search.position.startContainer,
+                self.search.position.startOffset - 1
+            );
+            replaceRange.setEnd(
+                comp.props.composer.range.startContainer,
+                comp.props.composer.range.startOffset
+            );
+            wysiwyg.odooEditor.historyPauseSteps();
+            replaceRange.deleteContents();
+            if (option.partner || option.thread) {
+                const link = document.createElement("a");
+                link.textContent = recordReplacement;
+                const attrs = generateMentionLink({
+                    partner: option.partner,
+                    thread: option.thread,
+                });
+                for (const [key, value] of Object.entries(attrs)) {
+                    link.setAttribute(key, value);
+                }
+                self.search.position.insertNode(link);
+                const space = document.createTextNode("\u00A0");
+                link.parentNode.insertBefore(space, link.nextSibling);
+                setCursorEnd(space);
+            } else {
+                const text = document.createTextNode(recordReplacement + "\u00A0");
+                self.search.position.insertNode(text);
+                setCursorEnd(text);
+            }
+            wysiwyg.odooEditor.historyUnpauseSteps();
+            wysiwyg.odooEditor.historyStep();
             self.clearSearch();
-            comp.props.composer.textInputContent = textLeft + recordReplacement + " " + textRight;
-            comp.props.composer.selection.start = textLeft.length + recordReplacement.length + 1;
-            comp.props.composer.selection.end = textLeft.length + recordReplacement.length + 1;
-            comp.props.composer.forceCursorMove = true;
+            callback();
         },
         async process(func) {
             if (self.fetch.inProgress) {
@@ -172,11 +201,7 @@ export function useSuggestion() {
         () => {
             self.detect();
         },
-        () => [
-            comp.props.composer.selection.start,
-            comp.props.composer.selection.end,
-            comp.props.composer.textInputContent,
-        ]
+        () => [comp.props.composer.wysiwygValue, comp.props.composer.range]
     );
     return self;
 }

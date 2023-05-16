@@ -168,10 +168,14 @@ const Wysiwyg = Widget.extend({
             _t: _t,
             toolbar: this.toolbar.$el[0],
             document: this.options.document,
+            disableToolbar: !!this.options.disableToolbar,
             autohideToolbar: !!this.options.autohideToolbar,
             isRootEditable: this.options.isRootEditable,
             onPostSanitize: this._setONotEditable.bind(this),
             placeholder: this.options.placeholder,
+            isPlaceholderHintTemporary: this.options.isPlaceholderHintTemporary === undefined ? true : this.options.isPlaceholderHintTemporary,
+            isPlaceholderHintPriority: !!this.options.isPlaceholderHintPriority,
+            disbaleImagesOnPaste: !! this.options.disbaleImagesOnPaste,
             powerboxFilters: this.options.powerboxFilters || [],
             showEmptyElementHint: this.options.showEmptyElementHint,
             controlHistoryFromDocument: this.options.controlHistoryFromDocument,
@@ -232,6 +236,7 @@ const Wysiwyg = Widget.extend({
             renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
             dropImageAsAttachment: options.dropImageAsAttachment,
             foldSnippets: !!options.foldSnippets,
+            disableTabAction: !!options.disableTabAction,
         }, editorCollaborationOptions));
 
         this.odooEditor.addEventListener('contentChanged', function () {
@@ -421,7 +426,7 @@ const Wysiwyg = Widget.extend({
             this._setONotEditable(this.odooEditor.editable);
         });
 
-        if (this.options.autohideToolbar) {
+        if (!this.options.disableToolbar && this.options.autohideToolbar) {
             if (this.odooEditor.isMobile) {
                 $(this.odooEditor.editable).before(this.toolbar.$el);
             } else {
@@ -1029,6 +1034,16 @@ const Wysiwyg = Widget.extend({
     focus: function () {
         if (this.odooEditor && !this.odooEditor.historyResetLatestComputedSelection(true)) {
             // If the editor don't have an history step to focus to,
+            if (this.odooEditor.editable.textContent.trim() === '') {
+                // If the editor is empty, we place the cursor at the beginning of the editor.
+                const range = document.createRange();
+                range.setStart(this.odooEditor.editable, 0);
+                range.collapse(true);
+                const selection = this.odooEditor.document.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+                return;
+            }
             // We place the cursor after the end of the editor exiting content.
             const range = document.createRange();
             const elementToTarget = this.$editable[0].lastElementChild ? this.$editable[0].lastElementChild : this.$editable[0];

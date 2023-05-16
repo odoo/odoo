@@ -27,7 +27,7 @@ QUnit.test('do not send typing notification on typing "/" command', async (asser
         },
     });
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "/");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "/");
     assert.verifySteps([], "No rpc done");
 });
 
@@ -44,9 +44,9 @@ QUnit.test(
             },
         });
         await openDiscuss(channelId);
-        await insertText(".o-mail-Composer-input", "/");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "/");
         await click(".o-mail-Composer-suggestion");
-        await insertText(".o-mail-Composer-input", " is user?");
+        await insertText(".o-mail-Composer .odoo-editor-editable", " is user?");
         assert.verifySteps([], "No rpc done");
     }
 );
@@ -60,16 +60,19 @@ QUnit.test("add an emoji after a command", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
-    assert.strictEqual($(".o-mail-Composer-input").val(), "");
-    await insertText(".o-mail-Composer-input", "/");
+    assert.strictEqual($(".o-mail-Composer .odoo-editor-editable")[0].textContent, "");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "/");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
+        $(".o-mail-Composer .odoo-editor-editable")[0].textContent.replaceAll(/\s/g, " "),
         "/who ",
         "previous content + used command + additional whitespace afterwards"
     );
 
     await click("button[aria-label='Emojis']");
     await click(".o-mail-Emoji:contains(😊)");
-    assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "/who 😊");
+    assert.strictEqual(
+        $(".o-mail-Composer .odoo-editor-editable")[0].textContent.replaceAll(/\s/g, " "),
+        "/who 😊"
+    );
 });
