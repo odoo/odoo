@@ -878,6 +878,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
             leave_2021 = self.env['hr.leave'].with_user(self.user_employee_id).create({
                 'name': 'Holiday Request',
                 'holiday_type': 'employee',
+<<<<<<< HEAD
                 'employee_id': self.employee_emp.id,
                 'holiday_status_id': self.holidays_type_2.id,
                 'date_from': datetime(2021, 8, 9, 0, 0, 0),
@@ -976,6 +977,18 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'date_from': '2020-09-21',
                 'date_to': '2020-09-23',
                 'number_of_days': 3,
+||||||| parent of 7783b19a649 (temp)
+                'employee_id': employee.id,
+                'holiday_status_id': leave_type.id,
+                'date_from': datetime.today() - timedelta(days=1),
+                'date_to': datetime.today() + timedelta(days=1),
+=======
+                'employee_id': employee.id,
+                'holiday_status_id': leave_type.id,
+                'date_from': fields.Date.today(),
+                'date_to': fields.Date.today() + timedelta(days=2),
+                'number_of_days': 2,
+>>>>>>> 7783b19a649 (temp)
             })
 
             # A meeting is only created once the leave is validated
