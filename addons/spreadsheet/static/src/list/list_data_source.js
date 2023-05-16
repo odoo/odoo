@@ -165,6 +165,8 @@ export default class ListDataSource extends OdooViewsDataSource {
                 const properties = record[fieldName] || [];
                 return properties.map((property) => property.string).join(", ");
             }
+            case "json":
+                throw new Error(sprintf(_t('Fields of type "%s" are not supported'), "json"));
             default:
                 return record[fieldName] || "";
         }
