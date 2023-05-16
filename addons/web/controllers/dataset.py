@@ -16,7 +16,9 @@ _logger = logging.getLogger(__name__)
 class DataSet(http.Controller):
 
     @http.route('/web/dataset/search_read', type='json', auth="user")
-    def search_read(self, model, fields=False, offset=0, limit=False, domain=None, sort=None):
+    def search_read(self, model, fields=False, offset=0, limit=False, domain=None, sort=None, context=None):
+        if context:
+            request.update_context(**context)
         return request.env[model].web_search_read(domain, fields, offset=offset, limit=limit, order=sort)
 
     def _call_kw(self, model, method, args, kwargs):
@@ -35,7 +37,7 @@ class DataSet(http.Controller):
         return False
 
     @http.route('/web/dataset/resequence', type='json', auth="user")
-    def resequence(self, model, ids, field='sequence', offset=0):
+    def resequence(self, model, ids, field='sequence', offset=0, context=None):
         """ Re-sequences a number of records in the model, by their ids
 
         The re-sequencing starts at the first model of ``ids``, the sequence
@@ -49,6 +51,8 @@ class DataSet(http.Controller):
                            starting the resequencing from an arbitrary number,
                            defaults to ``0``
         """
+        if context:
+            request.update_context(**context)
         m = request.env[model]
         if not m.fields_get([field]):
             return False

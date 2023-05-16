@@ -10,7 +10,9 @@ from odoo.tools import float_round, float_repr
 
 class LunchController(http.Controller):
     @http.route('/lunch/infos', type='json', auth='user')
-    def infos(self, user_id=None):
+    def infos(self, user_id=None, context=None):
+        if context:
+            request.update_context(**context)
         self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
@@ -36,7 +38,9 @@ class LunchController(http.Controller):
         return infos
 
     @http.route('/lunch/trash', type='json', auth='user')
-    def trash(self, user_id=None):
+    def trash(self, user_id=None, context=None):
+        if context:
+            request.update_context(**context)
         self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
@@ -46,7 +50,9 @@ class LunchController(http.Controller):
         lines.unlink()
 
     @http.route('/lunch/pay', type='json', auth='user')
-    def pay(self, user_id=None):
+    def pay(self, user_id=None, context=None):
+        if context:
+            request.update_context(**context)
         self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
@@ -64,7 +70,9 @@ class LunchController(http.Controller):
         return {'message': request.env['ir.qweb']._render('lunch.lunch_payment_dialog', {})}
 
     @http.route('/lunch/user_location_set', type='json', auth='user')
-    def set_user_location(self, location_id=None, user_id=None):
+    def set_user_location(self, location_id=None, user_id=None, context=None):
+        if context:
+            request.update_context(**context)
         self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 
@@ -72,7 +80,9 @@ class LunchController(http.Controller):
         return True
 
     @http.route('/lunch/user_location_get', type='json', auth='user')
-    def get_user_location(self, user_id=None):
+    def get_user_location(self, user_id=None, context=None):
+        if context:
+            request.update_context(**context)
         self._check_user_impersonification(user_id)
         user = request.env['res.users'].browse(user_id) if user_id else request.env.user
 

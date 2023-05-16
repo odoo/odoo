@@ -109,7 +109,6 @@ class TestTOTP(HttpCase):
                 "db": get_db_name(),
                 "login": "demo",
                 "password": "demo",
-                "context": {},
             },
         }
         response = self.url_open("/web/session/authenticate", data=json.dumps(payload), headers=headers)

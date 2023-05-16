@@ -6,11 +6,15 @@ from odoo.http import request, route, Controller
 class OnboardingController(Controller):
 
     @route('/sales/sale_quotation_onboarding_panel', auth='user', type='json')
-    def sale_quotation_onboarding(self):
+    def sale_quotation_onboarding(self, context=None):
         """ Returns the `banner` for the sale onboarding panel.
             It can be empty if the user has closed it or if he doesn't have
             the permission to see it. """
 
+        # Forward `allowed_company_ids` in the context
+        # so `request.env.company` returns the company selected in the dropdown
+        if context:
+            request.update_context(**context)
         company = request.env.company
         if not request.env.is_admin() or \
            company.sale_quotation_onboarding_state == 'closed':
