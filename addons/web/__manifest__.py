@@ -164,6 +164,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/core/smooth_scroll_on_drag.js',
             'web/static/src/legacy/js/widgets/colorpicker.js',
             'web/static/src/legacy/xml/colorpicker.xml',
+            'web/static/src/legacy/translations_loaded.js',
         ],
         'web.assets_backend': [
             ('include', 'web._assets_helpers'),
@@ -417,6 +418,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/fields/field_utils.js',
 
             ('include', 'web.frontend_legacy'),
+            'web/static/src/legacy/translations_loaded.js',
         ],
         'web.assets_frontend_lazy': [
             ('include', 'web.assets_frontend'),
