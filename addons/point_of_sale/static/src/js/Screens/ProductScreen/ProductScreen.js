@@ -266,7 +266,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                     return;
                 }
             } catch (error) {
-                if (!(error.message instanceof ConnectionLostError)) {
+                if (!(error instanceof ConnectionLostError)) {
                     throw error;
                 }
                 // Reject error in a separate stack to display the offline popup, but continue the flow
