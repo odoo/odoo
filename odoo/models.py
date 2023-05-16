@@ -5651,12 +5651,19 @@ class BaseModel(metaclass=MetaModel):
         :type key: callable | str
         :rtype: dict
         """
-        if isinstance(key, str):
-            key = itemgetter(key)
-
         collator = defaultdict(list)
         for record in self:
-            collator[key(record)].extend(record._ids)
+            k = record.mapped(key)
+            if isinstance(k, list):
+                if len(k) != 1:
+                    # it commonly happens when
+                    # 1. recordset.groupby('one2many_ids.name')
+                    # fix: recordset.grouped(lambda r: r.one2many_ids[0].name)
+                    # 2. recordset.grouped(lambda r: [func1(r), func2(r)])')
+                    # fix: recordset.grouped(lambda r: (func1(r), func2(r)))')
+                    raise ValueError("Cannot groupby on a list of values")
+                k = k[0]
+            collator[k].extend(record._ids)
 
         browse = functools.partial(type(self), self.env, prefetch_ids=self._prefetch_ids)
         return {key: browse(tuple(ids)) for key, ids in collator.items()}

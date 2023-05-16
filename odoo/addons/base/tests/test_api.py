@@ -681,7 +681,7 @@ class TestAPI(SavepointCaseWithUserDemo):
 
         with self.subTest("Should allow cross-group prefetching"):
             byfn = (p0 | p1 | p2).grouped('function')
-            self.env.invalidate_all(flush=False)
+            self.env.invalidate_all()
             self.assertFalse(self.env.cache._data, "ensure the cache is empty")
             self.assertEqual(byfn['guest'].mapped('name'), ['bob', 'rhod'])
             # name should have been prefetched by previous statement (on guest
