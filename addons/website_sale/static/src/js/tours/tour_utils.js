@@ -3,6 +3,7 @@
     import core from "web.core";
     const _t = core._t;
     import wTourUtils from "website.tour_utils";
+    import "web.legacy_tranlations_loaded";
 
     function addToCart({productName, search = true, productHasVariants = false}) {
         const steps = [];

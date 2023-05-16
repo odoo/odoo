@@ -2,6 +2,7 @@
     
     import core from "web.core";
     import wTourUtils from "website.tour_utils";
+    import "web.legacy_tranlations_loaded";
 
     var _t = core._t;
 

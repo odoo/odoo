@@ -54,37 +54,51 @@ import { callWithUnloadCheck } from "./tour_utils";
  * @typedef {"manual" | "auto"} TourMode
  */
 
-/** @type {() => { [k: string]: Tour }} */
-function extractRegisteredTours() {
-    const tours = {};
-    for (const [name, tour] of registry.category("web_tour.tours").getEntries()) {
-        tours[name] = {
-            name: tour.saveAs || name,
-            steps: tour.steps.map((step) => {
-                step.shadow_dom = step.shadow_dom ?? tour.shadow_dom;
-                return step;
-            }),
-            shadow_dom: tour.shadow_dom,
-            url: tour.url,
-            rainbowMan: tour.rainbowMan === undefined ? true : !!tour.rainbowMan,
-            rainbowManMessage: tour.rainbowManMessage,
-            fadeout: tour.fadeout || "medium",
-            sequence: tour.sequence || 1000,
-            test: tour.test,
-            wait_for: tour.wait_for || Promise.resolve(),
-            checkDelay: tour.checkDelay,
-        };
-    }
-    return tours;
-}
-
 export const tourService = {
-    dependencies: ["orm", "effect", "ui"],
+    // localization dependency to make sure translations used by tours are loaded
+    dependencies: ["orm", "effect", "ui", "localization"],
     start: async (_env, { orm, effect, ui }) => {
         await whenReady();
+        await odoo.ready("web.legacy_tranlations_loaded");
+
+        /** @type {{ [k: string]: Tour }} */
+        const tours = {};
+        const tourRegistry = registry.category("web_tour.tours");
+        function register(name, tour) {
+            tours[name] = {
+                name: tour.saveAs || name,
+                get steps() {
+                    return tour.steps.map((step) => {
+                        step.shadow_dom = step.shadow_dom ?? tour.shadow_dom;
+                        return step;
+                    });
+                },
+                shadow_dom: tour.shadow_dom,
+                url: tour.url,
+                rainbowMan: tour.rainbowMan === undefined ? true : !!tour.rainbowMan,
+                rainbowManMessage: tour.rainbowManMessage,
+                fadeout: tour.fadeout || "medium",
+                sequence: tour.sequence || 1000,
+                test: tour.test,
+                wait_for: tour.wait_for || Promise.resolve(),
+                checkDelay: tour.checkDelay,
+            };
+        }
+        for (const [name, tour] of tourRegistry.getEntries()) {
+            register(name, tour);
+        }
+        tourRegistry.addEventListener("UPDATE", ({ detail: { key, value } }) => {
+            if (tourRegistry.contains(key)) {
+                register(key, value);
+                if (tourState.getActiveTourNames().includes(key)) {
+                    resumeTour(key);
+                }
+            } else {
+                delete tours[value];
+            }
+        });
 
         const bus = new EventBus();
-        const tours = extractRegisteredTours();
         const macroEngine = new MacroEngine({ target: document });
         const consumedTours = new Set(session.web_tours);
 
@@ -317,10 +331,6 @@ export const tourService = {
             for (const tourName of tourState.getActiveTourNames()) {
                 if (tourName in tours) {
                     resumeTour(tourName);
-                } else {
-                    // If a tour found in the local storage is not found in the `tours` map,
-                    // then it is an outdated tour state. It should be cleared.
-                    tourState.clear(tourName);
                 }
             }
         }

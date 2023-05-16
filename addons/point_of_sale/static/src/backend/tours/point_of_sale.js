@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { markup } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { stepUtils } from "@web_tour/tour_service/tour_utils";
+import "web.legacy_tranlations_loaded";
 
 registry.category("web_tour.tours").add("point_of_sale_tour", {
     url: "/web",
