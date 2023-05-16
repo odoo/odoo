@@ -119,17 +119,17 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_partner_ids(self, operator, operand):
-        """Search function for message_follower_ids
-
-        Do not use with operator 'not in'. Use instead message_is_followers
-        """
-        # TOFIX make it work with not in
-        assert operator != "not in", "Do not search message_follower_ids with 'not in'"
-        followers = self.env['mail.followers'].sudo().search([
+        """Search function for message_follower_ids"""
+        neg = ''
+        if operator in expression.NEGATIVE_TERM_OPERATORS:
+            neg = 'not '
+            operator = expression.TERM_OPERATORS_NEGATION[operator]
+        followers = self.env['mail.followers'].sudo()._search([
             ('res_model', '=', self._name),
-            ('partner_id', operator, operand)])
-        # using read() below is much faster than followers.mapped('res_id')
-        return [('id', 'in', [res['res_id'] for res in followers.read(['res_id'])])]
+            ('partner_id', operator, operand),
+        ])
+        # use inselect to avoid reading thousands of potentially followed objects
+        return [('id', neg + 'inselect', followers.subselect('res_id'))]
 
     @api.depends('message_follower_ids')
     def _compute_message_is_follower(self):
