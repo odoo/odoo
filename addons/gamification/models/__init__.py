@@ -9,4 +9,5 @@ from . import gamification_goal
 from . import gamification_goal_definition
 from . import gamification_karma_rank
 from . import gamification_karma_tracking
+from . import ir_http
 from . import res_users

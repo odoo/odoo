@@ -5,7 +5,7 @@ from odoo.tests import tagged
 @tagged("post_install", "-at_install")
 class TestPerformance(TestWebLogin):
     def test_web_login(self):
-        with self.assertQueryCount(174):  # com: 151 ; ent: 174 ; local gamification only: 126
+        with self.assertQueryCount(184):  # com: 161 ; ent: 184 ; local gamification only: 134
             try:
                 super().test_web_login()
             except AssertionError:
@@ -13,7 +13,7 @@ class TestPerformance(TestWebLogin):
                 pass
 
     def test_web_login_external(self):
-        with self.assertQueryCount(262):  # com: 250 ; ent: 262 ; local gamification only: 110
+        with self.assertQueryCount(271):  # com: 260 ; ent: 271 ; local gamification only: 117
             try:
                 super().test_web_login_external()
             except AssertionError:

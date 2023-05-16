@@ -1671,6 +1671,7 @@ class HttpCase(TransactionCase):
             session.login = user
             session.session_token = uid and security.compute_session_token(session, env)
             session.context = dict(env['res.users'].context_get())
+            session.no_interactions_log_until_timestamp = int(datetime.now().timestamp()) + 28_800  # 8 hours
 
         odoo.http.root.session_store.save(session)
         # Reset the opener: turns out when we set cookies['foo'] we're really

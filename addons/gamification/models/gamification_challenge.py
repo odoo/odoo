@@ -8,7 +8,8 @@ from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta, MO
 from markupsafe import Markup
 
-from odoo import api, models, fields, _, exceptions
+from odoo import _, api, exceptions, fields, models, tools
+from odoo.http import SESSION_LIFETIME
 from odoo.tools import ustr
 
 _logger = logging.getLogger(__name__)
@@ -270,20 +271,24 @@ class Challenge(models.Model):
         Goals = self.env['gamification.goal']
 
         # include yesterday goals to update the goals that just ended
-        # exclude goals for portal users that did not connect since the last update
+        # exclude goals for users that have not been active (interacted with
+        # the webclient) since the last update.
         yesterday = fields.Date.to_string(date.today() - timedelta(days=1))
         self.env.cr.execute("""SELECT gg.id
                         FROM gamification_goal as gg
                         JOIN res_users_log as log ON gg.user_id = log.create_uid
-                        JOIN res_users ru on log.create_uid = ru.id
-                       WHERE (gg.write_date < log.create_date OR ru.share IS NOT TRUE)
-                         AND ru.active IS TRUE
+                       WHERE gg.write_date <= log.last_interacted_date
+                         AND log.last_interacted_date >= now() AT TIME ZONE 'UTC' - interval '%(session_lifetime)s seconds'
                          AND gg.closed IS NOT TRUE
-                         AND gg.challenge_id IN %s
+                         AND gg.challenge_id IN %(challenge_ids)s
                          AND (gg.state = 'inprogress'
-                              OR (gg.state = 'reached' AND gg.end_date >= %s))
+                              OR (gg.state = 'reached' AND gg.end_date >= %(yesterday)s))
                       GROUP BY gg.id
-        """, [tuple(self.ids), yesterday])
+        """, {
+            'session_lifetime': SESSION_LIFETIME,
+            'challenge_ids': tuple(self.ids),
+            'yesterday': yesterday
+        })
 
         Goals.browse(goal_id for [goal_id] in self.env.cr.fetchall()).update_goal()
 
@@ -644,6 +649,18 @@ class Challenge(models.Model):
         sudoed = self.sudo()
         sudoed.message_post(body=_("%s has refused the challenge", user.name))
         return sudoed.write({'invited_user_ids': (3, user.id)})
+
+    @api.model
+    @tools.ormcache()
+    def _get_cron_update_interval_or_default(self):
+        """Return interval in seconds between cron updates of challenges goals (data-provided cron).
+
+        Returns 86_400 if cron record was not found (= 1 day, default interval for this cron).
+        """
+        if not (cron_sudo := self.sudo().env.ref("gamification.ir_cron_check_challenge", raise_if_not_found=False)):
+            return 86_400
+
+        return timedelta(**{cron_sudo.interval_type: cron_sudo.interval_number}).total_seconds()
 
     def _check_challenge_reward(self, force=False):
         """Actions for the end of a challenge

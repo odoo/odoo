@@ -4,6 +4,12 @@
 from odoo import _, api, fields, models
 
 
+class ResUsersLog(models.Model):
+    _inherit = 'res.users.log'
+
+    last_interacted_date = fields.Datetime('Last interacted', default=fields.Datetime.now)
+
+
 class Users(models.Model):
     _inherit = 'res.users'
 
@@ -15,6 +21,7 @@ class Users(models.Model):
     bronze_badge = fields.Integer('Bronze badges count', compute="_get_user_badge_level")
     rank_id = fields.Many2one('gamification.karma.rank', 'Rank')
     next_rank_id = fields.Many2one('gamification.karma.rank', 'Next Rank')
+    last_interacted_date = fields.Datetime(related='log_ids.last_interacted_date', string='Last active', readonly=False)
 
     @api.depends('karma_tracking_ids.new_value')
     def _compute_karma(self):
@@ -367,3 +374,13 @@ WHERE sub.user_id IN %%s""" % {
                 'search_default_user_id': self.id,
             },
         }
+
+    def _update_last_interacted(self):
+        """Log that a non-public user just interacted with the application.
+
+        Does nothing if on a public user or if the user doesn't yet have any login record.
+        """
+        self.ensure_one()
+        if self._is_public() or not self.login_date:  # no res_users_log record
+            return
+        self.last_interacted_date = self.env.cr.now()
