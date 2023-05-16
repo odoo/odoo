@@ -476,8 +476,8 @@ class AccountEdiFormat(models.Model):
             "qtyUnit": line.product_id.uom_id.l10n_in_code and line.product_id.uom_id.l10n_in_code.split("-")[0] or "OTH",
             "taxableAmount": self._l10n_in_round_value(line.balance * sign),
         }
-        if tax_details_by_code.get("igst_rate"):
-            line_details.update({"igstRate": self._l10n_in_round_value(tax_details_by_code["igst_rate"])})
+        if tax_details_by_code.get("igst_rate") or (line.move_id.l10n_in_state_id.l10n_in_tin != line.company_id.state_id.l10n_in_tin):
+            line_details.update({"igstRate": self._l10n_in_round_value(tax_details_by_code.get("igst_rate", 0.00))})
         else:
             line_details.update({
                 "cgstRate": self._l10n_in_round_value(tax_details_by_code.get("cgst_rate", 0.00)),
