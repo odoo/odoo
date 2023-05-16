@@ -45,7 +45,8 @@ class StockBackorderConfirmation(models.TransientModel):
                                  move.quantity_done,
                                  precision_rounding=move.product_uom.rounding) > 0:
                     moves_to_log[move] = (move.quantity_done, move.product_uom_qty)
-            pick_id._log_less_quantities_than_expected(moves_to_log)
+            if moves_to_log:
+                pick_id._log_less_quantities_than_expected(moves_to_log)
 
     def process(self):
         pickings_to_do = self.env['stock.picking']
