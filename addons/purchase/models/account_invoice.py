@@ -65,7 +65,7 @@ class AccountMove(models.Model):
             )
 
         # Compute invoice_origin.
-        origins = set(self.line_ids.mapped('purchase_line_id.order_id.name'))
+        origins = set(self.invoice_line_ids.mapped('purchase_line_id.order_id.name'))
         self.invoice_origin = ','.join(list(origins))
 
         # Compute ref.
