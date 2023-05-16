@@ -19,14 +19,14 @@ class ResConfigSettings(models.TransientModel):
     income_currency_exchange_account_id = fields.Many2one(
         comodel_name="account.account",
         related="company_id.income_currency_exchange_account_id",
-        string="Gain Account",
+        string="Gain Exchange Rate Account",
         readonly=False,
         domain="[('deprecated', '=', False), ('company_id', '=', company_id),\
                 ('account_type', 'in', ('income', 'income_other'))]")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name="account.account",
         related="company_id.expense_currency_exchange_account_id",
-        string="Loss Account",
+        string="Loss Exchange Rate Account",
         readonly=False,
         domain="[('deprecated', '=', False), ('company_id', '=', company_id),\
                 ('account_type', '=', 'expense')]")
@@ -38,7 +38,7 @@ class ResConfigSettings(models.TransientModel):
         related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method', readonly=False)
     account_journal_suspense_account_id = fields.Many2one(
         comodel_name='account.account',
-        string='Bank Suspense Account',
+        string='Bank Suspense',
         readonly=False,
         related='company_id.account_journal_suspense_account_id',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'in', ('asset_current', 'liability_current'))]",
@@ -47,7 +47,7 @@ class ResConfigSettings(models.TransientModel):
              'Reconciliation replaces the latter by the definitive account(s).')
     account_journal_payment_debit_account_id = fields.Many2one(
         comodel_name='account.account',
-        string='Outstanding Receipts Account',
+        string='Outstanding Receipts',
         readonly=False,
         related='company_id.account_journal_payment_debit_account_id',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', '=', 'asset_current')]",
@@ -57,14 +57,14 @@ class ResConfigSettings(models.TransientModel):
              'Account.')
     account_journal_payment_credit_account_id = fields.Many2one(
         comodel_name='account.account',
-        string='Outstanding Payments Account',
+        string='Outstanding Payments',
         readonly=False,
         related='company_id.account_journal_payment_credit_account_id',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', '=', 'asset_current')]",
         help='Outgoing Payments are posted on an Outstanding Payments Account. '
              'In the bank reconciliation widget, they appear as blue lines.\n'
              'Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account.')
-    transfer_account_id = fields.Many2one('account.account', string="Internal Transfer Account",
+    transfer_account_id = fields.Many2one('account.account', string="Internal Transfer",
         related='company_id.transfer_account_id', readonly=False,
         domain="[('reconcile', '=', True), ('account_type', '=', 'asset_current')]",
         help="Intermediary account used when moving from a liquidity account to another.")
@@ -146,7 +146,7 @@ class ResConfigSettings(models.TransientModel):
 
     account_journal_early_pay_discount_loss_account_id = fields.Many2one(
         comodel_name='account.account',
-        string='Cash Discount Loss account',
+        string='Cash Discount Loss',
         help='Account for the difference amount after the expense discount has been granted',
         readonly=False,
         related='company_id.account_journal_early_pay_discount_loss_account_id',
@@ -154,7 +154,7 @@ class ResConfigSettings(models.TransientModel):
     )
     account_journal_early_pay_discount_gain_account_id = fields.Many2one(
         comodel_name='account.account',
-        string='Cash Discount Gain account',
+        string='Cash Discount Gain',
         help='Account for the difference amount after the income discount has been granted',
         readonly=False,
         related='company_id.account_journal_early_pay_discount_gain_account_id',
