@@ -119,6 +119,22 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         assert.strictEqual(getEvaluatedCell(model, "G3").format, "[$$]#,##0.00");
     });
 
+    QUnit.test("Json fields are not supported in list formulas", async function (assert) {
+        const { model } = await createSpreadsheetWithList({
+            columns: ["foo", "jsonField"],
+            linesNumber: 2,
+        });
+        setCellContent(model, "A1", `=ODOO.LIST(1,1,"foo")`);
+        setCellContent(model, "A2", `=ODOO.LIST(1,1,"jsonField")`);
+        await waitForDataSourcesLoaded(model);
+        assert.strictEqual(getEvaluatedCell(model, "A1").value, 12);
+        assert.strictEqual(getEvaluatedCell(model, "A2").value, "#ERROR");
+        assert.strictEqual(
+            getEvaluatedCell(model, "A2").error.message,
+            `Fields of type "json" are not supported`
+        );
+    });
+
     QUnit.test("can select a List from cell formula", async function (assert) {
         const { model } = await createSpreadsheetWithList();
         const sheetId = model.getters.getActiveSheetId();
