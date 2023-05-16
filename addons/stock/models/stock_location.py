@@ -431,6 +431,14 @@ class Route(models.Model):
         if not self.warehouse_selectable:
             self.warehouse_ids = [(5, 0, 0)]
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_stock_route_data(self):
+        external_ids = self.get_external_id()
+        for route in self:
+            external_id = external_ids.get(route.id)
+            if external_id and not external_id.startswith('__export__'):
+                raise UserError(_("You cannot delete route %s; archive it instead.", route.name))
+
     def toggle_active(self):
         for route in self:
             route.with_context(active_test=False).rule_ids.filtered(lambda ru: ru.active == route.active).toggle_active()
