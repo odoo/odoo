@@ -27,6 +27,15 @@ export class RecordsSelector extends Component {
         }));
     }
 
+    onKeydown(ev) {
+        if (this.props.resIds.length === 0) {
+            return;
+        }
+        if (ev.key.toUpperCase() === "BACKSPACE") {
+            this.removeRecord(this.props.resIds[this.props.resIds.length - 1]);
+        }
+    }
+
     searchDomain() {
         return Domain.not([["id", "in", this.props.resIds]]).toList();
     }

@@ -10,6 +10,7 @@ import {
 import { getDashboardServerData } from "../utils/data";
 import { getBasicData, getBasicListArchs } from "@spreadsheet/../tests/utils/data";
 import { createSpreadsheetDashboard } from "../utils/dashboard_action";
+import { keyDown } from "@spreadsheet/../tests/utils/ui";
 
 QUnit.module("spreadsheet_dashboard > Dashboard > Dashboard action");
 
@@ -190,3 +191,28 @@ QUnit.test(
         assert.equal(year.placeholder, "Select year...");
     }
 );
+
+QUnit.test("Can delete record tag in the filter by hitting Backspace", async function (assert) {
+    const spreadsheetData = {
+        globalFilters: [
+            {
+                id: "1",
+                type: "relation",
+                label: "Relation Filter",
+                modelName: "product",
+                defaultValue: [37],
+                automaticDefaultValue: true,
+            },
+        ],
+    };
+    const serverData = getServerData(spreadsheetData);
+    const fixture = getFixture();
+    await createSpreadsheetDashboard({ serverData });
+    const filter = fixture.querySelector(".o_control_panel_actions div.o_field_tags");
+    const autoCompleteInput = filter.querySelector(".o-autocomplete--input.o_input");
+    assert.equal(filter.querySelectorAll(".o_tag").length, 1);
+
+    autoCompleteInput.focus();
+    await keyDown({ key: "Backspace" });
+    assert.equal(filter.querySelectorAll(".o_tag").length, 0);
+});

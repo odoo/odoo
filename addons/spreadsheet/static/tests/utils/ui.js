@@ -2,7 +2,7 @@
 
 import { Spreadsheet } from "@odoo/o-spreadsheet";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
-import { getFixture } from "@web/../tests/helpers/utils";
+import { getFixture, nextTick } from "@web/../tests/helpers/utils";
 import { loadJS, templates } from "@web/core/assets";
 
 import { App } from "@odoo/owl";
@@ -47,4 +47,10 @@ function getMenuItem(registry, _path, env) {
         items = item.children(env);
     }
     throw new Error(`Menu item not found`);
+}
+
+export async function keyDown(eventArgs) {
+    const ev = new KeyboardEvent("keydown", { bubbles: true, cancelable: true, ...eventArgs });
+    document.activeElement.dispatchEvent(ev);
+    return await nextTick();
 }
