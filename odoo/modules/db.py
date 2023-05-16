@@ -35,9 +35,6 @@ def initialize(cr):
         cr.execute(base_sql_file.read())  # pylint: disable=sql-injection
 
     for i in odoo.modules.get_modules():
-        mod_path = odoo.modules.get_module_path(i)
-        if not mod_path:
-            continue
 
         # This will raise an exception if no/unreadable descriptor file.
         info = odoo.modules.get_manifest(i)
