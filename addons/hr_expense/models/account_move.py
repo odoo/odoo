@@ -46,7 +46,7 @@ class AccountMove(models.Model):
     def _compute_payment_state(self):
         company_paid = self.filtered(lambda m: m.expense_sheet_id.payment_mode == 'company_account')
         for move in company_paid:
-            move.payment_state = move._get_invoice_in_payment_state()
+            move.payment_state = 'paid'
         super(AccountMove, self - company_paid)._compute_payment_state()
 
     @api.depends('expense_sheet_id')

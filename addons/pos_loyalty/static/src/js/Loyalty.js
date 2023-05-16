@@ -1418,8 +1418,12 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                     }
                     return result;
                 }, 0)
-                const correction = shouldCorrectRemainingPoints ? this._getPointsCorrection(reward.program_id) : 0
-                freeQty = computeFreeQuantity((remainingPoints - correction) / factor, reward.required_points / factor, reward.reward_product_qty);
+                if (factor === 0) {
+                    freeQty = Math.floor((remainingPoints / reward.required_points) * reward.reward_product_qty);
+                } else {
+                    const correction = shouldCorrectRemainingPoints ? this._getPointsCorrection(reward.program_id) : 0
+                    freeQty = computeFreeQuantity((remainingPoints - correction) / factor, reward.required_points / factor, reward.reward_product_qty);
+                }
             } else {
                 freeQty = Math.floor((remainingPoints / reward.required_points) * reward.reward_product_qty);
             }
