@@ -4513,7 +4513,10 @@ class BaseModel(metaclass=MetaModel):
                 domain = [(self._active_name, '=', 1)] + domain
 
         if domain:
-            return expression.expression(domain, self).query
+            try:
+                return expression.expression(domain, self).query
+            except ValueError as e:
+                raise UserError(str(e))
         else:
             return Query(self.env.cr, self._table, self._table_query)
 
