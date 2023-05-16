@@ -2354,12 +2354,12 @@ export class OdooEditor extends EventTarget {
         const selection = this.document.getSelection();
         // Selection could be gone if the document comes from an iframe that has been removed.
         const anchorNode = selection && selection.rangeCount && selection.getRangeAt(0) && selection.anchorNode;
-        if (isProtected(anchorNode) || !ancestors(anchorNode).includes(this.editable)) {
+        if (anchorNode && !ancestors(anchorNode).includes(this.editable)) {
             return false;
         }
         this.deselectTable();
         const traversedNodes = getTraversedNodes(this.editable);
-        if (this._isResizingTable || !traversedNodes.some(node => !!closestElement(node, 'td'))) {
+        if (this._isResizingTable || !traversedNodes.some(node => !!closestElement(node, 'td') && !isProtected(node))) {
             return false;
         }
         let range;
@@ -2385,15 +2385,21 @@ export class OdooEditor extends EventTarget {
         const startTable = ancestors(range.startContainer, this.editable).filter(node => node.nodeName === 'TABLE').pop();
         const endTable = ancestors(range.endContainer, this.editable).filter(node => node.nodeName === 'TABLE').pop();
         if (startTd !== endTd && startTable === endTable) {
-            // The selection goes through at least two different cells -> select
-            // cells.
-            this._selectTableCells(range);
-            appliedCustomSelection = true;
+            if (!isProtected(startTable)) {
+                // The selection goes through at least two different cells ->
+                // select cells.
+                this._selectTableCells(range);
+                appliedCustomSelection = true;
+            }
         } else if (!traversedNodes.every(node => node.parentElement && closestElement(node.parentElement, 'table'))) {
             // The selection goes through a table but also outside of it ->
             // select the whole table.
             this.observerUnactive('handleSelectionInTable');
-            const traversedTables = new Set(traversedNodes.map(node => closestElement(node, 'table')));
+            const traversedTables = new Set(
+                traversedNodes
+                    .map((node) => closestElement(node, "table"))
+                    .filter((node) => !isProtected(node))
+            );
             for (const table of traversedTables) {
                 // Don't apply several nested levels of selection.
                 if (table && !ancestors(table, this.editable).some(node => [...traversedTables].includes(node))) {
@@ -2405,10 +2411,10 @@ export class OdooEditor extends EventTarget {
                 }
             }
             this.observerActive('handleSelectionInTable');
-        } else if (ev) {
+        } else if (ev && startTd && !isProtected(startTd)) {
             // We're redirected from a mousemove event.
             const selectedNodes = getSelectedNodes(this.editable);
-            const areCellContentsFullySelected = !!startTd && descendants(startTd).filter(d => !isBlock(d)).every(child => selectedNodes.includes(child));
+            const areCellContentsFullySelected = descendants(startTd).filter(d => !isBlock(d)).every(child => selectedNodes.includes(child));
             if (areCellContentsFullySelected) {
                 const SENSITIVITY = 5;
                 const rangeRect = range.getBoundingClientRect();
@@ -3693,9 +3699,6 @@ export class OdooEditor extends EventTarget {
             return;
         }
         const anchorNode = selection.anchorNode;
-        if (isProtected(anchorNode)) {
-            return;
-        }
         // Correct cursor if at editable root.
         if (
             selection.isCollapsed &&
