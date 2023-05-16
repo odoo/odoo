@@ -159,7 +159,7 @@ class CustomerPortal(portal.CustomerPortal):
             session_obj_date = request.session.get('view_quote_%s' % order_sudo.id)
             if session_obj_date != now and request.env.user.share and access_token:
                 request.session['view_quote_%s' % order_sudo.id] = now
-                body = _('Quotation viewed by customer %s', order_sudo.partner_id.name)
+                body = _('Quotation viewed by customer %s', order_sudo.partner_id.name if request.env.user._is_public() else request.env.user.partner_id.name)
                 _message_post_helper(
                     "sale.order",
                     order_sudo.id,
