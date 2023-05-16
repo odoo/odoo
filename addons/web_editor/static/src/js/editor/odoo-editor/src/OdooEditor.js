@@ -4010,8 +4010,16 @@ export class OdooEditor extends EventTarget {
 
     _fixSelectionOnContenteditableFalse() {
         const selection = this.document.getSelection();
-        const anchorNode = selection.anchorNode;
+        const { anchorNode, anchorOffset } = selection;
+        const selectedPositionNode = anchorNode && anchorNode.nodeType === Node.ELEMENT_NODE &&
+            anchorNode.childNodes[anchorOffset];
         if (isProtected(anchorNode)) {
+            if (!(
+                selectedPositionNode && selectedPositionNode.nodeType === Node.ELEMENT_NODE &&
+                ['INPUT', 'TEXTAREA'].includes(selectedPositionNode.tagName)
+            )) {
+                selection.removeAllRanges();
+            }
             return;
         }
         // When the browser set the selection inside a node that is
