@@ -226,16 +226,22 @@ export class TicketScreen extends IndependentToOrderScreen {
     async onDoRefund() {
         const order = this.getSelectedSyncedOrder();
 
+<<<<<<< HEAD
         if (order && this._doesOrderHaveSoleItem(order)) {
+||||||| parent of a514fa36ef2 (temp)
+        if (this._doesOrderHaveSoleItem(order)) {
+=======
+        if (!order) {
+            this._state.ui.highlightHeaderNote = !this._state.ui.highlightHeaderNote;
+            return;
+        }
+
+        if (this._doesOrderHaveSoleItem(order)) {
+>>>>>>> a514fa36ef2 (temp)
             if (!this._prepareAutoRefundOnOrder(order)) {
                 // Don't proceed on refund if preparation returned false.
                 return;
             }
-        }
-
-        if (!order) {
-            this._state.ui.highlightHeaderNote = !this._state.ui.highlightHeaderNote;
-            return;
         }
 
         const partner = order.get_partner();
