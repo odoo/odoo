@@ -1224,23 +1224,28 @@ class AccountMove(models.Model):
             )
         )
         self = self.sorted(lambda m: (m.date, m.ref or '', m.id))
-        highest_name = self[0]._get_last_sequence(lock=False) if self else False
 
         # Group the moves by journal and month
         for move in self:
-            if not highest_name and move == self[0] and not move.posted_before and move.date:
-                # In the form view, we need to compute a default sequence so that the user can edit
-                # it. We only check the first move as an approximation (enough for new in form view)
-                pass
-            elif (move.name and move.name != '/') or move.state != 'posted':
+            move_has_name = move.name and move.name != '/'
+            if move_has_name or move.state != 'posted':
                 try:
                     if not move.posted_before:
+                        # The move was never posted, so the name can potentially be changed.
                         move._constrains_date_sequence()
-                    # Has already a name or is not posted, we don't add to a batch
-                    continue
+                    # Either the move was posted before, or the name already matches the date.
+                    # We can skip recalculating the name when either
+                    # - the move was posted before and already has a name, or
+                    # - the move has no name, but is in a period with other moves (so name should be `/`)
+                    if move_has_name and move.posted_before or not move_has_name and move._get_last_sequence(lock=False):
+                        continue
                 except ValidationError:
-                    # Has never been posted and the name doesn't match the date: recompute it
-                    pass
+                    # The move was never posted and the current name doesn't match the date. We should calculate the
+                    # name later on, unless ...
+                    if move._get_last_sequence(lock=False):
+                        # ... we are in a period already containing moves: reset the name to `/` (draft)
+                        move.name = '/'
+                        continue
             group = grouped[journal_key(move)][date_key(move)]
             if not group['records']:
                 # Compute all the values needed to sequence this whole group
