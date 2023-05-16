@@ -913,8 +913,9 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'holiday_type': 'employee',
                 'employee_id': employee.id,
                 'holiday_status_id': leave_type.id,
-                'date_from': datetime.today() - timedelta(days=1),
-                'date_to': datetime.today() + timedelta(days=1),
+                'date_from': fields.Date.today(),
+                'date_to': fields.Date.today() + timedelta(days=2),
+                'number_of_days': 2,
             })
 
             if leave_validation_type in ('manager', 'both'):
