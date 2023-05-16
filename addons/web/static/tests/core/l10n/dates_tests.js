@@ -311,6 +311,24 @@ QUnit.module(
             unpatch(localization, "patch loc");
         });
 
+        QUnit.test("parseDateTime with escaped characters (eg. Basque locale)", async (assert) => {
+            const dateFormat = strftimeToLuxonFormat("%a, %Y.eko %bren %da");
+            const timeFormat = strftimeToLuxonFormat("%H:%M:%S");
+            patch(localization, "patch loc", {
+                dateFormat,
+                timeFormat,
+                dateTimeFormat: `${dateFormat} ${timeFormat}`,
+            });
+
+            const dateTimeFormat = `${dateFormat} ${timeFormat}`;
+            assert.equal(dateTimeFormat, "ccc, yyyy.'e''k''o' MMM'r''e''n' dd'a' HH:mm:ss");
+            assert.equal(
+                parseDateTime("1985-01-31 08:30:00").toFormat(dateTimeFormat),
+                "Thu, 1985.eko Janren 31a 08:30:00"
+            );
+            unpatch(localization, "patch loc");
+        });
+
         QUnit.test("parse smart date input", async (assert) => {
             const format = "dd MM yyyy";
             assert.strictEqual(
