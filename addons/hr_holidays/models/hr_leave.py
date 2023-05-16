@@ -10,6 +10,8 @@ from collections import namedtuple, defaultdict
 
 from datetime import datetime, timedelta, time
 from pytz import timezone, UTC
+
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.tools import date_utils
 
 from odoo import api, Command, fields, models, tools
@@ -1056,6 +1058,9 @@ class HolidaysRequest(models.Model):
                 raise UserError(error_message % (state_description_values.get(holiday.state),))
 
     def unlink(self):
+        self._force_cancel(_("deleted by %s (uid=%d).",
+            self.env.user.display_name, self.env.user.id
+        ))
         return super(HolidaysRequest, self.with_context(leave_skip_date_check=True)).unlink()
 
     def copy_data(self, default=None):
@@ -1417,7 +1422,8 @@ class HolidaysRequest(models.Model):
 
     def _force_cancel(self, reason, msg_subtype='mail.mt_comment'):
         leave_names = self.name_get()
-        for leave in self:
+        recs = self.browse() if self.env.context.get(MODULE_UNINSTALL_FLAG) else self
+        for leave in recs:
             leave.message_post(
                 body=_('The time off has been canceled: %s', reason),
                 subtype_xmlid=msg_subtype
