@@ -39,7 +39,9 @@ class Action(Controller):
         return value
 
     @route('/web/action/run', type='json', auth="user")
-    def run(self, action_id):
+    def run(self, action_id, context=None):
+        if context:
+            request.update_context(**context)
         action = request.env['ir.actions.server'].browse([action_id])
         result = action.run()
         return clean_action(result, env=action.env) if result else False

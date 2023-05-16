@@ -9,10 +9,12 @@ from odoo.http import request
 
 class OnboardingController(http.Controller):
     @http.route('/onboarding/<string:route_name>', auth='user', type='json')
-    def get_onboarding_data(self, route_name=None):
+    def get_onboarding_data(self, route_name=None, context=None):
         if not request.env.user.has_group('base.group_system'):
             return {}
 
+        if context:
+            request.update_context(**context)
         onboarding = request.env['onboarding.onboarding'].search([('route_name', '=', route_name)])
         if onboarding:
             try:
