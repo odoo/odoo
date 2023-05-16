@@ -192,16 +192,16 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
         async _onDoRefund() {
             const order = this.getSelectedSyncedOrder();
 
+            if (!order) {
+                this._state.ui.highlightHeaderNote = !this._state.ui.highlightHeaderNote;
+                return;
+            }
+            
             if (this._doesOrderHaveSoleItem(order)) {
                 if (!this._prepareAutoRefundOnOrder(order)) {
                     // Don't proceed on refund if preparation returned false.
                     return;
                 }
-            }
-
-            if (!order) {
-                this._state.ui.highlightHeaderNote = !this._state.ui.highlightHeaderNote;
-                return;
             }
 
             const partner = order.get_partner();
