@@ -293,7 +293,7 @@ export class FloorScreen extends Component {
                 try {
                     await this.env.pos.setTable(table);
                 } catch (e) {
-                    if (!(e.message instanceof ConnectionLostError)) {
+                    if (!(e instanceof ConnectionLostError)) {
                         throw e;
                     }
                     // Reject error in a separate stack to display the offline popup, but continue the flow
