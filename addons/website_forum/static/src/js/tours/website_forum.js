@@ -3,6 +3,7 @@ odoo.define("website_forum.tour_forum", function (require) {
 
     var core = require("web.core");
     const wTourUtils = require('website.tour_utils');
+    require("web.legacy_tranlations_loaded");
 
     var _t = core._t;
 

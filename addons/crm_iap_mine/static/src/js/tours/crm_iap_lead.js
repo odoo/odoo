@@ -4,6 +4,7 @@ odoo.define('crm_iap_mine.generate_leads_steps', function (require) {
 const { registry } = require("@web/core/registry");
 const {Markup} = require('web.utils');
 var core = require('web.core');
+require("web.legacy_tranlations_loaded");
 
 require('@crm/js/tours/crm');
 var _t = core._t;

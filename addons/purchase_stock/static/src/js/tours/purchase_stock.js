@@ -2,6 +2,7 @@ odoo.define('purchase_stock.purchase_steps', function (require) {
 "use strict";
 
 var core = require('web.core');
+require("web.legacy_tranlations_loaded");
 
 var _t = core._t;
 var PurchaseAdditionalTourSteps = require('purchase.purchase_steps');

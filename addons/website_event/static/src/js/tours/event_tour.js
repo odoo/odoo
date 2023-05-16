@@ -2,6 +2,7 @@ odoo.define('website_event.event_steps', function (require) {
 "use strict";
 
 const {_t} = require('web.core');
+require("web.legacy_tranlations_loaded");
 const {Markup} = require('web.utils');
 
 var EventAdditionalTourSteps = require('event.event_steps');

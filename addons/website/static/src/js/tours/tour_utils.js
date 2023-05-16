@@ -2,6 +2,7 @@ odoo.define("website.tour_utils", function (require) {
 "use strict";
 
 const {_t} = require("web.core");
+require("web.legacy_tranlations_loaded");
 const {Markup} = require('web.utils');
 const { registry } = require("@web/core/registry");
 
