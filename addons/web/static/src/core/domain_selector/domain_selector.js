@@ -247,7 +247,8 @@ export class DomainSelector extends Component {
                 this.applyLeafValueUdate();
                 this.notifyChanges();
             }
-        }, 90);
+        }, 0); // principle not good (for any number chosen). There seems to be
+        // a problem with the fact that DomainSelector does not manage a state.
     }
 
     isExprValue(value) {
