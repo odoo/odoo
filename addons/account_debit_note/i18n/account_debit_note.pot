@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.3\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-19 13:57+0000\n"
-"PO-Revision-Date: 2022-04-19 13:57+0000\n"
+"POT-Creation-Date: 2023-05-16 13:48+0000\n"
+"PO-Revision-Date: 2023-05-16 13:48+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,11 +18,6 @@ msgstr ""
 #. module: account_debit_note
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
 msgid "<span class=\"o_stat_text\">Debit Notes</span>"
-msgstr ""
-
-#. module: account_debit_note
-#: model_terms:ir.ui.view,arch_db:account_debit_note.view_move_form_debit
-msgid "Add Debit Note"
 msgstr ""
 
 #. module: account_debit_note
@@ -62,12 +57,18 @@ msgid "Created on"
 msgstr ""
 
 #. module: account_debit_note
+#: model:ir.actions.server,name:account_debit_note.action_move_debit_note
+msgid "Debit Note"
+msgstr ""
+
+#. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__date
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
 msgid "Debit Note Date"
 msgstr ""
 
 #. module: account_debit_note
+#. odoo-python
 #: code:addons/account_debit_note/models/account_move.py:0
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_note_ids
@@ -107,11 +108,6 @@ msgstr ""
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_type
 msgid "Journal Type"
-msgstr ""
-
-#. module: account_debit_note
-#: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note____last_update
-msgid "Last Modified on"
 msgstr ""
 
 #. module: account_debit_note
@@ -168,6 +164,7 @@ msgid "The debit notes created for this invoice"
 msgstr ""
 
 #. module: account_debit_note
+#. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #, python-format
 msgid "This debit note was created from: %s"
@@ -179,7 +176,26 @@ msgid "Use Specific Journal"
 msgstr ""
 
 #. module: account_debit_note
+#. odoo-python
+#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+#, python-format
+msgid ""
+"You can make a debit note only for a Customer Invoice, a Customer Credit "
+"Note, a Vendor Bill or a Vendor Credit Note."
+msgstr ""
+
+#. module: account_debit_note
+#. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #, python-format
 msgid "You can only debit posted moves."
+msgstr ""
+
+#. module: account_debit_note
+#. odoo-python
+#: code:addons/account_debit_note/wizard/account_debit_note.py:0
+#, python-format
+msgid ""
+"You can't make a debit note for an invoice that is already linked to a debit"
+" note."
 msgstr ""

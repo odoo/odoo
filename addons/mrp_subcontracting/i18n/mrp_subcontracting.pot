@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:01+0000\n"
-"PO-Revision-Date: 2023-01-17 08:01+0000\n"
+"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"PO-Revision-Date: 2023-05-16 13:49+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -194,13 +194,6 @@ msgstr ""
 
 #. module: mrp_subcontracting
 #. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
-#, python-format
-msgid "Make To Order"
-msgstr ""
-
-#. module: mrp_subcontracting
-#. odoo-python
 #: code:addons/mrp_subcontracting/models/stock_move_line.py:0
 #, python-format
 msgid ""
@@ -335,6 +328,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.subcontracting_portal_production_form_view
 msgid "Register components for subcontracted product"
+msgstr ""
+
+#. module: mrp_subcontracting
+#. odoo-python
+#: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
+#, python-format
+msgid "Replenish on Order (MTO)"
 msgstr ""
 
 #. module: mrp_subcontracting
@@ -612,15 +612,6 @@ msgstr ""
 #: code:addons/mrp_subcontracting/models/stock_location.py:0
 #, python-format
 msgid "You cannot alter the company's subcontracting location"
-msgstr ""
-
-#. module: mrp_subcontracting
-#. odoo-python
-#: code:addons/mrp_subcontracting/models/stock_location.py:0
-#, python-format
-msgid ""
-"You cannot change the subcontracting location as it is still linked to a "
-"subcontractor partner"
 msgstr ""
 
 #. module: mrp_subcontracting

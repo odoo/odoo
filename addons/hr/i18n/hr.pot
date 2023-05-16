@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server 16.3alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-23 12:37+0000\n"
-"PO-Revision-Date: 2023-02-23 12:37+0000\n"
+"POT-Creation-Date: 2023-05-16 13:48+0000\n"
+"PO-Revision-Date: 2023-05-16 13:48+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -42,7 +42,62 @@ msgstr ""
 
 #. module: hr
 #: model:ir.actions.report,print_report_name:hr.hr_employee_print_badge
-msgid "'Print Badge - %s' % (object.name).replace('/', '')"
+msgid "'Badge - %s' % (object.name).replace('/', '')"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "1 Onsite Interview"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "1 Phone Call"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "12 days / year, including <br>6 of your choice."
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "2 open days"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "4 Days after Interview"
 msgstr ""
 
 #. module: hr
@@ -92,6 +147,17 @@ msgid ""
 "hr_presence align-middle\" attrs=\"{'invisible': [('hr_icon_display', '!=', "
 "'presence_absent_active')]}\" aria-label=\"Present but not active\" "
 "title=\"Present but not active\" name=\"presence_absent_active\"/>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "<small><b>READ</b></small>"
 msgstr ""
 
 #. module: hr
@@ -183,17 +249,61 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_partner_view_form
-msgid "<span class=\"o_stat_text\">Employee(s)</span>"
+msgid "<span class=\"o_stat_text\">Employee</span>"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
-msgid "<span class=\"ps-1\">new Employees</span>"
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "<span class=\"text-muted small\">Days to get an Offer</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "<span class=\"text-muted small\">Process</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,job_details:hr.job_ceo
+#: model_terms:hr.job,job_details:hr.job_consultant
+#: model_terms:hr.job,job_details:hr.job_cto
+#: model_terms:hr.job,job_details:hr.job_developer
+#: model_terms:hr.job,job_details:hr.job_hrm
+#: model_terms:hr.job,job_details:hr.job_marketing
+#: model_terms:hr.job,job_details:hr.job_trainee
+msgid "<span class=\"text-muted small\">Time to Answer</span>"
 msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "<span>Km</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
+msgid "<span>new Employees</span>"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "A full-time position <br>Attractive salary package."
 msgstr ""
 
 #. module: hr
@@ -212,9 +322,21 @@ msgid "Absent"
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Achieve monthly sales objectives"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_needaction
 msgid "Action Needed"
 msgstr ""
 
@@ -232,6 +354,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_ids
 #: model:ir.model.fields,field_description:hr.field_hr_plan__plan_activity_type_ids
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_ids
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_activity_type_view_tree
 msgid "Activities"
 msgstr ""
@@ -248,6 +371,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_decoration
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_exception_decoration
 msgid "Activity Exception Decoration"
 msgstr ""
 
@@ -258,6 +382,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_state
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_state
 msgid "Activity State"
 msgstr ""
 
@@ -268,6 +393,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_icon
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_type_icon
 msgid "Activity Type Icon"
 msgstr ""
 
@@ -306,9 +432,31 @@ msgid "Additional Note"
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Additional languages"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__address_home_id
 #: model:ir.model.fields,field_description:hr.field_res_users__address_home_id
 msgid "Address"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Administrative Work"
 msgstr ""
 
 #. module: hr
@@ -350,6 +498,11 @@ msgid "Allow employees to update their own data."
 msgstr ""
 
 #. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+msgid "Application Settings"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_departure_wizard_view_form
 msgid "Apply"
 msgstr ""
@@ -375,14 +528,34 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#: model_terms:ir.ui.view,arch_db:hr.view_hr_job_form
 #: model_terms:ir.ui.view,arch_db:hr.view_job_filter
 msgid "Archived"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid ""
+"As an employee of our company, you will <b>collaborate with each department to create and deploy\n"
+"                                disruptive products.</b> Come work at a growing company that offers great benefits with opportunities to\n"
+"                                moving forward and learn alongside accomplished leaders. We're seeking an experienced and outstanding member of staff.\n"
+"                                <br><br>\n"
+"                                This position is both <b>creative and rigorous</b> by nature you need to think outside the box.\n"
+"                                We expect the candidate to be proactive and have a \"get it done\" spirit. To be successful,\n"
+"                                you will have solid solving problem skills."
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_attachment_count
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_attachment_count
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_attachment_count
 msgid "Attachment Count"
 msgstr ""
 
@@ -402,13 +575,24 @@ msgid "Authenticated Employees"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.mail_channel_view_form_
+#: model_terms:ir.ui.view,arch_db:hr.discuss_channel_view_form
 msgid "Auto Subscribe Departments"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,help:hr.field_mail_channel__subscription_department_ids
+#: model:ir.model.fields,help:hr.field_discuss_channel__subscription_department_ids
 msgid "Automatically subscribe members of those departments to the channel."
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Autonomy"
 msgstr ""
 
 #. module: hr
@@ -457,6 +641,17 @@ msgid "Bachelor"
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Bachelor Degree or Higher"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__barcode
 #: model:ir.model.fields,field_description:hr.field_res_users__barcode
 msgid "Badge ID"
@@ -498,6 +693,13 @@ msgid "Basic Employee"
 msgstr ""
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/background_image/background_image.xml:0
+#, python-format
+msgid "Binary file"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_users__can_edit
 msgid "Can Edit"
 msgstr ""
@@ -521,7 +723,6 @@ msgstr ""
 
 #. module: hr
 #. odoo-javascript
-#: code:addons/hr/static/src/components/employee_chat/employee_chat.xml:0
 #: code:addons/hr/static/src/components/employee_chat/employee_chat.xml:0
 #, python-format
 msgid "Chat"
@@ -592,6 +793,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_plan__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__company_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__company_id
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__company_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
@@ -674,8 +876,6 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__contractor
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__contractor
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__contractor
 msgid "Contractor"
 msgstr ""
 
@@ -720,6 +920,17 @@ msgid "Create a new department"
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Create content that will help our users on a daily basis"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 msgid "Create employee"
 msgstr ""
@@ -735,6 +946,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_plan__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__create_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_uid
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__create_uid
 msgid "Created by"
@@ -750,14 +962,31 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_plan__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__create_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__create_date
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__create_date
 msgid "Created on"
 msgstr ""
 
 #. module: hr
+#: model:ir.model.fields,field_description:hr.field_hr_employee__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_employee
 msgid "Current Number of Employees"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Customer Relationship"
 msgstr ""
 
 #. module: hr
@@ -774,12 +1003,27 @@ msgid "Default departure reasons cannot be deleted."
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,description:hr.job_ceo
+msgid ""
+"Demonstration of different Odoo services for each client and convincing the client about functionality of the application.\n"
+"The candidate should have excellent communication skills.\n"
+"Relationship building and influencing skills\n"
+"Expertise in New Client Acquisition (NCAs) and Relationship Management.\n"
+"Gathering market and customer information.\n"
+"Coordinating with the sales and support team for adopting different strategies\n"
+"Reviewing progress and identifying opportunities and new areas for development.\n"
+"Building strong relationships with clients / customers for business growth profitability.\n"
+"Keep regular interaction with key clients for better extraction and expansion."
+msgstr ""
+
+#. module: hr
 #: model:ir.model,name:hr.model_hr_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_job__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_plan__department_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__department_id
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__department_id
 #: model:ir.model.fields,field_description:hr.field_res_users__department_id
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_search
@@ -792,6 +1036,13 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__name
 msgid "Department Name"
+msgstr ""
+
+#. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
+#, python-format
+msgid "Department Organization"
 msgstr ""
 
 #. module: hr
@@ -854,7 +1105,18 @@ msgid "Discard"
 msgstr ""
 
 #. module: hr
-#: model:ir.model,name:hr.model_mail_channel
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Discover our products."
+msgstr ""
+
+#. module: hr
+#: model:ir.model,name:hr.model_discuss_channel
 msgid "Discussion Channel"
 msgstr ""
 
@@ -869,6 +1131,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_plan__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__display_name
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__display_name
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__display_name
 msgid "Display Name"
@@ -887,6 +1150,33 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__driving_license
 msgid "Driving License"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid ""
+"Each employee has a chance to see the impact of his work.\n"
+"                        You can make a real contribution to the success of the company.\n"
+"                        <br>\n"
+"                        Several activities are often organized all over the year, such as weekly\n"
+"                        sports sessions, team building events, monthly drink, and much more"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Eat &amp; Drink"
 msgstr ""
 
 #. module: hr
@@ -913,19 +1203,22 @@ msgid "Emergency"
 msgstr ""
 
 #. module: hr
+#. odoo-python
+#: code:addons/hr/models/res_partner.py:0 code:addons/hr/models/res_users.py:0
 #: model:ir.model,name:hr.model_hr_employee
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__employee_id
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__employee_ids
 #: model:ir.model.fields,field_description:hr.field_resource_resource__employee_id
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__employee
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__employee
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__employee
 #: model:ir.model.fields.selection,name:hr.selection__hr_plan_activity_type__responsible__employee
 #: model:ir.ui.menu,name:hr.menu_config_employee
 #: model_terms:ir.ui.view,arch_db:hr.hr_employee_public_view_form
+#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
+#, python-format
 msgid "Employee"
 msgstr ""
 
@@ -976,8 +1269,6 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__employee_type
-#: model:ir.model.fields,field_description:hr.field_hr_employee_base__employee_type
-#: model:ir.model.fields,field_description:hr.field_hr_employee_public__employee_type
 #: model:ir.model.fields,field_description:hr.field_res_users__employee_type
 msgid "Employee Type"
 msgstr ""
@@ -1016,13 +1307,7 @@ msgid "Employee's Working Hours"
 msgstr ""
 
 #. module: hr
-#: model_terms:ir.ui.view,arch_db:hr.res_users_view_form
-msgid "Employee(s)"
-msgstr ""
-
-#. module: hr
 #: model:ir.actions.act_window,name:hr.act_employee_from_department
-#: model:ir.actions.act_window,name:hr.hr_employee_action_from_user
 #: model:ir.actions.act_window,name:hr.hr_employee_public_action
 #: model:ir.actions.act_window,name:hr.open_view_employee_list
 #: model:ir.actions.act_window,name:hr.open_view_employee_list_my
@@ -1041,7 +1326,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr.view_department_tree
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_filter
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
-#: model_terms:ir.ui.view,arch_db:hr.view_partner_tree2
 msgid "Employees"
 msgstr ""
 
@@ -1087,9 +1371,31 @@ msgid ""
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Expand your knowledge of various business industries"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_job__expected_employees
 msgid ""
 "Expected number of employees for this job position after new recruitment."
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Experience in writing online content"
 msgstr ""
 
 #. module: hr
@@ -1122,6 +1428,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_follower_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_follower_ids
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_follower_ids
 msgid "Followers"
 msgstr ""
 
@@ -1129,17 +1436,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_partner_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_partner_ids
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_partner_ids
 msgid "Followers (Partners)"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_type_icon
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr ""
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/models/mail_channel.py:0
+#: code:addons/hr/models/discuss_channel.py:0
 #, python-format
 msgid ""
 "For %(channels)s, channel_type should be 'channel' to have the department "
@@ -1148,9 +1457,18 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__freelance
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__freelance
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__freelance
 msgid "Freelancer"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Fruit, coffee and <br>snacks provided."
 msgstr ""
 
 #. module: hr
@@ -1175,8 +1493,30 @@ msgid "Give more details about the reason of archiving the employee."
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Google Adwords experience"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__certificate__graduate
 msgid "Graduate"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Great team of smart people, in a friendly and open culture"
 msgstr ""
 
 #. module: hr
@@ -1187,7 +1527,7 @@ msgid "Group By"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_mail_channel__subscription_department_ids
+#: model:ir.model.fields,field_description:hr.field_discuss_channel__subscription_department_ids
 msgid "HR Departments"
 msgstr ""
 
@@ -1206,7 +1546,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department__has_message
 #: model:ir.model.fields,field_description:hr.field_hr_employee__has_message
 #: model:ir.model.fields,field_description:hr.field_hr_job__has_message
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__has_message
 msgid "Has Message"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Highly creative and autonomous"
 msgstr ""
 
 #. module: hr
@@ -1261,6 +1613,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__id
 #: model:ir.model.fields,field_description:hr.field_hr_plan__id
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__id
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__id
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__id
 msgid "ID"
@@ -1279,11 +1632,13 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_exception_icon
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_exception_icon
 msgid "Icon"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_icon
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_exception_icon
 msgid "Icon to indicate an exception activity."
 msgstr ""
 
@@ -1297,6 +1652,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr ""
 
@@ -1304,6 +1660,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 
@@ -1334,6 +1691,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__image_128
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__image_128
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__image_128
 msgid "Image 128"
 msgstr ""
 
@@ -1365,6 +1723,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_is_follower
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_is_follower
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_is_follower
 msgid "Is Follower"
 msgstr ""
 
@@ -1461,6 +1820,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_plan__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__write_uid
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_uid
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__write_uid
 msgid "Last Updated by"
@@ -1477,6 +1837,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_job__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_plan__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__write_date
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__write_date
 #: model:ir.model.fields,field_description:hr.field_hr_work_location__write_date
 msgid "Last Updated on"
@@ -1503,6 +1864,17 @@ msgid "Launch Plans"
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Lead the entire sales cycle"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__cohabitant
 msgid "Legal Cohabitant"
 msgstr ""
@@ -1525,9 +1897,20 @@ msgid "Location Number"
 msgstr ""
 
 #. module: hr
-#: model:ir.model.fields,field_description:hr.field_hr_department__message_main_attachment_id
+#: model_terms:hr.job,description:hr.job_hrm
+msgid ""
+"Lorem Ipsum is simply dummy text of the printing and typesetting industry. "
+"Lorem Ipsum has been the industry's standard dummy text ever since the "
+"1500s, when an unknown printer took a galley of type and scrambled it to "
+"make a type specimen book. It has survived not only five centuries, but also"
+" the leap into electronic typesetting, remaining essentially unchanged. It "
+"was popularised in the 1960s with the release of Letraset sheets containing "
+"Lorem Ipsum passages, and more recently with desktop publishing software "
+"like Aldus PageMaker including versions of Lorem Ipsum."
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_main_attachment_id
-#: model:ir.model.fields,field_description:hr.field_hr_job__message_main_attachment_id
 msgid "Main Attachment"
 msgstr ""
 
@@ -1583,6 +1966,17 @@ msgid "Master Department"
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Master demos of our software"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__member_of_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__member_of_department
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__member_of_department
@@ -1603,6 +1997,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_has_error
 msgid "Message Delivery error"
 msgstr ""
 
@@ -1610,11 +2005,24 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_ids
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_ids
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_ids
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_ids
 msgid "Messages"
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Must Have"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__my_activity_date_deadline
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr ""
 
@@ -1651,23 +2059,65 @@ msgid "Nationality (Country)"
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Negotiate and contract"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_calendar_event_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_date_deadline
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_summary
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_summary
 msgid "Next Activity Summary"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_type_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_type_id
 msgid "Next Activity Type"
+msgstr ""
+
+#. module: hr
+#: model_terms:ir.ui.view,arch_db:hr.hr_plan_employee_activity_kanban
+msgid "Next Activity:"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Nice to have"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "No dumb managers, no stupid tools to use, no rigid working hours"
 msgstr ""
 
 #. module: hr
@@ -1675,6 +2125,18 @@ msgstr ""
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
 msgid "No specific user given on activity %s."
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid ""
+"No waste of time in enterprise processes, real responsibilities and autonomy"
 msgstr ""
 
 #. module: hr
@@ -1697,6 +2159,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_needaction_counter
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_needaction_counter
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_needaction_counter
 msgid "Number of Actions"
 msgstr ""
 
@@ -1715,6 +2178,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_department__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,field_description:hr.field_hr_job__message_has_error_counter
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__message_has_error_counter
 msgid "Number of errors"
 msgstr ""
 
@@ -1728,6 +2192,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_department__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_employee__message_needaction_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_needaction_counter
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_needaction_counter
 msgid "Number of messages which requires an action"
 msgstr ""
 
@@ -1735,6 +2200,7 @@ msgstr ""
 #: model:ir.model.fields,help:hr.field_hr_department__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_employee__message_has_error_counter
 #: model:ir.model.fields,help:hr.field_hr_job__message_has_error_counter
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr ""
 
@@ -1768,7 +2234,7 @@ msgstr ""
 
 #. module: hr
 #: model:res.groups,name:hr.group_hr_user
-msgid "Officer : Manage all employees"
+msgid "Officer: Manage all employees"
 msgstr ""
 
 #. module: hr
@@ -1793,6 +2259,17 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible_id
 msgid "Other Responsible"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Our Product"
 msgstr ""
 
 #. module: hr
@@ -1832,6 +2309,17 @@ msgid "Partner-related data of the user"
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Passion for software products"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__passport_id
 #: model:ir.model.fields,field_description:hr.field_res_users__passport_id
 msgid "Passport No"
@@ -1843,8 +2331,41 @@ msgid "Payroll"
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Perfect written English"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Perks"
+msgstr ""
+
+#. module: hr
 #: model:hr.contract.type,name:hr.contract_type_permanent
 msgid "Permanent"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Personal Evolution"
 msgstr ""
 
 #. module: hr
@@ -1867,6 +2388,7 @@ msgid "Place of Birth"
 msgstr ""
 
 #. module: hr
+#: model:ir.model,name:hr.model_hr_plan_employee_activity
 #: model:ir.model.fields,field_description:hr.field_hr_department__plan_ids
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__plan_id
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__plan_id
@@ -1909,6 +2431,17 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_department__plans_count
 msgid "Plans Count"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Play any sport with colleagues, <br>the bill is covered."
 msgstr ""
 
 #. module: hr
@@ -2027,8 +2560,30 @@ msgid "Public Employee"
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Qualify the customer needs"
+msgstr ""
+
+#. module: hr
 #: model_terms:ir.actions.act_window,help:hr.action_hr_job
 msgid "Ready to recruit more efficiently?"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Real responsibilities and challenges in a fast evolving company"
 msgstr ""
 
 #. module: hr
@@ -2066,7 +2621,7 @@ msgstr ""
 
 #. module: hr
 #. odoo-python
-#: code:addons/hr/models/res_partner.py:0
+#: code:addons/hr/models/res_partner.py:0 code:addons/hr/models/res_users.py:0
 #, python-format
 msgid "Related Employees"
 msgstr ""
@@ -2088,6 +2643,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__user_id
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__user_id
 #: model:ir.model.fields,help:hr.field_resource_resource__user_id
 msgid "Related user name for the resource to manage its access."
 msgstr ""
@@ -2127,12 +2683,24 @@ msgid "Resources"
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Responsibilities"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__responsible
 msgid "Responsible"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__activity_user_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__activity_user_id
 msgid "Responsible User"
 msgstr ""
 
@@ -2204,6 +2772,13 @@ msgid "Show Hr Icon Display"
 msgstr ""
 
 #. module: hr
+#. odoo-javascript
+#: code:addons/hr/static/src/components/department_chart/department_chart.xml:0
+#, python-format
+msgid "Show employees"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__marital__single
 msgid "Single"
 msgstr ""
@@ -2226,6 +2801,17 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_plan_activity_type__responsible_id
 msgid "Specific responsible of activity if not linked to the employee."
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Sport Activity"
 msgstr ""
 
 #. module: hr
@@ -2253,6 +2839,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_state
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_state
 msgid ""
 "Status based on activities\n"
 "Overdue: Due date is already passed\n"
@@ -2276,14 +2863,24 @@ msgid "Street..."
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Strong analytical skills"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__student
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__student
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__student
 msgid "Student"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_plan_activity_type__summary
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__summary
 msgid "Summary"
 msgstr ""
 
@@ -2294,7 +2891,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.constraint,message:hr.constraint_hr_employee_category_name_uniq
-msgid "Tag name already exists !"
+msgid "Tag name already exists!"
 msgstr ""
 
 #. module: hr
@@ -2308,6 +2905,17 @@ msgstr ""
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_job__no_of_recruitment
 msgid "Target"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Technical Expertise"
 msgstr ""
 
 #. module: hr
@@ -2361,8 +2969,6 @@ msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__employee_type
-#: model:ir.model.fields,help:hr.field_hr_employee_base__employee_type
-#: model:ir.model.fields,help:hr.field_hr_employee_public__employee_type
 #: model:ir.model.fields,help:hr.field_res_users__employee_type
 msgid ""
 "The employee type. Although the primary purpose may seem to categorize "
@@ -2423,6 +3029,13 @@ msgstr ""
 #: code:addons/hr/wizard/hr_plan_wizard.py:0
 #, python-format
 msgid "The plan %s has been started"
+msgstr ""
+
+#. module: hr
+#. odoo-python
+#: code:addons/hr/models/hr_plan_activity_type.py:0
+#, python-format
+msgid "The user of %s's coach is not set."
 msgstr ""
 
 #. module: hr
@@ -2509,13 +3122,23 @@ msgstr ""
 #. module: hr
 #: model:hr.job,name:hr.job_trainee
 #: model:ir.model.fields.selection,name:hr.selection__hr_employee__employee_type__trainee
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_base__employee_type__trainee
-#: model:ir.model.fields.selection,name:hr.selection__hr_employee_public__employee_type__trainee
 msgid "Trainee"
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Trainings"
+msgstr ""
+
+#. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__activity_exception_decoration
+#: model:ir.model.fields,help:hr.field_hr_plan_employee_activity__activity_exception_decoration
 msgid "Type of the exception activity on record."
 msgstr ""
 
@@ -2538,15 +3161,9 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_employee__user_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_base__user_id
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__user_id
+#: model:ir.model.fields,field_description:hr.field_hr_plan_employee_activity__user_id
 #: model:ir.model.fields,field_description:hr.field_resource_resource__user_id
 msgid "User"
-msgstr ""
-
-#. module: hr
-#. odoo-python
-#: code:addons/hr/models/hr_plan_activity_type.py:0
-#, python-format
-msgid "The user of %s's coach is not set."
 msgstr ""
 
 #. module: hr
@@ -2557,13 +3174,24 @@ msgstr ""
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_job_view_kanban
-msgid "Vacancies :"
+msgid "Vacancies:"
 msgstr ""
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_company__hr_presence_control_ip_list
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__hr_presence_control_ip_list
 msgid "Valid IP addresses"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "Valid work permit for Belgium"
 msgstr ""
 
 #. module: hr
@@ -2584,6 +3212,28 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr.field_hr_plan_wizard__warning
 #, python-format
 msgid "Warning"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "What We Offer"
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,website_description:hr.job_ceo
+#: model_terms:hr.job,website_description:hr.job_consultant
+#: model_terms:hr.job,website_description:hr.job_cto
+#: model_terms:hr.job,website_description:hr.job_developer
+#: model_terms:hr.job,website_description:hr.job_hrm
+#: model_terms:hr.job,website_description:hr.job_marketing
+#: model_terms:hr.job,website_description:hr.job_trainee
+msgid "What's great in the job?"
 msgstr ""
 
 #. module: hr
@@ -2726,7 +3376,7 @@ msgstr ""
 
 #. module: hr
 #. odoo-javascript
-#: code:addons/hr/static/src/models/employee.js:0
+#: code:addons/hr/static/src/thread_service_patch.js:0
 #, python-format
 msgid "You can only chat with employees that have a dedicated user."
 msgstr ""
@@ -2746,10 +3396,35 @@ msgid "You do not have access to this document."
 msgstr ""
 
 #. module: hr
+#: model_terms:hr.job,description:hr.job_trainee
+msgid ""
+"You participate to the update of our tutorial tools and pre-sales tools after the launch of a new version of Odoo. Indeed, any new version of the software brings significant improvements in terms of functionalities, ergonomics and configuration.\n"
+"You will have to become familiar with the existing tools (books, class supports, Odoo presentation’s slides, commercial tools),\n"
+"to participate to the update of those tools in order to make them appropriate for the new version of the software and, for sure,\n"
+"to suggest improvements in order to cover the new domains of the software.\n"
+"You join the Implementation Assistance department. This team of 3 people go with Odoo’s clients in the set up of the software. Your role will be\n"
+"to animate webinars in order to show the different functionalities of the software.\n"
+"to be involved in the support of the customers and\n"
+"to answer to their questions.\n"
+"You help the support manager to set up new support services by\n"
+"being involved in the treatment of new cases,\n"
+"contributing to the set up of a new politic,\n"
+"being involved into satisfaction surveys in order to have a better knowledge of how the support given is seen by the customers."
+msgstr ""
+
+#. module: hr
 #. odoo-python
 #: code:addons/hr/models/res_config_settings.py:0
 #, python-format
 msgid "You should select at least one Advanced Presence Control option."
+msgstr ""
+
+#. module: hr
+#: model_terms:hr.job,description:hr.job_cto
+msgid ""
+"You will take part in the consulting services we provide to our partners and customers: design, analysis, development, testing, project management, support/coaching. You will work autonomously as well as coordinate and supervise small distributed development teams for some projects. Optionally, you will deliver Odoo training sessions to partners and customers (8-10 people/session). You will report to the Head of Professional Services and work closely with all developers and consultants.\n"
+"\n"
+"The job is located in Grand-Rosière (1367), Belgium (between Louvain-La-Neuve and Namur)."
 msgstr ""
 
 #. module: hr
