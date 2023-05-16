@@ -199,8 +199,6 @@
                                 <field name="date_end" string="Contract End Date"/>
                                 <field name="company_country_id" invisible="1"/>
                                 <field name="country_code" invisible="1"/>
-                                <field name="structure_type_id" groups="!hr_contract.group_hr_contract_manager" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]" options="{'no_open': True, 'no_create': True}"/>
-                                <field name="structure_type_id" groups="hr_contract.group_hr_contract_manager" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
                                 <field name="calendar_mismatch" invisible="1"/>
                                 <label for="resource_calendar_id"/>
                                 <div id="resource_calendar_warning" class="d-flex align-items-center">
@@ -217,22 +215,18 @@
                                 </div>
                             </group>
                             <group name="top_info_right">
+                                <field name="structure_type_id" groups="!hr_contract.group_hr_contract_manager" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="structure_type_id" groups="hr_contract.group_hr_contract_manager" domain="['|', ('country_id', '=', False), ('country_id', '=', company_country_id)]"/>
                                 <field name="department_id" groups="!hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}"/>
                                 <field name="department_id" groups="hr_contract.group_hr_contract_manager"/>
                                 <field name="job_id" groups="!hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}"/>
                                 <field name="job_id" groups="hr_contract.group_hr_contract_manager"/>
                                 <field name="contract_type_id" groups="!hr_contract.group_hr_contract_manager" options="{'no_open': True, 'no_create': True}"/>
                                 <field name="contract_type_id" groups="hr_contract.group_hr_contract_manager"/>
-                                <field name="hr_responsible_id" required="1" widget="many2one_avatar_user"/>
+                                <field name="hr_responsible_id" widget="many2one_avatar_user" invisible="1"/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Contract Details" name="other" groups="hr_contract.group_hr_contract_manager">
-                                <group><group name="contract_details"/></group>
-                                <group name="notes_group" string="Notes">
-                                    <field name="notes" nolabel="1" colspan="2" placeholder="Type in notes about this contract..."/>
-                                </group>
-                            </page>
                             <page string="Salary Information" name="information" class="o_hr_contract_salary_information">
                                 <group name="salary_info">
                                     <group name="salary">
@@ -243,6 +237,14 @@
                                         </div>
                                     </group>
                                     <group name="yearly_advantages"/>
+                                </group>
+                            </page>
+                            <page string="Contract Details" name="other" groups="hr_contract.group_hr_contract_manager">
+                                <group name="contract_details_0"/>
+                                <group name="contract_details" col="2"/>
+                                <group name="contract_details_2"/>
+                                <group name="notes_group" string="Notes">
+                                    <field name="notes" nolabel="1" colspan="2" placeholder="Type in notes about this contract..."/>
                                 </group>
                             </page>
                         </notebook>
