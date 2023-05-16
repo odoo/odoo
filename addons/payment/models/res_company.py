@@ -40,7 +40,15 @@ class ResCompany(models.Model):
         default_journal = new_env['account.journal'].search(
             [('type', '=', 'bank'), ('company_id', '=', new_env.company.id)], limit=1
         )
-        stripe_provider = new_env.ref('payment.payment_provider_stripe')
+        stripe_counter = new_env['payment.provider'].search_count(
+            [('company_id', '=', self.env.company.id), ('code', '=', 'stripe')]
+        )
+        if stripe_counter == 0:
+            new_provider = self.env.ref('payment.payment_provider_stripe').with_company(self.env.company.id).sudo().copy()
+            new_provider.company_id = self.env.company.id
+        stripe_provider = new_env['payment.provider'].search(
+            [('company_id', '=', self.env.company.id), ('code', '=', 'stripe')]
+        )
         stripe_provider.journal_id = stripe_provider.journal_id or default_journal
 
         return stripe_provider.action_stripe_connect_account(menu_id=menu_id)
