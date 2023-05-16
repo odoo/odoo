@@ -54,7 +54,7 @@ var registerSteps = [{
     },
 }, {
     content: "Next",
-    trigger: '.oe_cart .btn:contains("Next")',
+    trigger: '.oe_cart .btn:contains("Continue checkout")',
 }, {
     content: 'Select Test payment provider',
     trigger: '.o_payment_option_card:contains("Demo")'

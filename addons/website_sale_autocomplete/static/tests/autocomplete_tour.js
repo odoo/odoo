@@ -26,7 +26,7 @@ registry.category("web_tour.tours").add('autocomplete_tour', {
     tourUtils.goToCart(),
 {
     content: 'Go to process checkout',
-    trigger: 'a:contains("Process Checkout")'
+    trigger: 'a[role="button"]:contains("Checkout")'
 }, { // Actual test
     content: 'Input in Street & Number field',
     trigger: 'input[name="street"]',

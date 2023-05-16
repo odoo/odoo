@@ -20,7 +20,7 @@ registry.category("web_tour.tours").add('check_free_delivery', {
         {
             content: "go to checkout",
             extra_trigger: '#cart_products input.js_quantity:propValue(1)',
-            trigger: 'a[href*="/shop/checkout"]',
+            trigger: 'a[role="button"][href*="/shop/checkout"]',
         },
         {
             content: "Check Free Delivery value to be zero",

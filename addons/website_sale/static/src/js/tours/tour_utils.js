@@ -13,7 +13,7 @@
         steps.push(wTourUtils.clickOnElement(productName, `a:contains(${productName})`));
         steps.push(wTourUtils.clickOnElement('Add to cart', '#add_to_cart'));
         if (productHasVariants) {
-            steps.push(wTourUtils.clickOnElement('Continue Shopping', 'button:contains("Continue Shopping")'));
+            steps.push(wTourUtils.clickOnElement('Continue shopping', 'button:contains("Continue shopping")'));
         }
         return steps;
     }
@@ -66,7 +66,7 @@
         });
         steps.push({
             content: "Next",
-            trigger: '.oe_cart .btn:contains("Next")',
+            trigger: '.oe_cart .btn:contains("Continue checkout")',
         });
         return steps;
     }

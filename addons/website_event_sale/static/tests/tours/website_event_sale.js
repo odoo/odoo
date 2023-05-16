@@ -54,12 +54,12 @@ registry.category("web_tour.tours").add('event_buy_tickets', {
         },
         {
             content: "go to cart",
-            trigger: 'a:contains(Return to Cart)',
+            trigger: 'a:contains(Return to cart)',
         },
         {
-            content: "Now click on `Process Checkout`",
+            content: "Now click on `Checkout`",
             extra_trigger: 'a:has(.my_cart_quantity):contains(3),#cart_products input.js_quantity[value="3"]',
-            trigger: '.btn-primary:contains("Process Checkout")'
+            trigger: '.btn-primary:contains("Checkout")'
         },
         {
             content: "Check that the subtotal is 4,000.00 USD", // this test will fail if the currency of the main company is not USD

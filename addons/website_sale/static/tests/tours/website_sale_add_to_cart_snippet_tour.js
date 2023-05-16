@@ -29,7 +29,7 @@ wTourUtils.registerWebsitePreviewTour('add_to_cart_snippet_tour', {
         ...wTourUtils.selectElementInWeSelectWidget('product_template_picker_opt', 'Conference Chair', true),
         ...wTourUtils.clickOnSave(),
         wTourUtils.clickOnElement('add to cart button', 'iframe .s_add_to_cart_btn'),
-        wTourUtils.clickOnElement('continue shopping', 'iframe span:contains(Continue Shopping)'),
+        wTourUtils.clickOnElement('continue shopping', 'iframe a:contains("Continue shopping")'),
 
         // Product with 2 variants with a variant selected
         ...editAddToCartSnippet(),

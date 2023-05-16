@@ -75,7 +75,7 @@ registry.category("web_tour.tours").add('shop_sale_gift_card', {
         },
         {
             content: "click on 'Add to Cart' button",
-            trigger: "a:contains(ADD TO CART)",
+            trigger: "a:contains(Add to cart)",
         },
             tourUtils.goToCart({quantity: 2}),
         {

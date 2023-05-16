@@ -52,6 +52,6 @@ registry.category("web_tour.tours").add("a_shop_custom_attribute_value", {
     trigger: 'span:contains(1,557.00)',
     run: function (){}, // check
 }, {
-    trigger: 'button:has(span:contains(Proceed to Checkout))',
+    trigger: 'button:has(span:contains(Proceed to checkout))',
     run: 'click',
 }]});

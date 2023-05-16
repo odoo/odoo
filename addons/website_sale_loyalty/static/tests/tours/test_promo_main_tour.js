@@ -133,7 +133,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         /* 4. Check /shop/payment does not break the `merged discount lines split per tax` (eg: with _compute_tax_id) */
         {
             content: "go to checkout",
-            trigger: 'a[href="/shop/checkout?express=1"]',
+            trigger: 'a[role="button"][href="/shop/checkout?express=1"]',
         },
         {
             content: "check total is unchanged once we land on payment page",

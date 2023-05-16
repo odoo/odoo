@@ -31,7 +31,7 @@
     {
         content: "Check for 2 products in cart and proceed to checkout",
         extra_trigger: '#cart_products tr:contains("Storage Box Test") input.js_quantity:propValue(2)',
-        trigger: 'a[href*="/shop/checkout"]',
+        trigger: 'a[role="button"][href*="/shop/checkout"]',
     },
     {
         content: "Check Price b2b subtotal",
@@ -67,12 +67,12 @@
     },
     {
         content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Next")',
+        trigger: '.oe_cart .btn:contains("Continue checkout")',
     },
     {
         content: "Fulfill shipping address form",
         trigger: 'select[name="country_id"]',
-        extra_trigger: 'h2:contains("Shipping Address")',
+        extra_trigger: 'h3:contains("My details")',
         run: function () {
             $('input[name="name"]').val('def');
             $('input[name="phone"]').val('8888888888');
@@ -84,7 +84,7 @@
     },
     {
         content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Next")',
+        trigger: '.oe_cart .btn:contains("Continue checkout")',
     },
     {
         content: "Check selected billing address is same as typed in previous step",
@@ -98,7 +98,7 @@
     },
     {
         content: "Click for edit address",
-        trigger: 'a:contains("Edit") i',
+        trigger: 'a:contains("Edit")',
     },
     {
         content: "Click for edit billing address",
@@ -107,7 +107,7 @@
     {
         content: "Change billing address form",
         trigger: 'select[name="country_id"]',
-        extra_trigger: 'h2:contains("Your Address")',
+        extra_trigger: 'h3:contains("Your Address")',
         run: function () {
             $('input[name="name"]').val('abcd');
             $('input[name="phone"]').val('11111111');
@@ -117,7 +117,7 @@
     },
     {
         content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Next")',
+        trigger: '.oe_cart .btn:contains("Continue checkout")',
     },
     {
         content: "Confirm Address",
@@ -257,7 +257,7 @@
     },
     {
         content: "Add new shipping address",
-        trigger: '.one_kanban form[action^="/shop/address"] .btn',
+        trigger: '.one_kanban form[action^="/shop/address"] a[role="button"]',
     },
     {
         content: "Fulfill shipping address form",
@@ -273,7 +273,7 @@
     },
     {
         content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Next")',
+        trigger: '.oe_cart .btn:contains("Continue checkout")',
     },
     {
         content: "Select `Wire Transfer` payment method",
@@ -366,7 +366,7 @@
     },
     {
         content: "Click on next button",
-        trigger: '.oe_cart .btn:contains("Next")',
+        trigger: '.oe_cart .btn:contains("Continue checkout")',
     },
     {
         content: "Check selected billing address is same as typed in previous step",

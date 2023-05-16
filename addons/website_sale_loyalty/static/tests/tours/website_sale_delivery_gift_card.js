@@ -18,12 +18,12 @@ registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
         },
         {
             content: "click on 'Add to Cart' button",
-            trigger: "a:contains(ADD TO CART)",
+            trigger: "a:contains(Add to cart)",
         },
         wsTourUtils.goToCart(1),
         {
             content: "go to checkout",
-            trigger: 'a[href="/shop/checkout?express=1"]',
+            trigger: 'a[role="button"][href="/shop/checkout?express=1"]',
             run: 'click'
         },
         {

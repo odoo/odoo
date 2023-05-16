@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add('event_booth_sale_pricelists_different_c
         trigger: 'button[type="submit"]',
     }, {
         content: 'Checkout your order',
-        trigger: 'a[role="button"] span:contains("Process Checkout")',
+        trigger: 'a[role="button"]:contains("Checkout")',
     },
     ...getPriceListChecksSteps({
         pricelistName: "EUR With Discount Included",

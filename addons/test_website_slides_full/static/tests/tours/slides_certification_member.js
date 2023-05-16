@@ -43,8 +43,8 @@ var buyCertificationSteps = [{
 },
     tourUtils.goToCart(),
 {
-    content: 'eCommerce: Process Checkout',
-    trigger: 'a:contains("Process Checkout")'
+    content: 'eCommerce: Checkout',
+    trigger: 'a[role="button"]:contains("Checkout")'
 }, {
     content: 'eCommerce: select Test payment provider',
     trigger: '.o_payment_option_card:contains("Demo")'

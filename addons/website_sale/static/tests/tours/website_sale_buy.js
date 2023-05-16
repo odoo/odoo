@@ -40,7 +40,7 @@ registry.category("web_tour.tours").add('shop_buy_product', {
         {
             content: "add suggested",
             extra_trigger: '#wrap:not(:has(#cart_products:contains("Storage Box")))',
-            trigger: '.oe_cart:has(tr:contains("Storage Box")) a:contains("Add to Cart")',
+            trigger: '.oe_cart:has(tr:contains("Storage Box")) a.js_add_suggested_products',
         },
         {
             content: "add one more",
@@ -61,7 +61,7 @@ registry.category("web_tour.tours").add('shop_buy_product', {
         {
             content: "go to checkout",
             extra_trigger: '#cart_products input.js_quantity:propValue(1)',
-            trigger: 'a[href*="/shop/checkout"]',
+            trigger: 'a[role="button"][href*="/shop/checkout"]',
         },
         {
             content: "select payment",

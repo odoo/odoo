@@ -7,7 +7,7 @@
         _getSteps: function () {
             return [{
                 content: 'Checkout your order',
-                trigger: 'a[role="button"] span:contains("Process Checkout")',
+                trigger: 'a[role="button"]:contains("Checkout")',
                 run: 'click',
             }, {
                 content: "Select `Wire Transfer` payment method",
