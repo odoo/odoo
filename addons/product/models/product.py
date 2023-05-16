@@ -70,9 +70,11 @@ class ProductCategory(models.Model):
         main_category = self.env.ref('product.product_category_all')
         if main_category in self:
             raise UserError(_("You cannot delete this product category, it is the default generic category."))
-        expense_category = self.env.ref('product.cat_expense', raise_if_not_found=False)
-        if expense_category and expense_category in self:
-            raise UserError(_("You cannot delete the %s product category.", expense_category.name))
+        external_ids = self.get_external_id()
+        for category in self:
+            external_id = external_ids[category.id]
+            if external_id and not external_id.startswith('export'):
+                raise UserError(_("You cannot delete the %s product category.", category.display_name))
 
 
 class ProductProduct(models.Model):
