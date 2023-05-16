@@ -3404,6 +3404,21 @@ class AccountMove(models.Model):
 
         return reverse_moves
 
+    def _unlink_or_reverse(self):
+        if not self:
+            return
+        to_reverse = self.env['account.move']
+        to_cancel = self.env['account.move']
+        lock_date = self.company_id._get_user_fiscal_lock_date()
+        for move in self:
+            if move.inalterable_hash or move.date <= lock_date:
+                to_reverse += move
+            else:
+                to_cancel += move
+        to_reverse._reverse_moves(cancel=True)
+        to_cancel.button_draft()
+        to_cancel.filtered(lambda m: m.state == 'draft').unlink()
+
     def _post(self, soft=True):
         """Post/Validate the documents.
 
