@@ -327,7 +327,8 @@ class IrActionsReport(models.Model):
                 command_args.extend(['--disable-smart-shrinking'])
 
         # Add extra time to allow the page to render
-        command_args.extend(['--javascript-delay', '1000'])
+        delay = self.env['ir.config_parameter'].sudo().get_param('report.print_delay', '1000')
+        command_args.extend(['--javascript-delay', delay])
 
         if landscape:
             command_args.extend(['--orientation', 'landscape'])
