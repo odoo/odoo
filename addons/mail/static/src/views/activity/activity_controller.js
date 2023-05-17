@@ -2,7 +2,7 @@
 
 import { useMessaging } from "@mail/core/messaging_hook";
 
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 import { Layout } from "@web/search/layout";
 import { standardViewProps } from "@web/views/standard_view_props";
@@ -41,6 +41,7 @@ export class ActivityController extends Component {
         this.action = useService("action");
         this.messaging = useMessaging();
         this.activity = useService("mail.activity");
+        this.ui = useState(useService("ui"));
     }
 
     scheduleActivity() {

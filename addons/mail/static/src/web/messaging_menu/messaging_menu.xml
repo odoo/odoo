@@ -2,9 +2,9 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.MessagingMenu" owl="1">
-    <Dropdown t-if="!env.inDiscussApp" autoOpen="false" beforeOpen.bind="beforeOpen" onStateChanged="state => this.state.isOpen = state.open" position="'bottom-end'" menuClass="`p-0 ${ store.isSmall ? 'start-0 w-100 mh-100 bottom-0 d-flex flex-column' : ''}`">
+    <Dropdown t-if="!env.inDiscussApp" autoOpen="false" beforeOpen.bind="beforeOpen" onStateChanged="state => this.state.isOpen = state.open" position="'bottom-end'" menuClass="`p-0 ${ ui.isSmall ? 'start-0 w-100 mh-100 bottom-0 d-flex flex-column' : ''}`">
         <t t-set-slot="toggler">
-            <i class="fa fa-lg fa-comments" role="img" aria-label="Messages" t-on-click="() => store.discuss.activeTab = store.isSmall and store.discuss.activeTab === 'mailbox' ? 'all' : store.discuss.activeTab"></i>
+            <i class="fa fa-lg fa-comments" role="img" aria-label="Messages" t-on-click="() => store.discuss.activeTab = ui.isSmall and store.discuss.activeTab === 'mailbox' ? 'all' : store.discuss.activeTab"></i>
             <span t-if="counter" class="o-mail-MessagingMenu-counter badge rounded-pill"><t t-esc="counter"/></span>
         </t>
         <t t-set-slot="default">
@@ -16,17 +16,17 @@
 
 <t t-name="mail.MessagingMenu.content" owl="1">
     <t t-set="failures" t-value="store.notificationGroups"/>
-    <div class="o-mail-MessagingMenu d-flex flex-column flex-grow-1" t-att-class="{ 'overflow-auto w-100 mh-100': store.isSmall }">
-        <div t-att-class="{'flex-row-reverse text-uppercase': store.isSmall,
+    <div class="o-mail-MessagingMenu d-flex flex-column flex-grow-1" t-att-class="{ 'overflow-auto w-100 mh-100': ui.isSmall }">
+        <div t-att-class="{'flex-row-reverse text-uppercase': ui.isSmall,
         'o-mail-MessagingMenu-header border-bottom d-flex flex-shrink-0 p-2': !env.inDiscussApp,
         }">
-            <t t-if="!store.isSmall">
+            <t t-if="!ui.isSmall">
                 <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'all' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'all'">All</button>
                 <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
                 <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
             </t>
             <div class="flex-grow-1"></div>
-            <t t-if="!store.discuss.isActive or store.isSmall and store.discuss.activeTab !== 'mailbox'">
+            <t t-if="!store.discuss.isActive or ui.isSmall and store.discuss.activeTab !== 'mailbox'">
                 <t t-if="env.inDiscussApp and ['chat', 'channel'].includes(store.discuss.activeTab)">
                     <div t-if="state.addingChat or state.addingChannel" class="p-4 border-bottom bg-light" t-ref="selector">
                         <t t-if="state.addingChat" t-set="category" t-value="store.discuss.chats"/>
@@ -103,7 +103,7 @@
             </t>
         </div>
     </div>
-    <div t-if="store.isSmall" class="o-mail-MessagingMenu-navbar d-flex border-top bg-view shadow-lg w-100">
+    <div t-if="ui.isSmall" class="o-mail-MessagingMenu-navbar d-flex border-top bg-view shadow-lg w-100">
         <button t-foreach="tabs" t-key="tab.id" t-as="tab" class="o-mail-MessagingMenu-tab btn d-flex flex-column align-items-center flex-grow-1 flex-basis-0 p-2" t-att-class="{
             'text-primary fw-bolder': store.discuss.activeTab === tab.id,
             'border-end': !tab_last,

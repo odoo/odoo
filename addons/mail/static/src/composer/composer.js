@@ -73,6 +73,7 @@ export class Composer extends Component {
         this.messageService = useState(useService("mail.message"));
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
+        this.ui = useState(useService("ui"));
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
         this.state = useState({

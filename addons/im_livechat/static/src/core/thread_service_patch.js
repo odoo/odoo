@@ -27,7 +27,7 @@ patch(ThreadService.prototype, "im_livechat", {
      */
     setDiscussThread(thread, pushState) {
         this._super(thread, pushState);
-        if (this.store.isSmall && thread.type === "livechat") {
+        if (this.ui.isSmall && thread.type === "livechat") {
             this.store.discuss.activeTab = "livechat";
         }
     },

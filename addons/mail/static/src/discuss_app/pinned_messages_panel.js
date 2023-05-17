@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Component, onWillStart, onWillUpdateProps, useSubEnv } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, useState, useSubEnv } from "@odoo/owl";
 import { Message } from "@mail/core_ui/message";
 import { MessageConfirmDialog } from "@mail/core_ui/message_confirm_dialog";
 import { useService } from "@web/core/utils/hooks";
@@ -18,6 +18,8 @@ export class PinnedMessagesPanel extends Component {
         this.messageService = useService("mail.message");
         this.store = useService("mail.store");
         this.rpc = useService("rpc");
+        this.ui = useState(useService("ui"));
+
         onWillStart(() => {
             this.threadService.fetchPinnedMessages(this.props.thread);
         });
@@ -38,7 +40,7 @@ export class PinnedMessagesPanel extends Component {
      * @param {Message} message
      */
     async onClickJump(message) {
-        if (this.env.isSmall) {
+        if (this.ui.isSmall) {
             this.env.pinMenu.close();
             // Give the time to the pin menu to close before scrolling
             // to the message.
