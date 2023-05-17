@@ -48,6 +48,8 @@ export class CalendarController extends Component {
             resModel: this.props.resModel,
             domain: this.props.domain,
             fields: this.props.fields,
+        }, {
+            onWillStart: this.onWillStartModel.bind(this),
         });
         this.displayName = this.env.config.getDisplayName();
 
@@ -214,6 +216,9 @@ export class CalendarController extends Component {
             },
         });
     }
+
+    onWillStartModel() {}
+    
     async setDate(move) {
         let date = null;
         switch (move) {

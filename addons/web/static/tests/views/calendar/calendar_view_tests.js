@@ -46,10 +46,14 @@ import { userService } from "@web/core/user_service";
 import { CharField } from "@web/views/fields/char/char_field";
 import { actionService } from "@web/webclient/actions/action_service";
 import { getTimePickers } from "../../core/datetime/datetime_test_helpers";
+import { CalendarController } from "@web/views/calendar/calendar_controller";
+import { calendarView } from "@web/views/calendar/calendar_view";
+import { onWillRender } from "@odoo/owl";
 
 const fieldRegistry = registry.category("fields");
 const preloadedDataRegistry = registry.category("preloadedData");
 const serviceRegistry = registry.category("services");
+const viewRegistry = registry.category("views");
 
 let target;
 let serverData;
@@ -4765,5 +4769,37 @@ QUnit.module("Views", ({ beforeEach }) => {
         if (datepicker) {
             datepicker.remove();
         }
+    });
+
+    QUnit.test("check onWillStartModel is exectuted", async (assert) => {
+        assert.expect(3);
+        class TestCalendarController extends CalendarController {
+            setup() {
+                super.setup();
+                onWillRender(() => {
+                    assert.step("render");
+                });
+            }
+            onWillStartModel() {
+                assert.step("onWillStartModel");
+            }
+        }
+
+        viewRegistry.add("test_calendar_view", {
+            ...calendarView,
+            Controller: TestCalendarController,
+        });
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar js_class="test_calendar_view" date_start="start" date_stop="stop" all_day="allday" mode="month"/>
+            `,
+            limit: 3,
+        });
+
+        assert.verifySteps(["onWillStartModel", "render"]);
     });
 });
