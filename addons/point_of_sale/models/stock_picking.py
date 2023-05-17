@@ -43,6 +43,7 @@ class StockPicking(models.Model):
             )
 
             positive_picking._create_move_from_pos_order_lines(positive_lines)
+            self.env['base'].flush()
             try:
                 with self.env.cr.savepoint():
                     positive_picking._action_done()
@@ -62,6 +63,7 @@ class StockPicking(models.Model):
                 self._prepare_picking_vals(partner, return_picking_type, location_dest_id, return_location_id)
             )
             negative_picking._create_move_from_pos_order_lines(negative_lines)
+            self.env['base'].flush()
             try:
                 with self.env.cr.savepoint():
                     negative_picking._action_done()
