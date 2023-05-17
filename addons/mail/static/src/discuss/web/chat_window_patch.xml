@@ -14,10 +14,10 @@
                 <i class="fa fa-gear"/>
             </div>
         </xpath>
-        <xpath expr="//PinnedMessagesPanel" position="after">
-            <CallSettings t-elif="state.activeMode === 'in-settings'" thread="thread" className="'flex-grow-1'"/>
-            <ChannelMemberList t-elif="state.activeMode === 'member-list'" thread="thread" className="'flex-shrink-0 border-start w-100 h-100'"/>
-            <ChannelInvitation t-elif="state.activeMode === 'add-users'" thread="thread" chatState="state"/>
+        <xpath expr="//t[@name='thread content']" position="inside">
+            <CallSettings t-if="state.activeMode === 'in-settings'" thread="thread" className="'flex-grow-1'"/>
+            <ChannelMemberList t-if="state.activeMode === 'member-list'" thread="thread" className="'flex-shrink-0 border-start w-100 h-100'"/>
+            <ChannelInvitation t-if="state.activeMode === 'add-users'" thread="thread" chatState="state"/>
         </xpath>
     </t>
 </templates>

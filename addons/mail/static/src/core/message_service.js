@@ -136,13 +136,6 @@ export class MessageService {
         await this.orm.silent.call("mail.message", "set_message_done", [[message.id]]);
     }
 
-    setPin(message, pinned) {
-        return this.orm.call("discuss.channel", "set_message_pin", [message.originThread.id], {
-            message_id: message.id,
-            pinned,
-        });
-    }
-
     async unfollow(message) {
         if (message.isNeedaction) {
             await this.setDone(message);
@@ -232,12 +225,6 @@ export class MessageService {
      * @param {Object} data
      */
     update(message, data) {
-        if (message.pinned_at && data.pinned_at === false) {
-            removeFromArrayWithPredicate(
-                message.originThread.pinnedMessages,
-                ({ id }) => id === message.id
-            );
-        }
         const {
             attachment_ids: attachments = message.attachments,
             default_subject: defaultSubject = message.defaultSubject,
@@ -333,6 +320,7 @@ export class MessageService {
             message.notificationType =
                 htmlBody.querySelector(".o_mail_notification")?.dataset.oeType;
         }
+        this.env.bus.trigger("mail.message/onUpdate", { message, data });
     }
 
     _updateReactions(message, reactionGroups) {

@@ -13,8 +13,11 @@ import { ThreadIcon } from "@mail/discuss_app/thread_icon";
 import { ImStatus } from "@mail/discuss_app/im_status";
 import { isEventHandled } from "@mail/utils/misc";
 import { ChannelSelector } from "@mail/discuss_app/channel_selector";
-import { PinnedMessagesPanel } from "@mail/discuss_app/pinned_messages_panel";
 import { _t } from "@web/core/l10n/translation";
+
+export const MODES = {
+    NONE: "",
+};
 
 /**
  * @typedef {Object} Props
@@ -30,12 +33,12 @@ export class ChatWindow extends Component {
         Composer,
         ThreadIcon,
         ImStatus,
-        PinnedMessagesPanel,
     };
     static props = ["chatWindow", "right?"];
     static template = "mail.ChatWindow";
 
     setup() {
+        this.MODES = MODES;
         this.store = useStore();
         /** @type {import("@mail/web/chat_window/chat_window_service").ChatWindowService} */
         this.chatWindowService = useState(useService("mail.chat_window"));
@@ -48,13 +51,12 @@ export class ChatWindow extends Component {
         this.state = useState({
             /**
              * activeMode:
-             *   "pinned-messages": pin menu is displayed
              *   "member-list": channel member list is displayed
              *   "in-settings": settings is displayed
              *   "add-users": add users is displayed (small device)
              *   "": no action pannel
              */
-            activeMode: "",
+            activeMode: MODES.NONE,
         });
         this.action = useService("action");
         this.ui = useState(useService("ui"));
@@ -62,14 +64,6 @@ export class ChatWindow extends Component {
         useChildSubEnv({
             inChatWindow: true,
             messageHighlight: this.messageHighlight,
-            pinMenu: {
-                open: () => (this.state.activeMode = "pinned-messages"),
-                close: () => {
-                    if (this.state.activeMode === "pinned-messages") {
-                        this.state.activeMode = "";
-                    }
-                },
-            },
         });
     }
 
@@ -122,11 +116,6 @@ export class ChatWindow extends Component {
             this.chatWindowService.toggleFold(this.props.chatWindow);
         }
         this.chatWindowService.notifyState(this.props.chatWindow);
-    }
-
-    togglePinMenu() {
-        this.state.activeMode =
-            this.state.activeMode === "pinned-messages" ? "" : "pinned-messages";
     }
 
     expand() {

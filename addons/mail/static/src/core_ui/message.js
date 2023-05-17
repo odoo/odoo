@@ -145,6 +145,26 @@ export class Message extends Component {
         });
     }
 
+    get attClass() {
+        return {
+            "o-highlighted-from-mention": this.message.isHighlightedFromMention,
+            "o-highlighted bg-view shadow-lg": this.props.highlighted,
+            "o-selfAuthored": this.message.isSelfAuthored,
+            "o-selected": this.props.messageToReplyTo?.isSelected(
+                this.props.thread,
+                this.props.message
+            ),
+            "o-squashed pt-1": this.props.squashed,
+            "mt-1": !this.props.squashed && this.props.thread,
+            "px-3": !this.props.isInChatWindow,
+            "px-1": this.props.isInChatWindow,
+            "opacity-50": this.props.messageToReplyTo?.isNotSelected(
+                this.props.thread,
+                this.props.message
+            ),
+        };
+    }
+
     get authorAvatarUrl() {
         if (
             this.message.type === "email" &&
@@ -260,9 +280,7 @@ export class Message extends Component {
 
     get isAlignedRight() {
         return Boolean(
-            !this.env.pinnedPanel &&
-                this.env.inChatWindow &&
-                this.user.partnerId === this.props.message.author?.id
+            this.env.inChatWindow && this.user.partnerId === this.props.message.author?.id
         );
     }
 
@@ -293,7 +311,7 @@ export class Message extends Component {
      * @returns {boolean}
      */
     get shouldDisplayAuthorName() {
-        if (!this.env.inChatWindow || this.env.pinnedPanel) {
+        if (!this.env.inChatWindow) {
             return true;
         }
         if (this.message.isSelfAuthored) {
@@ -311,20 +329,6 @@ export class Message extends Component {
             messageComponent: Message,
             prompt: _t("Are you sure you want to delete this message?"),
             onConfirm: () => this.messageService.delete(this.message),
-        });
-    }
-
-    onClickPin() {
-        const prompt = this.message.pinned_at
-            ? _t("Are you sure you want to remove this pinned message?")
-            : _t(
-                  "The following message will be pinned to the channel. Are you sure you want to continue?"
-              );
-        this.env.services.dialog.add(MessageConfirmDialog, {
-            message: this.message,
-            messageComponent: Message,
-            prompt,
-            onConfirm: () => this.messageService.setPin(this.message, !this.message.pinned_at),
         });
     }
 
@@ -357,10 +361,6 @@ export class Message extends Component {
 
     get authorText() {
         return this.hasOpenChatFeature ? _t("Open chat") : "";
-    }
-
-    get pinOptionText() {
-        return this.message.pinned_at ? _t("Unpin") : _t("Pin");
     }
 
     openChatAvatar(ev) {

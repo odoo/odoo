@@ -184,13 +184,13 @@ For more specific needs, you may also assign custom-defined actions
             ('remove', 'mail/static/src/xml/**/*'),
             ('remove', 'mail/static/src/worklets/**/*'),
             ('remove', 'mail/static/src/views/**/*'),
-            ('remove', 'mail/static/src/web/**/*'),
+            ('remove', 'mail/static/src/**/web/**/*'),
             ('remove', 'mail/static/src/emoji_picker/emoji_data.js'),
             ('remove', 'mail/static/src/**/*.dark.scss'),
             # discuss (loaded last to fix dependencies)
             ('remove', 'mail/static/src/discuss/**/*'),
             'mail/static/src/discuss/**/*',
-            ('remove', 'mail/static/src/discuss/web/**/*'),
+            ('remove', 'mail/static/src/discuss/**/web/**/*'),
         ]
     },
     'license': 'LGPL-3',

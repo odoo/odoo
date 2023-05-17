@@ -4,18 +4,7 @@
     <t t-name="mail.Message" owl="1">
         <ActionSwiper onRightSwipe="hasTouch() and isInInbox ? { action: () => this.messageService.setDone(this.message), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
             <div class="o-mail-Message position-relative py-1"
-                t-att-class="{
-                    'o-pinnedPanel': env.pinnedPanel,
-                    'o-highlighted-from-mention': message.isHighlightedFromMention,
-                    'o-highlighted bg-view shadow-lg': props.highlighted,
-                    'o-selfAuthored': message.isSelfAuthored,
-                    'o-selected': props.messageToReplyTo?.isSelected(props.thread, props.message),
-                    'o-squashed pt-1': props.squashed,
-                    'mt-1': !props.squashed and props.thread and !env.pinnedPanel,
-                    'px-3': !props.isInChatWindow and !env.pinnedPanel,
-                    'px-1': props.isInChatWindow,
-                    'opacity-50': props.messageToReplyTo?.isNotSelected(props.thread, props.message),
-                }"
+                t-att-class="attClass"
                 role="group"
                 t-att-aria-label="messageTypeText"
                 t-on-click="onClick"
@@ -145,7 +134,6 @@
                                             <DropdownItem t-if="message.reactions.length" class="'px-2 d-flex align-items-center rounded-0'" title="'Reactions'" onSelected="() => this.openReactionMenu()"><i class="fa fa-lg fa-smile-o pe-2"/>View Reactions</DropdownItem>
                                             <DropdownItem t-if="isInInbox" class="'px-2 d-flex align-items-center rounded-0'" title="'Mark as Read'" onSelected="() => messageService.setDone(props.message)"><i class="fa fa-lg fa-check pe-2"/>Mark as Read</DropdownItem>
                                             <DropdownItem t-if="canUnfollow" class="'px-2 d-flex align-items-center rounded-0'" title="'Unfollow'" onSelected="() => messageService.unfollow(props.message)"><i class="fa fa-lg fa-user-times pe-2"/>Unfollow</DropdownItem>
-                                            <DropdownItem t-if="store.user and props.thread.model === 'discuss.channel'" class="'px-2 d-flex align-items-center rounded-0'" title="pinOptionText" onSelected="() => this.onClickPin()"><i class="fa fa-lg fa-thumb-tack pe-2"/><t t-esc="pinOptionText"/></DropdownItem>
                                             <DropdownItem t-if="props.thread.model === 'discuss.channel'" class="'px-2 d-flex align-items-center rounded-0'" title="'Mark as Unread'" onSelected="() => this.onClickMarkAsUnread()"><i class="fa fa-lg fa-eye-slash pe-2"/>Mark as Unread</DropdownItem>
                                             <DropdownItem t-if="editable" class="'px-2 d-flex align-items-center rounded-0'" title="'Edit'" onSelected="() => this.onClickEdit()"><i class="fa fa-lg fa-pencil pe-2"/>Edit</DropdownItem>
                                             <DropdownItem t-if="deletable" class="'px-2 d-flex align-items-center rounded-0'" title="'Delete'" onSelected="() => this.onClickDelete()"><i class="fa fa-lg fa-trash pe-2"/>Delete</DropdownItem>

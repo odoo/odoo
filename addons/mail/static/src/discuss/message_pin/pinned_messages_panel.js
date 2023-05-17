@@ -1,17 +1,18 @@
 /* @odoo-module */
 
-import { Component, onWillStart, onWillUpdateProps, useState, useSubEnv } from "@odoo/owl";
 import { Message } from "@mail/core_ui/message";
 import { MessageConfirmDialog } from "@mail/core_ui/message_confirm_dialog";
-import { useService } from "@web/core/utils/hooks";
+import { useMessagePinService } from "@mail/discuss/message_pin/message_pin_service";
+import { Component, onWillStart, onWillUpdateProps, useState, useSubEnv } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 export class PinnedMessagesPanel extends Component {
     static components = {
         Message,
     };
     static props = ["thread"];
-    static template = "mail.PinnedMessagesPanel";
+    static template = "discuss.PinnedMessagesPanel";
 
     setup() {
         this.threadService = useService("mail.thread");
@@ -19,13 +20,13 @@ export class PinnedMessagesPanel extends Component {
         this.store = useService("mail.store");
         this.rpc = useService("rpc");
         this.ui = useState(useService("ui"));
-
+        this.messagePinService = useMessagePinService();
         onWillStart(() => {
-            this.threadService.fetchPinnedMessages(this.props.thread);
+            this.messagePinService.fetchPinnedMessages(this.props.thread);
         });
         onWillUpdateProps(async (nextProps) => {
             if (nextProps.thread.id !== this.props.thread.id) {
-                this.threadService.fetchPinnedMessages(nextProps.thread);
+                this.messagePinService.fetchPinnedMessages(nextProps.thread);
             }
         });
         useSubEnv({
@@ -60,7 +61,7 @@ export class PinnedMessagesPanel extends Component {
             message,
             messageComponent: Message,
             prompt: _t("Are you sure you want to remove this pinned message?"),
-            onConfirm: () => this.messageService.setPin(message, false),
+            onConfirm: () => this.messagePinService.setPin(message, false),
         });
     }
 

@@ -12,7 +12,7 @@
                 <i class="fa fa-lg fa-gear text-700"/>
             </button>
         </xpath>
-        <xpath expr="//PinnedMessagesPanel" position="after">
+        <xpath expr="//*[@t-ref='core']" position="inside">
             <ChannelMemberList t-if="thread.hasMemberList and state.activeMode === MODES.MEMBER_LIST" thread="thread" className="'o-mail-Discuss-channelMemberList flex-shrink-0 border-start'"/>
             <CallSettings t-if="thread.allowCalls and state.activeMode === MODES.SETTINGS" thread="thread" className="'o-mail-Discuss-callSettings border-start'"/>
         </xpath>

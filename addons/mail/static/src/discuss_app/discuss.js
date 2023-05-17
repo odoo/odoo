@@ -23,7 +23,12 @@ import {
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { url } from "@web/core/utils/urls";
-import { PinnedMessagesPanel } from "./pinned_messages_panel";
+
+export const MODES = {
+    MEMBER_LIST: "member-list",
+    SETTINGS: "settings",
+    NONE: "",
+};
 
 export class Discuss extends Component {
     static components = {
@@ -32,7 +37,6 @@ export class Discuss extends Component {
         ThreadIcon,
         Composer,
         Call,
-        PinnedMessagesPanel,
         FileUploader,
         ImStatus,
     };
@@ -41,14 +45,8 @@ export class Discuss extends Component {
     };
     static template = "mail.Discuss";
 
-    MODES = Object.freeze({
-        MEMBER_LIST: "member-list",
-        PINNED_MESSAGES: "pinned-messages",
-        SETTINGS: "settings",
-        NONE: "",
-    });
-
     setup() {
+        this.MODES = MODES;
         this.messaging = useMessaging();
         this.store = useStore();
         this.threadService = useState(useService("mail.thread"));
@@ -59,7 +57,7 @@ export class Discuss extends Component {
         this.messageEdition = useMessageEdition();
         this.messageToReplyTo = useMessageToReplyTo();
         this.contentRef = useRef("content");
-        this.state = useState({ activeMode: this.MODES.NONE });
+        this.state = useState({ activeMode: MODES.NONE });
         this.orm = useService("orm");
         this.effect = useService("effect");
         this.ui = useState(useService("ui"));
@@ -67,14 +65,6 @@ export class Discuss extends Component {
         useChildSubEnv({
             inDiscussApp: true,
             messageHighlight: this.messageHighlight,
-            pinMenu: {
-                open: () => (this.state.activeMode = this.MODES.PINNED_MESSAGES),
-                close: () => {
-                    if (this.state.activeMode === this.MODES.PINNED_MESSAGES) {
-                        this.state.activeMode = this.MODES.NONE;
-                    }
-                },
-            },
         });
         this.notification = useService("notification");
         useEffect(
@@ -113,13 +103,6 @@ export class Discuss extends Component {
                   `/discuss/channel/${this.thread.id}/avatar_128?unique=${this.thread?.avatarCacheKey}`
               )
             : this.thread.imgUrl;
-    }
-
-    togglePinMenu() {
-        this.state.activeMode =
-            this.state.activeMode === this.MODES.PINNED_MESSAGES
-                ? this.MODES.NONE
-                : this.MODES.PINNED_MESSAGES;
     }
 
     async onFileUploaded(file) {
