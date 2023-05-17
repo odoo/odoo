@@ -80,5 +80,5 @@ class SalesOrderLine(models.Model):
                     discount_amount = sum(self.order_id.order_line.filtered(lambda l: l.product_id == coupon_program.discount_line_product_id).mapped('price_total'))
                     discount += (self.price_total / sum(lines.mapped('price_total'))) * discount_amount
             elif coupon_program.reward_type == "product" and self.product_id == coupon_program.reward_id.reward_product_id:
-                discount += self.price_total
+                discount += sum(self.order_id.order_line.filtered(lambda l: l.product_id == coupon_program.discount_line_product_id).mapped('price_total'))
         return discount * -1
