@@ -30,7 +30,7 @@
             <div class="o-bg-inherit o-discuss-ChannelMember-avatar position-relative d-flex ms-4 flex-shrink-0">
                 <img class="w-100 h-100 rounded-circle o_object_fit_cover o_redirect"
                      t-att-src="threadService.avatarUrl(member.persona, props.thread)"/>
-                <ImStatus persona="member.persona"/>
+                <ImStatus persona="member.persona" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
             </div>
             <span class="ms-2 text-truncate" t-esc="member.persona.name"/>
             <span class="ms-auto">
