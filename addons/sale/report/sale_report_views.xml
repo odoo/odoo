@@ -62,6 +62,7 @@
                 <field name="partner_id"/>
                 <field name="country_id"/>
                 <field name="industry_id"/>
+                <field name="zip"/>
                 <group expand="0" string="Extended Filters">
                     <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -72,6 +73,7 @@
                     <filter string="Customer" name="Customer" context="{'group_by':'partner_id'}"/>
                     <filter string="Customer Country" name="country_id" context="{'group_by':'country_id'}"/>
                     <filter string="Customer Industry" name="industry_id" context="{'group_by':'industry_id'}"/>
+                    <filter string="Customer ZIP" name="zip" context="{'group_by':'zip'}"/>
                     <filter string="Product" name="Product" context="{'group_by':'product_id'}"/>
                     <filter string="Product Category" name="Category" context="{'group_by':'categ_id'}"/>
                     <filter string="Status" name="status" context="{'group_by':'state'}"/>

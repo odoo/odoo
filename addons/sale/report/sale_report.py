@@ -39,6 +39,7 @@ class SaleReport(models.Model):
     team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
     country_id = fields.Many2one('res.country', 'Customer Country', readonly=True)
     industry_id = fields.Many2one('res.partner.industry', 'Customer Industry', readonly=True)
+    zip = fields.Char('Customer ZIP', readonly=True)
     commercial_partner_id = fields.Many2one('res.partner', 'Customer Entity', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft Quotation'),
@@ -108,6 +109,7 @@ class SaleReport(models.Model):
             p.product_tmpl_id,
             partner.country_id AS country_id,
             partner.industry_id AS industry_id,
+            partner.zip AS zip,
             partner.commercial_partner_id AS commercial_partner_id,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(p.weight * l.product_uom_qty / u.factor * u2.factor) ELSE 0 END AS weight,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(p.volume * l.product_uom_qty / u.factor * u2.factor) ELSE 0 END AS volume,
@@ -181,6 +183,7 @@ class SaleReport(models.Model):
             p.product_tmpl_id,
             partner.country_id,
             partner.industry_id,
+            partner.zip,
             partner.commercial_partner_id,
             l.discount,
             s.id,
