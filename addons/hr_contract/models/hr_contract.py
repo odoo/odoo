@@ -223,7 +223,7 @@ class Contract(models.Model):
             auto_commit = not getattr(threading.current_thread(), 'testing', False)
             for contract in self:
                 try:
-                    with self.env.cr.savepoint():
+                    with self.env.savepoint():
                         contract.write(vals)
                 except ValidationError as e:
                     _logger.warning(e)

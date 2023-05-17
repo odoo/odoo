@@ -745,7 +745,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
     def test_register_payment_constraints(self):
         # Test to register a payment for a draft journal entry.
         self.out_invoice_1.button_draft()
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.env['account.payment.register']\
                 .with_context(active_model='account.move', active_ids=self.out_invoice_1.ids)\
                 .create({})
@@ -755,7 +755,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             .with_context(active_model='account.move', active_ids=self.out_invoice_2.ids)\
             .create({})\
             ._create_payments()
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.env['account.payment.register']\
                 .with_context(active_model='account.move', active_ids=self.out_invoice_2.ids)\
                 .create({})

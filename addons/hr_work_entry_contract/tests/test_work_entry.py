@@ -204,5 +204,5 @@ class TestWorkEntry(TestWorkEntryBase):
 
         with mute_logger('odoo.sql_db'):
             with self.assertRaises(IntegrityError):
-                with self.cr.savepoint():
+                with self.env.savepoint():
                     (work_entry_1 + work_entry_2).write({'state': 'validated'})

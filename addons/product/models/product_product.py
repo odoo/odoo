@@ -377,7 +377,7 @@ class ProductProduct(models.Model):
             self = to_unlink
 
         try:
-            with self.env.cr.savepoint(), tools.mute_logger('odoo.sql_db'):
+            with self.env.savepoint(), tools.mute_logger('odoo.sql_db'):
                 self.unlink()
         except Exception:
             # We catch all kind of exceptions to be sure that the operation

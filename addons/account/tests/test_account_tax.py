@@ -26,5 +26,5 @@ class TestAccountTax(AccountTestInvoicingCommon):
             ],
         })
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.company_data['default_tax_sale'].company_id = self.company_data_2['company']

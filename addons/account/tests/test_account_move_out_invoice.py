@@ -2149,11 +2149,11 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         not_receivable_lines = move.line_ids - receivable_lines
 
         # Write a receivable account on a not-receivable line.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             not_receivable_lines.write({'account_id': receivable_lines[0].account_id.copy().id})
 
         # Write a not-receivable account on a receivable line.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             receivable_lines.write({'account_id': not_receivable_lines[0].account_id.copy().id})
 
         # Write another receivable account on a receivable line.
@@ -3340,7 +3340,7 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
             ],
         })
         self.product_a.property_account_income_id.deprecated = True
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             move.action_post()
 
     def test_change_currency_id(self):

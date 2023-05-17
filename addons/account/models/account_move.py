@@ -2890,7 +2890,7 @@ class AccountMove(models.Model):
 
             try:
                 if decoder and not success:
-                    with self.env.cr.savepoint(), self._get_edi_creation() as invoice:
+                    with self.env.savepoint(), self._get_edi_creation() as invoice:
                         # pylint: disable=not-callable
                         success = decoder(invoice, file_data, new)
                         if success:

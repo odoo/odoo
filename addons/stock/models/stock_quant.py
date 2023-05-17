@@ -1018,7 +1018,7 @@ class StockQuant(models.Model):
                    DELETE FROM stock_quant WHERE id in (SELECT unnest(to_delete_quant_ids) from dupes)
         """
         try:
-            with self.env.cr.savepoint():
+            with self.env.savepoint():
                 self.env.cr.execute(query)
                 self.env.invalidate_all()
         except Error as e:

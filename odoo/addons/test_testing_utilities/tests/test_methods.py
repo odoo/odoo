@@ -5,6 +5,7 @@ from unittest import mock, TestCase
 
 import psycopg2
 
+from odoo.api import Environment
 from odoo.exceptions import AccessError
 from odoo.sql_db import BaseCursor
 from odoo.tests import common
@@ -58,7 +59,7 @@ class TestBasic(common.TransactionCase):
         Raises an exception when `savepoint()` calls `flush()` during setup.
         """
         # ensure we catch the error with the "base" method to avoid any interference
-        with mock.patch.object(BaseCursor, 'flush', side_effect=CustomError), \
+        with mock.patch.object(Environment, 'flush_all', side_effect=CustomError), \
              TestCase.assertRaises(self, CustomError):
             with self.assertRaises(CustomError):
                 raise NotImplementedError

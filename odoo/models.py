@@ -1175,7 +1175,7 @@ class BaseModel(metaclass=MetaModel):
 
             # try to create in batch
             try:
-                with cr.savepoint():
+                with self.env.savepoint():
                     recs = self._load_records(data_list, mode == 'update')
                     ids.extend(recs.ids)
                 return
@@ -1192,7 +1192,7 @@ class BaseModel(metaclass=MetaModel):
             # try again, this time record by record
             for i, rec_data in enumerate(data_list, 1):
                 try:
-                    with cr.savepoint():
+                    with self.env.savepoint():
                         rec = self._load_records([rec_data], mode == 'update')
                         ids.append(rec.id)
                 except psycopg2.Warning as e:

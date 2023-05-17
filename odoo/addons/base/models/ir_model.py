@@ -1476,7 +1476,7 @@ class IrModelSelection(models.Model):
             if not records:
                 return
             try:
-                with self.env.cr.savepoint():
+                with self.env.savepoint():
                     records.write({fname: value})
             except Exception:
                 # going through the ORM failed, probably because of an exception
@@ -2208,7 +2208,7 @@ class IrModelData(models.Model):
             # now delete the records
             _logger.info('Deleting %s', records)
             try:
-                with self._cr.savepoint():
+                with self.env.savepoint():
                     records.unlink()
             except Exception:
                 if len(records) <= 1:
@@ -2256,7 +2256,7 @@ class IrModelData(models.Model):
         for data in self.browse(undeletable_ids).exists():
             record = self.env[data.model].browse(data.res_id)
             try:
-                with self.env.cr.savepoint():
+                with self.env.savepoint():
                     if record.exists():
                         # record exists therefore the data is still undeletable,
                         # remove it from module_data

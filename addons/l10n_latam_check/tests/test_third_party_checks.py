@@ -65,7 +65,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         delivery.action_post()
         self.assertFalse(check.l10n_latam_check_current_journal_id, 'Current journal was not computed properly on delivery')
         # check dont delivery twice
-        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.cr.savepoint():
+        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.env.savepoint():
             self.env['account.payment'].create(vals).action_post()
 
         # Check Return / Rejection
@@ -81,7 +81,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         supplier_return.action_post()
         self.assertEqual(check.l10n_latam_check_current_journal_id, self.rejected_check_journal, 'Current journal was not computed properly on return')
         # check dont return twice
-        with self.assertRaisesRegex(ValidationError, "it can't be received it again"), self.cr.savepoint():
+        with self.assertRaisesRegex(ValidationError, "it can't be received it again"), self.env.savepoint():
             self.env['account.payment'].create(vals).action_post()
 
         # Check Claim/Return to customer
@@ -97,7 +97,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         customer_return.action_post()
         self.assertFalse(check.l10n_latam_check_current_journal_id, 'Current journal was not computed properly on customer return')
         # check dont claim twice
-        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.cr.savepoint():
+        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.env.savepoint():
             self.env['account.payment'].create(vals).action_post()
 
         operations = self.env['account.payment'].search([('l10n_latam_check_id', '=', check.id), ('state', '=', 'posted')], order="date desc, id desc")
@@ -113,7 +113,7 @@ class TestThirdChecks(L10nLatamCheckTest):
             active_model='account.payment', active_ids=[check.id]).create({'destination_journal_id': bank_journal.id})._create_payments()
         self.assertEqual(check.l10n_latam_check_current_journal_id, bank_journal, 'Current journal was not computed properly on delivery')
         # check dont deposit twice
-        with self.assertRaisesRegex(UserError, "All selected checks must be on the same journal and on hand"), self.cr.savepoint():
+        with self.assertRaisesRegex(UserError, "All selected checks must be on the same journal and on hand"), self.env.savepoint():
             self.env['l10n_latam.payment.mass.transfer'].with_context(
                 active_model='account.payment', active_ids=[check.id]).create({'destination_journal_id': bank_journal.id})._create_payments()
 
@@ -131,7 +131,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         bank_rejection.action_post()
         self.assertEqual(check.l10n_latam_check_current_journal_id, self.rejected_check_journal, 'Current journal was not computed properly on return')
         # check dont reject twice
-        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.cr.savepoint():
+        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.env.savepoint():
             self.env['account.payment'].create(vals).action_post()
 
         # Check Claim/Return to customer
@@ -147,7 +147,7 @@ class TestThirdChecks(L10nLatamCheckTest):
         customer_return.action_post()
         self.assertFalse(check.l10n_latam_check_current_journal_id, 'Current journal was not computed properly on customer return')
         # check dont return twice
-        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.cr.savepoint():
+        with self.assertRaisesRegex(ValidationError, "it seems it has been moved by another payment"), self.env.savepoint():
             self.env['account.payment'].create(vals).action_post()
 
         operations = self.env['account.payment'].search([('l10n_latam_check_id', '=', check.id), ('state', '=', 'posted')], order="date desc, id desc")

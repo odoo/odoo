@@ -14,6 +14,7 @@ import re
 import threading
 import time
 import uuid
+import warnings
 from contextlib import contextmanager
 from datetime import datetime, timedelta
 from inspect import currentframe
@@ -164,6 +165,11 @@ class BaseCursor:
         relevant hooks.
         """
         if flush:
+            warnings.warn(
+                "Starting odoo 16.4, you should use 'env.savepoint()' to create a savepoint that will flush the cache",
+                DeprecationWarning,
+                stacklevel=2,
+            )
             return _FlushingSavepoint(self)
         else:
             return Savepoint(self)

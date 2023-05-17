@@ -527,7 +527,7 @@ class StockWarehouseOrderpoint(models.Model):
                                 orderpoint.company_id, values))
 
                     try:
-                        with self.env.cr.savepoint():
+                        with self.env.savepoint():
                             self.env['procurement.group'].with_context(from_orderpoint=True).run(procurements, raise_user_error=raise_user_error)
                     except ProcurementException as errors:
                         orderpoints_exceptions = []

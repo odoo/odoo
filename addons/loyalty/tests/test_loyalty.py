@@ -25,7 +25,7 @@ class TestLoyalty(TransactionCase):
         # Test that we can not unlink dicount line product id
         with mute_logger('odoo.sql_db'):
             with self.assertRaises(IntegrityError):
-                with self.cr.savepoint():
+                with self.env.savepoint():
                     self.program.reward_ids.discount_line_product_id.unlink()
 
     def test_loyalty_mail(self):

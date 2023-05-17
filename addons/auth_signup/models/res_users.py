@@ -142,7 +142,7 @@ class ResUsers(models.Model):
         # create a copy of the template user (attached to a specific partner_id if given)
         values['active'] = True
         try:
-            with self.env.cr.savepoint():
+            with self.env.savepoint():
                 return template_user.with_context(no_reset_password=True).copy(values)
         except Exception as e:
             # copy may failed if asked login is not available.
@@ -198,7 +198,7 @@ class ResUsers(models.Model):
                 raise UserError(_("Cannot send email: user %s has no email address.", user.name))
             email_values['email_to'] = user.email
             # TDE FIXME: make this template technical (qweb)
-            with self.env.cr.savepoint():
+            with self.env.savepoint():
                 force_send = not(self.env.context.get('import_file', False))
                 template.send_mail(user.id, force_send=force_send, raise_exception=True, email_values=email_values)
             _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)

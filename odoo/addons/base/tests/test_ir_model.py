@@ -253,7 +253,7 @@ class TestIrModel(TransactionCase):
 
         INVALID_ORDERS = ['', 'x_wat', 'id esc', 'create_uid,', 'id, x_is_yellow']
         for order in INVALID_ORDERS:
-            with self.assertRaises(ValidationError), self.cr.savepoint():
+            with self.assertRaises(ValidationError), self.env.savepoint():
                 self.bananas_model.order = order
 
         # check that the constraint is checked at model creation
