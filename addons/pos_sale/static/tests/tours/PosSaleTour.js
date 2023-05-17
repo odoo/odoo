@@ -85,3 +85,16 @@ PaymentScreen.do.clickValidate();
 ReceiptScreen.do.clickNextOrder();
 
 registry.category("web_tour.tours").add('PosRefundDownpayment', { test: true, url: '/pos/ui', steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickQuotationButton();
+ProductScreen.do.selectFirstOrder();
+ProductScreen.check.totalAmountIs(40);
+ProductScreen.do.clickPayButton();
+PaymentScreen.do.clickPaymentMethod('Bank');
+PaymentScreen.do.clickValidate();
+ReceiptScreen.check.isShown();
+
+registry.category("web_tour.tours").add('PosSettleOrderRealTime', { test: true, url: '/pos/ui', steps: getSteps() });
