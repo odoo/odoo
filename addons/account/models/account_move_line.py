@@ -480,6 +480,7 @@ class AccountMoveLine(models.Model):
                     values.append(product.description_purchase)
             line.name = '\n'.join(values)
 
+    @api.depends('display_type', 'company_id')
     def _compute_account_id(self):
         term_lines = self.filtered(lambda line: line.display_type == 'payment_term')
         if term_lines:
@@ -495,6 +496,7 @@ class AccountMoveLine(models.Model):
                      WHERE line.move_id = ANY(%(move_ids)s)
                        AND line.display_type = 'payment_term'
                        AND line.id != ANY(%(current_ids)s)
+                       AND company_id = ANY(%(company_ids)s)
                 ),
                 properties AS(
                     SELECT DISTINCT ON (property.company_id, property.name, property.res_id)
@@ -869,7 +871,7 @@ class AccountMoveLine(models.Model):
                 product_uom=line.product_uom_id,
             )
 
-    @api.depends('product_id', 'product_uom_id')
+    @api.depends('product_id', 'product_uom_id', 'company_id')
     def _compute_tax_ids(self):
         for line in self:
             if line.display_type in ('line_section', 'line_note', 'payment_term'):
