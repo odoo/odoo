@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
 
 /**
  * @typedef {Object} Props
@@ -41,6 +42,7 @@ export class AttachmentViewer extends Component {
             scale: 1,
             angle: 0,
         });
+        this.ui = useState(useService("ui"));
     }
 
     onImageLoaded() {

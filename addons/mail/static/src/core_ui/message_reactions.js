@@ -14,6 +14,7 @@ export class MessageReactions extends Component {
         this.user = useService("user");
         this.messaging = useService("mail.messaging");
         this.store = useStore();
+        this.ui = useService("ui");
         this.messageService = useState(useService("mail.message"));
     }
 
@@ -72,7 +73,7 @@ export class MessageReactions extends Component {
     }
 
     onContextMenu(ev) {
-        if (this.store.isSmall) {
+        if (this.ui.isSmall) {
             ev.preventDefault();
             this.props.openReactionMenu();
         }

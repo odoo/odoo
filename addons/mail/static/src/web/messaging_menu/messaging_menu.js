@@ -31,6 +31,7 @@ export class MessagingMenu extends Component {
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
         this.action = useService("action");
+        this.ui = useState(useService("ui"));
         this.state = useState({
             addingChat: false,
             addingChannel: false,
@@ -201,7 +202,7 @@ export class MessagingMenu extends Component {
     }
 
     onClickNewMessage() {
-        if (this.store.isSmall && this.env.inDiscussApp) {
+        if (this.ui.isSmall && this.env.inDiscussApp) {
             this.state.addingChat = true;
         } else {
             this.chatWindowService.openNewMessage();

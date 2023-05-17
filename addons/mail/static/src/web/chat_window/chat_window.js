@@ -57,6 +57,7 @@ export class ChatWindow extends Component {
             activeMode: "",
         });
         this.action = useService("action");
+        this.ui = useState(useService("ui"));
         this.contentRef = useRef("content");
         useChildSubEnv({
             inChatWindow: true,
@@ -77,10 +78,10 @@ export class ChatWindow extends Component {
     }
 
     get style() {
-        const maxHeight = !this.store.isSmall ? "max-height: 95vh;" : "";
+        const maxHeight = !this.ui.isSmall ? "max-height: 95vh;" : "";
         const textDirection = localization.direction;
         const offsetFrom = textDirection === "rtl" ? "left" : "right";
-        const visibleOffset = this.store.isSmall ? 0 : this.props.right;
+        const visibleOffset = this.ui.isSmall ? 0 : this.props.right;
         const oppositeFrom = offsetFrom === "right" ? "left" : "right";
         return `${offsetFrom}: ${visibleOffset}px; ${oppositeFrom}: auto; ${maxHeight}`;
     }
@@ -112,7 +113,7 @@ export class ChatWindow extends Component {
     }
 
     toggleFold() {
-        if (this.store.isSmall) {
+        if (this.ui.isSmall) {
             return;
         }
         if (this.props.chatWindow.hidden) {

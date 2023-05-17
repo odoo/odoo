@@ -39,6 +39,7 @@ export class ThreadService {
         this.rpc = services.rpc;
         this.notificationService = services.notification;
         this.router = services.router;
+        this.ui = services.ui;
         /** @type {import("@mail/core/persona_service").PersonaService} */
         this.personaService = services["mail.persona"];
         /** @type {import("@mail/core/message_service").MessageService} */
@@ -637,7 +638,7 @@ export class ThreadService {
             typeof thread.id === "string"
                 ? `mail.box_${thread.id}`
                 : `discuss.channel_${thread.id}`;
-        this.store.discuss.activeTab = !this.store.isSmall
+        this.store.discuss.activeTab = !this.ui.isSmall
             ? "all"
             : thread.model === "mail.box"
             ? "mailbox"
@@ -1101,6 +1102,7 @@ export const threadService = {
         "router",
         "mail.persona",
         "mail.message",
+        "ui",
     ],
     start(env, services) {
         return new ThreadService(env, services);
