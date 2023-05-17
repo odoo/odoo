@@ -114,7 +114,7 @@
 </t>
 
 <t t-name="mail.NotificationMessage" owl="1">
-    <div class="mx-auto text-500 small px-3 text-center" t-on-click="onClickNotification" t-att-class="{
+    <div class="o-mail-NotificationMessage mx-auto text-500 small px-3 text-center" t-on-click="onClickNotification" t-att-class="{
         'o-mail-Thread-noPinnedPanel': env.inChatWindow and !env.isSmall,
         'mt-2': prevMsg and !prevMsg.isNotification,
     }">
