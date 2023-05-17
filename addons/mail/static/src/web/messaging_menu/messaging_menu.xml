@@ -49,30 +49,33 @@
             <div class="d-flex justify-content-center py-4 px-2 text-muted" t-if="!hasPreviews">
                 No conversation yet...
             </div>
-            <NotificationItem t-if="notificationRequest.isShown"
-                body="notificationRequest.body"
-                displayName="notificationRequest.displayName"
-                iconSrc="notificationRequest.iconSrc"
-                isLast="notificationRequest.isLast"
-                onClick="() => notification.requestPermission()"
-            >
-                <t t-set-slot="icon">
-                    <ImStatus persona="notificationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
-                </t>
-            </NotificationItem>
-            <t t-if="store.discuss.activeTab === 'all'">
+            <t t-if="notificationRequest.isShown">
                 <NotificationItem
-                    t-foreach="failures" t-as="failure" t-key="failure.id"
-                    body="failure.body"
-                    counter="failure.notifications.length > 1 ? failure.notifications.length : undefined"
-                    datetime="failure.datetime"
-                    displayName="failure.modelName"
-                    iconSrc="failure.iconSrc"
-                    isLast="threads.length === 0 and failure_last"
-                    hasMarkAsReadButton="true"
-                    onClick="(isMarkAsRead) => isMarkAsRead ? this.cancelNotifications(failure) : this.onClickFailure(failure)"
-                    onSwipeRight="hasTouch() ? { action: () => this.cancelNotifications(failure), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
-                />
+                    body="notificationRequest.body"
+                    displayName="notificationRequest.displayName"
+                    iconSrc="notificationRequest.iconSrc"
+                    onClick="() => notification.requestPermission()"
+                >
+                    <t t-set-slot="icon">
+                        <ImStatus persona="notificationRequest.partner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
+                    </t>
+                </NotificationItem>
+                <hr t-if="!notificationRequest.isLast" class="my-0"/>
+            </t>
+            <t t-if="store.discuss.activeTab === 'all'">
+                <t t-foreach="failures" t-as="failure" t-key="failure.id">
+                    <NotificationItem
+                        body="failure.body"
+                        counter="failure.notifications.length > 1 ? failure.notifications.length : undefined"
+                        datetime="failure.datetime"
+                        displayName="failure.modelName"
+                        iconSrc="failure.iconSrc"
+                        hasMarkAsReadButton="true"
+                        onClick="(isMarkAsRead) => isMarkAsRead ? this.cancelNotifications(failure) : this.onClickFailure(failure)"
+                        onSwipeRight="hasTouch() ? { action: () => this.cancelNotifications(failure), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
+                    />
+                    <hr t-if="threads.length !== 0 or !failure_last" class="my-0"/>
+                </t>
             </t>
             <t t-foreach="threads" t-as="thread" t-key="thread.localId">
                 <t t-set="message" t-value="thread.isChatChannel or (thread.type === 'channel' and !thread.hasNeedactionMessages) ? thread.newestMessage : thread.newestNeedactionMessage"/>
@@ -83,7 +86,6 @@
                     displayName="thread.displayName"
                     iconSrc="thread.imgUrl"
                     hasMarkAsReadButton="thread.isUnread"
-                    isLast="thread_last"
                     onClick="(isMarkAsRead) => this.onClickThread(isMarkAsRead, thread)"
                     onSwipeRight="hasTouch() and thread.isUnread ? { action: () => this.markAsRead(thread), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
                     onSwipeLeft="hasTouch() and threadService.canUnpin(thread) ? { action: () => this.threadService.unpin(thread), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
@@ -100,6 +102,7 @@
                         </t>
                     </t>
                 </NotificationItem>
+                <hr t-if="!thread_last" class="my-0"/>
             </t>
         </div>
     </div>
