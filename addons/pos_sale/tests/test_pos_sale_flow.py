@@ -183,3 +183,71 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(len(sale_order.order_line), 3)
         self.assertEqual(sale_order.order_line[1].qty_invoiced, 1)
         self.assertEqual(sale_order.order_line[2].qty_invoiced, -1)
+    def test_settle_order_unreserve_order_lines(self):
+        #create a product category that use the closest location for the removal strategy
+        self.removal_strategy = self.env['product.removal'].search([('method', '=', 'closest')], limit=1)
+        self.product_category = self.env['product.category'].create({
+            'name': 'Product Category',
+            'removal_strategy_id': self.removal_strategy.id,
+        })
+
+        self.product = self.env['product.product'].create({
+            'name': 'Product',
+            'available_in_pos': True,
+            'type': 'product',
+            'lst_price': 10.0,
+            'taxes_id': False,
+            'categ_id': self.product_category.id,
+        })
+
+        #create 2 stock location Shelf 1 and Shelf 2
+        self.warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        self.shelf_1 = self.env['stock.location'].create({
+            'name': 'Shelf 1',
+            'usage': 'internal',
+            'location_id': self.warehouse.lot_stock_id.id,
+        })
+        self.shelf_2 = self.env['stock.location'].create({
+            'name': 'Shelf 2',
+            'usage': 'internal',
+            'location_id': self.warehouse.lot_stock_id.id,
+        })
+
+        quants = self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product.id,
+            'inventory_quantity': 2,
+            'location_id': self.shelf_1.id,
+        })
+        quants |= self.env['stock.quant'].with_context(inventory_mode=True).create({
+            'product_id': self.product.id,
+            'inventory_quantity': 5,
+            'location_id': self.shelf_2.id,
+        })
+        quants.action_apply_inventory()
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.res_partner_2').id,
+            'order_line': [(0, 0, {
+                'product_id': self.product.id,
+                'name': self.product.name,
+                'product_uom_qty': 4,
+                'price_unit': self.product.lst_price,
+            })],
+        })
+        sale_order.action_confirm()
+
+        self.assertEqual(sale_order.order_line.move_ids.move_line_ids[0].reserved_qty, 2)
+        self.assertEqual(sale_order.order_line.move_ids.move_line_ids[0].location_id.id, self.shelf_1.id)
+        self.assertEqual(sale_order.order_line.move_ids.move_line_ids[1].reserved_qty, 2)
+        self.assertEqual(sale_order.order_line.move_ids.move_line_ids[1].location_id.id, self.shelf_2.id)
+
+        self.main_pos_config.company_id.write({'point_of_sale_update_stock_quantities': 'real'})
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderRealTime', login="accountman")
+        self.main_pos_config.current_session_id.close_session_from_ui()
+        pos_order = self.env['pos.order'].search([], order='id desc', limit=1)
+        self.assertEqual(pos_order.picking_ids.move_line_ids[0].qty_done, 2)
+        self.assertEqual(pos_order.picking_ids.move_line_ids[0].location_id.id, self.shelf_1.id)
+        self.assertEqual(pos_order.picking_ids.move_line_ids[1].qty_done, 2)
+        self.assertEqual(pos_order.picking_ids.move_line_ids[1].location_id.id, self.shelf_2.id)
+        self.assertEqual(sale_order.order_line.move_ids.move_lines_count, 0)
