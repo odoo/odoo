@@ -2,6 +2,7 @@
 from odoo.tests.common import TransactionCase
 from odoo.exceptions import MissingError
 from odoo import Command
+from odoo.tools import mute_logger
 
 
 class One2manyCase(TransactionCase):
@@ -434,3 +435,48 @@ class One2manyCase(TransactionCase):
         # Check that the search is not stuck in the loop
         Team.search([('id', 'parent_of', team1.id)])
         Team.search([('id', 'child_of', team1.id)])
+
+    @mute_logger('odoo.osv.expression')
+    def test_create_one2many_with_unsearchable_field(self):
+        # odoo.osv.expression is muted as reading a non-stored and unsearchable field will log an error and makes the runbot red
+
+        unsearchableO2M = self.env['test_new_api.unsearchable.o2m']
+
+        # Create a parent record
+        parent_record1 = unsearchableO2M.create({
+            'name': 'Parent 1',
+        })
+
+        # Create another parent record
+        parent_record2 = unsearchableO2M.create({
+            'name': 'Parent 2',
+        })
+
+        children = {parent_record1.id : [], parent_record2.id : []}
+        # Create child records linked to parent_record1
+        for i in range(5):
+            child = unsearchableO2M.create({
+                'name': f'Child {i}',
+                'stored_parent_id': parent_record1.id,
+                'parent_id': parent_record1.id,
+            })
+            self.assertEqual(child.parent_id, parent_record1)
+            children[parent_record1.id].append(child.id)
+
+        # Create child records linked to parent_record2
+        for i in range(5, 10):
+            child = unsearchableO2M.create({
+                'name': f'Child {i}',
+                'stored_parent_id': parent_record2.id,
+                'parent_id': parent_record2.id,
+            })
+            self.assertEqual(child.parent_id, parent_record2)
+            children[parent_record2.id].append(child.id)
+
+        # invalidating the cache to force reading one2many again
+        self.env.invalidate_all()
+        # Make sure the parent_record1 only has its own child records
+        self.assertEqual(parent_record1.child_ids.ids, children[parent_record1.id])
+
+        # Make sure the parent_record2 only has its own child records
+        self.assertEqual(parent_record2.child_ids.ids, children[parent_record2.id])
