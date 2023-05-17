@@ -689,7 +689,7 @@ class AccountMove(models.Model):
                     if move._get_last_sequence(lock=False):
                         # The name does not match the date and the move is not the first in the period:
                         # Reset to draft
-                        move.name = '/'
+                        move.name = False
                         continue
                 else:
                     if move_has_name and move.posted_before or not move_has_name and move._get_last_sequence(lock=False):
@@ -701,7 +701,7 @@ class AccountMove(models.Model):
             if move.date and (not move_has_name or not move._sequence_matches_date()):
                 move._set_next_sequence()
 
-        self.filtered(lambda m: not m.name).name = '/'
+        self.filtered(lambda m: not m.name and not move.quick_edit_mode).name = '/'
         self._inverse_name()
 
 
