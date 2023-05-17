@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Message" t-inherit-mode="extension">
+        <xpath expr="//DropdownItem[@t-if='canUnfollow']" position="after">
+            <DropdownItem
+                t-if="store.user and props.thread.model === 'discuss.channel'"
+                class="'px-2 d-flex align-items-center rounded-0'"
+                title="pinOptionText"
+                onSelected="() => this.onClickPin()"
+            >
+                <span><i class="fa fa-lg fa-thumb-tack pe-2"/><t t-esc="pinOptionText"/></span>
+            </DropdownItem>
+        </xpath>
+    </t>
+</templates>

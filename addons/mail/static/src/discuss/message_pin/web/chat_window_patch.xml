@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='startCall']" position="before">
+            <div t-if="(thread?.model === 'discuss.channel' and ui.isSmall) or state.activeMode === MODES.PINNED_MESSAGES" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-75 opacity-100-hover" title="Pinned messages" t-on-click.stop="togglePinMenu">
+                <i class="fa fa-lg fa-thumb-tack"/>
+            </div>
+        </xpath>
+        <xpath expr="//t[@name='thread content']" position="inside">
+            <PinnedMessagesPanel t-if="state.activeMode === MODES.PINNED_MESSAGES" thread="thread"/>
+        </xpath>
+    </t>
+</templates>

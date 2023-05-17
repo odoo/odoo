@@ -59,8 +59,6 @@ export class Thread {
     isLoadingAttachments = false;
     isLoadedDeferred = new Deferred();
     isLoaded = false;
-    /** @type {"loading"|"loaded"} */
-    pinLoadState;
     /** @type {import("@mail/attachments/attachment_model").Attachment} */
     mainAttachment;
     memberCount = 0;
@@ -98,8 +96,6 @@ export class Thread {
      * @type {import("@mail/core/message_model").Message[]}
      */
     needactionMessages = [];
-    /** @type {import("@mail/core/message_model").Message[]} */
-    pinnedMessages = [];
     /** @type {string} */
     name;
     /** @type {number|false} */

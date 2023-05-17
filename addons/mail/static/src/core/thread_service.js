@@ -160,31 +160,6 @@ export class ThreadService {
         await this.orm.silent.call("discuss.channel", "channel_fetched", [[thread.id]]);
     }
 
-    async fetchPinnedMessages(thread) {
-        if (
-            thread.model !== "discuss.channel" ||
-            ["loaded", "loading"].includes(thread.pinLoadState)
-        ) {
-            return;
-        }
-        thread.pinLoadState = "loading";
-        try {
-            const messages = await this.rpc("/discuss/channel/pinned_messages", {
-                channel_id: thread.id,
-            });
-            const pinnedMessages = messages.map((message) => {
-                if (message.parentMessage) {
-                    message.parentMessage.body = markup(message.parentMessage.body);
-                }
-                message.body = markup(message.body);
-                return this.messageService.insert(message);
-            });
-            thread.pinnedMessages = pinnedMessages;
-        } finally {
-            thread.pinLoadState = "loaded";
-        }
-    }
-
     getFetchRoute(thread) {
         if (thread.model === "discuss.channel") {
             return "/discuss/channel/messages";

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="discuss.PinnedMessagesPanel" owl="1">
+        <div class="o-discuss-PinnedMessagesPanel overflow-auto d-flex flex-column flex-shrink-0 bg-view position-relative border-start" t-att-class="{
+            'flex-grow-1': env.inChatWindow,
+        }">
+            <p class="o-discuss-PinnedMessagesPanel-title position-sticky top-0 py-3 mb-0 fw-bolder text-center text-uppercase text-700">
+                Pinned messages
+            </p>
+            <div class="d-flex flex-column" t-att-class="{ 'justify-content-center flex-grow-1': !messagePinService.hasPinnedMessages(props.thread) }" t-ref="message-list">
+                <div class="card m-3 mt-0" t-foreach="messagePinService.getPinnedMessages(props.thread)" t-as="message" t-key="message.id">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-end">
+                            <button class="o-discuss-PinnedMessagesPanel-jump btn rounded bg-400 badge opacity-0 flex-shrink-0" t-att-class="{ 'opacity-100 py-1 px-2': ui.isSmall }" t-on-click="() => this.onClickJump(message)">Jump</button>
+                            <button class="btn ms-2 p-0 text-700 shadow-none" t-att-class="{ 'fs-5 align-self-end': ui.isSmall }" title="Unpin" t-on-click="() => this.onClickUnpin(message)">
+                                <i class="d-block fa fa-times"/>
+                            </button>
+                        </div>
+                        <Message hasActions="false" message="message" thread="props.thread"/>
+                    </div>
+                </div>
+                <p t-if="!messagePinService.hasPinnedMessages(props.thread)" t-esc="emptyMessage" class="text-center fst-italic text-500 fs-6"/>
+            </div>
+        </div>
+    </t>
+</templates>
