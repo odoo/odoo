@@ -28,10 +28,13 @@
                             <button
                                 class="o_date_item_cell o_datetime_button o_center o_cell_md btn p-1 border-0 fw-normal"
                                 t-att-class="{
-                                    'o_active bg-odoo': !itemInfo.isOutOfRange and arInfo.isActive,
-                                    'o_preview_active bg-odoo': !itemInfo.isOutOfRange and arInfo.isPreviewActive,
-                                    o_active_start: arInfo.isStart or arInfo.isPreviewStart,
-                                    o_active_end: arInfo.isEnd or arInfo.isPreviewEnd,
+                                    'o_selected bg-primary': arInfo.isSelected,
+                                    o_select_start: arInfo.isSelectStart,
+                                    o_select_end: arInfo.isSelectEnd,
+                                    'o_highlighted bg-primary': arInfo.isHighlighted,
+                                    o_highlight_start: arInfo.isHighlightStart,
+                                    o_highlight_end: arInfo.isHighlightEnd,
+                                    o_current: arInfo.isCurrent,
                                     o_today: itemInfo.includesToday,
                                     o_out_of_range: itemInfo.isOutOfRange or itemInfo.isInvalid,
                                     'border-bottom': !week_last,
@@ -83,10 +86,13 @@
                 <button
                     class="o_date_item_cell o_datetime_button o_center o_cell_lg btn p-1"
                     t-att-class="{
+                        'o_selected bg-primary': arInfo.isSelected,
+                        o_select_start: arInfo.isSelectStart,
+                        o_select_end: arInfo.isSelectEnd,
+                        'o_highlighted bg-primary': arInfo.isHighlighted,
+                        o_highlight_start: arInfo.isHighlightStart,
+                        o_highlight_end: arInfo.isHighlightEnd,
                         o_today: itemInfo.includesToday,
-                        'o_active text-bg-odoo': arInfo.isActive,
-                        o_active_start: arInfo.isStart,
-                        o_active_end: arInfo.isEnd,
                         o_out_of_range: itemInfo.isOutOfRange or itemInfo.isInvalid,
                     }"
                     t-att-disabled="itemInfo.isInvalid"
@@ -131,7 +137,7 @@
                     t-on-click="zoomOut"
                 >
                     <t t-foreach="titles" t-as="title" t-key="title">
-                        <h5 class="o_header_part o_text_inherit fw-bold m-0" t-esc="title" />
+                        <h5 class="o_header_part fw-bold m-0" t-esc="title" />
                     </t>
                 </button>
                 <button class="o_next btn btn-secondary flex-grow-0" t-on-click="next">
