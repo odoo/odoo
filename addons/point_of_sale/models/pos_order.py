@@ -531,12 +531,28 @@ class PosOrder(models.Model):
                     account_id = new_move.invoice_cash_rounding_id.loss_account_id.id
                 else:
                     account_id = new_move.invoice_cash_rounding_id.profit_account_id.id
-                if rounding_line_difference:
-                    rounding_line.with_context(check_move_validity=False).write({
-                        'debit': rounding_applied < 0.0 and -rounding_applied or 0.0,
-                        'credit': rounding_applied > 0.0 and rounding_applied or 0.0,
+                if rounding_line:
+                    if rounding_line_difference:
+                        rounding_line.with_context(skip_invoice_sync=True, check_move_validity=False).write({
+                            'debit': rounding_applied < 0.0 and -rounding_applied or 0.0,
+                            'credit': rounding_applied > 0.0 and rounding_applied or 0.0,
+                            'account_id': account_id,
+                            'price_unit': rounding_applied,
+                        })
+
+                else:
+                    self.env['account.move.line'].with_context(skip_invoice_sync=True, check_move_validity=False).create({
+                        'balance': -rounding_applied,
+                        'quantity': 1.0,
+                        'partner_id': new_move.partner_id.id,
+                        'move_id': new_move.id,
+                        'currency_id': new_move.currency_id.id,
+                        'company_id': new_move.company_id.id,
+                        'company_currency_id': new_move.company_id.currency_id.id,
+                        'display_type': 'rounding',
+                        'sequence': 9999,
+                        'name': self.config_id.rounding_method.name,
                         'account_id': account_id,
-                        'price_unit': rounding_applied,
                     })
             else:
                 if rounding_line:
@@ -818,7 +834,7 @@ class PosOrder(models.Model):
             new_move = order._create_invoice(move_vals)
 
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
-            new_move.sudo().with_company(order.company_id)._post()
+            new_move.sudo().with_company(order.company_id).with_context(skip_invoice_sync=True)._post()
             moves += new_move
             payment_moves = order._apply_invoice_payments()
 
