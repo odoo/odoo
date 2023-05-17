@@ -157,16 +157,13 @@
                                 attrs="{'invisible': [('state', 'not in', ('posted', 'cancel'))]}"
                                 groups="account.group_account_invoice" data-hotkey="w"/>
                         <button name="action_cancel" string="Cancel" type="object"
-                                attrs="{'invisible': [('state', '!=', 'draft')]}" data-hotkey="z"/>
+                                attrs="{'invisible': ['|', ('id', '=', False), ('state', '!=', 'draft')]}" data-hotkey="z"/>
                         <button name="mark_as_sent" string="Mark as Sent" type="object" data-hotkey="q"
                                 attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', True), ('payment_method_code', '!=', 'manual')]}"/>
                         <button name="unmark_as_sent"  string="Unmark as Sent" type="object" data-hotkey="k"
                                 attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', False), ('payment_method_code', '!=', 'manual')]}"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
                     </header>
-                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['|','|',('paired_internal_transfer_payment_id','!=',False),('is_internal_transfer','=',False),('state','!=','draft')]}">
-                        A second payment will be created automatically in the destination journal.
-                    </div>
                     <div class="alert alert-warning text-center" role="alert" attrs="{
                             'invisible': ['|', '|', ('is_internal_transfer','=',False), ('require_partner_bank_account', '=', False), ('partner_bank_id', '!=', False)]}">
                         The selected payment method requires a bank account but none is set on
@@ -254,9 +251,16 @@
 
                         <group>
                             <group name="group1">
-                                <field name="is_internal_transfer" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <label for="is_internal_transfer"/>
+                                <div>
+                                    <field name="is_internal_transfer" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <span attrs="{'invisible': ['|','|',('paired_internal_transfer_payment_id','!=',False),('is_internal_transfer','=',False),('state','!=','draft')]}"
+                                          class="fst-italic">
+                                        A second payment will be created in the destination journal.
+                                    </span>
+                                </div>
                                 <field name="payment_type" widget="radio" options="{'horizontal': True}"
-                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <field name="partner_id" context="{'default_is_company': True}" string="Customer"
                                        options="{'no_quick_create': True}"
                                        attrs="{'readonly':[('state', '!=', 'draft')],
@@ -309,7 +313,9 @@
                                             'required': [('require_partner_bank_account', '=', True), ('is_internal_transfer', '=', False)],
                                         }"/>
 
-                                <field name="destination_journal_id" context="{'default_partner_id': partner_id}"
+                                <field name="destination_journal_id"
+                                       placeholder="e.g. Cash"
+                                       context="{'default_partner_id': partner_id}"
                                        attrs="{'invisible': [('is_internal_transfer', '=', False)],
                                        'readonly': [('state', '!=', 'draft')], 'required': [('is_internal_transfer', '=', True),('state', '=', 'draft')]}"/>
                             </group>
@@ -346,7 +352,7 @@
         <!-- ACTIONS -->
 
         <record id="action_account_payments" model="ir.actions.act_window">
-            <field name="name">Payments</field>
+            <field name="name">Customer Payments</field>
             <field name="res_model">account.payment</field>
             <field name="view_mode">tree,kanban,form,graph,activity</field>
             <field name="context">{
@@ -367,7 +373,7 @@
         </record>
 
         <record id="action_account_payments_payable" model="ir.actions.act_window">
-            <field name="name">Payments</field>
+            <field name="name">Vendor Payments</field>
             <field name="res_model">account.payment</field>
             <field name="view_mode">tree,kanban,form,graph,activity</field>
             <field name="context">{
