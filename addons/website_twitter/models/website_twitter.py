@@ -34,6 +34,7 @@ class WebsiteTwitter(models.Model):
         except requests.HTTPError as e:
             _logger.debug("Twitter API request failed with code: %r, msg: %r, content: %r",
                           e.response.status_code, e.response.reason, e.response.content)
+            e.sentry_ignored = True
             raise
 
     @api.model
