@@ -278,8 +278,8 @@ export class MassMailingHtmlField extends HtmlField {
                 const imagesInfo = Object.assign({
                     all: {}
                 }, $theme.data("imagesInfo") || {});
-                for (const info of Object.values(imagesInfo)) {
-                    Object.assign({
+                for (const [key, info] of Object.entries(imagesInfo)) {
+                    imagesInfo[key] = Object.assign({
                         module: "mass_mailing",
                         format: "jpg"
                         },
