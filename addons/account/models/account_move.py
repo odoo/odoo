@@ -3401,7 +3401,6 @@ class AccountMove(models.Model):
         # Reconcile moves together to cancel the previous one.
         if cancel:
             reverse_moves.with_context(move_reverse_cancel=cancel)._post(soft=False)
-            reverse_moves = self._reconcile_reversed_moves(reverse_moves, cancel)
 
         return reverse_moves
 
@@ -3533,7 +3532,7 @@ class AccountMove(models.Model):
             'posted_before': True,
         })
 
-        draft_reverse_moves.reversed_entry_id._reconcile_reversed_moves(draft_reverse_moves, False)
+        draft_reverse_moves.reversed_entry_id._reconcile_reversed_moves(draft_reverse_moves, self._context.get('move_reverse_cancel', False))
 
         for invoice in to_post:
             invoice.message_subscribe([
