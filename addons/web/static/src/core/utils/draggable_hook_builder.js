@@ -50,7 +50,10 @@ import { setRecurringAnimationFrame, useThrottleForAnimation } from "@web/core/u
  * @property {DOMRect} [current.containerRect]
  * @property {HTMLElement} [current.element]
  * @property {DOMRect} [current.elementRect]
- * @property {HTMLElement} [scrollParent]
+ * @property {HTMLElement | null} [current.scrollParentX]
+ * @property {DOMRect | null} [current.scrollParentXRect]
+ * @property {HTMLElement | null} [current.scrollParentY]
+ * @property {DOMRect | null} [current.scrollParentYRect]
  * @property {Position} [initialPosition]
  * @property {Position} [offset={ x: 0, y: 0 }]
  *
@@ -138,19 +141,43 @@ function getReturnValue(valueOrFn) {
  * If both of these assertions are true, it means that the element can effectively
  * be scrolled on at least one axis.
  * @param {HTMLElement} el
+ * @returns {(HTMLElement | null)[]}
+ */
+function getScrollParents(el) {
+    return [getScrollParentX(el), getScrollParentY(el)];
+}
+
+/**
+ * @param {HTMLElement} el
  * @returns {HTMLElement | null}
  */
-function getScrollParent(el) {
+function getScrollParentX(el) {
     if (!el) {
         return null;
     }
-    if (el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight) {
+    if (el.scrollWidth > el.clientWidth) {
         const overflow = getComputedStyle(el).getPropertyValue("overflow");
         if (/\bauto\b|\bscroll\b/.test(overflow)) {
             return el;
         }
     }
-    return getScrollParent(el.parentElement);
+    return getScrollParentX(el.parentElement);
+}
+/**
+ * @param {HTMLElement} el
+ * @returns {HTMLElement | null}
+ */
+function getScrollParentY(el) {
+    if (!el) {
+        return null;
+    }
+    if (el.scrollHeight > el.clientHeight) {
+        const overflow = getComputedStyle(el).getPropertyValue("overflow");
+        if (/\bauto\b|\bscroll\b/.test(overflow)) {
+            return el;
+        }
+    }
+    return getScrollParentY(el.parentElement);
 }
 
 /**
@@ -440,7 +467,9 @@ export function makeDraggableHook(hookParams) {
                 state.dragging = true;
 
                 // Compute scrollable parent
-                ctx.current.scrollParent = getScrollParent(ctx.current.container);
+                [ctx.current.scrollParentX, ctx.current.scrollParentY] = getScrollParents(
+                    ctx.current.container
+                );
 
                 updateRects();
                 const { x, y, width, height } = ctx.current.elementRect;
@@ -470,7 +499,10 @@ export function makeDraggableHook(hookParams) {
                     dom.addStyle(document.body, { cursor: ctx.cursor });
                 }
 
-                if (ctx.current.scrollParent && ctx.edgeScrolling.enabled) {
+                if (
+                    (ctx.current.scrollParentX || ctx.current.scrollParentY) &&
+                    ctx.edgeScrolling.enabled
+                ) {
                     const cleanupFn = setRecurringAnimationFrame(handleEdgeScrolling);
                     cleanup.add(cleanupFn);
                 }
@@ -509,44 +541,38 @@ export function makeDraggableHook(hookParams) {
             const handleEdgeScrolling = (deltaTime) => {
                 updateRects();
                 const eRect = ctx.current.elementRect;
-                const cRect = ctx.current.containerRect;
+                const xRect = ctx.current.scrollParentXRect;
+                const yRect = ctx.current.scrollParentYRect;
 
                 const { speed, threshold } = ctx.edgeScrolling;
                 const correctedSpeed = (speed / 16) * deltaTime;
-                const maxWidth = cRect.x + cRect.width;
-                const maxHeight = cRect.y + cRect.height;
 
                 const diff = {};
 
-                if (eRect.x - cRect.x < threshold) {
-                    diff.x = [eRect.x - cRect.x, -1];
-                } else if (maxWidth - eRect.x - eRect.width < threshold) {
-                    diff.x = [maxWidth - eRect.x - eRect.width, 1];
+                if (xRect) {
+                    const maxWidth = xRect.x + xRect.width;
+                    if (eRect.x - xRect.x < threshold) {
+                        diff.x = [eRect.x - xRect.x, -1];
+                    } else if (maxWidth - eRect.x - eRect.width < threshold) {
+                        diff.x = [maxWidth - eRect.x - eRect.width, 1];
+                    }
                 }
-                if (eRect.y - cRect.y < threshold) {
-                    diff.y = [eRect.y - cRect.y, -1];
-                } else if (maxHeight - eRect.y - eRect.height < threshold) {
-                    diff.y = [maxHeight - eRect.y - eRect.height, 1];
+                if (yRect) {
+                    const maxHeight = yRect.y + yRect.height;
+                    if (eRect.y - yRect.y < threshold) {
+                        diff.y = [eRect.y - yRect.y, -1];
+                    } else if (maxHeight - eRect.y - eRect.height < threshold) {
+                        diff.y = [maxHeight - eRect.y - eRect.height, 1];
+                    }
                 }
 
-                if (diff.x && !diff.x[0]) {
-                    delete diff.x;
+                const diffToScroll = ([delta, sign]) =>
+                    (1 - clamp(delta, 0, threshold) / threshold) * correctedSpeed * sign;
+                if (diff.y) {
+                    ctx.current.scrollParentY.scrollBy({ top: diffToScroll(diff.y) });
                 }
-                if (diff.y && !diff.y[0]) {
-                    delete diff.y;
-                }
-
-                if (diff.x || diff.y) {
-                    const diffToScroll = ([delta, sign]) =>
-                        (1 - clamp(delta, 0, threshold) / threshold) * correctedSpeed * sign;
-                    const scrollParams = {};
-                    if (diff.x) {
-                        scrollParams.left = diffToScroll(diff.x);
-                    }
-                    if (diff.y) {
-                        scrollParams.top = diffToScroll(diff.y);
-                    }
-                    ctx.current.scrollParent.scrollBy(scrollParams);
+                if (diff.x) {
+                    ctx.current.scrollParentX.scrollBy({ left: diffToScroll(diff.x) });
                 }
             };
 
@@ -664,22 +690,39 @@ export function makeDraggableHook(hookParams) {
 
             const updateRects = () => {
                 const { current } = ctx;
-                const { container, element, scrollParent } = current;
+                const { container, element, scrollParentX, scrollParentY } = current;
                 // Container rect
                 current.containerRect = dom.getRect(container, { adjust: true });
-                if (scrollParent && ctx.edgeScrolling.enabled) {
-                    // Adjust container rect according to scrollparent
-                    const parentRect = dom.getRect(scrollParent, { adjust: true });
-                    current.containerRect.x = Math.max(current.containerRect.x, parentRect.x);
-                    current.containerRect.y = Math.max(current.containerRect.y, parentRect.y);
-                    current.containerRect.width = Math.min(
-                        current.containerRect.width,
-                        parentRect.width
-                    );
-                    current.containerRect.height = Math.min(
-                        current.containerRect.height,
-                        parentRect.height
-                    );
+
+                // ScrollParent rect
+                current.scrollParentXRect = null;
+                current.scrollParentYRect = null;
+                if (ctx.edgeScrolling.enabled) {
+                    // Adjust container rect according to scrollParents
+                    if (scrollParentX) {
+                        current.scrollParentXRect = dom.getRect(scrollParentX, { adjust: true });
+                        const right = Math.min(
+                            current.containerRect.right,
+                            current.scrollParentXRect.right
+                        );
+                        current.containerRect.x = Math.max(
+                            current.containerRect.x,
+                            current.scrollParentXRect.x
+                        );
+                        current.containerRect.width = right - current.containerRect.x;
+                    }
+                    if (scrollParentY) {
+                        current.scrollParentYRect = dom.getRect(scrollParentY, { adjust: true });
+                        const bottom = Math.min(
+                            current.containerRect.bottom,
+                            current.scrollParentYRect.bottom
+                        );
+                        current.containerRect.y = Math.max(
+                            current.containerRect.y,
+                            current.scrollParentYRect.y
+                        );
+                        current.containerRect.height = bottom - current.containerRect.y;
+                    }
                 }
 
                 // Element rect
