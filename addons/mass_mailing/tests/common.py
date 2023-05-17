@@ -243,9 +243,12 @@ class MassMailCommon(MailCommon, MassMailCase):
         super(MassMailCommon, cls).setUpClass()
 
         cls.user_marketing = mail_new_test_user(
-            cls.env, login='user_marketing',
+            cls.env,
             groups='base.group_user,base.group_partner_manager,mass_mailing.group_mass_mailing_user',
-            name='Martial Marketing', signature='--\nMartial')
+            login='user_marketing',
+            name='Martial Marketing',
+            signature='--\nMartial',
+        )
 
         cls.email_reply_to = 'MyCompany SomehowAlias <test.alias@test.mycompany.com>'
 
