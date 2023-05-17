@@ -17,6 +17,11 @@ class ResPartner(models.Model):
     def _get_sale_order_domain_count(self):
         return []
 
+    @api.model
+    def _get_partner_sale_order_count_fields(self):
+        """Used for determining which sale orders are related to a partner"""
+        return ['partner_id']
+
     def _compute_sale_order_count(self):
         # retrieve all children partners and prefetch 'parent_id' on them
         all_partners = self.with_context(active_test=False).search_fetch(
@@ -51,7 +56,8 @@ class ResPartner(models.Model):
     def action_view_sale_order(self):
         action = self.env['ir.actions.act_window']._for_xml_id('sale.act_res_partner_2_sale_order')
         all_child = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
-        action["domain"] = [("partner_id", "in", all_child.ids)]
+        list_of_domains = [[(f"{field}", "in", all_child.ids)] for field in self._get_partner_sale_order_count_fields()]
+        action["domain"] = expression.AND([self._get_sale_order_domain_count(), expression.OR(list_of_domains)])
         return action
 
     def _compute_credit_to_invoice(self):
