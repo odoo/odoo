@@ -856,6 +856,7 @@ class Transaction:
         self.registry = registry
         # weak set of environments
         self.envs = WeakSet()
+        self.envs.data = OrderedSet()  # make the weakset OrderedWeakSet
         # cache for all records
         self.cache = Cache()
         # fields to protect {field: ids}
