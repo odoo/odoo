@@ -191,6 +191,28 @@ def ondelete(*, at_uninstall):
     return attrsetter('_ondelete', at_uninstall)
 
 
+def onwrite(method):
+    """
+       Mark a method to be executed during :meth:`~odoo.models.BaseModel.write`.
+
+       The goal of this decorator is to allow client-side errors when write on record.
+
+       While this could be implemented by simply overriding the method ``write``
+       on the model, this method allows to make the write checks more granular .
+       Every module can define their own function to be called in write.
+
+       .. code-block:: python
+
+           @api.onwrite
+           def _on_write_check_field(self,vals):
+               if self.field and otherfield not in vals.keys():
+                   raise UserError("Can't write on model with field populated!")
+
+       """
+    method._onwrite = True
+
+    return method
+
 def onchange(*args):
     """Return a decorator to decorate an onchange method for given fields.
 

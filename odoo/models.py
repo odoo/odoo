@@ -741,6 +741,7 @@ class BaseModel(metaclass=MetaModel):
         cls._constraint_methods = BaseModel._constraint_methods
         cls._ondelete_methods = BaseModel._ondelete_methods
         cls._onchange_methods = BaseModel._onchange_methods
+        cls._onwrite_methods = BaseModel._onwrite_methods
 
     @property
     def _constraint_methods(self):
@@ -782,6 +783,18 @@ class BaseModel(metaclass=MetaModel):
         methods = [func for _, func in getmembers(cls, is_ondelete)]
         # optimization: memoize results on cls, it will not be recomputed
         cls._ondelete_methods = methods
+        return methods
+
+    @property
+    def _onwrite_methods(self):
+        """ Return a list of methods implementing checks before unlinking. """
+        def is_onwrite(func):
+            return callable(func) and hasattr(func, '_onwrite')
+
+        cls = type(self)
+        methods = [func for _, func in getmembers(cls, is_onwrite)]
+        # optimization: memoize results on cls, it will not be recomputed
+        cls._onwrite_methods = methods
         return methods
 
     @property
@@ -3647,6 +3660,10 @@ class BaseModel(metaclass=MetaModel):
         self.check_field_access_rights('write', vals.keys())
         self.check_access_rule('write')
         env = self.env
+
+        for func in self._onwrite_methods:
+            if func._onwrite:
+                func(self, vals)
 
         bad_names = {'id', 'parent_path'}
         if self._log_access:
