@@ -134,21 +134,21 @@
                                         'flex-row-reverse': env.inChatWindow and isAlignedRight,
                                     }"
                                 >
-                                    <button t-if="canAddReaction" class="btn px-1 py-0" tabindex="1" title="Add a Reaction" aria-label="Add a Reaction" t-ref="emoji-picker"><i class="fa fa-lg fa-smile-o"/></button>
-                                    <button t-if="canReplyTo" class="btn px-1 py-0" t-on-click.stop="onClickReplyTo" tabindex="1" title="Reply" aria-label="Reply"><i class="fa fa-lg fa-reply"/></button>
-                                    <button t-if="canToggleStar" class="btn px-1 py-0" t-on-click="() => messageService.toggleStar(props.message)" tabindex="0" title="Mark as Todo" aria-label="Mark as Todo"><i class="fa fa-lg" t-att-class="message.isStarred ? 'fa-star o-mail-Message-starred' : 'fa-star-o'"/></button>
+                                    <button t-if="canAddReaction" class="btn px-1 py-0 rounded-0" tabindex="1" title="Add a Reaction" aria-label="Add a Reaction" t-ref="emoji-picker"><i class="fa fa-lg fa-smile-o"/></button>
+                                    <button t-if="canReplyTo" class="btn px-1 py-0 rounded-0" t-on-click.stop="onClickReplyTo" tabindex="1" title="Reply" aria-label="Reply"><i class="fa fa-lg fa-reply"/></button>
+                                    <button t-if="canToggleStar" class="btn px-1 py-0 rounded-0" t-on-click="() => messageService.toggleStar(props.message)" tabindex="0" title="Mark as Todo" aria-label="Mark as Todo"><i class="fa fa-lg" t-att-class="message.isStarred ? 'fa-star o-mail-Message-starred' : 'fa-star-o'"/></button>
                                     <Dropdown t-if="editable or deletable or isInInbox or props.thread?.model === 'discuss.channel'" onStateChanged="state => this.state.expandOptions = state.open" position="props.thread?.newestMessage === props.message ? 'top-start' : 'bottom-start'" togglerClass="`btn p-0 ${ state.expandOptions ? 'bg-200' : '' }`" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" class="'d-flex'" title="expandText">
                                         <t t-set-slot="toggler">
-                                            <i class="btn px-1 py-0 fa fa-lg fa-ellipsis-h" t-att-class="{ 'order-1': props.isInChatWindow }" tabindex="1"/>
+                                            <i class="btn px-1 py-0 fa fa-lg fa-ellipsis-h rounded-0" t-att-class="{ 'order-1': props.isInChatWindow }" tabindex="1"/>
                                         </t>
                                         <t t-set-slot="default">
-                                            <DropdownItem t-if="message.reactions.length" class="'px-2 d-flex align-items-center'" title="'Reactions'" onSelected="() => this.openReactionMenu()"><i class="fa fa-lg fa-smile-o pe-2"/>View Reactions</DropdownItem>
-                                            <DropdownItem t-if="isInInbox" class="'px-2 d-flex align-items-center'" title="'Mark as Read'" onSelected="() => messageService.setDone(props.message)"><i class="fa fa-lg fa-check pe-2"/>Mark as Read</DropdownItem>
-                                            <DropdownItem t-if="canUnfollow" class="'px-2 d-flex align-items-center'" title="'Unfollow'" onSelected="() => messageService.unfollow(props.message)"><i class="fa fa-lg fa-user-times pe-2"/>Unfollow</DropdownItem>
-                                            <DropdownItem t-if="store.user and props.thread.model === 'discuss.channel'" class="'px-2 d-flex align-items-center'" title="pinOptionText" onSelected="() => this.onClickPin()"><i class="fa fa-lg fa-thumb-tack pe-2"/><t t-esc="pinOptionText"/></DropdownItem>
-                                            <DropdownItem t-if="props.thread.model === 'discuss.channel'" class="'px-2 d-flex align-items-center'" title="'Mark as Unread'" onSelected="() => this.onClickMarkAsUnread()"><i class="fa fa-lg fa-eye-slash pe-2"/>Mark as Unread</DropdownItem>
-                                            <DropdownItem t-if="editable" class="'px-2 d-flex align-items-center'" title="'Edit'" onSelected="() => this.onClickEdit()"><i class="fa fa-lg fa-pencil pe-2"/>Edit</DropdownItem>
-                                            <DropdownItem t-if="deletable" class="'px-2 d-flex align-items-center'" title="'Delete'" onSelected="() => this.onClickDelete()"><i class="fa fa-lg fa-trash pe-2"/>Delete</DropdownItem>
+                                            <DropdownItem t-if="message.reactions.length" class="'px-2 d-flex align-items-center rounded-0'" title="'Reactions'" onSelected="() => this.openReactionMenu()"><i class="fa fa-lg fa-smile-o pe-2"/>View Reactions</DropdownItem>
+                                            <DropdownItem t-if="isInInbox" class="'px-2 d-flex align-items-center rounded-0'" title="'Mark as Read'" onSelected="() => messageService.setDone(props.message)"><i class="fa fa-lg fa-check pe-2"/>Mark as Read</DropdownItem>
+                                            <DropdownItem t-if="canUnfollow" class="'px-2 d-flex align-items-center rounded-0'" title="'Unfollow'" onSelected="() => messageService.unfollow(props.message)"><i class="fa fa-lg fa-user-times pe-2"/>Unfollow</DropdownItem>
+                                            <DropdownItem t-if="store.user and props.thread.model === 'discuss.channel'" class="'px-2 d-flex align-items-center rounded-0'" title="pinOptionText" onSelected="() => this.onClickPin()"><i class="fa fa-lg fa-thumb-tack pe-2"/><t t-esc="pinOptionText"/></DropdownItem>
+                                            <DropdownItem t-if="props.thread.model === 'discuss.channel'" class="'px-2 d-flex align-items-center rounded-0'" title="'Mark as Unread'" onSelected="() => this.onClickMarkAsUnread()"><i class="fa fa-lg fa-eye-slash pe-2"/>Mark as Unread</DropdownItem>
+                                            <DropdownItem t-if="editable" class="'px-2 d-flex align-items-center rounded-0'" title="'Edit'" onSelected="() => this.onClickEdit()"><i class="fa fa-lg fa-pencil pe-2"/>Edit</DropdownItem>
+                                            <DropdownItem t-if="deletable" class="'px-2 d-flex align-items-center rounded-0'" title="'Delete'" onSelected="() => this.onClickDelete()"><i class="fa fa-lg fa-trash pe-2"/>Delete</DropdownItem>
                                         </t>
                                     </Dropdown>
                                 </div>
