@@ -21,9 +21,9 @@
         'o-mail-MessagingMenu-header border-bottom d-flex flex-shrink-0 p-2': !env.inDiscussApp,
         }">
             <t t-if="!store.isSmall">
-                <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'all' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'all'">All</button>
-                <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
-                <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bolder' : 'text-500'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
+                <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'all' ? 'fw-bolder' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'all'">All</button>
+                <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bolder' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
+                <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bolder' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
             </t>
             <div class="flex-grow-1"></div>
             <t t-if="!store.discuss.isActive or store.isSmall and store.discuss.activeTab !== 'mailbox'">
