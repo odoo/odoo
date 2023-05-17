@@ -102,7 +102,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
         if (confirmed) {
             let currentPOSOrder = this.env.pos.get_order();
             const sale_order = await this._getSaleOrder(clickedOrder.id);
-            clickedOrder.shipping_date = sale_order.shipping_date;
+            clickedOrder.shipping_date = this.env.pos.config.ship_later && sale_order.shipping_date;
 
             const currentSaleOrigin = this._getSaleOrderOrigin(currentPOSOrder);
             const currentSaleOriginId = currentSaleOrigin && currentSaleOrigin.id;
