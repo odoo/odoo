@@ -920,7 +920,7 @@ export const formatSelection = (editor, formatName, {applyStyle, formatProps} = 
     }
 
     const selectedTextNodes = getSelectedNodes(editor.editable)
-        .filter(n => n.nodeType === Node.TEXT_NODE);
+        .filter(n => n.nodeType === Node.TEXT_NODE && isVisibleTextNode(n));
 
     const formatSpec = formatsSpecs[formatName];
     for (const selectedTextNode of selectedTextNodes) {

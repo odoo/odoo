@@ -57,6 +57,43 @@ describe('List', () => {
                                 '<ul><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ul>',
                         });
                     });
+                    it('should turn an empty paragraph of multiple table cells into a list', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<br></td>
+                                            <td><br></td>
+                                            <td><br></td>
+                                        </tr>
+                                        <tr>
+                                            <td><br></td>
+                                            <td><br></td>
+                                            <td><br>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: toggleUnorderedList,
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                        });
+                    });
                 });
                 describe('Remove', () => {
                     it('should turn an empty list into a paragraph', async () => {
@@ -135,6 +172,43 @@ describe('List', () => {
                                 </ul>`),
                         });
                     });
+                    it('should turn an list of multiple table cells into a empty paragraph', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul></td>
+                                            <td><ul><li><br></li></ul>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: toggleUnorderedList,
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                        });
+                    });
                 });
                 describe('Transform', () => {
                     it('should turn an empty ordered list into an unordered list', async () => {
@@ -192,6 +266,43 @@ describe('List', () => {
                                 '<ol><li><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</li></ol>',
                         });
                     });
+                    it('should turn an empty paragraph of multiple table cells into a list', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<br></td>
+                                            <td><br></td>
+                                            <td><br></td>
+                                        </tr>
+                                        <tr>
+                                            <td><br></td>
+                                            <td><br></td>
+                                            <td><br>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: toggleOrderedList,
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                        });
+                    });
                 });
                 describe('Remove', () => {
                     it('should turn an empty list into a paragraph', async () => {
@@ -229,6 +340,43 @@ describe('List', () => {
                             stepFunction: toggleOrderedList,
                             contentAfter:
                                 '<p><span><b>ab</b></span> <span><i>cd</i></span> ef[]gh</p>',
+                        });
+                    });
+                    it('should turn an list of multiple table cells into a empty paragraph', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol></td>
+                                            <td><ol><li><br></li></ol>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: toggleOrderedList,
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
                         });
                     });
                 });
@@ -376,6 +524,44 @@ describe('List', () => {
                             </ul>`),
                         });
                     });
+                    it('should turn an empty paragraph of multiple table cells into a checklist', async () => {
+                        await testEditor(BasicEditor, {
+                            removeCheckIds: true,
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<br></td>
+                                            <td><br></td>
+                                            <td><br></td>
+                                        </tr>
+                                        <tr>
+                                            <td><br></td>
+                                            <td><br></td>
+                                            <td><br>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: toggleCheckList,
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                        });
+                    });
                 });
                 it('should add a unique id on a new checklist', async () => {
                     await testEditor(BasicEditor, {
@@ -468,6 +654,43 @@ describe('List', () => {
                                         </ul>
                                     </li>
                                 </ul>`),
+                        });
+                    });
+                    it('should turn an list of multiple table cells into a empty paragraph', async () => {
+                        await testEditor(BasicEditor, {
+                            contentBefore: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                        </tr>
+                                        <tr>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul></td>
+                                            <td><ul class="o_checklist"><li><br></li></ul>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
+                            stepFunction: toggleCheckList,
+                            contentAfter: unformat(`
+                                <table class="table table-bordered">
+                                    <tbody>
+                                        <tr>
+                                            <td>[<p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                        </tr>
+                                        <tr>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p></td>
+                                            <td><p><br></p>]</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            `),
                         });
                     });
                 });
