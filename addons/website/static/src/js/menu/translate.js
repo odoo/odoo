@@ -89,6 +89,7 @@ var AttributeTranslateDialog = weDialog.extend({
                     $originalNode.val(value).trigger('translate');
                 }
                 $node.trigger('change');
+                $originalNode[0].classList.add('oe_translated');
             });
             $group.append($label).append($input);
         });
@@ -124,7 +125,7 @@ const SelectTranslateDialog = weDialog.extend({
             this.optionEl.textContent = inputEl.value;
             const translationUpdated = inputEl.value !== this.optionEl.dataset.initialTranslationValue;
             this.translationObject.classList.toggle('o_dirty', translationUpdated);
-            this.optionEl.classList.add('o_option_translated');
+            this.optionEl.classList.toggle('oe_translated', translationUpdated);
         });
         this.el.appendChild(inputEl);
         return this._super(...arguments);
@@ -286,6 +287,8 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
 
                     translation['textContent'] = $trans[0];
                     $node.val(match[2]);
+                    // Update the text content of textarea too.
+                    $node[0].innerText = match[2];
 
                     $node.addClass('o_translatable_text').removeClass('o_text_content_invisible')
                         .data('translation', translation);
@@ -420,6 +423,13 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             _.each(translation, function (node, attr) {
                 var trans = self._getTranlationObject(node);
                 trans.value = (trans.value ? trans.value : $node.html()).replace(/[ \t\n\r]+/, ' ');
+                trans.state = node.dataset.oeTranslationState;
+                // If a node has an already translated attribute, we don't
+                // need to update its state, since it can be set again as
+                // "to_translate" by other attributes...
+                if ($node[0].dataset.oeTranslationState === 'translated') {
+                    return;
+                }
                 $node.attr('data-oe-translation-state', (trans.state || 'to_translate'));
             });
         });
