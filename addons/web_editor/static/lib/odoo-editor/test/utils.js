@@ -10,6 +10,11 @@ export const Direction = {
     FORWARD: 'FORWARD',
 };
 
+// True iff test is being run with its mobile implementation.
+let isMobileTest = false;
+// True iff test has mobile implementation for any called method.
+let hasMobileTest = false;
+
 function _nextNode(node) {
     let next = node.firstChild || node.nextSibling;
     if (!next) {
@@ -273,6 +278,9 @@ export function customErrorMessage(assertLocation, value, expected) {
 }
 
 export async function testEditor(Editor = OdooEditor, spec, options = {}) {
+    hasMobileTest = false;
+    isMobileTest = options.isMobile;
+
     const testNode = document.createElement('div');
     document.querySelector('#editor-test-container').innerHTML = '';
     document.querySelector('#editor-test-container').appendChild(testNode);
@@ -317,7 +325,12 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
 
     if (spec.stepFunction) {
         editor.observerActive('beforeUnitTests');
-        await spec.stepFunction(editor);
+        try {
+            await spec.stepFunction(editor);
+        } catch (e) {
+            e.message = (isMobileTest ? '[MOBILE VERSION] ' : '') + e.message;
+            throw e;
+        }
         editor.observerUnactive('afterUnitTests');
     }
 
@@ -354,6 +367,9 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
             customErrorMessage('contentAfter', value, spec.contentAfter));
     }
     await testNode.remove();
+    if (hasMobileTest && !isMobileTest) {
+        await testEditor(Editor, spec, { ...options, isMobile: true });
+    }
 }
 
 /**
@@ -424,19 +440,21 @@ export async function deleteForward(editor) {
 }
 
 export async function deleteBackward(editor) {
-    editor.execCommand('oDeleteBackward');
-}
-
-export async function deleteBackwardMobile(editor) {
-    // Some mobile keyboard use input event to trigger delete.
-    // This is a way to simulate this behavior.
-    const inputEvent = new InputEvent('input', {
-        inputType: 'deleteContentBackward',
-        data: null,
-        bubbles: true,
-        cancelable: false,
-    });
-    editor._onInput(inputEvent);
+    // This method has two implementations (desktop and mobile)
+    if (isMobileTest) {
+        // Some mobile keyboards use input event to trigger delete. 
+        // This is a way to simulate this behavior.
+        const inputEvent = new InputEvent('input', {
+            inputType: 'deleteContentBackward',
+            data: null,
+            bubbles: true,
+            cancelable: false,
+        });
+        editor._onInput(inputEvent);
+    } else {
+        hasMobileTest = true; // flag test for a re-run as mobile
+        editor.execCommand('oDeleteBackward');
+    }
 }
 
 export async function insertParagraphBreak(editor) {
