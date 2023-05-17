@@ -32,7 +32,7 @@ Model({
                 globalWindowInnerHeight: this.messaging.browser.innerHeight,
                 globalWindowInnerWidth: this.messaging.browser.innerWidth,
                 isMobileDevice: isMobileOS(),
-                isSmall: this.env.isSmall,
+                isSmall: this.env.services.ui.isSmall,
                 sizeClass: this.env.services.ui.size,
             });
         },

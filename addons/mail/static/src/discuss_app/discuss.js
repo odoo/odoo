@@ -62,6 +62,7 @@ export class Discuss extends Component {
         this.state = useState({ activeMode: this.MODES.NONE });
         this.orm = useService("orm");
         this.effect = useService("effect");
+        this.ui = useState(useService("ui"));
         this.prevInboxCounter = this.store.discuss.inbox.counter;
         useChildSubEnv({
             inDiscussApp: true,

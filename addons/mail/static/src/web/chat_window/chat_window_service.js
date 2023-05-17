@@ -16,6 +16,7 @@ export class ChatWindowService {
         /** @type {import("@mail/core/store_service").Store} */
         this.store = services["mail.store"];
         this.orm = services.orm;
+        this.ui = services.ui;
     }
 
     openNewMessage() {
@@ -42,12 +43,12 @@ export class ChatWindowService {
     }
 
     get maxVisible() {
-        const startGap = this.store.isSmall
+        const startGap = this.ui.isSmall
             ? 0
             : this.hidden.length > 0
             ? CHAT_WINDOW_END_GAP_WIDTH + CHAT_WINDOW_HIDDEN_WIDTH
             : CHAT_WINDOW_END_GAP_WIDTH;
-        const endGap = this.store.isSmall ? 0 : CHAT_WINDOW_END_GAP_WIDTH;
+        const endGap = this.ui.isSmall ? 0 : CHAT_WINDOW_END_GAP_WIDTH;
         const available = browser.innerWidth - startGap - endGap;
         const maxAmountWithoutHidden = Math.floor(
             available / (CHAT_WINDOW_WIDTH + CHAT_WINDOW_INBETWEEN_WIDTH)
@@ -56,7 +57,7 @@ export class ChatWindowService {
     }
 
     notifyState(chatWindow) {
-        if (this.env.isSmall) {
+        if (this.ui.isSmall) {
             return;
         }
         if (chatWindow.thread?.model === "discuss.channel") {
@@ -142,7 +143,7 @@ export class ChatWindowService {
     }
 
     async close(chatWindow, { escape = false } = {}) {
-        if (this.store.isSmall && !this.store.discuss.isActive) {
+        if (this.ui.isSmall && !this.store.discuss.isActive) {
             // If we are in mobile and discuss is not open, it means the
             // chat window was opened from the messaging menu. In that
             // case it should be re-opened to simulate it was always
@@ -171,7 +172,7 @@ export class ChatWindowService {
 }
 
 export const chatWindowService = {
-    dependencies: ["mail.store", "orm"],
+    dependencies: ["mail.store", "orm", "ui"],
     start(env, services) {
         return new ChatWindowService(env, services);
     },

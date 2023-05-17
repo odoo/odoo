@@ -45,6 +45,7 @@ export class ChatWindowContainer extends Component {
         this.messaging = useMessaging();
         this.store = useStore();
         this.chatWindowService = useState(useService("mail.chat_window"));
+        this.ui = useState(useService("ui"));
         this.hiddenMenuRef = useRef("hiddenMenu");
         useEffect(
             () => this.setHiddenMenuOffset(),

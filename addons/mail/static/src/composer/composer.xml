@@ -62,8 +62,8 @@
                     </div>
                     <div class="o-mail-Composer-actions d-flex bg-view"
                         t-att-class="{
-                            'ms-1' : compact and store.isSmall,
-                            'mx-1 me-2' : compact and !store.isSmall,
+                            'ms-1' : compact and ui.isSmall,
+                            'mx-1 me-2' : compact and !ui.isSmall,
                             'ms-3' : normal,
                             'mx-3 border-top p-1' : extended,
                         }"
@@ -96,14 +96,14 @@
 </t>
 
 <t t-name="mail.Composer.sendButton" owl="1">
-    <button t-if="!compact or store.isSmall" class="o-mail-Composer-send btn btn-link o-last border-start-0"
+    <button t-if="!compact or ui.isSmall" class="o-mail-Composer-send btn btn-link o-last border-start-0"
         t-att-class="{'mt-2': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'align-self-stretch': !extended, 'border-start-0': env.inDiscussApp}"
         t-on-click="sendMessage"
         type="button"
         t-att-disabled="isSendButtonDisabled"
         aria-label="Send"
     >
-        <t t-if="store.isSmall"><i class="fa fa-paper-plane-o"/></t>
+        <t t-if="ui.isSmall"><i class="fa fa-paper-plane-o"/></t>
         <t t-else="">Send</t>
     </button>
 </t>

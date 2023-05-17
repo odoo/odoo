@@ -170,7 +170,7 @@ patch(ThreadService.prototype, "mail/web", {
         thread.suggestedRecipients = recipients;
     },
     open(thread, replaceNewMessageChatWindow) {
-        if (!this.store.discuss.isActive || this.store.isSmall) {
+        if (!this.store.discuss.isActive || this.ui.isSmall) {
             const chatWindow = this.chatWindowService.insert({
                 folded: false,
                 thread,

@@ -418,7 +418,7 @@ async function start(param0 = {}) {
     await afterNextRender(async () => {
         webClient = await getWebClientReady({ ...param0, messagingBus });
     });
-    if (webClient.env.isSmall) {
+    if (webClient.env.services.ui.isSmall) {
         target.style.width = "100%";
     }
     const openView = async (action, options) => {

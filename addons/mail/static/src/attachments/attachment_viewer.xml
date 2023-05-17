@@ -33,10 +33,10 @@
                         </div>
                         <img t-on-click.stop="" t-on-load="onImageLoaded" t-on-wheel="onWheelImage" t-on-mousedown.stop="onMousedownImage" t-on-mouseup.stop="onMouseupImage" class="o-mail-AttachmentViewer-view o-mail-AttachmentViewer-viewImage mw-100 mh-100 transition-base" t-att-src="state.attachment.defaultSource" t-att-style="imageStyle" draggable="false" alt="Viewer" t-ref="image"/>
                     </div>
-                    <iframe t-if="state.attachment.isPdf" class="o-mail-AttachmentViewer-view w-75 h-100 border-0" t-ref="iframeViewerPdf" t-att-class="{ 'w-100': env.isSmall }" t-att-src="state.attachment.defaultSource"/>
+                    <iframe t-if="state.attachment.isPdf" class="o-mail-AttachmentViewer-view w-75 h-100 border-0" t-ref="iframeViewerPdf" t-att-class="{ 'w-100': ui.isSmall }" t-att-src="state.attachment.defaultSource"/>
                     <iframe t-if="state.attachment.isText" class="o-mail-AttachmentViewer-view o-isText o_text w-75 h-100 border-0" t-att-src="state.attachment.defaultSource"/>
                     <iframe t-if="state.attachment.isUrlYoutube" allow="autoplay; encrypted-media" class="o-mail-AttachmentViewer-view w-75 h-100 border-0" t-att-src="state.attachment.defaultSource" height="315" width="560"/>
-                    <video t-if="state.attachment.isVideo" class="o-mail-AttachmentViewer-view w-75 h-75" t-att-class="{ 'w-100 h-100': env.isSmall }" t-on-click.stop="" controls="controls">
+                    <video t-if="state.attachment.isVideo" class="o-mail-AttachmentViewer-view w-75 h-75" t-att-class="{ 'w-100 h-100': ui.isSmall }" t-on-click.stop="" controls="controls">
                         <source t-att-data-type="state.attachment.mimetype" t-att-src="state.attachment.defaultSource"/>
                     </video>
                 </div>

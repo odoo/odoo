@@ -14,7 +14,7 @@ export class Store {
 
     setup(env) {
         this.env = env;
-        this.isSmall = env.isSmall;
+        this.discuss.activeTab = this.env.services.ui.isSmall ? "mailbox" : "all";
     }
 
     async updateBusSubscription() {
@@ -149,10 +149,8 @@ export const storeService = {
     start(env, services) {
         const res = reactive(new Store(env, services));
         onChange(res, "threads", () => res.updateBusSubscription());
-        res.discuss.activeTab = res.isSmall ? "mailbox" : "all";
         services.ui.bus.addEventListener("resize", () => {
-            res.isSmall = services.ui.isSmall;
-            if (!res.isSmall) {
+            if (!services.ui.isSmall) {
                 res.discuss.activeTab = "all";
             } else {
                 res.discuss.activeTab = res.threads[res.discuss.threadLocalId]?.type ?? "all";

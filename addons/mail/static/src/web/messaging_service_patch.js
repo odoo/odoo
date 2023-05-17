@@ -9,6 +9,7 @@ patch(Messaging.prototype, "mail/web", {
         this._super(env, services, initialThreadLocalId);
         /** @type {import("@mail/chat/chat_window_service").ChatWindow} */
         this.chatWindowService = services["mail.chat_window"];
+        this.ui = services["ui"];
     },
     initMessagingCallback(data) {
         this.loadFailures();
@@ -29,7 +30,7 @@ patch(Messaging.prototype, "mail/web", {
         const channel = this.store.threads[createLocalId("discuss.channel", notif.payload.id)];
         const message = this.store.messages[notif.payload.message.id];
         if (
-            !this.store.isSmall &&
+            !this.ui.isSmall &&
             channel.correspondent !== this.store.odoobot &&
             !message.isSelfAuthored
         ) {
@@ -39,5 +40,5 @@ patch(Messaging.prototype, "mail/web", {
 });
 
 patch(messagingService, "mail/web", {
-    dependencies: [...messagingService.dependencies, "mail.chat_window"],
+    dependencies: [...messagingService.dependencies, "mail.chat_window", "ui"],
 });

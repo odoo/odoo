@@ -2,7 +2,7 @@
 
 import { useMessaging, useStore } from "@mail/core/messaging_hook";
 
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { registry } from "@web/core/registry";
@@ -18,6 +18,7 @@ export class ActivityMenu extends Component {
         this.store = useStore();
         this.action = useService("action");
         this.userId = useService("user").userId;
+        this.ui = useState(useService("ui"));
         this.fetchSystrayActivities();
     }
 

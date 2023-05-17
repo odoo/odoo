@@ -763,7 +763,7 @@ QUnit.test(
                 900,
             "should not have enough space to open 3 chat windows simultaneously"
         );
-        const { env, openDiscuss } = await start();
+        const { openDiscuss } = await start();
         await openDiscuss();
         // open, from systray menu, chat windows of channels with id 1, 2, 3
         await click(".o_menu_systray i[aria-label='Messages']");
@@ -773,7 +773,10 @@ QUnit.test(
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem-name:contains(Channel-3)");
         // simulate resize to go into mobile
-        await afterNextRender(() => (env.services["mail.store"].isSmall = true));
+        await afterNextRender(() => {
+            patchUiSize({ size: SIZES.SM });
+            window.dispatchEvent(new UIEvent("resize"));
+        });
         assert.containsNone($, ".o-mail-ChatWindowHiddenToggler");
     }
 );

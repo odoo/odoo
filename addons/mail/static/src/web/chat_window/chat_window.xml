@@ -5,19 +5,19 @@
     <div class="o-mail-ChatWindow"
         t-att-style="style"
         t-att-class="{
-                'w-100 h-100': store.isSmall,
+                'w-100 h-100': ui.isSmall,
                 'o-folded': props.chatWindow.folded,
                 'position-absolute bottom-0 overflow-hidden d-flex flex-column': !props.chatWindow.hidden,
-                'rounded-top-3': !props.chatWindow.hidden and !store.isSmall,
+                'rounded-top-3': !props.chatWindow.hidden and !ui.isSmall,
                 }"
         t-on-keydown.stop="onKeydown"
         tabindex="1"
     >
-        <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100" t-on-click="toggleFold" t-att-class="{ 'cursor-pointer': !store.isSmall, 'border-bottom': !props.chatWindow.folded }">
-            <div t-if="store.isSmall" class="cursor-pointer d-flex align-items-center h-100 px-3 py-0 me-2" title="Close conversation" t-on-click="() => this.close()">
+        <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100" t-on-click="toggleFold" t-att-class="{ 'cursor-pointer': !ui.isSmall, 'border-bottom': !props.chatWindow.folded }">
+            <div t-if="ui.isSmall" class="cursor-pointer d-flex align-items-center h-100 px-3 py-0 me-2" title="Close conversation" t-on-click="() => this.close()">
                 <i class="oi oi-arrow-left"/>
             </div>
-            <div t-if="thread and thread.model === 'discuss.channel'" class="o-mail-ChatWindow-threadAvatar position-relative align-self-center align-items-center my-0" t-att-class="{ 'ms-3': !store.isSmall, 'me-1': thread.type === 'chat', 'me-2': thread.type !== 'chat' }">
+            <div t-if="thread and thread.model === 'discuss.channel'" class="o-mail-ChatWindow-threadAvatar position-relative align-self-center align-items-center my-0" t-att-class="{ 'ms-3': !ui.isSmall, 'me-1': thread.type === 'chat', 'me-2': thread.type !== 'chat' }">
                 <img class="rounded" t-att-src="thread.imgUrl" alt="Thread Image"/>
             </div>
             <t t-else="">
@@ -32,14 +32,14 @@
                 (<t t-out="thread.message_unread_counter"/>)
             </div>
             <div class="flex-grow-1"/>
-            <div t-if="thread?.model === 'discuss.channel' and env.isSmall" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-75 opacity-100-hover" title="Pinned messages" t-on-click.stop="togglePinMenu">
+            <div t-if="thread?.model === 'discuss.channel' and ui.isSmall" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-75 opacity-100-hover" title="Pinned messages" t-on-click.stop="togglePinMenu">
                 <i class="fa fa-lg fa-thumb-tack"/>
             </div>
             <div t-if="thread and thread.allowCalls and thread !== rtc.state.channel and !props.chatWindow.hidden" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-75 opacity-100-hover" title="Start a Call" t-on-click.stop="() => this.rtc.toggleCall(this.props.chatWindow.thread)" t-ref="startCall">
                 <i class="fa fa-phone"/>
             </div>
             <t t-if="thread">
-                <div t-if="!env.isSmall" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-75 opacity-100-hover" title="Open in Discuss" t-on-click.stop="expand" t-ref="expand">
+                <div t-if="!ui.isSmall" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-75 opacity-100-hover" title="Open in Discuss" t-on-click.stop="expand" t-ref="expand">
                     <i class="fa fa-expand"/>
                 </div>
             </t>
