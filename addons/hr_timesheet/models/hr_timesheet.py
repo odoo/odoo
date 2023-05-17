@@ -176,7 +176,7 @@ class AccountAnalyticLine(models.Model):
                     '|', '|', '|',
                         ('task_id.project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
                         ('task_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
-                        ('task_id.project_id.allowed_portal_user_ids', 'child_of', [self.env.user.id]),
+                        ('task_id.project_id.allowed_portal_user_ids', 'in', [self.env.user.id]),
                         ('task_id.allowed_user_ids', 'in', [self.env.user.id]),
                     ('task_id.project_id.privacy_visibility', '=', 'portal'),
                 '&',
@@ -184,7 +184,7 @@ class AccountAnalyticLine(models.Model):
                     '&',
                         '|',
                             ('project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
-                            ('project_id.allowed_portal_user_ids', 'child_of', [self.env.user.id]),
+                            ('project_id.allowed_portal_user_ids', 'in', [self.env.user.id]),
                         ('project_id.privacy_visibility', '=', 'portal')
         ]
 

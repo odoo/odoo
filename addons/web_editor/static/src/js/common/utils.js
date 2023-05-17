@@ -44,6 +44,12 @@ const DEFAULT_PALETTE = {
     '4': '#FFFFFF',
     '5': '#383E45',
 };
+/**
+ * Set of all the data attributes relative to the background images.
+ */
+const BACKGROUND_IMAGE_ATTRIBUTES = new Set([
+    "originalId", "originalSrc", "mimetype", "resizeWidth", "glFilter", "quality", "bgSrc",
+]);
 
 /**
  * Computes the number of "px" needed to make a "rem" unit. Subsequent calls
@@ -267,6 +273,24 @@ function _getBgImageURL(el) {
     }
     return matchedURL;
 }
+/**
+ * Add one or more new attributes related to background images in the
+ * BACKGROUND_IMAGE_ATTRIBUTES set.
+ *
+ * @param {...string} newAttributes The new attributes to add in the
+ * BACKGROUND_IMAGE_ATTRIBUTES set.
+ */
+function _addBackgroundImageAttributes(...newAttributes) {
+    BACKGROUND_IMAGE_ATTRIBUTES.add(...newAttributes);
+}
+/**
+ * Check if an attribute is in the BACKGROUND_IMAGE_ATTRIBUTES set.
+ *
+ * @param {string} attribute The attribute that has to be checked.
+ */
+function _isBackgroundImageAttribute(attribute) {
+    return BACKGROUND_IMAGE_ATTRIBUTES.has(attribute);
+}
 
 return {
     CSS_SHORTHANDS: CSS_SHORTHANDS,
@@ -282,5 +306,7 @@ return {
     getCSSVariableValue: _getCSSVariableValue,
     normalizeColor: _normalizeColor,
     getBgImageURL: _getBgImageURL,
+    addBackgroundImageAttributes: _addBackgroundImageAttributes,
+    isBackgroundImageAttribute: _isBackgroundImageAttribute,
 };
 });

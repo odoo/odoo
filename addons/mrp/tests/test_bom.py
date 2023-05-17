@@ -967,3 +967,15 @@ class TestBoM(TestMrpCommon):
             line.product_uom_id = uom_unit
             line.product_qty = 5
         bom_finished = bom_finished.save()
+
+    def test_bom_kit_with_sub_kit(self):
+        p1, p2, p3, p4 = self.make_prods(4)
+        self.make_bom(p1, p2, p3)
+        self.make_bom(p2, p3, p4)
+
+        loc = self.env.ref("stock.stock_location_stock")
+        self.env["stock.quant"]._update_available_quantity(p3, loc, 10)
+        self.env["stock.quant"]._update_available_quantity(p4, loc, 10)
+        self.assertEqual(p1.qty_available, 5.0)
+        self.assertEqual(p2.qty_available, 10.0)
+        self.assertEqual(p3.qty_available, 10.0)
