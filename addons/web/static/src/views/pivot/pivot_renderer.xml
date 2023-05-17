@@ -5,7 +5,7 @@
         <t t-call="web.PivotView.Buttons"/>
         <div t-if="model.hasData() and model.metaData.activeMeasures.length" class="o_pivot table-responsive mx-3">
             <table
-                class="table-hover table table-sm table-bordered table-borderless bg-view"
+                class="table-hover table table-sm table-bordered table-borderless"
                 t-att-class="{ o_enable_linking: !model.metaData.disableLinking }"
                 t-ref="table"
             >
@@ -17,7 +17,7 @@
                                 <t t-set="isXAxis" t-value="true"/>
                                 <t t-set="isInHead" t-value="true"/>
                             </t>
-                            <th t-else="" t-att-colspan="cell.width" t-att-rowspan="cell.height" class="fw-normal border-start-0" t-att-class="{ 'border-top': cell_index != 0 }"/>
+                            <th t-else="" t-att-colspan="cell.width" t-att-rowspan="cell.height" class="border-0 bg-100 fw-normal" t-att-class="{ 'border-0': cell_index != 0 }"/>
                         </t>
                     </tr>
                 </thead>
@@ -55,7 +55,7 @@
 
     <t t-name="web.PivotHeader" owl="1">
         <th
-            class="text-nowrap cursor-pointer fw-normal user-select-none"
+            class="bg-view text-nowrap cursor-pointer fw-normal user-select-none"
             t-att-colspan="isXAxis ? cell.width : undefined"
             t-att-rowspan="isXAxis ? cell.height : undefined"
             t-att-class="{
@@ -91,7 +91,7 @@
     </t>
 
     <t t-name="web.PivotMeasure" owl="1">
-        <th class="text-muted text-center text-nowrap fw-normal" t-att-colspan="cell.width" t-att-rowspan="cell.height" t-att-class="{
+        <th class="bg-view text-muted text-center text-nowrap fw-normal" t-att-colspan="cell.width" t-att-rowspan="cell.height" t-att-class="{
                 'o_pivot_origin_row cursor-pointer user-select-none': cell.originIndexes,
                 'o_pivot_measure_row cursor-pointer user-select-none': !cell.originIndexes,
                 o_pivot_sort_order_asc: cell.order === 'asc',
