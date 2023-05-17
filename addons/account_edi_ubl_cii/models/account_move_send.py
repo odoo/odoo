@@ -34,7 +34,7 @@ class AccountMoveSend(models.Model):
             code_to_label = dict(wizard.move_ids.partner_id._fields['ubl_cii_format'].selection)
             codes = wizard.move_ids.partner_id.mapped('ubl_cii_format')
             if any(codes):
-                wizard.checkbox_ubl_cii_label = ", ".join(code_to_label[c] for c in codes)
+                wizard.checkbox_ubl_cii_label = ", ".join(code_to_label[c] for c in codes if c)
             else:
                 wizard.checkbox_ubl_cii_label = False
 
