@@ -1,42 +1,56 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo.tests
-from odoo.addons.base.tests.common import HttpCaseWithUserDemo
+from odoo.addons.mass_mailing.tests.common import MassMailCommon
+from odoo.tests import HttpCase, tagged
 
 
-@odoo.tests.tagged('-at_install', 'post_install')
-class TestUi(HttpCaseWithUserDemo):
-    def setUp(self):
-        super().setUp()
-        self.user_demo.groups_id |= self.env.ref('mass_mailing.group_mass_mailing_user')
-        self.user_demo.groups_id |= self.env.ref('mail.group_mail_template_editor')
-        self.user_demo.groups_id |= self.env.ref('mass_mailing.group_mass_mailing_campaign')
+@tagged('-at_install', 'post_install')
+class TestMailingUi(MassMailCommon, HttpCase):
 
-    def test_01_mass_mailing_editor_tour(self):
-        self.start_tour("/web", 'mass_mailing_editor_tour', login="demo")
-        mail = self.env['mailing.mailing'].search([('subject', '=', 'Test')])[0]
-        # The tour created and saved an email. The edited version should be
+    @classmethod
+    def setUpClass(cls):
+        super(TestMailingUi, cls).setUpClass()
+
+        cls.user_marketing.write({
+            'groups_id': [
+                (4, cls.env.ref('mail.group_mail_template_editor').id),
+            ],
+        })
+
+    def test_mailing_campaign_tour(self):
+        self.user_marketing.write({
+            'groups_id': [
+                (4, self.env.ref('mass_mailing.group_mass_mailing_campaign').id),
+            ],
+        })
+        self.start_tour("/web", 'mailing_campaign', login="user_marketing")
+
+    def test_mailing_editor_tour(self):
+        mailing = self.env['mailing.mailing'].search([('subject', '=', 'TestFromTour')], limit=1)
+        self.assertFalse(mailing)
+        self.start_tour("/web", 'mailing_editor', login="user_marketing")
+
+        # The tour created and saved a mailing. The edited version should be
         # saved in body_arch, and its transpiled version (see convert_inline)
         # for email client compatibility should be saved in body_html. This
         # ensures both fields have different values (the mailing body should
         # have been converted to a table in body_html).
-        self.assertIn('data-snippet="s_title"', mail.body_arch)
-        self.assertTrue(mail.body_arch.startswith('<div'))
-        self.assertIn('data-snippet="s_title"', mail.body_html)
-        self.assertTrue(mail.body_html.startswith('<table'))
+        mailing = self.env['mailing.mailing'].search([('subject', '=', 'TestFromTour')], limit=1)
+        self.assertTrue(mailing)
+        self.assertIn('data-snippet="s_title"', mailing.body_arch)
+        self.assertTrue(mailing.body_arch.startswith('<div'))
+        self.assertIn('data-snippet="s_title"', mailing.body_html)
+        self.assertTrue(mailing.body_html.startswith('<table'))
 
-    def test_02_mass_mailing_snippets_menu_tabs(self):
-        self.start_tour("/web", 'mass_mailing_snippets_menu_tabs', login="demo")
+    def test_mailing_editor_theme_tour(self):
+        self.start_tour('/web', 'mailing_editor_theme', login="demo")
 
-    def test_03_mass_mailing_snippets_toolbar_mobile_hide(self):
-        self.start_tour("/web", 'mass_mailing_snippets_menu_toolbar_new_mailing_mobile', login="demo")
+    def test_snippets_mailing_menu_tabs_tour(self):
+        self.start_tour("/web", 'snippets_mailing_menu_tabs', login="demo")
 
-    def test_04_mass_mailing_snippets_menu_hide(self):
-        self.start_tour("/web", 'mass_mailing_snippets_menu_toolbar', login="demo")
+    def test_snippets_mailing_menu_toolbar_tour(self):
+        self.start_tour("/web", 'snippets_mailing_menu_toolbar', login="demo")
 
-    def test_05_mass_mailing_basic_theme_toolbar(self):
-        self.start_tour('/web', 'mass_mailing_basic_theme_toolbar', login="demo")
-
-    def test_06_mass_mailing_campaign_new_mailing(self):
-        self.start_tour("/web", 'mass_mailing_campaing_new_mailing', login="demo")
+    def test_snippets_mailing_menu_toolbar_mobile_tour(self):
+        self.start_tour("/web", 'snippets_mailing_menu_toolbar_mobile', login="demo")

@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import wTourUtils from "website.tour_utils";
-import newsletterPopupUseTour from "website_mass_mailing.tour.newsletter_popup_use";
+import snippetNewsletterPopupUseTour from "website_mass_mailing.tour.snippet_newsletter_popup_use";
 
-wTourUtils.registerWebsitePreviewTour("newsletter_popup_edition", {
+wTourUtils.registerWebsitePreviewTour("snippet_newsletter_popup_edition", {
     test: true,
     url: "/",
     edition: true,
@@ -23,6 +23,6 @@ wTourUtils.registerWebsitePreviewTour("newsletter_popup_edition", {
         content: "Check the modal has been saved, closed",
         trigger: 'iframe body:has(.o_newsletter_popup)',
         extra_trigger: 'iframe body:not(.editor_enable)',
-        run: newsletterPopupUseTour.ensurePopupNotVisible,
+        run: snippetNewsletterPopupUseTour.ensurePopupNotVisible,
     }
 ]);

@@ -1,21 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo
-import odoo.tests
+from odoo.tests import HttpCase, tagged
 
 
-@odoo.tests.common.tagged('post_install', '-at_install')
-class TestSnippets(odoo.tests.HttpCase):
+@tagged('post_install', '-at_install')
+class TestSnippets(HttpCase):
 
-    def test_01_newsletter_popup(self):
-        self.start_tour('/', 'newsletter_popup_edition', login='admin')
-        self.start_tour("/", "newsletter_popup_use", login=None)
+    def test_snippet_newsletter_popup(self):
+        self.start_tour("/", "snippet_newsletter_popup_edition", login='admin')
+        self.start_tour("/", "snippet_newsletter_popup_use", login=None)
+
         mailing_list = self.env['mailing.list'].search([], limit=1)
         emails = mailing_list.contact_ids.mapped('email')
         self.assertIn("hello@world.com", emails)
 
-    def test_02_newsletter_block_edition(self):
+    def test_snippet_newsletter_block_witih_edit(self):
         admin_email = self.env.ref('base.user_admin').email
         # Get contacts with this email
         mass_mailing_contacts = self.env['mailing.contact'].search([('email', '=', admin_email)])
@@ -23,6 +23,10 @@ class TestSnippets(odoo.tests.HttpCase):
         # Unsubscribe the admin's email from every mailing list to ensure the
         # tour can subscribe the admin again
         mailing_list.write({
-            'contact_ids': [odoo.Command.unlink(id) for id in mass_mailing_contacts.ids]
+            'contact_ids': [(3, contact_id) for contact_id in mass_mailing_contacts.ids],
         })
-        self.start_tour(self.env['website'].get_client_action_url('/'), 'newsletter_block_edition', login='admin')
+        self.start_tour(
+            self.env['website'].get_client_action_url('/'),
+            "snippet_newsletter_block_with_edit",
+            login='admin'
+        )
