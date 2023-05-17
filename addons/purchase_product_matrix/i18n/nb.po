@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* purchase_product_matrix
-# 
+#
 # Translators:
-# Martin Trigaux, 2019
-# Marius Stedjan <marius@stedjan.com>, 2019
-# 
+# Marius Stedjan <marius@stedjan.com>, 2022
+# Martin Trigaux, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2019\n"
-"Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: Martin Trigaux, 2022\n"
+"Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
+"Language: nb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_product_matrix
@@ -27,19 +27,31 @@ msgstr "Attributtverdier"
 
 #. module: purchase_product_matrix
 #. openerp-web
-#: code:addons/purchase_product_matrix/static/src/js/product_matrix_configurator.js:0
-#: code:addons/purchase_product_matrix/static/src/js/product_matrix_configurator.js:0
+#: code:addons/purchase_product_matrix/static/src/js/purchase_product_field.js:0
 #, python-format
-msgid "Edit Configuration"
+msgid "Choose Product Variants"
 msgstr ""
 
 #. module: purchase_product_matrix
 #. openerp-web
-#: code:addons/purchase_product_matrix/static/src/js/product_matrix_configurator.js:0
-#: code:addons/purchase_product_matrix/static/src/js/product_matrix_configurator.js:0
+#: code:addons/purchase_product_matrix/static/src/js/purchase_product_field.js:0
 #, python-format
-msgid "External Link"
-msgstr ""
+msgid "Close"
+msgstr "Lukk"
+
+#. module: purchase_product_matrix
+#. openerp-web
+#: code:addons/purchase_product_matrix/static/src/js/purchase_product_field.js:0
+#, python-format
+msgid "Confirm"
+msgstr "Bekreft"
+
+#. module: purchase_product_matrix
+#. openerp-web
+#: code:addons/purchase_product_matrix/static/src/js/purchase_product_field.js:0
+#, python-format
+msgid "Edit Configuration"
+msgstr "Rediger konfigurasjon"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid
@@ -49,18 +61,16 @@ msgstr "Rutenett"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid_product_tmpl_id
 msgid "Grid Product Tmpl"
-msgstr ""
+msgstr "Matrise Produktmal"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__grid_update
 msgid "Grid Update"
-msgstr ""
+msgstr "Oppdater Matrise"
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__report_grids
-msgid ""
-"If set, the matrix of configurable products will be shown on the report of "
-"this order."
+msgid "If set, the matrix of configurable products will be shown on the report of this order."
 msgstr ""
 
 #. module: purchase_product_matrix
@@ -71,7 +81,7 @@ msgstr ""
 #. module: purchase_product_matrix
 #: model:ir.model.fields,field_description:purchase_product_matrix.field_purchase_order__report_grids
 msgid "Print Variant Grids"
-msgstr ""
+msgstr "Bruk variantmatrise"
 
 #. module: purchase_product_matrix
 #: model_terms:ir.ui.view,arch_db:purchase_product_matrix.purchase_order_form_matrix
@@ -101,25 +111,23 @@ msgstr "Innkjøpsordrelinje"
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_product_tmpl_id
 msgid "Technical field for product_matrix functionalities."
-msgstr ""
+msgstr "Teknisk felt for product_matrix funksjonalitet."
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid
 msgid ""
 "Technical storage of grid. \n"
-"If grid_update, will be loaded on the SO. \n"
+"If grid_update, will be loaded on the PO. \n"
 "If not, represents the matrix to open."
 msgstr ""
 
 #. module: purchase_product_matrix
 #: model:ir.model.fields,help:purchase_product_matrix.field_purchase_order__grid_update
 msgid "Whether the grid field contains a new matrix to apply or not."
-msgstr ""
+msgstr "Om matrisefeltet inneholder en ny matrise som skal legges til, eller ikke."
 
 #. module: purchase_product_matrix
 #: code:addons/purchase_product_matrix/models/purchase.py:0
 #, python-format
-msgid ""
-"You cannot change the quantity of a product present in multiple purchase "
-"lines."
+msgid "You cannot change the quantity of a product present in multiple purchase lines."
 msgstr ""

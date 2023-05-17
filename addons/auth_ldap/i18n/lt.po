@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* auth_ldap
-# 
+#
 # Translators:
 # Martin Trigaux, 2019
 # UAB "Draugiški sprendimai" <transifex@draugiskisprendimai.lt>, 2019
@@ -10,29 +10,42 @@
 # Audrius Palenskis <audrius.palenskis@gmail.com>, 2019
 # Monika Raciunaite <monika.raciunaite@gmail.com>, 2019
 # Linas Versada <linaskrisiukenas@gmail.com>, 2019
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
 "Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
+"Language: lt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lt\n"
 "Plural-Forms: nplurals=4; plural=(n % 10 == 1 && (n % 100 > 19 || n % 100 < 11) ? 0 : (n % 10 >= 2 && n % 10 <=9) && (n % 100 > 19 || n % 100 < 11) ? 1 : n % 1 != 0 ? 2: 3);\n"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
 msgid ""
-"Automatically create local user accounts for new users authenticating via "
-"LDAP"
+"    Filter used to look up user accounts in the LDAP database. It is an    arbitrary LDAP filter in string representation. Any `%s` placeholder    will be replaced by the login (identifier) provided by the user, the filter    should contain at least one such placeholder.\n"
+"\n"
+"    The filter must result in exactly one (1) result, otherwise the login will    be considered invalid.\n"
+"\n"
+"    Example (actual attributes depend on LDAP server and setup):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    or\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
 msgstr ""
-"Automatiškai kurti vietines vartotojų paskyras naujiems vartotojams, "
-"autentifikuojantiems per LDAP."
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
+msgid "Automatically create local user accounts for new users authenticating via LDAP"
+msgstr "Automatiškai kurti vietines vartotojų paskyras naujiems vartotojams, autentifikuojantiems per LDAP."
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -68,6 +81,11 @@ msgstr "Sukūrė"
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
 msgid "Created on"
 msgstr "Sukurta"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
+msgid "DN of the user search scope: all descendants of this base will be searched for users."
+msgstr ""
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
@@ -147,12 +165,10 @@ msgid "Login Information"
 msgstr "Prisijungimo informacija"
 
 #. module: auth_ldap
-#: code:addons/auth_ldap/models/res_company_ldap.py:202
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
 #, python-format
 msgid "No local user found for LDAP login and not configured to create one"
-msgstr ""
-"LDAP prisijungimui nerastas vietinis vartotojas ir jis nenustatytas jo "
-"sukūrimui"
+msgstr "LDAP prisijungimui nerastas vietinis vartotojas ir jis nenustatytas jo sukūrimui"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -161,14 +177,8 @@ msgstr "Vykdymo parametrai"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
-msgid ""
-"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
-"option requires a server with STARTTLS enabled, otherwise all authentication"
-" attempts will fail."
-msgstr ""
-"Prašyti saugaus TLS/SSL šifravimo jungiantis prie LDAP serverio. Šiam "
-"pasirinkimui reikia serverio su aktyvuotu STARTTLS, kitaip autentifikacijos "
-"bandymai nepavyks."
+msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
+msgstr "Prašyti saugaus TLS/SSL šifravimo jungiantis prie LDAP serverio. Šiam pasirinkimui reikia serverio su aktyvuotu STARTTLS, kitaip autentifikacijos bandymai nepavyks."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -192,21 +202,13 @@ msgstr "Vartotojas pagal šabloną"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
-msgid ""
-"The password of the user account on the LDAP server that is used to query "
-"the directory."
-msgstr ""
-"Vartotojo paskyros slaptažodis LDAP serveryje, skirtas direktorijos "
-"užklausoms."
+msgid "The password of the user account on the LDAP server that is used to query the directory."
+msgstr "Vartotojo paskyros slaptažodis LDAP serveryje, skirtas direktorijos užklausoms."
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
-msgid ""
-"The user account on the LDAP server that is used to query the directory. "
-"Leave empty to connect anonymously."
-msgstr ""
-"Vartotojo paskyra LDAP serveryje, kuri naudojama direktorijos užklausoms. "
-"Norėdami jungtis anonimiškai, palikite tuščią."
+msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
+msgstr "Vartotojo paskyra LDAP serveryje, kuri naudojama direktorijos užklausoms. Norėdami jungtis anonimiškai, palikite tuščią."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls

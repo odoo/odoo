@@ -1,32 +1,47 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * auth_ldap
-# 
+#
 # Translators:
 # Martin Trigaux, 2018
 # 최재호 <hwangtog@gmail.com>, 2018
 # Link Up링크업 <linkup.way@gmail.com>, 2018
 # Linkup <link-up@naver.com>, 2018
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2018-08-24 09:15+0000\n"
 "Last-Translator: Linkup <link-up@naver.com>, 2018\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
+"Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ko\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: auth_ldap
-#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_filter
 msgid ""
-"Automatically create local user accounts for new users authenticating via "
-"LDAP"
+"    Filter used to look up user accounts in the LDAP database. It is an    arbitrary LDAP filter in string representation. Any `%s` placeholder    will be replaced by the login (identifier) provided by the user, the filter    should contain at least one such placeholder.\n"
+"\n"
+"    The filter must result in exactly one (1) result, otherwise the login will    be considered invalid.\n"
+"\n"
+"    Example (actual attributes depend on LDAP server and setup):\n"
+"\n"
+"        (&(objectCategory=person)(objectClass=user)(sAMAccountName=%s))\n"
+"\n"
+"    or\n"
+"\n"
+"        (|(mail=%s)(uid=%s))\n"
+"    "
+msgstr ""
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__create_user
+msgid "Automatically create local user accounts for new users authenticating via LDAP"
 msgstr "LDAP를 통해 인증하는 새로운 사용자에 대해 로컬 사용자 계정을 자동으로 생성"
 
 #. module: auth_ldap
@@ -63,6 +78,11 @@ msgstr "작성자"
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_date
 msgid "Created on"
 msgstr "작성일"
+
+#. module: auth_ldap
+#: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_base
+msgid "DN of the user search scope: all descendants of this base will be searched for users."
+msgstr ""
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
@@ -142,7 +162,7 @@ msgid "Login Information"
 msgstr "로그인 정보"
 
 #. module: auth_ldap
-#: code:addons/auth_ldap/models/res_company_ldap.py:201
+#: code:addons/auth_ldap/models/res_company_ldap.py:0
 #, python-format
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
@@ -154,13 +174,8 @@ msgstr "과정 매개 변수"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_tls
-msgid ""
-"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
-"option requires a server with STARTTLS enabled, otherwise all authentication"
-" attempts will fail."
-msgstr ""
-"LDAP 서버 연결 시 보안 TLS/SSL 암호화 요청. 이 옵션은 STARTTLS가 활성화된 서버가 필요하며, 그렇지 않을 경우 인증 "
-"시도에 실패합니다."
+msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
+msgstr "LDAP 서버 연결 시 보안 TLS/SSL 암호화 요청. 이 옵션은 STARTTLS가 활성화된 서버가 필요하며, 그렇지 않을 경우 인증 시도에 실패합니다."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -184,16 +199,12 @@ msgstr "사용자 서식"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_password
-msgid ""
-"The password of the user account on the LDAP server that is used to query "
-"the directory."
+msgid "The password of the user account on the LDAP server that is used to query the directory."
 msgstr "디렉터리를 조회할 때 사용되는 LDAP 서버 상의 사용자 계정 암호"
 
 #. module: auth_ldap
 #: model:ir.model.fields,help:auth_ldap.field_res_company_ldap__ldap_binddn
-msgid ""
-"The user account on the LDAP server that is used to query the directory. "
-"Leave empty to connect anonymously."
+msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
 msgstr "디렉터리를 조회할 때 사용되는 LDAP 서버 상의 사용자 계정. 익명으로 연결하려면 비워두십시오."
 
 #. module: auth_ldap

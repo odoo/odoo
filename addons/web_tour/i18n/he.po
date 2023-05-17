@@ -1,50 +1,59 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * web_tour
-# 
+# 	* web_tour
+#
 # Translators:
-# ExcaliberX <excaliberx@gmail.com>, 2019
-# Yihya Hugirat <hugirat@gmail.com>, 2019
-# שהאב חוסיין <shhab89@gmail.com>, 2019
-# דודי מלכה <Dudimalka6@gmail.com>, 2019
-# 
+# Sagi Ahiel, 2022
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
+# Martin Trigaux, 2022
+# Yihya Hugirat <hugirat@gmail.com>, 2022
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
+# ExcaliberX <excaliberx@gmail.com>, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: דודי מלכה <Dudimalka6@gmail.com>, 2019\n"
-"Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
+"POT-Creation-Date: 2023-05-16 13:50+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: ExcaliberX <excaliberx@gmail.com>, 2022\n"
+"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: he\n"
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
 
 #. module: web_tour
-#. openerp-web
-#: code:addons/web_tour/static/src/js/tour_manager.js:386
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_service.js:0
+#, python-format
+msgid "<strong><b>Good job!</b> You went through all steps of this tour.</strong>"
+msgstr "<strong><b>עבודה טובה!</b> עברת את כל השלבים של המדריך.</strong>"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_utils.js:0
 #, python-format
 msgid "Click on the <i>Home icon</i> to navigate across apps."
-msgstr ""
+msgstr "לחץ על <i>סמל הבית</i> כדי לנווט בין יישומים."
 
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__user_id
 msgid "Consumed by"
-msgstr "נצרך על ידי"
+msgstr "בשימוש על ידי"
 
 #. module: web_tour
-#. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:7
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/debug_manager.js:0
 #, python-format
 msgid "Disable Tours"
-msgstr ""
+msgstr "השבת סיורים"
 
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__display_name
 msgid "Display Name"
-msgstr "הצג שם"
+msgstr "שם לתצוגה"
 
 #. module: web_tour
 #: model:ir.model,name:web_tour.model_ir_http
@@ -54,12 +63,7 @@ msgstr "ניתוב HTTP"
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__id
 msgid "ID"
-msgstr "תעודה מזהה"
-
-#. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour____last_update
-msgid "Last Modified on"
-msgstr "שינוי אחרון ב"
+msgstr "מזהה"
 
 #. module: web_tour
 #: model_terms:ir.ui.view,arch_db:web_tour.edit_tour_list
@@ -67,44 +71,100 @@ msgid "Menu"
 msgstr "תפריט"
 
 #. module: web_tour
-#. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:17
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Name"
 msgstr "שם"
 
 #. module: web_tour
-#. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:18
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Onboarding tours"
+msgstr ""
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_utils.js:0
+#, python-format
+msgid "Open bugger menu."
+msgstr ""
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Path"
 msgstr "נתיב"
 
 #. module: web_tour
-#. openerp-web
-#: code:addons/web_tour/static/src/js/tour_manager.js:76
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
 #, python-format
-msgid "Skip tour"
-msgstr "דלג על הסיור"
+msgid "Scroll down to reach the next step."
+msgstr ""
 
 #. module: web_tour
-#. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:8
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
+#, python-format
+msgid "Scroll up to reach the next step."
+msgstr ""
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Sequence"
+msgstr "רצף"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Start"
+msgstr "התחל"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/debug_manager.js:0
 #, python-format
 msgid "Start Tour"
+msgstr "התחל סיור"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Start tour"
+msgstr "התחל סיור"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Test"
+msgstr "בדוק"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Test tour"
+msgstr ""
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Testing tours"
 msgstr ""
 
 #. module: web_tour
 #: model_terms:ir.ui.view,arch_db:web_tour.edit_tour_search
 msgid "Tip"
-msgstr "טיפ"
-
-#. module: web_tour
-#. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:25
-#, python-format
-msgid "Tour"
-msgstr ""
+msgstr "עצה"
 
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__name
@@ -112,8 +172,11 @@ msgid "Tour name"
 msgstr "שם סיור"
 
 #. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.js:0
 #: model:ir.actions.act_window,name:web_tour.edit_tour_action
 #: model:ir.model,name:web_tour.model_web_tour_tour
 #: model:ir.ui.menu,name:web_tour.menu_tour_action
+#, python-format
 msgid "Tours"
 msgstr "סיורים"

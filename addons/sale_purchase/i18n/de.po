@@ -1,26 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_purchase
-# 
+#
 # Translators:
-# Leon Grill <leg@odoo.com>, 2019
-# Martin Trigaux, 2019
-# darenkster <inactive+darenkster@transifex.com>, 2019
-# Johannes Croe <jcr@odoo.com>, 2019
-# Chris Egal <sodaswed@web.de>, 2019
-# 
+# Martin Trigaux, 2022
+# Michael Hofer, 2022
+# Larissa Manderfeld, 2023
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: sale_purchase
@@ -32,6 +30,36 @@ msgid ""
 msgstr ""
 ".\n"
 "         Manuelle Aktion wird möglicherweise benötigt."
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
+msgid "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to Purchase\"/>"
+msgstr "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to Purchase\"/>"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
+msgid "<span class=\"o_stat_text\">Purchase</span>"
+msgstr "<span class=\"o_stat_text\">Kaufen</span>"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
+msgid "<span class=\"o_stat_text\">Sale</span>"
+msgstr "<span class=\"o_stat_text\">Verkaufen</span>"
+
+#. module: sale_purchase
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_cancel_view_form
+msgid ""
+"<span id=\"display_invoice_alert\" position=\"after\">\n"
+"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
+"                    There are active purchase orders linked to this sale order that are not cancelled automatically! <br/>\n"
+"                </span>\n"
+"            </span>"
+msgstr ""
+"<span id=\"display_invoice_alert\" position=\"after\">\n"
+"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
+"                    Es gibt aktive Kaufaufträge im Zusammenhang mit diesem Verkaufsauftrag, die nicht automatisch storniert werden! <br/>\n"
+"                </span>\n"
+"            </span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
@@ -59,15 +87,8 @@ msgstr "Generierte Kaufpositionen"
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_template__service_to_purchase
-msgid ""
-"If ticked, each time you sell this product through a SO, a RfQ is "
-"automatically created to buy the product. Tip: don't forget to set a vendor "
-"on the product."
-msgstr ""
-"Wenn diese Option aktiviert ist, wird jedes Mal, wenn Sie dieses Produkt "
-"über ein SO verkaufen, automatisch ein RfQ erstellt, um das Produkt zu "
-"kaufen. Tipp: Vergessen Sie nicht, einen Anbieter für das Produkt "
-"festzulegen."
+msgid "If ticked, each time you sell this product through a SO, a RfQ is automatically created to buy the product. Tip: don't forget to set a vendor on the product."
+msgstr "Wenn diese Option aktiviert ist, wird jedes Mal, wenn Sie dieses Produkt über ein SO verkaufen, automatisch ein RfQ erstellt, um das Produkt zu kaufen. Tipp: Vergessen Sie nicht, einen Anbieter für das Produkt festzulegen."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
@@ -76,8 +97,13 @@ msgstr "Manuelle Aktionen können erforderlich sein."
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
-msgid "Number of Purchase Order"
-msgstr "Nummer der Bestellung"
+msgid "Number of Purchase Order Generated"
+msgstr "Anzahl der erzeugten Bestellungen"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
+msgid "Number of Source Sale"
+msgstr "Anzahl der Ursprungsverkäufe"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_count
@@ -85,7 +111,7 @@ msgid "Number of generated purchase items"
 msgstr "Anzahl der generierten Kaufgegenstände"
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py:0
+#: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr "Bestellte Menge verringert!"
@@ -96,26 +122,31 @@ msgid "Origin Sale Item"
 msgstr "Herstellungsverlauf Gegenstand"
 
 #. module: sale_purchase
+#: code:addons/sale_purchase/models/product_template.py:0
+#, python-format
+msgid "Please define the vendor from whom you would like to purchase this service automatically."
+msgstr "Bitte geben Sie den Lieferanten an, von dem Sie diese Dienstleistung automatisch beziehen möchten."
+
+#. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_product_template
-msgid "Product Template"
-msgstr "Produktvorlage"
+msgid "Product"
+msgstr "Produkt"
 
 #. module: sale_purchase
-#: model:ir.model.constraint,message:sale_purchase.constraint_product_template_service_to_purchase
+#: code:addons/sale_purchase/models/product_template.py:0
+#, python-format
 msgid "Product that is not a service can not create RFQ."
-msgstr ""
-"Produkte die keine Dienstleistung sind können keine Anfrage erstellen."
-
-#. module: sale_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
-msgid "Purchase Automatically"
-msgstr "Automatisch kaufen"
+msgstr "Produkte die keine Dienstleistung sind können keine Anfrage erstellen."
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
 msgid "Purchase Order"
-msgstr "Beschaffungsauftrag"
+msgstr "Bestellung"
+
+#. module: sale_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_cancel__display_purchase_orders_alert
+msgid "Purchase Order Alert"
+msgstr "Kaufauftragsalarm"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order_line
@@ -123,18 +154,15 @@ msgid "Purchase Order Line"
 msgstr "Bestellposition"
 
 #. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_form_view_inherit
-msgid "Purchase Orders"
-msgstr "Bestellungen"
+#: code:addons/sale_purchase/models/sale_order.py:0
+#, python-format
+msgid "Purchase Order generated from %s"
+msgstr "Bestellung generiert von %s"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
-msgid ""
-"Purchase line generated by this Sales item on order confirmation, or when "
-"the quantity was increased."
-msgstr ""
-"Kaufzeile, die von dieser Verkaufsposition bei Auftragsbestätigung oder bei "
-"Erhöhung der Menge generiert wurde."
+msgid "Purchase line generated by this Sales item on order confirmation, or when the quantity was increased."
+msgstr "Einkaufszeile, die von dieser Verkaufsposition bei der Auftragsbestätigung oder bei der Erhöhung der Menge erzeugt wird."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
@@ -152,29 +180,38 @@ msgid "Sales Order"
 msgstr "Verkaufsauftrag "
 
 #. module: sale_purchase
+#: model:ir.model,name:sale_purchase.model_sale_order_cancel
+msgid "Sales Order Cancel"
+msgstr "Kundenauftrag stornieren"
+
+#. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_sale_order_line
 msgid "Sales Order Line"
 msgstr "Kundenauftragszeile"
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py:0
+#: code:addons/sale_purchase/models/purchase_order.py:0
 #, python-format
-msgid ""
-"There is no vendor associated to the product %s. Please define a vendor for "
-"this product."
-msgstr ""
-"Dem Produkt %s wurde kein Lieferant zugewiesen. Bitte definieren Sie einen "
-"Lieferanten für dieses Produkt."
+msgid "Sources Sale Orders %s"
+msgstr "Quellen der Verkaufsaufträge %s"
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py:0
+#: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
+#: model:ir.model.fields,field_description:sale_purchase.field_product_template__service_to_purchase
+msgid "Subcontract Service"
+msgstr "Dienstleistung Subunternehmer"
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
-msgid ""
-"You are decreasing the ordered quantity! Do not forget to manually update "
-"the purchase order if needed."
-msgstr ""
-"Sie verringern die bestellte Menge! Vergessen Sie nicht, die Bestellung bei "
-"Bedarf manuell zu aktualisieren."
+msgid "There is no vendor associated to the product %s. Please define a vendor for this product."
+msgstr "Dem Produkt %s wurde kein Lieferant zugewiesen. Bitte definieren Sie einen Lieferanten für dieses Produkt."
+
+#. module: sale_purchase
+#: code:addons/sale_purchase/models/sale_order_line.py:0
+#, python-format
+msgid "You are decreasing the ordered quantity! Do not forget to manually update the purchase order if needed."
+msgstr "Sie verringern die bestellte Menge! Vergessen Sie nicht, die Bestellung bei Bedarf manuell zu aktualisieren."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
