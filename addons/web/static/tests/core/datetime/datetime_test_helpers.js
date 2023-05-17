@@ -65,7 +65,7 @@ export function assertDateTimePicker(expectedParams) {
     const datePickerEls = select(".o_date_picker");
     assert.containsN(fixture, ".o_date_picker", date.length);
 
-    let activeCells = 0;
+    let selectedCells = 0;
     let outOfRangeCells = 0;
     let todayCells = 0;
     for (let i = 0; i < date.length; i++) {
@@ -107,8 +107,8 @@ export function assertDateTimePicker(expectedParams) {
 
                 // Check flags
                 let value = cell;
-                const isActive = Array.isArray(cell);
-                if (isActive) {
+                const isSelected = Array.isArray(cell);
+                if (isSelected) {
                     value = value[0];
                 }
                 const isToday = typeof value === "string";
@@ -121,9 +121,9 @@ export function assertDateTimePicker(expectedParams) {
                 }
 
                 // Assert based on flags
-                if (isActive) {
-                    activeCells++;
-                    assert.hasClass(cellEl, "o_active");
+                if (isSelected) {
+                    selectedCells++;
+                    assert.hasClass(cellEl, "o_selected");
                 }
                 if (isOutOfRange) {
                     outOfRangeCells++;
@@ -145,7 +145,7 @@ export function assertDateTimePicker(expectedParams) {
         );
     }
 
-    assert.containsN(fixture, ".o_active", activeCells);
+    assert.containsN(fixture, ".o_selected", selectedCells);
     assert.containsN(fixture, ".o_out_of_range", outOfRangeCells);
     assert.containsN(fixture, ".o_today", todayCells);
 }

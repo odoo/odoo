@@ -71,7 +71,7 @@ export class DateTimeField extends Component {
     }
 
     get showRange() {
-        return this.relatedField && this.values.filter(Boolean).length;
+        return this.relatedField && (this.props.required || this.values.filter(Boolean).length);
     }
 
     get startDateField() {
@@ -101,7 +101,10 @@ export class DateTimeField extends Component {
                         this.emptyField = null;
                     } else {
                         this.emptyField = value[1] ? this.startDateField : this.endDateField;
-                        this.state.value = value.find(Boolean);
+                        if (!this.props.required) {
+                            this.state.focusedDateIndex = 0;
+                            this.state.value = value.find(Boolean);
+                        }
                     }
                 }
                 this.triggerIsDirty(this.props);
@@ -140,6 +143,7 @@ export class DateTimeField extends Component {
         const [value] = this.values;
         this.state.focusedDateIndex = this.emptyField === this.startDateField ? 0 : 1;
         this.state.value = [value, value];
+        this.emptyField = null;
     }
 
     formatDisplayValue(value) {
@@ -220,7 +224,7 @@ export class DateTimeField extends Component {
      * @param {DateTimeFieldProps} props
      */
     triggerIsDirty(props) {
-        this.props.record.model.bus.trigger(
+        props.record.model.bus.trigger(
             "FIELD_IS_DIRTY",
             !areDatesEqual(this.getValueFromProps(props), this.state.value)
         );

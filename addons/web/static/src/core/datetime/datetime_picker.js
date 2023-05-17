@@ -71,6 +71,12 @@ import { ensureArray } from "../utils/arrays";
 const { DateTime } = luxon;
 
 /**
+ * @param {NullableDateTime} date1
+ * @param {NullableDateTime} date2
+ */
+const earliest = (date1, date2) => (date1 < date2 ? date1 : date2);
+
+/**
  * @param {DateTime} date
  */
 const getStartOfDecade = (date) => Math.floor(date.year / 10) * 10;
@@ -87,6 +93,12 @@ const getStartOfWeek = (date) => {
     const { weekStart } = localization;
     return date.set({ weekday: date.weekday < weekStart ? weekStart - 7 : weekStart });
 };
+
+/**
+ * @param {NullableDateTime} date1
+ * @param {NullableDateTime} date2
+ */
+const latest = (date1, date2) => (date1 > date2 ? date1 : date2);
 
 /**
  * @param {number} min
@@ -392,6 +404,7 @@ export class DateTimePicker extends Component {
     }
 
     onWillRender() {
+        const { hoveredDate } = this.state;
         const precision = this.activePrecisionLevel;
         const getterParams = {
             additionalMonth: this.additionalMonth,
@@ -402,6 +415,22 @@ export class DateTimePicker extends Component {
         const referenceDate = this.state.focusDate;
         this.title = precision.getTitle(referenceDate, getterParams);
         this.items = precision.getItems(referenceDate, getterParams);
+
+        /** Selected Range: current values with hovered date applied */
+        this.selectedRange = [...this.values];
+        /** Highlighted Range: union of current values and selected range */
+        this.highlightedRange = [...this.values];
+
+        // Apply hovered date to selected range
+        if (hoveredDate) {
+            [this.selectedRange] = this.applyValueAtIndex(hoveredDate, this.props.focusedDateIndex);
+            if (this.isRange && this.selectedRange.every(Boolean)) {
+                this.highlightedRange = [
+                    earliest(this.selectedRange[0], this.values[0]),
+                    latest(this.selectedRange[1], this.values[1]),
+                ];
+            }
+        }
     }
 
     //-------------------------------------------------------------------------
@@ -439,6 +468,24 @@ export class DateTimePicker extends Component {
     }
 
     /**
+     * @param {NullableDateTime} value
+     * @param {number} valueIndex
+     * @returns {[NullableDateRange, number]}
+     */
+    applyValueAtIndex(value, valueIndex) {
+        const result = [...this.values];
+        if (this.isRange) {
+            if (result[0] && value.endOf("day") < result[0].startOf("day")) {
+                valueIndex = 0;
+            } else if (result[1] && result[1].endOf("day") < value.startOf("day")) {
+                valueIndex = 1;
+            }
+        }
+        result[valueIndex] = value;
+        return [result, valueIndex];
+    }
+
+    /**
      * @param {DateTime} value
      */
     clamp(value) {
@@ -455,44 +502,49 @@ export class DateTimePicker extends Component {
     }
 
     /**
+     * Returns various flags indicating what ranges the current date item belongs
+     * to. Note that these ranges are computed differently according to the current
+     * value mode (range or single date). This is done to simplify CSS selectors.
+     * - Selected Range:
+     *      > range: current values with hovered date applied
+     *      > single date: just the hovered date
+     * - Highlighted Range:
+     *      > range: union of selection range and current values
+     *      > single date: just the current value
+     * - Current Range (range only):
+     *      > range: current start date or current end date.
      * @param {DateItem} item
      */
-    getActiveRangeInfo({ range }) {
-        const values = [...this.values];
+    getActiveRangeInfo({ isOutOfRange, range }) {
         const result = {
-            isActive: isInRange(values, range),
-            isStart: false,
-            isEnd: false,
+            isSelected: !isOutOfRange && isInRange(this.selectedRange, range),
+            isSelectStart: false,
+            isSelectEnd: false,
+            isHighlighted: !isOutOfRange && isInRange(this.highlightedRange, range),
+            isHighlightStart: false,
+            isHighlightEnd: false,
+            isCurrent: false,
         };
-        if (this.isRange) {
-            // Handle active "start" and "end" dates
-            if (result.isActive) {
-                const [start, end] = values;
-                result.isStart = !start || isInRange(start, range);
-                result.isEnd = !end || isInRange(end, range);
-            }
 
-            // Handle preview state
-            if (this.state.hoveredDate) {
-                values[this.props.focusedDateIndex] = this.state.hoveredDate;
-                // TODO: comment this
-                if (values[0] && values[1] && values[1].ts < values[0].ts) {
-                    values.reverse();
-                }
-                const [selectStart, selectEnd] = values;
-                if (isInRange(values, range)) {
-                    result.isActive = true;
-                }
-                if (!selectStart || isInRange(selectStart, range)) {
-                    result.isStart = true;
-                }
-                if (!selectEnd || isInRange(selectEnd, range)) {
-                    result.isEnd = true;
-                }
+        if (this.isRange) {
+            if (result.isSelected) {
+                const [selectStart, selectEnd] = this.selectedRange;
+                result.isSelectStart = !selectStart || isInRange(selectStart, range);
+                result.isSelectEnd = !selectEnd || isInRange(selectEnd, range);
             }
+            if (result.isHighlighted) {
+                const [currentStart, currentEnd] = this.highlightedRange;
+                result.isHighlightStart = !currentStart || isInRange(currentStart, range);
+                result.isHighlightEnd = !currentEnd || isInRange(currentEnd, range);
+            }
+            result.isCurrent =
+                !isOutOfRange &&
+                (isInRange(this.values[0], range) || isInRange(this.values[1], range));
         } else {
-            result.isStart = result.isEnd = result.isActive;
+            result.isSelectStart = result.isSelectEnd = result.isSelected;
+            result.isHighlightStart = result.isHighlightEnd = result.isHighlighted;
         }
+
         return result;
     }
 
@@ -571,24 +623,16 @@ export class DateTimePicker extends Component {
             // No onSelect handler
             return false;
         }
-        const result = [...this.values];
-        if (this.isRange) {
-            if (value.endOf("day") < result[0]) {
-                valueIndex = 0;
-            } else if (value.startOf("day") > result[1]) {
-                valueIndex = 1;
-            }
-        }
+        const [result, finalIndex] = this.applyValueAtIndex(value, valueIndex);
         if (this.props.type === "datetime") {
             // Adjusts result according to the current time values
-            const [hour, minute, second] = this.getTimeValues(valueIndex);
-            value = value.set({ hour, minute, second });
+            const [hour, minute, second] = this.getTimeValues(finalIndex);
+            result[finalIndex] = result[finalIndex].set({ hour, minute, second });
         }
-        if (!isInRange(value, [this.minDate, this.maxDate])) {
+        if (!isInRange(result[finalIndex], [this.minDate, this.maxDate])) {
             // Date is outside range defined by min and max dates
             return false;
         }
-        result[valueIndex] = value;
         this.props.onSelect(this.isRange ? result : result[0]);
         return true;
     }

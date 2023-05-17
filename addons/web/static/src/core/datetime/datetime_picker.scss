@@ -4,7 +4,6 @@
     --DateTimePicker__Template-rows: 3;
     --DateTimePicker__Template-columns: 4;
     --DateTimePicker__Day-template-rows: 6;
-    --DateTimePicker__Today-highlight-color: white;
 
     // Header
 
@@ -14,52 +13,54 @@
 
     // Day
 
-    .o_active {
-        --DateTimePicker__Cell-border-radius-left: 0;
-        --DateTimePicker__Cell-border-radius-right: 0;
+    .o_date_item_cell {
+        --DateTimePicker__Cell-border-radius-start: 0;
+        --DateTimePicker__Cell-border-radius-end: 0;
 
-        // border-radius: var(--DateTimePicker__Cell-border-radius-left)
-        //     var(--DateTimePicker__Cell-border-radius-right)
-        //     var(--DateTimePicker__Cell-border-radius-right)
-        //     var(--DateTimePicker__Cell-border-radius-left);
-
-        &.o_active_start,
-        &.o_active_end {
-            color: var(--DateTimePicker__Today-highlight-color);
-        }
-
-        &:not(.o_active_start):not(.o_active_end) {
-            --bg-opacity: 0.4;
-        }
+        border-radius: var(--DateTimePicker__Cell-border-radius-start)
+            var(--DateTimePicker__Cell-border-radius-end)
+            var(--DateTimePicker__Cell-border-radius-end)
+            var(--DateTimePicker__Cell-border-radius-start);
     }
 
-    .o_active_start {
+    .o_highlighted {
+        --bg-opacity: 0.25;
+    }
+
+    .o_selected {
+        --bg-opacity: 0.5;
+    }
+
+    .o_current {
+        --bg-opacity: 0.75;
+
+        color: var(--white);
+    }
+
+    .o_select_start,
+    .o_select_end {
+        --bg-opacity: 1;
+
+        color: var(--white);
+    }
+
+    .o_select_start:not(.o_highlighted),
+    .o_highlight_start {
         &.o_cell_md {
-            --DateTimePicker__Cell-border-radius-left: 100vmax;
+            --DateTimePicker__Cell-border-radius-start: 0.3rem;
         }
         &.o_cell_lg {
-            --DateTimePicker__Cell-border-radius-left: 0.5rem;
+            --DateTimePicker__Cell-border-radius-start: 0.5rem;
         }
     }
 
-    .o_active_end {
+    .o_select_end:not(.o_highlighted),
+    .o_highlight_end {
         &.o_cell_md {
-            --DateTimePicker__Cell-border-radius-right: 100vmax;
+            --DateTimePicker__Cell-border-radius-end: 0.3rem;
         }
         &.o_cell_lg {
-            --DateTimePicker__Cell-border-radius-right: 0.5rem;
-        }
-    }
-
-    .o_preview_active {
-        border-width: 2px 0 2px 0;
-
-        &.o_preview_start {
-            border-width: 2px 0 2px 2px;
-        }
-
-        &.o_preview_end {
-            border-width: 2px 2px 2px 0;
+            --DateTimePicker__Cell-border-radius-end: 0.5rem;
         }
     }
 
@@ -74,7 +75,8 @@
             var(--DateTimePicker__Today-border-color);
         font-weight: bold;
 
-        &.o_active {
+        &.o_selected,
+        &.o_current {
             --DateTimePicker__Today-border-color: white;
         }
 
@@ -91,8 +93,9 @@
     }
 
     .o_out_of_range {
-        color: var(--gray-400);
         --bg-opacity: 0.5;
+
+        color: var(--gray-400);
     }
 
     .o_time_picker_select {
@@ -118,11 +121,9 @@
 
     // Utilities
 
-    .o_datetime_button {
-        &:hover {
-            background-color: var(--gray-100);
-            border-color: var(--gray-200);
-        }
+    .o_datetime_button:hover {
+        background-color: var(--gray-100);
+        border-color: var(--gray-200);
     }
 
     .o_center {
@@ -143,17 +144,5 @@
 
     .o_text_sm {
         font-size: 0.875rem;
-    }
-
-    .o_bg_inherit {
-        background-color: inherit;
-    }
-
-    .o_text_inherit {
-        color: inherit;
-    }
-
-    .o_hover_primary:hover {
-        color: var(--primary);
     }
 }
