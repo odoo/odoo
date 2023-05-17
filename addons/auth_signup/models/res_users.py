@@ -204,6 +204,10 @@ class ResUsers(models.Model):
             _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
 
     def send_unregistered_user_reminder(self, after_days=5):
+        email_template = self.env.ref('auth_signup.mail_template_data_unregistered_users', raise_if_not_found=False)
+        if not email_template:
+            _logger.warning("Template 'auth_signup.mail_template_data_unregistered_users' was not found. Cannot send reminder notifications.")
+            return
         datetime_min = fields.Datetime.today() - relativedelta(days=after_days)
         datetime_max = datetime_min + relativedelta(hours=23, minutes=59, seconds=59)
 
@@ -221,7 +225,7 @@ class ResUsers(models.Model):
 
         # For sending mail to all the invitors about their invited users
         for user in invited_users:
-            template = self.env.ref('auth_signup.mail_template_data_unregistered_users').with_context(dbname=self._cr.dbname, invited_users=invited_users[user])
+            template = email_template.with_context(dbname=self._cr.dbname, invited_users=invited_users[user])
             template.send_mail(user, email_layout_xmlid='mail.mail_notification_light', force_send=False)
 
     @api.model
