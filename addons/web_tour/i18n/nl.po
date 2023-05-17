@@ -1,32 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * web_tour
-# 
+# 	* web_tour
+#
 # Translators:
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-# 
+# Martin Trigaux, 2022
+# Jolien De Paepe, 2023
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~14.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"POT-Creation-Date: 2023-05-16 13:50+0000\n"
+"PO-Revision-Date: 2022-09-22 05:56+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: web_tour
-#. openerp-web
-#: code:addons/web_tour/static/src/js/tour_manager.js:386
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_service.js:0
+#, python-format
+msgid "<strong><b>Good job!</b> You went through all steps of this tour.</strong>"
+msgstr "<strong><b>Goed gedaan!</b> Je hebt alle stappen van deze rondleiding doorlopen.</strong>"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_utils.js:0
 #, python-format
 msgid "Click on the <i>Home icon</i> to navigate across apps."
-msgstr "Klik op het <i>Home icoon</i> om doorheen apps te navigeren."
+msgstr "Klik op het <i>startpagina icoon</i> om doorheen apps te navigeren."
 
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__user_id
@@ -34,8 +40,8 @@ msgid "Consumed by"
 msgstr "Verbruikt door"
 
 #. module: web_tour
-#. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:7
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/debug_manager.js:0
 #, python-format
 msgid "Disable Tours"
 msgstr "Rondleidingen uitschakelen"
@@ -43,7 +49,7 @@ msgstr "Rondleidingen uitschakelen"
 #. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: web_tour
 #: model:ir.model,name:web_tour.model_ir_http
@@ -56,42 +62,100 @@ msgid "ID"
 msgstr "ID"
 
 #. module: web_tour
-#: model:ir.model.fields,field_description:web_tour.field_web_tour_tour____last_update
-msgid "Last Modified on"
-msgstr "Laatst gewijzigd op"
-
-#. module: web_tour
 #: model_terms:ir.ui.view,arch_db:web_tour.edit_tour_list
 msgid "Menu"
 msgstr "Menu"
 
 #. module: web_tour
-#. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:17
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Name"
 msgstr "Naam"
 
 #. module: web_tour
-#. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:18
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Onboarding tours"
+msgstr "Onboarding tours"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_utils.js:0
+#, python-format
+msgid "Open bugger menu."
+msgstr "Open het bugger-menu."
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
 #, python-format
 msgid "Path"
 msgstr "Pad"
 
 #. module: web_tour
-#. openerp-web
-#: code:addons/web_tour/static/src/js/tour_manager.js:76
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
 #, python-format
-msgid "Skip tour"
-msgstr "Rondleiding overslaan"
+msgid "Scroll down to reach the next step."
+msgstr ""
 
 #. module: web_tour
-#. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:8
+#. odoo-javascript
+#: code:addons/web_tour/static/src/tour_service/tour_pointer_state.js:0
+#, python-format
+msgid "Scroll up to reach the next step."
+msgstr ""
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Sequence"
+msgstr "Reeks"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Start"
+msgstr "Start"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/debug_manager.js:0
 #, python-format
 msgid "Start Tour"
-msgstr "Start ronleiding"
+msgstr "Rondleidingen starten"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Start tour"
+msgstr "Rondleiding starten"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Test"
+msgstr "Test"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Test tour"
+msgstr "Test rondleiding"
+
+#. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.xml:0
+#, python-format
+msgid "Testing tours"
+msgstr "Testing rondleidingen"
 
 #. module: web_tour
 #: model_terms:ir.ui.view,arch_db:web_tour.edit_tour_search
@@ -99,20 +163,16 @@ msgid "Tip"
 msgstr "Tip"
 
 #. module: web_tour
-#. openerp-web
-#: code:addons/web_tour/static/src/xml/debug_manager.xml:25
-#, python-format
-msgid "Tour"
-msgstr "Rondleiding"
-
-#. module: web_tour
 #: model:ir.model.fields,field_description:web_tour.field_web_tour_tour__name
 msgid "Tour name"
 msgstr "Naam rondleiding"
 
 #. module: web_tour
+#. odoo-javascript
+#: code:addons/web_tour/static/src/debug/tour_dialog_component.js:0
 #: model:ir.actions.act_window,name:web_tour.edit_tour_action
 #: model:ir.model,name:web_tour.model_web_tour_tour
 #: model:ir.ui.menu,name:web_tour.menu_tour_action
+#, python-format
 msgid "Tours"
 msgstr "Rondleidingen"

@@ -1,32 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_iban
-# 
+#
 # Translators:
-# Martin Trigaux, 2019
-# Chris Egal <sodaswed@web.de>, 2019
-# Leon Grill <leg@odoo.com>, 2019
-# 
+# Martin Trigaux, 2022
+# Larissa Manderfeld, 2023
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"POT-Creation-Date: 2022-09-27 15:12+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_iban
 #. openerp-web
-#: code:addons/base_iban/static/src/js/iban_widget.js:0
+#: code:addons/base_iban/static/src/js/legacy_iban_widget.js:0
 #, python-format
 msgid "Account isn't IBAN compliant."
 msgstr "Das Konto ist nicht IBAN-konform."
+
+#. module: base_iban
+#. openerp-web
+#: code:addons/base_iban/static/src/components/iban_widget/iban_widget.xml:0
+#, python-format
+msgid "Account isn't a valid IBAN"
+msgstr "Konto ist keine gültige IBAN"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -71,6 +77,4 @@ msgstr "Dort ist kein IBAN code."
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr ""
-"Diese IBAN hat die Gültigkeitsprüfung nicht bestanden, bitte prüfen Sie sie "
-"nach."
+msgstr "Diese IBAN hat die Gültigkeitsprüfung nicht bestanden, bitte prüfen Sie sie nach."

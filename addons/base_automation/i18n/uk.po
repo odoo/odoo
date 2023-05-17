@@ -1,24 +1,40 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* base_automation
-# 
+#
 # Translators:
-# Martin Trigaux, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
-# 
+# Martin Trigaux, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:10+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
-"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid ""
+"\"\n"
+"                (ID:"
+msgstr ""
+"\"\n"
+"                (ID:"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__website_published
+msgid "A code server action can be executed from the website, using a dedicated controller. The address is <base>/website/action/<website_path>. Set this field as True to allow users to run this action. If it is set to False the action cannot be run through the website."
+msgstr "Дія кодового сервера може бути виконана з веб-сайту, використовуючи спеціальний контролер. Адресою є <base>/website/action/<website_path>. Встановіть це поле як True, щоб дозволити користувачам запускати цю дію. Якщо встановлено значення False, дія не може бути виконана через веб-сайт."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__help
@@ -42,7 +58,6 @@ msgstr "Тип дії"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__active
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__active
 msgid "Active"
 msgstr "Активно"
 
@@ -55,11 +70,6 @@ msgstr "Дія"
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_type
 msgid "Activity User Type"
 msgstr "Тип дії користувача"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__channel_ids
-msgid "Add Channels"
-msgstr "Додати канали"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__partner_ids
@@ -77,11 +87,6 @@ msgid "Archived"
 msgstr "Заархівовано"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__is_assigned_to_admin
-msgid "Assigned to admin user"
-msgstr "Призначено адміністратору"
-
-#. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__ir_actions_server__usage__base_automation
 msgid "Automated Action"
@@ -94,19 +99,14 @@ msgid "Automated Actions"
 msgstr "Дія"
 
 #. module: base_automation
-#: model:ir.model,name:base_automation.model_base_automation_line_test
-msgid "Automated Rule Line Test"
-msgstr "Автоматичний тест рядка правила"
-
-#. module: base_automation
-#: model:ir.model,name:base_automation.model_base_automation_lead_test
-msgid "Automated Rule Test"
-msgstr "Автоматичний тест правила"
-
-#. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
 msgid "Automation"
 msgstr "Автоматизація"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_published
+msgid "Available on the Website"
+msgstr "Доступно на сайті"
 
 #. module: base_automation
 #: model:ir.actions.server,name:base_automation.ir_cron_data_base_automation_check_ir_actions_server
@@ -146,57 +146,50 @@ msgid "Binding View Types"
 msgstr "Типи зв'язування перегляду"
 
 #. module: base_automation
-#: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__cancel
-msgid "Cancelled"
-msgstr "Скасовано"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation_lead_test__employee
-msgid "Check this box if this contact is an Employee."
-msgstr "Позначте, якщо цей контакт є співробітником"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__child_ids
 msgid "Child Actions"
 msgstr "Дочірні дії"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__child_ids
+msgid "Child server actions that will be executed. Note that the last return returned action value will be used as global return value."
+msgstr "Дочірні серверні дії, які буде виконано. Занотуйте, що останнє повернене значення буде використано як глобальне повернене значення."
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__sms_method
 msgid ""
-"Child server actions that will be executed. Note that the last return "
-"returned action value will be used as global return value."
+"Choose method for SMS sending:\n"
+"SMS: mass SMS\n"
+"Post as Message: log on document\n"
+"Post as Note: mass SMS with archives"
 msgstr ""
-"Дочірні серверні дії, які буде виконано. Занотуйте, що останнє повернене "
-"значення буде використано як глобальне повернене значення."
+"Оберіть спосіб відправки SMS:\n"
+"SMS: масове відправлення SMS\n"
+"Опублікувати як Повідомлення: запис на документі\n"
+"Опублікувати як Примітку: масова відправка SMS з архівами"
 
 #. module: base_automation
-#: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__done
-msgid "Closed"
-msgstr "Завершено"
-
-#. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__on_change_fields
-msgid "Comma-separated list of field names that triggers the onchange."
-msgstr "Список назв полів, розділених комами, який ініціює обмін."
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_id
-msgid "Create/Write Target Model"
-msgstr "Створіть/напишіть цільову модель"
+#: model:ir.model.fields,help:base_automation.field_base_automation__mail_post_method
+msgid ""
+"Choose method for email sending:\n"
+"EMail: send directly emails\n"
+"Post as Message: post on document and notify followers\n"
+"Post as Note: log a note on document"
+msgstr ""
+"Оберіть спосіб для відправлення електронних листів:\n"
+"EMail: відправляти листи напряму\n"
+"Опублікувати як Повідомлення: публікувати на документах та підписникам\n"
+"Опублікувати як Примітку: запис примітки на документі"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__create_uid
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__create_uid
 msgid "Created by"
 msgstr "Створив"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_date
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__create_date
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__day
@@ -204,20 +197,15 @@ msgid "Days"
 msgstr "Дні"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__deadline
-msgid "Deadline"
-msgstr "Кінцевий термін"
-
-#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_range
 msgid ""
 "Delay after the trigger date.\n"
-"                                    You can put a negative number if you need a delay before the\n"
-"                                    trigger date, like sending a reminder 15 minutes before a meeting."
+"        You can put a negative number if you need a delay before the\n"
+"        trigger date, like sending a reminder 15 minutes before a meeting."
 msgstr ""
 "Затримка після дати запуску.\n"
-"Ви можете поставити негативне число, якщо вам потрібна затримка до\n"
-"дати запуску, наприклад, надсилання нагадування за 15 хвилин до зустрічі."
+"        Ви можете поставити від’ємне число, якщо вам потрібна затримка до дати запуску, як-от надсилання\n"
+" нагадування за 15 хвилин до зустрічі."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -230,14 +218,29 @@ msgid "Delay type"
 msgstr "Тип затримки"
 
 #. module: base_automation
-#: model:ir.model,name:base_automation.model_ir_demo
-msgid "Demo"
-msgstr "Демо"
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid "Disable Action"
+msgstr "Відключити дію"
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid ""
+"Disabling this automated action will enable you to continue your workflow\n"
+"                but any data created after this could potentially be corrupted,\n"
+"                as you are effectively disabling a customization that may set\n"
+"                important and/or required fields."
+msgstr ""
+"Вимкнення цієї автоматичної дії дозволить вам продовжити робочий процес, але будь-які дані,\n"
+" створені після цього, потенційно можуть бути пошкоджені, оскільки ви фактично вимикаєте \n"
+"налаштування, які можуть встановлювати важливі\n"
+" та/або обов’язкові поля."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__display_name
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__display_name
 msgid "Display Name"
 msgstr "Назва для відображення"
 
@@ -252,19 +255,38 @@ msgid "Due type"
 msgstr "Тип виконання"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
-msgid "Email Template"
-msgstr "Шаблон електронного листа"
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid "Edit action"
+msgstr "Редагувати дію"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__employee
-msgid "Employee"
-msgstr "Співробітник"
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__template_id
+msgid "Email Template"
+msgstr "Шаблон ел. листа"
+
+#. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid "Email, followers or activities action types cannot be used when deleting records."
+msgstr "Під час видалення записів не можна використовувати типи дій електронної пошти, підписників або дій."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__xml_id
 msgid "External ID"
 msgstr "Зовнішній ID"
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__on_change_field_ids
+msgid "Fields that trigger the onchange."
+msgstr "Поля, які запускають зміну."
+
+#. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid "Form Modification based actions can only be used with code action type."
+msgstr "Дії на основі модифікації форми можна використовувати лише з типом дії коду."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__groups_id
@@ -278,8 +300,6 @@ msgstr "Години"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__id
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__id
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__id
 msgid "ID"
 msgstr "ID"
 
@@ -290,34 +310,18 @@ msgstr "ID дії, якщо зазначене у файлі XML "
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_domain
-msgid ""
-"If present, this condition must be satisfied before executing the action "
-"rule."
+msgid "If present, this condition must be satisfied before executing the action rule."
 msgstr "Якщо є, ця умова повинна бути виконана до виконання правила дій."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__filter_pre_domain
-msgid ""
-"If present, this condition must be satisfied before the update of the "
-"record."
+msgid "If present, this condition must be satisfied before the update of the record."
 msgstr "Якщо є, ця умова повинна бути виконана до оновлення запису."
 
 #. module: base_automation
-#: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__open
-msgid "In Progress"
-msgstr "В процесі"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__date_action_last
-msgid "Last Action"
-msgstr "Остання дія"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation____last_update
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test____last_update
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Остання модифікація"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -326,32 +330,23 @@ msgstr "Останній запуск"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_uid
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__write_uid
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__write_uid
 msgid "Last Updated by"
 msgstr "Востаннє оновив"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__write_date
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__write_date
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__write_date
 msgid "Last Updated on"
 msgstr "Останнє оновлення"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__lead_id
-msgid "Lead"
-msgstr "Лід"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__line_ids
-msgid "Line"
-msgstr "Рядок"
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__least_delay_msg
+msgid "Least Delay Msg"
+msgstr "Спов. останньої затримки"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__link_field_id
-msgid "Link using field"
-msgstr "Посилання, що використовує поле"
+msgid "Link Field"
+msgstr "Зв'язати поле"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trg_date_range_type__minutes
@@ -370,12 +365,8 @@ msgstr "Назва моделі"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__crud_model_id
-msgid ""
-"Model for record creation / update. Set this field only to specify a "
-"different model than the base model."
-msgstr ""
-"Модель для створення / оновлення записів. Встановлюється тільки для точного "
-"визначення моделі, відмінної від базової."
+msgid "Model for record creation / update. Set this field only to specify a different model than the base model."
+msgstr "Модель для створення / оновлення записів. Встановлюється тільки для точного визначення моделі, відмінної від базової."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
@@ -388,22 +379,18 @@ msgid "Months"
 msgstr "Місяці"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__name
-msgid "Name"
-msgstr "Ім'я"
-
-#. module: base_automation
-#: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__draft
-msgid "New"
-msgstr "Новий"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_note
 msgid "Note"
 msgstr "Примітка"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_fields
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid "Note that this action can be triggered up to %d minutes after its schedule."
+msgstr "Зауважте, що цю дію можна запустити до %d хвилин після її планування."
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
 msgid "On Change Fields Trigger"
 msgstr "Запуск полів для зміни"
 
@@ -429,36 +416,13 @@ msgstr "На оновлення"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__help
-msgid ""
-"Optional help text for the users with a description of the target view, such"
-" as its usage and purpose."
-msgstr ""
-"Необов'язковий текст довідки для користувачів з описом цільового перегляду, "
-"наприклад його використання та призначення."
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__partner_id
-msgid "Partner"
-msgstr "Партнер"
-
-#. module: base_automation
-#: model:ir.model.fields.selection,name:base_automation.selection__base_automation_lead_test__state__pending
-msgid "Pending"
-msgstr "В очікуванні"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__priority
-msgid "Priority"
-msgstr "Пріоритет"
+msgid "Optional help text for the users with a description of the target view, such as its usage and purpose."
+msgstr "Необов'язковий текст довідки для користувачів з описом цільового перегляду, наприклад його використання та призначення."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__link_field_id
-msgid ""
-"Provide the field used to link the newly created record on the record on "
-"used by the server action."
-msgstr ""
-"Укажіть поле, яке використовується для пов'язування новоствореного запису із"
-" записами, що використовуються сервером."
+msgid "Provide the field used to link the newly created record on the record used by the server action."
+msgstr "Вкажіть поле, яке використовується для зв’язку новоствореного запису на записі, який використовується дією сервера."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__code
@@ -467,9 +431,23 @@ msgstr "Код Python"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__user_id
 msgid "Responsible"
 msgstr "Відповідальний"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_template_id
+msgid "SMS Template"
+msgstr "Шаблон SMS"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_method
+msgid "Send as"
+msgstr "Надіслати як"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__sms_method
+msgid "Send as (SMS)"
+msgstr "Надіслати як (SMS)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__sequence
@@ -488,12 +466,8 @@ msgstr "Дії на сервері"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__binding_model_id
-msgid ""
-"Setting a value makes this action available in the sidebar for the given "
-"model."
-msgstr ""
-"Встановлення значення робить цю дію доступною на бічній панелі для даної "
-"моделі."
+msgid "Setting a value makes this action available in the sidebar for the given model."
+msgstr "Встановлення значення робить цю дію доступною на бічній панелі для даної моделі."
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -501,14 +475,9 @@ msgid "Setup a new automated automation"
 msgstr "Налаштуйте нову автоматизацію"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__state
-msgid "Status"
-msgstr "Статус"
-
-#. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_lead_test__name
-msgid "Subject"
-msgstr "Тема"
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__mail_post_autofollow
+msgid "Subscribe Recipients"
+msgstr "Підписати одержувачів"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_summary
@@ -516,38 +485,46 @@ msgid "Summary"
 msgstr "Підсумок"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_id
 msgid "Target Model"
 msgstr "Цільова модель"
 
 #. module: base_automation
-#: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
-msgid "Technical name of the user on the record"
-msgstr "Технічна назва користувача, що записується"
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
+msgid "Target Model Name"
+msgstr "Назва цільової моделі"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
-msgid ""
-"The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
-"\"%(state_value)s\" action type"
-msgstr ""
-"\"%(trigger_value)s\" %(trigger_label)s може використовуватися тільки з "
-"\"%(state_value)s\" типом дії"
+msgid "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the \"%(state_value)s\" action type"
+msgstr "\"%(trigger_value)s\" %(trigger_label)s може використовуватися тільки з \"%(state_value)s\" типом дії"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
+msgid "The action will be triggered if and only if one of these fields is updated. If empty, all fields are watched."
+msgstr "Дія буде запущена тоді і тільки якщо одне з цих полів буде оновлено. Якщо пусто, перевіряються всі поля."
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
 msgid ""
-"The action will be triggered if and only if one of these fields is "
-"updated.If empty, all fields are watched."
+"The error occurred during the execution of the automated action\n"
+"                \""
 msgstr ""
-"Дія буде спрацьовувати тільки тоді, коли одне з цих полів буде оновлено. "
-"Якщо порожньо, усі поля спостерігаються."
+"Під час виконання автоматизованої дії сталася помилка\n"
+"                \""
+
+#. module: base_automation
+#: model:ir.model.fields,help:base_automation.field_base_automation__website_url
+msgid "The full URL to access the server action through the website."
+msgstr "URL-адреса повністю, для доступу до сервера через сайт"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger
-msgid "Trigger Condition"
-msgstr "Умова запуску"
+msgid "Trigger"
+msgstr "Запуск"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_id
@@ -555,42 +532,45 @@ msgid "Trigger Date"
 msgstr "Дата початку"
 
 #. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
+#: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_form
+msgid "Trigger Fields"
+msgstr "Запустити поля"
+
+#. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__state
 msgid ""
 "Type of server action. The following values are available:\n"
 "- 'Execute Python Code': a block of python code that will be executed\n"
-"- 'Create': create a new record with new values\n"
+"- 'Create a new Record': create a new record with new values\n"
 "- 'Update a Record': update the values of a record\n"
 "- 'Execute several actions': define an action that triggers several other server actions\n"
-"- 'Send Email': automatically send an email (Discuss)\n"
+"- 'Send Email': post a message, a note or send an email (Discuss)\n"
 "- 'Add Followers': add followers to a record (Discuss)\n"
-"- 'Create Next Activity': create an activity (Discuss)"
+"- 'Create Next Activity': create an activity (Discuss)\n"
+"- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
-"Тип дії сервера. Доступні наступні значення:\n"
-"- 'Виконати код Python': блок коду python, який буде виконано\n"
-"- 'Створити': створити запис з новими значеннями\n"
-"- 'Оновити запис': оновити значення запису\n"
-"- 'Виконати кілька дій': визначити дію, яка запускає кілька інших дій сервера\n"
-"- 'Надіслати Email': автоматично надіслати електронний лист (Обговорення)\n"
-"- 'Додати підписників': додати підписників до запису (Обговорення)\n"
-"- 'Створити наступну дію': створити дію (Обговорення)"
+"Тип дії сервера. Доступні такі значення:\n"
+"- «Виконати код Python»: блок коду Python, який буде виконано\n"
+"- «Створити новий запис»: створити новий запис із новими значеннями\n"
+"- «Оновити запис»: оновити значення запису\n"
+"- «Виконати кілька дій»: визначте дію, яка запускає кілька інших дій сервера\n"
+"- «Надіслати електронний лист»: опублікувати повідомлення, замітку або надіслати електронний лист (Обговорення)\n"
+"- «Додати підписників»: додати підписників до запису (Обговорення)\n"
+"- «Створити наступну дію»: створити дію (обговорення)\n"
+"- «Надіслати текстове повідомлення SMS»: відправити SMS, записати їх на документах (SMS)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__usage
+#: model:ir.model.fields,field_description:base_automation.field_ir_cron__usage
 msgid "Usage"
 msgstr "Застосування"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_type
-msgid ""
-"Use 'Specific User' to always assign the same user on the next activity. Use"
-" 'Generic User From Record' to specify the field name of the user to choose "
-"on the record."
-msgstr ""
-"Використовуйте \"Конкретного користувача\", щоби завжди призначати одного і "
-"того ж користувача на наступній дії. Використовуйте 'Загального користувача "
-"із запису', щоби вказати ім'я поля користувача для вибору запису."
+msgid "Use 'Specific User' to always assign the same user on the next activity. Use 'Generic User From Record' to specify the field name of the user to choose on the record."
+msgstr "Використовуйте \"Конкретного користувача\", щоби завжди призначати одного і того ж користувача на наступній дії. Використовуйте 'Загального користувача із запису', щоби вказати ім'я поля користувача для вибору запису."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
@@ -613,11 +593,6 @@ msgstr ""
 "                 потрібно запустити автоматичне нагадування електронною поштою."
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation_line_test__user_id
-msgid "User"
-msgstr "Користувач"
-
-#. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
 msgid "User field name"
 msgstr "Назва поля користувача"
@@ -631,39 +606,36 @@ msgstr "Картографічне значення"
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Warning"
-msgstr "Сповіщення"
+msgstr "Попередження"
 
 #. module: base_automation
-#: model:ir.model.fields,field_description:base_automation.field_base_automation__trigger_field_ids
-msgid "Watched fields"
-msgstr "Спостережувані поля"
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_path
+msgid "Website Path"
+msgstr "Перехід на сайт"
+
+#. module: base_automation
+#: model:ir.model.fields,field_description:base_automation.field_base_automation__website_url
+msgid "Website Url"
+msgstr "Url-адреса веб-сайту"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_calendar_id
-msgid ""
-"When calculating a day-based timed condition, it is possible to use a "
-"calendar to compute the date based on working days."
-msgstr ""
-"Під час обчислення часових умов на основі дня можна скористатись календарем "
-"для обчислення дати за робочими днями."
+msgid "When calculating a day-based timed condition, it is possible to use a calendar to compute the date based on working days."
+msgstr "Під час обчислення часових умов на основі дня можна скористатись календарем для обчислення дати за робочими днями."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__sequence
-msgid ""
-"When dealing with multiple actions, the execution order is based on the "
-"sequence. Low number means high priority."
-msgstr ""
-"При вирішенні кількох дій, виконання замовлення базується на послідовності. "
-"Низьке число означає високий пріоритет."
+msgid "When dealing with multiple actions, the execution order is based on the sequence. Low number means high priority."
+msgstr "При вирішенні кількох дій, виконання замовлення базується на послідовності. Низьке число означає високий пріоритет."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trg_date_id
 msgid ""
 "When should the condition be triggered.\n"
-"                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
+"                If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
-"Коли спрацює стан.\n"
-"Якщо є, буде перевірено планувальником. Якщо порожньо, буде перевірено при створенні та оновленні."
+"Коли має бути запущений стан.\n"
+"               Якщо є, буде перевірено планувальником. Якщо пусто, буде перевірено під час створення та оновлення."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
@@ -672,9 +644,25 @@ msgstr "Якщо це не позначено, правило сховане і 
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__code
-msgid ""
-"Write Python code that the action will execute. Some variables are available"
-" for use; help about python expression is given in the help tab."
-msgstr ""
-"Напишіть код Python, який буде виконано. Деякі змінні доступні для "
-"використання; допомогу щодо виразу python наведено на вкладці довідки."
+msgid "Write Python code that the action will execute. Some variables are available for use; help about python expression is given in the help tab."
+msgstr "Напишіть код Python, який буде виконано. Деякі змінні доступні для використання; допомогу щодо виразу python наведено на вкладці довідки."
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid "You can ask an administrator to disable or correct this automated action."
+msgstr "Ви можете попросити адміністратора вимкнути або виправити цю автоматизовану дію."
+
+#. module: base_automation
+#. openerp-web
+#: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
+#, python-format
+msgid "You can disable this automated action or edit it to solve the issue."
+msgstr "Ви можете відключити цю автоматизовану дію або відредагувати її, щоб вирішити проблему."
+
+#. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid "You cannot send an email, add followers or create an activity for a deleted record.  It simply does not work."
+msgstr "Ви не можете надсилати електронний лист, додавати підписників або створювати дії для видаленого запису. Це просто не працює."

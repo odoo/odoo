@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * product_margin
-# 
+#
 # Translators:
 # Martin Trigaux, 2018
 # Boško Stojaković <bluesoft83@gmail.com>, 2018
@@ -10,14 +10,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2018-09-18 09:49+0000\n"
 "Last-Translator: Bole <bole@dajmi5.com>, 2018\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
+"Language: bs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: bs\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #. module: product_margin
@@ -47,8 +47,8 @@ msgstr "Prosj. cijena na fakturama kupaca"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_avg_price
-msgid "Avg. Price in Vendor Bills "
-msgstr "Prosječna cijena na računima dobavljača"
+msgid "Avg. Price in Vendor Bills"
+msgstr ""
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_avg_price
@@ -91,8 +91,8 @@ msgid "Display Name"
 msgstr "Prikazani naziv"
 
 #. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
+#: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__draft_open_paid
+#: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__draft_open_paid
 msgid "Draft, Open and Paid"
 msgstr "U pripremi, Otvoreno i Plaćeno"
 
@@ -193,21 +193,16 @@ msgid "Open Margins"
 msgstr "Otvorene marže"
 
 #. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
+#: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__open_paid
+#: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__open_paid
 msgid "Open and Paid"
 msgstr "Otvoreno i plaćeno"
 
 #. module: product_margin
-#: selection:product.margin,invoice_state:0
-#: selection:product.product,invoice_state:0
+#: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__paid
+#: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__paid
 msgid "Paid"
 msgstr "Plaćeno"
-
-#. module: product_margin
-#: model:ir.model,name:product_margin.model_product_product
-msgid "Product"
-msgstr "Proizvod"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
@@ -215,7 +210,7 @@ msgid "Product Margin"
 msgstr "Marža proizvoda"
 
 #. module: product_margin
-#: code:addons/product_margin/wizard/product_margin.py:49
+#: code:addons/product_margin/wizard/product_margin.py:0
 #: model:ir.actions.act_window,name:product_margin.product_margin_act_window
 #: model:ir.ui.menu,name:product_margin.menu_action_product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_form
@@ -224,6 +219,11 @@ msgstr "Marža proizvoda"
 #, python-format
 msgid "Product Margins"
 msgstr "Marže proizvoda"
+
+#. module: product_margin
+#: model:ir.model,name:product_margin.model_product_product
+msgid "Product Variant"
+msgstr ""
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -263,8 +263,7 @@ msgstr "Suma proizvoda nabavne cijene i količine računa dobavljača"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__turnover
-msgid ""
-"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
+msgid "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
 msgstr "Suma množenja fakturne cijene i količine faktura kupaca"
 
 #. module: product_margin
@@ -274,11 +273,8 @@ msgstr "Suma proizvoda fakturne cijene i količine računa dobavljača"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_expected
-msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer "
-"Invoices"
-msgstr ""
-"Suma množenja prodajne kataloške cijene i količina na fakturama kupaca"
+msgid "Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+msgstr "Suma množenja prodajne kataloške cijene i količina na fakturama kupaca"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_num_invoiced

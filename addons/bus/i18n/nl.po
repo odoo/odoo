@@ -1,35 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* bus
-# 
+#
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
-# Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# 
+# Martin Trigaux, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"POT-Creation-Date: 2023-05-16 13:49+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: nl\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: bus
-#: model:ir.model.constraint,message:bus.constraint_bus_presence_bus_user_presence_unique
-msgid "A user can only have one IM status."
-msgstr "Een gebruiker kan maar één IM status hebben."
-
-#. module: bus
-#: model:ir.model,name:bus.model_ir_autovacuum
-msgid "Automatic Vacuum"
-msgstr "Automatisch vacuum"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
@@ -81,12 +70,6 @@ msgid "IM Status"
 msgstr "IM Status"
 
 #. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus____last_update
-#: model:ir.model.fields,field_description:bus.field_bus_presence____last_update
-msgid "Last Modified on"
-msgstr "Laatst gewijzigd op"
-
-#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__last_poll
 msgid "Last Poll"
 msgstr "Laatste pol"
@@ -112,6 +95,11 @@ msgid "Message"
 msgstr "Bericht"
 
 #. module: bus
+#: model:ir.model,name:bus.model_ir_model
+msgid "Models"
+msgstr "Modellen"
+
+#. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__offline
 msgid "Offline"
 msgstr "Offline"
@@ -122,18 +110,42 @@ msgid "Online"
 msgstr "Online"
 
 #. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#, python-format
+msgid "Refresh"
+msgstr "Vernieuw"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#, python-format
+msgid "The page appears to be out of date."
+msgstr "De pagina lijkt verouderd."
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_users
+msgid "User"
+msgstr "Gebruiker"
+
+#. module: bus
 #: model:ir.model,name:bus.model_bus_presence
 msgid "User Presence"
 msgstr "Gebruiker aanwezig"
 
 #. module: bus
-#: model:ir.model,name:bus.model_res_users
 #: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
 msgid "Users"
 msgstr "Gebruikers"
 
 #. module: bus
-#: code:addons/bus/controllers/main.py:0
+#. odoo-python
+#: code:addons/bus/controllers/home.py:0
 #, python-format
-msgid "bus.Bus not available in test mode"
-msgstr "bus.Bus niet beschikbaar in test modus"
+msgid "Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"
+msgstr ""
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_websocket
+msgid "websocket message handling"
+msgstr "websocket berichtafhandeling"

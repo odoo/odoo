@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_test
-# 
+#
 # Translators:
 # Martin Trigaux, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"Language: ro\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ro\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: account_test
@@ -51,8 +51,8 @@ msgstr "Teste Contabile"
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
-msgid "Accouting tests on"
-msgstr "Teste contabile in"
+msgid "Accounting tests on"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__active
@@ -60,44 +60,34 @@ msgid "Active"
 msgstr "Activ(a)"
 
 #. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
-msgstr ""
-"Verificati daca liniile miscarii sunt echilibrate si au aceeasi data si "
-"perioada"
+msgstr "Verificati daca liniile miscarii sunt echilibrate si au aceeasi data si perioada"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
-msgid ""
-"Check on bank statement that the Closing Balance = Starting Balance + sum of"
-" statement lines"
-msgstr ""
-"Verificati pe extrasele de cont ca Soldul de inchidere = Soldul inițial + "
-"suma liniilor extrasului"
+msgid "Check on bank statement that the Closing Balance = Starting Balance + sum of statement lines"
+msgstr "Verificati pe extrasele de cont ca Soldul de inchidere = Soldul inițial + suma liniilor extrasului"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
-msgstr ""
-"Verificați ca facturile platite/reconciliate sa nu fie în starea 'Deschisa'"
+msgstr "Verificați ca facturile platite/reconciliate sa nu fie în starea 'Deschisa'"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
-msgid ""
-"Check that reconciled account moves, that define Payable and Receivable "
-"accounts, are belonging to reconciled invoices"
-msgstr ""
-"Verificați ca mișcările reconciliate ale contului, care definesc conturile "
-"de Plăți și de Încasări, să aparțină facturilor reconciliate"
+msgid "Check that reconciled account moves, that define Payable and Receivable accounts, are belonging to reconciled invoices"
+msgstr "Verificați ca mișcările reconciliate ale contului, care definesc conturile de Plăți și de Încasări, să aparțină facturilor reconciliate"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
-msgid ""
-"Check that reconciled invoice for Sales/Purchases has reconciled entries for"
-" Payable and Receivable Accounts"
-msgstr ""
-"Verificați dacă factura reconciliată pentru Vânzări/Achiziții a reconciliat "
-"înregistrarile pentru Conturile de Plăți și de Încasări"
+msgid "Check that reconciled invoice for Sales/Purchases has reconciled entries for Payable and Receivable Accounts"
+msgstr "Verificați dacă factura reconciliată pentru Vânzări/Achiziții a reconciliat înregistrarile pentru Conturile de Plăți și de Încasări"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
@@ -113,7 +103,7 @@ msgstr "Ajutor Cod"
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
 "Code should always set a variable named `result` with the result of your test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
+"a dictionary. If `result` is an empty list, it means that the test was successful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
 "If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
@@ -133,23 +123,6 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
-"Codul ar trebui sa configureze o variabila numita `result` cu rezultatul testului dumneavoastră, care poate fi o lista sau un dicționar. Dacă `result` este o lista goala, înseamnă ca testul a avut succes. In caz contrar, va încerca sa traducă și sa tipărească ceea ce se afla în `result`.\n"
-"\n"
-"Dacă rezultatul testului dumneavoastră este un dicționar, puteți configura o variabila numita`column_order` pentru a alege ordinea in care doriți tipărirea conținutul din `result`.\n"
-"\n"
-"Dacă o sa aveți nevoie de ele, puteți utiliza de asemenea următoarele variabile in codul dumneavoastră:\n"
-"    * cr: cursorul in baza de date\n"
-"    * uid: ID-ul utilizatorului actual\n"
-"\n"
-"Oricum, codul trebuie sa fie declarații python legale cu indentare corectă (daca este necesara).\n"
-"\n"
-"Exemplu: \n"
-"sql = '''SELECT id, name, ref, date\n"
-"FROM account_move_line \n"
-"WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
-"'''\n"
-"cr.execute(sql)\n"
-"result = cr.dictfetchall()"
 
 #. module: account_test
 #: model_terms:ir.actions.act_window,help:account_test.action_accounting_assert
@@ -168,6 +141,7 @@ msgstr "Creat în"
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
 msgid "Description"
 msgstr "Descriere"
 
@@ -205,6 +179,11 @@ msgid "Last Updated on"
 msgstr "Ultima actualizare pe"
 
 #. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+msgid "Name"
+msgstr ""
+
+#. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Python Code"
 msgstr "Cod Python"
@@ -213,6 +192,11 @@ msgstr "Cod Python"
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__code_exec
 msgid "Python code"
 msgstr "Cod python"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+msgid "Search Account Test"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__sequence
@@ -231,11 +215,8 @@ msgstr "Test 3: Liniile miscarii"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
-msgid ""
-"Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
-msgstr ""
-"Test 5.1 : Liniile contabile de plati si incasari ale facturilor "
-"reconciliate"
+msgid "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
+msgstr "Test 5.1 : Liniile contabile de plati si incasari ale facturilor reconciliate"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
@@ -269,7 +250,7 @@ msgid "Tests"
 msgstr "Teste"
 
 #. module: account_test
-#: code:addons/account_test/report/report_account_test.py:53
+#: code:addons/account_test/report/report_account_test.py:0
 #, python-format
 msgid "The test was passed successfully"
 msgstr "Testul a fost trecut cu succes"

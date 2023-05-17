@@ -1,40 +1,59 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* crm_livechat
-# 
+#
 # Translators:
-# Martin Trigaux, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
-# 
+# Martin Trigaux, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~15.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
-"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"POT-Creation-Date: 2022-04-19 13:57+0000\n"
+"PO-Revision-Date: 2022-09-22 05:45+0000\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
+"Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
 
 #. module: crm_livechat
-#: code:addons/crm_livechat/models/mail_channel.py:12
+#: code:addons/crm_livechat/models/chatbot_script_step.py:0
 #, python-format
-msgid "Create a new lead (/lead lead title)"
-msgstr "Створіть новий лід (/lead назва ліду)"
+msgid "%s's New Lead"
+msgstr "%s Нових лідів"
 
 #. module: crm_livechat
-#: code:addons/crm_livechat/models/mail_channel.py:39
+#: model:ir.model,name:crm_livechat.model_chatbot_script
+msgid "Chatbot Script"
+msgstr "Скрипт чатботу"
+
+#. module: crm_livechat
+#: model:ir.model,name:crm_livechat.model_chatbot_script_step
+msgid "Chatbot Script Step"
+msgstr "Крок скрипта чатботу"
+
+#. module: crm_livechat
+#: model:ir.model.fields.selection,name:crm_livechat.selection__chatbot_script_step__step_type__create_lead
+msgid "Create Lead"
+msgstr "Створити лід"
+
+#. module: crm_livechat
+#. openerp-web
+#: code:addons/crm_livechat/models/mail_channel.py:0
+#: code:addons/crm_livechat/static/src/models/messaging_initializer.js:0
 #, python-format
-msgid ""
-"Created a new lead: <a href=\"#\" data-oe-id=\"%s\" data-oe-"
-"model=\"crm.lead\">%s</a>"
-msgstr ""
-"Створено новий лід: <a href=\"#\" data-oe-id=\"%s\" data-oe-"
-"model=\"crm.lead\">%s</a>"
+msgid "Create a new lead (/lead lead title)"
+msgstr "Створіть новий лід (/заголовок ліду)"
+
+#. module: crm_livechat
+#: code:addons/crm_livechat/models/mail_channel.py:0
+#, python-format
+msgid "Created a new lead: %s"
+msgstr "Стоврено новий лід: %s"
 
 #. module: crm_livechat
 #: model:ir.model,name:crm_livechat.model_mail_channel
@@ -42,6 +61,51 @@ msgid "Discussion Channel"
 msgstr "Канал обговорення"
 
 #. module: crm_livechat
-#: model:utm.source,name:crm_livechat.utm_source_livechat
-msgid "Livechat"
-msgstr "Живий чат"
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script__lead_count
+msgid "Generated Lead Count"
+msgstr "Підрахунок створених лідів"
+
+#. module: crm_livechat
+#: model:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_welcome
+msgid "Hi there, what brings you to our website today? 👋"
+msgstr "Привіт, що принесло вас сьогодні на наш сайт? 👋"
+
+#. module: crm_livechat
+#: model:chatbot.script.step,message:crm_livechat.chatbot_script_lead_generation_step_noone_available
+msgid "Hu-ho, it looks like none of our operators are available 🙁"
+msgstr "Ого, здається усі наші оператори зараз зайняті 🙁"
+
+#. module: crm_livechat
+#: model:chatbot.script,title:crm_livechat.chatbot_script_lead_generation_bot
+msgid "Lead Generation Bot"
+msgstr "Бот створення лідів"
+
+#. module: crm_livechat
+#: model_terms:ir.ui.view,arch_db:crm_livechat.chatbot_script_view_form
+msgid "Leads"
+msgstr "Ліди"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__crm_team_id
+msgid "Sales Team"
+msgstr "Команда продажу"
+
+#. module: crm_livechat
+#: model:ir.model.fields,field_description:crm_livechat.field_chatbot_script_step__step_type
+msgid "Step Type"
+msgstr "Тип кроку"
+
+#. module: crm_livechat
+#: model:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_just_looking
+msgid "Thank you, you should hear back from us very soon!"
+msgstr "Дякуємо, скоро почуємося!"
+
+#. module: crm_livechat
+#: model:ir.model.fields,help:crm_livechat.field_chatbot_script_step__crm_team_id
+msgid "Used in combination with 'create_lead' step type in order to automatically assign the created lead/opportunity to the defined team"
+msgstr "Використовується в поєднанні з типом кроку 'create_lead', щоб автоматично призначити створеного ліда/нагоду визначеній команді"
+
+#. module: crm_livechat
+#: model:chatbot.script.step,message:crm_livechat.chatbot_script_welcome_step_pricing_email
+msgid "Would you mind leaving your email address so that we can reach you back?"
+msgstr "Ви б не були проти залишити вашу електронну адресу, щоб ми зв'язалися з вами?"

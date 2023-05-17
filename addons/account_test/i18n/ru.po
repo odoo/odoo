@@ -1,21 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_test
-# 
+#
 # Translators:
 # Martin Trigaux, 2018
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2018-09-21 13:17+0000\n"
 "Last-Translator: Martin Trigaux, 2018\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: ru\n"
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || (n%10>=5 && n%10<=9) || (n%100>=11 && n%100<=14)? 2 : 3);\n"
 
 #. module: account_test
@@ -51,8 +51,8 @@ msgstr "Тесты Бухгалтерского учета"
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
-msgid "Accouting tests on"
-msgstr "Тесты бухгалтерского учета на"
+msgid "Accounting tests on"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__active
@@ -60,44 +60,34 @@ msgid "Active"
 msgstr "Активно"
 
 #. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
-msgstr ""
-"Проверьте если линии движения сбалансированы и имеют ту же дату и период"
+msgstr "Проверьте если линии движения сбалансированы и имеют ту же дату и период"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
-msgid ""
-"Check on bank statement that the Closing Balance = Starting Balance + sum of"
-" statement lines"
-msgstr ""
-"Проверить по банковской выписке, что Конечный Баланс = Начальный Баланс + "
-"сумма строк выписки"
+msgid "Check on bank statement that the Closing Balance = Starting Balance + sum of statement lines"
+msgstr "Проверить по банковской выписке, что Конечный Баланс = Начальный Баланс + сумма строк выписки"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
 msgid "Check that paid/reconciled invoices are not in 'Open' state"
-msgstr ""
-"Проверьте, что оплаченные/сверенные счета-фактуры не в статусе 'Открыто'"
+msgstr "Проверьте, что оплаченные/сверенные счета-фактуры не в статусе 'Открыто'"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
-msgid ""
-"Check that reconciled account moves, that define Payable and Receivable "
-"accounts, are belonging to reconciled invoices"
-msgstr ""
-"Проверьте, что сверенные движения по счету, которые определены как счета "
-"кредиторской и дебиторской задолженности, входят в состав сверенных счетов-"
-"фактур"
+msgid "Check that reconciled account moves, that define Payable and Receivable accounts, are belonging to reconciled invoices"
+msgstr "Проверьте, что сверенные движения по счету, которые определены как счета кредиторской и дебиторской задолженности, входят в состав сверенных счетов-фактур"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
-msgid ""
-"Check that reconciled invoice for Sales/Purchases has reconciled entries for"
-" Payable and Receivable Accounts"
-msgstr ""
-"Проверьте, что сверенный счет на Продажи/Покупки имеет примеренные записи "
-"для Счетов Кредиторской и Дебиторской задолженности"
+msgid "Check that reconciled invoice for Sales/Purchases has reconciled entries for Payable and Receivable Accounts"
+msgstr "Проверьте, что сверенный счет на Продажи/Покупки имеет примеренные записи для Счетов Кредиторской и Дебиторской задолженности"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
@@ -113,7 +103,7 @@ msgstr "Код Помощь"
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
 "Code should always set a variable named `result` with the result of your test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
+"a dictionary. If `result` is an empty list, it means that the test was successful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
 "If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
@@ -133,24 +123,6 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
-"Код должен всегда задать переменную с именем `результат` с результатом теста, это может быть список или словарь. Если результатом является пустой список, то это означает, что тест прошел успешно. В противном случае он будет пытаться перевести и напечатать то, что внутри `результат`. \n"
-"\n"
-"Если результат вашего теста-это словарь, вы можете установить переменную `column_order`, чтобы выбрать в\n"
-"какой порядок вы хотите напечатать \" результат` контента.\n"
-"\n"
-"Если вы нуждаетесь в них, вы также можете использовать следующие переменные в коде:\n"
-"* cr: cursor to the database\n"
-"* uid: ID текущего пользователя\n"
-"\n"
-"Код питона должен быть  корректным с правильными отступами (если требуется).\n"
-"\n"
-"Пример: \n"
-"sql = '''SELECT id, name, ref, date\n"
-"FROM account_move_line \n"
-"WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
-"'''\n"
-"cr.execute(sql)\n"
-"result = cr.dictfetchall()"
 
 #. module: account_test
 #: model_terms:ir.actions.act_window,help:account_test.action_accounting_assert
@@ -169,6 +141,7 @@ msgstr "Создан"
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
 msgid "Description"
 msgstr "Описание"
 
@@ -206,6 +179,11 @@ msgid "Last Updated on"
 msgstr "Последнее обновление"
 
 #. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+msgid "Name"
+msgstr ""
+
+#. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Python Code"
 msgstr "Код на Python"
@@ -214,6 +192,11 @@ msgstr "Код на Python"
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__code_exec
 msgid "Python code"
 msgstr "Код на Python"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+msgid "Search Account Test"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__sequence
@@ -232,18 +215,13 @@ msgstr "Тест 3: Линии Движения"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
-msgid ""
-"Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
-msgstr ""
-"Тест 5.1 : Строки кредиторской и дебиторской задолженности сверенных счетов-"
-"фактур"
+msgid "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
+msgstr "Тест 5.1 : Строки кредиторской и дебиторской задолженности сверенных счетов-фактур"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05_2
 msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
-msgstr ""
-"Тест 5.2 : Сверенные счета-фактуры и счета кредиторской/дебиторской "
-"задолженности"
+msgstr "Тест 5.2 : Сверенные счета-фактуры и счета кредиторской/дебиторской задолженности"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_06
@@ -272,7 +250,7 @@ msgid "Tests"
 msgstr "Тесты"
 
 #. module: account_test
-#: code:addons/account_test/report/report_account_test.py:53
+#: code:addons/account_test/report/report_account_test.py:0
 #, python-format
 msgid "The test was passed successfully"
 msgstr "Проверка прошла успешно"
