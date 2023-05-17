@@ -363,6 +363,8 @@ class ResCompany(models.Model):
 
     def _get_user_fiscal_lock_date(self):
         """Get the fiscal lock date for this company depending on the user"""
+        if not self:
+            return date.min
         self.ensure_one()
         lock_date = max(self.period_lock_date or date.min, self.fiscalyear_lock_date or date.min)
         if self.user_has_groups('account.group_account_manager'):
