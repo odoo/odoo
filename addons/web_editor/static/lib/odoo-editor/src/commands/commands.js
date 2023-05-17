@@ -535,7 +535,11 @@ export const editorCommands = {
         const li = new Set();
         const blocks = new Set();
 
-        for (const node of getTraversedNodes(editor.editable)) {
+        const selectedBlocks = getTraversedNodes(editor.editable);
+        const deepestSelectedBlocks = selectedBlocks.filter(block => (
+            !descendants(block).some(descendant => selectedBlocks.includes(descendant))
+        ));
+        for (const node of deepestSelectedBlocks) {
             if (node.nodeType === Node.TEXT_NODE && !isVisibleStr(node)) {
                 node.remove();
             } else {
