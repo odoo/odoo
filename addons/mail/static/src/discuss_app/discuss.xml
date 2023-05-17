@@ -22,7 +22,7 @@
                 <ImStatus t-if="thread and thread.type === 'chat' and thread.correspondent" className="'me-1'" persona="thread.correspondent"/>
                 <div class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2">
                     <AutoresizeInput
-                        className="'o-mail-Discuss-threadName lead fw-bold flex-shrink-1 text-dark py-0'"
+                        className="'o-mail-Discuss-threadName lead fw-bold flex-shrink-1 text-dark bg-view py-0'"
                         enabled="thread.is_editable or thread.type === 'chat'"
                         onValidate.bind="renameThread"
                         value="thread.displayName"
@@ -31,7 +31,7 @@
                         <div class="flex-shrink-0 mx-2 py-2 border-start"/>
                         <t t-set="autogrowDescriptionPlaceholder">Add a description</t>
                         <AutoresizeInput
-                            className="'o-mail-Discuss-threadDescription flex-shrink-1 py-1'"
+                            className="'o-mail-Discuss-threadDescription flex-shrink-1 py-1 bg-view'"
                             enabled="thread.is_editable"
                             onValidate.bind="updateThreadDescription"
                             placeholder="thread.is_editable ? autogrowDescriptionPlaceholder : ''"
@@ -63,8 +63,8 @@
                     </div>
                 </div>
             </div>
-            <div class="overflow-auto bg-100 d-flex flex-grow-1">
-                <div class="bg-view d-flex flex-column flex-grow-1">
+            <div class="overflow-auto bg-view d-flex flex-grow-1">
+                <div class="d-flex flex-column flex-grow-1">
                     <Call t-if="Object.keys(thread.rtcSessions).length > 0" thread="thread"/>
                     <Thread thread="thread" t-key="thread.localId" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
                     <Composer t-if="thread.type !== 'mailbox' or messageToReplyTo.thread === thread" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" dropzoneRef="contentRef"/>
