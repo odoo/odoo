@@ -109,6 +109,22 @@ class _FlushingSavepoint(Savepoint):
             self._cr.flush()
         super()._close(rollback)
 
+class _EnvironmentFlushingSavepoint(Savepoint):
+    def __init__(self, env):
+        self.env = env
+        env.flush_all()
+        super().__init__(env.cr)
+
+    def rollback(self):
+        self.env.cr.clear()
+        super().rollback()
+
+    def _close(self, rollback):
+        if not rollback:
+            self.env.flush_all()
+            self.env.cr.flush()
+        super()._close(rollback)
+
 class BaseCursor:
     """ Base class for cursors that manage pre/post commit hooks. """
 

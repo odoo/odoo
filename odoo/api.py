@@ -25,6 +25,7 @@ from weakref import WeakSet
 
 from decorator import decorate
 
+from .sql_db import _EnvironmentFlushingSavepoint, Savepoint
 from .exceptions import AccessError, CacheMiss
 from .tools import classproperty, frozendict, lazy_property, OrderedSet, Query, StackMap
 from .tools.translate import _
@@ -818,6 +819,8 @@ class Environment(Mapping):
             self._cache_key[field] = result
             return result
 
+    def savepoint(self) -> Savepoint:
+        return _EnvironmentFlushingSavepoint(self)
 
 class Transaction:
     """ A object holding ORM data structures for a transaction. """
