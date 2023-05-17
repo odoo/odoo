@@ -66,8 +66,6 @@ export class Message {
     /** @type {string|undefined} */
     notificationType;
     /** @type {string} */
-    pinned_at;
-    /** @type {string} */
     create_date;
     /** @type {string} */
     write_date;
@@ -235,13 +233,6 @@ export class Message {
 
     get failureNotifications() {
         return this.notifications.filter((notification) => notification.isFailure);
-    }
-
-    get pinnedAt() {
-        if (!this.pinned_at) {
-            return null;
-        }
-        return luxon.DateTime.fromISO(new Date(this.pinned_at).toISOString());
     }
 
     get editDatetimeHuge() {

@@ -42,9 +42,6 @@
                 <div class="o-mail-Discuss-header flex-shrink-0 d-flex align-items-center ms-1">
                     <button t-if="thread.id === 'inbox'" class="btn btn-link" t-att-disabled="thread.isEmpty" t-on-click="markAllAsRead">Mark all read</button>
                     <button t-if="thread.id === 'starred'" class="btn btn-link" t-att-disabled="thread.isEmpty" t-on-click="messageService.unstarAll">Unstar all</button>
-                    <button t-if="thread.model === 'discuss.channel'" class="btn rounded px-2 shadow-none" t-att-class="{ 'o-isActive': state.activeMode === MODES.PINNED_MESSAGES }" title="Pinned messages" t-on-click.stop="togglePinMenu">
-                        <i class="fa fa-lg fa-thumb-tack text-700"/>
-                    </button>
                     <button t-if="thread.allowCalls and thread.type !== 'mailbox' and thread !== rtc.state.channel" class="btn rounded px-2 shadow-none" title="Start a Call" t-on-click="() => this.rtc.toggleCall(this.thread)" t-ref="startCall">
                         <i class="fa fa-lg fa-phone text-700"/>
                     </button>
@@ -63,13 +60,12 @@
                     </div>
                 </div>
             </div>
-            <div class="overflow-auto bg-view d-flex flex-grow-1">
+            <div class="overflow-auto bg-view d-flex flex-grow-1" t-ref="core">
                 <div class="d-flex flex-column flex-grow-1">
                     <Call t-if="Object.keys(thread.rtcSessions).length > 0" thread="thread"/>
                     <Thread thread="thread" t-key="thread.localId" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
                     <Composer t-if="thread.type !== 'mailbox' or messageToReplyTo.thread === thread" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" dropzoneRef="contentRef"/>
                 </div>
-                <PinnedMessagesPanel t-if="state.activeMode === MODES.PINNED_MESSAGES and thread.model === 'discuss.channel'" thread="thread"/>
             </div>
         </div>
         <div t-if="!thread and (!ui.isSmall or store.discuss.activeTab === 'mailbox')" class="d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">

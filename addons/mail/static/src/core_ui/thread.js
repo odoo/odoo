@@ -52,7 +52,6 @@ export class Thread extends Component {
         this.state = useState({ isReplyingTo: false, showJumpPresent: false });
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
-        this.ui = useState(useService("ui"));
         if (!this.env.inChatter || !this.props.hasScrollAdjust) {
             useAutoScroll("messages", () => {
                 if (this.env.messageHighlight?.highlightedMessageId) {
@@ -174,8 +173,6 @@ export class Thread extends Component {
         const { oeType, oeId } = ev.target.dataset;
         if (oeType === "highlight") {
             await this.env.messageHighlight?.highlightMessage(Number(oeId), this.props.thread);
-        } else if (oeType === "pin-menu") {
-            this.env.pinMenu?.open();
         }
     }
 
