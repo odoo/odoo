@@ -671,6 +671,49 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingHalfUp', login="accountman")
 
+    def test_rounding_half_up_cash_and_bank(self):
+        company = self.main_pos_config.company_id
+        rouding_method = self.env['account.cash.rounding'].create({
+            'name': 'Rounding HALF-UP',
+            'rounding': 5,
+            'rounding_method': 'HALF-UP',
+            'strategy': 'add_invoice_line',
+            'profit_account_id': company['default_cash_difference_income_account_id'].id,
+            'loss_account_id': company['default_cash_difference_expense_account_id'].id,
+        })
+
+        self.env['product.product'].create({
+            'name': 'Product Test 40',
+            'available_in_pos': True,
+            'list_price': 40,
+            'taxes_id': False,
+        })
+
+        self.env['product.product'].create({
+            'name': 'Product Test 41',
+            'available_in_pos': True,
+            'list_price': 41,
+            'taxes_id': False,
+        })
+
+        self.main_pos_config.write({
+            'rounding_method': rouding_method.id,
+            'cash_rounding': True,
+            'only_round_cash_method': True
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingHalfUpCashAndBank', login="accountman")
+
+        invoiced_orders = self.env['pos.order'].search([('state', '=', 'invoiced')])
+        self.assertEqual(len(invoiced_orders), 2, 'There should be 2 invoiced orders.')
+
+        for order in invoiced_orders:
+            rounding_line = order.account_move.line_ids.filtered(lambda line: line.display_type == 'rounding')
+            self.assertEqual(len(rounding_line), 1, 'There should be 1 rounding line.')
+            rounding_applied = order.amount_total - order.amount_paid
+            self.assertEqual(rounding_line.balance, rounding_applied, 'Rounding amount is incorrect!')
+
     def test_pos_closing_cash_details(self):
         """Test if the cash closing details correctly show the cash difference
            if there is a difference at the opening of the PoS session. This also test if the accounting
