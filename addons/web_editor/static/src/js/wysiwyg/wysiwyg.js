@@ -186,6 +186,12 @@ const Wysiwyg = Widget.extend({
             allowInlineAtRoot: this.options.allowInlineAtRoot,
             getYoutubeVideoElement: getYoutubeVideoElement,
             getContextFromParentRect: options.getContextFromParentRect,
+            getScrollContainerRect: () => {
+                if (!this.scrollContainer || !this.scrollContainer.getBoundingClientRect) {
+                    this.scrollContainer = document.querySelector('.o_action_manager');
+                }
+                return this.scrollContainer.getBoundingClientRect();
+            },
             getPowerboxElement: () => {
                 const selection = (this.options.document || document).getSelection();
                 if (selection.isCollapsed && selection.rangeCount) {
@@ -2553,6 +2559,7 @@ const Wysiwyg = Widget.extend({
     },
     _onScroll: function(ev) {
         if (ev.target.contains(this.$editable[0])) {
+            this.scrollContainer = ev.target;
             this.odooEditor.updateToolbarPosition();
         }
     },
