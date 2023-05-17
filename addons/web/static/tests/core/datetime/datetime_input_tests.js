@@ -228,7 +228,7 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         await click(input);
 
-        assert.hasClass(getPickerCell("8").at(0), "o_active");
+        assert.hasClass(getPickerCell("8").at(0), "o_selected");
     });
 
     QUnit.test("Date format is correctly set", async function (assert) {
@@ -390,7 +390,7 @@ QUnit.module("Components", ({ beforeEach }) => {
         await click(input);
 
         assert.strictEqual(input.value, "08/02/1997 15:45:05");
-        assert.hasClass(getPickerCell("8").at(0), "o_active");
+        assert.hasClass(getPickerCell("8").at(0), "o_selected");
         assert.deepEqual(getTimePickers({ parse: true }).at(0), [15, 45]);
     });
 
