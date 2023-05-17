@@ -37,16 +37,16 @@
                 <attribute name="create">0</attribute>
             </xpath>
             <xpath expr="//div[hasclass('oe_kanban_details')]" position="inside">
-                <div class="oe_kanban_content">
-                    <div class="oe_kanban_row">
+                <div class="oe_kanban_content d-flex flex-column gap-1">
+                    <div class="oe_kanban_row d-flex gap-1">
                         <field name="hr_presence_state" invisible="1"/>
-                        <button name="action_set_present" type="object" class="btn btn-primary btn-sm mt8 fa fa-check" title="Set as present" attrs="{'invisible': [('hr_presence_state', '=', 'present')]}"> </button>
-                        <button name="action_set_absent" type="object" class="btn btn-primary btn-sm mt8 fa fa-times" title="Set as absent" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}"> </button>
-                        <button name="action_open_leave_request" type="object" class="btn btn-primary btn-sm mt8">Time Off</button>
+                        <button name="action_set_present" type="object" class="btn btn-success btn-sm fa fa-check" title="Set as present" attrs="{'invisible': [('hr_presence_state', '=', 'present')]}"> </button>
+                        <button name="action_set_absent" type="object" class="btn btn-warning btn-sm fa fa-times" title="Set as absent" attrs="{'invisible': [('hr_presence_state', '!=', 'present')]}"> </button>
+                        <button name="action_open_leave_request" type="object" class="btn btn-secondary btn-sm">Time Off</button>
                     </div>
-                    <div class="oe_kanban_row">
-                        <button name="action_send_sms" type="object" class="btn btn-primary btn-sm mt8">SMS</button>
-                        <button name="action_send_mail" type="object" class="btn btn-primary btn-sm mt8">Log</button>
+                    <div class="oe_kanban_row d-flex gap-1">
+                        <button name="action_send_sms" type="object" class="btn btn-secondary btn-sm">SMS</button>
+                        <button name="action_send_mail" type="object" class="btn btn-secondary btn-sm">Log</button>
                     </div>
                 </div>
             </xpath>
