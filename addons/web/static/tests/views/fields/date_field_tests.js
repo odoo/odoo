@@ -205,7 +205,7 @@ QUnit.module("Fields", (hooks) => {
         // re-open datepicker
         await click(target, ".o_field_date input");
         assert.strictEqual(
-            target.querySelector(".o_date_item_cell.o_active").textContent,
+            target.querySelector(".o_date_item_cell.o_selected").textContent,
             "22",
             "datepicker should be highlight with 22nd day of month"
         );
@@ -244,7 +244,7 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_datetime_picker", "datepicker should be opened");
         assert.containsOnce(
             target,
-            ".o_date_item_cell.o_active",
+            ".o_date_item_cell.o_selected",
             "datepicker should have a selected day"
         );
         // select 22 Feb 2017

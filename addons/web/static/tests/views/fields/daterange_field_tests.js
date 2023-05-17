@@ -86,7 +86,7 @@ QUnit.module("Fields", (hooks) => {
         let datepicker = document.querySelector(".o_datetime_picker");
         assert.isVisible(datepicker, "first date range picker should be opened");
         assert.strictEqual(
-            datepicker.querySelector(".o_date_item_cell.o_active_start").textContent,
+            datepicker.querySelector(".o_date_item_cell.o_select_start").textContent,
             "8",
             "active start date should be '8' in date range picker"
         );
@@ -102,7 +102,7 @@ QUnit.module("Fields", (hooks) => {
             "active start date minute should be '30' in date range picker"
         );
         assert.strictEqual(
-            datepicker.querySelector(".o_date_item_cell.o_active_end").textContent,
+            datepicker.querySelector(".o_date_item_cell.o_select_end").textContent,
             "13",
             "active end date should be '13' in date range picker"
         );
@@ -133,7 +133,7 @@ QUnit.module("Fields", (hooks) => {
         datepicker = document.querySelector(".o_datetime_picker");
         assert.isVisible(datepicker, "first date range picker should be opened");
         assert.strictEqual(
-            datepicker.querySelector(".o_date_item_cell.o_active_start").textContent,
+            datepicker.querySelector(".o_date_item_cell.o_select_start").textContent,
             "8",
             "active start date should be '8' in date range picker"
         );
@@ -149,7 +149,7 @@ QUnit.module("Fields", (hooks) => {
             "active start date minute should be '30' in date range picker"
         );
         assert.strictEqual(
-            datepicker.querySelector(".o_date_item_cell.o_active_end").textContent,
+            datepicker.querySelector(".o_date_item_cell.o_select_end").textContent,
             "13",
             "active end date should be '13' in date range picker"
         );
@@ -222,12 +222,12 @@ QUnit.module("Fields", (hooks) => {
 
         assert.isVisible(datepicker, "first date range picker should be opened");
         assert.strictEqual(
-            datepicker.querySelector(".o_active_start").textContent,
+            datepicker.querySelector(".o_select_start").textContent,
             "3",
             "active start date should be '3' in date range picker"
         );
         assert.strictEqual(
-            datepicker.querySelector(".o_active_end").textContent,
+            datepicker.querySelector(".o_select_end").textContent,
             "8",
             "active end date should be '8' in date range picker"
         );
@@ -257,12 +257,12 @@ QUnit.module("Fields", (hooks) => {
 
         assert.isVisible(datepicker, "date range picker should be opened");
         assert.strictEqual(
-            datepicker.querySelector(".o_active_start").textContent,
+            datepicker.querySelector(".o_select_start").textContent,
             "16",
             "start date should be a 16 in date range picker"
         );
         assert.strictEqual(
-            datepicker.querySelector(".o_active_end").textContent,
+            datepicker.querySelector(".o_select_end").textContent,
             "12",
             "end date should be a 12 in date range picker"
         );
@@ -735,7 +735,7 @@ QUnit.module("Fields", (hooks) => {
 
         // Start date: id=1
         assert.strictEqual(
-            datepicker.querySelector(".o_active_start").textContent,
+            datepicker.querySelector(".o_select_start").textContent,
             "8",
             "active start date should be '8' in date range picker"
         );
@@ -753,7 +753,7 @@ QUnit.module("Fields", (hooks) => {
 
         // End date: id=1
         assert.strictEqual(
-            datepicker.querySelector(".o_active_end").textContent,
+            datepicker.querySelector(".o_select_end").textContent,
             "13",
             "active end date should be '13' in date range picker"
         );
@@ -787,7 +787,7 @@ QUnit.module("Fields", (hooks) => {
 
         // Start date: id=2
         assert.strictEqual(
-            datepicker.querySelector(".o_active_start").textContent,
+            datepicker.querySelector(".o_select_start").textContent,
             "10",
             "active start date should be '10' in date range picker"
         );
@@ -805,7 +805,7 @@ QUnit.module("Fields", (hooks) => {
 
         // End date id=2
         assert.strictEqual(
-            datepicker.querySelector(".o_active_end").textContent,
+            datepicker.querySelector(".o_select_end").textContent,
             "15",
             "active end date should be '15' in date range picker"
         );
