@@ -118,6 +118,44 @@ class TestSequenceMixin(TestSequenceMixinCommon):
             invoice_form.date = '2017-01-01'
             self.assertEqual(invoice_form.name, 'INV/2017/00001')
 
+    def test_sequence_empty_editable_with_quick_edit_mode(self):
+        """ Ensure the names of all but the first moves in a period are empty and editable in quick edit mode """
+        self.env.company.quick_edit_mode = 'in_invoices'
+
+        bill_1 = self.env['account.move'].create({
+            'partner_id': 1,
+            'move_type': 'in_invoice',
+            'date': '2016-01-01',
+            'line_ids': [
+                Command.create({
+                    'name': 'line',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                }),
+            ]
+        })
+        # First move in a period gets a name
+        self.assertEqual(bill_1.name, 'BILL/2016/01/0001')
+
+        bill_2 = bill_1.copy({'date': '2016-01-02'})
+        with Form(bill_2) as bill_2_form:
+            # Subsequent moves in the same period get an empty editable name in draft mode
+            self.assertFalse(bill_2_form.name)
+            bill_2_form.name = 'BILL/2016/01/0002'
+            self.assertEqual(bill_2_form.name, 'BILL/2016/01/0002')
+
+
+        bill_3 = bill_1.copy({'date': '2016-01-03'})
+        bill_4 = bill_1.copy({'date': '2016-01-04'})
+        (bill_3 + bill_4).date = fields.Date.from_string('2016-02-01')
+
+        # Same works with updating multiple moves
+        with Form(bill_3) as bill_3_form:
+            self.assertEqual(bill_3_form.name, 'BILL/2016/02/0001')
+
+        with Form(bill_4) as bill_4_form:
+            self.assertFalse(bill_4_form.name)
+            bill_4_form.name = 'BILL/2016/02/0002'
+            self.assertEqual(bill_4_form.name, 'BILL/2016/02/0002')
 
     def test_sequence_draft_change_date(self):
         # When a draft entry is added to an empty period, it should get a name.
