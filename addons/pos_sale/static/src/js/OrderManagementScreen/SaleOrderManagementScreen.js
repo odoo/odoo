@@ -293,7 +293,7 @@ odoo.define('pos_sale.SaleOrderManagementScreen', function (require) {
             sale_order[0].amount_unpaid = saleOrdersAmountUnpaid[sale_order[0].id];
 
             const sale_lines = await this._getSOLines(sale_order[0].order_line);
-            const promo_products_to_remove = this.env.pos.promo_programs.flatMap(program => program.promo_code_usage === 'no_code_needed' ? program.discount_line_product_id[0] : []);
+            const promo_products_to_remove = this.env.pos.promo_programs ? this.env.pos.promo_programs.flatMap(program => program.promo_code_usage === 'no_code_needed' ? program.discount_line_product_id[0] : []) : [];
             sale_order[0].order_line = sale_lines.filter(line => !promo_products_to_remove.includes(line.product_id[0]));
 
             return sale_order[0];

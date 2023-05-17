@@ -121,6 +121,11 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(orderline_product_b.move_ids.product_uom_qty, 1)
 
     def test_settle_order_with_promotions(self):
+        if not self.env["ir.module.module"].search([("name", "=", "pos_coupon"), ("state", "=", "installed")]):
+            self.skipTest("pos_coupon module is required for this test")
+        if not self.env["ir.module.module"].search([("name", "=", "sale_coupon"), ("state", "=", "installed")]):
+            self.skipTest("sale_coupon module is required for this test")
+
         self.promotion_program = self.env['coupon.program'].create({
             'name': '50% on current order',
             'program_type': 'promotion_program',
