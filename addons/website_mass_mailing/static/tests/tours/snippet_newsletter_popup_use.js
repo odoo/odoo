@@ -1,4 +1,4 @@
-/** @odoo-module alias=website_mass_mailing.tour.newsletter_popup_use **/
+/** @odoo-module alias=website_mass_mailing.tour.snippet_newsletter_popup_use **/
 
 import { registry } from "@web/core/registry";
 
@@ -17,7 +17,7 @@ function ensurePopupNotVisible() {
     }
 }
 
-registry.category("web_tour.tours").add('newsletter_popup_use', {
+registry.category("web_tour.tours").add('snippet_newsletter_popup_use', {
     test: true,
     url: '/',
     steps: [
