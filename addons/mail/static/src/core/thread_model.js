@@ -125,7 +125,7 @@ export class Thread {
     /** @type {number} */
     lastServerMessageId;
     /** @type {Boolean} */
-    is_editable;
+    is_editable = false;
 
     constructor(store, data) {
         Object.assign(this, {

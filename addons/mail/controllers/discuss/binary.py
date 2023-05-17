@@ -85,10 +85,7 @@ class BinaryController(http.Controller):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
             request=request, channel_id=channel_id
         )
-        domain = [("id", "=", channel_id)]
-        channel_sudo = channel_member_sudo.env["discuss.channel"].search(domain, limit=1)
-        if not channel_sudo:
-            raise NotFound()
+        channel_sudo = channel_member_sudo.channel_id
         return (
             request.env["ir.binary"]
             ._get_image_stream_from(channel_sudo, field_name="avatar_128")
@@ -118,6 +115,6 @@ class BinaryController(http.Controller):
             raise NotFound()
         return (
             request.env["ir.binary"]
-            ._get_image_stream_from(attachment_sudo, width=width, height=height)
+            ._get_image_stream_from(attachment_sudo, width=int(width), height=int(height))
             .get_response(as_attachment=kwargs.get("download"))
         )

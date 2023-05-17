@@ -617,6 +617,13 @@ export class ThreadService {
         });
     }
 
+    async notifyThreadAvatarToServer(threadId, data) {
+        return this.rpc("/discuss/channel/update_avatar", {
+            channel_id: threadId,
+            data,
+        });
+    }
+
     async leaveChannel(channel) {
         await this.orm.call("discuss.channel", "action_unfollow", [channel.id]);
         this.remove(channel);

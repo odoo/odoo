@@ -115,8 +115,6 @@ class Channel(models.Model):
         for channel in self:
             if channel.channel_type == 'channel':
                 channel.is_editable = self.sudo(False).env.is_admin() or channel.create_uid.id == self.env.user.id
-            elif channel.channel_type == 'chat':
-                channel.is_editable = True
             elif channel.channel_type == 'group':
                 channel.is_editable = channel.is_member and not self.sudo(False).env.user._is_public()
             else:
