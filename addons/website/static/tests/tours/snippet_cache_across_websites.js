@@ -26,6 +26,8 @@ wTourUtils.registerWebsitePreviewTour('snippet_cache_across_websites', {
     },
     {
         content: "Wait for the iframe to be loaded",
+        // The page reload generates assets for website 2, it may take some time
+        timeout: 20000,
         trigger: 'iframe html:not([data-website-id="1"])',
         run: () => null,
     },
