@@ -67,12 +67,16 @@ class PaymentWizard(models.TransientModel):
         ]).mapped('name')
 
         if 'payment_paypal' in installed_modules:
-            acquirer = self.env.ref('payment.payment_acquirer_paypal')
+            acquirer = self.env['payment.acquirer'].search(
+                [('company_id', '=', self.env.company.id), ('name', '=', 'PayPal')], limit=1
+            )
             self._payment_acquirer_onboarding_cache['paypal_email_account'] = acquirer['paypal_email_account'] or self.env.user.email or ''
             self._payment_acquirer_onboarding_cache['paypal_pdt_token'] = acquirer['paypal_pdt_token']
 
         if 'payment_stripe' in installed_modules:
-            acquirer = self.env.ref('payment.payment_acquirer_stripe')
+            acquirer = self.env['payment.acquirer'].search(
+                [('company_id', '=', self.env.company.id), ('name', '=', 'Stripe')], limit=1
+            )
             self._payment_acquirer_onboarding_cache['stripe_secret_key'] = acquirer['stripe_secret_key']
             self._payment_acquirer_onboarding_cache['stripe_publishable_key'] = acquirer['stripe_publishable_key']
 
@@ -114,14 +118,23 @@ class PaymentWizard(models.TransientModel):
             self.env.company.payment_onboarding_payment_method = self.payment_method
 
             # create a new env including the freshly installed module(s)
-            new_env = api.Environment(self.env.cr, self.env.uid, self.env.context)
 
+            new_env = api.Environment(self.env.cr, self.env.uid, self.env.context)
             if self.payment_method == 'paypal':
-                acquirer = new_env.ref('payment.payment_acquirer_paypal', raise_if_not_found=False)
+                acquirer = new_env['payment.acquirer'].search(
+                    [('name', '=', 'PayPal'), ('company_id', '=', self.env.company.id)], limit=1
+                )
+                if not acquirer:
+                    base_acquirer = self.env.ref('payment.payment_acquirer_paypal')
+                    # Use sudo to access payment acquirer record that can be in different company.
+                    acquirer = base_acquirer.sudo().copy(
+                        default={'company_id': self.env.company.id}
+                    )
+                    acquirer.company_id = self.env.company.id
                 default_journal = new_env['account.journal'].search(
                     [('type', '=', 'bank'), ('company_id', '=', new_env.company.id)], limit=1
                 )
-                new_env.ref('payment.payment_acquirer_paypal').write({
+                acquirer.write({
                     'paypal_email_account': self.paypal_email_account,
                     'paypal_seller_account': self.paypal_seller_account,
                     'paypal_pdt_token': self.paypal_pdt_token,
@@ -129,7 +142,9 @@ class PaymentWizard(models.TransientModel):
                     'journal_id': acquirer.journal_id or default_journal
                 })
             if self.payment_method == 'stripe':
-                new_env.ref('payment.payment_acquirer_stripe').write({
+                new_env['payment.acquirer'].search(
+                    [('name', '=', 'Stripe'), ('company_id', '=', self.env.company.id)], limit=1
+                ).write({
                     'stripe_secret_key': self.stripe_secret_key,
                     'stripe_publishable_key': self.stripe_publishable_key,
                     'state': 'enabled',
