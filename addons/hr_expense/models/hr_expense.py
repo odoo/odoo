@@ -604,7 +604,7 @@ class HrExpense(models.Model):
             'approved': {
                 'description': _('to be reimbursed'),
                 'amount': 0.0,
-                'tooltip': _("Expenses from which the report is approved or posted. The payment still needs to be done."),
+                'tooltip': _("Expenses paid by employee that are approved but not paid yet."),
                 'currency': self.env.company.currency_id.id,
             }
         }
@@ -614,8 +614,15 @@ class HrExpense(models.Model):
         expenses = self._read_group(
             [
                 ('employee_id', 'in', self.env.user.employee_ids.ids),
-                ('payment_mode', '=', 'own_account'),
-                ('state', 'in', ('draft', 'reported', 'submitted', 'approved'))
+                # Counting the expenses to display in the dashboard:
+                # - To submit: contains the expenses paid either by the employee or by the company, and that are draft or reported
+                # - Under validation: contains expenses paid by the employee or paid by the company, and that have been submitted but still need to be approved/refused
+                # - To be reimbursed: contains ONLY expenses paid by the employee that are approved, the payment has not yet been made
+                '|',
+                '&', ('payment_mode', 'in', ('own_account', 'company_account')),
+                     ('state', 'in', ('draft', 'reported', 'submitted')),
+                '&', ('payment_mode', '=', 'own_account'),
+                     ('state', '=', 'approved')
             ], ['state', 'currency_id'], ['total_amount:sum'])
         for state, currency, total_amount_sum in expenses:
             if state in {'draft', 'reported'}:  # Fusion the two states into only one "To Submit" state
