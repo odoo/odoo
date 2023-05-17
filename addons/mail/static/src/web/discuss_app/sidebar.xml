@@ -39,7 +39,7 @@
         }"
         t-on-click="(ev) => this.openThread(ev, mailbox)"
     >
-        <ThreadIcon className="'ms-4 me-2'" thread="mailbox"/>
+        <ThreadIcon className="'ms-4 me-2 o-bg-inherit'" thread="mailbox"/>
         <div class="me-2 text-truncate">
             <t t-esc="mailbox.name"/>
         </div>
@@ -92,7 +92,7 @@
     >
         <div class="o-bg-inherit position-relative d-flex ms-4 flex-shrink-0" style="width:30px;height:30px">
             <img class="w-100 h-100 rounded" t-att-src="thread.imgUrl" alt="Thread Image"/>
-            <ThreadIcon t-if="thread.type === 'chat' or (thread.type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussCategoryItem-threadIcon position-absolute bottom-0 end-0 p-1 me-n1 mb-n1 d-flex align-items-center justify-content-center rounded-circle bg-100'"/>
+            <ThreadIcon t-if="thread.type === 'chat' or (thread.type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussCategoryItem-threadIcon position-absolute bottom-0 end-0 p-1 me-n1 mb-n1 d-flex align-items-center justify-content-center rounded-circle o-bg-inherit'"/>
         </div>
         <span class="ms-3 me-2 text-truncate" t-att-class="{ 'o-item-unread fw-bolder': thread.message_unread_counter > 0 }">
             <t t-esc="thread.displayName"/>
