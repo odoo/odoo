@@ -31,7 +31,7 @@ class AccountMove(models.Model):
 
     @api.depends('l10n_eg_eta_json_doc_id.raw')
     def _compute_eta_long_id(self):
-        for rec in self:
+        for rec in self.with_context(bin_size=False):
             response_data = rec.l10n_eg_eta_json_doc_id and json.loads(rec.l10n_eg_eta_json_doc_id.raw).get('response')
             if response_data:
                 rec.l10n_eg_long_id = response_data.get('l10n_eg_long_id')
