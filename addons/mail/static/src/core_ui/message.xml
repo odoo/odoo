@@ -123,8 +123,8 @@
                                     'mt-n4': env.inChatter and (message.isDiscussion or message.isNotification),
                                     'mt-n5': env.inChatter and !(message.isDiscussion or message.isNotification),
                                     'mt-2': env.inDiscussApp and (message.isDiscussion or message.isNotification),
-                                    'mt-n3': env.inChatWindow,
-                                    'ms-2': env.inDiscussApp,
+                                    'mt-n3': env.inChatWindow or env.inDiscussApp,
+                                    'position-absolute top-0 end-0 me-2': env.inDiscussApp,
                                     'invisible': !isActive,
                                     'o-expanded': state.expandOptions
                                 }"
@@ -152,6 +152,33 @@
                                         </t>
                                     </Dropdown>
                                 </div>
+                            </div>
+                                <t t-if="message.type !== 'notification' and !message.isTransient and (message.hasTextContent or message.subtypeDescription)">
+                                    <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="false"/>
+                                    <t t-else="">
+                                        <div class="position-relative">
+                                            <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
+                                                'border': state.isEditing,
+                                                'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.isNote,
+                                                'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.isNote,
+                                                }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
+                                            <div class="position-relative" t-att-class="{
+                                                        'p-1': message.isNote,
+                                                        'o-mail-Message-body mb-0 p-3': !message.isNote,
+                                                        'align-self-start text-break rounded-end-3 rounded-bottom-3': !state.isEditing and !message.isNote,
+                                                        'o-mail-Message-editable flex-grow-1': state.isEditing,
+                                                        }" t-ref="body">
+                                                <Composer t-if="state.isEditing" autofocus="true" composer="message.composer" messageComponent="constructor" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'"/>
+                                                <t t-else="">
+                                                    <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-esc="message.subject"/></em>
+                                                    <t t-if="message.body" t-out="message.body"/>
+                                                    <small t-if="message.editDate" class="ms-2 fst-italic text-muted" t-att-title="message.editDatetimeHuge">(edited)</small>
+                                                    <t t-if="showSubtypeDescription" t-out="message.subtypeDescription"/>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </t>
                             </div>
                         </div>
                         <AttachmentList
