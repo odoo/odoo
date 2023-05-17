@@ -356,6 +356,8 @@ export class MassMailingHtmlField extends HtmlField {
             this.wysiwyg.$iframeBody.closest('body').removeClass("o_force_mail_theme_choice");
 
             $themeSelectorNew.remove();
+            // resize once theme is selected
+            this.onIframeUpdated();
 
             this.wysiwyg.setSnippetsMenuFolded(device.isMobile || themeName === 'basic');
 
