@@ -363,13 +363,13 @@ publicWidget.registry.websiteLinks = publicWidget.Widget.extend({
         var defs = [this._super.apply(this, arguments)];
 
         // UTMS selects widgets
-        var campaignSelect = new SelectBox(this, 'utm.campaign', _t("e.g. Promotion of June, Winter Newsletter, .."));
+        const campaignSelect = new SelectBox(this, "utm.campaign", _t("e.g. June Sale, Paris Roadshow, ..."));
         defs.push(campaignSelect.attachTo($('#campaign-select')));
 
-        var mediumSelect = new SelectBox(this, 'utm.medium', _t("e.g. Newsletter, Social Network, .."));
+        const mediumSelect = new SelectBox(this, "utm.medium", _t("e.g. InMails, Ads, Social, ..."));
         defs.push(mediumSelect.attachTo($('#channel-select')));
 
-        var sourceSelect = new SelectBox(this, 'utm.source', _t("e.g. Search Engine, Website page, .."));
+        const sourceSelect = new SelectBox(this, "utm.source", _t("e.g. LinkedIn, Facebook, Leads, ..."));
         defs.push(sourceSelect.attachTo($('#source-select')));
 
         // Recent Links Widgets
