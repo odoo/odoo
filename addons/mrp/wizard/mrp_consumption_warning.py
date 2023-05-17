@@ -40,6 +40,11 @@ class MrpConsumptionWarning(models.TransientModel):
         for production in self.mrp_production_ids:
             for move in production.move_raw_ids:
                 rounding = move.product_uom.rounding
+                for line in self.mrp_consumption_warning_line_ids:
+                    if line.product_id != move.product_id:
+                        continue
+                    if float_compare(line.product_expected_qty_uom, move.product_uom_qty, precision_rounding=rounding) != 0:
+                        move.product_uom_qty = line.product_uom_id._compute_quantity(line.product_expected_qty_uom, move.product_uom)
                 if float_compare(move.quantity_done, move.should_consume_qty, precision_rounding=rounding) == 0:
                     continue
                 new_qty = float_round((production.qty_producing - production.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
