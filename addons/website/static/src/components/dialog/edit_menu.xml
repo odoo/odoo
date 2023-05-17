@@ -24,21 +24,17 @@
 
 <t t-name="website.MenuRow" owl="1">
     <li t-att-data-menu-id="props.menu.fields['id']" t-att-data-is-mega-menu="props.menu.fields['is_mega_menu'] ? 'true' : undefined">
-        <div class="input-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text fa fa-bars" role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
-            </div>
-            <span class="form-control d-flex align-items-center">
+        <div class="input-group mb-1">
+                <span class="input-group-text bg-view fa fa-bars" role="img" aria-label="Dropdown menu" title="Dropdown menu"/>
+            <span class="form-control d-flex align-items-center bg-view">
                 <span class="js_menu_label o_text_overflow flex-grow-1">
                     <t t-esc="props.menu.fields['name']"/>
                 </span>
                 <span t-if="props.menu.fields['is_mega_menu']" class="badge text-bg-primary">Mega Menu</span>
                 <i t-if="props.menu.is_homepage" class="fa fa-home ms-3" role="img" aria-label="Home" title="Home"/>
             </span>
-            <span class="input-group-append">
-                <button t-on-click="edit" type="button" class="btn btn-primary js_edit_menu fa fa-pencil-square-o" aria-label="Edit Menu Item" title="Edit Menu Item"/>
-                <button t-on-click="delete" type="button" class="btn btn-danger js_delete_menu fa fa-trash-o" aria-label="Delete Menu Item" title="Delete Menu Item"/>
-            </span>
+                <button t-on-click="edit" type="button" class="btn btn-secondary js_edit_menu fa fa-pencil-square-o" aria-label="Edit Menu Item" title="Edit Menu Item"/>
+                <button t-on-click="delete" type="button" class="btn btn-secondary js_delete_menu fa fa-trash-o rounded-start-0" aria-label="Delete Menu Item" title="Delete Menu Item"/>
         </div>
         <ul t-if="props.menu.children">
             <t t-foreach="props.menu.children" t-as="submenu" t-key="submenu.fields['id']">
