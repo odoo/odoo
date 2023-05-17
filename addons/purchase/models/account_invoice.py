@@ -84,7 +84,7 @@ class AccountMove(models.Model):
 
         currency_id = (
                 self.partner_id.property_purchase_currency_id
-                or self.env.context.get("default_currency_id")
+                or self.env['res.currency'].browse(self.env.context.get("default_currency_id"))
                 or self.currency_id
         )
 
