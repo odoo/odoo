@@ -23,5 +23,6 @@
         'views/res_config_settings_views.xml',
         'wizard/account_move_send_views.xml',
     ],
+    'pre_init_hook': 'pre_init_hook',
     'license': 'LGPL-3',
 }
