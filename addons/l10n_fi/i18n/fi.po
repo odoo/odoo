@@ -4,12 +4,13 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.2alpha1+e\n"
+"Project-Id-Version: Odoo Server 13.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-26 13:22+0000\n"
-"PO-Revision-Date: 2023-01-26 13:22+0000\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2023-01-26 13:23+0000\n"
+"PO-Revision-Date: 2020-05-19 16:10+0000\n"
+"Last-Translator: Elmeri Niemelä <elmeri.niemela@sprintit.fi>\n"
 "Language-Team: \n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -483,7 +484,7 @@ msgstr "Tase: Matkalla olevat tavarat"
 #. module: l10n_fi
 #: model:ir.model.fields,field_description:l10n_fi.field_account_journal__invoice_reference_model
 msgid "Communication Standard"
-msgstr "Viestintästandardi"
+msgstr "Maksuviitteen tyyppi"
 
 #. module: l10n_fi
 #: model:account.report.line,name:l10n_fi.tax_report_deductible
@@ -493,12 +494,12 @@ msgstr "Verokauden vähennettävä vero"
 #. module: l10n_fi
 #: model:ir.model.fields.selection,name:l10n_fi.selection__account_journal__invoice_reference_model__fi_rf
 msgid "Finnish Creditor Reference (RF)"
-msgstr "Suomen velkojaviite (RF)"
+msgstr "Kansainvälinen viitenumero (RF)"
 
 #. module: l10n_fi
 #: model:ir.model.fields.selection,name:l10n_fi.selection__account_journal__invoice_reference_model__fi
 msgid "Finnish Standard Reference"
-msgstr "Suomen standardiviite"
+msgstr "Suomalainen viitenumero"
 
 #. module: l10n_fi
 #: model:account.report.line,name:l10n_fi.tax_report_base_import_goods_no_eu
@@ -508,10 +509,9 @@ msgstr "Tavaroiden maahantuonnit EU:n ulkopuolelta"
 #. module: l10n_fi
 #. odoo-python
 #: code:addons/l10n_fi/models/account_move.py:0
-#: code:addons/l10n_fi/models/account_move.py:0
 #, python-format
 msgid "Invoice number must contain numeric characters"
-msgstr "Laskun numeron tulee sisältää numeerisia merkkejä"
+msgstr "Laskun numeron on sisällettävä numeerisia merkkejä"
 
 #. module: l10n_fi
 #: model:ir.model,name:l10n_fi.model_account_journal
@@ -530,8 +530,7 @@ msgstr "Maksettava vero / Palautukseen oikeuttava vero (-)"
 
 #. module: l10n_fi
 #: model:account.report.line,name:l10n_fi.tax_report_base_purchase_construct_service
-msgid ""
-"Purchases of construction services and scrap metal (inverted tax liability)"
+msgid "Purchases of construction services and scrap metal (inverted tax liability)"
 msgstr "Rakentamispalvelun ja metalliromun ostot (käännetty verovelvollisuus)"
 
 #. module: l10n_fi
@@ -566,8 +565,7 @@ msgstr "Tulos: Varastojen muutos"
 
 #. module: l10n_fi
 #: model:account.account.tag,name:l10n_fi.account_tag_manufacturing_warehouse_change
-msgid ""
-"Result: Change in inventories of finished and work-in-progress products"
+msgid "Result: Change in inventories of finished and work-in-progress products"
 msgstr "Tulos: Valmiiden ja keskeneräisten tuotteiden varastojen muutos"
 
 #. module: l10n_fi
@@ -772,10 +770,8 @@ msgstr "Tulos: Palkat ja palkkiot tuotanto"
 
 #. module: l10n_fi
 #: model:account.report.line,name:l10n_fi.tax_report_base_sales_construct_service
-msgid ""
-"Sales of construction services and scrap metal (inverted tax liability)"
-msgstr ""
-"Rakentamispalvelun ja metalliromun myynnit (käännetty verovelvollisuus)"
+msgid "Sales of construction services and scrap metal (inverted tax liability)"
+msgstr "Rakentamispalvelun ja metalliromun myynnit (käännetty verovelvollisuus)"
 
 #. module: l10n_fi
 #: model:account.report.line,name:l10n_fi.tax_report_base_sales_goods_eu
@@ -804,12 +800,8 @@ msgstr "Vero tavaroiden maahantuonneista EU:n ulkopuolelta"
 
 #. module: l10n_fi
 #: model:account.report.line,name:l10n_fi.tax_report_tax_purchase_construct_service
-msgid ""
-"Tax on purchases of construction services and scrap metal (inverted tax "
-"liability)"
-msgstr ""
-"Vero rakentamispalvelun ja metalliromun ostoista (käännetty "
-"verovelvollisuus)"
+msgid "Tax on purchases of construction services and scrap metal (inverted tax liability)"
+msgstr "Vero rakentamispalvelun ja metalliromun ostoista (käännetty verovelvollisuus)"
 
 #. module: l10n_fi
 #: model:account.report.line,name:l10n_fi.tax_report_tax_purchase_goods_eu
@@ -833,8 +825,5 @@ msgstr "ALV-raportti"
 
 #. module: l10n_fi
 #: model:ir.model.fields,help:l10n_fi.field_account_journal__invoice_reference_model
-msgid ""
-"You can choose different models for each type of reference. The default one "
-"is the Odoo reference."
-msgstr ""
-"Voit valita eri malleja kullekin viitetyypille. Oletusarvo on Odoo-viite."
+msgid "You can choose different models for each type of reference. The default one is the Odoo reference."
+msgstr "Voit valita erilaisen maksuviitetyypin. Oletus on Odoon laskuviite."

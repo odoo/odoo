@@ -1,49 +1,31 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* account_check_printing
-# 
+#
 # Translators:
-# Martin Trigaux, 2019
-# Rémi CAZENAVE <remi@le-filament.com>, 2019
-# Guillaume Piens <gup@odoo.com>, 2019
-# Cécile Collart <cco@odoo.com>, 2019
-# thomas quertinmont <tqu@odoo.com>, 2019
-# 
+# Martin Trigaux, 2022
+# Jolien De Paepe, 2023
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-23 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: thomas quertinmont <tqu@odoo.com>, 2019\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"POT-Creation-Date: 2023-05-16 13:48+0000\n"
+"PO-Revision-Date: 2022-09-22 05:44+0000\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
+"Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: fr\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 #, python-format
-msgid " : Check Number Sequence"
-msgstr " : Séquence du numéro de chèque"
-
-#. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:0
-#, python-format
-msgid "A check memo cannot exceed 60 characters."
-msgstr "Un mémo de chèque ne peut dépasser 60 caractères."
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_chart_template
-msgid "Account Chart Template"
-msgstr "Modèle de plan comptable"
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_reconciliation_widget
-msgid "Account Reconciliation widget"
-msgstr "outil de réconciliation de compte"
+msgid ": Check Number Sequence"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -52,11 +34,8 @@ msgstr "outil de réconciliation de compte"
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_margin_top
-msgid ""
-"Adjust the margins of generated checks to make it fit your printer's "
-"settings."
-msgstr ""
-"Ajuster les marges des chèques générés aux paramètres de votre imprimante."
+msgid "Adjust the margins of generated checks to make it fit your printer's settings."
+msgstr "Ajuster les marges des chèques générés aux paramètres de votre imprimante."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
@@ -88,12 +67,7 @@ msgstr "Numéro de chèque"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
 msgid "Check Printing"
-msgstr "Impression chèque"
-
-#. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_printing_payment_method_selected
-msgid "Check Printing Payment Method Selected"
-msgstr "Méthode de paiement d'impression des chèques sélectionnées"
+msgstr "Impression du chèque"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
@@ -103,7 +77,7 @@ msgstr "Marge de droite du chèque"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_sequence_id
 msgid "Check Sequence"
-msgstr "Séquence chèque"
+msgstr "Séquence du chèque"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_top
@@ -112,11 +86,17 @@ msgid "Check Top Margin"
 msgstr "Marge supérieure du chèque"
 
 #. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
+msgid "Check numbers can only consist of digits"
+msgstr "Le numéro de chèque ne peut être constitué que de chiffres"
+
+#. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr ""
-"Cochez cette option si vos chèques pré-imprimés ne sont pas numérotés."
+msgstr "Cochez cette option si vos chèques pré-imprimés ne sont pas numérotés."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -134,6 +114,7 @@ msgid "Checks numbering sequence."
 msgstr "Séquence de numérotation des chèques."
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_payment_check_printing_search
 #, python-format
@@ -151,14 +132,14 @@ msgid "Companies"
 msgstr "Sociétés"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__country_code
-msgid "Company Country code"
-msgstr "Code pays de société"
-
-#. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
 msgid "Config Settings"
-msgstr "Paramètres de config"
+msgstr "Paramètres de configuration"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_res_partner
+msgid "Contact"
+msgstr "Contact"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
@@ -173,7 +154,14 @@ msgstr "Créé le"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Nom d'affichage"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
+msgid "Go to the configuration panel"
+msgstr "Aller au panneau de configuration"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
@@ -181,14 +169,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid ""
-"In order to print multiple checks at once, they must belong to the same bank"
-" journal."
-msgstr ""
-"Afin d'imprimer plusieurs chèques à la fois, ils doivent appartenir au même "
-"journal bancaire."
+msgid "In order to print multiple checks at once, they must belong to the same bank journal."
+msgstr "Afin d'imprimer plusieurs chèques à la fois, ils doivent appartenir au même journal de banque."
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
@@ -196,9 +181,9 @@ msgid "Journal"
 msgstr "Journal"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks____last_update
-msgid "Last Modified on"
-msgstr "Dernière modification le"
+#: model:ir.model,name:account_check_printing.model_account_move
+msgid "Journal Entry"
+msgstr "Pièce comptable"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
@@ -217,23 +202,41 @@ msgid "Manual Numbering"
 msgstr "Numérotation manuelle"
 
 #. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_line_id
+msgid ""
+"Manual: Pay or Get paid by any method outside of Odoo.\n"
+"Payment Providers: Each payment provider has its own Payment Method. Request a transaction on/to a card thanks to a payment token saved by the partner when buying or subscribing online.\n"
+"Check: Pay bills by check and print it from Odoo.\n"
+"Batch Deposit: Collect several customer checks at once generating and submitting a batch deposit to your bank. Module account_batch_payment is necessary.\n"
+"SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
+"SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
+msgstr ""
+"Manuel : Payez ou soyez payé par n'importe quel mode en dehors d'Odoo.\n"
+"Fournisseurs de paiement : Chaque fournisseur de paiement a son propre mode de paiement. Demandez une transaction sur/vers une carte grâce à un jeton de paiement enregistré par le partenaire lors d'un achat ou d'un abonnement en ligne.\n"
+"Chèque : Payez vos factures par chèque et imprimez-le depuis Odoo.\n"
+"Dépôt par lot : Collectez plusieurs chèques clients en une seule fois en générant et en soumettant un dépôt par lot à votre banque. Le module account_batch_payment est nécessaire.\n"
+"Virement SEPA : Payez dans la zone SEPA en soumettant un fichier de virement SEPA à votre banque. Le module account_sepa est nécessaire.\n"
+"Prélèvement SEPA : Soyez payé dans la zone SEPA grâce à un mandat que votre partenaire vous aura accordé. Le module account_sepa est nécessaire.\n"
+
+#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
-msgstr "Stub sur plusieurs pages"
+msgstr "Talon de chèque sur plusieurs pages"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_next_number
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__next_check_number
 msgid "Next Check Number"
-msgstr "Numéro de chèque suivant"
+msgstr "Prochain numéro de chèque"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_journal.py:0
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 #, python-format
 msgid "Next Check Number should only contains numbers."
-msgstr "Prochain numéro de chèque doit contenir"
+msgstr "Le prochain numéro de chèque ne doit contenir que des chiffres."
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
@@ -241,28 +244,46 @@ msgid "None"
 msgstr "Aucun"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_line_id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
+#: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
+msgid "Payment Method"
+msgstr "Mode de paiement"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_payment_method
+msgid "Payment Methods"
+msgstr "Modes de paiement"
+
+#. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
 msgid "Payments"
 msgstr "Paiements"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid ""
-"Payments to print as a checks must have 'Check' selected as payment method "
-"and not have already been reconciled"
-msgstr ""
-"Les paiements à imprimer en tant que chèques doivent avoir \"Chèque\" de "
-"sélectionner comme méthode de paiement et ne doivent pas être déjà lettrés"
+msgid "Payments to print as a checks must have 'Check' selected as payment method and not have already been reconciled"
+msgstr "Les paiements à imprimer en tant que chèques doivent avoir 'Chèque' de sélectionner comme mode de paiement et ne doivent pas être déjà réconciliés"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid ""
-"Please enter the number of the first pre-printed check that you are about to"
-" print on."
-msgstr ""
-"Veuillez entrer le numéro du premier chèque pré-imprimé sur lequel vous êtes"
-" sur le point d'imprimer."
+msgid "Please enter the number of the first pre-printed check that you are about to print on."
+msgstr "Veuillez saisir le numéro du premier chèque pré-imprimé que vous êtes sur le point d'imprimer."
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
+msgid "Preferred Payment Method"
+msgstr "Mode de paiement préféré"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
+#: model:ir.model.fields,help:account_check_printing.field_res_users__property_payment_method_id
+msgid "Preferred payment method when paying this vendor. This is used to filter vendor bills by preferred payment method to register payments in mass. Use cases: create bank files for batch wires, check runs."
+msgstr "Mode de paiement préféré pour ce fournisseur. Ceci est utilisé pour trier les factures fournisseurs par mode de paiement préféré pour enregistrer des paiements en masse. Cas d'utilisation : création de fichiers de virement bancaires, impression de chèques."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -277,7 +298,7 @@ msgstr "Imprimer un chèque"
 #. module: account_check_printing
 #: model:ir.actions.server,name:account_check_printing.action_account_print_checks
 msgid "Print Checks"
-msgstr "Imprimer les chèques"
+msgstr "Imprimer des chèques"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_date_label
@@ -286,6 +307,7 @@ msgid "Print Date Label"
 msgstr "Imprimer l'étiquette de date"
 
 #. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #: model:ir.model,name:account_check_printing.model_print_prenumbered_checks
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -299,14 +321,9 @@ msgid "Register Payment"
 msgstr "Enregistrer un paiement"
 
 #. module: account_check_printing
-#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
-msgid "Reset Amount in Words"
-msgstr ""
-
-#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
 msgid "Right Margin"
-msgstr "Marge de Droite"
+msgstr "Marge de droite"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
@@ -316,7 +333,12 @@ msgid ""
 "In order to disable the printing feature, select 'None'."
 msgstr ""
 "Choisissez le format de vos chèques.\n"
-"Pour désactiver la fonctionnalité d'impression, choisissez \"Aucun\"."
+"Pour désactiver la fonctionnalité d'impression, sélectionnez 'Aucun'."
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
+msgid "Sent"
+msgstr "Envoyé"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
@@ -324,73 +346,58 @@ msgid "Sequence number of the next printed check."
 msgstr "Numéro de séquence du prochain chèque imprimé."
 
 #. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_account_journal__check_printing_payment_method_selected
-msgid ""
-"Technical feature used to know whether check printing was enabled as payment"
-" method."
-msgstr ""
-"Fonction technique utilisée afin de savoir si l'impression du chèque a été "
-"activée comme méthode de paiement."
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__show_check_number
+msgid "Show Check Number"
+msgstr "Afficher le numéro de chèque"
 
 #. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__country_code
-msgid ""
-"The ISO country code in two chars. \n"
-"You can use this field for quick search."
-msgstr ""
-"Code de pays ISO en deux caractères. \n"
-"Vous pouvez utiliser ce champ pour une recherche rapide."
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
+msgid "Something went wrong with Check Layout, please select another layout in Invoicing/Accounting Settings and try again."
+msgstr "Une erreur s'est produite lors de la mise en page du chèque. Veuillez sélectionner une autre mise en page dans les paramètres Facturation/Comptabilité et réessayer."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_journal.py:0
+#. odoo-python
+#: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
-"The last check number was %s. In order to avoid a check being rejected by "
-"the bank, you can only use a greater number."
+"The following numbers are already used:\n"
+"%s"
 msgstr ""
-"Le dernier numéro de chèque était %s. Afin d'éviter qu'un chèque ne soit "
-"refusé par la banque, vous ne pouvez utiliser qu'un numéro plus grand."
+"Les numéros suivants sont déjà utilisés :\n"
+"%s"
+
+#. module: account_check_printing
+#. odoo-python
+#: code:addons/account_check_printing/models/account_journal.py:0
+#, python-format
+msgid "The last check number was %s. In order to avoid a check being rejected by the bank, you can only use a greater number."
+msgstr "Le dernier numéro de chèque était %s. Afin d'éviter qu'un chèque ne soit refusé par la banque, vous ne pouvez utiliser qu'un numéro supérieur."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
-msgid ""
-"The selected journal is configured to print check numbers. If your pre-"
-"printed check paper already has numbers or if the current numbering is "
-"wrong, you can change it in the journal configuration page."
-msgstr ""
-"Le journal sélectionné est configuré pour imprimer les numéros de chèques. "
-"Si votre chèque pré-imprimé a déjà un numéro ou si la numérotation existante"
-" est mauvaise, vous pouvez la changer dans la page de configuration du "
-"journal."
+msgid "The selected journal is configured to print check numbers. If your pre-printed check paper already has numbers or if the current numbering is wrong, you can change it in the journal configuration page."
+msgstr "Le journal sélectionné est configuré pour imprimer les numéros de chèques. Si votre chèque pré-imprimé a déjà des numéros ou si la numérotation actuelle est incorrecte, vous pouvez la modifier dans la page de configuration du journal."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
-msgid ""
-"This option allows you to print check details (stub) on multiple pages if "
-"they don't fit on a single page."
-msgstr ""
-"Cette option permet d'imprimer les éléments (talons) sur plusieurs pages si "
-"ceux-ci ne tiennent pas sur une page."
+msgid "This option allows you to print check details (stub) on multiple pages if they don't fit on a single page."
+msgstr "Cette option vous permet d'imprimer les éléments (talons) sur plusieurs pages si ceux-ci ne tiennent pas sur une page."
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_date_label
 msgid ""
-"This option allows you to print the date label on the check as per CPA. "
+"This option allows you to print the date label on the check as per CPA.\n"
 "Disable this if your pre-printed check includes the date label."
-msgstr ""
-"Cette option vous permet d’imprimer l'étiquette de date sur le chèque, "
-"conformément au CPA. Désactivez cette option si votre chèque préimprimé "
-"comprend l'étiquette de la date."
+msgstr "Cette option vous permet d'imprimer l'étiquette de date sur le chèque, selon le CPA. Elle peut être déactivée si les chèques pré-imprimés la prévoient déjà."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
-msgid ""
-"This will allow to save on payments the number of the corresponding check."
-msgstr ""
-"Ceci permettra de sauvegarder sur les paiements le numéro du chèque "
-"correspondant. "
+msgid "This will allow to save on payments the number of the corresponding check."
+msgstr "Ceci permettra de sauvegarder sur les paiements le numéro du chèque correspondant. "
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
@@ -398,26 +405,13 @@ msgid "Unmark Sent"
 msgstr "Décochez ceux qui ont été envoyés"
 
 #. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
+msgid "Void Check"
+msgstr "Chèque nul"
+
+#. module: account_check_printing
+#. odoo-python
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
-msgid ""
-"You have to choose a check layout. For this, go in Apps, search for 'Checks "
-"layout' and install one."
-msgstr ""
-"Vous devez choisir un format de chèque. Pour cela, aller sue "
-"\"Applications\", rechercher \"Formats de chèque\" et installez."
-
-#. module: account_check_printing
-#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_middle
-msgid "check in middle"
-msgstr "Chèque au milieu"
-
-#. module: account_check_printing
-#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_bottom
-msgid "check on bottom"
-msgstr "Chèque en bas"
-
-#. module: account_check_printing
-#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_top
-msgid "check on top"
-msgstr "Chèque au dessus"
+msgid "You have to choose a check layout. For this, go in Invoicing/Accounting Settings, search for 'Checks layout' and set one."
+msgstr "Vous devez sélectionner une mise en page pour vos chèques. Pour faire cette sélection, allez aux paramètres Facturation/Comptabilité et choisissez-en une dans le réglage \"Mise en page des chèques\"."

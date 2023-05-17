@@ -1,23 +1,38 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* link_tracker
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-30 09:41+0000\n"
+"POT-Creation-Date: 2023-05-16 13:49+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
 "Language-Team: Luxembourgish (https://www.transifex.com/odoo/teams/41243/lb/)\n"
+"Language: lb\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: lb\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_kanban
-msgid "<small>Clicks:</small>"
+msgid "<i class=\"fa fa-fw fa-mouse-pointer\" aria-label=\"Clicks\" role=\"img\"/>"
+msgstr ""
+
+#. module: link_tracker
+#: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
+msgid "<span class=\"o_stat_text\">Visit Page</span>"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__absolute_url
+msgid "Absolute URL"
+msgstr ""
+
+#. module: link_tracker
+#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__label
+msgid "Button label"
 msgstr ""
 
 #. module: link_tracker
@@ -36,6 +51,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_click_view_search
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_form
 #: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_form
+#: model_terms:ir.ui.view,arch_db:link_tracker.utm_campaign_view_kanban
 msgid "Clicks"
 msgstr ""
 
@@ -76,20 +92,17 @@ msgid "Created on"
 msgstr ""
 
 #. module: link_tracker
+#. odoo-python
+#: code:addons/link_tracker/models/link_tracker.py:0
+#, python-format
+msgid "Creating a Link Tracker without URL is not possible"
+msgstr ""
+
+#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__display_name
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code__display_name
 msgid "Display Name"
-msgstr ""
-
-#. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__favicon
-msgid "Favicon"
-msgstr ""
-
-#. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker__icon_src
-msgid "Favicon Source"
 msgstr ""
 
 #. module: link_tracker
@@ -113,13 +126,6 @@ msgstr ""
 #. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click__ip
 msgid "Internet Protocol"
-msgstr ""
-
-#. module: link_tracker
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker____last_update
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_click____last_update
-#: model:ir.model.fields,field_description:link_tracker.field_link_tracker_code____last_update
-msgid "Last Modified on"
 msgstr ""
 
 #. module: link_tracker
@@ -171,6 +177,13 @@ msgid "Link Tracker Code"
 msgstr ""
 
 #. module: link_tracker
+#. odoo-python
+#: code:addons/link_tracker/models/link_tracker.py:0
+#, python-format
+msgid "Link Tracker values (URL, campaign, medium and source) must be unique (%s, %s, %s, %s)."
+msgstr ""
+
+#. module: link_tracker
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_graph
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_tree
@@ -183,9 +196,19 @@ msgid "Links Clicks"
 msgstr ""
 
 #. module: link_tracker
+#: model:ir.model,name:link_tracker.model_mail_render_mixin
+msgid "Mail Render Mixin"
+msgstr ""
+
+#. module: link_tracker
 #: model:ir.model.fields,field_description:link_tracker.field_link_tracker__medium_id
 #: model_terms:ir.ui.view,arch_db:link_tracker.link_tracker_view_search
 msgid "Medium"
+msgstr ""
+
+#. module: link_tracker
+#: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_click_action_statistics
+msgid "No data yet!"
 msgstr ""
 
 #. module: link_tracker
@@ -235,16 +258,9 @@ msgid "Target URL"
 msgstr ""
 
 #. module: link_tracker
-#: model:ir.model.constraint,message:link_tracker.constraint_link_tracker_url_utms_uniq
-msgid "The URL and the UTM combination must be unique"
-msgstr ""
-
-#. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__campaign_id
 #: model:ir.model.fields,help:link_tracker.field_link_tracker_click__campaign_id
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts,"
-" e.g. Fall_Drive, Christmas_Special"
+msgid "This is a name that helps you keep track of your different campaign efforts, e.g. Fall_Drive, Christmas_Special"
 msgstr ""
 
 #. module: link_tracker
@@ -254,9 +270,7 @@ msgstr ""
 
 #. module: link_tracker
 #: model:ir.model.fields,help:link_tracker.field_link_tracker__source_id
-msgid ""
-"This is the source of the link, e.g. Search Engine, another domain, or name "
-"of email list"
+msgid "This is the source of the link, e.g. Search Engine, another domain, or name of email list"
 msgstr ""
 
 #. module: link_tracker
@@ -272,9 +286,7 @@ msgstr ""
 #. module: link_tracker
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_action
 #: model_terms:ir.actions.act_window,help:link_tracker.link_tracker_action_campaign
-msgid ""
-"Trackers are used to collect count stat about click on links and generate "
-"short URLs."
+msgid "Trackers are used to collect count stat about click on links and generate short URLs."
 msgstr ""
 
 #. module: link_tracker
@@ -300,6 +312,7 @@ msgid "Visit Page"
 msgstr ""
 
 #. module: link_tracker
+#. odoo-python
 #: code:addons/link_tracker/models/link_tracker.py:0
 #, python-format
 msgid "Visit Webpage"

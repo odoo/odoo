@@ -1,26 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* product_margin
-# 
+#
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
-# Kovács Tibor <kovika@gmail.com>, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
-# 
+# Ákos Nagy <akos.nagy@oregional.hu>, 2022
+# Kovács Tibor <kovika@gmail.com>, 2022
+# Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
+# krnkris, 2022
+# Martin Trigaux, 2022
+# Tamás Dombos, 2022
+# gezza <geza.nagy@oregional.hu>, 2022
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
-"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:54+0000\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2022\n"
+"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
+"Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: product_margin
@@ -50,8 +52,8 @@ msgstr "Átl. ár vevői számlán."
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_avg_price
-msgid "Avg. Price in Vendor Bills "
-msgstr "Átl. ár szállítói számlán."
+msgid "Avg. Price in Vendor Bills"
+msgstr ""
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_avg_price
@@ -132,7 +134,7 @@ msgstr "Elvárt árrés * 100 / Elvárt értékesítés"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__from_date
 msgid "From"
-msgstr "Kezdő dátum"
+msgstr "Forrás"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -163,7 +165,7 @@ msgstr "Frissítette"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__write_date
 msgid "Last Updated on"
-msgstr "Frissítve "
+msgstr "Frissítve ekkor"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__date_from
@@ -208,11 +210,6 @@ msgid "Paid"
 msgstr "Kifizetve"
 
 #. module: product_margin
-#: model:ir.model,name:product_margin.model_product_product
-msgid "Product"
-msgstr "Termék"
-
-#. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
 msgid "Product Margin"
 msgstr "Termék árrés"
@@ -227,6 +224,11 @@ msgstr "Termék árrés"
 #, python-format
 msgid "Product Margins"
 msgstr "Termék árrések"
+
+#. module: product_margin
+#: model:ir.model,name:product_margin.model_product_product
+msgid "Product Variant"
+msgstr "Termékváltozat"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -262,31 +264,22 @@ msgstr "Alapár"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
-msgstr ""
-"Multiplikáció összesen költség ár és szállítói számlák mennyisége alapján"
+msgstr "Multiplikáció összesen költség ár és szállítói számlák mennyisége alapján"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__turnover
-msgid ""
-"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
-msgstr ""
-"Multiplikáció összesen számlázási ár és vevői számlák mennyisége alapján"
+msgid "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
+msgstr "Multiplikáció összesen számlázási ár és vevői számlák mennyisége alapján"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
-msgstr ""
-"Multiplikáció összesen számlázási ár és a szállítói számlák mennyisége "
-"alapján"
+msgstr "Multiplikáció összesen számlázási ár és a szállítói számlák mennyisége alapján"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_expected
-msgid ""
-"Sum of Multiplication of Sale Catalog price and quantity of Customer "
-"Invoices"
-msgstr ""
-"Multiplikáció összesen értékesítési katalógus ár és vevői számlák mennyisége"
-" alapján"
+msgid "Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+msgstr "Multiplikáció összesen értékesítési katalógus ár és vevői számlák mennyisége alapján"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_num_invoiced
@@ -301,7 +294,7 @@ msgstr "Összes mennyiség szállítói számlákban"
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__to_date
 msgid "To"
-msgstr "Eddig"
+msgstr "Záró dátum"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_cost

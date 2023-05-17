@@ -1,7 +1,7 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_test
-# 
+#
 # Translators:
 # Rivo Zängov <eraser@eraser.ee>, 2018
 # Martin Trigaux, 2018
@@ -10,19 +10,19 @@
 # Eneli Õigus <enelioigus@gmail.com>, 2018
 # Martin Aavastik <martin@avalah.ee>, 2018
 # Helen Sulaoja <helen@avalah.ee>, 2018
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2018-08-24 09:15+0000\n"
 "Last-Translator: Helen Sulaoja <helen@avalah.ee>, 2018\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+"Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: et\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_test
@@ -58,8 +58,8 @@ msgstr "Raamatupidamise testid"
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.report_accounttest
-msgid "Accouting tests on"
-msgstr "Raamatupidamise katsed"
+msgid "Accounting tests on"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__active
@@ -67,20 +67,19 @@ msgid "Active"
 msgstr "Aktiivne"
 
 #. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+msgid "Archived"
+msgstr ""
+
+#. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_03
 msgid "Check if movement lines are balanced and have the same date and period"
-msgstr ""
-"Kontrollige, kas liikumise read on tasakaalus ja neil on sama kuupäev ja "
-"periood"
+msgstr "Kontrollige, kas liikumise read on tasakaalus ja neil on sama kuupäev ja periood"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_07
-msgid ""
-"Check on bank statement that the Closing Balance = Starting Balance + sum of"
-" statement lines"
-msgstr ""
-"Kontrollige pangaväljavõttel, et lõppsaldo = algsaldo + väljavõtte ridade "
-"summa"
+msgid "Check on bank statement that the Closing Balance = Starting Balance + sum of statement lines"
+msgstr "Kontrollige pangaväljavõttel, et lõppsaldo = algsaldo + väljavõtte ridade summa"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_06
@@ -89,21 +88,13 @@ msgstr "Kontrollige, et makstud/sobitatud arved ei oleks \"avatud\" olekus"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05_2
-msgid ""
-"Check that reconciled account moves, that define Payable and Receivable "
-"accounts, are belonging to reconciled invoices"
-msgstr ""
-"Kontrollige, kas sobitatud konto liigutused, mis määravad tasumata ja "
-"maksmata kontod, kuuluvad sobitavate arvete hulka"
+msgid "Check that reconciled account moves, that define Payable and Receivable accounts, are belonging to reconciled invoices"
+msgstr "Kontrollige, kas sobitatud konto liigutused, mis määravad tasumata ja maksmata kontod, kuuluvad sobitavate arvete hulka"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_05
-msgid ""
-"Check that reconciled invoice for Sales/Purchases has reconciled entries for"
-" Payable and Receivable Accounts"
-msgstr ""
-"Kontrollige, kas sobitatud müügiarve/ostuarve on sobitatud tasumata ja "
-"maksmata kannete kontodega"
+msgid "Check that reconciled invoice for Sales/Purchases has reconciled entries for Payable and Receivable Accounts"
+msgstr "Kontrollige, kas sobitatud müügiarve/ostuarve on sobitatud tasumata ja maksmata kannete kontodega"
 
 #. module: account_test
 #: model:accounting.assert.test,desc:account_test.account_test_01
@@ -119,7 +110,7 @@ msgstr "Koodi abi"
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid ""
 "Code should always set a variable named `result` with the result of your test, that can be a list or\n"
-"a dictionary. If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
+"a dictionary. If `result` is an empty list, it means that the test was successful. Otherwise it will\n"
 "try to translate and print what is inside `result`.\n"
 "\n"
 "If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
@@ -139,26 +130,6 @@ msgid ""
 "    cr.execute(sql)\n"
 "    result = cr.dictfetchall()"
 msgstr ""
-"Kood peaks alati määrama muutuja nimega 'tulemus' koos testi tulemustega, see võib olla nimekiri või ka seletus.\n"
-"If `result` is an empty list, it means that the test was succesful. Otherwise it will\n"
-"try to translate and print what is inside `result`.\n"
-"\n"
-"If the result of your test is a dictionary, you can set a variable named `column_order` to choose in\n"
-"what order you want to print `result`'s content.\n"
-"\n"
-"Should you need them, you can also use the following variables into your code:\n"
-"    * cr: cursor to the database\n"
-"    * uid: ID of the current user\n"
-"\n"
-"In any ways, the code must be legal python statements with correct indentation (if needed).\n"
-"\n"
-"Example: \n"
-"    sql = '''SELECT id, name, ref, date\n"
-"             FROM account_move_line \n"
-"             WHERE account_id IN (SELECT id FROM account_account WHERE type = 'view')\n"
-"          '''\n"
-"    cr.execute(sql)\n"
-"    result = cr.dictfetchall()"
 
 #. module: account_test
 #: model_terms:ir.actions.act_window,help:account_test.action_accounting_assert
@@ -177,6 +148,7 @@ msgstr "Loomise kuupäev"
 
 #. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
 msgid "Description"
 msgstr "Kirjeldus"
 
@@ -214,6 +186,11 @@ msgid "Last Updated on"
 msgstr "Viimati uuendatud (millal)"
 
 #. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+msgid "Name"
+msgstr ""
+
+#. module: account_test
 #: model_terms:ir.ui.view,arch_db:account_test.account_assert_form
 msgid "Python Code"
 msgstr "Pythoni kood"
@@ -222,6 +199,11 @@ msgstr "Pythoni kood"
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__code_exec
 msgid "Python code"
 msgstr "Python kood"
+
+#. module: account_test
+#: model_terms:ir.ui.view,arch_db:account_test.accounting_assert_test_view_search
+msgid "Search Account Test"
+msgstr ""
 
 #. module: account_test
 #: model:ir.model.fields,field_description:account_test.field_accounting_assert_test__sequence
@@ -240,8 +222,7 @@ msgstr "Test 3: Ridade liikumised"
 
 #. module: account_test
 #: model:accounting.assert.test,name:account_test.account_test_05
-msgid ""
-"Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
+msgid "Test 5.1 : Payable and Receivable accountant lines of reconciled invoices"
 msgstr "Test 5.1 : Sobitatud arvete tasumata ja maksmata raamatupidamisread "
 
 #. module: account_test
@@ -276,7 +257,7 @@ msgid "Tests"
 msgstr "Testid"
 
 #. module: account_test
-#: code:addons/account_test/report/report_account_test.py:53
+#: code:addons/account_test/report/report_account_test.py:0
 #, python-format
 msgid "The test was passed successfully"
 msgstr "Test läbiti edukalt"

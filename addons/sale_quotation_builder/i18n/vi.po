@@ -1,34 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # 	* sale_quotation_builder
-# 
+#
 # Translators:
-# Martin Trigaux, 2019
-# fanha99 <fanha99@hotmail.com>, 2019
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
-# Duy BQ <duybq86@gmail.com>, 2019
-# Chinh Chinh <trinhttp@trobz.com>, 2019
-# Dung Nguyen Thi <dungnt@trobz.com>, 2019
-# Dao Nguyen <trucdao.uel@gmail.com>, 2019
-# 
+# Martin Trigaux, 2022
+# Thi Huong Nguyen, 2023
+#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 15.5alpha1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Dao Nguyen <trucdao.uel@gmail.com>, 2019\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"PO-Revision-Date: 2022-09-22 05:55+0000\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"Language: vi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
-msgid "&amp;times;"
-msgstr "&amp;times;"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -56,12 +46,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
 msgid ""
 ":\n"
-"                        this content will appear on the quotation only if this\n"
-"                        product is not removed."
+"                        the content below will disappear if this\n"
+"                        product is removed from the quote."
 msgstr ""
 ":\n"
-"                        nội dung này sẽ chỉ xuất hiện trong báo giá nếu \n"
-"                        sản phẩm này không bị bỏ."
+"                        nội dung dưới đây sẽ biến mất nếu\n"
+"                        sản phẩm bị xóa khỏi báo giá."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -70,19 +60,19 @@ msgid ""
 "                                    will appear on all quotations using this\n"
 "                                    template."
 msgstr ""
-"<strong>Đầu mục mẫu báo giá:</strong> nội dung này\n"
-"                                    sẽ xuất hiện trong tất cả các báo giá\n"
+"<strong>Header mẫu báo giá:</strong> nội dung này\n"
+"                                    sẽ xuất hiện trong tất cả báo giá\n"
 "                                    sử dụng mẫu này."
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "About us"
-msgstr "Về Chúng tôi"
+msgstr "Về chúng tôi"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
 msgid "An awesome"
-msgstr ""
+msgstr "Một"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -91,10 +81,9 @@ msgid ""
 "                                we know that success is all about the\n"
 "                                commitment we put on strong services."
 msgstr ""
-"Là một công ty dịch vụ chuyên nghiệp hàng đầu, \\ n"
-"                                chúng tôi biết rằng thành công là tất cả cam"
-" \\ n                                kết của chúng tôi đưa vào các dịch vụ "
-"mạnh mẽ."
+"Là công ty cung cấp dịch vụ chuyên nghiệp hàng đầu,\n"
+"                                chúng tôi biết rằng thành công bắt nguồn từ\n"
+"                                sự cam kết của chúng tôi để mang lại dịch vụ hiệu quả."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
@@ -102,14 +91,14 @@ msgid "Close"
 msgstr "Đóng"
 
 #. module: sale_quotation_builder
-#: model:ir.model,name:sale_quotation_builder.model_res_config_settings
-msgid "Config Settings"
-msgstr "Cấu hình"
+#: model:ir.model,name:sale_quotation_builder.model_res_company
+msgid "Companies"
+msgstr "Công ty"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_template_view_form_inherit_sale_quotation_builder
 msgid "Design Template"
-msgstr ""
+msgstr "Thiết kế mẫu"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -120,10 +109,11 @@ msgid ""
 "                                your references, your methodology or\n"
 "                                guarantees, your team, SLA, terms and conditions, etc."
 msgstr ""
-"Các mẫu báo giá tuyệt vời sẽ <strong>thúc đấy tỷ lệ thành công của bạn</strong>\n"
-"                                một cách rõ rệt. Phần đầu tiên thường là về công ty\n"
-"                                bạn, dẫn chiếu của bạn, phương pháp luận, cam kết,\n"
-"                                đội ngũ của bạn, các điều khoản và điều kiện, v.v."
+"Mẫu báo giá đẹp sẽ\n"
+"                                <strong>thúc đẩy tỉ lệ thành công</strong>. Phần\n"
+"                                đầu tiên thường là giới thiệu công ty,\n"
+"                                tham khảo về khách hàng, phương pháp hoặc\n"
+"                                người bảo đảm, đội ngũ, SLA, điều khoản và điều kiện,..."
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -133,15 +123,15 @@ msgid ""
 "                        template (from the Configuration menu), all future quotations will\n"
 "                        use this modified template."
 msgstr ""
-"Nếu bạn chỉnh sửa báo giá từ 'Xem trước' của báo giá, bạn sẽ \\ n"
-"                        chỉ cập nhật báo giá đó. Nếu bạn chỉnh sửa mẫu báo "
-"giá \\ n                        (từ menu Cấu hình), tất cả các báo giá trong"
-" tương lai sẽ \\ n                        sử dụng mẫu sửa đổi này."
+"Nếu bạn chỉnh sửa báo giá từ bản 'Xem trước' của báo giá, bạn sẽ\n"
+"                        chỉ cập nhật báo giá đó. Nếu bạn chỉnh sửa mẫu\n"
+"                        báo giá (từ menu Cấu hình), tất cả báo giá trong tương lai sẽ\n"
+"                        sử dụng mẫu đã được sửa đổi này."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
 msgid "Open Source CRM"
-msgstr "Mã nguồn mở CRM"
+msgstr "CRM mã nguồn mở"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -151,17 +141,17 @@ msgstr "Sản phẩm tùy chọn:"
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "Our Offer"
-msgstr "Cung cấp"
+msgstr "Ưu đãi của chúng tôi"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "Our Quality"
-msgstr "Chất lượng"
+msgstr "Chất lượng của chúng tôi"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid "Our Service"
-msgstr "Dịch vụ"
+msgstr "Dịch vụ của chúng tôi"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -170,8 +160,8 @@ msgstr "Giá"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_product_template
-msgid "Product Template"
-msgstr "Bản mẫu sản phẩm"
+msgid "Product"
+msgstr "Sản phẩm"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -180,9 +170,9 @@ msgid ""
 "                                stand on; we build it with a relentless\n"
 "                                focus on fabric, performance and craftsmanship."
 msgstr ""
-"Chất lượng sản phẩm là nền tảng để chúng tôi \\ nphát triển; chúng tôi xây "
-"dựng nó với một sự \\ ntập trung không ngừng vào cấu tạo, hiệu suất và tay "
-"nghề."
+"Chất lượng sản phẩm là nền tảng để\n"
+"                                chúng tôi đi lên; chúng tôi xây dựng nền móng\n"
+"                                với sự tập trung bền bỉ vào chất liệu vải, hiệu suất và sự khéo léo. "
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
@@ -200,7 +190,7 @@ msgstr "Mô tả báo giá"
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_product__quotation_only_description
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__quotation_only_description
 msgid "Quotation Only Description"
-msgstr "Mô tả mẫu báo giá"
+msgstr "Mô tả chỉ cho báo giá"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template
@@ -210,7 +200,7 @@ msgstr "Mẫu báo giá"
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template_line
 msgid "Quotation Template Line"
-msgstr "Chi tiết mẫu báo giá"
+msgstr "Mục mẫu báo giá"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_template_option
@@ -220,7 +210,7 @@ msgstr "Tùy chọn mẫu báo giá"
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_option
 msgid "Sale Options"
-msgstr "Tùy chọn bán"
+msgstr "Tùy chọn bán hàng"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order
@@ -230,29 +220,24 @@ msgstr "Đơn bán hàng"
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Chi tiết đơn hàng"
+msgstr "Mục đơn bán hàng"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Terms &amp; Conditions"
-msgstr "Điều khoản &amp; Điều kiện"
+msgstr "Điều khoản &amp; điều kiện"
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_product__quotation_only_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_template__quotation_only_description
-#: model:ir.model.fields,help:sale_quotation_builder.field_sale_order_template_line__website_description
 msgid "The quotation description (not used on eCommerce)"
-msgstr "Mô tả báo giá (không dùng trên thương mại điện tử)"
+msgstr "Mô tả báo giá (không dùng trên Thương mại điện tử)"
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_product__quotation_description
 #: model:ir.model.fields,help:sale_quotation_builder.field_product_template__quotation_description
-msgid ""
-"This field uses the Quotation Only Description if it is defined, otherwise "
-"it will try to read the eCommerce Description."
-msgstr ""
-"Trường này sử dụng mô tả trong báo giá nếu hệ thống đã xác định được, ngược "
-"lại hệ thống sẽ cố gắng để đọc phần mô tả Thương mại điện tử."
+msgid "This field uses the Quotation Only Description if it is defined, otherwise it will try to read the eCommerce Description."
+msgstr "Trường này sử dụng Mô tả chỉ cho báo giá nếu được xác định, nếu không, trường sẽ hiện Mô tả thương mại điện tử. "
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -263,25 +248,25 @@ msgid ""
 "                                Quotation Templates."
 msgstr ""
 "Đây là <strong>mẫu báo giá ví dụ</strong>. Bạn nên\n"
-"                                chỉnh sửa để hợp với yêu cầu của riêng bạn trong mục <i>Bán hàng</i>, \n"
-"                                vào mục: Thiết lập /\n"
-"                                Mẫu Báo Giá."
+"                                tuỳ chỉnh cho phù hợp với nhu cầu của riêng bạn trong ứng dụng <i>Bán hàng</i>, \n"
+"                                vào menu: Cấu hình/\n"
+"                                Mẫu báo giá."
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "This is a preview of the sale order template."
-msgstr ""
+msgstr "Đây là bản xem trước của mẫu đơn bán hàng. "
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid ""
-"Titles with style <i>Heading 1</i> and\n"
-"                                    <i>Heading 2</i> will be used to generate the\n"
+"Titles with style <i>Heading 2</i> and\n"
+"                                    <i>Heading 3</i> will be used to generate the\n"
 "                                    table of content automatically."
 msgstr ""
-"Titles with style <i>Heading 1</i> and\n"
-"                                    <i>Heading 2</i> will be used to generate the\n"
-"                                    table of content automatically."
+"Tiêu đề dùng kiểu <i>Heading 2</i> và\n"
+"                                    <i>Heading 3</i> sẽ được sử dụng để tạo\n"
+"                                    mục lục tự động."
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -290,8 +275,9 @@ msgid ""
 "                                set at a fair price so that you will be\n"
 "                                happy to buy them."
 msgstr ""
-"Chúng tôi luôn đảm bảo rằng các sản phẩm của mình \\ nđược đặt ở mức giá hợp"
-" lý để bạn sẽ được \\ nhạnh phúc khi mua chúng."
+"Chúng tôi luôn bảo đảm sản phẩm\n"
+"                                được định giá hợp lý để bạn\n"
+"                                luôn vui vẻ khi mua hàng."
 
 #. module: sale_quotation_builder
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order__website_description
@@ -302,7 +288,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template_option__website_description
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_template_view_form_inherit_sale_quotation_builder
 msgid "Website Description"
-msgstr "Mô tả Website"
+msgstr "Mô tả trang web"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -314,11 +300,6 @@ msgid ""
 "                        used in your description (heading 1, heading 2, ...)"
 msgstr ""
 "Bạn có thể <strong>thiết lập mô tả cho từng sản phẩm</strong>. Odoo sẽ tự động\n"
-"                        tạo một báo giá sử dụng mô tả của các sản phẩm ở trong báo\n"
-"                        giá. Mục lục ở bên trái được tạo tự động sử dụng các style\n"
-"                        mà bạn đã sử dụng ở trong mô tả của bạn (heading 1, heading 2, ...)"
-
-#. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
-msgid "portal"
-msgstr ""
+"                        tạo một báo giá sử dụng mô tả của tất cả sản phẩm trong báo\n"
+"                        giá. Mục lục ở bên trái được tạo tự động sử dụng các kiểu\n"
+"                        mà bạn đã dùng trong phần mô tả (heading 1, heading 2,...)"
