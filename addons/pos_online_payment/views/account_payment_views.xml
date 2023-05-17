@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_account_payment_form_inherit_pos_online_payment" model="ir.ui.view">
+        <field name="name">view.account.payment.form.inherit.pos_online_payment</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_pos_order" type="object"
+                        class="oe_stat_button" icon="fa-shopping-cart"
+                        attrs="{'invisible': [('pos_order_id', '=', False)]}">
+                    <field name="pos_order_id" widget="statinfo" string="POS Order"/>
+                </button>
+            </xpath>
+            <xpath expr="//group[1]" position="inside">
+                <label for="pos_order_id"/>
+                <field name="pos_order_id" attrs="{'invisible': [('pos_order_id', '=', False)]}"/>
+                <label for="payment_transaction_id"/>
+                <field name="payment_transaction_id" attrs="{'invisible': [('pos_order_id', '=', False)]}"/>
+            </xpath>
+            <!-- <xpath expr="//group[2]//field[@name='payment_transaction_id']" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_order_id', '=', False)]}</attribute>
+            </xpath> -->
+        </field>
+    </record>
+
+</odoo>

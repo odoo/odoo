@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_pos_pos_form_inherit_pos_online_payment" model="ir.ui.view">
+        <field name="name">pos.order.form.view.inherit.pos_online_payment</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"></field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_online_payments" type="object"
+                        class="oe_stat_button" icon="fa-dollar"
+                        attrs="{'invisible': ['|', ('online_payment_ids', '=', False), ('online_payment_ids', '=', [])]}">
+                    <field name="online_payment_ids" widget="statinfo" string="Online payments"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

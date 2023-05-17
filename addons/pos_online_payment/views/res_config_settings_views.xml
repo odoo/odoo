@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="res_config_settings_view_form_menu" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.pos_online_payment.view</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="pos_restaurant.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="self-order" position="inside">
+                <div colspan="2">
+                    <label for="pos_online_payment_provider_ids"/>
+                    <field name="pos_online_payment_provider_ids" widget="many2many_tags" options="{'no_create': True}" />
+                    <button name="%(payment.action_payment_provider)d" icon="fa-arrow-right" type="action" string="Payment Providers" class="btn-link" />
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

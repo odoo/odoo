@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Display of /pos/pay (the order of the if conditions matters)-->
+    <template id="pay">
+        <t t-call="portal.frontend_layout">
+            <t t-set="page_title" t-value="'Payment'" />
+            <t t-set="additional_title">
+                <t t-esc="page_title" />
+            </t>
+            <div class="wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-7">
+                            <b>Order Reference:</b>
+                            <t t-esc="reference_prefix" />
+                            <br />
+                            <b>Order id:</b>
+                            <t t-esc="pos_order_id" />
+                            <br />
+                            <div t-if="not currency" class="alert alert-danger">
+                                <strong>Error:</strong> The currency is missing or invalid. </div>
+                            <div t-elif="not amount" class="alert alert-info">
+                                There is nothing to pay.
+                            </div>
+                            <div t-elif="not providers and not tokens" class="alert alert-danger">
+                                <strong>No suitable payment option could be found.</strong><br /> If you believe that it is an error, please contact the website administrator. </div>
+                            <t t-else="">
+                                <div t-if="partner_is_different" class="alert alert-warning">
+                                    <strong>Warning</strong> Make sure your are logged in as the right partner before making this payment. </div>
+
+                                <b>Amount:</b>
+                                <t t-esc="amount"
+                                    t-options="{'widget': 'monetary', 'display_currency': currency}" />
+                                <t t-call="payment.checkout" />
+                            </t>
+                            <div class="col-md-4 offset-md-3 mt-2 ps-0" t-if="exit_route">
+                                <a role="button"
+                                    class="btn btn-primary"
+                                    t-att-href="exit_route">
+                                    <i class="fa fa-arrow-circle-right" /> Exit the payment page </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Display of /pos/pay/confirmation -->
+    <template id="pay_confirmation">
+        <t t-call="portal.frontend_layout">
+            <t t-set="page_title" t-value="'Payment Confirmation'" />
+            <t t-set="additional_title">
+                <t t-esc="page_title" />
+            </t>
+            <div class="wrap">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div>
+                                <t t-if="state == 'error'">
+                                    <div class="alert alert-danger">
+                                        <strong>Error:</strong> There was a problem during the payment process. </div>
+                                </t>
+                                <t t-else="">
+                                    <div class="mb-3 row">
+                                        <label for="form_order_reference" class="col-md-3 col-form-label">
+                                            Order Reference
+                                        </label>
+                                        <span name="form_order_reference"
+                                            class="col-md-9 col-form-label"
+                                            t-esc="order_reference" />
+                                        <label for="form_tx_reference" class="col-md-3 col-form-label">
+                                            Transaction Reference
+                                        </label>
+                                        <span name="form_tx_reference"
+                                            class="col-md-9 col-form-label"
+                                            t-esc="tx_reference" />
+                                        <label for="form_order_id" class="col-md-3 col-form-label">
+                                            Order id
+                                        </label>
+                                        <span name="form_order_id"
+                                            class="col-md-9 col-form-label"
+                                            t-esc="pos_order_id" />
+                                    </div>
+                                    <hr />
+                                    <t t-if="state == 'tx_error'">
+                                        <div class="alert alert-danger">
+                                            <strong>Error:</strong> The payment transaction has not been validated. No money was taken. </div>
+                                    </t>
+                                    <t t-elif="state == 'success'">
+                                        <div class="alert alert-success">
+                                            <strong>Success:</strong> The payment transaction has been validated. </div>
+                                        <div class="mb-3 row" t-if="state == 'success'">
+                                            <label for="form_amount" class="col-md-3 col-form-label">
+                                                Amount
+                                            </label>
+                                            <span name="form_amount"
+                                                class="col-md-9 col-form-label"
+                                                t-esc="amount"
+                                                t-options="{'widget': 'monetary', 'display_currency': currency}" />
+                                            <div class="col-md-5 text-muted"> Processed by <t t-esc="provider_name" /></div>
+                                        </div>
+                                    </t>
+                                </t>
+                                <div class="col-md-4 offset-md-3 mt-2 ps-0" t-if="pay_route and state != 'success'">
+                                    <a role="button"
+                                        class="btn btn-secondary"
+                                        t-att-href="pay_route">
+                                        <i class="fa fa-arrow-circle-right" /> Open back the payment page </a>
+                                </div>
+                                <div class="col-md-4 offset-md-3 mt-2 ps-0" t-if="exit_route">
+                                    <a role="button"
+                                        class="btn btn-primary"
+                                        t-att-href="exit_route">
+                                        <i class="fa fa-arrow-circle-right" /> Exit the payment page </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

@@ -180,7 +180,7 @@ class PosOrder(models.Model):
         for payments in pos_order['statement_ids']:
             order.add_payment(self._payment_fields(order, payments[2]))
 
-        order.amount_paid = sum(order.payment_ids.mapped('amount'))
+        order._update_amount_paid()
 
         if not draft and not float_is_zero(pos_order['amount_return'], prec_acc):
             cash_payment_method = pos_session.payment_method_ids.filtered('is_cash_count')[:1]
@@ -380,7 +380,7 @@ class PosOrder(models.Model):
             if not order.currency_id:
                 raise UserError(_("You can't: create a pos order from the backend interface, or unset the pricelist, or create a pos.order in a python test with Form tool, or edit the form view in studio if no PoS order exist"))
             currency = order.currency_id
-            order.amount_paid = sum(payment.amount for payment in order.payment_ids)
+            order._update_amount_paid()
             order.amount_return = sum(payment.amount < 0 and payment.amount or 0 for payment in order.payment_ids)
             order.amount_tax = currency.round(sum(self._amount_line_tax(line, order.fiscal_position_id) for line in order.lines))
             amount_untaxed = currency.round(sum(line.price_subtotal for line in order.lines))
@@ -488,7 +488,10 @@ class PosOrder(models.Model):
         return float_is_zero(self._get_rounded_amount(self.amount_total) - self.amount_paid, precision_rounding=self.currency_id.rounding)
 
     def _get_rounded_amount(self, amount):
-        if self.config_id.cash_rounding:
+        # TODO: add support for mix of cash and non-cash payments when both cash_rounding and only_round_cash_method are True
+        if self.config_id.cash_rounding \
+           and (not self.config_id.only_round_cash_method \
+           or any(p.payment_method_id.is_cash_count for p in self.payment_ids)):
             amount = float_round(amount, precision_rounding=self.config_id.rounding_method.rounding, rounding_method=self.config_id.rounding_method.rounding_method)
         currency = self.currency_id
         return currency.round(amount) if currency else amount
@@ -551,6 +554,10 @@ class PosOrder(models.Model):
                     'credit': existing_terms_line_new_val < 0.0 and -existing_terms_line_new_val or 0.0,
                 })
         return new_move
+
+    def get_amount_unpaid(self):
+        self.ensure_one()
+        return self.currency_id.round(self._get_rounded_amount(self.amount_total) - self.amount_paid)
 
     def action_pos_order_paid(self):
         self.ensure_one()
@@ -894,7 +901,11 @@ class PosOrder(models.Model):
         """Create a new payment for the order"""
         self.ensure_one()
         self.env['pos.payment'].create(data)
-        self.amount_paid = sum(self.payment_ids.mapped('amount'))
+        self._update_amount_paid()
+
+    def _update_amount_paid(self):
+        for order in self:
+            order.amount_paid = sum(order.payment_ids.mapped('amount'))
 
     def _prepare_refund_values(self, current_session):
         self.ensure_one()

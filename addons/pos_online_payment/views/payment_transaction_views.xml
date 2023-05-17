@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payment_transaction_form_inherit_pos_online_payment" model="ir.ui.view">
+        <field name="name">payment.transaction.form.inherit.pos_online_payment</field>
+        <field name="model">payment.transaction</field>
+        <field name="inherit_id" ref="payment.payment_transaction_form"/>
+        <field name="arch" type="xml">
+            <button name="action_view_refunds" position="before">
+                <button name="action_view_pos_order" type="object"
+                        class="oe_stat_button" icon="fa-shopping-cart"
+                        attrs="{'invisible': [('pos_order_id', '=', False)]}">
+                    <field name="pos_order_id" widget="statinfo" string="POS Order"/>
+                </button>
+            </button>
+            <field name="reference" position="after">
+                <field name="pos_order_id" attrs="{'invisible': [('pos_order_id', '=', False)]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>
