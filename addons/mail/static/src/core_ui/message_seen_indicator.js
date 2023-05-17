@@ -27,6 +27,15 @@ export class MessageSeenIndicator extends Component {
         return otherDidNotSee.length === 0;
     }
 
+    get hasEveryoneReceived() {
+        return !([...this.props.thread.seenInfos].some((seenInfo) => {
+            return (
+                seenInfo.partner.id !== this.props.message.author.id &&
+                (!seenInfo.lastFetchedMessage || seenInfo.lastFetchedMessage.id < this.props.message.id)
+            );
+        }));
+    }
+
     get isMessagePreviousToLastSelfMessageSeenByEveryone() {
         if (!this.props.thread.lastSelfMessageSeenByEveryone) {
             return false;

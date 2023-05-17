@@ -36,7 +36,7 @@
                             <small t-if="isActive" class="o-mail-Message-date text-muted opacity-50 ms-2">
                                 <t t-esc="messageService.dateSimple(message)"/>
                             </small>
-                            <div t-att-class="{ 'position-absolute bottom-0 mb-1': !env.inChatter }">
+                            <div t-else="" class="ms-2">
                                 <MessageSeenIndicator
                                     t-if="props.message.isSelfAuthored and props.thread"
                                     message="props.message"
