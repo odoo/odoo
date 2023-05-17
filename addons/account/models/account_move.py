@@ -3251,7 +3251,7 @@ class AccountMove(models.Model):
             reverse_moves += move.with_context(
                 move_reverse_cancel=cancel,
                 include_business_fields=True,
-                skip_invoice_sync=bool(move.tax_cash_basis_origin_move_id),
+                skip_invoice_sync=move.move_type == 'entry',
             ).copy(default_values)
 
         reverse_moves.with_context(skip_invoice_sync=cancel).write({'line_ids': [
