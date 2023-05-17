@@ -212,7 +212,12 @@ Wysiwyg.include({
         if (this.options.inIframe) {
             const iframeDocument = this.$iframe[0].contentDocument;
             const scrollInIframe = ev.target === iframeDocument || ev.target.ownerDocument === iframeDocument;
-            if (ev.target.contains(this.$iframe[0]) || scrollInIframe) {
+            if (ev.target.contains(this.$iframe[0]))  {
+                this.scrollContainer = ev.target;
+                this.odooEditor.updateToolbarPosition();
+            } else if (scrollInIframe) {
+                // UpdateToolbarPosition needs a scroll container in the top document.
+                this.scrollContainer = this.$iframe[0];
                 this.odooEditor.updateToolbarPosition();
             }
         } else {
