@@ -11,14 +11,16 @@
                 <page string="Received Badges" name="received_badges" attrs="{'invisible': [('user_id', '=', False)]}">
                     <field name="has_badges" invisible="1"/>
                     <button string="Grant a Badge" type="action" name="%(action_reward_wizard)d"/> to reward this employee for a good action
-                    <div class="o_field_nocontent" attrs="{'invisible': [('has_badges', '=', True)]}">
+                    <div class="o_field_nocontent mt-2" attrs="{'invisible': [('has_badges', '=', True)]}">
                         <p>
                             Grant this employee his first badge
                         </p><p class="oe_grey">
                             Badges are rewards of good work. Give them to people you believe deserve it.
                         </p>
                     </div>
-                    <field name="badge_ids" mode="kanban" />
+                    <div class="mt-2">
+                        <field name="badge_ids" mode="kanban" />
+                    </div>
                 </page>
             </xpath>
 
