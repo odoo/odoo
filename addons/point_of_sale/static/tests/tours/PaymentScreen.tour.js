@@ -3,6 +3,7 @@
 import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
+import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import { TicketScreen} from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
@@ -185,6 +186,50 @@ PaymentScreen.check.remainingIs('0.0');
 PaymentScreen.check.changeIs('1.0');
 
 registry.category("web_tour.tours").add('PaymentScreenRoundingHalfUp', { test: true, url: '/pos/ui', steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+ProductScreen.exec.addOrderline('Product Test 40', '1');
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer('Nicole Ford');
+ProductScreen.do.clickPayButton();
+
+PaymentScreen.check.totalIs('40.00');
+PaymentScreen.do.clickPaymentMethod('Bank');
+PaymentScreen.do.pressNumpad('3 8');
+PaymentScreen.check.remainingIs('2.0');
+PaymentScreen.do.clickPaymentMethod('Cash');
+
+PaymentScreen.check.remainingIs('0.0');
+PaymentScreen.check.changeIs('0.0');
+
+PaymentScreen.do.clickInvoiceButton();
+PaymentScreen.do.clickValidate();
+ReceiptScreen.check.receiptIsThere();
+ReceiptScreen.do.clickNextOrder();
+
+ProductScreen.do.clickHomeCategory();
+ProductScreen.exec.addOrderline('Product Test 41', '1');
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer('Nicole Ford');
+ProductScreen.do.clickPayButton();
+
+PaymentScreen.check.totalIs('41.00');
+PaymentScreen.do.clickPaymentMethod('Bank');
+PaymentScreen.do.pressNumpad('3 8');
+PaymentScreen.check.remainingIs('3.0');
+PaymentScreen.do.clickPaymentMethod('Cash');
+
+PaymentScreen.check.remainingIs('0.0');
+PaymentScreen.check.changeIs('0.0');
+
+PaymentScreen.do.clickInvoiceButton();
+PaymentScreen.do.clickValidate();
+ReceiptScreen.check.receiptIsThere();
+
+registry.category("web_tour.tours").add('PaymentScreenRoundingHalfUpCashAndBank', { test: true, url: '/pos/ui', steps: getSteps() });
 
 startSteps();
 
