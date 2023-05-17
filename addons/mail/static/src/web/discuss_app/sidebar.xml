@@ -82,7 +82,7 @@
 
 <t t-name="mail.DiscussCategoryItem" owl="1">
     <t t-set="counter" t-value="threadService.getCounter(thread)"/>
-    <button class="o-mail-DiscussCategoryItem o-mail-DiscussSidebar-item btn btn-secondary d-flex align-items-center w-100 px-0 py-2 border-0 text-reset"
+    <button class="o-mail-DiscussCategoryItem o-mail-DiscussSidebar-item btn btn-secondary d-flex align-items-center w-100 px-0 py-2 border-0 rounded-0 text-reset"
         t-att-class="{
             'o-bg-inherit': threadLocalId !== store.discuss.threadLocalId,
             'o-active bg-300': threadLocalId === store.discuss.threadLocalId,
