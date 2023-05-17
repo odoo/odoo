@@ -72,6 +72,9 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
         }
         if (lang) {
             paramsGet.lang = lang;
+        } else if (session.is_frontend && session.lang_url_code) {
+            // Keep distinct cached responses per language.
+            paramsGet.unique = session.lang_url_code;
         }
         return $.get(url, paramsGet).then(function (trans) {
             self.set_bundle(trans);
