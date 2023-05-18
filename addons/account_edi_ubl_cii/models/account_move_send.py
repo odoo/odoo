@@ -169,6 +169,7 @@ class AccountMoveSend(models.Model):
             try:
                 writer.convert_to_pdfa()
             except Exception as e:
+                e.sentry_ignored = True
                 _logger.exception("Error while converting to PDF/A: %s", e)
 
             # Extra metadata to be Factur-x PDF-A compliant.
