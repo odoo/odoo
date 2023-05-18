@@ -130,6 +130,9 @@ export function formatFloat(value, options = {}) {
     }
     const formatted = (value || 0).toFixed(precision || 2).split(".");
     formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
+    if (formatted[1] === undefined) {
+        return formatted[0];
+    }
     if (options.noTrailingZeros) {
         formatted[1] = formatted[1].replace(/0+$/, "");
     }
