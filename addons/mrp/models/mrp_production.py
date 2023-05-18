@@ -1302,7 +1302,7 @@ class MrpProduction(models.Model):
                 previous_workorder = workorder
                 last_workorder_per_bom[workorder.operation_id.bom_id] = workorder
         for move in (self.move_raw_ids | self.move_finished_ids):
-            if move.operation_id:
+            if move.operation_id and move.operation_id in workorder_per_operation:
                 move.write({
                     'workorder_id': workorder_per_operation[move.operation_id].id
                 })
