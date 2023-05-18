@@ -22,5 +22,6 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _post_dispatch(cls, response):
-        cls._set_utm(response)
+        if 'utm.mixin' in request.env:
+            cls._set_utm(response)
         super()._post_dispatch(response)
