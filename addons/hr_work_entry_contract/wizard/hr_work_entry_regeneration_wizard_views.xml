@@ -55,8 +55,7 @@
                             attrs="{'invisible': ['|', ('search_criteria_completed', '=', False), ('valid', '=', False)]}"/>
                     <button name="regenerate_work_entries_disabled"
                             string="Regenerate Work Entries"
-                            class="btn btn-primary"
-                            disabled="1"
+                            class="btn btn-primary disabled"
                             attrs="{'invisible': [('search_criteria_completed', '=', True), ('valid', '=', True)]}"/>
                     <button name="cancel_button" string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
