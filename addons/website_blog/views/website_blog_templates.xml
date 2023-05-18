@@ -99,14 +99,14 @@ list of filtered posts (by date or tag).
             <div class="row py-4">
                 <div t-attf-class="mb-3 mb-md-0 #{'col-md-5' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'}">
                     <t t-call="website.record_cover">
-                        <t t-set="_record" t-value="blog or first_post"/>
+                        <t t-set="_record" t-value="first_post or blog"/>
                         <t t-set="additionnal_classes" t-value="'h-100 py-5 py-md-0 overflow-hidden rounded shadow'"/>
                     </t>
                 </div>
                 <div t-att-class="'col-md-7' if (not opt_blog_list_view and not opt_blog_sidebar_show) else 'col-md-6'">
                     <div class="container position-relative h-100 d-flex flex-column justify-content-around pt-1 pb-2">
                         <div t-attf-class="o_wblog_post_title #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''}">
-                            <t t-if="blog">
+                            <t t-if="blog and len(blogs) != 1">
                                 <span t-field="blog.name" class="h1 d-block" placeholder="Blog's Title"/>
                                 <div t-field="blog.subtitle" class="h4" placeholder="Subtitle"/>
                             </t>
@@ -139,15 +139,15 @@ list of filtered posts (by date or tag).
 <template id="opt_blog_cover_post_fullwidth_design" name="Full-Width Cover" inherit_id="website_blog.opt_blog_cover_post" active="True">
     <xpath expr="//div[hasclass('container')]" position="replace">
         <t t-if="blog or first_post" t-call="website.record_cover">
-            <t t-set="_record" t-value="blog or first_post"/>
+            <t t-set="_record" t-value="first_post or blog"/>
             <t t-set="use_filters" t-value="True"/>
             <t t-set="use_text_align" t-value="True"/>
             <t t-set="additionnal_classes" t-value="'o_wblog_post_page_cover o_record_has_cover cover_auto'"/>
 
             <div class="container position-relative h-100 d-flex flex-column justify-content-around" t-cache="_record">
                 <div t-attf-class="o_wblog_post_title #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''}">
-                    <div t-if="not date and not tag and not blog" class="h4 bg-o-color-3 px-2 d-inline-block rounded-1">Latest</div>
-                    <a t-if="not blog and first_post" t-attf-href="/blog/#{slug(first_post.blog_id)}/#{slug(first_post)}" t-att-title="first_post.name" class="text-white text-decoration-none">
+                    <div t-if="not date and not tag and (not blog or len(blogs) == 1)" class="h4 bg-o-color-3 px-2 d-inline-block rounded-sm">Latest</div>
+                    <a t-if="first_post" t-attf-href="/blog/#{slug(first_post.blog_id)}/#{slug(first_post)}" t-att-title="first_post.name" class="text-white text-decoration-none">
                         <div t-field="first_post.name" id="o_wblog_post_name" t-att-data-blog-id="first_post.id" placeholder="Blog Post Title"/>
                         <div t-field="first_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
                     </a>
@@ -157,8 +157,8 @@ list of filtered posts (by date or tag).
                     </span>
 
                     <div>
-                        <span t-if="not blog and blog_post" class="text-white small mt-2 mb-3">
-                            in <i class="fa fa-folder-open text-white-75"/><a t-attf-href="#{blog_url(blog=blog_post.blog_id)}" class="text-white" t-field="blog_post.blog_id"/>
+                        <span t-if="not blog" class="text-white small mt-2 mb-3">
+                            in <i class="fa fa-folder-open text-white-75"/><a t-attf-href="#{blog_url(blog=first_post.blog_id)}" class="text-white" t-field="first_post.blog_id"/>
                         </span>
                         <span t-else="">&amp;nbsp;</span>
                     </div>
