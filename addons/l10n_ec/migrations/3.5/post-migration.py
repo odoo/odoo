@@ -87,4 +87,3 @@ def migrate(cr, version):
     env = api.Environment(cr, SUPERUSER_ID, {})
     update_withhold_income_sale_repartition_lines(env)
     update_missing_account_tags_in_taxes(env)
-    update_no_updateable_option_in_l10n_ec_ifrs_record(env)
