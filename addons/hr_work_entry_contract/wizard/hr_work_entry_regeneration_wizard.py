@@ -26,7 +26,7 @@ class HrWorkEntryRegenerationWizard(models.TransientModel):
     @api.depends('date_from')
     def _compute_date_to(self):
         for wizard in self:
-            wizard.date_to = wizard.date_from + relativedelta(months=+1, day=1, days=-1)
+            wizard.date_to = wizard.date_from and wizard.date_from + relativedelta(months=+1, day=1, days=-1)
 
     @api.depends('employee_ids')
     def _compute_earliest_available_date(self):
