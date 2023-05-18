@@ -6,8 +6,8 @@ import { Many2OneField, many2OneField } from "@web/views/fields/many2one/many2on
 
 class TaskWithHours extends Many2OneField {
 
-    get canCreate() {
-        return Boolean(this.context.default_project_id);
+    canCreate(props = this.props) {
+        return Boolean(props.context.default_project_id);
     }
 
     /**
@@ -30,7 +30,7 @@ class TaskWithHours extends Many2OneField {
      */
     get Many2XAutocompleteProps() {
         const props = super.Many2XAutocompleteProps;
-        if (!this.canCreate) {
+        if (!this.canCreate()) {
             props.quickCreate = null;
         }
         return props;
@@ -42,8 +42,8 @@ class TaskWithHours extends Many2OneField {
     computeActiveActions(props) {
         super.computeActiveActions(props);
         const activeActions = this.state.activeActions;
-        activeActions.create = activeActions.create && this.canCreate;
-        activeActions.createEdit = activeActions.create;
+        activeActions.create = activeActions.create && this.canCreate(props);
+        activeActions.createEdit = false
     }
 
 }
