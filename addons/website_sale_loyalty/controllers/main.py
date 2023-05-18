@@ -11,7 +11,7 @@ class WebsiteSale(main.WebsiteSale):
 
     @http.route()
     def pricelist(self, promo, **post):
-        order = request.website.sale_get_order()
+        order = request.website.sale_get_order(force_create=True)
         coupon_status = order._try_apply_code(promo)
         if 'error' not in coupon_status:
             if len(coupon_status) == 1:
