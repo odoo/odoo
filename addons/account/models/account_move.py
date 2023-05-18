@@ -682,22 +682,19 @@ class AccountMove(models.Model):
         highest_name = self[0]._get_last_sequence(lock=False) if self else False
 
         for move in self:
-            if not highest_name and move == self[0] and not move.posted_before and move.date and (not move.name or move.name == '/'):
+            name_not_set = not move.name or move.name == '/'
+            if not highest_name and move == self[0] and not move.posted_before and move.date and name_not_set:
                 # In the form view, we need to compute a default sequence so that the user can edit
                 # it. We only check the first move as an approximation (enough for new in form view)
                 move._set_next_sequence()
             elif move.quick_edit_mode and not move.posted_before:
                 # We always suggest the next sequence as the default name of the new move
-                move._set_next_sequence()
-            elif (move.name and move.name != '/') or move.state != 'posted':
-                try:
-                    move._constrains_date_sequence()
-                    # The name matches the date: we don't recompute
-                except ValidationError:
-                    # Has never been posted and the name doesn't match the date: recompute it
+                if name_not_set or not move._sequence_matches_date():
                     move._set_next_sequence()
-            else:
-                # The name is not set yet and it is posted
+            elif not move.posted_before and not move._sequence_matches_date():
+                # The date changed before posting on first move of period
+                move._set_next_sequence()
+            elif (name_not_set and move.state == 'posted'):
                 move._set_next_sequence()
 
         self.filtered(lambda m: not m.name).name = '/'
@@ -3715,6 +3712,24 @@ class AccountMove(models.Model):
             if all(move.move_type == 'out_refund' for move in self)
             else 'account.email_template_edi_invoice'
         )
+
+    def _notify_get_recipients_groups(self, msg_vals=None):
+        groups = super()._notify_get_recipients_groups(msg_vals)
+        local_msg_vals = dict(msg_vals or {})
+        if self.move_type != 'entry':
+            # This allows partners added to the email list in the sending wizard to access this document.
+            for group_name, _group_method, group_data in groups:
+                if group_name == 'customer' and self._portal_ensure_token():
+                    access_link = self._notify_get_action_link(
+                        'view', **local_msg_vals, access_token=self.access_token)
+                    group_data.update({
+                        'has_button_access': True,
+                        'button_access': {
+                            'url': access_link,
+                        },
+                    })
+
+        return groups
 
     def _get_report_base_filename(self):
         return self._get_move_display_name()

@@ -21,11 +21,11 @@
 # Murat Durmuş <muratd@projetgrup.com>, 2022
 # Özlem Atalay <ozlema@eskayazilim.com.tr>, 2022
 # Umur Akın <umura@projetgrup.com>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Tugay Hatıl <tugayh@projetgrup.com>, 2022
-# Ediz Duman <neps1192@gmail.com>, 2023
 # İlknur Gözütok, 2023
+# Ediz Duman <neps1192@gmail.com>, 2023
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -33,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: İlknur Gözütok, 2023\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
 "Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -229,7 +229,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span attrs=\"{'invisible': [('state', '=', 'draft')]}\">/</span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible': [('state', '=', 'draft')]}\">/</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -238,14 +238,14 @@ msgid ""
 "specific.\" role=\"img\" aria-label=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Burada belirlenen değerler "
-"şirkete özeldir.\" role=\"img\" aria-label=\"Burada belirlenen değerler "
-"şirkete özeldir.\" groups=\"base.group_multi_company\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"fw-bold text-nowrap\">To Produce</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold text-nowrap\">Üretme</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1318,6 +1318,9 @@ msgid ""
 "                                       Also note that purchase security lead"
 " times will be added when appropriate."
 msgstr ""
+"Bileşenleri ve/veya alt montajları satın alarak veya üreterek BoM'den tüm "
+"bileşenleri ikmal etmek için gereken günleri hesaplayın. Ayrıca, uygun "
+"olduğunda satın alma güvenliği sağlama sürelerinin ekleneceğini unutmayın."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1514,6 +1517,8 @@ msgid ""
 "Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
 "Note that security lead times will also be considered when appropriate."
 msgstr ""
+"Bileşenleri yenilemek veya yarı mamul ürünler üretmek için yeterli zamana sahip olmak için Üretim Siparişlerini bu kadar gün önceden oluşturun ve onaylayın.\n"
+"Uygun olduğunda güvenlik sağlama sürelerinin de dikkate alınacağını unutmayın."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -2871,7 +2876,7 @@ msgstr "Manuel Tüketim"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption_readonly
 msgid "Manual Consumption Readonly"
-msgstr ""
+msgstr "Manuel Tüketim Salt Okunur"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle_manual
@@ -4500,7 +4505,7 @@ msgstr "Seri Üretim"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Set Quantities & Validate"
-msgstr ""
+msgstr "Miktarları Ayarla ve Doğrula"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
@@ -6377,7 +6382,7 @@ msgstr "İşlenmiş ürün için bir lot sağlamanız gerekiyor"
 #: code:addons/mrp/wizard/mrp_consumption_warning.py:0
 #, python-format
 msgid "You need to supply Lot/Serial Number"
-msgstr ""
+msgstr "Lot/Seri Numarası sağlamanız gerekir"
 
 #. module: mrp
 #. odoo-python

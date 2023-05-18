@@ -103,6 +103,45 @@ class TestExpenses(TestExpenseCommon):
 
         self.assertEqual(expense_sheet.payment_state, 'paid', 'payment_state should be paid')
 
+    def test_expense_sheet_company_payment_state(self):
+        ''' Test expense sheet company payment states'''
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2021-01-01',
+            'expense_line_ids': [(0, 0, {
+                'name': 'Car Travel Expenses',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'unit_amount': 350.00,
+                'payment_mode': 'company_account',
+            })]
+        })
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        self.assertEqual(expense_sheet.payment_state, 'paid', 'payment_state should be paid')
+        liquidity_line = expense_sheet.account_move_id.payment_id._seek_for_lines()[0]
+
+        statement_line = self.env['account.bank.statement.line'].create({
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'payment_ref': 'pay_ref',
+            'amount': -350.0,
+            'partner_id': self.expense_employee.address_home_id.id,
+        })
+
+        # Reconcile without the bank reconciliation widget since the widget is in enterprise.
+        _st_liquidity_lines, st_suspense_lines, _st_other_lines = statement_line\
+            .with_context(skip_account_move_synchronization=True)\
+            ._seek_for_lines()
+        st_suspense_lines.account_id = liquidity_line.account_id
+        (st_suspense_lines + liquidity_line).reconcile()
+
+        self.assertEqual(expense_sheet.payment_state, 'paid', 'payment_state should be paid')
+
     def test_expense_values(self):
         """ Checking accounting move entries and analytic entries when submitting expense """
         # The expense employee is able to a create an expense sheet.

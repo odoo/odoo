@@ -3840,7 +3840,7 @@ msgstr "Số lượng được kiểm kho"
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_pivot
 msgid "Inventory"
-msgstr "Kho"
+msgstr "Tồn kho"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -4608,7 +4608,7 @@ msgstr "Quản lý kiện hàng"
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
 msgid "Manage Push and Pull inventory flows"
-msgstr "Quản lý qui trình hàng tồn kho kéo và đẩy"
+msgstr "Quản lý qui trình hàng tồn kho kéo và đẩy"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_storage_categories
@@ -8257,7 +8257,7 @@ msgstr "Phiếu điều chuyển liên kho đã được tạo"
 #: code:addons/stock/models/stock_move_line.py:0
 #, python-format
 msgid "The inventory adjustments have been reverted."
-msgstr "Điều chỉnh tồn kho đã được đảo lại."
+msgstr "Điều chỉnh tồn kho đã được đảo lại."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
@@ -8620,6 +8620,14 @@ msgid ""
 msgstr ""
 "Không thể thay đổi công ty của sản phẩm này nếu có số lượng sản phẩm này "
 "thuộc về một công ty khác."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
