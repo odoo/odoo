@@ -11,7 +11,15 @@ class ProjectShareWizard(models.TransientModel):
 
     @api.model
     def default_get(self, fields):
-        result = super().default_get(fields)
+        # The project share action could be called in `project.collaborator`
+        # and so we have to check the active_model and active_id to use
+        # the right project.
+        active_model = self._context.get('active_model', '')
+        active_id = self._context.get('active_id', False)
+        if active_model == 'project.collaborator':
+            active_model = 'project.project'
+            active_id = self._context('default_project_id', False)
+        result = super(ProjectShareWizard, self.with_context(active_model=active_model, active_id=active_id)).default_get(fields)
         if not result.get('access_mode'):
             result.update(
                 access_mode='read',
