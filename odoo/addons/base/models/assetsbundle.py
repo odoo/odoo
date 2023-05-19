@@ -229,7 +229,7 @@ class AssetsBundle(object):
             if asset_type == 'css':
                 assets = self.stylesheets
             elif asset_type == 'js':
-                assets = self.javascripts
+                assets = self.javascripts + self.templates
             else:
                 raise ValueError(f'Asset type {asset_type} not known')
 
