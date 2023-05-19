@@ -9,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools.misc import clean_context
 
 from odoo.addons.base.models.res_partner import _tz_get
 
@@ -237,7 +238,11 @@ class RecurrenceRule(models.Model):
 
         events = self.calendar_event_ids - keep
         detached_events = self._detach_events(events)
-        self.env['calendar.event'].with_context(no_mail_to_attendees=True, mail_create_nolog=True).create(event_vals)
+        context = {
+            **clean_context(self.env.context),
+            **{'no_mail_to_attendees': True, 'mail_create_nolog': True},
+        }
+        self.env['calendar.event'].with_context(context).create(event_vals)
         return detached_events
 
     def _split_from(self, event, recurrence_values=None):
