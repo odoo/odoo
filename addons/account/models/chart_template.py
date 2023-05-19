@@ -292,6 +292,20 @@ class AccountChartTemplate(models.AbstractModel):
                                 repartition_line.clear()
                                 if tags:
                                     repartition_line['tag_ids'] = tags
+                elif model_name == 'account.account':
+                    # Point or create xmlid to existing record to avoid duplicate code
+                    account = self.ref(xmlid, raise_if_not_found=False)
+                    if not account or (account and account.code != values['code']):
+                        existing_account = self.env['account.account'].search([
+                            ('code', '=', values['code']),
+                            ('company_id', '=', company.id),
+                        ])
+                        if existing_account:
+                            self.env['ir.model.data']._update_xmlids([{
+                                'xml_id': f"account.{company.id}_{xmlid}",
+                                'record': existing_account,
+                                'noupdate': True,
+                            }])
 
         if obsolete_xmlid:
             self.env['ir.model.data'].search([
