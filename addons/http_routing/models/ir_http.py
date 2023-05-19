@@ -284,7 +284,7 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _get_default_lang(cls):
-        lang_code = request.env['ir.default'].sudo().get('res.partner', 'lang')
+        lang_code = request.env['ir.default'].sudo()._get('res.partner', 'lang')
         if lang_code:
             return request.env['res.lang']._lang_get(lang_code)
         return request.env['res.lang'].search([], limit=1)
