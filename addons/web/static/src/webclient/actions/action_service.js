@@ -844,7 +844,7 @@ function makeActionManager(env) {
             env.services.ui.block();
             env.services.router.redirect(url);
             browser.removeEventListener("beforeunload", onUnload);
-            if (!willUnload) {
+            if (willUnload) {
                 env.services.ui.unblock();
             }
         } else {
