@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from . import test_account_move_reconcile
 from . import test_account_move_payments_widget
 from . import test_account_move_out_invoice
@@ -43,3 +41,4 @@ from . import test_download_xsds
 from . import test_multivat
 from . import test_account_partner
 from . import test_setup_wizard
+from . import test_structured_reference
