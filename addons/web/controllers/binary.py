@@ -22,6 +22,7 @@ from odoo.modules import get_resource_path
 from odoo.tools import file_open, file_path, replace_exceptions
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.image import image_guess_size_from_field_name
+from odoo.addons.base.models.assetsbundle import without_unaccent
 
 
 _logger = logging.getLogger(__name__)
@@ -100,7 +101,8 @@ class Binary(http.Controller):
                     ('url', '=like', f'/web/assets/%/{filename}'),
                     ('url', 'not like', f'/web/assets/%/%/{filename}')
                 ]
-            attachments = request.env['ir.attachment'].sudo().search_read(domain, fields=['id'], limit=1)
+            with without_unaccent(request.env.registry):
+                attachments = request.env['ir.attachment'].sudo().search_read(domain, fields=['id'], limit=1)
             if not attachments:
                 raise request.not_found()
             id = attachments[0]['id']

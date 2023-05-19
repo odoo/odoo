@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from contextlib import closing
+from contextlib import closing, contextmanager
 from collections import OrderedDict
 from datetime import datetime
 from lxml import etree
@@ -36,6 +36,18 @@ from odoo.tools.pycompat import to_text
 _logger = logging.getLogger(__name__)
 
 EXTENSIONS = (".js", ".css", ".scss", ".sass", ".less", ".xml")
+
+
+@contextmanager
+def without_unaccent(registry):
+    """Avoid calling the method unaccent in order to use the indexes faster.
+    Use this method for values that don't need to use unaccent"""
+    has_unaccent = registry.has_unaccent
+    try:
+        registry.has_unaccent = False
+        yield
+    finally:
+        registry.has_unaccent = has_unaccent
 
 
 class CompileError(RuntimeError): pass
@@ -276,7 +288,8 @@ class AssetsBundle(object):
             ('url', '=like', url),
             '!', ('url', '=like', self.get_asset_url(unique=self.version))
         ]
-        attachments = ira.sudo().search(domain)
+        with without_unaccent(self.env.registry):
+            attachments = ira.sudo().search(domain)
         # avoid to invalidate cache if it's already empty (mainly useful for test)
 
         if attachments:
