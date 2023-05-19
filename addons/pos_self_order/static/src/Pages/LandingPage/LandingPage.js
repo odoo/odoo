@@ -11,4 +11,9 @@ export class LandingPage extends Component {
         this.formatMonetary = formatMonetary;
         this.selfOrder.currentProduct = 0;
     }
+    getBGImageSrc() {
+        return `/menu/get-bg-image/${
+            this.selfOrder.pos_config_id
+        }${this.selfOrder.getRequiredQueryParams()}`;
+    }
 }

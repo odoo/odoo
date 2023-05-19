@@ -5,5 +5,6 @@ from . import pos_config
 from . import pos_order
 from . import pos_restaurant
 from . import pos_self_order_custom_link
+from . import pos_session
 from . import product_product
 from . import res_config_settings

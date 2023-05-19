@@ -29,7 +29,7 @@ class PosSelfOrderController(http.Controller):
         self,
         cart: List[Dict],
         pos_config_id: int,
-        table_access_token: Optional[str] = None,
+        access_token: str,
         order_pos_reference: Optional[str] = None,
         order_access_token: Optional[str] = None,
     ) -> Dict[str, str]:
@@ -46,6 +46,7 @@ class PosSelfOrderController(http.Controller):
             with the same pos_reference and order_access_token as the ones that the user has provided)
         :param cart: order lines
         :param pos_config_id: the id of the POS where the order is being sent
+        # TODO change this line in the docstring to reflect the new reality of kiosk mode
         :param table_access_token: the access token of the table where the order is being sent (UUID v4)
         :param pos_reference: the id of the order that is being edited; ex: "Order 00001-001-0001"
         :param order_access_token: the access token of the order that is being edited (UUID v4)
@@ -59,26 +60,20 @@ class PosSelfOrderController(http.Controller):
 
         pos_config_sudo = get_pos_config_sudo(pos_config_id)
 
-        if not pos_config_sudo.self_order_table_mode or not pos_config_sudo.has_active_session:
-            raise werkzeug.exceptions.BadRequest()
+        if not pos_config_sudo._allows_self_ordering(access_token):
+            raise werkzeug.exceptions.Unauthorized()
 
         order = self._form_order(
             self._create_order_data(
                 cart,
                 pos_config_sudo,
-                table_access_token,
+                access_token,
                 order_pos_reference,
                 order_access_token,
             )
         )
         posted_order_id = (
-            request.env["pos.order"]
-            .sudo()
-            .create_from_ui(
-                [order],
-                draft=True,
-            )[0]
-            .get("id")
+            request.env["pos.order"].sudo().create_from_ui([order], draft=True)[0].get("id")
         )
 
         return (
@@ -116,7 +111,7 @@ class PosSelfOrderController(http.Controller):
         self,
         cart: List[Dict],
         pos_config_sudo: PosConfig,
-        table_access_token: Optional[str],
+        access_token: Optional[str],
         order_pos_reference: Optional[str],
         order_access_token: Optional[str],
     ) -> Dict[str, Union[int, str, List[Dict]]]:
@@ -135,7 +130,7 @@ class PosSelfOrderController(http.Controller):
             **(
                 order_sudo._get_self_order_data()
                 if order_sudo
-                else self._create_new_order_data(pos_config_sudo, table_access_token)
+                else self._create_new_order_data(pos_config_sudo, access_token)
             ),
             "lines": self._create_orderlines(
                 self._merge_orderlines(
@@ -148,26 +143,33 @@ class PosSelfOrderController(http.Controller):
         }
 
     def _create_new_order_data(
-        self, pos_config_sudo: PosConfig, table_access_token: str
+        self, pos_config_sudo: PosConfig, access_token: str
     ) -> Dict[str, Union[str, int]]:
         """
         :param pos_config_id: the id of the pos config for which we want to create the order
         :param table_access_token: the access token of the table for which we want to create the order
         :return: a dictionary containing the data that we need to create a new order
         """
-        table_sudo = get_table_sudo(table_access_token)
-        pos_session_sudo = pos_config_sudo.current_session_id
-        if not table_sudo or not pos_session_sudo:
-            raise werkzeug.exceptions.Unauthorized()
 
-        sequence_number = self._get_sequence_number(table_sudo.id, pos_session_sudo.id)
+        if pos_config_sudo.self_order_table_mode:
+            table_sudo = get_table_sudo(access_token)
+
+        pos_session_sudo = pos_config_sudo.current_session_id
+        login_number = table_sudo.id if pos_config_sudo.self_order_table_mode else pos_session_sudo.login_number
+        sequence_number = self._get_sequence_number(login_number, pos_session_sudo.id)
 
         return {
-            "id": self._generate_unique_id(pos_session_sudo.id, table_sudo.id, sequence_number),
+            "id": self._generate_unique_id(pos_session_sudo.id, login_number, sequence_number),
             "sequence_number": sequence_number,
             "access_token": uuid.uuid4().hex,
             "session_id": pos_session_sudo.id,
-            "table_id": table_sudo.id,
+            **(
+                {
+                    "table_id": table_sudo.id,
+                }
+                if pos_config_sudo.self_order_table_mode
+                else {}
+            ),
         }
 
     def _merge_orderlines(
@@ -420,8 +422,8 @@ class PosSelfOrderController(http.Controller):
 
     def _find_order(
         self,
-        pos_reference: Optional[str],
-        order_access_token: Optional[str],
+        pos_reference: str,
+        order_access_token: str,
         state: Optional[str] = None,
     ) -> PosOrder:
         """

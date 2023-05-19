@@ -15,23 +15,12 @@ export class ProductCard extends Component {
     }
     clickOnProduct() {
         const product = this.props.product;
-        if (!this.canOpenProductMainView(product)) {
-            return;
-        }
         if (this.env.getCurrentRoute()[0] === "cart") {
             this.selfOrder.setCurrentlyEditedOrderLine(this.props?.orderLine);
         }
         this.env.navigate("/products/" + product.product_id);
     }
 
-    canOpenProductMainView(product) {
-        return (
-            this.selfOrder.table ||
-            product.has_image ||
-            product.description_sale ||
-            product.attributes.length
-        );
-    }
     getQtyInCart() {
         const cart = this.selfOrder.cart;
         const product = this.props.product;

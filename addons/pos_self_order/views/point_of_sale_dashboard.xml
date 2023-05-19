@@ -9,6 +9,7 @@
                 expr="//div[hasclass('dropdown-pos-config')]/div/div[hasclass('o_kanban_manage_view')]"
                 position="inside">
                 <field name="self_order_view_mode" invisible="1" />
+                <field name="self_order_kiosk_mode" invisible="1" />
                 <div role="menuitem">
                     <a name="preview_self_order_app" 
                         type="object"
@@ -16,14 +17,35 @@
                         attrs="{'invisible': [('self_order_view_mode','=',False)]}">
                         Mobile Menu
                     </a>
+                    <a name="preview_self_order_app" 
+                        type="object"
+                        style="white-space: nowrap;"
+                        attrs="{'invisible': [('self_order_kiosk_mode','=',False)]}">
+                        Kiosk
+                    </a>
                 </div>
             </xpath>
             <xpath expr="//div[hasclass('o_kanban_card_header_title_name')]" position="after">
                 <field name="self_order_table_mode" invisible="1" />
+                <field name="self_order_kiosk_mode" invisible="1" />
+                <field name="has_active_session" invisible="1" />
+
                 <div class="badge text-bg-info o_kanban_inline_block me-2"
                     attrs="{'invisible': [('self_order_table_mode','=',False)]}">
                     Self Ordering Enabled
                 </div>
+                <div class="badge text-bg-info o_kanban_inline_block me-2"
+                    attrs="{'invisible': [('self_order_kiosk_mode','=',False)]}">
+                    Kiosk
+                </div>
+                <!-- TODO: make this image smaller -->
+                <field 
+                    attrs="{'invisible': ['|', ('self_order_kiosk_mode','=',False), ('has_active_session','=',False)]}"
+                    name="kiosk_qr_code" 
+                    widget="image" 
+                    class="w-25" 
+                    options="{'zoom': true }"
+                    />
             </xpath>
         </field>
     </record>

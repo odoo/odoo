@@ -6,10 +6,11 @@
         <NavBar goBack="returnRoute()"/>
         <div class="bg-white d-flex flex-column pt-3 overflow-auto h-100">
             <div class="px-3">
+            <!-- object-fit-cover from bootstrap does not seem to work here -->
                 <img t-if="props.product.has_image"
-                    class="w-100 rounded-3" 
-                    style="max-height: 400px; object-fit: cover;" 
-                    t-attf-src="/menu/get-image/{{ props.product.product_id }}/1920" 
+                    class="w-100 rounded-3"
+                    style="max-height: 400px;object-fit: cover;" 
+                    t-att-src="selfOrder.getProductImageSrc(props.product.product_id, 1920)" 
                     alt="Product image"/>
                 <div class="pt-3">
                     <h3 t-esc="props.product.name"
@@ -35,13 +36,13 @@
                         <t t-call="pos_self_order.ColorProductAttribute" t-elif="attribute.display_type === 'color'" />
                     </div>
                 </t>
-                <div t-if="selfOrder.table">
+                <div t-if="selfOrder.access">
                     <label class="form-label fw-bold" for="note">Add a note:</label>
                     <textarea class="form-control rounded bg-white" id="note" type="textarea" rows="1" placeholder="No onions please" t-model="orderLine.customer_note"/>
                 </div>
             </div>
         </div>
-        <t t-if="selfOrder.table" t-call="pos_self_order.AddToCartButton"/>
+        <t t-if="selfOrder.access" t-call="pos_self_order.AddToCartButton"/>
     </div>
     </t>
 
@@ -61,12 +62,7 @@
                     <t t-if="value.price_extra.list_price">
                         + <t t-esc="selfOrder.formatMonetary(value.price_extra.list_price)" />
                     </t>
-                </span>,
-            nonFinalQty: orderLine.qty,
-            price_extra: this.getAllPricesExtra(orderLine.selectedVariants, product.attributes),
-        };
-    }
-
+                </span>
             </div>
         </t>
     </t>

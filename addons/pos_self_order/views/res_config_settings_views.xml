@@ -31,6 +31,191 @@
                     </div>
                 </setting>
             </setting>
+
+            <!-- TODO: remove empty blocks from settings -->
+            <setting id="is_order_shared" position="after">
+                <setting string="Kiosk" help="Turn this POS into an independent kiosk">
+                    <field name="pos_self_order_kiosk_mode"/>
+                </setting>
+            </setting>
+
+            <xpath expr="//setting[.//field[@name='pos_self_order_view_mode']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_self_order_table_mode']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='account_default_pos_receivable_account_id']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_tax_regime_selection']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_default_fiscal_position_id']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_fiscal_position_ids']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_journal_id']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_invoice_journal_id']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_use_pricelist']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='group_sale_pricelist']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='product_pricelist_setting']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_available_pricelist_ids']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_pricelist_id']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_restrict_price_control']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_iface_tax_included']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_manual_discount']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_module_pos_discount']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='module_loyalty']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_is_header_or_footer']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_receipt_header']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_receipt_footer']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_iface_print_auto']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_iface_print_skip_screen']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='point_of_sale_use_ticket_qr_code']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='point_of_sale_ticket_unique_code']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_sequence_id']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_payment_method_ids']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_auto_validate_terminal_payment']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_cash_rounding']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_rounding_method']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_only_round_cash_method']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_set_maximum_difference']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_amount_authorized_diff']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_default_bill_ids']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_iface_tipproduct']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_tip_product_id']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_iface_customer_facing_display_local']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_is_posbox']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_proxy_ip']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_iface_scan_via_proxy']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_iface_electronic_scale']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_iface_print_via_proxy']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_iface_cashdrawer']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_iface_customer_facing_display_via_proxy']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_is_order_printer']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_printer_ids']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='module_pos_preparation_display']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_picking_type_id']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_ship_later']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_warehouse_id']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_route_id']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_picking_policy']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='barcode_nomenclature_id']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='update_stock_quantities']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_floor_ids']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_iface_orderline_notes']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_iface_printbill']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_iface_splitbill']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath>
+            <xpath expr="//setting[.//field[@name='pos_set_tip_after_payment']]" position="attributes">
+                <attribute name="attrs">{'invisible': [('pos_self_order_kiosk_mode','=',True)]}</attribute>
+            </xpath> 
         </field>
     </record>
 </odoo>

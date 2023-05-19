@@ -6,7 +6,7 @@ from typing import Optional
 
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import unslug
-from odoo.addons.pos_self_order.models.pos_config import PosConfig
+from odoo.addons.point_of_sale.models.pos_config import PosConfig
 from odoo.addons.pos_restaurant.models.pos_restaurant import RestaurantTable
 
 
@@ -22,21 +22,24 @@ def get_pos_config_sudo(pos_config_name: str) -> PosConfig:
         .search(
             [
                 ("id", "=", unslug(str(pos_config_name))[1]),
-                ("self_order_view_mode", "=", True),
             ],
             limit=1,
         )
-    ) or _raise(werkzeug.exceptions.NotFound())
+    )
 
 
-def get_any_pos_config_sudo() -> PosConfig:
+def get_any_pos_config_sudo(access_token: Optional[str] = None) -> Optional[PosConfig]:
     """
-    Returns a PosConfig that allows the QR code menu, if there is one,
-    or raises a NotFound otherwise
+    Returns any PosConfig that allows the QR code menu, if there is one
     """
+    # TODO: it would be nicer to have: search([("pos_config.allows_qr_menu(access_token)","=", True)])
+    # but i don't know how to make it work
     return (
-        request.env["pos.config"].sudo().search([("self_order_view_mode", "=", True)], limit=1)
-    ) or _raise(werkzeug.exceptions.NotFound())
+        request.env["pos.config"]
+        .sudo()
+        .search([])
+        .filtered(lambda pos_config: pos_config._allows_qr_menu(access_token))[0]
+    )
 
 
 def get_table_sudo(table_access_token: Optional[str]) -> Optional[RestaurantTable]:
@@ -45,7 +48,3 @@ def get_table_sudo(table_access_token: Optional[str]) -> Optional[RestaurantTabl
         .sudo()
         .search([("access_token", "=", table_access_token), ("active", "=", True)], limit=1)
     )
-
-
-def _raise(e):
-    raise e

@@ -45,7 +45,7 @@
             <img 
                 t-if="props.product.has_image"
                 class="o_self_order_item_card_image h-100 w-100 ms-2 rounded-3 border border-light bg-light" 
-                t-attf-src="/menu/get-image/{{ props.product.product_id }}" 
+                t-att-src="selfOrder.getProductImageSrc(props.product.product_id)" 
                 alt="Product image" 
                 loading="lazy" 
                 onerror="this.remove()" 

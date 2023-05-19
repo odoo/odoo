@@ -127,6 +127,21 @@ export class SelfOrder {
         }
     }
 
+    getRequiredQueryParams() {
+        if (!this.is_kiosk) {
+            return "";
+        }
+        const params = {
+            access_token: this.access.access_token,
+        };
+        const searchParams = new URLSearchParams(params);
+        return `?${searchParams.toString()}`;
+    }
+
+    getProductImageSrc(product_id, resolution = 128) {
+        return `/menu/get-image/${product_id}/${resolution}${this.getRequiredQueryParams()}`;
+    }
+
     /**
      * @param {OrderLine} orderLine
      */
@@ -312,7 +327,8 @@ export class SelfOrder {
             */
             /**@type {ReducedOrder} */
             const postedOrder = await this.rpc(`/pos-self-order/send-order`, this.getOrderData());
-            this.orders = this.combineOrders(this.orders, postedOrder);
+            // for kiosks we do not want to keep track of old orders
+            this.orders = !this.is_kiosk && this.combineOrders(this.orders, postedOrder);
             this.notification.add(_t("Your order has been placed!"), { type: "success" });
             // we only want to clear the cart if the order was sent successfully;
             // in the case of an unsuccessful order the user might want to try again
@@ -331,7 +347,7 @@ export class SelfOrder {
         return {
             pos_config_id: this.pos_config_id,
             cart: this.extractCartData(this.cart),
-            table_access_token: this?.table?.access_token,
+            access_token: this?.access?.access_token,
             // The last order is always the first one in the array
             // The orders are kept in reverse chronological order
             order_pos_reference: this.orders?.[0]?.pos_reference,

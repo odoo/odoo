@@ -9,7 +9,6 @@ from odoo.http import request
 from odoo.addons.pos_self_order.controllers.utils import (
     get_pos_config_sudo,
     get_any_pos_config_sudo,
-    get_table_sudo,
 )
 from odoo.addons.pos_self_order.models.pos_config import PosConfig
 from odoo.addons.pos_self_order.models.pos_restaurant import RestaurantTable
@@ -27,7 +26,10 @@ class PosQRMenuController(http.Controller):
 
     @http.route("/menu", auth="public")
     def pos_self_order_redirect(self):
-        return request.redirect(f"/menu/{get_any_pos_config_sudo().id}")
+        pos_config_sudo = get_any_pos_config_sudo()
+        if not pos_config_sudo:
+            raise werkzeug.exceptions.NotFound()
+        return request.redirect(f"/menu/{pos_config_sudo.id}")
 
     @http.route(
         [
@@ -55,6 +57,11 @@ class PosQRMenuController(http.Controller):
             but we still have it here, because otherwise we get a Warning in the logs
         :return: the rendered template
         """
+        pos_config_sudo = get_pos_config_sudo(pos_name)
+
+        if not pos_config_sudo._allows_qr_menu(at):
+            raise werkzeug.exceptions.NotFound()
+
         return request.render(
             "pos_self_order.index",
             {
@@ -62,8 +69,8 @@ class PosQRMenuController(http.Controller):
                     **request.env["ir.http"].get_frontend_session_info(),
                     "currencies": request.env["ir.http"].get_currencies(),
                     "pos_self_order_data": self._get_self_order_config(
-                        get_pos_config_sudo(pos_name),
-                        get_table_sudo(table_access_token=at),
+                        pos_config_sudo,
+                        access_token=at,
                     ),
                 }
             },
@@ -78,14 +85,16 @@ class PosQRMenuController(http.Controller):
         type="http",
         auth="public",
     )
-    def pos_self_order_get_image(self, product_id: int, image_size: Optional[int] = 128):
+    def pos_self_order_get_image(
+        self, product_id: int, image_size: int = 128, access_token: Optional[str] = None
+    ):
         """
         This is the route that the POS Self Order App uses to GET THE PRODUCT IMAGES.
         :return: the image of the product (or a default one in case no product is found)
             or an exception if there is no pos configured as self order.
         :rtype: binary
         """
-        if not get_any_pos_config_sudo():
+        if not get_any_pos_config_sudo(access_token):
             raise werkzeug.exceptions.Unauthorized()
 
         return (
@@ -118,19 +127,12 @@ class PosQRMenuController(http.Controller):
         )
 
     def _get_self_order_config(
-        self, pos_config_sudo: PosConfig, table_sudo: RestaurantTable
+        self, pos_config_sudo: PosConfig, access_token: Optional[str] = None
     ) -> Dict:
         """
         Returns the necessary information for the POS Self Order App
         """
         return {
             **pos_config_sudo._get_self_order_data(),
-            **(
-                table_sudo
-                and pos_config_sudo.has_active_session
-                and pos_config_sudo.self_order_table_mode
-                # having the table_id in the frontend means that the client will be able to order
-                and {"table": table_sudo._get_self_order_data()}
-                or {}
-            ),
+            **pos_config_sudo._get_self_order_access_info(access_token),
         }

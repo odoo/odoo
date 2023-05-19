@@ -16,7 +16,7 @@
             would be at the top of the page )
             -->
             <div class="flex-grow-1"></div>
-            <t t-if="selfOrder.table and selfOrder.cart.length" t-call="pos_self_order.GoToCartButton"/>
+            <t t-if="selfOrder.access and selfOrder.cart.length" t-call="pos_self_order.GoToCartButton"/>
         </div>
     </t>
     
