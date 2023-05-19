@@ -71,8 +71,11 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     trigger: 'iframe .o_group_by_menu .dropdown-item:first-child',
     content: 'click on the first item in the group by menu',
 }, {
-    trigger: 'iframe .o_favorite_menu .o_add_favorite > button',
-    content: 'click to "save current search" button in favorite menu',
+    trigger: 'iframe .o_favorite_menu .o_add_favorite',
+    content: 'open accordion "save current search" in favorite menu',
+}, {
+    trigger: 'iframe .o_favorite_menu .o_accordion_values .o_save_favorite',
+    content: 'click to "save" button in favorite menu',
 }, {
     trigger: 'iframe .o_filter_menu .dropdown-item:first-child',
     content: 'click on the first item in the filter menu',
@@ -80,8 +83,8 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     trigger: 'iframe .o_group_by_menu .dropdown-item:first-child',
     content: 'click on the first item in the group by menu',
 }, {
-    trigger: 'iframe .o_favorite_menu .o_add_favorite > button',
-    content: 'click to "save current search" button in favorite menu',
+    trigger: 'iframe .o_favorite_menu .o_accordion_values .o_save_favorite',
+    content: 'click to "save" button in favorite menu',
 }, {
     trigger: 'iframe button.o_switch_view.o_list',
     content: 'Go to the list view',

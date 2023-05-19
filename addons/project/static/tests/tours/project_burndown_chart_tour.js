@@ -43,9 +43,6 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
 }, {
     content: 'Open the Date group by sub menu',
     trigger: '.o_group_by_menu button.o_menu_item:contains("Date")',
-    run: function () {
-        this.$anchor[0].dispatchEvent(new Event('mouseenter'));
-    },
 }, {
     content: 'Click on the selected Date sub menu',
     trigger: '.o_group_by_menu button.o_menu_item:contains("Date") + * .dropdown-item.selected',
@@ -61,9 +58,6 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
 }, {
     content: 'Open the Date filter sub menu',
     trigger: '.o_filter_menu button.o_menu_item:contains("Date")',
-    run: function () {
-        this.$anchor[0].dispatchEvent(new Event('mouseenter'));
-    },
 }, {
     content: 'Click on the first Date filter sub menu',
     trigger: '.o_filter_menu .o_menu_item:contains("Date") + * .dropdown-item:first-child',

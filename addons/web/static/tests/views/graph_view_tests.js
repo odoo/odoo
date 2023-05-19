@@ -2580,7 +2580,6 @@ QUnit.module("Views", (hooks) => {
         await toggleMenuItem(target, "Product");
         await toggleMenuItem(target, "Color");
 
-        await toggleSaveFavorite(target);
         await editFavoriteName(target, "Fourth Favorite");
         await saveFavorite(target);
     });

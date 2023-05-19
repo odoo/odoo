@@ -217,7 +217,7 @@ export async function toggleFilterMenu(el) {
 }
 
 export async function openAddCustomFilterDialog(el) {
-    await click(findItem(el, `.o_filter_menu .dropdown-item:not(.o_menu_item)`));
+    await click(findItem(el, `.o_filter_menu .o_menu_item.o_add_custom_filter`));
 }
 
 //////////////////////////////////////////////////////
@@ -277,17 +277,17 @@ export async function toggleGroupByMenu(el) {
 }
 
 export async function toggleAddCustomGroup(el) {
-    await mouseEnter(findItem(el, `.o_add_custom_group_menu .dropdown-toggle`));
+    await click(findItem(el, `.o_add_custom_group_menu`));
 }
 
 export async function selectGroup(el, fieldName) {
-    const select = findItem(el, `.o_add_custom_group_menu .dropdown-menu select`);
+    const select = findItem(el, `.o_add_custom_group_menu + .o_accordion_values select`);
     select.value = fieldName;
     await triggerEvent(select, null, "change");
 }
 
 export async function applyGroup(el) {
-    await click(findItem(el, `.o_add_custom_group_menu .dropdown-menu .btn`));
+    await click(findItem(el, `.o_add_custom_group_menu + .o_accordion_values .btn`));
 }
 
 export async function groupByMenu(el, fieldName) {
@@ -309,20 +309,20 @@ export async function deleteFavorite(el, favoriteFinder) {
 }
 
 export async function toggleSaveFavorite(el) {
-    await mouseEnter(findItem(el, `.o_favorite_menu .o_add_favorite .dropdown-toggle`));
+    await click(findItem(el, `.o_favorite_menu .o_add_favorite`));
 }
 
 export async function editFavoriteName(el, name) {
     const input = findItem(
         el,
-        `.o_favorite_menu .o_add_favorite .dropdown-menu input[type="text"]`
+        `.o_favorite_menu .o_add_favorite + .o_accordion_values input[type="text"]`
     );
     input.value = name;
     await triggerEvent(input, null, "input");
 }
 
 export async function saveFavorite(el) {
-    await click(findItem(el, `.o_favorite_menu .o_add_favorite .dropdown-menu button`));
+    await click(findItem(el, `.o_favorite_menu .o_add_favorite + .o_accordion_values button`));
 }
 
 /** Comparison menu */

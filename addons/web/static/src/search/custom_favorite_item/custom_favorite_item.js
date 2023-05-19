@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { AccordionItem } from "@web/core/dropdown/accordion_item";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
@@ -91,7 +91,7 @@ export class CustomFavoriteItem extends Component {
 }
 
 CustomFavoriteItem.template = "web.CustomFavoriteItem";
-CustomFavoriteItem.components = { CheckBox, Dropdown };
+CustomFavoriteItem.components = { CheckBox, AccordionItem };
 CustomFavoriteItem.props = {};
 favoriteMenuRegistry.add(
     "custom-favorite-item",

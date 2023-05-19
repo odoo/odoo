@@ -145,7 +145,6 @@ QUnit.module("Search", (hooks) => {
                 ["Birthday: January 1997", "Date: December 1996"].join("\nor\n"),
                 "Date: Previous Year",
             ]);
-            await toggleMenuItem(target, "Date");
             await toggleMenuItemOption(target, "Date", "1996");
             assert.deepEqual(getFacetTexts(target), ["Birthday: January 1997"]);
             await toggleMenuItem(target, "Birthday: Previous Year");
@@ -306,7 +305,7 @@ QUnit.module("Search", (hooks) => {
             await click(document.querySelector("div.o_dialog footer button"));
 
             assert.deepEqual(getFacetTexts(target), []);
-            assert.containsNone(target, ".o_favorite_menu .o_menu_item");
+            assert.containsOnce(target, ".o_favorite_menu .o_menu_item");
             assert.containsOnce(target, ".o_favorite_menu .o_add_favorite");
             assert.verifySteps(["deleteFavorite", "CLEAR-CACHES"]);
         });
@@ -497,7 +496,7 @@ QUnit.module("Search", (hooks) => {
 
             await toggleSearchBarMenu(target);
 
-            assert.containsNone(target, ".o_menu_item");
+            assert.containsOnce(target, ".o_menu_item");
             assert.containsNone(target, ".dropdown-divider");
             assert.containsOnce(target, ".o_add_custom_group_menu");
         });
@@ -518,7 +517,7 @@ QUnit.module("Search", (hooks) => {
 
             await toggleSearchBarMenu(target);
 
-            assert.containsOnce(target, ".o_menu_item");
+            assert.containsN(target, ".o_menu_item", 2);
             const menuItem = target.querySelector(".o_menu_item");
             assert.strictEqual(menuItem.innerText.trim(), "Foo");
             assert.strictEqual(menuItem.getAttribute("role"), "menuitemcheckbox");
@@ -752,7 +751,6 @@ QUnit.module("Search", (hooks) => {
             ]);
 
             // select option 'quarter'
-            await toggleMenuItem(target, "Date");
             await toggleMenuItemOption(target, "Date", "Quarter");
 
             assert.deepEqual(getFacetTexts(target), [
@@ -767,7 +765,6 @@ QUnit.module("Search", (hooks) => {
             ]);
 
             // unselect option 'week'
-            await toggleMenuItem(target, "Date");
             await toggleMenuItemOption(target, "Date", "Week");
 
             assert.deepEqual(getFacetTexts(target), [
@@ -829,7 +826,6 @@ QUnit.module("Search", (hooks) => {
             assert.deepEqual(getFacetTexts(target), ["Date: Day"]);
 
             await toggleMenuItem(target, "Bar");
-            await toggleMenuItem(target, "Date");
 
             assert.ok(isItemSelected(target, "Date"));
             assert.ok(isItemSelected(target, "Bar"));
@@ -845,7 +841,6 @@ QUnit.module("Search", (hooks) => {
             assert.deepEqual(getFacetTexts(target), ["Date: Quarter\n>\nDate: Day\n>\nBar"]);
 
             await toggleMenuItem(target, "Bar");
-            await toggleMenuItem(target, "Date");
 
             assert.ok(isItemSelected(target, "Date"));
             assert.notOk(isItemSelected(target, "Bar"));
@@ -970,7 +965,7 @@ QUnit.module("Search", (hooks) => {
             });
 
             await toggleSearchBarMenu(target);
-            assert.containsNone(target, ".o_menu_item");
+            assert.containsOnce(target, ".o_menu_item");
             assert.containsNone(target, ".dropdown-divider");
             assert.containsOnce(target, ".dropdown-item");
             assert.strictEqual(
@@ -994,13 +989,13 @@ QUnit.module("Search", (hooks) => {
             });
 
             await toggleSearchBarMenu(target);
-            assert.containsOnce(target, ".o_menu_item");
+            assert.containsN(target, ".o_menu_item", 2);
             assert.containsOnce(target, ".o_menu_item[role=menuitemcheckbox]");
             assert.deepEqual(target.querySelector(".o_menu_item").ariaChecked, "false");
             assert.containsOnce(target, ".dropdown-divider");
-            assert.containsOnce(target, ".dropdown-item:not(.o_menu_item)");
+            assert.containsN(target, ".o_menu_item", 2);
             assert.strictEqual(
-                target.querySelector(".dropdown-item:not(.o_menu_item)").innerText,
+                target.querySelector(".o_menu_item:nth-of-type(2)").innerText,
                 "Add Custom Filter"
             );
         });
@@ -1488,10 +1483,12 @@ QUnit.module("Search", (hooks) => {
             });
 
             await toggleSearchBarMenu(target);
-            assert.containsN(target, ".o_filter_menu .o_menu_item", 11);
+            assert.containsN(target, ".o_filter_menu .o_menu_item", 12);
 
-            const menuItemEls = target.querySelectorAll(".o_filter_menu .o_menu_item");
-            [...menuItemEls].forEach((e, index) => {
+            const menuItemEls = target.querySelectorAll(
+                ".o_filter_menu .o_menu_item:not(.o_add_custom_filter)"
+            );
+            menuItemEls.forEach((e, index) => {
                 assert.strictEqual(e.innerText.trim(), String(index + 1));
             });
         });
