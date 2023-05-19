@@ -209,3 +209,29 @@ class TestChartTemplate(TransactionCase):
         tax_1_new = self.env['account.tax'].search([('company_id', '=', self.company_1.id), ('name', '=', "Tax 1")])
         self.assertEqual(tax_1_old, tax_1_existing, "Old tax still exists but with a different name.")
         self.assertEqual(len(tax_1_new), 1, "New tax have been created with the original name.")
+
+    def test_update_account_codes_conflict(self):
+        # Change code of an existing account to something else
+        standard_account = self.env['account.chart.template'].ref('test_account_income_template')
+        standard_account.code = '111111'
+
+        # create a new account with the same code as an existing one
+        problematic_account = self.env['account.account'].create({
+            'code': '222221',
+            'name': 'problematic_account',
+            'company_id': self.company_1.id,
+        })
+
+        # remove an xmlid to see if it gets relinked and not duplicated
+        self.env['ir.model.data'].search([
+            ('name', '=', f'{self.company_1.id}_test_account_expense_template'),
+            ('module', '=', 'account'),
+        ]).unlink()
+
+        # reload chart template
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company_1, install_demo=False)
+
+        # check that xmlid is now pointing to problematic_account
+        xmlid_account = self.env.ref(f'account.{self.company_1.id}_test_account_income_template')
+        self.assertEqual(problematic_account, xmlid_account, "xmlid is not pointing to the right account")
