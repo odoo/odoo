@@ -350,6 +350,12 @@ class Website(models.Model):
             **get_manifest(theme_name).get('snippet_lists', {}),
         }
 
+    def get_theme_customizations(self, theme_name):
+        return {
+            **get_manifest('theme_default').get('theme_customizations', {}),
+            **get_manifest(theme_name).get('theme_customizations', {}),
+        }
+
     def configurator_set_menu_links(self, menu_company, module_data):
         menus = self.env['website.menu'].search([('url', 'in', list(module_data.keys())), ('website_id', '=', self.id)])
         for m in menus:
@@ -477,23 +483,122 @@ class Website(models.Model):
 
             return pages_views
 
-        def configure_page(page_code, snippet_list, pages_views, cta_data):
+        dynamic_snippets = {
+            's_dynamic_snippet_products': {
+                'filter_name': 'website_sale.dynamic_filter_newest_products',
+                'template_key': 'website_sale.dynamic_filter_template_product_product_borderless_1',
+                'data_attributes': {'number-of-records': '16', 'product-category-id': 'all', 'carousel-interval': '5000'},
+            },
+            's_events': {
+                'filter_name': 'website_event.website_snippet_filter_event_list',
+                'template_key': 'website_event.dynamic_filter_template_event_event_picture',
+                'data_attributes': {'number-of-records': '4'},
+            },
+            's_blog_posts': {
+                'filter_name': 'website_blog.dynamic_filter_latest_blog_posts',
+                'template_key': 'website_blog.dynamic_filter_template_blog_post_big_picture',
+                'data_attributes': {'number-of-records': '16', 'filter-by-blog-id': '-1', 'number-of-elements': '3'},
+                'hover_effect': 's_blog_posts_effect_marley'
+            },
+        }
+
+        def init_dynamic_snippet(el, snippet, customizations):
+            default_settings = dynamic_snippets[snippet]
+            snippet_classes = el.get('class').split()
+
+            # Setting the dynamic filter.
+            filter_name = customizations.get('filter_name') or default_settings['filter_name']
+            selected_filter = self.env.ref(filter_name)
+            el.set('data-filter-id', str(selected_filter.id))
+
+            # Setting the template.
+            selected_template_key = customizations.get('template_key') or default_settings['template_key']
+            el.set('data-template-key', selected_template_key)
+            template_class = re.sub(r'.*\.dynamic_filter_template_', 's_', selected_template_key)
+            if template_class not in snippet_classes:
+                snippet_classes.append(template_class)
+
+            # Setting the data_attributes so the options are correct.
+            data_attributes = {
+                **default_settings.get('data_attributes', {}),
+                **customizations.get('data_attributes', {})
+            }
+            for data_attribute in data_attributes:
+                el.set('data-' + data_attribute, data_attributes[data_attribute])
+
+            # Applying the custom hover effect if any (for blog posts).
+            if 'hover_effect' in customizations:
+                snippet_classes.remove(default_settings['hover_effect'])
+                snippet_classes.append(customizations['hover_effect'])
+
+            # Setting the classes.
+            el.set('class', ' '.join(snippet_classes))
+
+        def set_background_options(el, background_options):
+            snippet_classes = el.get('class').split()
+            snippet_style = (el.get('style') or '').split()
+
+            if 'color' in background_options:
+                snippet_classes = [c for c in snippet_classes if not c.startswith('o_cc')]  # Remove old color.
+                snippet_classes.append('o_cc ' + background_options['color'])  # Color should be 'o_ccx'.
+            if 'image' in background_options:
+                snippet_classes.append('oe_img_bg o_bg_img_center')
+                snippet_style.append(background_options['image'])
+            if 'shape' in background_options:
+                el.set('data-oe-shape-data', background_options['shape']['data-oe-shape-data'])
+                shape_el = html.fromstring(background_options['shape']['element'])
+                el.insert(0, shape_el)
+
+            el.set('class', ' '.join(snippet_classes))
+            el.set('style', ' '.join(snippet_style))
+
+        def configure_page(page_code, snippet_list, theme_customizations, pages_views, cta_data):
             if page_code == 'homepage':
                 page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
             else:
                 page_view_id = self.env['ir.ui.view'].browse(pages_views[page_code])
             rendered_snippets = []
+            inner_content_snippets = []  # To store temporarily inner contents.
+            added_snippets = []  # To keep track of the added snippets.
             nb_snippets = len(snippet_list)
             for i, snippet in enumerate(snippet_list, start=1):
                 try:
                     IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
-                    render = IrQweb._render('website.' + snippet, cta_data)
+
+                    # Add the snippet only if its module is installed.
+                    if '.' not in snippet:
+                        snippet = 'website.' + snippet
+                    module, snippet = snippet.split('.')
+                    is_website = module == 'website'
+                    if not is_website:
+                        is_module_installed = self.env['ir.module.module'].search([('name', '=', module)]).state == 'installed'
+                        if not is_module_installed:
+                            continue
+
+                    render = IrQweb._render(module + '.' + snippet, cta_data)
                     if render:
                         el = html.fromstring(render)
+                        customizations = theme_customizations.get(snippet, {})
 
                         # Add the data-snippet attribute to identify the snippet
                         # for compatibility code
                         el.attrib['data-snippet'] = snippet
+
+                        # If it is a dynamic snippet, initialize it.
+                        if not is_website and snippet in dynamic_snippets:
+                            init_dynamic_snippet(el, snippet, customizations)
+
+                        # Set the custom background, if any.
+                        if 'background' in customizations:
+                            set_background_options(el, customizations['background'])
+
+                        # If the snippet is an inner content and if a place is
+                        # specified, store it in order to insert it at the right
+                        # place later.
+                        is_inner_content = el.tag != 'section'
+                        if (is_inner_content and customizations):
+                            inner_content_snippets.append({'snippet': el, **customizations})
+                            continue
 
                         # Tweak the shape of the first snippet to connect it
                         # properly with the header color in some themes
@@ -510,8 +615,19 @@ class Website(models.Model):
                                 shape_el[0].attrib['class'] += ' o_footer_extra_shape_mapping'
                         rendered_snippet = pycompat.to_text(etree.tostring(el))
                         rendered_snippets.append(rendered_snippet)
+                        added_snippets.append(snippet)
                 except ValueError as e:
                     logger.warning(e)
+
+            # Add the inner snippets in their specified snippets.
+            for inner_content in inner_content_snippets:
+                if inner_content['drop_in'] not in added_snippets:
+                    continue
+                drop_index = added_snippets.index(inner_content['drop_in'])
+                drop_el = html.fromstring(rendered_snippets[drop_index])
+                drop_el.xpath(inner_content['xpath'])[0].append(inner_content['snippet'])
+                rendered_snippets[drop_index] = pycompat.to_text(etree.tostring(drop_el))
+
             page_view_id.save(value=''.join(rendered_snippets), xpath="(//div[hasclass('oe_structure')])[last()]")
 
         def set_images(images):
@@ -644,8 +760,9 @@ class Website(models.Model):
         # Update pages
         requested_pages = list(pages_views.keys()) + ['homepage']
         snippet_lists = website.get_theme_snippet_lists(theme_name)
+        theme_customizations = website.get_theme_customizations(theme_name)
         for page_code in requested_pages:
-            configure_page(page_code, snippet_lists.get(page_code, []), pages_views, cta_data)
+            configure_page(page_code, snippet_lists.get(page_code, []), theme_customizations.get(page_code, {}), pages_views, cta_data)
 
         images = custom_resources.get('images', {})
         set_images(images)

@@ -2985,13 +2985,13 @@ var SnippetsMenu = Widget.extend({
                 const isCustomSnippet = !!el.closest('#snippet_custom');
 
                 // Associate in-page snippets to their name
-                // TODO I am not sure this is useful anymore and it should at
-                // least be made more robust using data-snippet
                 let snippetClasses = $sbody.attr('class').match(/s_[^ ]+/g);
                 if (snippetClasses && snippetClasses.length) {
                     snippetClasses = '.' + snippetClasses.join('.');
                 }
-                const $els = self.$body.find(snippetClasses).not('[data-name]').add($(snippetClasses)).add($sbody);
+                const dataSnippetAttr = $sbody[0].dataset.snippet;
+                const selector = dataSnippetAttr ? `[data-snippet=${dataSnippetAttr}]` : snippetClasses;
+                const $els = self.$body.find(selector).not('[data-name]').add($(selector)).add($sbody);
                 $els.attr('data-name', name).data('name', name);
 
                 // Create the thumbnail
