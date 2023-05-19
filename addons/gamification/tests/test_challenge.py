@@ -2,6 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import datetime
 
+from freezegun import freeze_time
+
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import UserError
 from odoo.tools import mute_logger
@@ -61,14 +63,14 @@ class test_challenge(TestGamificationCommon):
         badge_ids = self.env['gamification.badge.user'].search([('badge_id', '=', badge_id), ('user_id', '=', demo.id)])
         self.assertEqual(len(badge_ids), 1, "Demo user has not received the badge")
 
-    @mute_logger('odoo.models.unlink')
+    @mute_logger('odoo.models.unlink', 'odoo.addons.mail', 'odoo.addons.auth_signup')
     def test_20_update_all_goals_filter(self):
         # Enroll two internal and two portal users in the challenge
         (
-            portal_login_before_update,
-            portal_login_after_update,
-            internal_login_before_update,
-            internal_login_after_update,
+            portal_last_active_old,
+            portal_last_active_recent,
+            internal_last_active_old,
+            internal_last_active_recent,
         ) = all_test_users = self.env['res.users'].create([
             {
                 'name': f'{kind} {age} login',
@@ -90,21 +92,33 @@ class test_challenge(TestGamificationCommon):
             'user_ids': [(6, 0, all_test_users.ids)]
         })
 
-        # Setup user access logs
-        self.env['res.users.log'].search([('create_uid', 'in', challenge.user_ids.ids)]).unlink()
-        now = datetime.datetime.now()
+        # Setup user presence
+        self.env['bus.presence'].search([('user_id', 'in', challenge.user_ids.ids)]).unlink()
+        now = self.env.cr.now()
 
         # Create "old" log in records
-        self.env['res.users.log'].create([
-            {"create_uid": internal_login_before_update.id, 'create_date': now - datetime.timedelta(minutes=3)},
-            {"create_uid": portal_login_before_update.id, 'create_date': now - datetime.timedelta(minutes=3)},
-        ])
+        twenty_minutes_ago = now - datetime.timedelta(minutes=20)
+        with freeze_time(twenty_minutes_ago):
+            # Not using BusPresence.update_presence to avoid lower level cursor handling there.
+            self.env['bus.presence'].create([
+                {
+                    'user_id': user.id,
+                    'last_presence': twenty_minutes_ago,
+                    'last_poll': twenty_minutes_ago,
+                }
+                for user in (
+                    portal_last_active_old,
+                    portal_last_active_recent,
+                    internal_last_active_old,
+                    internal_last_active_recent,
+                )
+            ])
 
         # Reset goal objective values
         all_test_users.partner_id.tz = False
 
         # Regenerate all goals
-        self.env["gamification.goal"].search([]).unlink()
+        self.env['gamification.goal'].search([]).unlink()
         self.assertFalse(self.env['gamification.goal'].search([]))
 
         challenge.action_check()
@@ -114,27 +128,28 @@ class test_challenge(TestGamificationCommon):
         self.assertEqual(len(goal_ids), 4)
         self.assertEqual(set(goal_ids.mapped('state')), {'inprogress'})
 
-        # Create more recent log in records
-        self.env['res.users.log'].create([
-            {"create_uid": internal_login_after_update.id, 'create_date': now + datetime.timedelta(minutes=3)},
-            {"create_uid": portal_login_after_update.id, 'create_date': now + datetime.timedelta(minutes=3)},
-        ])
+        # Update presence for 2 users
+        users_recent = internal_last_active_recent | portal_last_active_recent
+        users_recent_presence = self.env['bus.presence'].search([('user_id', 'in', users_recent.ids)])
+        users_recent_presence.last_presence = now
+        users_recent_presence.last_poll = now
+        users_recent_presence.flush_recordset()
 
         # Update goal objective checked by goal definition
         all_test_users.partner_id.write({'tz': 'Europe/Paris'})
+        all_test_users.flush_recordset()
 
         # Update goals as done by _cron_update
         challenge._update_all()
-        unchanged_goal_id = self.env['gamification.goal'].search([
+        unchanged_goal_ids = self.env['gamification.goal'].search([
             ('challenge_id', '=', challenge.id),
             ('state', '=', 'inprogress'),  # others were updated to "reached"
             ('user_id', 'in', challenge.user_ids.ids),
         ])
-        # Check that even though login record for internal user is older than goal update, their goal was reached.
+        # Check that goals of users not recently active were not updated
         self.assertEqual(
-            portal_login_before_update,
-            unchanged_goal_id.user_id,
-            "Only portal user last logged in before last challenge update should not have been updated.",
+            portal_last_active_old | internal_last_active_old,
+            unchanged_goal_ids.user_id,
         )
 
 
