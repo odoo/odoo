@@ -96,7 +96,7 @@ options.registry.SnippetPopup = options.Class.extend({
      * @see this.selectClass for parameters
      */
     moveBlock: function (previewMode, widgetValue, params) {
-        const $container = $(widgetValue === 'moveToFooter' ? 'footer' : 'main');
+        const $container = $(widgetValue === 'moveToFooter' ? 'footer#bottom' : 'main');
         this.$target.closest('.s_popup').prependTo($container.find('.oe_structure:o_editable').first());
     },
     /**
@@ -125,7 +125,7 @@ options.registry.SnippetPopup = options.Class.extend({
     _computeWidgetState: function (methodName, params) {
         switch (methodName) {
             case 'moveBlock':
-                return this.$target.closest('footer').length ? 'moveToFooter' : 'moveToBody';
+                return this.$target.closest('footer#bottom').length ? 'moveToFooter' : 'moveToBody';
         }
         return this._super(...arguments);
     },
