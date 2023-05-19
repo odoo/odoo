@@ -171,6 +171,11 @@ $-o-theme-text-colors: null;
     @extend %-bg-black;
 }
 
+.bg-transparent{
+    --bg-opacity: 0;
+    @extend %-bg-black;
+}
+
 // 2. Generate legacy opacity-variations classes for both white and black. We
 //    don't specifically assign colors here, we just extend placeholder
 //    selectors. To control opacity we act on the '--X-opacity' Bootstrap
