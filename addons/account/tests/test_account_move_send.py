@@ -413,3 +413,34 @@ class TestAccountComposerPerformance(AccountMoveSendBase):
 
         # invoice update
         self.assertTrue(test_move.is_move_sent)
+
+    def test_invoice_sent_to_additional_partner(self):
+        """
+        Make sure that when an invoice is sent to a partner who is not
+        the invoiced customer, they receive a link containing an access token,
+        allowing them to view the invoice without needing to log in.
+        """
+        test_move = self.test_account_moves[1].with_env(self.env)
+
+        additional_partner = self.env['res.partner'].create({
+            'name': "Additional Partner",
+            'email': "additional@example.com",
+        })
+
+        default_ctx = test_move.action_send_and_print()['context']
+        composer_form = Form(
+            self.env['account.move.send'].with_context(default_ctx)
+        )
+        composer_form.mail_partner_ids.add(additional_partner)
+        composer_form.checkbox_ubl_cii_xml = False
+        composer = composer_form.save()
+
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            composer.action_send_and_print()
+
+        self.assertMailMail(
+            additional_partner,
+            'sent',
+            author=self.user_account_other.partner_id,
+            content='access_token='
+        )
