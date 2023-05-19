@@ -139,6 +139,7 @@ export class TaxTotalsComponent extends Component {
     _onChangeTaxValueByTaxGroup({ oldValue, newValue }) {
         if (oldValue === newValue) return;
         this.props.update(this.totals);
+        this.totals.display_rounding = false;
     }
 
     formatData(props) {
@@ -161,7 +162,8 @@ export class TaxTotalsComponent extends Component {
             }
         }
         totals.subtotals = subtotals;
-        let amount_total = amount_untaxed + amount_tax;
+        let rounding_amount = totals.display_rounding && totals.rounding_amount || 0;
+        let amount_total = amount_untaxed + amount_tax + rounding_amount;
         totals.amount_total = amount_total;
         totals.formatted_amount_total = formatMonetary(amount_total, currencyFmtOpts);
         for (let group_name of Object.keys(totals.groups_by_subtotal)) {

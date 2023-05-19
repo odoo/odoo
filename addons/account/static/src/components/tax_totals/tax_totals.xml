@@ -64,6 +64,17 @@
                     </t>
                 </t>
 
+                <tr t-if="'formatted_rounding_amount' in totals and totals.rounding_amount !== 0 and totals.display_rounding">
+                    <td class="o_td_label">
+                        <label class="o_form_label o_tax_total_label">Rounding</label>
+                    </td>
+                    <td>
+                        <span
+                            t-out="totals.formatted_rounding_amount"
+                        />
+                    </td>
+                </tr>
+
                 <!-- Total amount with all taxes-->
                 <tr>
                     <td class="o_td_label">
@@ -75,19 +86,7 @@
                             name="amount_total"
                             t-att-class="Object.keys(totals.groups_by_subtotal).length > 0 ? 'oe_subtotal_footer_separator' : ''"
                             t-out="totals.formatted_amount_total"
-                            t-attf-style="{{ !totals.formatted_amount_total_rounded ? 'font-size: 1.3em; font-weight: bold; white-space: nowrap;' : 'font-size: 1em;' }}"
-                        />
-                    </td>
-                </tr>
-                <tr t-if="totals.formatted_amount_total_rounded">
-                    <td class="o_td_label">
-                        <label class="o_form_label o_tax_total_label">Total Rounded</label>
-                    </td>
-
-                    <td>
-                        <span
-                            t-out="totals.formatted_amount_total_rounded"
-                            style="white-space: nowrap; font-weight: bold; font-size: 1.3em;"
+                            style="'font-size: 1.3em; font-weight: bold; white-space: nowrap;'"
                         />
                     </td>
                 </tr>
