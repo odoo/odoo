@@ -18,8 +18,7 @@ This module add, for accounting:
 
     """,
     'depends': [
-        'base',
-        'account',
+        'account_qr_code_emv',
     ],
     'data': [
         'data/l10n_sg_chart_data.xml',
