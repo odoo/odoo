@@ -5445,7 +5445,7 @@ QUnit.module("Views", (hooks) => {
 
         // validate presence of the search arch info
         await toggleSearchBarMenu(target);
-        assert.containsOnce(target, ".o_filter_menu .o_menu_item");
+        assert.containsN(target, ".o_filter_menu .o_menu_item", 2);
     });
 
     QUnit.test("kanban view with create=False", async (assert) => {

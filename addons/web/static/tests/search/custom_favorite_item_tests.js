@@ -90,14 +90,20 @@ QUnit.module("Search", (hooks) => {
         await toggleSearchBarMenu(target);
         await toggleSaveFavorite(target);
         assert.strictEqual(
-            target.querySelector('.o_add_favorite input[type="text"]').value,
+            target.querySelector('.o_add_favorite + .o_accordion_values input[type="text"]').value,
             "Action Name"
         );
-        assert.containsN(target, '.o_add_favorite .form-check input[type="checkbox"]', 2);
-        const labelEls = target.querySelectorAll(".o_add_favorite .form-check label");
+        assert.containsN(
+            target,
+            '.o_add_favorite + .o_accordion_values .form-check input[type="checkbox"]',
+            2
+        );
+        const labelEls = target.querySelectorAll(
+            ".o_add_favorite + .o_accordion_values .form-check label"
+        );
         assert.deepEqual(
             [...labelEls].map((e) => e.innerText.trim()),
-            ["Use by default", "Share with all users"]
+            ["Default filter", "Shared"]
         );
     });
 
