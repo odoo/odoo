@@ -50,10 +50,10 @@ class TestExpression(TransactionCase):
 
         # Testing field mapping 1
         self.assertEqual(
-            ['&', '!', ('field3', '=', False), ('field3', '!=', 'test')],
+            [('field4', '!=', 'test')],
             normalize_domain(utils.filter_domain_leaf(
                 ['|', ('field1', 'in', [1, 2]), '!', ('field2', '=', False), ('field3', '!=', 'test')],
                 lambda field: field == 'field3',
-                field_name_mapping={'field2': 'field3'},
+                field_name_mapping={'field3': 'field4'},
             ))
         )
