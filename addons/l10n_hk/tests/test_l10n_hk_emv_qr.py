@@ -7,11 +7,16 @@ from odoo.tests import tagged
 
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class L10nHkTestEMVQRCode(AccountTestInvoicingCommon):
+class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
     """ Test the generation of the EMV QR Code on invoices """
 
     @classmethod
-    def setUpClass(cls, chart_template_ref='l10n_hk.l10n_hk_chart_template'):
+    def setup_armageddon_tax(cls, tax_name, company_data):
+        # Hong Kong doesn't have any tax, so this methods will throw errors if we don't return None
+        return None
+
+    @classmethod
+    def setUpClass(cls, chart_template_ref='hk'):
         super().setUpClass(chart_template_ref=chart_template_ref)
         cls.company_data['company'].qr_code = True
         cls.company_data['company'].partner_id.update({
@@ -40,7 +45,7 @@ class L10nHkTestEMVQRCode(AccountTestInvoicingCommon):
             'invoice_line_ids': [Command.create({'quantity': 1, 'price_unit': 100})],
         })
 
-    def l10n_hk_test_emv_qr_code_generation(self):
+    def test_emv_qr_code_generation(self):
         self.emv_qr_invoice.qr_code_method = 'emv_qr'
         self.emv_qr_invoice._generate_qr_code()
 
@@ -67,7 +72,7 @@ class L10nHkTestEMVQRCode(AccountTestInvoicingCommon):
         with self.assertRaises(UserError, msg="The account receiving the payment must have a FPS type and a FPS identifier set."):
             self.emv_qr_invoice._generate_qr_code()
 
-    def l10n_hk_test_emv_qr_vals(self):
+    def test_emv_qr_vals(self):
         self.emv_qr_invoice.qr_code_method = 'emv_qr'
         unstruct_ref = self.emv_qr_invoice.ref or self.emv_qr_invoice.name
         emv_qr_vals = self.emv_qr_invoice.partner_bank_id._get_qr_vals(
@@ -79,10 +84,6 @@ class L10nHkTestEMVQRCode(AccountTestInvoicingCommon):
             structured_communication=self.emv_qr_invoice.payment_reference,
         )
 
-        # Check crc16 value
-        crc16 = emv_qr_vals[-1]
-        self.assertEqual(crc16, '3CA6')
-
         # Check the whole qr code string
         qr_code_string = ''.join(emv_qr_vals)
-        self.assertEqual(qr_code_string, '00020101021226330012hk.com.hkicl0313+852-678912345204000053033445405115.05802HK5914company_1_data6002HK63043CA6')
+        self.assertEqual(qr_code_string, '00020101021226330012hk.com.hkicl0313+852-678912345204000053033445405100.05802HK5914company_1_data6002HK6304CD39')
