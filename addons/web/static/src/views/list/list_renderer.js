@@ -1563,8 +1563,15 @@ export class ListRenderer extends Component {
         group.toggle();
     }
 
+    get canSelectRecord() {
+        return !this.props.list.editedRecord && !this.props.list.model.useSampleModel;
+    }
+
     toggleSelection() {
         const list = this.props.list;
+        if (!this.canSelectRecord) {
+            return;
+        }
         if (list.selection.length === list.records.length) {
             list.records.forEach((record) => {
                 record.toggleSelection(false);
@@ -1578,6 +1585,9 @@ export class ListRenderer extends Component {
     }
 
     toggleRecordSelection(record) {
+        if (!this.canSelectRecord) {
+            return;
+        }
         record.toggleSelection();
         this.props.list.selectDomain(false);
     }
