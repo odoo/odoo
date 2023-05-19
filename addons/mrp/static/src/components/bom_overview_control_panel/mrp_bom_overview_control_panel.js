@@ -5,6 +5,7 @@ import { BomOverviewDisplayFilter } from "../bom_overview_display_filter/mrp_bom
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { formatFloat } from "@web/views/fields/formatters";
 
 const { Component } = owl;
 
@@ -16,7 +17,7 @@ export class BomOverviewControlPanel extends Component {
     //---- Handlers ----
 
     updateQuantity(ev) {
-        const newVal = isNaN(ev.target.value) ? 1 : parseInt(ev.target.value);
+        const newVal = isNaN(ev.target.value) ? 1 : parseFloat(formatFloat(parseFloat(ev.target.value), { digits: [false, this.precision] }));
         this.props.changeBomQuantity(newVal);
     }
 
@@ -34,6 +35,10 @@ export class BomOverviewControlPanel extends Component {
     getDomain() {
         const keys = Object.keys(this.props.variants);
         return [['id', 'in', keys]];
+    }
+
+    get precision() {
+        return this.props.precision;
     }
 }
 
@@ -60,6 +65,7 @@ BomOverviewControlPanel.props = {
     changeVariant: Function,
     changeBomQuantity: Function,
     changeDisplay: Function,
+    precision: Number,
 };
 BomOverviewControlPanel.defaultProps = {
     variants: {},
