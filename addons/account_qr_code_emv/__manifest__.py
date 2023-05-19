@@ -9,5 +9,8 @@
     """,
     'author': 'Odoo SA',
     'depends': ['account'],
+    'data': [
+        'views/res_bank_views.xml',
+    ],
     'license': 'LGPL-3',
 }

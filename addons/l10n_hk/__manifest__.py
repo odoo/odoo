@@ -12,7 +12,6 @@
     ],
     'data': [
         'data/account_chart_template_data.xml',
-        'views/res_bank_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
