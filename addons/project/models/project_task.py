@@ -12,6 +12,7 @@ from odoo.addons.web_editor.controllers.main import handle_history_divergence
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools.misc import get_lang
+from odoo.addons.resource.models.utils import filter_domain_leaf
 
 
 PROJECT_TASK_READABLE_FIELDS = {
@@ -1122,6 +1123,39 @@ class Task(models.Model):
         if project_task_type.fold:
             return {'date_end': fields.Datetime.now()}
         return {'date_end': False}
+
+    def _search_on_comodel(self, domain, field, comodel, order=None, additional_domain=None):
+
+        def _change_operator(domain):
+            new_domain = []
+            for dom in domain:
+                if len(dom) == 3:
+                    _, op, value = dom
+                    op = "ilike" if op == "child_of" else op
+                    if isinstance(value, list) and all(isinstance(val, int) for val in value):
+                        new_domain.append(("id", op, value))
+                    if isinstance(value, str) or (isinstance(value, list) and not all(isinstance(val, str) for val in value)):
+                        new_domain.append(("name", op, value))
+                    if isinstance(value, int):
+                        new_domain.append(("id", op, [value]))
+                else:
+                    new_domain.append(dom)
+            return new_domain
+
+        filtered_domain = filter_domain_leaf(domain, lambda field_to_check: field_to_check in [
+            field,
+            f"{field}.id",
+            f"{field}.name",
+        ], {
+            field: "name",
+            f"{field}.id": "id",
+            f"{field}.name": "name",
+        })
+        if not filtered_domain:
+            return False
+        if additional_domain:
+            filtered_domain = expression.AND([filtered_domain, additional_domain])
+        return self.env[comodel].search(_change_operator(filtered_domain), order=order)
 
     # ---------------------------------------------------
     # Subtasks
