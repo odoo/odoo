@@ -1,1 +1,1 @@
-from . import l10n_hk_test_emv_qr
+from . import test_l10n_hk_emv_qr
