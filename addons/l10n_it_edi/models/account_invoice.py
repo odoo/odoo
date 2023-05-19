@@ -252,7 +252,7 @@ class AccountMove(models.Model):
 
         # Reduce downpayment views to a single recordset
         downpayment_moves = [l.get('downpayment_moves', self.env['account.move']) for l in invoice_lines]
-        downpayment_moves = reduce(lambda x, y: x | y, downpayment_moves)
+        downpayment_moves = self.browse(move.id for moves in downpayment_moves for move in moves)
 
         # Create file content.
         template_values = {
