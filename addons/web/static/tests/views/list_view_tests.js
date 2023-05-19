@@ -17813,6 +17813,33 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test("list view: prevent record selection when editable list in edit mode", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="top">
+                    <field name="foo" />
+                </tree>`,
+        });
+
+        //  When we try to select new record in edit mode
+        await click(target.querySelector('.o_list_buttons .o_list_button_add'));
+        await click(target.querySelector('.o_data_row .o_list_record_selector'));
+        assert.strictEqual(
+            target.querySelector('.o_data_row .o_list_record_selector input[type="checkbox"]').checked,
+            false
+        );
+
+        //  When we try to select all records in edit mode
+        await click(target.querySelector('th.o_list_record_selector.o_list_controller'));
+        assert.strictEqual(
+            target.querySelector('.o_list_controller input[type="checkbox"]').checked,
+            false
+        );
+    });
+
     QUnit.test("context keys not passed down the stack and not to fields", async (assert) => {
         patchWithCleanup(AutoComplete, {
             timeout: 0,
