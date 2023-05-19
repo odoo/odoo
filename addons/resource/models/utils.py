@@ -84,8 +84,8 @@ def filter_domain_leaf(domain, field_check, field_name_mapping=None):
         next_elem = domain.pop() # Browsing the domain backward simplifies the filtering
         if is_leaf(next_elem):
             field_name, op, value = next_elem
-            field_name = field_name_mapping.get(field_name, field_name)
             if field_check(field_name):
+                field_name = field_name_mapping.get(field_name, field_name)
                 stack.append((field_name, op, value))
                 ignored_elems.append(False)
             else:
