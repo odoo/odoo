@@ -842,6 +842,7 @@ class StockQuant(models.Model):
         argument, we’ll create a new quant in order for these transactions to not rollback. This
         method will find and deduplicate these quants.
         """
+        params = []
         query = """WITH
                         dupes AS (
                             SELECT min(id) as to_update_quant_id,
@@ -851,6 +852,15 @@ class StockQuant(models.Model):
                                 SUM(quantity) as quantity,
                                 MIN(in_date) as in_date
                             FROM stock_quant
+        """
+        if self._ids:
+            query += """
+                            WHERE
+                                location_id in %s
+                                AND product_id in %s
+            """
+            params = [tuple(self.location_id.ids), tuple(self.product_id.ids)]
+        query += """
                             GROUP BY product_id, company_id, location_id, lot_id, package_id, owner_id
                             HAVING count(id) > 1
                         ),
@@ -867,7 +877,7 @@ class StockQuant(models.Model):
         """
         try:
             with self.env.cr.savepoint():
-                self.env.cr.execute(query)
+                self.env.cr.execute(query, params)
                 self.env.invalidate_all()
         except Error as e:
             _logger.info('an error occurred while merging quants: %s', e.pgerror)
@@ -1135,6 +1145,7 @@ class QuantPackage(models.Model):
             return [('id', '=', False)]
 
     def unpack(self):
+        unpacked_quants = self.env['stock.quant']
         for package in self:
             move_line_to_modify = self.env['stock.move.line'].search([
                 ('package_id', '=', package.id),
@@ -1142,11 +1153,12 @@ class QuantPackage(models.Model):
                 ('reserved_qty', '!=', 0),
             ])
             move_line_to_modify.write({'package_id': False})
+            unpacked_quants |= package.quant_ids
             package.mapped('quant_ids').sudo().write({'package_id': False})
 
         # Quant clean-up, mostly to avoid multiple quants of the same product. For example, unpack
         # 2 packages of 50, then reserve 100 => a quant of -50 is created at transfer validation.
-        self.env['stock.quant']._quant_tasks()
+        unpacked_quants._quant_tasks()
 
     def action_view_picking(self):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
