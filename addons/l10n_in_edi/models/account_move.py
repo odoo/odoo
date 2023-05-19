@@ -61,3 +61,12 @@ class AccountMove(models.Model):
         """
         param_name = 'l10n_in_edi.manage_invoice_negative_lines'
         return bool(self.env['ir.config_parameter'].sudo().get_param(param_name))
+
+    def action_view_einvoice(self):
+        if not self._get_l10n_in_edi_response_json():
+            raise UserError(_("There is no Indian E-invoice found."))
+        return {
+                'type': 'ir.actions.act_url',
+                'url': f'/l10n_in_edi/vieweinvoice/{self.id}',
+                'target': 'new',
+           }
