@@ -1175,6 +1175,7 @@ class PosSession(models.Model):
             partial_args = {
                 'name': 'Rounding line',
                 'move_id': self.move_id.id,
+                'display_type': 'rounding'
             }
             if float_compare(0.0, amount, precision_rounding=self.currency_id.rounding) > 0:    # loss
                 partial_args['account_id'] = self.config_id.rounding_method.loss_account_id.id
