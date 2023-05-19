@@ -29,6 +29,9 @@ odoo.define('payment.payment_form_mixin', require => {
             } else {
                 this._setPaymentFlow(); // Initialize the payment flow to let providers overwrite it
             }
+            // When a module wants to activate the button,
+            // it must test its conditions and then call this bus.
+            core.bus.on('enableButton', this, this._enableButton);
         },
 
         //--------------------------------------------------------------------------
