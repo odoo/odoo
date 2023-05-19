@@ -148,7 +148,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             }
             this._updateShippingCost(result.new_amount_delivery);
         }
-        this._setIsPayable(result.status);
+        this._enableButton(result.status);
         let currentId = result.carrier_id
         const showLocations = document.querySelectorAll(".o_show_pickup_locations");
 
@@ -232,23 +232,35 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
                 'carrier_id': carrier_id,
             },
         })
-        this._setIsPayable(result.status)
+        this._enableButton(result.status);
+    },
+    /**
+     * Check if the submit button can be enabled.
+     * If it is the case, trigger the `_enableButton` from payment
+     *
+     * @private
+     */
+    _enableButton: function(status){
+        if (!this._isPayable(status)) {
+            return;
+        }
+        core.bus.trigger('enableButton');
     },
     /**
      * @private
      * @param {boolean} status  : the status of the rate_shipment request
+     * @return {boolean}
      */
     // FYI we don't cover the case where the payement method is not selected because it already throws an error
-    _setIsPayable: function(status=false){
+    _isPayable: function(status=false){
         // abort if no paybutton
         var payButton = document.querySelector('button[name="o_payment_submit_button"]');
         if (!payButton) {
-            return;
+            return false;
         }
         // abort if the rating failed
         if (!status){
-            payButton.disabled = true;
-            return;
+            return false;
         }
         const carriers = Array.from(document.querySelectorAll('.o_delivery_carrier_select'))
         let carrierChecked = null;
@@ -259,24 +271,21 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         })
         //abort if no carrier is selected
         if (!carrierChecked){
-            payButton.disabled = true;
-            return;
+            return false;
         }
 
         // if the carrier does not need a pickup point
         const isPickUpPointNeeded = carrierChecked.querySelector('.o_show_pickup_locations')
         if (!isPickUpPointNeeded){
-            payButton.disabled = false;
-            return;
+            return true;
         }
 
         const address = carrierChecked.querySelector('.o_order_location_address').innerText
         const isPickUp = carrierChecked.lastChild.previousSibling.children;
         if (isPickUp.length > 1 && (address == "" || isPickUp[0].classList.contains("d-none"))) {
-            payButton.disabled = true ;
-            return
+            return false;
         }
-        payButton.disabled = false;
+        return true;
     },
 
     //--------------------------------------------------------------------------
@@ -392,7 +401,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
                 'carrier_id': carrierId,
             },
         })
-        this._setIsPayable(result.status)
+        this._enableButton(result.status);
     },
 
     /**
