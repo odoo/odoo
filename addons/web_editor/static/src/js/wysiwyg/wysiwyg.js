@@ -1721,16 +1721,16 @@ const Wysiwyg = Widget.extend({
                     colorpicker.on('color_leave', null, ev => {
                         this.odooEditor.historyRevertCurrentStep();
                     });
+                    const $childElement = $dropdown.children('.dropdown-toggle');
+                    const dropdownToggle = new Dropdown($childElement);
                     colorpicker.on('enter_key_color_colorpicker', null, () => {
-                        $dropdown.children('.dropdown-toggle').dropdown('hide');
+                        dropdownToggle.hide();
                     });
                     return colorpicker.replace(hookEl).then(() => {
                         if (oldColorpicker) {
                             oldColorpicker.destroy();
                         }
                         manualOpening = true;
-                        const $childElement = $dropdown.children('.dropdown-toggle');
-                        const dropdownToggle = new Dropdown($childElement);
                         dropdownToggle.show();
                         const $colorpicker = $dropdown.find('.colorpicker');
                         const colorpickerHeight = $colorpicker.outerHeight();
@@ -1811,21 +1811,16 @@ const Wysiwyg = Widget.extend({
         if (e && e.key === 'a' && (e.ctrlKey || e.metaKey)) {
             e.preventDefault();
             const selection = this.odooEditor.document.getSelection();
-            const containerSelector = '#wrap>*, [contenteditable], .oe_structure>*';
-            let $deepestParent =
-                selection ?
-                    $(selection.anchorNode).parentsUntil(containerSelector).last() :
-                    $();
-
-            if ($deepestParent.is('html')) {
-                // In case we didn't find a suitable container
-                // we need to restrict the selection inside to the editable area.
-                $deepestParent = this.$editable.find(containerSelector);
-            }
-
-            if ($deepestParent.length) {
+            const containerSelector = '#wrap>*, .oe_structure>*, [contenteditable]';
+            const container =
+                (selection &&
+                    closestElement(selection.anchorNode, containerSelector)) ||
+                // In case a suitable container could not be found then the
+                // selection is restricted inside the editable area.
+                this.$editable.find(containerSelector);
+            if (container) {
                 const range = document.createRange();
-                range.selectNodeContents($deepestParent.parent()[0]);
+                range.selectNodeContents(container);
                 selection.removeAllRanges();
                 selection.addRange(range);
             }
