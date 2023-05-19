@@ -11,14 +11,18 @@
                         <t t-foreach="moneyDetailsList" t-as="moneyValue" t-key="moneyValue">
                             <div class="money-details-value" t-on-input="updateMoneyDetailsAmount">
                                 <input class="pos-input" t-att-id="moneyValue" type="number" t-model.number="state.moneyDetails[moneyValue]" t-on-focus="ev=>ev.target.select()"/>
-                                <CurrencyAmount forTarget="moneyValue" currency="currency" amount="moneyValue"/>
+                                <label class="oe_link_icon" t-att-for="moneyValue">
+                                    <t t-if="currency.position === 'before'"><t t-esc="currency.symbol"/>&nbsp;</t>
+                                    <t t-esc="moneyValue"/>
+                                    <t t-if="currency.position === 'after'">&nbsp;<t t-esc="currency.symbol"/></t>
+                                </label>
                             </div>
                         </t>
                     </div>
                 </div>
                 <div class="total-section">
                     <span>Total </span>
-                    <CurrencyAmount currency="currency" amount="env.utils.formatCurrency(state.total, false)"/>
+                    <label t-esc="env.utils.formatCurrency(state.total)"/>
                 </div>
             </main>
             <footer class="footer footer-flex">

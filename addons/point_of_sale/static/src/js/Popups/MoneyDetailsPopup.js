@@ -2,12 +2,10 @@
 
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { useState } from "@odoo/owl";
-import { CurrencyAmount } from "../Misc/CurrencyAmount";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { floatIsZero } from "@web/core/utils/numbers";
 
 export class MoneyDetailsPopup extends AbstractAwaitablePopup {
-    static components = { CurrencyAmount };
     static template = "MoneyDetailsPopup";
 
     setup() {
