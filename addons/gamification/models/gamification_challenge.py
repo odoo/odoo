@@ -8,7 +8,8 @@ from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta, MO
 from markupsafe import Markup
 
-from odoo import api, models, fields, _, exceptions
+from odoo import _, api, exceptions, fields, models
+from odoo.http import SESSION_LIFETIME
 from odoo.tools import ustr
 
 _logger = logging.getLogger(__name__)
@@ -270,20 +271,25 @@ class Challenge(models.Model):
         Goals = self.env['gamification.goal']
 
         # include yesterday goals to update the goals that just ended
-        # exclude goals for portal users that did not connect since the last update
+        # exclude goals for users that have not interacted with the
+        # webclient since the last update or whose session is no longer
+        # valid.
         yesterday = fields.Date.to_string(date.today() - timedelta(days=1))
         self.env.cr.execute("""SELECT gg.id
                         FROM gamification_goal as gg
-                        JOIN res_users_log as log ON gg.user_id = log.create_uid
-                        JOIN res_users ru on log.create_uid = ru.id
-                       WHERE (gg.write_date < log.create_date OR ru.share IS NOT TRUE)
-                         AND ru.active IS TRUE
+                        JOIN bus_presence as bp ON bp.user_id = gg.user_id
+                       WHERE gg.write_date <= bp.last_presence
+                         AND bp.last_presence >= now() AT TIME ZONE 'UTC' - interval '%(session_lifetime)s seconds'
                          AND gg.closed IS NOT TRUE
-                         AND gg.challenge_id IN %s
+                         AND gg.challenge_id IN %(challenge_ids)s
                          AND (gg.state = 'inprogress'
-                              OR (gg.state = 'reached' AND gg.end_date >= %s))
+                              OR (gg.state = 'reached' AND gg.end_date >= %(yesterday)s))
                       GROUP BY gg.id
-        """, [tuple(self.ids), yesterday])
+        """, {
+            'session_lifetime': SESSION_LIFETIME,
+            'challenge_ids': tuple(self.ids),
+            'yesterday': yesterday
+        })
 
         Goals.browse(goal_id for [goal_id] in self.env.cr.fetchall()).update_goal()
 
