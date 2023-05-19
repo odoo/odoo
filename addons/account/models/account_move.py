@@ -17,7 +17,7 @@ from unittest.mock import patch
 
 from odoo import api, fields, models, _, Command
 from odoo.addons.base.models.decimal_precision import DecimalPrecision
-from odoo.addons.account.tools import format_rf_reference
+from odoo.addons.account.tools import format_structured_reference_iso
 from odoo.exceptions import UserError, ValidationError, AccessError, RedirectWarning
 from odoo.tools import (
     date_utils,
@@ -2699,7 +2699,7 @@ class AccountMove(models.Model):
             is 07 so the reference will be 'RF07 43'.
         """
         self.ensure_one()
-        return format_rf_reference(self.id)
+        return format_structured_reference_iso(self.id)
 
     def _get_invoice_reference_euro_partner(self):
         """ This computes the reference based on the RF Creditor Reference.
@@ -2716,7 +2716,7 @@ class AccountMove(models.Model):
         partner_ref = self.partner_id.ref
         partner_ref_nr = re.sub(r'\D', '', partner_ref or '')[-21:] or str(self.partner_id.id)[-21:]
         partner_ref_nr = partner_ref_nr[-21:]
-        return format_rf_reference(partner_ref_nr)
+        return format_structured_reference_iso(partner_ref_nr)
 
     def _get_invoice_reference_odoo_invoice(self):
         """ This computes the reference based on the Odoo format.
