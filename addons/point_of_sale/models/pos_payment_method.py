@@ -5,7 +5,7 @@ from odoo.exceptions import UserError
 class PosPaymentMethod(models.Model):
     _name = "pos.payment.method"
     _description = "Point of Sale Payment Methods"
-    _order = "sequence"
+    _order = "sequence, id"
 
     def _get_payment_terminal_selection(self):
         return []
