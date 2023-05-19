@@ -872,7 +872,7 @@ class BaseModel(metaclass=MetaModel):
         def onchange_default(field, self):
             value = field.convert_to_write(self[field.name], self)
             condition = "%s=%s" % (field.name, value)
-            defaults = self.env['ir.default'].get_model_defaults(self._name, condition)
+            defaults = self.env['ir.default']._get_model_defaults(self._name, condition)
             self.update(defaults)
 
         for name, field in cls._fields.items():
@@ -1430,7 +1430,7 @@ class BaseModel(metaclass=MetaModel):
         """
         defaults = {}
         parent_fields = defaultdict(list)
-        ir_defaults = self.env['ir.default'].get_model_defaults(self._name)
+        ir_defaults = self.env['ir.default']._get_model_defaults(self._name)
 
         for name in fields_list:
             # 1. look up context

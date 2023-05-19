@@ -476,7 +476,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
 
         # defaults: take the corresponding default value they set
         for name, model, field in classified['default']:
-            value = IrDefault.get(model, field)
+            value = IrDefault._get(model, field)
             if value is not None:
                 res[name] = value
 
