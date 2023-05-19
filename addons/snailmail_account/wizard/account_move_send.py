@@ -36,7 +36,7 @@ class AccountMoveSend(models.Model):
                     .filtered(lambda x: not self.env['snailmail.letter']._is_valid_address(x))
                 if wrong_address_partners:
                     display_messages.append(_("The following customers don't have a valid address: "))
-                    display_messages.append(", ".join(wrong_address_partners.mapped('name')))
+                    display_messages.append(", ".join(wrong_address_partners.mapped('display_name')))
             wizard.send_by_post_warning_message = "".join(display_messages) if display_messages else None
 
     # -------------------------------------------------------------------------
