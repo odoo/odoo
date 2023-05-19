@@ -161,7 +161,7 @@ class SaleOrder(models.Model):
     def _compute_warehouse_id(self):
         for order in self:
             default_warehouse_id = self.env['ir.default'].with_company(
-                order.company_id.id).get_model_defaults('sale.order').get('warehouse_id')
+                order.company_id.id)._get_model_defaults('sale.order').get('warehouse_id')
             if order.state in ['draft', 'sent'] or not order.ids:
                 # Should expect empty
                 if default_warehouse_id is not None:

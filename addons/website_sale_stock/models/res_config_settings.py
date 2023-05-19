@@ -33,11 +33,11 @@ class ResConfigSettings(models.TransientModel):
     @api.model
     def get_values(self):
         res = super(ResConfigSettings, self).get_values()
-        IrDefault = self.env['ir.default'].sudo()
-        allow_out_of_stock_order = IrDefault.get('product.template', 'allow_out_of_stock_order')
+        IrDefaultGet = self.env['ir.default'].sudo()._get
+        allow_out_of_stock_order = IrDefaultGet('product.template', 'allow_out_of_stock_order')
 
         res.update(
             allow_out_of_stock_order=allow_out_of_stock_order if allow_out_of_stock_order is not None else True,
-            available_threshold=IrDefault.get('product.template', 'available_threshold') or 5.0,
-            show_availability=IrDefault.get('product.template', 'show_availability') or False)
+            available_threshold=IrDefaultGet('product.template', 'available_threshold') or 5.0,
+            show_availability=IrDefaultGet('product.template', 'show_availability') or False)
         return res
