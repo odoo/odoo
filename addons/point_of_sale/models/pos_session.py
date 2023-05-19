@@ -665,6 +665,7 @@ class PosSession(models.Model):
         # field of the pos.payment record.
         amounts = lambda: {'amount': 0.0, 'amount_converted': 0.0}
         tax_amounts = lambda: {'amount': 0.0, 'amount_converted': 0.0, 'base_amount': 0.0, 'base_amount_converted': 0.0}
+        split_receivables_op = defaultdict(amounts)
         split_receivables_bank = defaultdict(amounts)
         split_receivables_cash = defaultdict(amounts)
         split_receivables_pay_later = defaultdict(amounts)
@@ -689,6 +690,13 @@ class PosSession(models.Model):
         currency_rounding = self.currency_id.rounding
         for order in self.order_ids:
             order_is_invoiced = order.is_invoiced
+            for op in order.online_payment_ids:
+                amount = op.amount
+                if float_is_zero(amount, precision_rounding=currency_rounding):
+                    continue
+                # TODO Caution: op != pos.payment, most methods expect a pos.payment
+                split_receivables_op[op] = self._update_amounts(split_receivables_op[op], {'amount': amount}, op.date)
+
             for payment in order.payment_ids:
                 amount = payment.amount
                 if float_is_zero(amount, precision_rounding=currency_rounding):
@@ -815,6 +823,7 @@ class PosSession(models.Model):
             'taxes':                               taxes,
             'sales':                               sales,
             'stock_expense':                       stock_expense,
+            'split_receivables_op':                split_receivables_op,
             'split_receivables_bank':              split_receivables_bank,
             'combine_receivables_bank':            combine_receivables_bank,
             'split_receivables_cash':              split_receivables_cash,
@@ -869,10 +878,12 @@ class PosSession(models.Model):
 
     def _create_bank_payment_moves(self, data):
         combine_receivables_bank = data.get('combine_receivables_bank')
+        split_receivables_op = data.get('split_receivables_op')
         split_receivables_bank = data.get('split_receivables_bank')
         bank_payment_method_diffs = data.get('bank_payment_method_diffs')
         MoveLine = data.get('MoveLine')
         payment_method_to_receivable_lines = {}
+        online_payment_to_receivable_lines = {}
         payment_to_receivable_lines = {}
         for payment_method, amounts in combine_receivables_bank.items():
             combine_receivable_line = MoveLine.create(self._get_combine_receivable_vals(payment_method, amounts['amount'], amounts['amount_converted']))
@@ -884,11 +895,17 @@ class PosSession(models.Model):
             payment_receivable_line = self._create_split_account_payment(payment, amounts)
             payment_to_receivable_lines[payment] = split_receivable_line | payment_receivable_line
 
+        for payment, amounts in split_receivables_op.items():
+            split_receivable_line = MoveLine.create(self._get_split_receivable_op_vals(payment, amounts['amount'], amounts['amount_converted']))
+            # payment_receivable_line = self._create_split_account_payment(payment, amounts)
+            online_payment_to_receivable_lines[payment] = split_receivable_line
+
         for bank_payment_method in self.payment_method_ids.filtered(lambda pm: pm.type == 'bank' and pm.split_transactions):
             self._create_diff_account_move_for_split_payment_method(bank_payment_method, bank_payment_method_diffs.get(bank_payment_method.id) or 0)
 
         data['payment_method_to_receivable_lines'] = payment_method_to_receivable_lines
         data['payment_to_receivable_lines'] = payment_to_receivable_lines
+        data['online_payment_to_receivable_lines'] = online_payment_to_receivable_lines
         return data
 
     def _create_pay_later_receivable_lines(self, data):
@@ -1095,6 +1112,7 @@ class PosSession(models.Model):
         stock_output_lines = data.get('stock_output_lines')
         payment_method_to_receivable_lines = data.get('payment_method_to_receivable_lines')
         payment_to_receivable_lines = data.get('payment_to_receivable_lines')
+        online_payment_to_receivable_lines = data.get('online_payment_to_receivable_lines')
 
 
         all_lines = (
@@ -1117,6 +1135,10 @@ class PosSession(models.Model):
                 lines.filtered(lambda line: not line.reconciled).reconcile()
 
         for payment, lines in payment_to_receivable_lines.items():
+            if payment.partner_id.property_account_receivable_id.reconcile:
+                lines.filtered(lambda line: not line.reconciled).reconcile()
+
+        for payment, lines in online_payment_to_receivable_lines.items():
             if payment.partner_id.property_account_receivable_id.reconcile:
                 lines.filtered(lambda line: not line.reconciled).reconcile()
 
@@ -1206,6 +1228,21 @@ class PosSession(models.Model):
             'move_id': self.move_id.id,
             'partner_id': accounting_partner.id,
             'name': '%s - %s' % (self.name, payment.payment_method_id.name),
+        }
+        return self._debit_amounts(partial_vals, amount, amount_converted)
+
+    def _get_split_receivable_op_vals(self, op, amount, amount_converted):
+        accounting_partner = self.env["res.partner"]._find_accounting_partner(op.partner_id)
+        if not accounting_partner:
+            # TODO change
+            raise UserError(_("You have enabled the \"Identify Customer\" option for %s payment method,"
+                              "but the order %s does not contain a customer.") % (payment.payment_method_id.name,
+                               payment.pos_order_id.name))
+        partial_vals = {
+            'account_id': accounting_partner.property_account_receivable_id.id,
+            'move_id': self.move_id.id,
+            'partner_id': accounting_partner.id,
+            'name': '%s - Online payment (%s)' % (self.name, op.payment_method_id.name),
         }
         return self._debit_amounts(partial_vals, amount, amount_converted)
 

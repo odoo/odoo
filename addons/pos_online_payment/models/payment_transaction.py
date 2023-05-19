@@ -40,14 +40,16 @@ class PaymentTransaction(models.Model):
                     raise ValidationError("The payment transaction (%d) has a negative amount." % tx.id);
                 if not tx.payment_id: # the payment could already have been created by account_payment module
                     account_payment = tx._create_payment()
-                    if not account_payment or tx.payment_id.id != account_payment.id:
+                    if not account_payment or not tx.payment_id or tx.payment_id.id != account_payment.id:
                         raise ValidationError(
                             "The POS online payment was not saved correctly (tx.id=%d)" % tx.id)
                 tx.pos_order_id.online_payment_ids = [Command.link(tx.payment_id.id)]
                 tx.payment_id.pos_order_id = tx.pos_order_id.id
+                tx.payment_id.pos_session_id = tx.pos_order_id.session_id.id # TODO check useful for payments by pos sessions
                 tx.pos_order_id._update_amount_paid()
                 if tx.pos_order_id._is_pos_order_paid():
                     tx.pos_order_id.action_pos_order_paid()
+                    # tx.pos_order_id.account_move = tx.payment_id.move_id
 
     def action_view_pos_order(self):
         """ Return the action for the view of the pos order linked to the transaction.
