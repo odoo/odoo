@@ -189,6 +189,8 @@ class Warehouse(models.Model):
         res = super().write(vals)
 
         for warehouse in warehouses:
+            if self._context.get('skip_check_route'):
+                continue
             # check if we need to delete and recreate route
             depends = [depend for depends in [value.get('depends', []) for value in warehouse._get_routes_values().values()] for depend in depends]
             if 'code' in vals or any(depend in vals for depend in depends):

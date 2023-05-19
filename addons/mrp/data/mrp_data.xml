@@ -14,9 +14,10 @@
         </record>
 
         <!-- Enable the manufacturing in warehouse0 -->
-        <record id='stock.warehouse0' model='stock.warehouse'>
-            <field name='manufacture_to_resupply' eval='True'/>
-        </record>
+        <function model="stock.warehouse" name="write" context="{'skip_check_route': True}">
+            <value model="stock.warehouse" eval="[ref('stock.warehouse0')]"/>
+            <value eval="{'manufacture_to_resupply': True}"/>
+        </function>
 
         <!--  Category for Blocking Reasons Workcenter -->
         <record id="category_availability" model="mrp.workcenter.productivity.loss.type">
