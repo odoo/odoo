@@ -74,16 +74,16 @@ class TestL10nHKEmvQrCode(AccountTestInvoicingCommon):
 
     def test_emv_qr_vals(self):
         self.emv_qr_invoice.qr_code_method = 'emv_qr'
-        unstruct_ref = self.emv_qr_invoice.ref or self.emv_qr_invoice.name
+        demo_payment_reference = 'INV/TEST/0001'
         emv_qr_vals = self.emv_qr_invoice.partner_bank_id._get_qr_vals(
             qr_method=self.emv_qr_invoice.qr_code_method,
             amount=self.emv_qr_invoice.amount_residual,
             currency=self.emv_qr_invoice.currency_id,
             debtor_partner=self.emv_qr_invoice.partner_id,
-            free_communication=unstruct_ref,
-            structured_communication=self.emv_qr_invoice.payment_reference,
+            free_communication=demo_payment_reference,
+            structured_communication=demo_payment_reference,
         )
 
         # Check the whole qr code string
         qr_code_string = ''.join(emv_qr_vals)
-        self.assertEqual(qr_code_string, '00020101021226330012hk.com.hkicl0313+852-678912345204000053033445405100.05802HK5914company_1_data6002HK6304CD39')
+        self.assertEqual(qr_code_string, '00020101021226330012hk.com.hkicl0313+852-678912345204000053033445405100.05802HK5914company_1_data6002HK62170513INV/TEST/00016304264C')

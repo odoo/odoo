@@ -12,7 +12,7 @@ class ResPartnerBank(models.Model):
 
     country_code = fields.Char(related='partner_id.country_code', string="Country Code")
     l10n_hk_fps_type = fields.Selection([('id', "FPS ID"), ('mobile', "Mobile Number"), ('email', "Email Address")], string='FPS Type')
-    l10n_hk_fps_identifier = fields.Char(string="FPS ID/Mobile Number/Email Address")
+    l10n_hk_fps_identifier = fields.Char(string="FPS Identifier", help="FPS ID, Mobile Number or Email Address")
 
     @api.constrains('l10n_hk_fps_type', 'l10n_hk_fps_identifier')
     def _check_l10n_hk_fps_identifier(self):
@@ -40,6 +40,9 @@ class ResPartnerBank(models.Model):
             fps_account = f'{fps_type_id}{len(self.l10n_hk_fps_identifier):02}{self.l10n_hk_fps_identifier}'
             return f'0012hk.com.hkicl{fps_account}'
         return super()._get_merchant_account_info()
+
+    def _get_additional_data_field(self, comment):
+        return f'05{len(comment):02}{comment}'
 
     def _get_error_messages_for_qr(self, qr_method, debtor_partner, currency):
         if qr_method == 'emv_qr' and self.country_code == 'HK':
