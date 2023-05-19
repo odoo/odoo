@@ -56,6 +56,7 @@
                             <field name="product_uom_category_id" invisible="1"/>
                             <field name="allow_operation_dependencies" invisible="1"/>
                             <field name="product_id" groups="product.group_product_variant" context="{'default_detailed_type': 'product'}"/>
+                            <field name="product_id" groups="!product.group_product_variant" invisible="1"/>
                             <label for="product_qty" string="Quantity"/>
                             <div class="o_row">
                                 <field name="product_qty"/>
