@@ -351,9 +351,10 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             ) if intracom_delivery else None,
         }
 
-        for line in invoice.line_ids:
-            if len(line.tax_ids) > 1:
+        for line in invoice.invoice_line_ids:
+            if len(line.tax_ids.filtered(lambda t: t.amount_type != 'fixed')) != 1:
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
+                # /!\ exception: possible to have any number of ecotaxes (fixed tax) with a regular percentage tax
                 constraints.update({'cen_en16931_tax_line': _("Each invoice line shall have one and only one tax.")})
 
         return constraints
