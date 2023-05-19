@@ -53,7 +53,7 @@ export class Attachment {
     }
 
     get isPdf() {
-        return this.mimetype === "application/pdf";
+        return this.mimetype && this.mimetype.startsWith("application/pdf");
     }
 
     get isImage() {
