@@ -1178,10 +1178,11 @@ class Field(MetaField('DummyField', (object,), {})):
             #       not stored and not computed -> default
             #
             if self.store and record.id:
+                # real record: fetch from database
                 recs = record._in_cache_without(self)
                 try:
                     recs._fetch_field(self)
-                except (AccessError, RecursionError):
+                except AccessError:
                     if len(recs) == 1:
                         raise
                     record._fetch_field(self)
