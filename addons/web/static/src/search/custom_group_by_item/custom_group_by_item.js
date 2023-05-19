@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Dropdown } from "@web/core/dropdown/dropdown";
+import { AccordionItem } from "@web/core/dropdown/accordion_item";
 
 import { Component, useState } from "@odoo/owl";
 
@@ -14,7 +14,7 @@ export class CustomGroupByItem extends Component {
 }
 
 CustomGroupByItem.template = "web.CustomGroupByItem";
-CustomGroupByItem.components = { Dropdown };
+CustomGroupByItem.components = { AccordionItem };
 CustomGroupByItem.props = {
     fields: Array,
     onAddCustomGroup: Function,

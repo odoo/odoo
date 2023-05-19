@@ -5,7 +5,8 @@ import { browser } from "../browser/browser";
 import { localization } from "@web/core/l10n/localization";
 import { scrollTo } from "../utils/scrolling";
 
-import { useComponent, useEffect, useRef } from "@odoo/owl";
+import { useChildSubEnv, useComponent, useEffect, useRef } from "@odoo/owl";
+import { ACCORDION } from "@web/core/dropdown/accordion_item";
 
 /**
  * @typedef {{
@@ -24,8 +25,12 @@ const ACTIVE_MENU_ELEMENT_CLASS = "focus";
 const MENU_ELEMENTS_SELECTORS = [
     ":scope > .dropdown-item",
     ":scope > .dropdown",
+    ":scope > .o_accordion > .dropdown-item",
+    ":scope > .o_accordion > .o_accordion_values > .dropdown-item",
     ":scope > .o_dropdown_container > .dropdown-item",
     ":scope > .o_dropdown_container > .dropdown",
+    ":scope > .o_dropdown_container > .o_accordion > .dropdown-item",
+    ":scope > .o_dropdown_container > .o_accordion > .o_accordion_values > .dropdown-item",
 ];
 const NEXT_ACTIVE_INDEX_FNS = {
     FIRST: () => 0,
@@ -70,7 +75,9 @@ export function useDropdownNavigation() {
     const menuRef = useRef("menuRef");
     /** @type {MenuElement[]} */
     let menuElements = [];
-    useEffect(() => {
+
+    let cleanupMenuElements;
+    const refreshMenuElements = () => {
         if (!comp.state.open) {
             return;
         }
@@ -157,7 +164,7 @@ export function useDropdownNavigation() {
             }
             addedListeners.push([navTarget, elementListeners]);
         }
-        return () => {
+        cleanupMenuElements = () => {
             menuElements = [];
             mouseSelectionActive = true;
 
@@ -168,6 +175,21 @@ export function useDropdownNavigation() {
                 }
             }
         };
+        return () => cleanupMenuElements();
+    };
+
+    useEffect(refreshMenuElements);
+
+    // Set up nested accordion
+    // This is needed in order to keep the parent dropdown
+    // aware of the accordion menu elements when its state has changed.
+    useChildSubEnv({
+        [ACCORDION]: {
+            accordionStateChanged: () => {
+                cleanupMenuElements?.();
+                refreshMenuElements();
+            },
+        },
     });
 
     // Set up active menu element helpers --------------------------------------

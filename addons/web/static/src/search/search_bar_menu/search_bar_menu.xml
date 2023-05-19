@@ -22,10 +22,7 @@
                             <div class="dropdown-divider" role="separator"/>
                         </t>
                         <t t-if="item.options">
-                            <Dropdown togglerClass="'o_menu_item' + (item.isActive ? ' selected' : '')">
-                                <t t-set-slot="toggler">
-                                    <t t-esc="item.description"/>
-                                </t>
+                            <AccordionItem description="item.description" selected="item.isActive">
                                 <t t-set="subGroup" t-value="null"/>
                                 <t t-foreach="item.options" t-as="option" t-key="option.id">
                                     <t t-if="subGroup !== null and subGroup !== option.groupNumber">
@@ -39,7 +36,7 @@
                                     />
                                     <t t-set="subGroup" t-value="option.groupNumber"/>
                                 </t>
-                            </Dropdown>
+                            </AccordionItem>
                         </t>
                         <t t-else="">
                             <SearchDropdownItem class="{ o_menu_item: true, selected: item.isActive }"
@@ -54,7 +51,7 @@
                     <t t-if="filterItems.length">
                         <div role="separator" class="dropdown-divider"/>
                     </t>
-                    <DropdownItem onSelected.bind="onAddCustomFilterClick">Add Custom Filter</DropdownItem>
+                    <DropdownItem class="'o_menu_item o_add_custom_filter'" onSelected.bind="onAddCustomFilterClick">Add Custom Filter</DropdownItem>
                 </div>
             </t>
             <!-- GroupBy -->
@@ -70,10 +67,7 @@
                             <div class="dropdown-divider" role="separator"/>
                         </t>
                         <t t-if="item.options">
-                            <Dropdown togglerClass="'o_menu_item' + (item.isActive ? ' selected' : '')">
-                                <t t-set-slot="toggler">
-                                    <t t-esc="item.description"/>
-                                </t>
+                            <AccordionItem description="item.description" selected="item.isActive">
                                 <t t-set="subGroup" t-value="null"/>
                                 <t t-foreach="item.options" t-as="option" t-key="option.id">
                                     <t t-if="subGroup !== null and subGroup !== option.groupNumber">
@@ -87,7 +81,7 @@
                                     />
                                     <t t-set="subGroup" t-value="option.groupNumber"/>
                                 </t>
-                            </Dropdown>
+                            </AccordionItem>
                         </t>
                         <t t-else="">
                             <SearchDropdownItem class="{ o_menu_item: true, selected: item.isActive }"

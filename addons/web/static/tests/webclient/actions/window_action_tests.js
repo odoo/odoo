@@ -1469,7 +1469,6 @@ QUnit.module("ActionManager", (hooks) => {
         await cpHelpers.toggleMenuItem(target, "Bar");
         assert.containsN(target, ".o_data_row", 2);
         // save filter
-        await cpHelpers.toggleFavoriteMenu(target);
         await cpHelpers.toggleSaveFavorite(target);
         await cpHelpers.editFavoriteName(target, "some name");
         await cpHelpers.saveFavorite(target);

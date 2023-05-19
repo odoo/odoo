@@ -59,20 +59,25 @@ QUnit.module("Search", (hooks) => {
 
         await toggleSearchBarMenu(target);
 
-        const customGroupByItem = target.querySelector(".o_add_custom_group_menu");
-        assert.strictEqual(customGroupByItem.innerText.trim(), "Add Custom Group");
+        const groupByMenu = target.querySelector(".o_group_by_menu");
+        assert.strictEqual(
+            groupByMenu.querySelector(".o_accordion").innerText.trim(),
+            "Add Custom Group"
+        );
 
-        assert.containsOnce(customGroupByItem, "button.dropdown-toggle");
-        assert.containsNone(customGroupByItem, ".dropdown-menu");
+        assert.containsOnce(groupByMenu, "button");
+        assert.containsNone(groupByMenu, ".o_accordion_values");
 
         await toggleAddCustomGroup(target);
 
-        assert.containsOnce(customGroupByItem, ".dropdown-menu");
+        assert.containsOnce(groupByMenu, ".o_accordion_values");
 
         assert.deepEqual(
-            [...target.querySelectorAll(".o_add_custom_group_menu select option")].map(
-                (el) => el.innerText
-            ),
+            [
+                ...target.querySelectorAll(
+                    ".o_add_custom_group_menu + .o_accordion_values select option"
+                ),
+            ].map((el) => el.innerText),
             ["Birthday", "Date", "Foo"]
         );
     });
@@ -100,7 +105,7 @@ QUnit.module("Search", (hooks) => {
             assert.deepEqual(
                 [
                     ...target.querySelectorAll(
-                        ".o_add_custom_group_menu .dropdown-menu select option"
+                        ".o_add_custom_group_menu + .o_accordion_values select option"
                     ),
                 ].map((el) => el.innerText),
                 ["Foo"]
@@ -136,7 +141,7 @@ QUnit.module("Search", (hooks) => {
             assert.deepEqual(
                 [
                     ...target.querySelectorAll(
-                        ".o_add_custom_group_menu .dropdown-menu select option"
+                        ".o_add_custom_group_menu + .o_accordion_values select option"
                     ),
                 ].map((el) => el.innerText),
                 ["Char A", "M2M Stored"]
@@ -163,7 +168,7 @@ QUnit.module("Search", (hooks) => {
             await toggleSearchBarMenu(target);
 
             assert.deepEqual(controlPanel.env.searchModel.groupBy, []);
-            assert.containsNone(target, ".o_menu_item");
+            assert.containsOnce(target, ".o_menu_item"); //Add Custom Group
 
             await toggleAddCustomGroup(target);
             await applyGroup(target);
@@ -200,16 +205,16 @@ QUnit.module("Search", (hooks) => {
         await toggleAddCustomGroup(target);
 
         // Single select node with a single option
-        assert.containsOnce(target, ".o_add_custom_group_menu .dropdown-menu select");
+        assert.containsOnce(target, ".o_add_custom_group_menu + .o_accordion_values select");
         assert.strictEqual(
             target
-                .querySelector(".o_add_custom_group_menu .dropdown-menu select option")
+                .querySelector(".o_add_custom_group_menu + .o_accordion_values select option")
                 .innerText.trim(),
             "Super Date"
         );
 
         // Button apply
-        assert.containsOnce(target, ".o_add_custom_group_menu .dropdown-menu .btn");
+        assert.containsOnce(target, ".o_add_custom_group_menu + .o_accordion_values .btn");
     });
 
     QUnit.test(
@@ -235,9 +240,9 @@ QUnit.module("Search", (hooks) => {
             await toggleAddCustomGroup(target);
             await applyGroup(target);
 
-            assert.containsOnce(target, ".o_group_by_menu .o_menu_item");
-            assert.containsOnce(target, ".o_add_custom_group_menu .dropdown-toggle");
-            assert.containsOnce(target, ".o_add_custom_group_menu .dropdown-menu");
+            assert.containsN(target, ".o_group_by_menu .o_menu_item", 2);
+            assert.containsOnce(target, ".o_add_custom_group_menu.o_accordion_toggle");
+            assert.containsOnce(target, ".o_add_custom_group_menu + .o_accordion_values");
             assert.deepEqual(getFacetTexts(target), ["Candlelight"]);
         }
     );
