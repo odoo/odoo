@@ -152,15 +152,7 @@ export const CLIPBOARD_WHITELISTS = {
     ],
     attributes: ['class', 'href', 'src', 'target'],
     styledTags: ['SPAN', 'B', 'STRONG', 'I', 'S', 'U', 'FONT'],
-    styles: {
-        'text-decoration': { defaultValues: ['', 'none'] },
-        'font-weight': { defaultValues: ['', '400'] },
-        'background-color': { defaultValues: ['', '#fff', '#ffffff', 'rgb(255, 255, 255)', 'rgba(255, 255, 255, 1)'] },
-        'color': { defaultValues: ['', '#000', '#000000', 'rgb(0, 0, 0)', 'rgba(0, 0, 0, 1)'] },
-        'font-style': { defaultValues: ['', 'none', 'normal'] },
-        'text-decoration-line': { defaultValues: ['', 'none'] },
-        'font-size': { defaultValues: ['', '16px'] },
-    }
+    styles: ['text-decoration', 'font-weight', 'background-color', 'color', 'font-style', 'text-decoration-line', 'font-size']
 };
 
 function defaultOptions(defaultObject, object) {
@@ -2395,9 +2387,7 @@ export class OdooEditor extends EventTarget {
                 if (CLIPBOARD_WHITELISTS.styledTags.includes(node.nodeName) && attribute.name === 'style') {
                     const spanInlineStyles = attribute.value.split(';').map(x => x.trim());
                     const allowedSpanInlineStyles = spanInlineStyles.filter(rawStyle => {
-                        const [styleName, styleValue] = rawStyle.split(':');
-                        const style = CLIPBOARD_WHITELISTS.styles[styleName.trim()];
-                        return style && !style.defaultValues.includes(styleValue.trim());
+                        return CLIPBOARD_WHITELISTS.styles.includes(rawStyle.split(':')[0].trim());
                     });
                     node.removeAttribute(attribute.name);
                     if (allowedSpanInlineStyles.length > 0) {
@@ -2438,7 +2428,7 @@ export class OdooEditor extends EventTarget {
                 okClass instanceof RegExp ? okClass.test(item) : okClass === item,
             );
         } else {
-            const allowedSpanStyles = Object.keys(CLIPBOARD_WHITELISTS.styles).map(s => `span[style*="${s}"]`);
+            const allowedSpanStyles = CLIPBOARD_WHITELISTS.styles.map(s => `span[style*="${s}"]`);
             return (
                 item.nodeType === Node.TEXT_NODE ||
                 (
