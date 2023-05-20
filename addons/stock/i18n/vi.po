@@ -236,7 +236,7 @@ msgid ""
 msgstr ""
 "* Mới: Khi một dịch chuyển kho được tạo và chưa được xác nhận.\n"
 "* Chờ dịch chuyển khác: Trạng thái này xuất hiện khi một dịch chuyển đang chờ một dịch chuyển khác, ví dụ như trong một chuỗi cung ứng.\n"
-"* Chờ hàng: Trạng thái này xuất hiện khi giải pháp mua sắm không diễn ra liền mạch. Trình lập lịch có thể được sử dụng, một bộ phận cần được sản xuất.\n"
+"* Chờ hàng: Trạng thái này xuất hiện khi giải pháp mua sắm không diễn ra liền mạch. Trình lập kế hoạch có thể được sử dụng, một nguyên liệu cần được sản xuất.\n"
 "* Có hàng: Khi sản phẩm đã được dự trữ thì sẽ có trạng thái \"Có hàng\".\n"
 "* Hoàn thành: Khi một lô hàng được xử lý xong."
 
@@ -3337,7 +3337,7 @@ msgstr "Chiều cao phải là số dương"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__snoozed_until
 msgid "Hidden until next scheduler."
-msgstr "Ẩn cho đến khi lên lịch tiếp theo."
+msgstr "Ẩn cho đến trình lập kế hoạch tiếp theo."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__hide_picking_type
@@ -7147,17 +7147,17 @@ msgstr "Quy tắc được sử dụng"
 #: model:ir.ui.menu,name:stock.menu_procurement_compute
 #: model_terms:ir.ui.view,arch_db:stock.view_procurement_compute_wizard
 msgid "Run Scheduler"
-msgstr "Chạy trình kế hoạch"
+msgstr "Chạy trình lập kế hoạch"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_scheduler_compute
 msgid "Run Scheduler Manually"
-msgstr "Chạy trình kế hoạch thủ công"
+msgstr "Chạy trình lập kế hoạch thủ công"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 msgid "Run the scheduler"
-msgstr "Chạy trình kế hoạch"
+msgstr "Chạy trình lập kế hoạch"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_sms
@@ -8236,7 +8236,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__sequence
 msgid "The first in the sequence is the default one."
-msgstr "Thứ tự đầu tiên trong trình tự mặc định là 1."
+msgstr "Đứng đầu trong trình tự là loại mặc định."
 
 #. module: stock
 #. odoo-javascript
@@ -8628,6 +8628,8 @@ msgid ""
 "This product's company cannot be changed as long as there are stock moves of"
 " it belonging to another company."
 msgstr ""
+"Không thể thay đổi công ty của sản phẩm này nếu có dịch chuyển tồn kho của "
+"nó thuộc về một công ty khác."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -10398,3 +10400,13 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Phiếu xuất kho (Mã {{ object.name or 'không có'"
 " }})"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allow to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
+"Không được phép nhập số lượng đã dự trữ, bạn phải trực tiếp sử dụng số "
+"lượng."
