@@ -33,7 +33,7 @@ msgstr ""
 #. module: website_sale_picking
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.payment_confirmation_status
 msgid "<span class=\"text-muted\"> (On site picking)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> (Ritiro in negozio)</span>"
 
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_res_config_settings
@@ -65,7 +65,7 @@ msgstr ""
 #: code:addons/website_sale_picking/static/src/js/checkout_form.js:0
 #, python-format
 msgid "No suitable payment option could be found."
-msgstr ""
+msgstr "Non è stato possibile trovare un'opzione di pagamento adatta."
 
 #. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__payment_provider__custom_mode__onsite
@@ -76,7 +76,7 @@ msgstr "Sul campo"
 #: model:product.product,name:website_sale_picking.onsite_delivery_product
 #: model:product.template,name:website_sale_picking.onsite_delivery_product_product_template
 msgid "On site picking"
-msgstr ""
+msgstr "Ritiro in sede"
 
 #. module: website_sale_picking
 #: model:payment.provider,name:website_sale_picking.payment_provider_onsite
@@ -100,7 +100,7 @@ msgstr "Sedi ritiro"
 #. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__delivery_carrier__delivery_type__onsite
 msgid "Pickup in store"
-msgstr ""
+msgstr "Ritira in negozio"
 
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__delivery_type
@@ -117,6 +117,7 @@ msgstr "Metodi di spedizione"
 #, python-format
 msgid "The picking site and warehouse must share the same company"
 msgstr ""
+"La sede di ritiro e il magazzino devono appartenere alla stessa azienda"
 
 #. module: website_sale_picking
 #: model:product.product,uom_name:website_sale_picking.onsite_delivery_product
@@ -138,7 +139,7 @@ msgstr "Sito web"
 #: code:addons/website_sale_picking/controllers/main.py:0
 #, python-format
 msgid "You cannot pay onsite if the delivery is not onsite"
-msgstr ""
+msgstr "Non puoi pagare in loco se la spedizione non è sul posto"
 
 #. module: website_sale_picking
 #: model_terms:payment.provider,auth_msg:website_sale_picking.payment_provider_onsite
@@ -158,4 +159,4 @@ msgstr "Il pagamento è stato elaborato con successo. Grazie!"
 #. module: website_sale_picking
 #: model:delivery.carrier,name:website_sale_picking.default_onsite_carrier
 msgid "[On Site Pick] My Shop 1"
-msgstr ""
+msgstr "[Ritiro in sede] Il mio negozio 1"

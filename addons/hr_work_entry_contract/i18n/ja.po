@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Noma Yuki, 2022
-# Ryoko Tsuda <ryoko@quartile.co>, 2022
 # Martin Trigaux, 2023
 # Andy Yiu, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Andy Yiu, 2023\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,6 +34,13 @@ msgid ""
 "        Planning: Work entries will be generated from the employee's planning. (requires Planning app)\n"
 "    "
 msgstr ""
+"\n"
+"        作業エントリ生成元を定義します\n"
+"\n"
+"        勤務スケジュール: 作業エントリは以下の作業時間から生成されます\n"
+"        勤怠管理: 作業エントリは従業員の勤怠管理から生成されます（勤怠管理アプリが必要）\n"
+"        計画: 作業エントリは従業員の計画から生成されます（計画アプリが必要）\n"
+"    "
 
 #. module: hr_work_entry_contract
 #. odoo-python
@@ -68,7 +75,7 @@ msgstr ""
 msgid ""
 "<span class=\"text-muted\">Warning: The work entry regeneration will delete "
 "all manual changes on the selected period.</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">警告: 作業エントリ再生成は、選択された期間のすべての手動変更を削除します。</span>"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
@@ -327,9 +334,9 @@ msgstr "作業エントリ再生成"
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_contract__work_entry_source
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry__work_entry_source
 msgid "Work Entry Source"
-msgstr ""
+msgstr "作業エントリ元"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields.selection,name:hr_work_entry_contract.selection__hr_contract__work_entry_source__calendar
 msgid "Working Schedule"
-msgstr "作業予定"
+msgstr "勤務スケジュール"

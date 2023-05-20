@@ -23,6 +23,7 @@
 # jabiri7, 2022
 # Ivan Espinola, 2023
 # jabelchi, 2023
+# martioodo hola, 2023
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # 
 msgid ""
@@ -1778,7 +1779,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_tracking_owner
 msgid "Consignment"
-msgstr "Enviament"
+msgstr " Dipòsit"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__consume_line_ids
@@ -6618,6 +6619,8 @@ msgid ""
 "Quants are auto-deleted when appropriate. If you must manually delete them, "
 "please ask a stock manager to do it."
 msgstr ""
+"Els Quants s'eliminen automàticament quan sigui apropiat. Si els heu de "
+"suprimir manualment, demaneu a un gestor d'estoc que ho faci."
 
 #. module: stock
 #. odoo-python
@@ -8685,6 +8688,14 @@ msgstr ""
 "pertanyin a una altra empresa."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -9573,7 +9584,7 @@ msgstr "Pes del tipus de paquet"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
 msgid "Weight unit"
-msgstr ""
+msgstr "Unitat de pes"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
@@ -10455,3 +10466,11 @@ msgid ""
 msgstr ""
 "{{ object.company_id.name }} Comanda d'entrega (Ref {{ object.name or 'n/a' "
 "}})"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allow to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
