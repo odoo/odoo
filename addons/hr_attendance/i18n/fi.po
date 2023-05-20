@@ -110,7 +110,7 @@ msgstr "<span class=\"o_stat_text\">Läsnäolo alkaen</span>"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "<span class=\"o_stat_text\">Extra Hours</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Ylimääräiset tunnit</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -141,7 +141,7 @@ msgstr ""
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span> Minutes</span>"
-msgstr ""
+msgstr "<span> Minuuttia</span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -150,16 +150,19 @@ msgid ""
 "                                    <br/>\n"
 "                                    <br/>"
 msgstr ""
+"<span> Minuuttia</span>\n"
+"                                    <br/>\n"
+"                                    <br/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "<span>Time Period </span>"
-msgstr ""
+msgstr "<span>Ajanjakso </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Activate the count of employees' extra hours."
-msgstr ""
+msgstr "Aktivoi työntekijöiden lisätuntien laskenta."
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -167,6 +170,8 @@ msgid ""
 "Add a few employees to be able to select an employee here and perform his check in / check out.\n"
 "                To create employees go to the Employees menu."
 msgstr ""
+"Lisää muutama työntekijä, jotta voit valita työntekijän täältä ja suorittaa hänen sisään-/uloskirjautumisensa.\n"
+"                Voit luoda työntekijöitä menemällä Työntekijät-valikkoon."
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__adjustment
@@ -184,6 +189,8 @@ msgid ""
 "Allow a period of time (around working hours) where extra time will not be "
 "counted, in benefit of the company"
 msgstr ""
+"Sallia yrityksen eduksi ajanjakso (työaikaan nähden), jolloin ylimääräistä "
+"aikaa ei lasketa mukaan"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -191,11 +198,13 @@ msgid ""
 "Allow a period of time (around working hours) where extra time will not be "
 "deducted, in benefit of the employee"
 msgstr ""
+"Sallia työntekijän eduksi aika (työajan ympärillä), jolloin ylimääräistä "
+"aikaa ei vähennetä"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 msgid "Amount of extra hours"
-msgstr ""
+msgstr "Lisätuntien määrä"
 
 #. module: hr_attendance
 #. openerp-web
@@ -228,13 +237,13 @@ msgstr "Läsnäoloanalyysi"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_overtime
 msgid "Attendance Overtime"
-msgstr ""
+msgstr "Läsnäolo ylityö"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_report
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_graph
 msgid "Attendance Statistics"
-msgstr ""
+msgstr "Osallistumistilastot"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__attendance_state
@@ -379,7 +388,7 @@ msgstr "Yrityksen logo"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Compare attendance with working hours set on employee."
-msgstr ""
+msgstr "Vertaa läsnäoloaikaa työntekijälle asetettuihin työtunteihin."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_config_settings
@@ -395,12 +404,12 @@ msgstr "Asetukset"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__hr_attendance_overtime
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__hr_attendance_overtime
 msgid "Count Extra Hours"
-msgstr ""
+msgstr "Laske lisätunnit"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Count of Extra Hours"
-msgstr ""
+msgstr "Lisätuntien määrä"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -408,6 +417,8 @@ msgid ""
 "Count of extra hours is considered from this date. Potential extra hours "
 "prior to this date are not considered."
 msgstr ""
+"Ylimääräiset tunnit lasketaan tästä päivästä alkaen. Mahdollisia lisätunteja"
+" ennen tätä päivämäärää ei oteta huomioon."
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -505,23 +516,23 @@ msgstr "Virhe: työntekijää ei löytynyt."
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__overtime_hours
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Extra Hours"
-msgstr ""
+msgstr "Lisätunnit"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_overtime__duration_real
 msgid "Extra Hours (Real)"
-msgstr ""
+msgstr "Lisätunnit (todellinen)"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_start_date
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_start_date
 msgid "Extra Hours Starting Date"
-msgstr ""
+msgstr "Lisätuntien aloituspäivä"
 
 #. module: hr_attendance
 #: model:ir.model.fields,help:hr_attendance.field_hr_attendance_overtime__duration_real
 msgid "Extra-hours including the threshold duration"
-msgstr ""
+msgstr "Lisätunnit, mukaan lukien kynnyskesto"
 
 #. module: hr_attendance
 #. openerp-web
@@ -593,7 +604,7 @@ msgstr "Ryhmittely"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_report_view_search
 msgid "HR Attendance Search"
-msgstr ""
+msgstr "Henkilöstöhallinnan läsnäolohaku"
 
 #. module: hr_attendance
 #. openerp-web
@@ -650,7 +661,7 @@ msgstr "Tunteja tänään"
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance_report__worked_hours
 msgid "Hours Worked"
-msgstr ""
+msgstr "Tehdyt työtunnit"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
@@ -669,14 +680,14 @@ msgstr "Tunniste (ID)"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Identify Manually"
-msgstr ""
+msgstr "Tunnista manuaalisesti"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "If a job is worth doing, it is worth doing well!"
-msgstr ""
+msgstr "Jos työ kannattaa tehdä, se kannattaa tehdä hyvin!"
 
 #. module: hr_attendance
 #. openerp-web
@@ -760,7 +771,7 @@ msgstr "Ei läsnäoloja näytettäväksi"
 #: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
 msgid "No employee corresponding to Badge ID '%(barcode)s.'"
-msgstr ""
+msgstr "Ei työntekijää, joka vastaa virkamerkin tunnusta \"%(barcode)s\""
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
@@ -870,13 +881,13 @@ msgstr "Työntekijän läsnäolotiedot näytetään tässä."
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "The early bird catches the worm"
-msgstr ""
+msgstr "Varhainen lintu saa madon"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_kiosk
 msgid ""
 "The user will be able to open the kiosk mode and validate the employee PIN."
-msgstr ""
+msgstr "Käyttäjä voi avata kioskitilan ja vahvistaa työntekijän PIN-koodin."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance
@@ -884,6 +895,8 @@ msgid ""
 "The user will gain access to the human resources attendance menu, enabling "
 "him to manage his own attendance."
 msgstr ""
+"Käyttäjä pääsee henkilöstöhallinnon läsnäolovalikkoon, jonka avulla hän voi "
+"hallita omia läsnäolojaan."
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_use_pin
@@ -891,6 +904,8 @@ msgid ""
 "The user will have to enter his PIN to check in and out manually at the "
 "company screen."
 msgstr ""
+"Käyttäjän on syötettävä PIN-koodinsa kirjautuakseen sisään ja ulos "
+"manuaalisesti yrityksen näytöllä."
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
@@ -899,6 +914,9 @@ msgid ""
 "To activate Kiosk mode without pin code, you must have access right as an "
 "Officer or above in the Attendance app. Please contact your administrator."
 msgstr ""
+"Jotta voit aktivoida kioskitilan ilman pin-koodia, sinulla on oltava "
+"vähintään esimiehen käyttöoikeus Attendance-sovelluksessa. Ota yhteyttä "
+"järjestelmänvalvojaan."
 
 #. module: hr_attendance
 #. openerp-web
@@ -906,28 +924,28 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Today's work hours:"
-msgstr ""
+msgstr "Tämän päivän työaika:"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_company_threshold
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_company_threshold
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Tolerance Time In Favor Of Company"
-msgstr ""
+msgstr "Aikatoleranssi yrityksen hyväksi"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_employee_threshold
 #: model:ir.model.fields,field_description:hr_attendance.field_res_config_settings__overtime_employee_threshold
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Tolerance Time In Favor Of Employee"
-msgstr ""
+msgstr "Aikatoleranssi työntekijän hyväksi"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__total_overtime
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__total_overtime
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__total_overtime
 msgid "Total Overtime"
-msgstr ""
+msgstr "Ylityöt yhteensä"
 
 #. module: hr_attendance
 #. openerp-web
@@ -935,7 +953,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Total extra hours:"
-msgstr ""
+msgstr "Lisätunteja yhteensä:"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -953,7 +971,7 @@ msgstr "Käyttäjät"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Want to check out?"
-msgstr ""
+msgstr "Haluatko kirjautua ulos?"
 
 #. module: hr_attendance
 #. openerp-web
@@ -1000,7 +1018,7 @@ msgstr "Tehdyt tunnit"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Worked hours last month"
-msgstr ""
+msgstr "Työtunnit viime kuussa"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/models/hr_employee.py:0
@@ -1017,7 +1035,7 @@ msgstr "Et voi kopioida läsnäoloa."
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
 msgid "Your attendance records will be displayed here."
-msgstr ""
+msgstr "Läsnäolotietosi näkyvät täällä."
 
 #. module: hr_attendance
 #. openerp-web
