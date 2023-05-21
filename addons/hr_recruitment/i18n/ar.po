@@ -116,6 +116,13 @@ msgid ""
 "                                </span>\n"
 "                            </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_warning_visible', '=', False)]}\">\n"
+"                                <span class=\"fa fa-exclamation-triangle text-danger ps-3\">\n"
+"                                </span>\n"
+"                                <span class=\"text-danger\">\n"
+"                                    كافة طلبات التقديم ستفقد تاريخ التوظيف وحالة التوظيف.\n"
+"                                </span>\n"
+"                            </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -736,7 +743,7 @@ msgstr "اسم اللقب"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "حالة اللقب "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_domain
@@ -746,7 +753,7 @@ msgstr "نطاق اللقب"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "حالة اللقب مقيّمة في آخر رسالة مستلمة. "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_model_id
@@ -1137,7 +1144,7 @@ msgstr "إنشاء منصب وظيفي"
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "Create new applications by sending an email to"
-msgstr ""
+msgstr "قم بإنشاء طلبات تقديم جديدة عن طريق إرسال بريد إلكتروني إلى "
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1214,6 +1221,9 @@ msgid ""
 "                    qualification call, first interview, second interview, refused,\n"
 "                    hired."
 msgstr ""
+"قم بتحديد مراحل عملية التوظيف من هنا، على سبيل المثال:\n"
+"                    مكالمة التأهيل، المقابلة الأولى، المقابلة الثانية،\n"
+"                    تم التوظيف. "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -1342,6 +1352,8 @@ msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "                is different according to the job position."
 msgstr ""
+"لا تنسَ تحديد القسم إذا كانت عملية التوظيف\n"
+"                تختلف حسب المنصب الوظيفي. "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_from
@@ -2291,7 +2303,7 @@ msgstr "رقم الهاتف"
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "Please provide an applicant name."
-msgstr ""
+msgstr "يرجى ذكر اسم المتقدم للوظيفة "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_contact
@@ -2601,7 +2613,7 @@ msgstr "إرسال رسالة نصية قصيرة "
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid ""
 "Send an Interview Survey to the applicant during the recruitment process"
-msgstr ""
+msgstr "أرسل استطلاعاً للمقابلة للمتقدم خلال عملية التوظيف "
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_send_mail
@@ -3033,6 +3045,8 @@ msgid ""
 "You can define here the labels that will be displayed for the kanban state instead\n"
 "                            of the default labels."
 msgstr ""
+"بإمكانك هنا تحديد بطاقات العناوين التي سيتم عرضها عند استخدام حالة كانبان عوضاً عن\n"
+"                            بطاقات العناوين الافتراضية. "
 
 #. module: hr_recruitment
 #. odoo-python

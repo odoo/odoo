@@ -26,7 +26,7 @@ msgstr ""
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid " Product cost updated from %(previous)s to %(new_cost)s."
-msgstr " Produktkosten aktualisiert von %(previous)s zu %(new_cost)s."
+msgstr " Produktkosten aktualisiert von %(previous)s auf %(new_cost)s."
 
 #. module: stock_account
 #. odoo-python
@@ -42,8 +42,8 @@ msgstr " [Gebucht am %s]"
 #, python-format
 msgid "%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s"
 msgstr ""
-"%(user)s hat die Kosten für %(product)s von %(previous)s in %(new_price)s "
-"verändert"
+"%(user)s hat die Kosten für %(product)s von %(previous)s auf%(new_price)s "
+"geändert"
 
 #. module: stock_account
 #. odoo-python
@@ -84,7 +84,7 @@ msgstr "<span>Menge</span>"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
 msgid "<span>SN/LN</span>"
-msgstr "<span>Chargen-/Seriennummer</span>"
+msgstr "<span>Los-/Seriennummer</span>"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_chart_template
@@ -128,7 +128,7 @@ msgstr "Manuelle Bewertung hinzufügen"
 msgid ""
 "Add additional cost (transport, customs, ...) in the value of the product."
 msgstr ""
-"Fügen Sie zusätzliche Kosten (Transport, Zoll, ...) zum Produktwert hinzu."
+"Fügen Sie zusätzliche Kosten (Transport, Zoll ...) zum Produktwert hinzu."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
@@ -153,7 +153,7 @@ msgstr ""
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_move__analytic_account_line_id
 msgid "Analytic Account Line"
-msgstr "Analysekontozeile"
+msgstr "Kostenstellenposten"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_valuation__real_time
@@ -163,7 +163,7 @@ msgstr "Automatisch"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__avg_cost
 msgid "Average Cost"
-msgstr "Durchschnittliche Kosten"
+msgstr "Durchschnittlichskosten"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__average
@@ -626,7 +626,7 @@ msgstr "Neubewertung von %s"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view
 msgid "Revalue"
-msgstr "Neubewertung"
+msgstr "Neu bewerten"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__standard
@@ -644,9 +644,10 @@ msgid ""
 "        First In First Out (FIFO): The products are valued supposing those that enter the company first will also leave it first.\n"
 "        "
 msgstr ""
-"Standardpreis: Die Produkte werden nach für das Produkt definierten Standard-Kosten berechnet.\n"
-" Durchschnittskosten (AVCO): Die Produkte werden zu gewichteten Durchschnittskosten berechnet.\n"
-" First In – First Out (FIFO): Die Produkte werden unter der Annahme bewertet, dass die Produkte, die zuerst im Unternehmen ankommen, auch zuerst das Unternehmen verlassen.\n"
+"Standardpreis: Die Produkte werden nach für das Produkt definierten Standardkosten berechnet.\n"
+"        Durchschnittskosten (AVCO): Die Produkte werden zu gewichteten Durchschnittskosten berechnet.\n"
+"        First In – First Out (FIFO): Die Produkte werden unter der Annahme bewertet, dass die Produkte, die zuerst im Unternehmen ankommen, auch zuerst das Unternehmen verlassen.\n"
+"        "
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_category__property_stock_account_input_categ_id
@@ -762,7 +763,7 @@ msgid ""
 "The action leads to the creation of a journal entry, for which you don't "
 "have the access rights."
 msgstr ""
-"Die Aktion führt zur Erstellung eines Journaleintrags, für den Sie keine "
+"Die Aktion führt zur Erstellung einer Journalbuchung, für die Sie keine "
 "Zugriffsrechte haben."
 
 #. module: stock_account
@@ -770,7 +771,7 @@ msgstr ""
 #: code:addons/stock_account/wizard/stock_valuation_layer_revaluation.py:0
 #, python-format
 msgid "The added value doesn't have any impact on the stock valuation"
-msgstr "Der Mehrwert hat keinen Einfluss auf die Bewertung der Aktie"
+msgstr "Der Mehrwert hat keinen Einfluss auf die Bestandsbewertung"
 
 #. module: stock_account
 #. odoo-python
@@ -794,7 +795,7 @@ msgid ""
 msgstr ""
 "Die Buchungszeilen weisen keinen konsistenten Status auf: Sie führen einen "
 "konzerninternen Vorgang in einem einzelnen Schritt aus, während sie das "
-"konzerninterne Umschlaglager durchlaufen müssten."
+"konzerninterne Umschlagslager durchlaufen müssten."
 
 #. module: stock_account
 #. odoo-python
@@ -834,7 +835,7 @@ msgstr "Verbleibender Gesamtwert"
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_tree
 #: model_terms:ir.ui.view,arch_db:stock_account.view_stock_quant_tree_editable_inherit
 msgid "Total Value"
-msgstr "Gesamt Wert"
+msgstr "Gesamtwert"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_picking
@@ -943,7 +944,7 @@ msgstr "Wert"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_product_product_replenishment
 msgid "Value On Hand:"
-msgstr "Verfügbarer Wert:"
+msgstr "Vorrätiger Wert:"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl

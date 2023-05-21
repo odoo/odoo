@@ -6,8 +6,8 @@
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2023
 # Niyas Raphy, 2023
 # Mustafa Rawi <mustafa@cubexco.com>, 2023
-# Malaz Abuidris <msea@odoo.com>, 2023
 # Martin Trigaux, 2023
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
 "PO-Revision-Date: 2023-01-17 11:03+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,7 +87,7 @@ msgstr "%(employee_name)s - من %(date_from)s إلى %(date_to)s - %(state)s "
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(holiday_name)s has been refused."
-msgstr ""
+msgstr "%(holiday_name)s تم رفضها. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -95,7 +95,7 @@ msgstr ""
 #, python-format
 msgid ""
 "%(leave_name)s has been cancelled with the justification: <br/> %(reason)s."
-msgstr ""
+msgstr "%(leave_name)s تم رفضها مع التبرير: <br/> %(reason)s. "
 
 #. module: hr_holidays
 #. odoo-python
@@ -109,7 +109,7 @@ msgstr "%(leave_type)s: %(duration).2f أيام (%(start)s) "
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(leave_type)s: %(duration).2f hours on %(date)s"
-msgstr ""
+msgstr "%(leave_type)s: %(duration).2f ساعات في %(date)s "
 
 #. module: hr_holidays
 #. odoo-python
@@ -130,14 +130,14 @@ msgstr "%(person)s في %(leave_type)s: %(duration).2f ساعات في %(date)s 
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(person)s: %(duration).2f days (%(start)s)"
-msgstr ""
+msgstr "%(person)s: %(duration).2f أيام (%(start)s) "
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%(person)s: %(duration).2f hours on %(date)s"
-msgstr ""
+msgstr "%(person)s: %(duration).2f ساعات في %(date)s "
 
 #. module: hr_holidays
 #. odoo-python
@@ -624,6 +624,8 @@ msgid ""
 "<span class=\"fa fa-plane text-warning\" role=\"img\" aria-label=\"To "
 "define\" title=\"On Time Off\"/>"
 msgstr ""
+"<span class=\"fa fa-plane text-warning\" role=\"img\" aria-label=\"To "
+"define\" title=\"في إجازة \"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -1391,7 +1393,7 @@ msgstr "إلغاء "
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_departure_wizard__cancel_leaves
 msgid "Cancel Future Time Off"
-msgstr ""
+msgstr "إلغاء الإجازة المستقبلية "
 
 #. module: hr_holidays
 #. odoo-python
@@ -1404,7 +1406,7 @@ msgstr "إلغاء الإجازة "
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_cancel_leave
 msgid "Cancel Time Off Wizard"
-msgstr ""
+msgstr "إلغاء معالج الإجازة "
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_departure_wizard__cancel_leaves
@@ -1421,7 +1423,7 @@ msgstr "تم الإلغاء "
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Canceled Time Off"
-msgstr ""
+msgstr "الإجازة الملغية "
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__cancel
@@ -1872,7 +1874,7 @@ msgstr "الموظفون"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_report_calendar_view_search
 msgid "Employees Off Today"
-msgstr ""
+msgstr "الموظفون في إجازة اليوم "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_to
@@ -1929,6 +1931,8 @@ msgid ""
 "Filters only on allocations that belong to a time off type that is 'active' "
 "(active field is True)"
 msgstr ""
+"يقوم فقط بتصفية المخصصات التابعة لنوع إجازة 'نشط' (عندما تكون قيمة الحقل "
+"النشط صحيحة) "
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -2811,7 +2815,7 @@ msgstr "المسؤول: إدارة كافة الطلبات "
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "On Time Off"
-msgstr ""
+msgstr "في إجازة "
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__hr_icon_display__presence_holiday_absent
@@ -2955,7 +2959,7 @@ msgstr "طباعة"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Provide a reason to delete an approved time off"
-msgstr ""
+msgstr "أعطِ سبباً لحذفك لإجازة قد تمت الموافقة عليها "
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
@@ -3016,7 +3020,7 @@ msgstr "تم الرفض "
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Refused Time Off"
-msgstr ""
+msgstr "الإجازات المرفوضة "
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__regular
@@ -3301,6 +3305,12 @@ msgid ""
 "                'After this accrual's period' will keep the employee on the same accrual level until the ongoing pay period is complete.\n"
 "                After it is complete, the new level will take effect when the next pay period begins."
 msgstr ""
+"حدد ما يحدث إذا كان الانتقال إلى مستوى أخر يحدث خلال فترة دفع.\n"
+"\n"
+"                'فوراً' ستقوم بنقل الموظف إلى مستوى الاستحقاق الجديد في ذات التاريخ أثناء فترة الدفع الجارية.\n"
+"\n"
+"                'بعد فترة الاستحقاق هذه' ستُبقي الموظف في نفس مستوى الاستحقاق حتى اكتمال فترة الدفع الجارية.\n"
+"                بعد انتهائها، سيبدأ المستوى الجديد عند بدء فترة الدفع التالية. "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_from
@@ -3457,7 +3467,7 @@ msgstr "الإجازة المأخوذة "
 #, python-format
 msgid ""
 "The Start Date of the Validity Period must be anterior to the End Date."
-msgstr ""
+msgstr "يجب أن يكون تاريخ بدء فترة الصلاحية قبل تاريخ الانتهاء. "
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__start_count
@@ -3724,7 +3734,7 @@ msgstr "تقويم الإجازات"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar__associated_leaves_count
 msgid "Time Off Count"
-msgstr ""
+msgstr "عدد أيام الإجازة "
 
 #. module: hr_holidays
 #. odoo-python
@@ -3832,7 +3842,7 @@ msgstr "أنواع الإجازات "
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_validation_type
 msgid "Time Off Validation"
-msgstr ""
+msgstr "تصديق الإجازة "
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
@@ -3867,7 +3877,7 @@ msgstr "تحليل الإجازة حسب الموظف ونوع الإجازة "
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
 msgid "Time off Taken"
-msgstr ""
+msgstr "أيام الإجازة المأخوذة "
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form

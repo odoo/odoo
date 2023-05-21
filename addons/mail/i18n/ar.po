@@ -40,6 +40,15 @@ msgid ""
 "                updates, you can however add them below and Odoo will let them go through.\n"
 "            </p>"
 msgstr ""
+"\n"
+"            <p class=\"o_view_nocontent_smiling_face\">\n"
+"                أضف العناوين إلى قائمة العناوين المسموح بها\n"
+"            </p><p>\n"
+"                لحمايتك من البريد الإلكتروني غير المرغوب به والردود اللانهائية، يقوم أودو بحجب رسائل البريد الإلكتروني\n"
+"                الواردة بعد حد معين وهو <b>%(threshold)i</b> رسالة كل <b>%(minutes)i</b>\n"
+"                دقائق. إذا كانت هناك عناوين ترغب باستلام التحديثات باستمرار منها،\n"
+"                مكنك إضافتها في الأسفل وسيسمح النظام بوصولها.\n"
+"            </p>"
 
 #. module: mail
 #. odoo-python
@@ -67,7 +76,7 @@ msgstr "يتطلب \"%s\" الوصول إلى الميكروفون "
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "%(author name)s from %(channel name)s"
-msgstr ""
+msgstr "%(author name)s من %(channel name)s"
 
 #. module: mail
 #. odoo-javascript
@@ -1308,7 +1317,7 @@ msgstr "اسم اللقب"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "حالة اللقب "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
@@ -1318,7 +1327,7 @@ msgstr "نطاق اللقب"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "حالة اللقب مقيّمة في آخر رسالة مستلمة. "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_model_id
@@ -2497,7 +2506,7 @@ msgstr "جهات الاتصال"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Container Model"
-msgstr ""
+msgstr "نموذج الحاوية "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_member__last_interest_dt
@@ -2723,7 +2732,7 @@ msgstr "الرسالة المرتدة المخصصة"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom ICE server list"
-msgstr ""
+msgstr "قائمة خادم ICE مخصص "
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__custom_template
@@ -2838,7 +2847,7 @@ msgstr "عزيزي"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "Dear Sender"
-msgstr ""
+msgstr "عزيزي المرسل "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
@@ -2997,7 +3006,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Developer mode is on"
-msgstr ""
+msgstr "وضع المطوّر فعال "
 
 #. module: mail
 #. odoo-javascript
@@ -5559,7 +5568,7 @@ msgstr "مخطط البريد الإلكتروني "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_message_id_int
 msgid "Mail Message Id Int"
-msgstr ""
+msgstr "Mail Message Id Int"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel_rtc_session
@@ -6459,7 +6468,7 @@ msgstr "غير مؤكد"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__not_tested
 msgid "Not Tested"
-msgstr ""
+msgstr "لم يتم اختباره "
 
 #. module: mail
 #. odoo-javascript
@@ -6815,7 +6824,7 @@ msgstr "فتح المستند "
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_tree
 msgid "Open Owner"
-msgstr ""
+msgstr "فتح المالك "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -7521,7 +7530,7 @@ msgstr "السبب"
 #. module: mail
 #: model:res.groups,name:mail.group_mail_notification_type_inbox
 msgid "Receive notifications in Odoo"
-msgstr ""
+msgstr "تلقي الإشعارات في أودو "
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__received
@@ -7742,7 +7751,7 @@ msgstr "نموذج التكوين "
 #, python-format
 msgid ""
 "Rendering of %(field_name)s is not possible as not defined on template."
-msgstr ""
+msgstr "تكوين %(field_name)s غير ممكن لعدم تحديده في القالب. "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
@@ -9092,7 +9101,7 @@ msgstr "المستخدم الداخلي مسؤول عن هذا العقد. "
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "The last message received on this alias has caused an error."
-msgstr ""
+msgstr "آخر رسالة تسلمتها في هذا اللقب تسببت في حدوث خطأ. "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
@@ -9108,6 +9117,9 @@ msgid ""
 "                 Only %(contact_description)s are allowed to contact it.<br /><br />\n"
 "                 Please make sure you are using the correct address or contact us at %(default_email)s instead."
 msgstr ""
+"تعذر قبول الرسالة أدناه من قِبَل العنوان %(alias_display_name)s.\n"
+"                 فقط %(contact_description)s هم المسموح لهم بالتواصل معه.<br /><br />\n"
+"                 يرجى التأكد من أنك تستخدم العنوان الصحيح أو تواصل معنا على %(default_email)s عوضاً عن ذلك. "
 
 #. module: mail
 #. odoo-python

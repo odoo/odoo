@@ -36,9 +36,9 @@ msgstr ""
 "\n"
 "        Definiert die Quelle für die Erzeugung von Arbeitseinträgen\n"
 "\n"
-"        Arbeitsplan: Die Arbeitseinträge werden aus den unten stehenden Arbeitszeiten generiert.\n"
+"        Arbeitsplan: Die Arbeitseinträge werden aus den unten stehenden Arbeitsstunden generiert.\n"
 "        Anwesenheiten: Die Arbeitseinträge werden aus den Anwesenheiten des Mitarbeiters generiert. (erfordert die Anwesenheiten-App)\n"
-"        Planung: Die Arbeitseinträge werden aus der Planung des Mitarbeiters generiert. (erfordert die Planungs-App)\n"
+"        Planung: Die Arbeitseinträge werden aus der Planung des Mitarbeiters generiert. (erfordert die Planungsapp)\n"
 "    "
 
 #. module: hr_work_entry_contract
@@ -56,7 +56,7 @@ msgid ""
 "%s has multiple contracts from %s to %s. A work entry cannot overlap "
 "multiple contracts."
 msgstr ""
-"%s hat mehrere Verträge von %s bis %s. Ein Arbeitseintrag kann sich nicht "
+"%s hat mehrere Verträge von %s bis %s. Ein Arbeitseintrag darf sich nicht "
 "mit mehreren Verträgen überschneiden."
 
 #. module: hr_work_entry_contract
@@ -193,7 +193,7 @@ msgstr "HR-Arbeitseintragsart"
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_home_working
 msgid "Home Working"
-msgstr "Home Office"
+msgstr "Homeoffice"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__id
@@ -294,16 +294,16 @@ msgid ""
 "be <= '%(latest_available_date)s', which correspond to the generated work "
 "entries time interval."
 msgstr ""
-"Das Startdatum muss ≥ '%(earliest_available_date)s' sein und das Enddatum "
-"muss ≤ '%(latest_available_date)s' sein, entsprechend dem Zeitintervall der "
+"Das Startdatum muss ≥ „%(earliest_available_date)s“ sein und das Enddatum "
+"muss ≤ „%(latest_available_date)s“ sein, entsprechend dem Zeitintervall der "
 "generierten Arbeitseinträge."
 
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_contract_view_form_inherit
 msgid "This work entry cannot be validated. The work entry type is undefined."
 msgstr ""
-"Dieser Arbeitseintrag kann nicht validiert werden. Der Typ des "
-"Arbeitseintrags ist undefiniert."
+"Dieser Arbeitseintrag kann nicht validiert werden. Die Arbeitseintragsart "
+"ist nicht definiert."
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_type__is_leave

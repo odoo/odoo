@@ -268,9 +268,9 @@ msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
-"Wählen Sie einen Partner, für den die Bestellung in Rechnung gestellt und "
-"geliefert wird. Sie finden einen Partner anhand seines Namens, seiner TIN, "
-"seiner E-Mail-Adresse oder seiner internen Referenz."
+"Wählen Sie einen Partner, für den der Auftrag in Rechnung gestellt und "
+"geliefert wird. Sie finden einen Partner anhand seines Namens, seiner "
+"Steuer-ID, seiner E-Mail-Adresse oder seiner internen Referenz."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__color
@@ -321,8 +321,7 @@ msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
-"Konnte keine Preisliste passend zu Produkt und Menge finden.\n"
-"\n"
+"Es konnte keine Preisliste passend zu Produkt und Menge gefunden werden.\n"
 "Sie können nun entweder das Produkt, die Menge oder die Preisliste ändern."
 
 #. module: repair
@@ -334,7 +333,7 @@ msgstr "Rechnung erstellen"
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order_make_invoice
 msgid "Create Mass Invoice (repair)"
-msgstr "Sammelrechnung erstellen (reparieren)"
+msgstr "Sammelrechnung erstellen (Reparatur)"
 
 #. module: repair
 #. odoo-python
@@ -352,7 +351,7 @@ msgstr "Reparaturaufträge aus Retouren erstellen"
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
 msgid "Create a new tag"
-msgstr "Neues Tag erstellen"
+msgstr "Neues Stichwort erstellen"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.act_repair_invoice
@@ -534,7 +533,7 @@ msgstr "Icon"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Symbol, um eine Ausnahmeaktivität anzuzeigen."
+msgstr "Icon, um eine Ausnahmeaktivität anzuzeigen."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction
@@ -577,7 +576,7 @@ msgstr "Interne Notizen"
 #: model:ir.model.fields,field_description:repair.field_repair_line__move_id
 #: model:ir.model.fields,field_description:repair.field_repair_order__move_id
 msgid "Inventory Move"
-msgstr "Lagerbuchung"
+msgstr "Lagerbewegung"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_move_lines
@@ -721,7 +720,7 @@ msgstr "Nächste Aktivitätsfrist"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_summary
 msgid "Next Activity Summary"
-msgstr "Zusammenfassung der nächsten Aktion"
+msgstr "Zusammenfassung der nächsten Aktivität"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_type_id
@@ -1028,7 +1027,7 @@ msgstr "Reparaturaufträge"
 #. module: repair
 #: model:ir.ui.menu,name:repair.repair_menu_tag
 msgid "Repair Orders Tags"
-msgstr "Reparaturauftrags-Tags"
+msgstr "Stichwörter für Reparaturaufträge"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -1044,7 +1043,7 @@ msgstr "Reparaturreferenz"
 #: model:ir.model,name:repair.model_repair_tags
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_form
 msgid "Repair Tags"
-msgstr "Reparatur-Tags"
+msgstr "Reparatur-Stichwörter"
 
 #. module: repair
 #. odoo-python
@@ -1171,7 +1170,7 @@ msgstr "Geplantes Datum"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Search Repair Orders"
-msgstr "Suche Reparatur Auftragsnummern"
+msgstr "Reparaturaufträge suchen"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__invoice_method
@@ -1248,7 +1247,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model,name:repair.model_stock_move
 msgid "Stock Move"
-msgstr "Lagerbuchung"
+msgstr "Bestandsbewegung"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__price_subtotal
@@ -1259,12 +1258,12 @@ msgstr "Zwischensumme"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__name
 msgid "Tag Name"
-msgstr "Tag Bezeichnung"
+msgstr "Stichwortbezeichnung"
 
 #. module: repair
 #: model:ir.model.constraint,message:repair.constraint_repair_tags_name_uniq
 msgid "Tag name already exists!"
-msgstr "Schlagwort existiert bereits!"
+msgstr "Stichwortbezeichnung existiert bereits!"
 
 #. module: repair
 #: model:ir.actions.act_window,name:repair.action_repair_order_tag
@@ -1355,8 +1354,8 @@ msgid ""
 "True if this repair is linked to a Return Order and the order is 'Done'. "
 "False otherwise."
 msgstr ""
-"True, wenn diese Reparatur mit einem Retourenauftrag verbunden ist und der "
-"Auftrag ist „Erledigt“. Anderenfalls False."
+"Wahr, wenn diese Reparatur mit einem Retourenauftrag verbunden ist und der "
+"Auftrag ist „Erledigt“. Anderenfalls Falsch."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__type

@@ -1102,7 +1102,7 @@ msgstr "Zugewiesen an: %s"
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
 msgid "Assigned Tasks"
-msgstr "Zugeordnete Aufgaben"
+msgstr "Zugewiesene Aufgaben"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
@@ -1246,7 +1246,7 @@ msgstr "Durchschnittliche Bewertung: Zufrieden"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Backlog"
-msgstr "Backlog"
+msgstr "Rückstand"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__analytic_account_balance
@@ -1700,7 +1700,7 @@ msgstr "Kunde"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Customer Email"
-msgstr "E-Mail Kunde"
+msgstr "Kunden-E-Mail"
 
 #. module: project
 #. odoo-javascript
@@ -1896,12 +1896,12 @@ msgstr "Standardplan"
 #: model:ir.model.fields,help:project.field_res_company__analytic_plan_id
 #: model:ir.model.fields,help:project.field_res_config_settings__analytic_plan_id
 msgid "Default Plan for a new analytic account for projects"
-msgstr "Standardplan für ein neues Analysekonto für Projekte"
+msgstr "Standardplan für eine neue Kostenstelle für Projekte"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
 msgid "Default Values"
-msgstr "Standardeinstellungen"
+msgstr "Standardwerte"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form_domain
@@ -2183,7 +2183,7 @@ msgstr "E-Mail-CC"
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Emails sent to"
-msgstr "E-Mails gesendet an"
+msgstr "E-Mail-Versand an"
 
 #. module: project
 #. odoo-javascript
@@ -2522,7 +2522,7 @@ msgstr "Icon"
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_icon
 #: model:ir.model.fields,help:project.field_project_update__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Symbol, um eine Ausnahmeaktivität anzuzeigen."
+msgstr "Icon, um eine Ausnahmeaktivität anzuzeigen."
 
 #. module: project
 #. odoo-javascript
@@ -2617,8 +2617,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the project "
 "without removing it."
 msgstr ""
-"Wenn diese Option deaktiviert wird, können Sie die Anzeige des Projekts "
-"ausblenden."
+"Wenn das aktive Feld auf Falsch gesetzt ist, können Sie die Anzeige des "
+"Projekts ausblenden."
 
 #. module: project
 #. odoo-python
@@ -2666,7 +2666,7 @@ msgid ""
 "automatically synchronized with Tasks (or optionally Issues if the Issue "
 "Tracker module is installed)."
 msgstr ""
-"Interne E-Mail Adresse des Projekts. Eingehende E-Mails werden automatisch "
+"Interne E-Mail-Adresse des Projekts. Eingehende E-Mails werden automatisch "
 "mit den Aufgaben synchronisiert (oder optional eskaliert, wenn das "
 "Eskalationsverfolgungsmodul installiert ist)."
 
@@ -2749,7 +2749,7 @@ msgstr "Ist blockiert"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_exceeded
 msgid "Is Deadline Exceeded"
-msgstr "Wenn Deadline überschritten"
+msgstr "Ist Frist überschritten"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__is_deadline_future
@@ -3372,7 +3372,7 @@ msgstr "Nächste Aktivitätsfrist"
 #: model:ir.model.fields,field_description:project.field_project_task__activity_summary
 #: model:ir.model.fields,field_description:project.field_project_update__activity_summary
 msgid "Next Activity Summary"
-msgstr "Zusammenfassung der nächsten Aktion"
+msgstr "Zusammenfassung der nächsten Aktivität"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__activity_type_id
@@ -3447,7 +3447,7 @@ msgstr "Keine Phasen gefunden. Erstellen Sie eine!"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "No tags found. Let's create one!"
-msgstr "Keine Tags gefunden. Erstellen Sie einen!"
+msgstr "Keine Stichwörter gefunden. Erstellen Sie eins!"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -3513,7 +3513,7 @@ msgstr "Anzahl Serienwiederholungen"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__tasks_count
 msgid "Number of Tasks"
-msgstr "Anzahl Aufgaben"
+msgstr "Anzahl der Aufgaben"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_recurrence__recurrence_left
@@ -3579,7 +3579,7 @@ msgstr "Alter abgeschlossener Sprint"
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_hold
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "On Hold"
-msgstr "On Hold"
+msgstr "In Warteschlange"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_track
@@ -3633,9 +3633,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"Optionale ID eines Themenstrangs dem alle eingehenden Nachrichten zugeordnet"
-" werden, auch wenn auf sie nicht geantwortet wird. Wenn gesetzt, verhindert "
-"dies die Anlage neuer Datensätze vollständig."
+"Optionale ID eines Threads (Datensatz), dem alle eingehenden Nachrichten "
+"zugeordnet werden, auch wenn auf sie nicht geantwortet wird. Wenn gesetzt, "
+"verhindert dies die Anlage neuer Datensätze vollständig."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
@@ -3905,7 +3905,7 @@ msgstr "Privat"
 #: code:addons/project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "Profitability"
-msgstr "Profitabilität"
+msgstr "<u>Rentabilität</u>"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_update__progress
@@ -3954,7 +3954,7 @@ msgstr "Projekt"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_analytic_account_id
 msgid "Project Analytic Account"
-msgstr "Projekt Analytisches Konto"
+msgstr "Projekt-Kostenstelle"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_collaborator_action
@@ -4000,7 +4000,7 @@ msgstr "Projektbewertungsstatus"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__project_id
 msgid "Project Shared"
-msgstr "Projekt Geteilt"
+msgstr "Projekt geteilt"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_sharing_project_task_action
@@ -4038,7 +4038,7 @@ msgstr "Projektphasen"
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Project Tags"
-msgstr "Projekt Stichwörter"
+msgstr "Projekt-Stichwörter"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
@@ -4075,7 +4075,7 @@ msgstr "Projektaufgaben"
 #. module: project
 #: model:ir.actions.server,name:project.ir_cron_recurring_tasks_ir_actions_server
 msgid "Project: Create Recurring Tasks"
-msgstr "Projekt: Serienaufgaben anlegen"
+msgstr "Projekt: wiederkehrende Aufgaben anlegen"
 
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
@@ -4352,12 +4352,12 @@ msgstr "Verbundenes Dokument"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_id
 msgid "Related Document ID"
-msgstr "Zugehörige Dokumenten-ID"
+msgstr "Zugehörige Dokument-ID"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__res_model
 msgid "Related Document Model"
-msgstr "Zugehöriges Dokumenten-Modell"
+msgstr "Zugehöriges Dokumentmodell"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_day
@@ -4568,7 +4568,7 @@ msgstr "Suche zugewiesene Personen"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Messages"
-msgstr "Nachrichten durchsuchen"
+msgstr "In Nachrichten suchen"
 
 #. module: project
 #. odoo-python
@@ -4582,28 +4582,28 @@ msgstr "In Meilensteinen suchen"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Priority"
-msgstr "Suche nach Prioritäten"
+msgstr "In Priorität suchen"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Project"
-msgstr "Suche im Projekt"
+msgstr "Im Projekt suchen"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Ref"
-msgstr "Suche in Ref"
+msgstr "In Ref. suchen"
 
 #. module: project
 #. odoo-python
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Stages"
-msgstr "Phasen durchsuchen"
+msgstr "In Phasen suchen"
 
 #. module: project
 #. odoo-python
@@ -4650,7 +4650,7 @@ msgstr "September"
 #: model:ir.model.fields,field_description:project.field_project_task__sequence
 #: model:ir.model.fields,field_description:project.field_project_task_type__sequence
 msgid "Sequence"
-msgstr "Sequenz"
+msgstr "Reihenfolge"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -5092,7 +5092,7 @@ msgstr "Aufgabenphasen"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
 #: model_terms:ir.ui.view,arch_db:project.quick_create_task_form
 msgid "Task Title"
-msgstr "Aufgabennezeichnung"
+msgstr "Aufgabentitel"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -5266,9 +5266,10 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
-"Das Odoo Datenmodell auf das sich der Alias bezieht. Jeglicher E-Mail "
-"Posteingang ohne Bezug zu einer bereits vorhandenen E-Mail  führt "
-"üblicherweise zur Erstellung eines neuen Datensatz (z. B. Projektaufgabe)."
+"Das Model (Odoo-Dokumentart), auf das sich der Alias bezieht. Alle "
+"eingehenden E-Mails ohne Bezug zu einer bereits vorhandenen E-Mail führen "
+"üblicherweise zur Erstellung eines neuen Datensatz dieses Modells (z. B. "
+"Projektaufgabe)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_name
@@ -5531,7 +5532,7 @@ msgstr "Heutige Aktivitäten"
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_profitability.xml:0
 #, python-format
 msgid "Total"
-msgstr "Total"
+msgstr "Gesamt"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5582,8 +5583,8 @@ msgid ""
 "Transparent tags are not visible in the kanban view of your projects and "
 "tasks."
 msgstr ""
-"Transparente Tags sind in der Kanban-Ansicht Ihres Projekts und Ihrer "
-"Aufgaben nicht sichtbar."
+"Transparente Stichwörter sind in der Kanban-Ansicht Ihres Projekts und Ihrer"
+" Aufgaben nicht sichtbar."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__tue
@@ -5646,7 +5647,7 @@ msgstr "Unbekannte Kostenstelle"
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
 #, python-format
 msgid "Unknown field %r in 'groupby'"
-msgstr "Unbekanntes Feld %r in 'groupby'"
+msgstr "Unbekanntes Feld %r in „groupby“"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form

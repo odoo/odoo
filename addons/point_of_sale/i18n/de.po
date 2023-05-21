@@ -49,7 +49,7 @@ msgstr "%(pos_name)s (nicht verwendet)"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "%s POS payment of %s in %s"
-msgstr "%s POS Zahlung von %s in %s"
+msgstr "%s Kassensystemzahlung von %s in %s"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -111,7 +111,7 @@ msgstr "(aktualisieren)"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "+ New Shop"
-msgstr "+ Neues Geschäft"
+msgstr "+ Neuer Shop"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -245,8 +245,8 @@ msgid ""
 "A globally unique identifier for this pos configuration, used to prevent "
 "conflicts in client-generated data."
 msgstr ""
-"Eine weltweit einzigartige Identifikation dieser POS-Konfiguration, die dazu"
-" verwendet wird, Konflikten um Kundendaten vorzubeugen."
+"Eine weltweit einzigartige Identifikation dieser Kassensystem-Konfiguration,"
+" die dazu verwendet wird, Konflikte in Kundendaten vorzubeugen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__login_number
@@ -765,7 +765,7 @@ msgstr "Verfügbar"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_available_categ_ids
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_iface_available_categ_ids
 msgid "Available PoS Product Categories"
-msgstr "Verfügbare PoS Produktkategorien"
+msgstr "Verfügbare Produktkategorien für Kassensystem"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_pricelist_ids
@@ -810,7 +810,7 @@ msgstr "Backend"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/NumpadWidget.xml:0
 #, python-format
 msgid "Backspace"
-msgstr "zurück"
+msgstr "Rücktaste"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -865,7 +865,7 @@ msgstr "Barcode-Lesegerät"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Barcode Scanner/Card Reader"
-msgstr "Barcode Scanner/Kartenleser"
+msgstr "Barcode-Scanner/Kartenleser"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -997,7 +997,7 @@ msgstr "Es kann keine Änderung ohne eine Zahlungsmethode erfolgen"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__cardholder_name
 #, python-format
 msgid "Cardholder Name"
-msgstr "Karteninhaber Name"
+msgstr "Name des Karteninhabers"
 
 #. module: point_of_sale
 #. odoo-python
@@ -1594,7 +1594,7 @@ msgstr "Wechselkurs"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_session_id
 msgid "Current Session"
-msgstr "Aktuelle Session"
+msgstr "Aktuelle Sitzung"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_user_id
@@ -1717,7 +1717,7 @@ msgstr "Warnung zum Kundenbildschirm"
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Customer is required for %s payment method."
-msgstr "Kunde benötigt für Zahlungsmethode %s."
+msgstr "Kunde wird benötigt für Zahlungsmethode %s."
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_customer
@@ -2134,7 +2134,7 @@ msgstr "E-Mail-Empfang"
 #: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
 #, python-format
 msgid "Email sent."
-msgstr "Email versandt."
+msgstr "E-Mail versendet."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2153,7 +2153,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Empty Order"
-msgstr "Leere Bestellung"
+msgstr "Leerer Auftrag"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_scan_via_proxy
@@ -2230,7 +2230,7 @@ msgstr "Bestehende Bestellzeilen"
 #: code:addons/point_of_sale/static/src/js/Popups/ErrorTracebackPopup.js:0
 #, python-format
 msgid "Exit Pos"
-msgstr "PoS verlassen"
+msgstr "Kassensystem verlassen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2463,7 +2463,7 @@ msgstr "Hardware-Status"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__has_active_session
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_has_active_session
 msgid "Has Active Session"
-msgstr "Laufende Sitzung"
+msgstr "Hat laufende Sitzung"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_control
@@ -2549,7 +2549,7 @@ msgstr "Icon"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Symbol, um eine Ausnahmeaktivität anzuzeigen."
+msgstr "Icon, um eine Ausnahmeaktivität anzuzeigen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__split_transactions
@@ -3242,7 +3242,7 @@ msgstr "Weitere Einstellungen"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductScreen.xml:0
 #, python-format
 msgid "More..."
-msgstr "Mehr..."
+msgstr "Mehr ..."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -3335,7 +3335,7 @@ msgstr "Nächste Aktivitätsfrist"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_summary
 msgid "Next Activity Summary"
-msgstr "Zusammenfassung der nächsten Aktion"
+msgstr "Zusammenfassung der nächsten Aktivität"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_type_id
@@ -3703,12 +3703,12 @@ msgstr "Anfangssaldo"
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_picking_type_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Operation Type"
-msgstr "Vorgangstyp"
+msgstr "Vorgangsart"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Operation types show up in the Inventory dashboard."
-msgstr "Die Vorgangstypen werden im Inventar-Dashboard angezeigt."
+msgstr "Die Vorgangsarten werden im Lagerdashboard angezeigt."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3762,7 +3762,7 @@ msgstr "Sequenz des Auftragspositions-IDs"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__lines
 msgid "Order Lines"
-msgstr "Auftragszeilen"
+msgstr "Auftragspositionen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__name
@@ -3791,14 +3791,14 @@ msgstr "Auftrag ist leer"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Order lines"
-msgstr "Auftragszeilen"
+msgstr "Auftragspositionen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order_line__refund_orderline_ids
 msgid "Orderlines in this field are the lines that refunded this orderline."
 msgstr ""
-"Auftragszeilen in diesem Feld sind die Zeilen, die diese Auftragszeile "
-"erstattet haben."
+"Auftragspositionen in diesem Feld sind die Positionen, die diese "
+"Auftragsposition erstattet haben."
 
 #. module: point_of_sale
 #. odoo-python
@@ -4026,7 +4026,7 @@ msgstr "Zahlungsterminals"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment__transaction_id
 msgid "Payment Transaction ID"
-msgstr "Zahlungstransaktion ID"
+msgstr "Zahlungstransaktions-ID"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4321,7 +4321,7 @@ msgstr "PoS Aufträge"
 #: model:ir.ui.menu,name:point_of_sale.menu_products_pos_category
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "PoS Product Categories"
-msgstr "PoS Produktkategorien"
+msgstr "Kassensystem-Produktkategorien"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_tree_view
@@ -4522,7 +4522,7 @@ msgstr "Zahlung Kassensystem"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_pos_category_form_view
 msgid "Pos Product Categories"
-msgstr "PoS Produktkategorien"
+msgstr "Kassensystem-Produktkategorien"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_selectable_categ_ids
@@ -5593,7 +5593,7 @@ msgstr "Versanddatum"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__picking_policy
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_picking_policy
 msgid "Shipping Policy"
-msgstr "Auslieferungsbedingungen"
+msgstr "Versandbedingungen"
 
 #. module: point_of_sale
 #. odoo-javascript
