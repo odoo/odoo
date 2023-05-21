@@ -383,6 +383,7 @@
                 <field name="user_id"/>
                 <field name="partner_id"/>
                 <field name="session_id"/>
+                <field name="lines" string="Product" filter_domain="[('lines.product_id', 'ilike', self)]"/>
                 <filter string="Invoiced" name="invoiced" domain="[('state', '=', 'invoiced')]"/>
                 <filter string="Posted" name="posted" domain="[('state', '=', 'done')]"/>
                 <separator/>
