@@ -72,6 +72,12 @@ msgid ""
 "                                        Contract\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible' : [('contracts_count', '=', 1)]}\" class=\"o_stat_text\">\n"
+"                                        العقود\n"
+"                                    </span>\n"
+"                                    <span attrs=\"{'invisible' : [('contracts_count', '&gt;', 1)]}\" class=\"o_stat_text\">\n"
+"                                        العقود\n"
+"                                    </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_hr_employee_view_form3
@@ -103,6 +109,8 @@ msgid ""
 "According to the contract's end date, this contract has been put in red on "
 "the %s. Please advise and correct."
 msgstr ""
+"وفقاً لتاريخ انتهاء العقد، تم وضع هذا العقد بالأحمر في %s. يرجى الإرشاد "
+"والتصحيح. "
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_needaction
@@ -193,6 +201,8 @@ msgid ""
 "Calendar Mismatch: The employee's calendar does not match this contract's "
 "calendar. This could lead to unexpected behaviors."
 msgstr ""
+"عدم تطابق التقويم: تقويم الموظف لا يطابق تقويم هذا العقد. قد يؤدي ذلك إلى "
+"تصرفات غير متوقعة. "
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__cancel

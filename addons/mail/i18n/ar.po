@@ -40,6 +40,15 @@ msgid ""
 "                updates, you can however add them below and Odoo will let them go through.\n"
 "            </p>"
 msgstr ""
+"\n"
+"            <p class=\"o_view_nocontent_smiling_face\">\n"
+"                أضف العناوين إلى قائمة العناوين المسموح بها\n"
+"            </p><p>\n"
+"                لحمايتك من البريد الإلكتروني غير المرغوب به والردود اللانهائية، يقوم أودو بحجب رسائل البريد الإلكتروني\n"
+"                الواردة بعد حد معين وهو <b>%(threshold)i</b> رسالة كل <b>%(minutes)i</b>\n"
+"                دقائق. إذا كانت هناك عناوين ترغب باستلام التحديثات باستمرار منها،\n"
+"                مكنك إضافتها في الأسفل وسيسمح النظام بوصولها.\n"
+"            </p>"
 
 #. module: mail
 #. odoo-python
@@ -67,7 +76,7 @@ msgstr "يتطلب \"%s\" الوصول إلى الميكروفون "
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "%(author name)s from %(channel name)s"
-msgstr ""
+msgstr "%(author name)s من %(channel name)s"
 
 #. module: mail
 #. odoo-javascript
@@ -803,12 +812,12 @@ msgstr "<span>@</span>"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "<span>If this was done by you:</span><br/>"
-msgstr ""
+msgstr "<span>إذا قمت أنت بذلك:</span><br/>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "<span>If this was not done by you:</span>"
-msgstr ""
+msgstr "<span>إذا لم تقم أنت بذلك:</span> "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_partner_view_form
@@ -818,7 +827,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "<span>We suggest you start by</span>"
-msgstr ""
+msgstr "<span>نقترح أن تبدأ بـ</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -1256,7 +1265,7 @@ msgstr "إضافة قناة أو الانضمام إليها"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_add_signature
 msgid "Add signature"
-msgstr ""
+msgstr "إضافة توقيع "
 
 #. module: mail
 #. odoo-javascript
@@ -1335,7 +1344,7 @@ msgstr "اسم اللقب"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "حالة اللقب "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_domain
@@ -1345,7 +1354,7 @@ msgstr "نطاق اللقب"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "حالة اللقب مقيمة في آخر رسالة مستلمة. "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_model_id
@@ -1371,7 +1380,7 @@ msgstr "الكل"
 #: code:addons/mail/wizard/mail_resend_message.py:0
 #, python-format
 msgid "All partners must belong to the same message"
-msgstr ""
+msgstr "يجب أن ينتمي كافة الشركاء إلى نفس الرسالة "
 
 #. module: mail
 #. odoo-javascript
@@ -1582,7 +1591,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "At this point lang should be correctly set"
-msgstr ""
+msgstr "في هذه المرحلة، يجب أن تكون اللغة معدّة بشكل صحيح "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -1829,7 +1838,7 @@ msgstr "القوالب الأساسية "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__composition_batch
 msgid "Batch composition"
-msgstr ""
+msgstr "الإنشاء الجماعي "
 
 #. module: mail
 #. odoo-python
@@ -1904,7 +1913,7 @@ msgstr "المتن"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__body_has_template_value
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__body_has_template_value
 msgid "Body content is the same as tmeplate"
-msgstr ""
+msgstr "محتوى المتن هو نفس محتوى القالب "
 
 #. module: mail
 #. odoo-javascript
@@ -2273,7 +2282,7 @@ msgstr "الدردشات "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_exclusion_list
 msgid "Check Exclusion List"
-msgstr ""
+msgstr "ألقِ نظرة على قائمة الاستثناءات "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__child_ids
@@ -2554,7 +2563,7 @@ msgstr "جهة الاتصال"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "Contact your administrator"
-msgstr ""
+msgstr "تواصل مع مديرك "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_activity
@@ -2564,7 +2573,7 @@ msgstr "جهات الاتصال"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Container Model"
-msgstr ""
+msgstr "نموذج الحاوية "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel_member__last_interest_dt
@@ -2790,7 +2799,7 @@ msgstr "الرسالة المرتدة المخصصة"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Custom ICE server list"
-msgstr ""
+msgstr "قائمة خادم ICE مخصص "
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_template__template_category__custom_template
@@ -2906,7 +2915,7 @@ msgstr "عزيزي"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "Dear Sender"
-msgstr ""
+msgstr "عزيزي المرسل "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
@@ -3032,7 +3041,7 @@ msgstr "فشل التوصيل "
 #: code:addons/mail/wizard/mail_compose_message.py:0
 #, python-format
 msgid "Deprecated usage of 'default_res_id', should use 'default_res_ids'."
-msgstr ""
+msgstr "استخدام موقوف لـ 'default_res_id'، يجب استخدام 'default_res_ids'. "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__description
@@ -3067,7 +3076,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Developer mode is on"
-msgstr ""
+msgstr "وضع المطوّر فعال "
 
 #. module: mail
 #. odoo-javascript
@@ -3736,21 +3745,21 @@ msgstr "فشل"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render QWeb template : %(template_src)s)"
-msgstr ""
+msgstr "فشل تكوين قالب QWeb: %(template_src)s) "
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render inline_template template : %(template_txt)s)"
-msgstr ""
+msgstr "فشل تكوين قالب inline_template: %(template_txt)s) "
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render template : %(view_ref)s"
-msgstr ""
+msgstr "فشل معالجة القالب : %(view_ref)s "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
@@ -4001,7 +4010,7 @@ msgstr "فرض الإرسال "
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "Force a Language:"
-msgstr ""
+msgstr "فرض لغة: "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_company__email_formatted
@@ -4641,6 +4650,9 @@ msgid ""
 "if sent, send emails after that date. This date is considered as being in "
 "UTC timezone."
 msgstr ""
+"في وضع التعليقات: إذا كان معداً، قم بتأجيل إرسال الإشعارات. في وضع المراسلات"
+" الجماعية: إذا تم إرساله، قم بإرسال رسائل بريد إلكتروني بعد ذلك التاريخ. "
+"يُعد هذا التاريخ ضمن المنطقة الزمنية للتوقيت العالمي. "
 
 #. module: mail
 #. odoo-python
@@ -4741,7 +4753,7 @@ msgstr "غير صالح "
 #: code:addons/mail/wizard/mail_compose_message.py:0
 #, python-format
 msgid "Invalid domain %(domain)r (type %(domain_type)s)"
-msgstr ""
+msgstr "النطاق غير صالح %(domain)r (النوع %(domain_type)s) "
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_invalid
@@ -4780,7 +4792,7 @@ msgstr "حقل البريد الإلكتروني الأساسي غير صالح 
 #: code:addons/mail/wizard/mail_compose_message.py:0
 #, python-format
 msgid "Invalid res_ids %(res_ids_str)s (type %(res_ids_type)s)"
-msgstr ""
+msgstr "res_ids غير صالح %(res_ids_str)s (النوع %(res_ids_type)s) "
 
 #. module: mail
 #. odoo-python
@@ -4790,6 +4802,8 @@ msgid ""
 "Invalid server name!\n"
 " %s"
 msgstr ""
+"اسم الخادم غير صالح!\n"
+" %s "
 
 #. module: mail
 #. odoo-python
@@ -4799,6 +4813,8 @@ msgid ""
 "Invalid template or view source %(svalue)s (type %(stype)s), should be a "
 "record or an XMLID"
 msgstr ""
+"القالب أو مصدر العرض غير صالح %(svalue)s (النوع %(stype)s)، يجب أن يكون "
+"سجلاً أو ملف XMLID "
 
 #. module: mail
 #. odoo-python
@@ -4807,6 +4823,7 @@ msgstr ""
 msgid ""
 "Invalid template or view source Xml ID %(source_ref)s does not exist anymore"
 msgstr ""
+"القالب غير صالح أو معرف Xml لمصدر العرض %(source_ref)s لم يعد موجوداً "
 
 #. module: mail
 #. odoo-python
@@ -4815,6 +4832,7 @@ msgstr ""
 msgid ""
 "Invalid template or view source record %(svalue)s, is %(model)s instead"
 msgstr ""
+"القالب غير صالح أو سجل مصدر العرض %(svalue)s هو %(model)s عوضاً عن ذلك "
 
 #. module: mail
 #. odoo-python
@@ -4823,6 +4841,7 @@ msgstr ""
 msgid ""
 "Invalid template or view source reference %(svalue)s, is %(model)s instead"
 msgstr ""
+"القالب غير صالح أو مرجع مصدر العرض %(svalue)s هو %(model)s عوضاً عن ذلك "
 
 #. module: mail
 #. odoo-python
@@ -4939,7 +4958,7 @@ msgstr "دردشة "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__subtype_is_log
 msgid "Is a log"
-msgstr ""
+msgstr "سجل "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__is_discuss_sidebar_category_channel_open
@@ -5278,7 +5297,7 @@ msgstr "الاحتفاظ بالمرفقات"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__auto_delete_keep_log
 msgid "Keep Message Copy"
-msgstr ""
+msgstr "الاحتفاظ بنسخة من الرسالة "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__original
@@ -5290,6 +5309,8 @@ msgstr "الاحتفاظ بالأصل"
 msgid ""
 "Keep a copy of the email content if emails are removed (mass mailing only)"
 msgstr ""
+"أبقِ نسخة من محتوى البريد الإلكتروني في حال تمت إزالة رسائل البريد "
+"الإلكتروني (المراسلات الجماعية فقط) "
 
 #. module: mail
 #. odoo-python
@@ -5688,12 +5709,12 @@ msgstr "مخطط البريد الإلكتروني "
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_main_attachment
 msgid "Mail Main Attachment management"
-msgstr ""
+msgstr "إدارة المرفق الرئيسي للبريد الإلكتروني "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_message_id_int
 msgid "Mail Message Id Int"
-msgstr ""
+msgstr "Mail Message Id Int"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel_rtc_session
@@ -5750,6 +5771,8 @@ msgid ""
 "Mail composer in comment mode should run on at least one record. No records "
 "found (model %(model_name)s)."
 msgstr ""
+"يجب أن تعمل أداة إنشاء البريد الإلكتروني في وضع التعليق في سجل واحد على "
+"الأقل. لم يتم العثور على أي سجلات (النموذج %(model_name)s). "
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_notification
@@ -5793,6 +5816,7 @@ msgid ""
 "Mailing or posting with a source should not be called with an empty "
 "%(source_type)s"
 msgstr ""
+"المراسلة أو النشر مع مصدر يجب ألا يتم استدعاؤه مع %(source_type)s فارغ "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_ids
@@ -6593,7 +6617,7 @@ msgstr "غير مؤكد"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_status__not_tested
 msgid "Not Tested"
-msgstr ""
+msgstr "لم يتم اختباره "
 
 #. module: mail
 #. odoo-javascript
@@ -6637,6 +6661,8 @@ msgid ""
 "Notification should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
+"يجب أن تتسلم الإشعارات المرفقات كقائمة لقائمة أو قوائم tuple (تم استلام "
+"%(aids)s) "
 
 #. module: mail
 #. odoo-python
@@ -6646,6 +6672,8 @@ msgid ""
 "Notification should receive attachments records as a list of IDs (received "
 "%(aids)s)"
 msgstr ""
+"يجب أن تتسلم الإشعارات سجلات المرفقات كقائمة من المعرفات (تم استلام "
+"%(aids)s) "
 
 #. module: mail
 #. odoo-python
@@ -6655,6 +6683,7 @@ msgid ""
 "Notification should receive partners given as a list of IDs (received "
 "%(pids)s)"
 msgstr ""
+"يجب أن تتسلم الإشعارات الشركاء كقائمة من المعرفات (تم استلام %(pids)s) "
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_delete_notification_ir_actions_server
@@ -6953,6 +6982,8 @@ msgid ""
 "Only users belonging to the \"%(group_name)s\" group can modify dynamic "
 "templates."
 msgstr ""
+"وحدهم المستخدمون التابعون للمجموعة \"%(group_name)s\" بإمكانهم بتعديل "
+"القوالب الديناميكية. "
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel_member__fold_state__open
@@ -6971,7 +7002,7 @@ msgstr "فتح المستند "
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_tree
 msgid "Open Owner"
-msgstr ""
+msgstr "فتح المالك "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
@@ -7447,6 +7478,8 @@ msgid ""
 "Posting a message should receive attachments as a list of list or tuples "
 "(received %(aids)s)"
 msgstr ""
+"يجب أن يؤدي إرسال رسالة إلى تسلم المرفقات كقائمة لقائمة أو قوائم tuple (تم "
+"استلام %(aids)s) "
 
 #. module: mail
 #. odoo-python
@@ -7456,6 +7489,8 @@ msgid ""
 "Posting a message should receive attachments records as a list of IDs "
 "(received %(aids)s)"
 msgstr ""
+"يجب أن يؤدي إرسال رسالة إلى تسلم سجلات المرفقات كقائمة من المعرفات (تم "
+"استلام %(aids)s) "
 
 #. module: mail
 #. odoo-python
@@ -7465,6 +7500,8 @@ msgid ""
 "Posting a message should receive partners as a list of IDs (received "
 "%(pids)s)"
 msgstr ""
+"يجب أن يؤدي إرسال رسالة إلى تسلم الشركاء كقائمة من المعرفات (تم استلام "
+"%(pids)s) "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
@@ -7685,7 +7722,7 @@ msgstr "السبب"
 #. module: mail
 #: model:res.groups,name:mail.group_mail_notification_type_inbox
 msgid "Receive notifications in Odoo"
-msgstr ""
+msgstr "تلقي الإشعارات في أودو "
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__received
@@ -7829,7 +7866,7 @@ msgstr "معرف المستند ذي الصلة "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__res_ids
 msgid "Related Document IDs"
-msgstr ""
+msgstr "معرفات المستندات ذات الصلة "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_model
@@ -7915,7 +7952,7 @@ msgstr "نموذج التكوين "
 #, python-format
 msgid ""
 "Rendering of %(field_name)s is not possible as no counterpart on template."
-msgstr ""
+msgstr "تكوين %(field_name)s غير ممكن لعدم وجود مقابل في القالب. "
 
 #. module: mail
 #. odoo-python
@@ -7924,7 +7961,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Rendering of %(field_name)s is not possible as not defined on template."
-msgstr ""
+msgstr "تكوين %(field_name)s غير ممكن لعدم تحديده في القالب. "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
@@ -8000,7 +8037,7 @@ msgstr "إعادة الإرسال"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_partner_action
 msgid "Resend Email"
-msgstr ""
+msgstr "إعادة إرسال البريد الإلكتروني "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend_wizard_id
@@ -8032,7 +8069,7 @@ msgstr "إعادة ضبط التكبير (0)"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.account_security_setting_update
 msgid "Resetting Your Password"
-msgstr ""
+msgstr "إعادة تعيين كلمة المرور "
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_id
@@ -8365,26 +8402,26 @@ msgstr "بحث: %s "
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid "Security Update: Email Changed"
-msgstr ""
+msgstr "تحديث الأمان: تغير البريد الإلكتروني "
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid "Security Update: Login Changed"
-msgstr ""
+msgstr "تحديث الأمان: تغيرت بيانات تسجيل الدخول "
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/res_users.py:0
 #, python-format
 msgid "Security Update: Password Changed"
-msgstr ""
+msgstr "تحديث الأمان: تغيرت كلمة المرور "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "See Error Details"
-msgstr ""
+msgstr "ألقِ نظرة على تفاصيل الخطأ "
 
 #. module: mail
 #. odoo-javascript
@@ -8508,7 +8545,7 @@ msgstr "إرسال بريد إلكتروني "
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__force_send
 msgid "Send mailing or notifications directly"
-msgstr ""
+msgstr "إرسال رسائل البريد أو الإشعارات مباشرة "
 
 #. module: mail
 #. odoo-javascript
@@ -9177,6 +9214,8 @@ msgid ""
 "Template rendering should be called only using on a list of IDs; received "
 "%(res_ids)r instead."
 msgstr ""
+"يجب استدعاء تكوين القالب فقط باستخدام قائمة من المعرفات؛ تم استلام "
+"%(res_ids)rعوضاً عن ذلك. "
 
 #. module: mail
 #. odoo-python
@@ -9186,6 +9225,8 @@ msgid ""
 "Template rendering supports only inline_template, qweb, or qweb_view (view "
 "or raw); received %(engine)s instead."
 msgstr ""
+"يدعم تكوين القالب فقط inline_template ،qweb، أو qweb_view (عرض أو raw). تم "
+"استلام %(engine)s عوضاً عن ذلك. "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -9328,7 +9369,7 @@ msgstr "المستخدم الداخلي مسؤول عن هذا العقد. "
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_form
 msgid "The last message received on this alias has caused an error."
-msgstr ""
+msgstr "آخر رسالة تسلمتها في هذا اللقب تسببت في حدوث خطأ. "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
@@ -9344,6 +9385,9 @@ msgid ""
 "                 Only %(contact_description)s are allowed to contact it.<br /><br />\n"
 "                 Please make sure you are using the correct address or contact us at %(default_email)s instead."
 msgstr ""
+"تعذر قبول الرسالة أدناه من قِبَل العنوان %(alias_display_name)s.\n"
+"                 فقط %(contact_description)s هم المسموح لهم بالتواصل معه.<br /><br />\n"
+"                 يرجى التأكد من أنك تستخدم العنوان الصحيح أو تواصل معنا على %(default_email)s عوضاً عن ذلك. "
 
 #. module: mail
 #. odoo-python

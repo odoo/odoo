@@ -7,7 +7,7 @@
 # Cécile Collart <cco@odoo.com>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
-# Lucia Pacheco <lpo@odoo.com>, 2023
+# Lucia Pacheco, 2023
 # Martin Trigaux, 2023
 # Iran Villalobos López, 2023
 # Fernanda Alvarez, 2023
@@ -57,18 +57,18 @@ msgstr " - Tareas por fecha límite"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_count
 msgid "# Collaborators"
-msgstr "Número de colaboradores"
+msgstr "# Colaboradores"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_count
 msgid "# Ratings"
-msgstr "Número de calificaciones"
+msgstr "# Calificaciones"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_partner__task_count
 #: model:ir.model.fields,field_description:project.field_res_users__task_count
 msgid "# Tasks"
-msgstr "Número de tareas"
+msgstr "# Tareas"
 
 #. module: project
 #. odoo-javascript
@@ -1508,6 +1508,14 @@ msgstr "Fecha de creación"
 #: model:ir.model.fields,field_description:project.field_project_project__currency_id
 msgid "Currency"
 msgstr "Divisa"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+#: code:addons/project/models/project_task.py:0
+#, python-format
+msgid "Current Stage: %s"
+msgstr "Etapa actual: %s"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list

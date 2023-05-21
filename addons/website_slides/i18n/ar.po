@@ -1564,7 +1564,7 @@ msgstr "كن على علم عندما تتم إضافة محتوى جديد. "
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__body_has_template_value
 msgid "Body content is the same as tmeplate"
-msgstr ""
+msgstr "محتوى المتن هو نفس محتوى القالب "
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__can_comment
@@ -6370,6 +6370,15 @@ msgid "Yes"
 msgstr "نعم"
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/wizard/slide_channel_invite.py:0
+#, python-format
+msgid ""
+"You are not allowed to add members to this course. Please contact the course"
+" responsible or an administrator."
+msgstr ""
+
+#. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
@@ -6437,8 +6446,9 @@ msgstr "لا يمكنك تحديد شريحة كشريحة تم عرضها إذ�
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid ""
-"You cannot mark a slide quiz as completed if you are not among its members."
-msgstr "لا يمكنك تحديد الاختبار القصير لشريحة كمكتمل إذا لم تكن أحد الأعضاء. "
+"You cannot mark a slide quiz as completed if you are not among its members "
+"or it is unpublished."
+msgstr ""
 
 #. module: website_slides
 #. odoo-python
@@ -6446,9 +6456,8 @@ msgstr "لا يمكنك تحديد الاختبار القصير لشريحة ك
 #, python-format
 msgid ""
 "You cannot mark a slide quiz as not completed if you are not among its "
-"members."
+"members or it is unpublished."
 msgstr ""
-"لا يمكنك تحديد الاختبار القصير لشريحة كغير مكتمل إذا لم تكن أحد الأعضاء. "
 
 #. module: website_slides
 #. odoo-python

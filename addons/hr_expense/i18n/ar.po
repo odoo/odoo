@@ -37,21 +37,21 @@ msgstr "يؤكد %(user)s بأن هذه النفقة ليست نسخة مكرر�
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "%s: It is not from your department"
-msgstr ""
+msgstr "%s: ليس من قسمك "
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "%s: It is your own expense"
-msgstr ""
+msgstr "%s: إنها نفقتك الخاصة "
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "%s: Your are not a Manager or HR Officer"
-msgstr ""
+msgstr "%s: أنت لست مديراً أو مسؤولاً في الموارد البشرية "
 
 #. module: hr_expense
 #: model:ir.actions.report,print_report_name:hr_expense.action_report_hr_expense_sheet
@@ -211,7 +211,7 @@ msgstr "كافة التقارير "
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "All payment methods allowed"
-msgstr ""
+msgstr "كافة طرق الدفع مسموح بها "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__amount_residual
@@ -280,7 +280,7 @@ msgstr "تاريخ الموافقة"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__approval_state
 msgid "Approval State"
-msgstr ""
+msgstr "حالة الموافقة "
 
 #. module: hr_expense
 #. odoo-javascript
@@ -383,7 +383,7 @@ msgstr "إلغاء"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__cannot_approve_reason
 msgid "Cannot Approve Reason"
-msgstr ""
+msgstr "سبب عدم الموافقة "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__product_ids
@@ -434,7 +434,7 @@ msgstr "الشركة "
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Company payment methods available"
-msgstr ""
+msgstr "طرق دفع الشركة المتاحة "
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_res_config_settings
@@ -651,7 +651,7 @@ msgstr "الموظف (لرد الأموال) "
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Employee Expense Journal"
-msgstr ""
+msgstr "دفتر يومية نفقات الموظفين "
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_account
@@ -817,7 +817,7 @@ msgstr "فئات النفقات يمكن إعادة فوترتها الى عمل
 #: code:addons/hr_expense/models/account_move.py:0
 #, python-format
 msgid "Expense entry created from: %s"
-msgstr ""
+msgstr "تم إنشاء قيد نفقة من: %s "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_refuse_wizard_view_form
@@ -842,7 +842,7 @@ msgstr "تم رفض تقرير النفقة "
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_reset
 msgid "Expense report reset to Draft"
-msgstr ""
+msgstr "تقارير النفقات المطلوب تعيينها كمسودات "
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
@@ -1105,7 +1105,7 @@ msgstr "دفتر اليومية"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__journal_displayed_id
 msgid "Journal Displayed"
-msgstr ""
+msgstr "دفتر اليومية المعروض "
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move
@@ -1117,7 +1117,7 @@ msgstr "قيد اليومية"
 #. module: hr_expense
 #: model:mail.message.subtype,name:hr_expense.mt_expense_entry_delete
 msgid "Journal Entry Deleted"
-msgstr ""
+msgstr "تم حذف قيد اليومية "
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_move_line
@@ -1127,7 +1127,7 @@ msgstr "عنصر اليومية"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_entry_delete
 msgid "Journal entry deleted"
-msgstr ""
+msgstr "تم حذف قيد اليومية "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_convert_rate
@@ -1184,7 +1184,7 @@ msgstr "فلنعد إلى نفقاتك. "
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Lunch with customer $12.32"
-msgstr ""
+msgstr "غداء مع العميل $12.32 "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_main_attachment_id
@@ -1425,7 +1425,7 @@ msgstr "أو"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Or send your receipts at"
-msgstr ""
+msgstr "أو قم بإرسال الإيصالات إلى "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_split
@@ -1480,13 +1480,13 @@ msgstr "تم إنشاء الدفع لـ: %s "
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Payment method allowed for expenses paid by company."
-msgstr ""
+msgstr "طريقة الدفع المسموح بها للنفقات التي تدفعها الشركة. "
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_company__company_expense_allowed_payment_method_line_ids
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__company_expense_allowed_payment_method_line_ids
 msgid "Payment methods available for expenses paid by company"
-msgstr ""
+msgstr "طرق الدفع المتاحة للنفقات التي تدفعها الشركة "
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_payment
@@ -1734,7 +1734,7 @@ msgstr ""
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__selectable_payment_method_line_ids
 msgid "Selectable Payment Method Line"
-msgstr ""
+msgstr "بند طريقة الدفع القابل للتحديد "
 
 #. module: hr_expense
 #. odoo-python
@@ -1957,7 +1957,7 @@ msgstr "يجب تعيين تفتر اليومية للنفقة المُرحلة.
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__employee_journal_id
 msgid "The journal used when the expense is paid by employee."
-msgstr ""
+msgstr "دفتر اليومية المستخدم عندما يتم دفع النفقة من قِبَل الموظف. "
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense_sheet__payment_method_line_id
@@ -2221,6 +2221,8 @@ msgid ""
 "You cannot approve:\n"
 " %s"
 msgstr ""
+"لا يمكنك الموافقة:\n"
+" %s "
 
 #. module: hr_expense
 #. odoo-python
@@ -2260,6 +2262,8 @@ msgid ""
 "You cannot refuse:\n"
 " %s"
 msgstr ""
+"لا يمكنك الرفض:\n"
+" %s "
 
 #. module: hr_expense
 #. odoo-python
@@ -2303,7 +2307,7 @@ msgstr ""
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason
 msgid "Your Expense Report"
-msgstr ""
+msgstr "تقارير نفقاتك "
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register

@@ -5,8 +5,9 @@
 # Translators:
 # Mustafa Rawi <mustafa@cubexco.com>, 2023
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2023
-# Martin Trigaux, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
+# Niyas Raphy, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-23 09:09+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -116,6 +117,13 @@ msgid ""
 "                                </span>\n"
 "                            </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_warning_visible', '=', False)]}\">\n"
+"                                <span class=\"fa fa-exclamation-triangle text-danger ps-3\">\n"
+"                                </span>\n"
+"                                <span class=\"text-danger\">\n"
+"                                    كافة طلبات التقديم ستفقد تاريخ التوظيف وحالة التوظيف.\n"
+"                                </span>\n"
+"                            </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -141,6 +149,8 @@ msgid ""
 "<span class=\"badge rounded-pill text-bg-danger float-end me-4\" attrs=\"{'invisible': [('application_status', '!=', 'refused')]}\">Refused</span>\n"
 "                            <span class=\"badge rounded-pill text-bg-secondary float-end me-4\" attrs=\"{'invisible': [('application_status', '!=', 'archived')]}\">Archived</span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-danger float-end me-4\" attrs=\"{'invisible': [('application_status', '!=', 'refused')]}\">مرفوض</span>\n"
+"                            <span class=\"badge rounded-pill text-bg-secondary float-end me-4\" attrs=\"{'invisible': [('application_status', '!=', 'archived')]}\">مؤرشف</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -732,7 +742,7 @@ msgstr "اسم اللقب"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "حالة اللقب "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_domain
@@ -742,7 +752,7 @@ msgstr "نطاق اللقب"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "حالة اللقب مقيمة في آخر رسالة مستلمة. "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_model_id
@@ -902,11 +912,6 @@ msgid "Applied Job"
 msgstr "الوظيفة التي تم التقديم لها "
 
 #. module: hr_recruitment
-#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__priority
-msgid "Appreciation"
-msgstr "التقدير"
-
-#. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Archive"
 msgstr "الأرشيف "
@@ -972,7 +977,7 @@ msgstr "محجوب"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__body_has_template_value
 msgid "Body content is the same as tmeplate"
-msgstr ""
+msgstr "محتوى المتن هو نفس محتوى القالب "
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position
@@ -1139,7 +1144,7 @@ msgstr "إنشاء منصب وظيفي"
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "Create new applications by sending an email to"
-msgstr ""
+msgstr "قم بإنشاء طلبات تقديم جديدة عن طريق إرسال بريد إلكتروني إلى "
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -1216,6 +1221,9 @@ msgid ""
 "                    qualification call, first interview, second interview, refused,\n"
 "                    hired."
 msgstr ""
+"قم بتحديد مراحل عملية التوظيف من هنا، على سبيل المثال:\n"
+"                    مكالمة التأهيل، المقابلة الأولى، المقابلة الثانية،\n"
+"                    تم التوظيف. "
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
@@ -1344,6 +1352,8 @@ msgid ""
 "Don't forget to specify the department if your recruitment process\n"
 "                is different according to the job position."
 msgstr ""
+"لا تنسَ تحديد القسم إذا كانت عملية التوظيف\n"
+"                تختلف حسب المنصب الوظيفي. "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_from
@@ -1434,6 +1444,11 @@ msgstr "الموظفون"
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_contract_type
 msgid "Employment Types"
 msgstr "أنواع التوظيف "
+
+#. module: hr_recruitment
+#: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__priority
+msgid "Evaluation"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__3
@@ -2125,6 +2140,13 @@ msgstr "بلا موضوع"
 #. odoo-python
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
+msgid "No application found. Let's create one !"
+msgstr ""
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_recruitment.py:0
+#, python-format
 msgid "No application yet"
 msgstr "لا يوجد تقديم بعد "
 
@@ -2197,7 +2219,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
 msgid "Officer: Manage all applicants"
-msgstr ""
+msgstr "المسؤول: إدارة كافة المتقدمين للوظائف "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__old_application_count
@@ -2279,6 +2301,13 @@ msgstr ""
 "alias_model_id (مثال: المشروع (parent_model) والمهمة (model))"
 
 #. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_recruitment.py:0
+#, python-format
+msgid "People can also apply by email to save time."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__hr_responsible_id
 msgid "Person responsible of validating the employee's contracts."
 msgstr "الشخص المسؤول عن اعتماد عقود الموظفين. "
@@ -2293,7 +2322,7 @@ msgstr "رقم الهاتف"
 #: code:addons/hr_recruitment/models/hr_applicant.py:0
 #, python-format
 msgid "Please provide an applicant name."
-msgstr ""
+msgstr "يرجى ذكر اسم المتقدم للوظيفة "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_contact
@@ -2520,7 +2549,7 @@ msgstr "استعادة"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Resume's content"
-msgstr ""
+msgstr "محتوى السيرة الذاتية "
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -2557,7 +2586,7 @@ msgstr "الراتب المقترح من قِبَل المنظمة، مع مزا
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Save it!"
-msgstr ""
+msgstr "احفظه! "
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -2613,7 +2642,7 @@ msgstr "إرسال رسالة نصية قصيرة "
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid ""
 "Send an Interview Survey to the applicant during the recruitment process"
-msgstr ""
+msgstr "أرسل استطلاعاً للمقابلة للمتقدم خلال عملية التوظيف "
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_send_mail
@@ -2780,6 +2809,28 @@ msgstr "اسم علامة التصنيف مستخدم بالفعل! "
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Tags"
 msgstr "علامات التصنيف "
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_report_team_menu
+msgid "Team Performance"
+msgstr "أداء الفريق"
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__interviewer_ids
+msgid ""
+"The Interviewers set on the job position can see all Applicants in it. They "
+"have access to the information, the attachments, the meeting management and "
+"they can refuse him. You don't need to have Recruitment rights to be set as "
+"an interviewer."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model.fields,help:hr_recruitment.field_hr_job__user_id
+msgid ""
+"The Recruiter will be the default value for all Applicants Recruiter's field"
+" in this job position. The Recruiter is automatically added to all meetings "
+"with the Applicant."
+msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3045,6 +3096,16 @@ msgid ""
 "You can define here the labels that will be displayed for the kanban state instead\n"
 "                            of the default labels."
 msgstr ""
+"بإمكانك هنا تحديد بطاقات العناوين التي سيتم عرضها عند استخدام حالة كانبان عوضاً عن\n"
+"                            بطاقات العناوين الافتراضية. "
+
+#. module: hr_recruitment
+#. odoo-python
+#: code:addons/hr_recruitment/models/hr_recruitment.py:0
+#, python-format
+msgid ""
+"You can search into attachment's content, like resumes, with the searchbar."
+msgstr ""
 
 #. module: hr_recruitment
 #. odoo-python
@@ -3064,6 +3125,12 @@ msgstr ""
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_refuse
 msgid "Your Job Application: {{ object.job_id.name }}"
 msgstr "طلب تقديمك للوظيفة: {{ object.job_id.name }} "
+
+#. module: hr_recruitment
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
+#: model_terms:ir.ui.view,arch_db:hr_recruitment.quick_create_applicant_form
+msgid "e.g. John Doe"
+msgstr "مثل: محمد محمود"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree

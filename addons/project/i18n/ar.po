@@ -752,7 +752,7 @@ msgstr "اسم اللقب"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "حالة اللقب "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_domain
@@ -767,7 +767,7 @@ msgstr "لقب البريد الإلكتروني "
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "حالة اللقب مقيمة في آخر رسالة مستلمة. "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_model_id
@@ -897,7 +897,7 @@ msgstr "هل أنت متاكد أنك ترغب في الاستمرار؟ "
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_stage_delete_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
 msgid "Are you sure you want to delete these stages?"
-msgstr ""
+msgstr "هل أنت متأكد من أنك ترغب في حذف تلك المراحل؟ "
 
 #. module: project
 #. odoo-javascript
@@ -1494,6 +1494,14 @@ msgstr "تاريخ الإنشاء"
 #: model:ir.model.fields,field_description:project.field_project_project__currency_id
 msgid "Currency"
 msgstr "العملة"
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project_task.py:0
+#: code:addons/project/models/project_task.py:0
+#, python-format
+msgid "Current Stage: %s"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
@@ -2246,13 +2254,6 @@ msgstr "الساعات"
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "How’s this project going?"
 msgstr "ما هي أحوال مشروعك؟ "
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "I take it"
-msgstr "سآخذها "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__id
@@ -4551,7 +4552,7 @@ msgstr ""
 #: model:mail.message.subtype,name:project.mt_project_task_canceled
 #: model:mail.message.subtype,name:project.mt_task_canceled
 msgid "Task Canceled"
-msgstr ""
+msgstr "تم إلغاء المهمة "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
@@ -5253,6 +5254,14 @@ msgid ""
 "\n"
 "        Make sure to use the right format and order e.g. Improve the configuration screen 5h #feature #v16 @Mitchell !"
 msgstr ""
+"استخدم هذه الكلمات المفتاحية في العنوان لإعداد مهام جديدة:\n"
+"\n"
+"        30h تقوم بتخصيص 30 ساعة للمهمة\n"
+"        #tags تقوم بتعيين علامات تصنيف في المهمة\n"
+"        @user تقوم بإسناد المهمة إلى مستخدم\n"
+"        ! تقوم بتعيين المهمة كذات أولوية عالية\n"
+"\n"
+"        احرص على استخدام الصياغة والترتيب الصحيحين مثال: قم بتحسين شاشة التهيئة 5h #feature #v16 @Mitchell !"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_stage_personal__user_id

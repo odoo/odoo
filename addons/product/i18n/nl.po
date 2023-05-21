@@ -3,8 +3,8 @@
 # 	* product
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Martin Trigaux, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -3245,10 +3245,12 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %(value)s because it is used on the following products:\n"
-"%(products)s"
+"%(products)s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"Je kan de waarde %(value)s niet verwijderen omdat het wordt gebruikt op de volgende producten:\n"
-"%(products)s"
+"Je kan de waarde %(value)s niet verwijderen omdat het wordt gebruikt in de volgende producten:\n"
+"%(products)s\n"
+" Als de waarde in het verleden aan een product is gekoppeld, kan je deze niet verwijderen."
 
 #. module: product
 #. odoo-python
@@ -3278,6 +3280,15 @@ msgstr ""
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
+"Je kunt waarde %s niet verwijderen omdat deze in sommige producten is "
+"gebruikt."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s"

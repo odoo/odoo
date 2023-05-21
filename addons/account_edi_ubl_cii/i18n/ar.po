@@ -60,12 +60,12 @@ msgstr "0037 - LY-tunnus"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0060
 msgid "0060 - Data Universal Numbering System (D-U-N-S Number)"
-msgstr ""
+msgstr "0060 - نظام ترقيم البيانات العالمي (رقم D-U-N-S) "
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0088
 msgid "0088 - EAN Location Code"
-msgstr ""
+msgstr "0088 - EAN Location Code"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0096
@@ -83,6 +83,8 @@ msgid ""
 "0106 - Association of Chambers of Commerce and Industry in the Netherlands, "
 "(EDIRA compliant)"
 msgstr ""
+"0106 - Association of Chambers of Commerce and Industry in the Netherlands, "
+"(EDIRA compliant)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0130
@@ -92,12 +94,12 @@ msgstr "0130 - Directorates of the European Commission"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0135
 msgid "0135 - SIA Object Identifiers"
-msgstr ""
+msgstr "0135 -  معرفات كائنات SIA "
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0142
 msgid "0142 - SECETI Object Identifiers"
-msgstr ""
+msgstr "0142 - معرفات كائنات SECETI "
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0151
@@ -117,7 +119,7 @@ msgstr "0184 - DIGSTORG"
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0188
 msgid "0188 - Corporate Number of The Social Security and Tax Number System"
-msgstr ""
+msgstr "0188 - رقم الشركة للضمان الاجتماعي ونظام رقم الضريبة "
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0190
@@ -220,7 +222,7 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__peppol_eas__0216
 msgid "0216 - OVTcode"
-msgstr ""
+msgstr "0216 - OVTcode"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -481,8 +483,14 @@ msgstr "إرسال حركة الحساب "
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
-msgid "Articles 226 items 11 to 15 Directive 2006/112/EN"
+msgid "A payment of %s was detected."
 msgstr ""
+
+#. module: account_edi_ubl_cii
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "Articles 226 items 11 to 15 Directive 2006/112/EN"
+msgstr "Articles 226 items 11 to 15 Directive 2006/112/EN"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -520,6 +528,8 @@ msgid ""
 "Code used to identify the Endpoint for Peppol BIS Billing 3.0 and its derivatives.\n"
 "             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 msgstr ""
+"Code used to identify the Endpoint for Peppol BIS Billing 3.0 and its derivatives.\n"
+"             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_common
@@ -543,6 +553,7 @@ msgid ""
 "Could not retrieve currency: %s. Did you enable the multicurrency option and"
 " activate the currency?"
 msgstr ""
+"تعذر إحضار العملة: %s. هل قمت بتمكين خيار العملات المتعددة وتفعيل العملة؟ "
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -550,7 +561,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "Could not retrieve the %s."
-msgstr ""
+msgstr "تعذر إحضار %s. "
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -608,7 +619,7 @@ msgstr "يجب أن يكون لكل بند فاتورة ضريبة واحدة ع
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.view_partner_property_form
 msgid "Electronic Invoicing"
-msgstr ""
+msgstr "الفوترة الإلكترونية "
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move_send__enable_ubl_cii_xml
@@ -621,6 +632,7 @@ msgstr "Enable Ubl Cii Xml"
 #, python-format
 msgid "Errors occured while creating the EDI document (format: %s):"
 msgstr ""
+"حدثت أخطاء أثناء إنشاء مستند نظام تبادل المستندات تلقائياً (الصيغة: %s): "
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -729,25 +741,25 @@ msgstr "ضريبة المخرجات، السعر العادي "
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_bis3
 msgid "Peppol Bis Billing 3.0"
-msgstr ""
+msgstr "Peppol Bis Billing 3.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__peppol_endpoint
 msgid "Peppol Endpoint"
-msgstr ""
+msgstr "Peppol Endpoint"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_eas
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_users__peppol_eas
 msgid "Peppol e-address (EAS)"
-msgstr ""
+msgstr "Peppol e-address (EAS)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_sg
 msgid "SG BIS Billing 3.0"
-msgstr ""
+msgstr "SG BIS Billing 3.0"
 
 #. module: account_edi_ubl_cii
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
@@ -840,7 +852,7 @@ msgstr "UBL BIS Billing 3.0.12"
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_move__ubl_cii_xml_file
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_account_payment__ubl_cii_xml_file
 msgid "UBL/CII File"
-msgstr ""
+msgstr "ملف UBL/CII "
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,help:account_edi_ubl_cii.field_res_partner__peppol_endpoint

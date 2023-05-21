@@ -1923,6 +1923,18 @@ msgid "You can not delete a program in an active state"
 msgstr "Vous ne pouvez pas supprimer un programme dans un état actif"
 
 #. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/product_product.py:0
+#: code:addons/loyalty/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot delete %(name)s as it is used in 'Coupons & Loyalty'. Please "
+"archive it instead."
+msgstr ""
+"Vous ne pouvez pas supprimer %(name)s, car il est utilisé dans 'Bons de "
+"réduction & Fidélité'. Veuillez plutôt l'archiver."
+
+#. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_gift_card
 msgid "Your Gift Card at {{ object.company_id.name }}"
 msgstr "Votre carte-cadeau chez {{ object.company_id.name }}"

@@ -618,7 +618,7 @@ msgstr "<strong>Qté Min :</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "<strong>On hand Quantity</strong>"
-msgstr "<strong>Quantité disponible</strong>"
+msgstr "<strong>Quantité en stock</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
@@ -3074,7 +3074,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"Quantité prévue (calculée comme quantité disponible - sortante + entrante)\n"
+"Quantité prévue (calculée comme quantité en stock - sortante + entrante)\n"
 "Dans le contexte d'un emplacement de stock seul, cela comprend les marchandises stockées dans cet emplacement et ses enfants.\n"
 "Dans le contexte d'un entrepôt seul, cela comprend les marchandises stockées dans l'emplacement de stock de cet entrepôt et ses enfants.\n"
 "Dans les autres cas, cela comprend les marchandises stockées dans tous les emplacements de type \"interne\""
@@ -3087,7 +3087,7 @@ msgid ""
 "In a context with a single Warehouse, this includes goods stored in the Stock Location of this Warehouse, or any of its children.\n"
 "Otherwise, this includes goods stored in any Stock Location with 'internal' type."
 msgstr ""
-"Quantité planifiée (calculée comme quantité disponible - quantité réservée)\n"
+"Quantité planifiée (calculée comme quantité en stock - quantité réservée)\n"
 "Dans un contexte avec un unique emplacement de stock, cela inclut les biens stockés dans cet emplacement, ainsi que dans chacun de ses enfants.\n"
 "Dans un contexte avec un unique entrepôt, cela inclut les biens stockés dans l'emplacement de stock de cet entrepôt, ou chacun de ses enfants.\n"
 "Autrement, cela inclut les bien stockés dans quelque emplacement de type interne."
@@ -4959,7 +4959,7 @@ msgstr "Nouveau mouvement :"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__new_quantity
 msgid "New Quantity on Hand"
-msgstr "Nouvelle quantité disponible"
+msgstr "Nouvelle quantité en stock"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_form
@@ -4998,7 +4998,7 @@ msgstr "Prochain inventaire prévu"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_date
 msgid "Next date the On Hand Quantity should be counted."
-msgstr "Prochaine date à laquelle la quantité disponible doit être comptée."
+msgstr "Prochaine date à laquelle la quantité en stock doit être comptée."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.exception_on_picking
@@ -5259,7 +5259,7 @@ msgstr "Disponible"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_editable
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "On Hand Quantity"
-msgstr "Quantité disponible"
+msgstr "Quantité en stock"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__available_quantity
@@ -5268,8 +5268,8 @@ msgid ""
 "On hand quantity which hasn't been reserved on a transfer, in the default "
 "unit of measure of the product"
 msgstr ""
-"Quantité disponible qui n'a pas été réservée pour un transfert, dans l'unité"
-" de mesure du produit."
+"Quantité en stock qui n'a pas été réservée pour un transfert, dans l'unité "
+"de mesure du produit."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_kanban_stock_view
@@ -6519,7 +6519,7 @@ msgstr "Quantité multiple de"
 #: model:ir.model.fields,field_description:stock.field_product_template__qty_available
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form_editable
 msgid "Quantity On Hand"
-msgstr "Quantité disponible"
+msgstr "Quantité en stock"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__reserved_availability
@@ -8763,6 +8763,16 @@ msgid ""
 msgstr ""
 "La société de ce produit ne peut être modifiée tant qu'il existe des "
 "quantités de ce produit appartenant à une autre société."
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+"La société de ce produit ne peut pas être modifiée tant qu'il y a des "
+"mouvements de stock de ce produit appartenant à une autre société."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity

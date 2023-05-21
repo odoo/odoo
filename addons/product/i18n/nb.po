@@ -3134,7 +3134,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %(value)s because it is used on the following products:\n"
-"%(products)s"
+"%(products)s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
 
 #. module: product
@@ -3159,6 +3160,13 @@ msgstr ""
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s"

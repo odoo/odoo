@@ -588,7 +588,7 @@ msgstr "تلقائي"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Automatic promo: 10% off on orders higher than $50"
-msgstr ""
+msgstr "عرض تلقائي: خصم بنسبة 10% على كافة الطلبات أكثر من 50$ "
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__available_on
@@ -612,7 +612,7 @@ msgstr "باركود"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Buy 10 products to get 10$ off on the 11th one"
-msgstr ""
+msgstr "اشترِ 10 منتجات واحصل على خصم 10$ على المنتج الـ11 "
 
 #. module: loyalty
 #. odoo-python
@@ -784,7 +784,7 @@ msgstr "أنشئ واحداً جديداً من البداية أو استخدم
 #. module: loyalty
 #: model_terms:ir.actions.act_window,help:loyalty.loyalty_program_discount_loyalty_action
 msgid "Create one from scratch, or use a templates below:"
-msgstr ""
+msgstr "أنشئ واحداً جديداً من البداية أو استخدم إحدى القوالب أدناه. "
 
 #. module: loyalty
 #. odoo-javascript
@@ -1015,7 +1015,7 @@ msgstr "Fidelity Cards"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Fill in your eWallet, to pay future orders"
-msgstr ""
+msgstr "اشحن محفظتك الإلكترونية واستخدمها لدفع ثمن الطلبات المستقبلية  "
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_follower_ids
@@ -1110,7 +1110,7 @@ msgstr "إنشاء المحفظة الإلكترونية "
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Get 10% of on some products, with a code"
-msgstr ""
+msgstr "احصل على خصم بنسبة 10% على بعض المنتجات، مع كود "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_gift_ewallet_view_form
@@ -1666,7 +1666,7 @@ msgstr "العملاء المختارون "
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Sell Gift Cards, that allows to purchase products"
-msgstr ""
+msgstr "قم ببيع بطاقات الهدايا، والتي تتيح لك شراء المنتجات "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_tree
@@ -1678,7 +1678,7 @@ msgstr "إرسال"
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Send a coupon after an order, valid for next purchase"
-msgstr ""
+msgstr "قم بإرسال كوبون بعد الطلب يمكن استخدامه في عملية الشراء التالية "
 
 #. module: loyalty
 #. odoo-python
@@ -1892,7 +1892,7 @@ msgstr "سيقوم بإرسال بريد إلكتروني "
 #: code:addons/loyalty/models/loyalty_program.py:0
 #, python-format
 msgid "Win points with each purchases, and claim gifts"
-msgstr ""
+msgstr "اكسب النقاط مع كل عملية شراء واستخدم النقاط للحصول على الهدايا "
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_rule__mode__with_code
@@ -1905,6 +1905,16 @@ msgstr "مع كود ترويجي "
 #, python-format
 msgid "You can not delete a program in an active state"
 msgstr "لا يمكنك حذف برنامج نشط "
+
+#. module: loyalty
+#. odoo-python
+#: code:addons/loyalty/models/product_product.py:0
+#: code:addons/loyalty/models/product_template.py:0
+#, python-format
+msgid ""
+"You cannot delete %(name)s as it is used in 'Coupons & Loyalty'. Please "
+"archive it instead."
+msgstr ""
 
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_gift_card

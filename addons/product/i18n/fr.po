@@ -3177,7 +3177,7 @@ msgid ""
 "You cannot change the Variants Creation Mode of the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
-"Vous ne pouvez pas modifier le mode de création des variantes de l'attribut %(attribute)s parce qu'il est utilisé sur les produits suivants :\n"
+"Vous ne pouvez pas modifier le mode de création des variantes de l'attribut %(attribute)s, car il est utilisé sur les produits suivants :\n"
 "%(products)s"
 
 #. module: product
@@ -3188,8 +3188,8 @@ msgid ""
 "You cannot change the attribute of the value %(value)s because it is used on"
 " the following products: %(products)s"
 msgstr ""
-"Vous ne pouvez pas modifier l'attribut de la valeur %(value)s parce qu'il "
-"est utilisé sur les produits suivants : %(products)s"
+"Vous ne pouvez pas modifier l'attribut de la valeur %(value)s, car il est "
+"utilisé sur les produits suivants : %(products)s"
 
 #. module: product
 #. odoo-python
@@ -3255,7 +3255,7 @@ msgid ""
 "You cannot delete the attribute %(attribute)s because it is used on the following products:\n"
 "%(products)s"
 msgstr ""
-"Vous ne pouvez pas supprimer l'attribut %(attribute)s parce qu'il est utilisé sur les produits suivants :\n"
+"Vous ne pouvez pas supprimer l'attribut %(attribute)s, car il est utilisé sur les produits suivants :\n"
 "%(products)s"
 
 #. module: product
@@ -3264,10 +3264,12 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %(value)s because it is used on the following products:\n"
-"%(products)s"
+"%(products)s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"Vous ne pouvez pas supprimer la valeur %(value)s parce qu'elle est utilisé sur les produits suivants :\n"
-"%(products)s"
+"Vous ne pouvez pas supprimer la valeur %(value)s, car elle est utilisée dans les produits suivants :\n"
+"%(products)s\n"
+" Si la valeur a été associée à un produit dans le passé, vous ne serez pas en mesure de la supprimer."
 
 #. module: product
 #. odoo-python
@@ -3297,6 +3299,15 @@ msgstr ""
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
+"Vous ne pouvez pas supprimer la valeur %s, parce qu'elle était utilisée pour"
+" certains produits."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s"

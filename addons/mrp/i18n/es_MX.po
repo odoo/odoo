@@ -10,8 +10,8 @@
 # Martin Trigaux, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Iran Villalobos López, 2023
-# Aimée Mendoza Sánchez, 2023
 # Fernanda Alvarez, 2023
+# Aimée Mendoza Sánchez, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-23 09:09+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,7 +61,7 @@ msgstr "Cuando todos los componentes están disponibles"
 #: model:ir.model.fields,field_description:mrp.field_product_product__bom_count
 #: model:ir.model.fields,field_description:mrp.field_product_template__bom_count
 msgid "# Bill of Material"
-msgstr "Número de lista de materiales"
+msgstr "# Lista de materiales"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__used_in_bom_count
@@ -77,7 +77,7 @@ msgstr "Número de órdenes de trabajo a leer"
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workorder_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_count
 msgid "# Work Orders"
-msgstr "Número de órdenes de trabajo"
+msgstr "# Órdenes de trabajo"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
@@ -4578,7 +4578,7 @@ msgid ""
 "Set the order that work orders should be processed in. Activate the feature "
 "within each BoM's Miscellaneous tab"
 msgstr ""
-"Establezca el orden en el que se deben procesar las órdenes de trabajo. "
+"Establezca la disposición en que se deben procesar las órdenes de trabajo. "
 "Active la función en la pestaña de Varios de cada LdM"
 
 #. module: mrp
@@ -4771,7 +4771,7 @@ msgstr "Capacidades específicas"
 msgid ""
 "Specific number of pieces that can be produced in parallel per product."
 msgstr ""
-"Número de piezas específico que se pueden producir en paralelo por producto."
+"Número específico de piezas por producto que se pueden producir en paralelo."
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_split
@@ -4825,7 +4825,8 @@ msgstr "Tornillo de acero inoxidable"
 #. module: mrp
 #: model_terms:product.template,description:mrp.product_product_computer_desk_bolt_product_template
 msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
-msgstr "Tornillo de acero inoxidable completo (dia - 5mm, Longitud - 10mm)"
+msgstr ""
+"Tornillo de acero inoxidable completo (diámetro - 5mm, longitud - 10mm)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -5051,8 +5052,8 @@ msgid ""
 "The Product Unit of Measure you chose has a different category than in the "
 "product form."
 msgstr ""
-"La unidad de medida del producto que eligió tiene una categoría diferente "
-"que la del formulario de producto."
+"La unidad de medida del producto que eligió tiene una categoría diferente a "
+"la del formulario de producto."
 
 #. module: mrp
 #. odoo-python
@@ -5084,7 +5085,7 @@ msgstr "La capacidad debe ser estrictamente positiva."
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "The component %s should not be the same as the product to produce."
-msgstr "El componente %s no debe ser el mismo que el del producto a producir."
+msgstr "El componente %s no debe ser el mismo que el del producto a fabricar."
 
 #. module: mrp
 #. odoo-python
@@ -5312,7 +5313,7 @@ msgid ""
 "                You can filter on the product to see all the past movements for the product."
 msgstr ""
 "Este menú le da trazabilidad total a las operaciones de inventario en productos específicos.\n"
-"                Puede filtrar en el producto para ver todos los movimientos pasados para el producto."
+"                Puede filtrar en el producto para ver todos los movimientos pasados para dicho elemento."
 
 #. module: mrp
 #. odoo-python
@@ -5402,7 +5403,9 @@ msgstr "Zona horaria"
 #: model:digest.tip,name:mrp.digest_tip_mrp_0
 #: model_terms:digest.tip,tip_description:mrp.digest_tip_mrp_0
 msgid "Tip: Use tablets in the shop to control manufacturing"
-msgstr "Consejo: utilice tablets en la tienda para controlar la fabricación"
+msgstr ""
+"Consejo: utilice tabletas electrónicas en la tienda para controlar la "
+"fabricación"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -5598,14 +5601,14 @@ msgstr "Desbloquear"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view_simplified
 msgid "Unbuild"
-msgstr "Desmantelar"
+msgstr "Desmontar"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view_simplified
 msgid "Unbuild Order"
-msgstr "Orden de desmantelamiento"
+msgstr "Orden de desmontaje"
 
 #. module: mrp
 #. odoo-python
@@ -5613,32 +5616,32 @@ msgstr "Orden de desmantelamiento"
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
 msgstr ""
-"La cantidad de producto de la orden de desmantelamiento debe ser "
-"estrictamente positiva."
+"La cantidad de producto de la orden de desmontaje debe ser estrictamente "
+"positiva."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_unbuild
 #: model:ir.ui.menu,name:mrp.menu_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Orders"
-msgstr "Órdenes de desmantelamiento"
+msgstr "Órdenes de desmontaje"
 
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "Unbuild: %s"
-msgstr "Desmantelar: %s"
+msgstr "Desmontar: %s"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unbuild_ids
 msgid "Unbuilds"
-msgstr "Desmantelaciones"
+msgstr "Desmontajes"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Unbuilt"
-msgstr "Desmantelar"
+msgstr "Desmontar"
 
 #. module: mrp
 #. odoo-javascript
@@ -5756,9 +5759,9 @@ msgid ""
 "Use Manufacturing Orders (MO) to build finished products while consuming "
 "components: i.e. 1 Table = 4 Table Legs + 1 Table Top"
 msgstr ""
-"Utilice las Ordenes de Fabricación para fabricar productos terminados "
-"utilizando componentes. Por ejemplo, 1 mesa = 4 patas de mesa + 1 cubierta "
-"de mesa "
+"Utilice las órdenes de fabricación para producir productos terminados "
+"mediante el uso de componentes. Por ejemplo, 1 mesa = 4 patas de mesa + 1 "
+"cubierta de mesa "
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_workorder_dependencies
@@ -5790,7 +5793,7 @@ msgid ""
 "is useful if you have long lead time and if you produce based on sales "
 "forecasts."
 msgstr ""
-"Es útil usar un reporte de plan maestro de producción  para planear sus "
+"Es útil usar un reporte de plan maestro de producción para planear sus "
 "operaciones de reordenamiento y fabricación si ha tenido tiempo y si se ha "
 "producido según el pronóstico de ventas."
 
@@ -5884,7 +5887,7 @@ msgstr "Almacén:"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warn_insufficient_qty_unbuild
 msgid "Warn Insufficient Unbuild Quantity"
-msgstr "Advertir cantidad insuficiente de desmantelamiento"
+msgstr "Advertir cantidad insuficiente de desmontaje"
 
 #. module: mrp
 #. odoo-python
@@ -5960,7 +5963,7 @@ msgstr "Cuando los componentes para la primera operación están disponibles"
 msgid ""
 "When products are manufactured, they can be manufactured in this warehouse."
 msgstr ""
-"Cuando se fabrican los productos, pueden ser fabricados en este almacén."
+"Cuando se fabrican los productos, pueden ser producidos en este almacén."
 
 #. module: mrp
 #. odoo-python
@@ -5993,9 +5996,9 @@ msgid ""
 "Wizard in case of consumption in warning/strict and more component has been "
 "used for a MO (related to the bom)"
 msgstr ""
-"Asistente en caso de consumo en advertencia/estricto y más componente se ha "
-"utilizado para una orden de fabricación (relacionado con la lista de "
-"materiales)"
+"Asistente en caso de consumo en advertencia/estricto y una mayor cantidad de"
+" componentes se han utilizado para una orden de fabricación (relacionado con"
+" la lista de materiales)"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_multi
@@ -6105,9 +6108,9 @@ msgid ""
 "the required components."
 msgstr ""
 "Las operaciones de órdenes de trabajo le permiten crear y administrar las "
-"operaciones de fabricación que deben seguirse dentro de sus centros de "
-"trabajo para producir un producto. Se adjuntan a las listas de materiales "
-"que definirán los componentes requeridos."
+"tareas de fabricación que deben seguirse dentro de sus centros de trabajo "
+"para elabora un producto. Se adjuntan a las listas de materiales que "
+"definirán los componentes requeridos."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
@@ -6231,7 +6234,7 @@ msgstr "Centro de trabajo bloqueado, haga clic para desbloquear."
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__resource_calendar_id
 msgid "Working Hours"
-msgstr "Horas laborables"
+msgstr "Horas laborales"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__working_user_ids
@@ -6366,8 +6369,7 @@ msgstr "No puede crear una dependencia cíclica."
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
-msgstr ""
-"No puede eliminar una orden de desmantelamiento si el estado es 'hecho'."
+msgstr "No puede eliminar una orden de desmontaje si el estado es 'hecho'."
 
 #. module: mrp
 #. odoo-python
@@ -6434,7 +6436,7 @@ msgstr ""
 "                            Confirme que fue a propósito.\n"
 "                        </b>\n"
 "                        <b attrs=\"{'invisible': [('consumption', '!=', 'strict')]}\">\n"
-"                            Revise el uso de sus componentes o pidale a un gerente que lo valide\n"
+"                            Revise el uso de sus componentes o pídale a un gerente que valide\n"
 "                            <span attrs=\"{'invisible':[('mrp_production_count', '!=', 1)]}\">esta orden de fabricación</span>\n"
 "                            <span attrs=\"{'invisible':[('mrp_production_count', '=', 1)]}\">estas ordenes de fabricación</span>.\n"
 "                        </b>"

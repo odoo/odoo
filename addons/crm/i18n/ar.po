@@ -266,6 +266,11 @@ msgid ""
 "                                    specified otherwise.\n"
 "                                </span>"
 msgstr ""
+"<span>قم بتعيين العملاء المهتمين دورياً حسب القواعد</span><br/>\n"
+"                                <span attrs=\"{'invisible': [('crm_use_auto_assignment', '=', False)]}\">\n"
+"                                    سوف تستخدم كافة فرق المبيعات هذا الإعداد اقتراضياً إلا إذا\n"
+"                                    تم تحديد خلاف ذلك.\n"
+"                                </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -581,7 +586,7 @@ msgstr "اسم اللقب"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_status
 msgid "Alias Status"
-msgstr ""
+msgstr "حالة اللقب "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_domain
@@ -591,7 +596,7 @@ msgstr "نطاق اللقب"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_status
 msgid "Alias status assessed on the last message received."
-msgstr ""
+msgstr "حالة اللقب مقيمة في آخر رسالة مستلمة. "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_model_id
@@ -1369,7 +1374,7 @@ msgstr "النطاق"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Drag your opportunity to <b>Won</b> when you get the deal. Congrats!"
-msgstr ""
+msgstr "قم بسحب الفرصة إلى <b>رابحة</b> عندما تحصل على الصفقة. تهانينا! "
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1405,7 +1410,7 @@ msgstr "لقب البريد الإلكتروني"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_domain_criterion
 msgid "Email Domain Criterion"
-msgstr ""
+msgstr "فئة نطاق البريد الإلكتروني "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_state
@@ -2355,6 +2360,8 @@ msgid ""
 "Meeting scheduled at %(html_time)s<br/>Subject: %(subject)s<br/>Duration: "
 "%(duration)s"
 msgstr ""
+"تمت جدولة الاجتماع في %(html_time)s<br/>الموضوع: %(subject)s<br/>المدة: "
+"%(duration)s"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
@@ -3038,7 +3045,7 @@ msgstr "عدد النسخ المطابقة المحتملة لبيانات عم�
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Predictive Lead Scoring"
-msgstr ""
+msgstr "تصنيف العملاء المهتمين التوقعي "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels
@@ -3095,7 +3102,7 @@ msgstr "الإيرادات الشهرية المتكررة التناسبية "
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_prorated
 msgid "Prorated Recurring Revenues"
-msgstr ""
+msgstr "الإيرادات المتكررة التناسبية "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__prorated_revenue
@@ -3960,6 +3967,8 @@ msgid ""
 "Use the top left <i>Create</i> button, or send an email to %(email_link)s to"
 " test the email gateway."
 msgstr ""
+"استخدم زر <i>الإنشاء</i> في أعلى يمين الشاشة، أو قم بإرسال بريد إلكتروني إلى"
+" %(email_link)s لاختبار بوابة البريد الإلكتروني. "
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
@@ -4053,7 +4062,7 @@ msgstr "التجربة المجانية الترحيبية "
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "What went wrong?"
-msgstr ""
+msgstr "ما الذي حدث؟ "
 
 #. module: crm
 #. odoo-python

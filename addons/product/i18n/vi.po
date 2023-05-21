@@ -2601,7 +2601,7 @@ msgstr "Hiển thị loại được dùng cho phần Cấu hình sản phẩm."
 #. module: product
 #: model:ir.model.fields,help:product.field_product_packaging__sequence
 msgid "The first in the sequence is the default one."
-msgstr "Thứ tự đầu tiên trong trình tự mặc định là 1."
+msgstr "Đứng đầu trong trình tự là loại mặc định."
 
 #. module: product
 #: model_terms:product.template,website_description:product.product_product_4_product_template
@@ -3216,7 +3216,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %(value)s because it is used on the following products:\n"
-"%(products)s"
+"%(products)s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
 
 #. module: product
@@ -3246,6 +3247,14 @@ msgstr ""
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_template_attribute_line.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
+"Bạn không thể xoá giá trị %s vì nó được sử dụng trong một số sản phẩm."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
 #, python-format
 msgid ""
 "You cannot move the attribute %(attribute)s from the product %(product_src)s"

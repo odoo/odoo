@@ -67,6 +67,10 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
+"<i class=\"fa fa-info-circle oe_inline\" attrs=\"{'invisible': "
+"[('support_partial_capture', '!=', 'full_only')]}\" title=\"Some of the "
+"transactions you intend to capture can only be captured in full. Handle the "
+"transactions individually to capture a partial amount.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
@@ -77,7 +81,7 @@ msgstr "<i class=\"fa fa-trash\"/>Löschen"
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "<span class=\"fs-4\">Saved payment methods</span>"
-msgstr ""
+msgstr "<span class=\"fs-4\">Gespeicherte Zahlungsmethoden</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -245,7 +249,7 @@ msgstr "Zusätzliche Gebühren hinzufügen"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "Add new payment method"
-msgstr ""
+msgstr "Neue Zahlungsmethode hinzufügen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -2235,6 +2239,13 @@ msgstr ""
 #: model:payment.provider,name:payment.payment_provider_transfer
 msgid "Wire Transfer"
 msgstr "Banküberweisung"
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid "You cannot delete the payment provider %s; archive it instead."
+msgstr ""
 
 #. module: payment
 #. odoo-python
