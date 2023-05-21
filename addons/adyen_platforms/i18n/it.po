@@ -187,6 +187,8 @@ msgstr ""
 #, python-format
 msgid "Allowed file formats for photo IDs are jpeg, jpg, pdf or png"
 msgstr ""
+"I formati di file consentiti per il documento di riconoscimento sono JPEG, "
+"JPG, PDF o PNG"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,help:adyen_platforms.field_adyen_account__id_back
@@ -253,7 +255,7 @@ msgstr ""
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__branch_code
 msgid "Branch Code"
-msgstr ""
+msgstr "Codice filiale"
 
 #. module: adyen_platforms
 #. openerp-web
@@ -295,7 +297,7 @@ msgstr "Annullamento storno di addebito ricevuto"
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid "Chargebacks cost 7.5€ each."
-msgstr "Gli storni di addebito costano 7,50 € ciascuno"
+msgstr "Gli storni di addebito costano 7,50 € ciascuno."
 
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_bank_account__account_type__checking
@@ -574,7 +576,7 @@ msgstr "Nome completo"
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__fundtransfer
 msgid "Fund Transfer"
-msgstr "Trasferimento di denaro"
+msgstr "Trasferimento di fondi"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__house_number_or_name
@@ -623,27 +625,27 @@ msgstr "ID"
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_id_mixin__id_type__id_card
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_shareholder__id_type__id_card
 msgid "ID Card"
-msgstr ""
+msgstr "Carta di identità"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__document_number
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__document_number
 msgid "ID Number"
-msgstr "Codice fiscale"
+msgstr "Numero documento"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_back_filename
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_back_filename
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_back_filename
 msgid "Id Back Filename"
-msgstr ""
+msgstr "Nome file retro documento"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_front_filename
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_front_filename
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_front_filename
 msgid "Id Front Filename"
-msgstr ""
+msgstr "Nome file fronte documento"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,help:adyen_platforms.field_adyen_account__message_needaction
@@ -793,13 +795,13 @@ msgstr "Prossimo pagamento programmato"
 #: code:addons/adyen_platforms/models/adyen_account.py:0
 #, python-format
 msgid "No balance is currently awaitng payout."
-msgstr "Al momento, nessun bilancio ha pagamenti in attesa"
+msgstr "Al momento nessun saldo è in attesa di pagamento."
 
 #. module: adyen_platforms
 #: code:addons/adyen_platforms/models/adyen_account.py:0
 #, python-format
 msgid "No pending balance"
-msgstr "Nessun bilancio in attesa"
+msgstr "Nessun saldo in sospeso"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__message_needaction_counter
@@ -922,8 +924,7 @@ msgstr "Ciascun pagamento costa 0,20 € (UE) o 0,22 $ (USA)."
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid "Payouts will be blocked until your application has been accepted."
-msgstr ""
-"I pagamenti resteranno bloccati fino all'accettazione dell'applicazione."
+msgstr "I pagamenti saranno bloccati fino all'accettazione della domanda."
 
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__pendingcredit
@@ -938,7 +939,7 @@ msgstr "Addebito in sospeso"
 #. module: adyen_platforms
 #: model:ir.model.fields.selection,name:adyen_platforms.selection__adyen_transaction__status__pendingfundtransfer
 msgid "Pending Fund Transfer"
-msgstr ""
+msgstr "Trasferimento di fondi in sospeso"
 
 #. module: adyen_platforms
 #. openerp-web
@@ -953,27 +954,29 @@ msgstr "Numero di telefono"
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_back
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_back
 msgid "Photo ID Back"
-msgstr ""
+msgstr "Retro doc. di riconoscimento"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_front
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_front
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_front
 msgid "Photo ID Front"
-msgstr "ID Foto - Fronte"
+msgstr "Fronte doc. di riconoscimento"
 
 #. module: adyen_platforms
 #: code:addons/adyen_platforms/models/adyen_account.py:0
 #, python-format
 msgid "Photo ID file size must be between 100kB (1kB for PDFs) and 4MB"
 msgstr ""
+"La dimensione del file per il documento di riconoscimento deve essere tra "
+"100kB (1kB per i PDF) e 4MB"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__id_type
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_id_mixin__id_type
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_shareholder__id_type
 msgid "Photo ID type"
-msgstr ""
+msgstr "Tipo doc. di riconoscimento"
 
 #. module: adyen_platforms
 #. openerp-web
@@ -1147,6 +1150,11 @@ msgid ""
 "Italy: Codice fiscale\n"
 "Australia: Document Number"
 msgstr ""
+"La tipologia richiesta per il numero documento dipende dalla nazione:\n"
+"Stati Uniti: numero di sicurezza sociale (9 cifre o ultime 4 cifre)\n"
+"Canada: numero di previdenza sociale\n"
+"Italia: codice fiscale\n"
+"Australia: numero documento"
 
 #. module: adyen_platforms
 #: code:addons/adyen_platforms/models/adyen_account.py:0
@@ -1217,8 +1225,8 @@ msgid ""
 "We had troubles reaching Adyen, please retry later or contact the support if"
 " the problem persists"
 msgstr ""
-"Problemi nella connessione ad Adyen, per favore riprovare più tardi o "
-"contattare l'assistenza se il problema persiste."
+"Si sono verificati problemi nella connessione ad Adyen. Riprovare più tardi "
+"o, se il problema persiste, contattare il supporto."
 
 #. module: adyen_platforms
 #. openerp-web
@@ -1240,6 +1248,8 @@ msgstr "Settimanale"
 #, python-format
 msgid "You can start processing payments as soon as your application is sent."
 msgstr ""
+"Non appena viene inviata la domanda è possibile iniziare a elaborare i "
+"pagamenti."
 
 #. module: adyen_platforms
 #: model:ir.model.fields,help:adyen_platforms.field_adyen_bank_account__bank_statement

@@ -7019,6 +7019,16 @@ msgstr ""
 "thuộc về một công ty khác."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+"Không thể thay đổi công ty của sản phẩm này nếu có dịch chuyển tồn kho của "
+"nó thuộc về một công ty khác."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -8440,3 +8450,5 @@ msgid ""
 "It is not allow to import reserved quantity, you have to use the quantity "
 "directly."
 msgstr ""
+"Không được phép nhập số lượng đã dự trữ, bạn phải sử dụng số lượng trực "
+"tiếp."
