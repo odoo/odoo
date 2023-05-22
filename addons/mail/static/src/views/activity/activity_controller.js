@@ -52,7 +52,7 @@ export class ActivityController extends Component {
                     model: this.props.resModel,
                 });
                 await messaging.openActivityForm({ thread });
-                this.model.load();
+                this.model.load({ domain: this.model.originalDomain });
             },
         });
     }
@@ -74,7 +74,7 @@ export class ActivityController extends Component {
                 },
             },
             {
-                onClose: () => this.model.load(),
+                onClose: () => this.model.load({ domain: this.model.originalDomain }),
             }
         );
     }
@@ -107,7 +107,7 @@ export class ActivityController extends Component {
             archInfo: this.props.archInfo,
             groupedActivities: this.model.activityData.grouped_activities,
             scheduleActivity: this.scheduleActivity.bind(this),
-            onReloadData: () => this.model.load(),
+            onReloadData: () => this.model.load({ domain: this.model.originalDomain }),
             onEmptyCell: this.openActivityFormView.bind(this),
             onSendMailTemplate: this.sendMailTemplate.bind(this),
             openRecord: this.openRecord.bind(this),
