@@ -18592,6 +18592,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("x2many onchange, check result", async function (assert) {
+        const def = makeDeferred();
         serverData.models.foo.onchanges = {
             m2m: function () {},
         };
@@ -18607,7 +18608,7 @@ QUnit.module("Views", (hooks) => {
             async mockRPC(route, args) {
                 if (args.method === "onchange") {
                     assert.step("onchange");
-                    await nextTick();
+                    await def;
                     return { value: { m2o: [3, "Value 3"] } };
                 }
             },
@@ -18626,6 +18627,9 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps(["onchange"]);
         await click(target.querySelector(".o_list_button_save:not(.btn-link)"));
+        def.resolve();
+        await nextTick();
+
         assert.strictEqual(
             target.querySelector(".o_data_cell.o_many2many_tags_cell").textContent,
             "Value 1Value 2Value 3"
