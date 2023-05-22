@@ -145,9 +145,10 @@ class Groups(models.Model):
     full_name = fields.Char(compute='_compute_full_name', string='Group Name', search='_search_full_name')
     share = fields.Boolean(string='Share Group', help="Group created to set access rights for sharing data with some users.")
 
-    _sql_constraints = [
-        ('name_uniq', 'unique (category_id, name)', 'The name of the group must be unique within an application!')
-    ]
+    def _auto_init(self):
+        super(Groups, self)._auto_init()
+        tools.create_unique_index(self._cr, "res_groups_name_uniq",
+                                  self._table, ["category_id", "(name->>'en_US')"])
 
     @api.constrains('users')
     def _check_one_user_type(self):
