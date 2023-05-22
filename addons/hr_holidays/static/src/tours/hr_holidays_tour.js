@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add('hr_holidays_tour', {
     rainbowManMessage: _t("Congrats, we can see that your request has been validated."),
     test: false,
     steps: [
-    stepUtils.showAppsMenuItem(), 
+    stepUtils.showAppsMenuItem(),
     {
         trigger: '.o_app[data-menu-xmlid="hr_holidays.menu_hr_holidays_root"]',
         content: _t("Let's discover the Time Off application"),
@@ -38,6 +38,7 @@ registry.category("web_tour.tours").add('hr_holidays_tour', {
     },
     {
         trigger: 'input[data-field=request_date_from]',
+        extra_trigger: ".o_field_widget[name='holiday_status_id'] input:propValue(NotLimitedHR)",
         content: _t("You can select the period you need to take off, from start date to end date"),
         position: 'right',
         run: `text ${leaveDateFrom}`,
