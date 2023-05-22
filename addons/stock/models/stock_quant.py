@@ -534,7 +534,7 @@ class StockQuant(models.Model):
                 name.append(record.lot_id.name)
             name_parts.append(name)
         if name_parts:
-            return [(quant.id, ' - '.join(name)) for quant, name in zip(self, name_parts)]
+            return [(quant.id, ' - '.join(name)) if name else (quant.id, "- no data -") for quant, name in zip(self, name_parts)]
         return []
 
     @api.constrains('product_id')
