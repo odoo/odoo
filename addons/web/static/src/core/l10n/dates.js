@@ -120,10 +120,10 @@ export function areDatesEqual(d1, d2) {
  * @param {DateTime} maxDate
  */
 export function clampDate(desired, minDate, maxDate) {
-    if (_fastLocalDateCompare(maxDate, "<", desired)) {
+    if (maxDate < desired) {
         return maxDate;
     }
-    if (_fastLocalDateCompare(minDate, ">", desired)) {
+    if (minDate > desired) {
         return minDate;
     }
     return desired;
@@ -142,6 +142,7 @@ export function is24HourFormat(format) {
 /**
  * @param {NullableDateTime | NullableDateRange} value
  * @param {NullableDateRange} range
+ * @returns {boolean}
  */
 export function isInRange(value, range) {
     if (!value || !range) {
@@ -153,16 +154,11 @@ export function isInRange(value, range) {
             return isInRange(actualValues[0], range);
         }
         return (
-            (_fastLocalDateCompare(value[0], "<=", range[0]) &&
-                _fastLocalDateCompare(range[0], "<=", value[1])) ||
-            (_fastLocalDateCompare(range[0], "<=", value[0]) &&
-                _fastLocalDateCompare(value[0], "<=", range[1]))
+            (value[0] <= range[0] && range[0] <= value[1]) ||
+            (range[0] <= value[0] && value[0] <= range[1])
         );
     } else {
-        return (
-            _fastLocalDateCompare(range[0], "<=", value) &&
-            _fastLocalDateCompare(value, "<=", range[1])
-        );
+        return range[0] <= value && value <= range[1];
     }
 }
 
@@ -264,44 +260,6 @@ export const strftimeToLuxonFormat = memoize(function strftimeToLuxonFormat(form
  */
 export function today() {
     return DateTime.local().startOf("day");
-}
-
-/**
- * Fast comparison of local dates.
- * This is faster than Luxon's internal number conversions but only works on DateTime
- * objects sharing the exact same locale and timezone.
- *
- * @private
- * @param {NullableDateTime} d1
- * @param {"<" | "<=" | ">" | ">=" | "=" | "!="} operator
- * @param {NullableDateTime} d2
- */
-function _fastLocalDateCompare(d1, operator, d2) {
-    if (!d1 || !d2) {
-        return false;
-    }
-    const a = d1.ts;
-    const b = d2.ts;
-    switch (operator) {
-        case "<": {
-            return a < b;
-        }
-        case "<=": {
-            return a <= b;
-        }
-        case ">": {
-            return a > b;
-        }
-        case ">=": {
-            return a >= b;
-        }
-        case "=": {
-            return a === b;
-        }
-        case "!=": {
-            return a !== b;
-        }
-    }
 }
 
 //-----------------------------------------------------------------------------
