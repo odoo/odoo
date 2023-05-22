@@ -186,6 +186,7 @@
                         class="o_search_panel_label_title text-truncate"
                         t-att-class="{'fw-bold' : value.bold}"
                         t-esc="value.display_name"
+                        t-att-data-tooltip="value.display_name"
                         />
                 </div>
                 <small t-if="section.enableCounters and value.__count gt 0"
