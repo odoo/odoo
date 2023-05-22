@@ -188,13 +188,6 @@ class PosConfig(models.Model):
         for config in self:
             config.cash_control = bool(config.payment_method_ids.filtered('is_cash_count'))
 
-    @api.onchange('payment_method_ids')
-    def _check_cash_payment_method(self):
-        for config in self:
-            if len(config.payment_method_ids.filtered('is_cash_count')) > 1:
-                config.payment_method_ids = config.payment_method_ids._origin
-                raise ValidationError(_('You can only have one cash payment method.'))
-
     @api.depends('use_pricelist', 'available_pricelist_ids')
     def _compute_allowed_pricelist_ids(self):
         for config in self:
