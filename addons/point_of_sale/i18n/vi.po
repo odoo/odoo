@@ -5,18 +5,18 @@
 # Translators:
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2022
 # Vo Thanh Thuy, 2022
-# Martin Trigaux, 2022
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2023
+# Martin Trigaux, 2023
 # Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2023\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -70,7 +70,7 @@ msgstr "%s có tổng tiền là %s, bạn có chắc muốn xóa đơn hàng n�
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
 #, python-format
 msgid "%s product(s) found for \"%s\"."
 msgstr "%s sản phẩm được tìm thấy cho \"%s\"."
@@ -721,8 +721,8 @@ msgstr "Càng sớm càng tốt"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__closing
-msgid "At the session closing"
-msgstr "Khi đóng phiên"
+msgid "At the session closing (faster)"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_update_stock_quantities
@@ -1705,7 +1705,7 @@ msgstr "Tài khoản khách hàng"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Customer Display"
-msgstr "Hiển thị khách hàng"
+msgstr "Màn hình cho khách hàng"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_customer_facing_display_via_proxy
@@ -2685,8 +2685,8 @@ msgstr "Để xóa đơn bán hàng, đơn đó phải ở trạng thái mới h
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__real
-msgid "In real time (recommended)"
-msgstr "Trong thời gian thực (được đề xuất)"
+msgid "In real time (accurate but slower)"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2931,6 +2931,13 @@ msgid ""
 msgstr ""
 "Không được điều chỉnh thuế sử dụng cho đơn hàng POS chưa vào sổ. Bạn phải "
 "đóng phiên POS trước khi điều chỉnh thuế. "
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "It is not allowed to mix refunds and sales"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3404,7 +3411,7 @@ msgstr "Cần tải khoản ghi lãi cho sổ nhật ký sau để vào sổ kho
 #: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/ProductInfoButton.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
@@ -3493,14 +3500,6 @@ msgstr ""
 " lại."
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#, python-format
-msgid "No customer found for"
-msgstr "Không tìm thấy khách hàng nào"
-
-#. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all_filtered
@@ -3513,6 +3512,20 @@ msgstr "Chưa có dữ liệu nào!"
 #, python-format
 msgid "No link to an invoice for %s."
 msgstr "Không có liên kết đến hoá đơn cho %s."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/PartnerListScreen/PartnerListScreen.js:0
+#, python-format
+msgid "No more customer found for \"%s\"."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
+#, python-format
+msgid "No more product found for \"%s\"."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3921,8 +3934,8 @@ msgstr ""
 " này. "
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/TicketButton.xml:0
@@ -4078,8 +4091,8 @@ msgid "Pay Order"
 msgstr "Thanh toán đơn hàng"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductScreen.xml:0
@@ -4955,7 +4968,7 @@ msgstr "Thông tin sản phẩm"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
 #, python-format
 msgid ""
 "Product is not loaded. Tried loading the product from the server but there "
@@ -5146,6 +5159,13 @@ msgstr "Chi tiết đơn hàng hoàn tiền"
 #, python-format
 msgid "Refund Orders"
 msgstr "Đơn hàng hoàn tiền"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Refund and Sales not allowed"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5486,9 +5506,10 @@ msgstr "Tìm kiếm đơn bán hàng"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
+#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
-msgid "Search database"
-msgstr "Tìm kiếm cơ sở dữ liệu"
+msgid "Search more"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_token
@@ -6383,9 +6404,7 @@ msgstr ""
 msgid ""
 "The rate of the currency to the currency of rate applicable at the date of "
 "the order"
-msgstr ""
-"Tỷ giá của loại tiền tệ so với loại tiền tệ có tỷ giá áp dụng vào ngày đặt "
-"hàng"
+msgstr "Tỷ giá tiền tệ của loại tiền tệ đang dùng tại ngày đặt hàng"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_print_skip_screen
@@ -6513,20 +6532,6 @@ msgstr "Số dư đóng phiên theo lý thuyết"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "There are"
 msgstr "Đây là"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#, python-format
-msgid "There are no customers."
-msgstr "Không có khách hàng."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#, python-format
-msgid "There are no loaded customers."
-msgstr "Không có khách hàng được tải."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6727,6 +6732,17 @@ msgstr ""
 #, python-format
 msgid "This order is empty"
 msgstr "Đơn hàng này trống"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+"Đơn hàng này chưa được đồng bộ với máy chủ. Hãy đảm bảo đơn đã được đồng bộ "
+"và thử lại. "
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
@@ -6979,17 +6995,6 @@ msgstr "Loại hoạt động ngoại lệ trong dữ liệu."
 
 #. module: point_of_sale
 #. odoo-python
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
-#, python-format
-msgid ""
-"This order is not yet synced to server. Make sure it is synced then try "
-"again."
-msgstr ""
-"Đơn hàng này chưa được đồng bộ với máy chủ. Hãy đảm bảo đơn đã được đồng bộ "
-"và thử lại. "
-
-#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -7084,6 +7089,13 @@ msgid "Unsupported File Format"
 msgstr "Định dạng tập tin không được hỗ trợ"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Unsynced order"
+msgstr "Đơn hàng chưa được đồng bộ"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "UoM"
 msgstr "ĐVT"
@@ -7155,10 +7167,9 @@ msgstr "Uuid"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
-#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
-#, python-format, python-format
-msgid "Unsynced order"
-msgstr "Đơn hàng chưa được đồng bộ"
+#, python-format
+msgid "VAT:"
+msgstr "Thuế GTGT:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7355,6 +7366,14 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/stock_picking.py:0
+#, python-format
+msgid "You cannot archive '%s' as it is used by a POS configuration '%s'."
+msgstr ""
+"Bạn không thể lưu trữ '%s' vì nó đang được dùng trong cấu hình POS '%s'."
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -7419,6 +7438,16 @@ msgid ""
 msgstr ""
 "Bạn không thể xóa các liên hệ khi có phiên PoS đang hoạt động. Hãy đóng "
 "(các) phiên %s trước. "
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You don't have the access rights to get the point of sale closing control "
+"data."
+msgstr ""
+"Bạn không có quyền truy cập để lấy dữ liệu kiểm soát đóng điểm bán hàng."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7718,12 +7747,3 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "là bản trùng lặp với đơn hàng hiện có"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid ""
-"You don't have the access rights to get the point of sale closing control "
-"data."
-msgstr ""
-"Bạn không có quyền truy cập để lấy dữ liệu kiểm soát đóng điểm bán hàng."

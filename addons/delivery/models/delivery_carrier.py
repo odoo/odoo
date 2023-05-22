@@ -126,7 +126,7 @@ class DeliveryCarrier(models.Model):
             return False
         if self.zip_prefix_ids:
             regex = re.compile('|'.join(['^' + zip_prefix for zip_prefix in self.zip_prefix_ids.mapped('name')]))
-            if not re.match(regex, partner.zip.upper()):
+            if not partner.zip or not re.match(regex, partner.zip.upper()):
                 return False
         return True
 
@@ -195,7 +195,8 @@ class DeliveryCarrier(models.Model):
             # save the real price in case a free_over rule overide it to 0
             res['carrier_price'] = res['price']
             # free when order is large enough
-            if res['success'] and self.free_over and order._compute_amount_total_without_delivery() >= self.amount:
+            amount_without_delivery = order._compute_amount_total_without_delivery()
+            if res['success'] and self.free_over and self._compute_currency(order, amount_without_delivery, 'pricelist_to_company') >= self.amount:
                 res['warning_message'] = _('The shipping is free since the order amount exceeds %.2f.') % (self.amount)
                 res['price'] = 0.0
             return res

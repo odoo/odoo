@@ -4,23 +4,23 @@
 # 
 # Translators:
 # Maksym <ms@myodoo.pl>, 2022
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2022
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2022
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
 # Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2022
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2022
 # Martin Trigaux, 2022
 # Wojciech Warczakowski <w.warczakowski@gmail.com>, 2022
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -36,6 +36,11 @@ msgstr "Użytkownik proxy konta EDI"
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_res_company__account_edi_proxy_client_ids
 msgid "Account Edi Proxy Client"
 msgstr "Klient proxy konta EDI"
+
+#. module: account_edi_proxy_client
+#: model_terms:ir.ui.view,arch_db:account_edi_proxy_client.view_form_account_edi_proxy_client_user
+msgid "Account Journal"
+msgstr "Dziennik"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__active
@@ -71,6 +76,16 @@ msgstr "Data utworzenia"
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__display_name
 msgid "Display Name"
 msgstr "Nazwa wyświetlana"
+
+#. module: account_edi_proxy_client
+#: model:ir.actions.act_window,name:account_edi_proxy_client.action_tree_account_edi_proxy_client_user
+msgid "EDI Proxy User"
+msgstr "EDI użytkownik proxy"
+
+#. module: account_edi_proxy_client
+#: model:ir.ui.menu,name:account_edi_proxy_client.menu_account_proxy_client_user
+msgid "EDI Proxy Users"
+msgstr "EDI użytkownicy proxy"
 
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_account_edi_format
@@ -118,6 +133,11 @@ msgid "Private Key"
 msgstr "Prywatny klucz"
 
 #. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__private_key_filename
+msgid "Private Key Filename"
+msgstr "Nazwa pliku klucza prywatnego"
+
+#. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__refresh_token
 msgid "Refresh Token"
 msgstr "Token odświeżania"
@@ -136,6 +156,7 @@ msgstr ""
 "Unikalny id który identyfikuje użytkownika w formacie edi, zazwyczaj vat"
 
 #. module: account_edi_proxy_client
+#. odoo-python
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
 #, python-format
 msgid ""
@@ -146,6 +167,7 @@ msgstr ""
 "połączyć to %s"
 
 #. module: account_edi_proxy_client
+#. odoo-python
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
 #, python-format
 msgid ""
@@ -156,6 +178,7 @@ msgstr ""
 "połączyć to %s. %s"
 
 #. module: account_edi_proxy_client
+#. odoo-python
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
 #, python-format
 msgid ""

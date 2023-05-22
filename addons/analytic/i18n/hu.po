@@ -6,26 +6,34 @@
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2022
 # Zsolt Godó <zsolttokio@gmail.com>, 2022
 # Krisztián Juhász <juhasz.krisztian@josafar.hu>, 2022
-# Martin Trigaux, 2022
 # Ákos Nagy <akos.nagy@oregional.hu>, 2022
 # krnkris, 2022
 # gezza <geza.nagy@oregional.hu>, 2023
 # Csaba Tóth <i3rendszerhaz@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Szabolcs Rádi, 2023
 # Tamás Németh <ntomasz81@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-04-14 05:52+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2023\n"
-"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: hu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_account.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr "%s (másolat)"
 
 #. module: analytic
 #. odoo-javascript
@@ -134,6 +142,12 @@ msgstr ""
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.action_analytic_distribution_model
 msgid "Analytic Distribution Models"
+msgstr ""
+
+#. module: analytic
+#: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution_search
+#: model:ir.model.fields,field_description:analytic.field_analytic_mixin__analytic_distribution_search
+msgid "Analytic Distribution Search"
 msgstr ""
 
 #. module: analytic
@@ -503,7 +517,7 @@ msgstr ""
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Invalid"
-msgstr ""
+msgstr "Érvénytelen"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_is_follower
@@ -661,6 +675,13 @@ msgstr ""
 #: model:account.analytic.account,name:analytic.analytic_internal
 msgid "Operating Costs"
 msgstr ""
+
+#. module: analytic
+#. odoo-python
+#: code:addons/analytic/models/analytic_mixin.py:0
+#, python-format
+msgid "Operation not supported"
+msgstr "A művelet nem támogatott"
 
 #. module: analytic
 #. odoo-javascript

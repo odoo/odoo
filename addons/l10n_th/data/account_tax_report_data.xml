@@ -166,4 +166,121 @@
             </record>
         </field>
     </record>
+
+    <record id="tax_report_pnd53" model="account.report">
+        <field name="name">PND53</field>
+        <field name="root_report_id" ref="account.generic_tax_report" />
+        <field name="country_id" ref="base.th" />
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_pnd53_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_total_income_pnd53_line" model="account.report.line">
+                <field name="name">Total Income</field>
+                <field name="code">INCOME_PND53</field>
+                <field name="expression_ids">
+                    <record id="tax_report_total_income_pnd53" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">Income PND53</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_total_remittance_pnd53_line" model="account.report.line">
+                <field name="name">Total Remittance</field>
+                <field name="code">P53</field>
+                <field name="expression_ids">
+                    <record id="tax_report_total_remittance_pnd53" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">PND53</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_surcharge_pnd53_line" model="account.report.line">
+                <field name="name">Surcharge</field>
+                <field name="code">S53</field>
+                <field name="expression_ids">
+                    <record id="tax_report_surcharge_pnd53" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">SUR53</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_total_pnd53_line" model="account.report.line">
+                <field name="name">Total</field>
+                <field name="expression_ids">
+                    <record id="tax_report_total_pnd53" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">P53.balance + S53.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
+    <record id="tax_report_pnd3" model="account.report">
+        <field name="name">PND3</field>
+        <field name="root_report_id" ref="account.generic_tax_report" />
+        <field name="country_id" ref="base.th" />
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="tax_report_pnd3_balance" model="account.report.column">
+                <field name="name">Balance</field>
+                <field name="expression_label">balance</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="tax_report_total_income_pnd3_line" model="account.report.line">
+                <field name="name">Total Income</field>
+                <field name="code">INCOME_PND3</field>
+                <field name="expression_ids">
+                    <record id="tax_report_total_income_pnd3" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">Income PND3</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_total_remittance_pnd3_line" model="account.report.line">
+                <field name="name">Total Remittance</field>
+                <field name="code">P3</field>
+                <field name="expression_ids">
+                    <record id="tax_report_total_remittance_pnd3" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">PND3</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_surcharge_pnd3_line" model="account.report.line">
+                <field name="name">Surcharge</field>
+                <field name="code">S3</field>
+                <field name="expression_ids">
+                    <record id="tax_report_surcharge_pnd3" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">tax_tags</field>
+                        <field name="formula">SUR3</field>
+                    </record>
+                </field>
+            </record>
+            <record id="tax_report_total_pnd3_line" model="account.report.line">
+                <field name="name">Total</field>
+                <field name="expression_ids">
+                    <record id="tax_report_total_pnd3" model="account.report.expression">
+                        <field name="label">balance</field>
+                        <field name="engine">aggregation</field>
+                        <field name="formula">P3.balance + S3.balance</field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+
 </odoo>

@@ -201,7 +201,7 @@ export class Powerbox {
                     this._context.selectedCommand = command;
                     commandElWrapper.classList.add('active');
                 });
-                commandElWrapper.addEventListener('mousedown', ev => {
+                commandElWrapper.addEventListener('click', ev => {
                         ev.preventDefault();
                         ev.stopImmediatePropagation();
                         this._pickCommand(command);
@@ -334,12 +334,18 @@ export class Powerbox {
             if (this._context.lastText.match(/\s/)) {
                 this.close();
             } else {
-                const term = this._context.lastText.toLowerCase().replaceAll(/\s/g, '\\s').replaceAll('\u200B', '');
+                const term = this._context.lastText.toLowerCase()
+                    .replaceAll(/\s/g, '\\s')
+                    .replaceAll('\u200B', '')
+                    .replace(REGEX_RESERVED_CHARS, '\\$&');
                 if (term.length) {
-                    const regex = new RegExp(term.split('').map(char => char.replace(REGEX_RESERVED_CHARS, '\\$&')).join('.*'), 'i');
-                    this._context.filteredCommands = this._context.commands.filter(command => (
-                        `${command.category} ${command.name}`.toLowerCase().match(regex)
-                    ));
+                    const exactRegex = new RegExp(term, 'i');
+                    const fuzzyRegex = new RegExp(term.match(/\\.|./g).join('.*'), 'i');
+                    this._context.filteredCommands = this._context.commands.filter(command => {
+                        const commandText = (command.category + ' ' + command.name);
+                        const commandDescription = command.description.replace(/\s/g, '');
+                        return commandText.match(fuzzyRegex) || commandDescription.match(exactRegex);
+                    });
                 } else {
                     this._context.filteredCommands = this._context.commands;
                 }

@@ -13,13 +13,13 @@
 
 <template id="snippets" inherit_id="website.snippets">
     <xpath expr="//t[@id='mass_mailing_newsletter_block_hook']" position="replace">
-        <t t-snippet="website_mass_mailing.s_newsletter_block" t-thumbnail="/website_mass_mailing/static/src/img/snippets_thumbs/s_newsletter_block.svg" t-forbid-sanitize="form"/>
+        <t t-snippet="website_mass_mailing.s_newsletter_block" string="Newsletter Block" t-thumbnail="/website_mass_mailing/static/src/img/snippets_thumbs/s_newsletter_block.svg" t-forbid-sanitize="form"/>
     </xpath>
     <xpath expr="//t[@id='mass_mailing_newsletter_popup_hook']" position="replace">
-        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" t-thumbnail="/website/static/src/img/snippets_thumbs/newsletter_subscribe_popup.svg" t-forbid-sanitize="form"/>
+        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" string="Newsletter Popup" t-thumbnail="/website/static/src/img/snippets_thumbs/newsletter_subscribe_popup.svg" t-forbid-sanitize="form"/>
     </xpath>
     <xpath expr="//t[@id='mass_mailing_newsletter_hook']" position="replace">
-        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.svg" t-forbid-sanitize="form"/>
+        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" string="Newsletter" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.svg" t-forbid-sanitize="form"/>
     </xpath>
 </template>
 
@@ -41,7 +41,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
 Users upgraded from a version lower than 16.0 may have those blocks in their
 database, without the s_newsletter_list class. See fixNewsletterListClass.
 -->
-<template id="s_newsletter_block" name="Newsletter block">
+<template id="s_newsletter_block" name="Newsletter Block">
     <section class="s_newsletter_block s_newsletter_list pt32 pb32" data-list-id="0">
         <div class="container">
             <t t-call="website_mass_mailing.s_newsletter_block_default_template"/>
@@ -101,7 +101,7 @@ database, without the s_newsletter_list class. See fixNewsletterListClass.
                                                 <input type="checkbox" class="s_website_form_input form-check-input" name="list_ids"
                                                     t-attf-id="mailing_list_#{record.id}" t-att-value="record.id" required="1"/>
                                                 <label class="form-check-label s_website_form_check_label" t-attf-for="mailing_list_#{record.id}">
-                                                    <t t-esc="record.display_name"/>
+                                                    <t t-esc="record.name"/>
                                                 </label>
                                             </div>
                                         </div>

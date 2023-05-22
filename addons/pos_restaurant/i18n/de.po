@@ -9,12 +9,12 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -121,7 +121,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow Bill Splitting"
-msgstr ""
+msgstr "Rechnungsteilung erlauben"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
@@ -252,6 +252,13 @@ msgid "CANCELLED"
 msgstr "ABBRECHEN"
 
 #. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_config.py:0
+#, python-format
+msgid "Cash Bar"
+msgstr "Bargeld"
+
+#. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
 msgid "Cheese Burger"
 msgstr "Cheeseburger"
@@ -368,7 +375,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Early Receipt Printing"
-msgstr ""
+msgstr "Frühzeitiger Quittungsdruck"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -426,7 +433,7 @@ msgstr "Sähle & Tische"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors & Tables Map"
-msgstr ""
+msgstr "Lage- & Tischplan"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.food
@@ -577,7 +584,7 @@ msgstr "Zuletzt aktualisiert am"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__multiprint_resume
 msgid "Last printed state of the order"
-msgstr ""
+msgstr "Letzter gedruckte Status des Auftrags"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -629,7 +636,7 @@ msgstr "Mozzarella Sandwich"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__multiprint_resume
 msgid "Multiprint Resume"
-msgstr ""
+msgstr "Mehrfachdruck fortsetzen"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -803,32 +810,32 @@ msgstr "Point of Sale Sitzung"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 msgid "Pos Iface Orderline Notes"
-msgstr ""
+msgstr "Kassensystem Iface Bestellungsnotizen"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
 msgid "Pos Iface Printbill"
-msgstr ""
+msgstr "Kassensystem Iface Rechnungsdruck"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_splitbill
 msgid "Pos Iface Splitbill"
-msgstr ""
+msgstr "Kassensystem Iface Rechnungsteilung"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_order_printer
 msgid "Pos Is Order Printer"
-msgstr ""
+msgstr "Kassensystem Iface Bestelldrucker"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_table_management
 msgid "Pos Is Table Management"
-msgstr ""
+msgstr "Kassensystem ist Tischverwaltung"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_set_tip_after_payment
 msgid "Pos Set Tip After Payment"
-msgstr ""
+msgstr "Pos Trinkgeld nach Zahlung einstellen"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1130,7 +1137,7 @@ msgstr "Tel.:"
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 #, python-format
 msgid "The %s is already used in another Pos Config."
-msgstr ""
+msgstr "%s wird bereits in einer anderen Kassensystemkonfiguration verwendet."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__proxy_ip
@@ -1146,7 +1153,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_color
 msgid "The background color of the floor in a html-compatible format"
-msgstr ""
+msgstr "Die Hintergrundfarbe des Raumplans in einem html-kompatiblem Format"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
@@ -1442,9 +1449,3 @@ msgstr "Button in der Toolbar zur Bearbeitung, um neue Tische zu erstellen"
 #, python-format
 msgid "discount"
 msgstr "Rabatt"
-
-#. module: pos_restaurant
-#: code:addons/pos_restaurant/models/pos_config.py:0
-#, python-format
-msgid "Cash Bar"
-msgstr ""

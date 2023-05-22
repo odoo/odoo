@@ -288,6 +288,8 @@ class StockMoveLine(models.Model):
                 vals['company_id'] = self.env['stock.move'].browse(vals['move_id']).company_id.id
             elif vals.get('picking_id'):
                 vals['company_id'] = self.env['stock.picking'].browse(vals['picking_id']).company_id.id
+            if self.env.context.get('import_file') and vals.get('product_uom_qty') != 0:
+                raise UserError(_("It is not allow to import reserved quantity, you have to use the quantity directly."))
 
         mls = super().create(vals_list)
 
@@ -689,6 +691,7 @@ class StockMoveLine(models.Model):
             product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True
         )
         if quantity > available_quantity:
+            quantity = quantity - available_quantity
             # We now have to find the move lines that reserved our now unavailable quantity. We
             # take care to exclude ourselves and the move lines were work had already been done.
             outdated_move_lines_domain = [

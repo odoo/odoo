@@ -257,4 +257,24 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_widget[name='bar'] input");
         assert.verifySteps(["write"]);
     });
+
+    QUnit.test("BooleanToggleField - autosave option set to false", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="bar" widget="boolean_toggle" options="{'autosave': false}"/>
+                </form>`,
+            resId: 1,
+            mockRPC(_route, { method }) {
+                if (method === "write") {
+                    assert.step("write");
+                }
+            },
+        });
+        await click(target, ".o_field_widget[name='bar'] input");
+        assert.verifySteps([]);
+    });
 });

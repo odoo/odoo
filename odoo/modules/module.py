@@ -178,7 +178,7 @@ def initialize_sys_path():
     legacy_upgrade_path = os.path.join(base_path, 'base', 'maintenance', 'migrations')
     for up in (tools.config['upgrade_path'] or legacy_upgrade_path).split(','):
         up = os.path.normcase(os.path.abspath(tools.ustr(up.strip())))
-        if up not in upgrade.__path__:
+        if os.path.isdir(up) and up not in upgrade.__path__:
             upgrade.__path__.append(up)
 
     # create decrecated module alias from odoo.addons.base.maintenance.migrations to odoo.upgrade

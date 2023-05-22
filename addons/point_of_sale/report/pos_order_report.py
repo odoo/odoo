@@ -18,7 +18,7 @@ class PosOrderReport(models.Model):
     state = fields.Selection(
         [('draft', 'New'), ('paid', 'Paid'), ('done', 'Posted'),
          ('invoiced', 'Invoiced'), ('cancel', 'Cancelled')],
-        string='Status')
+        string='Status', readonly=True)
     user_id = fields.Many2one('res.users', string='User', readonly=True)
     price_total = fields.Float(string='Total Price', readonly=True)
     price_sub_total = fields.Float(string='Subtotal w/o discount', readonly=True)
@@ -27,8 +27,8 @@ class PosOrderReport(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     nbr_lines = fields.Integer(string='Sale Line Count', readonly=True)
     product_qty = fields.Integer(string='Product Quantity', readonly=True)
-    journal_id = fields.Many2one('account.journal', string='Journal')
-    delay_validation = fields.Integer(string='Delay Validation')
+    journal_id = fields.Many2one('account.journal', string='Journal', readonly=True)
+    delay_validation = fields.Integer(string='Delay Validation', readonly=True)
     product_categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
     invoiced = fields.Boolean(readonly=True)
     config_id = fields.Many2one('pos.config', string='Point of Sale', readonly=True)

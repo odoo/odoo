@@ -241,6 +241,11 @@ $o-wblog-loader-size: 50px;
         animation: o-wblog-fade-In 1s cubic-bezier(.02, .01, .47, 1);
     }
 
+    // "Read next article" (with "Regular Cover")
+    #o_wblog_post_footer a.w-25 {
+        flex: 0 0 auto;
+    }
+
     // Blog Index Pages
     // ==============================================
     #o_wblog_posts_loop {
@@ -292,6 +297,11 @@ $o-wblog-loader-size: 50px;
         #o_wblog_sidebar .oe_structure:empty {
             display: none;
         }
+
+        // Prevent users from using the select in the sidebar during edit.
+        .o_wblog_sidebar_block select[name="archive"] {
+            pointer-events: none;
+        }
     }
 }
 
@@ -304,4 +314,16 @@ $o-wblog-loader-size: 50px;
     &:hover {
         background-color: rgba(black, 0.7);
     }
+}
+
+// TODO: remove me in master. Since bootstrap 5, all direct children of ".row"
+// element have a width of 100%. This rule has been added to fix the case where
+// the "List" layout is used in the "Blog" page and the sidebar is displayed.
+// In this disposition, a ".border-end" element is followed by the sidebar,
+// both being direct children of a ".row" element. Without this fix, the width
+// of the ".border-end" element would be 100%, leading the sidebar to be
+// displayed at the bottom of the page and not at the right. Note that in
+// master, this ".border-end" element has to be removed.
+#o_wblog_index_content > .container > .row > .border-end {
+    width: auto;
 }

@@ -289,7 +289,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         else:
             gross_price_subtotal = net_price_subtotal / (1.0 - (line.discount or 0.0) / 100.0)
         # Price subtotal with discount / quantity:
-        gross_price_unit = line.currency_id.round((gross_price_subtotal / line.quantity) if line.quantity else 0.0)
+        gross_price_unit = gross_price_subtotal / line.quantity if line.quantity else 0.0
 
         uom = super()._get_uom_unece_code(line)
 
@@ -299,6 +299,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
             # The price of an item, exclusive of VAT, after subtracting item price discount.
             'price_amount': gross_price_unit,
+            'product_price_dp': self.env['decimal.precision'].precision_get('Product Price'),
 
             # The number of item units to which the price applies.
             # setting to None -> the xml will not comprise the BaseQuantity (it's not mandatory)
@@ -561,10 +562,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         logs += self._import_fill_invoice_allowance_charge(tree, invoice, journal, qty_factor)
 
-        # ==== Down Payment (prepaid amount) ====
+        # ==== Prepaid amount ====
 
         prepaid_node = tree.find('./{*}LegalMonetaryTotal/{*}PrepaidAmount')
-        self._import_fill_invoice_down_payment(invoice, prepaid_node, qty_factor)
+        logs += self._import_log_prepaid_amount(invoice, prepaid_node, qty_factor)
 
         # ==== invoice_line_ids: InvoiceLine/CreditNoteLine ====
 

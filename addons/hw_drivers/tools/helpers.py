@@ -353,7 +353,11 @@ def load_iot_handlers():
             spec = util.spec_from_file_location(file, str(Path(path).joinpath(file)))
             if spec:
                 module = util.module_from_spec(spec)
-                spec.loader.exec_module(module)
+                try:
+                    spec.loader.exec_module(module)
+                except Exception as e:
+                    _logger.error('Unable to load file: %s ', file)
+                    _logger.error('An error encountered : %s ', e)
     lazy_property.reset_all(http.root)
 
 def list_file_by_os(file_list):

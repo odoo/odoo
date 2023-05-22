@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Bohdan Lisnenko, 2022
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
 # Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
-"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -129,6 +129,13 @@ msgstr "%<span class=\"px-3\"/>("
 #, python-format
 msgid "%d moves"
 msgstr "%d переміщення"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid "%s (%s)"
+msgstr "%s (%s)"
 
 #. module: account
 #. odoo-python
@@ -1450,18 +1457,6 @@ msgstr "Виписка повинна містити рядки з того ж �
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
 "Схема оподаткування може бути визначена лише один раз на однакові податки."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-#, python-format
-msgid ""
-"A tax should only use tags from its country. You should use another tax and "
-"a fiscal position if you wish to uses the tags from foreign tax reports."
-msgstr ""
-"Податок має використовувати лише теги зі своєї країни. Ви повинні "
-"використовувати інший податок і схему оподаткування, якщо ви хочете "
-"використовувати теги з іноземних податкових звітів."
 
 #. module: account
 #. odoo-python
@@ -2888,6 +2883,11 @@ msgid "Attach a file"
 msgstr "Долучити файл"
 
 #. module: account
+#: model:ir.model,name:account.model_ir_attachment
+msgid "Attachment"
+msgstr "Прикріплення"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_attachment_count
@@ -3159,11 +3159,6 @@ msgstr "МФО"
 #: model:ir.model.fields,field_description:account.field_res_company__bank_journal_ids
 msgid "Bank Journals"
 msgstr "Банківські журнали"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
-msgid "Bank Matched"
-msgstr "Банк співставлено"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__bank_partner_id
@@ -4425,6 +4420,11 @@ msgid "Counterpart Entries"
 msgstr "Відповідні записи"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Countries for which the company has a VAT number"
+msgstr "Країни для яких компанія має номер VAT"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_id
@@ -4962,6 +4962,11 @@ msgid "Current Liabilities"
 msgstr "Короткострокові зобов’язання"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__current_statement_balance
+msgid "Current Statement Balance"
+msgstr "Поточний баланс виписки"
+
+#. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity_unaffected
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__equity_unaffected
 msgid "Current Year Earnings"
@@ -5165,8 +5170,8 @@ msgid "Data consistency check"
 msgstr "Перевірка узгодженості даних"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/static/src/components/account_resequence/account_resequence.xml:0
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__date
@@ -5311,7 +5316,6 @@ msgstr "Спеціальна послідовність платежів"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Account"
 msgstr "Типовий рахунок"
 
@@ -5893,6 +5897,13 @@ msgid "Download"
 msgstr "Завантажити"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/settings_form_view/res_config_dev_tool.xml:0
+#, python-format
+msgid "Download XSD files (XML validation)"
+msgstr "Завантажити файли XSD (валідація XML)"
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__property_advance_tax_payment_account_id
 msgid ""
 "Downpayments posted on this account will be considered by the Tax Closing "
@@ -6045,6 +6056,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "Динамічні звіти"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
+msgid "Dynamic domain used for the tag that can be set on tax"
+msgstr ""
+"Динамічний домен використовується для тегів, які можуть бути встановлені на "
+"податку"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
@@ -6276,17 +6294,6 @@ msgstr "Капітал"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/ir_actions_report.py:0
-#, python-format
-msgid ""
-"Error when reading the original PDF for: %r.\n"
-"Please make sure the file is valid."
-msgstr ""
-"Помилка при зчитуванні оригіналу PDF для: %r.\n"
-"Переконайтеся, що файл валідний."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid "Error!"
@@ -6328,8 +6335,8 @@ msgid "Example Preview"
 msgstr "Попередній перегляд прикладу"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/models/chart_template.py:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
@@ -6359,8 +6366,8 @@ msgid "Expects a Chart of Accounts"
 msgstr "Очікується план рахунків"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/static/src/js/legacy_account_selection.js:0
 #: code:addons/account/wizard/accrued_orders.py:0
@@ -6601,6 +6608,7 @@ msgstr "Звітні періоди"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_move__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_payment__fiscal_position_id
+#: model:ir.model.fields,field_description:account.field_res_company__fiscal_position_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_position_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
@@ -6805,6 +6813,11 @@ msgstr "Іноземна валюта"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
 msgstr "Закордонний ID податку"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign VAT countries"
+msgstr "Країни іноземного ПДВ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -7106,6 +7119,11 @@ msgid "Has Sequence Holes"
 msgstr "Має дири послідовності"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__has_statement_lines
+msgid "Has Statement Lines"
+msgstr "Є рядки виписки"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
 #: model:ir.model.fields,field_description:account.field_res_users__has_unreconciled_entries
 msgid "Has Unreconciled Entries"
@@ -7345,13 +7363,6 @@ msgid ""
 msgstr ""
 "Якщо встановлено, терміни оплати та відповідні суми до сплати будуть "
 "детально вказані в рахунках-фактурах."
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "If set, this account is used to automatically balance entries."
-msgstr ""
-"Якщо встановлено, цей рахунок використовується для автоматичного "
-"балансування записів."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__non_trade
@@ -8338,8 +8349,8 @@ msgid "Journal Currency"
 msgstr "Валюта журналу"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
 #: code:addons/account/static/src/js/legacy_mail_activity.js:0
@@ -8359,8 +8370,8 @@ msgid "Journal Entries by Date"
 msgstr "Записи журналу за датою"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_payment.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
@@ -9688,6 +9699,11 @@ msgid "No"
 msgstr "Ні"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
+msgid "No Bank Matching"
+msgstr "Немає узгоджень банку"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
 msgid "No Follow-up"
 msgstr "Без відслідковування"
@@ -9731,11 +9747,11 @@ msgstr ""
 #: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid ""
-"No original vendor bills could be found for any of the selected vendor "
-"bills."
+"No original purchase document could be found for any of the selected "
+"purchase documents."
 msgstr ""
-"Жодного оригінального рахунка постачальника не можливо знайти для жодного "
-"вибраного рахунка постачальника."
+"Не вдалося знайти оригінальний документ про закупівлю для жодного з вибраних"
+" документів про закупівлю."
 
 #. module: account
 #. odoo-python
@@ -10121,13 +10137,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_bank_statement.py:0
-#, python-format
-msgid "One or more selected lines already belong to a complete statement."
-msgstr "Один або декілька вибраних рядків належать уже рознесеній виписці."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -10170,10 +10179,9 @@ msgstr "Лише рахунки можуть друкуватися."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_register__group_payment
 msgid ""
-"Only one payment will be created by partner (bank), instead of one per "
-"billy."
+"Only one payment will be created by partner (bank), instead of one per bill."
 msgstr ""
-"Партнером (банком) буде створено лише один платіж замість на кожен рахунок."
+"Партнером (банком) буде створено лише один платіж замість одного за рахунок."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
@@ -11063,6 +11071,18 @@ msgstr "Період порівняння"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
+"Please check the fiscal country of company %s. (Settings > Accounting > "
+"Fiscal Country)Taxes can only be updated if they are in the company's fiscal"
+" country (%s) or the localization's country (%s)."
+msgstr ""
+"Перевірте країну фіскальної локалізації компанії %s. (Налаштування > "
+"Бухоблік > Фіскальна країна)Податки можуть оновитися лише, якщо вони в "
+"фіскальній країні компанії (%s) або країні локалізації (%s)."
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
 "Please check these taxes. They might be outdated. We did not update them. "
 "Indeed, they do not exactly match the taxes of the original version of the "
 "localization module.<br/>You might want to archive or adapt them.<br/><ul>"
@@ -11071,6 +11091,15 @@ msgstr ""
 "оновлювали їх. Дійсно, вони не зовсім відповідають податкам оригінальної "
 "версії модуля локалізації.<br/>Ви можливо захочете архівувати їх або "
 "адаптувати.<br/><ul>"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+"Будь ласка, зверніться до свого бухгалтера, щоб надрукувати результат "
+"цілісності хешу."
 
 #. module: account
 #. odoo-python
@@ -11347,6 +11376,11 @@ msgstr "Друкувати за замовчуванням"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Print checks to pay your vendors"
 msgstr "Друк чеків на оплату вашим постачальникам"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__problem_description
+msgid "Problem Description"
+msgstr "Опис проблеми"
 
 #. module: account
 #: model:ir.model,name:account.model_product_template
@@ -14619,6 +14653,13 @@ msgid ""
 msgstr "Залишкова сума в журналі, виражена у валюті компанії."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "The running balance (%s) doesn't match the specified ending balance."
+msgstr "Запущений баланс (%s) не співпадає із вказаним кінцевим балансом."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid ""
 "The selected destination account is set to use a specific currency. Every entry transferred to it will be converted into this currency, causing\n"
@@ -14719,13 +14760,6 @@ msgid ""
 msgstr ""
 "Послідовності цього журналу відрізняються для платежів і неплатежів, але ви "
 "вибрали деякі з обох типів."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement.py:0
-#, python-format
-msgid "The running balance (%s) doesn't match the specified ending balance."
-msgstr "Запущений баланс (%s) не співпадає із вказаним кінцевим балансом."
 
 #. module: account
 #. odoo-python
@@ -14902,6 +14936,7 @@ msgid "There was an error processing this page."
 msgstr "Під час обробки цієї сторінки сталася помилка."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid ""
@@ -15650,6 +15685,7 @@ msgid "Unposted"
 msgstr "Залишок"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unposted Entries"
@@ -15699,6 +15735,8 @@ msgstr "Неузгоджені транзакції"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_tax.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed
@@ -16272,19 +16310,6 @@ msgstr "Щорічно"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#, python-format
-msgid ""
-"You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted. If you are absolutely sure you want to modify the opening "
-"balance of your accounts, reset the move to draft."
-msgstr ""
-"Ви не можете імпортувати \"openning_balance\", якщо початкова проводка (%s) "
-"вже опублікована. Якщо ви абсолютно впевнені, що хочете змінити початковий "
-"баланс своїх рахунків, скиньте проводку до чернетки."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
@@ -16369,10 +16394,9 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/ir_actions_report.py:0
 #, python-format
-msgid "You can only print the original document for vendor bills."
+msgid "You can only print the original document for purchase documents."
 msgstr ""
-"Ви можете роздрукувати лише оригінальний документ для рахунків "
-"постачальника."
+"Ви можете роздрукувати лише оригінальний документ для документів закупівлі."
 
 #. module: account
 #. odoo-python
@@ -16602,14 +16626,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/company.py:0
-#, python-format
-msgid "Please contact your accountant to print the Hash integrity result."
-msgstr ""
-"Будь ласка, зверніться до свого бухгалтера, щоб надрукувати результат "
-"цілісності хешу."
-
-#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -16726,6 +16742,16 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot edit the following fields due to restrict mode being activated on"
+" the journal: %s."
+msgstr ""
+"Ви не можете видалити наступні поля через обмежений режим, що активується в "
+"журналі: %s."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -16779,6 +16805,20 @@ msgid ""
 msgstr ""
 "Ви не можете мати більше одного рахунка з \"Прибутком поточного періоду\" як"
 " тип. (рахунки: %s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"You cannot import the \"openning_balance\" if the opening move (%s) is "
+"already posted.                         If you are absolutely sure you want "
+"to modify the opening balance of your accounts, reset the move to draft."
+msgstr ""
+"Ви не можете імпортувати \"openning_balance\" якщо проводка відкриття (%s) "
+"вже опублікована.                         Якщо ви абсолютно впевнені, що "
+"хочете змінити початковий баланс своїх рахунків, скиньте проводку до "
+"чернетки."
 
 #. module: account
 #. odoo-python
@@ -17346,6 +17386,11 @@ msgid ""
 msgstr ""
 "залишає за собою право вимагати сплату фіксованих відсотків у розмірі 10% "
 "від суми, що залишилася до сплати."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
+msgid "tag domain"
+msgstr "домен тегу"
 
 #. module: account
 #. odoo-python

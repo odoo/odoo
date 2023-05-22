@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<template>
+    <div t-name='account.res_config_dev_tool' t-inherit="web.res_config_dev_tool" t-inherit-mode="extension" owl="1" primary="1">
+        <xpath expr="//Setting/div" position="inside">
+            <a t-if="isDebug" class="d-block" t-on-click.prevent="onClickDownloadXSD" href="#">Download XSD files (XML validation)</a>
+        </xpath>
+    </div>
+</template>

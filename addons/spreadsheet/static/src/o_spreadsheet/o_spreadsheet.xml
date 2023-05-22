@@ -91,10 +91,10 @@
           t-on-click="() => this.onColorClick(color)"
           t-attf-style="background-color:{{color}};">
           <div
-            t-if="props.currentColor === color"
+            t-if="isSameColor(props.currentColor, color)"
             align="center"
             t-attf-style="color:{{getCheckMarkColor()}}">
-            &#10004;
+            ✓
           </div>
         </div>
       </div>
@@ -117,10 +117,10 @@
           t-attf-style="background-color:{{color}};"
           t-on-click="() => this.onColorClick(color)">
           <div
-            t-if="props.currentColor === color"
+            t-if="isSameColor(props.currentColor, color)"
             align="center"
             t-attf-style="color:{{getCheckMarkColor()}}">
-            &#10004;
+            ✓
           </div>
         </div>
       </div>
@@ -434,10 +434,11 @@
     <div
       class="o-chart-container w-100 h-100"
       t-ref="chartContainer"
-      t-on-contextmenu.prevent.stop="(ev) => !env.isDashboard() and this.onContextMenu(ev)">
+      t-on-contextmenu.prevent.stop="(ev) => !env.isDashboard() and !env.model.getters.isReadonly() and this.onContextMenu(ev)">
       <div class="o-chart-menu" t-if="!env.isDashboard()">
         <div
           class="o-chart-menu-item"
+          t-if="!env.model.getters.isReadonly()"
           t-on-click="showMenu"
           t-ref="menuButton"
           t-on-contextmenu.prevent.stop="showMenu">
@@ -692,7 +693,8 @@
       childHeight="cellPopover.Component.size.height"
       flipHorizontalOffset="cellPopover.cellWidth"
       flipVerticalOffset="cellPopover.cellHeight"
-      onMouseWheel="props.onMouseWheel">
+      onMouseWheel="props.onMouseWheel"
+      zIndex="zIndex">
       <t
         t-component="cellPopover.Component"
         t-props="{...cellPopover.props, onClosed : () => props.onClosePopover()}"
@@ -1469,7 +1471,7 @@
 
   <t t-name="o-spreadsheet-Menu" owl="1">
     <Popover
-      t-if="props.menuItems.length"
+      t-if="visibleMenuItems.length"
       position="props.position"
       childWidth="MENU_WIDTH"
       childHeight="menuHeight"
@@ -1483,7 +1485,7 @@
         t-on-wheel.stop=""
         t-on-click.stop=""
         t-on-contextmenu.prevent="">
-        <t t-foreach="props.menuItems" t-as="menuItem" t-key="menuItem.id">
+        <t t-foreach="visibleMenuItems" t-as="menuItem" t-key="menuItem.id">
           <t t-set="isMenuRoot" t-value="isRoot(menuItem)"/>
           <t t-set="isMenuEnabled" t-value="isEnabled(menuItem)"/>
           <div
@@ -1562,7 +1564,7 @@
           class="o-btn o-remove-selection"
           t-if="ranges.length > 1"
           t-on-click="() => this.removeInput(range.id)">
-          ✖
+          ✕
         </button>
       </div>
 
@@ -1570,7 +1572,7 @@
         <button class="o-btn-action o-add-selection" t-if="canAddRange" t-on-click="addEmptyInput">
           Add range
         </button>
-        <button class="o-btn-action o-selection-ok" t-if="hasFocus" t-on-click="disable">
+        <button class="o-btn-action o-selection-ok" t-if="hasFocus" t-on-click="confirm">
           Confirm
         </button>
       </div>
@@ -2189,7 +2191,7 @@
           <ColorPicker
             t-if="state.openedColorPicker === 'backgroundColor'"
             onColorPicked="(color) => this.setColor(color, 'backgroundColor')"
-            currentColor="props.definition.brackground"
+            currentColor="props.definition.background"
             t-key="backgroundColor"
           />
         </div>
@@ -2898,7 +2900,7 @@
     <div class="o-sidePanel">
       <div class="o-sidePanelHeader">
         <div class="o-sidePanelTitle" t-esc="getTitle()"/>
-        <div class="o-sidePanelClose" t-on-click="() => this.props.onCloseSidePanel()">×</div>
+        <div class="o-sidePanelClose" t-on-click="() => this.props.onCloseSidePanel()">✕</div>
       </div>
       <div class="o-sidePanelBody">
         <t
@@ -3247,7 +3249,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.0.5';
-  __info__.date = '2023-03-23T11:44:46.218Z';
-  __info__.hash = '53150ef';
+  __info__.version = '16.0.10';
+  __info__.date = '2023-05-12T11:48:53.692Z';
+  __info__.hash = '115eda7';
 -->

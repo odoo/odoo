@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Lukas Van Cauter <cvl@odoo.com>, 2022
-# Jolien De Paepe, 2023
 # Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -71,7 +71,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
 #, python-format
 msgid "%s product(s) found for \"%s\"."
 msgstr "%s product(en) gevonden voor \"%s\"."
@@ -605,7 +605,7 @@ msgstr "Later verzenden toestaan"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Allow cashiers to set a discount per line"
-msgstr "Laat kassière een korting per regel instellen"
+msgstr "Laat kassamedewerker een korting per regel instellen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -727,8 +727,8 @@ msgstr "Zo snel mogelijk"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__closing
-msgid "At the session closing"
-msgstr "Bij het sluiten van de sessie"
+msgid "At the session closing (faster)"
+msgstr "Bij het sluiten van de sessie (sneller)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_update_stock_quantities
@@ -1150,7 +1150,7 @@ msgstr "Kassa"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
 #, python-format
 msgid "Cashier"
-msgstr "Kassière"
+msgstr "Kassamedewerker"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_pos_category_action
@@ -1770,7 +1770,7 @@ msgstr "Klantscherm niet verbonden"
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/CustomerFacingDisplayButton.js:0
 #, python-format
 msgid "Customer Screen Unsupported. Please upgrade the IoT Box"
-msgstr "Klantscherm niet ondersteund. Gelieve de IoT Box te upgraden"
+msgstr "Klantscherm niet ondersteund. Je moet de IoT Box te upgraden"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2693,8 +2693,8 @@ msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__real
-msgid "In real time (recommended)"
-msgstr "In realtime (aangeraden)"
+msgid "In real time (accurate but slower)"
+msgstr "In realtime (nauwkeurig maar trager)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2939,6 +2939,13 @@ msgstr ""
 "Het is verboden om een BTW te wijzigen die is gebruikt in een kassaorders "
 "die niet is geboekt. Je moet de kassasessies sluiten voordat je de BTW "
 "wijzigt."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "It is not allowed to mix refunds and sales"
+msgstr "Het is niet toegestaan retouren en verkopen te vermengen"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3417,7 +3424,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/ProductInfoButton.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
@@ -3506,14 +3513,6 @@ msgstr ""
 "registreren."
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#, python-format
-msgid "No customer found for"
-msgstr "Geen klant gevonden voor"
-
-#. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all_filtered
@@ -3526,6 +3525,20 @@ msgstr "Nog geen gegevens!"
 #, python-format
 msgid "No link to an invoice for %s."
 msgstr "Geen link naar een factuur voor %s."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/PartnerListScreen/PartnerListScreen.js:0
+#, python-format
+msgid "No more customer found for \"%s\"."
+msgstr "Geen klant meer gevonden voor \"%s\"."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
+#, python-format
+msgid "No more product found for \"%s\"."
+msgstr "Geen product meer gevonden voor \"%s\"."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3937,8 +3950,8 @@ msgstr ""
 "teruggenomen."
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/DebugWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/ChromeWidgets/TicketButton.xml:0
@@ -4094,8 +4107,8 @@ msgid "Pay Order"
 msgstr "Betaal order"
 
 #. module: point_of_sale
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductScreen.xml:0
@@ -4398,7 +4411,7 @@ msgstr "Definieer een omzetrekening voor dit product:  \"%s\" (id:%d)."
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "Please define income account for this product: '%s' (id:%d)."
-msgstr "Definieer de inkomensrekening voor dit product: '%s' (id:%d)."
+msgstr "Definieer de omzetrekening voor dit product: '%s' (id:%d)."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -4969,7 +4982,7 @@ msgstr "Productinformatie"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
 #, python-format
 msgid ""
 "Product is not loaded. Tried loading the product from the server but there "
@@ -5160,6 +5173,13 @@ msgstr "Retourorderregels"
 #, python-format
 msgid "Refund Orders"
 msgstr "Retourorders"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Refund and Sales not allowed"
+msgstr "Retouren en Verkopen zijn niet toegestaan"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5503,9 +5523,10 @@ msgstr "Verkooporder zoeken"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
+#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
-msgid "Search database"
-msgstr "Zoek in database"
+msgid "Search more"
+msgstr "Zoek meer"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_token
@@ -6546,20 +6567,6 @@ msgstr "Er zijn"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#, python-format
-msgid "There are no customers."
-msgstr "Er zijn geen klanten."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#, python-format
-msgid "There are no loaded customers."
-msgstr "Er zijn geen geladen klanten."
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
 msgid "There are no products in this category."
@@ -6760,6 +6767,17 @@ msgid "This order is empty"
 msgstr "Deze order is leeg"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+"Deze bestelling is nog niet gesynchroniseerd met de server. Zorg ervoor dat "
+"het is gesynchroniseerd en probeer het opnieuw."
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "This product is used as reference on customer receipts."
@@ -6829,7 +6847,7 @@ msgstr "Fooien"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_form
 msgid "Tips:"
-msgstr "Fooien:"
+msgstr "Tips:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -7012,17 +7030,6 @@ msgstr "Type van activiteit uitzondering op record."
 
 #. module: point_of_sale
 #. odoo-python
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
-#, python-format
-msgid ""
-"This order is not yet synced to server. Make sure it is synced then try "
-"again."
-msgstr ""
-"Deze bestelling is nog niet gesynchroniseerd met de server. Zorg ervoor dat "
-"het is gesynchroniseerd en probeer het opnieuw."
-
-#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -7117,6 +7124,13 @@ msgid "Unsupported File Format"
 msgstr "Bestandsformaat niet ondersteund"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Unsynced order"
+msgstr "Niet-gesynchroniseerde bestelling"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "UoM"
 msgstr "Maateenheid"
@@ -7186,10 +7200,9 @@ msgstr "Uuid"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
-#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
-#, python-format, python-format
-msgid "Unsynced order"
-msgstr "Niet-gesynchroniseerde bestelling"
+#, python-format
+msgid "VAT:"
+msgstr "BTW:"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7386,6 +7399,15 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/stock_picking.py:0
+#, python-format
+msgid "You cannot archive '%s' as it is used by a POS configuration '%s'."
+msgstr ""
+"Je kan '%s' niet archiveren omdat het wordt gebruikt door een kassa-"
+"configuratie '%s'."
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -7453,6 +7475,17 @@ msgid ""
 msgstr ""
 "Je kunt geen contacten verwijderen die zich in actieve kassasessies "
 "bevinden. Sluit de sessie(s) %s eerst."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You don't have the access rights to get the point of sale closing control "
+"data."
+msgstr ""
+"Je hebt geen toegangsrechten om de gegevens van de sluitingscontrole van de "
+"kassa te verkrijgen."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7752,13 +7785,3 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "waren duplicaten van bestaande orders"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid ""
-"You don't have the access rights to get the point of sale closing control "
-"data."
-msgstr ""
-"Je hebt geen toegangsrechten om de gegevens van de sluitingscontrole van de "
-"kassa te verkrijgen."

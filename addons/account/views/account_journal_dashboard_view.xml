@@ -59,8 +59,7 @@
                     </t>
 
                     <t t-name="HasSequenceHoles">
-                        <field name="has_sequence_holes" invisible="1"/>
-                        <a t-if="record.has_sequence_holes.raw_value and journal_type == 'sale'" name="show_sequence_holes" type="object" class="text-warning">
+                        <a t-if="dashboard.has_sequence_holes" name="show_sequence_holes" type="object" class="text-warning">
                             <i class="fa fa-exclamation-triangle"/>
                             Gaps in the sequence
                         </a>
@@ -262,7 +261,7 @@
                         <div id="dashboard_bank_cash_right" class="col-12 col-sm-7 o_kanban_primary_right">
                             <div class="row" t-if="dashboard.nb_lines_bank_account_balance > 0">
                                 <div id="dashboard_bank_cash_balance" class="col overflow-hidden text-start">
-                                    <span title="Balance in General Ledger">Balance in GL</span>
+                                    <span>Running Balance</span>
                                 </div>
                                 <div class="col-auto text-end">
                                     <span><t t-esc="dashboard.account_balance"/></span>
@@ -296,8 +295,7 @@
                                 </button>
                             </t>
                             <t t-if="journal_type == 'purchase'">
-                                <field name="entries_count" invisible="1"/>
-                                <t t-if="record.entries_count.raw_value > 0">
+                                <t t-if="dashboard.entries_count > 0">
                                     <widget name="account_file_uploader" btnClass="btn btn-primary oe_kanban_action_button"/>
                                 </t>
                                 <t t-else="">

@@ -184,6 +184,7 @@
             'website/static/src/components/views/*',
             'website/static/src/services/website_service.js',
             'website/static/src/js/utils.js',
+            'website/static/src/xml/website.xml',
 
             # Don't include dark mode files in light mode
             ('remove', 'website/static/src/client_actions/*/*.dark.scss'),

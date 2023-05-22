@@ -43,10 +43,9 @@ wTourUtils.changeOption('ConditionalVisibility', 'we-toggler'),
         }
     },
 },
-wTourUtils.clickOnEdit(),
+...wTourUtils.clickOnEditAndWaitEditMode(),
 {
     content: 'Check if the element is visible as it should always be visible in edit view',
-    extra_trigger: 'body.editor_has_snippets',
     trigger: 'iframe #wrap .s_text_image',
     run: function (actions) {
         const style = window.getComputedStyle((this.$anchor[0]));

@@ -4366,8 +4366,8 @@ registry.sizing = SnippetOptionWidget.extend({
                 return;
             }
 
-            // If we are in grid mode, add a background grid and place the
-            // element we are resizing in front of it.
+            // If we are in grid mode, add a background grid and place it in
+            // front of the other elements.
             const rowEl = self.$target[0].parentNode;
             let backgroundGridEl;
             if (rowEl.classList.contains('o_grid_mode')) {
@@ -5254,12 +5254,15 @@ registry.layout_column = SnippetOptionWidget.extend({
             gridUtils._reloadLazyImages(columnEl);
 
             // Removing the grid properties.
-            columnEl.classList.remove('o_grid_item', 'o_grid_item_image', 'o_grid_item_image_contain');
+            const gridSizeClasses = columnEl.className.match(/(g-col-lg|g-height)-[0-9]+/g);
+            columnEl.classList.remove('o_grid_item', 'o_grid_item_image', 'o_grid_item_image_contain', ...gridSizeClasses);
             columnEl.style.removeProperty('grid-area');
             columnEl.style.removeProperty('z-index');
         }
         // Removing the grid properties.
         delete rowEl.dataset.rowCount;
+        rowEl.style.removeProperty('--grid-item-padding-x');
+        rowEl.style.removeProperty('--grid-item-padding-y');
     },
     /**
      * Removes the padding highlights that were added when changing the grid
@@ -5736,6 +5739,12 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             this._filesize = undefined;
             return;
         }
+        // Do not apply modifications if there is no original src, since it is
+        // needed for it.
+        if (!img.dataset.originalSrc) {
+            delete img.dataset.mimetype;
+            return;
+        }
         const dataURL = await applyModifications(img, {mimetype: this._getImageMimetype(img)});
         this._filesize = dataURL.split(',')[1].length / 4 * 3 / 1024;
 
@@ -6061,7 +6070,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         const [module, directory, fileName] = shapeName.split('/');
         let shape = this.shapeCache[fileName];
         if (!shape) {
-            const shapeURL = `/${module}/static/image_shapes/${directory}/${fileName}.svg`;
+            const shapeURL = `/${encodeURIComponent(module)}/static/image_shapes/${encodeURIComponent(directory)}/${encodeURIComponent(fileName)}.svg`;
             shape = await (await fetch(shapeURL)).text();
             this.shapeCache[fileName] = shape;
         }
@@ -6267,7 +6276,7 @@ registry.ImageTools = ImageHandlerOption.extend({
         uiFragment.querySelectorAll('we-select-page we-button[data-set-img-shape]').forEach(btn => {
             const image = document.createElement('img');
             const [moduleName, directory, shapeName] = btn.dataset.setImgShape.split('/');
-            image.src = `/${moduleName}/static/image_shapes/${directory}/${shapeName}.svg`;
+            image.src = `/${encodeURIComponent(moduleName)}/static/image_shapes/${encodeURIComponent(directory)}/${encodeURIComponent(shapeName)}.svg`;
             $(btn).prepend(image);
 
             if (btn.dataset.animated) {
@@ -6303,7 +6312,37 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @private
      */
     async _initializeImage() {
-        const img = this._getImg();
+        const _super = this._super.bind(this);
+        let img = this._getImg();
+
+        // Check first if the `src` and eventual `data-original-src` attributes
+        // are correct (i.e. the await are not rejected), as they may have been
+        // wrongly hardcoded in some templates.
+        let checkedAttribute = 'src';
+        try {
+            await loadImage(img.src);
+            if (img.dataset.originalSrc) {
+                checkedAttribute = 'originalSrc';
+                await loadImage(img.dataset.originalSrc);
+            }
+        } catch {
+            if (checkedAttribute === 'src') {
+                // If `src` does not exist, replace the image by a placeholder.
+                Object.keys(img.dataset).forEach(key => delete img.dataset[key]);
+                img.dataset.mimetype = 'image/png';
+                const newSrc = '/web/image/web.image_placeholder';
+                img = await loadImage(newSrc, img);
+                return this._loadImageInfo(newSrc);
+            } else {
+                // If `data-original-src` does not exist, remove the `data-
+                // original-*` attributes (they will be set correctly afterwards
+                // in `_loadImageInfo`).
+                delete img.dataset.originalId;
+                delete img.dataset.originalSrc;
+                delete img.dataset.originalMimetype;
+            }
+        }
+
         let match = img.src.match(/\/web_editor\/image_shape\/(\w+\.\w+)/);
         if (img.dataset.shape && match) {
             match = match[1];
@@ -6314,9 +6353,9 @@ registry.ImageTools = ImageHandlerOption.extend({
                 // attribute.
                 match = match.slice(0, -12);
             }
-            return this._loadImageInfo(`/web/image/${match}`);
+            return this._loadImageInfo(`/web/image/${encodeURIComponent(match)}`);
         }
-        return this._super(...arguments);
+        return _super(...arguments);
     },
     /**
      * @override
@@ -7072,9 +7111,9 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 return `${colorName}=${encodedCol}`;
             });
         if (flip.length) {
-            searchParams.push(`flip=${flip.sort().join('')}`);
+            searchParams.push(`flip=${encodeURIComponent(flip.sort().join(''))}`);
         }
-        return `/web_editor/shape/${shape}.svg?${searchParams.join('&')}`;
+        return `/web_editor/shape/${encodeURIComponent(shape)}.svg?${searchParams.join('&')}`;
     },
     /**
      * Retrieves current shape data from the target's dataset.

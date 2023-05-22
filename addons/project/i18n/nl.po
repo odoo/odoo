@@ -14,10 +14,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -647,7 +647,7 @@ msgstr "<span class=\"o_stat_text\">Subtaken</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"o_stat_text\">Tasks</span>"
-msgstr "<span class=\"o_stat_text\">Tasken</span>"
+msgstr "<span class=\"o_stat_text\">Taken</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -978,8 +978,8 @@ msgid ""
 "An analytic account is required in order to use timesheets."
 msgstr ""
 "Kostenplaats waaraan dit project, zijn taken en zijn urenstaten zijn gekoppeld.\n"
-"Volg de kosten en inkomsten van je project door deze kostenplaats in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
-"Deze kostenplaats kan, indien nodig, voor elke taak afzonderlijk worden gewijzigd.\n"
+"Volg de kosten en omzet van je project door deze kostenplaats in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, declaratie, enz.).\n"
+"Deze kostenplaats kan, als nodig, voor elke taak afzonderlijk worden gewijzigd.\n"
 "Om gebruik te kunnen maken van urenstaten is een kostenplaats vereist."
 
 #. module: project
@@ -990,7 +990,7 @@ msgid ""
 "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary."
 msgstr ""
 "Kostenplaats waaraan deze taak en de bijbehorende urenstaten zijn gekoppeld.\n"
-"Houd de kosten en inkomsten van je taak bij door de kostenplaats in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
+"Houd de kosten en omzet van je taak bij door de kostenplaats in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, declaratie, enz.).\n"
 "Standaard is de kostenplaats van het project ingesteld. Het kan echter indien nodig voor elke taak afzonderlijk worden gewijzigd."
 
 #. module: project
@@ -1519,7 +1519,7 @@ msgid ""
 "      designers to the workers who print the t-shirt. Organize priorities amongst orders using the"
 msgstr ""
 "Communiceer met klanten over de taak met behulp van de e-mailgateway. Voeg logo-ontwerpen toe aan de taak, zodat informatie uit\n"
-"      ontwerpers tot de arbeiders die het t-shirt bedrukken. Organiseer prioriteiten onder bestellingen met behulp van de"
+"      ontwerpers tot de mensen die het T-shirt bedrukken. Organiseer prioriteiten onder bestellingen met behulp van de"
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -2175,8 +2175,8 @@ msgstr ""
 "e-mail"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -2304,7 +2304,8 @@ msgstr "Fout! Je kunt geen recursieve hiërarchie van taken maken."
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Everyone can propose ideas, and the Editor marks the best ones as"
-msgstr "Iedereen kan ideeën voorstellen, en de Editor markeert de beste als"
+msgstr ""
+"Iedereen kan ideeën voorstellen en de marketing-editor markeert de beste als"
 
 #. module: project
 #. odoo-javascript
@@ -2527,8 +2528,8 @@ msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them"
 " in the chatter of the tasks. Use the"
 msgstr ""
-"Behandel je ideeënverzameling binnen Taken van je nieuwe project en bespreek"
-" ze in het gebabbel van de taken. Gebruik de"
+"Verzamel al je ideeën als taken van je nieuwe project en bespreek ze in het "
+"chatter van de taken. Gebruik de"
 
 #. module: project
 #. odoo-javascript
@@ -2584,13 +2585,6 @@ msgstr "Uren"
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "How’s this project going?"
 msgstr "Hoe gaat het met dit project?"
-
-#. module: project
-#. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "I take it"
-msgstr "Ik neem hem"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__id
@@ -2728,8 +2722,8 @@ msgstr ""
 "verwijderen."
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -3303,6 +3297,11 @@ msgid "Menu"
 msgstr "Menu"
 
 #. module: project
+#: model:ir.model,name:project.model_mail_message
+msgid "Message"
+msgstr "Bericht"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error
@@ -3319,8 +3318,8 @@ msgid "Messages"
 msgstr "Berichten"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
@@ -3487,8 +3486,8 @@ msgid "Neutral face"
 msgstr "Neutraal gezicht"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -4014,7 +4013,7 @@ msgid ""
 "Plan resource allocation across projects and estimate deadlines more "
 "accurately"
 msgstr ""
-"Plan de toewijzing van middelen over projecten en schat deadlines "
+"Plan de toewijzing van resources over projecten en schat deadlines "
 "nauwkeuriger in"
 
 #. module: project
@@ -4147,8 +4146,8 @@ msgid "Progress Percentage"
 msgstr "Voortgangspercentage"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/js/project_rating_graph_view.js:0
@@ -5076,8 +5075,8 @@ msgid "Sprint in Progress"
 msgstr "Sprint in behandeling"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
@@ -6265,7 +6264,7 @@ msgstr ""
 msgid ""
 "You cannot delete recurring tasks. Please disable the recurrence first."
 msgstr ""
-"Je kunt terugkerende taken niet verwijderen. Schakel eerst de herhaling uit."
+"Je kunt herhalende taken niet verwijderen. Schakel eerst de herhaling uit."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -6520,7 +6519,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "to indicate a problem or a need for discussion on a task."
-msgstr "om een probleem of behoefte aan discussie over een taak aan te geven."
+msgstr "om een probleem of behoefte aan overleg over een taak aan te geven."
 
 #. module: project
 #. odoo-javascript

@@ -791,7 +791,7 @@
                     .text(_t('Mark To Do'))
                     .removeAttr('title')
                     .removeAttr('aria-disabled')
-                    .attr('href', `/slides/slide/${slide.id}/set_uncompleted`);
+                    .attr('href', `/slides/slide/${encodeURIComponent(slide.id)}/set_uncompleted`);
             }
         },
 

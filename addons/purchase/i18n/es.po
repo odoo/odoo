@@ -8,15 +8,16 @@
 # Víctor Martínez <victor.martinez@tecnativa.com>, 2022
 # David Ramia, 2023
 # Camille Dantinne <cmd@odoo.com>, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Camille Dantinne <cmd@odoo.com>, 2023\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -72,8 +73,7 @@ msgstr "%s confirmó que la recolección será en %s."
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "%s modified receipt dates for the following products:"
-msgstr ""
-"%s se modificaron las fechas de recolección de los siguientes productos:"
+msgstr "%s modificó las fechas de recepción de los siguientes productos:"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_orders
@@ -406,10 +406,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
-"                              <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
-"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Cantidad</span>\n"
-"                              <span groups=\"account.group_show_line_subtotals_tax_included\">Precio total</span>"
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\">Importe</span>\n"
+"                                 <span groups=\"account.group_show_line_subtotals_tax_included\">Precio total</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
@@ -1313,7 +1313,7 @@ msgstr "Valores prohibidos en una línea de pedido de compra no computable"
 #: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "From %s document"
-msgstr ""
+msgstr "Desde el documento %s"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
@@ -3145,6 +3145,9 @@ msgid ""
 "Value: 'avg_days_to_purchase' should only be used to show an average. If you"
 " are seeing this message then it is being accessed incorrectly."
 msgstr ""
+"El valor 'avg_days_to_purchase' solo debe usar para mostrar una media. Si "
+"está viendo este mensaje, entonces es porque se está accediendo al mismo "
+"incorrectamente."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase

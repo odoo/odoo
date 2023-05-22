@@ -21,7 +21,7 @@ class ProjectCustomerPortal(CustomerPortal):
             values['project_count'] = request.env['project.project'].search_count([]) \
                 if request.env['project.project'].check_access_rights('read', raise_exception=False) else 0
         if 'task_count' in counters:
-            values['task_count'] = request.env['project.task'].search_count([]) \
+            values['task_count'] = request.env['project.task'].search_count([('project_id', '!=', False)]) \
                 if request.env['project.task'].check_access_rights('read', raise_exception=False) else 0
         return values
 
@@ -34,6 +34,10 @@ class ProjectCustomerPortal(CustomerPortal):
         # pager
         url = "/my/projects/%s" % project.id
         values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, url, domain, su=bool(access_token))
+        # adding the access_token to the pager's url args,
+        # so we are not prompted for loging when switching pages
+        # if access_token is None, the arg is not present in the URL
+        values['pager']['url_args']['access_token'] = access_token
         pager = portal_pager(**values['pager'])
 
         values.update(
@@ -455,7 +459,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
     def _get_my_tasks_searchbar_filters(self, project_domain=None, task_domain=None):
         searchbar_filters = {
-            'all': {'label': _('All'), 'domain': []},
+            'all': {'label': _('All'), 'domain': [('project_id', '!=', False)]},
         }
 
         # extends filterby criteria with project the customer has access to

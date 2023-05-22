@@ -148,9 +148,17 @@
                 </DatiBollo>
                 <ImportoTotaleDocumento t-esc="format_monetary(document_total, currency)"/>
             </DatiGeneraliDocumento>
-            <DatiOrdineAcquisto t-if="record.ref">
+            <DatiOrdineAcquisto t-if="record.ref and not record.reversed_entry_id">
                 <IdDocumento t-esc="format_alphanumeric(record.ref[:20])"/>
             </DatiOrdineAcquisto>
+            <DatiFattureCollegate t-if="record.reversed_entry_id">
+                <IdDocumento t-out="format_alphanumeric(record.reversed_entry_id.name[-20:])"/>
+                <Data t-out="format_date(record.reversed_entry_id.invoice_date)"/>
+            </DatiFattureCollegate>
+            <DatiFattureCollegate t-foreach="downpayment_moves" t-as="downpayment_move">
+                <IdDocumento t-out="format_alphanumeric(downpayment_move.name[-20:])"/>
+                <Data t-out="format_date(downpayment_move.invoice_date)"/>
+            </DatiFattureCollegate>
             <DatiDDT t-if="record.l10n_it_ddt_id">
                 <NumeroDDT t-esc="format_alphanumeric(record.l10n_it_ddt_id.name[-20:])"/>
                 <DataDDT t-esc="format_date(record.l10n_it_ddt_id.date)"/>

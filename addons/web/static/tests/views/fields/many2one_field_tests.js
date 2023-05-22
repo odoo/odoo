@@ -4582,4 +4582,52 @@ QUnit.module("Fields", (hooks) => {
             "aaa"
         );
     });
+
+    QUnit.test("many2one field with kanban_view_ref attribute", async function (assert) {
+        registry.category("services").add("ui", {
+            start(env) {
+                Object.defineProperty(env, "isSmall", {
+                    value: true,
+                });
+                return {
+                    activeElement: document.body,
+                    activateElement() {},
+                    deactivateElement() {},
+                    bus: new owl.EventBus(),
+                    size: 0,
+                    isSmall: true,
+                };
+            },
+        });
+        serverData.views = {
+            "partner,98,kanban": `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="display_name"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="trululu" kanban_view_ref="98"/></form>',
+            resId: 1,
+            mockRPC(route, { method, kwargs }) {
+                if (method === "get_views") {
+                    assert.step(JSON.stringify(kwargs.views));
+                }
+            },
+        });
+
+        await click(target, ".o_field_many2one input");
+        assert.verifySteps([
+            '[[100000001,"form"],[100000002,"search"]]',
+            '[[98,"kanban"],[false,"search"]]',
+        ]);
+    });
 });

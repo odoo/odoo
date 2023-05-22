@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import socket
 
 from datetime import datetime
@@ -1476,6 +1477,23 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(record.name, 'Spammy')
         self.assertEqual(record._name, 'mail.test.gateway')
 
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_message_process_file_encoding(self):
+        """ Incoming email with file encoding """
+        file_content = 'Hello World'
+        for encoding in ['', 'UTF-8', 'UTF-16LE', 'UTF-32BE']:
+            file_content_b64 = base64.b64encode(file_content.encode(encoding or 'utf-8')).decode()
+            record = self.format_and_process(test_mail_data.MAIL_FILE_ENCODING,
+                self.email_from, 'groups@test.com',
+                subject='Test Charset %s' % encoding or 'Unset',
+                charset='; charset="%s"' % encoding if encoding else '',
+                content=file_content_b64
+            )
+            attachment = record.message_ids.attachment_ids
+            self.assertEqual(file_content, attachment.raw.decode(encoding or 'utf-8'))
+            if encoding not in ['', 'UTF-8']:
+                self.assertNotEqual(file_content, attachment.raw.decode('utf-8'))
+
     # --------------------------------------------------
     # Emails loop detection
     # --------------------------------------------------
@@ -1573,6 +1591,26 @@ class TestMailgateway(TestMailCommon):
         records = self.env['mail.test.gateway'].search([('name', 'ilike', 'Whitelist test alias loop %')])
         self.assertEqual(len(records), 10, msg='Email whitelisted should not have the restriction')
 
+    # --------------------------------------------------
+    # Corner cases / Bugs during message process
+    # --------------------------------------------------
+
+    def test_message_process_file_encoding_ascii(self):
+        """ Incoming email containing an xml attachment with unknown characters (�) but an ASCII charset should not
+        raise an Exception. UTF-8 is used as a safe fallback.
+        """
+        record = self.format_and_process(test_mail_data.MAIL_MULTIPART_INVALID_ENCODING, self.email_from, 'groups@test.com')
+
+        self.assertEqual(record.message_main_attachment_id.name, 'bis3_with_error_encoding_address.xml')
+        # NB: the xml received by email contains b"Chauss\xef\xbf\xbd\xef\xbf\xbde" with "\xef\xbf\xbd" being the
+        # replacement character � in UTF-8.
+        # When calling `_message_parse_extract_payload`, `part.get_content()` will be called on the attachment part of
+        # the email, triggering the decoding of the base64 attachment, so b"Chauss\xef\xbf\xbd\xef\xbf\xbde" is
+        # first retrieved. Then, `get_text_content` in `email` tries to decode this using the charset of the email
+        # part, i.e: `content.decode('us-ascii', errors='replace')`. So the errors are replaced using the Unicode
+        # replacement marker and the string "Chauss������e" is used to create the attachment.
+        # This explains the multiple "�" in the attachment.
+        self.assertIn("Chauss������e de Bruxelles", record.message_main_attachment_id.raw.decode())
 
 class TestMailThreadCC(TestMailCommon):
 

@@ -128,7 +128,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         }
         for (const font of this.googleLocalFonts) {
             const attachmentId = font.split(/\s*:\s*/)[1];
-            const fontURL = `/web/content/${attachmentId}`;
+            const fontURL = `/web/content/${encodeURIComponent(attachmentId)}`;
             fontsToLoad.push(fontURL);
         }
         // TODO ideally, remove the <link> elements created once this widget
@@ -243,7 +243,9 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                         let isValidFamily = false;
 
                         try {
-                            const result = await fetch("https://fonts.googleapis.com/css?family=" + m[1]+':300,300i,400,400i,700,700i', {method: 'HEAD'});
+                            // Font family is an encoded query parameter:
+                            // "Open+Sans" needs to remain "Open+Sans".
+                            const result = await fetch("https://fonts.googleapis.com/css?family=" + m[1] + ':300,300i,400,400i,700,700i', {method: 'HEAD'});
                             // Google fonts server returns a 400 status code if family is not valid.
                             if (result.ok) {
                                 isValidFamily = true;
@@ -1646,7 +1648,7 @@ options.registry.company_data = options.Class.extend({
                     args: [session.uid, ['company_id']],
                 });
             }).then(function (res) {
-                proto.__link = '/web#action=base.action_res_company_form&view_type=form&id=' + (res && res[0] && res[0].company_id[0] || 1);
+                proto.__link = '/web#action=base.action_res_company_form&view_type=form&id=' + encodeURIComponent(res && res[0] && res[0].company_id[0] || 1);
             });
         }
         return Promise.all([this._super.apply(this, arguments), prom]);
@@ -2250,6 +2252,15 @@ options.registry.HeaderNavbar = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        // TODO Remove in master.
+        const signInOptionEl = this.el.querySelector('[data-customize-website-views="portal.user_sign_in"]');
+        signInOptionEl.dataset.noPreview = 'true';
+    },
+    /**
      * @private
      */
     async updateUI() {
@@ -2617,8 +2628,7 @@ options.registry.anchor = options.Class.extend({
         this.$button = this.$el.find('we-button');
         const clipboard = new ClipboardJS(this.$button[0], {text: () => this._getAnchorLink()});
         clipboard.on('success', () => {
-            const anchor = decodeURIComponent(this._getAnchorLink());
-            const message = sprintf(Markup(_t("Anchor copied to clipboard<br>Link: %s")), anchor);
+            const message = sprintf(Markup(_t("Anchor copied to clipboard<br>Link: %s")), this._getAnchorLink());
             this.displayNotification({
               type: 'success',
               message: message,
@@ -2795,13 +2805,20 @@ options.registry.CookiesBar = options.registry.SnippetPopup.extend({
         }));
 
         const $content = this.$target.find('.modal-content');
+        
+        // The order of selectors is significant since certain selectors may be 
+        // nested within others, and we want to preserve the nested ones.
+        // For instance, in the case of '.o_cookies_bar_text_policy' nested
+        // inside '.o_cookies_bar_text_secondary', the parent selector should be
+        // copied first, followed by the child selector to ensure that the
+        // content of the nested selector is not overwritten.
         const selectorsToKeep = [
             '.o_cookies_bar_text_button',
             '.o_cookies_bar_text_button_essential',
-            '.o_cookies_bar_text_policy',
             '.o_cookies_bar_text_title',
             '.o_cookies_bar_text_primary',
             '.o_cookies_bar_text_secondary',
+            '.o_cookies_bar_text_policy'
         ];
 
         if (this.$savedSelectors === undefined) {
@@ -3767,6 +3784,23 @@ options.registry.GridImage = options.Class.extend({
                 : 'cover';
         }
         return this._super(...arguments);
+    },
+});
+
+options.registry.layout_column.include({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * TODO adapt in master: used to hide the "Layout" options on "Images Wall"
+     * (which has its own options to handle the layout).
+     *
+     * @override
+     */
+    _computeVisibility() {
+        return !this.$target[0].closest('[data-snippet="s_images_wall"]');
     },
 });
 

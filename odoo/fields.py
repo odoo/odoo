@@ -1332,10 +1332,29 @@ class Field(MetaField('DummyField', (object,), {})):
         if not to_compute_ids:
             return
 
+        def apply_except_missing(func, records):
+            """ Apply `func` on `records`, with a fallback ignoring non-existent records. """
+            try:
+                func(records)
+            except MissingError:
+                existing = records.exists()
+                if existing:
+                    func(existing)
+                # mark the field as computed on missing records, otherwise they
+                # remain to compute forever, which may lead to an infinite loop
+                missing = records - existing
+                for f in records.pool.field_computed[self]:
+                    records.env.remove_to_compute(f, missing)
+
         if self.recursive:
-            for record in records:
-                if record.id in to_compute_ids:
-                    self.compute_value(record)
+            # recursive computed fields are computed record by record, in order
+            # to recursively handle dependencies inside records
+            def recursive_compute(records):
+                for record in records:
+                    if record.id in to_compute_ids:
+                        self.compute_value(record)
+
+            apply_except_missing(recursive_compute, records)
             return
 
         for record in records:
@@ -1343,8 +1362,8 @@ class Field(MetaField('DummyField', (object,), {})):
                 ids = expand_ids(record.id, to_compute_ids)
                 recs = record.browse(itertools.islice(ids, PREFETCH_MAX))
                 try:
-                    self.compute_value(recs)
-                except (AccessError, MissingError):
+                    apply_except_missing(self.compute_value, recs)
+                except AccessError:
                     self.compute_value(record)
 
     def compute_value(self, records):
@@ -1733,7 +1752,8 @@ class _String(Field):
         record.flush_recordset([self.name])
         cr = record.env.cr
         cr.execute(f'SELECT "{self.name}" FROM "{record._table}" WHERE id = %s', (record.id,))
-        return cr.fetchone()[0]
+        res = cr.fetchone()
+        return res[0] if res else None
 
     def write(self, records, value):
         if not self.translate or value is False or value is None:
@@ -3343,7 +3363,7 @@ class Properties(Field):
         convert_to_record / convert_to_read.
         """
         definition_records_map = {
-            record: record[self.definition_record][self.definition_record_field]
+            record: record[self.definition_record].sudo()[self.definition_record_field]
             for record in records
         }
 

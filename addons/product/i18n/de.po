@@ -16,7 +16,7 @@ msgstr ""
 "POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -336,7 +336,7 @@ msgstr "Menge hinzufügen"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
 msgid "Additional Product Tag"
-msgstr ""
+msgstr "Zusätzliches Produkt-Tag"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -352,12 +352,12 @@ msgstr "Erweiterte Preisregeln (Rabatte, Formeln)"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
 msgid "All Product Tag"
-msgstr ""
+msgstr "Alle Produkt-Tags"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_ids
 msgid "All Product Variants using this Tag"
-msgstr ""
+msgstr "Alle Produktvarianten, die dieses Tag verwenden"
 
 #. module: product
 #. odoo-python
@@ -633,7 +633,7 @@ msgstr "Spalten"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__combination_indices
 msgid "Combination Indices"
-msgstr ""
+msgstr "Kombinationshinweise"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -901,7 +901,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Define a new tag"
-msgstr ""
+msgstr "Ein neues Tag festlegen"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1710,6 +1710,8 @@ msgid ""
 "No product to print, if the product is archived please unarchive it before "
 "printing its label."
 msgstr ""
+"Kein zu druckendes Produkt, wenn das Produkt archiviert ist, deaktivieren "
+"Sie es bitte, bevor Sie sein Etikett drucken."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
@@ -2110,7 +2112,7 @@ msgstr "Produktetikett (PDF)"
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel
 #: model:ir.model,name:product.model_report_product_report_producttemplatelabel_dymo
 msgid "Product Label Report"
-msgstr ""
+msgstr "Produktetikettenbericht"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -2192,7 +2194,7 @@ msgstr "Produktvorlage Attributwert"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Template Tags"
-msgstr ""
+msgstr "Produktvorlagen-Tag"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
@@ -2300,7 +2302,7 @@ msgstr "Produkte: %(category)s"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__module_loyalty
 msgid "Promotions, Coupons, Gift Card & Loyalty Program"
-msgstr ""
+msgstr "Werbeaktionen, Gutscheine, Geschenkkarte & Treueprogramme"
 
 #. module: product
 #: model:product.pricelist,name:product.list0
@@ -2614,6 +2616,7 @@ msgstr "Stichwörter"
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Tags are used to search product for a given theme."
 msgstr ""
+"Tags werden verwendet, um Produkt zu einem bestimmten Thema zu suchen."
 
 #. module: product
 #. odoo-python
@@ -2952,7 +2955,7 @@ msgstr "Werteanzahl"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Value Price Extra"
-msgstr ""
+msgstr "Preisaufschlag für Wert"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -3277,7 +3280,7 @@ msgstr ""
 #: code:addons/product/models/product_category.py:0
 #, python-format
 msgid "You cannot delete the %s product category."
-msgstr ""
+msgstr "Sie können die Produktkategorie %s nicht löschen."
 
 #. module: product
 #. odoo-python
@@ -3296,10 +3299,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"Sie können den Wert %s nicht löschen, da er für die folgenden Produkte verwendet wird:\n"
-"%s"
 
 #. module: product
 #. odoo-python
@@ -3325,6 +3327,13 @@ msgstr ""
 "(%s)\n"
 ", sie werden hier verwendet:\n"
 "%s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
 
 #. module: product
 #. odoo-python

@@ -14,7 +14,7 @@ msgstr ""
 "POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Abe Manyo, 2023\n"
-"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -1585,7 +1585,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
-msgstr ""
+msgstr "Konferensi, workshop dan training akan diatur dalam 6 kamar:"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -1902,7 +1902,7 @@ msgstr "Organisasi acara"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_organizer_id
 msgid "Event Organizer"
-msgstr ""
+msgstr "Organizer Acara"
 
 #. module: event
 #: model:ir.model,name:event.model_event_registration
@@ -1935,6 +1935,18 @@ msgid ""
 "  - or the responsible of the event,\n"
 "  - or the last writer of the template.\n"
 msgstr ""
+"Penjadwal Acara untuk:\n"
+"  - Acara: %(event_name)s (%(event_id)s)\n"
+"  - Dijadwalkan: %(date)s\n"
+"  - Templat: %(template_name)s (%(template_id)s)\n"
+"\n"
+"Gagal karena error:\n"
+"  - %(error)s\n"
+"\n"
+"Anda menerima email ini karena Anda adalah:\n"
+"  - organizer acara ini,\n"
+"  - atau bertanggung jawab untuk acara,\n"
+"  - atau penulis terakhir templat.\n"
 
 #. module: event
 #: model:ir.model,name:event.model_event_stage
@@ -2003,6 +2015,9 @@ msgid ""
 "                usually based on the types of events you organize (e.g. \"Workshop\",\n"
 "                \"Roadshow\", \"Online Webinar\", etc)."
 msgstr ""
+"Templat Acara menggabungkan konfigurasi yang sering digunakan dan yang\n"
+"                biasanya berdasarkan tipe acara yang Anda buat (contohnya \"Workshop\",\n"
+"                \"Roadshow\", \"Online Webinar\", dsb)."
 
 #. module: event
 #: model:ir.model,name:event.model_event_event_ticket
@@ -2141,7 +2156,7 @@ msgstr ""
 #. module: event
 #: model:event.event,subtitle:event.event_3
 msgid "Experience live music, local food and beverages."
-msgstr ""
+msgstr "Rasakan music live, makanan dan minuman lokal."
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_registration_foldable_badge
@@ -2162,7 +2177,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__fold
 msgid "Folded in Kanban"
-msgstr "Sembunyikan di Kanban"
+msgstr "Dilipat di Kanban"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_follower_ids
@@ -3065,7 +3080,7 @@ msgstr "Siap untuk Tahap Berikutnya"
 #: code:addons/event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid "Ready to <b>organize events</b> in a few minutes? Let's get started!"
-msgstr ""
+msgstr "Siap untuk <b>mengatur acara</b> dalam hitungan menit? Ayo mulai!"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_stage__legend_blocked
@@ -3223,6 +3238,8 @@ msgid ""
 "Schedule and organize your events: handle registrations, send automated "
 "confirmation emails, sell tickets, etc."
 msgstr ""
+"Jadwal dan atur acara Anda: tangani pendaftaran, kirimkan email konfirmasi "
+"otomatis, jual tiket, dsb."
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__mail_state__scheduled
@@ -3741,6 +3758,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:event.event_tag_category_action_tree
 msgid "Use Event Tag Categories to classify and organize your event tags."
 msgstr ""
+"Gunakan Tag Kategori Acara untuk menggolongkan dan mengatur tag acara Anda."
 
 #. module: event
 #. odoo-javascript

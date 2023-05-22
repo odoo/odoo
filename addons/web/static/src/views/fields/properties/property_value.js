@@ -350,6 +350,7 @@ PropertyValue.props = {
     context: { type: Object },
     readonly: { type: Boolean, optional: true },
     canChangeDefinition: { type: Boolean, optional: true },
+    checkDefinitionWriteAccess: { type: Function, optional: true },
     selection: { type: Array, optional: true },
     tags: { type: Array, optional: true },
     onChange: { type: Function, optional: true },

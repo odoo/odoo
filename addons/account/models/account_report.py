@@ -589,6 +589,11 @@ class AccountReportExpression(models.Model):
                     line_code, total_name = term.split('.')
                     totals_by_code[line_code].add(total_name)
 
+            if expression.subformula:
+                if_other_expr_match = re.match(r'if_other_expr_(above|below)\((?P<line_code>.+)[.](?P<expr_label>.+),.+\)', expression.subformula)
+                if if_other_expr_match:
+                    totals_by_code[if_other_expr_match['line_code']].add(if_other_expr_match['expr_label'])
+
         return totals_by_code
 
     def _get_matching_tags(self, sign=None):

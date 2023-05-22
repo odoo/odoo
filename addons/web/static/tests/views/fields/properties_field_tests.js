@@ -10,7 +10,9 @@ import {
     patchWithCleanup,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
+import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { browser } from "@web/core/browser/browser";
 
 let serverData;
@@ -246,7 +248,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: access to parent", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             }
         }
@@ -343,7 +345,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: add a new property", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             }
         }
@@ -400,7 +402,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: selection", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             }
         }
@@ -538,7 +540,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: float and integer", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             }
         }
@@ -607,7 +609,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: move properties", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             }
         }
@@ -682,7 +684,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: tags", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             }
         }
@@ -802,7 +804,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: many2one", async function (assert) {
         async function mockRPC(route, { method, model, args, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             } else if (method === "get_available_models" && model === "ir.model") {
                 return [
@@ -888,7 +890,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: many2many", async function (assert) {
         async function mockRPC(route, { method, model, args, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             } else if (method === "get_available_models" && model === "ir.model") {
                 return [
@@ -984,6 +986,117 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    /**
+     * When the user creates a property field of type many2many, many2one, etc.
+     * and changes the co-model of the field, the model loaded by the "Search more..."
+     * modal should correspond to the selected model and should be updated dynamically.
+     */
+    QUnit.test("properties: many2one 'Search more...'", async function (assert) {
+        async function mockRPC(route, { method, model }) {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
+                return true;
+            } else if (method === "display_name_for" && model === "ir.model") {
+                return [
+                    { model: "partner", display_name: "Partner" },
+                    { model: "res.users", display_name: "User" },
+                ];
+            } else if (method === "get_available_models" && model === "ir.model") {
+                return [
+                    { model: "partner", display_name: "Partner" },
+                    { model: "res.users", display_name: "User" },
+                ];
+            }
+        }
+
+        // Patch the test data
+        serverData.models.partner.records = [
+            {
+                id: 1,
+                company_id: 37,
+                display_name: "Pierre",
+                properties: [
+                    {
+                        name: "many_2_one",
+                        type: "many2one",
+                        string: "My Many-2-one",
+                        comodel: "partner",
+                    },
+                ],
+            },
+        ];
+        serverData.views = {
+            "partner,false,list": `
+                <tree>
+                    <field name="id"/>
+                    <field name="display_name"/>
+                </tree>`,
+            "res.users,false,list": `
+                <tree>
+                    <field name="id"/>
+                    <field name="display_name"/>
+                </tree>`,
+            "res.users,false,search": `<search/>`,
+        };
+
+        // Patch the Many2XAutocomplete default search limit options
+        patchWithCleanup(Many2XAutocomplete.defaultProps, {
+            searchLimit: -1,
+        });
+
+        // Patch the SelectCreateDialog component
+        patchWithCleanup(SelectCreateDialog.prototype, {
+            /**
+             * @override
+             */
+            setup() {
+                this._super();
+                assert.step(this.props.resModel);
+            },
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="company_id" invisible="1"/>
+                            <field name="properties"/>
+                        </group>
+                    </sheet>
+                </form>`,
+            mockRPC,
+        });
+
+        // Opening the popover
+        await click(target, '[property-name="many_2_one"] .o_field_property_open_popover');
+        const popover = target.querySelector(".o_property_field_popover");
+
+        // Opening the "Search more..." modal
+        await click(popover, ".o_field_property_definition_value input");
+        await click(popover, ".o_m2o_dropdown_option_search_more");
+
+        // Checking the model loaded
+        assert.verifySteps(["partner"]);
+
+        // Closing the modal
+        await click(target.querySelector(".modal"), ".btn-close");
+
+        // Switching the co-model of the property field
+        await click(popover, ".o_field_property_definition_model input");
+        await click(popover, ".o_field_property_definition_model .ui-menu-item:nth-child(2)");
+
+        // Opening the "Search more..." modal
+        await click(popover, ".o_field_property_definition_value input");
+        await click(popover, ".o_m2o_dropdown_option_search_more");
+
+        // Checking the model loaded
+        assert.verifySteps(["res.users"]);
+    });
+
     QUnit.test("properties: date(time) property manipulations", async function (assert) {
         serverData.models.partner.records.push({
             id: 3,
@@ -1077,7 +1190,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: name reset", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             } else if (method === "get_available_models" && model === "ir.model") {
                 return [
@@ -1215,7 +1328,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: default value", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             }
         }
@@ -1280,7 +1393,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: form view and falsy domain, properties are not empty", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             }
         }
@@ -1331,7 +1444,7 @@ QUnit.module("Fields", (hooks) => {
      */
     QUnit.test("properties: form view and falsy domain, properties are empty", async function (assert) {
         async function mockRPC(route, { method, model, kwargs }) {
-            if (method === "check_access_rights") {
+            if (["check_access_rights", "check_access_rule"].includes(method)) {
                 return true;
             }
         }

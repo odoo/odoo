@@ -263,7 +263,7 @@
                                     <label for="legend_normal" string=" " class="o_status mt4"
                                         title="Task in progress. Click to block or set as done."
                                         aria-label="Task in progress. Click to block or set as done." role="img"/>
-                                    <div class="col-11 ps-0">
+                                    <div class="col-11 ps-2">
                                         <field name="legend_normal"/>
                                     </div>
                                 </div>
@@ -271,7 +271,7 @@
                                     <label for="legend_blocked" string=" " class="o_status o_status_red mt4"
                                         title="Task is blocked. Click to unblock or set as done."
                                         aria-label="Task is blocked. Click to unblock or set as done." role="img"/>
-                                    <div class="col-11 ps-0">
+                                    <div class="col-11 ps-2">
                                         <field name="legend_blocked"/>
                                     </div>
                                 </div>
@@ -279,7 +279,7 @@
                                     <label for="legend_done" string=" " class="o_status o_status_green mt4"
                                         title="This step is done. Click to block or set in progress."
                                         aria-label="This step is done. Click to block or set in progress." role="img"/>
-                                    <div class="col-11 ps-0">
+                                    <div class="col-11 ps-2">
                                         <field name="legend_done"/>
                                     </div>
                                 </div>
@@ -1207,7 +1207,7 @@
                                     <field name="is_closed" invisible="1"/>
                                     <field name="allow_milestones" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
-                                    <field name="priority" widget="priority" optional="show" nolabel="1"/>
+                                    <field name="priority" widget="priority" optional="show" nolabel="1" options="{'autosave': False}"/>
                                     <field name="id" optional="hide"/>
                                     <field name="child_text" invisible="1"/>
                                     <field name="allow_subtasks" invisible="1"/>
@@ -1229,7 +1229,7 @@
                                         decoration-warning="rating_last_text == 'ok'" decoration-success="rating_last_text == 'top'"
                                         attrs="{'invisible': [('rating_last_text', '=', 'none')]}"
                                         class="fw-bold" widget="badge" optional="hide"/>
-                                    <field name="kanban_state" widget="state_selection" optional="show" options="{'hide_label': True}" nolabel="1"/>
+                                    <field name="kanban_state" widget="state_selection" optional="show" options="{'hide_label': True, 'autosave': False}" nolabel="1"/>
                                     <field name="stage_id" optional="show" context="{'default_project_id': project_id}"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"/>
                                 </tree>
@@ -1242,7 +1242,7 @@
                                     <field name="parent_id" invisible="1" />
                                     <field name="display_project_id" invisible="1" />
                                     <field name="is_closed" invisible="1" />
-                                    <field name="priority" widget="priority" optional="show" nolabel="1"/>
+                                    <field name="priority" widget="priority" optional="show" nolabel="1" options="{'autosave': False}"/>
                                     <field name="child_text" invisible="1"/>
                                     <field name="allow_subtasks" invisible="1"/>
                                     <field name="name" widget="name_with_subtask_count"/>
@@ -1268,15 +1268,15 @@
                                     <field name="legend_normal" invisible="1"/>
                                     <field name="legend_done" invisible="1"/>
                                     <field name="legend_blocked" invisible="1"/>
-                                    <field name="kanban_state" widget="state_selection" optional="show" options="{'hide_label': True}" nolabel="1"/>
+                                    <field name="kanban_state" widget="state_selection" optional="show" options="{'hide_label': True, 'autosave': False}" nolabel="1"/>
                                     <field name="stage_id" optional="show" />
                                     <button class="oe_link float-end" string="View Task" name="action_open_task" type="object"/>
                                 </tree>
                             </field>
                         </page>
-                        <page name="recurrence" string="Recurrent"  groups="project.group_project_recurring_tasks">
+                        <page name="recurrence" string="Recurrent" groups="project.group_project_recurring_tasks">
                             <label for="recurring_task" />
-                            <field name="recurring_task" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('active', '=', False)]}"/>
+                            <field name="recurring_task" class="ms-5" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('active', '=', False)]}"/>
                             <group attrs="{'invisible': [('recurring_task', '=', False)]}">
                                 <group>
                                     <label for="repeat_interval" />

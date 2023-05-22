@@ -20,6 +20,7 @@ def _configure_journals(cr, registry):
         'property_stock_valuation_account_id',
     ]
     # Property Stock Accounts
+    categ_values = {category.id: False for category in env['product.category'].search([])}
     for company_id in company_ids:
         # Check if property exists for stock account journal exists
         field = env['ir.model.fields']._get("product.category", "property_stock_journal")
@@ -57,10 +58,4 @@ def _configure_journals(cr, registry):
                     account,
                     company_id,
                 )
-    for name in todo_list:
-        env['ir.property']._set_multi(
-            name,
-            'product.category',
-            {category.id: False for category in env['product.category'].search([])},
-            True
-        )
+            env['ir.property'].with_company(company_id.id)._set_multi(name, 'product.category', categ_values, True)

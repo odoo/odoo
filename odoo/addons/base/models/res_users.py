@@ -1443,6 +1443,8 @@ class GroupsView(models.Model):
                             dest_group.append(E.field(name=field_name, invisible="1", **attrs))
                         else:
                             dest_group.append(E.field(name=field_name, **attrs))
+                        # add duplicate invisible field so default values are saved on create
+                        xml0.append(E.field(name=field_name, **dict(attrs, invisible="1", groups='!base.group_no_one')))
                         group_count += 1
                     xml4.append(E.group(*left_group))
                     xml4.append(E.group(*right_group))
@@ -1641,7 +1643,8 @@ class UsersView(models.Model):
             missing_implied_groups = missing_implied_groups.filtered(
                 lambda g:
                 g.category_id not in (group.category_id | categories_to_ignore) and
-                g not in current_groups_by_category[g.category_id]
+                g not in current_groups_by_category[g.category_id] and
+                (self.user_has_groups('base.group_no_one') or g.category_id)
             )
             if missing_implied_groups:
                 # prepare missing group message, by categories

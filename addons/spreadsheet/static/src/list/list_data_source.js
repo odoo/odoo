@@ -161,6 +161,10 @@ export default class ListDataSource extends OdooViewsDataSource {
                 return record[fieldName] ? toNumber(this._formatDate(record[fieldName])) : "";
             case "datetime":
                 return record[fieldName] ? toNumber(this._formatDateTime(record[fieldName])) : "";
+            case "properties": {
+                const properties = record[fieldName] || [];
+                return properties.map((property) => property.string).join(", ");
+            }
             default:
                 return record[fieldName] || "";
         }
@@ -172,12 +176,18 @@ export default class ListDataSource extends OdooViewsDataSource {
 
     _formatDateTime(dateValue) {
         const date = deserializeDateTime(dateValue);
-        return formatDateTime(date);
+        return formatDateTime(date, {
+            format: "yyyy-MM-dd HH:mm:ss",
+            numberingSystem: "latn",
+        });
     }
 
     _formatDate(dateValue) {
         const date = deserializeDate(dateValue);
-        return formatDate(date);
+        return formatDate(date, {
+            format: "yyyy-MM-dd",
+            numberingSystem: "latn",
+        });
     }
 
     /**

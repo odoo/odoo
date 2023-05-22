@@ -3,17 +3,18 @@
 # 	* hr_work_entry_contract
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
+# Martin Trigaux, 2023
+# Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2023\n"
-"Language-Team: Spanish (Mexico) (https://www.transifex.com/odoo/teams/41243/es_MX/)\n"
+"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
+"Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -75,12 +76,12 @@ msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Pista\"/>"
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
 msgid ""
-"<span class=\"text-muted\">Warning: Work Entry Regeneration will erase all "
-"manual configuration (work entry type, deferred time off, ...).</span>"
+"<span class=\"text-muted\">Warning: The work entry regeneration will delete "
+"all manual changes on the selected period.</span>"
 msgstr ""
-"<span class=\"text-muted\">Advertencia: ejecutar la regeneración de entradas"
-" de trabajo borrará toda la configuración manual (tipos de entrada de "
-"trabajo, tiempo personal diferido, etc).</span>"
+"<span class=\"text-muted\">Advertencia: la regeneración de entradas de "
+"trabajo eliminará de forma automática todos los cambios manuales en el "
+"periodo seleccionado.</span>"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
@@ -88,6 +89,11 @@ msgid "Allow the work entry type to be linked with time off types."
 msgstr ""
 "Permitir que el tipo de entrada de trabajo se vincule con los tipos de "
 "tiempo personal."
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Cancel"
+msgstr "Cancelar"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_compensatory
@@ -244,14 +250,14 @@ msgid "Latest date"
 msgstr "Última fecha"
 
 #. module: hr_work_entry_contract
-#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
-msgid "Legal Leaves 2023"
-msgstr "Permisos legales 2023"
-
-#. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_long_leave
 msgid "Long Term Time Off"
 msgstr "Tiempo personal de largo plazo"
+
+#. module: hr_work_entry_contract
+#: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_legal_leave
+msgid "Paid Time Off"
+msgstr "Tiempo personal pagado"
 
 #. module: hr_work_entry_contract
 #: model:ir.model,name:hr_work_entry_contract.model_hr_work_entry_regeneration_wizard

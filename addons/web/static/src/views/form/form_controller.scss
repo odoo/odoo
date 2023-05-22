@@ -597,10 +597,6 @@
                         }
                     }
                 }
-                // Prevent table overflow when having long chars in x2many list
-                .o_field_widget:has(.o_field_x2many.o_field_x2many_list) {
-                    width: 100%;
-                }
             }
         }
 
@@ -724,9 +720,11 @@
         }
     }
 
-    .o_field_float_time.oe_inline {
-        &, input {
-            max-width: 7ch;
+    .o_field_float_time, .o_field_percentage {
+        &.oe_inline {
+            &, input {
+                max-width: 7ch;
+            }
         }
     }
 

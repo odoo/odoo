@@ -6,13 +6,14 @@ import {
     formatDateTime,
     luxonToMoment,
     luxonToMomentFormat,
+    momentToLuxon,
     parseDate,
     parseDateTime,
 } from "@web/core/l10n/dates";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { localization } from "@web/core/l10n/localization";
 import { useAutofocus } from "@web/core/utils/hooks";
-import { isIOS } from "@web/core/browser/feature_detection";
+import { isMobileOS } from "@web/core/browser/feature_detection";
 
 import {
     Component,
@@ -86,9 +87,9 @@ export class DatePicker extends Component {
             this.datePickerShown = true;
             this.inputRef.el.select();
         });
-        window.$(this.rootRef.el).on("hide.datetimepicker", () => {
+        window.$(this.rootRef.el).on("hide.datetimepicker", ({date}) => {
             this.datePickerShown = false;
-            this.onDateChange({ useStatic: true });
+            this.onDateChange({ eventDate: date, useStatic: true });
         });
         window.$(this.rootRef.el).on("error.datetimepicker", () => false);
     }
@@ -215,10 +216,13 @@ export class DatePicker extends Component {
      * @param {Object} [params={}]
      * @param {boolean} [params.useStatic]
      */
-    onDateChange({ useStatic } = {}) {
+    onDateChange({ eventDate, useStatic } = {}) {
         const { value } = this.inputRef.el;
-        const options = this.getOptions(useStatic);
-        const parsedDate = this.parseValue(value, options)[0];
+        let parsedDate = value && eventDate ? momentToLuxon(eventDate).setLocale(this.getOptions().locale): null;
+        if (!parsedDate) {
+            const options = this.getOptions(useStatic);
+            parsedDate = this.parseValue(value, options)[0];
+        }
         this.state.warning = parsedDate && parsedDate > DateTime.local();
         // Always update input.
         // if the date is invalid, it will reset to default (= given) date.
@@ -243,7 +247,7 @@ export class DatePicker extends Component {
      * @param {Event} ev
      */
     onWindowScroll(ev) {
-        if (!isIOS() && ev.target !== this.inputRef.el) {
+        if (!isMobileOS() && ev.target !== this.inputRef.el) {
             this.bootstrapDateTimePicker("hide");
         }
     }

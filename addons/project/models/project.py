@@ -18,7 +18,6 @@ from odoo.tools.misc import get_lang
 from .project_task_recurrence import DAYS, WEEKS
 from .project_update import STATUS_COLOR
 
-
 PROJECT_TASK_READABLE_FIELDS = {
     'id',
     'active',
@@ -405,7 +404,7 @@ class Project(models.Model):
         ('to_define', 'Set Status'),
     ], default='to_define', compute='_compute_last_update_status', store=True, readonly=False, required=True)
     last_update_color = fields.Integer(compute='_compute_last_update_color')
-    milestone_ids = fields.One2many('project.milestone', 'project_id', copy=True)
+    milestone_ids = fields.One2many('project.milestone', 'project_id')
     milestone_count = fields.Integer(compute='_compute_milestone_count', groups='project.group_project_milestone')
     milestone_count_reached = fields.Integer(compute='_compute_milestone_reached_count', groups='project.group_project_milestone')
     is_milestone_exceeded = fields.Boolean(compute="_compute_is_milestone_exceeded", search='_search_is_milestone_exceeded')
@@ -606,6 +605,10 @@ class Project(models.Model):
         project = super(Project, self).copy(default)
         for follower in self.message_follower_ids:
             project.message_subscribe(partner_ids=follower.partner_id.ids, subtype_ids=follower.subtype_ids.ids)
+        if self.allow_milestones:
+            if 'milestone_mapping' not in self.env.context:
+                self = self.with_context(milestone_mapping=dict())
+            project.milestone_ids = [milestone.copy().id for milestone in self.milestone_ids]
         if 'tasks' not in default:
             self.map_tasks(project.id)
 
@@ -904,11 +907,8 @@ class Project(models.Model):
             'icon': 'tasks',
             'text': _lt('Tasks'),
             'number': self.task_count,
-            'action_type': 'action',
-            'action': 'project.act_project_project_2_project_task_all',
-            'additional_context': json.dumps({
-                'active_id': self.id,
-            }),
+            'action_type': 'object',
+            'action': 'action_view_tasks',
             'show': True,
             'sequence': 3,
         }]
@@ -1512,7 +1512,7 @@ class Task(models.Model):
                 task.repeat_week,
                 task.repeat_month,
                 count=number_occurrences)
-            date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format
+            date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format or get_lang(self.env).date_format
             if recurrence_left == 0:
                 recurrence_title = _('There are no more occurrences.')
             else:
@@ -1745,6 +1745,9 @@ class Task(models.Model):
             self.write({'dependent_ids': [Command.unlink(t.id) for t in self.dependent_ids if t.id in new_tasks]})
             task_copy.write({'depend_on_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in self.depend_on_ids]})
             task_copy.write({'dependent_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in self.dependent_ids]})
+        if self.allow_milestones:
+            milestone_mapping = self.env.context.get('milestone_mapping', {})
+            task_copy.milestone_id = milestone_mapping.get(task_copy.milestone_id.id, task_copy.milestone_id.id)
         return task_copy
 
     @api.model
@@ -2128,7 +2131,7 @@ class Task(models.Model):
         # rating on stage
         if 'stage_id' in vals and vals.get('stage_id'):
             tasks.filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
-        for task in self:
+        for task in tasks:
             if task.display_project_id != task.project_id and not task.parent_id:
                 # We must make the display_project_id follow the project_id if no parent_id set
                 task.display_project_id = task.project_id
@@ -2367,10 +2370,6 @@ class Task(models.Model):
 
         project_user_group_id = self.env.ref('project.group_project_user').id
         new_group = ('group_project_user', lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups'], {})
-        if not self.user_ids and not self.is_closed:
-            take_action = self._notify_get_action_link('assign', **local_msg_vals)
-            project_actions = [{'url': take_action, 'title': _('I take it')}]
-            new_group[2]['actions'] = project_actions
         groups = [new_group] + groups
 
         if self.project_privacy_visibility == 'portal':

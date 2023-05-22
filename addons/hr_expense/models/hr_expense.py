@@ -383,6 +383,8 @@ class HrExpense(models.Model):
                 raise UserError(_('You cannot delete a posted or approved expense.'))
 
     def write(self, vals):
+        if 'sheet_id' in vals:
+            self.env['hr.expense.sheet'].browse(vals['sheet_id']).check_access_rule('write')
         if 'tax_ids' in vals or 'analytic_distribution' in vals or 'account_id' in vals:
             if any(not expense.is_editable for expense in self):
                 raise UserError(_('You are not authorized to edit this expense report.'))
@@ -577,7 +579,6 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             'expense_id': self.id,
             'partner_id': False if self.payment_mode == 'company_account' else self.employee_id.sudo().address_home_id.commercial_partner_id.id,
             'tax_ids': [Command.set(self.tax_ids.ids)],
-            'currency_id': self.company_currency_id.id,
         }
 
     def _get_expense_account_destination(self):
@@ -1071,7 +1072,9 @@ class HrExpenseSheet(models.Model):
         company_account_sheets = self - own_account_sheets
 
         moves = self.env['account.move'].create([sheet._prepare_bill_vals() for sheet in own_account_sheets])
-        payments = self.env['account.payment'].create([sheet._prepare_payment_vals() for sheet in company_account_sheets])
+        payments = self.env['account.payment']\
+            .with_context(default_currency_id=self.company_id.currency_id.id)\
+            .create([sheet._prepare_payment_vals() for sheet in company_account_sheets])
 
         moves |= payments.move_id
         moves.action_post()
@@ -1124,6 +1127,7 @@ class HrExpenseSheet(models.Model):
             'invoice_date': self.accounting_date or fields.Date.context_today(self), # expense payment behave as bills
             'ref': self.name,
             'expense_sheet_id': [Command.set(self.ids)],
+            'currency_id': self.company_id.currency_id.id,
             'line_ids':[
                 Command.create(expense._prepare_move_line_vals())
                 for expense in self.expense_line_ids
@@ -1228,7 +1232,11 @@ class HrExpenseSheet(models.Model):
         if not filtered_sheet:
             return notification
         for sheet in filtered_sheet:
-            sheet.write({'state': 'approve', 'user_id': sheet.user_id.id or self.env.user.id})
+            sheet.write({
+                'state': 'approve',
+                'user_id': sheet.user_id.id or self.env.user.id,
+                'approval_date': fields.Date.context_today(sheet),
+            })
         notification['params'].update({
             'title': _('The expense reports were successfully approved.'),
             'type': 'success',

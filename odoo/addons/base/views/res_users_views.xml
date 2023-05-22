@@ -184,8 +184,8 @@
                             <div attrs="{'invisible': [('id', '>', 0)]}" groups="base.group_no_one">
                                 <field name="groups_id" readonly="1" widget="many2many_tags" options="{'color_field': 'color'}" style="display: inline;"/> You will be able to define additional access rights by editing the newly created user under the Settings / Users menu.
                             </div>
-                            <field name="phone" widget="phone" options="{'enable_sms': false}"/>
-                            <field name="mobile" widget="phone" options="{'enable_sms': false}"/>
+                            <field name="phone" widget="phone"/>
+                            <field name="mobile" widget="phone"/>
                         </group>
                     </sheet>
                 </form>

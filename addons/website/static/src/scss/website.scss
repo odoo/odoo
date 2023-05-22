@@ -285,6 +285,10 @@ $-header-nav-link-height: $nav-link-height;
         @include o-apply-colors('copyright-custom', $background: $-footer-color);
         @include o-add-gradient('copyright-gradient');
     }
+    .s_popup {
+        // The colors of the footer must not impact the "all pages" popup.
+        @include o-apply-colors(1);
+    }
 }
 
 h2, h3, h4, h5, h6 {
@@ -886,6 +890,12 @@ header {
         max-height: 80vh;
         overflow-y: auto;
         overflow-x: hidden; // Needed because of container in container having 0px padding... TODO improve
+
+        @include media-breakpoint-down(lg) {
+            .nav-link, .dropdown-item {
+                white-space: normal;
+            }
+        }
     }
 
     &:not(.o_header_is_scrolled) {
@@ -1056,6 +1066,13 @@ header {
                     // menu when the off-canvas menu is open.
                     display: none;
                 }
+                #top_menu {
+                    // This is useful because otherwise, the 'order-first' class
+                    // of the 'template_header_vertical' template puts the menu
+                    // behind the "backdrop" and it's no longer possible to
+                    // click on the menu links (only on Firefox).
+                    order: unset !important;
+                }
             }
         }
         &.collapsing #top_menu {
@@ -1211,7 +1228,7 @@ header {
 .o_mega_menu {
     width: 100%;
     padding: 0;
-    margin-top: 0;
+    margin-top: 0 !important;
     border-radius: 0;
     background-clip: unset; // Remove the 1px gap introduced by BS4
     background-color: transparent; // In order to allow the mega menu to be transparent
@@ -1393,6 +1410,7 @@ header {
     height: 1em;
     margin-right: 0.2em;
     border-radius: $border-radius-pill;
+    object-fit: cover;
 }
 a.js_change_lang:hover, a.o_add_language:hover {
     text-decoration: none;
@@ -1591,6 +1609,21 @@ ul.o_checklist > li.o_checked::after {
 input[value*="data-oe-translation-initial-sha"] {
     @extend .o_text_content_invisible;
 }
+[data-oe-translation-initial-sha] {
+    > .o_translation_select {
+        border: $input-border-width solid $input-border-color;
+        @include border-radius($input-border-radius, 0);
+
+        // Hide translatable `<select/>`s since we use `.o_translation_select`
+        // elements to handle translations.
+        + select {
+            display: none !important;
+        }
+        > div:not(:last-child) {
+            border-bottom: inherit;
+        }
+    }
+}
 
 //------------------------------------------------------------------------------
 // Website Animate
@@ -1622,6 +1655,17 @@ input[value*="data-oe-translation-initial-sha"] {
 }
 .o_wanim_overflow_xy_hidden {
     overflow-x: hidden !important;
+
+    &.o_rtl {
+        // Fix for Chrome and Edge bug: resolves slow/stuck scrolling during
+        // left-overflowing animations on RTL web pages. Note: using overflow on
+        // the main element hides animated elements outside of it (e.g. "Framed"
+        // page layout). This may not be the ideal solution but could be the
+        // best workaround for now.
+        > main {
+            overflow-x: hidden;
+        }
+    }
     .o_footer_slideout {
         overflow-y: hidden !important;
     }

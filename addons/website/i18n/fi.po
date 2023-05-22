@@ -22,7 +22,6 @@
 # Mikko Närjänen <mikko.narjanen@web-veistamo.fi>, 2022
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2022
 # Miku Laitinen <miku.laitinen@gmail.com>, 2022
-# Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
 # Simo Suurla <simo@suurla.fi>, 2022
 # Janne Rättyä <janne.rattya@web-veistamo.fi>, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
@@ -32,18 +31,18 @@
 # Miika Nissi <miika.nissi@tawasta.fi>, 2022
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
 # Richard Mouthier <rmo@odoo.com>, 2022
-# Martin Trigaux, 2022
+# Svante Suominen <svante.suominen@web-veistamo.fi>, 2023
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
+# Martin Trigaux, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -1337,8 +1336,10 @@ msgstr "<span class=\"s_website_form_label_content\">Puhelinnumero</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
-msgid "<span class=\"s_website_form_label_content\">Question</span>"
-msgstr "<span class=\"s_website_form_label_content\">Kysymys</span>"
+msgid ""
+"<span class=\"s_website_form_label_content\">Question</span>\n"
+"                                                            <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.contactus
@@ -1514,6 +1515,11 @@ msgstr "Pääsytunnisteen pitää olla yksilöllinen."
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Accessories"
 msgstr "Tarvikkeet"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Accordion"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -1724,6 +1730,7 @@ msgstr "Jälkeen"
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Alert"
 msgstr "Varoitus"
@@ -2180,6 +2187,7 @@ msgstr "Taustan muoto"
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Badge"
 msgstr "Ansiomerkki"
@@ -2188,6 +2196,11 @@ msgstr "Ansiomerkki"
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Bags"
 msgstr "Laukut"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Banner"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -2251,6 +2264,11 @@ msgid "Big"
 msgstr "Suuri"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Big Boxes"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Big Icons Subtitles"
 msgstr "Suuret kuvakkeiden kuvatekstit"
@@ -2278,6 +2296,7 @@ msgstr "Lohko"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Blockquote"
 msgstr "Sitaatti"
@@ -2455,6 +2474,7 @@ msgstr "CTA"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Call to Action"
 msgstr "Kehotustoiminta"
 
@@ -2517,6 +2537,7 @@ msgstr "Google-karttaa ei voi ladata."
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Card"
 msgstr "Kortti"
@@ -2550,6 +2571,11 @@ msgstr "Kortit"
 #: model:website.configurator.feature,name:website.feature_module_career
 msgid "Career"
 msgstr "Työpaikat"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Carousel"
+msgstr "Karuselli"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
@@ -2627,6 +2653,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Chart"
 msgstr "Kaavio"
@@ -2887,6 +2914,7 @@ msgstr "Sarak"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Columns"
 msgstr "Sarakkeet"
 
@@ -2912,6 +2940,11 @@ msgstr "Yritykset"
 #, python-format
 msgid "Company"
 msgstr "Yritys"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Comparisons"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -3143,6 +3176,11 @@ msgid "Copyright"
 msgstr "Tekijänoikeus"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Countdown"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/000.js:0
 #, python-format
@@ -3181,6 +3219,7 @@ msgstr "Kurssi"
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #: model_terms:ir.ui.view,arch_db:website.record_cover
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Cover"
 msgstr "Kansi"
@@ -3988,8 +4027,18 @@ msgstr "Kesto"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Dynamic Carousel"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Dynamic Content"
 msgstr "Dynaaminen sisältö"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Dynamic Snippet"
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_homepage_url
@@ -4141,6 +4190,11 @@ msgstr "Sähköpostiosoite"
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Email support"
 msgstr "Sähköpostituki"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Embed Code"
+msgstr "Upota koodi"
 
 #. module: website
 #. odoo-python
@@ -4322,6 +4376,7 @@ msgid "F.A.Q."
 msgstr "UKK"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Facebook"
 msgstr "Facebook"
@@ -4391,6 +4446,11 @@ msgstr "Ominaisuuden Url"
 #, python-format
 msgid "Features"
 msgstr "Ominaisuudet"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Features Grid"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
@@ -4623,6 +4683,7 @@ msgstr "Alatunniste näkyvissä"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Form"
 msgstr "Lomake"
 
@@ -5218,8 +5279,8 @@ msgid "Home page of the current website"
 msgstr "Nykyisen verkkosivuston etusivu"
 
 #. module: website
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/website/models/website.py:0
 #: code:addons/website/static/src/client_actions/website_preview/website_preview.xml:0
 #: model:ir.model.fields,field_description:website.field_website_page__is_homepage
@@ -5417,9 +5478,19 @@ msgid "Image"
 msgstr "Kuva"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Image - Text"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Image Cover"
 msgstr "Kuvan kansi"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Image Gallery"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -5458,6 +5529,11 @@ msgstr "Kuvien väli"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Images Subtitles"
 msgstr "Kuvien aliotsikot"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Images Wall"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5892,6 +5968,11 @@ msgstr "Elementti 1"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 msgid "Item 2"
 msgstr "Elementti 2"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Items"
+msgstr "Viennit"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -6434,6 +6515,11 @@ msgid "Make sure your settings are properly configured:"
 msgstr "Varmista, että asetukset on määritetty oikein:"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Map"
+msgstr "Kartta"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
@@ -6469,6 +6555,7 @@ msgstr "Markkinapaikka"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Masonry"
 msgstr "Tiiliseinä"
 
@@ -6486,6 +6573,11 @@ msgstr "Mittauksen tunnus"
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
 msgid "Media"
 msgstr "Media"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Media List"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
@@ -6635,19 +6727,19 @@ msgid "Mobile"
 msgstr "Matkapuhelin"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Mobile Alignment"
+msgstr "Tasaus mobiililaitteille"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Mobile Preview"
 msgstr "Esikatselu mobiililaitteille"
 
 #. module: website
 #. odoo-javascript
-#: code:addons/website/static/src/js/editor/snippets.options.js:0
-#, python-format
-msgid "Mobile Alignment"
-msgstr ""
-
-#. module: website
-#. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Mobile menu"
@@ -7126,6 +7218,11 @@ msgid "Number of languages"
 msgstr "Kielten määrä"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Numbers"
+msgstr ""
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/client_actions/configurator/configurator.xml:0
 #, python-format
@@ -7558,6 +7655,7 @@ msgstr "Kappale."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Parallax"
 msgstr "Parallax-tehoste"
 
@@ -7623,6 +7721,11 @@ msgstr "Puhelimet"
 #, python-format
 msgid "Pick a Theme"
 msgstr "Valitse teema"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Picture"
+msgstr "Kuva"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -7696,6 +7799,7 @@ msgstr "Kassapääte"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Popup"
 msgstr "Ponnahdusikkuna"
 
@@ -7777,6 +7881,11 @@ msgid "Previous View Architecture"
 msgstr "Aiempi näkymäarkkitehtuuri"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Pricelist"
+msgstr "Hinnasto"
+
+#. module: website
 #: model:website.configurator.feature,name:website.feature_page_pricing
 #: model_terms:ir.ui.view,arch_db:website.pricing
 msgid "Pricing"
@@ -7851,6 +7960,7 @@ msgstr "Profiili"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Progress Bar"
 msgstr "Edistymispalkki"
@@ -7960,6 +8070,11 @@ msgid "Quality"
 msgstr "Laatu"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Quotes"
+msgstr "Sanottua"
+
+#. module: website
 #: model:ir.model,name:website.model_ir_qweb
 msgid "Qweb"
 msgstr "Qweb"
@@ -7982,6 +8097,7 @@ msgstr "Radiopainikkeet"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Rating"
 msgstr "Arvostelu"
@@ -8024,6 +8140,13 @@ msgid "Redirect to URL in a new tab"
 msgstr "Uudelleenohjaa URL-osoitteeseen uudessa välilehdessä"
 
 #. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/website_preview/website_preview.js:0
+#, python-format
+msgid "Redirecting..."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_rewrite_search
 msgid "Redirection Type"
 msgstr "Uudelleenohjauksen tyyppi"
@@ -8032,6 +8155,11 @@ msgstr "Uudelleenohjauksen tyyppi"
 #: model:ir.ui.menu,name:website.menu_website_rewrite
 msgid "Redirects"
 msgstr "Uudelleenohjaukset"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "References"
+msgstr "Viitteet"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
@@ -8402,6 +8530,7 @@ msgstr "Scroll down to next section"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #: model_terms:ir.ui.view,arch_db:website.view_view_qweb
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
 msgid "Search"
@@ -8565,6 +8694,7 @@ msgstr "Erotettu linkki"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Separator"
 msgstr "Erotin"
@@ -8652,6 +8782,7 @@ msgstr "Ravistus"
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_share
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Share"
 msgstr "Jaa"
@@ -8760,6 +8891,11 @@ msgstr "Näytä/piilota työpöydällä"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show/Hide on Mobile"
 msgstr "Näytä/piilota mobiililaitteessa"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Showcase"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8891,6 +9027,7 @@ msgstr "Älypuhelimet"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_social_media
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Social Media"
 msgstr "Sosiaalinen media"
 
@@ -9053,6 +9190,11 @@ msgstr ""
 " tapahtuu."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Steps"
+msgstr "Vaiheet"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
 msgid "Sticky"
 msgstr "Kiinteä"
@@ -9185,6 +9327,11 @@ msgid "TRANSLATE"
 msgstr "KÄÄNNÄ"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Table of Content"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
 msgid "Tablets"
@@ -9192,6 +9339,7 @@ msgstr "Tabletit"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Tabs"
 msgstr "Välilehdet"
 
@@ -9209,6 +9357,11 @@ msgstr "Tada"
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__target
 msgid "Target"
 msgstr "Tavoite"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Team"
+msgstr "Tiimi"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -9265,8 +9418,14 @@ msgstr "Testaa robots.txt-tiedostosi Google Search Console -palvelun avulla"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Text"
 msgstr "Teksti"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Text - Image"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9282,6 +9441,7 @@ msgstr "Tekstin väri"
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_text_highlight
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Text Highlight"
 msgstr "Tekstin korostus"
@@ -9718,6 +9878,7 @@ msgstr "Aika loppui! Voit nyt käydä"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Timeline"
 msgstr "Aikajana"
 
@@ -9760,6 +9921,7 @@ msgstr "Vinkki: Käytä rojaltivapaita kuvia"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Title"
 msgstr "Otsikko"
@@ -9894,6 +10056,13 @@ msgstr "Siirtymä"
 #, python-format
 msgid "Translate Attribute"
 msgstr "Käännä ominaisuus"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/translator/translator.js:0
+#, python-format
+msgid "Translate Selection Option"
+msgstr ""
 
 #. module: website
 #. odoo-javascript
@@ -11014,6 +11183,16 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_timeline_options
 msgid "Year"
 msgstr "Vuosi"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/client_actions/website_preview/website_preview.js:0
+#, python-format
+msgid ""
+"You are about to be redirected to the domain configured for your website ( "
+"%s ). This is necessary to edit or view your website from the Website app. "
+"You might need to log back in."
+msgstr ""
 
 #. module: website
 #. odoo-javascript

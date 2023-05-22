@@ -41,6 +41,24 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 })],
         })
 
+    def assert_tax_totals(self, document, expected_values):
+        main_keys_to_ignore = {
+            'formatted_amount_total', 'formatted_amount_untaxed', 'display_tax_base', 'subtotals_order'}
+        group_keys_to_ignore = {'group_key', 'tax_group_id', 'tax_group_name',
+                                'formatted_tax_group_amount', 'formatted_tax_group_base_amount'}
+        subtotals_keys_to_ignore = {'formatted_amount'}
+        to_compare = document.copy()
+        for key in main_keys_to_ignore:
+            del to_compare[key]
+        for key in group_keys_to_ignore:
+            for groups in to_compare['groups_by_subtotal'].values():
+                for group in groups:
+                    del group[key]
+        for key in subtotals_keys_to_ignore:
+            for subtotal in to_compare['subtotals']:
+                del subtotal[key]
+        self.assertEqual(to_compare, expected_values)
+
     # ========================== Tests Payment Terms ==========================
     def test_early_payment_end_date(self):
         inv_1200_10_percents_discount_no_tax = self.env['account.move'].create({
@@ -86,7 +104,8 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             {'display_type': 'epd',             'balance': -75.0},
             {'display_type': 'epd',             'balance': 75.0},
             {'display_type': 'product',         'balance': -1000.0},
-            {'display_type': 'tax',             'balance': -138.75},
+            {'display_type': 'tax',             'balance': -150},
+            {'display_type': 'tax',             'balance': 11.25},
             {'display_type': 'tax',             'balance': -0.05},
             {'display_type': 'payment_term',    'balance': 569.4},
             {'display_type': 'payment_term',    'balance': 569.4},
@@ -449,22 +468,6 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         ])
 
     def test_mixed_epd_with_draft_invoice(self):
-        def assert_tax_totals(document, expected_values):
-            main_keys_to_ignore = {'formatted_amount_total', 'formatted_amount_untaxed', 'display_tax_base', 'subtotals_order'}
-            group_keys_to_ignore = {'group_key', 'tax_group_id', 'tax_group_name', 'formatted_tax_group_amount', 'formatted_tax_group_base_amount'}
-            subtotals_keys_to_ignore = {'formatted_amount'}
-            to_compare = document
-            for key in main_keys_to_ignore:
-                del to_compare[key]
-            for key in group_keys_to_ignore:
-                for groups in to_compare['groups_by_subtotal'].values():
-                    for group in groups:
-                        del group[key]
-            for key in subtotals_keys_to_ignore:
-                for subtotal in to_compare['subtotals']:
-                    del subtotal[key]
-            self.assertEqual(to_compare, expected_values)
-
         self.env.company.early_pay_discount_computation = 'mixed'
         tax = self.env['account.tax'].create({
             'name': 'WonderTax',
@@ -480,7 +483,7 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                 line_form.quantity = 1
                 line_form.tax_ids.clear()
                 line_form.tax_ids.add(tax)
-            assert_tax_totals(invoice._values['tax_totals'], {
+            self.assert_tax_totals(invoice._values['tax_totals'], {
                 'amount_untaxed': 1000,
                 'amount_total': 1090,
                 'groups_by_subtotal': {
@@ -569,3 +572,132 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             {'amount_currency': 4.0,    'tax_ids': [],                  'tax_tag_ids': tax_tags[5].ids, 'tax_tag_invert': True},
             {'amount_currency': 1000.0, 'tax_ids': [],                  'tax_tag_ids': [],              'tax_tag_invert': False},
         ])
+
+    def test_mixed_early_discount_with_tag_on_tax_base_line(self):
+        """
+        Ensure that early payment discount line grouping works properly when
+        using a tax that adds tax tags to its base line.
+        """
+        self.env.company.early_pay_discount_computation = 'mixed'
+
+        tax_tag = self.env['account.account.tag'].create({
+            'name': 'tax_tag',
+            'applicability': 'taxes',
+            'country_id': self.env.company.account_fiscal_country_id.id,
+        })
+
+        tax_21 = self.env['account.tax'].create({
+            'name': "tax_21",
+            'amount': 21,
+            'invoice_repartition_line_ids': [
+                Command.create({
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                    'tag_ids': [Command.set(tax_tag.ids)],
+                }),
+                Command.create({
+                    'factor_percent': 100, 'repartition_type': 'tax',
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                Command.create({
+                    'factor_percent': 100, 'repartition_type': 'base',
+                }),
+                Command.create({
+                    'factor_percent': 100, 'repartition_type': 'tax',
+                }),
+            ],
+        })
+        bill = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+        })
+        bill.write({
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line1',
+                    'price_unit': 1000.0,
+                    'tax_ids': [Command.set(tax_21.ids)],
+                }),
+            ],
+        })
+        bill.write({
+            'invoice_line_ids': [Command.create({
+                'name': 'line2',
+                'price_unit': 1000.0,
+                'tax_ids': [Command.set(tax_21.ids)],
+            })],
+        })
+        epd_lines = bill.line_ids.filtered(lambda line: line.display_type == 'epd')
+        self.assertRecordValues(epd_lines.sorted('balance'), [
+            {'balance': -200.0},
+            {'balance': 200.0},
+        ])
+    def test_mixed_epd_with_tax_included(self):
+        self.company_data['company'].early_pay_discount_computation = 'mixed'
+
+        early_pay_2_percents_10_days = self.env['account.payment.term'].create({
+            'name': '2% discount if paid within 10 days',
+            'company_id': self.company_data['company'].id,
+            'line_ids': [Command.create({
+                'value': 'balance',
+                'days': 0,
+                'discount_percentage': 2,
+                'discount_days': 10
+            })]
+        })
+        tax = self.env['account.tax'].create({
+            'name': 'Tax 21% included',
+            'amount': 21,
+            'price_include': True,
+        })
+
+        with Form(self.env['account.move'].with_context(default_move_type='out_invoice')) as invoice:
+            invoice.partner_id = self.partner_a
+            invoice.invoice_date = fields.Date.from_string('2022-02-21')
+            invoice.invoice_payment_term_id = early_pay_2_percents_10_days
+            with invoice.invoice_line_ids.new() as line_form:
+                line_form.product_id = self.product_a
+                line_form.price_unit = 121
+                line_form.quantity = 1
+                line_form.tax_ids.clear()
+                line_form.tax_ids.add(tax)
+            self.assert_tax_totals(invoice._values['tax_totals'], {
+                'amount_untaxed': 100,
+                'amount_total': 120.58,
+                'groups_by_subtotal': {
+                    'Untaxed Amount': [
+                        {
+                            'tax_group_amount': 20.58,
+                            'tax_group_base_amount': 98,
+                        },
+                    ],
+                },
+                'subtotals': [
+                    {
+                        'name': "Untaxed Amount",
+                        'amount': 100,
+                    }
+                ],
+            })
+
+    def test_mixed_epd_with_tax_no_duplication(self):
+        self.env.company.early_pay_discount_computation = 'mixed'
+        inv = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'invoice_line_ids': [
+                Command.create({'name': 'line', 'price_unit': 100.0, 'tax_ids': [Command.set(self.product_a.taxes_id.ids)]}),
+            ],
+            'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+        })
+        self.assertEqual(len(inv.line_ids), 6) # 1 prod, 1 tax, 2 epd, 1 epd tax discount, 1 payment terms
+        inv.write({'invoice_payment_term_id': self.pay_terms_a.id})
+        self.assertEqual(len(inv.line_ids), 3) # 1 prod, 1 tax, 1 payment terms
+        inv.write({'invoice_payment_term_id': self.early_pay_10_percents_10_days.id})
+        self.assertEqual(len(inv.line_ids), 6)

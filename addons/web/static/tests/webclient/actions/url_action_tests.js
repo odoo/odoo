@@ -39,10 +39,7 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.test("execute an 'ir.actions.act_url' action with onClose option", async (assert) => {
         setupWebClientRegistries();
         patchWithCleanup(browser, {
-            open: (url, target, argument) => {
-                assert.step("browser open");
-                assert.strictEqual(argument, "noreferrer");
-            },
+            open: () => assert.step("browser open"),
         });
         const env = await makeTestEnv({ serverData });
         const options = {

@@ -12,7 +12,6 @@ var core = require('web.core');
 const dom = require('web.dom');
 var mixins = require('web.mixins');
 var publicWidget = require('web.public.widget');
-var utils = require('web.utils');
 const wUtils = require('website.utils');
 
 var qweb = core.qweb;
@@ -987,9 +986,6 @@ registry.anchorSlide = publicWidget.Widget.extend({
      * @private
      */
     _onAnimateClick: function (ev) {
-        if (this.$target[0].pathname !== window.location.pathname) {
-            return;
-        }
         var hash = this.$target[0].hash;
         if (hash === '#top' || hash === '#bottom') {
             // If the anchor targets #top or #bottom, directly call the
@@ -1004,9 +1000,11 @@ registry.anchorSlide = publicWidget.Widget.extend({
             });
             return;
         }
-        if (!utils.isValidAnchor(hash)) {
+        if (!hash.length) {
             return;
         }
+        // Escape special characters to make the jQuery selector to work.
+        hash = '#' + $.escapeSelector(hash.substring(1));
         var $anchor = $(hash);
         const scrollValue = $anchor.attr('data-anchor');
         if (!$anchor.length || !scrollValue) {
@@ -1402,9 +1400,9 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
             // Cookies bar might be opened and considered as a modal but it is
             // not really one (eg 'discrete' layout), and should not be used as
             // scrollTop value.
-            const scrollTop = document.body.classList.contains('modal-open') ?
-                this.$target.find('.modal:visible').scrollTop() :
-                this.$scrollingElement.scrollTop();
+            const $closestModal = $el.closest(".modal:visible");
+            const scrollTop = $closestModal[0] ?
+                $closestModal.scrollTop() : this.$scrollingElement.scrollTop();
             const elTop = this._getElementOffsetTop(el) - scrollTop;
             let visible;
             const footerEl = el.closest('.o_footer_slideout');

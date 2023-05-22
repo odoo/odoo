@@ -117,7 +117,7 @@
                     <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': ['|', ('is_planned', '=', False), ('state', '=', 'cancel')]}" data-hotkey="x"/>
                     <button name="action_assign" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}" string="Check availability" type="object" data-hotkey="q"/>
                     <button name="do_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}" data-hotkey="w"/>
-                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('cancel', 'draft'))]}" data-hotkey="z"/>
+                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('cancel', 'draft'))]}" data-hotkey="y"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,progress,done"/>
                     <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('show_lock', '=', False), ('is_locked', '=', False)]}" string="Unlock" groups="mrp.group_mrp_manager" type="object" help="Unlock the manufacturing order to adjust what has been consumed or produced." data-hotkey="l"/>
                     <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('show_lock', '=', False), ('is_locked', '=', True)]}" string="Lock" groups="mrp.group_mrp_manager" type="object" help="Lock the manufacturing order to prevent changes to what has been consumed or produced." data-hotkey="l"/>
@@ -232,7 +232,7 @@
                             <label for="date_planned_start"/>
                             <div class="o_row">
                                 <field name="date_planned_start"
-                                    attrs="{'readonly': [('state', 'in', ['close', 'cancel'])]}"
+                                    attrs="{'readonly': [('state', 'in', ['done', 'cancel'])]}"
                                     decoration-warning="state not in ('done', 'cancel') and date_planned_start &lt; now"
                                     decoration-danger="state not in ('done', 'cancel') and date_planned_start &lt; current_date"
                                     decoration-bf="state not in ('done', 'cancel') and (date_planned_start &lt; current_date or date_planned_start &lt; now)"/>
