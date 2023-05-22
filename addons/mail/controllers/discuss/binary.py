@@ -118,6 +118,6 @@ class BinaryController(http.Controller):
             raise NotFound()
         return (
             request.env["ir.binary"]
-            ._get_image_stream_from(attachment_sudo, width=width, height=height)
+            ._get_image_stream_from(attachment_sudo, width=int(width), height=int(height))
             .get_response(as_attachment=kwargs.get("download"))
         )

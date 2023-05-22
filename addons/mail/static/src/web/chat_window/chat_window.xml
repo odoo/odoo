@@ -24,7 +24,7 @@
                 <ThreadIcon t-if="thread" thread="thread" className="'ms-3 me-1 my-0'"/>
             </t>
             <ImStatus t-if="thread and thread.type === 'chat' and thread.correspondent" className="'me-1'" persona="thread.correspondent"/>
-            <span class="o-mail-ChatWindow-name text-truncate" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="{
+            <span class="o-mail-ChatWindow-name text-truncate fw-bold" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="{
                     'ms-3 me-1 my-0': !thread,
                 }"
             />

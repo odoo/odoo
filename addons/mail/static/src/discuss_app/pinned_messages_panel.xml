@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="mail.PinnedMessagesPanel" owl="1">
-        <div class="o-mail-PinnedMessagesPanel overflow-auto d-flex flex-column flex-shrink-0 bg-100 position-relative border-start" t-att-class="{
+        <div class="o-mail-PinnedMessagesPanel overflow-auto d-flex flex-column flex-shrink-0 bg-view position-relative border-start" t-att-class="{
             'flex-grow-1': env.inChatWindow,
         }">
-            <p class="o-mail-PinnedMessagesPanel-title position-sticky top-0 py-3 mb-0 fw-bolder text-center text-uppercase text-700 bg-100">
+            <p class="o-mail-PinnedMessagesPanel-title position-sticky top-0 py-3 mb-0 fw-bolder text-center text-uppercase text-700">
                 Pinned messages
             </p>
             <div class="d-flex flex-column" t-att-class="{ 'justify-content-center flex-grow-1': props.thread.pinnedMessages.length === 0 }" t-ref="message-list">

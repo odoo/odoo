@@ -199,13 +199,6 @@ patch(ThreadService.prototype, "mail/web", {
         }
         delete this.store.followers[follower.id];
     },
-
-    async updateAvatar(threadId, data) {
-        return this.rpc("/discuss/channel/update_avatar", {
-            channel_id: threadId,
-            data,
-        });
-    },
 });
 
 patch(threadService, "mail/web", {

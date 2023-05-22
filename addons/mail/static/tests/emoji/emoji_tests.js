@@ -49,22 +49,22 @@ QUnit.test("Basic keyboard navigation", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    assert.containsOnce($, ".o-mail-EmojiPicker-content .o-mail-Emoji[data-index=0].bg-300"); // bg-300 means active
+    assert.containsOnce($, ".o-mail-EmojiPicker-content .o-mail-Emoji[data-index=0].bg-200"); // bg-200 means active
     await afterNextRender(() => triggerHotkey("ArrowRight"));
-    assert.containsOnce($, ".o-mail-EmojiPicker-content .o-mail-Emoji[data-index=1].bg-300");
+    assert.containsOnce($, ".o-mail-EmojiPicker-content .o-mail-Emoji[data-index=1].bg-200");
     await afterNextRender(() => triggerHotkey("ArrowDown"));
     assert.containsOnce(
         $,
-        `.o-mail-EmojiPicker-content .o-mail-Emoji[data-index=${EMOJI_PER_ROW + 1}].bg-300`
+        `.o-mail-EmojiPicker-content .o-mail-Emoji[data-index=${EMOJI_PER_ROW + 1}].bg-200`
     );
     await afterNextRender(() => triggerHotkey("ArrowLeft"));
     assert.containsOnce(
         $,
-        `.o-mail-EmojiPicker-content .o-mail-Emoji[data-index=${EMOJI_PER_ROW}].bg-300`
+        `.o-mail-EmojiPicker-content .o-mail-Emoji[data-index=${EMOJI_PER_ROW}].bg-200`
     );
     await afterNextRender(() => triggerHotkey("ArrowUp"));
-    assert.containsOnce($, ".o-mail-EmojiPicker-content .o-mail-Emoji[data-index=0].bg-300");
-    const codepoints = $(".o-mail-EmojiPicker-content .o-mail-Emoji[data-index=0].bg-300").data(
+    assert.containsOnce($, ".o-mail-EmojiPicker-content .o-mail-Emoji[data-index=0].bg-200");
+    const codepoints = $(".o-mail-EmojiPicker-content .o-mail-Emoji[data-index=0].bg-200").data(
         "codepoints"
     );
     await afterNextRender(() => triggerHotkey("Enter"));
@@ -148,7 +148,7 @@ QUnit.test("first category should be highlight by default", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    assert.containsOnce($, ".o-mail-EmojiPicker-header .o-mail-Emoji:eq(0).bg-300");
+    assert.containsOnce($, ".o-mail-EmojiPicker-header .o-mail-Emoji:eq(0).bg-200");
 });
 
 QUnit.test(

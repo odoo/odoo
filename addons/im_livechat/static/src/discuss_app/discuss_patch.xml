@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates>
-    <t t-name="im_livechat.Discuss" t-inherit="mail.Discuss" t-inherit-mode="extension" owl="1">
-        <xpath expr="//*[contains(@class, 'o-mail-Discuss-threadAvatar')]" position="attributes">
-            <attribute name="t-if">thread and thread.model === 'discuss.channel' and thread.type !== 'livechat'</attribute>
-        </xpath>
-    </t>
-</templates>
