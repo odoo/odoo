@@ -1,13 +1,43 @@
 /* @odoo-module */
 
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
-
-import { popoverService } from "@web/core/popover/popover_service";
+import { click, patchWithCleanup, triggerHotkey, triggerEvent } from "@web/../tests/helpers/utils";
 import { registry } from "@web/core/registry";
-import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { session } from "@web/session";
-import { click, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { nextTick } from "web.test_utils";
+import { popoverService } from "@web/core/popover/popover_service";
+import { tooltipService } from "@web/core/tooltip/tooltip_service";
+import { browser } from "@web/core/browser/browser";
+import { EventBus } from "@odoo/owl";
+
+const fakeMultiTab = {
+    start() {
+        const bus = new EventBus();
+        return {
+            bus,
+            get currentTabId() {
+                return null;
+            },
+            isOnMainTab() {
+                return true;
+            },
+            getSharedValue(key, defaultValue) {
+                return "";
+            },
+            setSharedValue(key, value) {},
+            removeSharedValue(key) {},
+        };
+    },
+};
+
+const fakeImStatusService = {
+    start() {
+        return {
+            registerToImStatus() {},
+            unregisterFromImStatus() {},
+        };
+    },
+};
 
 QUnit.module("M2XAvatarUser");
 
@@ -311,6 +341,61 @@ QUnit.test(
         );
     }
 );
+
+QUnit.test("avatar card preview", async (assert) => {
+    registry.category("services").add("multi_tab", fakeMultiTab, { force: true });
+    registry.category("services").add("im_status", fakeImStatusService, { force: true });
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({
+        name: "Mario",
+        email: "Mario@odoo.test",
+        im_status: "online",
+    });
+    const mockRPC = (route, args) => {
+        if (route === "/web/dataset/call_kw/res.users/read") {
+            assert.deepEqual(args.args[1], ["name", "email", "im_status"]);
+            assert.step("user read");
+        }
+    };
+    const avatarUserId = pyEnv["m2x.avatar.user"].create({ user_id: userId });
+    const views = {
+        "m2x.avatar.user,false,kanban": `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="user_id" widget="many2one_avatar_user"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+    };
+    const { openView } = await start({ serverData: { views }, mockRPC });
+    await openView({
+        res_model: "m2x.avatar.user",
+        res_id: avatarUserId,
+        views: [[false, "kanban"]],
+    });
+
+    patchWithCleanup(browser, {
+        setTimeout: (callback, delay) => {
+            assert.step(`setTimeout of ${delay}ms`);
+            callback();
+        },
+    });
+    // Open card
+    await triggerEvent(document, ".o_m2o_avatar > img", "mouseover");
+    assert.verifySteps(["setTimeout of 350ms", "user read"]);
+    assert.containsOnce(document.body, ".o_avatar_card");
+    assert.strictEqual(
+        document.querySelector(".o_card_user_infos").textContent,
+        "Mario Mario@odoo.test"
+    );
+    // Close card
+    await triggerEvent(document, ".o_control_panel", "mouseover");
+    assert.verifySteps(["setTimeout of 400ms"]);
+    assert.containsNone(document.body, ".o_avatar_card");
+});
 
 QUnit.test(
     "avatar_user widget displays the appropriate user image in form view",
