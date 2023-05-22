@@ -33,7 +33,7 @@ QUnit.test("basic rendering", async (assert) => {
     assert.containsOnce($, ".o-mail-ChatWindow-header .o-mail-ChatWindow-command");
     assert.containsOnce(
         $,
-        ".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Close chat window']"
+        ".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Close Chat Window']"
     );
     assert.containsOnce($, "span:contains('To :')");
     assert.containsOnce($, ".o-mail-ChannelSelector");
@@ -53,7 +53,7 @@ QUnit.test("close", async (assert) => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button:contains(New Message)");
-    await click(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Close chat window']");
+    await click(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Close Chat Window']");
     assert.containsNone($, ".o-mail-ChatWindow");
 });
 

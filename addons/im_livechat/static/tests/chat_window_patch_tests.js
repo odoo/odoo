@@ -45,7 +45,7 @@ QUnit.test("closing a chat window with no message from admin side unpins it", as
     const { env } = await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await click(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Close chat window']");
+    await click(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Close Chat Window']");
     const channels = await env.services.orm.silent.call("discuss.channel", "channel_info", [
         channelId,
     ]);

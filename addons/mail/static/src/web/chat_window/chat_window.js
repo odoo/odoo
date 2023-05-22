@@ -14,6 +14,8 @@ import { ImStatus } from "@mail/discuss_app/im_status";
 import { isEventHandled } from "@mail/utils/misc";
 import { ChannelSelector } from "@mail/discuss_app/channel_selector";
 import { _t } from "@web/core/l10n/translation";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 export const MODES = {
     NONE: "",
@@ -28,6 +30,8 @@ export const MODES = {
 export class ChatWindow extends Component {
     static components = {
         Call,
+        Dropdown,
+        DropdownItem,
         Thread,
         ChannelSelector,
         Composer,
@@ -49,6 +53,7 @@ export class ChatWindow extends Component {
         this.messageHighlight = useMessageHighlight();
         this.messageToReplyTo = useMessageToReplyTo();
         this.state = useState({
+            moreActionsExpanded: false,
             /**
              * activeMode:
              *   "member-list": channel member list is displayed
@@ -58,7 +63,7 @@ export class ChatWindow extends Component {
              */
             activeMode: MODES.NONE,
         });
-        this.action = useService("action");
+        this.actionService = useService("action");
         this.ui = useState(useService("ui"));
         this.contentRef = useRef("content");
         useChildSubEnv({
@@ -107,7 +112,7 @@ export class ChatWindow extends Component {
     }
 
     toggleFold() {
-        if (this.ui.isSmall) {
+        if (this.ui.isSmall || this.state.moreActionsExpanded) {
             return;
         }
         if (this.props.chatWindow.hidden) {
@@ -120,7 +125,7 @@ export class ChatWindow extends Component {
 
     expand() {
         if (this.thread.type === "chatter") {
-            this.action.doAction({
+            this.actionService.doAction({
                 type: "ir.actions.act_window",
                 res_id: this.thread.id,
                 res_model: this.thread.model,
@@ -130,7 +135,7 @@ export class ChatWindow extends Component {
             return;
         }
         this.threadService.setDiscussThread(this.thread);
-        this.action.doAction(
+        this.actionService.doAction(
             {
                 type: "ir.actions.client",
                 tag: "mail.action_discuss",
@@ -143,5 +148,55 @@ export class ChatWindow extends Component {
     close(options) {
         this.chatWindowService.close(this.props.chatWindow, options);
         this.chatWindowService.notifyState(this.props.chatWindow);
+    }
+
+    get orderedActions() {
+        return this.actions.sort((act1, act2) => act1.sequence - act2.sequence);
+    }
+
+    get actions() {
+        const acts = [];
+        if (
+            this.thread?.allowCalls &&
+            this.thread !== this.rtc.state.channel &&
+            !this.props.chatWindow.hidden
+        ) {
+            acts.push({
+                id: "call",
+                name: _t("Start a Call"),
+                icon: "fa fa-fw fa-phone",
+                onSelect: () => this.rtc.toggleCall(this.props.chatWindow.thread),
+                sequence: 10,
+            });
+        }
+        if (this.thread && this.props.chatWindow.isOpen) {
+            acts.push({
+                id: "expand",
+                name:
+                    this.thread.model === "discuss.channel"
+                        ? _t("Open in Discuss")
+                        : _t("Open Form View"),
+                icon: "fa fa-fw fa-expand",
+                onSelect: () => this.expand(),
+                sequence: 50,
+            });
+        }
+        acts.push({
+            id: "close",
+            name: _t("Close Chat Window"),
+            icon: "fa fa-fw fa-close",
+            onSelect: () => this.close(),
+            sequence: 100,
+        });
+        return acts;
+    }
+
+    get moreMenuText() {
+        return _t("More actions");
+    }
+
+    async onMoreActionsStateChanged(state) {
+        await new Promise(setTimeout); // wait for bubbling header
+        this.state.moreActionsExpanded = state.open;
     }
 }

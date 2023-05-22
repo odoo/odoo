@@ -123,14 +123,14 @@ QUnit.test(
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem:contains(channel-D)");
         await waitUntil(
-            ".o-mail-ChatWindow-header:contains(channel-D) .o-mail-ChatWindow-command[title='Close chat window']"
+            ".o-mail-ChatWindow-header:contains(channel-D) .o-mail-ChatWindow-command[title='Close Chat Window']"
         );
         assert.containsN($, ".o-mail-ChatWindow", 2);
         assert.containsOnce($, ".o-mail-ChatWindow:eq(0):contains(channel-A)");
         assert.containsOnce($, ".o-mail-ChatWindow:eq(1):contains(channel-D)");
         assert.containsOnce($, ".o-mail-ChatWindowHiddenToggler:contains(2)");
         await click(
-            ".o-mail-ChatWindow-header:contains(channel-D) .o-mail-ChatWindow-command[title='Close chat window']"
+            ".o-mail-ChatWindow-header:contains(channel-D) .o-mail-ChatWindow-command[title='Close Chat Window']"
         );
         assert.containsOnce($, ".o-mail-ChatWindow:eq(0):contains(channel-A)");
         assert.containsOnce($, ".o-mail-ChatWindow:eq(1):contains(channel-C)");
