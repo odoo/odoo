@@ -1089,6 +1089,18 @@ export class ThreadService {
         }
         return DEFAULT_AVATAR;
     }
+
+    /**
+     * @param {number} threadId
+     * @param {string} data base64 representation of the binary
+     * @returns 
+     */
+    async notifyThreadAvatarToServer(threadId, data) {
+        return this.rpc("/discuss/channel/update_avatar", {
+            channel_id: threadId,
+            data,
+        });
+    }
 }
 
 export const threadService = {

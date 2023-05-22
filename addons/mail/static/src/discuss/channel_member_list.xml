@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.ChannelMemberList" owl="1">
-        <div class="o-discuss-ChannelMemberList d-flex flex-column overflow-auto bg-light" t-att-class="props.className">
+        <div class="o-discuss-ChannelMemberList d-flex flex-column overflow-auto bg-view" t-att-class="props.className">
             <t t-if="props.thread.onlineMembers.length > 0">
                 <h6 class="m-2">
                     Online -
@@ -26,11 +26,11 @@
     </t>
 
     <t t-name="discuss.channel_member" owl="1">
-        <div class="o-discuss-ChannelMember d-flex align-items-center mx-2 p-2 bg-light" t-att-class="{ 'cursor-pointer': canOpenChatWith(member) }" t-on-click.stop="() => this.openChatAvatar(member)">
+        <div class="o-discuss-ChannelMember d-flex align-items-center p-2 bg-view" t-att-class="{ 'cursor-pointer': canOpenChatWith(member) }" t-on-click.stop="() => this.openChatAvatar(member)">
             <div class="o-bg-inherit o-discuss-ChannelMember-avatar position-relative d-flex ms-4 flex-shrink-0">
                 <img class="w-100 h-100 rounded-circle o_object_fit_cover o_redirect"
                      t-att-src="threadService.avatarUrl(member.persona, props.thread)"/>
-                <ImStatus persona="member.persona"/>
+                <ImStatus persona="member.persona" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
             </div>
             <span class="ms-2 text-truncate" t-esc="member.persona.name"/>
             <span class="ms-auto">

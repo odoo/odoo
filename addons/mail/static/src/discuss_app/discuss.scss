@@ -2,10 +2,6 @@
     .o-mail-Thread {
         flex-grow: 1;
     }
-
-    .o-mail-Discuss-header button:not(.btn-secondary):hover {
-        background-color: $gray-400;
-    }
 }
 
 .o-mail-Discuss-selfAvatar {
@@ -17,15 +13,19 @@
     max-width: 75%;
 }
 
-.o-mail-Discuss-header button {
-    &:not(.o-isActive):hover {
-        background-color: $gray-300;
-    }
-    &.o-isActive {
-        background-color: $gray-300;
-    }
-    &.o-isActive:hover {
-        background-color: $gray-400;
+.o-mail-Discuss-header {
+    height: $o-mail-Discuss-headerHeight;
+
+    button {
+        &:not(.o-isActive):hover {
+            background-color: $gray-200;
+        }
+        &.o-isActive {
+            background-color: $gray-300;
+        }
+        &.o-isActive:hover {
+            background-color: $gray-300;
+        }
     }
 }
 

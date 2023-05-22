@@ -1,3 +1,7 @@
+.o-mail-Thread-date hr {
+    opacity: $hr-opacity / 2;
+}
+
 .o-mail-Thread-newMessage {
     transition: opacity 0.5s;
 
@@ -24,4 +28,8 @@
 .o-mail-Thread-jumpPresent {
     background-color: mix(map-get($theme-colors, 'info'), $o-webclient-background-color, 5%);
     z-index: $o-mail-NavigableList-zIndex - 2;
+}
+
+.o-mail-NotificationMessage p {
+    margin-bottom: 0;
 }
