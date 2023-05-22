@@ -20,15 +20,15 @@
                 <t t-foreach="props.order === 'asc' ? props.thread.nonEmptyMessages : [...props.thread.nonEmptyMessages].reverse()" t-as="msg" t-key="msg.id">
                     <t t-if="msg.dateDay !== currentDay">
                         <div class="o-mail-Thread-date d-flex align-items-center fw-bolder pt-4">
-                            <hr class="flex-grow-1"/>
-                            <span class="px-3"><t t-esc="msg.dateDay"/></span>
-                            <hr class="flex-grow-1"/>
+                            <hr class="ms-3 flex-grow-1"/>
+                            <span class="px-3 text-muted"><t t-esc="msg.dateDay"/></span>
+                            <hr class="me-3 flex-grow-1"/>
                         </div>
                         <t t-set="currentDay" t-value="msg.dateDay"/>
                     </t>
                     <Transition t-if="props.thread.isChannel"  visible="props.thread.seen_message_id === (prevMsg?.id ?? false)" name="'o-fade'" t-slot-scope="transition">
                         <div class="o-mail-Thread-newMessage d-flex align-items-center fw-bolder" t-att-class="{ 'opacity-0': transition.className.includes('o-fade-leave') }">
-                            <hr class="flex-grow-1 border opacity-50"/><span class="px-3">New messages</span>
+                            <hr class="ms-3 flex-grow-1 border opacity-50"/><span class="px-3 me-3">New messages</span>
                         </div>
                     </Transition>
                     <t t-if="msg.isNotification">
@@ -114,7 +114,7 @@
 </t>
 
 <t t-name="mail.NotificationMessage" owl="1">
-    <div class="mx-auto text-500 small px-3 text-center" t-on-click="onClickNotification" t-att-class="{
+    <div class="o-mail-NotificationMessage mx-auto text-500 small px-3 text-center" t-on-click="onClickNotification" t-att-class="{
         'o-mail-Thread-noPinnedPanel': env.inChatWindow and !ui.isSmall,
         'mt-2': prevMsg and !prevMsg.isNotification,
     }">

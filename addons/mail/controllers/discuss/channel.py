@@ -38,7 +38,7 @@ class ChannelController(http.Controller):
             except UserError:
                 raise NotFound()
 
-    @http.route("/discuss/channel/update_avatar", methods=["POST"], type="json", auth="public")
+    @http.route("/discuss/channel/update_avatar", methods=["POST"], type="json")
     def discuss_channel_avatar_update(self, channel_id, data):
         channel = request.env["discuss.channel"].browse(int(channel_id)).exists()
         if not channel or not data:

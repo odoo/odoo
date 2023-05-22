@@ -8,7 +8,7 @@
                 Start a meeting
             </button>
         </div>
-        <hr class="w-100"/>
+        <hr class="w-100 opacity-0"/>
         <div class="d-flex flex-column flex-grow-0">
             <t t-call="mail.Mailbox">
                 <t t-set="mailbox" t-value="store.discuss.inbox"/>
@@ -20,7 +20,7 @@
                 <t t-set="mailbox" t-value="store.discuss.history"/>
             </t>
         </div>
-        <hr class="w-100"/>
+        <hr class="w-100 opacity-0"/>
         <input t-if="hasQuickSearch" class="form-control mx-4 mb-2 rounded-3 w-auto" placeholder="Quick search..." t-model="state.quickSearchVal"/>
         <t t-call="mail.DiscussCategory">
             <t t-set="category" t-value="store.discuss.channels"/>
@@ -35,11 +35,11 @@
     <button class="o-mail-DiscussSidebar-item btn d-flex align-items-center py-1 px-0 border-0 rounded-0 fw-normal text-reset"
         t-att-class="{
             'o-bg-inherit': mailbox.localId !== store.discuss.threadLocalId,
-            'o-active bg-300': mailbox.localId === store.discuss.threadLocalId,
+            'o-active bg-200': mailbox.localId === store.discuss.threadLocalId,
         }"
         t-on-click="(ev) => this.openThread(ev, mailbox)"
     >
-        <ThreadIcon className="'ms-4 me-2'" thread="mailbox"/>
+        <ThreadIcon className="'ms-4 me-2 o-bg-inherit'" thread="mailbox"/>
         <div class="me-2 text-truncate">
             <t t-esc="mailbox.name"/>
         </div>
@@ -54,7 +54,7 @@
     <t t-set="hover_class" t-value="'btn p-0 text-start text-700 opacity-100-hover opacity-75'"/>
     <div class="o-mail-DiscussCategory d-flex align-items-center my-1" t-att-class="category.extraClass">
         <div t-attf-class="d-flex align-items-baseline mx-1 {{ hover_class }}" t-on-click="() => this.toggleCategory(category)">
-            <i class="o-mail-DiscussCategory-icon small" t-att-class="category.isOpen ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
+            <i class="o-mail-DiscussCategory-icon small me-1" t-att-class="category.isOpen ? 'oi oi-chevron-down' : 'oi oi-chevron-right'"/>
             <span class="btn-sm p-0 text-uppercase fw-bolder"><t t-esc="category.name"/></span>
         </div>
         <div class="flex-grow-1"/>
@@ -85,14 +85,14 @@
     <button class="o-mail-DiscussCategoryItem o-mail-DiscussSidebar-item btn btn-secondary d-flex align-items-center w-100 px-0 py-2 border-0 rounded-0 text-reset"
         t-att-class="{
             'o-bg-inherit': threadLocalId !== store.discuss.threadLocalId,
-            'o-active bg-300': threadLocalId === store.discuss.threadLocalId,
+            'o-active bg-200': threadLocalId === store.discuss.threadLocalId,
             'o-unread': thread.message_unread_counter > 0,
         }"
         t-on-click="(ev) => this.openThread(ev, thread)"
     >
         <div class="o-bg-inherit position-relative d-flex ms-4 flex-shrink-0" style="width:30px;height:30px">
             <img class="w-100 h-100 rounded" t-att-src="thread.imgUrl" alt="Thread Image"/>
-            <ThreadIcon t-if="thread.type === 'chat' or (thread.type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussCategoryItem-threadIcon position-absolute bottom-0 end-0 p-1 me-n1 mb-n1 d-flex align-items-center justify-content-center rounded-circle bg-100'"/>
+            <ThreadIcon t-if="thread.type === 'chat' or (thread.type === 'channel' and !thread.authorizedGroupFullName)" thread="thread" size="'small'" className="'o-mail-DiscussCategoryItem-threadIcon position-absolute bottom-0 end-0 p-1 me-n1 mb-n1 d-flex align-items-center justify-content-center rounded-circle o-bg-inherit'"/>
         </div>
         <span class="ms-3 me-2 text-truncate" t-att-class="{ 'o-item-unread fw-bolder': thread.message_unread_counter > 0 }">
             <t t-esc="thread.displayName"/>
@@ -102,7 +102,7 @@
             <i t-if="thread.type === 'channel'" t-attf-class="fa fa-cog {{ hover_class }}" title="Channel settings" t-on-click.stop="() => this.openSettings(thread)" role="img"/>
             <div t-if="threadService.canLeave(thread)" class="fa fa-times ms-1" t-attf-class="{{ hover_class }}"
                 t-on-click.stop="() => this.leaveChannel(thread)" title="Leave this channel" role="img"/>
-            <div t-if="threadService.canUnpin(thread)" t-attf-class="fa fa-times ms-1" t-on-click.stop="() => threadService.unpin(thread)" title="Unpin Conversation" role="img"/>
+            <div t-if="threadService.canUnpin(thread)" t-attf-class="fa fa-times ms-1 {{ hover_class }}" t-on-click.stop="() => threadService.unpin(thread)" title="Unpin Conversation" role="img"/>
         </div>
         <div t-if="Object.keys(thread.rtcSessions).length > 0" class="fa fa-volume-up ms-1 me-3" t-att-class="{ 'text-danger': rtc.state.channel?.id === thread.id }"/>
         <div t-if="counter > 0" t-attf-class="o-mail-DiscussCategoryItem-counter badge rounded-pill text-bg-primary ms-1 me-3">
