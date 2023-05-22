@@ -1289,47 +1289,52 @@ class MassMailing(models.Model):
         """
         root = lxml.html.fromstring(body_html)
         did_modify_body = False
-        nodes_to_convert = []
-        for node in root.iter('img'):
-            match = image_re.match(node.attrib.get('src', ''))
-            if match:
-                mime = match.group(1)  # unused
-                image = match.group(2).encode()  # base64 image as bytes
-                nodes_to_convert.append(node)
-        urls = self._create_attachments_from_inline_images(nodes_to_convert)
-        for (node, url) in zip(nodes_to_convert, urls):
-            did_modify_body = True
-            node.attrib['src'] = url
 
-        comments_to_convert = []
+        conversion_info = []  # list of tuples (image: base64 image, node: lxml node, old_url: string or None))
         with requests.Session() as session:
-            for comment in [c for c in root.iter(lxml.etree.Comment) if mso_re.match(c.text)]:
-                for match in re.findall(r'<v:image[^>]*>', comment.text):
-                    url = re.search(r'src=\s*\"([^\"]+)\"', match)[1]
-                    # Make sure we have an absolute URL by adding a scheme and host if needed.
-                    absolute_url = url if '//' in url else f"{self.get_base_url()}{url if url.startswith('/') else f'/{url}'}"
-                    target_width_match = re.search(r'width:\s*([0-9\.]+)\s*px', match)
-                    target_height_match = re.search(r'height:\s*([0-9\.]+)\s*px', match)
-                    if target_width_match and target_height_match:
-                        target_width = float(target_width_match[1])
-                        target_height = float(target_height_match[1])
-                        try:
-                            image = self._get_image_by_url(absolute_url, session)
-                        except (ImportValidationError, UnidentifiedImageError):
-                            # Url invalid or doesn't resolve to a valid image.
-                            # Note: We choose to ignore errors so as not to
-                            # break the entire process just for one image's
-                            # responsive cropping behavior).
-                            pass
-                        else:
-                            image_processor = tools.ImageProcess(image)
-                            image = image_processor.crop_resize(target_width, target_height, 0, 0)
-                            comments_to_convert.append((comment, url, base64.b64encode(image.source)))
-        images_in_comments = [image for (_, _, image) in comments_to_convert]
-        urls = self._create_attachments_from_inline_images(images_in_comments)
-        for ((comment, old_url, image), url) in zip(comments_to_convert, urls):
+            for node in [n for n in root.iter('img', lxml.etree.Comment) if n.tag == 'img' or mso_re.match(n.text)]:
+                if node.tag == 'img':
+                    # Convert base64 images in img tags to attachments.
+                    match = image_re.match(node.attrib.get('src', ''))
+                    if match:
+                        image = match.group(2).encode()  # base64 image as bytes
+                        conversion_info.append((image, node, None))
+                else:
+                    # Convert base64 images in mso comments to attachments.
+                    for match in re.findall(r'<img[^>]*src="(data:image/[A-Za-z]+;base64,[^"]*)"', node.text):
+                        image = re.sub(r'data:image/[A-Za-z]+;base64,', '', match).encode()  # base64 image as bytes
+                        conversion_info.append((image, node, match))
+                    # Crop VML images.
+                    for match in re.findall(r'<v:image[^>]*>', node.text):
+                        url = re.search(r'src=\s*\"([^\"]+)\"', match)[1]
+                        # Make sure we have an absolute URL by adding a scheme and host if needed.
+                        absolute_url = url if '//' in url else f"{self.get_base_url()}{url if url.startswith('/') else f'/{url}'}"
+                        target_width_match = re.search(r'width:\s*([0-9\.]+)\s*px', match)
+                        target_height_match = re.search(r'height:\s*([0-9\.]+)\s*px', match)
+                        if target_width_match and target_height_match:
+                            target_width = float(target_width_match[1])
+                            target_height = float(target_height_match[1])
+                            try:
+                                image = self._get_image_by_url(absolute_url, session)
+                            except (ImportValidationError, UnidentifiedImageError):
+                                # Url invalid or doesn't resolve to a valid image.
+                                # Note: We choose to ignore errors so as not to
+                                # break the entire process just for one image's
+                                # responsive cropping behavior).
+                                pass
+                            else:
+                                image_processor = tools.ImageProcess(image)
+                                image = image_processor.crop_resize(target_width, target_height, 0, 0)
+                                conversion_info.append((base64.b64encode(image.source), node, url))
+
+        # Apply the changes.
+        urls = self._create_attachments_from_inline_images([image for (image, _, _) in conversion_info])
+        for ((image, node, old_url), new_url) in zip(conversion_info, urls):
             did_modify_body = True
-            comment.text = comment.text.replace(old_url, url)
+            if node.tag == 'img':
+                node.attrib['src'] = new_url
+            else:
+                node.text = node.text.replace(old_url, new_url)
 
         if did_modify_body:
             return lxml.html.tostring(root, encoding='unicode')
