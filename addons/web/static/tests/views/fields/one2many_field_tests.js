@@ -4397,7 +4397,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(td.textContent, "01/25/2017");
 
         await click(td);
-        await nextTick(); // wait for picker to open
+        await click(td, ".o_field_date input");
         await click(getPickerCell("1").at(0));
         await clickSave(target);
 
