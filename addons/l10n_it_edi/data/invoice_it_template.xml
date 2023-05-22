@@ -183,8 +183,8 @@
                         <Imposta t-esc="format_monetary(balance_multiplicator * tax_line['tax_amount'], currency)"/>
                     </t>
                     <t t-else="">
-                        <ImponibileImporto t-esc="format_monetary(abs(tax_line['base_amount']), currency)"/>
-                        <Imposta t-esc="format_monetary(abs(tax_line['tax_amount']), currency)"/>
+                        <ImponibileImporto t-esc="format_monetary(tax_line['base_amount'], currency)"/>
+                        <Imposta t-esc="format_monetary(tax_line['tax_amount'], currency)"/>
                     </t>
                     <EsigibilitaIVA t-if="not has_exoneration or kind_exoneration == 'N6'" t-esc="tax.l10n_it_vat_due_date"/>
                     <RiferimentoNormativo t-if="tax.l10n_it_law_reference" t-esc="format_alphanumeric(tax.l10n_it_law_reference[:100])"/>
@@ -227,4 +227,3 @@
 
     </data>
 </odoo>
-

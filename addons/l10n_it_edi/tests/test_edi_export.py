@@ -25,6 +25,13 @@ class TestItEdiExport(TestItEdi):
             'company_id': cls.company.id,
         })
 
+        cls.tax_10 = cls.env['account.tax'].create({
+            'name': '10% tax',
+            'amount': 10.0,
+            'amount_type': 'percent',
+            'company_id': cls.company.id,
+        })
+
         cls.tax_zero_percent_hundred_percent_repartition = cls.env['account.tax'].create({
             'name': 'all of nothing',
             'amount': 0,
@@ -284,6 +291,12 @@ class TestItEdiExport(TestItEdi):
                     **cls.standard_line,
                     'name': 'negative_line',
                     'price_unit': -100.0,
+                    }),
+                (0, 0, {
+                    **cls.standard_line,
+                    'name': 'negative_line_different_tax',
+                    'price_unit': -50.0,
+                    'tax_ids': [(6, 0, [cls.tax_10.id])]
                     }),
                 ],
             })
@@ -662,19 +675,33 @@ class TestItEdiExport(TestItEdi):
                         <PrezzoTotale>-100.00</PrezzoTotale>
                         <AliquotaIVA>22.00</AliquotaIVA>
                       </DettaglioLinee>
+                      <DettaglioLinee>
+                        <NumeroLinea>3</NumeroLinea>
+                        <Descrizione>negative_line_different_tax</Descrizione>
+                        <Quantita>1.00</Quantita>
+                        <PrezzoUnitario>-50.000000</PrezzoUnitario>
+                        <PrezzoTotale>-50.00</PrezzoTotale>
+                        <AliquotaIVA>10.00</AliquotaIVA>
+                      </DettaglioLinee>
                       <DatiRiepilogo>
                         <AliquotaIVA>22.00</AliquotaIVA>
                         <ImponibileImporto>700.40</ImponibileImporto>
                         <Imposta>154.09</Imposta>
                         <EsigibilitaIVA>I</EsigibilitaIVA>
                       </DatiRiepilogo>
+                      <DatiRiepilogo>
+                        <AliquotaIVA>10.00</AliquotaIVA>
+                        <ImponibileImporto>-50.00</ImponibileImporto>
+                        <Imposta>-5.00</Imposta>
+                        <EsigibilitaIVA>I</EsigibilitaIVA>
+                      </DatiRiepilogo>
                     </DatiBeniServizi>
                 </xpath>
                 <xpath expr="//DettaglioPagamento//ImportoPagamento" position="inside">
-                    854.49
+                    799.49
                 </xpath>
                 <xpath expr="//DatiGeneraliDocumento//ImportoTotaleDocumento" position="inside">
-                    854.49
+                    799.49
                 </xpath>
             ''')
         invoice_etree = self.with_applied_xpath(invoice_etree, "<xpath expr='.//Allegati' position='replace'/>")
