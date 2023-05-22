@@ -8,7 +8,8 @@
                 <field name="partner_id" optional="show"/>
                 <field name="partner_category_id" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
-                <field name="analytic_distribution" widget="analytic_distribution" optional="show"/>
+                <field name="analytic_distribution" widget="analytic_distribution" optional="show"
+                       options="{'force_applicability': 'optional', 'disable_save': true}"/>
                 <button name="action_read_distribution_model" type="object" string="View" class="float-end btn-secondary"/>
             </tree>
         </field>
