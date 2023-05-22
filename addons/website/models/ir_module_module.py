@@ -9,6 +9,7 @@ from odoo import api, fields, models
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.exceptions import MissingError
 from odoo.http import request
+from odoo.tools import split_every
 
 _logger = logging.getLogger(__name__)
 
@@ -532,7 +533,8 @@ class IrModuleModule(models.Model):
             return res
 
         o_menu_name = [f"'{lang}', o_menu.name->>'{lang}'" for lang in langs if lang != 'en_US']
-        o_menu_name = 'jsonb_build_object(' + ', '.join(o_menu_name) + ')'
+        o_menu_name = ['jsonb_build_object(' + ', '.join(items) + ')' for items in split_every(50, o_menu_name)]
+        o_menu_name = ' || '.join(o_menu_name)
         self.env.cr.execute(f"""
                         UPDATE website_menu menu
                            SET name = {'menu.name || ' + o_menu_name if overwrite else o_menu_name + ' || menu.name'}
