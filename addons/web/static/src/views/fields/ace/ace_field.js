@@ -103,7 +103,7 @@ export class AceField extends Component {
     commitChanges() {
         if (!this.props.readonly) {
             const value = this.aceSession.getValue();
-            if (this.props.value !== value) {
+            if ((this.props.value || "") !== value) {
                 return this.props.update(value);
             }
         }

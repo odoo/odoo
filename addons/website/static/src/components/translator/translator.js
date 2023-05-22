@@ -36,6 +36,7 @@ export class AttributeTranslateDialog extends Component {
                         $originalNode.val(value).trigger('translate');
                     }
                     $node.trigger('change');
+                    $originalNode[0].classList.add('oe_translated');
                 });
                 $group.append($label).append($input);
             });
@@ -58,7 +59,7 @@ export class SelectTranslateDialog extends Component {
         const value = this.inputEl.el.value;
         this.optionEl.textContent = value;
         this.optionEl.classList.toggle(
-            'o_option_translated',
+            'oe_translated',
             value !== this.optionEl.dataset.initialTranslationValue
         );
     }
@@ -320,6 +321,13 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             _.each(translation, function (node, attr) {
                 var trans = self.getTranslationObject(node);
                 trans.value = (trans.value ? trans.value : $node.html()).replace(/[ \t\n\r]+/, ' ');
+                trans.state = node.dataset.oeTranslationState;
+                // If a node has an already translated attribute, we don't
+                // need to update its state, since it can be set again as
+                // "to_translate" by other attributes...
+                if ($node[0].dataset.oeTranslationState === 'translated') {
+                    return;
+                }
                 $node.attr('data-oe-translation-state', (trans.state || 'to_translate'));
             });
         });

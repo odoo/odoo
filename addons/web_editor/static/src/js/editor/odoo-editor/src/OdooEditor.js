@@ -3346,11 +3346,6 @@ export class OdooEditor extends EventTarget {
                     }
                 }
                 this.historyStep();
-            } else if (ev.inputType === 'insertLineBreak') {
-                this._compositionStep();
-                this.historyRollback();
-                ev.preventDefault();
-                this._applyCommand('oShiftEnter');
             } else {
                 this.historyStep();
             }

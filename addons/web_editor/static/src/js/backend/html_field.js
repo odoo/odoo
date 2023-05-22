@@ -319,7 +319,7 @@ export class HtmlField extends Component {
             this.wysiwyg.toolbar.$el.append($codeviewButtonToolbar);
             $codeviewButtonToolbar.click(this.toggleCodeView.bind(this));
         }
-        this.wysiwyg.odooEditor.editable.addEventListener("input", () =>
+        this.wysiwyg.odooEditor.addEventListener("historyStep", () =>
             this.props.setDirty(this._isDirty())
         );
 
@@ -397,7 +397,7 @@ export class HtmlField extends Component {
     _isDirty() {
         const strippedPropValue = stripHistoryIds(String(this.props.value));
         const strippedEditingValue = stripHistoryIds(this.getEditingValue());
-        return !this.props.readonly && strippedPropValue !== strippedEditingValue;
+        return !this.props.readonly && (strippedPropValue || '<p><br></p>') !== strippedEditingValue;
     }
     _getCodeViewEl() {
         return this.state.showCodeView && this.codeViewRef.el;
