@@ -143,31 +143,27 @@
                                     </div>
                                 </group>
                             </group>
-                            <group attrs="{'invisible': [('question_type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
-                                <field name="suggested_answer_ids" context="{'default_question_id': active_id}" nolabel="1" colspan="2">
-                                    <tree editable="bottom">
-                                        <field name="sequence" widget="handle"/>
-                                        <field name="value" string="Choices"/>
-                                        <field name="is_correct"
-                                            attrs="{'column_invisible': ['|', ('parent.scoring_type', '=', 'no_scoring'), ('parent.question_type', '=', 'matrix')]}"/>
-                                        <field name="answer_score"
-                                            attrs="{'column_invisible': ['|', ('parent.scoring_type', '=', 'no_scoring'), ('parent.question_type', '=', 'matrix')]}"/>
-                                        <field name="value_image_filename" invisible="1"/>
-                                        <field name="value_image" width="200px" filename="value_image_filename" options="{'accepted_file_extensions': 'image/*'}"
-                                            attrs="{'column_invisible': [('parent.question_type', '=', 'matrix')]}"/>
-                                    </tree>
-                                </field>
-                            </group>
+                            <field name="suggested_answer_ids" context="{'default_question_id': active_id}" attrs="{'invisible': [('question_type', 'not in', ['simple_choice', 'multiple_choice', 'matrix'])]}">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="value" string="Choices"/>
+                                    <field name="is_correct"
+                                        attrs="{'column_invisible': ['|', ('parent.scoring_type', '=', 'no_scoring'), ('parent.question_type', '=', 'matrix')]}"/>
+                                    <field name="answer_score"
+                                        attrs="{'column_invisible': ['|', ('parent.scoring_type', '=', 'no_scoring'), ('parent.question_type', '=', 'matrix')]}"/>
+                                    <field name="value_image_filename" invisible="1"/>
+                                    <field name="value_image" width="200px" filename="value_image_filename" options="{'accepted_file_extensions': 'image/*'}"
+                                        attrs="{'column_invisible': [('parent.question_type', '=', 'matrix')]}"/>
+                                </tree>
+                            </field>
 
-                            <group attrs="{'invisible': [('question_type', '!=', 'matrix')]}">
-                                <field name="matrix_row_ids" context="{'default_matrix_question_id': active_id}"
-                                    attrs="{'invisible': [('question_type', '!=', 'matrix')]}" nolabel="1" colspan="2">
-                                    <tree editable="bottom">
-                                        <field name="sequence" widget="handle"/>
-                                        <field name="value" string="Rows"/>
-                                    </tree>
-                                </field>
-                            </group>
+                            <field name="matrix_row_ids" context="{'default_matrix_question_id': active_id}"
+                                attrs="{'invisible': [('question_type', '!=', 'matrix')]}">
+                                <tree editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="value" string="Rows"/>
+                                </tree>
+                            </field>
                         </page>
                         <page string="Description" name="survey_description">
                             <field name="description" widget="html"
