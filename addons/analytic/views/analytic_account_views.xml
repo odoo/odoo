@@ -66,6 +66,19 @@
             </field>
         </record>
 
+        <record id="view_account_analytic_account_list_select" model="ir.ui.view">
+            <field name="name">account.analytic.account.list.select</field>
+            <field name="model">account.analytic.account</field>
+            <field name="mode">primary</field>
+            <field eval="18" name="priority"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_list"/>
+            <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="multi_edit">0</attribute>
+                </tree>
+            </field>
+        </record>
+
         <record id="view_account_analytic_account_kanban" model="ir.ui.view">
             <field name="name">account.analytic.account.kanban</field>
             <field name="model">account.analytic.account</field>
