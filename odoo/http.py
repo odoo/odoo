@@ -1952,7 +1952,7 @@ class JsonRPCDispatcher(Dispatcher):
         return self._response(error=error)
 
     def _response(self, result=None, error=None):
-        request_id = self.jsonrequest.get('id')
+        request_id = self.jsonrequest.get('id') if isinstance(self.jsonrequest, dict) else False
         response = {'jsonrpc': '2.0', 'id': request_id}
         if error is not None:
             response['error'] = error

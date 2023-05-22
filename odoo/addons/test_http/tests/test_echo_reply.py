@@ -173,3 +173,8 @@ class TestHttpEchoReplyJsonWithDB(TestHttpBase):
         self.assertEqual(res.text, '{"jsonrpc": "2.0", "id": 0, "result": '
             f'{{"lang": "en_US", "tz": false, "uid": {self.jackoneill.id}, "name": "Thor"}}'
             '}')
+
+    def test_echojson_wrong_payload(self):
+        res = self.db_url_open('/test_http/echo-json?race=Asgard', data='wrong payload', headers=CT_JSON)
+        self.assertEqual(res.json().get('error').get('code'), 200)
+        self.assertEqual(res.json().get('error').get('message'), 'Odoo Server Error')
