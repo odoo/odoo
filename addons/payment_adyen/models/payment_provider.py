@@ -9,6 +9,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_adyen.const import API_ENDPOINT_VERSIONS
+from odoo.tools import single_wesite_re
 
 _logger = logging.getLogger(__name__)
 
@@ -37,6 +38,15 @@ class PaymentProvider(models.Model):
     adyen_recurring_api_url = fields.Char(
         string="Recurring API URL", help="The base URL for the Recurring API endpoints",
         required_if_provider='adyen')
+
+    @api.constrains('adyen_checkout_api_url', 'adyen_recurring_api_url')
+    def _check_adyen_url(self):
+        for payment in self:
+            checkout_api_url = single_wesite_re.match(str(payment.adyen_checkout_api_url))
+            recurring_api_url = single_wesite_re.match(str(payment.adyen_recurring_api_url))
+            if payment.adyen_checkout_api_url and not checkout_api_url or payment.adyen_recurring_api_url and not recurring_api_url:
+                raise ValidationError(
+                    _('Invalid URL %s') % (payment.adyen_checkout_api_url if not checkout_api_url else payment.adyen_recurring_api_url))
 
     #=== CRUD METHODS ===#
 

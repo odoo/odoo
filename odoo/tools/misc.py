@@ -63,6 +63,9 @@ etree.set_default_parser(etree.XMLParser(resolve_entities=False))
 
 NON_BREAKING_SPACE = u'\N{NO-BREAK SPACE}'
 
+# matches a string containing only one website
+single_wesite_re = re.compile(r"""(http|https):\/\/([\w\-_]+(?:(?:\.[\w\-_]+)+))([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?""")
+
 #----------------------------------------------------------
 # Subprocesses
 #----------------------------------------------------------

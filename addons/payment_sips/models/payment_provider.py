@@ -3,9 +3,11 @@
 
 from hashlib import sha256
 
-from odoo import fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 from odoo.addons.payment_sips.const import SUPPORTED_CURRENCIES
+from odoo.tools import single_wesite_re
 
 
 class PaymentProvider(models.Model):
@@ -28,6 +30,15 @@ class PaymentProvider(models.Model):
         default="https://payment-webinit.sips-services.com/paymentInit")
     sips_version = fields.Char(
         string="Interface Version", required_if_provider='sips', default="HP_2.31")
+
+    @api.constrains('sips_test_url', 'sips_prod_url')
+    def _check_sips_url(self):
+        for payment in self:
+            test_url = single_wesite_re.match(str(payment.sips_test_url))
+            prod_url = single_wesite_re.match(str(payment.sips_prod_url))
+            if payment.sips_prod_url and not test_url or payment.sips_prod_url and not prod_url:
+                raise ValidationError(
+                    _('Invalid URL %s') % (payment.sips_test_url if not test_url else payment.sips_prod_url))
 
     def _get_supported_currencies(self):
         """ Override of `payment` to return the supported currencies. """
