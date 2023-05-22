@@ -73,22 +73,6 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button
-                            class="oe_stat_button"
-                            icon="fa-calendar"
-                            type="action"
-                            invisible="1"
-                            name="%(hr_leave_action_holiday_allocation_id)d"
-                            help="Time off Taken/Total Allocated">
-                            <div class="o_stat_info">
-                                <span class="o_stat_value">
-                                    <field name="leaves_taken" digits="[42,1]"/>/<field name="max_leaves" digits="[42,1]"/>
-                                </span>
-                                <span class="o_stat_text">
-                                    Time Off
-                                </span>
-                            </div>
-                        </button>
                     </div>
                     <div id="title" class="oe_title">
                         <h2><field name="name" class="w-100" placeholder="e.g. Time Off type (From validity start to validity end / no limit)" attrs="{'invisible': [('state', 'not in', ('draft', 'confirm'))]}" required="1"/>

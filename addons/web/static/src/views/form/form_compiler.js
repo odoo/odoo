@@ -166,7 +166,7 @@ export class FormCompiler extends ViewCompiler {
             append(buttonBox, mainSlot);
         }
 
-        return hasContent ? buttonBox : null;
+        return hasContent ? buttonBox : '';
     }
 
     compileButton(el, params) {
