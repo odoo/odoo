@@ -313,16 +313,20 @@ class StockMoveLine(models.Model):
             else:
                 create_move(move_line)
 
+        moves_to_update = mls.filtered(
+            lambda ml:
+            ml.move_id and
+            ml.qty_done and (
+                ml.move_id.state == 'done' or (
+                    ml.move_id.picking_id and
+                    ml.move_id.picking_id.immediate_transfer
+                ))
+        ).move_id
+        for move in moves_to_update:
+            move.with_context(avoid_putaway_rules=True).product_uom_qty = move.quantity_done
+
         for ml, vals in zip(mls, vals_list):
-            if ml.move_id and \
-                    ml.move_id.picking_id and \
-                    ml.move_id.picking_id.immediate_transfer and \
-                    ml.move_id.state != 'done' and \
-                    'qty_done' in vals:
-                ml.move_id.with_context(avoid_putaway_rules=True).product_uom_qty = ml.move_id.quantity_done
             if ml.state == 'done':
-                if 'qty_done' in vals:
-                    ml.move_id.product_uom_qty = ml.move_id.quantity_done
                 if ml.product_id.type == 'product':
                     Quant = self.env['stock.quant']
                     quantity = ml.product_uom_id._compute_quantity(ml.qty_done, ml.move_id.product_id.uom_id,rounding_method='HALF-UP')
