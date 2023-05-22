@@ -300,8 +300,18 @@ class Project(models.Model):
         } for sol_read in sols.with_context(with_price_unit=True).read(['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom'])]
 
     def _get_sale_items_domain(self, additional_domain=None):
-        sale_orders = self._get_sale_orders()
-        domain = [('order_id', 'in', sale_orders.ids), ('is_downpayment', '=', False), ('state', 'in', ['sale', 'done']), ('display_type', '=', False)]
+        sale_items = self._get_sale_order_items()
+        domain = [
+            ('order_id', 'in', sale_items.order_id.ids),
+            ('is_downpayment', '=', False),
+            ('state', 'in', ['sale', 'done']),
+            ('display_type', '=', False),
+            '|',
+                '|',
+                    ('project_id', 'in', self.ids),
+                    ('project_id', '=', False),
+                ('id', 'in', sale_items.ids),
+        ]
         if additional_domain:
             domain = expression.AND([domain, additional_domain])
         return domain
@@ -505,7 +515,15 @@ class Project(models.Model):
 
     def _get_profitability_items(self, with_action=True):
         profitability_items = super()._get_profitability_items(with_action)
-        domain = [('order_id', 'in', self.sudo()._get_sale_orders().ids)]
+        sale_items = self.sudo()._get_sale_order_items()
+        domain = [
+            ('order_id', 'in', sale_items.order_id.ids),
+            '|',
+                '|',
+                    ('project_id', 'in', self.ids),
+                    ('project_id', '=', False),
+                ('id', 'in', sale_items.ids),
+        ]
         revenue_items_from_sol = self._get_revenues_items_from_sol(
             domain,
             with_action,
