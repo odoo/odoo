@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { orderManagement } from "@point_of_sale/js/PosContext";
 import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/pos_hook";
 
@@ -27,12 +26,11 @@ export class SaleOrderManagementControlPanel extends Component {
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.saleOrderFetcher = useService("sale_order_fetcher");
-        this.orderManagementContext = useState(orderManagement);
         useAutofocus();
 
         const currentPartner = this.pos.globalState.get_order().get_partner();
         if (currentPartner) {
-            this.orderManagementContext.searchString = currentPartner.name;
+            this.pos.orderManagement.searchString = currentPartner.name;
         }
         this.saleOrderFetcher.setSearchDomain(this._computeDomain());
     }
@@ -93,12 +91,12 @@ export class SaleOrderManagementControlPanel extends Component {
             ["state", "!=", "cancel"],
             ["invoice_status", "!=", "invoiced"],
         ];
-        const input = this.orderManagementContext.searchString.trim();
+        const input = this.pos.orderManagement.searchString.trim();
         if (!input) {
             return domain;
         }
 
-        const searchConditions = this.orderManagementContext.searchString.split(/[,&]\s*/);
+        const searchConditions = this.pos.orderManagement.searchString.split(/[,&]\s*/);
         if (searchConditions.length === 1) {
             const cond = searchConditions[0].split(/:\s*/);
             if (cond.length === 1) {
@@ -120,7 +118,7 @@ export class SaleOrderManagementControlPanel extends Component {
         return domain;
     }
     clearSearch() {
-        this.orderManagementContext.searchString = "";
+        this.pos.orderManagement.searchString = "";
         this.onInputKeydown({ key: "Enter" });
     }
 }
