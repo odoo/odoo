@@ -75,6 +75,10 @@ class WebsiteBlog(http.Controller):
         BlogPost = request.env['blog.post']
         BlogTag = request.env['blog.tag']
 
+        try:
+            page = int(page)
+        except ValueError:
+            page = 1
         # prepare domain
         domain = request.website.website_domain()
 
