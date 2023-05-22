@@ -4,33 +4,39 @@
     <t t-name="web.BinaryField" owl="1">
         <t t-if="!props.readonly">
             <t t-if="props.record.data[props.name]">
-                <div class="w-100 d-inline-flex">
+                <div class="w-100 d-inline-flex gap-1">
                     <FileUploader
                         acceptedFileExtensions="props.acceptedFileExtensions"
                         onUploaded.bind="update"
                     >
                         <t t-if="props.record.resId">
                             <button
-                                class="btn btn-secondary fa fa-download"
+                                class="btn btn-secondary btn-sm lh-1"
                                 data-tooltip="Download"
                                 aria-label="Download"
                                 t-on-click="onFileDownload"
-                            />
+                            >
+                                <i class="fa fa-fw fa-download"/>
+                            </button>
                         </t>
                         <t t-set-slot="toggler">
                             <input type="text" class="o_input" t-att-value="fileName" readonly="readonly" />
                             <button
-                                class="btn btn-secondary fa fa-pencil o_select_file_button"
+                                class="btn btn-secondary btn-sm lh-1 o_select_file_button"
                                 data-tooltip="Edit"
                                 aria-label="Edit"
-                            />
+                            >
+                                <i class="fa fa-fw fa-pencil"/>
+                            </button>
                         </t>
                         <button
-                            class="btn btn-secondary fa fa-trash o_clear_file_button"
+                            class="btn btn-secondary btn-sm lh-1 o_clear_file_button"
                             data-tooltip="Clear"
                             aria-label="Clear"
                             t-on-click="() => this.update({})"
-                        />
+                        >
+                            <i class="fa fa-fw fa-trash"/>
+                        </button>
                     </FileUploader>
                 </div>
             </t>
