@@ -113,7 +113,7 @@ QUnit.test("reaction button should not be present on livechat", async (assert) =
     });
     const { insertText, openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "Test");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "Test");
     await click(".o-mail-Composer-send");
     await click(".o-mail-Message");
     assert.containsNone($, "[title='Add a Reaction']");
@@ -179,7 +179,7 @@ QUnit.test(
         assert.strictEqual($(".o-mail-DiscussCategoryItem:eq(1)").text(), "Visitor 11");
         // post a new message on the last channel
         await click(".o-mail-DiscussCategoryItem:eq(1)");
-        await insertText(".o-mail-Composer-input", "Blabla");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "Blabla");
         await click(".o-mail-Composer-send");
         assert.containsN($, ".o-mail-DiscussCategoryItem", 2);
         assert.strictEqual($(".o-mail-DiscussCategoryItem:eq(0)").text(), "Visitor 11");

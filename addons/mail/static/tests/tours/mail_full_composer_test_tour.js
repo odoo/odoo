@@ -19,8 +19,11 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/mail_full_compo
         },
         {
             content: "Write something in composer",
-            trigger: ".o-mail-Composer-input",
-            run: "text blahblah",
+            trigger: ".o-mail-Composer .odoo-editor-editable",
+            run: function (actions) {
+                actions.text("blahblah", this.$anchor.find("p"));
+                document.querySelector(".o-mail-Composer .odoo-editor-editable").click();
+            },
         },
         {
             content: "Add one file in composer",

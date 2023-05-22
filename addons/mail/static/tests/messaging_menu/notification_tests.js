@@ -276,6 +276,7 @@ QUnit.test("thread notifications are re-ordered on receiving a new message", asy
         { name: "Channel 2019" },
         { name: "Channel 2020" },
     ]);
+    const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["mail.message"].create([
         {
             date: "2019-01-01 00:00:00",
@@ -288,24 +289,26 @@ QUnit.test("thread notifications are re-ordered on receiving a new message", asy
             res_id: channelId_2,
         },
     ]);
-    await start();
+    const { env } = await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     assert.containsN($, ".o-mail-NotificationItem", 2);
 
     const channel_1 = pyEnv["discuss.channel"].searchRead([["id", "=", channelId_1]])[0];
+    const messageId = pyEnv["mail.message"].create({
+        author_id: partnerId,
+        body: "<p>New message !</p>",
+        needaction: true,
+        model: "discuss.channel",
+        res_id: channel_1,
+        needaction_partner_ids: [pyEnv.currentPartnerId],
+    });
+    const [formattedMessage] = await env.services.orm.call("mail.message", "message_format", [
+        [messageId],
+    ]);
     await afterNextRender(() => {
         pyEnv["bus.bus"]._sendone(channel_1, "discuss.channel/new_message", {
             id: channelId_1,
-            message: {
-                author: { id: 7, name: "Demo User" },
-                body: "<p>New message !</p>",
-                date: "2020-03-23 10:00:00",
-                id: 44,
-                message_type: "comment",
-                model: "discuss.channel",
-                record_name: "Channel 2019",
-                res_id: channelId_1,
-            },
+            message: formattedMessage,
         });
     });
     assert.containsN($, ".o-mail-NotificationItem", 2);

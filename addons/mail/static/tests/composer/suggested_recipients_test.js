@@ -201,7 +201,7 @@ QUnit.test(
         });
         await openFormView("res.fake", fakeId);
         await click("button:contains(Log note)");
-        await insertText(".o-mail-Composer-input", "Dummy Message");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "Dummy Message");
         await click(".o-mail-Composer-send");
     }
 );
@@ -220,7 +220,7 @@ QUnit.test(
         });
         await openFormView("res.fake", fakeId);
         await click("button:contains(Send message)");
-        await insertText(".o-mail-Composer-input", "Dummy Message");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "Dummy Message");
         await click(".o-mail-Composer-send");
         assert.strictEqual($(".o-mail-Followers-counter").text(), "1");
     }

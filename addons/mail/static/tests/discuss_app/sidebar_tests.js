@@ -278,7 +278,7 @@ QUnit.test("sidebar: open pinned channel", async (assert) => {
     await openDiscuss();
     await click(".o-mail-DiscussCategoryItem:contains(General)");
     assert.strictEqual($(".o-mail-Discuss-threadName").val(), "General");
-    assert.containsOnce($, ".o-mail-Composer-input[placeholder='Message #General…']");
+    assert.containsOnce($, ".o-mail-Composer .odoo-editor-editable");
 });
 
 QUnit.test("sidebar: open channel and leave it", async (assert) => {
@@ -1073,7 +1073,7 @@ QUnit.test("chat should be sorted by last activity time [REQUIRE FOCUS]", async 
 
     // post a new message on the last channel
     await click($($chats[1]));
-    await insertText(".o-mail-Composer-input", "Blabla");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "Blabla");
     await click(".o-mail-Composer-send");
     $chats = $(".o-mail-DiscussCategory-chat ~ .o-mail-DiscussCategoryItem");
     assert.strictEqual($chats.length, 2);

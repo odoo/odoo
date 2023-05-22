@@ -200,7 +200,7 @@ QUnit.test("thread is still scrolling after scrolling up then to bottom", async 
     await openDiscuss(channelId);
     $(".o-mail-Thread")[0].scrollTo({ top: $(".o-mail-Thread")[0].scrollHeight / 2 });
     $(".o-mail-Thread")[0].scrollTo({ top: $(".o-mail-Thread")[0].scrollHeight });
-    await insertText(".o-mail-Composer-input", "123");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "123");
     await click(".o-mail-Composer-send");
     assert.ok(isScrolledToBottom($(".o-mail-Thread")[0]));
 });
@@ -210,7 +210,7 @@ QUnit.test("mention a channel with space in the name", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General good boy" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "#");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "#");
     await click(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-send");
     assert.containsOnce($(".o-mail-Message-body"), ".o_channel_redirect");
@@ -222,7 +222,7 @@ QUnit.test('mention a channel with "&" in the name', async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General & good" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "#");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "#");
     await click(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-send");
     assert.containsOnce($(".o-mail-Message-body"), ".o_channel_redirect");
@@ -259,6 +259,9 @@ QUnit.test(
             },
         });
         await click(".o_menu_systray i[aria-label='Messages']");
+        await click(".o-mail-NotificationItem");
+        $(".o-mail-Composer .odoo-editor-editable")[0].blur();
+
         await afterNextRender(async () =>
             env.services.rpc("/mail/message/post", {
                 context: { mockedUserId: userId },
@@ -269,7 +272,7 @@ QUnit.test(
         );
         assert.verifySteps(["rpc:channel_fetch"]);
 
-        $(".o-mail-Composer-input")[0].focus();
+        $(".o-mail-Composer .odoo-editor-editable")[0].focus();
         await waitUntil(".o-mail-Message");
         assert.verifySteps(["rpc:set_last_seen_message"]);
     }
@@ -297,7 +300,7 @@ QUnit.test(
             },
         });
         await openDiscuss(channelId);
-        $(".o-mail-Composer-input")[0].focus();
+        $(".o-mail-Composer .odoo-editor-editable")[0].focus();
         // simulate receiving a message
         await env.services.rpc("/mail/message/post", {
             context: { mockedUserId: userId },
@@ -450,7 +453,7 @@ QUnit.test(
         assert.containsOnce($, ".o-mail-Message");
         assert.containsNone($, "hr + span:contains(New messages)");
 
-        await insertText(".o-mail-Composer-input", "hey!");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "hey!");
         await afterNextRender(() => {
             // need to remove focus from text area to avoid set_last_seen_message
             $(".o-mail-Composer-send")[0].focus();
@@ -491,7 +494,7 @@ QUnit.test("new messages separator on receiving new message [REQUIRE FOCUS]", as
     assert.containsOnce($, ".o-mail-Message", "should have an initial message");
     assert.containsNone($, "hr + span:contains(New messages)");
 
-    $(".o-mail-Composer-input")[0].blur();
+    $(".o-mail-Composer .odoo-editor-editable")[0].blur();
     // simulate receiving a message
     await afterNextRender(() =>
         env.services.rpc("/mail/message/post", {
@@ -505,7 +508,7 @@ QUnit.test("new messages separator on receiving new message [REQUIRE FOCUS]", as
     assert.containsOnce($, "hr + span:contains(New messages)");
     assert.containsOnce($, ".o-mail-Thread-newMessage ~ .o-mail-Message:contains(hu)");
 
-    $(".o-mail-Composer-input")[0].focus();
+    $(".o-mail-Composer .odoo-editor-editable")[0].focus();
     await nextTick();
     assert.containsNone($, "hr + span:contains(New messages)");
 });
@@ -524,7 +527,7 @@ QUnit.test("no new messages separator on posting message (no message history)", 
     assert.containsNone($, ".o-mail-Message");
     assert.containsNone($, "hr + span:contains(New messages)");
 
-    await insertText(".o-mail-Composer-input", "hey!");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "hey!");
     await click(".o-mail-Composer-send");
     assert.containsOnce($, ".o-mail-Message");
     assert.containsNone($, "hr + span:contains(New messages)");
@@ -545,8 +548,8 @@ QUnit.test("Mention a partner with special character (e.g. apostrophe ')", async
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "@");
-    await insertText(".o-mail-Composer-input", "Pyn");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "@");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "Pyn");
     await click(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-send");
     assert.containsOnce(
@@ -577,11 +580,11 @@ QUnit.test("mention 2 different partners that have the same name", async (assert
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "@");
-    await insertText(".o-mail-Composer-input", "Te");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "@");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "Te");
     await click(".o-mail-Composer-suggestion:eq(0)");
-    await insertText(".o-mail-Composer-input", "@");
-    await insertText(".o-mail-Composer-input", "Te");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "@");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "Te");
     await click(".o-mail-Composer-suggestion:eq(1)");
     await click(".o-mail-Composer-send");
     assert.containsOnce($, ".o-mail-Message-body");
@@ -600,8 +603,8 @@ QUnit.test("mention a channel on a second line when the first line contains #", 
     const channelId = pyEnv["discuss.channel"].create({ name: "General good" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "#blabla\n");
-    await insertText(".o-mail-Composer-input", "#");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "#blabla\n");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "#");
     await click(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-send");
     assert.containsOnce($(".o-mail-Message-body"), ".o_channel_redirect");
@@ -615,11 +618,11 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({ name: "General good" });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        await insertText(".o-mail-Composer-input", "#");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "#");
         await click(".o-mail-Composer-suggestion");
-        const text = $(".o-mail-Composer-input").val();
-        $(".o-mail-Composer-input").val(text.slice(0, -1));
-        await insertText(".o-mail-Composer-input", ", test");
+        const text = $(".o-mail-Composer .odoo-editor-editable")[0].textContent;
+        $(".o-mail-Composer .odoo-editor-editable").val(text.slice(0, -1));
+        await insertText(".o-mail-Composer .odoo-editor-editable", ", test");
         await click(".o-mail-Composer-send");
         assert.containsOnce($(".o-mail-Message-body"), ".o_channel_redirect");
         assert.strictEqual($(".o_channel_redirect").text(), "#General good");
@@ -641,11 +644,11 @@ QUnit.test("mention 2 different channels that have the same name", async (assert
     ]);
     const { openDiscuss } = await start();
     await openDiscuss(channelId_1);
-    await insertText(".o-mail-Composer-input", "#");
-    await insertText(".o-mail-Composer-input", "m");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "#");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "m");
     await click(".o-mail-Composer-suggestion:eq(0)");
-    await insertText(".o-mail-Composer-input", "#");
-    await insertText(".o-mail-Composer-input", "m");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "#");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "m");
     await click(".o-mail-Composer-suggestion:eq(1)");
     await click(".o-mail-Composer-send");
     assert.containsOnce($, ".o-mail-Message-body");
@@ -676,9 +679,9 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        await insertText(".o-mail-Composer-input", "email@odoo.com\n");
-        await insertText(".o-mail-Composer-input", "@");
-        await insertText(".o-mail-Composer-input", "Te");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "email@odoo.com\n");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "@");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "Te");
         await click(".o-mail-Composer-suggestion");
         await click(".o-mail-Composer-send");
         assert.containsOnce(
@@ -743,10 +746,10 @@ QUnit.test(
         const { openDiscuss, env } = await start();
         await openDiscuss(channelId);
         // send a command that leads to receiving a transient message
-        await insertText(".o-mail-Composer-input", "/who");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "/who");
         await click(".o-mail-Composer-send");
         // composer is focused by default, we remove that focus
-        $(".o-mail-Composer-input")[0].blur();
+        $(".o-mail-Composer .odoo-editor-editable")[0].blur();
         // simulate receiving a message
         await afterNextRender(() =>
             env.services.rpc("/mail/message/post", {
@@ -769,9 +772,9 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({ name: "test" });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        await insertText(".o-mail-Composer-input", "Dummy Message");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "Dummy Message");
         await click(".o-mail-Composer-send");
-        assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
+        assert.strictEqual(document.activeElement, $(".o-mail-Composer .odoo-editor-editable")[0]);
     }
 );
 
@@ -895,7 +898,10 @@ QUnit.test(
         });
         await openDiscuss(channelId);
         // ensure focusout is triggered on composers' textarea
-        await triggerEvents($(".o-mail-Composer-input")[0], null, ["blur", "focusout"]);
+        await triggerEvents($(".o-mail-Composer .odoo-editor-editable")[0], null, [
+            "blur",
+            "focusout",
+        ]);
         await click("button:contains(Inbox)");
         const messageId = pyEnv["mail.message"].create({
             author_id: partnerId,

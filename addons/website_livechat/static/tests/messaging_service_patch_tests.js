@@ -35,6 +35,6 @@ QUnit.test("Should open chat window on send chat request to website visitor", as
         });
     });
     assert.containsOnce($, ".o-mail-ChatWindow");
-    assert.ok(document.activeElement, $(".o-mail-ChatWindow .o-mail-Composer-input")[0]);
+    assert.ok(document.activeElement, $(".o-mail-ChatWindow .o-mail-Composer")[0]);
     assert.strictEqual($(".o-mail-ChatWindow-name").text(), "Visitor #11");
 });
