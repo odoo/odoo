@@ -9,9 +9,9 @@ QUnit.test("Member list and settings menu are exclusive", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click("button[title='Show Member List']");
+    await click("[title='Show Member List']");
     assert.containsOnce($, ".o-discuss-ChannelMemberList");
-    await click("button[title='Show Call Settings']");
+    await click("[title='Show Call Settings']");
     assert.containsOnce($, ".o-discuss-CallSettings");
     assert.containsNone($, ".o-discuss-ChannelMemberList");
 });

@@ -235,6 +235,7 @@ export class MessageService {
             message_type: type = message.type,
             model: resModel = message.resModel,
             notifications = message.notifications,
+            parentMessage,
             recipients = message.recipients,
             res_id: resId = message.resId,
             subtype_description: subtypeDescription = message.subtypeDescription,
@@ -249,7 +250,7 @@ export class MessageService {
                 ? message.starred_partner_ids.includes(this.store.user.id)
                 : false,
             isTransient,
-            parentMessage: message.parentMessage ? this.insert(message.parentMessage) : undefined,
+            parentMessage: parentMessage ? this.insert(parentMessage) : undefined,
             resId,
             resModel,
             subtypeDescription,

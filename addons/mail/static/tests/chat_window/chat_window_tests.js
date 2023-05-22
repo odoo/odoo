@@ -102,17 +102,22 @@ QUnit.test("chat window: basic rendering", async (assert) => {
     assert.containsOnce($, ".o-mail-ChatWindow-header");
     assert.containsOnce($(".o-mail-ChatWindow-header"), ".o-mail-ChatWindow-threadAvatar");
     assert.containsOnce($, ".o-mail-ChatWindow-name:contains(General)");
-    assert.containsN($, ".o-mail-ChatWindow-command", 5);
-    assert.containsOnce($, ".o-mail-ChatWindow-command[title='Start a Call']");
-    assert.containsOnce($, ".o-mail-ChatWindow-command[title='Show Member List']");
-    assert.containsOnce($, ".o-mail-ChatWindow-command[title='Show Call Settings']");
-    assert.containsOnce($, ".o-mail-ChatWindow-command[title='Open in Discuss']");
-    assert.containsOnce($, ".o-mail-ChatWindow-command[title='Close chat window']");
+    assert.containsN($, ".o-mail-ChatWindow-command", 3);
+    assert.containsOnce($, "[title='Start a Call']");
+    assert.containsOnce($, "[title='More actions']");
+    assert.containsOnce($, "[title='Close Chat Window']");
     assert.containsOnce($, ".o-mail-ChatWindow-content .o-mail-Thread");
     assert.strictEqual(
         $(".o-mail-ChatWindow-content .o-mail-Thread").text().trim(),
         "There are no messages in this conversation."
     );
+    await click("[title='More actions']");
+    assert.containsN($, ".o-mail-ChatWindow-command", 8);
+    assert.containsOnce($, "[title='Pinned Messages']");
+    assert.containsOnce($, "[title='Add Users']");
+    assert.containsOnce($, "[title='Show Member List']");
+    assert.containsOnce($, "[title='Show Call Settings']");
+    assert.containsOnce($, "[title='Open in Discuss']");
 });
 
 QUnit.test(
@@ -179,8 +184,7 @@ QUnit.test("chat window: open / close", async (assert) => {
     assert.containsOnce($, ".o-mail-ChatWindow");
     assert.verifySteps(["rpc:channel_fold/open"]);
 
-    // Close chat window
-    await click(".o-mail-ChatWindow-command[title='Close chat window']");
+    await click(".o-mail-ChatWindow-command[title='Close Chat Window']");
     assert.containsNone($, ".o-mail-ChatWindow");
     assert.verifySteps(["rpc:channel_fold/closed"]);
 
@@ -205,8 +209,7 @@ QUnit.test(
         await click("button i[aria-label='Messages']");
         await click(".o-mail-NotificationItem");
         assert.containsOnce($, ".o-mail-ChatWindow");
-        // Close chat window
-        await click(".o-mail-ChatWindow-command[title='Close chat window']");
+        await click("[title='Close Chat Window']");
         assert.containsNone($, ".o-mail-ChatWindow");
         const [member] = pyEnv["discuss.channel.member"].searchRead([
             ["channel_id", "=", channelId],
@@ -967,18 +970,22 @@ QUnit.test("folded chat window should hide member-list and settings buttons", as
     // Open Thread
     await click("button i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    assert.containsOnce($, "div[title='Show Member List']");
-    assert.containsOnce($, "div[title='Show Call Settings']");
+    await click("[title='More actions']");
+    assert.containsOnce($, "[title='Show Member List']");
+    assert.containsOnce($, "[title='Show Call Settings']");
+    await click(".o-mail-ChatWindow-header"); // click away to close the more menu
 
     // Fold chat window
     await click(".o-mail-ChatWindow-header");
-    assert.containsNone($, "div[title='Show Member List']");
-    assert.containsNone($, "div[title='Show Call Settings']");
+    assert.containsNone($, "[title='More actions']");
+    assert.containsNone($, "[title='Show Member List']");
+    assert.containsNone($, "[title='Show Call Settings']");
 
     // Unfold chat window
     await click(".o-mail-ChatWindow-header");
-    assert.containsOnce($, "div[title='Show Member List']");
-    assert.containsOnce($, "div[title='Show Call Settings']");
+    await click("[title='More actions']");
+    assert.containsOnce($, "[title='Show Member List']");
+    assert.containsOnce($, "[title='Show Call Settings']");
 });
 
 QUnit.test("Chat window in mobile are not foldable", async (assert) => {

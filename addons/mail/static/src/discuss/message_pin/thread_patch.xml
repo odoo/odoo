@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates xml:space="preserve">
-    <t t-inherit="mail.NotificationMessage" t-inherit-mode="extension">
-        <xpath expr="//*[@t-ref='root']" position="attributes">
-            <attribute name="t-attf-class">{{ env.inChatWindow and !ui.isSmall ? 'o-mail-Thread-noPinnedPanel' : '' }}</>
-        </xpath>
-    </t>
-</templates>
