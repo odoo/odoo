@@ -112,7 +112,7 @@ patch(FormCompiler.prototype, "mail", {
                 "t-if": `__comp__.hasFileViewer() and __comp__.uiService.size >= ${SIZES.XXL}`,
             });
             const sheetBgChatterContainerHookXml = chatterContainerHookXml.cloneNode(true);
-            sheetBgChatterContainerHookXml.classList.add("o-isInFormSheetBg");
+            sheetBgChatterContainerHookXml.classList.add("o-isInFormSheetBg", "w-auto");
             setAttributes(sheetBgChatterContainerHookXml, {
                 "t-if": `__comp__.hasFileViewer() and __comp__.uiService.size >= ${SIZES.XXL}`,
             });
