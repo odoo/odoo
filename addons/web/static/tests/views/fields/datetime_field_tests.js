@@ -13,7 +13,6 @@ import {
     editInput,
     editSelect,
     getFixture,
-    nextTick,
     patchTimeZone,
     triggerEvent,
     triggerEvents,
@@ -202,7 +201,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_form_button_cancel");
         assert.containsNone(target, ".modal", "there should not be a Warning dialog");
     });
-    QUnit.test("DatetimeField in editable list view [REQUIRE FOCUS]", async (assert) => {
+    QUnit.test("DatetimeField in editable list view", async (assert) => {
         patchTimeZone(120);
 
         await makeView({
@@ -222,7 +221,6 @@ QUnit.module("Fields", (hooks) => {
 
         // switch to edit mode
         await click(target.querySelector(".o_data_row .o_data_cell"));
-        await nextTick(); // wait for the datepicker to open after cell click
 
         assert.containsOnce(
             target,
@@ -240,6 +238,11 @@ QUnit.module("Fields", (hooks) => {
             expectedDateString,
             "the date should be correct in edit mode"
         );
+
+        assert.containsNone(target, ".o_datetime_picker");
+
+        await click(target, ".o_field_datetime input");
+
         assert.containsOnce(target, ".o_datetime_picker");
 
         // select 22 April 2018 at 8:25
@@ -273,7 +276,7 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
-        "multi edition of DatetimeField in list view: edit date in input [REQUIRE FOCUS]",
+        "multi edition of DatetimeField in list view: edit date in input",
         async (assert) => {
             await makeView({
                 serverData,
@@ -310,7 +313,7 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test(
-        "multi edition of DatetimeField in list view: clear date in input [REQUIRE FOCUS]",
+        "multi edition of DatetimeField in list view: clear date in input",
         async (assert) => {
             serverData.models.partner.records[1].datetime = "2017-02-08 10:00:00";
 

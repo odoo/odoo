@@ -22,8 +22,12 @@ import { DateTimePickerPopover } from "./datetime_picker_popover";
  *
  * @typedef DateTimePickerHookParams
  * @property {string} [format]
- * @property {(value: DateTimePickerProps["value"]) => any} [onChange]
- * @property {(value: DateTimePickerProps["value"]) => any} [onApply]
+ * @property {(value: DateTimePickerProps["value"]) => any} [onChange] callback
+ *  invoked every time the hook updates the reactive value, either through the inputs
+ *  or the picker.
+ * @property {(value: DateTimePickerProps["value"]) => any} [onApply] callback
+ *  invoked once the value is committed: this is either when all inputs received
+ *  a "change" event or when the datetime picker popover has been closed.
  * @property {DateTimePickerProps | (props: Record<string, any>) => PromiseLike<DateTimePickerProps>} [pickerProps]
  * @property {string | ReturnType<typeof useRef>} [target]
  *
@@ -139,6 +143,31 @@ export const useDateTimePicker = (hookParams) => {
     };
 
     /**
+     * @param {PointerEvent} ev
+     */
+    const onInputClick = ({ target }) => {
+        pickerProps.focusedDateIndex = target === getInput(1) ? 1 : 0;
+
+        if (!popover.isOpen) {
+            if (target && env.isSmall) {
+                target.scrollIntoView(true);
+            }
+
+            popover.open(getPopoverTarget(), { pickerProps });
+        }
+
+        focusInput(target);
+    };
+
+    /**
+     * @param {FocusEvent} ev
+     */
+    const onInputFocus = ({ target }) => {
+        pickerProps.focusedDateIndex = target === getInput(1) ? 1 : 0;
+        focusInput(target);
+    };
+
+    /**
      * @param {KeyboardEvent} ev
      */
     const onInputKeydown = (ev) => {
@@ -149,7 +178,6 @@ export const useDateTimePicker = (hookParams) => {
                 return saveAndClose();
             }
             case "Tab": {
-                updateValueFromInputs();
                 if (!getInput(0) || !getInput(1) || ev.target !== getInput(ev.shiftKey ? 1 : 0)) {
                     return saveAndClose();
                 }
@@ -167,29 +195,10 @@ export const useDateTimePicker = (hookParams) => {
                 ? getPickerProps(nextProps || comp.props)
                 : getPickerProps;
 
-        canNotify = false;
         Object.assign(pickerProps, nextPickerProps);
-        canNotify = true;
 
         lastChangedDate = lastAppliedDate = pickerProps.value;
         inputsChanged = ensureArray(pickerProps.value).map(() => false);
-    };
-
-    /**
-     * @param {HTMLInputElement} inputEl
-     */
-    const openFromInput = (inputEl) => {
-        pickerProps.focusedDateIndex = inputEl === getInput(1) ? 1 : 0;
-
-        if (!popover.isOpen) {
-            if (inputEl && env.isSmall) {
-                inputEl.scrollIntoView(true);
-            }
-
-            popover.open(getPopoverTarget(), { pickerProps });
-        }
-
-        focusInput(inputEl);
     };
 
     /**
@@ -276,6 +285,11 @@ export const useDateTimePicker = (hookParams) => {
             }
         }
         pickerProps.value = value;
+
+        if (!areDatesEqual(lastChangedDate, pickerProps.value)) {
+            lastChangedDate = pickerProps.value;
+            onChange?.(pickerProps.value);
+        }
     };
 
     const updateValueFromInputs = () => {
@@ -308,11 +322,15 @@ export const useDateTimePicker = (hookParams) => {
     const comp = useComponent();
     const popover = usePopover(DateTimePickerPopover, {
         onClose: () => {
+            if (!allowOnClose) {
+                return;
+            }
             updateValueFromInputs();
             checkAndApply();
             setFocusClass(null);
         },
     });
+    /** @type {DateTimePickerProps} */
     const rawPickerProps = {
         ...DateTimePicker.defaultProps,
         onSelect: (value) => {
@@ -325,6 +343,16 @@ export const useDateTimePicker = (hookParams) => {
     const pickerProps = reactive(rawPickerProps, () => {
         subscribeToPickerProps();
 
+        // Resets the popover position when switching from single date to a range
+        // or vice-versa
+        const currentIsRange = isRange(pickerProps.value);
+        if (popover.isOpen && lastIsRange !== currentIsRange) {
+            allowOnClose = false;
+            popover.open(getPopoverTarget(), { pickerProps });
+            allowOnClose = true;
+        }
+        lastIsRange = currentIsRange;
+
         // Update inputs
         for (const [{ el }, value] of zip(inputRefs, ensureArray(pickerProps.value), true)) {
             if (el) {
@@ -335,19 +363,14 @@ export const useDateTimePicker = (hookParams) => {
         // Will focus input on next patch
         shouldFocus = true;
         setFocusClass(getInput(pickerProps.focusedDateIndex));
-
-        if (!canNotify || areDatesEqual(lastChangedDate, pickerProps.value)) {
-            return;
-        }
-
-        lastChangedDate = pickerProps.value;
-        onChange?.(pickerProps.value);
     });
 
-    let canNotify = false;
+    /** Decides whether the popover 'onClose' callback can be called */
+    let allowOnClose = true;
     let inputsChanged = [];
     let lastAppliedDate;
     let lastChangedDate;
+    let lastIsRange = isRange(pickerProps.value);
     let shouldFocus = false;
 
     subscribeToPickerProps();
@@ -372,7 +395,8 @@ export const useDateTimePicker = (hookParams) => {
         for (const [{ el }, value] of zip(inputRefs, ensureArray(pickerProps.value), true)) {
             if (el && !el.disabled && !el.readOnly) {
                 addListener(el, "change", onInputChange);
-                addListener(el, "focus", (ev) => openFromInput(ev.target));
+                addListener(el, "click", onInputClick);
+                addListener(el, "focus", onInputFocus);
                 addListener(el, "keydown", onInputKeydown);
 
                 updateInput(el, value);
