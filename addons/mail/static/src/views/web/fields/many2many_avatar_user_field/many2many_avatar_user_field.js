@@ -6,6 +6,9 @@ import { useAssignUserCommand } from "@mail/views/web/fields/assign_user_command
 import { registry } from "@web/core/registry";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { patch } from "@web/core/utils/patch";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { browser } from "@web/core/browser/browser";
+import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 import {
     Many2ManyTagsAvatarField,
     many2ManyTagsAvatarField,
@@ -26,12 +29,39 @@ const userChatter = {
         if (this.props.withCommand) {
             useAssignUserCommand();
         }
+        this.avatarCard = usePopover(AvatarCardPopover, {
+            closeOnHoverAway: true,
+        });
+        this.openTimeout = false;
+        this.lastOpenedId = 0;
     },
 
     getTagProps(record) {
         return {
             ...this._super(...arguments),
             onImageClicked: () => this.openChat(record.resId),
+            openCard: (ev) => {
+                if (this.env.isSmall) {
+                    return;
+                }
+                const target = ev.currentTarget;
+                this.openTimeout = browser.setTimeout(() => {
+                    if (
+                        !this.avatarCard.isOpen ||
+                        (this.lastOpenedId && record.resId !== this.lastOpenedId)
+                    ) {
+                        this.avatarCard.open(target, {
+                            id: record.resId,
+                            relation: this.relation,
+                        });
+                        this.lastOpenedId = record.resId;
+                    }
+                }, 350);
+            },
+            clearTimeout: () => {
+                browser.clearTimeout(this.openTimeout);
+                delete this.openTimeout;
+            },
         };
     },
 };

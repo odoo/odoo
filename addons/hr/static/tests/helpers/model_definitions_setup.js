@@ -2,7 +2,7 @@
 
 import { addFakeModel, addModelNamesToFetch } from '@bus/../tests/helpers/model_definitions_helpers';
 
-addModelNamesToFetch(['hr.employee', 'hr.employee.public']);
+addModelNamesToFetch(['hr.employee', 'hr.employee.public', 'hr.department']);
 
 addFakeModel('m2x.avatar.employee', {
     employee_id: { string: "Employee", type: 'many2one', relation: 'hr.employee.public' },
