@@ -85,6 +85,14 @@ class MailTemplate(models.Model):
         for template in self:
             template.can_write = template in writable_templates
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_reset_password_email(self):
+        mail_template = self.env.ref('auth_signup.reset_password_email', False)
+        if mail_template.id in self.ids:
+            raise UserError(_(
+                "You cannot delete this %s template."
+                "Please archive it instead.", mail_template.name))
+
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
