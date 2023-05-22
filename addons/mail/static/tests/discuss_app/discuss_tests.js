@@ -2009,7 +2009,8 @@ QUnit.test(
         await start();
         await click(".o_main_navbar i[aria-label='Messages']");
         await click(".o-mail-NotificationItem:contains(General)");
-        await click(".o-mail-ChatWindow [title='Open in Discuss']");
+        await click("[title='More actions']");
+        await click("[title='Open in Discuss']");
         await click(".o-mail-DiscussCategoryItem:contains(General) [title='Channel settings']");
         assert.strictEqual($(".o_breadcrumb").text(), "DiscussGeneral");
     }
