@@ -37,4 +37,8 @@ export class ChatWindow {
     get displayName() {
         return this.thread?.displayName ?? _t("New message");
     }
+
+    get isOpen() {
+        return !this.folded && !this.hidden;
+    }
 }

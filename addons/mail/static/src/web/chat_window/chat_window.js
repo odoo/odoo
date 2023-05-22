@@ -15,6 +15,8 @@ import { isEventHandled } from "@mail/utils/misc";
 import { ChannelSelector } from "@mail/discuss_app/channel_selector";
 import { PinnedMessagesPanel } from "@mail/discuss_app/pinned_messages_panel";
 import { _t } from "@web/core/l10n/translation";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 
 /**
  * @typedef {Object} Props
@@ -25,6 +27,8 @@ import { _t } from "@web/core/l10n/translation";
 export class ChatWindow extends Component {
     static components = {
         Call,
+        Dropdown,
+        DropdownItem,
         Thread,
         ChannelSelector,
         Composer,
@@ -45,7 +49,9 @@ export class ChatWindow extends Component {
         this.messageEdition = useMessageEdition();
         this.messageHighlight = useMessageHighlight();
         this.messageToReplyTo = useMessageToReplyTo();
+        this.ui = useState(useService("ui"));
         this.state = useState({
+            moreActionsExpanded: false,
             /**
              * activeMode:
              *   "pinned-messages": pin menu is displayed
@@ -56,7 +62,7 @@ export class ChatWindow extends Component {
              */
             activeMode: "",
         });
-        this.action = useService("action");
+        this.actionService = useService("action");
         this.contentRef = useRef("content");
         useChildSubEnv({
             inChatWindow: true,
@@ -112,7 +118,7 @@ export class ChatWindow extends Component {
     }
 
     toggleFold() {
-        if (this.store.isSmall) {
+        if (this.store.isSmall || this.state.moreActionsExpanded) {
             return;
         }
         if (this.props.chatWindow.hidden) {
@@ -130,7 +136,7 @@ export class ChatWindow extends Component {
 
     expand() {
         if (this.thread.type === "chatter") {
-            this.action.doAction({
+            this.actionService.doAction({
                 type: "ir.actions.act_window",
                 res_id: this.thread.id,
                 res_model: this.thread.model,
@@ -140,7 +146,7 @@ export class ChatWindow extends Component {
             return;
         }
         this.threadService.setDiscussThread(this.thread);
-        this.action.doAction(
+        this.actionService.doAction(
             {
                 type: "ir.actions.client",
                 tag: "mail.action_discuss",
@@ -153,5 +159,64 @@ export class ChatWindow extends Component {
     close(options) {
         this.chatWindowService.close(this.props.chatWindow, options);
         this.chatWindowService.notifyState(this.props.chatWindow);
+    }
+
+    get orderedActions() {
+        return this.actions.sort((act1, act2) => act1.sequence - act2.sequence);
+    }
+
+    get actions() {
+        const acts = [];
+        if (
+            this.thread?.allowCalls &&
+            this.thread !== this.rtc.state.channel &&
+            !this.props.chatWindow.hidden
+        ) {
+            acts.push({
+                id: "call",
+                name: _t("Start a Call"),
+                icon: "fa fa-fw fa-phone",
+                onSelect: () => this.rtc.toggleCall(this.props.chatWindow.thread),
+                sequence: 10,
+            });
+        }
+        if (this.thread?.model === "discuss.channel" && this.props.chatWindow.isOpen) {
+            acts.push({
+                id: "pinned",
+                name: _t("Pinned Messages"),
+                icon: "fa fa-fw fa-thumb-tack",
+                onSelect: () => this.togglePinMenu(),
+                sequence: 20,
+            });
+        }
+        if (this.thread && this.props.chatWindow.isOpen) {
+            acts.push({
+                id: "expand",
+                name:
+                    this.thread.model === "discuss.channel"
+                        ? _t("Open in Discuss")
+                        : _t("Open Form View"),
+                icon: "fa fa-fw fa-expand",
+                onSelect: () => this.expand(),
+                sequence: 50,
+            });
+        }
+        acts.push({
+            id: "close",
+            name: _t("Close Chat Window"),
+            icon: "fa fa-fw fa-close",
+            onSelect: () => this.close(),
+            sequence: 100,
+        });
+        return acts;
+    }
+
+    get moreMenuText() {
+        return _t("More actions");
+    }
+
+    async onMoreActionsStateChanged(state) {
+        await new Promise(setTimeout); // wait for bubbling header
+        this.state.moreActionsExpanded = state.open;
     }
 }
