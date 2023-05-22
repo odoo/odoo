@@ -6,7 +6,6 @@ import { useBus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { ControlButtonsMixin } from "@point_of_sale/js/ControlButtonsMixin";
 import { IndependentToOrderScreen } from "@point_of_sale/js/Misc/IndependentToOrderScreen";
-import { orderManagement } from "@point_of_sale/js/PosContext";
 import { Orderline } from "@point_of_sale/js/models";
 
 import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
@@ -16,7 +15,7 @@ import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 
 import { SaleOrderList } from "./SaleOrderList";
 import { SaleOrderManagementControlPanel } from "./SaleOrderManagementControlPanel";
-import { onMounted, useRef, useState } from "@odoo/owl";
+import { onMounted, useRef } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/pos_hook";
 
 /**
@@ -43,7 +42,6 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
         this.notification = useService("pos_notification");
 
         useBus(this.saleOrderFetcher, "update", this.render);
-        this.orderManagementContext = useState(orderManagement);
 
         onMounted(this.onMounted);
     }
@@ -70,7 +68,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
         return false;
     }
     get selectedPartner() {
-        const order = this.orderManagementContext.selectedOrder;
+        const order = this.pos.orderManagement.selectedOrder;
         return order ? order.get_partner() : null;
     }
     get orders() {

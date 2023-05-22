@@ -11,7 +11,7 @@
                 <span class="icon">
                     <i class="fa fa-search" />
                 </span>
-                <input type="text" t-ref="autofocus" t-model="orderManagementContext.searchString" t-on-keydown="onInputKeydown" placeholder="E.g. customer: Steward, date: 2020-05-09" />
+                <input type="text" t-ref="autofocus" t-model="pos.orderManagement.searchString" t-on-keydown="onInputKeydown" placeholder="E.g. customer: Steward, date: 2020-05-09" />
                 <span class="clear" t-on-click="() => this.clearSearch()">
                     <i class="fa fa-remove" />
                 </span>
