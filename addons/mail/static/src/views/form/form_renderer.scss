@@ -26,8 +26,8 @@
     }
 
     &.o-isInFormSheetBg {
-        background-color: $white;
-        border-top: 1px solid $border-color;
+        margin-left: calc(var(--formView-sheetBg-padding-x) * -1);
+        margin-right: calc(var(--formView-sheetBg-padding-x) * -1);
     }
 
     &:not(.o-aside):not(.o-full-width) .o-mail-Chatter {
