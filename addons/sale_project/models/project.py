@@ -266,8 +266,17 @@ class Project(models.Model):
             f'{ProjectMilestone._table}.sale_line_id',
         )
 
-        query = Query(self._cr, 'project_sale_order_item', ' UNION '.join([project_query_str, task_query_str, milestone_query_str]))
-        query._where_params = project_params + task_params + milestone_params
+        SaleOrderLine = self.env['sale.order.line']
+        sol_query = SaleOrderLine._search([])
+        sol_query.order = None
+        sol_query.add_where('analytic_distribution ? %s', [str(analytic_account_id) for analytic_account_id in self.analytic_account_id.ids])
+        sol_query_str, sol_params = sol_query.select(
+            f'{SaleOrderLine._table}.project_id AS id',
+            f'{SaleOrderLine._table}.id AS sale_line_id',
+        )
+
+        query = Query(self._cr, 'project_sale_order_item', ' UNION '.join([project_query_str, task_query_str, milestone_query_str, sol_query_str]))
+        query._where_params = project_params + task_params + milestone_params + sol_params
         return query
 
     def get_panel_data(self):
