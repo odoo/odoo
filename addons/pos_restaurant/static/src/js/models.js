@@ -137,10 +137,7 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
         }
     },
     getTableById(tableId) {
-        return this.floors
-            .map((floor) => floor.tables)
-            .flat()
-            .find((table) => table.id === tableId);
+        return this.getTables().find((table) => table.id === tableId);
     },
     getTables() {
         return this.floors.map((floor) => floor.tables).flat();

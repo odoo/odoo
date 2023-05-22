@@ -41,7 +41,6 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
     // the websocket and dispatch them to the different utility functions.
     handleBusMessages(detail) {
         this._super(...arguments);
-        console.debug("socketMessage", detail);
         if (detail.type === "TABLE_ORDER_COUNT") {
             this.ws_syncTableCount(detail.payload);
         } else if (detail.type === "TABLE_CHANGED") {
@@ -97,9 +96,6 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
             // Is a table update
             for (const key in table) {
                 if (table[key] !== newTable[key]) {
-                    console.debug(
-                        `table ${table.id} changed ${key} from ${table[key]} to ${newTable[key]}`
-                    );
                     table[key] = newTable[key];
                 }
             }
