@@ -14,6 +14,31 @@ const qweb = core.qweb;
 const _t = core._t;
 let currentActionName;
 
+const allFormsInfo = new Map();
+const clearAllFormsInfo = () => {
+    allFormsInfo.clear();
+};
+/**
+ * Returns the domain of a field.
+ *
+ * @private
+ * @param {HTMLElement} formEl
+ * @param {String} name
+ * @param {String} type
+ * @param {String} relation
+ * @returns {Object|false}
+ */
+function _getDomain(formEl, name, type, relation) {
+    // We need this because the field domain is in formInfo in the
+    // WebsiteFormEditor but we need it in the WebsiteFieldEditor.
+    if (!allFormsInfo.get(formEl) || !name || !type || !relation) {
+        return false;
+    }
+    const field = allFormsInfo.get(formEl).fields
+        .find(el => el.name === name && el.type === type && el.relation === relation);
+    return field && field.domain;
+}
+
 const FormEditor = options.Class.extend({
     //----------------------------------------------------------------------
     // Private
@@ -607,6 +632,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         if (!formInfo || !formInfo.fields) {
             return;
         }
+        allFormsInfo.set(this.$target[0], formInfo);
         const proms = formInfo.fields.map(field => this._fetchFieldRecords(field));
         return Promise.all(proms).then(() => {
             formInfo.fields.forEach(field => {
@@ -849,7 +875,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             this.fields = {};
             for (const [fieldName, field] of Object.entries(fields)) {
                 field.name = fieldName;
-                field.domain = field.domain || [];
+                const fieldDomain = _getDomain(this.formEl, field.name, field.type, field.relation);
+                field.domain = fieldDomain || field.domain || [];
                 this.fields[fieldName] = field;
             }
             // Create the buttons for the type we-select
@@ -1590,3 +1617,7 @@ options.registry.DeviceVisibility.include({
             && !this.$target.hasClass('s_website_form_field_hidden');
     },
 });
+
+export default {
+    clearAllFormsInfo,
+};

@@ -3,6 +3,7 @@
 import Wysiwyg from "web_editor.wysiwyg";
 import snippetsEditor from "website.snippet.editor";
 import socialMediaOptions from "@website/snippets/s_social_media/options";
+import formOptions from "@website/snippets/s_website_form/options";
 
 /**
  * Show/hide the dropdowns associated to the given toggles and allows to wait
@@ -112,6 +113,8 @@ const WebsiteWysiwyg = Wysiwyg.extend({
         // It would also survive (multi) website switch, not fetching the values
         // from the accessed website.
         socialMediaOptions.clearDbSocialValuesCache();
+
+        formOptions.clearAllFormsInfo();
 
         this._restoreMegaMenus();
         this._super.apply(this, arguments);
