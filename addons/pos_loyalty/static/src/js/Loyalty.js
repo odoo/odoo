@@ -832,22 +832,46 @@ const PosLoyaltyOrder = (Order) =>
             for (const rule of program.rules) {
                 for (const line of rewardLines) {
                     const reward = this.pos.reward_by_id[line.reward_id];
-                    if (reward.reward_type !== "product") {
-                        continue;
-                    }
-                    if (rule.reward_point_mode === "order") {
-                        res += rule.reward_point_amount;
-                    } else if (rule.reward_point_mode === "money") {
-                        res -= round_precision(
-                            rule.reward_point_amount * line.get_price_with_tax(),
-                            0.01
-                        );
-                    } else if (rule.reward_point_mode === "unit") {
-                        res += rule.reward_point_amount * line.get_quantity();
+                    if (this._validForPointsCorrection(reward, line, rule)) {
+                        if (rule.reward_point_mode === "order") {
+                            res += rule.reward_point_amount;
+                        } else if (rule.reward_point_mode === "money") {
+                            res -= round_precision(
+                                rule.reward_point_amount * line.get_price_with_tax(),
+                                0.01
+                            );
+                        } else if (rule.reward_point_mode === "unit") {
+                            res += rule.reward_point_amount * line.get_quantity();
+                        }
                     }
                 }
             }
             return res;
+        }
+        /**
+         * Checks if a reward line is valid for points correction.
+         *
+         * The function evaluates three conditions:
+         * 1. The reward type must be 'product'.
+         * 2. The reward line must be part of the rule.
+         * 3. The reward line and the rule must be associated with the same program.
+         */
+        _validForPointsCorrection(reward, line, rule) {
+            // Check if the reward type is free product
+            if (reward.reward_type !== 'product') {
+                return false;
+            }
+
+            // Check if the reward line is part of the rule
+            if (!(rule.any_product || rule.valid_product_ids.has(line.reward_product_id))) {
+                return false;
+            }
+
+            // Check if the reward line and the rule are associated with the same program
+            if (rule.program_id.id !== reward.program_id.id) {
+                return false;
+            }
+            return true;
         }
         /**
          * @returns {number} The points that are left for the given coupon for this order.
