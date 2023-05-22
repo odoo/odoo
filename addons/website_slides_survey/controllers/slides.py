@@ -153,7 +153,7 @@ class WebsiteSlidesSurvey(WebsiteSlides):
 
         # 3. Remove certification badge from badges and keep only certification badge linked to opened survey
         badges = values['badges'] - certification_badges
-        certification_badges = certification_badges.filtered(lambda b: b.survey_id.state == 'open')
+        certification_badges = certification_badges.filtered(lambda b: b.survey_id.active)
 
         # 4. Getting all course url for each badge
         certification_slides = request.env['slide.slide'].sudo().search([('survey_id', 'in', certification_badges.mapped('survey_id').ids)])
