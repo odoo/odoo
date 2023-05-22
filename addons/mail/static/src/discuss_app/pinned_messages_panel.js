@@ -38,7 +38,7 @@ export class PinnedMessagesPanel extends Component {
      * @param {Message} message
      */
     async onClickJump(message) {
-        if (this.env.isSmall) {
+        if (this.env.isSmall || this.env.inChatWindow) {
             this.env.pinMenu.close();
             // Give the time to the pin menu to close before scrolling
             // to the message.
