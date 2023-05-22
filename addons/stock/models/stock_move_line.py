@@ -37,7 +37,7 @@ class StockMoveLine(models.Model):
         compute='_compute_reserved_qty', inverse='_set_reserved_qty', store=True)
     reserved_uom_qty = fields.Float(
         'Reserved', default=0.0, digits='Product Unit of Measure', required=True, copy=False)
-    qty_done = fields.Float('Done', default=0.0, digits='Product Unit of Measure', copy=False,
+    qty_done = fields.Float('Done', digits='Product Unit of Measure', copy=False,
         compute='_compute_qty_done', store=True, readonly=False)
     package_id = fields.Many2one(
         'stock.quant.package', 'Source Package', ondelete='restrict',
@@ -137,7 +137,11 @@ class StockMoveLine(models.Model):
     def _compute_qty_done(self):
         for record in self:
             if not record.qty_done:
-                record.qty_done = min(record.quant_id.quantity, record.move_id.product_qty)
+                if (record.move_id.product_qty - record.move_id.quantity_done):
+                    record.qty_done = min(record.quant_id.available_quantity, max(record.move_id.product_qty - record.move_id.quantity_done, 0))
+                else:
+                    record.qty_done = record.quant_id.quantity
+
 
     @api.constrains('lot_id', 'product_id')
     def _check_lot_product(self):
