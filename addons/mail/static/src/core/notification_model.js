@@ -23,7 +23,6 @@ export class Notification {
             id: data.id,
             _store: store,
         });
-        store.notifications[this.id] = this;
     }
 
     get message() {

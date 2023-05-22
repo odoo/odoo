@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Message } from "./message_model";
-import { removeFromArrayWithPredicate } from "../utils/arrays";
+import { removeFromArrayWithPredicate, replaceArrayWithCompare } from "../utils/arrays";
 import { convertBrToLineBreak, prettifyMessageContent } from "../utils/format";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
@@ -150,7 +150,9 @@ export class MessageService {
         const thread = message.originThread;
         await this.env.services["mail.thread"].removeFollower(thread.followerOfSelf);
         this.env.services.notification.add(
-            sprintf(_t('You are no longer following "%(thread_name)s".'), { thread_name: thread.name }),
+            sprintf(_t('You are no longer following "%(thread_name)s".'), {
+                thread_name: thread.name,
+            }),
             { type: "success" }
         );
     }
@@ -221,7 +223,6 @@ export class MessageService {
             message = this.store.messages[data.id] = message;
         }
         this.update(message, data);
-        this.updateNotifications(message);
         // return reactive version
         return message;
     }
@@ -246,15 +247,14 @@ export class MessageService {
             linkPreviews = message.linkPreviews,
             message_type: type = message.type,
             model: resModel = message.resModel,
+            notifications = message.notifications,
+            recipients = message.recipients,
             res_id: resId = message.resId,
             subtype_description: subtypeDescription = message.subtypeDescription,
             ...remainingData
         } = data;
         assignDefined(message, remainingData);
         assignDefined(message, {
-            attachments: attachments.map((attachment) =>
-                this.attachmentService.insert({ message, ...attachment })
-            ),
             defaultSubject,
             isDiscussion,
             isNote,
@@ -262,13 +262,25 @@ export class MessageService {
                 ? message.starred_partner_ids.includes(this.store.user.id)
                 : false,
             isTransient,
-            linkPreviews: linkPreviews.map((data) => new LinkPreview(data)),
             parentMessage: message.parentMessage ? this.insert(message.parentMessage) : undefined,
             resId,
             resModel,
             subtypeDescription,
             type,
         });
+        // origin thread before other information (in particular notification insert uses it)
+        if (data.record_name) {
+            message.originThread.name = data.record_name;
+        }
+        if (data.res_model_name) {
+            message.originThread.modelName = data.res_model_name;
+        }
+        replaceArrayWithCompare(
+            message.attachments,
+            attachments.map((attachment) =>
+                this.attachmentService.insert({ message, ...attachment })
+            )
+        );
         if (
             Array.isArray(message.author) &&
             message.author.some((command) => command.includes("clear"))
@@ -288,17 +300,22 @@ export class MessageService {
                 channelId: message.originThread.id,
             });
         }
-        if (data.recipients) {
-            message.recipients = data.recipients.map((recipient) =>
+        replaceArrayWithCompare(
+            message.linkPreviews,
+            linkPreviews.map((data) => this.insertLinkPreview({ ...data, message }))
+        );
+        replaceArrayWithCompare(
+            message.notifications,
+            notifications.map((notification) =>
+                this.insertNotification({ ...notification, messageId: message.id })
+            )
+        );
+        replaceArrayWithCompare(
+            message.recipients,
+            recipients.map((recipient) =>
                 this.personaService.insert({ ...recipient, type: "partner" })
-            );
-        }
-        if (data.record_name) {
-            message.originThread.name = data.record_name;
-        }
-        if (data.res_model_name) {
-            message.originThread.modelName = data.res_model_name;
-        }
+            )
+        );
         if ("user_follower_id" in data && data.user_follower_id && this.store.self) {
             this.env.services["mail.thread"].insertFollower({
                 followedThread: message.originThread,
@@ -307,7 +324,9 @@ export class MessageService {
                 partner: this.store.self,
             });
         }
-        this._updateReactions(message, data.messageReactionGroups);
+        if (data.messageReactionGroups) {
+            this._updateReactions(message, data.messageReactionGroups);
+        }
         if (message.isNotification && !message.notificationType) {
             const parser = new DOMParser();
             const htmlBody = parser.parseFromString(message.body, "text/html");
@@ -316,13 +335,7 @@ export class MessageService {
         }
     }
 
-    updateNotifications(message) {
-        message.notifications = message.notifications.map((notification) =>
-            this.insertNotification({ ...notification, messageId: message.id })
-        );
-    }
-
-    _updateReactions(message, reactionGroups = []) {
+    _updateReactions(message, reactionGroups) {
         const reactionContentToUnlink = new Set();
         const reactionsToInsert = [];
         for (const rawReaction of reactionGroups) {
@@ -347,6 +360,20 @@ export class MessageService {
                 message.reactions.push(reaction);
             }
         });
+    }
+
+    /**
+     * @param {Object} data
+     * @returns {LinkPreview}
+     */
+    insertLinkPreview(data) {
+        const linkPreview = data.message.linkPreviews.find(
+            (linkPreview) => linkPreview.id === data.id
+        );
+        if (linkPreview) {
+            return Object.assign(linkPreview, data);
+        }
+        return new LinkPreview(data);
     }
 
     /**
@@ -399,16 +426,13 @@ export class MessageService {
      * @returns {Notification}
      */
     insertNotification(data) {
-        let notification;
-        if (data.id in this.store.notifications) {
+        let notification = this.store.notifications[data.id];
+        if (!notification) {
+            this.store.notifications[data.id] = new Notification(this.store, data);
             notification = this.store.notifications[data.id];
-            this.updateNotification(notification, data);
-            return notification;
         }
-        notification = new Notification(this.store, data);
         this.updateNotification(notification, data);
-        // return reactive version
-        return this.store.notifications[data.id];
+        return notification;
     }
 
     updateNotification(notification, data) {

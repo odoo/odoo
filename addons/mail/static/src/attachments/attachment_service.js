@@ -17,13 +17,12 @@ export class AttachmentService {
         if (!("id" in data)) {
             throw new Error("Cannot insert attachment: id is missing in data");
         }
-        if (data.id in this.store.attachments) {
-            const attachment = this.store.attachments[data.id];
-            this.update(attachment, data);
-            return attachment;
+        let attachment = this.store.attachments[data.id];
+        if (!attachment) {
+            this.store.attachments[data.id] = new Attachment();
+            attachment = this.store.attachments[data.id];
+            Object.assign(attachment, { _store: this.store, id: data.id });
         }
-        const attachment = (this.store.attachments[data.id] = new Attachment());
-        Object.assign(attachment, { _store: this.store, id: data.id });
         this.update(attachment, data);
         return attachment;
     }
@@ -55,9 +54,8 @@ export class AttachmentService {
                 id: threadData.id,
             });
             attachment.originThreadLocalId = createLocalId(threadData.model, threadData.id);
-            const originThread = this.store.threads[attachment.originThreadLocalId];
-            if (!originThread.attachments.some((a) => a.id === attachment.id)) {
-                originThread.attachments.push(attachment);
+            if (!attachment.originThread.attachments.includes(attachment)) {
+                attachment.originThread.attachments.push(attachment);
             }
         }
     }

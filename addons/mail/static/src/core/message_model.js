@@ -41,7 +41,7 @@ export class Message {
     parentMessage;
     /** @type {MessageReactions[]} */
     reactions = [];
-    /** @type {Notification[]} */
+    /** @type {import("@mail/core/notification_model").Notification[]} */
     notifications = [];
     /** @type {import("@mail/core/persona_model").Persona[]} */
     recipients = [];
