@@ -164,7 +164,9 @@ export class ReceiptScreen extends AbstractReceiptScreen {
             currentOrder._printed = true;
         }
 
-        this.buttonPrintReceipt.el.className = "fa fa-print";
+        if (this.buttonPrintReceipt.el) {
+            this.buttonPrintReceipt.el.className = "fa fa-print";
+        }
     }
     _shouldAutoPrint() {
         return this.pos.globalState.config.iface_print_auto && !this.currentOrder._printed;
