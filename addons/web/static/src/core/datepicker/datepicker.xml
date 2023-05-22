@@ -16,6 +16,7 @@
                 t-on-input="(ev) => this.props.onInput(ev)"
                 t-on-click="onInputClick"
                 t-on-keydown="onInputKeydown"
+                autocomplete="off"
             />
             <span
                 t-if="props.warn_future and state.warning"
