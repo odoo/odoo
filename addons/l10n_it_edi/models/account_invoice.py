@@ -112,7 +112,7 @@ class AccountMove(models.Model):
             })
         return invoice_lines
 
-    def _l10n_it_edi_prepare_fatturapa_tax_details(self, tax_details, reverse_charge_refund=False):
+    def _l10n_it_edi_prepare_fatturapa_tax_details(self, tax_details):
         """ Returns a list of dictionaries passed to the template for the invoice lines (DatiRiepilogo)
         """
         tax_lines = []
@@ -130,10 +130,6 @@ class AccountMove(models.Model):
                 if expected_base_amount and float_compare(base_amount, expected_base_amount, 2):
                     tax_dict['rounding'] = base_amount - (tax_amount * 100 / tax_rate)
                     tax_dict['base_amount'] = base_amount - tax_dict['rounding']
-
-            if not reverse_charge_refund:
-                tax_dict['base_amount'] = abs(tax_dict['base_amount'])
-                tax_dict['tax_amount'] = abs(tax_dict['tax_amount'])
 
             tax_line_dict = {
                 'tax': tax,
@@ -251,7 +247,7 @@ class AccountMove(models.Model):
         ) if convert_to_euros and conversion_line else None
 
         invoice_lines = self._l10n_it_edi_prepare_fatturapa_line_details(reverse_charge_refund, is_downpayment, convert_to_euros)
-        tax_lines = self._l10n_it_edi_prepare_fatturapa_tax_details(tax_details, reverse_charge_refund)
+        tax_lines = self._l10n_it_edi_prepare_fatturapa_tax_details(tax_details)
 
         # Reduce downpayment views to a single recordset
         downpayment_moves = [l.get('downpayment_moves', self.env['account.move']) for l in invoice_lines]
