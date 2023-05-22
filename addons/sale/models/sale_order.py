@@ -1415,7 +1415,7 @@ class SaleOrder(models.Model):
             'description': self.name,
             'amount': self.amount_total - sum(self.invoice_ids.filtered(lambda x: x.state != 'cancel' and x.invoice_line_ids.sale_line_ids.order_id == self).mapped('amount_total')),
             'currency_id': self.currency_id.id,
-            'partner_id': self.partner_id.id,
+            'partner_id': self.partner_invoice_id.id,
             'amount_max': self.amount_total,
         }
 
