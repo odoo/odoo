@@ -107,11 +107,16 @@ class TestSequenceMixin(AccountTestInvoicingCommon):
         self.assertEqual(new_multiple_move_2.name, '/')
 
         # Change the journal of the last two moves (empty)
-        new_moves.journal_id = self.company_data['default_journal_sale']
+        journal = self.env['account.journal'].create({
+            'name': 'awesome journal',
+            'type': 'general',
+            'code': 'AJ',
+        })
+        new_moves.journal_id = journal
 
         # Both moves should be assigned a name, since no moves are in the journal and they are in different periods.
-        self.assertEqual(new_multiple_move_1.name, 'INV/2016/01/0001')
-        self.assertEqual(new_multiple_move_2.name, 'INV/2016/02/0001')
+        self.assertEqual(new_multiple_move_1.name, 'AJ/2016/01/0001')
+        self.assertEqual(new_multiple_move_2.name, 'AJ/2016/02/0001')
 
 
     def test_journal_sequence(self):
@@ -429,6 +434,7 @@ class TestSequenceMixin(AccountTestInvoicingCommon):
         self.assertEqual(move.name, 'MISC/2021/10/0001')
         with Form(move) as move_form:
             move_form.journal_id = journal
+        self.assertEqual(move.name, 'AJ/2021/10/0001')
 
 
 @tagged('post_install', '-at_install')
