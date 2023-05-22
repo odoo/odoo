@@ -882,6 +882,41 @@ QUnit.module("test_mail", {}, function () {
         }
     );
 
+    QUnit.test("activity view: Domain should not reset on load", async function (assert) {
+            Object.assign(serverData.views, {
+                "mail.test.activity,false,list":
+                    '<tree string="MailTestActivity"><field name="name"/></tree>',
+            });
+            const { env, openView } = await start({
+                serverData,
+            });
+            await openView({
+                res_model: "mail.test.activity",
+                views: [[false, "activity"]],
+                domain: [['id', '=', 1]],
+            });
+            patchWithCleanup(env.services.action, {
+                doAction(action, options) {
+                    assert.step("doAction");
+                    options.onClose();
+                },
+            });
+
+            await click(document.querySelector(".o_activity_view .o_record_selector"));
+            // search create dialog
+            await click(document.querySelector(".modal-lg .o_data_row .o_data_cell"));
+            assert.verifySteps(["doAction"]);
+
+            await click(document.querySelector(".o_activity_view .o_record_selector"));
+            // again open search create dialog
+            assert.strictEqual(
+                document.querySelectorAll(".modal-lg .o_data_row").length,
+                1,
+                "Should contains only one record after calling schedule activity which load view again"
+            );
+        }
+    );
+
     QUnit.test("Activity view: discard an activity creation dialog", async function (assert) {
         assert.expect(2);
 
