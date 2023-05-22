@@ -12,6 +12,9 @@ import {
     KanbanMany2OneAvatarField,
     kanbanMany2OneAvatarField,
 } from "@web/views/fields/many2one_avatar/many2one_avatar_field";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { browser } from "@web/core/browser/browser";
+import { AvatarCardPopover } from "@mail/discuss/web/avatar_card/avatar_card_popover";
 
 const userChatter = {
     setup() {
@@ -20,6 +23,10 @@ const userChatter = {
         if (this.props.withCommand) {
             useAssignUserCommand();
         }
+        this.avatarCard = usePopover(AvatarCardPopover, {
+            closeOnHoverAway: true,
+        });
+        this.openTimeout = false;
     },
 
     onClickAvatar() {
@@ -27,6 +34,26 @@ const userChatter = {
         if (id !== false) {
             this.openChat(id);
         }
+    },
+
+    openCard(ev) {
+        if (this.env.isSmall) {
+            return;
+        }
+        const target = ev.currentTarget;
+        this.openTimeout = browser.setTimeout(() => {
+            if (!this.avatarCard.isOpen) {
+                this.avatarCard.open(target, {
+                    id: this.props.record.data[this.props.name][0],
+                    relation: this.relation,
+                });
+            }
+        }, 350);
+    },
+
+    clearTimeout() {
+        browser.clearTimeout(this.openTimeout);
+        delete this.openTimeout;
     },
 };
 
