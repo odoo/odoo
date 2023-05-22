@@ -3,7 +3,7 @@
 import difflib
 import logging
 import time
-from markupsafe import escape
+from markupsafe import escape, Markup
 
 from odoo import api, fields, models, Command, _
 
@@ -134,7 +134,7 @@ class AccountMove(models.Model):
             if not purchases:
                 continue
             refs = [purchase._get_html_link() for purchase in purchases]
-            message = escape(_("This vendor bill has been created from: %s")) % ','.join(refs)
+            message = escape(_("This vendor bill has been created from: %s")) % Markup(',').join(refs)
             move.message_post(body=message)
         return moves
 
@@ -149,7 +149,7 @@ class AccountMove(models.Model):
             diff_purchases = new_purchases - old_purchases[i]
             if diff_purchases:
                 refs = [purchase._get_html_link() for purchase in diff_purchases]
-                message = escape(_("This vendor bill has been modified from: %s")) % ','.join(refs)
+                message = escape(_("This vendor bill has been modified from: %s")) % Markup(',').join(refs)
                 move.message_post(body=message)
         return res
 
