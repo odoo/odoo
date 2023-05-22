@@ -71,7 +71,7 @@ class RestaurantFloor(models.Model):
         self.active = False
 
         for config_id in self.pos_config_ids:
-            self.env['bus.bus']._sendone(f'pos_config-{config_id.id}', 'disable_floor', {
+            self.env['bus.bus']._sendone(f'pos_config-{config_id.id}', 'DISABLE_FLOOR', {
                 'id': self.id,
                 'table_ids': self.table_ids.ids,
             })
@@ -99,14 +99,14 @@ class RestaurantTable(models.Model):
         draft_orders = self.env['pos.order'].search([('table_id', 'in', self.ids), ('state', '=', 'draft')])
         return len(draft_orders) > 0
 
-    def multi_write(self, table_list):
+    def multi_write(self, table_vals):
         for table in self:
-            table.write(table_list[str(table.id)])
+            table.write(table_vals[str(table.id)])
             table.sendBusMessage(table)
 
     @api.model_create_multi
-    def create(self, table_list):
-        records = super().create(table_list)
+    def create(self, table_vals):
+        records = super().create(table_vals)
         for table in records:
             self.sendBusMessage(table)
         return records
@@ -128,7 +128,7 @@ class RestaurantTable(models.Model):
         }
 
         for config_id in pos_config_ids:
-            self.env['bus.bus']._sendone(f'pos_config-{config_id.id}', 'table_changed', {
+            self.env['bus.bus']._sendone(f'pos_config-{config_id.id}', 'TABLE_CHANGED', {
                 'changes': values
             })
 

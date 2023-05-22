@@ -34,7 +34,6 @@ export class PosStore extends Reactive {
         this.popup = popup;
         this.numberBuffer = number_buffer;
         this.barcodeReader = barcode_reader;
-        this.bus = bus_service;
         this.globalState = new PosGlobalState({ orm, env, hardwareProxy: hardware_proxy });
         this.hardwareProxy = hardware_proxy;
         // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
@@ -49,8 +48,8 @@ export class PosStore extends Reactive {
         this.showScreen("ProductScreen");
 
         // initialize bus_service and listen on pos_config-`id` channel
-        this.bus.addChannel(`pos_config-${this.globalState.config.id}`);
-        this.bus.addEventListener("notification", async (message) =>
+        bus_service.addChannel(`pos_config-${this.globalState.config.id}`);
+        bus_service.addEventListener("notification", async (message) =>
             message.detail.map((detail) => {
                 this.handleBusMessages(detail);
             })

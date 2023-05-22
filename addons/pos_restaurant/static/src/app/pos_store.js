@@ -42,16 +42,16 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
     handleBusMessages(detail) {
         this._super(...arguments);
         console.debug("socketMessage", detail);
-        if (detail.type === "table_order_count") {
+        if (detail.type === "TABLE_ORDER_COUNT") {
             this.ws_syncTableCount(detail.payload);
-        } else if (detail.type === "table_changed") {
+        } else if (detail.type === "TABLE_CHANGED") {
             this.ws_syncTableChanges(detail.payload);
-        } else if (detail.type === "disable_floor") {
+        } else if (detail.type === "DISABLE_FLOOR") {
             this.ws_disableFloor(detail.payload);
         }
     },
 
-    // Handles server bus messages of type `disable_floor`,
+    // Handles server bus messages of type `DISABLE_FLOOR`,
     // it will delete the floor and its tables.
     ws_disableFloor(data) {
         const floorId = data.id;

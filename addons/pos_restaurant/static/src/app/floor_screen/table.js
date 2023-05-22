@@ -70,14 +70,14 @@ export class Table extends Component {
     }
     get orderCount() {
         const table = this.props.table;
-        const orderOnTable = this.pos.globalState
+        const numOrdersOnTable = this.pos.globalState
             .getTableOrders(table.id)
             .filter(
                 (o) => !o.finalized && (o.orderlines.length > 0 || o.paymentlines.length > 0)
             ).length;
-        return table.order_count && table.order_count > orderOnTable
+        return table.order_count && table.order_count > numOrdersOnTable
             ? table.order_count
-            : orderOnTable;
+            : numOrdersOnTable;
     }
     get orderCountClass() {
         const countClass = { "order-count": true };
