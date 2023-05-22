@@ -33,6 +33,7 @@ NewContentElement.props = {
     onClick: Function,
     status: { type: String, optional: true },
     moduleXmlId: { type: String, optional: true },
+    moduleName: { type: String, optional: true },
     slots: Object,
 };
 NewContentElement.defaultProps = {
@@ -75,21 +76,18 @@ export class NewContentModal extends Component {
                     moduleName: 'website_blog',
                     moduleXmlId: 'base.module_website_blog',
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    icon: xml`<i class="fa fa-newspaper-o"/>`,
                     title: this.env._t('Blog Post'),
                 },
                 {
                     moduleName: 'website_event',
                     moduleXmlId: 'base.module_website_event',
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    icon: xml`<i class="fa fa-ticket"/>`,
                     title: this.env._t('Event'),
                 },
                 {
                     moduleName: 'website_forum',
                     moduleXmlId: 'base.module_website_forum',
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    icon: xml`<i class="fa fa-comment"/>`,
                     redirectUrl: '/forum',
                     title: this.env._t('Forum'),
                 },
@@ -97,28 +95,24 @@ export class NewContentModal extends Component {
                     moduleName: 'website_hr_recruitment',
                     moduleXmlId: 'base.module_website_hr_recruitment',
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    icon: xml`<i class="fa fa-briefcase"/>`,
                     title: this.env._t('Job Position'),
                 },
                 {
                     moduleName: 'website_sale',
                     moduleXmlId: 'base.module_website_sale',
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    icon: xml`<i class="fa fa-shopping-cart"/>`,
                     title: this.env._t('Product'),
                 },
                 {
                     moduleName: 'website_slides',
                     moduleXmlId: 'base.module_website_slides',
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    icon: xml`<i class="fa module_icon" style="background-image: url('/website/static/src/img/apps_thumbs/website_slide.svg');background-repeat: no-repeat; background-position: center;"/>`,
                     title: this.env._t('Course'),
                 },
                 {
                     moduleName: 'website_livechat',
                     moduleXmlId: 'base.module_website_livechat',
                     status: MODULE_STATUS.NOT_INSTALLED,
-                    icon: xml`<i class="fa fa-comments"/>`,
                     title: this.env._t('Livechat Widget'),
                     redirectUrl: '/livechat'
                 },

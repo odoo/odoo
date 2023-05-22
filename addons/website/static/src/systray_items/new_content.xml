@@ -16,12 +16,13 @@
 <t t-name="website.NewContentModal" owl="1">
     <div id="o_new_content_menu_choices">
         <div class="container pt32 pb32">
+            <h1 class="text-white text-center pb32">Create a new:</h1>
             <div class="row">
                 <NewContentElement t-if="isDesigner"
                         name="'New Page'"
                         onClick="() => this.createNewPage()"
                         title="'New Page'">
-                    <i class="fa fa-file-o"/>
+                    <img src="/mrp/static/description/icon.png"/>
                     <p>Page</p>
                 </NewContentElement>
 
@@ -30,7 +31,7 @@
                         status="element.status"
                         title="element.title"
                         moduleXmlId="element.moduleXmlId">
-                        <t t-call="{{ element.icon }}"/>
+                        <img t-attf-src="/{{element.moduleName}}/static/description/icon.png"/>
                         <p><t t-esc="element.title"/></p>
                     </NewContentElement>
                 </t>
