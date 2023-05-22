@@ -13,14 +13,20 @@ class Job(models.Model):
 
     @api.model
     def _default_address_id(self):
-        return self.env.company.partner_id
+        last_used_address = self.env['hr.job'].search([('company_id', '=', self.env.company.id)], order='id desc', limit=1)
+        if last_used_address:
+            return last_used_address.address_id
+        else:
+            return self.env.company.partner_id
 
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
+    company_partner_id = fields.Many2one(related='company_id.partner_id')
+    child_partners = fields.One2many(related='company_id.partner_id.child_ids')
     address_id = fields.Many2one(
         'res.partner', "Job Location", default=_default_address_id,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="['|', '&', ('type', '!=', 'private'), ('id', 'in', child_partners), ('id', '=', company_partner_id)]",
         help="Address where employees are working")
     application_ids = fields.One2many('hr.applicant', 'job_id', "Job Applications")
     application_count = fields.Integer(compute='_compute_application_count', string="Application Count")
