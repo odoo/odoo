@@ -39,7 +39,9 @@ export class StockPickFrom extends Many2OneField {
             if (this.enabledGroups?.lot) {
                 name_parts.push(this.props.record.data.lot_id?.[1] || this.props.record.data.lot_name)
             }
-            return name_parts.join(" - ");
+            const result = name_parts.join(" - ");
+            if (result) return result;
+            return "- no data -";
         }
         return "";
     }
