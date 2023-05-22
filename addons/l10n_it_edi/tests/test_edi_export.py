@@ -298,6 +298,13 @@ class TestItEdiExport(TestItEdi):
         self._assert_export_invoice(invoice, 'invoice_zero_percent_taxes.xml')
 
     def test_invoice_negative_price(self):
+        tax_10 = self.env['account.tax'].create({
+            'name': '10% tax',
+            'amount': 10.0,
+            'amount_type': 'percent',
+            'company_id': self.company.id,
+        })
+
         invoice = self.env['account.move'].with_company(self.company).create({
             'move_type': 'out_invoice',
             'invoice_date': '2022-03-24',
@@ -315,6 +322,11 @@ class TestItEdiExport(TestItEdi):
                     'price_unit': -100.0,
                     'tax_ids': [Command.set(self.default_tax.ids)],
                 }),
+                Command.create({
+                    'name': 'negative_line_different_tax',
+                    'price_unit': -50.0,
+                    'tax_ids': [Command.set(tax_10.ids)],
+                    }),
             ],
         })
         invoice.action_post()
