@@ -104,7 +104,7 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
         })
 
 
-@tagged('document_layout')
+@tagged('document_layout', "post_install", "-at_install")
 class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
     # Logo change Tests
     def test_company_no_color_change_logo(self):
