@@ -68,7 +68,7 @@
                     <field name="tax_ids" optional="hide" widget="many2many_tags" groups="account.group_account_invoice,account.group_account_readonly"/>
                     <field name="amount_tax_company" sum="Total Taxes"
                            optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
-                    <field name="attachment_number" nolabel="1" class='fa fa-paperclip pe-0' attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
+                    <field name="attachment_number" nolabel="1" class='fa fa-paperclip align-middle' attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
                     <field name="total_amount_company" sum="Total Amount" widget='monetary'
                            options="{'currency_field': 'company_currency_id'}" decoration-bf="1"/>
                     <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}" optional="hide" decoration-bf="1" groups="base.group_multi_currency"/>
