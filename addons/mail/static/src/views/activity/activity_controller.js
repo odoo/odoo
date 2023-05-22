@@ -53,7 +53,7 @@ export class ActivityController extends Component {
             context: this.props.context,
             onSelected: async (resIds) => {
                 await this.activity.schedule(this.props.resModel, resIds[0]);
-                this.model.load();
+                this.model.load(this.props);
             },
         });
     }
@@ -75,7 +75,7 @@ export class ActivityController extends Component {
                 },
             },
             {
-                onClose: () => this.model.load(),
+                onClose: () => this.model.load(this.props),
             }
         );
     }
@@ -108,7 +108,7 @@ export class ActivityController extends Component {
             archInfo: this.props.archInfo,
             groupedActivities: this.model.activityData.grouped_activities,
             scheduleActivity: this.scheduleActivity.bind(this),
-            onReloadData: () => this.model.load(),
+            onReloadData: () => this.model.load(this.props),
             onEmptyCell: this.openActivityFormView.bind(this),
             onSendMailTemplate: this.sendMailTemplate.bind(this),
             openRecord: this.openRecord.bind(this),
