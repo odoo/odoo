@@ -502,7 +502,8 @@ class MrpWorkorder(models.Model):
             if workorder.state in ['done', 'cancel']:
                 continue
             workorder._plan_workorder(replan)
-            date_start = max(date_start, workorder.date_finished)
+            if workorder.date_finished and workorder.date_finished > date_start:
+                date_start = workorder.date_finished
         # Plan only suitable workorders
         if self.state not in ['pending', 'waiting', 'ready']:
             return
