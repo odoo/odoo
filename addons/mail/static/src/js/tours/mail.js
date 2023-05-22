@@ -37,7 +37,7 @@ registry.category("web_tour.tours").add("mail_tour", {
             },
         },
         {
-            trigger: ".o-mail-Composer-input",
+            trigger: ".o-mail-Composer .odoo-editor-editable",
             content: Markup(
                 _t(
                     "<p><b>Write a message</b> to the members of the channel here.</p> <p>You can notify someone with <i>'@'</i> or link another channel with <i>'#'</i>. Start your message with <i>'/'</i> to get the list of possible commands.</p>"
@@ -47,7 +47,8 @@ registry.category("web_tour.tours").add("mail_tour", {
             width: 350,
             run: function (actions) {
                 var t = new Date().getTime();
-                actions.text("SomeText_" + t, this.$anchor);
+                actions.text("SomeText_" + t, this.$anchor.find("p"));
+                document.querySelector(".o-mail-Composer .odoo-editor-editable").click();
             },
         },
         {

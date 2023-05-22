@@ -66,7 +66,7 @@ QUnit.test(
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         await click(".o-mail-NotificationItem");
-        await insertText(".o-mail-ChatWindow .o-mail-Composer-input", "Test");
+        await insertText(".o-mail-ChatWindow .o-mail-Composer .odoo-editor-editable", "Test");
         await afterNextRender(() => triggerHotkey("control+Enter"));
         assert.containsOnce($, ".o-mail-Message");
     }
@@ -232,7 +232,7 @@ QUnit.test("chat window: close on ESCAPE", async (assert) => {
     });
     assert.containsOnce($, ".o-mail-ChatWindow");
 
-    $(".o-mail-Composer-input")[0].focus();
+    $(".o-mail-Composer .odoo-editor-editable")[0].focus();
     await afterNextRender(() => triggerHotkey("Escape"));
     assert.containsNone($, ".o-mail-ChatWindow");
     assert.verifySteps(["rpc:channel_fold/closed"]);
@@ -255,7 +255,7 @@ QUnit.test(
             ],
         });
         await start();
-        await insertText(".o-mail-Composer-input", "@");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "@");
         await afterNextRender(() => triggerHotkey("Escape"));
         assert.containsOnce($, ".o-mail-ChatWindow");
     }
@@ -296,7 +296,7 @@ QUnit.test("open 2 different chat windows: enough screen width [REQUIRE FOCUS]",
         document.activeElement,
         $(".o-mail-ChatWindow-header:contains(Channel_1)")
             .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
+            .find(".o-mail-Composer .odoo-editor-editable")[0]
     );
 
     await click("button i[aria-label='Messages']");
@@ -308,7 +308,7 @@ QUnit.test("open 2 different chat windows: enough screen width [REQUIRE FOCUS]",
         document.activeElement,
         $(".o-mail-ChatWindow-header:contains(Channel_2)")
             .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
+            .find(".o-mail-Composer .odoo-editor-editable")[0]
     );
 });
 
@@ -352,7 +352,7 @@ QUnit.test("open 3 different chat windows: not enough screen width", async (asse
         document.activeElement,
         $(".o-mail-ChatWindow-header:contains(Channel_3)")
             .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
+            .find(".o-mail-Composer .odoo-editor-editable")[0]
     );
 });
 
@@ -397,11 +397,11 @@ QUnit.test(
             "should have enough space to open 2 chat windows simultaneously"
         );
         await start();
-        assert.containsN($, ".o-mail-ChatWindow .o-mail-Composer-input", 2);
+        assert.containsN($, ".o-mail-ChatWindow .o-mail-Composer .odoo-editor-editable", 2);
 
         $(".o-mail-ChatWindow-name:contains(MyTeam)")
             .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
+            .find(".o-mail-Composer .odoo-editor-editable")[0]
             .focus();
         await afterNextRender(() => triggerHotkey("Escape"));
         assert.containsOnce($, ".o-mail-ChatWindow");
@@ -409,7 +409,7 @@ QUnit.test(
             document.activeElement,
             $(".o-mail-ChatWindow-name:contains(General)")
                 .closest(".o-mail-ChatWindow")
-                .find(".o-mail-Composer-input")[0]
+                .find(".o-mail-Composer .odoo-editor-editable")[0]
         );
     }
 );
@@ -431,7 +431,7 @@ QUnit.test("chat window: switch on TAB", async (assert) => {
         document.activeElement,
         $(".o-mail-ChatWindow-name:contains(channel1)")
             .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
+            .find(".o-mail-Composer .odoo-editor-editable")[0]
     );
 
     await afterNextRender(() => triggerHotkey("Tab"));
@@ -439,7 +439,7 @@ QUnit.test("chat window: switch on TAB", async (assert) => {
         document.activeElement,
         $(".o-mail-ChatWindow-name:contains(channel1)")
             .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
+            .find(".o-mail-Composer .odoo-editor-editable")[0]
     );
 
     await click(".o_menu_systray i[aria-label='Messages']");
@@ -451,7 +451,7 @@ QUnit.test("chat window: switch on TAB", async (assert) => {
         document.activeElement,
         $(".o-mail-ChatWindow-name:contains(channel2)")
             .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
+            .find(".o-mail-Composer .odoo-editor-editable")[0]
     );
 
     await afterNextRender(() => triggerHotkey("Tab"));
@@ -460,7 +460,7 @@ QUnit.test("chat window: switch on TAB", async (assert) => {
         document.activeElement,
         $(".o-mail-ChatWindow-name:contains(channel1)")
             .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
+            .find(".o-mail-Composer .odoo-editor-editable")[0]
     );
 });
 
@@ -518,18 +518,18 @@ QUnit.test("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", as
     );
     await start();
     // FIXME: assumes ordering: MyProject, MyTeam, General
-    assert.containsN($, ".o-mail-ChatWindow .o-mail-Composer-input", 3);
+    assert.containsN($, ".o-mail-ChatWindow .o-mail-Composer .odoo-editor-editable", 3);
 
     $(".o-mail-ChatWindow-name:contains(MyProject)")
         .closest(".o-mail-ChatWindow")
-        .find(".o-mail-Composer-input")[0]
+        .find(".o-mail-Composer .odoo-editor-editable")[0]
         .focus();
     await afterNextRender(() => triggerHotkey("Tab"));
     assert.strictEqual(
         document.activeElement,
         $(".o-mail-ChatWindow-name:contains(MyTeam)")
             .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
+            .find(".o-mail-Composer .odoo-editor-editable")[0]
     );
 
     await afterNextRender(() => triggerHotkey("Tab"));
@@ -537,7 +537,7 @@ QUnit.test("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", as
         document.activeElement,
         $(".o-mail-ChatWindow-name:contains(General)")
             .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
+            .find(".o-mail-Composer .odoo-editor-editable")[0]
     );
 
     await afterNextRender(() => triggerHotkey("Tab"));
@@ -545,7 +545,7 @@ QUnit.test("chat window: TAB cycle with 3 open chat windows [REQUIRE FOCUS]", as
         document.activeElement,
         $(".o-mail-ChatWindow-name:contains(MyProject)")
             .closest(".o-mail-ChatWindow")
-            .find(".o-mail-Composer-input")[0]
+            .find(".o-mail-Composer .odoo-editor-editable")[0]
     );
 });
 
@@ -590,29 +590,10 @@ QUnit.test(
                 thread_model: "discuss.channel",
             })
         );
-        assert.containsOnce($, ".o-mail-ChatWindow");
-        assert.containsN($, ".o-mail-Message", 2);
-        assert.containsOnce($, "hr + span:contains(New messages)");
-    }
-);
-
-QUnit.test(
-    "new message separator is shown in chat window of chat on receiving new message when there was no history",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-        const userId = pyEnv["res.users"].create({
-            name: "Foreigner user",
-            partner_id: partnerId,
-        });
-        const channelId = pyEnv["discuss.channel"].create({
-            channel_member_ids: [
-                Command.create({ partner_id: pyEnv.currentPartnerId }),
-                Command.create({ partner_id: partnerId }),
-            ],
-            channel_type: "chat",
-        });
-        const { env } = await start();
+        $(".o-mail-ChatWindow-name:contains(Demo)")
+            .closest(".o-mail-ChatWindow")
+            .find(".o-mail-Composer .odoo-editor-editable")[0]
+            .blur();
         // simulate receiving a message
         await afterNextRender(async () =>
             env.services.rpc("/mail/message/post", {
@@ -622,6 +603,8 @@ QUnit.test(
                 thread_model: "discuss.channel",
             })
         );
+        assert.containsOnce($, ".o-mail-ChatWindow");
+        assert.containsN($, ".o-mail-Message", 3);
         assert.containsOnce($, "hr + span:contains(New messages)");
     }
 );
@@ -696,9 +679,9 @@ QUnit.test(
             });
         }
         await start();
-        await insertText(".o-mail-Composer-input", "WOLOLO");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "WOLOLO");
         await afterNextRender(() =>
-            triggerEvent(document.body, ".o-mail-Composer-input", "keydown", {
+            triggerEvent(document.body, ".o-mail-Composer .odoo-editor-editable", "keydown", {
                 key: "Enter",
             })
         );
@@ -785,7 +768,7 @@ QUnit.test("chat window: composer state conservation on toggle discuss", async (
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     // Set content of the composer of the chat window
-    await insertText(".o-mail-Composer-input", "XDU for the win !");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "XDU for the win !");
     assert.containsNone($, ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard");
     // Set attachments of the composer
     const files = [
@@ -802,7 +785,10 @@ QUnit.test("chat window: composer state conservation on toggle discuss", async (
     ];
     inputFiles($(".o-mail-Composer-coreMain .o_input_file")[0], files);
     await waitUntil(".o-mail-AttachmentCard .fa-check", 2);
-    assert.strictEqual($(".o-mail-Composer-input").val(), "XDU for the win !");
+    assert.strictEqual(
+        $(".o-mail-Composer .odoo-editor-editable")[0].textContent,
+        "XDU for the win !"
+    );
 
     await openDiscuss();
     assert.containsNone($, ".o-mail-ChatWindow");
@@ -812,7 +798,10 @@ QUnit.test("chat window: composer state conservation on toggle discuss", async (
         res_model: "discuss.channel",
         views: [[false, "form"]],
     });
-    assert.strictEqual($(".o-mail-Composer-input").val(), "XDU for the win !");
+    assert.strictEqual(
+        $(".o-mail-Composer .odoo-editor-editable")[0].textContent,
+        "XDU for the win !"
+    );
     assert.containsN($, ".o-mail-Composer-footer .o-mail-AttachmentList .o-mail-AttachmentCard", 2);
 });
 
@@ -854,7 +843,7 @@ QUnit.test(
         ]);
         pyEnv["discuss.channel.member"].write([memberId], { seen_message_id: messageId });
         const { env } = await start();
-        $(".o-mail-Composer-input")[0].blur();
+        $(".o-mail-Composer .odoo-editor-editable")[0].blur();
         // simulate receiving a message
         await afterNextRender(() =>
             env.services.rpc("/mail/message/post", {
@@ -865,7 +854,7 @@ QUnit.test(
             })
         );
         assert.containsOnce($, "hr + span:contains(New messages)");
-        await afterNextRender(() => $(".o-mail-Composer-input")[0].focus());
+        await afterNextRender(() => $(".o-mail-Composer .odoo-editor-editable")[0].focus());
         assert.containsNone($, "hr + span:contains(New messages)");
     }
 );

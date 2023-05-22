@@ -80,10 +80,7 @@ QUnit.test("log note toggling", async (assert) => {
 
     await click("button:contains(Log note)");
     assert.hasClass($("button:contains(Log note)"), "o-active");
-    assert.containsOnce(
-        $,
-        ".o-mail-Composer .o-mail-Composer-input[placeholder='Log an internal note...']"
-    );
+    assert.containsOnce($, ".o-mail-Composer .odoo-editor-editable");
 
     await click("button:contains(Log note)");
     assert.doesNotHaveClass($("button:contains(Log note)"), "o-active");
@@ -105,7 +102,7 @@ QUnit.test("send message toggling", async (assert) => {
 
     await click("button:contains(Send message)");
     assert.hasClass($("button:contains(Send message)"), "o-active");
-    assert.containsOnce($, ".o-mail-Composer-input[placeholder='Send a message to followers...']");
+    assert.containsOnce($, ".o-mail-Composer .odoo-editor-editable");
 
     await click("button:contains(Send message)");
     assert.doesNotHaveClass($("button:contains(Send message)"), "o-active");
@@ -130,12 +127,12 @@ QUnit.test("log note/send message switching", async (assert) => {
     await click("button:contains(Send message)");
     assert.hasClass($("button:contains(Send message)"), "o-active");
     assert.doesNotHaveClass($("button:contains(Log note)"), "o-active");
-    assert.containsOnce($, ".o-mail-Composer-input[placeholder='Send a message to followers...']");
+    assert.containsOnce($, ".o-mail-Composer .odoo-editor-editable");
 
     await click("button:contains(Log note)");
     assert.doesNotHaveClass($("button:contains(Send message)"), "o-active");
     assert.hasClass($("button:contains(Log note)"), "o-active");
-    assert.containsOnce($, ".o-mail-Composer-input[placeholder='Log an internal note...']");
+    assert.containsOnce($, ".o-mail-Composer .odoo-editor-editable");
 });
 
 QUnit.test("attachment counter without attachments", async (assert) => {

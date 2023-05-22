@@ -35,30 +35,11 @@
                         'border rounded-3 align-self-stretch flex-column' : extended,
                     }"
                 >
-                    <div class="position-relative flex-grow-1">
-                        <textarea class="o-mail-Composer-input form-control bg-view px-3 border-0 rounded-3 shadow-none overflow-auto"
-                            t-ref="textarea"
-                            style="height:40px;"
-                            t-on-keydown="onKeydown"
-                            t-on-focusin="onFocusin"
-                            t-on-focusout="() => this.props.composer.isFocused = false"
-                            t-on-click="(ev) => markEventHandled(ev, 'composer.onClickTextarea')"
-                            t-on-paste="onPaste"
-                            t-model="props.composer.textInputContent"
-                            t-att-placeholder="placeholder"
-                            t-att-readOnly="!state.active"
-                        />
-                        <!--
-                             This is an invisible textarea used to compute the composer
-                             height based on the text content. We need it to downsize
-                             the textarea properly without flicker.
-                        -->
-                        <textarea
-                            class="o-mail-Composer-fake position-absolute"
-                            t-model="props.composer.textInputContent"
-                            t-ref="fakeTextarea"
-                            disabled="1"
-                        />
+                    <div class="d-flex flex-column flex-grow-1" t-ref="wysiwygArea">
+                        <HtmlFieldWysiwygAdapterComponent Component="this.Wysiwyg"
+                            startWysiwyg.bind="this.startWysiwyg"
+                            editingValue="props.composer.wysiwygValue"
+                            widgetArgs="[this.wysiwygOptions()]" />
                     </div>
                     <div class="o-mail-Composer-actions d-flex bg-view"
                         t-att-class="{

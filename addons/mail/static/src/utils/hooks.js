@@ -226,55 +226,6 @@ export function useMessageHighlight(duration = 2000) {
     return state;
 }
 
-export function useSelection({ refName, model, preserveOnClickAwayPredicate = () => false }) {
-    const ref = useRef(refName);
-    function onSelectionChange() {
-        if (document.activeElement && document.activeElement === ref.el) {
-            Object.assign(model, {
-                start: ref.el.selectionStart,
-                end: ref.el.selectionEnd,
-                direction: ref.el.selectionDirection,
-            });
-        }
-    }
-    function clear() {
-        if (!ref.el) {
-            return;
-        }
-        ref.el.selectionStart = ref.el.selectionEnd = ref.el.value.length;
-    }
-    onExternalClick(refName, async (ev) => {
-        if (await preserveOnClickAwayPredicate(ev)) {
-            return;
-        }
-        if (!ref.el) {
-            return;
-        }
-        clear();
-        Object.assign(model, {
-            start: ref.el.selectionStart,
-            end: ref.el.selectionEnd,
-            direction: ref.el.selectionDirection,
-        });
-    });
-    onMounted(() => {
-        document.addEventListener("selectionchange", onSelectionChange);
-    });
-    onWillUnmount(() => {
-        document.removeEventListener("selectionchange", onSelectionChange);
-    });
-    return {
-        clear,
-        restore() {
-            ref.el?.setSelectionRange(model.start, model.end, model.direction);
-        },
-        moveCursor(position) {
-            model.start = model.end = position;
-            ref.el.selectionStart = ref.el.selectionEnd = position;
-        },
-    };
-}
-
 /**
  * @param {string} refName
  * @param {ScrollPosition} [model] Model to store saved position.

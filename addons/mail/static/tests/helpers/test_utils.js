@@ -43,6 +43,9 @@ function _createFakeDataTransfer(files) {
         dropEffect: "all",
         effectAllowed: "all",
         files,
+        getData: () => {
+            return files;
+        },
         items: [],
         types: ["Files"],
     };
@@ -533,13 +536,21 @@ function pasteFiles(el, files) {
  * @param {string} content
  * @param {Object} [param2 = {}]
  * @param {boolean} [param2.replace = false]
+ * @param {boolean} [param2.inComposer = false]
  */
-export async function insertText(selector, content, { replace = false } = {}) {
-    await afterNextRender(() => {
-        if (replace) {
+export async function insertText(selector, content, { replace = false, inComposer = false } = {}) {
+    if (replace) {
+        if (inComposer) {
+            document.querySelector(selector).innerText = "";
+        } else {
             document.querySelector(selector).value = "";
         }
-        document.querySelector(selector).focus();
+    }
+    document.querySelector(selector).focus();
+    if (content === "") {
+        return;
+    }
+    await afterNextRender(() => {
         for (const char of content) {
             document.execCommand("insertText", false, char);
             document

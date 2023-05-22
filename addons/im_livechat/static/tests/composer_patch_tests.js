@@ -8,7 +8,7 @@ import {
     dragenterFiles,
     start,
 } from "@mail/../tests/helpers/test_utils";
-import { editInput, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
+import { nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 
 QUnit.module("composer (patch)");
 
@@ -35,7 +35,7 @@ QUnit.test("Attachment upload via drag and drop disabled", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsOnce($, ".o-mail-Composer");
-    dragenterFiles($(".o-mail-Composer-input")[0]);
+    dragenterFiles($(".o-mail-Composer")[0]);
     await nextTick();
     assert.containsNone($, ".o-mail-Dropzone");
 });
@@ -62,7 +62,8 @@ QUnit.test("Can execute help command on livechat channels", async (assert) => {
     });
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
-    await editInput(document.body, ".o-mail-Composer-input", "/help");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "/help");
+    triggerHotkey("Enter");
     triggerHotkey("Enter");
     await nextTick();
     assert.verifySteps(["execute_command_help"]);
@@ -112,7 +113,7 @@ QUnit.test('display canned response suggestions on typing ":"', async (assert) =
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
-    await insertText(".o-mail-Composer-input", ":");
+    await insertText(".o-mail-Composer .odoo-editor-editable", ":");
     assert.containsOnce($, ".o-mail-Composer-suggestionList .o-open");
 });
 
@@ -134,12 +135,12 @@ QUnit.test("use a canned response", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
-    assert.strictEqual($(".o-mail-Composer-input").val(), "");
-    await insertText(".o-mail-Composer-input", ":");
+    assert.strictEqual($(".o-mail-Composer .odoo-editor-editable")[0].textContent, "");
+    await insertText(".o-mail-Composer .odoo-editor-editable", ":");
     assert.containsOnce($, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
+        $(".o-mail-Composer .odoo-editor-editable")[0].textContent.replaceAll(/\s/g, " "),
         "Hello! How are you? ",
         "canned response + additional whitespace afterwards"
     );
@@ -163,14 +164,17 @@ QUnit.test("use a canned response some text", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestion");
-    assert.strictEqual($(".o-mail-Composer-input").val(), "");
-    await insertText(".o-mail-Composer-input", "bluhbluh ");
-    assert.strictEqual($(".o-mail-Composer-input").val(), "bluhbluh ");
-    await insertText(".o-mail-Composer-input", ":");
+    assert.strictEqual($(".o-mail-Composer .odoo-editor-editable")[0].textContent, "");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "bluhbluh ");
+    assert.strictEqual(
+        $(".o-mail-Composer .odoo-editor-editable")[0].textContent.replaceAll(/\s/g, " "),
+        "bluhbluh "
+    );
+    await insertText(".o-mail-Composer .odoo-editor-editable", ":");
     assert.containsOnce($, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
+        $(".o-mail-Composer .odoo-editor-editable")[0].textContent.replaceAll(/\s/g, " "),
         "bluhbluh Hello! How are you? ",
         "previous content + canned response substitution + additional whitespace afterwards"
     );
@@ -194,19 +198,19 @@ QUnit.test("add an emoji after a canned response", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestion");
-    assert.strictEqual($(".o-mail-Composer-input").val(), "");
-    await insertText(".o-mail-Composer-input", ":");
+    assert.strictEqual($(".o-mail-Composer .odoo-editor-editable")[0].textContent, "");
+    await insertText(".o-mail-Composer .odoo-editor-editable", ":");
     assert.containsOnce($, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
+        $(".o-mail-Composer .odoo-editor-editable")[0].textContent.replaceAll(/\s/g, " "),
         "Hello! How are you? ",
         "previous content + canned response substitution + additional whitespace afterwards"
     );
     await click("button[aria-label='Emojis']");
     await click(".o-mail-Emoji:contains(😊)");
     assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
+        $(".o-mail-Composer .odoo-editor-editable")[0].textContent.replaceAll(/\s/g, " "),
         "Hello! How are you? 😊"
     );
 });

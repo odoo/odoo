@@ -24,7 +24,7 @@ QUnit.test('display command suggestions on typing "/"', async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
-    await insertText(".o-mail-Composer-input", "/");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "/");
     assert.containsOnce($, ".o-mail-Composer-suggestionList .o-open");
 });
 
@@ -34,11 +34,11 @@ QUnit.test("use a command for a specific channel type", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
-    assert.strictEqual($(".o-mail-Composer-input").val(), "");
-    await insertText(".o-mail-Composer-input", "/");
+    assert.strictEqual($(".o-mail-Composer .odoo-editor-editable")[0].textContent, "");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "/");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
+        $(".o-mail-Composer .odoo-editor-editable")[0].textContent.replaceAll(/\s/g, " "),
         "/who ",
         "command + additional whitespace afterwards"
     );
@@ -55,10 +55,13 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
-        assert.strictEqual($(".o-mail-Composer-input").val(), "");
-        await insertText(".o-mail-Composer-input", "bluhbluh ");
-        assert.strictEqual($(".o-mail-Composer-input").val(), "bluhbluh ");
-        await insertText(".o-mail-Composer-input", "/");
+        assert.strictEqual($(".o-mail-Composer .odoo-editor-editable")[0].textContent, "");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "bluhbluh ");
+        assert.strictEqual(
+            $(".o-mail-Composer .odoo-editor-editable")[0].textContent.replaceAll(/\s/g, " "),
+            "bluhbluh "
+        );
+        await insertText(".o-mail-Composer .odoo-editor-editable", "/");
         assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
     }
 );

@@ -72,13 +72,13 @@ QUnit.test("reply: discard on pressing escape", async (assert) => {
     assert.containsOnce($, ".o-mail-Composer");
 
     // Escape on suggestion prompt does not stop replying
-    await insertText(".o-mail-Composer-input", "@");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "@");
     assert.containsOnce($, ".o-mail-Composer-suggestionList .o-open");
     await afterNextRender(() => triggerHotkey("Escape"));
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
     assert.containsOnce($, ".o-mail-Composer");
 
-    click(".o-mail-Composer-input").catch(() => {});
+    click(".o-mail-Composer .odoo-editor-editable").catch(() => {});
     await afterNextRender(() => triggerHotkey("Escape"));
     assert.containsNone($, ".o-mail-Composer");
 });
@@ -115,7 +115,7 @@ QUnit.test(
         assert.containsOnce($, ".o-mail-Message");
 
         await click("[title='Reply']");
-        await insertText(".o-mail-Composer-input", "Test");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "Test");
         await click(".o-mail-Composer-send");
         assert.verifySteps(["/mail/message/post"]);
     }
@@ -155,7 +155,7 @@ QUnit.test(
         await click("[title='Reply']");
         assert.strictEqual($(".o-mail-Composer-send").text().trim(), "Send");
 
-        await insertText(".o-mail-Composer-input", "Test");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "Test");
         await click(".o-mail-Composer-send");
         assert.verifySteps(["/mail/message/post"]);
     }

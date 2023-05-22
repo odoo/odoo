@@ -59,7 +59,7 @@ For more specific needs, you may also assign custom-defined actions
 (technically: Server Actions) to be triggered for each incoming mail.
     """,
     'website': 'https://www.odoo.com/app/discuss',
-    'depends': ['base', 'base_setup', 'bus', 'web_tour'],
+    'depends': ['base', 'base_setup', 'bus', 'web_tour', 'web_editor'],
     'data': [
         'data/mail_groups.xml',
         'wizard/mail_blacklist_remove_views.xml',
@@ -121,6 +121,8 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/**/primary_variables.scss',
         ],
         'web.assets_backend': [
+            'web_editor/static/src/xml/editor.xml',
+
             # depends on BS variables, can't be loaded in assets_primary or assets_secondary
             'mail/static/src/scss/variables/derived_variables.scss',
             'mail/static/src/scss/*.scss',
@@ -177,6 +179,11 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/src/legacy/js/services/session.js',
             'web/static/src/legacy/legacy_load_views.js',
             'web/static/src/legacy/utils.js',
+
+            ('include', 'web_editor.assets_wysiwyg'),
+            'web_editor/static/src/js/wysiwyg/dialog.js',
+            'web_editor/static/src/components/media_dialog/**/*',
+            'web_editor/static/src/js/frontend/loader.js',
 
             'mail/static/src/**/*',
             ('remove', 'mail/static/src/js/**/*'),

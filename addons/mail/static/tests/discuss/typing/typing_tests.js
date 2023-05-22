@@ -243,7 +243,7 @@ QUnit.test("current partner notify is typing to other thread members", async (as
         },
     });
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "a");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "a");
     assert.verifySteps(["notify_typing:true"]);
 });
 
@@ -261,14 +261,14 @@ QUnit.test(
             },
         });
         await openDiscuss(channelId);
-        await insertText(".o-mail-Composer-input", "a");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "a");
         assert.verifySteps(["notify_typing:true"]);
 
         // simulate current partner typing a character for a long time.
         let totalTimeElapsed = 0;
         const elapseTickTime = SHORT_TYPING / 2;
         while (totalTimeElapsed < LONG_TYPING + SHORT_TYPING) {
-            await insertText(".o-mail-Composer-input", "a");
+            await insertText(".o-mail-Composer .odoo-editor-editable", "a");
             totalTimeElapsed += elapseTickTime;
             await advanceTime(elapseTickTime);
         }
@@ -290,7 +290,7 @@ QUnit.test(
             },
         });
         await openDiscuss(channelId);
-        await insertText(".o-mail-Composer-input", "a");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "a");
         assert.verifySteps(["notify_typing:true"]);
 
         await advanceTime(SHORT_TYPING);
@@ -312,7 +312,7 @@ QUnit.test(
             },
         });
         await openDiscuss(channelId);
-        await insertText(".o-mail-Composer-input", "a");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "a");
         assert.verifySteps(["notify_typing:true"]);
 
         await nextAnimationFrame();

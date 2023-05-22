@@ -2,15 +2,25 @@
 
 import { AttachmentList } from "@mail/attachments/attachment_list";
 import { useAttachmentUploader } from "@mail/attachments/attachment_uploader_hook";
-import { useSelection } from "@mail/utils/hooks";
 import { isDragSourceExternalFile, isEventHandled, markEventHandled } from "@mail/utils/misc";
-import { Component, onMounted, useChildSubEnv, useEffect, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    onWillStart,
+    onMounted,
+    useSubEnv,
+    useChildSubEnv,
+    useRef,
+    useEffect,
+    useState,
+} from "@odoo/owl";
 import { useDropzone } from "../dropzone/dropzone_hook";
 import { useMessaging, useStore } from "../core/messaging_hook";
 import { useEmojiPicker } from "../emoji_picker/emoji_picker";
 
 import { sprintf } from "@web/core/utils/strings";
-import { escapeAndCompactTextContent } from "../utils/format.js";
+import { getWysiwygClass } from "web_editor.loader";
+import legacyEnv from "web.commonEnv";
+import { ComponentAdapter } from "web.OwlCompatibility";
 import { FileUploader } from "@web/views/fields/file_handler";
 import { NavigableList } from "@mail/composer/navigable_list";
 import { useSuggestion } from "@mail/composer/suggestion_hook";
@@ -18,6 +28,49 @@ import { useSuggestion } from "@mail/composer/suggestion_hook";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { MessageConfirmDialog } from "../core_ui/message_confirm_dialog";
+import { setCursorEnd } from "@web_editor/js/editor/odoo-editor/src/utils/utils";
+
+// See odoo/addons/web_editor/static/src/js/backend/html_field.js
+// for the original implementation of this component.
+// This is for reducing the bundle denpendency of the composer in public env.
+class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
+    setup() {
+        super.setup();
+        useSubEnv(legacyEnv);
+
+        let started = false;
+        onMounted(() => {
+            if (!started) {
+                this.props.startWysiwyg(this.widget);
+                started = true;
+            }
+        });
+    }
+
+    updateWidget(newProps) {
+        const lastValue = String(this.props.widgetArgs[0].value || "");
+        const lastRecordInfo = this.props.widgetArgs[0].recordInfo;
+        const lastCollaborationChannel = this.props.widgetArgs[0].collaborationChannel;
+        const newValue = String(newProps.widgetArgs[0].value || "");
+        const newRecordInfo = newProps.widgetArgs[0].recordInfo;
+        const newCollaborationChannel = newProps.widgetArgs[0].collaborationChannel;
+
+        if (
+            (stripHistoryIds(newValue) !== stripHistoryIds(newProps.editingValue) &&
+                stripHistoryIds(lastValue) !== stripHistoryIds(newValue)) ||
+            !_.isEqual(lastRecordInfo, newRecordInfo) ||
+            !_.isEqual(lastCollaborationChannel, newCollaborationChannel)
+        ) {
+            this.widget.resetEditor(newValue, newProps.widgetArgs[0]);
+            this.env.onWysiwygReset && this.env.onWysiwygReset();
+        }
+    }
+    renderWidget() {}
+}
+
+function stripHistoryIds(value) {
+    return (value && value.replace(/\sdata-last-history-steps="[^"]*?"/, "")) || value;
+}
 
 /**
  * @typedef {Object} Props
@@ -39,6 +92,7 @@ export class Composer extends Component {
         AttachmentList,
         FileUploader,
         NavigableList,
+        HtmlFieldWysiwygAdapterComponent,
     };
     static defaultProps = {
         mode: "normal",
@@ -73,30 +127,15 @@ export class Composer extends Component {
         this.messageService = useState(useService("mail.message"));
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
-        this.ref = useRef("textarea");
-        this.fakeTextarea = useRef("fakeTextarea");
+        this.wysiwygAreaRef = useRef("wysiwygArea");
         this.state = useState({
             autofocus: 0,
             active: true,
         });
-        this.selection = useSelection({
-            refName: "textarea",
-            model: this.props.composer.selection,
-            preserveOnClickAwayPredicate: async (ev) => {
-                // Let event be handled by bubbling handlers first.
-                await new Promise(setTimeout);
-                return (
-                    !this.isEventTrusted(ev) ||
-                    isEventHandled(ev, "sidebar.openThread") ||
-                    isEventHandled(ev, "emoji.selectEmoji") ||
-                    isEventHandled(ev, "composer.clickOnAddEmoji") ||
-                    isEventHandled(ev, "composer.clickOnAddAttachment") ||
-                    isEventHandled(ev, "composer.selectSuggestion")
-                );
-            },
+        onWillStart(async () => {
+            this.Wysiwyg = await getWysiwygClass();
         });
         this.suggestion = this.store.user ? useSuggestion() : undefined;
-        this.markEventHandled = markEventHandled;
         if (this.props.dropzoneRef && this.allowUpload) {
             useDropzone(
                 this.props.dropzoneRef,
@@ -122,9 +161,9 @@ export class Composer extends Component {
         });
         useEffect(
             (focus) => {
-                if (focus && this.ref.el) {
-                    this.selection.restore();
-                    this.ref.el.focus();
+                if (focus && this.wysiwyg) {
+                    // TODO: restore selection, the composer.range is lost when the DOM is updated.
+                    this.wysiwyg.focus();
                 }
             },
             () => [this.props.autofocus + this.state.autofocus, this.props.placeholder]
@@ -137,25 +176,53 @@ export class Composer extends Component {
             },
             () => [this.props.messageToReplyTo?.thread, this.props.composer.thread]
         );
-        useEffect(
-            () => {
-                this.ref.el.style.height = this.fakeTextarea.el.scrollHeight + "px";
-            },
-            () => [this.props.composer.textInputContent, this.ref.el]
-        );
-        useEffect(
-            () => {
-                if (!this.props.composer.forceCursorMove) {
-                    return;
-                }
-                this.selection.restore();
-                this.props.composer.forceCursorMove = false;
-            },
-            () => [this.props.composer.forceCursorMove]
-        );
-        onMounted(() => {
-            this.ref.el.scrollTo({ top: 0, behavior: "instant" });
+    }
+
+    async startWysiwyg(wysiwyg) {
+        this.wysiwyg = wysiwyg;
+        await this.wysiwyg.startEdition();
+        this.wysiwyg.odooEditor.editable.addEventListener("click", () => {
+            this.update();
         });
+        this.wysiwyg.odooEditor.editable.addEventListener("keyup", (ev) => {
+            this.onKeyup(ev);
+        });
+        this.wysiwyg.odooEditor.editable.addEventListener("keydown", (ev) => {
+            this.onKeydown(ev);
+        });
+        this.wysiwyg.odooEditor.editable.addEventListener("focusin", () => {
+            this.props.composer.isFocused = true;
+            if (this.props.composer.thread) {
+                this.threadService.markAsRead(this.props.composer.thread);
+            }
+        });
+        this.wysiwyg.odooEditor.editable.addEventListener("focusout", () => {
+            this.props.composer.isFocused = false;
+        });
+        this.wysiwyg.odooEditor.editable.addEventListener("paste", (ev) => {
+            this.onPaste(ev);
+        });
+        this.wysiwyg.focus();
+        this.update();
+    }
+
+    wysiwygOptions() {
+        return {
+            autostart: false,
+            collaborative: false,
+            disableToolbar: true,
+            disableTabAction: true,
+            disbaleImagesOnPaste: true,
+            isPlaceholderHintPriority: true,
+            isPlaceholderHintTemporary: false,
+            placeholder: this.placeholder,
+            powerboxFilters: [
+                () => {
+                    return [];
+                },
+            ],
+            value: this.props.composer.wysiwygValue,
+        };
     }
 
     get placeholder() {
@@ -191,7 +258,8 @@ export class Composer extends Component {
         const attachments = this.props.composer.attachments;
         return (
             !this.state.active ||
-            (!this.props.composer.textInputContent && attachments.length === 0) ||
+            (this.wysiwyg?.odooEditor?.editable.textContent.trim() === "" &&
+                attachments.length === 0) ||
             attachments.some(({ uploading }) => Boolean(uploading))
         );
     }
@@ -202,11 +270,11 @@ export class Composer extends Component {
 
     get navigableListProps() {
         const props = {
-            anchorRef: this.ref.el,
+            anchorRef: this.wysiwygAreaRef.el,
             position: this.thread?.type === "chatter" ? "bottom-fit" : "top-fit",
             placeholder: _t("Loading"),
             onSelect: (ev, option) => {
-                this.suggestion.insert(option);
+                this.suggestion.insert(option, this.update.bind(this));
                 markEventHandled(ev, "composer.selectSuggestion");
             },
             options: [],
@@ -285,16 +353,36 @@ export class Composer extends Component {
         if (ev.clipboardData.files.length === 0) {
             return;
         }
+        ev.stopPropagation();
         ev.preventDefault();
         for (const file of ev.clipboardData.files) {
             this.attachmentUploader.uploadFile(file);
         }
     }
 
+    onKeyup(ev) {
+        if (
+            this.hasSuggestions &&
+            (ev.key === "ArrowUp" ||
+                ev.key === "ArrowDown" ||
+                ev.key === "Tab" ||
+                ev.key === "Escape")
+        ) {
+            return;
+        }
+        this.update();
+    }
+
     onKeydown(ev) {
         switch (ev.key) {
             case "ArrowUp":
-                if (this.props.messageEdition && this.props.composer.textInputContent === "") {
+                if (this.hasSuggestions) {
+                    return;
+                }
+                if (
+                    this.props.messageEdition &&
+                    this.wysiwyg?.odooEditor.editable.textContent === ""
+                ) {
                     const messageToEdit = this.props.composer.thread.lastEditableMessageOfSelf;
                     if (messageToEdit) {
                         this.props.messageEdition.editingMessage = messageToEdit;
@@ -308,6 +396,10 @@ export class Composer extends Component {
                 }
                 const shouldPost = this.props.mode === "extended" ? ev.ctrlKey : !ev.shiftKey;
                 if (!shouldPost) {
+                    if (!ev.shiftKey && this.props.mode === "extended") {
+                        ev.preventDefault();
+                        this.wysiwyg.odooEditor._applyCommand("oShiftEnter");
+                    }
                     return;
                 }
                 ev.preventDefault(); // to prevent useless return
@@ -339,7 +431,7 @@ export class Composer extends Component {
         const attachmentIds = this.props.composer.attachments.map((attachment) => attachment.id);
         const context = {
             default_attachment_ids: attachmentIds,
-            default_body: escapeAndCompactTextContent(this.props.composer.textInputContent),
+            default_body: this.props.composer.wysiwygValue,
             default_model: this.props.composer.thread.model,
             default_partner_ids: this.props.composer.thread.suggestedRecipients.map(
                 (partner) => partner.id
@@ -369,9 +461,25 @@ export class Composer extends Component {
         await this.env.services.action.doAction(action, options);
     }
 
+    update() {
+        const value = this.wysiwyg?.getValue();
+        const lastValue = (this.props.composer.wysiwygValue || "").toString();
+        if (
+            value !== null &&
+            !(!lastValue && stripHistoryIds(value) === "<p><br></p>") &&
+            stripHistoryIds(value) !== stripHistoryIds(lastValue)
+        ) {
+            this.props.composer.wysiwygValue = value;
+            this.props.composer.range = this.wysiwyg.getDeepRange();
+        }
+        const range = this.wysiwyg?.getDeepRange();
+        this.props.composer.range = range;
+    }
+
     clear() {
         this.attachmentUploader?.clear();
         this.threadService.clearComposer(this.props.composer);
+        this.wysiwyg.odooEditor.resetContent();
     }
 
     onClickAddEmoji(ev) {
@@ -384,10 +492,9 @@ export class Composer extends Component {
     }
 
     async processMessage(cb) {
-        const el = this.ref.el;
         const attachments = this.props.composer.attachments;
         if (
-            el.value.trim() ||
+            this.wysiwyg?.odooEditor.editable.textContent ||
             (attachments.length > 0 && attachments.every(({ uploading }) => !uploading)) ||
             (this.message && this.message.attachments.length > 0)
         ) {
@@ -395,13 +502,17 @@ export class Composer extends Component {
                 return;
             }
             this.state.active = false;
-            await cb(el.value);
+            await cb(
+                this.wysiwyg?.odooEditor.editable.textContent,
+                this.props.composer.wysiwygValue
+            );
             if (this.props.onPostCallback) {
                 this.props.onPostCallback();
             }
             this.clear();
             this.state.active = true;
-            el.focus();
+            this.wysiwyg.odooEditor.editable.focus();
+            this.update();
         } else if (attachments.some(({ uploading }) => Boolean(uploading))) {
             this.env.services.notification.add(
                 this.env._t("Please wait while the file is uploading."),
@@ -411,7 +522,7 @@ export class Composer extends Component {
     }
 
     async sendMessage() {
-        await this.processMessage(async (value) => {
+        await this.processMessage(async (textContent, body) => {
             const thread =
                 this.props.messageToReplyTo?.message?.originThread ?? this.props.composer.thread;
             const postData = {
@@ -422,7 +533,7 @@ export class Composer extends Component {
                 rawMentions: this.props.composer.rawMentions,
                 parentId: this.props.messageToReplyTo?.message?.id,
             };
-            const message = await this.threadService.post(thread, value, postData);
+            const message = await this.threadService.post(thread, textContent, body, postData);
             if (this.props.composer.thread.type === "mailbox") {
                 this.env.services.notification.add(
                     sprintf(_t('Message posted on "%s"'), message.originThread.displayName),
@@ -435,13 +546,15 @@ export class Composer extends Component {
     }
 
     async editMessage() {
-        if (this.ref.el.value || this.props.composer.message.attachments.length > 0) {
-            await this.processMessage(async (value) =>
+        if (
+            this.wysiwyg?.odooEditor.editable.textContent ||
+            this.props.composer.message.attachments.length > 0
+        ) {
+            await this.processMessage(async (textContent, body) =>
                 this.messageService.edit(
                     this.props.composer.message,
-                    value,
-                    this.props.composer.attachments,
-                    this.props.composer.rawMentions
+                    body,
+                    this.props.composer.attachments
                 )
             );
         } else {
@@ -456,18 +569,27 @@ export class Composer extends Component {
     }
 
     addEmoji(str) {
-        const textContent = this.ref.el.value;
-        const firstPart = textContent.slice(0, this.props.composer.selection.start);
-        const secondPart = textContent.slice(this.props.composer.selection.end, textContent.length);
-        this.props.composer.textInputContent = firstPart + str + secondPart;
-        this.selection.moveCursor((firstPart + str).length);
-        this.state.autofocus++;
-    }
-
-    onFocusin() {
-        this.props.composer.isFocused = true;
-        if (this.props.composer.thread) {
-            this.threadService.markAsRead(this.props.composer.thread);
+        this.wysiwyg.odooEditor.historyPauseSteps();
+        const emoji = document.createTextNode(str);
+        if (this.props.composer.range.collapsed) {
+            // To avoid buggy behavior when inserting emoji after initializing the editor,
+            // we need to check if the content is empty and if so, we need to replace the
+            // content with the emoji. Othwerwise, we will have `</br>str`.
+            if (this.wysiwyg.getValue() === "<p><br></p>") {
+                const editable = this.wysiwyg.odooEditor.editable;
+                editable.firstChild.insertBefore(emoji, editable.firstChild.firstChild);
+                editable.firstChild.firstChild.nextSibling.remove();
+            } else {
+                this.props.composer.range.insertNode(emoji);
+            }
+        } else {
+            this.props.composer.range.deleteContents();
+            this.props.composer.range.insertNode(emoji);
         }
+        setCursorEnd(emoji, false);
+        this.wysiwyg.odooEditor.historyUnpauseSteps();
+        this.wysiwyg.odooEditor.historyStep();
+        this.state.autofocus++;
+        this.update();
     }
 }

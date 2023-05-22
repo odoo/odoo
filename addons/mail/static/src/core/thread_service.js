@@ -592,9 +592,9 @@ export class ThreadService {
         });
     }
 
-    executeCommand(thread, command, body = "") {
+    executeCommand(thread, command, textContent = "") {
         return this.orm.call("discuss.channel", command.methodName, [[thread.id]], {
-            body,
+            textContent,
         });
     }
 
@@ -867,11 +867,8 @@ export class ThreadService {
         if (!composer) {
             composer = new Composer(this.store, data);
         }
-        if ("textInputContent" in data) {
-            composer.textInputContent = data.textInputContent;
-        }
-        if ("selection" in data) {
-            Object.assign(composer.selection, data.selection);
+        if ("wysiwygValue" in data) {
+            composer.wysiwygValue = data.wysiwygValue;
         }
         if ("mentions" in data) {
             for (const mention of data.mentions) {
@@ -885,9 +882,15 @@ export class ThreadService {
 
     /**
      * @param {Thread} thread
+     * @param {string} textContent
      * @param {string} body
      */
-    async post(thread, body, { attachments = [], isNote = false, parentId, rawMentions }) {
+    async post(
+        thread,
+        textContent,
+        body,
+        { attachments = [], isNote = false, parentId, rawMentions }
+    ) {
         let tmpMsg;
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions = this.store.user
@@ -908,7 +911,7 @@ export class ThreadService {
                 temporary_id: tmpId,
             },
             post_data: {
-                body: await prettifyMessageContent(body, validMentions),
+                body: await prettifyMessageContent(body),
                 attachment_ids: attachments.map(({ id }) => id),
                 message_type: "comment",
                 partner_ids,
@@ -939,7 +942,7 @@ export class ThreadService {
             if (parentId) {
                 tmpData.parentMessage = this.store.messages[parentId];
             }
-            const prettyContent = await prettifyMessageContent(body, validMentions);
+            const prettyContent = await prettifyMessageContent(body);
             const { emojis } = await loadEmoji();
             const recentEmojis = JSON.parse(
                 browser.localStorage.getItem("mail.emoji.frequent") || "{}"
@@ -1046,12 +1049,8 @@ export class ThreadService {
      */
     clearComposer(composer) {
         composer.attachments.length = 0;
-        composer.textInputContent = "";
-        Object.assign(composer.selection, {
-            start: 0,
-            end: 0,
-            direction: "none",
-        });
+        composer.range = undefined;
+        composer.wysiwygValue = "<p><br></p>";
     }
 
     /**

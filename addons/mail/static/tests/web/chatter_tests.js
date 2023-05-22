@@ -14,7 +14,7 @@ import {
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
-import { editInput, triggerHotkey } from "@web/../tests/helpers/utils";
+import { triggerHotkey } from "@web/../tests/helpers/utils";
 import { file } from "web.test_utils";
 
 const { createFile } = file;
@@ -59,7 +59,7 @@ QUnit.test("can post a message on a record thread", async (assert) => {
                 const expected = {
                     context: args.context,
                     post_data: {
-                        body: "hey",
+                        body: "<p>hey</p>",
                         attachment_ids: [],
                         message_type: "comment",
                         partner_ids: [],
@@ -78,7 +78,7 @@ QUnit.test("can post a message on a record thread", async (assert) => {
     await click("button:contains(Send message)");
     assert.containsOnce($, ".o-mail-Composer");
 
-    await editInput(document.body, ".o-mail-Composer-input", "hey");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "hey");
     assert.containsNone($, ".o-mail-Message");
 
     await click(".o-mail-Composer button:contains(Send)");
@@ -97,7 +97,7 @@ QUnit.test("can post a note on a record thread", async (assert) => {
                     context: args.context,
                     post_data: {
                         attachment_ids: [],
-                        body: "hey",
+                        body: "<p>hey</p>",
                         message_type: "comment",
                         partner_ids: [],
                         subtype_xmlid: "mail.mt_note",
@@ -115,7 +115,7 @@ QUnit.test("can post a note on a record thread", async (assert) => {
     await click("button:contains(Log note)");
     assert.containsOnce($, ".o-mail-Composer");
 
-    await editInput(document.body, ".o-mail-Composer-input", "hey");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "hey");
     assert.containsNone($, ".o-mail-Message");
 
     await click(".o-mail-Composer button:contains(Send)");
@@ -159,7 +159,7 @@ QUnit.test("Composer toggle state is kept when switching from aside to bottom", 
         resId: partnerId,
         resModel: "res.partner",
     });
-    assert.containsOnce($, ".o-mail-Composer-input");
+    assert.containsOnce($, ".o-mail-Composer .odoo-editor-editable");
 });
 
 QUnit.test("Textarea content is kept when switching from aside to bottom", async (assert) => {
@@ -168,13 +168,13 @@ QUnit.test("Textarea content is kept when switching from aside to bottom", async
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     await openFormView("res.partner", partnerId);
     await click("button:contains(Send message)");
-    await editInput(document.body, ".o-mail-Composer-input", "Hello world !");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "Hello world !");
     patchUiSize({ size: SIZES.LG });
     await waitFormViewLoaded(() => window.dispatchEvent(new Event("resize")), {
         resId: partnerId,
         resModel: "res.partner",
     });
-    assert.strictEqual($(".o-mail-Composer-input").val(), "Hello world !");
+    assert.strictEqual($(".o-mail-Composer .odoo-editor-editable")[0].textContent, "Hello world !");
 });
 
 QUnit.test("Composer type is kept when switching from aside to bottom", async (assert) => {
@@ -283,7 +283,7 @@ QUnit.test('post message with "CTRL-Enter" keyboard shortcut in chatter', async 
     assert.containsNone($, ".o-mail-Message");
 
     await click("button:contains(Send message)");
-    await insertText(".o-mail-Composer-input", "Test");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "Test");
     await afterNextRender(() => triggerHotkey("control+Enter"));
     assert.containsOnce($, ".o-mail-Message");
 });
@@ -404,11 +404,11 @@ QUnit.test("composer show/hide on log note/send message [REQUIRE FOCUS]", async 
 
     await click("button:contains(Send message)");
     assert.containsOnce($, ".o-mail-Composer");
-    assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
+    assert.strictEqual(document.activeElement, $(".o-mail-Composer .odoo-editor-editable")[0]);
 
     await click("button:contains(Log note)");
     assert.containsOnce($, ".o-mail-Composer");
-    assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
+    assert.strictEqual(document.activeElement, $(".o-mail-Composer .odoo-editor-editable")[0]);
 
     await click("button:contains(Log note)");
     assert.containsNone($, ".o-mail-Composer");
@@ -432,7 +432,7 @@ QUnit.test('do not post message with "Enter" keyboard shortcut', async (assert) 
     assert.containsNone($, ".o-mail-Message");
 
     await click("button:contains(Send message)");
-    await insertText(".o-mail-Composer-input", "Test");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "Test");
     await triggerHotkey("Enter");
     assert.containsNone($, ".o-mail-Message");
 });
@@ -716,7 +716,7 @@ QUnit.test("post message on draft record", async (assert) => {
         views: [[false, "form"]],
     });
     await click("button:contains(Send message)");
-    await editInput(document.body, ".o-mail-Composer-input", "Test");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "Test");
     await click(".o-mail-Composer button:contains(Send)");
     assert.containsOnce($, ".o-mail-Message");
     assert.containsOnce($, ".o-mail-Message:contains(Test)");

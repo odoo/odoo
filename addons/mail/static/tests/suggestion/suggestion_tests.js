@@ -45,7 +45,7 @@ QUnit.test('display partner mention suggestions on typing "@"', async (assert) =
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestion");
 
-    await insertText(".o-mail-Composer-input", "@");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "@");
     assert.containsN($, ".o-mail-Composer-suggestion", 3);
 });
 
@@ -73,11 +73,11 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         assert.containsNone($, ".o-mail-Composer-suggestion");
-        await insertText(".o-mail-Composer-input", "first message");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "first message");
         triggerHotkey("Enter");
         await nextTick();
 
-        await insertText(".o-mail-Composer-input", "@");
+        await insertText(".o-mail-Composer .odoo-editor-editable", "@");
         assert.containsN($, ".o-mail-Composer-suggestion", 3);
     }
 );
@@ -88,7 +88,7 @@ QUnit.test('display partner mention suggestions on typing "@" in chatter', async
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button:contains(Send message)");
     assert.containsNone($, ".o-mail-Composer-suggestion");
-    await insertText(".o-mail-Composer-input", "@");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "@");
     assert.containsOnce($, ".o-mail-Composer-suggestion:contains(Mitchell Admin)");
 });
 
@@ -107,7 +107,7 @@ QUnit.test("show other channel member in @ mention", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "@");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "@");
     assert.containsOnce($, ".o-mail-Composer-suggestion:contains(TestPartner)");
 });
 
@@ -126,9 +126,12 @@ QUnit.test("select @ mention insert mention text in composer", async (assert) =>
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", "@");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "@");
     await click(".o-mail-Composer-suggestion:contains(TestPartner)");
-    assert.strictEqual($(".o-mail-Composer-input").val().trim(), "@TestPartner");
+    assert.strictEqual(
+        $(".o-mail-Composer .odoo-editor-editable")[0].textContent.trim(),
+        "@TestPartner"
+    );
 });
 
 QUnit.test('display channel mention suggestions on typing "#"', async (assert) => {
@@ -140,7 +143,7 @@ QUnit.test('display channel mention suggestions on typing "#"', async (assert) =
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
-    await insertText(".o-mail-Composer-input", "#");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "#");
     assert.containsOnce($, ".o-mail-Composer-suggestionList .o-open");
 });
 
@@ -153,12 +156,12 @@ QUnit.test("mention a channel", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
-    assert.strictEqual($(".o-mail-Composer-input").val(), "");
-    await insertText(".o-mail-Composer-input", "#");
+    assert.strictEqual($(".o-mail-Composer .odoo-editor-editable")[0].textContent, "");
+    await insertText(".o-mail-Composer .odoo-editor-editable", "#");
     assert.containsOnce($, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
-        $(".o-mail-Composer-input").val().replace(/\s/, " "),
+        $(".o-mail-Composer .odoo-editor-editable")[0].textContent.replace(/\s/, " "),
         "#General ",
         "mentioned channel + additional whitespace afterwards"
     );
@@ -181,9 +184,9 @@ QUnit.test("Channel suggestions do not crash after rpc returns", async (assert) 
     });
     await openDiscuss(channelId);
     pyEnv["discuss.channel"].create({ name: "foo" });
-    insertText(".o-mail-Composer-input", "#");
+    insertText(".o-mail-Composer .odoo-editor-editable", "#");
     await nextTick();
-    insertText(".o-mail-Composer-input", "f");
+    insertText(".o-mail-Composer .odoo-editor-editable", "f");
     await deferred;
     assert.verifySteps(["get_mention_suggestions"]);
 });

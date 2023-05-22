@@ -68,7 +68,7 @@ QUnit.test("Basic keyboard navigation", async (assert) => {
         "codepoints"
     );
     await afterNextRender(() => triggerHotkey("Enter"));
-    assert.strictEqual($(".o-mail-Composer-input").val(), codepoints);
+    assert.strictEqual($(".o-mail-Composer .odoo-editor-editable")[0].textContent, codepoints);
 });
 
 QUnit.test("recent category (basic)", async (assert) => {
@@ -118,7 +118,7 @@ QUnit.test("posting :wink: in message should impact recent", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", ":wink:");
+    await insertText(".o-mail-Composer .odoo-editor-editable", ":wink:");
     await click(".o-mail-Composer button[aria-label='Send']");
     await click("button[aria-label='Emojis']");
     assert.containsOnce(
@@ -133,7 +133,7 @@ QUnit.test("posting :snowman: in message should impact recent", async (assert) =
     const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await insertText(".o-mail-Composer-input", ":snowman:");
+    await insertText(".o-mail-Composer .odoo-editor-editable", ":snowman:");
     await click(".o-mail-Composer button[aria-label='Send']");
     await click("button[aria-label='Emojis']");
     assert.containsOnce(
@@ -165,6 +165,6 @@ QUnit.test(
             )
         );
         assert.containsOnce($, ".o-mail-EmojiPicker");
-        assert.strictEqual($(".o-mail-Composer-input").val(), "👺");
+        assert.strictEqual($(".o-mail-Composer .odoo-editor-editable")[0].textContent, "👺");
     }
 );

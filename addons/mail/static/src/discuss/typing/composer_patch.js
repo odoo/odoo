@@ -25,6 +25,12 @@ patch(Composer.prototype, "discuss/typing", {
         this.typingNotified = false;
         this.stopTypingDebounced = useDebounced(this.stopTyping.bind(this), SHORT_TYPING);
     },
+    async startWysiwyg(wysiwyg) {
+        await this._super(...arguments);
+        this.wysiwyg.odooEditor.editable.addEventListener("input", () => {
+            this.onInput();
+        });
+    },
     /**
      * Notify the server of the current typing status
      *
@@ -46,11 +52,12 @@ patch(Composer.prototype, "discuss/typing", {
      * @param {InputEvent} ev
      */
     onInput(ev) {
-        if (this.thread?.model === "discuss.channel" && ev.target.value.startsWith("/")) {
-            const [firstWord] = ev.target.value.substring(1).split(/\s/);
+        const value = this.wysiwyg.odooEditor.editable.textContent;
+        if (this.thread?.model === "discuss.channel" && value.startsWith("/")) {
+            const [firstWord] = value.substring(1).split(/\s/);
             const command = commandRegistry.get(firstWord, false);
             if (
-                ev.target.value === "/" || // suggestions not yet started
+                value === "/" || // suggestions not yet started
                 this.hasSuggestions ||
                 (command &&
                     (!command.channel_types || command.channel_types.includes(this.thread.type)))
@@ -59,7 +66,7 @@ patch(Composer.prototype, "discuss/typing", {
                 return;
             }
         }
-        if (!this.typingNotified && ev.target.value) {
+        if (!this.typingNotified && value) {
             this.typingNotified = true;
             this.notifyIsTyping();
             browser.setTimeout(() => (this.typingNotified = false), LONG_TYPING);

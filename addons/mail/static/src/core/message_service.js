@@ -2,7 +2,7 @@
 
 import { Message } from "./message_model";
 import { removeFromArrayWithPredicate } from "../utils/arrays";
-import { convertBrToLineBreak, prettifyMessageContent } from "../utils/format";
+import { prettifyMessageContent } from "../utils/format";
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
@@ -28,16 +28,20 @@ export class MessageService {
         this.attachmentService = services["mail.attachment"];
     }
 
-    async edit(message, body, attachments = [], rawMentions) {
-        if (convertBrToLineBreak(message.body) === body && attachments.length === 0) {
+    async edit(message, body, attachments = []) {
+        const htmlBody = new DOMParser().parseFromString(message.body, "text/html");
+        const prettifiedBody = await prettifyMessageContent(body);
+        if (
+            htmlBody.querySelector("body").innerHTML === prettifiedBody &&
+            attachments.length === 0
+        ) {
             return;
         }
-        const validMentions = this.getMentionsFromText(rawMentions, body);
         await this.rpc("/mail/message/update_content", {
             attachment_ids: attachments
                 .map(({ id }) => id)
                 .concat(message.attachments.map(({ id }) => id)),
-            body: await prettifyMessageContent(body, validMentions),
+            body: prettifiedBody,
             message_id: message.id,
         });
         if (!message.isEmpty && this.store.hasLinkPreviewFeature) {
@@ -150,7 +154,9 @@ export class MessageService {
         const thread = message.originThread;
         await this.env.services["mail.thread"].removeFollower(thread.followerOfSelf);
         this.env.services.notification.add(
-            sprintf(_t('You are no longer following "%(thread_name)s".'), { thread_name: thread.name }),
+            sprintf(_t('You are no longer following "%(thread_name)s".'), {
+                thread_name: thread.name,
+            }),
             { type: "success" }
         );
     }

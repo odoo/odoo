@@ -37,8 +37,11 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/discuss_public_
         },
         {
             content: "Write something in composer",
-            trigger: ".o-mail-Composer-input",
-            run: "text cheese",
+            trigger: ".o-mail-Composer .odoo-editor-editable",
+            run: function (actions) {
+                actions.text("cheese", this.$anchor.find("p"));
+                document.querySelector(".o-mail-Composer .odoo-editor-editable").click();
+            },
         },
         {
             content: "Add one file in composer",

@@ -4,7 +4,7 @@ import { ImStatus } from "@mail/discuss_app/im_status";
 import { AttachmentList } from "@mail/attachments/attachment_list";
 import { MessageInReply } from "./message_in_reply";
 import { isEventHandled, markEventHandled } from "@mail/utils/misc";
-import { convertBrToLineBreak, htmlToTextContentInline } from "@mail/utils/format";
+import { htmlToTextContentInline } from "@mail/utils/format";
 import { MessageReactionMenu } from "@mail/core_ui/message_reaction_menu";
 import {
     Component,
@@ -427,16 +427,11 @@ export class Message extends Component {
     }
 
     enterEditMode() {
-        const messageContent = convertBrToLineBreak(this.props.message.body);
+        const messageBody = this.props.message.body;
         this.threadService.insertComposer({
             mentions: this.props.message.recipients,
             message: this.props.message,
-            textInputContent: messageContent,
-            selection: {
-                start: messageContent.length,
-                end: messageContent.length,
-                direction: "none",
-            },
+            wysiwygValue: messageBody,
         });
         this.state.isEditing = true;
     }

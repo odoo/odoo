@@ -30,28 +30,31 @@
     .o-mail-Composer-footer {
         grid-area: core-footer;
     }
-}
 
-.o-mail-Composer-actions button {
-    opacity: 75%;
-    &:hover {
-        background-color: rgba(0, 0, 0, 0.1);
-        opacity: 100%;
-    }
-}
-
-.o-mail-Composer-input {
-    padding-top: 10px; // carefully crafted to have the text in the middle in chat window
-    padding-bottom: 10px;
-    max-height: 100px;
-    resize: none;
-
-    .o-extended & {
-        max-height: 400px;
+    .o-mail-Composer-actions button {
+        opacity: 75%;
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+            opacity: 100%;
+        }
     }
 
-    &::placeholder {
-        @include text-truncate();
+    .odoo-editor-editable {
+        border: 0;
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+        max-height: 100px;
+
+        &::placeholder {
+            @include text-truncate();
+        }
+
+        p {
+            overflow-wrap: anywhere !important;
+            margin: 0;
+        }
     }
 }
 
