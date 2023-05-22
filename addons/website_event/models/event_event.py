@@ -196,10 +196,9 @@ class Event(models.Model):
 
     @api.depends('name')
     def _compute_website_url(self):
-        super(Event, self)._compute_website_url()
-        for event in self:
-            if event.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
-                event.website_url = '/event/%s' % slug(event)
+        super()._compute_website_url()
+        for event in self.filtered(lambda record: record.id):
+            event.website_url = f'/event/{slug(event)}'
 
     @api.depends('event_type_id')
     def _compute_question_ids(self):

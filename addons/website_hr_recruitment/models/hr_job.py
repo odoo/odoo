@@ -64,8 +64,8 @@ class Job(models.Model):
             self.website_id = False
 
     def _compute_website_url(self):
-        super(Job, self)._compute_website_url()
-        for job in self:
+        super()._compute_website_url()
+        for job in self.filtered(lambda record: record.id):
             job.website_url = f'/jobs/detail/{slug(job)}'
 
     def set_open(self):

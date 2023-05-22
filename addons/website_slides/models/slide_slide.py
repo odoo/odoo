@@ -571,11 +571,9 @@ class Slide(models.Model):
 
     @api.depends('name', 'channel_id.website_id.domain')
     def _compute_website_url(self):
-        super(Slide, self)._compute_website_url()
-        for slide in self:
-            if slide.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
-                base_url = slide.channel_id.get_base_url()
-                slide.website_url = '%s/slides/slide/%s' % (base_url, slug(slide))
+        super()._compute_website_url()
+        for slide in self.filtered(lambda record: record.id):
+            slide.website_url = f'/slides/slide/{slug(slide)}'
 
     @api.depends('is_published')
     def _compute_website_share_url(self):

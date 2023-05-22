@@ -172,8 +172,8 @@ class Post(models.Model):
 
     @api.depends('name')
     def _compute_website_url(self):
-        self.website_url = False
-        for post in self.filtered(lambda post: post.id):
+        self.website_url = '#'
+        for post in self.filtered(lambda record: record.id):
             anchor = f'#answer_{post.id}' if post.parent_id else ''
             post.website_url = f'/forum/{slug(post.forum_id)}/{slug(post)}{anchor}'
 
@@ -794,7 +794,7 @@ class Post(models.Model):
 
     def go_to_website(self):
         self.ensure_one()
-        if not self.website_url:
+        if not self.website_url or self.website_url == '#':
             return False
         return self.env['website'].get_client_action(self.website_url)
 

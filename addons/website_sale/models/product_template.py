@@ -403,11 +403,9 @@ class ProductTemplate(models.Model):
         return res
 
     def _compute_website_url(self):
-        super(ProductTemplate, self)._compute_website_url()
-        for product in self:
-            if product.id:
-                product.website_url = "/shop/%s" % slug(product)
-
+        super()._compute_website_url()
+        for product in self.filtered(lambda record: record.id):
+            product.website_url = f'/shop/{slug(product)}'
 
     def _get_website_ribbon(self):
         if self.website_ribbon_id:
