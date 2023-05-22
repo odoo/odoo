@@ -168,37 +168,6 @@ class TestImportModule(odoo.tests.TransactionCase):
             set(addons_path).difference(__addons_path__),
             'No directory must be added in the addons path during import')
 
-    def test_import_module_addons_path(self):
-        """Assert it's possible to import a module using directly `_import_module` without zip from the addons path"""
-        files = [
-            ('foo/__manifest__.py', b"{'data': ['data.xml']}"),
-            ('foo/data.xml', b"""
-                <data>
-                    <record id="foo" model="res.partner">
-                        <field name="name">foo</field>
-                    </record>
-                </data>
-            """),
-            ('foo/static/css/style.css', b".foo{color: black;}"),
-        ]
-        with tempfile.TemporaryDirectory() as module_dir:
-            for path, data in files:
-                os.makedirs(os.path.join(module_dir, os.path.dirname(path)), exist_ok=True)
-                with open(os.path.join(module_dir, path), 'wb') as fp:
-                    fp.write(data)
-            try:
-                __addons_path__.append(module_dir)
-                self.env['ir.module.module']._import_module('foo', os.path.join(module_dir, 'foo'))
-            finally:
-                __addons_path__.remove(module_dir)
-
-        self.assertEqual(self.env.ref('foo.foo')._name, 'res.partner')
-        self.assertEqual(self.env.ref('foo.foo').name, 'foo')
-        static_path, static_data = files[2]
-        static_attachment = self.env['ir.attachment'].search([('url', '=', '/%s' % static_path)])
-        self.assertEqual(static_attachment.name, os.path.basename(static_path))
-        self.assertEqual(static_attachment.datas, base64.b64encode(static_data))
-
     def test_import_and_uninstall_module(self):
         bundle = 'web.assets_backend'
         path = '/test_module/static/src/js/test.js'

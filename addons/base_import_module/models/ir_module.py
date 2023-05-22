@@ -27,7 +27,7 @@ def _file_open(env, path):
     import_path = __import_paths__.get(env)
     if import_path and path.startswith(import_path):
         return open(path, 'rb')
-    return odoo.tools.file_open(path, 'rb')
+    raise FileNotFoundError("File not found in the import paths: " + path)
 
 
 class IrModule(models.Model):
