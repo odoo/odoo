@@ -46,6 +46,7 @@ class AccountReport(models.Model):
     )
     load_more_limit = fields.Integer(string="Load More Limit")
     search_bar = fields.Boolean(string="Search Bar")
+    prefix_groups_threshold = fields.Integer(string="Prefix Groups Threshold")
 
     default_opening_date_filter = fields.Selection(
         string="Default Opening",
