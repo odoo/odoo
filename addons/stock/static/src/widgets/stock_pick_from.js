@@ -11,7 +11,12 @@ export class StockPickFrom extends Many2OneField {
         super.setup();
         this.user = useService('user');
         onWillStart(async () => {
-            const testedGroup = [['location', 'stock.group_stock_multi_locations'], ['lot', 'stock.group_production_lot']];
+            const testedGroup = [
+                ['location', 'stock.group_stock_multi_locations'],
+                ['lot', 'stock.group_production_lot'],
+                ['package', 'stock.group_tracking_lot'],
+                ['owner', 'stock.group_tracking_owner'],
+            ];
             const userGroups = await Promise.all(
                 testedGroup.map((group) => this.user.hasGroup(group[1]))
             );
@@ -33,11 +38,18 @@ export class StockPickFrom extends Many2OneField {
         let name_parts = [];
         if (this.props.record.data.id) {
             // if location group is activated
-            if (this.enabledGroups?.location) {
-                name_parts.push(this.props.record.data.location_id?.[1])
+            const data = this.props.record.data;
+            if (this.enabledGroups?.location && data.location_id) {
+                name_parts.push(data.location_id?.[1])
             }
-            if (this.enabledGroups?.lot) {
-                name_parts.push(this.props.record.data.lot_id?.[1] || this.props.record.data.lot_name)
+            if (this.enabledGroups?.lot && data.lot_id) {
+                name_parts.push(data.lot_id?.[1] || data.lot_name)
+            }
+            if (this.enabledGroups?.package && data.package_id) {
+                name_parts.push(data.pachage_id?.[1])
+            }
+            if (this.enabledGroups?.owner&& data.owner) {
+                name_parts.push(data.owner?.[1])
             }
             const result = name_parts.join(" - ");
             if (result) return result;
