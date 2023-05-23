@@ -485,7 +485,8 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         phone = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Telephone')
         mail = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:ElectronicMail')
         name = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Name')
-        self._import_retrieve_and_fill_partner(invoice, name=name, phone=phone, mail=mail, vat=vat)
+        country_code = _find_value(f'//cac:Accounting{role}Party/cac:Party//cac:Country//cbc:IdentificationCode')
+        self._import_retrieve_and_fill_partner(invoice, name=name, phone=phone, mail=mail, vat=vat, country_code=country_code)
 
         # ==== currency_id ====
 
