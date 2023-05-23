@@ -497,7 +497,7 @@ export const editorCommands = {
         const end = leftLeafFirstPath(...pos1).next().value;
         const li = new Set();
         for (const node of leftLeafFirstPath(...pos2)) {
-            const cli = closestBlock(node);
+            const cli = closestElement(node,'li');
             if (
                 cli &&
                 cli.tagName == 'LI' &&
