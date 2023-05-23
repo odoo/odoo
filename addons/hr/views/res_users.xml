@@ -205,9 +205,21 @@
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_simple_form"/>
             <field name="arch" type="xml">
+                <xpath expr="//sheet" position="inside">
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_employees"
+                            class="oe_stat_button"
+                            icon="fa-users"
+                            invisible="employee_count == 0"
+                            context="{'active_test': False}"
+                            type="object">
+                            <field name="employee_count" widget="statinfo" string="Employee"/>
+                        </button>
+                    </div>
+                </xpath>
                 <xpath expr="//field[@name='mobile']" position="after">
                     <field name="create_employee_id" force_save="1" invisible="1"/>
-                    <field name="create_employee" force_save="1" string="Create Employee" invisible="not context.get('allow_create_employee', True) or create_employee_id &gt; 0" groups="hr.group_hr_user"/>
+                    <field name="create_employee" force_save="1" string="Create Employee" invisible="create_employee_id &gt; 0 or id &gt; 0" groups="hr.group_hr_user"/>
                 </xpath>
             </field>
         </record>
