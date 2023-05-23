@@ -1,4 +1,4 @@
-Bangladesh, 2023-05-23
+Bangladesh, 2023-05-24
 
 I hereby agree to the terms of the Odoo Individual Contributor License
 Agreement v1.0.
