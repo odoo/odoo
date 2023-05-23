@@ -3,12 +3,14 @@
 
 from datetime import datetime
 from freezegun import freeze_time
+from unittest.mock import patch
 
 from odoo import exceptions
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
-from odoo.tests.common import Form, users
+from odoo.tests.common import Form, tagged, users
 
 
+@tagged('mailing_list')
 class TestMailingContactToList(MassMailCommon):
 
     @users('user_marketing')
@@ -55,6 +57,7 @@ class TestMailingContactToList(MassMailCommon):
         self.assertEqual(subaction["context"]["default_contact_list_ids"], [mailing2.id])
 
 
+@tagged('mailing_list')
 class TestMailingListMerge(MassMailCommon):
 
     @classmethod
@@ -102,7 +105,8 @@ class TestMailingListMerge(MassMailCommon):
             new = new.with_context(default_list_ids=[list_id])
             self.assertFalse(any(contact.opt_out for contact in new))
 
-        with freeze_time('2022-01-01 12:00'):
+        with freeze_time('2022-01-01 12:00'), \
+             patch.object(self.env.cr, 'now', lambda: datetime(2022, 1, 1, 12, 0, 0)):
             contact_form = Form(self.env['mailing.contact'])
             contact_form.name = 'Contact_test'
             with contact_form.subscription_list_ids.new() as subscription:
@@ -175,6 +179,7 @@ class TestMailingListMerge(MassMailCommon):
         self.assertEqual(merge.dest_list_id, self.mailing_list_3)
 
 
+@tagged('mailing_list')
 class TestMailingContactImport(MassMailCommon):
     """Test the transient <mailing.contact.import>."""
 
