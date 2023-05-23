@@ -32,11 +32,13 @@
                                     <span>Cash In/Out</span>
                                 </li>
                                 <CustomerFacingDisplayButton t-if="CustomerFacingDisplayButtonIsShown"/>
-                                <div class="end-nav-button">
-                                    <BackendButton/>
-                                    <div class="close-button">
-                                        <HeaderButton/>
-                                    </div>
+                                <li class="menu-item navbar-button backend-button" t-on-click="() => pos.closePos()">
+                                    <span>
+                                        Backend
+                                    </span>
+                                </li>
+                                <div class="close-button">
+                                    <HeaderButton/>
                                 </div>
                                 <li t-if="this.env.debug" t-on-click="() => debug.toggleWidget()" class="menu-item navbar-button">
                                     <span>Debug Window</span>
