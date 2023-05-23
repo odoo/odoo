@@ -87,3 +87,10 @@ class IrModule(models.Model):
                 self.env.company,
             )
             del self.env.registry._auto_install_template
+
+    def module_uninstall(self):
+        unlinked_templates = [code for template in self.mapped('account_templates') for code in template]
+        self.env['res.company'].search([
+            ('chart_template', 'in', unlinked_templates),
+        ]).chart_template = False
+        return super().module_uninstall()
