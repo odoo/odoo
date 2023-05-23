@@ -309,6 +309,8 @@ def is_html_empty(html_content):
     """
     if not html_content:
         return True
+    if isinstance(html_content, bytes):
+        html_content = html_content.decode('utf-8')
     tag_re = re.compile(r'\<\s*\/?(?:p|div|span|br|b|i|font)(?:(?=\s+\w*)[^/>]*|\s*)/?\s*\>')
     return not bool(re.sub(tag_re, '', html_content).strip())
 
