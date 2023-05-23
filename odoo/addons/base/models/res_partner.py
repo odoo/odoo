@@ -580,6 +580,9 @@ class Partner(models.Model):
             if 'lang' not in vals and partner.parent_id:
                 partner._onchange_parent_id_for_lang()
             partner._handle_first_contact_creation()
+
+            if not partner.email:
+                partner.email = partner.parent_id.email
         return partners
 
     def _load_records_create(self, vals_list):
