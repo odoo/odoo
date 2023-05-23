@@ -1163,6 +1163,25 @@ class MrpProduction(models.Model):
         parent_moves = self.procurement_group_id.stock_move_ids.move_dest_ids
         return (dest_moves | parent_moves).group_id.mrp_production_ids.filtered(lambda p: p.origin != self.origin) - self
 
+    def _set_lot_producing(self):
+        self.ensure_one()
+        if self.product_id.tracking == 'lot':
+            name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
+            exist_lot = self.env['stock.lot'].search([
+                ('product_id', '=', self.product_id.id),
+                ('company_id', '=', self.company_id.id),
+                ('name', '=', name),
+            ], limit=1)
+            if exist_lot:
+                name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
+        else:
+            name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id) or self.env['ir.sequence'].next_by_code('stock.lot.serial')
+        self.lot_producing_id = self.env['stock.lot'].create({
+            'product_id': self.product_id.id,
+            'company_id': self.company_id.id,
+            'name': name,
+        })
+
     def action_view_mrp_production_childs(self):
         self.ensure_one()
         mrp_production_ids = self._get_children().ids
@@ -1215,22 +1234,7 @@ class MrpProduction(models.Model):
 
     def action_generate_serial(self):
         self.ensure_one()
-        if self.product_id.tracking == 'lot':
-            name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
-            exist_lot = self.env['stock.lot'].search([
-                ('product_id', '=', self.product_id.id),
-                ('company_id', '=', self.company_id.id),
-                ('name', '=', name),
-            ], limit=1)
-            if exist_lot:
-                name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
-        else:
-            name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id) or self.env['ir.sequence'].next_by_code('stock.lot.serial')
-        self.lot_producing_id = self.env['stock.lot'].create({
-            'product_id': self.product_id.id,
-            'company_id': self.company_id.id,
-            'name': name,
-        })
+        self._set_lot_producing()
         if self.product_id.tracking == 'serial':
             self._set_qty_producing()
 
