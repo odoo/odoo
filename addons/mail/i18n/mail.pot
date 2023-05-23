@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.3alpha1\n"
+"Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 13:48+0000\n"
-"PO-Revision-Date: 2023-05-16 13:48+0000\n"
+"POT-Creation-Date: 2023-05-30 05:08+0000\n"
+"PO-Revision-Date: 2023-05-30 05:08+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -128,13 +128,6 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/typing/typing.js:0
 #, python-format
 msgid "%s and %s are typing..."
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/core_ui/message_seen_indicator.js:0
-#, python-format
-msgid "Seen by everyone"
 msgstr ""
 
 #. module: mail
@@ -1177,6 +1170,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss/discuss_patch.xml:0
+#: code:addons/mail/static/src/discuss/web/chat_window_patch.js:0
 #, python-format
 msgid "Add Users"
 msgstr ""
@@ -2306,9 +2300,9 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/web/chat_window/chat_window.xml:0
+#: code:addons/mail/static/src/web/chat_window/chat_window.js:0
 #, python-format
-msgid "Close chat window"
+msgid "Close Chat Window"
 msgstr ""
 
 #. module: mail
@@ -2316,6 +2310,13 @@ msgstr ""
 #: code:addons/mail/static/src/web/chat_window/chat_window.xml:0
 #, python-format
 msgid "Close conversation"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/web/chat_window/chat_window.xml:0
+#, python-format
+msgid "Close panel"
 msgstr ""
 
 #. module: mail
@@ -4205,6 +4206,20 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss/web/chat_window_patch.js:0
+#, python-format
+msgid "Hide Call Settings"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/web/chat_window_patch.js:0
+#, python-format
+msgid "Hide Member List"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/rtc/call.xml:0
 #, python-format
 msgid "Hide sidebar"
@@ -4803,6 +4818,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__is_current_user_or_guest_author
 #: model:ir.model.fields,field_description:mail.field_mail_message__is_current_user_or_guest_author
 msgid "Is Current User Or Guest Author"
+msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_discuss_channel__is_editable
+msgid "Is Editable"
 msgstr ""
 
 #. module: mail
@@ -6126,6 +6146,13 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/web/chat_window/chat_window.js:0
+#, python-format
+msgid "More actions"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "Mother"
@@ -6388,6 +6415,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss_app/im_status.xml:0
 #: code:addons/mail/static/src/discuss_app/thread_icon.xml:0
 #, python-format
 msgid "No IM status available"
@@ -6923,6 +6951,13 @@ msgid "Open Document"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/web/chat_window/chat_window.js:0
+#, python-format
+msgid "Open Form View"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_tree
 msgid "Open Owner"
 msgstr ""
@@ -6936,7 +6971,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/web/chat_window/chat_window.xml:0
+#: code:addons/mail/static/src/web/chat_window/chat_window.js:0
 #, python-format
 msgid "Open in Discuss"
 msgstr ""
@@ -7235,7 +7270,10 @@ msgid "Pinned"
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/web/chat_window/chat_window.js:0
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__pinned_message_ids
+#, python-format
 msgid "Pinned Messages"
 msgstr ""
 
@@ -7243,7 +7281,6 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss_app/discuss.xml:0
 #: code:addons/mail/static/src/discuss_app/pinned_messages_panel.xml:0
-#: code:addons/mail/static/src/web/chat_window/chat_window.xml:0
 #, python-format
 msgid "Pinned messages"
 msgstr ""
@@ -8517,7 +8554,7 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/discuss/web/chat_window_patch.xml:0
+#: code:addons/mail/static/src/discuss/web/chat_window_patch.js:0
 #, python-format
 msgid "Show Call Settings"
 msgstr ""
@@ -8527,6 +8564,13 @@ msgstr ""
 #: code:addons/mail/static/src/web/chatter.js:0
 #, python-format
 msgid "Show Followers"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/web/chat_window_patch.js:0
+#, python-format
+msgid "Show Member List"
 msgstr ""
 
 #. module: mail
@@ -8648,7 +8692,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/discuss_app/discuss.xml:0
-#: code:addons/mail/static/src/web/chat_window/chat_window.xml:0
+#: code:addons/mail/static/src/web/chat_window/chat_window.js:0
 #, python-format
 msgid "Start a Call"
 msgstr ""
@@ -8709,6 +8753,13 @@ msgid ""
 "Overdue: Due date is already passed\n"
 "Today: Activity date is today\n"
 "Planned: Future activities."
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss/web/chat_window_patch.js:0
+#, python-format
+msgid "Stop Adding Users"
 msgstr ""
 
 #. module: mail
@@ -9065,6 +9116,13 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss_app/discuss.js:0
+#, python-format
+msgid "The avatar has been updated!"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.constraint,message:mail.constraint_discuss_channel_uuid_unique
 msgid "The channel UUID must be unique"
 msgstr ""
@@ -9341,6 +9399,8 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/discuss_app/discuss.xml:0
+#: code:addons/mail/static/src/web/chat_window/chat_window.xml:0
 #: code:addons/mail/static/src/web/discuss_app/sidebar.xml:0
 #, python-format
 msgid "Thread Image"
@@ -9777,6 +9837,13 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Update Mail Layout"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/discuss_app/discuss.xml:0
+#, python-format
+msgid "Upload Avatar"
 msgstr ""
 
 #. module: mail
@@ -16341,8 +16408,8 @@ msgid "doctor"
 msgstr ""
 
 #. module: mail
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
