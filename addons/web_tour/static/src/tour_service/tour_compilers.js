@@ -199,7 +199,7 @@ function setupListeners({
 
 /** @type {TourStepCompiler} */
 export function compileStepManual(stepIndex, step, options) {
-    const { tour, pointer } = options;
+    const { tour, pointer, onStepConsummed } = options;
     let proceedWith = null;
     let removeListeners = () => {};
 
@@ -257,6 +257,7 @@ export function compileStepManual(stepIndex, step, options) {
                 tourState.set(tour.name, "currentIndex", stepIndex + 1);
                 pointer.hide();
                 proceedWith = null;
+                onStepConsummed(tour, step);
             },
         },
     ];
@@ -266,7 +267,7 @@ let tourTimeout;
 
 /** @type {TourStepCompiler} */
 export function compileStepAuto(stepIndex, step, options) {
-    const { tour, pointer, stepDelay, keepWatchBrowser, showPointerDuration } = options;
+    const { tour, pointer, stepDelay, keepWatchBrowser, showPointerDuration, onStepConsummed } = options;
     let skipAction = false;
     return [
         {
@@ -352,6 +353,11 @@ export function compileStepAuto(stepIndex, step, options) {
                 return result;
             },
         },
+        {
+            action: () => {
+                onStepConsummed(tour, step);
+            },
+        },
     ];
 }
 
@@ -376,6 +382,7 @@ export function compileTourToMacro(tour, options) {
         keepWatchBrowser,
         showPointerDuration,
         checkDelay,
+        onStepConsummed,
         onTourEnd,
     } = options;
     const currentStepIndex = tourState.get(tour.name, "currentIndex");
@@ -396,6 +403,7 @@ export function compileTourToMacro(tour, options) {
                             stepDelay,
                             keepWatchBrowser,
                             showPointerDuration,
+                            onStepConsummed,
                         }),
                     ];
                 }
