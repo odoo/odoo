@@ -700,14 +700,10 @@
                                 </div>
                             </group>
                             <group string="Tracking" name="sale_reporting">
-                                <group name="technical" colspan="2" class="mb-0">
-                                    <field name="origin"/>
-                                </group>
-                                <group name="utm_link" colspan="2" class="mt-0">
-                                    <field name="campaign_id" options="{'create_name_field': 'title', 'always_reload': True}"/>
-                                    <field name="medium_id"/>
-                                    <field name="source_id"/>
-                                </group>
+                                <field name="origin"/>
+                                <field name="campaign_id" options="{'create_name_field': 'title', 'always_reload': True}"/>
+                                <field name="medium_id"/>
+                                <field name="source_id"/>
                             </group>
                         </group>
                     </page>
