@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.3alpha1\n"
+"Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-16 15:09+0000\n"
-"PO-Revision-Date: 2023-05-16 15:09+0000\n"
+"POT-Creation-Date: 2023-05-30 05:28+0000\n"
+"PO-Revision-Date: 2023-05-30 05:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -2044,6 +2044,17 @@ msgid ""
 "\n"
 "Accounting reports for Denmark\n"
 "=================================\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ec_reports
+msgid ""
+"\n"
+"Accounting reports for Ecuador\n"
+"==============================\n"
+"* Adds Balance Sheet report adapted for Ecuador\n"
+"* Adds Profit and Loss report adapted for Ecuador\n"
 "    "
 msgstr ""
 
@@ -8979,6 +8990,11 @@ msgid "Access to unauthorized or invalid companies."
 msgstr ""
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_account
+msgid "Account"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
 msgid "Account Automatic Transfers"
 msgstr ""
@@ -12013,6 +12029,11 @@ msgid "Chile - Electronic Receipt"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_cl_edi_website_sale
+msgid "Chilean eCommerce"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.cn
 msgid "China"
 msgstr ""
@@ -14588,6 +14609,11 @@ msgid "Ecuadorian Accounting EDI"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ec_reports
+msgid "Ecuadorian Accounting Reports"
+msgstr ""
+
+#. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_P
 msgid "Education"
 msgstr ""
@@ -14966,9 +14992,8 @@ msgstr ""
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
-"Error while validating view near:\n"
+"Error while parsing or validating view:\n"
 "\n"
-"%(fivelines)s\n"
 "%(error)s"
 msgstr ""
 
@@ -14977,8 +15002,9 @@ msgstr ""
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
-"Error while parsing or validating view:\n"
+"Error while validating view near:\n"
 "\n"
+"%(fivelines)s\n"
 "%(error)s"
 msgstr ""
 
@@ -21230,8 +21256,6 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__comment
 #: model:ir.model.fields,field_description:base.field_res_users__comment
-#: model:ir.module.category,name:base.module_category_productivity_notes
-#: model:ir.module.module,shortdesc:base.module_note
 #: model_terms:ir.ui.view,arch_db:base.view_groups_form
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
 msgid "Notes"
@@ -21811,69 +21835,6 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_web_mobile
 msgid "Odoo Mobile Core module"
-msgstr ""
-
-#. module: base
-#: model:ir.module.module,description:base.module_note
-msgid ""
-"Odoo Notes\n"
-"----------\n"
-"\n"
-"Organize yourself with efficient <a href=\"https://www.odoo.com/app/notes\">todo lists and notes</a>.\n"
-"From personal tasks to collaborative meeting minutes, increase your user's\n"
-"productivity by giving them the tools to prioritize their work, share their\n"
-"ideas and collaborate on documents.\n"
-"\n"
-"Personal to-do lists that works\n"
-"-------------------------------\n"
-"\n"
-"Quickly create to-dos, organize horizontally for the mid-term (today, this week, this month, ...), prioritize vertically for the short term and group by assigning colors. The kanban approach allows a simple visual organization of your to-dos.\n"
-"\n"
-"### Beat Work Overload\n"
-"\n"
-"Feel how good it is to rely on a structured way to organize your work instead of keeping everything in memory. Use notes to [Get Things Done](http://en.wikipedia.org/wiki/Getting_Things_Done).\n"
-"\n"
-"### Prioritize Efficiently\n"
-"\n"
-"Most people are lost in the flow of urgent daily tasks and have difficulties to work on important, long-term tasks. Notes gives you a simple way to allocate time very day to do important, but less urgent tasks.\n"
-"\n"
-"### Find Motivation to Close Tasks\n"
-"\n"
-"People used to work on tasks they like and not on important tasks. Start feeling good by checking tasks as done.\n"
-"\n"
-"Adapts to Your Creative Process\n"
-"-------------------------------\n"
-"\n"
-"### Customize to your own workflow\n"
-"\n"
-"Everyone has their own way to organize activities. Odoo Notes' smart kanban approach allows every user to customize their own steps to process it's to-dos and notes.\n"
-"\n"
-"### A Creative Person\n"
-"\n"
-"A creative person will organize notes based on idea's maturity level: Draft Ideas ** Mature Ideas ** Specified **To Do\n"
-"\n"
-"### A Frequent Traveler\n"
-"\n"
-"An employee travelling a lot can organize their tasks based on the context to perform the task: U.S. Office | London's Office | To Review during Flights | At Home\n"
-"\n"
-"### A Manager\n"
-"\n"
-"A manager will organize their high number of tasks based on prioritizations: Todo Today | This Week | This Month | Later\n"
-"\n"
-"Personnal Notes\n"
-"---------------\n"
-"\n"
-"### Notes are private but can be shared\n"
-"\n"
-"Write down your ideas in pads, keep your notes at your finger tips, attach related documents and use tags and colors to organize the information. Once your ideas are mature, you can share them to others users, start discussing it and collaborate by improving the specification in the pad.\n"
-"\n"
-"Collaborative Meeting Minutes\n"
-"-----------------------------\n"
-"\n"
-"### Real-time sharing and editing of notes\n"
-"\n"
-"The real time collaborative writings on notes makes it the perfect tool to collaborate on meeting minutes. Attendees will be able to contribute to the minutes, attach important documents or discuss on the related thread.\n"
-"\n"
 msgstr ""
 
 #. module: base
@@ -22862,8 +22823,8 @@ msgid "Organize and plan your projects"
 msgstr ""
 
 #. module: base
-#: model:ir.module.module,summary:base.module_note
-msgid "Organize your work with memos"
+#: model:ir.module.module,summary:base.module_project_todo
+msgid "Organize your work with memos and to-do lists"
 msgstr ""
 
 #. module: base
@@ -29008,6 +28969,12 @@ msgid "To return an action, assign: <code>action = {...}</code>"
 msgstr ""
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_productivity_to-do
+#: model:ir.module.module,shortdesc:base.module_project_todo
+msgid "To-Do"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Todo"
 msgstr ""
@@ -31274,7 +31241,6 @@ msgid "Zip Required"
 msgstr ""
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_account
 #: model:ir.module.category,name:base.module_category_services_payroll_account
 msgid "account"
 msgstr ""
