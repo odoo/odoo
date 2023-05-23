@@ -3277,3 +3277,14 @@ class TestMrpOrder(TestMrpCommon):
 
         # Only duration from the workcenter specific capacity setup/cleanup times since there is one defined for this product.
         self.assertEqual(production.workorder_ids[0].duration_expected, 15.0, "Capacity setup time (5) + capacity cleanup time (10)")
+
+    def test_unlink_workorder_with_consumed_operations(self):
+        self.bom_3.bom_line_ids[0].operation_id = self.bom_3.operation_ids[0].id
+        self.bom_3.bom_line_ids[1].operation_id = self.bom_3.operation_ids[1].id
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = self.bom_3
+        mo = mo_form.save()
+        mo.workorder_ids[1].unlink()
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        self.assertEqual(len(mo.workorder_ids), 2)
