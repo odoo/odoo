@@ -334,7 +334,7 @@
 
                     <!-- main content -->
                     <div t-attf-class="card #{'pb-5' if report_type == 'html' else ''}" id="portal_sale_content">
-                        <div t-call="sale.sale_order_portal_content"/>
+                        <div t-call="#{sale_order._get_name_portal_content_view()}"/>
                     </div>
 
                     <!-- bottom actions -->
@@ -478,13 +478,13 @@
                                 <th t-if="display_discount" t-attf-class="text-end {{ 'd-none d-sm-table-cell' if report_type == 'html' else '' }}">
                                     <span>Disc.%</span>
                                 </th>
-                                <th t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                <th t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" id="taxes_header">
                                     <span>Taxes</span>
                                 </th>
-                                <th class="text-end">
+                                <th class="text-end" id="subtotal_header">
                                     <span>Tax excl.</span>
                                 </th>
-                                <th class="text-end" t-if="sale_order.tax_calculation_rounding_method == 'round_per_line'">
+                                <th class="text-end" t-if="sale_order.tax_calculation_rounding_method == 'round_per_line'" id="total_header">
                                     <span>Tax incl.</span>
                                 </th>
                             </tr>
@@ -526,10 +526,10 @@
                                                 <t t-out="((line.discount % 1) and '%s' or '%d') % line.discount"/>%
                                             </strong>
                                         </td>
-                                        <td t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}">
+                                        <td t-attf-class="text-end {{ 'd-none d-md-table-cell' if report_type == 'html' else '' }}" id="taxes">
                                             <span t-out="', '.join(map(lambda x: (x.description or x.name), line.tax_id))"/>
                                         </td>
-                                        <td t-if="not line.is_downpayment" class="text-end">
+                                        <td t-if="not line.is_downpayment" class="text-end" id="subtotal">
                                         <span class="oe_order_line_price_subtotal" t-field="line.price_subtotal"/>
                                         </td>
                                         <td class="text-end" t-if="sale_order.tax_calculation_rounding_method == 'round_per_line' and not line.is_downpayment" >
@@ -604,7 +604,7 @@
     <template id="sale_order_portal_content_totals_table">
         <table class="table table-sm">
             <t t-set="tax_totals" t-value="sale_order.tax_totals"/>
-            <t t-call="sale.document_tax_totals"/>
+            <t t-call="#{sale_order._get_name_tax_totals_view()}"/>
         </table>
     </template>
 </odoo>
