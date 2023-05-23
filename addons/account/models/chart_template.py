@@ -731,7 +731,7 @@ class AccountChartTemplate(models.AbstractModel):
             ('applicability', '=', 'taxes'),
             ('country_id', '=', self._get_chart_template_mapping()[template_code]['country_id']),
         ])}
-        return lambda *args: [tags[re.sub(r'\s+', ' ', x.strip())] for x in args]
+        return lambda *args: [tags.get(re.sub(r'\s+', ' ', x.strip())) for x in args]
 
     def _deref_account_tags(self, template_code, tax_data):
         mapper = self._get_tag_mapper(template_code)
