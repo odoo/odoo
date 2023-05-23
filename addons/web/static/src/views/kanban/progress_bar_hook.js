@@ -137,7 +137,7 @@ class ProgressBarState {
 
     async selectBar(groupId, bar) {
         const group = this.model.root.groups.find((group) => group.id === groupId);
-        const progressBar = this._groupsInfo[groupId];
+        const progressBar = this.getGroupInfo(group);
         const nextActiveBar = {};
         if (bar.value && this.activeBars[group.value]?.value !== bar.value) {
             nextActiveBar.value = bar.value;
@@ -157,7 +157,7 @@ class ProgressBarState {
         const proms = [];
         proms.push(
             group.applyFilter(filterDomain).then((res) => {
-                const groupInfo = this._groupsInfo[group.id];
+                const groupInfo = this.getGroupInfo(group);
                 nextActiveBar.count = groupInfo.bars.find(
                     (x) => x.value === nextActiveBar.value
                 ).count;
@@ -171,7 +171,7 @@ class ProgressBarState {
     }
 
     _updateAggregateGroup(group, activeBar) {
-        const groupInfo = this._groupsInfo[group.id];
+        const groupInfo = this.getGroupInfo(group);
         const filterDomain = _createFilterDomain(
             this.progressAttributes.fieldName,
             groupInfo.bars,
@@ -253,7 +253,7 @@ class ProgressBarState {
             }
             for (const group of this.model.root.groups) {
                 if (!group.isFolded) {
-                    const groupInfo = this._groupsInfo[group.id];
+                    const groupInfo = this.getGroupInfo(group);
                     let groupValue = group.displayName || group.value;
                     if (groupValue === true) {
                         groupValue = "True";
@@ -299,7 +299,7 @@ class ProgressBarState {
     }
 
     getGroupCount(group) {
-        const progressBarInfo = this._groupsInfo[group.id];
+        const progressBarInfo = this.getGroupInfo(group);
         if (progressBarInfo.activeBar) {
             const progressBar = progressBarInfo.bars.find(
                 (b) => b.value === progressBarInfo.activeBar
