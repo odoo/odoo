@@ -16,6 +16,7 @@ import { device } from "web.config";
 import { localization } from "@web/core/l10n/localization";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import snippetsEditor from "web_editor.snippet.editor";
+import snippetsOptions from "web_editor.snippets.options";
 import Toolbar from "web_editor.toolbar";
 import weWidgets from "wysiwyg.widgets";
 import Link from "wysiwyg.widgets.Link";
@@ -746,6 +747,7 @@ const Wysiwyg = Widget.extend({
         for (const timeout of this.tooltipTimeouts) {
             clearTimeout(timeout);
         }
+        snippetsOptions.clearM2oRpcCache();
         this._super();
     },
     /**
