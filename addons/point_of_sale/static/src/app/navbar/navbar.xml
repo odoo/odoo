@@ -37,9 +37,11 @@
                                         Backend
                                     </span>
                                 </li>
-                                <div class="close-button">
-                                    <HeaderButton/>
-                                </div>
+                                <li class="menu-item navbar-button close-button" t-on-click="closeSession">
+                                    <span>
+                                        Close Session
+                                    </span>
+                                </li>
                                 <li t-if="this.env.debug" t-on-click="() => debug.toggleWidget()" class="menu-item navbar-button">
                                     <span>Debug Window</span>
                                 </li>

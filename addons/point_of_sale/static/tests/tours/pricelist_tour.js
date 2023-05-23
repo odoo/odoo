@@ -319,7 +319,7 @@ steps = steps.concat([
     },
     {
         content: "confirm closing the frontend",
-        trigger: ".header-button",
+        trigger: ".close-button",
         run: function () {}, //it's a check,
     },
 ]);

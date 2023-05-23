@@ -309,7 +309,7 @@ steps = steps.concat([
     },
     {
         content: "open closing the Point of Sale frontend popup",
-        trigger: ".header-button",
+        trigger: ".close-button",
     },
     {
         content: "close the Point of Sale frontend",
