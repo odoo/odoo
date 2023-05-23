@@ -236,4 +236,5 @@ class DiscussChannel(models.Model):
 
         return self._chatbot_post_message(
             chatbot_script,
-            '<div class="o_mail_notification">%s</div>' % _('Restarting conversation...'))
+            Markup('<div class="o_mail_notification">%s</div>') % _('Restarting conversation...'),
+        )
