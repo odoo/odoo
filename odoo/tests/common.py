@@ -907,8 +907,7 @@ class ChromeBrowser:
             os._exit(0)
 
     def stop(self):
-        # only cleanup chrome if it was started before SIGXCPU triggered
-        if self.chrome:
+        if hasattr(self, 'ws'):
             self._websocket_send('Page.stopScreencast')
             if self.screencasts_dir and os.path.isdir(self.screencasts_frames_dir):
                 shutil.rmtree(self.screencasts_frames_dir)
@@ -928,6 +927,7 @@ class ChromeBrowser:
             self._websocket_send('Browser.close')
             self._logger.info("Closing websocket connection")
             self.ws.close()
+        if self.chrome:
             self._logger.info("Terminating chrome headless with pid %s", self.chrome.pid)
             self.chrome.terminate()
 
@@ -986,7 +986,6 @@ class ChromeBrowser:
             '--disable-dev-shm-usage': '',
             '--disable-namespace-sandbox': '',
             '--disable-translate': '',
-            '--no-first-run': '',
             '--no-sandbox': '',
             '--disable-gpu': '',
         }
@@ -1000,6 +999,7 @@ class ChromeBrowser:
             '--remote-debugging-port': str(self.remote_debugging_port),
             '--user-data-dir': user_data_dir,
             '--window-size': window_size,
+            '--no-first-run': '',
             # '--enable-precise-memory-info': '', # uncomment to debug memory leaks in qunit suite
             # '--js-flags': '--expose-gc', # uncomment to debug memory leaks in qunit suite
         }
@@ -1023,7 +1023,7 @@ class ChromeBrowser:
 
         return proc, devtools_port
 
-    def _json_command(self, command, timeout=3, get_key=None):
+    def _json_command(self, command, timeout=3):
         """Queries browser state using JSON
 
         Available commands:
@@ -1056,15 +1056,10 @@ class ChromeBrowser:
             except ProcessLookupError:
                 message = 'Chrome crashed at startup'
                 break
-            res = None
             try:
                 r = requests.get(url, timeout=3)
                 if r.ok:
-                    res = r.json()
-                    if get_key is None:
-                        return res
-                    else:
-                        return res[get_key]
+                    return r.json()
             except requests.ConnectionError as e:
                 failure_info = str(e)
                 message = 'Connection Error while trying to connect to Chrome debugger'
@@ -1072,8 +1067,7 @@ class ChromeBrowser:
                 failure_info = str(e)
                 message = 'Connection Timeout while trying to connect to Chrome debugger'
                 break
-            except (KeyError, IndexError):
-                message = 'Key "%s" not found in json result "%s" after connecting to Chrome debugger' % (get_key, res)
+
             time.sleep(delay)
             timeout -= delay
             delay = delay * 1.5
@@ -1087,8 +1081,23 @@ class ChromeBrowser:
     def _open_websocket(self):
         version = self._json_command('version')
         self._logger.info('Browser version: %s', version['Browser'])
-        infos = self._json_command('', get_key=0)  # Infos about the first tab
-        ws_url = infos['webSocketDebuggerUrl']
+
+        start = time.time()
+        while (time.time() - start) < 5.0:
+            ws_url = next((
+                target['webSocketDebuggerUrl']
+                for target in self._json_command('')
+                if target['type'] == 'page'
+                if target['url'] == 'about:blank'
+            ), None)
+            if ws_url:
+                break
+
+            time.sleep(0.1)
+        else:
+            self.stop()
+            raise unittest.SkipTest("Error during Chrome connection: never found 'page' target")
+
         self._logger.info('Websocket url found: %s', ws_url)
         ws = websocket.create_connection(ws_url, enable_multithread=True, suppress_origin=True)
         if ws.getstatus() != 101:
