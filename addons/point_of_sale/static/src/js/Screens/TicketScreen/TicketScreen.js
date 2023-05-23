@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { Order } from "@point_of_sale/js/models";
-import { IndependentToOrderScreen } from "@point_of_sale/js/Misc/IndependentToOrderScreen";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -18,12 +17,13 @@ import { OrderDetails } from "../TicketScreen/OrderDetails";
 import { ReprintReceiptButton } from "./ControlButtons/ReprintReceiptButton";
 import { SearchBar } from "../../Misc/SearchBar";
 import { usePos } from "@point_of_sale/app/pos_hook";
-import { onMounted, useState } from "@odoo/owl";
+import { Component, onMounted, useState } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
 
 const { DateTime } = luxon;
 
-export class TicketScreen extends IndependentToOrderScreen {
+export class TicketScreen extends Component {
+    static storeOnOrder = false;
     static template = "TicketScreen";
     static components = {
         ActionpadWidget,
@@ -80,9 +80,6 @@ export class TicketScreen extends IndependentToOrderScreen {
     }
     //#endregion
     //#region EVENT HANDLERS
-    onCloseScreen() {
-        this.close();
-    }
     async onFilterSelected(selectedFilter) {
         this._state.ui.filter = selectedFilter;
         if (this._state.ui.filter == "SYNCED") {
@@ -282,7 +279,7 @@ export class TicketScreen extends IndependentToOrderScreen {
             globalState.set_order(destinationOrder);
         }
 
-        this.onCloseScreen();
+        this.pos.closeScreen();
     }
     //#endregion
     //#region PUBLIC METHODS
@@ -564,7 +561,7 @@ export class TicketScreen extends IndependentToOrderScreen {
             globalState.sendDraftToServer();
         }
         globalState.set_order(order);
-        this.close();
+        this.pos.closeScreen();
     }
     _getOrderList() {
         return this.pos.globalState.get_order_list();

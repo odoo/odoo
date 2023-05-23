@@ -41,7 +41,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         // we came from the FloorScreen
         const orderTable = order.getTable();
         await globalState.setTable(orderTable, order.uid);
-        this.close();
+        this.pos.closeScreen();
     },
     get allowNewOrders() {
         return this.pos.globalState.config.module_pos_restaurant
