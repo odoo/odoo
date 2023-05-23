@@ -264,8 +264,9 @@ class AccountChartTemplate(models.AbstractModel):
                     rec = self.ref(xmlid, raise_if_not_found=False)
                     if rec:
                         for fname in x2manyfields:
-                            for i, (line, vals) in enumerate(zip(rec[fname], values[fname])):
-                                values[fname][i] = Command.update(line.id, vals[2])
+                            for i, (line, (command, _id, vals)) in enumerate(zip(rec[fname], values[fname])):
+                                if command == Command.CREATE:
+                                    values[fname][i] = Command.update(line.id, vals)
 
                 if model_name == 'account.fiscal.position':
                     # Only add tax mappings containing new taxes
