@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="document_tax_totals_template_brazil" inherit_id="account.document_tax_totals_template">
+        <!-- hide the tax summary above the total -->
+        <t t-as="subtotal" position="attributes">
+            <!-- doc for quotations, sale_order for online quote (o is used for invoices) -->
+            <attribute name="t-if">(doc or sale_order).company_id.country_id.code != 'BR' if (doc or sale_order) else True</attribute>
+        </t>
+    </template>
+</odoo>

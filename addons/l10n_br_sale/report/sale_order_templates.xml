@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_document_brazil" inherit_id="sale.report_saleorder_document">
+        <!-- hide the taxes th -->
+        <th name="th_taxes" position="attributes">
+            <attribute name="t-if">doc.company_id.country_id.code != 'BR'</attribute>
+        </th>
+        <!-- hide the taxes td -->
+        <td name="td_taxes" position="attributes">
+            <attribute name="t-if">doc.company_id.country_id.code != 'BR'</attribute>
+        </td>
+        <!-- hide the "Tax excl." th -->
+        <th name="th_subtotal" position="attributes">
+            <attribute name="t-if">doc.company_id.country_id.code != 'BR'</attribute>
+        </th>
+        <!-- hide the "Tax excl." td -->
+        <td name="td_subtotal" position="attributes">
+            <attribute name="t-if">doc.company_id.country_id.code != 'BR'</attribute>
+        </td>
+        <!-- rename the "Tax incl." th, avoid touching original <span> to keep existing translations working -->
+        <xpath expr="//th[@name='th_total']/span" position="attributes">
+            <attribute name="t-if">doc.company_id.country_id.code != 'BR'</attribute>
+        </xpath>
+        <xpath expr="//th[@name='th_total']/span" position="after">
+            <span t-else="">Total</span>
+        </xpath>
+    </template>
+</odoo>
