@@ -580,7 +580,11 @@ class IrActionsServer(models.Model):
             for field, new_value in res.items():
                 record_cached[field] = new_value
         else:
-            self.env[self.model_id.model].browse(self._context.get('active_id')).write(res)
+            try:
+                self.env[self.model_id.model].browse(self._context.get('active_id')).write(res)
+            except Exception as e:
+                e.sentry_ignored = True
+                raise
 
     def _run_action_object_create(self, eval_context=None):
         """Create specified model object with specified values.
@@ -590,7 +594,11 @@ class IrActionsServer(models.Model):
         vals = self.fields_lines.eval_value(eval_context=eval_context)
         res = {line.col1.name: vals[line.id] for line in self.fields_lines}
 
-        res = self.env[self.crud_model_id.model].create(res)
+        try:
+            res = self.env[self.crud_model_id.model].create(res)
+        except Exception as e:
+            e.sentry_ignored = True
+            raise
 
         if self.link_field_id:
             record = self.env[self.model_id.model].browse(self._context.get('active_id'))
