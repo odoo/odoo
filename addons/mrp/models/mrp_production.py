@@ -1304,7 +1304,7 @@ class MrpProduction(models.Model):
         for move in (self.move_raw_ids | self.move_finished_ids):
             if move.operation_id:
                 move.write({
-                    'workorder_id': workorder_per_operation[move.operation_id].id
+                    'workorder_id': workorder_per_operation[move.operation_id].id if move.operation_id in workorder_per_operation else False
                 })
             else:
                 bom = move.bom_line_id.bom_id if (move.bom_line_id and move.bom_line_id.bom_id in workorder_boms) else self.bom_id
