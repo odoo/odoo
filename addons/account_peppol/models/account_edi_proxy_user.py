@@ -3,7 +3,7 @@
 
 import logging
 
-from odoo import fields, models, _
+from odoo import fields, models, tools, _
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.exceptions import UserError
 
@@ -20,8 +20,8 @@ class AccountEdiProxyClientUser(models.Model):
     def _get_proxy_urls(self):
         urls = super()._get_proxy_urls()
         urls['peppol'] = {
-            'prod': '',
-            'test': 'https://l10n-pe-edi.test.odoo.com',
+            'prod': 'https://peppol.api.odoo.com',
+            'test': 'https://peppol.test.odoo.com',
         }
         return urls
 
@@ -125,7 +125,7 @@ class AccountEdiProxyClientUser(models.Model):
                     move = journal_id\
                         .with_context(
                             default_move_type='in_invoice',
-                            default_peppol_move_state='done',
+                            default_peppol_move_state=content['state'],
                             default_extract_can_show_send_button=False,
                             default_peppol_message_uuid=uuid,
                         )\
@@ -153,7 +153,8 @@ class AccountEdiProxyClientUser(models.Model):
 
                 proxy_acks.append(uuid)
 
-            self.env.cr.commit()
+            if not tools.config['test_enable']:
+                self.env.cr.commit()
             if proxy_acks:
                 edi_user._make_request(
                     f"{edi_user._get_server_url()}/api/peppol/1/ack",
