@@ -7,7 +7,7 @@ import { nextTick } from "@web/../tests/helpers/utils";
 import { createSpreadsheetWithChart, insertChartInSpreadsheet } from "../../utils/chart";
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "../../utils/model";
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { RPCError } from "@web/core/network/rpc_service";
+import { makeServerError } from "@web/../tests/helpers/mock_server";
 
 const { toZone } = spreadsheet.helpers;
 
@@ -411,9 +411,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
                         args.method === "web_read_group" &&
                         !hasAccessRights
                     ) {
-                        const error = new RPCError();
-                        error.data = { message: "ya done!" };
-                        throw error;
+                        throw makeServerError({ description: "ya done!" });
                     }
                 },
             });

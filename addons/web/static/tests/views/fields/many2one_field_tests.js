@@ -2,6 +2,7 @@
 
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
+import { makeServerError } from "@web/../tests/helpers/mock_server";
 import {
     addRow,
     click,
@@ -26,15 +27,14 @@ import {
 import {
     editSearch,
     getFacetTexts,
-    toggleSearchBarMenu,
     toggleMenuItem,
+    toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/search/helpers";
 import { makeView, makeViewInDialog, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { errorService } from "@web/core/errors/error_service";
-import { RPCError } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import { Field } from "@web/views/fields/field";
@@ -3024,9 +3024,7 @@ QUnit.module("Fields", (hooks) => {
                 arch: '<form><field name="product_id" /></form>',
                 mockRPC(route, { args, method }) {
                     if (method === "name_create") {
-                        const error = new RPCError("Something went wrong");
-                        error.exceptionName = "odoo.exceptions.ValidationError";
-                        throw error;
+                        throw makeServerError({ type: "ValidationError" });
                     }
                     if (method === "create") {
                         assert.deepEqual(args[0], { name: "xyz" });
@@ -3067,7 +3065,7 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="product_id" /></form>',
             mockRPC(route, { args, method }) {
                 if (method === "name_create") {
-                    return new RPCError("Something went wrong");
+                    throw makeServerError();
                 }
             },
         });
@@ -3099,9 +3097,7 @@ QUnit.module("Fields", (hooks) => {
                 arch: '<form><field name="p" /></form>',
                 mockRPC(route, { args, method }) {
                     if (method === "name_create") {
-                        const error = new RPCError("Something went wrong");
-                        error.exceptionName = "odoo.exceptions.ValidationError";
-                        throw error;
+                        throw makeServerError({ type: "ValidationError" });
                     }
                     if (method === "create") {
                         assert.deepEqual(args[0], { name: "xyz" });

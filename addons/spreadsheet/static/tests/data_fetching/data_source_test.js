@@ -3,7 +3,7 @@
 import { nextTick } from "@web/../tests/helpers/utils";
 import { LoadableDataSource } from "@spreadsheet/data_sources/data_source";
 import { Deferred } from "@web/core/utils/concurrency";
-import { RPCError } from "@web/core/network/rpc_service";
+import { makeServerError } from "@web/../tests/helpers/mock_server";
 
 QUnit.module("spreadsheet data source", {}, () => {
     QUnit.test(
@@ -60,9 +60,7 @@ QUnit.module("spreadsheet data source", {}, () => {
             notify: () => {},
             orm: {
                 call: () => {
-                    const error = new RPCError();
-                    error.data = { message: "Ya done!" };
-                    throw error;
+                    throw makeServerError({ description: "Ya done!" });
                 },
             },
         });

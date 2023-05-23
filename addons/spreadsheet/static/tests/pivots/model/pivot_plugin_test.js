@@ -18,7 +18,7 @@ import {
 } from "@spreadsheet/../tests/utils/model";
 import { makeDeferred, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { session } from "@web/session";
-import { RPCError } from "@web/core/network/rpc_service";
+import { makeServerError } from "@web/../tests/helpers/mock_server";
 
 QUnit.module("spreadsheet > pivot plugin", {}, () => {
     QUnit.test("can select a Pivot from cell formula", async function (assert) {
@@ -763,9 +763,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                         args.method === "read_group" &&
                         !hasAccessRights
                     ) {
-                        const error = new RPCError();
-                        error.data = { message: "ya done!" };
-                        throw error;
+                        throw makeServerError({ description: "ya done!" });
                     }
                 },
             });
