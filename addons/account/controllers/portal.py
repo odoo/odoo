@@ -52,8 +52,8 @@ class PortalAccount(CustomerPortal):
 
         searchbar_filters = {
             'all': {'label': _('All'), 'domain': []},
-            'invoices': {'label': _('Invoices'), 'domain': [('move_type', '=', ('out_invoice', 'out_refund'))]},
-            'bills': {'label': _('Bills'), 'domain': [('move_type', '=', ('in_invoice', 'in_refund'))]},
+            'invoices': {'label': _('Invoices'), 'domain': [('move_type', 'in', ('out_invoice', 'out_refund'))]},
+            'bills': {'label': _('Bills'), 'domain': [('move_type', 'in', ('in_invoice', 'in_refund'))]},
         }
         # default filter by value
         if not filterby:
