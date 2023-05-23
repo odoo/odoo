@@ -14,7 +14,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='technical']" position="inside">
+            <xpath expr="//field[@name='origin']" position="after">
                 <field name="opportunity_id" context="{'default_type': 'opportunity'}"/>
             </xpath>
         </field>
