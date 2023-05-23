@@ -6074,39 +6074,38 @@ class BaseModel(metaclass=MetaModel):
 
             # subtree is another tree of dependencies
             model = self.env[field.model_name]
-            for invf in model.pool.field_inverses[field]:
-                # use an inverse of field without domain
-                if not (invf.type in ('one2many', 'many2many') and invf.domain):
-                    if invf.type == 'many2one_reference':
-                        rec_ids = OrderedSet()
-                        for rec in self:
-                            try:
-                                if rec[invf.model_field] == field.model_name:
-                                    rec_ids.add(rec[invf.name])
-                            except MissingError:
-                                continue
-                        records = model.browse(rec_ids)
-                    else:
-                        try:
-                            records = self[invf.name]
-                        except MissingError:
-                            records = self.exists()[invf.name]
 
-                    # TODO: find a better fix
-                    if field.model_name == records._name:
-                        if not any(self._ids):
-                            # if self are new, records should be new as well
-                            records = records.browse(it and NewId(it) for it in records._ids)
-                        break
-            else:
-                new_records = self.filtered(lambda r: not r.id)
-                real_records = self - new_records
-                records = model.browse()
-                if real_records:
-                    records = model.search([(field.name, 'in', real_records.ids)], order='id')
-                if new_records:
-                    cache_records = self.env.cache.get_records(model, field)
-                    records |= cache_records.filtered(lambda r: set(r[field.name]._ids) & set(self._ids))
+            records = model
+            self_new = self.filtered(lambda r: not r.id)
+            self_real = self - self_new
+            if self_new:
+                cache_records = self.env.cache.get_records(model, field)
+                set_ids = set(self_new._ids)
+                records = cache_records.filtered(lambda r: set_ids.intersection(r[field.name]._ids))
+            if self_real:
+                for invf in model.pool.field_inverses[field]:
+                    # use an inverse of field without domain
+                    if not (invf.type in ('one2many', 'many2many') and invf.domain):
+                        if invf.type == 'many2one_reference':
+                            rec_ids = OrderedSet()
+                            for rec in self_real:
+                                try:
+                                    if rec[invf.model_field] == field.model_name:
+                                        rec_ids.add(rec[invf.name])
+                                except MissingError:
+                                    continue
+                            records = model.browse(rec_ids)
+                        else:
+                            try:
+                                records = self_real[invf.name]
+                            except MissingError:
+                                records = self_real.exists()[invf.name]
+
+                        # TODO: find a better fix
+                        if field.model_name == records._name:
+                            break
+                else:
+                    records += model.search([(field.name, 'in', self_real.ids)], order='id')
 
             yield from records._modified_triggers(subtree)
 

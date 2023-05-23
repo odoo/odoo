@@ -3398,8 +3398,12 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(move.currency_id, self.currency_data['currency'])
 
         with Form(self.env['account.move'].with_context(default_move_type='out_invoice')) as move_form:
+            with move_form.invoice_line_ids.new():
+                pass
             move_form.currency_id = self.currency_data['currency']
             self.assertEqual(move_form.currency_id, self.currency_data['currency'])
+            with move_form.invoice_line_ids.edit(0) as line_form:
+                self.assertEqual(line_form.currency_id, self.currency_data['currency'])
 
     def test_change_journal_currency(self):
         second_journal = self.company_data['default_journal_sale'].copy({
