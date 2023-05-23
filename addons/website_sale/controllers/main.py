@@ -452,6 +452,7 @@ class WebsiteSale(http.Controller):
             'attrib_set': attrib_set,
             'pager': pager,
             'pricelist': pricelist,
+            'fiscal_position': fiscal_position_sudo,
             'add_qty': add_qty,
             'products': products,
             'search_product': search_product,
