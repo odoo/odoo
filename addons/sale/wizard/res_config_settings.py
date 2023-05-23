@@ -71,6 +71,7 @@ class ResConfigSettings(models.TransientModel):
     module_delivery_shiprocket = fields.Boolean("Shiprocket Connector")
     module_delivery_ups = fields.Boolean("UPS Connector")
     module_delivery_usps = fields.Boolean("USPS Connector")
+    module_delivery_starshipit = fields.Boolean("Starshipit Connector")
 
     module_product_email_template = fields.Boolean("Specific Email")
     module_sale_amazon = fields.Boolean("Amazon Sync")
