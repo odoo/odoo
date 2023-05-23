@@ -901,8 +901,8 @@ class WebsiteSale(http.Controller):
 
     @http.route('/shop/save_shop_layout_mode', type='json', auth='public', website=True)
     def save_shop_layout_mode(self, layout_mode):
-        assert layout_mode in ('grid', 'list'), "Invalid shop layout mode"
-        request.session['website_sale_shop_layout_mode'] = layout_mode
+        if layout_mode in ('grid', 'list'):
+            request.session['website_sale_shop_layout_mode'] = layout_mode
 
     @http.route(['/shop/cart/quantity'], type='json', auth="public", methods=['POST'], website=True, csrf=False)
     def cart_quantity(self):
