@@ -15,7 +15,7 @@ class Forum(models.Model):
         'mail.thread',
         'image.mixin',
         'website.seo.metadata',
-        'website.multi.mixin',
+        'website.published.multi.mixin',
         'website.searchable.mixin',
     ]
     _order = "sequence"
@@ -177,12 +177,12 @@ class Forum(models.Model):
             domain = [('forum_id', '=', forum.id), ('state', '=', 'flagged')]
             forum.count_flagged_posts = self.env['forum.post'].search_count(domain)
 
-    # EXTENDS WEBSITE.MULTI.MIXIN
+    # EXTENDS WEBSITE.PUBLISHED.MULTI.MIXIN
 
     def _compute_website_url(self):
-        if not self.id:
-            return False
-        return f'/forum/{slug(self)}'
+        self.website_url = '#'
+        for forum in self.filtered(lambda record: record.id):
+            forum.website_url = f'/forum/{slug(forum)}'
 
     # ----------------------------------------------------------------------
     # CRUD
@@ -262,10 +262,11 @@ class Forum(models.Model):
 
     def go_to_website(self):
         self.ensure_one()
-        website_url = self._compute_website_url
-        if not website_url:
-            return False
-        return self.env['website'].get_client_action(self._compute_website_url())
+        return False if (url := self.website_url) == '#' else self.env['website'].get_client_action(url)
+
+    @api.model
+    def _default_is_published(self):
+        return True
 
     @api.model
     def _search_get_detail(self, website, order, options):
@@ -293,5 +294,5 @@ class Forum(models.Model):
     def _search_render_results(self, fetch_fields, mapping, icon, limit):
         results_data = super()._search_render_results(fetch_fields, mapping, icon, limit)
         for forum, data in zip(self, results_data):
-            data['website_url'] = forum._compute_website_url()
+            data['website_url'] = forum.website_url
         return results_data
