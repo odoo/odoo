@@ -1003,10 +1003,3 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
             project.allocated_hours == project_template.allocated_hours != sale_order_line.product_uom_qty,
             "The project's allocated hours should have been copied from its template, rather than the sale order line",
         )
-
-class TestSaleTimesheetView(TestCommonTimesheet):
-    def test_get_view_timesheet_encode_uom(self):
-        """ Test the label of timesheet time spent fields according to the company encoding timesheet uom """
-        self.assert_get_view_timesheet_encode_uom([
-            ('sale_timesheet.project_project_view_form', '//field[@name="display_cost"]', [None, 'Daily Cost']),
-        ])

@@ -8,13 +8,13 @@ class ReportProjectTaskUser(models.Model):
     _inherit = "report.project.task.user"
 
     allocated_hours = fields.Float('Allocated Time', readonly=True)
-    effective_hours = fields.Float('Hours Spent', readonly=True)
-    remaining_hours = fields.Float('Remaining Hours', readonly=True)
-    remaining_hours_percentage = fields.Float('Remaining Hours Percentage', readonly=True)
+    effective_hours = fields.Float('Time Spent', readonly=True)
+    remaining_hours = fields.Float('Time Remaining', readonly=True)
+    remaining_hours_percentage = fields.Float('Time Remaining Percentage', readonly=True)
     progress = fields.Float('Progress', aggregator='avg', readonly=True)
     overtime = fields.Float(readonly=True)
-    total_hours_spent = fields.Float("Total Hours Spent", help="Time spent on this task, including its sub-tasks.")
-    subtask_effective_hours = fields.Float("Hours Spent on Sub-Tasks", help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
+    total_hours_spent = fields.Float("Total Time Spent", help="Time spent on this task, including its sub-tasks.")
+    subtask_effective_hours = fields.Float("Time Spent on Sub-Tasks", help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
 
     def _select(self):
         return super()._select() +  """,
@@ -36,17 +36,3 @@ class ReportProjectTaskUser(models.Model):
                 t.overtime,
                 t.total_hours_spent
         """
-
-    @api.model
-    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
-        """The override of _get_view changing the time field labels according to the company timesheet encoding UOM
-        makes the view cache dependent on the company timesheet encoding uom"""
-        key = super()._get_view_cache_key(view_id, view_type, **options)
-        return key + (self.env.company.timesheet_encode_uom_id,)
-
-    @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type in ['pivot', 'graph'] and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
-            arch = self.env['account.analytic.line']._apply_time_label(arch, related_model=self._name)
-        return arch, view

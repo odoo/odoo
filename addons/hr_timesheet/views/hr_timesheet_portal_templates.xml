@@ -44,8 +44,7 @@
                             <th t-if="not groupby == 'project_id'">Project</th>
                             <th t-if="not groupby == 'task_id'">Task</th>
                             <th>Description</th>
-                            <th t-if="is_uom_day" class="text-end">Days Spent</th>
-                            <th t-else="" class="text-end">Hours Spent</th>
+                            <th class="text-end" name="t_label">Time Spent</th>
                         </tr>
                     </thead>
                     <t t-foreach="grouped_timesheets" t-as="timesheets_with_hours">
@@ -128,8 +127,7 @@
                 <th>Date</th>
                 <th>Employee</th>
                 <th>Description</th>
-                <th t-if="is_uom_day" class="text-end">Days Spent</th>
-                <th t-else="" class="text-end">Hours Spent</th>
+                <th class="text-end" name="t_label">Time Spent</th>
               </tr>
             </thead>
             <tr t-foreach="timesheets" t-as="timesheet" valign="middle">
@@ -147,31 +145,19 @@
                 <div t-attf-class="{{'col-auto' if report_type != 'html' else 'col-sm-2'}}">
                     <table class="table table-sm">
                         <tr>
-                            <td t-if="is_uom_day"><strong>Days Spent: </strong></td>
-                            <td t-else=""><strong>Hours Spent: </strong></td>
+                            <td><strong>Total Time Spent: </strong></td>
                             <td class="text-end">
-                                <t t-if="is_uom_day">
-                                    <span t-esc="timesheets._convert_hours_to_days(task.effective_hours)" t-options="{'widget': 'timesheet_uom'}"/>
-                                </t>
-                                <t t-else="">
-                                    <span t-esc="task.effective_hours" t-options='{"widget": "float_time"}'/>
-                                </t>
+                                <span t-if="is_uom_day" t-esc="timesheets._convert_hours_to_days(task.effective_hours)" t-options="{'widget': 'timesheet_uom'}"/>
+                                <span t-else="" t-esc="task.effective_hours" t-options='{"widget": "float_time"}'/>
                             </td>
                         </tr>
                         <tr>
                             <div t-if="task.subtask_effective_hours">
-                                <t t-if="is_uom_day">
-                                    <td><a t-att-href="'/my/timesheets?parent_task_id=%s' % task.id"><strong>Days recorded on sub-tasks: </strong></a></td>
-                                    <td class="text-end">
-                                        <span t-esc="timesheets._convert_hours_to_days(task.subtask_effective_hours)" t-options='{"widget": "timesheet_uom"}'/>
-                                    </td>
-                                </t>
-                                <t t-else="">
-                                    <td><a t-att-href="'/my/timesheets?parent_task_id=%s' % task.id"><strong>Hours recorded on sub-tasks: </strong></a></td>
-                                    <td class="text-end">
-                                        <span t-esc="task.subtask_effective_hours" t-options='{"widget": "float_time"}'/>
-                                    </td>
-                                </t>
+                                <td><strong>Time recorded on sub-tasks: </strong></td>
+                                <td class="text-end">
+                                    <span t-if="is_uom_day" t-esc="timesheets._convert_hours_to_days(timesheets_by_subtask_amount)" t-options='{"widget": "timesheet_uom"}'/>
+                                    <span t-else="" t-esc="timesheets_by_subtask_amount" t-options='{"widget": "float_time"}'/>
+                                </td>
                             </div>
                         </tr>
                         <tr>
@@ -192,18 +178,11 @@
                         </tr>
                         <tr t-attf-class="{{task.remaining_hours &lt; 0 and 'text-danger' or ''}}">
                             <div t-if="task.allocated_hours > 0" name="allocated_time">
-                                <t t-if="is_uom_day">
-                                    <td><strong>Remaining Days: </strong></td>
-                                    <td class="text-end">
-                                        <span t-esc="timesheets._convert_hours_to_days(task.remaining_hours)" t-options='{"widget": "timesheet_uom"}'/>
-                                    </td>
-                                </t>
-                                <t t-else="">
-                                    <td><strong>Remaining Hours: </strong></td>
-                                    <td class="text-end">
-                                        <span t-esc="task.remaining_hours" t-options='{"widget": "float_time"}'/>
-                                    </td>
-                                </t>
+                                <td><strong>Time Remaining: </strong></td>
+                                <td class="text-end">
+                                    <span t-if="is_uom_day" t-esc="timesheets._convert_hours_to_days(task.remaining_hours)" t-options='{"widget": "timesheet_uom"}'/>
+                                    <span t-else="" t-esc="task.remaining_hours" t-options='{"widget": "float_time"}'/>
+                                </td>
                             </div>
                         </tr>
                     </table>

@@ -22,7 +22,7 @@ class TimesheetsAnalysisReport(models.Model):
     currency_id = fields.Many2one('res.currency', string="Currency", readonly=True)
     date = fields.Date("Date", readonly=True)
     amount = fields.Monetary("Amount", readonly=True)
-    unit_amount = fields.Float("Hours Spent", readonly=True)
+    unit_amount = fields.Float("Time Spent", readonly=True)
     partner_id = fields.Many2one('res.partner', string="Partner", readonly=True)
     milestone_id = fields.Many2one('project.milestone', related='task_id.milestone_id')
 
@@ -58,20 +58,6 @@ class TimesheetsAnalysisReport(models.Model):
     @api.model
     def _where(self):
         return "WHERE A.project_id IS NOT NULL"
-
-    @api.model
-    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
-        """The override of _get_view changing the time field labels according to the company timesheet encoding UOM
-        makes the view cache dependent on the company timesheet encoding uom"""
-        key = super()._get_view_cache_key(view_id, view_type, **options)
-        return key + (self.env.company.timesheet_encode_uom_id,)
-
-    @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type in ["pivot", "graph"] and self.env.company.timesheet_encode_uom_id == self.env.ref("uom.product_uom_day"):
-            arch = self.env["account.analytic.line"]._apply_time_label(arch, related_model=self._name)
-        return arch, view
 
     def init(self):
         tools.drop_view_if_exists(self.env.cr, self._table)

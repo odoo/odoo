@@ -12,7 +12,7 @@ class SaleOrderLine(models.Model):
     qty_delivered_method = fields.Selection(selection_add=[('timesheet', 'Timesheets')])
     analytic_line_ids = fields.One2many(domain=[('project_id', '=', False)])  # only analytic lines, not timesheets (since this field determine if SO line came from expense)
     remaining_hours_available = fields.Boolean(compute='_compute_remaining_hours_available', compute_sudo=True)
-    remaining_hours = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours', compute_sudo=True, store=True)
+    remaining_hours = fields.Float('Time Remaining on SO', compute='_compute_remaining_hours', compute_sudo=True, store=True)
     has_displayed_warning_upsell = fields.Boolean('Has Displayed Warning Upsell', copy=False)
     timesheet_ids = fields.One2many('account.analytic.line', 'so_line', domain=[('project_id', '!=', False)], string='Timesheets')
 

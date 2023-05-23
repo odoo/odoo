@@ -35,13 +35,13 @@ class Task(models.Model):
         compute='_compute_allow_timesheets', search='_search_allow_timesheets',
         compute_sudo=True, readonly=True,
         help="Timesheets can be logged on this task.")
-    remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', store=True, readonly=True, help="Number of allocated hours minus the number of hours spent.")
+    remaining_hours = fields.Float("Time Remaining", compute='_compute_remaining_hours', store=True, readonly=True, help="Number of allocated hours minus the number of hours spent.")
     remaining_hours_percentage = fields.Float(compute='_compute_remaining_hours_percentage', search='_search_remaining_hours_percentage')
-    effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True)
-    total_hours_spent = fields.Float("Total Hours", compute='_compute_total_hours_spent', store=True, help="Time spent on this task and its sub-tasks (and their own sub-tasks).")
+    effective_hours = fields.Float("Time Spent", compute='_compute_effective_hours', compute_sudo=True, store=True)
+    total_hours_spent = fields.Float("Total Time Spent", compute='_compute_total_hours_spent', store=True, help="Time spent on this task and its sub-tasks (and their own sub-tasks).")
     progress = fields.Float("Progress", compute='_compute_progress_hours', store=True, aggregator="avg")
     overtime = fields.Float(compute='_compute_progress_hours', store=True)
-    subtask_effective_hours = fields.Float("Hours Spent on Sub-tasks", compute='_compute_subtask_effective_hours', recursive=True, store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
+    subtask_effective_hours = fields.Float("Time Spent on Sub-tasks", compute='_compute_subtask_effective_hours', recursive=True, store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', default=lambda self: self._uom_in_days())
     display_name = fields.Char(help="""Use these keywords in the title to set new tasks:\n
@@ -237,22 +237,9 @@ class Task(models.Model):
                     task.display_name = task.display_name + "\u00A0" + hours_left
 
     @api.model
-    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
-        """The override of _get_view changing the time field labels according to the company timesheet encoding UOM
-        makes the view cache dependent on the company timesheet encoding uom"""
-        key = super()._get_view_cache_key(view_id, view_type, **options)
-        return key + (self.env.company.timesheet_encode_uom_id,)
-
-    @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
-        """ Set the correct label for `unit_amount`, depending on company UoM """
         arch, view = super()._get_view(view_id, view_type, **options)
-        # Use of sudo as the portal user doesn't have access to uom
         arch = self.env['account.analytic.line'].sudo()._apply_timesheet_label(arch)
-
-        if view_type in ['tree', 'pivot', 'graph', 'form'] and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
-            arch = self.env['account.analytic.line']._apply_time_label(arch, related_model=self._name)
-
         return arch, view
 
     @api.ondelete(at_uninstall=False)
