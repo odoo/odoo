@@ -5,7 +5,6 @@ import { parseFloat } from "@web/views/fields/parsers";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { ControlButtonsMixin } from "@point_of_sale/js/ControlButtonsMixin";
-import { IndependentToOrderScreen } from "@point_of_sale/js/Misc/IndependentToOrderScreen";
 import { Orderline } from "@point_of_sale/js/models";
 
 import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
@@ -15,7 +14,7 @@ import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 
 import { SaleOrderList } from "./SaleOrderList";
 import { SaleOrderManagementControlPanel } from "./SaleOrderManagementControlPanel";
-import { onMounted, useRef } from "@odoo/owl";
+import { Component, onMounted, useRef } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/pos_hook";
 
 /**
@@ -27,7 +26,8 @@ function getId(fieldVal) {
     return fieldVal && fieldVal[0];
 }
 
-export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderScreen) {
+export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
+    static storeOnOrder = false;
     static components = { SaleOrderList, SaleOrderManagementControlPanel };
     static template = "SaleOrderManagementScreen";
 
@@ -377,7 +377,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                 }
             }
 
-            this.close();
+            this.pos.closeScreen();
         }
     }
 
