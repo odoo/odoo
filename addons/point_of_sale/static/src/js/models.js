@@ -3169,6 +3169,9 @@ export class Order extends PosModel {
         return Object.keys(this.getOrderChanges()).length ? true : false;
     }
     async pay() {
+        if (!this.orderlines.length) {
+            return;
+        }
         if (
             this.orderlines.some(
                 (line) => line.get_product().tracking !== "none" && !line.has_valid_product_lot()
