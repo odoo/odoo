@@ -574,7 +574,11 @@ class IrActionsServer(models.Model):
             for field, new_value in res.items():
                 record_cached[field] = new_value
         else:
-            self.env[self.model_id.model].browse(self._context.get('active_id')).write(res)
+            try:
+                self.env[self.model_id.model].browse(self._context.get('active_id')).write(res)
+            except Exception as e:
+                e.sentry_ignored = True
+                raise
 
     def _run_action_object_create(self, eval_context=None):
         """Create specified model object with specified values.
