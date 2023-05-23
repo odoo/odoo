@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 
 class Pricelist(models.Model):
     _name = "product.pricelist"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Pricelist"
     _rec_names_search = ['name', 'currency_id']  # TODO check if should be removed
     _order = "sequence asc, id desc"
@@ -25,16 +26,22 @@ class Pricelist(models.Model):
     currency_id = fields.Many2one(
         comodel_name='res.currency',
         default=_default_currency_id,
-        required=True)
+        required=True,
+        tracking=1,
+    )
 
     company_id = fields.Many2one(
-        comodel_name='res.company')
+        comodel_name='res.company',
+        tracking=5,
+    )
     country_group_ids = fields.Many2many(
         comodel_name='res.country.group',
         relation='res_country_group_pricelist_rel',
         column1='pricelist_id',
         column2='res_country_group_id',
-        string="Country Groups")
+        string="Country Groups",
+        tracking=10,
+    )
 
     discount_policy = fields.Selection(
         selection=[
@@ -42,7 +49,9 @@ class Pricelist(models.Model):
             ('without_discount', "Show public price & discount to the customer"),
         ],
         default='with_discount',
-        required=True)
+        required=True,
+        tracking=15,
+    )
 
     item_ids = fields.One2many(
         comodel_name='product.pricelist.item',
