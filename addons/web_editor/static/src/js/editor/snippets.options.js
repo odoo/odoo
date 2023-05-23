@@ -2536,7 +2536,10 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
     }
 });
 
-const m2oRpcCache = {};
+let m2oRpcCache = {};
+const clearM2oRpcCache = () => {
+    m2oRpcCache = {};
+};
 const Many2oneUserValueWidget = SelectUserValueWidget.extend({
     className: (SelectUserValueWidget.prototype.className || '') + ' o_we_many2one',
     events: Object.assign({}, SelectUserValueWidget.prototype.events, {
@@ -8225,4 +8228,6 @@ export default {
     // Other names for convenience
     Class: SnippetOptionWidget,
     registry: registry,
+
+    clearM2oRpcCache,
 };
