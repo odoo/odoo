@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { markup, whenReady, reactive } from "@odoo/owl";
+import { EventBus, markup, whenReady, reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { MacroEngine } from "@web/core/macro";
@@ -77,6 +77,7 @@ export const tourService = {
     start: async (_env, { orm, effect, ui }) => {
         await whenReady();
 
+        const bus = new EventBus();
         const tours = extractRegisteredTours();
         const macroEngine = new MacroEngine({ target: document });
         const consumedTours = new Set(session.web_tours);
@@ -161,6 +162,9 @@ export const tourService = {
                 keepWatchBrowser,
                 showPointerDuration,
                 checkDelay,
+                onStepConsummed(tour, step) {
+                    bus.trigger("STEP-CONSUMMED", { tour, step });
+                },
                 onTourEnd({ name, rainbowManMessage, fadeout }) {
                     if (mode === "auto") {
                         transitionConfig.disabled = false;
@@ -273,6 +277,7 @@ export const tourService = {
         odoo.isTourReady = (tourName) => tours[tourName].wait_for.then(() => true);
 
         return {
+            bus,
             startTour,
             getSortedTours() {
                 return Object.values(tours).sort((t1, t2) => {
