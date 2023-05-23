@@ -198,7 +198,7 @@
                                 <group>
                                     <group string='Status' name="active_group">
                                         <field name="employee_type"/>
-                                        <field name="user_id" string="Related User" domain="[('share', '=', False)]" context="{'allow_create_employee': False, 'default_create_employee': False}" widget="many2one_avatar_user"/>
+                                        <field name="user_id" string="Related User" domain="[('share', '=', False)]" context="{'default_create_employee_id': active_id}" widget="many2one_avatar_user"/>
                                     </group>
                                     <group string="Attendance/Point of Sale" name="identification_group">
                                         <field name="pin" string="PIN Code"/>
@@ -422,7 +422,7 @@
             <field name="groups_id" eval="[(4, ref('base.group_erp_manager'))]"/>
             <field name="state">code</field>
             <field name="code">
-                action = records.with_context(allow_create_employee=False).action_create_user()
+                action = records.action_create_user()
             </field>
         </record>
 
