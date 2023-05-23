@@ -111,8 +111,6 @@
             <tree class="o_sale_order"
                   string="Sales Orders"
                   sample="1"
-                  decoration-info="state == 'draft' or invoice_status == 'to invoice'"
-                  decoration-primary="state == 'sent'"
                   decoration-muted="state == 'cancel'">
                 <header>
                     <button name="%(sale.action_view_sale_advance_payment_inv)d" 
@@ -148,6 +146,7 @@
                        sum="Total Tax Included"
                        widget="monetary"
                        decoration-bf="1"
+                       decoration-info="invoice_status == 'to invoice'"
                        optional="show"/>
                 <field name="tag_ids"
                       widget="many2many_tags"
