@@ -2,6 +2,7 @@
 
 from . import test_get_model_definitions
 from . import test_link_preview
+from . import test_mail_chatter_reload
 from . import test_mail_composer
 from . import test_mail_full_composer
 from . import test_mail_render
