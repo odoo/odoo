@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_restaurant.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension">
-        <xpath expr="//div[hasclass('end-nav-button')]" position="before">
+        <xpath expr="//li[hasclass('backend-button')]" position="before">
             <li t-if="pos.mainScreen.component.name == 'FloorScreen'" class="menu-item navbar-button edit-button" t-on-click="toggleEditMode">
                 <span>Edit Plan</span>
             </li>
