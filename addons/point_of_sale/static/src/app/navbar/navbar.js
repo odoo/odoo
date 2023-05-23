@@ -9,7 +9,6 @@ import { HeaderButton } from "@point_of_sale/js/ChromeWidgets/HeaderButton";
 import { ProxyStatus } from "@point_of_sale/js/ChromeWidgets/ProxyStatus";
 import { SaleDetailsButton } from "@point_of_sale/js/ChromeWidgets/SaleDetailsButton";
 import { SyncNotification } from "@point_of_sale/js/ChromeWidgets/SyncNotification";
-import { BackendButton } from "@point_of_sale/js/ChromeWidgets/BackendButton";
 import { CashMovePopup } from "./cash_move_popup/cash_move_popup";
 import { TicketScreen } from "@point_of_sale/js/Screens/TicketScreen/TicketScreen";
 import { Component, useState, useExternalListener } from "@odoo/owl";
@@ -24,7 +23,6 @@ export class Navbar extends Component {
         ProxyStatus,
         SaleDetailsButton,
         SyncNotification,
-        BackendButton,
     };
     static props = {
         showCashMoveButton: Boolean,
