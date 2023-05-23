@@ -32,6 +32,15 @@ class IrRule(models.Model):
          'Rule must have at least one checked access right!'),
     ]
 
+    @api.constrains('domain_force')
+    def _check_domain_force(self):
+        eval_context = self._eval_context()
+        for rule in self:
+            try:
+                return expression.normalize_domain(safe_eval(rule.domain_force, eval_context) if rule.domain_force else [])
+            except Exception:
+                raise ValidationError(_("Invalid domain: %s", rule.domain_force))
+
     @api.model
     def _eval_context(self):
         """Returns a dictionary to use as evaluation context for
