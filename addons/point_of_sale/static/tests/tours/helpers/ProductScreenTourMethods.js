@@ -255,7 +255,7 @@ class Do {
     clickCloseButton() {
         return [
             {
-                trigger: ".header-button",
+                trigger: ".close-button",
             },
         ];
     }
@@ -415,7 +415,7 @@ class Check {
             },
             {
                 content: "Click close session button",
-                trigger: ".header-button",
+                trigger: ".close-button",
             },
             {
                 content: "Check closing details",

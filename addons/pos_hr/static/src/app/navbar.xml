@@ -8,7 +8,7 @@
             </attribute>
         </xpath>
 
-        <xpath expr="//div[hasclass('close-button')]" position="attributes">
+        <xpath expr="//li[hasclass('close-button')]" position="attributes">
             <attribute name="t-if">
                 !pos.globalState.config.module_pos_hr or pos.globalState.get_cashier().role === 'manager' or pos.globalState.get_cashier_user_id() === pos.globalState.user.id
             </attribute>
