@@ -1275,26 +1275,9 @@ class AccountMove(models.Model):
     @api.depends('date', 'line_ids.debit', 'line_ids.credit', 'line_ids.tax_line_id', 'line_ids.tax_ids', 'line_ids.tax_tag_ids')
     def _compute_tax_lock_date_message(self):
         for move in self:
-            invoice_date = move.invoice_date or fields.Date.context_today(move)
             accounting_date = move.date or fields.Date.context_today(move)
             affects_tax_report = move._affect_tax_report()
-            lock_dates = move._get_violated_lock_dates(accounting_date, affects_tax_report)
-            if lock_dates:
-                accounting_date = move._get_accounting_date(invoice_date, affects_tax_report)
-                lock_date, lock_type = lock_dates[-1]
-                tax_lock_date_message = _(
-                    "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
-                    "The Journal Entry will be accounted on %(accounting_date)s upon posting.",
-                    lock_type=lock_type,
-                    lock_date=format_date(move.env, lock_date),
-                    accounting_date=format_date(move.env, accounting_date))
-                for lock_date, lock_type in lock_dates[:-1]:
-                    tax_lock_date_message += _(" The %(lock_type)s lock date is set on %(lock_date)s.",
-                                               lock_type=lock_type,
-                                               lock_date=format_date(move.env, lock_date))
-                move.tax_lock_date_message = tax_lock_date_message
-            else:
-                move.tax_lock_date_message = False
+            move.tax_lock_date_message = move._get_lock_date_message(accounting_date, affects_tax_report)
 
     @api.depends('currency_id')
     def _compute_display_inactive_currency_warning(self):
@@ -3252,7 +3235,7 @@ class AccountMove(models.Model):
             reverse_moves += move.with_context(
                 move_reverse_cancel=cancel,
                 include_business_fields=True,
-                skip_invoice_sync=bool(move.tax_cash_basis_origin_move_id),
+                skip_invoice_sync=move.move_type == 'entry',
             ).copy(default_values)
 
         reverse_moves.with_context(skip_invoice_sync=cancel).write({'line_ids': [
@@ -3844,6 +3827,26 @@ class AccountMove(models.Model):
             locks.append((tax_lock_date, _('tax')))
         locks.sort()
         return locks
+
+    def _get_lock_date_message(self, invoice_date, has_tax):
+        """Get a message describing the latest lock date affecting the specified date.
+        :param invoice_date: The date to be checked
+        :param has_tax: If any taxes are involved in the lines of the invoice
+        :return: a message describing the latest lock date affecting this move and the date it will be
+                 accounted on if posted, or False if no lock dates affect this move.
+        """
+        lock_dates = self._get_violated_lock_dates(invoice_date, has_tax)
+        if lock_dates:
+            invoice_date = self._get_accounting_date(invoice_date, has_tax)
+            lock_date, lock_type = lock_dates[-1]
+            tax_lock_date_message = _(
+                "The date is being set prior to the %(lock_type)s lock date %(lock_date)s. "
+                "The Journal Entry will be accounted on %(invoice_date)s upon posting.",
+                lock_type=lock_type,
+                lock_date=format_date(self.env, lock_date),
+                invoice_date=format_date(self.env, invoice_date))
+            return tax_lock_date_message
+        return False
 
     @api.model
     def _move_dict_to_preview_vals(self, move_vals, currency_id=None):

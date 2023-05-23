@@ -654,7 +654,7 @@
         <field name="search_view_id" ref="hr_leave_view_search_my"/>
         <field name="view_ids" eval="[(5, 0, 0),
                 (0, 0, {'view_mode': 'kanban', 'view_id': ref('hr_leave_view_kanban')})]"/>
-        <field name="domain">[('user_id', '=', uid)]</field>
+        <field name="domain">[('user_id', '=', uid), ('employee_company_id', 'in', allowed_company_ids)]</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Keep track of your PTOs.

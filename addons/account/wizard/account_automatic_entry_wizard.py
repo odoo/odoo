@@ -4,7 +4,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import format_date, formatLang
 
 from collections import defaultdict
-from itertools import groupby
+from odoo.tools import groupby
 import json
 
 class AutomaticEntryWizard(models.TransientModel):
@@ -43,6 +43,7 @@ class AutomaticEntryWizard(models.TransientModel):
         compute="_compute_revenue_accrual_account",
         inverse="_inverse_revenue_accrual_account",
     )
+    lock_date_message = fields.Char(string="Lock Date Message", compute="_compute_lock_date_message")
 
     # change account
     destination_account_id = fields.Many2one(string="To", comodel_name='account.account', help="Account to transfer to.")
@@ -101,6 +102,17 @@ class AutomaticEntryWizard(models.TransientModel):
         for record in self:
             record.account_type = 'income' if sum(record.move_line_ids.mapped('balance')) < 0 else 'expense'
 
+    @api.depends('action', 'move_line_ids')
+    def _compute_lock_date_message(self):
+        for record in self:
+            record.lock_date_message = False
+            if record.action == 'change_period':
+                for aml in record.move_line_ids:
+                    lock_date_message = aml.move_id._get_lock_date_message(aml.date, aml.move_id._affect_tax_report())
+                    if lock_date_message:
+                        record.lock_date_message = lock_date_message
+                        break
+
     @api.depends('destination_account_id')
     def _compute_display_currency_helper(self):
         for record in self:
@@ -111,11 +123,6 @@ class AutomaticEntryWizard(models.TransientModel):
         for wizard in self:
             if wizard.move_line_ids.move_id._get_violated_lock_dates(wizard.date, False):
                 raise ValidationError(_("The date selected is protected by a lock date"))
-
-            if wizard.action == 'change_period':
-                for move in wizard.move_line_ids.move_id:
-                    if move._get_violated_lock_dates(move.date, False):
-                        raise ValidationError(_("The date of some related entries is protected by a lock date"))
 
     @api.model
     def default_get(self, fields):
@@ -208,6 +215,12 @@ class AutomaticEntryWizard(models.TransientModel):
         }]
 
     def _get_move_dict_vals_change_period(self):
+        reference_move = self.env['account.move'].new({'journal_id': self.journal_id.id})
+
+        def get_lock_safe_date(aml):
+            # Use a reference move in the correct journal because _get_accounting_date depends on the journal sequence.
+            return reference_move._get_accounting_date(aml.date, aml.move_id._affect_tax_report())
+
         # set the change_period account on the selected journal items
         accrual_account = self.revenue_accrual_account if self.account_type == 'income' else self.expense_accrual_account
 
@@ -220,7 +233,7 @@ class AutomaticEntryWizard(models.TransientModel):
             'journal_id': self.journal_id.id,
         }}
         # complete the account.move data
-        for date, grouped_lines in groupby(self.move_line_ids, lambda m: m.move_id.date):
+        for date, grouped_lines in groupby(self.move_line_ids, get_lock_safe_date):
             grouped_lines = list(grouped_lines)
             amount = sum(l.balance for l in grouped_lines)
             move_data[date] = {
@@ -261,7 +274,7 @@ class AutomaticEntryWizard(models.TransientModel):
                     'analytic_distribution': aml.analytic_distribution,
                 }),
             ]
-            move_data[aml.move_id.date]['line_ids'] += [
+            move_data[get_lock_safe_date(aml)]['line_ids'] += [
                 (0, 0, {
                     'name': aml.name or '',
                     'debit': reported_credit,
@@ -344,7 +357,7 @@ class AutomaticEntryWizard(models.TransientModel):
         accrual_move_offsets = defaultdict(int)
         for move in self.move_line_ids.move_id:
             amount = sum((self.move_line_ids._origin & move.line_ids).mapped('balance'))
-            accrual_move = created_moves[1:].filtered(lambda m: m.date == move.date)
+            accrual_move = created_moves[1:].filtered(lambda m: m.date == m._get_accounting_date(move.date, move._affect_tax_report()))
 
             if accrual_account.reconcile and accrual_move.state == 'posted' and destination_move.state == 'posted':
                 destination_move_lines = destination_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[destination_move_offset:destination_move_offset+2]
