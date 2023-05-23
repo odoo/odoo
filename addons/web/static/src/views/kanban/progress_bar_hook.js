@@ -218,25 +218,6 @@ class ProgressBarState {
         }
     }
 
-    async updateCountsArchive(group) {
-        const groupInfo = this._groupsInfo[group.id];
-        for (const bar of groupInfo.bars) {
-            bar.count = 0;
-        }
-        if (this._aggregateFields.length) {
-            const key = Object.keys(this._aggregateValues).find(
-                (key) => this._aggregateValues[key][group.groupByField.name] === group.value
-            );
-            for (const sumField of this._aggregateFields) {
-                this._aggregateValues[key][sumField.name] = 0;
-            }
-        }
-        if (this.activeBars[group.value] && group.list.count === 0) {
-            // If the selected bar is empty, remove the selection
-            this.selectBar(group.id, { value: null });
-        }
-    }
-
     async _updateAggregates() {
         const { context, groupBy, domain, resModel, firstGroupBy } = this.model.root;
         const fieldsName = this._aggregateFields.map((f) => f.name);
