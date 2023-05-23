@@ -253,13 +253,6 @@ class AccountAnalyticLine(models.Model):
         return result
 
     @api.model
-    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
-        """The override of _get_view changing the time field labels according to the company timesheet encoding UOM
-        makes the view cache dependent on the company timesheet encoding uom"""
-        key = super()._get_view_cache_key(view_id, view_type, **options)
-        return key + (self.env.company.timesheet_encode_uom_id,)
-
-    @api.model
     def get_views(self, views, options=None):
         res = super().get_views(views, options)
         if options and options.get('toolbar'):
@@ -279,11 +272,10 @@ class AccountAnalyticLine(models.Model):
 
     @api.model
     def _get_view(self, view_id=None, view_type='form', **options):
-        """ Set the correct label for `unit_amount`, depending on company UoM """
+        """ Set the correct label for `unit_amount`, for timesheet record"""
         arch, view = super()._get_view(view_id, view_type, **options)
         # Use of sudo as the portal user doesn't have access to uom
         arch = self.sudo()._apply_timesheet_label(arch, view_type=view_type)
-        arch = self._apply_time_label(arch, related_model=self._name)
         return arch, view
 
     @api.model
@@ -294,19 +286,7 @@ class AccountAnalyticLine(models.Model):
         # custom inheretied view stored in database. Even if normally, no xpath can be done on
         # 'string' attribute.
         for node in doc.xpath("//field[@name='unit_amount'][@widget='timesheet_uom'][not(@string)]"):
-            node.set('string', _('%s Spent', re.sub(r'[\(\)]', '', encoding_uom.name or '')))
-        return doc
-
-    @api.model
-    def _apply_time_label(self, view_node, related_model):
-        doc = view_node
-        Model = self.env[related_model]
-        # Just fetch the name of the uom in `timesheet_encode_uom_id` of the current company
-        encoding_uom_name = self.env.company.timesheet_encode_uom_id.with_context(prefetch_fields=False).sudo().name
-        for node in doc.xpath("//field[@widget='timesheet_uom'][not(@string)] | //field[@widget='timesheet_uom_no_toggle'][not(@string)]"):
-            name_with_uom = re.sub(re.escape(_('Hours')) + "|Hours", encoding_uom_name or '', Model._fields[node.get('name')]._description_string(self.env), flags=re.IGNORECASE)
-            node.set('string', name_with_uom)
-
+            node.set('string', _('Time Spent'))
         return doc
 
     def _timesheet_get_portal_domain(self):

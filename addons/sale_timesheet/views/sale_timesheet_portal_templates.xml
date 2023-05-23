@@ -55,9 +55,9 @@
                 </th>
             </t>
         </xpath>
-        <xpath expr="//thead/tr/th[@t-if='is_uom_day']" position="before">
-            <th t-if="not groupby == 'so_line'">Sales Order Item</th>
-        </xpath>
+        <th name="t_label" position="before">
+            <th t-if="not groupby == 'sol'">Sales Order Item</th>
+        </th>
         <xpath expr="//tbody//td[hasclass('text-end')]" position="before">
             <td t-if="not groupby == 'so_line'"><span t-field="timesheet.so_line" t-att-title="timesheet.so_line.display_name"></span></td>
         </xpath>

@@ -27,10 +27,10 @@ class Project(models.Model):
         help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.", compute_sudo=True)
     encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days')
     is_internal_project = fields.Boolean(compute='_compute_is_internal_project', search='_search_is_internal_project')
-    remaining_hours = fields.Float(compute='_compute_remaining_hours', string='Remaining Hours', compute_sudo=True)
+    remaining_hours = fields.Float(compute='_compute_remaining_hours', string='Time Remaining', compute_sudo=True)
     is_project_overtime = fields.Boolean('Project in Overtime', compute='_compute_remaining_hours', search='_search_is_project_overtime', compute_sudo=True)
-    allocated_hours = fields.Float(string='Allocated Hours')
-    effective_hours = fields.Float(string='Hours Spent', compute='_compute_remaining_hours', compute_sudo=True)
+    allocated_hours = fields.Float(string='Allocated Time')
+    effective_hours = fields.Float(string='Time Spent', compute='_compute_remaining_hours', compute_sudo=True)
 
     def _compute_encode_uom_in_days(self):
         self.encode_uom_in_days = self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
@@ -68,20 +68,6 @@ class Project(models.Model):
         else:
             operator_new = 'not inselect'
         return [('id', operator_new, (query, ()))]
-
-    @api.model
-    def _get_view_cache_key(self, view_id=None, view_type='form', **options):
-        """The override of _get_view changing the time field labels according to the company timesheet encoding UOM
-        makes the view cache dependent on the company timesheet encoding uom"""
-        key = super()._get_view_cache_key(view_id, view_type, **options)
-        return key + (self.env.company.timesheet_encode_uom_id,)
-
-    @api.model
-    def _get_view(self, view_id=None, view_type='form', **options):
-        arch, view = super()._get_view(view_id, view_type, **options)
-        if view_type in ['tree', 'form'] and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
-            arch = self.env['account.analytic.line']._apply_time_label(arch, related_model=self._name)
-        return arch, view
 
     @api.depends('allow_timesheets', 'timesheet_ids.unit_amount', 'allocated_hours')
     def _compute_remaining_hours(self):

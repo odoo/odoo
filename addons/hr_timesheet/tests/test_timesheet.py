@@ -94,19 +94,6 @@ class TestCommonTimesheet(TransactionCase):
             'employee_type': 'freelance',
         })
 
-    def assert_get_view_timesheet_encode_uom(self, expected):
-        companies = self.env['res.company'].create([
-            {'name': 'foo', 'timesheet_encode_uom_id': self.env.ref('uom.product_uom_hour').id},
-            {'name': 'bar', 'timesheet_encode_uom_id': self.env.ref('uom.product_uom_day').id},
-        ])
-        for view_xml_id, xpath_expr, expected_labels in expected:
-            for company, expected_label in zip(companies, expected_labels):
-                view = self.env.ref(view_xml_id)
-                view = self.env[view.model].with_company(company).get_view(view.id, view.type)
-                tree = etree.fromstring(view['arch'])
-                field_node = tree.xpath(xpath_expr)[0]
-                self.assertEqual(field_node.get('string'), expected_label)
-
 
 class TestTimesheet(TestCommonTimesheet):
 
@@ -579,15 +566,6 @@ class TestTimesheet(TestCommonTimesheet):
 
         with self.assertRaises(UserError):
             timesheet.employee_id = self.empl_employee2
-
-    def test_get_view_timesheet_encode_uom(self):
-        """ Test the label of timesheet time spent fields according to the company encoding timesheet uom """
-        self.assert_get_view_timesheet_encode_uom([
-            ('hr_timesheet.hr_timesheet_line_form', '//field[@name="unit_amount"]', ['Hours Spent', 'Days Spent']),
-            ('hr_timesheet.project_invoice_form', '//field[@name="allocated_hours"]', [None, 'Allocated Days']),
-            ('hr_timesheet.view_task_form2_inherited', '//field[@name="unit_amount"]', ['Hours Spent', 'Days Spent']),
-            ('hr_timesheet.timesheets_analysis_report_pivot_employee', '//field[@name="unit_amount"]', [None, 'Days Spent']),
-        ])
 
     def test_create_timesheet_with_companyless_analytic_account(self):
         """ This test ensures that a timesheet can be created on an analytic account whose company_id is set to False"""
