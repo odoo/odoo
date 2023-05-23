@@ -1860,7 +1860,7 @@ class AccountMoveLine(models.Model):
                         if credit_vals.get('record'):
                             exchange_lines_to_fix += credit_vals['record']
                         amounts_list.append({'amount_residual': credit_exchange_amount})
-                        remaining_credit_amount += credit_exchange_amount
+                        remaining_credit_amount -= credit_exchange_amount
                         if credit_vals['currency'] == company_currency:
                             remaining_credit_amount_curr -= credit_exchange_amount
                 else:
