@@ -59,7 +59,7 @@
             <field name="model">account.tax</field>
             <field name="arch" type="xml">
                 <tree string="Account Tax">
-                    <field name="display_name" string="name"/>
+                    <field name="display_name" string="Name"/>
                     <field name="description"/>
                     <field name="invoice_label"/>
                 </tree>
@@ -99,6 +99,7 @@
             <field name="arch" type="xml">
                 <search string="Search Taxes">
                     <field name="name_searchable" string="Name"/>
+                    <field name="description"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <filter string="Sale" name="sale" domain="[('type_tax_use','=','sale')]" />
                     <filter string="Purchase" name="purchase" domain="[('type_tax_use','=','purchase')]" />
@@ -122,7 +123,7 @@
             <field name="model">account.tax</field>
             <field name="arch" type="xml">
                 <search string="Search Taxes">
-                    <field name="name" filter_domain="['|', ('name', 'ilike', self), ('description', 'ilike', self), ('invoice_label', 'ilike', self)]" string="Tax"/>
+                    <field name="name" filter_domain="['|', '|', ('name', 'ilike', self), ('description', 'ilike', self), ('invoice_label', 'ilike', self)]" string="Tax"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </search>
             </field>
