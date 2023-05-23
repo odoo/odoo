@@ -1,31 +1,31 @@
 /** @odoo-module **/
 
+import { makeServerError } from "@web/../tests/helpers/mock_server";
+import { fakeCookieService, makeFakeUserService } from "@web/../tests/helpers/mock_services";
+import * as cpHelpers from "@web/../tests/search/helpers";
 import { browser } from "@web/core/browser/browser";
+import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { registry } from "@web/core/registry";
+import { session } from "@web/session";
 import { editView } from "@web/views/debug_items";
-import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
 import { listView } from "@web/views/list/list_view";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
+import { clearUncommittedChanges } from "@web/webclient/actions/action_service";
 import testUtils from "web.test_utils";
-import { session } from "@web/session";
+import { errorService } from "../../../src/core/errors/error_service";
+import { registerCleanup } from "../../helpers/cleanup";
 import {
     click,
-    getFixture,
+    clickSave,
     editInput,
+    getFixture,
     getNodesTextContent,
     legacyExtraNextTick,
     makeDeferred,
     nextTick,
     patchWithCleanup,
-    clickSave,
 } from "../../helpers/utils";
 import { createWebClient, doAction, getActionManagerServerData, loadState } from "./../helpers";
-import { errorService } from "../../../src/core/errors/error_service";
-import { RPCError } from "@web/core/network/rpc_service";
-import { registerCleanup } from "../../helpers/cleanup";
-import { WarningDialog } from "@web/core/errors/error_dialogs";
-import { makeFakeUserService, fakeCookieService } from "@web/../tests/helpers/mock_services";
-import * as cpHelpers from "@web/../tests/search/helpers";
 
 import { onMounted } from "@odoo/owl";
 let serverData;
@@ -2181,10 +2181,7 @@ QUnit.module("ActionManager", (hooks) => {
 
         const mockRPC = (route, args) => {
             if (args.method === "onchange" && args.model === "partner") {
-                const error = new RPCError();
-                error.exceptionName = "odoo.exceptions.ValidationError";
-                error.code = 200;
-                return Promise.reject(error);
+                throw makeServerError({ type: "ValidationError" });
             }
         };
 
