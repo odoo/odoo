@@ -175,6 +175,38 @@ QUnit.module("Tour service", (hooks) => {
         assert.strictEqual(target.querySelector(".counter .value").textContent, "5");
     });
 
+    QUnit.test("trigger an event when a step is consummed", async function (assert) {
+        registry.category("web_tour.tours").add("tour1", {
+            sequence: 10,
+            steps: [{ trigger: ".interval input" }],
+        });
+        const env = await makeTestEnv({});
+
+        const { Component: TourPointerContainer, props: tourPointerProps } = registry
+            .category("main_components")
+            .get("TourPointerContainer");
+
+        class Root extends Component {
+            static components = { TourPointerContainer, Counter };
+            static template = xml/*html*/ `
+                <t>
+                    <Counter />
+                    <TourPointerContainer t-props="props.tourPointerProps" />
+                </t>
+            `;
+        }
+
+        await mount(Root, target, { env, props: { tourPointerProps } });
+        env.services.tour_service.startTour("tour1", { mode: "manual" });
+        env.services.tour_service.bus.addEventListener("STEP-CONSUMMED", ({ detail }) => {
+            assert.step(`Tour ${detail.tour.name}, step ${detail.step.trigger}`);
+        });
+        await mock.advanceTime(750);
+        await editInput(target, ".interval input", "5");
+        await mock.advanceTime(750);
+        assert.verifySteps(["Tour tour1, step .interval input"]);
+    });
+
     QUnit.test("should show only 1 pointer at a time", async function (assert) {
         registry.category("web_tour.tours").add("tour1", {
             sequence: 10,
