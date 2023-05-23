@@ -152,10 +152,9 @@ class Track(models.Model):
 
     @api.depends('name')
     def _compute_website_url(self):
-        super(Track, self)._compute_website_url()
-        for track in self:
-            if track.id:
-                track.website_url = '/event/%s/track/%s' % (slug(track.event_id), slug(track))
+        super()._compute_website_url()
+        for track in self.filtered(lambda record: record.id):
+            track.website_url = f'/event/{slug(track.event_id)}/track/{slug(track)}'
 
     # STAGES
 

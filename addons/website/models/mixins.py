@@ -185,13 +185,15 @@ class WebsitePublishedMixin(models.AbstractModel):
     website_published = fields.Boolean('Visible on current website', related='is_published', readonly=False)
     is_published = fields.Boolean('Is Published', copy=False, default=lambda self: self._default_is_published(), index=True)
     can_publish = fields.Boolean('Can Publish', compute='_compute_can_publish')
-    website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
+    website_url = fields.Char('Website URL', compute='_compute_website_url', help='The URL path to access the document through the website.')
 
     @api.depends_context('lang')
     def _compute_website_url(self):
-        for record in self:
-            record.website_url = '#'
+        # In overrides, records are commonly filtered on `id` to skip non-existing records
+        # (found with onchanges or when using studio).
+        self.website_url = '#'
 
+    @api.model
     def _default_is_published(self):
         return False
 

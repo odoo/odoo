@@ -186,11 +186,9 @@ class Sponsor(models.Model):
 
     @api.depends('name', 'event_id.name')
     def _compute_website_url(self):
-        super(Sponsor, self)._compute_website_url()
-        for sponsor in self:
-            if sponsor.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
-                base_url = sponsor.event_id.get_base_url()
-                sponsor.website_url = '%s/event/%s/exhibitor/%s' % (base_url, slug(sponsor.event_id), slug(sponsor))
+        super()._compute_website_url()
+        for sponsor in self.filtered(lambda record: record.id):
+            sponsor.website_url = f'/event/{slug(sponsor.event_id)}/exhibitor/{slug(sponsor)}'
 
     # ------------------------------------------------------------
     # CRUD

@@ -46,7 +46,7 @@ class Product(models.Model):
     def _compute_product_website_url(self):
         for product in self:
             attributes = ','.join(str(x) for x in product.product_template_attribute_value_ids.ids)
-            product.website_url = "%s#attr=%s" % (product.product_tmpl_id.website_url, attributes)
+            product.website_url = f'{product.product_tmpl_id.website_url}#attr={attributes}'
 
     def _prepare_variant_values(self, combination):
         variant_dict = super()._prepare_variant_values(combination)

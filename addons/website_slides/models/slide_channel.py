@@ -657,11 +657,9 @@ class Channel(models.Model):
 
     @api.depends('name', 'website_id.domain')
     def _compute_website_url(self):
-        super(Channel, self)._compute_website_url()
-        for channel in self:
-            if channel.id:  # avoid to perform a slug on a not yet saved record in case of an onchange.
-                base_url = channel.get_base_url()
-                channel.website_url = '%s/slides/%s' % (base_url, slug(channel))
+        super()._compute_website_url()
+        for channel in self.filtered(lambda record: record.id):
+            channel.website_url = f'/slides/{slug(channel)}'
 
     @api.depends('can_publish', 'is_member', 'karma_review', 'karma_slide_comment', 'karma_slide_vote')
     @api.depends_context('uid')

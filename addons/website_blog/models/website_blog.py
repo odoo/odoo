@@ -158,9 +158,9 @@ class BlogPost(models.Model):
     _mail_post_access = 'read'
 
     def _compute_website_url(self):
-        super(BlogPost, self)._compute_website_url()
-        for blog_post in self:
-            blog_post.website_url = "/blog/%s/%s" % (slug(blog_post.blog_id), slug(blog_post))
+        super()._compute_website_url()
+        for blog_post in self.filtered(lambda record: record.id):
+            blog_post.website_url = f'/blog/{slug(blog_post.blog_id)}/{slug(blog_post)}'
 
     def _default_content(self):
         return '''
