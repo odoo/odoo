@@ -18989,4 +18989,49 @@ QUnit.module("Views", (hooks) => {
             "Search: M2M field"
         );
     });
+
+    QUnit.test("search nested many2one field with early option selection", async (assert) => {
+        const deferred = makeDeferred();
+        serverData.models.parent = {
+            fields: {
+                foo: { string: "Foo", type: "one2many", relation: "foo" },
+            },
+        },
+        await makeView({
+            type: "form",
+            resModel: "parent",
+            serverData,
+            arch: `
+            <form>
+                <field name="foo">
+                    <tree editable="bottom">
+                        <field name="m2o"/>
+                    </tree>
+                </field>
+            </form>`,
+            mockRPC: async (route, { method }) => {
+                if (method === "name_search") {
+                    await deferred;
+                }
+            },
+        });
+
+        await triggerEvent(document.querySelector('.o_field_x2many_list_row_add a'), null, "click");
+
+        const input = document.activeElement;
+        input.value = 'alu';
+        triggerEvent(document.activeElement, null, "input"),
+        await nextTick();
+
+        input.value = 'alue';
+        triggerEvent(document.activeElement, null, "input"),
+        triggerHotkey("Enter"),
+        await nextTick();
+
+        deferred.resolve();
+        await nextTick();
+
+        assert.strictEqual(input, document.activeElement);
+        assert.strictEqual(input.value, 'Value 1');
+    });
 });
