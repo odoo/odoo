@@ -343,8 +343,11 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      * @private
      */
     _addEditorMessages() {
-        const $wrap = this.$editable.find('.oe_structure.oe_empty, [data-oe-type="html"]');
+        const $wrap = this.$editable
+            .find('.oe_structure.oe_empty, [data-oe-type="html"]')
+            .filter(':o_editable');
         this.$editorMessageElement = $wrap.not('[data-editor-message]')
+                .attr('data-editor-message-default', true)
                 .attr('data-editor-message', this.env._t('DRAG BUILDING BLOCKS HERE'));
         $wrap.filter(':empty').attr('contenteditable', false);
     }
@@ -703,7 +706,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         } else if (event.data.reloadWebClient) {
             const currentPath = encodeURIComponent(window.location.pathname);
             const websiteId = this.websiteService.currentWebsite.id;
-            callback = () => window.location = `/web#action=website.website_preview&website_id=${websiteId}&path=${currentPath}&enable_editor=1`;
+            callback = () => window.location = `/web#action=website.website_preview&website_id=${encodeURIComponent(websiteId)}&path=${currentPath}&enable_editor=1`;
         } else if (event.data.action) {
             callback = () => {
                 this.leaveEditMode({

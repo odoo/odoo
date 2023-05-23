@@ -3,6 +3,7 @@
 
 from collections import defaultdict
 from odoo import _, models
+from odoo.tools import float_compare
 import base64
 
 class PosOrder(models.Model):
@@ -28,7 +29,7 @@ class PosOrder(models.Model):
                 }
             }
         for coupon in coupons:
-            if (coupon.points + point_changes[coupon.id]) < 0:
+            if float_compare(coupon.points, -point_changes[coupon.id], 2) == -1:
                 return {
                     'successful': False,
                     'payload': {

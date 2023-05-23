@@ -5,17 +5,17 @@
 # Translators:
 # Martin Trigaux, 2022
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2022
-# trendspotter <jirka.p@volny.cz>, 2022
+# Jiří Podhorecký, 2022
 # Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -33,7 +33,7 @@ msgid "Adyen API key"
 msgstr "Adyen API klíč"
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Adyen Error"
@@ -60,7 +60,7 @@ msgid "Adyen Test Mode"
 msgstr "Testovací režim Adyen"
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "An unexpected error occurred. Message from Adyen: %s"
@@ -72,14 +72,14 @@ msgid "Ask Customers For Tip"
 msgstr "Požádat zákazníky o spropitné"
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
 msgstr "Autentizace služby selhala. Zkontrolujte přihlašovací údaje Adyen."
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid ""
@@ -88,7 +88,7 @@ msgid ""
 msgstr ""
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Cannot process transactions with negative amount."
@@ -100,7 +100,7 @@ msgid "Config Settings"
 msgstr "Nastavení konfigurace"
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid ""
@@ -109,13 +109,14 @@ msgid ""
 msgstr ""
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Message from Adyen: %s"
 msgstr "Zpráva od Adyen: %s"
 
 #. module: pos_adyen
+#. odoo-python
 #: code:addons/pos_adyen/models/pos_config.py:0
 #, python-format
 msgid ""
@@ -149,16 +150,18 @@ msgid "Run transactions in the test environment."
 msgstr "Spustit transakce v testovacím prostředí."
 
 #. module: pos_adyen
-#: code:addons/pos_adyen/models/pos_payment_method.py:0
-#, python-format
-msgid "Terminal %s is already used on payment method %s."
-msgstr "Terminál %s se již používá při platbě %s."
-
-#. module: pos_adyen
+#. odoo-python
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
 msgid "Terminal %s is already used in company %s on payment method %s."
 msgstr "Terminál %s se již používá ve společnosti %s při platbě %s."
+
+#. module: pos_adyen
+#. odoo-python
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Terminal %s is already used on payment method %s."
+msgstr "Terminál %s se již používá při platbě %s."
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_api_key

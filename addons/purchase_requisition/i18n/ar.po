@@ -14,7 +14,7 @@ msgstr ""
 "POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -24,12 +24,12 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.actions.report,print_report_name:purchase_requisition.action_report_purchase_requisitions
 msgid "'Purchase Agreement - %s' % (object.name)"
-msgstr ""
+msgstr "'اتفاقية الشراء - %s' % (object.name) "
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Agreement Deadline:</strong><br/>"
-msgstr ""
+msgstr "<strong>الموعد النهائي للاتفاقية:</strong><br/> "
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -132,17 +132,17 @@ msgstr "نوع الاتفاقية"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__alternative_po_ids
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__alternative_po_ids
 msgid "Alternative POs"
-msgstr ""
+msgstr "أوامر الشراء البديلة "
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__alternative_po_count
 msgid "Alternative Po Count"
-msgstr ""
+msgstr "عدد أوامر الشراء البديلة "
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Alternative Purchase Order"
-msgstr ""
+msgstr "أمر الشراء البديل "
 
 #. module: purchase_requisition
 #. odoo-python
@@ -150,17 +150,17 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 #, python-format
 msgid "Alternative Warning"
-msgstr ""
+msgstr "تحذير البديل "
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Alternatives"
-msgstr ""
+msgstr "البدائل "
 
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "An example of a purchase agreement is a blanket order."
-msgstr ""
+msgstr "من الأمثلة على اتفاقية الشراء الطلبات الشاملة. "
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution
@@ -198,7 +198,7 @@ msgstr "طلب شامل "
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Blanket Orders"
-msgstr ""
+msgstr "الطلبات الشاملة "
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
@@ -210,7 +210,7 @@ msgstr "إلغاء "
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 msgid "Cancel Alternatives"
-msgstr ""
+msgstr "إلغاء البدائل "
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__cancel
@@ -238,7 +238,7 @@ msgstr "اختر "
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__partner_id
 msgid "Choose a vendor for alternative PO"
-msgstr ""
+msgstr "قم بتحديد المورّد لأمر الشراء البديل "
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
@@ -248,7 +248,7 @@ msgstr "مسح "
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 msgid "Clear Selected"
-msgstr ""
+msgstr "إزالة التحديدات "
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -272,12 +272,12 @@ msgstr "الشركة "
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Compare Order Lines"
-msgstr ""
+msgstr "مقارنة بنود الطلب "
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Compare Product Lines"
-msgstr ""
+msgstr "مقارنة بنود المنتج "
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -318,6 +318,9 @@ msgid ""
 "                            Make your choice by selecting the best combination of lead time, OTD and/or total amount.\n"
 "                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
 msgstr ""
+"قم بإنشاء طلب مناقصات عن طريق إضافة طلب بديل لعروض الأسعار إلى عدة موردين.\n"
+"                            قم باتخاذ قرارك عن طريق تحديد العرض الذي يحتوي على أفضل مهلة تسليم، التوصيل في الوقت المحدد، و/أو المبلغ الإجمالي.\n"
+"                            عند مقارنتك لبنود المنتجات، يمكنك أيضاً أن تقرر طلب بعض المنتجات من مورّد واحد وبقية المنتجات من مورّد آخر. "
 
 #. module: purchase_requisition
 #. odoo-python
@@ -349,7 +352,7 @@ msgstr "أنشئ في"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__creation_blocked
 msgid "Creation Blocked"
-msgstr ""
+msgstr "تم حجب عملية الإنشاء "
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__currency_id
@@ -425,6 +428,9 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement to benefit\n"
 "            from the negotiated prices."
 msgstr ""
+"للطلبات الشاملة، بإمكانك تسجيل اتفاقية لفترة محددة\n"
+"            (مثال: لمدة سنة) وتقوم بطلب المنتجات ضمن هذه الاتفاقية\n"
+"            للاستفادة من الأسعار المخفضة. "
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -441,7 +447,7 @@ msgstr "التجميع حسب "
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_kpis_tree_inherit_purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_tree_inherit_purchase_requisition
 msgid "Has Alternatives"
-msgstr ""
+msgstr "يحتوي على بدائل "
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__has_message
@@ -487,12 +493,16 @@ msgid ""
 " normally these fields are cleared w/warning message within form view, but "
 "we cannot recreate that in this case."
 msgstr ""
+"إذا كان لدى المورّد المحدد أو أي منتج في أمر الشراء الأصلي تحذير يمنعك من "
+"الاستمرار، نقوم عندها بمنع إنشاء أمر الشراء البديل. يحدث ذلك لأنه عادة ما "
+"يتم إنشاء تلك الحقول مع رسالة تحذير ضمن نافذة عرض الاستمارة، ولكن لا يمكننا "
+"محاكاة ذلك في هذه الحالة. "
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
 msgid ""
 "If this is checked, the product quantities of the original PO will be copied"
-msgstr ""
+msgstr "إذا كان محدداً، سيتم نسخ كميات منتجات أمر الشراء الأصلي "
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -552,7 +562,7 @@ msgstr "البنود"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Link to Existing RfQ"
-msgstr ""
+msgstr "الربط بطلب عرض سعر موجود بالفعل "
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_main_attachment_id
@@ -673,17 +683,17 @@ msgstr "تاريخ الطلب"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__origin_po_id
 msgid "Origin Po"
-msgstr ""
+msgstr "أمر الشراء الأصلي "
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__alternative_po_ids
 msgid "Other potential purchase orders for purchasing products"
-msgstr ""
+msgstr "أوامر الشراء المحتملة الأخرى لشراء المنتجات "
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__po_ids
 msgid "POs to Confirm"
-msgstr ""
+msgstr "أوامر الشراء لتأكيدها "
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -922,7 +932,7 @@ msgstr "لم يتم مسح البعض"
 #, python-format
 msgid ""
 "Some quantities were not cleared because their status is not a RFQ status."
-msgstr ""
+msgstr "لم يتم الانتهاء من بعض الكميات لأن حالتها ليست حالة طلب عرض السعر. "
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__origin
@@ -971,7 +981,7 @@ msgstr "قائمة أسعار المورد"
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_order_group
 msgid "Technical model to group PO for call to tenders"
-msgstr ""
+msgstr "نموذج تفني لتجميع أوامر الشراء لطلبات المناقصات "
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -987,7 +997,7 @@ msgstr "تاريخ التوصيل المتوقع والمجدول حيث سيت�
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__origin_po_id
 msgid "The original PO that this alternative PO is being created for."
-msgstr ""
+msgstr "أمر الشراء الأصلي الذي يتم إنشاء أمر الشراء البديل هذا من أجله. "
 
 #. module: purchase_requisition
 #. odoo-python
@@ -998,13 +1008,15 @@ msgid ""
 " from the original order has a blocking warning on it and cannot be selected"
 " to create an alternative."
 msgstr ""
+"المورّد الذي قمت بتحديده أو إحدى المنتجات التي تقوم بنسخها من الطلب الأصلي "
+"بها تحذير يمنعها من الاستمرار ولا يمكن تحديدها لإنشاء بديل. "
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "There are no quantities to clear."
-msgstr ""
+msgstr "لا توجد كميات لمسحها. "
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1023,7 +1035,7 @@ msgstr ""
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid "This is a blocking warning!\n"
-msgstr ""
+msgstr "هذا التحذير لمنعك من الاستمرار! \n"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -1075,7 +1087,7 @@ msgstr "المورد"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__purchase_warn_msg
 msgid "Warning Messages"
-msgstr ""
+msgstr "رسائل التحذير "
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1085,6 +1097,8 @@ msgid ""
 "Warning for %(partner)s:\n"
 "%(warning_message)s\n"
 msgstr ""
+"تحذير لـ %(partner)s:\n"
+"%(warning_message)s\n"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1094,6 +1108,8 @@ msgid ""
 "Warning for %(product)s:\n"
 "%(warning_message)s\n"
 msgstr ""
+"تحذير لـ %(product)s:\n"
+"%(warning_message)s\n"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1117,17 +1133,17 @@ msgstr "سجل تواصل الموقع الإلكتروني "
 msgid ""
 "Whether or not this purchase order is linked to another purchase order as an"
 " alternative."
-msgstr ""
+msgstr "ما إذا كان أمر الشراء هذا مرتبطاً بأمر شراء آخر كبديل، أم لا. "
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_alternative_warning
 msgid "Wizard in case PO still has open alternative requests for quotation"
-msgstr ""
+msgstr "المعالج في حال كان لدى أمر الشراء طلبات عروض أسعار بديلة مفتوحة. "
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_create_alternative
 msgid "Wizard to preset values for alternative PO"
-msgstr ""
+msgstr "معالج لضبط القيم مسبقاً لأمر الشراء البديل "
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1173,7 +1189,7 @@ msgstr "عليك إلغاء أو تصديق كافة طلبات عروض الأ�
 msgid ""
 "alternative request for quotations are still open, do you want to cancel "
 "them?"
-msgstr ""
+msgstr "طلبات عروض الأسعار البديلة لا تزال مفتوحة، هل ترغب في إلغائها؟ "
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

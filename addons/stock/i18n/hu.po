@@ -15,15 +15,16 @@
 # Martin Trigaux, 2022
 # Tamás Németh <ntomasz81@gmail.com>, 2023
 # gezza <geza.nagy@oregional.hu>, 2023
+# Szabolcs Rádi, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2023\n"
-"Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
+"Last-Translator: Szabolcs Rádi, 2023\n"
+"Language-Team: Hungarian (https://app.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -508,11 +509,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<span>Remaining quantities not yet delivered:</span>"
 msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
-msgid "<span>kg</span>"
-msgstr "<span>kg</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -1111,8 +1107,8 @@ msgid "Automatic No Step Added"
 msgstr "Nincs automatikus következő lépcső hozzáadva"
 
 #. module: stock
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
@@ -2979,6 +2975,7 @@ msgstr "Előrejelzett nyugták"
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/stock_forecasted.js:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.actions.client,name:stock.stock_replenishment_product_product_action
 #: model:ir.actions.client,name:stock.stock_replenishment_product_template_action
@@ -3931,11 +3928,6 @@ msgid ""
 msgstr ""
 
 #. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
-msgid "LN/SN:"
-msgstr ""
-
-#. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__label_type
 msgid "Labels to print"
 msgstr "Nyomtatandó címkék"
@@ -4515,13 +4507,9 @@ msgstr "Max mennyiség"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__max_weight
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__max_weight
+#: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_tree
 msgid "Max Weight"
 msgstr "Max tömeg"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_tree
-msgid "Max Weight (kg)"
-msgstr "Max tömeg (kg)"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_positive_max_weight
@@ -4950,8 +4938,8 @@ msgid "Normal"
 msgstr "Normál"
 
 #. module: stock
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/stock/models/stock_picking.py:0
 #: code:addons/stock/static/src/stock_forecasted/forecasted_details.xml:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
@@ -6216,14 +6204,6 @@ msgstr "Kvant"
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
-msgid ""
-"Quants are auto-deleted when appropriate. If you must manually delete them, "
-"please ask a stock manager to do it."
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
 msgstr ""
 
@@ -6397,6 +6377,15 @@ msgstr "Nyomtatandó mennyiség"
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Quants"
 msgstr "Kvantok"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -7772,7 +7761,7 @@ msgstr "Végrehajtott készletmozgások"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_package_type
 msgid "Stock package type"
-msgstr ""
+msgstr "Készlet csomagolás típus"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_report_stock_rule
@@ -8350,6 +8339,14 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -8790,6 +8787,11 @@ msgid "Unit of Measure Name"
 msgstr "Mértékegység név"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
+msgid "Unit of measure"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
 msgstr "Mértékegység"
@@ -8803,11 +8805,6 @@ msgstr "Mértékegységek"
 #: model:ir.ui.menu,name:stock.product_uom_menu
 msgid "Units of Measures"
 msgstr "Mértékegységek"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
-msgid "Unity of measure"
-msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -9211,6 +9208,11 @@ msgstr "Tömeg"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__base_weight
 msgid "Weight of the package type"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
+msgid "Weight unit"
 msgstr ""
 
 #. module: stock
@@ -9727,9 +9729,9 @@ msgstr "Egy időben csak egy kigyűjtés visszáruzható."
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/model/stock_picking.py:0
+#: code:addons/stock/models/stock_picking.py:0
 #, python-format
-msgid " You might want to update the locations of this transfer's operations "
+msgid "You might want to update the locations of this transfer's operations"
 msgstr ""
 
 #. module: stock
@@ -10002,3 +10004,11 @@ msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
 msgstr ""
 "{{ object.company_id.name }} Szállítólevél (Hiv {{ object.name or 'n/a' }})"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allow to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""

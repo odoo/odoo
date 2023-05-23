@@ -3,6 +3,7 @@
 import { browser } from "@web/core/browser/browser";
 import { CheckBox } from "@web/core/checkbox/checkbox";
 import { Dialog } from "@web/core/dialog/dialog";
+import { unique } from "@web/core/utils/arrays";
 import { useService } from "@web/core/utils/hooks";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { useSortable } from "@web/core/utils/sortable";
@@ -21,22 +22,25 @@ DeleteExportListDialog.template = "web.DeleteExportListDialog";
 
 class ExportDataItem extends Component {
     setup() {
-        this.subFields = [];
         this.state = useState({
-            isExpanded: false,
+            isExpanded: this.subFields.length > 0 && this.props.isExpanded,
         });
     }
 
-    async onClick() {
-        if (this.props.isFieldExpandable(this.props.field)) {
-            this.subFields = await this.props.onClick(this.props.field.id);
-            this.state.isExpanded = this.props.isFieldExpanded(this.props.field.id);
+    get subFields() {
+        return this.props.getSubFields(this.props.field.id);
+    }
+
+    async loadExpandedContent(id) {
+        if (this.props.isFieldExpandable(id)) {
+            await this.props.onToggleExpandField(id);
+            this.state.isExpanded = !this.state.isExpanded;
         }
     }
 
-    onDoubleClick(fieldId) {
-        if (!this.props.isFieldExpandable(this.props.field) && !this.isFieldSelected(fieldId)) {
-            this.props.onAdd(fieldId);
+    onDoubleClick(id) {
+        if (!this.props.isFieldExpandable(id) && !this.isFieldSelected(id)) {
+            this.props.onAdd(id);
         }
     }
 
@@ -47,14 +51,15 @@ class ExportDataItem extends Component {
 ExportDataItem.template = "web.ExportDataItem";
 ExportDataItem.components = { ExportDataItem };
 ExportDataItem.props = {
-    field: { type: Object, optional: true },
     exportList: { type: Object, optional: true },
-    expandedContent: Function,
+    field: { type: Object, optional: true },
+    getSubFields: Function,
     isDebug: Boolean,
+    isExpanded: Boolean,
     isFieldExpandable: Function,
-    isFieldExpanded: Function,
-    onClick: Function,
     onAdd: Function,
+    onToggleExpandField: Function,
+    search: Array,
 };
 
 export class ExportDataDialog extends Component {
@@ -146,7 +151,30 @@ export class ExportDataDialog extends Component {
     }
 
     get rootFields() {
+        if (this.searchRef.el && this.searchRef.el.value) {
+            const rootFromSearchResults = this.fieldsAvailable.map((f) => {
+                if (f.parent) {
+                    const parentEl = this.knownFields[f.parent.id];
+                    return this.knownFields[parentEl.parent ? parentEl.parent.id : parentEl.id];
+                }
+                return this.knownFields[f.id];
+            });
+            return unique(rootFromSearchResults);
+        }
         return this.fieldsAvailable.filter(({ parent }) => !parent);
+    }
+
+    getSubFields(id) {
+        let subfieldsFromSearchResults = [];
+        const fieldsAvailable = this.fieldsAvailable;
+        const expandedFields = (this.expandedFields[id] && this.expandedFields[id].fields) || [];
+        if (this.searchRef.el && this.searchRef.el.value) {
+            subfieldsFromSearchResults = fieldsAvailable
+                .filter((f) => f.parent && this.knownFields[f.parent.id].parent)
+                .map((f) => f.parent);
+        }
+        const availableSubFields = unique([...fieldsAvailable, ...subfieldsFromSearchResults]);
+        return expandedFields.filter((a) => availableSubFields.some((b) => a.id === b.id));
     }
 
     updateSize() {
@@ -175,15 +203,7 @@ export class ExportDataDialog extends Component {
         }
     }
 
-    expandedContent(id) {
-        return this.isFieldExpanded(id) && this.expandedFields[id].fields;
-    }
-
-    isFieldExpanded(id) {
-        return this.expandedFields[id] && !this.expandedFields[id].hidden;
-    }
-
-    isFieldExpandable({ id }) {
+    isFieldExpandable(id) {
         return this.knownFields[id].children && id.split("/").length < 3;
     }
 
@@ -197,7 +217,12 @@ export class ExportDataDialog extends Component {
             model: this.props.root.resModel,
             export_id: Number(value),
         });
-        this.state.exportList = fields;
+        this.state.exportList = fields.map(({ label, name }) => {
+            return {
+                string: label,
+                id: name,
+            };
+        });
     }
 
     async loadFields(id) {
@@ -206,7 +231,6 @@ export class ExportDataDialog extends Component {
         if (id) {
             if (this.expandedFields[id]) {
                 // we don't make a new RPC if the value is already known
-                this.expandedFields[id].hidden = !this.expandedFields[id].hidden;
                 return this.expandedFields[id].fields;
             }
             parentField = this.knownFields[id];
@@ -225,7 +249,6 @@ export class ExportDataDialog extends Component {
             parentParams
         );
         for (const field of fields) {
-            field.label = field.string;
             field.parent = parentField;
             if (!this.knownFields[field.id]) {
                 this.knownFields[field.id] = field;
@@ -243,8 +266,6 @@ export class ExportDataDialog extends Component {
 
     onAddItemExportList(fieldId) {
         this.state.exportList.push(this.knownFields[fieldId]);
-        this.state.search = [];
-        this.searchRef.el.value = "";
         this.enterTemplateEdition();
     }
 
@@ -331,9 +352,19 @@ export class ExportDataDialog extends Component {
     async onSearch(ev) {
         this.state.search = fuzzyLookup(
             ev.target.value,
-            this.fieldsAvailable || Object.values(this.knownFields),
-            (field) => field.string
+            Object.values(this.knownFields),
+            // because fuzzyLookup gives an higher score if the string starts with the pattern,
+            // reversing the string makes the search more reliable in this context
+            (field) => field.id.split("/").reverse().join("/")
         );
+        if (this.isDebug) {
+            this.state.search = unique([
+                ...this.state.search,
+                ...Object.values(this.knownFields).filter((f) => {
+                    return f.id.includes(ev.target.value);
+                }),
+            ]);
+        }
     }
 
     onToggleCompatibleExport(value) {

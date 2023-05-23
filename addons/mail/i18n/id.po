@@ -15,10 +15,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Abe Manyo, 2023\n"
-"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -764,6 +764,11 @@ msgid ""
 "Please make sure you are using the correct address or contact us at %(default_email)s instead.<br /><br />\n"
 "Kind Regards,</p>"
 msgstr ""
+"<p>Yth Pengirim,<br /><br />\n"
+"Pesan di bawah tidak dapat diterima oleh alamat %(alias_display_name)s.\n"
+"Hanya %(contact_description)s yang diperbolehkan untuk menghubungi.<br /><br />\n"
+"Mohon pastikan Anda menggunakan alamat yang tepat atau hubungi kami pada %(default_email)s.<br /><br />\n"
+"Salam Hangat,</p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -1418,8 +1423,8 @@ msgid "Animals & Nature"
 msgstr ""
 
 #. module: mail
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message.js:0
@@ -1550,7 +1555,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Attach a file"
-msgstr "Lampirkan berkas"
+msgstr "Lampirkan file"
 
 #. module: mail
 #. odoo-javascript
@@ -2366,6 +2371,7 @@ msgstr "Perusahaan"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/activity.js:0
+#: code:addons/mail/static/src/models/composer_view.js:0
 #: code:addons/mail/static/src/models/mail_template.js:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -2469,7 +2475,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_force_new
 msgid "Considers answers as new thread"
-msgstr ""
+msgstr "Anggap jawaban sebagai membuat thread baru"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -2814,7 +2820,7 @@ msgstr "Kepada"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_limit_email
 msgid "Dear Sender,"
-msgstr ""
+msgstr "Yth Pengirim,"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__activity_decoration
@@ -3007,6 +3013,7 @@ msgstr ""
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -3319,7 +3326,7 @@ msgstr "Email"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__email_add_signature
 #: model:ir.model.fields,field_description:mail.field_mail_message__email_add_signature
 msgid "Email Add Signature"
-msgstr ""
+msgstr "Email Tambahkan Tanda Tangan"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__email
@@ -3363,7 +3370,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__email_layout_xmlid
 msgid "Email Notification Layout"
-msgstr ""
+msgstr "Tata Letak Notifikasi Email"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
@@ -3786,7 +3793,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/attachment_box/attachment_box.xml:0
 #, python-format
 msgid "Files"
-msgstr "Berkas"
+msgstr "File"
 
 #. module: mail
 #. odoo-javascript
@@ -3805,7 +3812,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel_member__fold_state__folded
 msgid "Folded"
-msgstr "Terlipat"
+msgstr "Dilipat"
 
 #. module: mail
 #. odoo-javascript
@@ -4744,7 +4751,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_mail_template_editor
 #: model:ir.model.fields,field_description:mail.field_mail_composer_mixin__is_mail_template_editor
 msgid "Is Editor"
-msgstr ""
+msgstr "Is Editor"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_is_follower
@@ -5440,11 +5447,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__is_log
 msgid "Log as Internal Note"
-msgstr ""
+msgstr "Log sebagai Catatan Internal"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
+#: code:addons/mail/static/src/models/composer_view.js:0
 #, python-format
 msgid "Log note"
 msgstr "Log catatan"
@@ -5666,6 +5674,8 @@ msgid ""
 "Manage answers as new incoming emails instead of replies going to the same "
 "thread."
 msgstr ""
+"Kelola jawaban sebagai email masuk baru alih-alih sebagai bagian dari thread"
+" yang sama."
 
 #. module: mail
 #. odoo-javascript
@@ -6179,7 +6189,7 @@ msgid ""
 "Name to use for the generated report file (may contain placeholders)\n"
 "The extension can be omitted and will then come from the report type."
 msgstr ""
-"Nama yang digunakan untuk berkas laporan yang dibuat (dapat memakai placeholder)\n"
+"Nama yang digunakan untuk file laporan yang dibuat (dapat memakai placeholder)\n"
 "Ekstensi tidak perlu dimasukkan dan akan diambil dari tipe laporan."
 
 #. module: mail
@@ -6870,9 +6880,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"ID Opsional dari berkas (catatan) di mana semua pesan masuk akan "
-"dilampirkan, bahkan jika mereka tidak menjawabnya. Jika diatur, hal ini akan"
-" menonaktifkan pembuatan catatan baru sepenuhnya."
+"ID Opsional dari file (catatan) di mana semua pesan masuk akan dilampirkan, "
+"bahkan jika mereka tidak menjawabnya. Jika diatur, hal ini akan "
+"menonaktifkan pembuatan catatan baru sepenuhnya."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_notification__mail_mail_id
@@ -6904,6 +6914,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Bahasa terjemahan opsional (kode ISO) yang dipilih ketika mengirim email. "
+"Bila tidak diatur, versi Bahasa Inggris akan digunakan. Ini seharusnya "
+"merupakan expression placeholder yang menyediakan bahasa yang sesuai, "
+"misalnya {{ object.partner_id.lang }}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_mode
@@ -6912,6 +6926,9 @@ msgid ""
 " Another Email Address: Answers go to the email address mentioned in the tracking message-id instead of original document discussion thread. \n"
 " This has an impact on the generated message-id."
 msgstr ""
+"Diskusi Original: Jawaban masuk ke dalam thread diskusi dokumen original. \n"
+" Alamat Email Lain: Jawaban masuk ke alamat email yang disebut di tracking message-id alih-alih pada thread diskusi dokumen original. \n"
+" Ini akan berdampak pada generated message-id."
 
 #. module: mail
 #. odoo-javascript
@@ -7038,7 +7055,7 @@ msgstr "Model Induk"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "Catatan Induk ID Berkas"
+msgstr "Catatan Induk ID File"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_model_id
@@ -7720,12 +7737,12 @@ msgstr "Hapus pengikut ini"
 #: model:ir.model.fields,field_description:mail.field_mail_render_mixin__render_model
 #: model:ir.model.fields,field_description:mail.field_mail_template__render_model
 msgid "Rendering Model"
-msgstr ""
+msgstr "Model Rendering"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
 msgid "Replies"
-msgstr ""
+msgstr "Replies"
 
 #. module: mail
 #. odoo-javascript
@@ -7739,7 +7756,7 @@ msgstr "Balas"
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to
 #: model:ir.model.fields,field_description:mail.field_mail_template__reply_to
 msgid "Reply To"
-msgstr ""
+msgstr "Balas Ke"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to
@@ -7774,7 +7791,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__report_name
 msgid "Report Filename"
-msgstr "Nama Berkas Laporan"
+msgstr "Nama File Laporan"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__request_partner_id
@@ -7853,7 +7870,7 @@ msgid "Review All Templates"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
+#: model:ir.model.fields,field_description:mail.field_mail_mail__body_content
 msgid "Rich-text Contents"
 msgstr "Konten rich-text"
 
@@ -7925,6 +7942,13 @@ msgstr "SSL / TLS"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "SSL might not be set up properly"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "SUV"
@@ -7986,7 +8010,7 @@ msgstr "Jadwal"
 #: code:addons/mail/static/src/models/messaging.js:0
 #, python-format
 msgid "Schedule Activity"
-msgstr ""
+msgstr "Jadwalkan Aktivitas"
 
 #. module: mail
 #. odoo-javascript
@@ -8408,6 +8432,9 @@ msgid ""
 "messages. Type ':' followed by the name of your shortcut (e.g. :hello) to "
 "use in your messages."
 msgstr ""
+"Shortcut yang secara otomatis diganti dengan konten lebih panjang di pesan-"
+"pesan Anda. Ketik ':' diikuti nama shortcut Anda (contoh :halo) untuk "
+"menggunakan shortcut di pesan Anda."
 
 #. module: mail
 #. odoo-javascript
@@ -8939,6 +8966,11 @@ msgid "Test & Confirm"
 msgstr "Test & Konfirmasi"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
+msgid "Text Contents"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
@@ -8972,6 +9004,9 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"Nomor Identifikasi Pajak. Nomor di sini akan divalidasi berdasarkan format "
+"negara. Anda dapat menggunakan '/' untuk mengindikasikan bahwa mitra tidak "
+"dikenakan pajak."
 
 #. module: mail
 #. odoo-javascript
@@ -9213,6 +9248,9 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
+"Opsi ini secara permanen menghapus semua jejak email setelah dikirim, "
+"termasuk menu Teknis di Pengaturan, agar dapat memiliki lebih banyak storage"
+" space di database Odoo Anda."
 
 #. module: mail
 #. odoo-javascript
@@ -9755,6 +9793,7 @@ msgstr ""
 #, python-format
 msgid "Use a local script to fetch your emails and create new records."
 msgstr ""
+"Gunakan skrip lokal untuk mengambil email Anda dan membuat record baru."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__use_active_domain
@@ -10297,8 +10336,8 @@ msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
 msgstr ""
-"Anda dapat melampirkan berkas pada contoh ini, yang akan ditambahkan ke "
-"semua email yang dibuat melalui contoh ini"
+"Anda dapat melampirkan file pada contoh ini, yang akan ditambahkan ke semua "
+"email yang dibuat melalui contoh ini"
 
 #. module: mail
 #. odoo-javascript
@@ -16208,8 +16247,8 @@ msgid "doctor"
 msgstr ""
 
 #. module: mail
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
@@ -16980,7 +17019,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "entry"
-msgstr ""
+msgstr "entri"
 
 #. module: mail
 #. odoo-javascript
@@ -19219,7 +19258,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "geometric"
-msgstr ""
+msgstr "geometris"
 
 #. module: mail
 #. odoo-javascript
@@ -23925,6 +23964,13 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "medal"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "Media devices unobtainable"
 msgstr ""
 
 #. module: mail

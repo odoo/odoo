@@ -69,10 +69,14 @@ import {
     parseHTML,
     splitTextNode,
     isMacOS,
-    isVoidElement,
+    isArtificialVoidElement,
     cleanZWS,
     isZWS,
+    setCursorEnd,
+    paragraphRelatedElements,
     getDeepestPosition,
+    leftPos,
+    isNotAllowedContent,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -435,10 +439,8 @@ export class OdooEditor extends EventTarget {
                     this.historyRevertUntil(this._powerboxBeforeStepIndex);
                     this.historyStep(true);
                     this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
-                    setTimeout(() => {
-                        ensureFocus(this.editable);
-                        getDeepRange(this.editable, { select: true });
-                    });
+                    ensureFocus(this.editable);
+                    getDeepRange(this.editable, { select: true });
                 }
             },
             afterCommand: () => {
@@ -1887,8 +1889,9 @@ export class OdooEditor extends EventTarget {
         let end = range.endContainer;
         // Let the DOM split and delete the range.
         const doJoin =
-            closestBlock(start) !== closestBlock(range.commonAncestorContainer) ||
-            closestBlock(end) !== closestBlock(range.commonAncestorContainer) ;
+            (closestBlock(start) !== closestBlock(range.commonAncestorContainer) ||
+            closestBlock(end) !== closestBlock(range.commonAncestorContainer))
+            && (closestBlock(start).tagName !== 'TD' && closestBlock(end).tagName !== 'TD');
         let next = nextLeaf(end, this.editable);
         const contents = range.extractContents();
         setSelection(start, nodeSize(start));
@@ -2243,7 +2246,7 @@ export class OdooEditor extends EventTarget {
         this.observerUnactive('_activateContenteditable');
         this.editable.setAttribute('contenteditable', this.options.isRootEditable);
 
-        const editableAreas = this.options.getContentEditableAreas(this).filter(node => !isVoidElement(node));
+        const editableAreas = this.options.getContentEditableAreas(this).filter(node => !isArtificialVoidElement(node));
         for (const node of editableAreas) {
             if (!node.isContentEditable) {
                 node.setAttribute('contenteditable', true);
@@ -2352,7 +2355,7 @@ export class OdooEditor extends EventTarget {
                     this._selectTableCells(range);
                     appliedCustomSelection = true;
                 }
-            } else if (!descendants(startTd).some(child => isVisibleTextNode(child) && child.textContent !== '\u200B') &&
+            } else if (!!startTd && !descendants(startTd).some(child => isVisibleTextNode(child) && child.textContent !== '\u200B') &&
                 ev.clientX - (this._lastMouseClickPosition ? this._lastMouseClickPosition[0] : ev.clientX) >= 15
             ) {
                 // Handle selecting an empty cell.
@@ -3264,12 +3267,16 @@ export class OdooEditor extends EventTarget {
                     if (lastWordMatch) {
                         const matches = getUrlsInfosInString(textSliced);
                         const match = matches[matches.length - 1];
-                        this._createLinkWithUrlInTextNode(
-                            selection.anchorNode,
-                            match.url,
-                            match.index,
-                            match.length,
-                        );
+                        const cloneRange = selection.getRangeAt(0).cloneRange();
+                        const range = this.document.createRange();
+                        range.setStart(selection.anchorNode, match.index);
+                        range.setEnd(selection.anchorNode, match.index + match.length);
+                        const link = this._createLink(range.extractContents().textContent, match.url);
+                        range.insertNode(link);
+                        // Inserting an element into a range clears the selection in Safari
+                        // Hence, use the cloned range to reselect it.
+                        selection.removeAllRanges();
+                        selection.addRange(cloneRange);
                     }
                     selection.collapseToEnd();
                 }
@@ -3339,11 +3346,6 @@ export class OdooEditor extends EventTarget {
                     }
                 }
                 this.historyStep();
-            } else if (ev.inputType === 'insertLineBreak') {
-                this._compositionStep();
-                this.historyRollback();
-                ev.preventDefault();
-                this._applyCommand('oShiftEnter');
             } else {
                 this.historyStep();
             }
@@ -3432,6 +3434,7 @@ export class OdooEditor extends EventTarget {
     _onKeyDown(ev) {
         this.keyboardType =
             ev.key === 'Unidentified' ? KEYBOARD_TYPES.VIRTUAL : KEYBOARD_TYPES.PHYSICAL;
+        this._currentKeyPress = ev.key;
         // If the pressed key has a printed representation, the returned value
         // is a non-empty Unicode character string containing the printable
         // representation of the key. In this case, call `deleteRange` before
@@ -3577,6 +3580,8 @@ export class OdooEditor extends EventTarget {
      * @private
      */
     _onSelectionChange() {
+        const currentKeyPress = this._currentKeyPress;
+        delete this._currentKeyPress;
         const selection = this.document.getSelection();
         if (!selection) {
             // Because the `selectionchange` event is async, the selection can
@@ -3588,7 +3593,16 @@ export class OdooEditor extends EventTarget {
         if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
             return;
         }
-
+        // Correct cursor if at editable root.
+        if (
+            selection.isCollapsed &&
+            anchorNode === this.editable &&
+            !this.options.allowInlineAtRoot
+        ) {
+            this._fixSelectionOnEditableRoot(selection, currentKeyPress);
+            // The _onSelectionChange handler is going to be triggered again.
+            return;
+        }
         let appliedCustomSelection = false;
         if (selection.rangeCount && selection.getRangeAt(0)) {
             appliedCustomSelection = this._handleSelectionInTable();
@@ -3839,16 +3853,16 @@ export class OdooEditor extends EventTarget {
         }
 
         const selectors = {
-            BLOCKQUOTE: 'Empty quote',
-            H1: 'Heading 1',
-            H2: 'Heading 2',
-            H3: 'Heading 3',
-            H4: 'Heading 4',
-            H5: 'Heading 5',
-            H6: 'Heading 6',
-            'UL LI': 'List',
-            'OL LI': 'List',
-            'CL LI': 'To-do',
+            BLOCKQUOTE: this.options._t('Empty quote'),
+            H1: this.options._t('Heading 1'),
+            H2: this.options._t('Heading 2'),
+            H3: this.options._t('Heading 3'),
+            H4: this.options._t('Heading 4'),
+            H5: this.options._t('Heading 5'),
+            H6: this.options._t('Heading 6'),
+            'UL LI': this.options._t('List'),
+            'OL LI': this.options._t('List'),
+            'CL LI': this.options._t('To-do'),
         };
 
         for (const hint of this.editable.querySelectorAll('.oe-hint')) {
@@ -4007,6 +4021,67 @@ export class OdooEditor extends EventTarget {
         if (startContainerNotEditable || endContainerNotEditable) {
             selection.removeAllRanges();
             selection.addRange(newRange);
+        }
+    }
+
+    /**
+     * Places the cursor in a safe place (not the editable root).
+     * Inserts an empty paragraph if selection results from mouse click and
+     * there's no other way to insert text before/after a block.
+     *
+     * @param {Selection} selection - Collapsed selection at the editable root.
+     * @param {String} currentKeyPress
+     */
+    _fixSelectionOnEditableRoot(selection, currentKeyPress) {
+        let nodeAfterCursor = this.editable.childNodes[selection.anchorOffset];
+        let nodeBeforeCursor = nodeAfterCursor && nodeAfterCursor.previousElementSibling;
+        // Handle arrow key presses.
+        if (currentKeyPress === 'ArrowRight' || currentKeyPress === 'ArrowDown') {
+            while (nodeAfterCursor && isNotAllowedContent(nodeAfterCursor)) {
+                nodeAfterCursor = nodeAfterCursor.nextElementSibling;
+            }
+            if (nodeAfterCursor) {
+                setSelection(...getDeepestPosition(nodeAfterCursor, 0));
+            } else {
+                this.historyResetLatestComputedSelection(true);
+            }
+        } else if (currentKeyPress === 'ArrowLeft' || currentKeyPress === 'ArrowUp') {
+            while (nodeBeforeCursor && isNotAllowedContent(nodeBeforeCursor)) {
+                nodeBeforeCursor = nodeBeforeCursor.previousElementSibling;
+            }
+            if (nodeBeforeCursor) {
+                setSelection(...getDeepestPosition(nodeBeforeCursor, nodeSize(nodeBeforeCursor)));
+            } else {
+                this.historyResetLatestComputedSelection(true);
+            }
+        // Handle cursor next to a 'P'.
+        } else if (nodeAfterCursor && paragraphRelatedElements.includes(nodeAfterCursor.nodeName)) {
+            // Cursor is right before a 'P'.
+            setCursorStart(nodeAfterCursor);
+        } else if (nodeBeforeCursor && paragraphRelatedElements.includes(nodeBeforeCursor.nodeName)) {
+            // Cursor is right after a 'P'.
+            setCursorEnd(nodeBeforeCursor);
+        // Handle cursor not next to a 'P'.
+        // Insert a new 'P' if selection resulted from a mouse click.
+        } else if (this._currentMouseState === 'mousedown') {
+            this._recordHistorySelection(true);
+            const p = this.document.createElement('p');
+            p.append(this.document.createElement('br'));
+            if (!nodeAfterCursor) {
+                // Cursor is at the end of the editable.
+                this.editable.append(p);
+            } else if (!nodeBeforeCursor) {
+                // Cursor is at the beginning of the editable.
+                this.editable.prepend(p);
+            } else {
+                // Cursor is between two non-p blocks
+                nodeAfterCursor.before(p);
+            }
+            setCursorStart(p);
+            this.historyStep();
+        } else {
+            // Remove selection as a fallback.
+            selection.removeAllRanges();
         }
     }
 
@@ -4205,33 +4280,18 @@ export class OdooEditor extends EventTarget {
     }
 
     /**
-     * Create a Link in the node text based on the given data
-     *
-     * @param {Node} textNode
+     * @param {String} label
      * @param {String} url
-     * @param {int} index
-     * @param {int} length
      */
-    _createLinkWithUrlInTextNode(textNode, url, index, length) {
-        const selection = this.document.getSelection();
-        const cloneRange = selection.getRangeAt(0).cloneRange();
-
+    _createLink(label, url) {
         const link = this.document.createElement('a');
         link.setAttribute('href', url);
         for (const [param, value] of Object.entries(this.options.defaultLinkAttributes)) {
             link.setAttribute(param, `${value}`);
         }
-        const range = this.document.createRange();
-        range.setStart(textNode, index);
-        range.setEnd(textNode, index + length);
-        link.appendChild(range.extractContents());
-        range.insertNode(link);
-        // Inserting an element into a range clears the selection in Safari
-        // Hence, use the cloned range to reselect it.
-        selection.removeAllRanges();
-        selection.addRange(cloneRange);
+        link.innerText = label;
+        return link;
     }
-
     /**
      * Add images inside the editable at the current selection.
      *
@@ -4261,181 +4321,159 @@ export class OdooEditor extends EventTarget {
         const odooEditorHtml = ev.clipboardData.getData('text/odoo-editor');
         const clipboardHtml = ev.clipboardData.getData('text/html');
         const targetSupportsHtmlContent = isHtmlContentSupported(sel.anchorNode);
+        // Replace entire link if its label is fully selected.
+        const link = closestElement(sel.anchorNode, 'a');
+        if (link && sel.toString().replace(/\u200B/g, '') === link.innerText.replace(/\u200B/g, '')) {
+            const start = leftPos(link);
+            // Exit link isolation since we're removing the link and editing outside of it.
+            if (this._fixLinkMutatedElements && this._fixLinkMutatedElements.link === link) {
+                this.resetContenteditableLink();
+                this._activateContenteditable();
+            }
+            link.remove();
+            setSelection(...start, ...start, false);
+        }
         if (odooEditorHtml && targetSupportsHtmlContent) {
             const fragment = parseHTML(odooEditorHtml);
             DOMPurify.sanitize(fragment, { IN_PLACE: true });
             if (fragment.hasChildNodes()) {
-                this.execCommand('insert', fragment);
+                this._applyCommand('insert', fragment);
             }
-        } else if (files.length && targetSupportsHtmlContent) {
-            this.addImagesFiles(files).then(html => this.execCommand('insert', this._prepareClipboardData(html)));
-        } else if (clipboardHtml && targetSupportsHtmlContent) {
-            this.execCommand('insert', this._prepareClipboardData(clipboardHtml));
+        } else if ((files.length || clipboardHtml) && targetSupportsHtmlContent) {
+            const clipboardElem = this._prepareClipboardData(clipboardHtml);
+            // When copy pasting a table from the outside, a picture of the
+            // table can be included in the clipboard as an image file. In that
+            // particular case the html table is given a higher priority than
+            // the clipboard picture.
+            if (files.length && !clipboardElem.querySelector('table')) {
+                this.addImagesFiles(files).then(html => this._applyCommand('insert', this._prepareClipboardData(html)));
+            } else {
+                this._applyCommand('insert', clipboardElem);
+            }
         } else {
             const text = ev.clipboardData.getData('text/plain');
-            let splitAroundUrl = [text];
-            const linkAttributes = this.options.defaultLinkAttributes || {};
             const selectionIsInsideALink = !!closestElement(sel.anchorNode, 'a');
-
+            let splitAroundUrl = [text];
             // Avoid transforming dynamic placeholder pattern to url.
             if(!text.match(/\${.*}/gi)) {
                 splitAroundUrl = text.split(URL_REGEX);
             }
-            this.historyPauseSteps("_onPaste");
-            for (let i = 0; i < splitAroundUrl.length; i++) {
-                const url = /^https?:\/\//gi.test(splitAroundUrl[i])
-                    ? splitAroundUrl[i]
-                    : 'https://' + splitAroundUrl[i];
-                const youtubeUrl = YOUTUBE_URL_GET_VIDEO_ID.exec(url);
+            if (splitAroundUrl.length === 3 && !splitAroundUrl[0] && !splitAroundUrl[2]) {
+                // Pasted content is a single URL.
+                const url = /^https?:\/\//i.test(text) ? text : 'https://' + text;
+                const youtubeUrl = this.options.allowCommandVideo &&YOUTUBE_URL_GET_VIDEO_ID.exec(url);
                 const urlFileExtention = url.split('.').pop();
-                const isImageUrl = ['jpg', 'jpeg', 'png', 'gif'].includes(urlFileExtention.toLowerCase());
-                // Even indexes will always be plain text, and odd indexes will always be URL.
-                // only allow images emebed inside an existing link. No other url or video embed.
-                if (i % 2 && (isImageUrl || !selectionIsInsideALink)) {
-                    const baseEmbedCommand = [
-                        {
-                            category: this.options._t('Paste'),
-                            name: this.options._t('Paste as URL'),
-                            description: this.options._t('Create an URL.'),
-                            fontawesome: 'fa-link',
-                            callback: () => {
-                                this.historyUndo();
-                                const link = document.createElement('A');
-                                link.setAttribute('href', url);
-                                for (const attribute in linkAttributes) {
-                                    link.setAttribute(attribute, linkAttributes[attribute]);
-                                }
-                                link.innerText = splitAroundUrl[i];
-                                const sel = this.document.getSelection();
-                                if (!sel.isCollapsed) {
-                                    this.deleteRange(sel);
-                                }
-                                if (sel.rangeCount) {
-                                    sel.getRangeAt(0).insertNode(link);
-                                    sel.collapseToEnd();
-                                }
-                            },
-                        },
-                        {
-                            category: this.options._t('Paste'),
-                            name: this.options._t('Paste as text'),
-                            description: this.options._t('Simple text paste.'),
-                            fontawesome: 'fa-font',
-                            callback: () => {},
-                        },
-                    ];
-
-                    const execCommandAtStepIndex = (index, callback) => {
-                        this.historyRevertUntil(index);
+                const isImageUrl = ['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(urlFileExtention.toLowerCase());
+                // A url cannot be transformed inside an existing link.
+                // An image can be embedded inside an existing link, a video cannot.
+                if (selectionIsInsideALink) {
+                    if (isImageUrl) {
+                        const img = document.createElement('IMG');
+                        img.setAttribute('src', url);
+                        this._applyCommand('insert', img);
+                    } else {
+                        this._applyCommand('insert', text);
+                    }
+                } else if (isImageUrl || youtubeUrl) {
+                    // Open powerbox with commands to embed media or paste as link.
+                    // Store history step index to revert it later.
+                    const stepIndexBeforeInsert = this._historySteps.length - 1;
+                    // Store mutations before text insertion, to reapply them after history revert.
+                    this.observerFlush();
+                    const currentStepMutations = [...this._currentStep.mutations];
+                    // Insert URL as text, revert it later.
+                    this._applyCommand('insert', text);
+                    const revertTextInsertion = () => {
+                        this.historyRevertUntil(stepIndexBeforeInsert);
                         this.historyStep(true);
                         this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
-
-                        callback();
-
-                        this.historyStep(true);
+                        // Reapply mutations that were done before the text insertion.
+                        this.historyApply(currentStepMutations);
                     };
-
+                    let commands;
+                    const pasteAsURLCommand = {
+                        name: this.options._t('Paste as URL'),
+                        description: this.options._t('Create an URL.'),
+                        fontawesome: 'fa-link',
+                        callback: () => {
+                            revertTextInsertion();
+                            this._applyRawCommand('insert', this._createLink(text, url))
+                        },
+                    };
                     if (isImageUrl) {
-                        const stepIndexBeforeInsert = this._historySteps.length - 1;
-                        this.execCommand('insert', splitAroundUrl[i]);
-                        this.powerbox.open([
-                            {
-                                category: this.options._t('Embed'),
-                                name: this.options._t('Embed Image'),
-                                description: this.options._t('Embed the image in the document.'),
-                                fontawesome: 'fa-image',
-                                callback: () => {
-                                    execCommandAtStepIndex(stepIndexBeforeInsert, () => {
-                                        const img = document.createElement('IMG');
-                                        img.setAttribute('src', url);
-                                        const sel = this.document.getSelection();
-                                        if (!sel.isCollapsed) {
-                                            this.deleteRange(sel);
-                                        }
-                                        if (sel.rangeCount) {
-                                            sel.getRangeAt(0).insertNode(img);
-                                            sel.collapseToEnd();
-                                        }
-                                    });
-                                },
+                        const embedImageCommand = {
+                            name: this.options._t('Embed Image'),
+                            description: this.options._t('Embed the image in the document.'),
+                            fontawesome: 'fa-image',
+                            callback: () => {
+                                revertTextInsertion();
+                                const img = document.createElement('IMG');
+                                img.setAttribute('src', url);
+                                this._applyRawCommand('insert', img);
                             },
-                            ...baseEmbedCommand,
-                        ]);
-                    } else if (this.options.allowCommandVideo && youtubeUrl) {
-                        const stepIndexBeforeInsert = this._historySteps.length - 1;
-                        this.execCommand('insert', splitAroundUrl[i]);
-                        this.powerbox.open([
-                            {
-                                category: this.options._t('Embed'),
-                                name: this.options._t('Embed Youtube Video'),
-                                description: this.options._t('Embed the youtube video in the document.'),
-                                fontawesome: 'fa-youtube-play',
-                                callback: async () => {
-                                    let videoElement;
-                                    if (this.options.getYoutubeVideoElement) {
-                                        videoElement = await this.options.getYoutubeVideoElement(youtubeUrl[0]);
-                                    } else {
-                                        videoElement = document.createElement('iframe');
-                                        videoElement.setAttribute('width', '560');
-                                        videoElement.setAttribute('height', '315');
-                                        videoElement.setAttribute(
-                                            'src',
-                                            `https://www.youtube.com/embed/${youtubeUrl[1]}`,
-                                        );
-                                        videoElement.setAttribute('title', 'YouTube video player');
-                                        videoElement.setAttribute('frameborder', '0');
-                                        videoElement.setAttribute(
-                                            'allow',
-                                            'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
-                                        );
-                                        videoElement.setAttribute('allowfullscreen', '1');
-                                    }
-
-                                    execCommandAtStepIndex(stepIndexBeforeInsert, () => {
-
-                                        const sel = this.document.getSelection();
-                                        if (!sel.isCollapsed) {
-                                            this.deleteRange(sel);
-                                        }
-                                        if (sel.rangeCount) {
-                                            sel.getRangeAt(0).insertNode(videoElement);
-                                            sel.collapseToEnd();
-                                        }
-                                    });
-                                },
-                            },
-                            ...baseEmbedCommand,
-                        ]);
+                        };
+                        commands = [embedImageCommand, pasteAsURLCommand];
                     } else {
-                        const link = document.createElement('A');
-                        link.setAttribute('href', url);
-                        for (const attribute in linkAttributes) {
-                            link.setAttribute(attribute, linkAttributes[attribute]);
-                        }
-                        link.innerText = splitAroundUrl[i];
-                        const sel = this.document.getSelection();
-                        if (!sel.isCollapsed) {
-                            this.deleteRange(sel);
-                        }
-                        if (sel.rangeCount) {
-                            sel.getRangeAt(0).insertNode(link);
-                            sel.collapseToEnd();
-                        }
+                         // URL is a YouTube video.
+                        const embedVideoCommand = {
+                            name: this.options._t('Embed Youtube Video'),
+                            description: this.options._t('Embed the youtube video in the document.'),
+                            fontawesome: 'fa-youtube-play',
+                            callback: () => {
+                                revertTextInsertion();
+                                let videoElement;
+                                if (this.options.getYoutubeVideoElement) {
+                                    videoElement = this.options.getYoutubeVideoElement(youtubeUrl[0]);
+                                } else {
+                                    videoElement = document.createElement('iframe');
+                                    videoElement.setAttribute('width', '560');
+                                    videoElement.setAttribute('height', '315');
+                                    videoElement.setAttribute(
+                                        'src',
+                                        `https://www.youtube.com/embed/${encodeURIComponent(youtubeUrl[1])}`,
+                                    );
+                                    videoElement.setAttribute('title', 'YouTube video player');
+                                    videoElement.setAttribute('frameborder', '0');
+                                    videoElement.setAttribute(
+                                        'allow',
+                                        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+                                    );
+                                    videoElement.setAttribute('allowfullscreen', '1');
+                                }
+                                this._applyRawCommand('insert', videoElement);
+                            },
+                        };
+                        commands = [embedVideoCommand, pasteAsURLCommand];
                     }
-                } else if (splitAroundUrl[i] !== '') {
-                    const textFragments = splitAroundUrl[i].split(/\r?\n/);
-                    let textIndex = 1;
-                    for (const textFragment of textFragments) {
-                        this.execCommand('insert', textFragment);
-                        if (textIndex < textFragments.length) {
-                            this._applyCommand('oShiftEnter');
+                    this.powerbox.open(commands);
+                } else {
+                    this._applyCommand('insert', this._createLink(text, url));
+                }
+            } else {
+                this.historyPauseSteps();
+                for (let i = 0; i < splitAroundUrl.length; i++) {
+                    const url = /^https?:\/\//gi.test(splitAroundUrl[i])
+                        ? splitAroundUrl[i]
+                        : 'https://' + splitAroundUrl[i];
+                    // Even indexes will always be plain text, and odd indexes will always be URL.
+                    // only allow images emebed inside an existing link. No other url or video embed.
+                    if (i % 2 && !selectionIsInsideALink) {
+                        this._applyCommand('insert', this._createLink(splitAroundUrl[i], url));
+                    } else if (splitAroundUrl[i] !== '') {
+                        const textFragments = splitAroundUrl[i].split(/\r?\n/);
+                        let textIndex = 1;
+                        for (const textFragment of textFragments) {
+                            this._applyCommand('insert', textFragment);
+                            if (textIndex < textFragments.length) {
+                                this._applyCommand('oShiftEnter');
+                            }
+                            textIndex++;
                         }
-                        textIndex++;
                     }
                 }
+                this.historyUnpauseSteps();
+                this.historyStep();
             }
-            this.historyUnpauseSteps("_onPaste");
-            this.historyStep();
         }
     }
     _onDragStart(ev) {

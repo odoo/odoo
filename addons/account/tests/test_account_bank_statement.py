@@ -5,6 +5,7 @@ from odoo.tests.common import Form
 from odoo.exceptions import ValidationError, UserError
 from odoo import fields, Command
 
+import base64
 
 @tagged('post_install', '-at_install')
 class TestAccountBankStatementLine(AccountTestInvoicingCommon):
@@ -1385,3 +1386,27 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
             'is_valid': True,
             'is_complete': True,
         }])
+
+    def test_statement_attachments(self):
+        ''' Ensure that attachments are properly linked to bank statements '''
+
+        attachment_vals = {
+            'datas': base64.b64encode(b'My attachment'),
+            'name': 'doc.txt',
+        }
+
+        attachment = self.env['ir.attachment'].create(attachment_vals)
+
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'attachment_ids': [Command.set(attachment.ids)],
+        })
+
+        attachment = self.env['ir.attachment'].create(attachment_vals)
+
+        statement.write({'attachment_ids': [Command.link(attachment.id)]})
+
+        self.assertRecordValues(statement.attachment_ids, [
+            {'res_id': statement.id, 'res_model': 'account.bank.statement'},
+            {'res_id': statement.id, 'res_model': 'account.bank.statement'},
+        ])

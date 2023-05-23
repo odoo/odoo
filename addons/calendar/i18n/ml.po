@@ -3,16 +3,18 @@
 # 	* calendar
 # 
 # Translators:
+# Hasna, 2023
+# Nikhil Krishnan, 2023
 # Niyas Raphy, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Niyas Raphy, 2023\n"
-"Language-Team: Malayalam (https://www.transifex.com/odoo/teams/41243/ml/)\n"
+"Language-Team: Malayalam (https://app.transifex.com/odoo/teams/41243/ml/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -26,6 +28,7 @@ msgid "# Meetings"
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid ""
@@ -34,18 +37,21 @@ msgid ""
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "%s has accepted the invitation"
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "%s has declined the invitation"
@@ -512,7 +518,7 @@ msgid "A user cannot have the same contact twice."
 msgstr ""
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #, python-format
@@ -556,7 +562,7 @@ msgstr "പ്രവർത്തനങ്ങൾ"
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity
 msgid "Activity"
-msgstr ""
+msgstr "ആക്റ്റിവിറ്റി"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_mixin
@@ -566,16 +572,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model,name:calendar.model_mail_activity_type
 msgid "Activity Type"
-msgstr ""
-
-#. module: calendar
-#. openerp-web
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
-#, python-format
-msgid "Add"
-msgstr "ചേർക്കുക"
+msgstr "ആക്ടിവിറ്റി ടൈപ്പ് "
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__body
@@ -589,7 +586,7 @@ msgid ""
 msgstr ""
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__allday
 #, python-format
@@ -597,13 +594,14 @@ msgid "All Day"
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "All Day, %(day)s"
 msgstr ""
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__all_events
 #, python-format
@@ -614,10 +612,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Archived"
-msgstr ""
+msgstr "ആർക്കൈവ് ചെയ്തു"
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_model.js:0
 #, python-format
 msgid "Are you sure you want to delete this record ?"
@@ -626,12 +624,12 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "അറ്റാച്ച്മെന്റ് എണ്ണം"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__partner_id
 msgid "Attendee"
-msgstr ""
+msgstr "പങ്കെടുക്കുന്നയാൾ"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_status
@@ -642,13 +640,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__partner_ids
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "Attendees"
-msgstr ""
+msgstr "പങ്കെടുക്കുന്നവർ"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__free
 msgid "Available"
-msgstr ""
+msgstr "അവൈലബിൾ"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
@@ -661,6 +659,7 @@ msgid "Base Event"
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #: code:addons/calendar/models/calendar_event.py:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__busy
@@ -681,7 +680,7 @@ msgstr ""
 #: model:ir.ui.menu,name:calendar.menu_calendar_configuration
 #: model_terms:ir.ui.view,arch_db:calendar.res_users_view_form
 msgid "Calendar"
-msgstr ""
+msgstr "കലണ്ടർ"
 
 #. module: calendar
 #: model:ir.actions.act_window,name:calendar.action_calendar_alarm
@@ -694,13 +693,13 @@ msgstr ""
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_attendee
 msgid "Calendar Attendee Information"
-msgstr ""
+msgstr "കലണ്ടർ പങ്കെടുക്കുന്നവരുടെ വിവരങ്ങൾ"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_event
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__calendar_event_ids
 msgid "Calendar Event"
-msgstr ""
+msgstr "കലണ്ടർ ഇവന്റ്"
 
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
@@ -730,7 +729,6 @@ msgstr ""
 #. module: calendar
 #: model:ir.actions.server,name:calendar.ir_cron_scheduler_alarm_ir_actions_server
 #: model:ir.cron,cron_name:calendar.ir_cron_scheduler_alarm
-#: model:ir.cron,name:calendar.ir_cron_scheduler_alarm
 msgid "Calendar: Event Reminder"
 msgstr ""
 
@@ -794,7 +792,7 @@ msgid "Configuration"
 msgstr "കോൺഫിഗറേഷൻ"
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.xml:0
 #, python-format
 msgid "Confirm"
@@ -806,7 +804,7 @@ msgid "Connect"
 msgstr ""
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.js:0
 #, python-format
 msgid "Connect your Calendar"
@@ -815,9 +813,10 @@ msgstr ""
 #. module: calendar
 #: model:ir.model,name:calendar.model_res_partner
 msgid "Contact"
-msgstr ""
+msgstr "കോൺടാക്ട് "
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "Contact Attendees"
@@ -848,12 +847,12 @@ msgstr "ഉണ്ടാക്കിയത്"
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_date
 msgid "Created on"
-msgstr ""
+msgstr "സൃഷ്ടിച്ചത്"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__videocall_source__custom
 msgid "Custom"
-msgstr ""
+msgstr "കസ്‌റ്റം"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -892,7 +891,7 @@ msgid "Days"
 msgstr "ദിവസം"
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 #, python-format
@@ -906,7 +905,7 @@ msgid "Declined"
 msgstr ""
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
 #, python-format
 msgid "Delete"
@@ -919,16 +918,16 @@ msgid "Description"
 msgstr "വിവരണം"
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/js/services/calendar_notification_service.js:0
 #, python-format
 msgid "Details"
-msgstr ""
+msgstr "വിശദാംശങ്ങൾ"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__videocall_source__discuss
 msgid "Discuss"
-msgstr ""
+msgstr "ഡിസ്‌കസ്"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_channel_id
@@ -1016,7 +1015,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__mail_template_id
 msgid "Email Template"
-msgstr ""
+msgstr "ഇമെയിൽ ടെംപ്ലേറ്റ്"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_id
@@ -1076,12 +1075,14 @@ msgid "Event Time"
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "Every %(count)s %(period)s"
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/mail_activity.py:0
 #, python-format
 msgid "Feedback: %(feedback)s"
@@ -1091,9 +1092,10 @@ msgstr ""
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__1
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__1
 msgid "First"
-msgstr ""
+msgstr "ആദ്യം"
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "First you have to specify the date of the invitation."
@@ -1112,13 +1114,13 @@ msgstr "ഫോള്ളോവെഴ്‌സ് "
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "അനുയായികൾ (പങ്കാളികൾ)"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__forever
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__forever
 msgid "Forever"
-msgstr ""
+msgstr "എന്നെന്നേക്കുമായി"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__4
@@ -1144,7 +1146,7 @@ msgid "Friday"
 msgstr "വെള്ളിയാഴ്ച"
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_provider_config__external_calendar_provider__google
 #, python-format
@@ -1172,6 +1174,7 @@ msgid "Group By"
 msgstr "ഗ്രൂപ്പ് ബൈ"
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "Grouping by %s is not allowed on private events."
@@ -1185,7 +1188,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "സന്ദേശമുണ്ട്"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__interval__hours
@@ -1201,7 +1204,7 @@ msgstr "മണിക്കൂറുകൾ"
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__id
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__id
 msgid "ID"
-msgstr ""
+msgstr "ഐഡി"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
@@ -1224,13 +1227,13 @@ msgstr ""
 #: model:ir.model.fields,help:calendar.field_calendar_event__show_as
 msgid ""
 "If the time is shown as 'busy', this event will be visible to other people with either the full         information or simply 'busy' written depending on its privacy. Use this option to let other people know         that you are unavailable during that period of time. \n"
-" If the time is shown as 'free', this event won't         be visible to other people at all. Use this option to let other people know that you are available during         that period of time."
+" If the event is shown as 'free', other users know         that you are available during that period of time."
 msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__interval
 msgid "Interval"
-msgstr ""
+msgstr "ഇടവേള"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__invalid_email_partner_ids
@@ -1276,7 +1279,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "അനുയായിയാണ്"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
@@ -1320,7 +1323,7 @@ msgstr "അവസാനം അപ്ഡേറ്റ് ചെയ്തത്"
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__write_uid
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "അവസാനം അപ്ഡേറ്റ് ചെയ്തത്"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_date
@@ -1363,7 +1366,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "പ്രധാന അറ്റാച്ച്മെന്റ്"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__user_id
@@ -1377,6 +1380,7 @@ msgid "Meeting"
 msgstr "മീറ്റിംഗ് "
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
@@ -1484,6 +1488,13 @@ msgid "Needs Action"
 msgstr ""
 
 #. module: calendar
+#. odoo-javascript
+#: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
+#, python-format
+msgid "New"
+msgstr "പുതിയ"
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_mail_activity_mixin__activity_calendar_event_id
 #: model:ir.model.fields,field_description:calendar.field_res_partner__activity_calendar_event_id
 #: model:ir.model.fields,field_description:calendar.field_res_users__activity_calendar_event_id
@@ -1508,7 +1519,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
 msgid "Notification"
-msgstr ""
+msgstr "നോട്ടിഫിക്കേഷൻ"
 
 #. module: calendar
 #: model:calendar.alarm,name:calendar.alarm_notif_5
@@ -1548,17 +1559,17 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "പിശകുകളുടെ എണ്ണം"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr ""
+msgstr "ഒരു പ്രവർത്തനം ആവശ്യമായ സന്ദേശങ്ങളുടെ എണ്ണം"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "ഡെലിവറി പിശകുള്ള സന്ദേശങ്ങളുടെ എണ്ണം"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__count
@@ -1567,11 +1578,11 @@ msgid "Number of repetitions"
 msgstr ""
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/js/services/calendar_notification_service.js:0
 #, python-format
 msgid "OK"
-msgstr ""
+msgstr "ശരി"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
@@ -1602,15 +1613,15 @@ msgstr "ഓപ്ഷൻസ്"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__user_id
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
 msgid "Organizer"
-msgstr ""
+msgstr "സംഘാടകൻ"
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_provider_config__external_calendar_provider__microsoft
 #, python-format
 msgid "Outlook"
-msgstr ""
+msgstr "ഔട്ട്ലുക്ക്"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_provider_config__microsoft_outlook_client_identifier
@@ -1651,9 +1662,10 @@ msgstr "സ്വകാര്യത"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__private
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Private"
-msgstr ""
+msgstr "പ്രൈവറ്റ്"
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "Private Event Excluded"
@@ -1663,7 +1675,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Public"
-msgstr ""
+msgstr "പബ്ലിക് "
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.calendar_provider_config_view_form
@@ -1739,7 +1751,7 @@ msgid "Repeat x times"
 msgstr ""
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/components/activity/activity.xml:0
 #, python-format
 msgid "Reschedule"
@@ -1748,7 +1760,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Responsible"
-msgstr ""
+msgstr "ഉത്തരവാദിയായ"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__rrule
@@ -1806,7 +1818,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Send Mail"
-msgstr ""
+msgstr "മെയിൽ അയയ്ക്കുക"
 
 #. module: calendar
 #: model:mail.template,description:calendar.calendar_template_meeting_reminder
@@ -1824,7 +1836,7 @@ msgid "Show as"
 msgstr ""
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/js/services/calendar_notification_service.js:0
 #, python-format
 msgid "Snooze"
@@ -1839,7 +1851,7 @@ msgstr "ആരംഭിക്കുക"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__start_date
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Start Date"
-msgstr ""
+msgstr "ആരംഭിക്കുന്ന തീയതി"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__start
@@ -1874,7 +1886,7 @@ msgstr ""
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "Subject"
-msgstr ""
+msgstr "വിഷയം"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__sun
@@ -1889,7 +1901,7 @@ msgid "Sunday"
 msgstr "ഞായറാഴ്ച"
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/attendee_calendar_controller.xml:0
 #, python-format
 msgid "Synchronize with:"
@@ -1908,7 +1920,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
 msgid "Tag name already exists !"
-msgstr ""
+msgstr "ടാഗ് നാമം ഇതിനകം നിലവിലുണ്ട്!"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
@@ -1931,7 +1943,7 @@ msgid "The"
 msgstr ""
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/models/activity_view.js:0
 #, python-format
 msgid ""
@@ -1953,6 +1965,7 @@ msgid "The day must be between 1 and 31"
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid ""
@@ -1960,24 +1973,28 @@ msgid ""
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "The ending date cannot be earlier than the starting date."
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "The interval cannot be negative."
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "The number of repetitions cannot be negative."
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "There are no attendees on these events"
@@ -1990,7 +2007,7 @@ msgid "Third"
 msgstr "മൂന്നാമത്"
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
 #, python-format
@@ -1998,7 +2015,7 @@ msgid "This and following events"
 msgstr ""
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/views/ask_recurrence_update_policy_dialog.js:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
 #, python-format
@@ -2021,7 +2038,7 @@ msgstr "വ്യാഴാഴ്ച"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__event_tz
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__event_tz
 msgid "Timezone"
-msgstr ""
+msgstr "ടൈംസോൺ"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_attendee__mail_tz
@@ -2029,6 +2046,7 @@ msgid "Timezone used for displaying time in the mail template"
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/res_users.py:0
 #, python-format
 msgid "Today's Meetings"
@@ -2052,7 +2070,7 @@ msgid "Type"
 msgstr "ടൈപ്പ്"
 
 #. module: calendar
-#. openerp-web
+#. odoo-javascript
 #: code:addons/calendar/static/src/views/attendee_calendar/common/attendee_calendar_common_popover.xml:0
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__state__tentative
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__attendee_status__tentative
@@ -2064,7 +2082,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__interval
 msgid "Unit"
-msgstr ""
+msgstr "യൂണിറ്റ് "
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__until
@@ -2128,24 +2146,28 @@ msgid "Yes I'm going."
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "You can't update a recurrence without base event."
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_attendee.py:0
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "You have to choose at least one day in the week"
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "day %s"
@@ -2157,24 +2179,28 @@ msgid "e.g. Business Lunch"
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "for %s events"
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "on %s"
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "on the %(position)s %(weekday)s"
 msgstr ""
 
 #. module: calendar
+#. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "until %s"

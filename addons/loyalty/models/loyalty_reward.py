@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
+import json
 
 from odoo import _, api, fields, models
 from odoo.osv import expression
@@ -69,6 +70,7 @@ class LoyaltyReward(models.Model):
     discount_product_category_id = fields.Many2one('product.category', string="Discounted Prod. Categories")
     discount_product_tag_id = fields.Many2one('product.tag', string="Discounted Prod. Tag")
     all_discount_product_ids = fields.Many2many('product.product', compute='_compute_all_discount_product_ids')
+    reward_product_domain = fields.Char(compute='_compute_reward_product_domain', store=False)
     discount_max_amount = fields.Monetary('Max Discount', 'currency_id',
         help="This is the max amount this reward may discount, leave to 0 for no limit.")
     discount_line_product_id = fields.Many2one('product.product', copy=False, ondelete='restrict',
@@ -103,23 +105,45 @@ class LoyaltyReward(models.Model):
         for reward in self:
             reward.reward_product_uom_id = reward.reward_product_ids.product_tmpl_id.uom_id[:1]
 
+    def _find_all_category_children(self, category_id, child_ids):
+        if len(category_id.child_id) > 0:
+            for child_id in category_id.child_id:
+                child_ids.append(child_id.id)
+                self._find_all_category_children(child_id, child_ids)
+        return child_ids
+
     def _get_discount_product_domain(self):
         self.ensure_one()
         domain = []
         if self.discount_product_ids:
             domain = [('id', 'in', self.discount_product_ids.ids)]
         if self.discount_product_category_id:
-            domain = expression.OR([domain, [('categ_id', 'child_of', self.discount_product_category_id.id)]])
+            product_category_ids = self._find_all_category_children(self.discount_product_category_id, [])
+            product_category_ids.append(self.discount_product_category_id.id)
+            domain = expression.OR([domain, [('categ_id', 'in', product_category_ids)]])
         if self.discount_product_tag_id:
             domain = expression.OR([domain, [('all_product_tag_ids', 'in', self.discount_product_tag_id.id)]])
         if self.discount_product_domain and self.discount_product_domain != '[]':
             domain = expression.AND([domain, ast.literal_eval(self.discount_product_domain)])
         return domain
 
+    @api.depends('discount_product_domain')
+    def _compute_reward_product_domain(self):
+        compute_all_discount_product = self.env['ir.config_parameter'].sudo().get_param('loyalty.compute_all_discount_product_ids', 'enabled')
+        for reward in self:
+            if compute_all_discount_product == 'enabled':
+                reward.reward_product_domain = "null"
+            else:
+                reward.reward_product_domain = json.dumps(reward._get_discount_product_domain())
+
     @api.depends('discount_product_ids', 'discount_product_category_id', 'discount_product_tag_id', 'discount_product_domain')
     def _compute_all_discount_product_ids(self):
+        compute_all_discount_product = self.env['ir.config_parameter'].sudo().get_param('loyalty.compute_all_discount_product_ids', 'enabled')
         for reward in self:
-            reward.all_discount_product_ids = self.env['product.product'].search(reward._get_discount_product_domain())
+            if compute_all_discount_product == 'enabled':
+                reward.all_discount_product_ids = self.env['product.product'].search(reward._get_discount_product_domain())
+            else:
+                reward.all_discount_product_ids = self.env['product.product']
 
     @api.depends('reward_product_id', 'reward_product_tag_id', 'reward_type')
     def _compute_multi_product(self):
@@ -161,8 +185,9 @@ class LoyaltyReward(models.Model):
                 elif reward.discount_applicability == 'cheapest':
                     reward_string += _('the cheapest product')
                 elif reward.discount_applicability == 'specific':
-                    if len(reward.all_discount_product_ids) == 1:
-                        reward_string += reward.all_discount_product_ids.name
+                    product_available = self.env['product.product'].search(reward._get_discount_product_domain(), limit=2)
+                    if len(product_available) == 1:
+                        reward_string += product_available.name
                     else:
                         reward_string += _('specific products')
                 if reward.discount_max_amount:

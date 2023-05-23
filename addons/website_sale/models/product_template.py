@@ -189,7 +189,7 @@ class ProductTemplate(models.Model):
                 'price_reduce': price_reduce
             }
             base_price = None
-            price_list_contains_template = price_reduce != base_sales_prices[template.id]
+            price_list_contains_template = pricelist.currency_id.compare_amounts(price_reduce, base_sales_prices[template.id]) != 0
 
             if template.compare_list_price:
                 # The base_price becomes the compare list price and the price_reduce becomes the price
@@ -440,10 +440,11 @@ class ProductTemplate(models.Model):
                     ids = [value[1]]
             if attrib:
                 domains.append([('attribute_line_ids.value_ids', 'in', ids)])
-        search_fields = ['name', 'product_variant_ids.default_code']
+        search_fields = ['name', 'default_code', 'product_variant_ids.default_code']
         fetch_fields = ['id', 'name', 'website_url']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
+            'default_code': {'name': 'default_code', 'type': 'text', 'match': True},
             'product_variant_ids.default_code': {'name': 'product_variant_ids.default_code', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
         }

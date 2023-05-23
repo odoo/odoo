@@ -8,8 +8,8 @@
 # ILMIR <karamov@it-projects.info>, 2022
 # Иван Дроздов <hiraetari@gmail.com>, 2022
 # Martin Trigaux, 2022
-# Alena Vlasova, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2022
+# Alena Vlasova, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,8 +17,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2022\n"
-"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Last-Translator: Alena Vlasova, 2023\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -30,21 +30,21 @@ msgstr ""
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 #, python-format
 msgid "An error occured while loading the dashboard"
-msgstr ""
+msgstr "При загрузке дашборда произошла ошибка"
 
 #. module: spreadsheet_dashboard
 #. openerp-web
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_search_panel/mobile_search_panel.xml:0
 #, python-format
 msgid "BACK"
-msgstr ""
+msgstr "НАЗАД"
 
 #. module: spreadsheet_dashboard
 #. openerp-web
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_search_panel/mobile_search_panel.js:0
 #, python-format
 msgid "Choose a dashboard...."
-msgstr ""
+msgstr "Выбрать дашборд..."
 
 #. module: spreadsheet_dashboard
 #: model:ir.ui.menu,name:spreadsheet_dashboard.spreadsheet_dashboard_menu_configuration
@@ -71,7 +71,7 @@ msgstr "Обзор"
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__dashboard_group_id
 msgid "Dashboard Group"
-msgstr ""
+msgstr "Группа дашбордов"
 
 #. module: spreadsheet_dashboard
 #: model:ir.actions.act_window,name:spreadsheet_dashboard.spreadsheet_dashboard_action_configuration_dashboards
@@ -102,7 +102,7 @@ msgstr "Группа"
 #. module: spreadsheet_dashboard
 #: model:ir.model,name:spreadsheet_dashboard.model_spreadsheet_dashboard_group
 msgid "Group of dashboards"
-msgstr ""
+msgstr "Группа дашбордов"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__id
@@ -146,7 +146,7 @@ msgstr "Имя"
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 #, python-format
 msgid "No available dashboard"
-msgstr ""
+msgstr "Нет доступного дашборда"
 
 #. module: spreadsheet_dashboard
 #. openerp-web
@@ -156,11 +156,13 @@ msgid ""
 "Only chart figures are displayed in small screens but this dashboard doesn't"
 " contain any"
 msgstr ""
+"На маленьких экранах отображаются только графики, но этот дашборд не "
+"содержит"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__raw
 msgid "Raw"
-msgstr ""
+msgstr "Исходный"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__sequence
@@ -172,7 +174,7 @@ msgstr "Нумерация"
 #: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard.py:0
 #, python-format
 msgid "Sheet1"
-msgstr ""
+msgstr "Лист1"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model,name:spreadsheet_dashboard.model_spreadsheet_dashboard
@@ -182,9 +184,16 @@ msgstr "Дашборд электронной таблицы"
 #. module: spreadsheet_dashboard
 #: model_terms:ir.ui.view,arch_db:spreadsheet_dashboard.spreadsheet_dashboard_container_view_form
 msgid "Spreadsheets"
-msgstr ""
+msgstr "Таблицы"
 
 #. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard__thumbnail
 msgid "Thumbnail"
 msgstr "Миниатюра"
+
+#. module: spreadsheet_dashboard
+#. odoo-python
+#: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard_group.py:0
+#, python-format
+msgid "You cannot delete %s as it is used in another module."
+msgstr ""

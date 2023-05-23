@@ -10,5 +10,6 @@ patch(NewContentModal.prototype, 'website_sale_new_content', {
         const newProductElement = this.state.newContentElements.find(element => element.moduleXmlId === 'base.module_website_sale');
         newProductElement.createNewContent = () => this.onAddContent('website_sale.product_product_action_add', true);
         newProductElement.status = MODULE_STATUS.INSTALLED;
+        newProductElement.model = 'product.product';
     },
 });

@@ -5584,6 +5584,51 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test(
+        "pager, grouped, group pager should update after removing a filter",
+        async function (assert) {
+            patchWithCleanup(DynamicRecordList, { WEB_SEARCH_READ_COUNT_LIMIT: 3 });
+            serverData.models.foo.records = [
+                { id: 121, foo: "aaa" },
+                { id: 122, foo: "blip" },
+                { id: 123, foo: "blip" },
+                { id: 124, foo: "blip" },
+                { id: 125, foo: "blip" },
+                { id: 126, foo: "blip" },
+            ];
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: '<tree limit="2"><field name="foo"/><field name="bar"/></tree>',
+                searchViewArch: `
+                    <search>
+                        <filter name="foo" domain="[('foo','=','aaa')]"/>
+                        <filter name="groupby_foo" context="{'group_by': 'bar'}"/>
+                    </search>`,
+            });
+
+            await toggleFilterMenu(target);
+            await toggleMenuItem(target, "Foo");
+
+            await toggleGroupByMenu(target);
+            await toggleMenuItem(target, "Bar");
+
+            // expand group
+            await click(target, "th.o_group_name");
+
+            assert.containsNone(target, "th.o_group_name .o_pager_counter");
+
+            // remove filter
+            await removeFacet(target);
+
+            assert.strictEqual(
+                $(target).find("th.o_group_name:eq(0) .o_pager_counter").text().trim(),
+                "1-2 / 6"
+            );
+        }
+    );
+
+    QUnit.test(
         "grouped, show only limited records when the list view is initially expanded",
         async function (assert) {
             const forcedDefaultLimit = 3;
@@ -11406,7 +11451,7 @@ QUnit.module("Views", (hooks) => {
             "o_readonly_modifier"
         );
 
-        await click(target.querySelector(".o_selected_row .o_field_many2one input"));
+        await click(target.querySelector(".o_selected_row .o_field_many2one"));
         assert.strictEqual(
             document.activeElement,
             target.querySelector(".o_selected_row .o_field_many2one input")
@@ -16865,4 +16910,54 @@ QUnit.module("Views", (hooks) => {
         await click(document, "body .modal footer button.btn-primary");
         assert.verifySteps(["a"]);
     });
+
+    QUnit.test("restore orderBy from state when using default order", async (assert) => {
+        serverData.models.foo.fields.amount.sortable = true;
+        serverData.models.foo.fields.foo.sortable = true;
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Foo",
+                res_model: "foo",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
+            },
+        };
+        serverData.views = {
+            "foo,false,list": `
+                <tree default_order="foo">
+                    <field name="foo"/>
+                    <field name="amount"/>
+                </tree>`,
+            "foo,false,form": `
+                <form>
+                    <field name="amount"/>
+                    <field name="foo"/>
+                </form>`,
+            "foo,false,search": "<search/>",
+        };
+        const webclient = await createWebClient({
+            serverData,
+            async mockRPC(route, { kwargs, method }) {
+                if (method === "web_search_read") {
+                    assert.step("order:" + kwargs.order);
+                }
+            },
+        });
+        await doAction(webclient, 1);
+
+        await click(target.querySelector("th[data-name=amount]")); // order by amount
+        await click(target.querySelector(".o_data_row .o_data_cell")); // switch to the form view
+        await click(target.querySelector(".breadcrumb-item")); // go back to the list view
+
+        assert.verifySteps([
+            "order:foo ASC", // initial list view
+            "order:amount ASC, foo ASC", // order by amount
+            "order:amount ASC, foo ASC", // go back to the list view, it should still be ordered by amount
+        ]);
+    });
+
 });

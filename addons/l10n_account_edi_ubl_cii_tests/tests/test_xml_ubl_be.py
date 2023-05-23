@@ -218,6 +218,72 @@ class TestUBLBE(TestUBLCommon):
     def test_encoding_in_attachment_ubl(self):
         self._test_encoding_in_attachment('ubl_bis3', 'INV_2017_00002_ubl_bis3.xml')
 
+    def test_sending_to_public_admin(self):
+        """ A public administration has no VAT, but has an arbitrary number (see:
+        https://pch.gouvernement.lu/fr/peppol.html). When a partner has no VAT, the node PartyTaxScheme should
+        not appear.
+        NB: The `EndpointID` node should be filled with this arbitrary number, that is why `l10n_lu_peppol_id`
+        module was created. However we cannot use it here because it would require adding it to the dependencies of
+        `l10n_account_edi_ubl_cii_tests` in stable.
+        """
+        self.partner_2.vat = None
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 2,
+                    'price_unit': 100,
+                    'tax_ids': [(6, 0, self.tax_21.ids)],
+                }
+            ],
+        )
+        self._assert_invoice_attachment(
+            invoice,
+            xpaths='''
+                <xpath expr="./*[local-name()='ID']" position="replace">
+                    <ID>___ignore___</ID>
+                </xpath>
+                <xpath expr="./*[local-name()='PaymentMeans']/*[local-name()='PaymentID']" position="replace">
+                    <PaymentID>___ignore___</PaymentID>
+                </xpath>
+                <xpath expr=".//*[local-name()='InvoiceLine'][1]/*[local-name()='ID']" position="replace">
+                    <ID>___ignore___</ID>
+                </xpath>
+            ''',
+            expected_file='from_odoo/bis3_out_invoice_public_admin.xml',
+        )
+
+    def test_rounding_price_unit(self):
+        """ OpenPeppol states that:
+        * All document level amounts shall be rounded to two decimals for accounting
+        * Invoice line net amount shall be rounded to two decimals
+        See: https://docs.peppol.eu/poacc/billing/3.0/bis/#_rounding
+        Do not round the unit prices. It allows to obtain the correct line amounts when prices have more than 2
+        digits.
+        """
+        # Set the allowed number of digits for the price_unit
+        decimal_precision = self.env['decimal.precision'].search([('name', '=', 'Product Price')], limit=1)
+        self.assertTrue(bool(decimal_precision), "The decimal precision for Product Price is required for this test")
+        decimal_precision.digits = 4
+
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 10000,
+                    'price_unit': 0.4567,
+                    'tax_ids': [(6, 0, self.tax_21.ids)],
+                }
+            ],
+        )
+        self._assert_invoice_attachment(invoice, xpaths=None, expected_file='from_odoo/bis3_out_invoice_rounding.xml')
+
     ####################################################
     # Test import
     ####################################################
@@ -239,6 +305,27 @@ class TestUBLBE(TestUBLCommon):
 
         new_invoice = self._import_invoice_attachment(invoice, 'ubl_bis3', self.company_data['default_journal_purchase'])
         self.assertEqual(self.partner_1, new_invoice.partner_id)
+
+    def test_import_journal_ubl(self):
+        """
+        If the context contains the info about the current default journal, we should use it
+        instead of infering the journal from the move type.
+        """
+        journal2 = self.company_data['default_journal_sale'].copy()
+        journal2.default_account_id = self.company_data['default_account_revenue'].id
+        invoice = self._generate_move(
+            seller=self.partner_1,
+            buyer=self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[{'product_id': self.product_a.id}],
+        )
+        edi_attachment = invoice._get_edi_attachment(self.env.ref('account_edi_ubl_cii.ubl_bis3')).id
+
+        new_invoice = self.env['account.journal'].with_context(default_move_type='out_invoice')._create_document_from_attachment(edi_attachment)
+        self.assertEqual(new_invoice.journal_id, self.company_data['default_journal_sale'])
+
+        new_invoice = self.env['account.journal'].with_context(default_journal_id=journal2.id)._create_document_from_attachment(edi_attachment)
+        self.assertEqual(new_invoice.journal_id, journal2)
 
     def test_import_and_create_partner_ubl(self):
         """ Tests whether the partner is created at import if no match is found when decoding the EDI attachment
@@ -304,8 +391,8 @@ class TestUBLBE(TestUBLCommon):
         # Source: https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples
         subfolder = 'tests/test_files/from_peppol-bis-invoice-3_doc'
         # source: Allowance-example.xml
-        self._assert_imported_invoice_from_file(subfolder=subfolder, filename='bis3_allowance.xml', amount_total=6125,
-            amount_tax=1225, list_line_subtotals=[200, -200, 4000, 1000, 900, 0, -1000])
+        self._assert_imported_invoice_from_file(subfolder=subfolder, filename='bis3_allowance.xml', amount_total=7125,
+            amount_tax=1225, list_line_subtotals=[200, -200, 4000, 1000, 900])
         # source: base-creditnote-correction.xml
         self._assert_imported_invoice_from_file(subfolder=subfolder, filename='bis3_credit_note.xml',
             amount_total=1656.25, amount_tax=331.25, list_line_subtotals=[25, 2800, -1500], move_type='in_refund')
@@ -315,3 +402,18 @@ class TestUBLBE(TestUBLCommon):
         # source: vat-category-E.xml
         self._assert_imported_invoice_from_file(subfolder=subfolder, filename='bis3_tax_exempt_gbp.xml',
             amount_total=1200, amount_tax=0, list_line_subtotals=[1200], currency_id=self.env.ref('base.GBP').id)
+
+    def test_import_existing_invoice_flip_move_type(self):
+        """ Tests whether the move_type of an existing invoice can be flipped when importing an attachment
+        For instance: with an email alias to create account_move, first the move is created (using alias_defaults,
+        which contains move_type = 'out_invoice') then the attachment is decoded, if it represents a credit note,
+        the move type needs to be changed to 'out_refund'
+        """
+        invoice = self.env['account.move'].create({'move_type': 'out_invoice'})
+        self.update_invoice_from_file(
+            'l10n_account_edi_ubl_cii_tests',
+            'tests/test_files/from_odoo',
+            'bis3_out_refund.xml',
+            invoice,
+        )
+        self.assertRecordValues(invoice, [{'move_type': 'out_refund', 'amount_total': 3164.22}])

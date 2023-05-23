@@ -8,12 +8,12 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2023-04-14 05:52+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
-"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -84,15 +84,6 @@ msgid ""
 msgstr ""
 "<span><i class=\"fa fa-arrow-right\"/> Як налаштувати ваш обліковий запис "
 "PayPal</span>"
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
-msgid ""
-"<span>Start selling directly without an account; an email will be sent by "
-"Paypal to create your new account and collect your payments.</span>"
-msgstr ""
-"<span>Почніть прямі продажі без рахунку; Paypal надішле електронний лист, "
-"щоб створити новий рахунок та збирати платежі.</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -389,8 +380,8 @@ msgstr "Скасоване повідомлення"
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
-msgid "Cancelled payments"
-msgstr "Скасовані платежі"
+msgid "Canceled operations"
+msgstr "Скасовані операції"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
@@ -431,6 +422,8 @@ msgstr "Місто"
 
 #. module: payment
 #. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Click here to be redirected to the confirmation page."
@@ -706,8 +699,8 @@ msgid "Error"
 msgstr "Помилка"
 
 #. module: payment
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/payment/models/payment_transaction.py:0
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
@@ -723,6 +716,13 @@ msgstr "Шаблон форми швидкої реєстрації"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_express_checkout
 msgid "Express Checkout Supported"
 msgstr "Підтримується швидка реєстрація"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Failed operations"
+msgstr "Невдалі операції"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
@@ -1140,6 +1140,13 @@ msgid "Operation"
 msgstr "Операція"
 
 #. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Operations in progress"
+msgstr "Операції в процесі"
+
+#. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__other
 msgid "Other"
 msgstr "Інше"
@@ -1302,20 +1309,6 @@ msgstr "Помічник отримання провайдера платежу"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
 msgid "Payments"
 msgstr "Платежі"
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Payments failed"
-msgstr "Платежі не вдалися"
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Payments received"
-msgstr "Отримані платежі"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_user_type
@@ -1488,6 +1481,13 @@ msgstr "Зберегти метод оплати"
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 msgid "Save my payment details"
 msgstr "Зберегти мої деталі оплати"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Saving your payment method, please wait..."
+msgstr "Збереження вашого способу оплату, будь ласка, зачекайте..."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1895,6 +1895,13 @@ msgstr ""
 "                     Рекомендується встановити електронну адресу для цього партнера."
 
 #. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "This payment has been canceled."
+msgstr "Цей платіж скасовано."
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has been verified by our system."
 msgstr "Цей спосіб оплати перевірено нашою системою."
@@ -1903,13 +1910,6 @@ msgstr "Цей спосіб оплати перевірено нашою сис�
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has not been verified by our system."
 msgstr "Цей метод оплати не підтверджений нашою системою."
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "This transaction has been cancelled."
-msgstr "Цю операцію було скасовано."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -1992,8 +1992,8 @@ msgstr "Недійсна транзакція"
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
-msgid "Waiting for payment"
-msgstr "Очікує платежу"
+msgid "Waiting for operations to process"
+msgstr "Очікування операції для обробки"
 
 #. module: payment
 #. odoo-python
@@ -2079,12 +2079,12 @@ msgid "Wire Transfer"
 msgstr "Банківський переказ"
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
 #, python-format
-msgid "You can click here to be redirected to the confirmation page."
+msgid "You cannot delete the payment provider %s; archive it instead."
 msgstr ""
-"Ви можете натиснути тут, для перенаправлення на сторінку підтвердження."
+"Ви не можете видалити провайдера платежу %s; натомість архівуйте його."
 
 #. module: payment
 #. odoo-python
@@ -2122,20 +2122,6 @@ msgstr "Вас буде повідомлено, коли платіж буде �
 #, python-format
 msgid "You will be notified when the payment is fully confirmed."
 msgstr "Вас буде повідомлено, коли платіж буде повністю підтверджено."
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Your order has been processed."
-msgstr "Ваше замовлення обробляється."
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Your order is being processed, please wait ..."
-msgstr "Ваше замовлення обробляється, будь ласка, зачекайте..."
 
 #. module: payment
 #. odoo-python
@@ -2180,6 +2166,13 @@ msgstr "Вашу оплату було авторизовано."
 #, python-format
 msgid "Your payment has been cancelled."
 msgstr "Ваш платіж скасовано."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Your payment has been processed."
+msgstr "Ваш платіж оброблено."
 
 #. module: payment
 #. odoo-javascript
@@ -2241,8 +2234,22 @@ msgstr "Ваш платіж ще не оброблено."
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
+msgid "Your payment is being processed, please wait..."
+msgstr "Ваш платіж виконується, будь ласка, зачекайте..."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
 msgid "Your payment is in pending state."
 msgstr "Ваш платіж перебуває у стані очікування."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Your payment method has been saved."
+msgstr "Ваш спосіб оплати збережено."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2295,13 +2302,3 @@ msgstr "успішно"
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "warning"
 msgstr "попередження"
-
-#. module: payment
-#: code:addons/payment/models/account_journal.py:0
-#, python-format
-msgid ""
-"You must first deactivate a payment provider before deleting its journal.\n"
-"Linked providers: %s"
-msgstr ""
-"Ви повинні спочатку деактивувати постачальника платежів, перш ніж видаляти його журнал.\n"
-"Пов’язані постачальники: %s"

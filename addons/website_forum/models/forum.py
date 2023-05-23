@@ -45,7 +45,7 @@ class Forum(models.Model):
     authorized_group_id = fields.Many2one('res.groups', 'Authorized Group')
     menu_id = fields.Many2one('website.menu', 'Menu', copy=False)
     active = fields.Boolean(default=True)
-    faq = fields.Html('Guidelines', translate=html_translate, sanitize=False)
+    faq = fields.Html('Guidelines', translate=html_translate, sanitize=True, sanitize_overridable=True)
     description = fields.Text('Description', translate=True)
     teaser = fields.Text('Teaser', compute='_compute_teaser', store=True)
     welcome_message = fields.Html(
@@ -243,6 +243,8 @@ class Forum(models.Model):
         return post_tags
 
     def _compute_website_url(self):
+        if not self.id:
+            return False
         return '/forum/%s' % (slug(self))
 
     def get_tags_first_char(self):
@@ -252,7 +254,10 @@ class Forum(models.Model):
 
     def go_to_website(self):
         self.ensure_one()
-        return self.env['website'].get_client_action(self._compute_website_url())
+        website_url = self._compute_website_url()
+        if not website_url:
+            return False
+        return self.env['website'].get_client_action(website_url)
 
     @api.model
     def _update_website_count(self):
@@ -967,7 +972,8 @@ class Post(models.Model):
         return super(Post, self)._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
 
     def _compute_website_url(self):
-        for post in self:
+        self.website_url = False
+        for post in self.filtered(lambda post: post.id):
             forum_slug = slug(post.forum_id)
             post_slug = slug(post)
             anchor = post.parent_id and '#answer_%d' % post.id or ''
@@ -975,6 +981,8 @@ class Post(models.Model):
 
     def go_to_website(self):
         self.ensure_one()
+        if not self.website_url:
+            return False
         return self.env['website'].get_client_action(self.website_url)
 
     @api.model

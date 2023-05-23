@@ -8,7 +8,7 @@ from odoo.tests.common import users, warmup, Form
 from odoo.tests import tagged
 
 
-@tagged('crm_performance', 'post_install', '-at_install')
+@tagged('crm_performance', 'post_install', '-at_install', '-standard')
 class CrmPerformanceCase(TestCrmFullCommon):
 
     def setUp(self):
@@ -31,7 +31,7 @@ class CrmPerformanceCase(TestCrmFullCommon):
         self.cr.flush()
 
 
-@tagged('crm_performance', 'post_install', '-at_install')
+@tagged('crm_performance', 'post_install', '-at_install', '-standard')
 class TestCrmPerformance(CrmPerformanceCase):
 
     @users('user_sales_leads')

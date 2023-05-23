@@ -117,7 +117,7 @@
                     <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': ['|', ('is_planned', '=', False), ('state', '=', 'cancel')]}" data-hotkey="x"/>
                     <button name="action_assign" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}" string="Check availability" type="object" data-hotkey="q"/>
                     <button name="do_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}" data-hotkey="w"/>
-                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('cancel', 'draft'))]}" data-hotkey="z"/>
+                    <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('cancel', 'draft'))]}" data-hotkey="y"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,progress,done"/>
                     <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('show_lock', '=', False), ('is_locked', '=', False)]}" string="Unlock" groups="mrp.group_mrp_manager" type="object" help="Unlock the manufacturing order to adjust what has been consumed or produced." data-hotkey="l"/>
                     <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('show_lock', '=', False), ('is_locked', '=', True)]}" string="Lock" groups="mrp.group_mrp_manager" type="object" help="Lock the manufacturing order to prevent changes to what has been consumed or produced." data-hotkey="l"/>
@@ -205,21 +205,21 @@
                                     context="{'default_product_tmpl_id': product_tmpl_id}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                             </div>
                             <label for="product_qty" string="Quantity"/>
-                            <div class="d-flex flex-row">
+                            <div class="d-flex flex-row align-items-start">
                                 <field name="qty_producing" class="w-auto" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)], 'invisible': [('state', '=', 'draft')]}"/>
                                 <span attrs="{'invisible': [('state', '=', 'draft')]}">/</span>
                                 <field name="product_qty" class="oe_inline text-start" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('state', 'not in', ('draft', 'done'))]}"/>
                                 <button type="action" name="%(mrp.action_change_production_qty)d"
-                                    context="{'default_mo_id': id}" class="oe_link oe_inline" style="margin: 0px; padding: 0px;" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done','cancel')), ('id', '=', False)]}">
+                                    context="{'default_mo_id': id}" class="oe_link oe_inline py-0" style="margin: 0px; padding: 0px;" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done','cancel')), ('id', '=', False)]}">
                                     <field name="product_qty" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </button>
                                 <label for="product_uom_id" string="" class="oe_inline flex-grow-1"/>
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="product_uom_id" groups="!uom.group_uom" invisible="1"/>
                                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" groups="uom.group_uom" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
-                                <span class='fw-bold'>To Produce</span>
-                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" attrs="{'invisible': [('forecasted_issue', '=', True)]}"/>
-                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" attrs="{'invisible': [('forecasted_issue', '=', False)]}" class="text-danger"/>
+                                <span class='fw-bold text-nowrap'>To Produce</span>
+                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" attrs="{'invisible': [('forecasted_issue', '=', True)]}" class="py-0" />
+                                <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart" attrs="{'invisible': [('forecasted_issue', '=', False)]}" class="text-danger py-0"/>
                             </div>
                             <label for="lot_producing_id" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}"/>
                             <div class="o_row" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}">
@@ -232,7 +232,7 @@
                             <label for="date_planned_start"/>
                             <div class="o_row">
                                 <field name="date_planned_start"
-                                    attrs="{'readonly': [('state', 'in', ['close', 'cancel'])]}"
+                                    attrs="{'readonly': [('state', 'in', ['done', 'cancel'])]}"
                                     decoration-warning="state not in ('done', 'cancel') and date_planned_start &lt; now"
                                     decoration-danger="state not in ('done', 'cancel') and date_planned_start &lt; current_date"
                                     decoration-bf="state not in ('done', 'cancel') and (date_planned_start &lt; current_date or date_planned_start &lt; now)"/>

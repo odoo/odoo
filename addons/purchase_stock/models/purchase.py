@@ -50,7 +50,7 @@ class PurchaseOrder(models.Model):
     @api.depends('picking_ids.date_done')
     def _compute_effective_date(self):
         for order in self:
-            pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'internal' and x.date_done)
+            pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage != 'supplier' and x.date_done)
             order.effective_date = min(pickings.mapped('date_done'), default=False)
 
     @api.depends('picking_ids', 'picking_ids.state')
@@ -288,7 +288,20 @@ class PurchaseOrder(models.Model):
 class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
-    qty_received_method = fields.Selection(selection_add=[('stock_moves', 'Stock Moves')])
+    def _ondelete_stock_moves(self):
+        modified_fields = ['qty_received_manual', 'qty_received_method']
+        self.flush_recordset(fnames=['qty_received', *modified_fields])
+        self.invalidate_recordset(fnames=modified_fields, flush=False)
+        query = f'''
+            UPDATE {self._table}
+            SET qty_received_manual = qty_received, qty_received_method = 'manual'
+            WHERE id IN %(ids)s
+        '''
+        self.env.cr.execute(query, {'ids': self._ids or (None,)})
+        self.modified(modified_fields)
+
+    qty_received_method = fields.Selection(selection_add=[('stock_moves', 'Stock Moves')],
+                                           ondelete={'stock_moves': _ondelete_stock_moves})
 
     move_ids = fields.One2many('stock.move', 'purchase_line_id', string='Reservation', readonly=True, copy=False)
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint', copy=False, index='btree_not_null')
@@ -364,7 +377,8 @@ class PurchaseOrderLine(models.Model):
                 lambda m: m.state not in ['cancel', 'done']
             ).product_packaging_id = values['product_packaging_id']
 
-        previous_product_qty = {line.id: line.product_uom_qty for line in lines}
+        previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
+        previous_product_qty = {line.id: line.product_qty for line in lines}
         result = super(PurchaseOrderLine, self).write(values)
         if 'price_unit' in values:
             for line in lines:
@@ -372,7 +386,8 @@ class PurchaseOrderLine(models.Model):
                 moves = line.move_ids.filtered(lambda s: s.state not in ('cancel', 'done') and s.product_id == line.product_id)
                 moves.write({'price_unit': line._get_stock_move_price_unit()})
         if 'product_qty' in values:
-            lines.with_context(previous_product_qty=previous_product_qty)._create_or_update_picking()
+            lines = lines.filtered(lambda l: float_compare(previous_product_qty[l.id], l.product_qty, precision_rounding=l.product_uom.rounding) != 0)
+            lines.with_context(previous_product_qty=previous_product_uom_qty)._create_or_update_picking()
         return result
 
     def action_product_forecast_report(self):

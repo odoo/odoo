@@ -48,6 +48,7 @@ patch(ImageSelector.prototype, 'image_selector_unsplash', {
         this.state.isMaxed = false;
         this.state.unsplashError = null;
         this.state.useUnsplash = true;
+        this.NUMBER_OF_RECORDS_TO_DISPLAY = 30;
 
         this.errorMessages = {
             'key_not_found': {
@@ -122,7 +123,7 @@ patch(ImageSelector.prototype, 'image_selector_unsplash', {
         }
         this.state.isFetchingUnsplash = true;
         try {
-            const { isMaxed, images } = await this.unsplash.getImages(this.state.needle, offset, this.NUMBER_OF_ATTACHMENTS_TO_DISPLAY, this.props.orientation);
+            const { isMaxed, images } = await this.unsplash.getImages(this.state.needle, offset, this.NUMBER_OF_RECORDS_TO_DISPLAY, this.props.orientation);
             this.state.isFetchingUnsplash = false;
             this.state.unsplashError = false;
             const records = images.map(record => {
@@ -132,6 +133,7 @@ patch(ImageSelector.prototype, 'image_selector_unsplash', {
                 url.searchParams.delete('w');
                 return Object.assign({}, record, {
                     url: url.toString(),
+                    mediaType: 'unsplashRecord',
                 });
             });
             return { isMaxed, records };

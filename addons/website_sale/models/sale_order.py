@@ -116,7 +116,7 @@ class SaleOrder(models.Model):
             update_values = self._prepare_order_line_update_values(order_line, quantity, **kwargs)
             if update_values:
                 self._update_cart_line_values(order_line, update_values)
-        elif quantity >= 0:
+        elif quantity > 0:
             # Create new line
             order_line_values = self._prepare_order_line_values(product_id, quantity, **kwargs)
             order_line = self.env['sale.order.line'].sudo().create(order_line_values)

@@ -6,10 +6,10 @@
 # Ryanto The <ry.the77@gmail.com>, 2022
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
 # William Surya Permana <zarambie_game@yahoo.com>, 2022
-# Martin Trigaux, 2022
 # arfa simoncelli, 2022
-# Abe Manyo, 2023
 # Aldo Bagaskara, 2023
+# Martin Trigaux, 2023
+# Abe Manyo, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,8 +17,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Aldo Bagaskara, 2023\n"
-"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"Last-Translator: Abe Manyo, 2023\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -85,7 +85,7 @@ msgstr "%d tahun yang lalu"
 #: code:addons/web/static/src/core/file_upload/file_upload_service.js:0
 #, python-format
 msgid "%s Files"
-msgstr "%s Berkas"
+msgstr "%s File"
 
 #. module: web
 #. odoo-javascript
@@ -885,6 +885,7 @@ msgstr "Apakah Anda yakin Anda ingin mengarsipkan semua record ini?"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/legacy/js/views/form/form_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive this record?"
@@ -1094,7 +1095,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/signature/signature_field.xml:0
 #, python-format
 msgid "Binary file"
-msgstr "Berkas biner"
+msgstr "Binary file"
 
 #. module: web
 #. odoo-javascript
@@ -2391,7 +2392,7 @@ msgstr "Kolom untuk diekspor"
 #: code:addons/web/static/src/views/fields/binary/binary_field.js:0
 #, python-format
 msgid "File"
-msgstr "Berkas"
+msgstr "File"
 
 #. module: web
 #. odoo-javascript
@@ -2399,7 +2400,7 @@ msgstr "Berkas"
 #: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "File upload"
-msgstr "Unggah Berkas"
+msgstr "Unggah File"
 
 #. module: web
 #. odoo-javascript
@@ -2761,8 +2762,8 @@ msgid ""
 "Invalid database name. Only alphanumerical characters, underscore, hyphen "
 "and dot are allowed."
 msgstr ""
-"Nama database tidak sah. Hanya huruf, angka, garis bawah, tanda penghubung, "
-"dan titik yang diijinkan."
+"Nama database tidak sah. Hanya huruf alfanumerik, angka, garis bawah, tanda "
+"penghubung, dan titik yang diijinkan."
 
 #. module: web
 #. odoo-javascript
@@ -4965,6 +4966,13 @@ msgstr "Bagikan dengan semua pengguna"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
+#, python-format
+msgid "Shortcuts"
+msgstr "Jalan pintas"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
@@ -5188,6 +5196,9 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"Nomor Identifikasi Pajak. Nomor di sini akan divalidasi berdasarkan format "
+"negara. Anda dapat menggunakan '/' untuk mengindikasikan bahwa mitra tidak "
+"dikenakan pajak."
 
 #. module: web
 #. odoo-python
@@ -5224,7 +5235,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "The selected file exceed the maximum file size of %s."
-msgstr "Berkas yang dipilih melebihi ukuran maksimum, yaitu %s."
+msgstr "File yang dipilih melebihi ukuran maksimum, yaitu %s."
 
 #. module: web
 #. odoo-javascript
@@ -5261,7 +5272,7 @@ msgstr "Tidak ada gambar yang bisa digunakan sebagai sampul."
 #: code:addons/web/static/src/legacy/js/fields/basic_fields.js:0
 #, python-format
 msgid "There was a problem while uploading your file"
-msgstr "Ada masalah saat mengunggah berkas Anda"
+msgstr "Ada masalah saat mengunggah file Anda"
 
 #. module: web
 #. odoo-javascript
@@ -5681,7 +5692,7 @@ msgstr "Unggah dan tetapkan"
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
 msgid "Upload your file"
-msgstr "Unggah berkas Anda"
+msgstr "Unggah file Anda"
 
 #. module: web
 #. odoo-javascript
@@ -6027,6 +6038,21 @@ msgstr "Anda mungkin tidak percaya,"
 msgid ""
 "You may not believe it,<br />but the application is actually loading..."
 msgstr "Anda mungkin tidak percaya, <br /> tetapi aplikasi masih memuat..."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/property_tags.js:0
+#, python-format
+msgid "You need to be able to edit parent first to add property tags"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/properties_field.js:0
+#: code:addons/web/static/src/views/fields/properties/properties_field.js:0
+#, python-format
+msgid "You need to be able to edit parent first to configure property fields"
+msgstr ""
 
 #. module: web
 #. odoo-javascript

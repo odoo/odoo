@@ -71,6 +71,10 @@ odoo.define('website.s_website_form', function (require) {
             return res;
         },
         start: function () {
+            // Reset the form first, as it is still filled when coming back
+            // after a redirect.
+            this.$target[0].reset();
+
             // Prepare visibility data and update field visibilities
             const visibilityFunctionsByFieldName = new Map();
             for (const fieldEl of this.$target[0].querySelectorAll('[data-visibility-dependency]')) {
@@ -124,7 +128,13 @@ odoo.define('website.s_website_form', function (require) {
             // Data-fill-with attribute is given during registry and is used by
             // to know which user data should be used to prfill fields.
             const dataForEl = document.querySelector(`[data-for='${this.$target[0].id}']`);
-            if (dataForEl || Object.keys(this.preFillValues).length) {
+            this.editTranslations = !!this._getContext(true).edit_translations;
+            // On the "edit_translations" mode, a <span/> with a translated term
+            // will replace the attribute value, leading to some inconsistencies
+            // (setting again the <span> on the attributes after the editor's
+            // cleanup, setting wrong values on the attributes after translating
+            // default values...)
+            if (!this.editTranslations && (dataForEl || Object.keys(this.preFillValues).length)) {
                 const dataForValues = dataForEl ?
                     JSON.parse(dataForEl.dataset.values
                         .replace('False', '""')
@@ -339,12 +349,39 @@ odoo.define('website.s_website_form', function (require) {
                     }
                     switch (successMode) {
                         case 'redirect': {
-                            successPage = successPage.startsWith("/#") ? successPage.slice(1) : successPage;
+                            let hashIndex = successPage.indexOf("#");
+                            if (hashIndex > 0) {
+                                // URL containing an anchor detected: extract
+                                // the anchor from the URL if the URL is the
+                                // same as the current page URL so we can scroll
+                                // directly to the element (if found) later
+                                // instead of redirecting.
+                                // Note that both currentUrlPath and successPage
+                                // can exist with or without a trailing slash
+                                // before the hash (e.g. "domain.com#footer" or
+                                // "domain.com/#footer"). Therefore, if they are
+                                // not present, we add them to be able to
+                                // compare the two variables correctly.
+                                let currentUrlPath = window.location.pathname;
+                                if (!currentUrlPath.endsWith("/")) {
+                                    currentUrlPath = currentUrlPath + "/";
+                                }
+                                if (!successPage.includes("/#")) {
+                                    successPage = successPage.replace("#", "/#");
+                                    hashIndex++;
+                                }
+                                if ([successPage, "/" + session.lang_url_code + successPage].some(link => link.startsWith(currentUrlPath + '#'))) {
+                                    successPage = successPage.substring(hashIndex);
+                                }
+                            }
                             if (successPage.charAt(0) === "#") {
-                                await dom.scrollTo($(successPage)[0], {
-                                    duration: 500,
-                                    extraOffset: 0,
-                                });
+                                const successAnchorEl = document.getElementById(successPage.substring(1));
+                                if (successAnchorEl) {
+                                    await dom.scrollTo(successAnchorEl, {
+                                        duration: 500,
+                                        extraOffset: 0,
+                                    });
+                                }
                                 break;
                             }
                             $(window.location).attr('href', successPage);
@@ -358,7 +395,7 @@ odoo.define('website.s_website_form', function (require) {
 
                             self.$target[0].classList.add('d-none');
                             self.$target[0].parentElement.querySelector('.s_website_form_end_message').classList.remove('d-none');
-                            return;
+                            break;
                         }
                         default: {
                             // Prevent double-clicking on the send button and
@@ -456,7 +493,8 @@ odoo.define('website.s_website_form', function (require) {
                     if (_.isString(error_fields[field_name])) {
                         $field.popover({content: error_fields[field_name], trigger: 'hover', container: 'body', placement: 'top'});
                         // update error message and show it.
-                        $field.data("bs.popover").config.content = error_fields[field_name];
+                        const popover = Popover.getInstance($field);
+                        popover._config.content = error_fields[field_name];
                         $field.popover('show');
                     }
                     form_valid = false;

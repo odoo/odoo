@@ -50,7 +50,10 @@ export class MassMailingHtmlField extends HtmlField {
             resizable: false,
             defaultDataForLinkTools: { isNewWindow: true },
             toolbarTemplate: 'mass_mailing.web_editor_toolbar',
-            onWysiwygBlur: () => this.wysiwyg.odooEditor.toolbarHide(),
+            onWysiwygBlur: () => {
+                this.commitChanges();
+                this.wysiwyg.odooEditor.toolbarHide();
+            },
             ...this.props.wysiwygOptions,
         };
     }
@@ -618,6 +621,9 @@ MassMailingHtmlField.extractProps = (...args) => {
         inlineField: attrs.options['inline-field'],
         iframeHtmlClass: attrs['iframeHtmlClass'],
     };
+};
+MassMailingHtmlField.fieldDependencies = {
+    body_html: { type: 'html' },
 };
 
 registry.category("fields").add("mass_mailing_html", MassMailingHtmlField);

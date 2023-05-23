@@ -18,7 +18,6 @@ from odoo.tools.misc import get_lang
 from .project_task_recurrence import DAYS, WEEKS
 from .project_update import STATUS_COLOR
 
-
 PROJECT_TASK_READABLE_FIELDS = {
     'id',
     'active',
@@ -405,7 +404,7 @@ class Project(models.Model):
         ('to_define', 'Set Status'),
     ], default='to_define', compute='_compute_last_update_status', store=True, readonly=False, required=True)
     last_update_color = fields.Integer(compute='_compute_last_update_color')
-    milestone_ids = fields.One2many('project.milestone', 'project_id', copy=True)
+    milestone_ids = fields.One2many('project.milestone', 'project_id')
     milestone_count = fields.Integer(compute='_compute_milestone_count', groups='project.group_project_milestone')
     milestone_count_reached = fields.Integer(compute='_compute_milestone_reached_count', groups='project.group_project_milestone')
     is_milestone_exceeded = fields.Boolean(compute="_compute_is_milestone_exceeded", search='_search_is_milestone_exceeded')
@@ -580,8 +579,7 @@ class Project(models.Model):
     def map_tasks(self, new_project_id):
         """ copy and map tasks from old to new project """
         project = self.browse(new_project_id)
-        new_task_ids = []
-        new_subtasks = self.env['project.task']
+        new_tasks = self.env['project.task']
         # We want to copy archived task, but do not propagate an active_test context key
         task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id), ('parent_id', '=', False)]).ids
         if self.allow_task_dependencies and 'task_mapping' not in self.env.context:
@@ -589,13 +587,13 @@ class Project(models.Model):
         for task in self.env['project.task'].browse(task_ids):
             # preserve task name and stage, normally altered during copy
             defaults = self._map_tasks_default_valeus(task, project)
-            new_task = task.copy(defaults)
-            new_task_ids.append(new_task.id)
-            all_subtasks = new_task._get_all_subtasks()
-            if all_subtasks:
-                new_subtasks += all_subtasks.filtered(lambda child: child.display_project_id == self)
-        project.write({'tasks': [Command.set(new_task_ids)]})
-        new_subtasks.write({'display_project_id': project.id})
+            new_tasks |= task.copy(defaults)
+        project.write({'tasks': [Command.set(new_tasks.ids)]})
+        new_tasks._get_all_subtasks().filtered(
+            lambda child: child.display_project_id == self
+        ).write({
+            'display_project_id': project.id
+        })
         return True
 
     @api.returns('self', lambda value: value.id)
@@ -607,6 +605,10 @@ class Project(models.Model):
         project = super(Project, self).copy(default)
         for follower in self.message_follower_ids:
             project.message_subscribe(partner_ids=follower.partner_id.ids, subtype_ids=follower.subtype_ids.ids)
+        if self.allow_milestones:
+            if 'milestone_mapping' not in self.env.context:
+                self = self.with_context(milestone_mapping=dict())
+            project.milestone_ids = [milestone.copy().id for milestone in self.milestone_ids]
         if 'tasks' not in default:
             self.map_tasks(project.id)
 
@@ -905,11 +907,8 @@ class Project(models.Model):
             'icon': 'tasks',
             'text': _lt('Tasks'),
             'number': self.task_count,
-            'action_type': 'action',
-            'action': 'project.act_project_project_2_project_task_all',
-            'additional_context': json.dumps({
-                'active_id': self.id,
-            }),
+            'action_type': 'object',
+            'action': 'action_view_tasks',
             'show': True,
             'sequence': 3,
         }]
@@ -1028,7 +1027,7 @@ class Project(models.Model):
         if self.privacy_visibility != 'portal':
             return False
         if self.env.user.has_group('base.group_portal'):
-            return self.env.user.partner_id in self.collaborator_ids.partner_id
+            return self.env['project.collaborator'].search([('project_id', '=', self.sudo().id), ('partner_id', '=', self.env.user.partner_id.id)])
         return self.env.user._is_internal()
 
     def _add_collaborators(self, partners):
@@ -1513,7 +1512,7 @@ class Task(models.Model):
                 task.repeat_week,
                 task.repeat_month,
                 count=number_occurrences)
-            date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format
+            date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format or get_lang(self.env).date_format
             if recurrence_left == 0:
                 recurrence_title = _('There are no more occurrences.')
             else:
@@ -1666,8 +1665,9 @@ class Task(models.Model):
 
     @api.depends('child_ids')
     def _compute_subtask_count(self):
+        subtasks_per_task = self._get_subtask_ids_per_task_id()
         for task in self:
-            task.subtask_count = len(task._get_all_subtasks())
+            task.subtask_count = len(subtasks_per_task.get(task.id, []))
 
     @api.onchange('company_id')
     def _onchange_task_company(self):
@@ -1745,6 +1745,9 @@ class Task(models.Model):
             self.write({'dependent_ids': [Command.unlink(t.id) for t in self.dependent_ids if t.id in new_tasks]})
             task_copy.write({'depend_on_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in self.depend_on_ids]})
             task_copy.write({'dependent_ids': [Command.link(task_mapping.get(t.id, t.id)) for t in self.dependent_ids]})
+        if self.allow_milestones:
+            milestone_mapping = self.env.context.get('milestone_mapping', {})
+            task_copy.milestone_id = milestone_mapping.get(task_copy.milestone_id.id, task_copy.milestone_id.id)
         return task_copy
 
     @api.model
@@ -2128,7 +2131,7 @@ class Task(models.Model):
         # rating on stage
         if 'stage_id' in vals and vals.get('stage_id'):
             tasks.filtered(lambda x: x.project_id.rating_active and x.project_id.rating_status == 'stage')._send_task_rating_mail(force_send=True)
-        for task in self:
+        for task in tasks:
             if task.display_project_id != task.project_id and not task.parent_id:
                 # We must make the display_project_id follow the project_id if no parent_id set
                 task.display_project_id = task.project_id
@@ -2367,10 +2370,6 @@ class Task(models.Model):
 
         project_user_group_id = self.env.ref('project.group_project_user').id
         new_group = ('group_project_user', lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups'], {})
-        if not self.user_ids and not self.is_closed:
-            take_action = self._notify_get_action_link('assign', **local_msg_vals)
-            project_actions = [{'url': take_action, 'title': _('I take it')}]
-            new_group[2]['actions'] = project_actions
         groups = [new_group] + groups
 
         if self.project_privacy_visibility == 'portal':
@@ -2484,16 +2483,51 @@ class Task(models.Model):
     def action_unassign_me(self):
         self.write({'user_ids': [Command.unlink(self.env.uid)]})
 
-    # If depth == 1, return only direct children
-    # If depth == 3, return children to third generation
-    # If depth <= 0, return all children without depth limit
     def _get_all_subtasks(self, depth=0):
-        children = self.mapped('child_ids')
+        return self.browse(set.union(set(), *self._get_subtask_ids_per_task_id().values()))
+
+    def _get_subtask_ids_per_task_id(self):
+        if not self:
+            return {}
+
+        res = dict.fromkeys(self._ids, [])
+        if all(self._ids):
+            self.env.cr.execute(
+                """
+         WITH RECURSIVE task_tree
+                     AS (
+                     SELECT id, id as supertask_id
+                       FROM project_task
+                      WHERE id IN %(ancestor_ids)s
+                      UNION
+                         SELECT t.id, tree.supertask_id
+                           FROM project_task t
+                           JOIN task_tree tree
+                             ON tree.id = t.parent_id
+                            AND t.active in (TRUE, %(active)s)
+               ) SELECT supertask_id, ARRAY_AGG(id)
+                   FROM task_tree
+                  WHERE id != supertask_id
+               GROUP BY supertask_id
+                """,
+                {
+                    "ancestor_ids": tuple(self.ids),
+                    "active": self._context.get('active_test', True),
+                }
+            )
+            res.update(dict(self.env.cr.fetchall()))
+        else:
+            res.update({
+                task.id: task._get_subtasks_recursively().ids
+                for task in self
+            })
+        return res
+
+    def _get_subtasks_recursively(self):
+        children = self.child_ids
         if not children:
             return self.env['project.task']
-        if depth == 1:
-            return children
-        return children + children._get_all_subtasks(depth - 1)
+        return children + children._get_all_subtasks()
 
     def action_open_parent_task(self):
         return {

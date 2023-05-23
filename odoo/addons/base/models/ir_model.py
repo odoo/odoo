@@ -623,6 +623,19 @@ class IrModelFields(models.Model):
             self.relation = field.relation
             self.readonly = True
 
+    @api.onchange('relation')
+    def _onchange_relation(self):
+        try:
+            self._check_relation()
+        except ValidationError as e:
+            return {'warning': {'title': _("Model %s does not exist", self.relation), 'message': e}}
+
+    @api.constrains('relation')
+    def _check_relation(self):
+        for rec in self:
+            if rec.state == 'manual' and rec.relation and not rec.env['ir.model']._get_id(rec.relation):
+                raise ValidationError(_("Unknown model name '%s' in Related Model", rec.relation))
+
     @api.constrains('depends')
     def _check_depends(self):
         """ Check whether all fields in dependencies are valid. """
@@ -669,12 +682,7 @@ class IrModelFields(models.Model):
     def _onchange_ttype(self):
         if self.ttype == 'many2many' and self.model_id and self.relation:
             if self.relation not in self.env:
-                return {
-                    'warning': {
-                        'title': _('Model %s does not exist', self.relation),
-                        'message': _('Please specify a valid model for the object relation'),
-                    }
-                }
+                return
             names = self._custom_many2many_names(self.model_id.model, self.relation)
             self.relation_table, self.column1, self.column2 = names
         else:
@@ -776,7 +784,8 @@ class IrModelFields(models.Model):
                     if inverse.manual and inverse.type == 'one2many':
                         failed_dependencies.append((field, inverse))
 
-        if not self._context.get(MODULE_UNINSTALL_FLAG) and failed_dependencies:
+        uninstalling = self._context.get(MODULE_UNINSTALL_FLAG)
+        if not uninstalling and failed_dependencies:
             msg = _("The field '%s' cannot be removed because the field '%s' depends on it.")
             raise UserError(msg % failed_dependencies[0])
         elif failed_dependencies:
@@ -792,8 +801,10 @@ class IrModelFields(models.Model):
         # DLE P16: if there are pending updates of the field we currently try to unlink, pop them out from the cache
         # test `test_unlink_with_dependant`
         for record in self:
-            field = self.pool[record.model]._fields[record.name]
-            self.env.cache.clear_dirty_field(field)
+            model = self.env.get(record.model)
+            field = model and model._fields.get(record.name)
+            if field:
+                self.env.cache.clear_dirty_field(field)
         # remove fields from registry, and check that views are not broken
         fields = [self.env[record.model]._pop_field(record.name) for record in self]
         domain = expression.OR([('arch_db', 'like', record.name)] for record in self)
@@ -802,7 +813,7 @@ class IrModelFields(models.Model):
             for view in views:
                 view._check_xml()
         except Exception:
-            if not self._context.get(MODULE_UNINSTALL_FLAG):
+            if not uninstalling:
                 raise UserError("\n".join([
                     _("Cannot rename/delete fields that are still present in views:"),
                     _("Fields: %s") % ", ".join(str(f) for f in fields),
@@ -814,8 +825,9 @@ class IrModelFields(models.Model):
                         + ", ".join(str(f) for f in fields)
                         + " the following view might be broken %s" % view.name)
         finally:
-            # the registry has been modified, restore it
-            self.pool.setup_models(self._cr)
+            if not uninstalling:
+                # the registry has been modified, restore it
+                self.pool.setup_models(self._cr)
 
     @api.ondelete(at_uninstall=False)
     def _unlink_if_manual(self):
@@ -906,13 +918,9 @@ class IrModelFields(models.Model):
 
         # names of the models to patch
         patched_models = set()
-
-        # write callable(self._fields[fname].translate) means changing content
-        translate_only = self.env.lang not in (None, 'en_US') and all(self._fields[fname].translate is True for fname in vals)
-
         if vals and self:
             for item in self:
-                if item.state != 'manual' and not translate_only:
+                if item.state != 'manual':
                     raise UserError(_('Properties of base fields cannot be altered in this manner! '
                                       'Please modify them through Python code, '
                                       'preferably through a custom addon!'))
@@ -979,6 +987,12 @@ class IrModelFields(models.Model):
             models = self.pool.descendants(patched_models, '_inherits')
             self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
 
+        return res
+
+    def update_field_translations(self, field_name, translations):
+        res = super().update_field_translations(field_name, translations)
+        if res:
+            self.clear_caches()
         return res
 
     def name_get(self):

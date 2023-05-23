@@ -26,6 +26,7 @@ coreTypes.add("UPDATE_ODOO_LIST_DOMAIN");
 coreTypes.add("ADD_LIST_DOMAIN");
 
 invalidateEvaluationCommands.add("UPDATE_ODOO_LIST_DOMAIN");
+invalidateEvaluationCommands.add("INSERT_ODOO_LIST");
 invalidateEvaluationCommands.add("REMOVE_ODOO_LIST");
 
 cellMenuRegistry.add("list_see_record", {

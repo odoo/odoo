@@ -734,6 +734,8 @@ class MrpProduction(models.Model):
                         Command.update(m.id, updated_values) for m in production.move_finished_ids
                     ]
                 continue
+            # delete to remove existing moves from database and clear to remove new records
+            production.move_finished_ids = [Command.delete(m) for m in production.move_finished_ids.ids]
             production.move_finished_ids = [Command.clear()]
             if production.product_id:
                 production._create_update_move_finished()
@@ -769,7 +771,7 @@ class MrpProduction(models.Model):
                 self.move_raw_ids = self.move_raw_ids - move
                 return {'warning': {'title': _('Warning'), 'message': message}}
 
-    @api.constrains('move_byproduct_ids')
+    @api.constrains('move_finished_ids')
     def _check_byproducts(self):
         for order in self:
             if any(move.cost_share < 0 for move in order.move_byproduct_ids):
@@ -1217,10 +1219,21 @@ class MrpProduction(models.Model):
 
     def action_generate_serial(self):
         self.ensure_one()
+        if self.product_id.tracking == 'lot':
+            name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
+            exist_lot = self.env['stock.lot'].search([
+                ('product_id', '=', self.product_id.id),
+                ('company_id', '=', self.company_id.id),
+                ('name', '=', name),
+            ], limit=1)
+            if exist_lot:
+                name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
+        else:
+            name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id) or self.env['ir.sequence'].next_by_code('stock.lot.serial')
         self.lot_producing_id = self.env['stock.lot'].create({
             'product_id': self.product_id.id,
             'company_id': self.company_id.id,
-            'name': self.env['stock.lot']._get_next_serial(self.company_id, self.product_id) or self.env['ir.sequence'].next_by_code('stock.lot.serial'),
+            'name': name,
         })
         if self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_line_ids:
             self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_line_ids.lot_id = self.lot_producing_id
@@ -1519,6 +1532,7 @@ class MrpProduction(models.Model):
                     workorder.duration_expected = workorder._get_duration_expected()
                 if workorder.duration == 0.0:
                     workorder.duration = workorder.duration_expected * order.qty_produced/order.product_qty
+                    workorder.duration_unit = round(workorder.duration / max(workorder.qty_produced, 1), 2)
             order._cal_price(moves_to_do_by_order[order.id])
         moves_to_finish = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_to_finish = moves_to_finish._action_done(cancel_backorder=cancel_backorder)

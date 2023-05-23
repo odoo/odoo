@@ -63,6 +63,12 @@ export const websiteCustomMenus = {
                         }
                     }
                 }
+                for (const section of filteredSections) {
+                    section.childrenTree = section.childrenTree.filter(
+                        // Exclude non-leaf node having no visible sub-element.
+                        tree => !(tree.children.length && !tree.childrenTree.length)
+                    );
+                }
                 return filteredSections;
             },
         };
@@ -83,10 +89,6 @@ registry.category('website_custom_menus').add('website.menu_optimize_seo', {
         && env.services.website.isDesigner
         && !!env.services.website.currentWebsite.metadata.mainObject,
 });
-registry.category('website_custom_menus').add('website.menu_current_page', {
-    isDisplayed: (env) => !!env.services.website.currentWebsite
-        && !!env.services.website.pageDocument,
-},);
 registry.category('website_custom_menus').add('website.menu_ace_editor', {
     openWidget: (services) => services.website.context.showAceEditor = true,
     isDisplayed: (env) => env.services.website.currentWebsite

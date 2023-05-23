@@ -6,6 +6,7 @@
 # Maksym <ms@myodoo.pl>, 2022
 # Martin Trigaux, 2022
 # Paweł Wodyński <pw@myodoo.pl>, 2022
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +14,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Paweł Wodyński <pw@myodoo.pl>, 2022\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,6 +29,9 @@ msgid ""
 "company. Note that standard subcontracting routes will be adapted so as to "
 "take these into account automatically."
 msgstr ""
+"Zaznacz to pole, aby utworzyć nową dedykowaną lokalizację podwykonawczą dla "
+"tej firmy. Zauważ, że standardowe trasy podwykonawstwa zostaną dostosowane "
+"tak, aby automatycznie je uwzględnić."
 
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model,name:mrp_subcontracting_dropshipping.model_res_company
@@ -37,7 +41,7 @@ msgstr "Firmy"
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model.fields,field_description:mrp_subcontracting_dropshipping.field_res_company__dropship_subcontractor_pick_type_id
 msgid "Dropship Subcontractor Pick Type"
-msgstr ""
+msgstr "Podwykonawca dropship rodzaj odbioru"
 
 #. module: mrp_subcontracting_dropshipping
 #. odoo-python
@@ -47,22 +51,22 @@ msgstr ""
 #: model:stock.route,name:mrp_subcontracting_dropshipping.route_subcontracting_dropshipping
 #, python-format
 msgid "Dropship Subcontractor on Order"
-msgstr ""
+msgstr "Podwykonawca dropship na zamówienie"
 
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model.fields,field_description:mrp_subcontracting_dropshipping.field_stock_warehouse__subcontracting_dropshipping_to_resupply
 msgid "Dropship Subcontractors"
-msgstr ""
+msgstr "Podwykonawcy Dropship"
 
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model.fields,help:mrp_subcontracting_dropshipping.field_stock_warehouse__subcontracting_dropshipping_to_resupply
 msgid "Dropship subcontractors with components"
-msgstr ""
+msgstr "Podwykonawcy z podzespołami"
 
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model.fields,field_description:mrp_subcontracting_dropshipping.field_purchase_order__default_location_dest_id_is_subcontracting_loc
 msgid "Is a Subcontracting Location?"
-msgstr ""
+msgstr "Czy jest to lokalizacja dla podwykonawców?"
 
 #. module: mrp_subcontracting_dropshipping
 #. odoo-python
@@ -72,6 +76,8 @@ msgid ""
 "It appears some components in this RFQ are not meant for subcontracting. "
 "Please create a separate order for these."
 msgstr ""
+"Wygląda na to, że niektóre elementy w tym RFQ nie są przeznaczone do "
+"podwykonawstwa. Prosimy o stworzenie dla nich osobnego zamówienia."
 
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_warehouse_orderpoint
@@ -96,7 +102,7 @@ msgstr "Reguła zasobów"
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model.fields,field_description:mrp_subcontracting_dropshipping.field_stock_warehouse__subcontracting_dropshipping_pull_id
 msgid "Subcontracting-Dropshipping MTS Rule"
-msgstr ""
+msgstr "Podwykonawstwo-Dropshipping Zasada MTS"
 
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_picking

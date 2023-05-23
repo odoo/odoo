@@ -27,21 +27,21 @@
 # Piotr Strębski <strebski@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Maja Stawicka <mjstwck@wp.pl>, 2022
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2022
 # Paweł Wodyński <pw@myodoo.pl>, 2022
 # Grażyna Grzelak <grazyna.grzelak@openglobe.pl>, 2022
 # Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022
 # Maksym <ms@myodoo.pl>, 2023
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -2112,8 +2112,8 @@ msgid "Do not have access, skip this data for user's digest email"
 msgstr "Nie masz dostępu, pomiń te dane dla wiadomości e-mail użytkownika"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -2511,13 +2511,6 @@ msgid "How’s this project going?"
 msgstr "Jak przebiega ten projekt?"
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "I take it"
-msgstr "Biorę to"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__id
 #: model:ir.model.fields,field_description:project.field_project_milestone__id
 #: model:ir.model.fields,field_description:project.field_project_project__id
@@ -2641,8 +2634,8 @@ msgstr ""
 "będziesz musiał go usuwać)."
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -3201,6 +3194,11 @@ msgid "Menu"
 msgstr "Menu"
 
 #. module: project
+#: model:ir.model,name:project.model_mail_message
+msgid "Message"
+msgstr "Wiadomość"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error
@@ -3217,8 +3215,8 @@ msgid "Messages"
 msgstr "Wiadomości"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
@@ -3383,8 +3381,8 @@ msgid "Neutral face"
 msgstr "Neutralna twarz"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -3701,7 +3699,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:project.selection__project_update__status__on_hold
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "On Hold"
-msgstr ""
+msgstr "On Hold (na żądanie)"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__on_track
@@ -4022,8 +4020,8 @@ msgid "Progress Percentage"
 msgstr "Procent postępu"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/js/project_rating_graph_view.js:0
@@ -4152,7 +4150,7 @@ msgstr "Zadania projektu"
 #: model:ir.model,name:project.model_project_update
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_form
 msgid "Project Update"
-msgstr ""
+msgstr "Aktualizacja projektu"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_update_all_action
@@ -4585,7 +4583,7 @@ msgstr "Badania"
 #: model:account.analytic.account,name:project.analytic_research_development
 #: model:project.project,name:project.project_project_2
 msgid "Research & Development"
-msgstr ""
+msgstr "Badania i rozwój"
 
 #. module: project
 #. odoo-javascript
@@ -4943,8 +4941,8 @@ msgid "Sprint in Progress"
 msgstr ""
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
@@ -5205,7 +5203,7 @@ msgstr "Zadanie gotowe"
 #. module: project
 #: model:ir.model,name:project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "Powtarzalność zadań"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task_type

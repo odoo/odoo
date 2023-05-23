@@ -18,6 +18,7 @@ import { getClassNameFromDecoration } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
+import { getFormattedValue } from "../utils";
 
 import {
     Component,
@@ -738,16 +739,7 @@ export class ListRenderer extends Component {
 
     getFormattedValue(column, record) {
         const fieldName = column.name;
-        const field = this.fields[fieldName];
-        const formatter = formatters.get(field.type, (val) => val);
-        const formatOptions = {
-            escape: false,
-            data: record.data,
-            isPassword: "password" in column.rawAttrs,
-            digits: column.rawAttrs.digits ? JSON.parse(column.rawAttrs.digits) : field.digits,
-            field: record.fields[fieldName],
-        };
-        return formatter(record.data[fieldName], formatOptions);
+        return getFormattedValue(record, fieldName, column.rawAttrs);
     }
 
     evalModifier(modifier, record) {
@@ -845,7 +837,7 @@ export class ListRenderer extends Component {
         return {
             offset: list.offset,
             limit: list.limit,
-            total: list.count,
+            total: group.count,
             onUpdate: async ({ offset, limit }) => {
                 await list.load({ limit, offset });
                 this.render(true);
@@ -1515,7 +1507,7 @@ export class ListRenderer extends Component {
     }
 
     showGroupPager(group) {
-        return !group.isFolded && group.list.limit < group.list.count;
+        return !group.isFolded && group.list.limit < group.count;
     }
 
     toggleGroup(group) {

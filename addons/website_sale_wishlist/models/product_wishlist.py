@@ -33,7 +33,11 @@ class ProductWishlist(models.Model):
         else:
             wish = self.search([("partner_id", "=", self.env.user.partner_id.id), ('website_id', '=', request.website.id)])
 
-        return wish.filtered(lambda x: x.sudo().product_id.product_tmpl_id.website_published and x.sudo().product_id.product_tmpl_id.sale_ok)
+        return wish.filtered(
+            lambda wish:
+                wish.sudo().product_id.product_tmpl_id.website_published
+                and wish.sudo().product_id.product_tmpl_id._can_be_added_to_cart()
+        )
 
     @api.model
     def _add_to_wishlist(self, pricelist_id, currency_id, website_id, price, product_id, partner_id=False):

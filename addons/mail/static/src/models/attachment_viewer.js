@@ -169,7 +169,7 @@ registerModel({
                         </script>
                     </head>
                     <body onload='onloadImage()'>
-                        <img src="${this.imageUrl}" alt=""/>
+                        <img src="${this.attachmentViewerViewable.imageUrl}" alt=""/>
                     </body>
                 </html>`);
             printWindow.document.close();

@@ -78,3 +78,35 @@ class WebsiteSaleCart(TransactionCase):
             # Try processing payment with the old amount
             with self.assertRaises(UserError):
                 PaymentPortal().shop_payment_transaction(sale_order.id, sale_order.access_token, amount=old_amount)
+
+    def test_update_cart_zero_qty(self):
+        # Try to remove a product that has already been removed
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'sale_ok': True,
+            'website_published': True,
+            'lst_price': 1000.0,
+            'standard_price': 800.0,
+        })
+        portal_user = self.env.ref('base.demo_user0')
+        website = self.website.with_user(portal_user)
+
+        SaleOrderLine = self.env['sale.order.line']
+
+        with MockRequest(product.with_user(portal_user).env, website=website):
+            # add the product to the cart
+            self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=1)
+            sale_order = website.sale_get_order()
+            self.assertEqual(sale_order.amount_total, 1150.0)
+
+            # remove the product from the cart
+            self.WebsiteSaleController.cart_update_json(product_id=product.id, line_id=sale_order.order_line.id, set_qty=0)
+            self.assertEqual(sale_order.amount_total, 0.0)
+            self.assertEqual(sale_order.order_line, SaleOrderLine)
+
+            # removing the product again doesn't add a line with zero quantity
+            self.WebsiteSaleController.cart_update_json(product_id=product.id, set_qty=0)
+            self.assertEqual(sale_order.order_line, SaleOrderLine)
+
+            self.WebsiteSaleController.cart_update_json(product_id=product.id, add_qty=0)
+            self.assertEqual(sale_order.order_line, SaleOrderLine)

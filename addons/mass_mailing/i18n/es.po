@@ -7,7 +7,9 @@
 # Antonio Trueba, 2022
 # Alejandro Die Sanchis <marketing@domatix.com>, 2022
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2022
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
+# Camille Dantinne <cmd@odoo.com>, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,8 +17,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -395,12 +397,12 @@ msgstr "<span class=\"mx-2\">/</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
 msgid "<span class=\"o_stat_text\">Blacklist</span>"
-msgstr "<span class=\"o_stat_text\">Lista negra</span>"
+msgstr "<span class=\"o_stat_text\">Lista de denegación</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
 msgid "<span class=\"o_stat_text\">Bounce</span>"
-msgstr "<span class=\"o_stat_text\">Regreso</span>"
+msgstr "<span class=\"o_stat_text\">Rebote</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_form
@@ -415,12 +417,12 @@ msgstr "<span class=\"o_stat_value\">%</span>"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 msgid "<span class=\"text-muted\">Blacklist</span>"
-msgstr "<span class=\"text-muted\">Lista negra</span>"
+msgstr "<span class=\"text-muted\">Lista de denegación</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
 msgid "<span class=\"text-muted\">Bounce</span>"
-msgstr "<span class=\"text-muted\">Regreso</span>"
+msgstr "<span class=\"text-muted\">Rebote</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_kanban
@@ -797,6 +799,11 @@ msgid "Advanced"
 msgstr "Avanzado"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Alert"
+msgstr "Alerta"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Align Bottom"
 msgstr "Alinear el fondo"
@@ -867,7 +874,9 @@ msgstr "Permitir pruebas A/B"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.res_config_settings_view_form
 msgid "Allow recipients to blacklist themselves"
-msgstr "Permitir que los destinatarios se incluyan en la lista negra"
+msgstr ""
+"Permitir que los destinatarios se puedan auto-incluir en la lista de "
+"denegación"
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_res_config_settings__show_blacklist_buttons
@@ -885,6 +894,11 @@ msgid ""
 "                                 The 'come Back' button will always be "
 "visible in any case to allow leads and partners to re-subscribe."
 msgstr ""
+"Permitir que el destinatario administre su estado en la lista de denegación "
+"a través de la página de baja. Si la opción está activa, el botón 'Agregarme"
+" a la lista de denegación' está oculto en la página de baja. El botón "
+"'Volver a suscribirse' siempre estará visible en cualquier caso para "
+"permitir que los clientes potenciales y contactos se vuelvan a suscribir."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -1060,41 +1074,51 @@ msgid "Beautiful snippets"
 msgstr "Hermosos snippets"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Big Boxes"
+msgstr ""
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__is_blacklisted
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact_subscription__is_blacklisted
 msgid "Blacklist"
-msgstr "Lista negra"
+msgstr "Lista de denegación"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_list_view_tree
 msgid "Blacklist (%s)"
-msgstr "Lista negra (%s)"
+msgstr "Lista de denegación (%s)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribed
 msgid "Blacklist Me"
-msgstr "Agregarme a la lista negra"
+msgstr "Agregarme a la lista de denegación"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__show_blacklist_buttons
 msgid "Blacklist Option when Unsubscribing"
-msgstr "Opción de lista negra al darse de baja"
+msgstr "Opción de lista de denegación al darse de baja"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Blacklisted"
-msgstr "En la lista negra"
+msgstr "En la lista de denegación"
 
 #. module: mass_mailing
 #: model:ir.model.fields.selection,name:mass_mailing.selection__mailing_trace__failure_type__mail_bl
 msgid "Blacklisted Address"
-msgstr "Direcciones incluidas en la lista negra"
+msgstr "Direcciones incluidas en la lista de denegación"
 
 #. module: mass_mailing
 #: model:ir.ui.menu,name:mass_mailing.mail_blacklist_mm_menu
 msgid "Blacklisted Email Addresses"
-msgstr "Direcciones de correo electrónico incluidas en la lista negra"
+msgstr "Direcciones de correo electrónico incluidas en la lista de denegación"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Blockquote"
+msgstr "Bloque de cita"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__body_arch
@@ -1196,6 +1220,11 @@ msgid "Calendar Date"
 msgstr "Fecha del calendario"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Call to Action"
+msgstr "Llamamiento a la acción"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace__campaign_id
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_trace_report_view_search
 #: model_terms:ir.ui.view,arch_db:mass_mailing.utm_campaign_view_form
@@ -1266,6 +1295,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Center"
 msgstr "Centro"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Centered Logo"
+msgstr "Logotipo centrado"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_features_grid
@@ -1392,6 +1426,7 @@ msgstr ""
 "Agregue imágenes o iconos para personalizar los bloques."
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Columns"
 msgstr "Columnas"
@@ -1400,7 +1435,7 @@ msgstr "Columnas"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribed
 msgid "Come Back"
-msgstr "Regresar"
+msgstr "Volver a suscribirse"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1419,6 +1454,11 @@ msgstr "Compañías"
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__company_name
 msgid "Company Name"
 msgstr "Nombre de la compañía"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Comparisons"
+msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model,name:mass_mailing.model_res_config_settings
@@ -1497,6 +1537,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__country_id
 msgid "Country"
 msgstr "País"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Cover"
+msgstr "Cubrir"
 
 #. module: mass_mailing
 #: model_terms:ir.actions.act_window,help:mass_mailing.mailing_mailing_action_mail
@@ -1703,6 +1748,11 @@ msgid "Discard"
 msgstr "Descartar"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Discount Offer"
+msgstr ""
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_media_list
 msgid "Discover"
 msgstr "Descubrir"
@@ -1832,7 +1882,7 @@ msgstr "Correo electrónico"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_tree
 msgid "Email Blacklisted"
-msgstr "Lista negra de correos electrónicos"
+msgstr "Lista de denegación de correos electrónicos"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form
@@ -1891,6 +1941,11 @@ msgid "Error"
 msgstr "Error"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Event"
+msgstr "Evento"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_media_list
 msgid "Event heading"
 msgstr "Acontecimientos"
@@ -1903,7 +1958,7 @@ msgstr "Excepción"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
 msgid "Exclude Blacklisted Emails"
-msgstr "Excluir correos electrónicos en la lista negra"
+msgstr "Excluir correos electrónicos en la lista de denegación"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_search
@@ -1978,6 +2033,16 @@ msgid "Feature Two"
 msgstr "Característica dos"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Features"
+msgstr "Características"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Features Grid"
+msgstr ""
+
+#. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
@@ -2040,6 +2105,16 @@ msgstr "Seguidores (Contactos)"
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
 msgstr "Icono de Font Awesome ej. fa-tasks"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Footer Center"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Footer Left"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -2232,13 +2307,18 @@ msgid ""
 "If the email address is on the blacklist, the contact won't receive mass "
 "mailing anymore, from any list"
 msgstr ""
-"Si la dirección de email esta en la lista negra, el contacto ya no recibirá "
-"correo masivo de cualquier lista."
+"Si la dirección de correo electrónico esta en la lista de denegación, el "
+"contacto ya no recibirá correo masivo de cualquier lista."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_mailing_view_form_full_width
 msgid "Ignored"
 msgstr "Ignorado"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Image - Text"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -2343,6 +2423,11 @@ msgid "Italic"
 msgstr "Cursiva"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Items"
+msgstr "Artículos"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_call_to_action
 msgid "Join us and make your company a better place."
 msgstr "Únase a nosotros para hacer de la compañía un mejor lugar."
@@ -2435,6 +2520,16 @@ msgstr "Última actualización el"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Left"
 msgstr "Izquierda"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Left Logo"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Left Text"
+msgstr ""
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -2768,6 +2863,11 @@ msgid "Marketing Content"
 msgstr "Contenido de marketing"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Masonry"
+msgstr "Albañilería"
+
+#. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_trace_report__name
 msgid "Mass Mail"
 msgstr "Envío masivo de correo"
@@ -2842,6 +2942,11 @@ msgstr "Información de suscripción de correo masivo"
 #: model:ir.model.fields,field_description:mass_mailing.field_utm_campaign__mailing_mail_ids
 msgid "Mass Mailings"
 msgstr "Envíos masivos"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Media List"
+msgstr ""
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_media_list
@@ -3156,7 +3261,7 @@ msgstr "Número de acciones"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__contact_count_blacklisted
 msgid "Number of Blacklisted"
-msgstr "Número de correos en la lista negra"
+msgstr "Número de correos en la lista de denegación"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__clicks_ratio
@@ -3215,6 +3320,11 @@ msgstr "Número de mensajes que requieren una acción"
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Número de mensajes con error de envío"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Numbers"
+msgstr "Numero"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
@@ -3350,7 +3460,7 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__contact_pct_blacklisted
 msgid "Percentage of Blacklisted"
-msgstr "Porcentajes de correo en la lista negra"
+msgstr "Porcentaje en la lista de denegación"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__contact_pct_bounce
@@ -3382,6 +3492,11 @@ msgstr ""
 #, python-format
 msgid "Pick the <b>email subject</b>."
 msgstr "Elija el<b>asunto del correo</b>."
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Picture"
+msgstr "Foto"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -3421,6 +3536,11 @@ msgid "Primary Buttons"
 msgstr ""
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Promo Code"
+msgstr "Código promocional"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_highlight
 msgid "Put the focus on what you have to say!"
 msgstr "¡Pon el enfoque en lo que tienes que decir!"
@@ -3443,6 +3563,11 @@ msgstr "RECIBIDO (%i)"
 #, python-format
 msgid "REPLIED (%i)"
 msgstr "RESPONDIDO (%i)"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Rating"
+msgstr "Calificación"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_image_text
@@ -3516,6 +3641,11 @@ msgstr "Modelo real de los destinatarios"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_discount1
 msgid "Redeem Discount!"
 msgstr "Canjear descuento!"
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "References"
+msgstr "Referencias"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_event
@@ -3604,14 +3734,18 @@ msgstr "Informes"
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Requested blacklisting via unsubscribe link."
-msgstr "Lista negra solicitada a través del enlace para darse de baja."
+msgstr ""
+"Inclusión en la lista de denegación solicitada a través del enlace para "
+"darse de baja."
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Requested blacklisting via unsubscription page."
-msgstr "Lista negra solicitada a través de la página de baja."
+msgstr ""
+"Inclusión en la lista de denegación solicitada a través de la página de "
+"baja."
 
 #. module: mass_mailing
 #. odoo-python
@@ -3619,7 +3753,8 @@ msgstr "Lista negra solicitada a través de la página de baja."
 #, python-format
 msgid "Requested de-blacklisting via unsubscription page."
 msgstr ""
-"Solicitó su eliminación de la lista negra a través de la página de baja."
+"Solicitó su eliminación de la lista de denegación a través de la página de "
+"baja."
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__user_id
@@ -3904,6 +4039,11 @@ msgid "Sent on #{record.sent_date.value}"
 msgstr "Enviado el #{record.sent_date.value}"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Separator"
+msgstr "Separador"
+
+#. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Separators"
 msgstr ""
@@ -3923,6 +4063,11 @@ msgstr ""
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_list__is_public
 msgid "Show In Preferences"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Showcase"
 msgstr ""
 
 #. module: mass_mailing
@@ -4061,6 +4206,11 @@ msgid "Take Future Schedule Date"
 msgstr "Tomar fecha futura del horario"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Team"
+msgstr "Equipo"
+
+#. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_mailing__mail_server_available
 msgid ""
 "Technical field used to know if the user has activated the outgoing mail "
@@ -4118,11 +4268,18 @@ msgid "Tested"
 msgstr "Probado"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model_terms:ir.ui.view,arch_db:mass_mailing.snippet_options
 msgid "Text"
 msgstr "Texto"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Text - Image"
+msgstr ""
+
+#. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_text_highlight
 msgid "Text Highlight"
 msgstr "Reflejo del texto"
@@ -4278,8 +4435,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
 msgid "This email is blacklisted for mass mailings. Click to unblacklist."
 msgstr ""
-"Este correo electrónico está en la lista negra para envíos masivos. Haga "
-"clic para eliminar la lista negra."
+"Este correo electrónico está en la lista de denegación para envíos masivos. "
+"Haga clic para eliminarlo de ella."
 
 #. module: mass_mailing
 #: model:ir.model.fields,help:mass_mailing.field_mailing_contact__email_normalized
@@ -4339,6 +4496,7 @@ msgstr ""
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_contact__title_id
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Title"
 msgstr "Título"
 
@@ -4479,7 +4637,7 @@ msgstr "Error desconocido"
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_footer_social_left
 #: model_terms:ir.ui.view,arch_db:mass_mailing.theme_basic_template
 msgid "Unsubscribe"
-msgstr "Anular subscripción"
+msgstr "Anular suscripción"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribe
@@ -4583,6 +4741,7 @@ msgid "Vertical Alignment"
 msgstr "Alineación Vertical"
 
 #. module: mass_mailing
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_mail_block_header_view
 msgid "View Online"
 msgstr "Ver en línea"
@@ -4812,8 +4971,8 @@ msgid ""
 "You have been successfully <strong>added to our blacklist</strong>. You will"
 " not be contacted anymore by our services."
 msgstr ""
-"Has sido <strong>agregado con éxito a nuestra lista negra</strong>. Ya no "
-"será contactado por nuestros servicios."
+"Ha sido <strong>agregado con éxito a nuestra lista de denegación</strong>. "
+"Ya no será contactado por nuestros servicios."
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -4823,8 +4982,8 @@ msgid ""
 "You have been successfully <strong>removed from our blacklist</strong>. You "
 "are now able to be contacted by our services."
 msgstr ""
-"Has sido <strong>eliminado con éxito de nuestra lista negra</strong>. Ahora "
-"puede ser contactado por nuestros servicios."
+"Ha sido <strong>eliminado con éxito de nuestra lista de denegación</strong>."
+" Ahora puede ser contactado por nuestros servicios."
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.unsubscribed

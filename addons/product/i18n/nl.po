@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -3126,7 +3126,7 @@ msgstr "Berichten website"
 #: model:ir.model.fields,help:product.field_product_product__website_message_ids
 #: model:ir.model.fields,help:product.field_product_template__website_message_ids
 msgid "Website communication history"
-msgstr "Geschiedenis van websitecommunicatie"
+msgstr "Website communicatiegeschiedenis"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__weight
@@ -3281,10 +3281,12 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"Je kunt de waarde  %s niet verwijderen omdat deze wordt gebruikt voor de volgende producten:\n"
-"%s"
+"Je kan de waarde %s niet verwijderen omdat deze wordt gebruikt voor de volgende producten:\n"
+"%s\n"
+" Als de waarde in het verleden aan een product is gekoppeld, kan je deze niet verwijderen."
 
 #. module: product
 #. odoo-python
@@ -3310,6 +3312,15 @@ msgstr ""
 "(%s)\n"
 ", ze worden gebruikt in andere prijslijst(en):\n"
 "%s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
+"Je kan waarde %s niet verwijderen omdat deze in sommige producten is "
+"gebruikt."
 
 #. module: product
 #. odoo-python

@@ -4,7 +4,7 @@
     <!-- TODO: rename this to QtyAtDate in master version -->
     <t t-name="sale_stock.qtyAtDate" owl="1">
         <div t-att-class="!props.record.data.display_qty_widget ? 'invisible' : ''">
-            <a tabindex="0" t-on-click="showPopup" t-attf-class="fa fa-area-chart {{ calcData.forecasted_issue ? 'text-danger' : 'text-primary' }}"/>
+            <a t-att-tabindex="props.record.data.display_qty_widget ? '0' : '-1'" t-on-click="showPopup" t-attf-class="fa fa-area-chart {{ calcData.forecasted_issue ? 'text-danger' : 'text-primary' }}"/>
         </div>
     </t>
 

@@ -152,4 +152,60 @@ odoo.define('mass_mailing.mass_mailing_editor_tour', function (require) {
         },
         ...tour.stepUtils.discardForm(),
     ]);
+
+    tour.register('mass_mailing_campaing_new_mailing', {
+        url: '/web',
+        test: true,
+    }, [
+        tour.stepUtils.showAppsMenuItem(),
+        {
+            content: 'Select the "Email Marketing" app',
+            trigger: '.o_app[data-menu-xmlid="mass_mailing.mass_mailing_menu_root"]',
+        },
+        {
+            content: 'Select "Campaings" Navbar item',
+            trigger: '.o_nav_entry[data-menu-xmlid="mass_mailing.menu_email_campaigns"]',
+        },
+        {
+            content: 'Select "Newsletter" campaign',
+            trigger: '.oe_kanban_card:contains("Newsletter")',
+        },
+        {
+            content: 'Add a line (create new mailing)',
+            trigger: '.o_field_x2many_list_row_add a',
+        },
+        {
+            content: 'Pick the basic theme',
+            trigger: 'iframe',
+            run(actions) {
+                // For some reason the selectors inside the iframe cannot be triggered.
+                const link = this.$anchor[0].contentDocument.querySelector('#basic');
+                actions.click(link);
+            }
+        },
+        {
+            content: 'Fill in Subject',
+            trigger: '#subject',
+            run: 'text Test',
+        },
+        {
+            content: 'Fill in Mailing list',
+            trigger: '#contact_list_ids',
+            run: 'text Newsletter',
+        },
+        {
+            content: 'Pick "Newsletter" option',
+            trigger: '.o_input_dropdown a:contains(Newsletter)',
+        },
+        {
+            content: 'Save form',
+            trigger: '.o_form_button_save',
+        },
+        {
+            content: 'Check that newly created record is on the list',
+            trigger: '[name="mailing_mail_ids"] td[name="subject"]:contains("Test")',
+            run: () => null,
+        },
+        ...tour.stepUtils.saveForm(),
+    ]);
 });

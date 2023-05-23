@@ -3,18 +3,18 @@
 # 	* purchase
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Martin Trigaux, 2023
 # Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2023\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -402,10 +402,10 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_portal_content
 msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
-"                              <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Số tiền</span>\n"
-"                              <span groups=\"account.group_show_line_subtotals_tax_included\">Tổng giá</span>"
+"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Tổng tiền</span>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_partner_property_form
@@ -615,7 +615,7 @@ msgstr "Hoạt động"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Hành động ngoại lệ"
+msgstr "Hoạt động ngoại lệ"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_state
@@ -1178,7 +1178,7 @@ msgid ""
 "arrival of products."
 msgstr ""
 "Ngày giao hàng mà nhà cung cấp hẹn trước. Ngày này được sử dụng để xác định "
-"thời gian nhận hàng dự kiến của sản phẩm."
+"thời gian dự kiến nhận sản phẩm."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_order
@@ -1572,8 +1572,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
 msgstr ""
-"Quản lý các hợp đồng mua hàng của bạn (thông báo mời thầu, đơn đặt hàng "
-"thường xuyên)"
+"Quản lý các hợp đồng mua hàng của bạn (thông báo mời thầu, hợp đồng khung)"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
@@ -2486,8 +2485,8 @@ msgid ""
 "on the delivery order sent by your vendor."
 msgstr ""
 "Mã đơn bán hàng hoặc chào thầu gửi bởi nhà cung cấp. Mã số này được sử dụng "
-"để so sánh lúc bạn nhận sản phẩm vì nó thường được viết trên phiếu giao hàng"
-" do nhà cung cấp gửi."
+"để so sánh lúc bạn nhận sản phẩm vì nó thường được viết trên phiếu xuất kho "
+"do nhà cung cấp gửi."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reminder_confirmed
@@ -3253,7 +3252,7 @@ msgstr "Thông báo trên trang web"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__website_message_ids
 msgid "Website communication history"
-msgstr "Lịch sử Liên lạc qua trang web"
+msgstr "Lịch sử trao đổi qua trang web"
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_0
@@ -3317,7 +3316,7 @@ msgid ""
 "You must define a product for everything you sell or purchase,\n"
 "            whether it's a storable product, a consumable or a service."
 msgstr ""
-"Bạn phải chỉ định một sản phẩm mỗi khi muốn bán hoặc mua hàng.\n"
+"Bạn phải xác định một sản phẩm mỗi khi muốn bán hoặc mua hàng,\n"
 "dù đó là một sản phẩm lưu kho, sản phẩm tiêu thụ hay dịch vụ."
 
 #. module: purchase

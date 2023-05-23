@@ -8,8 +8,10 @@ import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
 import { unslugHtmlDataObject } from '../../services/website_service';
 import {OptimizeSEODialog} from '@website/components/dialog/seo';
+import { WebsiteDialog } from "@website/components/dialog/dialog";
 import { routeToUrl } from "@web/core/browser/router_service";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { sprintf } from "@web/core/utils/strings";
 import wUtils from 'website.utils';
 
 const { Component, onWillStart, onMounted, onWillUnmount, useRef, useEffect, useState } = owl;
@@ -64,9 +66,20 @@ export class WebsitePreview extends Component {
                 // URL (event if it wasn't, it wouldn't be an issue as those are
                 // really considered as the same domain, the user will share the
                 // same session and CORS errors won't be a thing in such a case)
-                window.location.href = `${this.websiteDomain}/web#action=website.website_preview&path=${encodedPath}&website_id=${this.websiteId}`;
+                this.dialogService.add(WebsiteDialog, {
+                    title: this.env._t("Redirecting..."),
+                    body: sprintf(this.env._t(
+                        "You are about to be redirected to the domain configured for your website ( %s ). " +
+                        "This is necessary to edit or view your website from the Website app. You might need to log back in."
+                    ), this.websiteDomain),
+                    showSecondaryButton: false,
+                }, {
+                    onClose: () => {
+                         window.location.href = `${this.websiteDomain}/web#action=website.website_preview&path=${encodedPath}&website_id=${encodeURIComponent(this.websiteId)}`;
+                    }
+                });
             } else {
-                this.initialUrl = `/website/force/${this.websiteId}?path=${encodedPath}`;
+                this.initialUrl = `/website/force/${encodeURIComponent(this.websiteId)}?path=${encodedPath}`;
             }
         });
 
@@ -295,6 +308,15 @@ export class WebsitePreview extends Component {
      * the iframe's url (it is clearer for the user).
      */
     _replaceBrowserUrl() {
+        if (!wUtils.isHTTPSorNakedDomainRedirection(this.iframe.el.contentWindow.location.origin, window.location.origin)) {
+            // If another domain ends up loading in the iframe (for example,
+            // if the iframe is being redirected and has no initial URL, so it
+            // loads "about:blank"), do not push that into the history
+            // state as that could prevent the user from going back and could
+            // trigger a traceback.
+            history.replaceState({}, document.title, '/web');
+            return;
+        }
         // The original /web#action=... url is saved to be pushed on top of the
         // history when leaving the component, so that the webclient can
         // correctly find back and replay the client action.
@@ -404,6 +426,21 @@ export class WebsitePreview extends Component {
         });
     }
 
+    /**
+     * This method is called when the page is unloaded to clean
+     * the iframefallback content.
+     */
+    _cleanIframeFallback() {
+        // Remove autoplay in all media video iframes urls so videos are not
+        // playing in the background
+        const iframesEl = this.iframefallback.el.contentDocument.querySelectorAll(".media_iframe_video iframe");
+        for (const iframeEl of iframesEl) {
+            const url = new URL(iframeEl.src);
+            url.searchParams.delete('autoplay');
+            iframeEl.src = url.toString();
+        }
+    }
+
     _onPageUnload() {
         this.iframe.el.setAttribute('is-ready', 'false');
         // Before leaving the iframe, its content is replicated on an
@@ -416,6 +453,7 @@ export class WebsitePreview extends Component {
             this.iframefallback.el.contentDocument.body.replaceWith(this.iframe.el.contentDocument.body.cloneNode(true));
             this.iframefallback.el.classList.remove('d-none');
             $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
+            this._cleanIframeFallback();
         }
     }
     _onPageHide() {

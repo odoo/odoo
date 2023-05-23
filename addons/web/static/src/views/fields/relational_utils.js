@@ -49,7 +49,7 @@ export function useSelectCreate({ resModel, activeActions, onSelected, onCreateE
     const env = useEnv();
     const addDialog = useOwnedDialogs();
 
-    function selectCreate({ domain, context, filters, title }) {
+    function selectCreate({ domain, context, filters, title, kanbanViewId }) {
         addDialog(SelectCreateDialog, {
             title: title || env._t("Select records"),
             noCreate: !activeActions.create,
@@ -61,6 +61,7 @@ export function useSelectCreate({ resModel, activeActions, onSelected, onCreateE
             onCreateEdit: () => onCreateEdit({ context }),
             dynamicFilters: filters,
             onUnselect,
+            kanbanViewId,
         });
     }
     return selectCreate;
@@ -351,6 +352,7 @@ export class Many2XAutocomplete extends Component {
             context,
             filters: dynamicFilters,
             title,
+            kanbanViewId: this.props.kanbanViewId,
         });
     }
 
@@ -528,6 +530,7 @@ export class X2ManyFieldDialog extends Component {
         if (await this.record.checkValidity()) {
             this.record = (await this.props.save(this.record, { saveAndNew })) || this.record;
         } else {
+            this.record.openInvalidFieldsNotification();
             return false;
         }
         if (!saveAndNew) {

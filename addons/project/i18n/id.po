@@ -6,17 +6,17 @@
 # Samsul Hadi, 2022
 # arfa simoncelli, 2022
 # Wahyu Setiawan <wahyusetiaaa@gmail.com>, 2022
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
 # Abe Manyo, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Abe Manyo, 2023\n"
-"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -386,6 +386,68 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            <t t-if=\"partner.name\">\n"
+"                Halo <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                Halo,<br/><br/>\n"
+"            </t>\n"
+"            Mohon ambil sedikit waktu untuk menilai layanan kami terkait tugas \"<strong t-out=\"object.name or ''\">Perencanaan dan anggaran</strong>\"\n"
+"            <t t-if=\"object._rating_get_operator().name\">\n"
+"                yang diberikan ke <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/>\n"
+"            </t>\n"
+"            <t t-else=\"\">\n"
+"                .<br/>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <strong>Beritahu kami pendapat Anda mengenai layanan kami</strong><br/>\n"
+"                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(klik salah satu emoji ini)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;margin-top:2rem;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
+"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
+"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Kami menghargai feedback Anda. Feedback Anda membantu kami terus berkembang.\n"
+"            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
+"                <br/><br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Survei pelanggan ini dikirim karena tiket Anda telah dipindahkan ke tahap <b t-out=\"object.stage_id.name or ''\">Sedang berlangsung</b></span>\n"
+"            </t>\n"
+"            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Survei pelanggan ini dikirim <b t-out=\"object.project_id.rating_status_period or ''\">Setiap Minggu</b> selama tugas masih berada dalam tahap <b t-out=\"object.stage_id.name or ''\">Sedang berlangsung</b>.</span>\n"
+"            </t>\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.project_done_email_template
@@ -428,6 +490,18 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Yth <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"    Terima kasih untuk pertanyaan Anda.<br/>\n"
+"    Bila Anda memiliki pertanyaan apapun, mohon beritahu kami.\n"
+"    <br/><br/>\n"
+"    Terima kasih,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -758,6 +832,8 @@ msgid ""
 "Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In "
 "Progress - Done</i>."
 msgstr ""
+"Tambahkan kolom-kolom untuk mengatur tugas-tugas Anda menjadi <b>tahap-"
+"tahap</b> <i>contohnya Baru - Sedang Berlangsung - Selesai</i>."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -1391,6 +1467,8 @@ msgid ""
 "Communicate with customers on the task using the email gateway. Attach logo designs to the task, so that information flows from\n"
 "      designers to the workers who print the t-shirt. Organize priorities amongst orders using the"
 msgstr ""
+"Berkomunikasi dengan pelanggan pada tugas menggunakan gateway email. Lampirkan desain logo pada tugas, supaya informasi mengalir dari\n"
+"      desainer ke pekerja yang akan mencetak t-shirt. Atur prioritas di antara pesanan menggunakan"
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -1513,6 +1591,8 @@ msgid ""
 "Create projects to organize your tasks and define a different workflow for "
 "each project."
 msgstr ""
+"Buat project untuk mengatur tugas-tugas Anda dan definisikan workflow "
+"berbeda untuk setiap project."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
@@ -1520,6 +1600,8 @@ msgid ""
 "Create projects to organize your tasks. Define a different workflow for each"
 " project."
 msgstr ""
+"Buat project untuk mengatur tugas-tugas Anda. Definisikan workflow berbeda "
+"untuk setiap project."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2014,8 +2096,8 @@ msgid "Do not have access, skip this data for user's digest email"
 msgstr "Tidak punya akses, lewati data ini untuk email singkat pengguna"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -2213,7 +2295,7 @@ msgstr "Pertama"
 #: model:ir.model.fields,field_description:project.field_project_project_stage__fold
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
 msgid "Folded in Kanban"
-msgstr "Sembunyikan di Kanban"
+msgstr "Dilipat di Kanban"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__is_closed
@@ -2413,13 +2495,6 @@ msgid "How’s this project going?"
 msgstr ""
 
 #. module: project
-#. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "I take it"
-msgstr "Saya mengambil"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__id
 #: model:ir.model.fields,field_description:project.field_project_milestone__id
 #: model:ir.model.fields,field_description:project.field_project_project__id
@@ -2542,8 +2617,8 @@ msgstr ""
 "menyembunyikan proyek tanpa menghapus itu."
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -3102,6 +3177,11 @@ msgid "Menu"
 msgstr "Menu"
 
 #. module: project
+#: model:ir.model,name:project.model_mail_message
+msgid "Message"
+msgstr "Pesan"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error
@@ -3118,8 +3198,8 @@ msgid "Messages"
 msgstr "Pesan"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
@@ -3282,8 +3362,8 @@ msgid "Neutral face"
 msgstr "Muka netral"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -3653,9 +3733,9 @@ msgid ""
 "attached, even if they did not reply to it. If set, this will disable the "
 "creation of new records completely."
 msgstr ""
-"ID Opsional dari berkas (catatan) di mana semua pesan masuk akan "
-"dilampirkan, bahkan jika mereka tidak menjawabnya. Jika diatur, hal ini akan"
-" menonaktifkan pembuatan catatan baru sepenuhnya."
+"ID Opsional dari file (catatan) di mana semua pesan masuk akan dilampirkan, "
+"bahkan jika mereka tidak menjawabnya. Jika diatur, hal ini akan "
+"menonaktifkan pembuatan catatan baru sepenuhnya."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_all_task
@@ -3663,6 +3743,8 @@ msgid ""
 "Organize your tasks by dispatching them across the pipeline.<br>\n"
 "                    Collaborate efficiently by chatting in real-time or via email."
 msgstr ""
+"Atur tugas-tugas Anda dengan mengirimkan mereka di seluruh pipeline.<br>\n"
+"                    Kolaborasi efisien dengan mengobrol secara real-time atau melalui email."
 
 #. module: project
 #. odoo-python
@@ -3703,7 +3785,7 @@ msgstr "Model Induk"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "Catatan Induk ID Berkas"
+msgstr "Catatan Induk ID File"
 
 #. module: project
 #. odoo-python
@@ -3746,6 +3828,20 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"Orang yang dapat melihat project ini dan tugasnya.\n"
+"\n"
+"- User internal yang diundang: saat mengikuti project, user internal mendapatkan akses ke semua task. Jika tidak, mereka hanya mendapatkan akses ke tugas-tugas yang mereka ikuti.\n"
+" User dengan hak akses project > administrator masih dapat mengakses project ini dan tugasnya, bahkan bila mereka tidak termasuk sebagai follower.\n"
+"\n"
+"- Semua user internal: semua user internal dapat mengakses project dan semua tugasnya.\n"
+"\n"
+"- User portal yang diundang dan semua user internal: semua user internal dapat mengakses project dan semua tugasnya.\n"
+"Saat mengikuti project, user portal akan dapat mengakses semua tugasnya. Jika tidak, mereka hanya mendapatkan akses ke tugas-tugas yang mereka ikuti.\n"
+"\n"
+"Saat project dibagikan dalam format read-only, user portal akan dialihkan ke portal mereka. Mereka dapat melihat tugasnya, tapi tidak dapat mengedit.\n"
+"Saat project dibagikan dalam format bisa diedit, user portal akan dialihkan ke tampilan daftar dan kanban dari tugas mereka. Mereka dapat memodifikasi field-field terpilih tertentu pada tugas mereka.\n"
+"\n"
+"Dalam kasus apapun juga, user internal tanpa hak akses project masih dapat mengakses tugas, asalkan mereka diberikan URL yang sesuai (dan mereka merupakan bagian dari follower bila project bersifat privat."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -3921,8 +4017,8 @@ msgid "Progress Percentage"
 msgstr ""
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/js/project_rating_graph_view.js:0
@@ -4839,8 +4935,8 @@ msgid "Sprint in Progress"
 msgstr ""
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
@@ -6176,7 +6272,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "icon to organize your daily activities."
-msgstr ""
+msgstr "ikon untuk mengatur kegiatan sehari-hari Anda."
 
 #. module: project
 #. odoo-javascript

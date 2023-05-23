@@ -48,6 +48,7 @@ import {
     getDeepestPosition,
     fillEmpty,
     isEmptyBlock,
+    getCursorDirection,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
@@ -374,7 +375,7 @@ export const editorCommands = {
         const changedElements = [];
         const defaultDirection = editor.options.direction;
         const shouldApplyStyle = !isSelectionFormat(editor.editable, 'switchDirection');
-        for (const block of new Set(selectedTextNodes.map(textNode => closestBlock(textNode)))) {
+        for (const block of new Set(selectedTextNodes.map(textNode => closestElement(textNode, 'ul,ol') || closestBlock(textNode)))) {
             if (!shouldApplyStyle) {
                 block.removeAttribute('dir');
             } else {
@@ -430,25 +431,37 @@ export const editorCommands = {
     },
     unlink: editor => {
         const sel = editor.document.getSelection();
-        const closestEl = closestElement(sel.focusNode, 'a');
-        if (closestEl) {
-            // Remove the class otherwise Firefox transforms the link in a span.
-            closestEl.removeAttribute('class');
-            // Remove the contentEditable isolation of links before unlinking,
-            // otherwise the command fails since the link is the editable root.
-            if (closestEl.getAttribute('contenteditable') === 'true') {
-                editor._activateContenteditable();
+        const isCollapsed = sel.isCollapsed;
+        // If the selection is collapsed, unlink the whole link:
+        // `<a>a[]b</a>` => `a[]b`.
+        getDeepRange(editor.editable, { sel, splitText: true, select: true });
+        if (!isCollapsed) {
+            // If not, unlink only the part(s) of the link(s) that are selected:
+            // `<a>a[b</a>c<a>d</a>e<a>f]g</a>` => `<a>a</a>[bcdef]<a>g</a>`.
+            let { anchorNode, focusNode, anchorOffset, focusOffset } = sel;
+            const direction = getCursorDirection(anchorNode, anchorOffset, focusNode, focusOffset);
+            // Split the links around the selection.
+            const [startLink, endLink] = [closestElement(anchorNode, 'a'), closestElement(focusNode, 'a')];
+            if (startLink) {
+                anchorNode = splitAroundUntil(anchorNode, startLink);
+                anchorOffset = direction === DIRECTIONS.RIGHT ? 0 : nodeSize(anchorNode);
+                setSelection(anchorNode, anchorOffset, focusNode, focusOffset, true);
+            }
+            // Only split the end link if it was not already done above.
+            if (endLink && endLink.isConnected) {
+                focusNode = splitAroundUntil(focusNode, endLink);
+                focusOffset = direction === DIRECTIONS.RIGHT ? nodeSize(focusNode) : 0;
+                setSelection(anchorNode, anchorOffset, focusNode, focusOffset, true);
             }
         }
-        if (sel.isCollapsed) {
+        const targetedNodes = isCollapsed ? [sel.anchorNode] : getSelectedNodes(editor.editable);
+        const links = new Set(targetedNodes.map(node => closestElement(node, 'a')).filter(a => a));
+        if (links.size) {
             const cr = preserveCursor(editor.document);
-            const node = closestElement(sel.focusNode, 'a');
-            setSelection(node, 0, node, node.childNodes.length, false);
-            editor.document.execCommand('unlink');
+            for (const link of links) {
+                unwrapContents(link);
+            }
             cr();
-        } else {
-            editor.document.execCommand('unlink');
-            setSelection(sel.anchorNode, sel.anchorOffset, sel.focusNode, sel.focusOffset);
         }
     },
 
@@ -486,8 +499,9 @@ export const editorCommands = {
             if (node.nodeType === Node.TEXT_NODE && !isVisibleStr(node)) {
                 node.remove();
             } else {
-                const block = closestBlock(node);
+                let block = closestBlock(node);
                 if (!['OL', 'UL'].includes(block.tagName)) {
+                    block = block.closest('li') || block;
                     const ublock = block.closest('ol, ul');
                     ublock && getListMode(ublock) == mode ? li.add(block) : blocks.add(block);
                 }
@@ -552,7 +566,7 @@ export const editorCommands = {
                     font = [];
                 }
             } else if ((node.nodeType === Node.TEXT_NODE && isVisibleStr(node))
-                    || node.nodeName === "BR"
+                    || (isEmptyBlock(node.parentNode))
                     || (node.nodeType === Node.ELEMENT_NODE &&
                         ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
                         isVisibleStr(node.textContent) &&

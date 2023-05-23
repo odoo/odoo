@@ -56,7 +56,7 @@ class WebsiteSaleWishlist(WebsiteSale):
             wish_ids = request.session.get('wishlist_ids') or []
             if wish.id in wish_ids:
                 request.session['wishlist_ids'].remove(wish.id)
-                request.session.modified = True
+                request.session.touch()
                 wish.sudo().unlink()
         else:
             wish.unlink()

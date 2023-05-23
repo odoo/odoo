@@ -11,10 +11,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Abe Manyo, 2023\n"
-"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -59,13 +59,13 @@ msgstr "# Digunakan di BoM"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_ready_count
 msgid "# Read Work Orders"
-msgstr "# Baca Order Kerja"
+msgstr "# Baca SPK"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__workorder_count
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_count
 msgid "# Work Orders"
-msgstr "# Order Kerja"
+msgstr "# SPK"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
@@ -194,6 +194,11 @@ msgid ""
 msgstr ""
 
 #. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
+msgid "<span attrs=\"{'invisible': [('state', '=', 'draft')]}\">/</span>"
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
@@ -206,7 +211,7 @@ msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
-msgid "<span class=\"fw-bold\">To Produce</span>"
+msgid "<span class=\"fw-bold text-nowrap\">To Produce</span>"
 msgstr ""
 
 #. module: mrp
@@ -312,7 +317,7 @@ msgstr "Laporan"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>WORK ORDERS</span>"
-msgstr "<span>ORDER KERJA</span>"
+msgstr "<span>SPK</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -432,7 +437,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_warn_insufficient_qty_unbuild_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr ""
+msgstr "? Ini dapat berujung pada ketidaksamaan dalam inventaris Anda."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -706,8 +711,8 @@ msgid "Attachment URL"
 msgstr "URL Lampiran"
 
 #. module: mrp
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/mrp/models/mrp_bom.py:0
 #: code:addons/mrp/static/src/components/bom_overview_line/mrp_bom_overview_line.js:0
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
@@ -1255,6 +1260,8 @@ msgstr ""
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
 "buying or manufacturing the components and/or subassemblies."
+"                                       Also note that purchase security lead"
+" times will be added when appropriate."
 msgstr ""
 
 #. module: mrp
@@ -1447,8 +1454,8 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_product_product__days_to_prepare_mo
 #: model:ir.model.fields,help:mrp.field_product_template__days_to_prepare_mo
 msgid ""
-"Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
-"Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism."
+"Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+"Note that security lead times will also be considered when appropriate."
 msgstr ""
 
 #. module: mrp
@@ -1967,7 +1974,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__file_size
 msgid "File Size"
-msgstr "Ukuran Berkas"
+msgstr "Ukuran File"
 
 #. module: mrp
 #. odoo-javascript
@@ -2050,7 +2057,7 @@ msgstr "Ikon font awesome, misalnya fa-tasks"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Force"
-msgstr ""
+msgstr "Force"
 
 #. module: mrp
 #. odoo-javascript
@@ -2409,8 +2416,7 @@ msgstr "Pergerakan Stok Persediaan"
 msgid ""
 "Inventory moves for which you must scan a lot number at this work order"
 msgstr ""
-"Pergerakan stok persediaan yang harus Anda pindai nomor lotnya pada order "
-"kerja ini"
+"Pergerakan stok persediaan yang harus Anda pindai nomor lotnya pada SPK ini"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_is_follower
@@ -2771,12 +2777,17 @@ msgstr ""
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_routings
 msgid "Manage Work Order Operations"
-msgstr "Kelola Operasi Order Kerja"
+msgstr "Kelola Operasi SPK"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption
 #: model:ir.model.fields,field_description:mrp.field_stock_move__manual_consumption
 msgid "Manual Consumption"
+msgstr ""
+
+#. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption_readonly
+msgid "Manual Consumption Readonly"
 msgstr ""
 
 #. module: mrp
@@ -2904,7 +2915,7 @@ msgstr "Jenis Operasi Produksi"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Manufacturing Order"
-msgstr "Order Produksi"
+msgstr "Manufacturing Order"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_mrp_production_workcenter
@@ -2920,12 +2931,12 @@ msgstr "Order Produksi"
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_graph
 #: model_terms:ir.ui.view,arch_db:mrp.view_production_pivot
 msgid "Manufacturing Orders"
-msgstr "Order Produksi"
+msgstr "Manufacturing Orders"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Manufacturing Orders which are in confirmed state."
-msgstr "Order Produksi yang sedang dalam status dikonfirmasi."
+msgstr "Manufacturing Orders yang dalam status sudah di-konfirmasi."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__ready_to_produce
@@ -3018,8 +3029,8 @@ msgid "Minimum Inventory Rule"
 msgstr "Aturan Stok Persediaan Minimum"
 
 #. module: mrp
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -3235,17 +3246,17 @@ msgstr "Jumlah Tindakan"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_late
 msgid "Number of Manufacturing Orders Late"
-msgstr "Jumlah Order Produksi Yang Terlambat"
+msgstr "Jumlah Manufacturing Order yang Terlambat"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_waiting
 msgid "Number of Manufacturing Orders Waiting"
-msgstr "Jumlah Order Produksi Yang Menunggu"
+msgstr "Jumlah Order Produksi yang Menunggu"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__count_mo_todo
 msgid "Number of Manufacturing Orders to Process"
-msgstr "Jumlah Order Produk Akan Diproses"
+msgstr "Jumlah Manufacturing Order untuk Diproses"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unbuild_count
@@ -3363,8 +3374,8 @@ msgid ""
 msgstr ""
 
 #. module: mrp
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/mrp/report/mrp_report_bom_structure.py:0
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.js:0
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
@@ -3591,7 +3602,7 @@ msgstr "Rencanakan Order"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Plan manufacturing or purchase orders based on forecasts"
-msgstr "Rencanakan order produksi atau pembelian berdasarkan perkiraan"
+msgstr "Rencanakan manufacturing order atau SPB berdasarkan forecast"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -4231,7 +4242,7 @@ msgstr "Tanggal jadwal"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Schedule manufacturing orders earlier to avoid delays"
-msgstr "Jadwalkan order produksi lebih awal untuk menghindari penundaan"
+msgstr "Jadwalkan manufacturing order lebih awal untuk menghindari penundaan"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__date_planned_start
@@ -4322,7 +4333,7 @@ msgstr "Cari Produksi"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Search Work Orders"
-msgstr "Cari Order Kerja"
+msgstr "Cari SPK"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
@@ -4381,6 +4392,11 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "Serial Mass Produce"
+msgstr ""
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
+msgid "Set Quantities & Validate"
 msgstr ""
 
 #. module: mrp
@@ -4723,7 +4739,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__store_fname
 msgid "Stored Filename"
-msgstr "Nama Berkas Tersimpan"
+msgstr "Nama File yang Disimpan"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__child_bom_id
@@ -4850,7 +4866,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__qty_produced
 msgid "The number of products already handled by this work order"
-msgstr "Jumlah produk yang sudah ditangani oleh order kerja ini"
+msgstr "Jumlah produk yang sudah ditangani oleh SPK ini"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom_line__operation_id
@@ -5024,6 +5040,8 @@ msgid ""
 "This menu gives you the full traceability of inventory operations on a specific product.\n"
 "                You can filter on the product to see all the past movements for the product."
 msgstr ""
+"Menu ini memungkinkan Anda untuk menelusuri penuh operasi inventaris untuk produk tertentu.\n"
+"                Anda dapat memfilter produk untuk melihat semua pergerakan di masa lalu untuk produk tersebut."
 
 #. module: mrp
 #. odoo-python
@@ -5471,7 +5489,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__valid_details
 msgid "Valid"
-msgstr ""
+msgstr "Valid"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -5747,7 +5765,7 @@ msgstr "Instruksi Kerja"
 #: model:ir.model.fields,field_description:mrp.field_stock_scrap__workorder_id
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Work Order"
-msgstr "Order Kerja"
+msgstr "SPK"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_workorder_dependencies
@@ -5766,7 +5784,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
 msgid "Work Order To Consume"
-msgstr "Order Kerja Akan Dikonsumsi"
+msgstr "SPK untuk Dikonsumsi"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_routing_time
@@ -5783,18 +5801,18 @@ msgstr "Order Kerja Akan Dikonsumsi"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Work Orders"
-msgstr "Order Kerja"
+msgstr "SPK"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workorder_workcenter_report
 msgid "Work Orders Performance"
-msgstr "Performa Order Kerja"
+msgstr "Performa SPK"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_production
 #: model:ir.actions.act_window,name:mrp.action_mrp_workorder_workcenter
 msgid "Work Orders Planning"
-msgstr "Perencanaan Order Kerja"
+msgstr "Perencanaan SPK"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
@@ -5826,7 +5844,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Work orders in progress. Click to block work center."
-msgstr "Order kerja sedang dalam proses. Klik untuk memblokir pusat kerja."
+msgstr "SPK sedang berlangsung. Klik untuk memblokir pusat kerja."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
@@ -5920,8 +5938,8 @@ msgid ""
 "You can either upload a file from your computer or copy/paste an internet "
 "link to your file."
 msgstr ""
-"Anda dapat mengunggah berkas dari komputer Anda maupun salin/tempel dari "
-"tautan internet ke berkas Anda."
+"Anda dapat mengunggah file dari komputer Anda maupun salin/tempel dari "
+"tautan internet ke file Anda."
 
 #. module: mrp
 #. odoo-python
@@ -5940,8 +5958,9 @@ msgid ""
 "You can not delete a Bill of Material with running manufacturing orders.\n"
 "Please close or cancel it first."
 msgstr ""
-"Anda tidak dapat menghapus BoM yang dipakai oleh order produksi yang sedang "
-"berjalan. Silakan tutup atau batalkan order produksi tersebut lebih dahulu."
+"Anda tidak dapat menghapus BoM yang dipakai oleh manufacturing order yang "
+"sedang berjalan. Silakan tutup atau batalkan order produksi tersebut lebih "
+"dahulu."
 
 #. module: mrp
 #. odoo-python
@@ -6038,7 +6057,7 @@ msgstr "Anda tidak dapat memproduksi yang nomor serinya sama dua kali."
 #: code:addons/mrp/models/mrp_unbuild.py:0
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr "Anda tidak dapat membongkar atau membatalkan order produksi."
+msgstr "Anda tidak dapat membongkar atau membatalkan manufacturing order."
 
 #. module: mrp
 #. odoo-python
@@ -6148,6 +6167,13 @@ msgstr ""
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "You need to provide a lot for the finished product."
+msgstr ""
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
+#, python-format
+msgid "You need to supply Lot/Serial Number"
 msgstr ""
 
 #. module: mrp
@@ -6287,4 +6313,4 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view
 msgid "work orders"
-msgstr "order kerja"
+msgstr "SPK"

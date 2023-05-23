@@ -103,6 +103,45 @@ class TestExpenses(TestExpenseCommon):
 
         self.assertEqual(expense_sheet.payment_state, 'paid', 'payment_state should be paid')
 
+    def test_expense_sheet_company_payment_state(self):
+        ''' Test expense sheet company payment states'''
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2021-01-01',
+            'expense_line_ids': [(0, 0, {
+                'name': 'Car Travel Expenses',
+                'employee_id': self.expense_employee.id,
+                'product_id': self.product_a.id,
+                'unit_amount': 350.00,
+                'payment_mode': 'company_account',
+            })]
+        })
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+
+        self.assertEqual(expense_sheet.payment_state, 'paid', 'payment_state should be paid')
+        liquidity_line = expense_sheet.account_move_id.payment_id._seek_for_lines()[0]
+
+        statement_line = self.env['account.bank.statement.line'].create({
+            'journal_id': self.company_data['default_journal_bank'].id,
+            'payment_ref': 'pay_ref',
+            'amount': -350.0,
+            'partner_id': self.expense_employee.address_home_id.id,
+        })
+
+        # Reconcile without the bank reconciliation widget since the widget is in enterprise.
+        _st_liquidity_lines, st_suspense_lines, _st_other_lines = statement_line\
+            .with_context(skip_account_move_synchronization=True)\
+            ._seek_for_lines()
+        st_suspense_lines.account_id = liquidity_line.account_id
+        (st_suspense_lines + liquidity_line).reconcile()
+
+        self.assertEqual(expense_sheet.payment_state, 'paid', 'payment_state should be paid')
+
     def test_expense_values(self):
         """ Checking accounting move entries and analytic entries when submitting expense """
         # The expense employee is able to a create an expense sheet.
@@ -311,6 +350,80 @@ class TestExpenses(TestExpenseCommon):
         ], {
             'amount_total': 350.0,
         })
+
+    def test_account_entry_multi_currency_company_account(self):
+        """ Checking accounting payment entry when payment_mode is 'Company'. With multi-currency."""
+        expense = self.env['hr.expense'].create({
+            'name': 'Company expense',
+            'date': '2022-11-17',
+            'total_amount': 1000.0,
+            'payment_mode': 'company_account',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_a.id,
+            'currency_id': self.currency_data['currency'].id,  # rate is 1:2
+        })
+
+        foreign_bank_journal = self.company_data['default_journal_bank'].copy()
+        foreign_bank_journal.currency_id = self.currency_data['currency'].id
+        foreign_bank_journal_account = foreign_bank_journal.default_account_id.copy()
+        foreign_bank_journal_account.currency_id = self.currency_data['currency'].id
+        foreign_bank_journal.default_account_id = foreign_bank_journal_account.id
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': "test_account_entry_multi_currency_own_account",
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2020-01-01',
+            'bank_journal_id': foreign_bank_journal.id,
+            'expense_line_ids': [Command.set(expense.ids)],
+        })
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+        self.assertRecordValues(expense_sheet.account_move_id.payment_id, [{
+            'currency_id': self.env.company.currency_id.id,
+        }])
+        self.assertRecordValues(expense_sheet.account_move_id.line_ids, [
+            {'currency_id': self.env.company.currency_id.id},
+            {'currency_id': self.env.company.currency_id.id},
+            {'currency_id': self.env.company.currency_id.id},
+            {'currency_id': self.env.company.currency_id.id},
+        ])
+
+    def test_account_entry_multi_currency_own_account(self):
+        """ Checking accounting payment entry when payment_mode is 'Company'. With multi-currency."""
+        expense = self.env['hr.expense'].create({
+            'name': 'Company expense',
+            'date': '2022-11-17',
+            'total_amount': 1000.0,
+            'payment_mode': 'own_account',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_a.id,
+            'currency_id': self.currency_data['currency'].id, # rate is 1:2
+        })
+
+        foreign_sale_journal = self.company_data['default_journal_sale'].copy()
+        foreign_sale_journal.currency_id = self.currency_data['currency'].id
+
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'name': "test_account_entry_multi_currency_own_account",
+            'employee_id': self.expense_employee.id,
+            'accounting_date': '2020-01-01',
+            'journal_id': foreign_sale_journal.id,
+            'expense_line_ids': [Command.set(expense.ids)],
+        })
+
+        expense_sheet.action_submit_sheet()
+        expense_sheet.approve_expense_sheets()
+        expense_sheet.action_sheet_move_create()
+        self.assertRecordValues(expense_sheet.account_move_id, [{
+            'currency_id': self.env.company.currency_id.id,
+        }])
+        self.assertRecordValues(expense_sheet.account_move_id.line_ids, [
+            {'currency_id': self.env.company.currency_id.id},
+            {'currency_id': self.env.company.currency_id.id},
+            {'currency_id': self.env.company.currency_id.id},
+        ])
 
     def test_expenses_with_tax_and_lockdate(self):
         ''' Test creating a journal entry for multiple expenses using taxes. A lock date is set in order to trigger
@@ -753,3 +866,69 @@ class TestExpenses(TestExpenseCommon):
 
         expense.unlink()
         self.analytic_account_1.unlink()
+
+    def test_reset_move_to_draft(self):
+        """
+        Test the state of an expense and its report
+        after resetting the paid move to draft
+        """
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'company_id': self.env.company.id,
+            'employee_id': self.expense_employee.id,
+            'name': 'test sheet',
+            'expense_line_ids': [
+                (0, 0, {
+                    'name': 'expense_1',
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_a.id,
+                    'unit_amount': 1000.00,
+                }),
+            ],
+        })
+
+        expense = expense_sheet.expense_line_ids
+
+        self.assertEqual(expense.state, 'draft', 'Expense state must be draft before sheet submission')
+        self.assertEqual(expense_sheet.state, 'draft', 'Sheet state must be draft before submission')
+
+        # Submit report
+        expense_sheet.action_submit_sheet()
+
+        self.assertEqual(expense.state, 'reported', 'Expense state must be reported after sheet submission')
+        self.assertEqual(expense_sheet.state, 'submit', 'Sheet state must be submit after submission')
+
+        # Approve report
+        expense_sheet.approve_expense_sheets()
+
+        self.assertEqual(expense.state, 'approved', 'Expense state must be draft after sheet approval')
+        self.assertEqual(expense_sheet.state, 'approve', 'Sheet state must be draft after approval')
+
+        # Create move
+        expense_sheet.action_sheet_move_create()
+
+        self.assertEqual(expense.state, 'approved', 'Expense state must be draft after posting move')
+        self.assertEqual(expense_sheet.state, 'post', 'Sheet state must be draft after posting move')
+
+        # Pay move
+        move = expense_sheet.account_move_id
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move.ids).create({
+            'amount': 1000.0,
+        })._create_payments()
+
+        self.assertEqual(expense.state, 'done', 'Expense state must be done after payment')
+        self.assertEqual(expense_sheet.state, 'done', 'Sheet state must be done after payment')
+
+        # Reset move to draft
+        move.button_draft()
+
+        self.assertEqual(expense.state, 'approved', 'Expense state must be approved after resetting move to draft')
+        self.assertEqual(expense_sheet.state, 'post', 'Sheet state must be done after resetting move to draft')
+
+        # Post and pay move again
+        move.action_post()
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move.ids).create({
+            'amount': 1000.0,
+        })._create_payments()
+
+        self.assertEqual(expense.state, 'done', 'Expense state must be done after payment')
+        self.assertEqual(expense_sheet.state, 'done', 'Sheet state must be done after payment')

@@ -221,7 +221,7 @@ class AccountPaymentTermLine(models.Model):
 
     def _get_due_date(self, date_ref):
         self.ensure_one()
-        due_date = fields.Date.from_string(date_ref)
+        due_date = fields.Date.from_string(date_ref) or fields.Date.today()
         due_date += relativedelta(months=self.months)
         due_date += relativedelta(days=self.days)
         if self.end_month:

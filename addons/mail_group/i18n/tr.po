@@ -25,7 +25,7 @@ msgstr ""
 "POT-Creation-Date: 2022-10-04 09:25+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -38,6 +38,8 @@ msgid ""
 ") <span attrs=\"{'invisible': [('send_email', '=', False)]}\">and send them "
 "an email</span>."
 msgstr ""
+") <span attrs=\"{'invisible': [('send_email', '=', False)]}\">tıklayın ve "
+"onlara bir e-posta gönderin</span>."
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.confirmation_subscription
@@ -57,8 +59,14 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">Merhaba<br/><br/>E-posta listesine abone olmayı talep ettiniz <strong j=\"1/\">.                <br/><br/>Onaylamak için lütfen aşağıdaki bağlantıyı ziyaret edin: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t j=\"4/\"></t></a></strong>\n"
-"                <br/><br/>Bu bir hataysa veya bu eylemi talep etmediyseniz, lütfen bu mesajı yok sayın.            </strong></div>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Merhaba<br/><br/>\n"
+"                E-posta listesine abone olmayı talep ettiniz <strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                Onaylamak için lütfen aşağıdaki bağlantıyı ziyaret edin: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
+"                <br/><br/>\n"
+"                Bu bir hataysa veya bu eylemi talep etmediyseniz, lütfen bu mesajı yok sayın.\n"
+"            </div>\n"
 "        "
 
 #. module: mail_group
@@ -74,7 +82,14 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">Merhaba<br/><br/>Posta listesi aboneliğinden çıkarılmayı talep ettiniz <strong j=\"1/\">.                <br/><br/>Onaylamak için lütfen aşağıdaki bağlantıyı ziyaret edin: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t j=\"4/\"></t></a></strong>.                <br/><br/>Bu bir hataysa veya bu eylemi talep etmediyseniz, lütfen bu mesajı yok sayın.            </strong></div>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Merhaba<br/><br/>\n"
+"                Posta listesi aboneliğinden çıkarılmayı talep ettiniz <strong t-out=\"object.name or ''\"/>.\n"
+"                <br/><br/>\n"
+"                Onaylamak için lütfen aşağıdaki bağlantıyı ziyaret edin: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
+"                <br/><br/>\n"
+"                Bu bir hataysa veya bu eylemi talep etmediyseniz, lütfen bu mesajı yok sayın.\n"
+"            </div>\n"
 "        "
 
 #. module: mail_group
@@ -157,6 +172,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
@@ -183,6 +200,8 @@ msgid ""
 "<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">Whitelisted</span>\n"
 "                            <span class=\"ms-2 badge text-bg-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">Banned</span>"
 msgstr ""
+"<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">Beyaz Listeye Alınmış</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">Yasaklı</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -716,12 +735,12 @@ msgstr "Posta Grubu Yöneticisi"
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_subscribe
 msgid "Mail Group: Mailing List Subscription"
-msgstr ""
+msgstr "Posta Grubu: Posta listesi aboneliği"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_unsubscribe
 msgid "Mail Group: Mailing List Unsubscription"
-msgstr ""
+msgstr "Posta Grubu: Posta listesi aboneliğinden çık"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_guidelines
@@ -941,6 +960,9 @@ msgid ""
 "Need to unsubscribe? <br/>It's right here! <span class=\"fa fa-2x fa-arrow-"
 "down float-end\" role=\"img\" aria-label=\"\" title=\"Read this !\"/>"
 msgstr ""
+"Abonelikten çıkmanız mı gerekiyor? <br/>Tam burada! <span class=\"fa fa-2x "
+"fa-arrow-down float-end\" role=\"img\" aria-label=\"\" title=\"Read this "
+"!\"/>"
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__moderation_guidelines
@@ -1146,7 +1168,7 @@ msgstr "Grup Mesajını Reddet"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
 msgid "Reject Silently"
-msgstr ""
+msgstr "Sessizce Reddet"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_reject_form
@@ -1234,12 +1256,12 @@ msgstr "Yeni abonelere yönergeler gönderme"
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_guidelines
 msgid "Sent to people who subscribed to a mailing group with group guidelines"
-msgstr ""
+msgstr "Grup kuralları ile bir posta grubuna abone olan kişilere gönderilir"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_unsubscribe
 msgid "Sent to people who unsubscribed from a mailing group"
-msgstr ""
+msgstr "Posta grubu aboneliğinden çıkan kişilere gönderilir"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
@@ -1271,7 +1293,7 @@ msgstr "Abone Ol"
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_subscribe
 msgid "Subscription confirmation to a mailing group"
-msgstr ""
+msgstr "Posta grubuna abonelik onayı"
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0

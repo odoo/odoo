@@ -563,9 +563,10 @@ class AccountPayment(models.Model):
             self.reconciled_statement_lines_count = 0
             return
 
-        self.env['account.move'].flush_model()
-        self.env['account.move.line'].flush_model()
-        self.env['account.partial.reconcile'].flush_model()
+        self.env['account.payment'].flush_model(fnames=['move_id', 'outstanding_account_id'])
+        self.env['account.move'].flush_model(fnames=['move_type', 'payment_id', 'statement_line_id'])
+        self.env['account.move.line'].flush_model(fnames=['move_id', 'account_id', 'statement_line_id'])
+        self.env['account.partial.reconcile'].flush_model(fnames=['debit_move_id', 'credit_move_id'])
 
         self._cr.execute('''
             SELECT
@@ -611,7 +612,6 @@ class AccountPayment(models.Model):
                 ARRAY_AGG(DISTINCT counterpart_line.statement_line_id) AS statement_line_ids
             FROM account_payment payment
             JOIN account_move move ON move.id = payment.move_id
-            JOIN account_journal journal ON journal.id = move.journal_id
             JOIN account_move_line line ON line.move_id = move.id
             JOIN account_account account ON account.id = line.account_id
             JOIN account_partial_reconcile part ON
@@ -865,12 +865,14 @@ class AccountPayment(models.Model):
             # Update the existing journal items.
             # If dealing with multiple write-off lines, they are dropped and a new one is generated.
 
-            pay.move_id.write({
-                'partner_id': pay.partner_id.id,
-                'currency_id': pay.currency_id.id,
-                'partner_bank_id': pay.partner_bank_id.id,
-                'line_ids': line_ids_commands,
-            })
+            pay.move_id\
+                .with_context(skip_invoice_sync=True)\
+                .write({
+                    'partner_id': pay.partner_id.id,
+                    'currency_id': pay.currency_id.id,
+                    'partner_bank_id': pay.partner_bank_id.id,
+                    'line_ids': line_ids_commands,
+                })
 
     def _create_paired_internal_transfer_payment(self):
         ''' When an internal transfer is posted, a paired payment is created

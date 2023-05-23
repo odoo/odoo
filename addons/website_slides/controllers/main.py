@@ -66,12 +66,20 @@ class WebsiteSlides(WebsiteProfile):
 
     def _set_viewed_slide(self, slide, quiz_attempts_inc=False):
         if not slide.channel_id.is_member:
-            # set(...) ensures backward compatibility for sessions created earlier using a list.
-            # TODO: remove for v16.1.
-            viewed_slides = set(request.session.setdefault('viewed_slides', set()))
+            if not isinstance(request.session.get('viewed_slides'), dict):
+                # Compatibility layer with Odoo 15.0,
+                # where `viewed_slides` are stored as `list` in sessions.
+                # For performance concerns, `viewed_slides` is changed to a dict,
+                # but sessions coming from Odoo 15.0 after an upgrade should still be compatible.
+                # This compatibility layer regarding `viewed_slides` must remain from Odoo 16.0 and above,
+                # as this is possible to do a jump of multiple versions in one go,
+                # and carry the sessions with the upgrade.
+                # e.g. upgrade from Odoo 15.0 to 18.0.
+                request.session.viewed_slides = dict.fromkeys(request.session.get('viewed_slides', []), 1)
+            viewed_slides = request.session['viewed_slides']
             if slide.id not in viewed_slides:
                 if tools.sql.increment_fields_skiplock(slide, 'public_views', 'total_views'):
-                    viewed_slides.add(slide.id)
+                    viewed_slides[slide.id] = 1
                     request.session.touch()
         else:
             slide.action_set_viewed(quiz_attempts_inc=quiz_attempts_inc)
@@ -607,12 +615,13 @@ class WebsiteSlides(WebsiteProfile):
         }
 
         if not request.env.user._is_public():
+            subtype_comment_id = request.env['ir.model.data']._xmlid_to_res_id('mail.mt_comment')
             last_message = request.env['mail.message'].search([
                 ('model', '=', channel._name),
                 ('res_id', '=', channel.id),
                 ('author_id', '=', request.env.user.partner_id.id),
                 ('message_type', '=', 'comment'),
-                ('is_internal', '=', False)
+                ('subtype_id', '=', subtype_comment_id)
             ], order='write_date DESC', limit=1)
 
             if last_message:

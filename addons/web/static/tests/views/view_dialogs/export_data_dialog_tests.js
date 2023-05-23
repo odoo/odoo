@@ -11,6 +11,7 @@ import {
     nextTick,
     triggerEvent,
     mockTimeout,
+    patchWithCleanup,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { registry } from "@web/core/registry";
@@ -216,6 +217,14 @@ QUnit.module("ViewDialogs", (hooks) => {
             "Activities",
             "string of second field in export list should be 'Activities'"
         );
+        assert.strictEqual(
+            target.querySelector(".o_export_search_input").value,
+            "ac",
+            "search input still contains the search string"
+        );
+
+        // Since we use an input of type search, we can't click on the 'X' in tests to reset the value
+        await editInput(target.querySelector(".modal .o_export_search_input"), null, "");
         assert.hasClass(
             target.querySelector(".modal .o_export_tree_item:nth-child(2) .o_tree_column"),
             "fw-bolder",
@@ -413,6 +422,58 @@ QUnit.module("ViewDialogs", (hooks) => {
             ["Foo"]
         );
     });
+
+    QUnit.test(
+        "Export dialog: interacting with export templates in debug",
+        async function (assert) {
+            assert.expect(3);
+
+            patchWithCleanup(odoo, { debug: "1" });
+            await makeView({
+                serverData,
+                type: "list",
+                resModel: "partner",
+                arch: `
+                <tree export_xlsx="1"><field name="foo"/></tree>`,
+                actionMenus: {},
+                mockRPC(route, args) {
+                    if (args.method === "search_read") {
+                        return Promise.resolve([{ id: 1, name: "Activities template" }]);
+                    }
+                    if (route === "/web/export/namelist") {
+                        if (args.export_id === 1) {
+                            return Promise.resolve([{ name: "activity_ids", label: "Activities" }]);
+                        }
+                        return Promise.resolve([]);
+                    }
+                    if (route === "/web/export/formats") {
+                        return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+                    }
+                    if (route === "/web/export/get_fields") {
+                        return Promise.resolve(fetchedFields.root);
+                    }
+                },
+            });
+
+            await openExportDataDialog();
+            assert.strictEqual(
+                target.querySelector(".o_fields_list .o_export_field").textContent,
+                "Foo (foo)"
+            );
+
+            // load a template which contains the activity_ids field
+            await editSelect(target, ".o_exported_lists_select", "1");
+            assert.containsOnce(
+                target,
+                ".o_fields_list .o_export_field",
+                "only one field is present for the selected template"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_fields_list .o_export_field").textContent,
+                "Activities (activity_ids)"
+            );
+        }
+    );
 
     QUnit.test("Export dialog: interacting with available fields", async function (assert) {
         assert.expect(9);
@@ -1026,4 +1087,82 @@ QUnit.module("ViewDialogs", (hooks) => {
             );
         }
     );
+
+    QUnit.test("Export dialog: search subfields", async function (assert) {
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree export_xlsx="1"><field name="foo"/></tree>`,
+            actionMenus: {},
+            mockRPC(route, args) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+                }
+                if (route === "/web/export/get_fields") {
+                    if (!args.parent_field) {
+                        return Promise.resolve(fetchedFields.root);
+                    }
+                    return Promise.resolve(fetchedFields[args.prefix]);
+                }
+            },
+        });
+
+        await openExportDataDialog();
+
+        const firstField = target.querySelector(
+            ".o_left_field_panel .o_export_tree_item:first-child"
+        );
+        await click(firstField);
+
+        // show then hide content for the 'partner_ids' field.
+        // this will load subfields and make them available to search
+        await click(firstField.querySelector(".o_export_tree_item"));
+        await click(firstField.querySelector(".o_export_tree_item"));
+        await editInput(target, ".o_export_search_input", "company");
+        assert.containsOnce(
+            target,
+            ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids']",
+            "subfield that was known has been found and is displayed"
+        );
+    });
+
+    QUnit.test("Export dialog: search in debug", async function (assert) {
+        patchWithCleanup(odoo, { debug: "1" });
+
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree export_xlsx="1"><field name="foo"/></tree>`,
+            actionMenus: {},
+            mockRPC(route, args) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+                }
+                if (route === "/web/export/get_fields") {
+                    if (!args.parent_field) {
+                        return Promise.resolve(fetchedFields.root);
+                    }
+                    return Promise.resolve(fetchedFields[args.prefix]);
+                }
+            },
+        });
+
+        await openExportDataDialog();
+
+        const firstField = target.querySelector(
+            ".o_left_field_panel .o_export_tree_item:first-child"
+        );
+        await click(firstField);
+        await click(firstField.querySelector(".o_export_tree_item"));
+        await editInput(target, ".o_export_search_input", "company_ids");
+        assert.containsOnce(
+            target,
+            ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids']",
+            "subfield has been found with its technical name and is displayed"
+        );
+    });
 });

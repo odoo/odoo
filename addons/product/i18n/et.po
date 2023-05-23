@@ -19,7 +19,7 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Anna, 2023
-# Jana Jaakson, 2023
+# JanaAvalah, 2023
 # Leaanika Randmets, 2023
 # 
 msgid ""
@@ -29,7 +29,7 @@ msgstr ""
 "POT-Creation-Date: 2022-12-15 12:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Leaanika Randmets, 2023\n"
-"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -3270,10 +3270,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"Väärtust %s ei saa kustutada, kuna seda kasutatakse järgmistes toodetes:\n"
-"%s"
 
 #. module: product
 #. odoo-python
@@ -3298,6 +3297,13 @@ msgstr ""
 "(%s)\n"
 ", neid kasutatakse teistes hinnakirjades:\n"
 "%s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
 
 #. module: product
 #. odoo-python

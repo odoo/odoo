@@ -48,7 +48,7 @@ var ExhibitorConnectClosedDialog = Dialog.extend({
      */
     async _fetchSponsor() {
         const sponsorData = await this._rpc({
-            route: `/event_sponsor/${this.sponsorId}/read`
+            route: `/event_sponsor/${encodeURIComponent(this.sponsorId)}/read`
         });
         sponsorData.website_description = Markup(sponsorData.website_description);
         this.sponsorData = sponsorData;

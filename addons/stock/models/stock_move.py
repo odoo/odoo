@@ -125,7 +125,7 @@ class StockMove(models.Model):
     scrapped = fields.Boolean(
         'Scrapped', related='location_dest_id.scrap_location', readonly=True, store=True)
     scrap_ids = fields.One2many('stock.scrap', 'move_id')
-    group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id)
+    group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id, index=True)
     rule_id = fields.Many2one(
         'stock.rule', 'Stock Rule', ondelete='restrict', help='The stock rule that created this stock move',
         check_company=True)
@@ -188,9 +188,7 @@ class StockMove(models.Model):
     @api.depends('product_id')
     def _compute_product_uom(self):
         for move in self:
-            if not move.product_uom:
-                move.product_uom = move.product_id.uom_id.id
-
+            move.product_uom = move.product_id.uom_id.id
 
     @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'state')
     def _compute_display_assign_serial(self):
@@ -2027,11 +2025,11 @@ Please change the quantity done or the rounding precision of your unit of measur
             if move.state not in ('partially_available', 'assigned'):
                 continue
             for move_line in move.move_line_ids:
-                if move.has_tracking != 'none' and (
-                    (move.picking_type_id.use_existing_lots and not move_line.lot_id) or
-                    (move.picking_type_id.use_create_lots and not move_line.lot_name)):
-                    continue
-                move_line.qty_done = move_line.reserved_uom_qty
+                if move.has_tracking == 'none' or\
+                    (move.picking_type_id.use_existing_lots and move_line.lot_id) or\
+                    (move.picking_type_id.use_create_lots and move_line.lot_name) or\
+                    (not move.picking_type_id.use_existing_lots and not move.picking_type_id.use_create_lots):
+                    move_line.qty_done = move_line.reserved_uom_qty
 
     def _clear_quantities_to_zero(self):
         self.filtered(lambda m: m.state in ('partially_available', 'assigned')).move_line_ids.qty_done = 0

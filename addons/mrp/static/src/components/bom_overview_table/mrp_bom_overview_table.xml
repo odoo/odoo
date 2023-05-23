@@ -11,7 +11,7 @@
                         <h6 t-if="data.bom_code">Reference: <t t-esc="data.bom_code"/></h6>
                     </div>
                     <div class="text-center">
-                        <h3><t t-esc="formatFloat(data.quantity_available)"/> <t t-if="showUom" t-esc="props.uomName"/></h3>
+                        <h3><t t-esc="formatFloat(data.quantity_available, {'digits': [false, precision]})"/> <t t-if="showUom" t-esc="props.uomName"/></h3>
                         <span>Free to Use</span>
                     </div>
                     <div t-if="data.hasOwnProperty('earliest_capacity')" class="ps-5 text-center">
@@ -42,12 +42,15 @@
                         <BomOverviewLine
                             showOptions="props.showOptions"
                             currentWarehouseId="props.currentWarehouseId"
-                            data="data"/>
+                            data="data"
+                            precision="props.precision"
+                            />
 
                         <BomOverviewComponentsBlock
                             showOptions="props.showOptions"
                             currentWarehouseId="props.currentWarehouseId"
                             data="data"
+                            precision="props.precision"
                             changeFolded.bind="props.changeFolded"/>
                     </tbody>
                     <tfoot t-if="showCosts">

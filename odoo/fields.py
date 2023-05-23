@@ -79,6 +79,29 @@ def resolve_mro(model, name, predicate):
     return result
 
 
+def determine(needle, records, *args):
+    """ Simple helper for calling a method given as a string or a function.
+
+    :param needle: callable or name of method to call on ``records``
+    :param BaseModel records: recordset to call ``needle`` on or with
+    :params args: additional arguments to pass to the determinant
+    :returns: the determined value if the determinant is a method name or callable
+    :raise TypeError: if ``records`` is not a recordset, or ``needle`` is not
+                      a callable or valid method name
+    """
+    if not isinstance(records, BaseModel):
+        raise TypeError("Determination requires a subject recordset")
+    if isinstance(needle, str):
+        needle = getattr(records, needle)
+        if needle.__name__.find('__'):
+            return needle(*args)
+    elif callable(needle):
+        if needle.__name__.find('__'):
+            return needle(records, *args)
+
+    raise TypeError("Determination requires a callable or method name")
+
+
 class MetaField(type):
     """ Metaclass for field classes. """
     by_type = {}
@@ -313,10 +336,6 @@ class Field(MetaField('DummyField', (object,), {})):
         kwargs['string'] = string
         self._sequence = next(_global_seq)
         self.args = {key: val for key, val in kwargs.items() if val is not Default}
-
-    def new(self, **kwargs):
-        """ Return a field of the same type as ``self``, with its own parameters. """
-        return type(self)(**kwargs)
 
     def __str__(self):
         if self.name is None:
@@ -609,7 +628,7 @@ class Field(MetaField('DummyField', (object,), {})):
         for attr, prop in self.related_attrs:
             # check whether 'attr' is explicitly set on self (from its field
             # definition), and ignore its class-level value (only a default)
-            if attr not in self.__dict__:
+            if attr not in self.__dict__ and prop.startswith('_related_'):
                 setattr(self, attr, getattr(field, prop))
 
         for attr in field._extra_keys:
@@ -819,6 +838,8 @@ class Field(MetaField('DummyField', (object,), {})):
         desc = {}
         for attr, prop in self.description_attrs:
             if attributes is not None and attr not in attributes:
+                continue
+            if not prop.startswith('_description_'):
                 continue
             value = getattr(self, prop)
             if callable(value):
@@ -1311,10 +1332,29 @@ class Field(MetaField('DummyField', (object,), {})):
         if not to_compute_ids:
             return
 
+        def apply_except_missing(func, records):
+            """ Apply `func` on `records`, with a fallback ignoring non-existent records. """
+            try:
+                func(records)
+            except MissingError:
+                existing = records.exists()
+                if existing:
+                    func(existing)
+                # mark the field as computed on missing records, otherwise they
+                # remain to compute forever, which may lead to an infinite loop
+                missing = records - existing
+                for f in records.pool.field_computed[self]:
+                    records.env.remove_to_compute(f, missing)
+
         if self.recursive:
-            for record in records:
-                if record.id in to_compute_ids:
-                    self.compute_value(record)
+            # recursive computed fields are computed record by record, in order
+            # to recursively handle dependencies inside records
+            def recursive_compute(records):
+                for record in records:
+                    if record.id in to_compute_ids:
+                        self.compute_value(record)
+
+            apply_except_missing(recursive_compute, records)
             return
 
         for record in records:
@@ -1322,8 +1362,8 @@ class Field(MetaField('DummyField', (object,), {})):
                 ids = expand_ids(record.id, to_compute_ids)
                 recs = record.browse(itertools.islice(ids, PREFETCH_MAX))
                 try:
-                    self.compute_value(recs)
-                except (AccessError, MissingError):
+                    apply_except_missing(self.compute_value, recs)
+                except AccessError:
                     self.compute_value(record)
 
     def compute_value(self, records):
@@ -1353,22 +1393,11 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def determine_inverse(self, records):
         """ Given the value of ``self`` on ``records``, inverse the computation. """
-        if isinstance(self.inverse, str):
-            getattr(records, self.inverse)()
-        else:
-            self.inverse(records)
+        determine(self.inverse, records)
 
     def determine_domain(self, records, operator, value):
         """ Return a domain representing a condition on ``self``. """
-        if isinstance(self.search, str):
-            return getattr(records, self.search)(operator, value)
-        else:
-            return self.search(records, operator, value)
-
-    ############################################################################
-    #
-    # Notification when fields are modified
-    #
+        return determine(self.search, records, operator, value)
 
 
 class Boolean(Field):
@@ -1692,29 +1721,6 @@ class _String(Field):
     def convert_to_write(self, value, record):
         return value
 
-    def get_trans_func(self, records):
-        """ Return a translation function `translate` for `self` on the given
-        records; the function call `translate(record_id, value)` translates the
-        field English value to the language given by the environment of `records`.
-        """
-        lang = records.env.lang or 'en_US'
-        if lang == 'en_US' or not self.translate:
-            return lambda record_id, value: value
-        # TODO: CWG: optimize it to one query
-        vals_en2lang = zip(records.with_context(lang='en_US').mapped(self.name),
-                           records.with_context(lang=lang).mapped(self.name))
-        translation_dictionaries = dict(
-            zip(records.ids, [self.get_translation_dictionary(val_en, {lang: val_lang}) for val_en, val_lang in vals_en2lang]))
-        if callable(self.translate):
-            def translate(record_id, value):
-                translation_dictionary = translation_dictionaries[record_id]
-                # pylint: disable=not-callable
-                return self.translate(lambda term: translation_dictionary[term][lang], value)
-        else:  # TODO CWG: TBD never used, useless?
-            def translate(record_id, value):
-                return translation_dictionaries.get(record_id).get(value, value)
-        return translate
-
     def get_translation_dictionary(self, from_lang_value, to_lang_values):
         """ Build a dictionary from terms in from_lang_value to terms in to_lang_values
 
@@ -1746,7 +1752,8 @@ class _String(Field):
         record.flush_recordset([self.name])
         cr = record.env.cr
         cr.execute(f'SELECT "{self.name}" FROM "{record._table}" WHERE id = %s', (record.id,))
-        return cr.fetchone()[0]
+        res = cr.fetchone()
+        return res[0] if res else None
 
     def write(self, records, value):
         if not self.translate or value is False or value is None:
@@ -1797,7 +1804,7 @@ class _String(Field):
             if not old_translations:
                 new_translations_list.append({'en_US': cache_value, lang: cache_value})
                 continue
-            from_lang_value = old_translations.get(lang, old_translations.get('en_US'))
+            from_lang_value = old_translations.get(lang, old_translations['en_US'])
             translation_dictionary = self.get_translation_dictionary(from_lang_value, old_translations)
             text2terms = defaultdict(list)
             for term in new_terms:
@@ -1816,7 +1823,8 @@ class _String(Field):
                 for l in old_translations.keys()
             }
             new_translations[lang] = cache_value
-            new_translations.setdefault('en_US', cache_value)
+            if not records.env['res.lang']._lang_get_id('en_US'):
+                new_translations['en_US'] = cache_value
             new_translations_list.append(new_translations)
         # Maybe we can use Cache.update(records.with_context(cache_update_raw=True), self, new_translations_list, dirty=True)
         cache.update_raw(records, self, new_translations_list, dirty=True)
@@ -2678,10 +2686,8 @@ class Selection(Field):
             translated according to context language
         """
         selection = self.selection
-        if isinstance(selection, str):
-            return getattr(env[self.model_name], selection)()
-        if callable(selection):
-            return selection(env[self.model_name])
+        if isinstance(selection, str) or callable(selection):
+            return determine(selection, env[self.model_name])
 
         # translate selection labels
         if env.lang:
@@ -2696,11 +2702,8 @@ class Selection(Field):
     def get_values(self, env):
         """Return a list of the possible values."""
         selection = self.selection
-        if isinstance(selection, str):
-            selection = getattr(env[self.model_name], selection)()
-        elif callable(selection):
-            model = env[self.model_name].with_context(lang=None)
-            selection = selection(model)
+        if isinstance(selection, str) or callable(selection):
+            selection = determine(selection, env[self.model_name].with_context(lang=None))
         return [value for value, _ in selection]
 
     def convert_to_column(self, value, record, values=None, validate=True):
@@ -3361,7 +3364,7 @@ class Properties(Field):
         convert_to_record / convert_to_read.
         """
         definition_records_map = {
-            record: record[self.definition_record][self.definition_record_field]
+            record: record[self.definition_record].sudo()[self.definition_record_field]
             for record in records
         }
 
@@ -3704,10 +3707,12 @@ class Properties(Field):
 
         dict_value = {}
         for property_definition in values_list:
-            property_value = property_definition.get('value') or False
+            property_value = property_definition.get('value')
             property_type = property_definition.get('type')
             property_model = property_definition.get('comodel')
 
+            if property_type not in ('integer', 'float') or property_value != 0:
+                property_value = property_value or False
             if property_type in ('many2one', 'many2many') and property_model and property_value:
                 # check that value are correct before storing them in database
                 if property_type == 'many2many' and property_value and not is_list_of(property_value, int):
