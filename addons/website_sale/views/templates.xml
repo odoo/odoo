@@ -946,7 +946,7 @@
              Change accordingly to the derired visual result (eg. `primary`, `dark`...)-->
         <t t-set="navClass" t-valuef="light"/>
 
-    <t t-cache="pricelist,product">
+    <t t-cache="pricelist,product,fiscal_position">
         <t t-set="combination" t-value="product._get_first_possible_combination()"/>
         <t t-set="combination_info" t-value="product._get_combination_info(combination, add_qty=add_qty)"/>
         <t t-set="product_variant" t-value="product.env['product.product'].browse(combination_info['product_id'])"/>
