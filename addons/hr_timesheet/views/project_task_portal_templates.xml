@@ -53,9 +53,8 @@
             </t>
         </xpath>
         <xpath expr="//thead/tr/th[@name='project_portal_milestones']" position="after">
-            <t t-if="allow_timesheets">
-                <th t-if="is_uom_day" class="text-end">Days Spent</th>
-                <th t-else="" class="text-end">Hours Spent</th>
+            <t t-if="not project or project.allow_timesheets">
+                <th class="text-end">Time Spent</th>
             </t>
         </xpath>
         <xpath expr="//tbody/t/tr/td[@name='project_portal_milestones']" position="after">

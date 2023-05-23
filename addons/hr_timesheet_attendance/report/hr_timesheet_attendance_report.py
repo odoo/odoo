@@ -11,9 +11,9 @@ class TimesheetAttendance(models.Model):
 
     employee_id = fields.Many2one('hr.employee', readonly=True)
     date = fields.Date(readonly=True)
-    total_timesheet = fields.Float("Timesheets Hours", readonly=True)
-    total_attendance = fields.Float("Attendance Hours", readonly=True)
-    total_difference = fields.Float("Hours Difference", readonly=True)
+    total_timesheet = fields.Float("Timesheets Time", readonly=True)
+    total_attendance = fields.Float("Attendance Time", readonly=True)
+    total_difference = fields.Float("Time Difference", readonly=True)
     timesheets_cost = fields.Float("Timesheet Cost", readonly=True)
     attendance_cost = fields.Float("Attendance Cost", readonly=True)
     cost_difference = fields.Float("Cost Difference", readonly=True)

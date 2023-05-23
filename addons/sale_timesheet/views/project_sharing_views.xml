@@ -30,14 +30,10 @@
                 <field name="remaining_hours_available" invisible="1"/>
                 <field name="sale_order_id" invisible="1"/>
                 <span id="remaining_hours_so_label" invisible="not allow_billable or not sale_order_id or not partner_id or not sale_line_id or not remaining_hours_available" class="o_td_label float-start">
-                    <label class="fw-bold" for="remaining_hours_so" string="Remaining Hours on SO"
-                            invisible="encode_uom_in_days or remaining_hours_so &lt; 0"/>
-                    <label class="fw-bold" for="remaining_hours_so" string="Remaining Days on SO"
-                            invisible="not encode_uom_in_days or remaining_hours_so &lt; 0"/>
-                    <label class="fw-bold text-danger" for="remaining_hours_so" string="Remaining Hours on SO"
-                            invisible="encode_uom_in_days or remaining_hours_so &gt;= 0"/>
-                    <label class="fw-bold text-danger" for="remaining_hours_so" string="Remaining Days on SO"
-                            invisible="not encode_uom_in_days or remaining_hours_so &gt;= 0"/>
+                    <label class="fw-bold" for="remaining_hours_so"
+                            invisible="remaining_hours_so &lt; 0"/>
+                    <label class="fw-bold text-danger" for="remaining_hours_so"
+                            invisible="remaining_hours_so &gt;= 0"/>
                 </span>
                 <field name="remaining_hours_so" nolabel="1" widget="timesheet_uom" invisible="not allow_billable or not sale_order_id or not partner_id or not sale_line_id or not remaining_hours_available" decoration-danger="remaining_hours_so &lt; 0"></field>
             </xpath>

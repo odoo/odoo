@@ -2,15 +2,15 @@
 <odoo>
 
     <template id="portal_timesheet_table_inherit" inherit_id="hr_timesheet.portal_timesheet_table">
-        <xpath expr="//thead/tr/th[@t-if='is_uom_day']" position="before">
-	    <t t-set="display_sol" t-value="False"/>
-	    <t t-foreach="timesheets" t-as="timesheet">
-	        <t t-if="timesheet.so_line != task.sale_line_id">
-		    <t t-set="display_sol" t-value="True"/>
-		</t>
-	    </t>
+        <th name="t_label" position="before">
+            <t t-set="display_sol" t-value="False"/>
+            <t t-foreach="timesheets" t-as="timesheet">
+                <t t-if="timesheet.so_line != task.sale_line_id">
+                    <t t-set="display_sol" t-value="True"/>
+                </t>
+            </t>
             <th t-if="display_sol">Sales Order Item</th>
-        </xpath>
+        </th>
         <xpath expr="//tr/td[t[@t-esc='timesheet.name']]" position="after">
             <td  t-if="display_sol">
 	        <t t-if="timesheet.so_line.order_id.access_url and so_accessible"><a t-att-href="'%s' % timesheet.so_line.order_id.access_url"><t t-out="timesheet.so_line.display_name"/></a></t>
@@ -19,14 +19,11 @@
         </xpath>
         <xpath expr="//div[@name='allocated_time']" position="after">
             <tr t-if="task.allow_billable and task.sale_line_id and task.sale_line_id.remaining_hours_available" t-attf-class="{{task.remaining_hours_so &lt; 0 and 'text-danger'}}">
-                <t t-if="is_uom_day">
-                    <td><strong>Remaining Days on SO: </strong></td>
-                    <td class="text-end" t-esc="timesheets._convert_hours_to_days(task.remaining_hours_so)" t-options='{"widget": "timesheet_uom"}'/>
-                </t>
-                <t t-else="">
-                    <td><strong>Remaining Hours on SO: </strong></td>
-                    <td class="text-end" t-esc="task.remaining_hours_so" t-options='{"widget": "float_time"}'/>
-                </t>
+                <td><strong>Time Remaining on SO: </strong></td>
+                <td class="text-end">
+                    <span t-if="is_uom_day" t-esc="timesheets._convert_hours_to_days(task.remaining_hours_so)" t-options='{"widget": "timesheet_uom"}'/>
+                    <span t-else="" t-esc="task.remaining_hours_so" t-options='{"widget": "float_time"}'/>
+                </td>
             </tr>
         </xpath>
     </template>

@@ -73,9 +73,3 @@ class ResCompany(models.Model):
         for company in self:
             company.internal_project_id = projects_by_company.get(company.id, False)
         return project_ids
-
-    def _is_timesheet_hour_uom(self):
-        return self.timesheet_encode_uom_id and self.timesheet_encode_uom_id == self.env.ref('uom.product_uom_hour')
-
-    def _timesheet_uom_text(self):
-        return self._is_timesheet_hour_uom() and _("hours") or _("days")
