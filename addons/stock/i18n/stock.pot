@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 06:41+0000\n"
-"PO-Revision-Date: 2023-02-17 06:41+0000\n"
+"POT-Creation-Date: 2023-05-25 11:22+0000\n"
+"PO-Revision-Date: 2023-05-25 11:22+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -295,33 +295,33 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
 "        We are glad to inform you that your order has been shipped.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
+"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
 "                    </t>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
 "                </t>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
 "            </t>\n"
 "            </strong>\n"
 "        </t>\n"
-"        <br/><br/>\n"
-"        Please find your delivery order attached for more details.<br/><br/>\n"
+"        <br><br>\n"
+"        Please find your delivery order attached for more details.<br><br>\n"
 "        Thank you,\n"
 "        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -452,11 +452,6 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<span>Remaining quantities not yet delivered:</span>"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
-msgid "<span>kg</span>"
 msgstr ""
 
 #. module: stock
@@ -2876,6 +2871,7 @@ msgstr ""
 
 #. module: stock
 #. odoo-javascript
+#: code:addons/stock/static/src/stock_forecasted/stock_forecasted.js:0
 #: code:addons/stock/static/src/widgets/forecast_widget.xml:0
 #: model:ir.actions.client,name:stock.stock_replenishment_product_product_action
 #: model:ir.actions.client,name:stock.stock_replenishment_product_template_action
@@ -3726,6 +3722,15 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allow to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -3803,11 +3808,6 @@ msgstr ""
 msgid ""
 "Keep the <strong>Difference</strong> (the Counted Quantity will be updated "
 "to reflect the same difference as when you counted)"
-msgstr ""
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
-msgid "LN/SN:"
 msgstr ""
 
 #. module: stock
@@ -4335,12 +4335,8 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__max_weight
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__max_weight
-msgid "Max Weight"
-msgstr ""
-
-#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_tree
-msgid "Max Weight (kg)"
+msgid "Max Weight"
 msgstr ""
 
 #. module: stock
@@ -4419,7 +4415,6 @@ msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__move_ids
-#: model:ir.model.fields,field_description:stock.field_report_stock_quantity__move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_assign_serial__move_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__move_id
@@ -6029,12 +6024,6 @@ msgstr ""
 #. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
-msgid "Quants are auto-deleted when appropriate. If you must manually delete them, please ask a stock manager to do it."
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_quant.py:0
-#, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
 msgstr ""
 
@@ -6195,6 +6184,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_track_confirmation__quant_ids
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "Quants"
+msgstr ""
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_quant.py:0
+#, python-format
+msgid ""
+"Quants are auto-deleted when appropriate. If you must manually delete them, "
+"please ask a stock manager to do it."
 msgstr ""
 
 #. module: stock
@@ -8109,11 +8107,12 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
-"This product's company cannot be changed as long as there are stock moves of "
-"it belonging to another company."
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
 msgstr ""
 
 #. module: stock
@@ -8552,6 +8551,11 @@ msgid "Unit of Measure Name"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
+msgid "Unit of measure"
+msgstr ""
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
 msgstr ""
@@ -8564,11 +8568,6 @@ msgstr ""
 #. module: stock
 #: model:ir.ui.menu,name:stock.product_uom_menu
 msgid "Units of Measures"
-msgstr ""
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
-msgid "Unit of measure"
 msgstr ""
 
 #. module: stock
@@ -8975,6 +8974,11 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_package_type__base_weight
 msgid "Weight of the package type"
+msgstr ""
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
+msgid "Weight unit"
 msgstr ""
 
 #. module: stock
@@ -9468,9 +9472,9 @@ msgstr ""
 
 #. module: stock
 #. odoo-python
-#: code:addons/stock/model/stock_picking.py:0
+#: code:addons/stock/models/stock_picking.py:0
 #, python-format
-msgid " You might want to update the locations of this transfer's operations "
+msgid "You might want to update the locations of this transfer's operations"
 msgstr ""
 
 #. module: stock
@@ -9741,11 +9745,4 @@ msgstr ""
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allow to import reserved quantity, you have to use the quantity directly."
 msgstr ""
