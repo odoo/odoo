@@ -126,8 +126,6 @@ class ResPartnerBank(models.Model):
                     value = [sanitize_account_number(i) for i in value]
                 else:
                     value = sanitize_account_number(value)
-                if 'like' in arg[1]:
-                    value = '%' + value + '%'
                 return ('sanitized_acc_number', arg[1], value)
             return arg
 
