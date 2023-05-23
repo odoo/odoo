@@ -1,8 +1,6 @@
 /** @odoo-module **/
 
-import { AutoComplete } from "@web/core/autocomplete/autocomplete";
-import { browser } from "@web/core/browser/browser";
-import { many2ManyTagsFieldColorEditable } from "@web/views/fields/many2many_tags/many2many_tags_field";
+import { makeServerError } from "@web/../tests/helpers/mock_server";
 import {
     click,
     clickDiscard,
@@ -19,8 +17,10 @@ import {
     triggerEvent,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
-import { RPCError } from "@web/core/network/rpc_service";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
+import { browser } from "@web/core/browser/browser";
+import { many2ManyTagsFieldColorEditable } from "@web/views/fields/many2many_tags/many2many_tags_field";
 
 let serverData;
 let target;
@@ -1483,9 +1483,7 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
             mockRPC(route, args) {
                 if (args.method === "name_create") {
-                    const error = new RPCError("Something went wrong");
-                    error.exceptionName = "odoo.exceptions.ValidationError";
-                    throw error;
+                    throw makeServerError({ type: "ValidationError" });
                 }
                 if (args.method === "create") {
                     assert.deepEqual(args.args[0], {

@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { makeServerError } from "@web/../tests/helpers/mock_server";
 import { makeFakeDialogService } from "@web/../tests/helpers/mock_services";
 import {
     click,
@@ -19,10 +20,10 @@ import {
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import {
-    getVisibleButtons,
     getFacetTexts,
     getPagerLimit,
     getPagerValue,
+    getVisibleButtons,
     pagerNext,
     toggleSearchBarMenu,
     validateSearch,
@@ -31,22 +32,21 @@ import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
-import { makeErrorFromResponse, RPCError } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { nbsp } from "@web/core/utils/strings";
 import { getNextTabableElement } from "@web/core/utils/ui";
 import { session } from "@web/session";
-import { AnimatedNumber } from "@web/views/view_components/animated_number";
 import { KanbanController } from "@web/views/kanban/kanban_controller";
 import { kanbanView } from "@web/views/kanban/kanban_view";
 import { DynamicRecordList } from "@web/views/relational_model";
 import { ViewButton } from "@web/views/view_button/view_button";
+import { AnimatedNumber } from "@web/views/view_components/animated_number";
 
 import { Component, onWillRender, xml } from "@odoo/owl";
-import { SampleServer } from "@web/views/sample_server";
 import { pick } from "@web/core/utils/objects";
 import { KanbanDynamicGroupList } from "@web/views/kanban/kanban_model";
+import { SampleServer } from "@web/views/sample_server";
 
 const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");
@@ -3746,16 +3746,7 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["product_id"],
             async mockRPC(route, args) {
                 if (args.method === "name_create") {
-                    throw makeErrorFromResponse({
-                        code: 200,
-                        message: "Odoo Server Error",
-                        data: {
-                            name: "odoo.exceptions.UserError",
-                            debug: "traceback",
-                            arguments: ["This is a user error"],
-                            context: {},
-                        },
-                    });
+                    throw makeServerError({ message: "This is a user error" });
                 }
             },
         });
@@ -3801,16 +3792,7 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["product_id"],
             async mockRPC(route, args) {
                 if (args.method === "name_create") {
-                    throw makeErrorFromResponse({
-                        code: 200,
-                        message: "Odoo Server Error",
-                        data: {
-                            name: "odoo.exceptions.UserError",
-                            debug: "traceback",
-                            arguments: ["This is a user error"],
-                            context: {},
-                        },
-                    });
+                    throw makeServerError({ message: "This is a user error" });
                 }
             },
         });
@@ -3848,16 +3830,7 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
             async mockRPC(route, args) {
                 if (args.method === "name_create") {
-                    throw makeErrorFromResponse({
-                        code: 200,
-                        message: "Odoo Server Error",
-                        data: {
-                            name: "odoo.exceptions.UserError",
-                            debug: "traceback",
-                            arguments: ["This is a user error"],
-                            context: {},
-                        },
-                    });
+                    throw makeServerError({ message: "This is a user error" });
                 }
                 if (args.method === "create") {
                     assert.deepEqual(args.args[0], { foo: "blip" });
@@ -3907,16 +3880,7 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
             async mockRPC(route, args) {
                 if (args.method === "name_create") {
-                    throw makeErrorFromResponse({
-                        code: 200,
-                        message: "Odoo Server Error",
-                        data: {
-                            name: "odoo.exceptions.UserError",
-                            debug: "traceback",
-                            arguments: ["This is a user error"],
-                            context: {},
-                        },
-                    });
+                    throw makeServerError({ message: "This is a user error" });
                 }
                 if (args.method === "create") {
                     assert.deepEqual(args.args[0], { state: "abc" });
@@ -12719,7 +12683,7 @@ QUnit.module("Views", (hooks) => {
             async mockRPC(route, { method }) {
                 assert.step(method || route);
                 if (method === "name_create") {
-                    throw new RPCError();
+                    throw makeServerError();
                 }
             },
         });

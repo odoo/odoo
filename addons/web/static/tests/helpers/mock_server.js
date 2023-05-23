@@ -16,6 +16,7 @@ import { intersection } from "@web/core/utils/arrays";
 import { deepCopy, pick } from "@web/core/utils/objects";
 import { makeFakeRPCService, makeMockFetch } from "./mock_services";
 import { patchWithCleanup } from "./utils";
+import { makeErrorFromResponse } from "@web/core/network/rpc_service";
 
 const serviceRegistry = registry.category("services");
 
@@ -102,6 +103,21 @@ function makeLogger(prefix, title) {
     let hasCalledRequest = false;
 
     return { request, response };
+}
+
+export function makeServerError({ code, context, description, message, subType, type } = {}) {
+    return makeErrorFromResponse({
+        code: code || 200,
+        message: message || "Odoo Server Error",
+        data: {
+            name: `odoo.exceptions.${type || "UserError"}`,
+            debug: "traceback",
+            arguments: [],
+            context: context || {},
+            subType,
+            message: description,
+        },
+    });
 }
 
 /**

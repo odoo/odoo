@@ -2,6 +2,7 @@
 
 import { Component, EventBus, xml } from "@odoo/owl";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import { makeServerError } from "@web/../tests/helpers/mock_server";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import {
     addRow,
@@ -32,7 +33,6 @@ import { browser } from "@web/core/browser/browser";
 import { WarningDialog } from "@web/core/errors/error_dialogs";
 import { errorService } from "@web/core/errors/error_service";
 import { localization } from "@web/core/l10n/localization";
-import { RPCError } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 import { scrollerService } from "@web/core/scroller_service";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
@@ -11470,7 +11470,7 @@ QUnit.module("Views", (hooks) => {
             mockRPC(route, { method }) {
                 if (method === "write") {
                     assert.step("write");
-                    throw new RPCError("Something went wrong");
+                    throw makeServerError();
                 }
             },
         });
@@ -12068,7 +12068,7 @@ QUnit.module("Views", (hooks) => {
             mockRPC(route, { method }) {
                 if (method === "write") {
                     assert.step("write");
-                    throw new RPCError("Something went wrong");
+                    throw makeServerError();
                 }
             },
         });
@@ -12133,7 +12133,7 @@ QUnit.module("Views", (hooks) => {
             mockRPC(route, { method }) {
                 if (method === "write") {
                     assert.step("write");
-                    throw new RPCError("Something went wrong");
+                    throw makeServerError();
                 }
             },
         });
@@ -12167,10 +12167,7 @@ QUnit.module("Views", (hooks) => {
             mockRPC(route, { method }) {
                 if (method === "create") {
                     assert.step("create");
-                    const error = new RPCError("Some business message");
-                    error.data = { context: {} };
-                    error.exceptionName = "odoo.exceptions.UserError";
-                    throw error;
+                    throw makeServerError({ message: "Some business message" });
                 }
             },
         });
@@ -13056,7 +13053,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             class TestClientAction extends Component {
                 setup() {
-                    throw new RPCError("Something went wrong");
+                    throw new Error("Something went wrong");
                 }
             }
             TestClientAction.template = xml`<div></div>`;
@@ -13139,7 +13136,7 @@ QUnit.module("Views", (hooks) => {
         async function (assert) {
             class TestClientAction extends Component {
                 setup() {
-                    throw new RPCError("Something went wrong");
+                    throw new Error("Something went wrong");
                 }
             }
             TestClientAction.template = xml`<div></div>`;

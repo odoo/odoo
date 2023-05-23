@@ -2,7 +2,8 @@
 
 import { click, editInput, getFixture, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
-import { RPCError } from "@web/core/network/rpc_service";
+
+import { makeServerError } from "@web/../tests/helpers/mock_server";
 
 QUnit.module("QuestionPageOneToManyField", (hooks) => {
     let serverData;
@@ -188,14 +189,11 @@ QUnit.module("QuestionPageOneToManyField", (hooks) => {
             mockRPC(route, args) {
                 if (args.method === "write" && args.model === "survey") {
                     assert.step("save parent form");
-                    const surveyValidationError = new RPCError();
-                    Object.assign(surveyValidationError, {
-                        exceptionName: "odoo.exceptions.ValidationError",
-                        data: {
-                            message: "This isn't right!",
-                        },
+                    throw makeServerError({
+                        description: "This isn't right!",
+                        type: "ValidationError",
                     });
-                    return Promise.reject(surveyValidationError);
+
                 }
             },
         });

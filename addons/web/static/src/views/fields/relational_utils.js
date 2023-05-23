@@ -278,7 +278,7 @@ export class Many2XAutocomplete extends Component {
                             const context = this.getCreationContext(request);
                             return this.openMany2X({ context });
                         }
-                        throw e;
+                        throw e.message ? e.message : e;
                     }
                 },
             });

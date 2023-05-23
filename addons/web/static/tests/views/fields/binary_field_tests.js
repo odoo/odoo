@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import { makeServerError } from "@web/../tests/helpers/mock_server";
 import { makeMockXHR } from "@web/../tests/helpers/mock_services";
 import {
     click,
@@ -12,7 +13,6 @@ import {
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { browser } from "@web/core/browser/browser";
-import { RPCError } from "@web/core/network/rpc_service";
 
 const BINARY_FILE =
     "R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAAMlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7";
@@ -482,9 +482,7 @@ QUnit.module("Fields", (hooks) => {
         serverData.models.partner.onchanges = {
             document: function (obj) {
                 if (obj.document) {
-                    const error = new RPCError();
-                    error.exceptionName = "odoo.exceptions.ValidationError";
-                    throw error;
+                    throw makeServerError({ type: "ValidationError" });
                 }
             },
         };
