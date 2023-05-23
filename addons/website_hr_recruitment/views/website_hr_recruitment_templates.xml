@@ -60,10 +60,9 @@
                                                 <h3 t-field="job.name"/>
                                                 <span t-if="not job.website_published" class="badge bg-danger mb8 p-2">unpublished</span>
                                             </div>
-                                            <t t-set="open_positions_label">%s open positions</t>
                                             <h5 t-if="job.no_of_recruitment >= 3"
                                                 class="text-reset"
-                                                t-out="open_positions_label % job.no_of_recruitment"/>
+                                                t-out="'%s open positions' % job.no_of_recruitment"/>
                                             <t t-set="job_desc_edition_placeholder">Insert a Job Description...</t>
                                             <div class="oe_empty text-muted mb16"
                                                  t-field="job.description"
