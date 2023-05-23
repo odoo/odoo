@@ -21,14 +21,6 @@ export class ActionpadWidget extends Component {
     get isLongName() {
         return this.props.partner && this.props.partner.name.length > 10;
     }
-
-    clickPay() {
-        const order = this.pos.globalState.get_order();
-        if (order.orderlines.length) {
-            order.pay();
-        }
-    }
-
     get highlightPay() {
         return this.pos.globalState.get_order()?.orderlines?.length;
     }

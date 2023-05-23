@@ -14,10 +14,8 @@ import { ConnectionLostError } from "@web/core/network/rpc_service";
 
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { Component, onMounted, useState } from "@odoo/owl";
-import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { ErrorBarcodePopup } from "@point_of_sale/js/Popups/ErrorBarcodePopup";
 
-import { MobileOrderWidget } from "../../Misc/MobileOrderWidget";
 import { NumpadWidget } from "./NumpadWidget";
 import { OrderWidget } from "./OrderWidget";
 import { ProductsWidget } from "./ProductsWidget";
@@ -27,7 +25,6 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     static template = "ProductScreen";
     static components = {
         ActionpadWidget,
-        MobileOrderWidget,
         NumpadWidget,
         OrderWidget,
         ProductsWidget,
@@ -78,6 +75,12 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     }
     get currentOrder() {
         return this.pos.globalState.get_order();
+    }
+    get total() {
+        return this.env.utils.formatCurrency(this.currentOrder?.get_total_with_tax() ?? 0);
+    }
+    get items() {
+        return this.currentOrder.orderlines?.reduce((items, line) => items + line.quantity, 0) ?? 0;
     }
     async updateSelectedOrderline({ buffer, key }) {
         const { globalState } = this.pos;
@@ -230,6 +233,8 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             order.add_orderline(newLine);
         }
     }
+    // FIXME POSREF this is dead code, check if we need the business logic that's left in here
+    // If we do it should be in the model.
     async onClickPay() {
         const { globalState } = this.pos;
         if (globalState.get_order().server_id) {
@@ -258,29 +263,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                 Promise.reject(error);
             }
         }
-        if (
-            globalState
-                .get_order()
-                .orderlines.some(
-                    (line) =>
-                        line.get_product().tracking !== "none" && !line.has_valid_product_lot()
-                ) &&
-            (globalState.picking_type.use_create_lots || globalState.picking_type.use_existing_lots)
-        ) {
-            const { confirmed } = await this.popup.add(ConfirmPopup, {
-                title: this.env._t("Some Serial/Lot Numbers are missing"),
-                body: this.env._t(
-                    "You are trying to sell products with serial/lot numbers, but some of them are not set.\nWould you like to proceed anyway?"
-                ),
-                confirmText: this.env._t("Yes"),
-                cancelText: this.env._t("No"),
-            });
-            if (confirmed) {
-                this.pos.showScreen("PaymentScreen");
-            }
-        } else {
-            this.pos.showScreen("PaymentScreen");
-        }
+        this.currentOrder.pay();
     }
     switchPane() {
         this.state.mobile_pane = this.state.mobile_pane === "left" ? "right" : "left";

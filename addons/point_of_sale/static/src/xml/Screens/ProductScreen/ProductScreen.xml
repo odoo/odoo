@@ -31,10 +31,16 @@
                 </div>
                 <div class="rightpane" t-if="!ui.isSmall || state.mobile_pane === 'right'">
                     <ProductsWidget />
-                    <MobileOrderWidget
-                        t-if="ui.isSmall"
-                        pane="state.mobile_pane"
-                        onSwitchPane.bind="switchPane"/>
+                    <div t-if="ui.isSmall" class="switchpane">
+                        <button class="btn-switchpane" t-on-click="() => currentOrder.pay()">
+                            <h1>Pay</h1>
+                            <span t-esc="total"/>
+                        </button>
+                        <button class="btn-switchpane secondary" t-on-click="switchPane">
+                            <h1>Review</h1>
+                            <span><t t-esc="items"/> items</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
