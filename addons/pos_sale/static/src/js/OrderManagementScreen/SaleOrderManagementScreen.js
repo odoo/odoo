@@ -87,7 +87,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
     onPrevPage() {
         this.saleOrderFetcher.prevPage();
     }
-    onSearch({ detail: domain }) {
+    onSearch(domain) {
         this.saleOrderFetcher.setSearchDomain(domain);
         this.saleOrderFetcher.setPage(1);
         this.saleOrderFetcher.fetch();
