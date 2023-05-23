@@ -12,6 +12,7 @@ import { uiService } from "@web/core/ui/ui_service";
 import { getNextTabableElement } from "@web/core/utils/ui";
 import { session } from "@web/session";
 import { FloatField } from "@web/views/fields/float/float_field";
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { textField } from "@web/views/fields/text/text_field";
 import { ListController } from "@web/views/list/list_controller";
@@ -18835,6 +18836,80 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o_data_cell.o_list_many2one").textContent,
             "Value 3",
             "onchange result should be applied"
+        );
+    });
+
+    QUnit.test("context keys not passed down the stack and not to fields", async (assert) => {
+        patchWithCleanup(AutoComplete, {
+            timeout: 0,
+        });
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Foo",
+                res_model: "foo",
+                type: "ir.actions.act_window",
+                views: [[false, "list"]],
+                context: {
+                    tree_view_ref: "foo_view_ref",
+                    search_default_bar: true,
+                },
+            },
+        };
+        serverData.views = {
+            "foo,foo_view_ref,list": `
+                <tree default_order="foo" editable="top">
+                    <field name="m2m" widget="many2many_tags"/>
+                </tree>`,
+            "foo,false,search": "<search/>",
+            "bar,false,list": `<tree><field name="name" /></tree>`,
+            "bar,false,search": "<search/>",
+        };
+
+        const barRecs = [];
+        for (let i = 1; i < 50; i++) {
+            barRecs.push({
+                id: i,
+                display_name: `Value ${i}`,
+            });
+        }
+        serverData.models.bar.records = barRecs;
+
+        const mockRPC = (route, args) => {
+            if (args.method) {
+                assert.step(
+                    `${args.model}: ${args.method}: ${JSON.stringify(args.kwargs.context)}`
+                );
+            }
+        };
+        const wc = await createWebClient({ serverData, mockRPC });
+        await doAction(wc, 1);
+        assert.verifySteps([
+            `foo: get_views: {"lang":"en","uid":7,"tz":"taht","tree_view_ref":"foo_view_ref","search_default_bar":true}`,
+            `foo: web_search_read: {"lang":"en","uid":7,"tz":"taht","bin_size":true}`,
+            `bar: read: {"lang":"en","uid":7,"tz":"taht","bin_size":true}`,
+        ]);
+
+        await click(target.querySelectorAll(".o_data_row .o_data_cell")[1]);
+
+        const input = target.querySelector(".o_selected_row .o_field_many2many_tags input");
+        await triggerEvent(input, null, "focus");
+        await click(input);
+        await nextTick();
+        assert.verifySteps([`bar: name_search: {"lang":"en","uid":7,"tz":"taht"}`]);
+
+        const items = Array.from(
+            target.querySelectorAll(".o_selected_row .o_field_many2many_tags .dropdown-item")
+        );
+        await click(items.find((el) => el.textContent.trim() === "Search More..."));
+        assert.verifySteps([
+            `bar: get_views: {"lang":"en","uid":7,"tz":"taht"}`,
+            `bar: web_search_read: {"lang":"en","uid":7,"tz":"taht","bin_size":true}`,
+        ]);
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(
+            target.querySelector(".modal .modal-header .modal-title").textContent,
+            "Search: M2M field"
         );
     });
 });
