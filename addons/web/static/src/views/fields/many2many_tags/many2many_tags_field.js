@@ -44,6 +44,7 @@ export class Many2ManyTagsField extends Component {
         placeholder: { type: String, optional: true },
         nameCreateField: { type: String, optional: true },
         string: { type: String, optional: true },
+        noViewAll: { type: Boolean, optional: true },
     };
     static defaultProps = {
         canCreate: true,
