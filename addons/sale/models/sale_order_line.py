@@ -348,9 +348,9 @@ class SaleOrderLine(models.Model):
             name += "\n" + ptav.display_name
 
         # Sort the values according to _order settings, because it doesn't work for virtual records in onchange
-        custom_values = sorted(self.product_custom_attribute_value_ids, key=lambda r: (r.custom_product_template_attribute_value_id.id, r.id))
-        # display the is_custom values
-        for pacv in custom_values:
+        sorted_custom_ptav = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id.sorted()
+        for patv in sorted_custom_ptav:
+            pacv = self.product_custom_attribute_value_ids.filtered(lambda pcav: pcav.custom_product_template_attribute_value_id == patv)
             name += "\n" + pacv.display_name
 
         return name
