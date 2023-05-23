@@ -30,7 +30,6 @@
     ],
     'assets': {
         'web.assets_frontend': [
-            'payment/static/src/scss/portal_payment.scss',
             'payment/static/src/scss/payment_templates.scss',
             'payment/static/src/scss/payment_form.scss',
             'payment/static/lib/jquery.payment/jquery.payment.js',
