@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import * as utils from '@mail/js/utils';
+import { start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module('mail', {}, function () {
 
@@ -136,5 +137,21 @@ QUnit.test('addLink: linkify inside text node (2 occurrences)', function (assert
         "text content of 2nd link should be equivalent to its non-linkified version"
     );
 });
+
+QUnit.test("url", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const { click, insertText, openDiscuss } = await start({
+        discuss: {
+            context: { active_id: channelId },
+        },
+    });
+    await openDiscuss();
+    // see: https://www.ietf.org/rfc/rfc1738.txt
+    const messageBody = "https://odoo.com?test=~^|`{}[]#";
+    await insertText(".o_ComposerTextInput_textarea", messageBody);
+    await click("button:contains(Send)");
+    assert.containsOnce($, `.o_Message a:contains(${messageBody})`);
+})
 
 });
