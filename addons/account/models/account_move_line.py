@@ -1842,7 +1842,7 @@ class AccountMoveLine(models.Model):
                     if not company_currency.is_zero(credit_exchange_amount):
                         exchange_lines_to_fix += credit_aml
                         amounts_list.append({'amount_residual': credit_exchange_amount})
-                        remaining_credit_amount += credit_exchange_amount
+                        remaining_credit_amount -= credit_exchange_amount
                         if credit_aml.currency_id == company_currency:
                             remaining_credit_amount_curr -= credit_exchange_amount
                 else:
