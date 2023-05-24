@@ -1608,7 +1608,8 @@ class Request:
         ir_http._authenticate(rule.endpoint)
         ir_http._pre_dispatch(rule, args)
         response = self.dispatcher.dispatch(rule.endpoint, args)
-        ir_http._post_dispatch(response)
+        # the registry can have been reniewed by dispatch
+        self.registry['ir.http']._post_dispatch(response)
         return response
 
 
