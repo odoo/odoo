@@ -3,6 +3,18 @@
 import { _t } from "@web/core/l10n/translation";
 import { BomOverviewDisplayFilter } from "../bom_overview_display_filter/mrp_bom_overview_display_filter";
 
+export const SHOW_OPTIONS = {
+    type: Object,
+    shape: {
+        uom: Boolean,
+        replenishments: Boolean,
+        availabilities: Boolean,
+        receipts: Boolean,
+        moCosts: Boolean,
+        realCosts: Boolean,
+    },
+};
+
 export class MoOverviewDisplayFilter extends BomOverviewDisplayFilter {
     setup() {
         if (!this.props.limited) {
@@ -15,23 +27,13 @@ export class MoOverviewDisplayFilter extends BomOverviewDisplayFilter {
         this.displayOptions = {
             ...(this.displayOptions || {}),
             moCosts: _t("MO Costs"),
-            productCosts: _t("Product Costs"),
+            realCosts: _t("Real Costs"),
         };
     }
 }
 
 MoOverviewDisplayFilter.props = {
-    showOptions: {
-        type: Object,
-        shape: {
-            uom: Boolean,
-            replenishments: Boolean,
-            availabilities: Boolean,
-            receipts: Boolean,
-            moCosts: Boolean,
-            productCosts: Boolean,
-        },
-    },
+    showOptions: SHOW_OPTIONS,
     changeDisplay: Function,
     limited: { type: Boolean, optional: true },
 };

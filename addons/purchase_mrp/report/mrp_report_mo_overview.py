@@ -74,7 +74,7 @@ class ReportMoOverview(models.AbstractModel):
             return move.purchase_line_id.order_id
         return super()._get_origin(move)
 
-    def _get_replenishment_cost(self, product, quantity, uom_id, currency, move_in=False):
+    def _get_replenishment_mo_cost(self, product, quantity, uom_id, currency, move_in=False):
         if move_in and move_in.purchase_line_id:
             po_line = move_in.purchase_line_id
             po = po_line.order_id
@@ -83,4 +83,4 @@ class ReportMoOverview(models.AbstractModel):
                 product=po_line.product_id, partner=po.partner_id
             )['total_void']
             return currency.round(price)
-        return super()._get_replenishment_cost(product, quantity, uom_id, currency, move_in)
+        return super()._get_replenishment_mo_cost(product, quantity, uom_id, currency, move_in)

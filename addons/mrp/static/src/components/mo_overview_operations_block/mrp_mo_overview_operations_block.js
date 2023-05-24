@@ -4,6 +4,7 @@ import { Component, useState } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
 import { formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
 import { MoOverviewLine } from "../mo_overview_line/mrp_mo_overview_line";
+import { SHOW_OPTIONS } from "../mo_overview_display_filter/mrp_mo_overview_display_filter";
 
 export class MoOverviewOperationsBlock extends Component {
     static template = "mrp.MoOverviewOperationsBlock";
@@ -72,22 +73,13 @@ MoOverviewOperationsBlock.props = {
             quantity_decorator: { type: [String, Boolean], optional: true },
             mo_cost: { type: Number, optional: true },
             mo_cost_decorator: { type: [String, Boolean], optional: true },
+            real_cost: { type: Number, optional: true },
             uom_name: { type: String, optional: true },
             currency_id: { type: Number, optional: true },
             currency: { type: String, optional: true },
         },
     },
-    showOptions: {
-        type: Object,
-        shape: {
-            uom: Boolean,
-            replenishments: Boolean,
-            availabilities: Boolean,
-            receipts: Boolean,
-            moCosts: Boolean,
-            productCosts: Boolean,
-        },
-    },
+    showOptions: SHOW_OPTIONS,
 };
 MoOverviewOperationsBlock.defaultProps = {
     unfoldAll: false,

@@ -36,9 +36,7 @@
             </t>
         </td>
         <td t-attf-class="text-end {{ getColorClass(data.mo_cost_decorator) }}" t-if="props.showOptions.moCosts" t-out="formatMonetary(data.mo_cost)"/>
-        <td class="text-end" t-if="props.showOptions.productCosts">
-            <t t-if="hasQuantity('product_cost')" t-out="formatMonetary(data.product_cost)"/>
-        </td>
+        <td class="text-end" t-if="props.showOptions.realCosts" t-out="formatMonetary(data.real_cost)"/>
     </tr>
 
 </templates>
