@@ -173,7 +173,7 @@
                     <field name="subtask_effective_hours" widget="timesheet_uom" sum="Sub-Tasks Total Effective Hours" optional="hide"/>
                     <field name="total_hours_spent" widget="timesheet_uom" sum="Total Hours" optional="hide"/>
                     <field name="remaining_hours" widget="timesheet_uom" sum="Total Remaining Hours" optional="hide" decoration-danger="progress &gt;= 100" decoration-warning="progress &gt;= 80 and progress &lt; 100" attrs="{'invisible' : [('planned_hours', '=', 0)]}"/>
-                    <field name="progress" widget="progressbar" optional="show" groups="hr_timesheet.group_hr_timesheet_user" attrs="{'invisible' : [('planned_hours', '=', 0)]}" options="{'overflow_class': 'bg-danger'}" />
+                    <field name="progress" widget="progressbar" avg="Average of Progress" optional="show" groups="hr_timesheet.group_hr_timesheet_user" attrs="{'invisible' : [('planned_hours', '=', 0)]}" options="{'overflow_class': 'bg-danger'}" />
                 </field>
             </field>
         </record>
