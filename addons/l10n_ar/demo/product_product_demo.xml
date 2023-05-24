@@ -7,8 +7,8 @@
         <field name="default_code">AFIP_DESPACHO</field>
         <field name="sale_ok" eval="False"/>
         <field name="uom_id" ref="uom.product_uom_unit"/>
-        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
-        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'IVA No Gravado')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'IVA No Gravado')]"/>
     </record>
 
     <record id="product_product_tasa_estadistica" model="product.product">
@@ -17,8 +17,8 @@
         <field name="default_code">AFIP_TASA_EST</field>
         <field name="sale_ok" eval="False"/>
         <field name="uom_id" ref="uom.product_uom_unit"/>
-        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
-        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'IVA No Gravado')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'IVA No Gravado')]"/>
     </record>
 
     <record id="product_product_arancel" model="product.product">
@@ -27,8 +27,8 @@
         <field name="default_code">AFIP_ARANCEL</field>
         <field name="sale_ok" eval="False"/>
         <field name="uom_id" ref="uom.product_uom_unit"/>
-        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
-        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'IVA No Gravado')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'IVA No Gravado')]"/>
     </record>
 
     <record id="product_product_servicio_de_guarda" model="product.product">
@@ -37,8 +37,8 @@
         <field name="default_code">AFIP_SERV_GUARDA</field>
         <field name="sale_ok" eval="False"/>
         <field name="uom_id" ref="uom.product_uom_unit"/>
-        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
-        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'IVA No Gravado')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'IVA No Gravado')]"/>
     </record>
 
     <record id="product_product_exento" model="product.product">
@@ -50,8 +50,8 @@
         <field name="uom_id" ref="uom.product_uom_unit"/>
         <field name="uom_po_id" ref="uom.product_uom_unit"/>
         <field name="default_code">EXENTO</field>
-        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT Exempt')]"/>
-        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT Exempt')]"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'IVA Exento')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'IVA Exento')]"/>
     </record>
 
     <record id="product_product_cero" model="product.product">
@@ -63,8 +63,8 @@
         <field name="uom_id" ref="uom.product_uom_unit"/>
         <field name="uom_po_id" ref="uom.product_uom_unit"/>
         <field name="default_code">CERO</field>
-        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 0%')]"/>
-        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT 0%')]"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'IVA 0%')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'IVA 0%')]"/>
     </record>
     <record id="product_product_no_gravado" model="product.product">
         <field name="name">Untaxed concepts (VAT NT)</field>
@@ -75,8 +75,8 @@
         <field name="uom_id" ref="uom.product_uom_unit"/>
         <field name="uom_po_id" ref="uom.product_uom_unit"/>
         <field name="default_code">NOGRAVADO</field>
-        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
-        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT Untaxed')]"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'IVA No Gravado')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'IVA No Gravado')]"/>
     </record>
     <record id="product_product_telefonia" model="product.product">
         <field name="name">Telephone service (VAT 27)</field>
@@ -87,8 +87,8 @@
         <field name="uom_id" ref="uom.product_uom_unit"/>
         <field name="uom_po_id" ref="uom.product_uom_unit"/>
         <field name="default_code">TELEFONIA</field>
-        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 27%')]"/>
-        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT 27%')]"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'IVA 27%')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'IVA 27%')]"/>
     </record>
 
     <record id="product.product_product_2" model="product.product">
@@ -99,14 +99,14 @@
 
     <record id="product.product_product_25" model="product.product">
         <!-- agregamos percecipn aplicada y sufrida tambien -->
-        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', 'in', ['VAT 10.5%', 'Percepción IIBB', 'Percepción Ganancias', 'Percepción IVA'])]"/>
-        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', 'in', ['VAT 10.5%', 'Percepción IIBB', 'Percepción Ganancias', 'Percepción IVA'])]"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', 'in', ['IVA 10,5%', 'Percepción IIBB', 'Percepción Ganancias', 'Percepción IVA'])]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', 'in', ['IVA 10,5%', 'Percepción IIBB', 'Percepción Ganancias', 'Percepción IVA'])]"/>
         <field name="standard_price">3280.0</field>
     </record>
 
     <record id="product.product_product_27" model="product.product">
-        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'VAT 10.5%')]"/>
-        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'VAT 10.5%')]"/>
+        <field name="taxes_id" search="[('type_tax_use', '=', 'sale'), ('tax_group_id', '=', 'IVA 10,5%')]"/>
+        <field name="supplier_taxes_id" search="[('type_tax_use', '=', 'purchase'), ('tax_group_id', '=', 'IVA 10,5%')]"/>
         <field name="standard_price">4500.0</field>
     </record>
 
