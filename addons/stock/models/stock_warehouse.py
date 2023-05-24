@@ -370,12 +370,12 @@ class Warehouse(models.Model):
                 self[rule_field] = self.env['stock.rule'].create(values)
         return True
 
-    def _find_global_route(self, xml_id, route_name):
+    def _find_global_route(self, xml_id, route_name, raise_if_not_found=True):
         """ return a route record set from an xml_id or its name. """
         route = self.env.ref(xml_id, raise_if_not_found=False)
         if not route:
             route = self.env['stock.route'].search([('name', 'like', route_name)], limit=1)
-        if not route:
+        if not route and raise_if_not_found:
             raise UserError(_('Can\'t find any generic route %s.') % (route_name))
         return route
 
@@ -391,6 +391,12 @@ class Warehouse(models.Model):
             -update_values: values used to update the route when a field in
             depends is modify on the warehouse.
         """
+        vals = self._generate_global_route_rules_values()
+        # `route_id` might be `False` if the user has deleted it, in such case we
+        # should simply ignore the rule
+        return {k: v for k, v in vals.items() if v.get('create_values', {}).get('route_id', True) and v.get('update_values', {}).get('route_id', True)}
+
+    def _generate_global_route_rules_values(self):
         # We use 0 since routing are order from stock to cust. If the routing
         # order is modify, the mto rule will be wrong.
         rule = self.get_rules_dict()[self.id][self.delivery_steps]
@@ -408,7 +414,7 @@ class Warehouse(models.Model):
                     'action': 'pull',
                     'auto': 'manual',
                     'propagate_carrier': True,
-                    'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)')).id
+                    'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'), raise_if_not_found=False).id
                 },
                 'update_values': {
                     'name': self._format_rulename(location_id, location_dest_id, 'MTO'),
