@@ -3,6 +3,9 @@
     <data noupdate="1">
 
     <!--Department-->
+        <record id="dep_sales" model="hr.department">
+            <field name="name">Sales</field>
+        </record>
 
       <record id="dep_management" model="hr.department">
           <field name="name">Management</field>
@@ -28,16 +31,6 @@
 
 
       <!-- Contract Types -->
-      <record id="contract_type_permanent" model="hr.contract.type">
-          <field name="name">Permanent</field>
-          <field name="sequence">1</field>
-      </record>
-
-      <record id="contract_type_temporary" model="hr.contract.type">
-          <field name="name">Temporary</field>
-          <field name="sequence">2</field>
-      </record>
-
       <record id="contract_type_interim" model="hr.contract.type">
           <field name="name">Interim</field>
           <field name="sequence">3</field>
