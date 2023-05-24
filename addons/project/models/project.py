@@ -2474,7 +2474,7 @@ class Task(models.Model):
         children = self.child_ids
         if not children:
             return self.env['project.task']
-        return children + children._get_all_subtasks()
+        return children + children._get_subtasks_recursively()
 
     def action_open_parent_task(self):
         return {
