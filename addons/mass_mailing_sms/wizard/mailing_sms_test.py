@@ -54,14 +54,15 @@ class MassSMSTest(models.TransientModel):
                     _('Test SMS successfully sent to %s', sent_sms.get('res_id')))
             elif sent_sms.get('state'):
                 notification_messages.append(
-                    _('Test SMS could not be sent to %s:<br>%s',
+                    _('Test SMS could not be sent to %s: %s',
                     sent_sms.get('res_id'),
                     error_messages.get(sent_sms['state'], _("An error occurred.")))
                 )
 
         if notification_messages:
-            self.mailing_id._message_log(body=Markup('<ul>%s</ul>') % ''.join(
-                [Markup('<li>%s</li>') % notification_message for notification_message in notification_messages]
-            ))
+            message_body = Markup(
+                f"<ul>{''.join('<li>%s</li>' for _ in notification_messages)}</ul>"
+            ) % tuple(notification_messages)
+            self.mailing_id._message_log(body=message_body)
 
         return True
