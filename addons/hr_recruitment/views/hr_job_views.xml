@@ -251,6 +251,10 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_favorite_jobs']" position="after">
                 <filter string="My Job Positions" name="my_positions" domain="[('user_id', '=', uid)]"/>
+                <searchpanel>
+                    <field name="company_id" groups="base.group_multi_company" icon="fa-building" enable_counters="1"/>
+                    <field name="department_id" icon="fa-users" enable_counters="1"/>
+                </searchpanel>
             </xpath>
         </field>
     </record>
