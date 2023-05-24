@@ -18,9 +18,18 @@ def get_test_modules(module):
     feed unittest.TestLoader.loadTestsFromModule() """
     results = _get_tests_modules(importlib.util.find_spec(f'odoo.addons.{module}'))
 
-    upgrade_spec = importlib.util.find_spec(f'odoo.upgrade.{module}')
-    if upgrade_spec:
-        results += list(_get_upgrade_test_modules(module))
+    # list of tuples with potential upgrade-script containing python
+    # modules and their respective `glob` pattern for test files
+    upgrade_modules = [
+        (f'odoo.upgrade.{module}', 'tests/test_*.py'),
+        (f'odoo.addons.{module}.migrations', '*/tests/test_*.py'),
+        (f'odoo.addons.{module}.upgrades', '*/tests/test_*.py'),
+    ]
+
+    for module_name, tests_glob in upgrade_modules:
+        if importlib.util.find_spec(module_name):
+            upgrade_module = importlib.import_module(module_name)
+            results += list(_get_upgrade_test_modules(upgrade_module, tests_glob))
 
     return results
 
@@ -38,11 +47,10 @@ def _get_tests_modules(mod):
     ]
 
 
-def _get_upgrade_test_modules(module):
-    upg = importlib.import_module("odoo.upgrade")
-    for path in map(Path, upg.__path__):
-        for test in (path / module / "tests").glob("test_*.py"):
-            spec = importlib.util.spec_from_file_location(f"odoo.upgrade.{module}.tests.{test.stem}", test)
+def _get_upgrade_test_modules(upgrade_module, tests_glob):
+    for path in map(Path, upgrade_module.__path__):
+        for test in path.glob(tests_glob):
+            spec = importlib.util.spec_from_file_location(f"{upgrade_module.__name__}.tests.{test.stem}", test)
             if not spec:
                 continue
             pymod = importlib.util.module_from_spec(spec)
