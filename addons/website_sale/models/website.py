@@ -520,8 +520,8 @@ class Website(models.Model):
 
         return {
             'none': (0, 12),
-            '50_pc': (6, 6),
-            '66_pc': (8, 4),
+            '50_pc': (6, 5),
+            '66_pc': (7, 4),
             '100_pc': (12, 12),
         }.get(self.product_page_image_width)
 

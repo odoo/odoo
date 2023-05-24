@@ -231,8 +231,8 @@
         <div t-attf-class="o_pricelist_dropdown dropdown #{_classes if hasPricelistDropdown else 'd-none'}">
             <t t-set="curr_pl" t-value="website.pricelist_id" />
 
-            <a role="button" href="#" t-attf-class="dropdown-toggle btn btn-{{navClass}}" data-bs-toggle="dropdown">
-                <t t-esc="curr_pl and curr_pl.name or ' - '" />
+            <a role="button" href="#" t-attf-class="dropdown-toggle d-flex align-items-center btn btn-{{navClass}}" data-bs-toggle="dropdown">
+                <span class="o_pricelist_dropdown_span d-inline-block text-truncate" t-esc="curr_pl and curr_pl.name or ' - '"/>
             </a>
             <div class="dropdown-menu" role="menu">
                 <t t-foreach="website_sale_pricelists" t-as="pl">
@@ -888,27 +888,17 @@
 
         <t t-call="website.layout">
             <t t-set="additional_title" t-value="product.name" />
+            <t t-set="image_cols" t-value="website._get_product_page_proportions()"/>
+            <t t-set="o_product_width" t-value="website.product_page_image_width"/>
+            <t t-set="o_product_width_fw" t-value="o_product_width == 'none' or o_product_width == '100_pc'"/>
+
             <div itemscope="itemscope" itemtype="http://schema.org/Product" id="wrap" class="js_sale o_wsale_product_page">
                 <div class="oe_structure oe_empty oe_structure_not_nearest" id="oe_structure_website_sale_product_1" data-editor-message="DROP BUILDING BLOCKS HERE TO MAKE THEM AVAILABLE ACROSS ALL PRODUCTS"/>
                 <section t-attf-class="container py-4 oe_website_sale #{'discount' if combination_info['has_discounted_price'] else ''}" id="product_detail"
                     t-att-data-view-track="view_track and '1' or '0'"
                     t-att-data-product-tracking-info="json.dumps(request.env['product.template'].get_google_analytics_data(combination_info))">
                     <div class="row align-items-center">
-                        <div class="col-lg-6 d-flex align-items-center">
-                            <div class="d-flex justify-content-between w-100">
-                                <t t-if="is_view_active('website_sale.search')" t-call="website_sale.search">
-                                    <t t-set="search" t-value="False"/>
-                                    <t t-set="_form_classes" t-valuef="mb-2 mb-lg-0"/>
-                                    <t t-set="_classes" t-value="'me-sm-2'"/>
-                                </t>
-                                <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)" />
-                                <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
-                                <t t-call="website_sale.pricelist_list">
-                                    <t t-set="_classes" t-valuef="d-lg-inline ms-2"/>
-                                </t>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 d-flex align-items-center">
+                        <div t-attf-class="{{'col-lg-6' if o_product_width_fw else 'col-xl-' + str(image_cols[0]) + ' col-lg-' + str(image_cols[0] + 1)}} d-flex align-items-center">
                             <ol class="breadcrumb p-0 mb-2 m-lg-0">
                                 <li class="breadcrumb-item o_not_editable">
                                     <a t-att-href="keep(category=0)">All Products</a>
@@ -921,31 +911,53 @@
                                 </li>
                             </ol>
                         </div>
+                        <div t-attf-class="{{'col-lg-6 offset-xl-1 col-xl-5' if o_product_width_fw else 'offset-xl-1 col-lg-' + str(image_cols[1])}} d-flex align-items-center">
+                            <div class="d-flex justify-content-between flex-grow-1">
+                                <t t-set="website_sale_pricelists" t-value="website.get_pricelist_available(show_visible=True)"/>
+                                <t t-set="hasPricelistDropdown" t-value="website_sale_pricelists and len(website_sale_pricelists)&gt;1"/>
+                                <t t-call="website_sale.pricelist_list">
+                                    <t t-set="_classes" t-valuef="me-2"/>
+                                </t>
+                                <t t-if="is_view_active('website_sale.search')" t-call="website_sale.search">
+                                    <t t-set="search" t-value="False"/>
+                                    <t t-set="_form_classes" t-valuef="mb-2 mb-lg-0"/>
+                                    <t t-set="_classes" t-value="'me-sm-2'"/>
+                                </t>
+
+                            </div>
+                        </div>
                     </div>
                     <div class="row" id="product_detail_main" data-name="Product Page"
                         t-att-data-image_width="website.product_page_image_width"
                         t-att-data-image_layout="website.product_page_image_layout">
-                        <t t-set="image_cols" t-value="website._get_product_page_proportions()"/>
-                        <div t-attf-class="col-lg-#{image_cols[0]} mt-lg-4 o_wsale_product_images position-relative" t-if="website.product_page_image_width != 'none'">
+
+                        <div t-attf-class="o_wsale_product_images position-relative col-xl-#{image_cols[0]} col-lg-#{image_cols[0] + 1} mt-lg-4" t-if="o_product_width != 'none'">
                             <t t-call="website_sale.shop_product_images"/>
                         </div>
-                        <div t-attf-class="col-lg-#{image_cols[1]} mt-md-4" id="product_details">
-                            <t t-set="base_url" t-value="product.get_base_url()"/>
-                            <h1 itemprop="name" t-field="product.name">Product Name</h1>
-                            <span itemprop="url" style="display:none;" t-esc="base_url + product.website_url"/>
-                            <span itemprop="image" style="display:none;" t-esc="base_url + website.image_url(product, 'image_1920')" />
-                            <t t-if="is_view_active('website_sale.product_comment')">
-                                <a href="#o_product_page_reviews" class="o_product_page_reviews_link text-decoration-none">
-                                    <t t-call="portal_rating.rating_widget_stars_static">
-                                        <t t-set="rating_avg" t-value="product.rating_avg"/>
-                                        <t t-set="trans_text_plural">%s reviews</t>
-                                        <t t-set="trans_text_singular">%s review</t>
-                                        <t t-set="rating_count" t-value="(trans_text_plural if product.rating_count > 1 else trans_text_singular) % product.rating_count"/>
+                        <div id="product_details" t-attf-class="{{'row m-0 p-0' if o_product_width_fw else 'offset-xl-1 col-lg-' + str(image_cols[1])}} mt-lg-4">
+                            <div t-attf-class="d-flex {{'gap-3' if o_product_width_fw else ''}}">
+                                <div t-attf-class="{{'flex-grow-1'if not o_product_width_fw else ''}} mb-3">
+                                    <h1 itemprop="name" t-field="product.name">Product Name</h1>
+                                    <t t-if="is_view_active('website_sale.product_comment')">
+                                        <a href="#o_product_page_reviews" class="o_product_page_reviews_link text-decoration-none">
+                                            <t t-call="portal_rating.rating_widget_stars_static">
+                                                <t t-set="rating_avg" t-value="product.rating_avg"/>
+                                                <t t-set="trans_text_plural">%s reviews</t>
+                                                <t t-set="trans_text_singular">%s review</t>
+                                                <t t-set="rating_count" t-value="(trans_text_plural if product.rating_count > 1 else trans_text_singular) % product.rating_count"/>
+                                            </t>
+                                        </a>
                                     </t>
-                                </a>
-                            </t>
-                            <p t-field="product.description_sale" class="text-muted my-2" placeholder="A short description that will also appear on documents." />
-                            <form t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
+                                </div>
+                            </div>
+                            <div id="o_product_description_div" t-attf-class="{{'col-xl-6' if o_product_width_fw else ''}} d-flex flex-column">
+                                <t t-set="base_url" t-value="product.get_base_url()"/>
+
+                                <span itemprop="url" style="display:none;" t-out="base_url + product.website_url"/>
+                                <span itemprop="image" style="display:none;" t-out="base_url + website.image_url(product, 'image_1920')" />
+                                <p t-field="product.description_sale" class="text-muted my-2" placeholder="A short description that will also appear on documents." />
+                            </div>
+                            <form t-attf-class="{{'col-lg-6 offset-xl-1 col-xl-5' if o_product_width_fw else ''}}" t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                 <div class="js_product js_main_product mb-3">
                                     <div>
