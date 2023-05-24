@@ -204,7 +204,7 @@ class Website(Home):
         # default lang in case we switch from /fr -> /en with /en as default lang.
         request.update_context(lang=lang_code)
         redirect = request.redirect(r or ('/%s' % lang))
-        redirect.set_cookie('frontend_lang', lang_code)
+        redirect.set_cookie('frontend_lang', lang_code, max_age=365 * 24 * 3600)
         return redirect
 
     @http.route(['/website/country_infos/<model("res.country"):country>'], type='json', auth="public", methods=['POST'], website=True)

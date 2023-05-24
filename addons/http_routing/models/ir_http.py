@@ -466,28 +466,28 @@ class IrHttp(models.AbstractModel):
         elif not url_lang_str:
             _logger.debug("%r (lang: %r) missing lang in url, redirect", path, request_url_code)
             redirect = request.redirect_query(f'/{request_url_code}{path}', request.httprequest.args)
-            redirect.set_cookie('frontend_lang', request.lang._get_cached('code'))
+            redirect.set_cookie('frontend_lang', request.lang._get_cached('code'), max_age=365 * 24 * 3600)
             werkzeug.exceptions.abort(redirect)
 
         # See /6, default lang in url, /en/home -> /home
         elif url_lang_str == default_lang.url_code and allow_redirect:
             _logger.debug("%r (lang: %r) default lang in url, redirect", path, request_url_code)
             redirect = request.redirect_query(path_no_lang, request.httprequest.args)
-            redirect.set_cookie('frontend_lang', default_lang._get_cached('code'))
+            redirect.set_cookie('frontend_lang', default_lang._get_cached('code'), max_age=365 * 24 * 3600)
             werkzeug.exceptions.abort(redirect)
 
         # See /7, lang alias in url, /fr_FR/home -> /fr/home
         elif url_lang_str != request_url_code and allow_redirect:
             _logger.debug("%r (lang: %r) lang alias in url, redirect", path, request_url_code)
             redirect = request.redirect_query(f'/{request_url_code}{path_no_lang}', request.httprequest.args, code=301)
-            redirect.set_cookie('frontend_lang', request.lang._get_cached('code'))
+            redirect.set_cookie('frontend_lang', request.lang._get_cached('code'), max_age=365 * 24 * 3600)
             werkzeug.exceptions.abort(redirect)
 
         # See /8, homepage with trailing slash. /fr_BE/ -> /fr_BE
         elif path == f'/{url_lang_str}/' and allow_redirect:
             _logger.debug("%r (lang: %r) homepage with trailing slash, redirect", path, request_url_code)
             redirect = request.redirect_query(path[:-1], request.httprequest.args, code=301)
-            redirect.set_cookie('frontend_lang', default_lang._get_cached('code'))
+            redirect.set_cookie('frontend_lang', default_lang._get_cached('code'), max_age=365 * 24 * 3600)
             werkzeug.exceptions.abort(redirect)
 
         # See /9, valid lang in url
@@ -576,7 +576,7 @@ class IrHttp(models.AbstractModel):
     def _frontend_pre_dispatch(cls):
         request.update_context(lang=request.lang._get_cached('code'))
         if request.httprequest.cookies.get('frontend_lang') != request.lang._get_cached('code'):
-            request.future_response.set_cookie('frontend_lang', request.lang._get_cached('code'))
+            request.future_response.set_cookie('frontend_lang', request.lang._get_cached('code'), max_age=365 * 24 * 3600)
 
     @classmethod
     def _get_exception_code_values(cls, exception):
