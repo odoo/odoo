@@ -2512,7 +2512,7 @@ class Task(models.Model):
 
     def action_open_task(self):
         return {
-            'view_mode': 'form',
+            'views': [[False, "form"]],
             'res_model': 'project.task',
             'res_id': self.id,
             'type': 'ir.actions.act_window',
