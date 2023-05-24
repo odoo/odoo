@@ -938,7 +938,6 @@
                             <div t-attf-class="d-flex {{'gap-3' if o_product_width_fw else ''}}">
                                 <div t-attf-class="{{'flex-grow-1'if not o_product_width_fw else ''}} mb-3">
                                     <h1 itemprop="name" t-field="product.name">Product Name</h1>
-                                    <div id="product_option_block" class="d-flex flex-wrap w-100"/>
                                     <t t-if="is_view_active('website_sale.product_comment')">
                                         <a href="#o_product_page_reviews" class="o_product_page_reviews_link text-decoration-none">
                                             <t t-call="portal_rating.rating_widget_stars_static">
@@ -950,6 +949,7 @@
                                         </a>
                                     </t>
                                 </div>
+                                <div id="product_option_block" class="d-flex align-items-start"/>
                             </div>
                             <div id="o_product_description_div" t-attf-class="{{'col-lg-6' if o_product_width_fw else ''}} d-flex flex-column mb-2">
                                 <t t-set="base_url" t-value="product.get_base_url()"/>
@@ -1024,8 +1024,6 @@
                                     </t>
                                 </table>
                             </div>
-                            <div id="o_product_terms_and_share" class="d-flex justify-content-between flex-column flex-md-row align-items-md-end mb-3">
-                            </div>
                             <!-- terms and conditions change position according to the image layout -->
                             <div t-attf-class="{{'d-lg-none' if o_product_width_fw else ''}}">
                                 <t t-call="website_sale.product_custom_text"/>
@@ -1071,13 +1069,16 @@
     </template>
 
     <template id="product_share_buttons" inherit_id="website_sale.product" active="True" name="Share Buttons" priority="22">
-        <xpath expr="//div[@id='o_product_terms_and_share']" position="inside">
-            <div class="h4 mt-3 mb-0 d-flex justify-content-md-end flex-shrink-0" contenteditable="false">
+        <xpath expr="//div[@id='product_option_block']" position="inside">
+            <div class="dropdown">
+                <button class="o_wsale_share_btn btn btn-link d-flex p-0 text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-share-alt fs-3" role="img" aria-label="Share product" data-bs-original-title="" title="" aria-describedby="tooltip374124"></i>
+                </button>
                 <t t-snippet-call="website.s_share">
                     <t t-set="_exclude_share_links" t-value="['whatsapp', 'linkedin']"/>
                     <t t-set="_no_title" t-value="True"/>
-                    <t t-set="_classes" t-valuef="text-lg-end"/>
-                    <t t-set="_link_classes" t-valuef="mx-1 my-0"/>
+                    <t t-set="_classes" t-valuef="dropdown-menu o_wsale_share_menu"/>
+                    <t t-set="_link_classes" t-valuef="dropdown-item m-0 p-0 py-2"/>
                 </t>
             </div>
         </xpath>

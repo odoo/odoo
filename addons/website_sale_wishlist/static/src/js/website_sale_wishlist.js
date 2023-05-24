@@ -83,6 +83,8 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
         var templateId = $form.find('.product_template_id').val();
         // when adding from /shop instead of the product page, need another selector
         if (!templateId) {
+            productID = parseInt($el.data('product-product-id'));
+            $form = $el.closest('#product_details').find('form');
             templateId = $el.data('product-template-id');
         }
         $el.prop("disabled", true).addClass('disabled');
