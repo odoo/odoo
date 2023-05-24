@@ -3,26 +3,31 @@
     <template id="report_ddt_view">
         <t t-call="web.external_layout">
             <t t-set="o" t-value="o.with_context(lang=lang)"/>
+            <t t-if="o.move_ids_without_package and o.move_ids_without_package[0].partner_id and o.location_dest_id.usage == 'customer' and o.location_id.usage == 'supplier'">
+              <t t-set="delivery_from" t-value="o.partner_id"/>
+              <t t-set="delivery_to" t-value="o.move_ids_without_package[0].partner_id"/>
+            </t>
+            <t t-elif="o.picking_type_id.warehouse_id.partner_id">
+              <t t-set="delivery_from" t-value="o.picking_type_id.warehouse_id.partner_id"/>
+              <t t-set="delivery_to" t-value="o.partner_id"/>
+            </t>
+            <t t-else="">
+              <t t-set="delivery_from" t-value="o.company_id.partner_id"/>
+              <t t-set="delivery_to" t-value="o.partner_id"/>
+            </t>
             <div class="page">
                 <div class="row">
                     <div class="col-6">
                        <span><strong>Warehouse Address:</strong></span>
-                        <t t-set="delivery_from" t-value="o.picking_type_id.warehouse_id.partner_id or o.company_id.partner_id"/>
-                        <t t-if="o.picking_type_id.warehouse_id.partner_id">
-                            <div t-field="o.picking_type_id.warehouse_id.partner_id"
-                                t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                        </t>
-                        <t t-else="">
-                            <div t-field="o.company_id.partner_id"
-                            t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
-                        </t>
+                        <div t-esc="delivery_from"
+                        t-options='{"widget": "contact", "fields": ["address", "name", "phone"], "no_marker": True, "phone_icons": True}'/>
                         <p t-if="delivery_from.vat">VAT: <span t-field="delivery_from.vat"/></p>
                     </div>
                     <div class="col-5 offset-1">
                         <div>
                             <span><strong>Customer Address:</strong></span>
-                            <div t-field="o.partner_id"
-                                 t-options='{"widget": "contact", "fields": ["address", "name", "phone", "vat"], "no_marker": True, "phone_icons": True}'/>
+                            <div t-esc="delivery_to"
+                                   t-options='{"widget": "contact", "fields": ["address", "name", "phone", "vat"], "no_marker": True, "phone_icons": True}'/>
                         </div>
                     </div>
                 </div>
