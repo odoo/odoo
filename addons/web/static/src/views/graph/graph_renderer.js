@@ -384,7 +384,7 @@ export class GraphRenderer extends Component {
                 dataset.backgroundColor = hexToRGBA(dataset.borderColor, LINE_FILL_TRANSPARENCY);
             }
             if (cumulated) {
-                let accumulator = 0;
+                let accumulator = dataset.cumulatedStart;
                 dataset.data = dataset.data.map((value) => {
                     accumulator += value;
                     return accumulator;

@@ -42,6 +42,7 @@ export const graphView = {
                 resModel: resModel,
                 stacked: "stacked" in archInfo ? archInfo.stacked : true,
                 cumulated: archInfo.cumulated || false,
+                cumulatedStart: archInfo.cumulatedStart || false,
                 title: archInfo.title || _lt("Untitled"),
             };
         }
