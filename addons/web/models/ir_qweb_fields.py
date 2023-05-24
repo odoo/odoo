@@ -98,17 +98,16 @@ class Image(models.AbstractModel):
 
         atts = self.env['ir.qweb']._post_processing_att('img', atts)
 
-        img = ['<img']
+        img = [Markup('<img')]
         for name, value in atts.items():
             if value:
-                img.append(' ')
-                img.append(escape(pycompat.to_text(name)))
-                img.append('="')
-                img.append(escape(pycompat.to_text(value)))
-                img.append('"')
-        img.append('/>')
+                img.append(Markup(' %s="%s"') % (
+                    pycompat.to_text(name),
+                    pycompat.to_text(value),
+                ))
+        img.append(Markup('/>'))
 
-        return Markup(''.join(img))
+        return Markup('').join(img)
 
 class ImageUrlConverter(models.AbstractModel):
     _description = 'Qweb Field Image'

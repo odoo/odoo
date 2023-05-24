@@ -3,6 +3,7 @@
 from markupsafe import Markup, escape
 
 from odoo import fields, models, _
+from odoo.tools import html_sanitize
 from odoo.tools.misc import clean_context
 
 
@@ -21,7 +22,7 @@ class SurveyInvite(models.TransientModel):
     def _send_mail(self, answer):
         mail = super()._send_mail(answer)
         if answer.applicant_id:
-            answer.applicant_id.message_post(body=Markup(mail.body_html))
+            answer.applicant_id.message_post(body=html_sanitize(mail.body_html, sanitize_style=True, sanitize_attributes=True))
             mail.send()
         return mail
 
