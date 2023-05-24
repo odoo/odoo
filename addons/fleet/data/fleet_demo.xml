@@ -428,6 +428,7 @@
           <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
+          <field name="manager_id" ref="base.user_admin"/>
           <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_purchased'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
       </record>
 
