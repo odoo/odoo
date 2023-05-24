@@ -142,6 +142,17 @@ Model({
                             return this._handleNotificationRtcSessionUpdate(message.payload);
                         case "mail.channel.rtc.session/ended":
                             return this._handleNotificationRtcSessionEnded(message.payload);
+                        case "client_refresh":
+                            const currentController = this.env.services.action.currentController;
+                            if (!currentController) {
+                                return;
+                            }
+                            if (currentController.view && currentController.view.type === "form" && message.payload.models.includes(currentController.action.res_model)) {
+                                this.messaging.notify({
+                                    type: "warning",
+                                    message: this.env._t("The Architecture of this view has been modified. Please Refresh the page."),
+                                });
+                            }
                         default:
                             return this._handleNotification(message);
                     }
