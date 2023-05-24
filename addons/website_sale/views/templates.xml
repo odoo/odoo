@@ -951,7 +951,7 @@
                                     </t>
                                 </div>
                             </div>
-                            <div id="o_product_description_div" t-attf-class="{{'col-xl-6' if o_product_width_fw else ''}} d-flex flex-column mb-2">
+                            <div id="o_product_description_div" t-attf-class="{{'col-lg-6' if o_product_width_fw else ''}} d-flex flex-column mb-2">
                                 <t t-set="base_url" t-value="product.get_base_url()"/>
 
                                 <span itemprop="url" style="display:none;" t-out="base_url + product.website_url"/>
@@ -1026,6 +1026,10 @@
                             </div>
                             <div id="o_product_terms_and_share" class="d-flex justify-content-between flex-column flex-md-row align-items-md-end mb-3">
                             </div>
+                            <!-- terms and conditions change position according to the image layout -->
+                            <div t-attf-class="{{'d-lg-none' if o_product_width_fw else ''}}">
+                                <t t-call="website_sale.product_custom_text"/>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -1058,14 +1062,12 @@
         </div>
     </template>
 
-    <template id="product_custom_text" inherit_id="website_sale.product" active="True" name="Terms and Conditions" priority="21">
-        <xpath expr="//div[@id='o_product_terms_and_share']" position="inside">
-            <p class="text-muted mb-0">
-                <a href="/terms" class="text-muted"><u>Terms and Conditions</u></a><br/>
-                30-day money-back guarantee<br/>
-                Shipping: 2-3 Business Days
-            </p>
-        </xpath>
+    <template id="product_custom_text" name="Terms and Conditions" priority="21">
+        <p class="text-muted mb-0 mt-4">
+            <a href="/terms" class="text-muted"><u>Terms and Conditions</u></a><br/>
+            30-day money-back guarantee<br/>
+            Shipping: 2-3 Business Days
+        </p>
     </template>
 
     <template id="product_share_buttons" inherit_id="website_sale.product" active="True" name="Share Buttons" priority="22">
