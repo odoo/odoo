@@ -37,8 +37,15 @@ def test_get_data(self, template_code):
                 'transfer_account_code_prefix': '3000',
             },
         },
+        'account.account.tag': {
+            'account_tax_tag_1': {
+                'name': 'tax_tag_name_1',
+                'applicability': 'taxes',
+                'country_id': 'base.be',
+            }
+        },
         'account.tax': {
-            xmlid: _tax_vals(name, amount)
+            xmlid: _tax_vals(name, amount, 'account_tax_tag_1')
             for name, xmlid, amount in [
                 ('Tax 1', 'test_tax_1_template', 15),
                 ('Tax 2', 'test_tax_2_template', 0),
@@ -71,18 +78,17 @@ def test_get_data(self, template_code):
         },
     }
 
-def _tax_vals(name, amount):
+def _tax_vals(name, amount, tax_tag_id=None):
+    tag_command = [Command.set([tax_tag_id])] if tax_tag_id else None
     return {
         'name': name,
         'amount': amount,
         'tax_group_id': 'tax_group_taxes',
-        'invoice_repartition_line_ids': [
-            Command.create({'factor_percent': 100, 'repartition_type': 'base'}),
-            Command.create({'factor_percent': 100, 'repartition_type': 'tax'}),
-        ],
-        'refund_repartition_line_ids': [
-            Command.create({'factor_percent': 100, 'repartition_type': 'base'}),
-            Command.create({'factor_percent': 100, 'repartition_type': 'tax'}),
+        'repartition_line_ids': [
+            Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'base', 'tag_ids': tag_command}),
+            Command.create({'document_type': 'invoice', 'factor_percent': 100, 'repartition_type': 'tax'}),
+            Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'base'}),
+            Command.create({'document_type': 'refund', 'factor_percent': 100, 'repartition_type': 'tax'}),
         ],
     }
 
@@ -124,11 +130,8 @@ class TestChartTemplate(TransactionCase):
         with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
             cls.env['account.chart.template'].try_loading('test', company=cls.company_1, install_demo=False)
 
-    def test_update_taxes_from_templates(self):
-        """
-            Tests that adding a new tax template and a fiscal position tax template with this new tax template
-            creates this new tax and fiscal position line when updating
-        """
+    def test_update_taxes_creation(self):
+        """ Tests that adding a new tax and a fiscal position tax creates new records when updating. """
         def local_get_data(self, template_code):
             data = test_get_data(self, template_code)
             data['account.tax'].update({
@@ -173,6 +176,43 @@ class TestChartTemplate(TransactionCase):
             {'name': 'Tax 4'},
         ])
 
+    def test_update_taxes_update(self):
+        """ When a tax is close enough from an existing tax we want to update that tax with the new values. """
+        def local_get_data(self, template_code):
+            data = test_get_data(self, template_code)
+            data['account.account.tag']['account_tax_tag_1']['name'] += ' [DUP]'
+            return data
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company_1, install_demo=False)
+
+        updated_tax = self.env['account.tax'].search([('company_id', '=', self.company_1.id), ('name', '=', 'Tax 1')])
+        # Check that tax was not recreated
+        self.assertEqual(len(updated_tax), 1)
+        # Check that tags have been updated
+        self.assertEqual(updated_tax.invoice_repartition_line_ids.tag_ids.name, 'tax_tag_name_1 [DUP]')
+
+    def test_update_taxes_recreation(self):
+        """ When a tax is too different from an existing tax we want to recreate a new tax with new values. """
+        def local_get_data(self, template_code):
+            # We increment the amount so the template gets slightly different from the
+            # corresponding tax and triggers recreation
+            data = test_get_data(self, template_code)
+            data['account.tax']['test_tax_1_template']['name'] = 'Tax 1 modified'
+            data['account.tax']['test_tax_1_template']['amount'] += 1
+            return data
+
+        tax_existing = self.env['account.tax'].search([('company_id', '=', self.company_1.id), ('name', '=', 'Tax 1')])
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company_1, install_demo=False)
+
+        # Check that old tax has not been changed beside of the name prefixed by [old]
+        self.assertRecordValues(tax_existing, [{'name': '[old] Tax 1', 'amount': 15}])
+
+        # Check that new tax has been recreated
+        new_tax = self.env['account.tax'].search([('company_id', '=', self.company_1.id), ('name', '=', 'Tax 1 modified')])
+        self.assertEqual(new_tax.amount, tax_existing.amount + 1)
+
     def test_update_taxes_removed_from_templates(self):
         """
             Tests updating after the removal of taxes and fiscal position mapping from the company
@@ -209,6 +249,32 @@ class TestChartTemplate(TransactionCase):
         tax_1_new = self.env['account.tax'].search([('company_id', '=', self.company_1.id), ('name', '=', "Tax 1")])
         self.assertEqual(tax_1_old, tax_1_existing, "Old tax still exists but with a different name.")
         self.assertEqual(len(tax_1_new), 1, "New tax have been created with the original name.")
+
+    def test_update_taxes_multi_company(self):
+        """ In a multi-company environment all companies should be correctly updated."""
+        def local_get_data(self, template_code):
+            # triggers recreation of tax 1
+            data = test_get_data(self, template_code)
+            data['account.tax']['test_tax_1_template']['amount'] += 1
+            return data
+
+        company_2 = self.env['res.company'].create({
+            'name': 'TestCompany2',
+            'country_id': self.env.ref('base.be').id,
+        })
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=test_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=company_2, install_demo=False)
+
+        with patch.object(AccountChartTemplate, '_get_chart_template_data', side_effect=local_get_data, autospec=True):
+            self.env['account.chart.template'].try_loading('test', company=self.company_1, install_demo=False)
+            self.env['account.chart.template'].try_loading('test', company=company_2, install_demo=False)
+
+        taxes_1_companies = self.env['account.tax'].search([
+            ('name', 'like', '%Tax 1'),
+            ('company_id', 'in', [self.company_1.id, company_2.id]),
+        ])
+        # we should have 4 records: 2 companies * (1 original tax + 1 recreated tax)
+        self.assertEqual(len(taxes_1_companies), 4)
 
     def test_update_account_codes_conflict(self):
         # Change code of an existing account to something else
