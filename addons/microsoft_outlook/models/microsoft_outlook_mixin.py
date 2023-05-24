@@ -81,11 +81,6 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         if not self.use_microsoft_outlook_service or not self.is_microsoft_outlook_configured:
             raise UserError(_('Please configure your Outlook credentials.'))
 
-        if not self.smtp_user:
-            raise UserError(_(
-                        'Please fill the "Username" field with your Outlook/Office365 username (your email address). '
-                        'This should be the same account as the one used for the Outlook OAuthentication Token.'))
-
         return {
             'type': 'ir.actions.act_url',
             'url': self.microsoft_outlook_uri,
