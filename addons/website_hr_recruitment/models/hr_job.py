@@ -61,7 +61,6 @@ class Job(models.Model):
             self.is_published = True
         else:
             self.is_published = False
-            self.website_id = False
 
     def _compute_website_url(self):
         super(Job, self)._compute_website_url()
