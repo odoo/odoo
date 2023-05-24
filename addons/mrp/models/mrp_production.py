@@ -1819,7 +1819,7 @@ class MrpProduction(models.Model):
 
         self.workorder_ids.button_finish()
 
-        backorders = productions_to_backorder._generate_backorder_productions(close_mo=close_mo)
+        backorders = productions_to_backorder and productions_to_backorder._generate_backorder_productions(close_mo=close_mo)
         productions_not_to_backorder._post_inventory(cancel_backorder=True)
         productions_to_backorder._post_inventory(cancel_backorder=True)
 
