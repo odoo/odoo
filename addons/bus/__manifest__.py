@@ -20,6 +20,7 @@
             'bus/static/src/*.js',
             'bus/static/src/services/**/*.js',
             ('remove', 'bus/static/src/services/assets_watchdog_service.js'),
+            ('remove', 'bus/static/src/simple_notification_service.js'),
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
         ],
