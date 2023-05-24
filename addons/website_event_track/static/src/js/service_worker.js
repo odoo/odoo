@@ -314,7 +314,7 @@ const prefetchUrls = async (urls = []) => {
             continue;
         }
         try {
-            await processFetchRequest(new Request(url), { disableTracking: true });
+            await processFetchRequest({ request: new Request(url) });
         } catch (error) {
             console.error(`fail to prefetch ${url} : ${error}`);
         }
