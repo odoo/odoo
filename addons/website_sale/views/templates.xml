@@ -1503,13 +1503,14 @@
 
     <!-- this template is the one when we mouse over "My Cart" on the top right -->
     <template id="cart_popover" name="Cart Popover">
+        <!-- let's not open the cart on hover if it's empty -->
         <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
           Your cart is empty!
         </div>
         <t t-if="website_sale_order and website_sale_order.website_order_line">
             <t t-foreach="website_sale_order.website_order_line" t-as="line">
-                <div class="row mb8 cart_line">
-                    <div class="col-3 text-center">
+                <div class="cart_line row g-2 mb-2">
+                    <div class="col-3">
                         <span t-if="line._is_not_sellable_line() and line.product_id.image_128">
                             <img t-att-src="image_data_uri(line.product_id.image_128)" class="img o_image_64_max rounded mb-2 img-fluid" t-att-alt="line.name_short"/>
                         </span>
@@ -1518,13 +1519,24 @@
                             t-options="{'widget': 'image', 'qweb_img_responsive': True, 'class': 'rounded o_image_64_max mb-2'}"
                         />
                     </div>
-                    <div class="col-9">
-                        <div>
-                            <t t-call="website_sale.cart_line_product_link">
-                                <span class="h6" t-esc="line.name_short" />
-                            </t>
-                        </div>
-                        Qty: <t t-esc="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
+                    <div class="col-6">
+                        <t t-call="website_sale.cart_line_product_link">
+                            <h6>
+                                <t t-out="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty"/>
+                                x
+                                <t t-out="line.name_short"/>
+                            </h6>
+                        </t>
+                    </div>
+                    <div class="col-3 text-end">
+                        <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                              t-field="line.price_reduce_taxexcl" style="white-space: nowrap;"
+                              t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
+                              class="h6"/>
+                        <span t-else=""
+                              t-field="line.price_reduce_taxinc" style="white-space: nowrap;"
+                              t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
+                              class="h6"/>
                     </div>
                 </div>
             </t>
@@ -1532,10 +1544,15 @@
                 <span class="h6">
                     <t t-call="website_sale.total">
                         <t t-set="hide_promotions" t-value="True"/>
+                        <t t-set="only_subtotal" t-value="True"/>
                     </t>
                 </span>
-                <a role="button" class="btn btn-primary" href="/shop/cart">
-                    View Cart (<span class="o_wsale_cart_quantity" t-esc="website_sale_order.cart_quantity" /> item(s))
+                <a role="button" class="w-100 btn btn-outline-primary mb-2" href="/shop/cart">
+                    View Cart
+                </a>
+                <!-- /shop/payments because fallsback automatically to /checkout if there is no address yet -->
+                <a role="button" class="w-100 btn btn-primary" href="/shop/payment">
+                    Check out
                 </a>
             </div>
         </t>
@@ -2201,7 +2218,7 @@
         <div id="cart_total" t-att-class="extra_class or ''" t-if="website_sale_order and website_sale_order.website_order_line">
             <table class="table mb-0">
                   <tr id="order_total_untaxed">
-                      <td colspan="2" t-attf-class="text-muted border-0 ps-0 pt-0 {{'pb-3' if only_subtotal else 'pb-2'}}">Subtotal</td>
+                      <td colspan="2" t-attf-class="border-0 ps-0 pt-0 {{'pb-3' if only_subtotal else 'pb-2'}} text-start text-muted">Subtotal</td>
                       <td t-attf-class="text-end border-0 pe-0 pt-0 {{'pb-3' if only_subtotal else 'pb-2'}}" >
                           <span t-field="website_sale_order.amount_untaxed" class="monetary_field" style="white-space: nowrap;" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                       </td>
