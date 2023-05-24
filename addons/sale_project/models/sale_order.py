@@ -213,8 +213,12 @@ class SaleOrderLine(models.Model):
         self.ensure_one()
         values = self._timesheet_create_project_prepare_values()
         if self.product_id.project_template_id:
-            values['name'] = "%s - %s" % (values['name'], self.product_id.project_template_id.name)
             project = self.product_id.project_template_id.copy(values)
+            languages = self.env['res.lang'].search([('active', '=', 'true')])
+            for lang in languages:
+                project.with_context(lang=lang.code).write({
+                    'name': "%s - %s" % (values['name'], self.product_id.project_template_id.with_context(lang=lang.code).name)
+                })
             project.tasks.write({
                 'sale_line_id': self.id,
                 'partner_id': self.order_id.partner_id.id,

@@ -10,6 +10,10 @@ class TestSaleProject(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
 
+        # activate multi language support
+        cls.env['res.lang']._activate_lang('fr_FR')
+        cls.env.user.write({'lang': 'en_US'})
+
         cls.analytic_account_sale = cls.env['account.analytic.account'].create({
             'name': 'Project for selling timesheet - AA',
             'code': 'AA-2030'
@@ -23,6 +27,10 @@ class TestSaleProject(TransactionCase):
         cls.project_template = cls.env['project.project'].create({
             'name': 'Project TEMPLATE for services',
         })
+        cls.project_template.with_context(lang='fr_FR').write({
+            'name': 'Projet TEMPLATE pour services'
+        })
+
         cls.project_template_state = cls.env['project.task.type'].create({
             'name': 'Only stage in project template',
             'sequence': 1,
@@ -81,6 +89,20 @@ class TestSaleProject(TransactionCase):
             'project_id': False,
         })
 
+        cls.product_order_service5 = cls.env['product.product'].create({
+            'name': "Service Ordered, create project only (based on project template)",
+            'standard_price': 15,
+            'list_price': 30,
+            'type': 'service',
+            'invoice_policy': 'order',
+            'uom_id': uom_hour.id,
+            'uom_po_id': uom_hour.id,
+            'default_code': 'SERV-ORDERED5',
+            'service_tracking': 'project_only',
+            'project_id': False,
+            'project_template_id': cls.project_template,
+        })
+
         # Create partner
         cls.partner = cls.env['res.partner'].create({'name': "Mur en béton"})
 
@@ -128,6 +150,16 @@ class TestSaleProject(TransactionCase):
             'price_unit': self.product_order_service4.list_price,
             'order_id': sale_order.id,
         })
+
+        so_line_order_only_project_translated = SaleOrderLine.create({
+            'name': self.product_order_service5.name,
+            'product_id': self.product_order_service5.id,
+            'product_uom_qty': 10,
+            'product_uom': self.product_order_service5.uom_id.id,
+            'price_unit': self.product_order_service5.list_price,
+            'order_id': sale_order.id,
+        })
+
         sale_order.action_confirm()
 
         # service_tracking 'no'
@@ -142,6 +174,17 @@ class TestSaleProject(TransactionCase):
         # service_tracking 'project_only'
         self.assertFalse(so_line_order_only_project.task_id, "Task should not be created")
         self.assertTrue(so_line_order_only_project.project_id, "Sales order line should be linked to newly created project")
+        # service_tracking 'project_only' based on project template
+        self.assertFalse(so_line_order_only_project_translated.task_id, "Task should not be created")
+        self.assertTrue(so_line_order_only_project_translated.project_id, "Sales order line should be linked to newly created project")
+        self.assertEqual(
+            so_line_order_only_project_translated.project_id.name,
+            "%s - Project TEMPLATE for services" % sale_order.name,
+        )
+        self.assertEqual(
+            so_line_order_only_project_translated.project_id.with_context(lang="fr_FR").name,
+            "%s - Projet TEMPLATE pour services" % sale_order.name,
+        )
 
         self.assertEqual(self.project_global._get_sale_order_items(), self.project_global.sale_line_id | self.project_global.tasks.sale_line_id, 'The _get_sale_order_items should returns all the SOLs linked to the project and its active tasks.')
 
