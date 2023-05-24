@@ -3,6 +3,7 @@
 // ------------------------------------------------------------------
 
 .o-mail-CallParticipantCard {
+    color: white;
     aspect-ratio: 16/9;
 }
 
@@ -34,11 +35,16 @@
     85% { border: solid $gray-700 }
 }
 
+.o-mail-CallParticipantCard-iconBlackBg {
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
 .o-mail-CallParticipantCard-overlay {
     margin: Min(5%, map-get($spacers, 2));
 }
 
 .o-mail-CallParticipantCard-overlayBottom {
+    background-color: rgba(0, 0, 0, 0.75);
     max-width: 50%;
 }
 
