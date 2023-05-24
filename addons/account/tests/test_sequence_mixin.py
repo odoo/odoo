@@ -119,6 +119,12 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         self.assertEqual(new_multiple_move_1.name, 'AJ/2016/01/0001')
         self.assertEqual(new_multiple_move_2.name, 'AJ/2016/02/0001')
 
+        # When the date is removed in the form view, the name should not recompute
+        with Form(new_multiple_move_1) as move_form:
+            move_form.date = False
+            self.assertEqual(new_multiple_move_1.name, 'AJ/2016/01/0001')
+            move_form.date = fields.Date.to_date('2016-01-10')
+
 
     def test_journal_sequence(self):
         self.assertEqual(self.test_move.name, 'MISC/2016/01/0001')
