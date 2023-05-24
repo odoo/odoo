@@ -53,7 +53,7 @@
                                 <field name="plan_activity_type_ids" nolabel="1">
                                     <tree>
                                         <field name="company_id" invisible="1"/>
-                                        <field name="activity_type_id"/>
+                                        <field name="activity_type_id" context="{'form_view_ref': 'hr.mail_activity_type_form_inherit'}"/>
                                         <field name="summary"/>
                                         <field name="responsible"/>
                                         <field name="responsible_id" attrs="{'readonly': [('responsible', '!=', 'other')]}" optional="hide"/>
@@ -71,7 +71,7 @@
             <field name="model">hr.plan.activity.type</field>
             <field name="arch" type="xml">
                 <tree string="Activities">
-                    <field name="activity_type_id"/>
+                    <field name="activity_type_id" context="{'form_view_ref': 'hr.mail_activity_type_form_inherit'}"/>
                     <field name="summary"/>
                     <field name="responsible"/>
                     <field name="company_id" groups="base.group_multi_company"/>
@@ -87,7 +87,7 @@
                     <field name="company_id" invisible="1"/>
                     <sheet>
                         <group>
-                            <field name="activity_type_id"/>
+                            <field name="activity_type_id" context="{'form_view_ref': 'hr.mail_activity_type_form_inherit'}"/>
                             <field name="summary"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="responsible"/>
@@ -178,6 +178,36 @@
                         <field name="activity_ids"/>
                     </div>
                 </form>
+            </field>
+        </record>
+
+        <record id="mail_activity_type_form_inherit" model="ir.ui.view">
+            <field name="name">mail.activity.type.form.inherit</field>
+            <field name="model">mail.activity.type</field>
+            <field name="inherit_id" ref="mail.mail_activity_type_view_form"/>
+            <field name="mode">primary</field>
+            <field name="priority">50</field>
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='delay_count']" position="attributes">
+                    <attribute name="attrs">
+                        {'invisible': ['|', '&amp;', ('chaining_type', '=', 'suggest'), ('suggested_next_type_ids', '=', []), '&amp;', ('chaining_type', '=', 'trigger'), ('triggered_next_type_id', '=', False)]}
+                    </attribute>                </xpath>
+
+                <field name="delay_count" position="attributes">
+                    <attribute name="attrs">
+                        {'invisible': ['|', '&amp;', ('chaining_type', '=', 'suggest'), ('suggested_next_type_ids', '=', []), '&amp;', ('chaining_type', '=', 'trigger'), ('triggered_next_type_id', '=', False)]}
+                    </attribute>
+                </field>
+                <field name="delay_from" position="attributes">
+                    <attribute name="attrs">
+                        {'invisible': ['|', '&amp;', ('chaining_type', '=', 'suggest'), ('suggested_next_type_ids', '=', []), '&amp;', ('chaining_type', '=', 'trigger'), ('triggered_next_type_id', '=', False)]}
+                    </attribute>
+                </field>
+                <field name="delay_unit" position="attributes">
+                    <attribute name="attrs">
+                        {'invisible': ['|', '&amp;', ('chaining_type', '=', 'suggest'), ('suggested_next_type_ids', '=', []), '&amp;', ('chaining_type', '=', 'trigger'), ('triggered_next_type_id', '=', False)]}
+                    </attribute>
+                </field>
             </field>
         </record>
     </data>
