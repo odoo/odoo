@@ -215,7 +215,8 @@ export class PaymentScreen extends Component {
         const { globalState } = this.pos;
         if (
             (this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) &&
-            globalState.config.iface_cashdrawer
+            globalState.config.iface_cashdrawer &&
+            globalState.config.use_proxy
         ) {
             this.hardwareProxy.printer.openCashbox();
         }
