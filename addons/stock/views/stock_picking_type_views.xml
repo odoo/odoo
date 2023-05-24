@@ -89,12 +89,12 @@
                             <field name="sequence_code"/>
                             <field name="warehouse_id" groups="stock.group_stock_multi_warehouses" force_save="1"/>
                             <field name="reservation_method" invisible="hide_reservation_method" widget="radio"/>
-                            <field name="auto_show_reception_report" invisible="code not in ['incoming', 'internal']" groups="stock.group_reception_report"/>
                             <label for="reservation_days_before" string="Reserve before scheduled date" invisible="code == 'incoming' or reservation_method != 'by_date'"/>
                             <div class="o_row" invisible="code == 'incoming' or reservation_method != 'by_date'">
                                 <span><field name="reservation_days_before" style="width: 23px;"/> days before/</span>
                                 <span><field name="reservation_days_before_priority" style="width: 23px;"/> days before when starred</span>
                             </div>
+                            <field name="auto_show_reception_report" invisible="code not in ['incoming', 'internal']" groups="stock.group_reception_report"/>
                         </group>
                         <group>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
