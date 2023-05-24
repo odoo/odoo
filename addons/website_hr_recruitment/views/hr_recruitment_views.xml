@@ -37,7 +37,7 @@
             </div>
             <xpath expr="//div[@name='recruitment_target']" position="after">
                 <field name="website_published" string="Is Published"/>
-                <field name="website_id" attrs="{'invisible': [('website_published', '=', False)]}" options="{'no_create': True}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="website.group_multi_website"/>
+                <field name="website_id" options="{'no_create': True}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="website.group_multi_website"/>
             </xpath>
         </field>
     </record>
