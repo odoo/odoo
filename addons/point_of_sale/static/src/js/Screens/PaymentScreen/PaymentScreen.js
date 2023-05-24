@@ -215,7 +215,8 @@ export class PaymentScreen extends Component {
     async _finalizeValidation() {
         if (
             (this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) &&
-            this.env.pos.config.iface_cashdrawer
+            this.env.pos.config.iface_cashdrawer &&
+            this.env.pos.config.use_proxy
         ) {
             this.env.proxy.printer.open_cashbox();
         }
