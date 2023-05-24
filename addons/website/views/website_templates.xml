@@ -2590,6 +2590,64 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     </xpath>
 </template>
 
+<template id="website.step_wizard" name="Step Wizard">
+    <!-- o_wizard_back_custom - Optional -->
+    <!-- @ any step of the stepper, overrides the default back button url with a custom one -->
+
+    <t t-set="_titles" t-value="o_wizard_titles if o_wizard_titles else ['none']"/>
+    <t t-set="_urls" t-value="o_wizard_urls if o_wizard_urls else ['#']"/>
+    <t t-set="_step_first_back_url" t-value="o_wizard_step_first_back_url if o_wizard_step_first_back_url else '#'"/>
+    <t t-set="_step_active" t-value="o_wizard_step_active if o_wizard_step_active else 0"/>
+
+    <div class="o_wizard d-flex flex-wrap justify-content-end justify-content-sm-start my-3 my-sm-4">
+        <t t-set="_steps_in_deg" t-value="(_step_active + 1) / len(_titles) * 360"/>
+
+        <a class="align-self-center me-auto" t-attf-href="{{o_wizard_back_custom if o_wizard_back_custom else _urls[_step_active - 1] if _step_active &gt; 0 else _step_first_back_url if _step_first_back_url else '#'}}">
+            <i class="fa fa-long-arrow-left me-2"/>Back</a>
+        <div class="d-flex flex-column flex-md-row align-items-end align-items-md-start justify-content-center">
+            <a t-foreach="_titles"
+               t-as="step"
+               t-attf-class="d-none d-md-flex no-decoration {{'o_disabled' if step_index &gt; _step_active else ''}}"
+               t-att-href="_urls[step_index]"
+               t-att-title="_titles[step_index]">
+                <div t-attf-class="d-flex align-items-center {{'o_wizard_step_active fw-bold' if _step_active == step_index else 'o_wizard_step-done' if _step_active &gt; step_index else 'o_wizard_step-inactive text-muted'}}">
+                    <p t-attf-class="o_wizard_steplabel text-center mb-0">
+                        <t t-out="step"/>
+                    </p>
+                    <span t-if="not step_last" class="d-inline-block align-middle mx-sm-3 fa fa-angle-right text-muted fs-5"/>
+                </div>
+            </a>
+            <div class="d-flex d-md-none flex-column align-items-end">
+                <div class="dropdown">
+                    <a t-attf-class="{{'dropdown-toggle' if _step_active &gt; 0 else ''}} fw-bold" role="button" data-bs-toggle="dropdown" aria-expanded="false" title="Steps">
+                        <t t-out="_titles[_step_active]"/>
+                    </a>
+                    <ul t-attf-class="dropdown-menu {{'d-none' if _step_active == 0 else ''}}">
+                        <li t-foreach="_titles" t-as="step">
+                            <a t-attf-class="dropdown-item {{'text-muted o_disabled' if step_index &gt; _step_active else 'fw-bold' if step_index == _step_active else ''}}"
+                               t-att-href="_urls[step_index]"
+                               t-out="step"
+                               title="_titles[step_index]"/>
+                        </li>
+                    </ul>
+                </div>
+                <span t-if="_step_active &lt; len(_titles) - 1 and step_index &gt; _step_active" class="d-inline-block d-md-none text-muted" t-out="'Next: ' + _titles[_step_active + 1]"/>
+            </div>
+        </div>
+        <div class="o_wizard_circle_progress progress d-md-none position-relative rounded-circle ms-3 bg-transparent" t-attf-style="--rightProgress:{{'180' if _steps_in_deg >= 180 else _steps_in_deg}}deg; --leftProgress:{{_steps_in_deg-180 if _steps_in_deg >= 180 else 0}}deg;">
+            <span class="o_wizard_circle_progress_left position-absolute start-0 top-0  z-index-1 overflow-hidden w-50 h-100 ">
+               <span class="progress-bar position-absolute start-100 top-0 w-100 h-100 border border-5 border-start-0 border-primary bg-transparent"/>
+            </span>
+            <span class="o_wizard_circle_progress_right position-absolute top-0 end-0 z-index-1 overflow-hidden w-50 h-100">
+                <span class="progress-bar position-absolute top-0 end-100 w-100 h-100 border border-5 border-end-0 border-primary bg-transparent"/>
+            </span>
+            <p class="fw-bold mx-auto">
+                <t t-out="_step_active+1"/> of <t t-out="len(_titles)"/>
+            </p>
+        </div>
+    </div>
+</template>
+
 <template id="iframefallback" inherit_id="web.layout" primary="True">
     <xpath expr="//head/link[last()]" position="after">
         <t t-call-assets="web.assets_frontend" t-js="false"/>

@@ -1256,38 +1256,19 @@
         </xpath>
     </template>
 
-    <template id="wizard_checkout" name="Wizard Checkout">
-        <t t-set="website_sale_order" t-value="website.sale_get_order()"/>
+    <template id="website_sale.wizard_values_xpath" inherit_id="website.step_wizard">
+        <xpath expr="//t[@t-set='_titles']" position="before">
+            <t t-set="extra_step" t-value="false"/>
+            <t t-set="o_wizard_titles" t-value="['Review Order', 'Shipping', 'Extra Info', 'Payment'] if extra_step else ['Review Order', 'Shipping', 'Payment']"/>
+            <t t-set="o_wizard_urls" t-value="['/shop/cart', '/shop/checkout', '/shop/extra_info', '/shop/payment'] if extra_step else ['/shop/cart', '/shop/checkout', '/shop/payment']"/>
+            <t t-set="o_wizard_step_first_back_url" t-value="'/shop'"/>
+        </xpath>
+    </template>
 
-        <div class="row">
-            <div class="col-xl">
-                <div class="wizard container">
-                    <div class="progress-wizard row g-0">
-                        <a class="no-decoration col" t-att-href="step&gt;=10 and '/shop/cart' or '#'">
-                          <div id="wizard-step10" t-att-class="'progress-wizard-step %s' % (step == 10 and 'active' or step&gt;10 and 'complete' or 'disabled')">
-                            <div class="progress-wizard-bar d-none d-md-block"/>
-                            <span class="progress-wizard-dot d-none d-md-inline-block"></span>
-                            <div class="text-center progress-wizard-steplabel">Review Order</div>
-                          </div>
-                        </a>
-                        <a class="no-decoration col" t-att-href="step&gt;=20 and '/shop/checkout' or '#'">
-                          <div id="wizard-step20" t-att-class="'progress-wizard-step %s' % (step == 20 and 'active' or step&gt;20 and 'complete' or 'disabled')">
-                            <div class="progress-wizard-bar d-none d-md-block"/>
-                            <span class="progress-wizard-dot d-none d-md-inline-block"></span>
-                            <div class="text-center progress-wizard-steplabel">Address</div>
-                          </div>
-                        </a>
-                        <a class="no-decoration col" t-att-href="step&gt;=40 and '/shop/payment' or '#'">
-                          <div id="wizard-step40" t-att-class="'progress-wizard-step %s' % (step == 40 and 'active' or step&gt;40 and 'complete' or 'disabled')">
-                            <div class="progress-wizard-bar d-none d-md-block"/>
-                            <span class="progress-wizard-dot d-none d-md-inline-block"></span>
-                            <div class="text-center progress-wizard-steplabel">Confirm Order</div>
-                          </div>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <template id="extra_info_option" name="Extra Step Option" inherit_id="website_sale.wizard_values_xpath" active="False">
+        <xpath expr="//t[@t-set='extra_step']" position="attributes">
+            <attribute name="t-value">true</attribute>
+        </xpath>
     </template>
 
     <template id="extra_info" name="Checkout Extra Info">
@@ -1297,8 +1278,8 @@
                 <div class="container oe_website_sale py-2">
                     <div class="row">
                         <div class="col-12">
-                            <t t-call="website_sale.wizard_checkout">
-                                <t t-set="step" t-value="30"/>
+                            <t t-call="website.step_wizard">
+                                <t t-set="o_wizard_step_active" t-value="2"/>
                             </t>
                         </div>
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
@@ -1359,21 +1340,9 @@
         </t>
     </template>
 
-    <template id="extra_info_option" name="Extra Step Option" inherit_id="wizard_checkout" active="False">
-        <xpath expr="//div[@id='wizard-step20']/parent::a" position="after">
-            <a class="no-decoration col" t-att-href="step&gt;=30 and '/shop/extra_info' or '#'">
-                <div id="wizard-step30" t-att-class="'progress-wizard-step %s' % (step == 30 and 'active' or step&gt;30 and 'complete' or 'disabled')">
-                    <div class="progress-wizard-bar d-none d-md-block"/>
-                    <span class="progress-wizard-dot d-none d-md-inline-block"></span>
-                    <div class="text-center progress-wizard-steplabel">Extra Info</div>
-                </div>
-            </a>
-        </xpath>
-    </template>
-
     <!-- We use this template where we want to give the user a link to the product of a sale order line. -->
     <template id="cart_line_product_link" name="Shopping Cart Line Product Link">
-        <a t-att-href="line.product_id.website_url">
+        <a t-att-href="line.product_id.website_url" t-attf-class="{{product_link_style}}">
             <t t-out="0"/>
         </a>
     </template>
@@ -1491,8 +1460,8 @@
                 <div class="container oe_website_sale py-2">
                     <div class="row">
                         <div class="col-12">
-                            <t t-call="website_sale.wizard_checkout">
-                                <t t-set="step" t-value="10" />
+                            <t t-call="website.step_wizard">
+                                <t t-set="o_wizard_step_active" t-value="0"/>
                             </t>
                         </div>
                         <div class="col-12 col-lg-7 oe_cart">
@@ -1639,8 +1608,8 @@
                     <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
                     <div class="row">
                         <div class="col-12">
-                            <t t-call="website_sale.wizard_checkout">
-                                <t t-set="step" t-value="20" />
+                            <t t-call="website.step_wizard">
+                                <t t-set="o_wizard_step_active" t-value="1"/>
                             </t>
                         </div>
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
@@ -1748,8 +1717,8 @@
                 <div class="container oe_website_sale py-2">
                     <div class="row">
                         <div class="col-12">
-                            <t t-call="website_sale.wizard_checkout">
-                                <t t-set="step" t-value="20" />
+                            <t t-call="website.step_wizard">
+                                <t t-set="o_wizard_step_active" t-value="1"/>
                             </t>
                         </div>
                     </div>
@@ -1938,8 +1907,8 @@
                 <div class="container oe_website_sale py-2">
                     <div class="row">
                         <div class='col-12'>
-                            <t t-call="website_sale.wizard_checkout">
-                                <t t-set="step" t-value="40" />
+                            <t t-call="website.step_wizard">
+                                <t t-set="o_wizard_step_active" t-value="2"/>
                             </t>
                         </div>
                         <div class="col-12" t-if="errors">
