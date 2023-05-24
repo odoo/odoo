@@ -9,6 +9,7 @@
                 <field name="tag_ids"/>
                 <field name="user_ids"/>
                 <field name="stage_id" />
+                <field name="is_closed"/>
                 <field name="project_id" />
                 <field name="milestone_id" groups="project.group_project_milestone"/>
                 <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
@@ -25,7 +26,8 @@
                 <filter string="Closed Tasks" name="closed_tasks" domain="[('state', 'in', ['1_done', '1_canceled'])]"/>
                 <group expand="0" string="Group By">
                     <filter string="Date" name="date" context="{'group_by': 'date'}" />
-                    <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}" invisible="1"/>
+                    <filter string="Stage (Burndown Chart)" name="stage" context="{'group_by': 'stage_id'}"/>
+                    <filter string="Is Closed (Burn-up Chart)" name="is_closed" context="{'group_by': 'is_closed'}"/>
                 </group>
             </search>
         </field>
@@ -38,6 +40,7 @@
             <graph string="Burndown Chart" type="line" sample="1" disable_linking="1" js_class="burndown_chart">
                 <field name="date" string="Date" interval="month"/>
                 <field name="stage_id"/>
+                <field name="is_closed"/>
             </graph>
         </field>
     </record>

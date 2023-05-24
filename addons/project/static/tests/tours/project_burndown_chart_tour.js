@@ -30,16 +30,16 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
     trigger: '.o_searchview_autocomplete .o_menu_item:contains("Project")',
 }, {
     content: 'Remove the group by "Date: Month > Stage"',
-    trigger: '.o_searchview_facet:contains("Date: Month") .o_facet_remove',
+    trigger: '.o_searchview_facet:contains("Stage") .o_facet_remove',
 }, {
     content: 'A "The Burndown Chart must be grouped by Date and Stage" notification is shown when trying to remove the group by "Date: Month > Stage"',
-    trigger: '.o_notification_manager .o_notification:contains("The Burndown Chart must be grouped by Date and Stage") button.o_notification_close',
+    trigger: '.o_notification_manager .o_notification:contains("The report should be grouped either by ") button.o_notification_close',
 }, {
     content: 'Open the search panel menu',
     trigger: '.o_control_panel .o_searchview_dropdown_toggler',
 }, {
-    content: 'The Stage group menu item is invisible',
-    trigger: '.o_group_by_menu:not(:has(.o_menu_item:contains("Stage")))',
+    content: 'The Stage group menu item is visible',
+    trigger: '.o_group_by_menu .o_menu_item:contains("Stage")',
 }, {
     content: 'Open the Date group by sub menu',
     trigger: '.o_group_by_menu button.o_menu_item:contains("Date")',
