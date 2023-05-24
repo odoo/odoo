@@ -1398,13 +1398,12 @@
                 <strong>Warning!</strong> <t t-esc='website_sale_order._get_shop_warning()'/>
             </div>
         </t>
-        <table t-if="website_sale_order and website_sale_order.website_order_line" class="mb16 table table-striped table-sm js_cart_lines" id="cart_products">
+        <table t-if="website_sale_order and website_sale_order.website_order_line" class="js_cart_lines table table-borderless mb32" id="cart_products">
             <t t-set="show_qty" t-value="is_view_active('website_sale.product_quantity')"/>
             <t t-foreach="website_sale_order.website_order_line" t-as="line">
                 <tr t-att-class="'optional_product info' if line.linked_line_id else None">
                     <t t-if="not line.product_id" rowspan="2" class="td-img ps-0">
                         <td rowspan="2" t-attf-class="td-img w-0 px-0 {{'border-bottom pb-4' if not line_last else ''}}"/>
-                        <td/>
                     </t>
                     <t t-else="">
                         <td rowspan="2" t-attf-class="td-img w-0 ps-0 {{'border-bottom pb-4' if not line_last else ''}} {{'pt-4' if line_index &gt; 0 else ''}}">
@@ -1427,7 +1426,7 @@
                             </t>
                         </td>
                     </t>
-                    <td t-attf-class="text-center td-qty pe-0 {{'pt-4' if line_index &gt; 0 else ''}}">
+                    <td t-attf-class="text-center td-qty pe-0 {{'pt-4' if line_index &gt; 0 else ''}}" t-att-colspan="2 if not line.product_id else 0">
                         <div class="css_quantity input-group mx-auto float-end">
                             <t t-if="not line._is_not_sellable_line()">
                                 <t t-if="show_qty">
@@ -1456,11 +1455,11 @@
                     </td>
                 </tr>
                 <tr>
-                    <td t-attf-class="align-bottom pt-0 {{'border-bottom pb-4' if not line_last else ''}}">
-                        <a class="js_delete_product d-none d-md-inline-block" href='#' aria-label="Remove from cart" title="Remove from cart"><small>Remove</small></a>
+                    <td t-attf-class="pt-0 align-bottom {{'border-bottom pb-4' if not line_last else ''}}">
+                        <a class="js_delete_product d-none d-md-inline-block small" href='#' aria-label="Remove from cart" title="Remove from cart">Remove</a>
                         <button type="button" role="button" class="js_delete_product btn btn-light d-inline-block d-md-none " title="Add to Wishlist" data-action="o_wishlist"><span class="fa fa-trash-o" role="img" aria-label="Add to wishlist"></span></button>
                     </td>
-                    <td t-attf-class="td-price h6 fw-bold text-end pt-0 pe-0 align-bottom {{'border-bottom pb-4' if not line_last else ''}}" data-cell-type="price">
+                    <td t-attf-class="td-price h6 text-end pt-0 pe-0 align-bottom fw-bold {{'border-bottom pb-4' if not line_last else ''}}" data-cell-type="price">
                         <t t-set="combination" t-value="line.product_id.product_template_attribute_value_ids + line.product_no_variant_attribute_value_ids"/>
                         <t t-set="combination_info" t-value="line.product_id.product_tmpl_id._get_combination_info(combination, pricelist=website_sale_order.pricelist_id, add_qty=line.product_uom_qty)"/>
                         <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
@@ -1495,15 +1494,16 @@
                                 <t t-set="step" t-value="10" />
                             </t>
                         </div>
-                        <div class="col-12 col-xl-8 oe_cart">
+                        <div class="col-12 col-lg-7 oe_cart">
                             <div class="row">
-                                <div class="col-lg-12">
-                                    <div t-if="abandoned_proceed or access_token" class="mt8 mb8 alert alert-info" role="alert"> <!-- abandoned cart choices -->
+                                <div class="col">
+                                    <h3 class="mb-4">Order Overview</h3>
+                                        <div t-if="abandoned_proceed or access_token" class="mt8 mb8 alert alert-info" role="alert"> <!-- abandoned cart choices -->
                                         <t t-if="abandoned_proceed">
                                             <p>Your previous cart has already been completed.</p>
                                             <p t-if="website_sale_order">Please proceed your current cart.</p>
                                         </t>
-                                        <t t-if="access_token">
+                                        <t t-if="access_token or true">
                                             <p>This is your current cart.</p>
                                             <p>
                                                 <strong>
@@ -1519,38 +1519,12 @@
                                     </div>
                                     <t t-call="website_sale.cart_lines"/>
                                     <div class="clearfix" />
-                                    <div class="d-xl-none mb-2" id="o_cart_summary">
-                                        <t t-call="website_sale.short_cart_summary"/>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <div>
-                                            <a role="button" href="/shop" class="btn btn-secondary mb32">
-                                                <span class="oi oi-chevron-left" />
-                                                <span>Continue<span class="d-none d-md-inline"> Shopping</span></span>
-                                            </a>
-                                        </div>
-                                        <t t-set="redirect_to_sign_in" t-value="website.account_on_checkout == 'mandatory' and website.is_public_user()"/>
-                                        <t t-set="redirect_url" t-value="'/web/login?redirect=/shop/checkout' if redirect_to_sign_in else '/shop/checkout?express=1'"/>
-                                        <div class="d-flex flex-column"
-                                             t-if="website_sale_order and website_sale_order.website_order_line">
-                                            <a class="btn btn-primary float-end" role="button" t-attf-href="{{redirect_url}}">
-                                                <t t-if="redirect_to_sign_in">
-                                                    <span>Sign In</span>
-                                                    <span class="fa fa-sign-in"/>
-                                                </t>
-                                                <t t-else="">
-                                                    <span>Process Checkout</span>
-                                                    <span class="oi oi-chevron-right"/>
-                                                </t>
-                                            </a>
-                                            <t t-call="payment.express_checkout"/>
-                                        </div>
-                                    </div>
+                                    <t t-call="payment.express_checkout"/>
                                     <div class="oe_structure" id="oe_structure_website_sale_cart_1"/>
                                 </div>
                             </div>
                         </div>
-                        <div class="d-none d-xl-block col-xl-4" id="o_cart_summary">
+                        <div class="d-none d-xl-block offset-lg-1 col-lg-4" id="o_cart_summary">
                             <t t-call="website_sale.short_cart_summary"/>
                         </div>
                     </div>
@@ -1602,36 +1576,40 @@
 
     <template id="suggested_products_list" inherit_id="website_sale.cart_lines" name="Accessory Products in my cart">
         <xpath expr="//table[@id='cart_products']" position="after">
-            <h5 class='text-muted js_cart_lines' t-if="suggested_products">Suggested Accessories:</h5>
-            <table t-if="suggested_products" id="suggested_products" class="js_cart_lines table table-striped table-sm">
+            <h5 class="js_cart_lines" t-if="suggested_products">Suggested Accessories</h5>
+            <table t-if="suggested_products" id="suggested_products" class="js_cart_lines table table-borderless">
                 <tbody>
-                    <tr t-foreach="suggested_products" t-as="product" t-att-data-publish="product.website_published and 'on' or 'off'">
+                    <t t-foreach="suggested_products" t-as="product" t-att-data-publish="product.website_published and 'on' or 'off'">
                         <t t-set="combination_info" t-value="product._get_combination_info_variant(pricelist=website_sale_order.pricelist_id)"/>
-                        <td class='td-img text-center'>
-                            <a t-att-href="product.website_url">
-                                <span t-field="product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}" />
-                            </a>
-                        </td>
-                        <td class='td-product_name'>
-                            <div>
+                        <tr>
+                            <td rowspan="2" t-attf-class="td-img w-0 ps-0 {{'pt-4' if product_index != 0 else ''}}">
                                 <a t-att-href="product.website_url">
-                                    <strong t-esc="combination_info['display_name']" />
+                                    <span t-field="product.image_128" t-options="{'widget': 'image', 'qweb_img_responsive': False, 'class': 'rounded o_image_64_max'}" />
                                 </a>
-                            </div>
-                            <div class="text-muted d-none d-md-block" t-field="product.description_sale" />
-                        </td>
-                        <td class='td-price'>
-                            <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
-                            <span t-esc="combination_info['price']" style="white-space: nowrap;" t-options="{'widget': 'monetary','display_currency': website.currency_id}"/>
-                        </td>
-                        <td class="w-25 text-center">
-                            <input class="js_quantity" name="product_id" t-att-data-product-id="product.id" type="hidden" />
-                            <a t-if="product._website_show_quick_add()"
-                               role="button" class="btn btn-link js_add_suggested_products">
-                                <strong>Add to Cart</strong>
-                            </a>
-                        </td>
-                    </tr>
+                            </td>
+                            <td t-attf-class="td-product_name {{'pt-4' if product_index != 0 else ''}}">
+                                <div>
+                                    <a t-att-href="product.website_url">
+                                        <strong t-esc="combination_info['display_name']" />
+                                    </a>
+                                </div>
+                                <div class="text-muted d-none d-md-block" t-field="product.description_sale" />
+                            </td>
+                            <td t-attf-class="text-end pe-0 w-25 {{'pt-4' if product_index != 0 else ''}}">
+                                <input class="js_quantity" name="product_id" t-att-data-product-id="product.id" type="hidden" />
+                                <a t-if="product._website_show_quick_add()"
+                                   role="button" class="js_add_suggested_products btn btn-md btn-outline-primary">
+                                    Add<span class="d-none d-md-inline"> to cart</span>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" t-attf-class="td-price text-end pt-0 pe-0 border-0 fw-bold {{'border-bottom pb-4' if not product_last else ''}}" data-cell-type="price">
+                                <del t-attf-class="text-danger mr8 {{'' if combination_info['has_discounted_price'] else 'd-none'}}" style="white-space: nowrap;" t-esc="combination_info['list_price']" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                <span t-esc="combination_info['price']" style="white-space: nowrap;" t-options="{'widget': 'monetary','display_currency': website.currency_id}"/>
+                            </td>
+                        </tr>
+                    </t>
                 </tbody>
             </table>
         </xpath>
@@ -2073,22 +2051,37 @@
                     <t t-call="website_sale.total">
                         <t t-set="no_rowspan" t-value="1"/>
                     </t>
+
                     <t t-set="redirect_to_sign_in" t-value="website.account_on_checkout == 'mandatory' and website.is_public_user()"/>
                     <t t-set="redirect_url" t-value="'/web/login?redirect=/shop/checkout' if redirect_to_sign_in else '/shop/checkout?express=1'"/>
-                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line"
-                       class="btn btn-secondary float-end d-none d-xl-inline-block"
-                       t-attf-href="{{redirect_url}}">
-                        <t t-if="redirect_to_sign_in">
-                            <span>Sign In</span>
-                            <span class="fa fa-sign-in"/>
-                        </t>
-                        <t t-else="">
-                            <span>Proceed to Checkout</span>
-                            <span class="oi oi-chevron-right"/>
-                        </t>
-                    </a>
+
+                    <t t-call="website_sale.cta_buttons_navigation">
+                        <t t-set="main_cta_text" t-value="'Sign in' if redirect_to_sign_in else 'Checkout'"/>
+                        <t t-set="main_cta_href" t-value="redirect_url"/>
+                        <t t-set="back_cta_text" t-value=" 'Continue shopping'"/>
+                        <t t-set="back_cta_href" t-value="'/shop'"/>
+                    </t>
                 </div>
             </div>
+        </div>
+    </template>
+
+    <template id="cta_buttons_navigation" name="Navigation buttons">
+        <div class="d-flex flex-column mt-4">
+            <a role="button" t-if="website_sale_order and website_sale_order.website_order_line and not address_form_submit"
+               class="btn btn-primary w-100"
+               t-attf-href="{{ main_cta_href }}">
+                <t t-out="main_cta_text"/>
+                <i class="fw-light fa fa-angle-right ms-2"/>
+            </a>
+            <div class="position-relative w-100 d-flex justify-content-center align-items-center my-2 opacity-75">
+                <hr class="w-100"/>
+                <span class="px-3">or</span>
+                <hr class="w-100"/>
+            </div>
+            <a t-attf-href="{{back_cta_href}}" class="text-center">
+                <i class="fw-light fa fa-angle-left me-2"/><t t-out="back_cta_text"/>
+            </a>
         </div>
     </template>
 

@@ -98,35 +98,20 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
     .address-inline address {
         display: inline-block;
     }
-    table#cart_products tr td, table#suggested_products tr td {
-        vertical-align: middle;
-    }
-
-    table#cart_products {
-        margin-bottom: 0;
-
-        td, th {
-            &:first-child {
-                padding-left: $grid-gutter-width*0.5;
-            }
-        }
-    }
 
     h1[itemprop="name"], .td-product_name {
         word-break: break-word;
         word-wrap: break-word;
         overflow-wrap: break-word;
+
+        @include media-breakpoint-down(md) {
+            vertical-align: middle;
+        }
     }
 
     h1[itemprop="name"] {
         font-size: $h3-font-size;
         font-weight: $font-weight-bold;
-    }
-
-    @include media-breakpoint-down(md) {
-        .td-img {
-            display: none;
-        }
     }
 
     .toggle_summary_div {
