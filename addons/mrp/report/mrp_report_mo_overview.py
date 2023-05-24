@@ -86,7 +86,7 @@ class ReportMoOverview(models.AbstractModel):
             'product_id': production.product_id.id,
             'state': production.state,
             'formatted_state': self._format_state(production),
-            'quantity': production.product_uom_qty,
+            'quantity': production.product_qty,
             'uom_name': production.product_uom_id.display_name,
             'uom_precision': self._get_uom_precision(production.product_uom_id.rounding),
             'quantity_free': product.uom_id._compute_quantity(product.free_qty, production.product_uom_id) if product.type == 'product' else False,
