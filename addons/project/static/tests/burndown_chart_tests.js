@@ -21,12 +21,19 @@ QUnit.module("Project", {}, () => {
                             date: { string: "Date", type: "date", store: true, sortable: true },
                             project_id: { string: "Project", type: "many2one", relation: "project", store: true, sortable: true },
                             stage_id: { string: "Stage", type: "many2one", relation: "stage", store: true, sortable: true },
+                            is_closed: {
+                                string: "Burn up chart",
+                                type: "selection",
+                                selection: [['closed', 'Closed tasks'], ['open', 'Open tasks']],
+                                store: true,
+                                sortable: true
+                            },
                             nb_tasks: { string: "Number of Tasks", type: "integer", store: true, sortable: true, group_operator: "sum" }
                         },
                         records: [
-                            { id: 1, project_id: 1, stage_id: 1, date: "2020-01-01", nb_tasks: 10 },
-                            { id: 2, project_id: 1, stage_id: 2, date: "2020-02-01", nb_tasks: 5 },
-                            { id: 3, project_id: 1, stage_id: 3, date: "2020-03-01", nb_tasks: 2 },
+                            { id: 1, project_id: 1, stage_id: 1, is_closed: 'open', date: "2020-01-01", nb_tasks: 10 },
+                            { id: 2, project_id: 1, stage_id: 2, is_closed: 'open', date: "2020-02-01", nb_tasks: 5 },
+                            { id: 3, project_id: 1, stage_id: 3, is_closed: 'closed', date: "2020-03-01", nb_tasks: 2 },
                         ],
                     },
                     project: {
@@ -57,6 +64,7 @@ QUnit.module("Project", {}, () => {
                         <graph type="line">
                             <field name="date" string="Date" interval="month"/>
                             <field name="stage_id"/>
+                            <field name="is_closed"/>
                             <field name="nb_tasks" type="measure"/>
                         </graph>
                     `,
@@ -98,7 +106,8 @@ QUnit.module("Project", {}, () => {
                 searchViewArch: `
                     <search string="Burndown Chart">
                         <filter string="Date" name="date" context="{'group_by': 'date'}" />
-                        <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}" />
+                        <filter string="Stage - Burndown chart" name="stage" context="{'group_by': 'stage_id'}" />
+                        <filter string="Is Closed - Burnup chart" name="is_closed" context="{'group_by': 'is_closed'}"/>
                     </search>
                 `,
                 searchViewFields: {
@@ -112,12 +121,20 @@ QUnit.module("Project", {}, () => {
                     },
                     stage_id: {
                         name: "stage_id",
-                        string: "Stage",
+                        string: "Stage - Burndown chart",
                         type: "many2one",
                         store: true,
                         sortable: true,
                         searchable: true,
                     },
+                    is_closed: {
+                        name: "is_closed",
+                        string: "Is Closed - Burnup chart",
+                        type: "selection",
+                        store: true,
+                        sortable: true,
+                        searchable: true,
+                    }
                 },
                 context: { ...makeViewParams.context, 'search_default_date': 1, 'search_default_stage': 1 },
                 ...makeViewOverwriteParams,
@@ -141,7 +158,7 @@ QUnit.module("Project", {}, () => {
 
         async function toggleGroupByStageMenu(target) {
             await openGroupByMainMenu(target);
-            await toggleMenuItem(target, 'Stage');
+            await toggleMenuItem(target, 'Stage - Burndown chart');
         }
 
         async function toggleSelectedGroupByDateItem(target) {
@@ -171,13 +188,6 @@ QUnit.module("Project", {}, () => {
         QUnit.test("check that removing the group by 'Date' triggers a notification", async function (assert) {
             const stepsTriggeringNotification = async () => {
                 await toggleSelectedGroupByDateItem(target);
-            };
-            await testBurnDownChartWithSearchView(stepsTriggeringNotification, assert);
-        });
-
-        QUnit.test("check that removing the group by 'Stage' triggers a notification", async function (assert) {
-            const stepsTriggeringNotification = async () => {
-                await toggleGroupByStageMenu(target);
             };
             await testBurnDownChartWithSearchView(stepsTriggeringNotification, assert);
         });
@@ -216,7 +226,7 @@ QUnit.module("Project", {}, () => {
             const dateSearchFacetParts = dateSearchFacetElement.querySelectorAll('.o_facet_value');
             assert.equal(dateSearchFacetParts.length, 2);
             assert.equal(dateSearchFacetParts[0].innerText, 'Date: Month');
-            assert.equal(dateSearchFacetParts[1].innerText, 'Stage');
+            assert.equal(dateSearchFacetParts[1].innerText, 'Stage - Burndown chart');
         }
 
         QUnit.test("check that the group by is always sorted 'Date' first, 'Stage' second", async function (assert) {
@@ -226,6 +236,25 @@ QUnit.module("Project", {}, () => {
 
         QUnit.test("check that the group by is always sorted 'Date' first, 'Stage' second", async function (assert) {
             await makeBurnDownChartWithSearchView({context: {...makeViewParams.context, 'search_default_stage': 1, 'search_default_date': 1}});
+            checkGroupByOrder(assert);
+        });
+
+        function checkGroupByIsClosed(assert) {
+            const dateSearchFacetXpath = `//div[contains(@class, 'o_searchview_facet')]
+                                            [.//small[@class='o_facet_value']
+                                            [contains(., 'Date: Month')]]`;
+            const dateSearchFacetElement = getFirstElementForXpath(target, dateSearchFacetXpath);
+            const dateSearchFacetParts = dateSearchFacetElement.querySelectorAll('.o_facet_value');
+            assert.equal(dateSearchFacetParts.length, 2);
+            assert.equal(dateSearchFacetParts[0].innerText, 'Date: Month');
+            assert.equal(dateSearchFacetParts[1].innerText, 'Is Closed - Burnup chart');
+        }
+
+        QUnit.test("check that the toggle between 'Stage' and 'Burnup chart' are working as intended", async function (assert) {
+            await makeBurnDownChartWithSearchView();
+            await toggleGroupByStageMenu(target);
+            checkGroupByIsClosed(assert);
+            await toggleMenuItem(target, 'Is Closed - Burnup chart');
             checkGroupByOrder(assert);
         });
     });
