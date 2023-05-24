@@ -345,6 +345,9 @@ class IrAttachment(models.Model):
                     # Catch error during test where we provide fake image
                     # raise UserError(_("This file could not be decoded as an image file. Please try with a different file."))
                     _logger.info('Post processing ignored : %s', e)
+                except (Image.DecompressionBombError, Image.DecompressionBombWarning) as e:
+                    e.sentry_ignored = True
+                    raise
         return values
 
     def _check_contents(self, values):
