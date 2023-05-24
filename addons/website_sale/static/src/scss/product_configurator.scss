@@ -65,11 +65,25 @@
         border-color: $input-border-color;
     }
 
+    .fa {
+        font-size: $font-size-base * .875;
+    }
+
+    .btn:hover::before {
+        content: "";
+        @include o-position-absolute(50%, $left: 50%);
+        transform: translate(-50%, -50%);
+        padding: 0.8rem;
+        background-color: currentColor;
+        opacity: 0.05;
+        border-radius: 50%;
+    }
+
     input {
         // Needs !important because themes customize btns' padding direclty
         // rather than change '$input-btn-padding-X' (shared with inputs).
         height: auto !important;
-        max-width: 5ch;
+        max-width: 4ch;
     }
 }
 
