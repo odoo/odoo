@@ -316,7 +316,7 @@ class SaleOrderLine(models.Model):
     @api.depends('state')
     def _compute_product_uom_readonly(self):
         for line in self:
-            line.product_uom_readonly = line.state in ['sale', 'done', 'cancel']
+            line.product_uom_readonly = line.ids and line.state in ['sale', 'done', 'cancel']
 
     @api.depends('is_expense')
     def _compute_qty_delivered_method(self):
