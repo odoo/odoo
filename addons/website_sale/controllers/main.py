@@ -725,7 +725,10 @@ class WebsiteSale(http.Controller):
 
         # error message for empty required fields
         for field_name in required_fields:
-            if not data.get(field_name):
+            val = data.get(field_name)
+            if isinstance(val, str):
+                val = val.strip()
+            if not val:
                 error[field_name] = 'missing'
 
         # email validation
