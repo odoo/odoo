@@ -21,8 +21,8 @@ class StockWarehouse(models.Model):
                                      help="When products are bought, they can be delivered to this warehouse")
     buy_pull_id = fields.Many2one('stock.rule', 'Buy rule')
 
-    def _get_global_route_rules_values(self):
-        rules = super(StockWarehouse, self)._get_global_route_rules_values()
+    def _generate_global_route_rules_values(self):
+        rules = super()._generate_global_route_rules_values()
         location_id = self.in_type_id.default_location_dest_id
         rules.update({
             'buy_pull_id': {
@@ -32,7 +32,7 @@ class StockWarehouse(models.Model):
                     'picking_type_id': self.in_type_id.id,
                     'group_propagation_option': 'none',
                     'company_id': self.company_id.id,
-                    'route_id': self._find_global_route('purchase_stock.route_warehouse0_buy', _('Buy')).id,
+                    'route_id': self._find_global_route('purchase_stock.route_warehouse0_buy', _('Buy'), raise_if_not_found=False).id,
                     'propagate_cancel': self.reception_steps != 'one_step',
                 },
                 'update_values': {

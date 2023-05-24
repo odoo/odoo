@@ -51,3 +51,18 @@ class TestRoutes(TransactionCase):
                 line.name = 'second rule'
                 line.action = 'buy'
                 line.picking_type_id = receipt_2
+
+    def test_delete_buy_route(self):
+        """
+        The user should be able to write on a warehouse even if the buy route
+        does not exist anymore
+        """
+        wh = self.env['stock.warehouse'].search([], limit=1)
+
+        buy_routes = self.env['stock.route'].search([('name', 'ilike', 'buy')])
+        self.assertTrue(buy_routes)
+
+        buy_routes.unlink()
+
+        wh.reception_steps = 'two_steps'
+        self.assertEqual(wh.reception_steps, 'two_steps')
