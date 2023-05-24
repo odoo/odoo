@@ -141,6 +141,8 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
                             couponUpdate.partner_id,
                             couponUpdate.points
                         );
+                        this.pos.globalState.partnerId2CouponIds[partner.id] = this.pos.globalState.partnerId2CouponIds[partner.id] || new Set();
+                        this.pos.globalState.partnerId2CouponIds[partner.id].add(couponUpdate.id);
                     }
                     delete couponCache[couponUpdate.old_id];
                     couponCache[couponUpdate.id] = dbCoupon;
