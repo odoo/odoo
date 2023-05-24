@@ -6,6 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { formatFloatTime, formatMonetary } from "@web/views/fields/formatters";
 import { formatFloat } from "@web/core/utils/numbers";
 import { getStateDecorator } from "./mo_overview_colors";
+import { SHOW_OPTIONS } from "../mo_overview_display_filter/mrp_mo_overview_display_filter";
 
 export class MoOverviewLine extends Component {
     static template = "mrp.MoOverviewLine";
@@ -159,23 +160,13 @@ MoOverviewLine.props = {
             },
             mo_cost: Number,
             mo_cost_decorator: { type: [String, Boolean], optional: true },
-            product_cost: { type: Number, optional: true },
+            real_cost: Number,
             currency_id: Number,
             currency: { type: String, optional: true },
             production_id: { type: Number, optional: true },
         },
     },
-    showOptions: {
-        type: Object,
-        shape: {
-            uom: Boolean,
-            replenishments: Boolean,
-            availabilities: Boolean,
-            receipts: Boolean,
-            moCosts: Boolean,
-            productCosts: Boolean,
-        }
-    },
+    showOptions: SHOW_OPTIONS,
     hasFoldButton: { type: Boolean, optional: true },
     isFolded: { type: Boolean, optional: true },
     toggleFolded: { type: Function, optional: true },

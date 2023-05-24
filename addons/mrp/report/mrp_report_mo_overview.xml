@@ -15,7 +15,8 @@
     <template id="mo_overview_content">
         <t t-set="currency" t-value="data['summary']['currency']"/>
         <div class="container bg-view">
-            <table class="table">
+            <h2><t t-out="data['name']"/> - Overview</h2>
+            <table name="overview" class="table table-borderless">
                 <thead>
                     <tr>
                         <th/>
@@ -25,7 +26,7 @@
                         <th t-if="data['show_availabilities']" class="text-end">Reserved</th>
                         <th t-if="data['show_receipts']" class="text-end">Receipt</th>
                         <th t-if="data['show_mo_costs']" class="text-end">MO Cost</th>
-                        <th t-if="data['show_product_costs']" class="text-end">Product Cost</th>
+                        <th t-if="data['show_real_costs']" class="text-end">Real Cost</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -38,19 +39,13 @@
                         <t t-set="byproducts" t-value="data['byproducts']"/>
                     </t>
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <td class="text-start">Unit Cost</td>
-                        <td t-if="data['show_replenishments']"/>
-                        <td/>
-                        <td t-if="data['show_uom']"/>
-                        <td t-if="data['show_availabilities']"/>
-                        <td t-if="data['show_availabilities']"/>
-                        <td t-if="data['show_receipts']"/>
-                        <td t-if="data['show_mo_costs']" t-attf-class="text-end {{ 'text-' + data['extras']['unit_mo_cost_decorator'] if data.get('extras', {}).get('unit_mo_cost_decorator') else '' }}" t-out="data['extras']['unit_mo_cost']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
-                        <td t-if="data['show_product_costs']" class="text-end" t-out="data['extras']['unit_product_cost']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                <t t-if="data['show_mo_costs'] or data['show_real_costs']">
+                    <tr name="unit_cost" class="border-top border-dark">
+                        <td class="text-end" t-att-colspan="data['footer_colspan']">Unit Cost</td>
+                        <td t-if="data['show_mo_costs']" t-attf-class="text-end {{ data['get_color'](data.get('extras', {}).get('unit_mo_cost_decorator')) }}" t-out="data['extras']['unit_mo_cost']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
+                        <td t-if="data['show_real_costs']" class="text-end" t-out="data['extras']['unit_real_cost']" t-options="{'widget': 'monetary', 'display_currency': currency}"/>
                     </tr>
-                </tfoot>
+                </t>
             </table>
         </div>
     </template>
@@ -61,9 +56,9 @@
                 <div t-attf-style="margin-left: {{ line['level'] * 20 }}px" class="d-inline-block" t-out="line['name']"/>
             </td>
             <td t-if="data['show_replenishments']" class="text-center" t-out="line.get('formatted_state', '')"/>
-            <td t-attf-class="text-end {{ 'text-' + line['quantity_decorator'] if line.get('quantity_decorator') else '' }}">
+            <td t-attf-class="text-end {{ data['get_color'](line.get('quantity_decorator')) }}">
                 <t t-if="line.get('model') == 'mrp.workorder'" t-out="line['quantity']" t-options="{'widget': 'float_time'}"/>
-                <t t-else="" t-out="line['quantity']" t-options="{'widget': 'float', 'decimal_precision': 'Product Unit of Measure'}"/>
+                <t t-else="" t-out="line['quantity']" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/>
             </td>
             <td t-if="data['show_uom']" class="text-start" t-out="line['uom_name']"/>
             <td t-if="data['show_availabilities']" class="text-end">
@@ -75,14 +70,14 @@
             <td t-if="data['show_availabilities']" class="text-end">
                 <t t-if="line.get('quantity_reserved', False) is not False" t-out="line['quantity_reserved']" t-options="{'widget': 'float', 'precision': line['uom_precision']}"/>
             </td>
-            <td t-if="data['show_receipts']" t-attf-class="text-end {{ 'text-' + line['receipt']['decorator'] if line.get('receipt', {}).get('decorator') else '' }}">
-                <span t-if="line.get('receipt')" t-attf-class="{{ 'text-' + line['receipt']['decorator'] if line['receipt'].get('decorator') else '' }}" t-out="line['receipt']['display']"/>
+            <td t-if="data['show_receipts']" class="text-end">
+                <span t-if="line.get('receipt')" t-att-class="data['get_color'](line['receipt'].get('decorator'))" t-out="line['receipt']['display']"/>
             </td>
-            <td t-if="data['show_mo_costs']" t-attf-class="text-end {{ 'text-' + line['mo_cost_decorator'] if line.get('mo_cost_decorator') else '' }}">
+            <td t-if="data['show_mo_costs']" t-attf-class="text-end {{ data['get_color'](line.get('mo_cost_decorator')) }}">
                 <t t-out="line['mo_cost']" t-options="{'widget': 'monetary', 'display_currency': line['currency']}"/>
             </td>
-            <td t-if="data['show_product_costs']" class="text-end">
-                <t t-if="line.get('product_cost', False) is not False" t-out="line['product_cost']" t-options="{'widget': 'monetary', 'display_currency': line['currency']}"/>
+            <td t-if="data['show_real_costs']" class="text-end">
+                <t t-out="line['real_cost']" t-options="{'widget': 'monetary', 'display_currency': line['currency']}"/>
             </td>
         </tr>
     </template>
@@ -123,7 +118,7 @@
                     Operations
                 </td>
                 <td t-if="data['show_replenishments']" class="text-center"/>
-                <td t-attf-class="text-end {{ 'text-' + summary['quantity_decorator'] if summary.get('quantity_decorator') else '' }}">
+                <td t-attf-class="text-end {{ data['get_color'](summary.get('quantity_decorator')) }}">
                     <t t-out="summary['quantity']" t-options="{'widget': 'float_time'}"/>
                 </td>
                 
@@ -131,10 +126,12 @@
                 <td t-if="data['show_availabilities']" class="text-end"/>
                 <td t-if="data['show_availabilities']" class="text-end"/>
                 <td t-if="data['show_receipts']" class="text-end"/>
-                <td t-if="data['show_mo_costs']" t-attf-class="text-end {{ 'text-' + summary['mo_cost_decorator'] if summary.get('mo_cost_decorator') else '' }}">
+                <td t-if="data['show_mo_costs']" t-attf-class="text-end {{ data['get_color'](summary.get('mo_cost_decorator')) }}">
                     <t t-out="summary['mo_cost']" t-options="{'widget': 'monetary', 'display_currency': summary['currency']}"/>
                 </td>
-                <td t-if="data['show_product_costs']" class="text-end"/>
+                <td t-if="data['show_real_costs']" class="text-end">
+                    <t t-out="summary['real_cost']" t-options="{'widget': 'monetary', 'display_currency': summary['currency']}"/>
+                </td>
             </tr>
         </t>
         <t t-if="summary['index'] in data['unfolded_ids']" t-foreach="operations" t-as="operation">
@@ -157,11 +154,11 @@
                 <td t-if="data['show_availabilities']" class="text-end"/>
                 <td t-if="data['show_availabilities']" class="text-end"/>
                 <td t-if="data['show_receipts']" class="text-end"/>
-                <td t-if="data['show_mo_costs']" t-attf-class="text-end {{ 'text-' + summary['mo_cost_decorator'] if summary.get('mo_cost_decorator') else '' }}">
+                <td t-if="data['show_mo_costs']" t-attf-class="text-end {{ data['get_color'](summary.get('mo_cost_decorator')) }}">
                     <t t-out="summary['mo_cost']" t-options="{'widget': 'monetary', 'display_currency': summary['currency']}"/>
                 </td>
-                <td t-if="data['show_product_costs']" class="text-end">
-                    <t t-out="summary['product_cost']" t-options="{'widget': 'monetary', 'display_currency': summary['currency']}"/>
+                <td t-if="data['show_real_costs']" class="text-end">
+                    <t t-out="summary['real_cost']" t-options="{'widget': 'monetary', 'display_currency': summary['currency']}"/>
                 </td>
             </tr>
         </t>
