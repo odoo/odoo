@@ -165,7 +165,7 @@
                 <field name="user_id" widget="many2one_avatar_user" readonly="state not in ['draft', 'in_progress']"/>
                 <field name="picking_type_id" readonly="state != 'draft'"/>
                 <field name="company_id" groups="base.group_multi_company"/>
-                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state in ('draft', 'in_progress')"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state in ('draft', 'in_progress')" decoration-danger="state == 'cancel'"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
