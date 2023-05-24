@@ -72,11 +72,6 @@ class GoogleGmailMixin(models.AbstractModel):
         if not self.google_gmail_uri:
             raise UserError(_('Please configure your Gmail credentials.'))
 
-        if not self.smtp_user:
-            raise UserError(_(
-                        'Please fill the "Username" field with your Gmail username (your email address). '
-                        'This should be the same account as the one used for the Gmail OAuthentication Token.'))
-
         return {
             'type': 'ir.actions.act_url',
             'url': self.google_gmail_uri,
