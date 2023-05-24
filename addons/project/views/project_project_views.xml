@@ -24,7 +24,7 @@
                         invisible="privacy_visibility != 'portal'" context="{'default_access_mode': 'read', 'dialog_size': 'medium'}" data-hotkey="r"/>
                         <button name="%(project.project_share_wizard_action)d" string="Share Editable" type="action" class="oe_highlight" groups="project.group_project_manager"
                         invisible="privacy_visibility != 'portal'" context="{'default_access_mode': 'edit', 'dialog_size': 'medium'}" data-hotkey="e"/>
-                        <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" groups="project.group_project_stages"/>
+                        <field name="stage_id" widget="statusbar" options="{'clickable': '1', 'fold_field': 'fold'}" groups="project.group_project_stages" domain="[('company_id', 'in', (company_id, False))]"/>
                     </header>
                 <sheet string="Project">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
@@ -204,7 +204,7 @@
             <field name="name">project.project.tree</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <tree decoration-muted="active == False" string="Projects" multi_edit="1" sample="1" default_order="is_favorite desc, sequence, name, id">
+                <tree decoration-muted="active == False" string="Projects" multi_edit="1" sample="1" default_order="is_favorite desc, sequence, name, id" js_class="project_project_list">
                     <field name="sequence" column_invisible="True"/>
                     <field name="message_needaction" column_invisible="True"/>
                     <field name="active" column_invisible="True"/>
@@ -220,7 +220,7 @@
                     <field name="last_update_color" column_invisible="True"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                     <field name="last_update_status" string="Status" nolabel="1" optional="show" widget="project_state_selection" options="{'hide_label': True}"/>
-                    <field name="stage_id" options="{'no_open': True}" optional="show"/>
+                    <field name="stage_id" options="{'no_open': True}" domain="[('company_id', 'in', (company_id, False))]" optional="show"/>
                     <button string="View Tasks" name="action_view_tasks" type="object"/>
                 </tree>
             </field>
