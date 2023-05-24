@@ -6,10 +6,6 @@
           <field name="name">Administration</field>
         </record>
 
-        <record id="dep_sales" model="hr.department">
-          <field name="name">Sales</field>
-        </record>
-
         <record id="res_partner_admin_private_address" model="res.partner">
             <field name="name">Administrator</field>
             <field name="company_id" ref="base.main_company"/>
@@ -85,6 +81,31 @@
             <field name="name">Retired</field>
         </record>
 
+        <record id="contract_type_permanent" model="hr.contract.type">
+            <field name="name">Permanent</field>
+            <field name="sequence">1</field>
+        </record>
+
+        <record id="contract_type_temporary" model="hr.contract.type">
+            <field name="name">Temporary</field>
+            <field name="sequence">2</field>
+        </record>
+
+        <record id="contract_type_seasonal" model="hr.contract.type">
+            <field name="name">Seasonal</field>
+            <field name="sequence">3</field>
+        </record>
+
+        <record id="contract_type_full_time" model="hr.contract.type">
+            <field name="name">Full-Time</field>
+            <field name="sequence">4</field>
+        </record>
+
+        <record id="contract_type_part_time" model="hr.contract.type">
+            <field name="name">Part-Time</field>
+            <field name="sequence">5</field>
+        </record>
+
         <!-- Work permit expires Soon -->
         <record id="ir_cron_data_check_work_permit_validity" model="ir.cron">
             <field name="name">HR Employee: check work permit validity</field>
@@ -95,6 +116,5 @@
             <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
         </record>
-
     </data>
 </odoo>

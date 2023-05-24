@@ -135,9 +135,12 @@
         <field name="arch" type="xml">
             <search string="Vehicles costs" >
                 <field name="name" string="Model" />
-                <field name="brand_id" />
+                <field name="brand_id"/>
+                <filter string="Contains Vehicle" name="contains_vehicle" domain="[('vehicle_count', '!=', 0)]"/>
                 <group expand="1" string="Group By">
-                    <filter name="groupby_brand" context="{'group_by' : 'brand_id'}" string="Contains Vehicles"/>
+                    <filter name="groupby_brand" context="{'group_by' : 'brand_id'}" string="Manufacturers"/>
+                    <filter name="groupby_category" context="{'group_by' : 'category_id'}" string="Category"/>
+                    <filter name="groupby_vehicle_type" context="{'group_by' : 'vehicle_type'}" string="Vehicle Type"/>
                 </group>
             </search>
         </field>
@@ -184,12 +187,10 @@
                         </button>
                     </div>
                     <group>
-                        <div>
-                            <field name="image_128" widget="image" class="oe_avatar"/>
-                            <h1>
-                                <field name="name"/>
-                            </h1>
-                        </div>
+                        <group>
+                            <field name="name"/>
+                            <field name="image_128" widget="image" class="oe_avatar float-start"/>
+                        </group>
                     </group>
                 </sheet>
             </form>
@@ -202,10 +203,16 @@
         <field name="arch" type="xml">
             <kanban default_order="name" action="action_brand_model" type="object">
                 <field name="id"/>
-                <field name="name" />
+                <field name="name"/>
+                <field name="active"/>
                 <templates>
                     <t t-name="kanban-menu">
                         <a role="menuitem" type="open" class="dropdown-item">Configuration</a>
+                        <a role="menuitem" type="object" name="toggle_active" class="dropdown-item">
+                            <t t-if="record.active.raw_value">Archive</t>
+                            <t t-else="">Restore</t>
+                        </a>
+                        <a role="menuitem" t-if="widget.deletable" type="delete" class="dropdown-item">Delete</a>
                     </t>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_vignette oe_semantic_html_override oe_kanban_global_click">
@@ -237,6 +244,8 @@
                 <field name="name"/>
                 <filter string="With Models" name="with_models"
                     domain="[('model_count', '>', 0)]"/>
+                <separator/>
+                <filter string="Archived" name="active" domain="[('active','=',False)]"/>
             </search>
         </field>
     </record>
@@ -260,6 +269,9 @@
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new category
+            </p>
+            <p>
+                Categories will help you manage your fleet more efficiently and arrange your vehicles.
             </p>
         </field>
     </record>

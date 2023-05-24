@@ -31,7 +31,7 @@ class FleetVehicleModel(models.Model):
     active = fields.Boolean(default=True)
     vehicle_type = fields.Selection([('car', 'Car'), ('bike', 'Bike')], default='car', required=True)
     transmission = fields.Selection([('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission')
-    vehicle_count = fields.Integer(compute='_compute_vehicle_count')
+    vehicle_count = fields.Integer(compute='_compute_vehicle_count', search='_search_vehicle_count')
     model_year = fields.Integer()
     color = fields.Char()
     seats = fields.Integer(string='Seats Number')
@@ -69,6 +69,21 @@ class FleetVehicleModel(models.Model):
         count_by_model = {model.id: count for model, count in group}
         for model in self:
             model.vehicle_count = count_by_model.get(model.id, 0)
+
+    @api.model
+    def _search_vehicle_count(self, operator, value):
+        if operator not in ['=', '!=', '<', '>'] or not isinstance(value, int):
+            raise NotImplementedError(_('Operation not supported.'))
+        fleet_models = self.env['fleet.vehicle.model'].search([])
+        if operator == '=':
+            fleet_models = fleet_models.filtered(lambda m: m.vehicle_count == value)
+        elif operator == '!=':
+            fleet_models = fleet_models.filtered(lambda m: m.vehicle_count != value)
+        elif operator == '<':
+            fleet_models = fleet_models.filtered(lambda m: m.vehicle_count < value)
+        elif operator == '>':
+            fleet_models = fleet_models.filtered(lambda m: m.vehicle_count > value)
+        return [('id', 'in', fleet_models.ids)]
 
     def action_model_vehicle(self):
         self.ensure_one()
