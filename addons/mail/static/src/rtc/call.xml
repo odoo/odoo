@@ -3,7 +3,7 @@
 
     <t t-name="mail.Call" owl="1">
         <div class="o-mail-Call user-select-none d-flex" t-att-class="{'o-fullscreen fixed-top vw-100 vh-100': state.isFullscreen, 'o-minimized': minimized, 'position-relative': !state.isFullscreen }">
-            <div class="d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto bg-black-50" t-on-mouseleave="onMouseleaveMain">
+            <div class="o-mail-Call-main d-flex flex-grow-1 flex-column align-items-center justify-content-center position-relative overflow-auto" t-on-mouseleave="onMouseleaveMain">
                 <div
                     class="d-flex align-items-center overflow-hidden h-100 w-100 flex-wrap justify-content-center"
                     t-attf-style="--height:{{state.tileHeight}}px; --width:{{state.tileWidth}}px;"
