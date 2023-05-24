@@ -67,8 +67,8 @@ class StockWarehouse(models.Model):
 
         route_id.active = bool(all_rules.filtered(lambda r: r.action == 'pull'))
 
-    def _get_global_route_rules_values(self):
-        rules = super()._get_global_route_rules_values()
+    def _generate_global_route_rules_values(self):
+        rules = super()._generate_global_route_rules_values()
         subcontract_location_id = self._get_subcontracting_location()
         production_location_id = self._get_production_location()
         rules.update({
@@ -80,7 +80,7 @@ class StockWarehouse(models.Model):
                     'action': 'pull',
                     'auto': 'manual',
                     'route_id': self._find_global_route('mrp_subcontracting_dropshipping.route_subcontracting_dropshipping',
-                                                        _('Dropship Subcontractor on Order')).id,
+                                                        _('Dropship Subcontractor on Order'), raise_if_not_found=False).id,
                     'name': self._format_rulename(subcontract_location_id, production_location_id, False),
                     'location_dest_id': production_location_id.id,
                     'location_src_id': subcontract_location_id.id,
