@@ -438,10 +438,29 @@ class Project(models.Model):
             for vals in vals_list:
                 if 'label_tasks' in vals and not vals['label_tasks']:
                     vals['label_tasks'] = task_label
+        if len(self.env.companies) > 1 and self.env.user.has_group('project.group_project_stages'):
+            # Select the stage whether the default_stage_id field is set in context (quick create) or if it is not (normal create)
+            stage = self.env['project.project.stage'].browse(self._context['default_stage_id']) if 'default_stage_id' in self._context else self._default_stage_id()
+            # The project's company_id must be the same as the stage's company_id
+            if stage.company_id:
+                for vals in vals_list:
+                    vals['company_id'] = stage.company_id.id
         projects = super().create(vals_list)
         return projects
 
     def write(self, vals):
+        # Here we modify the project's stage according to the selected company (selecting the first
+        # stage in sequence that is linked to the company).
+        if self.env.user.has_group('project.group_project_stages') and\
+            vals.get('company_id') not in (None, self.company_id.id) and\
+            self.stage_id.company_id:
+            ProjectStage = self.env['project.project.stage']
+            vals['stage_id'] = ProjectStage.search(
+                [('company_id', 'in', (vals['company_id'], False))],
+                order=f"company_id asc, {ProjectStage._order}",
+                limit=1,
+            ).id
+
         # directly compute is_favorite to dodge allow write access right
         if 'is_favorite' in vals:
             vals.pop('is_favorite')
@@ -555,6 +574,21 @@ class Project(models.Model):
             values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")
             defaults['project_id'] = self.id
         return values
+
+    @api.constrains('stage_id')
+    def _ensure_stage_has_same_company(self):
+        for project in self:
+            if project.stage_id.company_id and project.stage_id.company_id != project.company_id:
+                raise UserError(
+                    _('This project is associated with %s, whereas the selected stage belongs to %s. '
+                    'There are a couple of options to consider: either remove the company designation '
+                    'from the project or from the stage. Alternatively, you can update the company '
+                    'information for these records to align them under the same company.', project.company_id.name, project.stage_id.company_id.name)
+                    if project.company_id else
+                    _('This project is not associated to any company, while the stage is associated to %s. '
+                    'There are a couple of options to consider: either change the project\'s company '
+                    'to align with the stage\'s company or remove the company designation from the stage', project.stage_id.company_id.name)
+                )
 
     # ---------------------------------------------------
     # Mail gateway
