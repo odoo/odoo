@@ -86,8 +86,8 @@ class StockWarehouse(models.Model):
         })
         return routes
 
-    def _get_global_route_rules_values(self):
-        rules = super(StockWarehouse, self)._get_global_route_rules_values()
+    def _generate_global_route_rules_values(self):
+        rules = super()._generate_global_route_rules_values()
         subcontract_location_id = self._get_subcontracting_location()
         production_location_id = self._get_production_location()
         rules.update({
@@ -98,7 +98,7 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'action': 'pull',
                     'auto': 'manual',
-                    'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)')).id,
+                    'route_id': self._find_global_route('stock.route_warehouse0_mto', _('Replenish on Order (MTO)'), raise_if_not_found=False).id,
                     'name': self._format_rulename(self.lot_stock_id, subcontract_location_id, 'MTO'),
                     'location_dest_id': subcontract_location_id.id,
                     'location_src_id': self.lot_stock_id.id,
@@ -116,7 +116,7 @@ class StockWarehouse(models.Model):
                     'action': 'pull',
                     'auto': 'manual',
                     'route_id': self._find_global_route('mrp_subcontracting.route_resupply_subcontractor_mto',
-                                                        _('Resupply Subcontractor on Order')).id,
+                                                        _('Resupply Subcontractor on Order'), raise_if_not_found=False).id,
                     'name': self._format_rulename(subcontract_location_id, production_location_id, False),
                     'location_dest_id': production_location_id.id,
                     'location_src_id': subcontract_location_id.id,
