@@ -96,7 +96,7 @@ class IrMailServer(models.Model):
     name = fields.Char(string='Name', required=True, index=True)
     from_filter = fields.Char(
         "FROM Filtering",
-        help='Define for which email address or domain this server can be used.\n'
+        help='Comma-separated list of addresses or domains for which this server can be used.\n'
              'e.g.: "notification@odoo.com" or "odoo.com"')
     smtp_host = fields.Char(string='SMTP Server', help="Hostname or IP of SMTP server")
     smtp_port = fields.Integer(string='SMTP Port', default=25, help="SMTP Port. Usually 465 for SSL, and 25 or 587 for other cases.")
@@ -204,20 +204,21 @@ class IrMailServer(models.Model):
         self.ensure_one()
         email_to = "noreply@odoo.com"
         if self.from_filter:
-            if "@" in self.from_filter:
+            from_filter_parts = [part.strip() for part in self.from_filter.split(",")]
+            if mail_from := next((email for email in from_filter_parts if "@" in email), None):
                 # All emails will be sent from the same address
-                return self.from_filter, email_to
+                return mail_from, email_to
             # All emails will be sent from any address in the same domain
             default_from = self.env["ir.config_parameter"].sudo().get_param("mail.default.from", "odoo")
             if "@" not in default_from:
-                return f"{default_from}@{self.from_filter}", email_to
+                return f"{default_from}@{from_filter_parts[0]}", email_to
             elif self._match_from_filter(default_from, self.from_filter):
                 # the mail server is configured for a domain
                 # that match the default email address
                 return default_from, email_to
             # the from_filter is configured for a domain different that the one
             # of the full email configured in mail.default.from
-            return f"noreply@{self.from_filter}", email_to
+            return f"noreply@{from_filter_parts[0]}", email_to
         # Fallback to current user email if there's no from filter
         email_from = self.env.user.email
         if not email_from:
@@ -733,30 +734,33 @@ class IrMailServer(models.Model):
         if mail_servers is None:
             mail_servers = self.sudo().search([], order='sequence')
 
-        # 1. Try to find a mail server for the right mail from
-        mail_server = mail_servers.filtered(lambda m: email_normalize(m.from_filter) == email_from_normalized)
-        if mail_server:
-            return mail_server[0], email_from
+        def first_match(target, normalize_method):
+            for mail_server in mail_servers:
+                if mail_server.from_filter and any(
+                    normalize_method(email.strip()) == target
+                    for email in mail_server.from_filter.split(',')
+                ):
+                    return mail_server
 
-        mail_server = mail_servers.filtered(lambda m: email_domain_normalize(m.from_filter) == email_from_domain)
-        if mail_server:
-            return mail_server[0], email_from
+        # 1. Try to find a mail server for the right mail from
+        if mail_server := first_match(email_from_normalized, email_normalize):
+            return mail_server, email_from
+
+        if mail_server := first_match(email_from_domain, email_domain_normalize):
+            return mail_server, email_from
 
         # 2. Try to find a mail server for <notifications@domain.com>
         if notifications_email:
-            mail_server = mail_servers.filtered(lambda m: email_normalize(m.from_filter) == notifications_email)
-            if mail_server:
-                return mail_server[0], notifications_email
+            if mail_server := first_match(notifications_email, email_normalize):
+                return mail_server, notifications_email
 
-            mail_server = mail_servers.filtered(lambda m: email_domain_normalize(m.from_filter) == notifications_domain)
-            if mail_server:
-                return mail_server[0], notifications_email
+            if mail_server := first_match(notifications_domain, email_domain_normalize):
+                return mail_server, notifications_email
 
         # 3. Take the first mail server without "from_filter" because
         # nothing else has been found... Will spoof the FROM because
         # we have no other choices
-        mail_server = mail_servers.filtered(lambda m: not m.from_filter)
-        if mail_server:
+        if mail_server := mail_servers.filtered(lambda m: not m.from_filter):
             return mail_server[0], email_from
 
         # 4. Return the first mail server even if it was configured for another domain
@@ -786,10 +790,15 @@ class IrMailServer(models.Model):
             return True
 
         normalized_mail_from = email_normalize(email_from)
-        if '@' in from_filter:
-            return email_normalize(from_filter) == normalized_mail_from
+        normalized_domain = email_domain_extract(normalized_mail_from)
 
-        return email_domain_extract(normalized_mail_from) == email_domain_normalize(from_filter)
+        for email_filter in from_filter.split(','):
+            email_filter = email_filter.strip()
+            if '@' in email_filter and email_normalize(email_filter) == normalized_mail_from:
+                return True
+            if '@' not in email_filter and email_domain_normalize(email_filter) == normalized_domain:
+                return True
+        return False
 
     @api.onchange('smtp_encryption')
     def _onchange_encryption(self):

@@ -41,6 +41,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             ('admin@mail.example.com', False),
             ('"fake@test.com" <admin@mail.example.com>', 'mail.example.com'),
             ('"fake@test.com" <ADMIN@mail.example.com>', 'mail.example.com'),
+            ('"fake@test.com" <ADMIN@mail.example.com>', 'test.com, mail.example.com, test2.com'),
         ]
         for email, from_filter in tests:
             self.assertTrue(match_from_filter(email, from_filter))
@@ -53,6 +54,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             ('admin@mmail.example.com', 'mail.example.com'),
             ('admin@mail.example.com', 'mmail.example.com'),
             ('"admin@mail.example.com" <fake@test.com>', 'mail.example.com'),
+            ('"fake@test.com" <ADMIN@mail.example.com>', 'test.com, wrong.mail.example.com, test3.com'),
         ]
         for email, from_filter in tests:
             self.assertFalse(match_from_filter(email, from_filter))
@@ -137,6 +139,23 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         mail_server, mail_from = self.env['ir.mail_server']._find_mail_server(email_from='"Test" <test@unknown_domain.com>')
         self.assertEqual(mail_server, self.server_notification, 'Should take the notification email')
         self.assertEqual(mail_from, 'notifications@test.com')
+
+        # this mail server can not be used for a specific email address and 2 domain names
+        self.server_user.from_filter = "domain1.com, specific_user@test.com, domain2.com"
+        mail_server, mail_from = self.env['ir.mail_server']._find_mail_server(email_from='"Test" <specific_user@test.com>')
+        self.assertEqual(mail_server, self.server_user, "The entire email matches, the server should be used")
+        self.assertEqual(mail_from, '"Test" <specific_user@test.com>')
+        mail_server, mail_from = self.env['ir.mail_server']._find_mail_server(email_from='"Example" <test@domain2.com>')
+        self.assertEqual(mail_server, self.server_user, "The domain matches, the server should be used")
+        self.assertEqual(mail_from, '"Example" <test@domain2.com>')
+        mail_server, mail_from = self.env['ir.mail_server']._find_mail_server(email_from='"Example" <test@domain1.com>')
+        self.assertEqual(mail_server, self.server_user, "The domain matches, the server should be used")
+        self.assertEqual(mail_from, '"Example" <test@domain1.com>')
+
+        # check that we take the domain server and not the "user specific" server
+        mail_server, mail_from = self.env['ir.mail_server']._find_mail_server(email_from='"Test" <not_specific_user@test.com>')
+        self.assertEqual(mail_server, self.server_domain)
+        self.assertEqual(mail_from, '"Test" <not_specific_user@test.com>')
 
         # remove the notifications email to simulate a mis-configured Odoo database
         # so we do not have the choice, we have to spoof the FROM
@@ -391,7 +410,10 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         )
 
     @mute_logger('odoo.models.unlink')
-    @patch.dict(config.options, {"from_filter": "test.com", "smtp_server": "example.com"})
+    @patch.dict(config.options, {
+        "from_filter": "dummy@example.com, test.com, dummy2@example.com",
+        "smtp_server": "example.com",
+    })
     def test_mail_server_binary_arguments_domain_smtp_session(self):
         """Test the configuration provided in the odoo-bin arguments.
 
@@ -415,7 +437,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         self.assert_email_sent_smtp(
             smtp_from=default_bounce_adress,
             message_from='specific_user@test.com',
-            from_filter='test.com',
+            from_filter='dummy@example.com, test.com, dummy2@example.com',
         )
 
         # Use an email outside of the domain of the "from_filter"
@@ -430,12 +452,12 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         self.assert_email_sent_smtp(
             smtp_from=default_bounce_adress,
             message_from='"test" <notifications@test.com>',
-            from_filter='test.com',
+            from_filter='dummy@example.com, test.com, dummy2@example.com',
         )
 
     def test_mail_server_get_email_addresses(self):
         """Test the email used to test the mail server connection."""
-        self.server_notification.from_filter = 'example_2.com'
+        self.server_notification.from_filter = 'example_2.com, example_3.com'
 
         self.env['ir.config_parameter'].set_param('mail.default.from', 'notifications@example.com')
         email_from = self.server_notification._get_test_email_addresses()[0]
@@ -445,7 +467,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         email_from = self.server_notification._get_test_email_addresses()[0]
         self.assertEqual(email_from, 'notifications@example_2.com')
 
-        self.server_notification.from_filter = 'full_email@example_2.com'
+        self.server_notification.from_filter = 'dummy.com, full_email@example_2.com, dummy2.com'
 
         self.env['ir.config_parameter'].set_param('mail.default.from', 'notifications')
         email_from = self.server_notification._get_test_email_addresses()[0]
@@ -477,7 +499,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
             'smtp_host': 'smtp_host',
             'smtp_encryption': 'none',
             'smtp_authentication': 'cli',
-            'from_filter': 'cli_example.com',
+            'from_filter': 'dummy@example.com, cli_example.com, dummy2@example.com',
         }])
 
         IrMailServer = self.env['ir.mail_server']
@@ -491,7 +513,7 @@ class TestIrMailServer(TransactionCase, MockSmtplibCase):
         self.assert_email_sent_smtp(
             smtp_from='test@cli_example.com',
             message_from='test@cli_example.com',
-            from_filter='cli_example.com',
+            from_filter='dummy@example.com, cli_example.com, dummy2@example.com',
         )
 
         # other mail server still work
