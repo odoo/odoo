@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, api
+from odoo import models, fields, _
 from odoo.tools.safe_eval import safe_eval
+from odoo.exceptions import UserError
 
 
 class AccountTaxPython(models.Model):
@@ -35,7 +36,10 @@ class AccountTaxPython(models.Model):
         if self.amount_type == 'code':
             company = self.env.company
             localdict = {'base_amount': base_amount, 'price_unit':price_unit, 'quantity': quantity, 'product':product, 'partner':partner, 'company': company}
-            safe_eval(self.python_compute, localdict, mode="exec", nocopy=True)
+            try:
+                safe_eval(self.python_compute, localdict, mode="exec", nocopy=True)
+            except Exception as e:
+                raise UserError(_("You entered invalid code %r in %r taxes\n\nError : %s") % (self.python_compute, self.name, e)) from e
             return localdict['result']
         return super(AccountTaxPython, self)._compute_amount(base_amount, price_unit, quantity, product, partner, fixed_multiplicator)
 
@@ -46,7 +50,10 @@ class AccountTaxPython(models.Model):
         def is_applicable_tax(tax, company=self.env.company):
             if tax.amount_type == 'code':
                 localdict = {'price_unit': price_unit, 'quantity': quantity, 'product': product, 'partner': partner, 'company': company}
-                safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
+                try:
+                    safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
+                except Exception as e:
+                    raise UserError(_("You entered invalid code %r in %r taxes\n\nError : %s") % (tax.python_applicable, tax.name, e)) from e
                 return localdict.get('result', False)
 
             return True
