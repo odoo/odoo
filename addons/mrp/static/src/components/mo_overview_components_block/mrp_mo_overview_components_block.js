@@ -5,6 +5,7 @@ import { useBus } from "@web/core/utils/hooks";
 import { MoOverviewLine } from "../mo_overview_line/mrp_mo_overview_line";
 import { MoOverviewOperationsBlock } from "../mo_overview_operations_block/mrp_mo_overview_operations_block";
 import { MoOverviewByproductsBlock } from "../mo_overview_byproducts_block/mrp_mo_overview_byproducts_block";
+import { SHOW_OPTIONS } from "../mo_overview_display_filter/mrp_mo_overview_display_filter";
 
 export class MoOverviewComponentsBlock extends Component {
     static template = "mrp.MoOverviewComponentsBlock";
@@ -104,17 +105,7 @@ MoOverviewComponentsBlock.props = {
         },
         optional: true,
     },
-    showOptions: {
-        type: Object,
-        shape: {
-            uom: Boolean,
-            replenishments: Boolean,
-            availabilities: Boolean,
-            receipts: Boolean,
-            moCosts: Boolean,
-            productCosts: Boolean,
-        },
-    },
+    showOptions: SHOW_OPTIONS,
 };
 MoOverviewComponentsBlock.defaultProps = {
     unfoldAll: false,

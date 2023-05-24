@@ -18,7 +18,7 @@
                 <td class="text-end" t-if="props.showOptions.availabilities"/>
                 <td class="text-end" t-if="props.showOptions.receipts"/>
                 <td t-attf-class="text-end {{ getColorClass(props.summary.mo_cost_decorator) }}" t-if="props.showOptions.moCosts" t-out="formatMonetary(props.summary.mo_cost)"/>
-                <td class="text-end" t-if="props.showOptions.productCosts"/>
+                <td class="text-end" t-if="props.showOptions.realCosts" t-out="formatMonetary(props.summary.real_cost)"/>
             </tr>
             <t t-if="!state.isFolded" t-foreach="props.operations" t-as="operation" t-key="operation.index">
                 <MoOverviewLine data="operation" showOptions="props.showOptions"/>
