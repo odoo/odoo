@@ -42,7 +42,7 @@
             run: 'click',
         },
         {
-            trigger: '.dropdown-item:contains("Calendar")',
+            trigger: '.o_back_button',
             content: 'Go back to Calendar view',
             run: 'click',
         },
