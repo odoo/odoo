@@ -6,7 +6,7 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useOwnDebugContext } from "@web/core/debug/debug_context";
 import { session } from '@web/session';
 
-const { Component, useEffect, useExternalListener, useState } = owl;
+const { Component, markup, useEffect, useExternalListener, useState } = owl;
 
 export class ProjectSharingWebClient extends Component {
     setup() {
@@ -34,6 +34,9 @@ export class ProjectSharingWebClient extends Component {
 
     async _showView() {
         const { action_name, project_id, open_task_action } = session;
+        if (action_name.help) {
+            action_name.help = markup(action_name.help);
+        }
         await this.actionService.doAction(
             action_name,
             {
