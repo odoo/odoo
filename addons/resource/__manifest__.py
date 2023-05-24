@@ -24,6 +24,9 @@ associated to every resource. It also manages the leaves of every resource.
         'views/resource_calendar_views.xml',
         'views/menuitems.xml',
     ],
+    'demo': [
+        'data/resource_demo.xml',
+    ],
     'assets': {
         'web.assets_backend': [
             'resource/static/src/**/*',
