@@ -1114,6 +1114,8 @@ class TestReports(TestReportsCommon):
         delivery2_form.scheduled_date = datetime.now() + timedelta(days=1)
         delivery2 = delivery2_form.save()
         delivery2.move_ids.quantity_done = delivery1.move_ids.quantity_done
+        # To avoid stealing the 150 unit in stock
+        delivery2.do_unreserve()
         self.assertEqual(delivery2.move_ids.forecast_availability, 100)
 
         # Check for both deliveries and receipts if the highlight (is_matched) corresponds to the correct picking
