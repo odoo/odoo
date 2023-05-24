@@ -7,6 +7,7 @@ import pytz
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, UserError
+from odoo.osv.expression import AND
 
 
 class PosConfig(models.Model):
@@ -411,6 +412,9 @@ class PosConfig(models.Model):
                           'payment_method_ids', 'iface_tipproduc']
         return forbidden_keys
 
+    def _get_products_domain(self):
+        return []
+
     def unlink(self):
         # Delete the pos.config records first then delete the sequences linked to them
         sequences_to_delete = self.sequence_id | self.sequence_line_id
@@ -501,7 +505,7 @@ class PosConfig(models.Model):
         self._validate_fields(self._fields)
 
         # check if there's any product for this PoS
-        domain = [('available_in_pos', '=', True)]
+        domain = AND([self._get_products_domain(), [('available_in_pos', '=', True)]])
         if self.limit_categories and self.iface_available_categ_ids:
             domain.append(('pos_categ_id', 'in', self.iface_available_categ_ids.ids))
         if not self.env['product.product'].search(domain):
@@ -646,7 +650,8 @@ class PosConfig(models.Model):
         }
         self.env.cr.execute(query, params)
         product_ids = self.env.cr.fetchall()
-        products = self.env['product.product'].search_read([('id', 'in', product_ids)], fields=fields)
+        domain = AND([self._get_products_domain(), [('id', 'in', product_ids)]])
+        products = self.env['product.product'].search_read(domain, fields=fields)
         return products
 
     def get_limited_partners_loading(self):

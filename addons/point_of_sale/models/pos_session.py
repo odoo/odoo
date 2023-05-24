@@ -1756,6 +1756,9 @@ class PosSession(models.Model):
     def _get_partners_domain(self):
         return []
 
+    def _get_products_domain(self):
+        return []
+
     def _loader_params_res_partner(self):
         return {
             'search_params': {
@@ -1884,6 +1887,7 @@ class PosSession(models.Model):
             domain = AND([domain, [('pos_categ_id', 'in', self.config_id.iface_available_categ_ids.ids)]])
         if self.config_id.iface_tipproduct:
             domain = OR([domain, [('id', '=', self.config_id.tip_product_id.id)]])
+        domain = AND([self._get_products_domain(), domain])
 
         return {
             'search_params': {
