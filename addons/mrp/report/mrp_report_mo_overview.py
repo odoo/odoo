@@ -445,7 +445,7 @@ class ReportMoOverview(models.AbstractModel):
         if product.type == 'product' and production.state not in ('done', 'cancel')\
            and float_compare(missing_quantity, 0, precision_rounding=move_raw.product_uom.rounding) > 0:
             # Need to order more products to fulfill the need
-            resupply_rules = replenish_data['products'][product.id].get('resupply_rules', [])
+            resupply_rules = self._get_resupply_rules(production, product, replenish_data)
             rules_delay = sum(rule.delay for rule in resupply_rules)
             resupply_data = self._get_resupply_data(resupply_rules, rules_delay, missing_quantity, move_raw.product_uom, product, production.warehouse_id)
 
@@ -567,7 +567,7 @@ class ReportMoOverview(models.AbstractModel):
                 extra_docs.sort(key=lambda ex: ex.get('production_id', False), reverse=True)
                 product_forecast_lines = list(filter(lambda line: line.get('product', {}).get('id') == product.id, forecast_lines))
                 updated_forecast_lines = self._add_extra_in_forecast(product_forecast_lines, extra_docs, product.uom_id.rounding)
-                replenish_data = self._set_replenish_data(updated_forecast_lines, product, production, replenish_data)
+                replenish_data = self._set_replenish_data(updated_forecast_lines, product, replenish_data)
 
         return replenish_data
 
@@ -594,18 +594,20 @@ class ReportMoOverview(models.AbstractModel):
                     })
                 if float_compare(required_qty, 0, precision_rounding=component_move.product_uom.rounding) <= 0:
                     break
-            replenish_data = self._set_replenish_data(product_lines, product, production, replenish_data)
+            replenish_data = self._set_replenish_data(product_lines, product, replenish_data)
 
         return replenish_data
 
-    def _set_replenish_data(self, new_lines, product, production, replenish_data):
+    def _set_replenish_data(self, new_lines, product, replenish_data):
         if product.id not in replenish_data['products']:
-            replenish_data['products'][product.id] = {
-                'forecast': [],
-                'resupply_rules': product._get_rules_from_location(production.warehouse_id.lot_stock_id),
-            }
+            replenish_data['products'][product.id] = {'forecast': []}
         replenish_data['products'][product.id]['forecast'] += new_lines
         return replenish_data
+
+    def _get_resupply_rules(self, production, product, replenish_data):
+        if not replenish_data['products'][product.id].get('resupply_rules'):
+            replenish_data['products'][product.id]['resupply_rules'] = product._get_rules_from_location(production.warehouse_id.lot_stock_id)
+        return replenish_data['products'][product.id]['resupply_rules']
 
     def _add_origins_to_forecast(self, forecast_lines):
         # Keeps the link to its origin even when the product is now in stock.
