@@ -33,12 +33,15 @@ class Website(models.Model):
     def _compute_app_icon(self):
         """ Computes a squared image based on the favicon to be used as mobile webapp icon.
             App Icon should be in PNG format and size of at least 512x512.
+
+            If the favicon is an SVG image, it will be skipped and the app_icon will be set to False.
+
         """
         for website in self:
-            if not website.favicon:
+            image = ImageProcess(base64.b64decode(website.favicon)) if website.favicon else None
+            if not (image and image.image):
                 website.app_icon = False
                 continue
-            image = ImageProcess(base64.b64decode(website.favicon))
             w, h = image.image.size
             square_size = w if w > h else h
             image.crop_resize(square_size, square_size)
