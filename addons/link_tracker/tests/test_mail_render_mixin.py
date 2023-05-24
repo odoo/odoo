@@ -7,7 +7,7 @@ from odoo.tools import TEXT_URL_REGEX
 
 
 @tagged('-at_install', 'post_install')
-class TestMailRenderMixin(common.TransactionCase):
+class TestMailRenderMixin(common.HttpCase):
 
     @classmethod
     def setUpClass(cls):
