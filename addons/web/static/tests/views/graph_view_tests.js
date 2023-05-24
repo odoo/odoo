@@ -1219,6 +1219,54 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(graph.model.metaData.mode, "line", "should be in line chart mode.");
         assert.strictEqual(graph.model.metaData.cumulated, true, "should be in cumulative");
+        assert.strictEqual(
+            graph.model.metaData.cumulatedStart,
+            false,
+            "should have cumulated start opted-out"
+        );
+    });
+
+    QUnit.test("Cumulative prop and cumulated start", async function (assert) {
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph type="line" stacked="0" cumulated="1" cumulated_start="1">
+                    <field name="date"/>
+                    <field name="product_id"/>
+                </graph>
+            `,
+            searchViewArch: `
+                <search>
+                    <filter name="filter_after_march"
+                        string="After March 2016"
+                        domain="[['date', '>=', '2016-03-01']]"
+                        />
+                </search>
+            `,
+            context: {
+                search_default_filter_after_march: 1,
+            },
+        });
+
+        assert.strictEqual(graph.model.metaData.mode, "line", "should be in line chart mode.");
+        assert.strictEqual(graph.model.metaData.cumulated, true, "should be in cumulative");
+        assert.strictEqual(
+            graph.model.metaData.cumulatedStart,
+            true,
+            "should have cumulated start opted-in"
+        );
+
+        const expectedDatasets = [
+            {
+                data: [4, 4, 4],
+            },
+            {
+                data: [0, 1, 2],
+            },
+        ];
+        checkDatasets(assert, graph, ["data"], expectedDatasets);
     });
 
     QUnit.test("line chart rendering (no groupBy, several domains)", async function (assert) {
@@ -4178,10 +4226,10 @@ QUnit.module("Views", (hooks) => {
             setup() {
                 this._super(...arguments);
                 onRendered(() => {
-                    assert.step("rendering")
+                    assert.step("rendering");
                 });
-            }
-        })
+            },
+        });
         await makeView({
             serverData,
             type: "graph",

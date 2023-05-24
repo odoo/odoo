@@ -24,6 +24,11 @@ export class GraphArchParser extends XMLParser {
                     if (node.hasAttribute("cumulated")) {
                         archInfo.cumulated = archParseBoolean(node.getAttribute("cumulated"));
                     }
+                    if (node.hasAttribute("cumulated_start")) {
+                        archInfo.cumulatedStart = archParseBoolean(
+                            node.getAttribute("cumulated_start")
+                        );
+                    }
                     const mode = node.getAttribute("type");
                     if (mode && MODES.includes(mode)) {
                         archInfo.mode = mode;
