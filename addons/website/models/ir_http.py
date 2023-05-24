@@ -415,7 +415,7 @@ class Http(models.AbstractModel):
             # pre-16.0 compatibility, `website_cookies_bar` was `"true"`.
             # In that case we delete that cookie and let the user choose again.
             if not isinstance(accepted_cookie_types, dict):
-                request.future_response.set_cookie('website_cookies_bar', expires=0, max_age=0)
+                request.future_response.set_cookie('website_cookies_bar', max_age=0)
                 return False
 
             if 'optional' in accepted_cookie_types:
