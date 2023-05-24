@@ -770,7 +770,6 @@ class Picking(models.Model):
                 vals['immediate_transfer'] = False
             if self.env['ir.config_parameter'].sudo().get_param('stock.no_default_immediate_tranfer'):
                 vals['immediate_transfer'] = False
-
         pickings = super().create(vals_list)
 
         for picking, scheduled_date in zip(pickings, scheduled_dates):
