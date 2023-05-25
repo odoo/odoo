@@ -27,6 +27,22 @@ class TestUBLCommon(AccountEdiTestCommon):
         cls.tax_armageddon.children_tax_ids.unlink()
         cls.tax_armageddon.unlink()
 
+        # Fixed Taxes
+        cls.recupel = cls.env['account.tax'].create({
+            'name': "RECUPEL",
+            'amount_type': 'fixed',
+            'amount': 1,
+            'include_base_amount': True,
+            'sequence': 1,
+        })
+        cls.auvibel = cls.env['account.tax'].create({
+            'name': "AUVIBEL",
+            'amount_type': 'fixed',
+            'amount': 1,
+            'include_base_amount': True,
+            'sequence': 2,
+        })
+
     @classmethod
     def setup_company_data(cls, company_name, chart_template=None, **kwargs):
         # OVERRIDE to force the company with EUR currency.
@@ -94,6 +110,11 @@ class TestUBLCommon(AccountEdiTestCommon):
         # Create empty account.move, then update a file
         if move_type == 'in_invoice':
             invoice = self._create_empty_vendor_bill()
+        elif move_type == 'out_invoice':
+            invoice = self.env['account.move'].create({
+                'move_type': move_type,
+                'journal_id': self.company_data['default_journal_sale'].id,
+            })
         else:
             invoice = self.env['account.move'].create({
                 'move_type': move_type,

@@ -108,3 +108,45 @@ class TestMultiCompanySetup(TestMailCommon, TestRecipients):
                     "%s %s" % (company_3.name, test_record.name),
                     "%s@%s" % (self.alias_catchall, self.alias_domain)))
             )
+
+    def test_systray_get_activities(self):
+        self.env["mail.activity"].search([]).unlink()
+        user_admin = self.user_admin.with_user(self.user_admin)
+        test_records = self.env["mail.test.multi.company.with.activity"].create(
+            [
+                {"name": "Test1", "company_id": user_admin.company_id.id},
+                {"name": "Test2", "company_id": self.company_2.id},
+            ]
+        )
+        test_records[0].activity_schedule("test_mail.mail_act_test_todo", user_id=user_admin.id)
+        test_records[1].activity_schedule("test_mail.mail_act_test_todo", user_id=user_admin.id)
+        res_all = user_admin.systray_get_activities()
+        self.assertEqual(
+            res_all[0],
+            {
+                "actions": [{"icon": "fa-clock-o", "name": "Summary"}],
+                "icon": "/base/static/description/icon.png",
+                "model": "mail.test.multi.company.with.activity",
+                "name": "Test Multi Company Mail With Activity",
+                "overdue_count": 0,
+                "planned_count": 0,
+                "today_count": 2,
+                "total_count": 2,
+                "type": "activity",
+            }
+        )
+        res_c2 = user_admin.with_context(allowed_company_ids=[self.company_2.id]).systray_get_activities()
+        self.assertEqual(
+            res_c2[0],
+            {
+                "actions": [{"icon": "fa-clock-o", "name": "Summary"}],
+                "icon": "/base/static/description/icon.png",
+                "model": "mail.test.multi.company.with.activity",
+                "name": "Test Multi Company Mail With Activity",
+                "overdue_count": 0,
+                "planned_count": 0,
+                "today_count": 1,
+                "total_count": 1,
+                "type": "activity",
+            }
+        )
