@@ -13,7 +13,7 @@
                     class="o_column_title flex-grow-1 d-inline-block mw-100 text-truncate fs-4 fw-bold align-top text-900"
                     />
                 <t t-if="env.isSmall or !group.isFolded">
-                    <Dropdown class="'o_kanban_config'" togglerClass="'btn px-2'" position="'bottom-end'" container="() => this.rootRef.el">
+                    <Dropdown class="'o_kanban_config'" togglerClass="'btn px-2'" position="'bottom-end'" container="() => this._configDropdownContainer">
                         <t t-set-slot="toggler">
                             <i class="fa fa-gear opacity-50 opacity-100-hover" role="img" aria-label="Settings" title="Settings"/>
                         </t>

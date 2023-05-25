@@ -60,6 +60,13 @@ export class KanbanHeader extends Component {
     // Getters
     // ------------------------------------------------------------------------
 
+    get _configDropdownContainer() {
+        // FIXME: please do not override this getter in other modules.
+        // The dropdown's container prop is only used here as a workaround of
+        // a stacking context issue. It should be removed in the next release.
+        return this.rootRef.el.closest(`.o_kanban_group[data-id="${this.props.group.id}"]`);
+    }
+
     get progressBar() {
         return this.props.progressBarState?.getGroupInfo(this.group);
     }
