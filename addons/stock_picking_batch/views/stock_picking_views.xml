@@ -6,7 +6,6 @@
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
-                <field name="batch_id" invisible="1" readonly="state in ['cancel', 'done']"/>
                 <button type="object"
                         name="action_view_batch"
                         class="oe_stat_button"
@@ -14,6 +13,11 @@
                         string="Batch"
                         invisible="not batch_id"/>
             </div>
+            <xpath expr="//page[@name='extra']//field[@name='company_id']" position="after">
+                <field name="batch_id"
+                    readonly="1"
+                    options="{'no_create': True}"/>
+            </xpath>
         </field>
     </record>
 </odoo>
