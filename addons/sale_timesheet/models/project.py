@@ -366,6 +366,7 @@ class Project(models.Model):
             'billable_manual': _lt('Timesheets (Billed Manually)'),
             'non_billable': _lt('Timesheets (Non Billable)'),
             'timesheet_revenues': _lt('Timesheets revenues'),
+            'other_costs': _lt('Materials'),
         }
 
     def _get_profitability_sequence_per_invoice_type(self):
@@ -377,6 +378,7 @@ class Project(models.Model):
             'billable_manual': 4,
             'non_billable': 5,
             'timesheet_revenues': 6,
+            'other_costs': 12,
         }
 
     def _get_profitability_aal_domain(self):
