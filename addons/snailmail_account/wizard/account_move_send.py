@@ -27,11 +27,11 @@ class AccountMoveSend(models.Model):
             wizard.checkbox_send_by_post = not wizard.send_by_post_warning_message \
                 and wizard.company_id.invoice_is_snailmail
 
-    @api.depends('mode')
+    @api.depends('mode', 'checkbox_send_mail')
     def _compute_send_by_post_warning_message(self):
         for wizard in self:
             display_messages = []
-            if wizard.enable_send_by_post:
+            if wizard.enable_send_by_post and wizard.checkbox_send_mail:
                 wrong_address_partners = wizard.move_ids.partner_id\
                     .filtered(lambda x: not self.env['snailmail.letter']._is_valid_address(x))
                 if wrong_address_partners:
