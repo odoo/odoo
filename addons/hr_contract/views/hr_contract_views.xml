@@ -9,9 +9,7 @@
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//page[@name='hr_settings']//field[@name='employee_type']" position="after">
-                        <field name="first_contract_date"
-                               attrs="{'invisible' : ['|', ('employee_type', 'not in', ['employee', 'student']), ('first_contract_date', '=', False)]}"
-                               readonly="1"/>
+                        <field name="first_contract_date" invisible="1"/>
                     </xpath>
                     <xpath expr="//field[@name='bank_account_id']" position="replace">
                         <field name="bank_account_id" context="{'display_partner':True}" attrs="{'invisible' : [('address_home_id', '=', False)]}"/>
