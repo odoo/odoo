@@ -181,6 +181,7 @@
             'website/static/src/components/website_loader/website_loader.js',
             'website/static/src/components/website_loader/website_loader.scss',
             'website/static/src/components/views/*',
+            'website/static/src/services/chat_window_service_patch.js',
             'website/static/src/services/website_service.js',
             'website/static/src/js/utils.js',
             'website/static/src/xml/website.xml',
