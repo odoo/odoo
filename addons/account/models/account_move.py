@@ -1630,7 +1630,7 @@ class AccountMove(models.Model):
 
     @api.onchange('journal_id')
     def _onchange_journal_id(self):
-        if not self.quick_edit_mode and self._get_last_sequence(lock=False):
+        if not self.quick_edit_mode:
             self.name = '/'
             self._compute_name()
 
