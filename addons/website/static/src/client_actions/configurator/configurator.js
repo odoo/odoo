@@ -123,9 +123,8 @@ class DescriptionScreen extends Component {
     _setSelectedIndustry(label) {
         this.industrySelection.el.parentNode.dataset.value = label;
         if (!this.autocompleteHasResults) {
-            // If no industry has been found, the first one is chosen by
-            // default to continue the website configuration.
-            this.state.selectIndustry(label, 1);
+            // Unknown industry.
+            this.state.selectIndustry(label, -1);
         } else {
             const id = this.labelToId[label];
             this.state.selectIndustry(label, id);
