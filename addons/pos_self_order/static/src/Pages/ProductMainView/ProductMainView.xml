@@ -61,12 +61,7 @@
                     <t t-if="value.price_extra.list_price">
                         + <t t-esc="selfOrder.formatMonetary(value.price_extra.list_price)" />
                     </t>
-                </span>,
-            nonFinalQty: orderLine.qty,
-            price_extra: this.getAllPricesExtra(orderLine.selectedVariants, product.attributes),
-        };
-    }
-
+                </span>
             </div>
         </t>
     </t>
