@@ -44,7 +44,7 @@
                             </div>
                         </t>
                     </div>
-                    <div class="w-100" t-att-class="{ 'flex-grow-1': message.composer }">
+                    <div class="w-100 overflow-auto" t-att-class="{ 'flex-grow-1': message.composer }">
                         <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline">
                             <span t-if="(message.author or message.email_from) and shouldDisplayAuthorName" class="o-mail-Message-author" t-att-class="{ 'cursor-pointer o_redirect': hasAuthorClickable }" t-att-title="authorText" t-on-click="ev => this.onClickAuthor(ev)">
                                 <strong class="me-1 text-truncate"><t t-if="message.author" t-esc="message.author.name"/><t t-else="" t-esc="message.email_from"/></strong>
