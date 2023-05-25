@@ -199,6 +199,14 @@ class AccountPayment(models.Model):
             self.journal_id.outbound_payment_method_line_ids.payment_account_id,
         )
 
+    def _get_aml_default_display_map(self):
+        return {
+            ('outbound', 'customer'): _("Customer Reimbursement"),
+            ('inbound', 'customer'): _("Customer Payment"),
+            ('outbound', 'supplier'): _("Vendor Payment"),
+            ('inbound', 'supplier'): _("Vendor Reimbursement"),
+        }
+
     def _get_aml_default_display_name_list(self):
         """ Hook allowing custom values when constructing the default label to set on the journal items.
 
@@ -212,12 +220,7 @@ class AccountPayment(models.Model):
             ]
         """
         self.ensure_one()
-        display_map = {
-            ('outbound', 'customer'): _("Customer Reimbursement"),
-            ('inbound', 'customer'): _("Customer Payment"),
-            ('outbound', 'supplier'): _("Vendor Payment"),
-            ('inbound', 'supplier'): _("Vendor Reimbursement"),
-        }
+        display_map = self._get_aml_default_display_map()
         values = [
             ('label', _("Internal Transfer") if self.is_internal_transfer else display_map[(self.payment_type, self.partner_type)]),
             ('sep', ' '),
