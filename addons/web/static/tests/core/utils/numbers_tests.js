@@ -6,7 +6,7 @@ QUnit.module("utils", () => {
     QUnit.module("numbers");
 
     QUnit.test("roundPrecision", function (assert) {
-        assert.expect(26);
+        assert.expect(32);
 
         assert.strictEqual(String(roundPrecision(1.0, 1)), "1");
         assert.strictEqual(String(roundPrecision(1.0, 0.1)), "1");
@@ -19,8 +19,8 @@ QUnit.module("utils", () => {
         assert.strictEqual(String(roundPrecision(1.0, 0.00000001)), "1");
         assert.strictEqual(String(roundPrecision(0.5, 1)), "1");
         assert.strictEqual(String(roundPrecision(-0.5, 1)), "-1");
-        assert.strictEqual(String(roundPrecision(2.6745, 0.001)), "2.6750000000000003");
-        assert.strictEqual(String(roundPrecision(-2.6745, 0.001)), "-2.6750000000000003");
+        assert.strictEqual(String(roundPrecision(2.6745, 0.001)), "2.675");
+        assert.strictEqual(String(roundPrecision(-2.6745, 0.001)), "-2.675");
         assert.strictEqual(String(roundPrecision(2.6744, 0.001)), "2.674");
         assert.strictEqual(String(roundPrecision(-2.6744, 0.001)), "-2.674");
         assert.strictEqual(String(roundPrecision(0.0004, 0.001)), "0");
@@ -29,11 +29,17 @@ QUnit.module("utils", () => {
         assert.strictEqual(String(roundPrecision(-357.4555, 0.001)), "-357.456");
         assert.strictEqual(String(roundPrecision(457.4554, 0.001)), "457.455");
         assert.strictEqual(String(roundPrecision(-457.4554, 0.001)), "-457.455");
-        assert.strictEqual(String(roundPrecision(-457.4554, 0.05)), "-457.45000000000005");
+        assert.strictEqual(String(roundPrecision(-457.4554, 0.05)), "-457.45");
         assert.strictEqual(String(roundPrecision(457.444, 0.5)), "457.5");
         assert.strictEqual(String(roundPrecision(457.3, 5)), "455");
         assert.strictEqual(String(roundPrecision(457.5, 5)), "460");
         assert.strictEqual(String(roundPrecision(457.1, 3)), "456");
+        assert.strictEqual(String(roundPrecision(5.06, 0.01)), "5.06");
+        assert.strictEqual(String(roundPrecision(457.1, 0.2)), "457.2");
+        assert.strictEqual(String(roundPrecision(7.74, 0.25)), "7.75");
+        assert.strictEqual(String(roundPrecision(7.6, 0.25)), "7.5");
+        assert.strictEqual(String(roundPrecision(1290.575, 0.01)), "1290.58");
+        assert.strictEqual(String(roundPrecision(10.45 * 123.5, 0.01)), "1290.58");
     });
 
     QUnit.test("roundDecimals", function (assert) {
@@ -50,8 +56,8 @@ QUnit.module("utils", () => {
         assert.strictEqual(String(roundDecimals(1.0, 8)), "1");
         assert.strictEqual(String(roundDecimals(0.5, 0)), "1");
         assert.strictEqual(String(roundDecimals(-0.5, 0)), "-1");
-        assert.strictEqual(String(roundDecimals(2.6745, 3)), "2.6750000000000003");
-        assert.strictEqual(String(roundDecimals(-2.6745, 3)), "-2.6750000000000003");
+        assert.strictEqual(String(roundDecimals(2.6745, 3)), "2.675");
+        assert.strictEqual(String(roundDecimals(-2.6745, 3)), "-2.675");
         assert.strictEqual(String(roundDecimals(2.6744, 3)), "2.674");
         assert.strictEqual(String(roundDecimals(-2.6744, 3)), "-2.674");
         assert.strictEqual(String(roundDecimals(0.0004, 3)), "0");

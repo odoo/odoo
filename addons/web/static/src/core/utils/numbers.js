@@ -44,10 +44,13 @@ export function roundPrecision(value, precision) {
         precision = 1;
     }
     let normalizedValue = value / precision;
-    const epsilonMagnitude = Math.log2(Math.abs(normalizedValue));
-    const epsilon = Math.pow(2, epsilonMagnitude - 52);
-    normalizedValue += normalizedValue >= 0 ? epsilon : -epsilon;
-
+    const epsilon = Number.EPSILON * Math.abs(normalizedValue);
+    // instead of this `epsilon` trick, we could use `Number.EPSILON` directly, but it
+    // would not always give the desired outcome:
+    // ex: if value == 10.45 * 123.5 => value == 1290.5749999999998,
+    // but this value clearly represents the number 1290.575,
+    // so it should be rounded to 1290.58, not 1290.57
+    normalizedValue += Math.sign(normalizedValue) * epsilon;
     /**
      * Javascript performs strictly the round half up method, which is asymmetric. However, in
      * Python, the method is symmetric. For example:
@@ -55,9 +58,14 @@ export function roundPrecision(value, precision) {
      * - In Python, round(-0.5) is equal to -1.
      * We want to keep the Python behavior for consistency.
      */
-    const sign = normalizedValue < 0 ? -1.0 : 1.0;
-    const roundedValue = sign * Math.round(Math.abs(normalizedValue));
-    return roundedValue * precision;
+    // if precision is less than 1, it will be, in our use cases, a number that evenly divides 1,
+    // (ex: 0.1, 0.00001, 0.25, 0.5)
+    // This means that we expect 1/precision to be a whole number. We still round it though,
+    // because we could run into problems for certain values of precision.
+    // ex: 1/0.00001 -> 99999.99999999999
+    const precisionMagnitude = precision < 1 ? Math.round(1 / precision) : 1 / precision;
+    const roundedValue = Math.sign(normalizedValue) * Math.round(Math.abs(normalizedValue));
+    return roundedValue / precisionMagnitude;
 }
 
 export function roundDecimals(value, decimals) {
