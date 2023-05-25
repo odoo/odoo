@@ -63,10 +63,6 @@ class EventType(models.Model):
         'Maximum Registrations', compute='_compute_seats_max',
         readonly=False, store=True,
         help="It will select this default maximum value when you choose this event")
-    auto_confirm = fields.Boolean(
-        'Automatically Confirm Registrations', default=False,
-        help="Events and registrations will automatically be confirmed "
-             "upon creation, easing the flow for simple events.")
     default_timezone = fields.Selection(
         _tz_get, string='Timezone', default=lambda self: self.env.user.tz or 'UTC')
     # communication
@@ -166,19 +162,13 @@ class EventEvent(models.Model):
     seats_available = fields.Integer(
         string='Available Seats',
         store=False, readonly=True, compute='_compute_seats')
-    seats_unconfirmed = fields.Integer(
-        string='Unconfirmed Registrations',
-        store=False, readonly=True, compute='_compute_seats')
     seats_used = fields.Integer(
         string='Number of Attendees',
         store=False, readonly=True, compute='_compute_seats')
-    seats_expected = fields.Integer(
-        string='Number of Expected Attendees',
+    seats_taken = fields.Integer(
+        string='Number of Taken Seats',
         store=False, readonly=True, compute='_compute_seats')
     # Registration fields
-    auto_confirm = fields.Boolean(
-        string='Autoconfirmation', compute='_compute_auto_confirm', readonly=False, store=True,
-        help='Autoconfirm Registrations. Registrations will automatically be confirmed upon creation.')
     registration_ids = fields.One2many('event.registration', 'event_id', string='Attendees')
     event_ticket_ids = fields.One2many(
         'event.event.ticket', 'event_id', string='Event Ticket', copy=True,
@@ -255,13 +245,12 @@ class EventEvent(models.Model):
 
     @api.depends('seats_max', 'registration_ids.state', 'registration_ids.active')
     def _compute_seats(self):
-        """ Determine reserved, available, reserved but unconfirmed and used seats. """
+        """ Determine available, reserved, used and taken seats. """
         # initialize fields to 0
         for event in self:
-            event.seats_unconfirmed = event.seats_reserved = event.seats_used = event.seats_available = 0
+            event.seats_reserved = event.seats_used = event.seats_available = 0
         # aggregate registrations by event and by state
         state_field = {
-            'draft': 'seats_unconfirmed',
             'open': 'seats_reserved',
             'done': 'seats_used',
         }
@@ -270,7 +259,7 @@ class EventEvent(models.Model):
         if self.ids:
             query = """ SELECT event_id, state, count(event_id)
                         FROM event_registration
-                        WHERE event_id IN %s AND state IN ('draft', 'open', 'done') AND active = true
+                        WHERE event_id IN %s AND state IN ('open', 'done') AND active = true
                         GROUP BY event_id, state
                     """
             self.env['event.registration'].flush_model(['event_id', 'state', 'active'])
@@ -285,7 +274,7 @@ class EventEvent(models.Model):
             if event.seats_max > 0:
                 event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
 
-            event.seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
+            event.seats_taken = event.seats_reserved + event.seats_used
 
     @api.depends('date_tz', 'start_sale_datetime')
     def _compute_event_registrations_started(self):
@@ -462,15 +451,6 @@ class EventEvent(models.Model):
                 event.seats_limited = event.event_type_id.has_seats_limitation
             if not event.seats_limited:
                 event.seats_limited = False
-
-    @api.depends('event_type_id')
-    def _compute_auto_confirm(self):
-        """ Update event configuration from its event type. Depends are set only
-        on event_type_id itself, not its sub fields. Purpose is to emulate an
-        onchange: if event type is changed, update event configuration. Changing
-        event type content itself should not trigger this method. """
-        for event in self:
-            event.auto_confirm = event.event_type_id.auto_confirm
 
     @api.depends('event_type_id')
     def _compute_event_mail_ids(self):

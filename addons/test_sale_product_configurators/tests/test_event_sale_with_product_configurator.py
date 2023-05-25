@@ -83,7 +83,6 @@ class TestEventProductConfiguratorUi(HttpCase):
         # Create the event and link it to the product variants as event tickets
         cls.event = cls.env['event.event'].create({
             'name': 'TestEvent',
-            'auto_confirm': True,
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
             'date_tz': 'Europe/Brussels',

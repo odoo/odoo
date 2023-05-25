@@ -109,7 +109,6 @@
         <field name="user_id" ref="base.user_admin"/>
         <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 07:00:00')" name="date_begin"/>
         <field eval="(DateTime.today()+ timedelta(days=5)).strftime('%Y-%m-%d 16:30:00')" name="date_end"/>
-        <field name="auto_confirm" eval="True"/>
         <field name="address_id" ref="event.res_partner_location_2"/>
         <field name="seats_limited">True</field>
         <field name="seats_max">200</field>
@@ -240,7 +239,6 @@
         <field name="event_type_id" ref="event_type_0"/>
         <field name="stage_id" ref="event.event_stage_booked"/>
         <field name="user_id" ref="base.user_demo"/>
-        <field name="auto_confirm" eval="True"/>
         <field name="date_begin" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d 05:00:00')"/>
         <field name="date_end" eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d 15:00:00')"/>
         <field name="address_id" eval="False"/>

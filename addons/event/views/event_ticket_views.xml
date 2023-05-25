@@ -77,8 +77,7 @@
                 <field name="start_sale_datetime" optional="show"/>
                 <field name="end_sale_datetime" optional="show"/>
                 <field name="seats_max" sum="Total" width="105px" string="Maximum"/>
-                <field name="seats_reserved" sum="Total" width="105px" string="Confirmed"/>
-                <field name="seats_unconfirmed" sum="Total" width="110px" string="Unconfirmed"/>
+                <field name="seats_taken" sum="Total" width="105px" string="Taken"/>
                 <field name="color" widget="color" optional="show"/>
             </tree>
         </field>
@@ -100,7 +99,6 @@
                         </group><group>
                             <field name="seats_max"/>
                             <field name="seats_reserved"/>
-                            <field name="seats_unconfirmed"/>
                         </group>
                     </group>
                 </sheet>
@@ -117,7 +115,6 @@
                 <field name="name"/>
                 <field name="seats_max"/>
                 <field name="seats_reserved"/>
-                <field name="seats_unconfirmed"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">
@@ -127,7 +124,7 @@
                                 </div>
                             </div>
                             <div><i>
-                            <t t-out="record.seats_reserved.value"/> reserved + <t t-out="record.seats_reserved.value"/> unconfirmed
+                            <t t-out="record.seats_reserved.value"/> reserved
                             </i></div>
                         </div>
                     </t>
@@ -173,7 +170,6 @@
                         <group>
                             <field name="seats_max"/>
                             <field name="seats_reserved"/>
-                            <field name="seats_unconfirmed"/>
                             <field name="seats_used"/>
                             <field name="is_expired"/>
                         </group>

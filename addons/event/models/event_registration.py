@@ -38,7 +38,7 @@ class EventRegistration(models.Model):
     active = fields.Boolean(default=True)
     barcode = fields.Char(string='Barcode', default=lambda self: self._get_random_barcode(), readonly=True, copy=False)
     # utm informations
-    utm_campaign_id = fields.Many2one('utm.campaign', 'Campaign',  index=True, ondelete='set null')
+    utm_campaign_id = fields.Many2one('utm.campaign', 'Campaign', index=True, ondelete='set null')
     utm_source_id = fields.Many2one('utm.source', 'Source', index=True, ondelete='set null')
     utm_medium_id = fields.Many2one('utm.medium', 'Medium', index=True, ondelete='set null')
     # attendee
@@ -62,9 +62,16 @@ class EventRegistration(models.Model):
         'res.company', string='Company', related='event_id.company_id',
         store=True, readonly=False)
     state = fields.Selection([
-        ('draft', 'Unconfirmed'), ('cancel', 'Cancelled'),
-        ('open', 'Confirmed'), ('done', 'Attended')],
-        string='Status', default='draft', readonly=True, copy=False, tracking=6)
+        ('draft', 'Unconfirmed'),
+        ('open', 'Registered'),
+        ('done', 'Attended'),
+        ('cancel', 'Cancelled')],
+        string='Status', default='open',
+        readonly=True, copy=False, tracking=6,
+        help='Unconfirmed: registrations in a pending state waiting for an action (specific case, notably with sale status)\n'
+             'Registered: registrations considered taken by a client\n'
+             'Attended: registrations for which the attendee attended the event\n'
+             'Cancelled: registrations cancelled manually')
     # properties
     registration_properties = fields.Properties(
         'Properties', definition='event_id.registration_properties_definition', copy=True)
@@ -72,6 +79,12 @@ class EventRegistration(models.Model):
     _sql_constraints = [
         ('barcode_event_uniq', 'unique(barcode)', "Barcode should be unique")
     ]
+
+    @api.constrains('state', 'event_id', 'event_ticket_id')
+    def _check_seats_availability(self):
+        registrations_confirmed = self.filtered(lambda registration: registration.state in ('open', 'done'))
+        registrations_confirmed.event_id._check_seats_availability()
+        registrations_confirmed.event_ticket_id._check_seats_availability()
 
     @api.depends('partner_id')
     def _compute_name(self):
@@ -185,11 +198,7 @@ class EventRegistration(models.Model):
 
         registrations = super(EventRegistration, self).create(vals_list)
 
-        # auto_confirm if possible; if not automatically confirmed, call mail schedulers in case
-        # some were created already open
-        if registrations._check_auto_confirmation():
-            registrations.sudo().action_confirm()
-        elif not self.env.context.get('install_mode', False):
+        if not self.env.context.get('install_mode', False):
             # running the scheduler for demo data can cause an issue where wkhtmltopdf runs during
             # server start and hangs indefinitely, leading to serious crashes
             # we currently avoid this by not running the scheduler, would be best to find the actual
@@ -202,19 +211,12 @@ class EventRegistration(models.Model):
         to_confirm = (self.filtered(lambda registration: registration.state in {'draft', 'cancel'})
                       if confirming else None)
         ret = super(EventRegistration, self).write(vals)
-        # As these Event(Ticket) methods are model constraints, it is not necessary to call them
-        # explicitly when creating new registrations. However, it is necessary to trigger them here
-        # as changes in registration states cannot be used as constraints triggers.
-        if confirming:
-            to_confirm.event_id._check_seats_availability()
-            to_confirm.event_ticket_id._check_seats_availability()
-
-            if not self.env.context.get('install_mode', False):
-                # running the scheduler for demo data can cause an issue where wkhtmltopdf runs
-                # during server start and hangs indefinitely, leading to serious crashes we
-                # currently avoid this by not running the scheduler, would be best to find the
-                # actual reason for this issue and fix it so we can remove this check
-                to_confirm._update_mail_schedulers()
+        if confirming and not self.env.context.get('install_mode', False):
+            # running the scheduler for demo data can cause an issue where wkhtmltopdf runs
+            # during server start and hangs indefinitely, leading to serious crashes we
+            # currently avoid this by not running the scheduler, would be best to find the
+            # actual reason for this issue and fix it so we can remove this check
+            to_confirm._update_mail_schedulers()
 
         return ret
 
@@ -232,10 +234,6 @@ class EventRegistration(models.Model):
         if pre_inactive:
             pre_inactive.event_id._check_seats_availability()
             pre_inactive.event_ticket_id._check_seats_availability()
-
-    def _check_auto_confirmation(self):
-        """ Checks that all registrations are for `auto-confirm` events. """
-        return all(event.auto_confirm for event in self.event_id)
 
     # ------------------------------------------------------------
     # ACTIONS / BUSINESS
