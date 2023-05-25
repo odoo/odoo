@@ -4,8 +4,8 @@ import { registry } from "@web/core/registry";
 
 import { formatDate } from "@web/core/l10n/dates";
 
-import { SkillsX2ManyField, skillsX2ManyField } from "./skills_one2many";
-import { CommonSkillsListRenderer } from "../views/skills_list_renderer";
+import { SkillsX2ManyField, skillsX2ManyField } from "../skills_one2many/skills_one2many";
+import { CommonSkillsListRenderer } from "../../views/skills_list_renderer";
 
 export class ResumeListRenderer extends CommonSkillsListRenderer {
     get groupBy() {
