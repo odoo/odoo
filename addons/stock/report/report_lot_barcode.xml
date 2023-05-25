@@ -25,7 +25,8 @@
                                         <t name="gs1_datamatrix_lot" t-if="o.product_id.tracking == 'lot'" t-set="final_barcode" t-value="(final_barcode or '') + '10' + o.name"/>
                                         <t t-elif="o.product_id.tracking == 'serial'" t-set="final_barcode" t-value="(final_barcode or '') + '21' + o.name"/>
                                     </t>
-                                    <div class="o_label_4x12" t-field="o.product_id.display_name" t-att-style="'width:22mm' if final_barcode else ''"/>
+                                    <div class="o_label_4x12" t-if="o.product_id.default_code" t-att-style="'width:22mm' if final_barcode else ''">[<t t-out="o.product_id.default_code"/>]</div>
+                                    <div class="o_label_4x12" t-field="o.product_id.name" t-att-style="'width:22mm' if final_barcode else ''"/>
                                     <div class="o_label_4x12" name="lot_name" t-field="o.name" t-att-style="'width:22mm' if final_barcode else ''"/>
                                     <t t-if="env.user.has_group('stock.group_stock_lot_print_gs1')">
                                         <div t-if="final_barcode" t-att-style="'position:absolute; right:.5px; bottom:.5px'" t-out="final_barcode" t-options="{'widget': 'barcode', 'symbology': 'ECC200DataMatrix', 'img_style': 'width:17mm; height:17mm'}"/>
