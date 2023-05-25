@@ -32,11 +32,6 @@ registry.category("web_tour.tours").add('shop_sale_loyalty_delivery', {
             run: 'click'
         },
         {
-            content: "click on 'Pay with gift card'",
-            trigger: '.show_coupon',
-            run: 'click'
-        },
-        {
             content: "Enter gift card code",
             trigger: "form[name='coupon_code'] input[name='promo']",
             run: 'text 123456'

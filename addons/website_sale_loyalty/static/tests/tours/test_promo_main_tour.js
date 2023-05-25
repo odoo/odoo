@@ -25,11 +25,6 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
             tourUtils.goToCart({quantity: 2}),
         {
-            content: "click on 'I have a promo code'",
-            extra_trigger: '.show_coupon',
-            trigger: '.show_coupon',
-        },
-        {
             content: "insert promo code 'testcode'",
             extra_trigger: 'form[name="coupon_code"]',
             trigger: 'form[name="coupon_code"] input[name="promo"]',

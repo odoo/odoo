@@ -19,11 +19,6 @@ registry.category("web_tour.tours").add('shop_sale_gift_card', {
         },
         tourUtils.goToCart(),
         {
-            content: 'Click on "I have a promo code"',
-            extra_trigger: '#cart_products',
-            trigger: '.show_coupon',
-        },
-        {
             content: 'insert gift card code',
             trigger: 'form[name="coupon_code"] input[name="promo"]',
             run: 'text GIFT_CARD'
@@ -35,10 +30,6 @@ registry.category("web_tour.tours").add('shop_sale_gift_card', {
         {
             content: 'check gift card line',
             trigger: '.td-product_name:contains("PAY WITH GIFT CARD")',
-        },
-        {
-            content: 'Click on "I have a promo code"',
-            trigger: '.show_coupon',
         },
         {
             content: 'insert gift card code',

@@ -26,7 +26,6 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         'change form.js_attributes input, form.js_attributes select': '_onChangeAttribute',
         'mouseup form.js_add_cart_json label': '_onMouseupAddCartLabel',
         'touchend form.js_add_cart_json label': '_onMouseupAddCartLabel',
-        'click .show_coupon': '_onClickShowCoupon',
         'submit .o_wsale_products_searchbar_form': '_onSubmitSaleSearch',
         'change select[name="country_id"]': '_onChangeCountry',
         'change #shipping_use_same': '_onChangeShippingUseSame',
@@ -608,14 +607,6 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
 
         var dec = value % 1;
         $price.html(value + (dec < 0.01 ? ".00" : (dec < 1 ? "0" : "") ));
-    },
-    /**
-     * @private
-     * @param {Event} ev
-     */
-    _onClickShowCoupon: function (ev) {
-        $(".show_coupon").hide();
-        $('.coupon_form').removeClass('d-none');
     },
     /**
      * @private

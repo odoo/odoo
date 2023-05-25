@@ -1609,7 +1609,7 @@
             method="post" name="coupon_code">
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
             <div class="input-group w-100 my-2">
-                <input name="promo" class="form-control" type="text" placeholder="Discount code..." t-att-value="website_sale_order.pricelist_id.code or None"/>
+                <input name="promo" class="form-control" type="text" t-attf-placeholder="{{_placeholder if _placeholder else 'Discount code...'}}" t-att-value="website_sale_order.pricelist_id.code or None"/>
                 <a href="#" role="button" class="btn btn-secondary ps-2 a-submit">Apply</a>
             </div>
         </form>
@@ -2244,12 +2244,9 @@
         <xpath expr="//div[@id='cart_total']//table/tr[last()]" position="after">
             <tr t-if="not hide_promotions">
                 <td colspan="3" class="text-end text-xl-end border-0 p-0">
-                <span class=''>
+                <span>
                     <t t-set='force_coupon' t-value="website_sale_order.pricelist_id.code or request.params.get('code_not_available')"/>
-                    <t t-if="not force_coupon">
-                        <a href="#" class="show_coupon">I have a promo code</a>
-                    </t>
-                    <div t-attf-class="coupon_form #{not force_coupon and 'd-none'}">
+                    <div t-if="not force_coupon" class="coupon_form">
                         <t t-call="website_sale.coupon_form"/>
                     </div>
                 </span>
