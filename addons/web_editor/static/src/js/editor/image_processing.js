@@ -408,7 +408,8 @@ async function activateCropper(image, aspectRatio, dataset) {
         dragMode: 'move',
         autoCropArea: 1.0,
         aspectRatio: aspectRatio,
-        data: Object.values(pick(dataset, ...cropperDataFields)).map((value) => parseFloat(value)),
+        data: Object.fromEntries(Object.entries(pick(dataset, ...cropperDataFields))
+            .map(([key, value]) => [key, parseFloat(value)])),
         // Can't use 0 because it's falsy and cropperjs will then use its defaults (200x100)
         minContainerWidth: 1,
         minContainerHeight: 1,
