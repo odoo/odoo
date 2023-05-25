@@ -325,8 +325,10 @@
           <span>Custom</span>
         </div>
         <div class="colors-grid o-color-picker-toggler" t-on-click.stop="toggleColorPicker">
-          <div class="o-color-picker-line-item o-color-picker-toggler">
-            <div align="center">+</div>
+          <div class="o-color-picker-line-item o-color-picker-toggler-button">
+            <div class="o-color-picker-toggler-sign">
+              <t t-call="o-spreadsheet-Icon.PLUS"/>
+            </div>
           </div>
           <div
             t-foreach="env.model.getters.getCustomColors()"
@@ -635,7 +637,7 @@
       <div
         class="o-figure w-100 h-100"
         t-on-mousedown.stop="(ev) => this.onMouseDown(ev)"
-        t-on-contextmenu.prevent.stop="onContextMenu"
+        t-on-contextmenu.prevent.stop="(ev) => !env.model.getters.isReadonly() and this.onContextMenu(ev)"
         t-ref="figure"
         t-att-style="props.style"
         t-att-data-id="props.figure.id"
@@ -651,6 +653,7 @@
         <div class="o-figure-menu position-absolute m-2" t-if="!env.isDashboard()">
           <div
             class="o-figure-menu-item"
+            t-if="!env.model.getters.isReadonly()"
             t-on-click="showMenu"
             t-ref="menuButton"
             t-on-contextmenu.prevent.stop="showMenu">
@@ -1323,6 +1326,14 @@
       />
     </svg>
   </t>
+  <t t-name="o-spreadsheet-Icon.UNFREEZE" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="currentColor"
+        d="M.5 17.5h16a1 1 0 0 0 1-1v-15a1 1 0 0 0-1-1h-15a1 1 0 0 0-1 1v15a1 1 0 0 0 1 1M5 6H2V2h3m0 9.5H2V7h3m0 9H2v-3.5h3M10.5 7v4.5H6V7m0 9v-3.5h4.5V16m5.5 0h-4.5v-3.5H16m0-1h-4.5V7H16m0-5v4h-4.5V2m-1 4H6V2h4.5"
+      />
+    </svg>
+  </t>
   <t t-name="o-spreadsheet-Icon.SHOW_HIDE_GRID" owl="1">
     <svg class="o-icon">
       <path
@@ -1741,7 +1752,7 @@
   </t>
 
   <t t-name="o-spreadsheet-Icon.PLUS" owl="1">
-    <svg class="o-icon">
+    <svg class="o-icon" viewBox="0 0 18 18">
       <path fill="currentColor" d="M8 0h2v8h8v2h-8v8H8v-8H0V8h8"/>
     </svg>
   </t>
@@ -1922,26 +1933,16 @@
   </t>
   <t t-name="o-spreadsheet-Icon.SORT_ASCENDING" owl="1">
     <svg class="o-icon" fill="currentColor">
-      <style>
-        .small {
-          font: bold 9px sans-serif;
-        }
-      </style>
       <path d="m3 13-1-1-1 1 3 3 3-3-1-1-1 1V0H3"/>
-      <text x="9" y="7" class="small">A</text>
-      <text x="9.3" y="15" class="small">Z</text>
+      <text x="9" y="7" class="small-text">A</text>
+      <text x="9.3" y="15" class="small-text">Z</text>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.SORT_DESCENDING" owl="1">
     <svg class="o-icon" fill="currentColor">
-      <style>
-        .small {
-          font: bold 9px sans-serif;
-        }
-      </style>
       <path d="m3 13.9-1-1-1 1 3 3 3-3-1-1-1 1V.9H3"/>
-      <text x="9.3" y="7.9" class="small">Z</text>
-      <text x="9" y="15.9" class="small">A</text>
+      <text x="9.3" y="7.9" class="small-text">Z</text>
+      <text x="9" y="15.9" class="small-text">A</text>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.FILTER_ICON" owl="1">
@@ -2025,16 +2026,8 @@
   </t>
   <t t-name="o-spreadsheet-Icon.FONT_SIZE" owl="1">
     <svg class="o-icon" fill="currentColor">
-      <style>
-        .small {
-          font: bold 9px sans-serif;
-        }
-        .heavy {
-          font: bold 16px sans-serif;
-        }
-      </style>
-      <text x="2" y="15" class="small">A</text>
-      <text x="6" y="15" class="heavy">A</text>
+      <text x="2" y="15" class="small-text">A</text>
+      <text x="6" y="15" class="heavy-text">A</text>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.TRIANGLE_EXCLAMATION" owl="1">
@@ -3843,7 +3836,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.3.0-alpha.8';
-  __info__.date = '2023-05-12T11:53:11.552Z';
-  __info__.hash = 'afee7d5';
+  __info__.version = '16.3.1';
+  __info__.date = '2023-05-25T13:12:43.979Z';
+  __info__.hash = 'b3cfd2c';
 -->

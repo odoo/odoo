@@ -4397,6 +4397,7 @@
         CommandResult[CommandResult["EmptySplitSeparator"] = 89] = "EmptySplitSeparator";
         CommandResult[CommandResult["SplitWillOverwriteContent"] = 90] = "SplitWillOverwriteContent";
         CommandResult[CommandResult["NoSplitSeparatorInSelection"] = 91] = "NoSplitSeparatorInSelection";
+        CommandResult[CommandResult["NoActiveSheet"] = 92] = "NoActiveSheet";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     const borderStyles = ["thin", "medium", "thick", "dashed", "dotted"];
@@ -16869,6 +16870,7 @@
         execute: (env) => env.model.dispatch("UNFREEZE_COLUMNS_ROWS", {
             sheetId: env.model.getters.getActiveSheetId(),
         }),
+        icon: "o-spreadsheet-Icon.UNFREEZE",
     };
     const freezePane = {
         name: _lt("Freeze"),
@@ -17546,7 +17548,7 @@
     })
         .addChild("sort_range", ["data"], {
         ...sortRange,
-        sequence: 20,
+        sequence: 10,
         separator: true,
     })
         .addChild("sort_ascending", ["data", "sort_range"], {
@@ -17559,16 +17561,16 @@
     })
         .addChild("split_to_columns", ["data"], {
         ...splitToColumns,
-        sequence: 10,
+        sequence: 20,
         separator: true,
     })
         .addChild("add_data_filter", ["data"], {
         ...addDataFilter,
-        sequence: 10,
+        sequence: 30,
     })
         .addChild("remove_data_filter", ["data"], {
         ...removeDataFilter,
-        sequence: 10,
+        sequence: 30,
     });
 
     class OTRegistry extends Registry {
@@ -17939,6 +17941,18 @@
       padding: ${LINE_VERTICAL_PADDING}px ${LINE_HORIZONTAL_PADDING}px;
       grid-template-columns: repeat(${ITEMS_PER_LINE}, 1fr);
       grid-gap: ${ITEM_HORIZONTAL_MARGIN * 2}px;
+    }
+    .o-color-picker-toggler-button {
+      display: flex;
+      .o-color-picker-toggler-sign {
+        margin: auto auto;
+        width: 55%;
+        height: 55%;
+        .o-icon {
+          width: 100%;
+          height: 100%;
+        }
+      }
     }
     .o-color-picker-line-item {
       width: ${ITEM_EDGE_LENGTH}px;
@@ -18675,6 +18689,18 @@
         onCloseSidePanel: Function,
     };
 
+    css /* scss */ `
+  .o-spreadsheet {
+    .o-icon {
+      .small-text {
+        font: bold 9px sans-serif;
+      }
+      .heavy-text {
+        font: bold 16px sans-serif;
+      }
+    }
+  }
+`;
     // -----------------------------------------------------------------------------
     // We need here the svg of the icons that we need to convert to images for the renderer
     // -----------------------------------------------------------------------------
@@ -20600,7 +20626,14 @@
                 current = it.next();
             }
             if (current.value !== nodeToFind) {
-                throw new Error("Cannot find the node in the children of the element");
+                /** This situation can happen if the code is called while the selection is not currently on the ContentEditableHelper.
+                 * In this case, we return 0 because we don't know the size of the text before the selection.
+                 *
+                 * A known occurence is triggered since the introduction of commit d4663158 (PR #2038).
+                 *
+                 * FIXME: find a way to test eventhough the selection API is not available in jsDOM.
+                 */
+                return 0;
             }
             else {
                 if (!current.value.hasChildNodes()) {
@@ -32191,6 +32224,8 @@
             "getSheetSize",
             "getSheetZone",
             "getPaneDivisions",
+            "checkZonesExistInSheet",
+            "getCommandZones",
         ];
         sheetIdsMapName = {};
         orderedSheetIds = [];
@@ -32200,7 +32235,7 @@
         // Command Handling
         // ---------------------------------------------------------------------------
         allowDispatch(cmd) {
-            const genericChecks = this.chainValidations(this.checkSheetExists, this.checkZones)(cmd);
+            const genericChecks = this.chainValidations(this.checkSheetExists, this.checkZonesAreInSheet)(cmd);
             if (genericChecks !== 0 /* CommandResult.Success */) {
                 return genericChecks;
             }
@@ -32539,6 +32574,37 @@
             return positions(zone)
                 .map(({ col, row }) => this.getCell({ sheetId, col, row }))
                 .every((cell) => !cell || cell.content === "");
+        }
+        getCommandZones(cmd) {
+            const zones = [];
+            if ("zone" in cmd) {
+                zones.push(cmd.zone);
+            }
+            if ("target" in cmd) {
+                zones.push(...cmd.target);
+            }
+            if ("ranges" in cmd) {
+                zones.push(...cmd.ranges.map((rangeData) => this.getters.getRangeFromRangeData(rangeData).zone));
+            }
+            if ("col" in cmd && "row" in cmd) {
+                zones.push({ top: cmd.row, left: cmd.col, bottom: cmd.row, right: cmd.col });
+            }
+            return zones;
+        }
+        /**
+         * Check if zones in the command are well formed and
+         * not outside the sheet.
+         */
+        checkZonesExistInSheet(sheetId, zones) {
+            if (!zones.every(isZoneValid))
+                return 25 /* CommandResult.InvalidRange */;
+            if (zones.length) {
+                const sheetZone = this.getSheetZone(sheetId);
+                return zones.every((zone) => isZoneInside(zone, sheetZone))
+                    ? 0 /* CommandResult.Success */
+                    : 18 /* CommandResult.TargetOutOfSheet */;
+            }
+            return 0 /* CommandResult.Success */;
         }
         updateCellPosition(cmd) {
             const { sheetId, cellId, col, row } = cmd;
@@ -32988,9 +33054,6 @@
             }
             return { rowNumber, colNumber };
         }
-        // ----------------------------------------------------
-        //  HIDE / SHOW
-        // ----------------------------------------------------
         /**
          * Check that any "sheetId" in the command matches an existing
          * sheet.
@@ -33008,27 +33071,10 @@
          * Check if zones in the command are well formed and
          * not outside the sheet.
          */
-        checkZones(cmd) {
-            const zones = [];
-            if ("zone" in cmd) {
-                zones.push(cmd.zone);
-            }
-            if ("target" in cmd && Array.isArray(cmd.target)) {
-                zones.push(...cmd.target);
-            }
-            if ("ranges" in cmd && Array.isArray(cmd.ranges)) {
-                zones.push(...cmd.ranges.map((rangeData) => this.getters.getRangeFromRangeData(rangeData).zone));
-            }
-            if (!zones.every(isZoneValid)) {
-                return 25 /* CommandResult.InvalidRange */;
-            }
-            else if (zones.length && "sheetId" in cmd) {
-                const sheetZone = this.getSheetZone(cmd.sheetId);
-                return zones.every((zone) => isZoneInside(zone, sheetZone))
-                    ? 0 /* CommandResult.Success */
-                    : 18 /* CommandResult.TargetOutOfSheet */;
-            }
-            return 0 /* CommandResult.Success */;
+        checkZonesAreInSheet(cmd) {
+            if (!("sheetId" in cmd))
+                return 0 /* CommandResult.Success */;
+            return this.checkZonesExistInSheet(cmd.sheetId, this.getCommandZones(cmd));
         }
     }
 
@@ -33619,7 +33665,7 @@
                     }
                     break;
                 case "PASTE_CONDITIONAL_FORMAT":
-                    this.pasteCf(cmd.origin, cmd.target, cmd.operation);
+                    this.pasteCf(cmd.originPosition, cmd.targetPosition, cmd.operation);
                     break;
             }
         }
@@ -38604,18 +38650,7 @@
         // Command Handling
         // ---------------------------------------------------------------------------
         allowDispatch(cmd) {
-            switch (cmd.type) {
-                case "AUTORESIZE_ROWS":
-                case "AUTORESIZE_COLUMNS":
-                    try {
-                        this.getters.getSheet(cmd.sheetId);
-                        break;
-                    }
-                    catch (error) {
-                        return 27 /* CommandResult.InvalidSheetId */;
-                    }
-            }
-            return 0 /* CommandResult.Success */;
+            return this.chainValidations(this.checkSheetExists, this.checkZonesAreInSheet)(cmd);
         }
         handle(cmd) {
             switch (cmd.type) {
@@ -38650,7 +38685,8 @@
         getCellWidth(position) {
             const text = this.getCellText(position);
             const style = this.getters.getCellComputedStyle(position);
-            let contentWidth = this.getTextWidth(text, style);
+            const multiLineText = text.split(NEWLINE);
+            let contentWidth = Math.max(...multiLineText.map((line) => this.getTextWidth(line, style)));
             const icon = this.getters.getConditionalIcon(position);
             if (icon) {
                 contentWidth += computeIconWidth(this.getters.getCellStyle(position));
@@ -38814,6 +38850,31 @@
             }
             splitWord.push(wordPart);
             return splitWord;
+        }
+        /**
+         * Check that any "sheetId" in the command matches an existing
+         * sheet.
+         */
+        checkSheetExists(cmd) {
+            if ("sheetId" in cmd && this.getters.tryGetSheet(cmd.sheetId) === undefined) {
+                return 27 /* CommandResult.InvalidSheetId */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        /**
+         * Check if zones in the command are well formed and
+         * not outside the sheet.
+         */
+        checkZonesAreInSheet(cmd) {
+            const sheetId = "sheetId" in cmd ? cmd.sheetId : this.getters.tryGetActiveSheetId();
+            const zones = this.getters.getCommandZones(cmd);
+            if (!sheetId && zones.length > 0) {
+                return 92 /* CommandResult.NoActiveSheet */;
+            }
+            if (sheetId && zones.length > 0) {
+                return this.getters.checkZonesExistInSheet(sheetId, zones);
+            }
+            return 0 /* CommandResult.Success */;
         }
     }
 
@@ -39639,8 +39700,8 @@
                     this.pasteCell(origin, position, this.operation, clipboardOptions);
                     if (shouldPasteCF) {
                         this.dispatch("PASTE_CONDITIONAL_FORMAT", {
-                            origin: origin.position,
-                            target: position,
+                            originPosition: origin.position,
+                            targetPosition: position,
                             operation: this.operation,
                         });
                     }
@@ -40031,7 +40092,7 @@
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "CUT":
-                    const zones = cmd.target || this.getters.getSelectedZones();
+                    const zones = cmd.cutTarget || this.getters.getSelectedZones();
                     const state = this.getClipboardState(zones, cmd.type);
                     return state.isCutAllowed(zones);
                 case "PASTE":
@@ -40061,7 +40122,7 @@
             switch (cmd.type) {
                 case "COPY":
                 case "CUT":
-                    const zones = ("target" in cmd && cmd.target) || this.getters.getSelectedZones();
+                    const zones = ("cutTarget" in cmd && cmd.cutTarget) || this.getters.getSelectedZones();
                     this.state = this.getClipboardState(zones, cmd.type);
                     this.status = "visible";
                     break;
@@ -41017,6 +41078,7 @@
             "isSelected",
             "isSingleColSelected",
             "getElementsFromSelection",
+            "tryGetActiveSheetId",
         ];
         gridSelection = {
             anchor: {
@@ -41231,6 +41293,9 @@
         }
         getActiveSheetId() {
             return this.activeSheet.id;
+        }
+        tryGetActiveSheetId() {
+            return this.activeSheet?.id;
         }
         getActiveCell() {
             return this.getters.getEvaluatedCell(this.getActivePosition());
@@ -41478,7 +41543,7 @@
             const deltaCol = isBasedBefore && isCol ? thickness : 0;
             const deltaRow = isBasedBefore && !isCol ? thickness : 0;
             this.dispatch("CUT", {
-                target: [
+                cutTarget: [
                     {
                         left: isCol ? start + deltaCol : 0,
                         right: isCol ? end + deltaCol : this.getters.getNumberCols(cmd.sheetId) - 1,
@@ -43750,6 +43815,10 @@
         }
         checkViewportSize() {
             const { xRatio, yRatio } = this.env.model.getters.getFrozenSheetViewRatio(this.env.model.getters.getActiveSheetId());
+            if (!isFinite(xRatio) || !isFinite(yRatio)) {
+                // before mounting, the ratios can be NaN or Infinity if the viewport size is 0
+                return;
+            }
             if (yRatio > MAXIMAL_FREEZABLE_RATIO || xRatio > MAXIMAL_FREEZABLE_RATIO) {
                 if (this.isViewportTooSmall) {
                     return;
@@ -46972,6 +47041,7 @@
         coreGetters;
         uuidGenerator;
         handlers = [];
+        uiHandlers = [];
         coreHandlers = [];
         constructor(data = {}, config = {}, stateUpdateMessages = [], uuidGenerator = new UuidGenerator(), verboseImport = true) {
             super();
@@ -47011,17 +47081,20 @@
                 const plugin = this.setupUiPlugin(Plugin);
                 this.statefulUIPlugins.push(plugin);
                 this.handlers.push(plugin);
+                this.uiHandlers.push(plugin);
             }
             for (let Plugin of coreViewsPluginRegistry.getAll()) {
                 const plugin = this.setupUiPlugin(Plugin);
                 this.coreViewsPlugins.push(plugin);
                 this.handlers.push(plugin);
+                this.uiHandlers.push(plugin);
                 this.coreHandlers.push(plugin);
             }
             for (let Plugin of featurePluginRegistry.getAll()) {
                 const plugin = this.setupUiPlugin(Plugin);
                 this.featurePlugins.push(plugin);
                 this.handlers.push(plugin);
+                this.uiHandlers.push(plugin);
             }
             this.uuidGenerator.setIsFastStrategy(false);
             // starting plugins
@@ -47190,7 +47263,7 @@
             return new DispatchResult(results.flat());
         }
         checkDispatchAllowedLocalCommand(command) {
-            const results = this.handlers.map((handler) => handler.allowDispatch(command));
+            const results = this.uiHandlers.map((handler) => handler.allowDispatch(command));
             return new DispatchResult(results.flat());
         }
         finalize() {
@@ -47509,9 +47582,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.0-alpha.8';
-    __info__.date = '2023-05-12T11:53:07.768Z';
-    __info__.hash = 'afee7d5';
+    __info__.version = '16.3.1';
+    __info__.date = '2023-05-25T13:12:39.949Z';
+    __info__.hash = 'b3cfd2c';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
