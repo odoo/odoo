@@ -121,7 +121,6 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
         subscription_template = cls.env.ref('event.event_subscription')
         subscription_template.write({'report_template_ids': [(6, 0, test_registration_report.ids)]})
         cls.test_event_type = cls.env['event.type'].create({
-            'auto_confirm': True,
             'default_timezone': 'Europe/Paris',
             'event_type_booth_ids': [
                 (0, 0, {'booth_category_id': cls.event_booth_categories[0].id,
@@ -229,7 +228,6 @@ class TestEventFullCommon(EventCrmCase, TestSalesCommon, MockVisitor):
 
         cls.test_event = cls.env['event.event'].create({
             'name': 'Test Event',
-            'auto_confirm': True,
             'date_begin': datetime.now() + timedelta(days=1),
             'date_end': datetime.now() + timedelta(days=5),
             'date_tz': 'Europe/Brussels',
@@ -339,7 +337,6 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, MockVisitor
         )
         self.event = self.env['event.event'].create({
             'name': 'Online Reveal TestEvent',
-            'auto_confirm': True,
             'stage_id': self.env.ref('event.event_stage_booked').id,
             'address_id': False,
             'user_id': self.user_demo.id,

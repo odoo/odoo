@@ -159,15 +159,6 @@
     </record>
 
     <function model="event.registration"
-        name="action_confirm"
-        context="{'install_mode' : True}"
-        eval="[[ref('event_registration_0_0'), ref('event_registration_0_1'),
-                ref('event_registration_1_0'), ref('event_registration_1_1'), ref('event_registration_1_2'),
-                ref('event_registration_2_0'), ref('event_registration_2_1'), ref('event_registration_2_2'), ref('event_registration_2_3'),
-                ref('event_registration_4_2')]]"
-    />
-
-    <function model="event.registration"
         name="action_set_done"
         eval="[[ref('event_registration_4_0'), ref('event_registration_4_1')]]"
     />

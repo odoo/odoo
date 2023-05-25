@@ -11,11 +11,12 @@ class EventRegistration(models.Model):
     # TDE FIXME: maybe add an onchange on sale_order_id
     sale_order_id = fields.Many2one('sale.order', string='Sales Order', ondelete='cascade', copy=False)
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade', copy=False)
-    payment_status = fields.Selection(string="Payment Status", selection=[
-            ('to_pay', 'Not Paid'),
-            ('paid', 'Paid'),
+    sale_status = fields.Selection(string="Sale Status", selection=[
+            ('to_pay', 'Not Sold'),
+            ('sold', 'Sold'),
             ('free', 'Free'),
-        ], compute="_compute_payment_status", compute_sudo=True, store=True)
+        ], compute="_compute_registration_status", compute_sudo=True, store=True)
+    state = fields.Selection(default=None, compute="_compute_registration_status", store=True, readonly=False)
     utm_campaign_id = fields.Many2one(compute='_compute_utm_campaign_id', readonly=False,
         store=True, ondelete="set null")
     utm_source_id = fields.Many2one(compute='_compute_utm_source_id', readonly=False,
@@ -24,12 +25,20 @@ class EventRegistration(models.Model):
         store=True, ondelete="set null")
 
     @api.depends('sale_order_id.state', 'sale_order_id.currency_id', 'sale_order_line_id.price_total')
-    def _compute_payment_status(self):
+    def _compute_registration_status(self):
+        self.filtered(lambda reg: not reg.state).state = 'draft'
         for so_line, registrations in self.grouped('sale_order_line_id').items():
+            cancelled_registrations = registrations.filtered(lambda reg: reg.sale_order_id.state == 'cancel')
+            cancelled_registrations.state = 'cancel'
             if not so_line or float_is_zero(so_line.price_total, precision_digits=so_line.currency_id.rounding):
-                registrations.payment_status = 'free'
+                registrations.sale_status = 'free'
+                registrations.filtered(lambda reg: reg.state == 'draft').write({"state": "open"})
             else:
-                registrations.payment_status = 'to_pay'
+                sold_registrations = registrations.filtered(lambda reg: reg.sale_order_id.state == 'sale')
+                sold_registrations.sale_status = 'sold'
+                (registrations - sold_registrations).sale_status = 'to_pay'
+                sold_registrations.filtered(lambda reg: reg.state in {'draft', 'cancel'}).write({"state": "open"})
+                (registrations - sold_registrations - cancelled_registrations).state = 'draft'
 
     @api.depends('sale_order_id')
     def _compute_utm_campaign_id(self):
@@ -119,14 +128,11 @@ class EventRegistration(models.Model):
                 views_or_xmlid='event_sale.event_ticket_id_change_exception',
                 render_context=render_context)
 
-    def _action_set_paid(self):
-        self.write({'payment_status': 'paid'})
-
     def _get_registration_summary(self):
         res = super(EventRegistration, self)._get_registration_summary()
         res.update({
-            'payment_status': self.payment_status,
-            'payment_status_value': dict(self._fields['payment_status']._description_selection(self.env))[self.payment_status],
-            'has_to_pay': self.payment_status == 'to_pay',
+            'sale_status': self.sale_status,
+            'sale_status_value': dict(self._fields['sale_status']._description_selection(self.env))[self.sale_status],
+            'has_to_pay': self.sale_status == 'to_pay',
         })
         return res

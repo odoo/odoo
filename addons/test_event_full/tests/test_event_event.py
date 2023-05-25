@@ -36,7 +36,6 @@ class TestEventEvent(TestEventFullCommon):
 
         # check result
         self.assertEqual(event.address_id, self.env.user.company_id.partner_id)
-        self.assertTrue(event.auto_confirm)
         self.assertEqual(event.country_id, self.env.user.company_id.country_id)
         self.assertEqual(event.date_tz, 'Europe/Paris')
         self.assertEqual(event.event_booth_count, 4)

@@ -39,7 +39,7 @@
                         <tr t-if="!registration.event_id and registration.company_name"><td>Company</td><td><t t-out="registration.company_name"/></td></tr>
                         <tr><td>Name</td><td><t t-out="registration.name"/></td></tr>
                         <tr t-if="registration.ticket_name"><td>Ticket</td><td><t t-out="registration.ticket_name"/></td></tr>
-                        <tr t-if="registration.payment_status_value"><td>Payment</td><td><t t-out="registration.payment_status_value"/></td></tr>
+                        <tr t-if="registration.sale_status_value"><td>Payment</td><td><t t-out="registration.sale_status_value"/></td></tr>
                         <tr t-if="registration.registration_answers">
                             <td>Answers</td>
                             <td>

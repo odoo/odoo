@@ -39,9 +39,9 @@ class EventSaleReport(models.Model):
     sale_price = fields.Float('Revenues', readonly=True)
     sale_price_untaxed = fields.Float('Untaxed Revenues', readonly=True)
     invoice_partner_id = fields.Many2one('res.partner', string='Invoice Address', readonly=True)
-    payment_status = fields.Selection(string="Payment Status", selection=[
-            ('to_pay', 'Not Paid'),
-            ('paid', 'Paid'),
+    sale_status = fields.Selection(string="Payment Status", selection=[
+            ('to_pay', 'Not Sold'),
+            ('sold', 'Sold'),
             ('free', 'Free'),
         ])
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
@@ -80,7 +80,7 @@ SELECT
     event_registration.active AS active,
     event_registration.sale_order_id AS sale_order_id,
     event_registration.sale_order_line_id AS sale_order_line_id,
-    event_registration.payment_status AS payment_status,
+    event_registration.sale_status AS sale_status,
 
     event_event.event_type_id AS event_type_id,
     event_event.date_begin AS event_date_begin,

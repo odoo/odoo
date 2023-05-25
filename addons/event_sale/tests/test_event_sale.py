@@ -3,7 +3,7 @@
 
 from odoo.addons.event_sale.tests.common import TestEventSaleCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
-
+from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import users
 
@@ -197,7 +197,7 @@ class TestEventSale(TestEventSaleCommon):
 
     @users('user_sales_salesman')
     def test_event_sale_free_confirm(self):
-        """Check that even with the event's `no_confirm`, free registrations are immediately
+        """Check that free registrations are immediately
         confirmed if the seats are available.
         """
         TICKET_COUNT = 3
@@ -206,7 +206,6 @@ class TestEventSale(TestEventSaleCommon):
 
         # Limiting seats
         self.event_0.write({
-            "auto_confirm": False,
             "seats_limited": True,
             "seats_max": 5
         })
@@ -235,7 +234,7 @@ class TestEventSale(TestEventSaleCommon):
 
     @users('user_sales_salesman')
     def test_event_sale_free_full_event_no_confirm(self):
-        """Check that even free registrations are not immediately confirmed if there are not
+        """Check that even free registrations are not confirmed if there are not
         enough seats available for the event.
         """
         TICKET_COUNT = 3
@@ -244,7 +243,6 @@ class TestEventSale(TestEventSaleCommon):
 
         # Limiting event seats
         self.event_0.write({
-            "auto_confirm": False,
             "seats_limited": True,
             "seats_max": 2
         })
@@ -269,26 +267,28 @@ class TestEventSale(TestEventSaleCommon):
             ]
         })
 
+        # Confirming the SO will raise an error if there is not enough seats
+        with self.assertRaises(ValidationError):
+            customer_so.action_confirm()
+
         editor = self.env['registration.editor'].with_context({
             'default_sale_order_id': customer_so.id
         }).create({})
 
         self.assertTrue(editor.seats_available_insufficient)
 
-        editor.action_make_registration()
-        self.assertEqual(len(self.event_0.registration_ids), TICKET_COUNT)
-        self.assertTrue(all(reg.state == "draft" for reg in self.event_0.registration_ids))
+        with self.assertRaises(ValidationError):
+            editor.action_make_registration()
 
     @users('user_sales_salesman')
     def test_event_sale_free_full_ticket_no_confirm(self):
-        """Check that even free registrations are not immediately confirmed if there are not enough
+        """Check that even free registrations are not confirmed if there are not enough
         seats available for the requested tickets.
         """
         TICKET_COUNT = 3
         customer_so = self.customer_so.with_user(self.env.user)
         ticket = self.event_0.event_ticket_ids[0]
 
-        self.event_0.write({"auto_confirm": False})
         # Limiting ticket seats
         ticket.write({
             "seats_limited": True,
@@ -314,15 +314,18 @@ class TestEventSale(TestEventSaleCommon):
             ]
         })
 
+        # Confirming the SO will raise an error if there is not enough seats
+        with self.assertRaises(ValidationError):
+            customer_so.action_confirm()
+
         editor = self.env['registration.editor'].with_context({
             'default_sale_order_id': customer_so.id
         }).create({})
 
         self.assertTrue(editor.seats_available_insufficient)
 
-        editor.action_make_registration()
-        self.assertEqual(len(self.event_0.registration_ids), TICKET_COUNT)
-        self.assertTrue(all(reg.state == "draft" for reg in self.event_0.registration_ids))
+        with self.assertRaises(ValidationError):
+            editor.action_make_registration()
 
     def test_ticket_price_with_currency_conversion(self):
         def _prepare_currency(self, currency_name):
@@ -446,29 +449,30 @@ class TestEventSale(TestEventSaleCommon):
     @users('user_salesman')
     def test_unlink_so(self):
         """ This test ensures that when deleting a sale order, if the latter is linked to an event registration,
-        the number of expected seats will be correctly updated """
+        it is also deleted """
         event = self.env['event.event'].browse(self.event_0.ids)
         self.register_person.action_make_registration()
-        self.assertEqual(event.seats_expected, 1)
+        self.assertEqual(len(event.registration_ids), 1)
         self.sale_order.unlink()
-        self.assertEqual(event.seats_expected, 0)
+        self.assertEqual(len(event.registration_ids), 0)
 
     @users('user_salesman')
     def test_unlink_soline(self):
         """ This test ensures that when deleting a sale order line, if the latter is linked to an event registration,
-        the number of expected seats will be correctly updated """
+        it is also deleted """
         event = self.env['event.event'].browse(self.event_0.ids)
         self.register_person.action_make_registration()
-        self.assertEqual(event.seats_expected, 1)
+        self.assertEqual(len(event.registration_ids), 1)
         self.sale_order.order_line.unlink()
-        self.assertEqual(event.seats_expected, 0)
+        self.assertEqual(len(event.registration_ids), 0)
 
     @users('user_salesman')
     def test_cancel_so(self):
         """ This test ensures that when canceling a sale order, if the latter is linked to an event registration,
-        the number of expected seats will be correctly updated """
+        it is also cancelled """
         event = self.env['event.event'].browse(self.event_0.ids)
         self.register_person.action_make_registration()
-        self.assertEqual(event.seats_expected, 1)
+        self.assertEqual(len(event.registration_ids), 1)
         self.sale_order._action_cancel()
-        self.assertEqual(event.seats_expected, 0)
+        self.assertEqual(len(event.registration_ids), 1)
+        self.assertEqual(event.registration_ids.state, 'cancel')
