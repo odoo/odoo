@@ -116,4 +116,16 @@ QUnit.module("CalendarView - QuickCreate", ({ beforeEach }) => {
         await click(target, ".o-calendar-quick-create--cancel-btn");
         assert.verifySteps(["close"]);
     });
+
+    QUnit.test("check default title", async (assert) => {
+        assert.expect(1);
+        await start({
+            props: {
+                title: "Example Title",
+            },
+        });
+
+        const input = target.querySelector(".o-calendar-quick-create--input");
+        assert.strictEqual(input.value, "Example Title");
+    });
 });
