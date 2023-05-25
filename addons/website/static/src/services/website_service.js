@@ -50,6 +50,7 @@ export const websiteService = {
             showAceEditor: false,
             edition: false,
             isPublicRootReady: false,
+            isPreviewOpen: false,
             snippetsLoaded: false,
             isMobile: false,
         });
