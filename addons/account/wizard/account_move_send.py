@@ -135,19 +135,18 @@ class AccountMoveSend(models.Model):
     def _get_default_email_from(self, mail_template, lang, move):
         return self._get_mail_default_field_value_from_template(mail_template, lang, move, 'email_from')
 
-    @api.model
     def _get_placeholder_mail_attachments_data(self, move):
         """ Returns all the placeholder data.
         Should be extended to add placeholder based on the checkboxes.
 
+        :param: move:       The current move.
         :returns: A list of dictionary for each placeholder.
         * id:               str: The (fake) id of the attachment, this is needed in rendering in t-key.
         * name:             str: The name of the attachment.
         * mimetype:         str: The mimetype of the attachment.
         * placeholder       bool: Should be true to prevent download / deletion.
         """
-        mode = self._get_default_mode_from_moves(move)
-        if mode != 'invoice_single':
+        if move.invoice_pdf_report_id:
             return []
 
         filename = move._get_invoice_pdf_report_filename()
@@ -189,7 +188,6 @@ class AccountMoveSend(models.Model):
             for attachment in mail_template.attachment_ids
         ]
 
-    @api.model
     def _get_default_email_attachment_data(self, mail_template, move):
         return self._get_placeholder_mail_attachments_data(move) \
                + self._get_invoice_extra_attachments_data(move) \
@@ -294,8 +292,10 @@ class AccountMoveSend(models.Model):
         for wizard in self:
             if wizard.mode == 'invoice_single':
                 manual_attachments_data = [x for x in wizard.mail_attachments_widget or [] if x.get('manual')]
-                wizard.mail_attachments_widget = wizard\
-                    ._get_default_email_attachment_data(wizard.mail_template_id, wizard.move_ids) + manual_attachments_data
+                wizard.mail_attachments_widget = wizard._get_default_email_attachment_data(
+                    wizard.mail_template_id,
+                    wizard.move_ids,
+                ) + manual_attachments_data
             else:
                 wizard.mail_attachments_widget = []
 
@@ -564,8 +564,11 @@ class AccountMoveSend(models.Model):
             self.env.ref('account.ir_cron_account_move_send')._trigger()
 
         if download:
-            attachment_id = self.move_ids.invoice_pdf_report_id.id or list(moves_data.values())[0]['proforma_pdf_attachment'].id
-            return self._download(attachment_id)
+            attachment = self.move_ids.invoice_pdf_report_id
+            if not attachment:
+                attachment = list(moves_data.values())[0].get('proforma_pdf_attachment')
+            if attachment:
+                return self._download(attachment.id)
 
         return {'type': 'ir.actions.act_window_close'}
 
