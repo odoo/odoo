@@ -32,6 +32,7 @@ class IrUiMenu(models.Model):
                     "actionModel": False,
                     "webIcon": None,
                     "webIconData": None,
+                    "webIconDataMimetype": None,
                     "backgroundImage": menu.get('backgroundImage'),
                 }
             else:
@@ -57,6 +58,7 @@ class IrUiMenu(models.Model):
                     "actionModel": action_model,
                     "webIcon": menu['web_icon'],
                     "webIconData": menu['web_icon_data'],
+                    "webIconDataMimetype": menu['web_icon_data_mimetype'],
                 }
 
         return web_menus
