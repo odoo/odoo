@@ -1115,6 +1115,21 @@
         }
         return true;
     }
+    class JetSet extends Set {
+        add(...iterable) {
+            for (const element of iterable) {
+                super.add(element);
+            }
+            return this;
+        }
+        delete(...iterable) {
+            let deleted = false;
+            for (const element of iterable) {
+                deleted ||= super.delete(element);
+            }
+            return deleted;
+        }
+    }
 
     const RBA_REGEX = /rgba?\(|\s+|\)/gi;
     const HEX_MATCH = /^#([A-F\d]{2}){3,4}$/;
@@ -2884,6 +2899,14 @@
         }
         return positions;
     }
+    function forEachPositionsInZone(zone, callback) {
+        const { left, right, top, bottom } = zone;
+        for (let col = left; col <= right; col++) {
+            for (let row = top; row <= bottom; row++) {
+                callback(col, row);
+            }
+        }
+    }
     /**
      * This function returns a zone with coordinates modified according to the change
      * applied to the zone. It may be possible to change the zone by resizing or moving
@@ -4184,6 +4207,11 @@
         "INSERT_CELL",
         "UNDO",
         "REDO",
+        "ADD_MERGE",
+    ]);
+    const invalidateDependenciesCommands = new Set([
+        ...invalidateEvaluationCommands,
+        "MOVE_RANGES",
     ]);
     const invalidateCFEvaluationCommands = new Set([
         ...invalidateEvaluationCommands,
@@ -4397,9 +4425,13 @@
         CommandResult[CommandResult["EmptySplitSeparator"] = 89] = "EmptySplitSeparator";
         CommandResult[CommandResult["SplitWillOverwriteContent"] = 90] = "SplitWillOverwriteContent";
         CommandResult[CommandResult["NoSplitSeparatorInSelection"] = 91] = "NoSplitSeparatorInSelection";
+        CommandResult[CommandResult["NoActiveSheet"] = 92] = "NoActiveSheet";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     const borderStyles = ["thin", "medium", "thick", "dashed", "dotted"];
+    function isMatrix(x) {
+        return Array.isArray(x) && Array.isArray(x[0]);
+    }
     var DIRECTION;
     (function (DIRECTION) {
         DIRECTION["UP"] = "up";
@@ -10365,7 +10397,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (factor1) => {
-            return Array.isArray(factor1) ? factor1[0][0]?.format : factor1?.format;
+            return Array.isArray(factor1?.format) ? factor1.format[0][0] : factor1?.format;
         },
         compute: function (...factors) {
             let count = 0;
@@ -10591,7 +10623,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
-            return Array.isArray(value1) ? value1[0][0]?.format : value1?.format;
+            return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
         },
         compute: function (...values) {
             return reduceNumbers(values, (acc, a) => acc + a, 0);
@@ -10863,7 +10895,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
-            return Array.isArray(value1) ? value1[0][0]?.format : value1?.format;
+            return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
         },
         compute: function (...values) {
             let count = 0;
@@ -10891,7 +10923,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (values) => {
-            return Array.isArray(values) ? values[0][0]?.format : values?.format;
+            return Array.isArray(values?.format) ? values.format[0][0] : values?.format;
         },
         compute: function (...values) {
             let sum = 0;
@@ -10949,7 +10981,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
-            return Array.isArray(value1) ? value1[0][0]?.format : value1?.format;
+            return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
         },
         compute: function (...values) {
             let count = 0;
@@ -11122,7 +11154,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
-            return Array.isArray(data) ? data[0][0]?.format : data?.format;
+            return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
         },
         compute: function (data, n) {
             const _n = Math.trunc(toNumber(n));
@@ -11158,7 +11190,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
-            return Array.isArray(value1) ? value1[0][0]?.format : value1?.format;
+            return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
         },
         compute: function (...values) {
             const result = reduceNumbers(values, (acc, a) => (acc < a ? a : acc), -Infinity);
@@ -11177,7 +11209,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
-            return Array.isArray(value1) ? value1[0][0]?.format : value1?.format;
+            return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
         },
         compute: function (...values) {
             const maxa = reduceNumbersTextAs0(values, (acc, a) => {
@@ -11223,7 +11255,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
-            return Array.isArray(value1) ? value1[0][0]?.format : value1?.format;
+            return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
         },
         compute: function (...values) {
             let data = [];
@@ -11245,7 +11277,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
-            return Array.isArray(value1) ? value1[0][0]?.format : value1?.format;
+            return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
         },
         compute: function (...values) {
             const result = reduceNumbers(values, (acc, a) => (a < acc ? a : acc), Infinity);
@@ -11264,7 +11296,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (value1) => {
-            return Array.isArray(value1) ? value1[0][0]?.format : value1?.format;
+            return Array.isArray(value1?.format) ? value1.format[0][0] : value1?.format;
         },
         compute: function (...values) {
             const mina = reduceNumbersTextAs0(values, (acc, a) => {
@@ -11310,7 +11342,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
-            return Array.isArray(data) ? data[0][0]?.format : data?.format;
+            return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
         },
         compute: function (data, percentile) {
             return PERCENTILE_INC.compute(data, percentile);
@@ -11328,7 +11360,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
-            return Array.isArray(data) ? data[0][0]?.format : data?.format;
+            return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
         },
         compute: function (data, percentile) {
             return centile([data], percentile, false);
@@ -11346,7 +11378,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
-            return Array.isArray(data) ? data[0][0]?.format : data?.format;
+            return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
         },
         compute: function (data, percentile) {
             return centile([data], percentile, true);
@@ -11364,7 +11396,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
-            return Array.isArray(data) ? data[0][0]?.format : data?.format;
+            return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
         },
         compute: function (data, quartileNumber) {
             return QUARTILE_INC.compute(data, quartileNumber);
@@ -11382,7 +11414,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
-            return Array.isArray(data) ? data[0][0]?.format : data?.format;
+            return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
         },
         compute: function (data, quartileNumber) {
             const _quartileNumber = Math.trunc(toNumber(quartileNumber));
@@ -11401,7 +11433,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
-            return Array.isArray(data) ? data[0][0]?.format : data?.format;
+            return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
         },
         compute: function (data, quartileNumber) {
             const _quartileNumber = Math.trunc(toNumber(quartileNumber));
@@ -11420,7 +11452,7 @@
         ],
         returns: ["NUMBER"],
         computeFormat: (data) => {
-            return Array.isArray(data) ? data[0][0]?.format : data?.format;
+            return Array.isArray(data?.format) ? data.format[0][0] : data?.format;
         },
         compute: function (data, n) {
             const _n = Math.trunc(toNumber(n));
@@ -16207,16 +16239,10 @@
                 return undefined;
             }
             if (typeof arg === "function") {
-                return () => _extractArgValuesFromArgs(arg());
+                return () => arg()?.value;
             }
-            return _extractArgValuesFromArgs(arg);
+            return arg.value;
         });
-    }
-    function _extractArgValuesFromArgs(arg) {
-        if (Array.isArray(arg)) {
-            return arg.map((col) => col.map((simpleArg) => simpleArg?.value));
-        }
-        return arg?.value;
     }
     const functionRegistry = new FunctionRegistry();
     for (let category of categories) {
@@ -16869,6 +16895,7 @@
         execute: (env) => env.model.dispatch("UNFREEZE_COLUMNS_ROWS", {
             sheetId: env.model.getters.getActiveSheetId(),
         }),
+        icon: "o-spreadsheet-Icon.UNFREEZE",
     };
     const freezePane = {
         name: _lt("Freeze"),
@@ -17546,7 +17573,7 @@
     })
         .addChild("sort_range", ["data"], {
         ...sortRange,
-        sequence: 20,
+        sequence: 10,
         separator: true,
     })
         .addChild("sort_ascending", ["data", "sort_range"], {
@@ -17559,16 +17586,16 @@
     })
         .addChild("split_to_columns", ["data"], {
         ...splitToColumns,
-        sequence: 10,
+        sequence: 20,
         separator: true,
     })
         .addChild("add_data_filter", ["data"], {
         ...addDataFilter,
-        sequence: 10,
+        sequence: 30,
     })
         .addChild("remove_data_filter", ["data"], {
         ...removeDataFilter,
-        sequence: 10,
+        sequence: 30,
     });
 
     class OTRegistry extends Registry {
@@ -17939,6 +17966,18 @@
       padding: ${LINE_VERTICAL_PADDING}px ${LINE_HORIZONTAL_PADDING}px;
       grid-template-columns: repeat(${ITEMS_PER_LINE}, 1fr);
       grid-gap: ${ITEM_HORIZONTAL_MARGIN * 2}px;
+    }
+    .o-color-picker-toggler-button {
+      display: flex;
+      .o-color-picker-toggler-sign {
+        margin: auto auto;
+        width: 55%;
+        height: 55%;
+        .o-icon {
+          width: 100%;
+          height: 100%;
+        }
+      }
     }
     .o-color-picker-line-item {
       width: ${ITEM_EDGE_LENGTH}px;
@@ -18675,6 +18714,18 @@
         onCloseSidePanel: Function,
     };
 
+    css /* scss */ `
+  .o-spreadsheet {
+    .o-icon {
+      .small-text {
+        font: bold 9px sans-serif;
+      }
+      .heavy-text {
+        font: bold 16px sans-serif;
+      }
+    }
+  }
+`;
     // -----------------------------------------------------------------------------
     // We need here the svg of the icons that we need to convert to images for the renderer
     // -----------------------------------------------------------------------------
@@ -20600,7 +20651,14 @@
                 current = it.next();
             }
             if (current.value !== nodeToFind) {
-                throw new Error("Cannot find the node in the children of the element");
+                /** This situation can happen if the code is called while the selection is not currently on the ContentEditableHelper.
+                 * In this case, we return 0 because we don't know the size of the text before the selection.
+                 *
+                 * A known occurence is triggered since the introduction of commit d4663158 (PR #2038).
+                 *
+                 * FIXME: find a way to test eventhough the selection API is not available in jsDOM.
+                 */
+                return 0;
             }
             else {
                 if (!current.value.hasChildNodes()) {
@@ -20725,7 +20783,7 @@
         argToFocus: Number,
     };
 
-    const functions$2 = functionRegistry.content;
+    const functions$3 = functionRegistry.content;
     const ASSISTANT_WIDTH = 300;
     const selectionIndicatorClass = "selector-flag";
     const selectionIndicatorColor = "#a9a9a9";
@@ -21227,7 +21285,7 @@
                         // initialize Formula Assistant
                         const tokenContext = tokenAtCursor.functionContext;
                         const parentFunction = tokenContext.parent.toUpperCase();
-                        const description = functions$2[parentFunction];
+                        const description = functions$3[parentFunction];
                         const argPosition = tokenContext.argPosition;
                         this.functionDescriptionState.functionName = parentFunction;
                         this.functionDescriptionState.functionDescription = description;
@@ -22099,6 +22157,21 @@
     };
 
     /**
+     * Manages an event listener on a ref. Useful for hooks that want to manage
+     * event listeners, especially more than one. Prefer using t-on directly in
+     * components. If your hook only needs a single event listener, consider simply
+     * returning it from the hook and letting the user attach it with t-on.
+     *
+     * Adapted from Odoo Community - See https://github.com/odoo/odoo/blob/saas-16.2/addons/web/static/src/core/utils/hooks.js
+     */
+    function useRefListener(ref, ...listener) {
+        owl.useEffect((el) => {
+            el?.addEventListener(...listener);
+            return () => el?.removeEventListener(...listener);
+        }, () => [ref.el]);
+    }
+
+    /**
      * Repeatedly calls a callback function with a time delay between calls.
      */
     function useInterval(callback, delay) {
@@ -22160,20 +22233,10 @@
                 setPosition(undefined, undefined);
             }
         }
-        owl.onMounted(() => {
-            const grid = gridRef.el;
-            grid.addEventListener("mousemove", updateMousePosition);
-            grid.addEventListener("mouseleave", pause);
-            grid.addEventListener("mouseenter", resume);
-            grid.addEventListener("mousedown", recompute);
-        });
-        owl.onWillUnmount(() => {
-            const grid = gridRef.el;
-            grid.removeEventListener("mousemove", updateMousePosition);
-            grid.removeEventListener("mouseleave", pause);
-            grid.removeEventListener("mouseenter", resume);
-            grid.removeEventListener("mousedown", recompute);
-        });
+        useRefListener(gridRef, "mousemove", updateMousePosition);
+        useRefListener(gridRef, "mouseleave", pause);
+        useRefListener(gridRef, "mouseenter", resume);
+        useRefListener(gridRef, "mousedown", recompute);
         function setPosition(col, row) {
             if (col !== hoveredPosition.col || row !== hoveredPosition.row) {
                 hoveredPosition.col = col;
@@ -22212,16 +22275,9 @@
             x = currentX;
             y = currentY;
         }
-        owl.onMounted(() => {
-            gridRef.el.addEventListener("touchstart", onTouchStart);
-            gridRef.el.addEventListener("touchend", onTouchEnd);
-            gridRef.el.addEventListener("touchmove", onTouchMove);
-        });
-        owl.onWillUnmount(() => {
-            gridRef.el.removeEventListener("touchstart", onTouchStart);
-            gridRef.el.removeEventListener("touchend", onTouchEnd);
-            gridRef.el.removeEventListener("touchmove", onTouchMove);
-        });
+        useRefListener(gridRef, "touchstart", onTouchStart);
+        useRefListener(gridRef, "touchend", onTouchEnd);
+        useRefListener(gridRef, "touchmove", onTouchMove);
     }
     class GridOverlay extends owl.Component {
         static template = "o-spreadsheet-GridOverlay";
@@ -25072,7 +25128,7 @@
      * is useful for the composer, which needs to be able to work with incomplete
      * formulas.
      */
-    const functions$1 = functionRegistry.content;
+    const functions$2 = functionRegistry.content;
     const POSTFIX_UNARY_OPERATORS = ["%"];
     const OPERATORS = "+,-,*,/,:,=,<>,>=,>,<=,<,^,&".split(",").concat(POSTFIX_UNARY_OPERATORS);
     function tokenize(str) {
@@ -25195,7 +25251,7 @@
         }
         if (result.length) {
             const value = result;
-            const isFunction = value.toUpperCase() in functions$1;
+            const isFunction = value.toUpperCase() in functions$2;
             if (isFunction) {
                 return { type: "FUNCTION", value };
             }
@@ -25665,7 +25721,7 @@
         return result;
     }
 
-    const functions = functionRegistry.content;
+    const functions$1 = functionRegistry.content;
     const OPERATOR_MAP = {
         "=": "EQ",
         "+": "ADD",
@@ -25728,56 +25784,32 @@
              * between a cell value and a non cell value.
              */
             function compileFunctionArgs(ast) {
-                const functionDefinition = functions[ast.value.toUpperCase()];
-                const currentFunctionArguments = ast.args;
-                // check if arguments are supplied in the correct quantities
-                const nbrArg = currentFunctionArguments.length;
-                if (nbrArg < functionDefinition.minArgRequired) {
-                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s minimum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.minArgRequired.toString(), nbrArg.toString()));
-                }
-                if (nbrArg > functionDefinition.maxArgPossible) {
-                    throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s maximum, but got %s instead.", ast.value.toUpperCase(), functionDefinition.maxArgPossible.toString(), nbrArg.toString()));
-                }
-                const repeatingArg = functionDefinition.nbrArgRepeating;
-                if (repeatingArg > 1) {
-                    const argBeforeRepeat = functionDefinition.args.length - repeatingArg;
-                    const nbrRepeatingArg = nbrArg - argBeforeRepeat;
-                    if (nbrRepeatingArg % repeatingArg !== 0) {
-                        throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected all arguments after position %s to be supplied by groups of %s arguments", ast.value.toUpperCase(), argBeforeRepeat.toString(), repeatingArg.toString()));
-                    }
-                }
-                let compiledArgs = [];
-                for (let i = 0; i < nbrArg; i++) {
-                    const argPosition = functionDefinition.getArgToFocus(i + 1) - 1;
-                    if (0 <= argPosition && argPosition < functionDefinition.args.length) {
-                        const currentArg = currentFunctionArguments[i];
-                        const argDefinition = functionDefinition.args[argPosition];
-                        const argTypes = argDefinition.type || [];
-                        // detect when an argument need to be evaluated as a meta argument
-                        const isMeta = argTypes.includes("META");
-                        // detect when an argument need to be evaluated as a lazy argument
-                        const isLazy = argDefinition.lazy;
-                        const hasRange = argTypes.some((t) => t === "RANGE" ||
-                            t === "RANGE<BOOLEAN>" ||
-                            t === "RANGE<DATE>" ||
-                            t === "RANGE<NUMBER>" ||
-                            t === "RANGE<STRING>");
-                        const isRangeOnly = argTypes.every((t) => t === "RANGE" ||
-                            t === "RANGE<BOOLEAN>" ||
-                            t === "RANGE<DATE>" ||
-                            t === "RANGE<NUMBER>" ||
-                            t === "RANGE<STRING>");
-                        if (isRangeOnly) {
-                            if (currentArg.type !== "REFERENCE") {
-                                throw new BadExpressionError(_lt("Function %s expects the parameter %s to be reference to a cell or range, not a %s.", ast.value.toUpperCase(), (i + 1).toString(), currentArg.type.toLowerCase()));
-                            }
+                const { args } = ast;
+                const functionName = ast.value.toUpperCase();
+                const functionDefinition = functions$1[functionName];
+                assertEnoughArgs(ast);
+                const compiledArgs = [];
+                for (let i = 0; i < args.length; i++) {
+                    const argToFocus = functionDefinition.getArgToFocus(i + 1) - 1;
+                    const argDefinition = functionDefinition.args[argToFocus];
+                    const currentArg = args[i];
+                    const argTypes = argDefinition.type || [];
+                    // detect when an argument need to be evaluated as a meta argument
+                    const isMeta = argTypes.includes("META");
+                    // detect when an argument need to be evaluated as a lazy argument
+                    const isLazy = argDefinition.lazy;
+                    const hasRange = argTypes.some((t) => isRangeType(t));
+                    const isRangeOnly = argTypes.every((t) => isRangeType(t));
+                    if (isRangeOnly) {
+                        if (!isRangeInput(currentArg)) {
+                            throw new BadExpressionError(_lt("Function %s expects the parameter %s to be reference to a cell or range, not a %s.", functionName, (i + 1).toString(), currentArg.type.toLowerCase()));
                         }
-                        const compiledAST = compileAST(currentArg, isMeta, hasRange, {
-                            functionName: ast.value.toUpperCase(),
-                            paramIndex: i + 1,
-                        });
-                        compiledArgs.push(isLazy ? compiledAST.wrapInClosure() : compiledAST);
                     }
+                    const compiledAST = compileAST(currentArg, isMeta, hasRange, {
+                        functionName,
+                        paramIndex: i + 1,
+                    });
+                    compiledArgs.push(isLazy ? compiledAST.wrapInClosure() : compiledAST);
                 }
                 return compiledArgs;
             }
@@ -25922,6 +25954,41 @@
             constantValues,
         };
     }
+    /**
+     * Check if arguments are supplied in the correct quantities
+     */
+    function assertEnoughArgs(ast) {
+        const nbrArg = ast.args.length;
+        const functionName = ast.value.toUpperCase();
+        const functionDefinition = functions$1[functionName];
+        if (nbrArg < functionDefinition.minArgRequired) {
+            throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s minimum, but got %s instead.", functionName, functionDefinition.minArgRequired.toString(), nbrArg.toString()));
+        }
+        if (nbrArg > functionDefinition.maxArgPossible) {
+            throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s maximum, but got %s instead.", functionName, functionDefinition.maxArgPossible.toString(), nbrArg.toString()));
+        }
+        const repeatableArgs = functionDefinition.nbrArgRepeating;
+        if (repeatableArgs > 1) {
+            const unrepeatableArgs = functionDefinition.args.length - repeatableArgs;
+            const repeatingArgs = nbrArg - unrepeatableArgs;
+            if (repeatingArgs % repeatableArgs !== 0) {
+                throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected all arguments after position %s to be supplied by groups of %s arguments", functionName, unrepeatableArgs.toString(), repeatableArgs.toString()));
+            }
+        }
+    }
+    function isRangeType(type) {
+        return type.startsWith("RANGE");
+    }
+    function isRangeInput(arg) {
+        if (arg.type === "REFERENCE") {
+            return true;
+        }
+        if (arg.type === "FUNCALL") {
+            const fnDef = functions$1[arg.value.toUpperCase()];
+            return fnDef && isRangeType(fnDef.returns[0]);
+        }
+        return false;
+    }
 
     /**
      * Add the following information on tokens:
@@ -26037,16 +26104,6 @@
     // -------------------------------------
     //        WORKSHEET HELPERS
     // -------------------------------------
-    function getCellType(value) {
-        switch (typeof value) {
-            case "boolean":
-                return "b";
-            case "string":
-                return "str";
-            case "number":
-                return "n";
-        }
-    }
     function convertHeightToExcel(height) {
         return Math.round(HEIGHT_FACTOR * height * 100) / 100;
     }
@@ -29733,23 +29790,7 @@
          */
         createFormulaCellWithDependencies(id, compiledFormula, format, style, sheetId) {
             const dependencies = compiledFormula.dependencies.map((xc) => this.getters.getRangeFromSheetXC(sheetId, xc));
-            const buildFormulaContent = this.buildFormulaContent.bind(this);
-            // Only for formulas with dependencies because
-            // **the closure is expensive memory-wise**
-            return {
-                id,
-                get content() {
-                    return buildFormulaContent(sheetId, {
-                        dependencies: this.dependencies,
-                        compiledFormula: this.compiledFormula,
-                    });
-                },
-                style,
-                format,
-                isFormula: true,
-                compiledFormula,
-                dependencies,
-            };
+            return new FormulaCellWithDependencies(id, compiledFormula, format, style, dependencies, sheetId, this.buildFormulaContent.bind(this));
         }
         createErrorFormula(id, content, format, style, error) {
             return {
@@ -29774,6 +29815,31 @@
                 return 27 /* CommandResult.InvalidSheetId */;
             const sheetZone = this.getters.getSheetZone(sheetId);
             return isInside(col, row, sheetZone) ? 0 /* CommandResult.Success */ : 18 /* CommandResult.TargetOutOfSheet */;
+        }
+    }
+    class FormulaCellWithDependencies {
+        id;
+        compiledFormula;
+        format;
+        style;
+        dependencies;
+        sheetId;
+        buildFormulaContent;
+        isFormula = true;
+        constructor(id, compiledFormula, format, style, dependencies, sheetId, buildFormulaContent) {
+            this.id = id;
+            this.compiledFormula = compiledFormula;
+            this.format = format;
+            this.style = style;
+            this.dependencies = dependencies;
+            this.sheetId = sheetId;
+            this.buildFormulaContent = buildFormulaContent;
+        }
+        get content() {
+            return this.buildFormulaContent(this.sheetId, {
+                dependencies: this.dependencies,
+                compiledFormula: this.compiledFormula,
+            });
         }
     }
 
@@ -32191,6 +32257,8 @@
             "getSheetSize",
             "getSheetZone",
             "getPaneDivisions",
+            "checkZonesExistInSheet",
+            "getCommandZones",
         ];
         sheetIdsMapName = {};
         orderedSheetIds = [];
@@ -32200,7 +32268,7 @@
         // Command Handling
         // ---------------------------------------------------------------------------
         allowDispatch(cmd) {
-            const genericChecks = this.chainValidations(this.checkSheetExists, this.checkZones)(cmd);
+            const genericChecks = this.chainValidations(this.checkSheetExists, this.checkZonesAreInSheet)(cmd);
             if (genericChecks !== 0 /* CommandResult.Success */) {
                 return genericChecks;
             }
@@ -32539,6 +32607,37 @@
             return positions(zone)
                 .map(({ col, row }) => this.getCell({ sheetId, col, row }))
                 .every((cell) => !cell || cell.content === "");
+        }
+        getCommandZones(cmd) {
+            const zones = [];
+            if ("zone" in cmd) {
+                zones.push(cmd.zone);
+            }
+            if ("target" in cmd) {
+                zones.push(...cmd.target);
+            }
+            if ("ranges" in cmd) {
+                zones.push(...cmd.ranges.map((rangeData) => this.getters.getRangeFromRangeData(rangeData).zone));
+            }
+            if ("col" in cmd && "row" in cmd) {
+                zones.push({ top: cmd.row, left: cmd.col, bottom: cmd.row, right: cmd.col });
+            }
+            return zones;
+        }
+        /**
+         * Check if zones in the command are well formed and
+         * not outside the sheet.
+         */
+        checkZonesExistInSheet(sheetId, zones) {
+            if (!zones.every(isZoneValid))
+                return 25 /* CommandResult.InvalidRange */;
+            if (zones.length) {
+                const sheetZone = this.getSheetZone(sheetId);
+                return zones.every((zone) => isZoneInside(zone, sheetZone))
+                    ? 0 /* CommandResult.Success */
+                    : 18 /* CommandResult.TargetOutOfSheet */;
+            }
+            return 0 /* CommandResult.Success */;
         }
         updateCellPosition(cmd) {
             const { sheetId, cellId, col, row } = cmd;
@@ -32988,9 +33087,6 @@
             }
             return { rowNumber, colNumber };
         }
-        // ----------------------------------------------------
-        //  HIDE / SHOW
-        // ----------------------------------------------------
         /**
          * Check that any "sheetId" in the command matches an existing
          * sheet.
@@ -33008,27 +33104,10 @@
          * Check if zones in the command are well formed and
          * not outside the sheet.
          */
-        checkZones(cmd) {
-            const zones = [];
-            if ("zone" in cmd) {
-                zones.push(cmd.zone);
-            }
-            if ("target" in cmd && Array.isArray(cmd.target)) {
-                zones.push(...cmd.target);
-            }
-            if ("ranges" in cmd && Array.isArray(cmd.ranges)) {
-                zones.push(...cmd.ranges.map((rangeData) => this.getters.getRangeFromRangeData(rangeData).zone));
-            }
-            if (!zones.every(isZoneValid)) {
-                return 25 /* CommandResult.InvalidRange */;
-            }
-            else if (zones.length && "sheetId" in cmd) {
-                const sheetZone = this.getSheetZone(cmd.sheetId);
-                return zones.every((zone) => isZoneInside(zone, sheetZone))
-                    ? 0 /* CommandResult.Success */
-                    : 18 /* CommandResult.TargetOutOfSheet */;
-            }
-            return 0 /* CommandResult.Success */;
+        checkZonesAreInSheet(cmd) {
+            if (!("sheetId" in cmd))
+                return 0 /* CommandResult.Success */;
+            return this.checkZonesExistInSheet(cmd.sheetId, this.getCommandZones(cmd));
         }
     }
 
@@ -33051,6 +33130,931 @@
         // Grid rendering
         // ---------------------------------------------------------------------------
         drawGrid(ctx, layer) { }
+    }
+
+    const functionMap = functionRegistry.mapping;
+    /**
+     * Return all functions necessary to properly evaluate a formula:
+     * - a refFn function to read any reference, cell or range of a normalized formula
+     * - a range function to convert any reference to a proper value array
+     * - an evaluation context
+     */
+    function buildCompilationParameters(context, getters, computeCell) {
+        const builder = new CompilationParametersBuilder(context, getters, computeCell);
+        return builder.getParameters();
+    }
+    class CompilationParametersBuilder {
+        getters;
+        computeCell;
+        evalContext;
+        constructor(context, getters, computeCell) {
+            this.getters = getters;
+            this.computeCell = computeCell;
+            this.evalContext = Object.assign(Object.create(functionMap), context, {
+                getters: this.getters,
+            });
+        }
+        getParameters() {
+            return [this.refFn.bind(this), this.range.bind(this), this.evalContext];
+        }
+        /**
+         * Returns the value of the cell(s) used in reference
+         *
+         * @param range the references used
+         * @param isMeta if a reference is supposed to be used in a `meta` parameter as described in the
+         *        function for which this parameter is used, we just return the string of the parameter.
+         *        The `compute` of the formula's function must process it completely
+         */
+        refFn(range, isMeta, functionName, paramNumber) {
+            if (isMeta) {
+                // Use zoneToXc of zone instead of getRangeString to avoid sending unbounded ranges
+                return { value: zoneToXc(range.zone) };
+            }
+            if (!isZoneValid(range.zone)) {
+                throw new InvalidReferenceError();
+            }
+            // if the formula definition could have accepted a range, we would pass through the _range function and not here
+            if (range.zone.bottom !== range.zone.top || range.zone.left !== range.zone.right) {
+                throw new Error(paramNumber
+                    ? _lt("Function %s expects the parameter %s to be a single value or a single cell reference, not a range.", functionName.toString(), paramNumber.toString())
+                    : _lt("Function %s expects its parameters to be single values or single cell references, not ranges.", functionName.toString()));
+            }
+            if (range.invalidSheetName) {
+                throw new Error(_lt("Invalid sheet name: %s", range.invalidSheetName));
+            }
+            return this.readCell(range);
+        }
+        readCell(range) {
+            if (!this.getters.tryGetSheet(range.sheetId)) {
+                throw new Error(_lt("Invalid sheet name"));
+            }
+            const position = { sheetId: range.sheetId, col: range.zone.left, row: range.zone.top };
+            const evaluatedCell = this.getEvaluatedCellIfNotEmpty(position);
+            if (evaluatedCell === undefined) {
+                return { value: null, format: this.getters.getCell(position)?.format };
+            }
+            return evaluatedCell;
+        }
+        getEvaluatedCellIfNotEmpty(position) {
+            const evaluatedCell = this.getEvaluatedCell(position);
+            if (evaluatedCell.type === CellValueType.empty) {
+                const cell = this.getters.getCell(position);
+                if (!cell || cell.content === "") {
+                    return undefined;
+                }
+            }
+            return evaluatedCell;
+        }
+        getEvaluatedCell(position) {
+            const evaluatedCell = this.computeCell(position);
+            if (evaluatedCell.type === CellValueType.error) {
+                throw evaluatedCell.error;
+            }
+            return evaluatedCell;
+        }
+        /**
+         * Return the values of the cell(s) used in reference, but always in the format of a range even
+         * if a single cell is referenced. It is a list of col values. This is useful for the formulas that describe parameters as
+         * range<number> etc.
+         *
+         * Note that each col is possibly sparse: it only contain the values of cells
+         * that are actually present in the grid.
+         */
+        range({ sheetId, zone }) {
+            if (!isZoneValid(zone)) {
+                throw new InvalidReferenceError();
+            }
+            // Performance issue: Avoid fetching data on positions that are out of the spreadsheet
+            // e.g. A1:ZZZ9999 in a sheet with 10 cols and 10 rows should ignore everything past J10 and return a 10x10 array
+            const sheetZone = this.getters.getSheetZone(sheetId);
+            const _zone = intersection(zone, sheetZone);
+            if (!_zone) {
+                return { value: [[]], format: [[]] };
+            }
+            const height = _zone.bottom - _zone.top + 1;
+            const width = _zone.right - _zone.left + 1;
+            const value = Array.from({ length: width }, () => Array.from({ length: height }));
+            const format = Array.from({ length: width }, () => Array.from({ length: height }));
+            // Performance issue: nested loop is faster than a map here
+            for (let col = _zone.left; col <= _zone.right; col++) {
+                for (let row = _zone.top; row <= _zone.bottom; row++) {
+                    const evaluatedCell = this.getEvaluatedCellIfNotEmpty({ sheetId: sheetId, col, row });
+                    if (evaluatedCell) {
+                        const colIndex = col - _zone.left;
+                        const rowIndex = row - _zone.top;
+                        value[colIndex][rowIndex] = evaluatedCell.value;
+                        if (evaluatedCell.format !== undefined) {
+                            format[colIndex][rowIndex] = evaluatedCell.format;
+                        }
+                    }
+                }
+            }
+            return { value, format };
+        }
+    }
+
+    /**
+     * This class is an implementation of a dependency Graph.
+     * The graph is used to evaluate the cells in the correct
+     * order, and should be updated each time a cell's content is modified
+     *
+     */
+    class FormulaDependencyGraph {
+        /**
+         * Internal structure:
+         * - key: a cell position (encoded as an integer)
+         * - value: a set of cell positions that depends on the key
+         *
+         * Given
+         * - A1:"= B1 + SQRT(B2)"
+         * - C1:"= B1";
+         * - C2:"= C1"
+         *
+         * we will have something like:
+         * - B1 ---> (A1, C1)   meaning A1 and C1 depends on B1
+         * - B2 ---> (A1)       meaning A1 depends on B2
+         * - C1 ---> (C2)       meaning C2 depends on C1
+         */
+        inverseDependencies = new Map();
+        dependencies = new Map();
+        removeAllDependencies(formulaPositionId) {
+            const dependencies = this.dependencies.get(formulaPositionId);
+            if (!dependencies) {
+                return;
+            }
+            for (const dependency of dependencies) {
+                this.inverseDependencies.get(dependency)?.delete(formulaPositionId);
+            }
+            this.dependencies.delete(formulaPositionId);
+        }
+        addDependencies(formulaPositionId, dependencies) {
+            for (const dependency of dependencies) {
+                const inverseDependencies = this.inverseDependencies.get(dependency);
+                if (inverseDependencies) {
+                    inverseDependencies.add(formulaPositionId);
+                }
+                else {
+                    this.inverseDependencies.set(dependency, new Set([formulaPositionId]));
+                }
+            }
+            const existingDependencies = this.dependencies.get(formulaPositionId);
+            if (existingDependencies) {
+                existingDependencies.push(...dependencies);
+            }
+            else {
+                this.dependencies.set(formulaPositionId, dependencies);
+            }
+        }
+        /**
+         * Return the cell and all cells that depend on it,
+         * in the correct order they should be evaluated.
+         * This is called a topological ordering (excluding cycles)
+         */
+        getCellsDependingOn(positionIds) {
+            const visited = new JetSet();
+            const queue = Array.from(positionIds);
+            while (queue.length > 0) {
+                const node = queue.shift();
+                visited.add(node);
+                const adjacentNodes = this.inverseDependencies.get(node) || new Set();
+                for (const adjacentNode of adjacentNodes) {
+                    if (!visited.has(adjacentNode)) {
+                        queue.push(adjacentNode);
+                    }
+                }
+            }
+            visited.delete(...positionIds);
+            return visited;
+        }
+    }
+
+    /**
+     * Contains, for each cell, the array
+     * formulas that could potentially spread on it
+     * This is essentially a two way mapping between array formulas
+     * and their results.
+     *
+     * As we don't allow two array formulas to spread on the same cell, this structure
+     * is used to force the reevaluation of the potential spreaders of a cell when the
+     * content of this cell is modified. This structure should be updated each time
+     * an array formula is evaluated and try to spread on another cell.
+     *
+     */
+    class SpreadingRelation {
+        /**
+         * Internal structure:
+         * For something like
+         * - A2:'=SPLIT("KAYAK", "A")'
+         * - B1:'=TRANSPOSE(SPLIT("COYOTE", "O"))'
+         *
+         * Resulting in:
+         * ```
+         * -----------------
+         * |   | A | B | C |
+         * |---+---+---+---|
+         * | 1 |   | C |   |
+         * | 2 | K | Y | K |
+         * | 3 |   | T |   |
+         * | 4 |   | E |   |
+         * -----------------
+         * ```
+         * We will have `resultsToArrayFormulas` looking like:
+         * - (B2) --> (A2, B1)  meaning B2 can be the result of A2 OR B1
+         * - (C2) --> (A2)      meaning C2 is the result of A2
+         * - (B3) --> (B1)      meaning B3 is the result of B1
+         * - (B4) --> (B1)      meaning B4 is the result of B1
+         *
+         * We will have `arrayFormulasToResults` looking like:
+         * - (A2) --> (B2, C2)      meaning A2 spreads on B2 and C2
+         * - (B1) --> (B2, B3, B4)  meaning B1 spreads on B2, B3 and B4
+         *
+         */
+        resultsToArrayFormulas = new Map();
+        arrayFormulasToResults = new Map();
+        getFormulaPositionsSpreadingOn(resultPositionId) {
+            return this.resultsToArrayFormulas.get(resultPositionId) || EMPTY_ARRAY;
+        }
+        getArrayResultPositionIds(formulasPositionId) {
+            return this.arrayFormulasToResults.get(formulasPositionId) || EMPTY_ARRAY;
+        }
+        /**
+         * Remove a node, also remove it from other nodes adjacency list
+         */
+        removeNode(positionId) {
+            this.resultsToArrayFormulas.delete(positionId);
+            this.arrayFormulasToResults.delete(positionId);
+        }
+        /**
+         * Create a spreading relation between two cells
+         */
+        addRelation({ arrayFormulaPositionId, resultPositionId, }) {
+            if (!this.resultsToArrayFormulas.has(resultPositionId)) {
+                this.resultsToArrayFormulas.set(resultPositionId, new Set());
+            }
+            this.resultsToArrayFormulas.get(resultPositionId)?.add(arrayFormulaPositionId);
+            if (!this.arrayFormulasToResults.has(arrayFormulaPositionId)) {
+                this.arrayFormulasToResults.set(arrayFormulaPositionId, new Set());
+            }
+            this.arrayFormulasToResults.get(arrayFormulaPositionId)?.add(resultPositionId);
+        }
+        hasArrayFormulaResult(positionId) {
+            return this.resultsToArrayFormulas.has(positionId);
+        }
+        isArrayFormula(positionId) {
+            return this.arrayFormulasToResults.has(positionId);
+        }
+    }
+    const EMPTY_ARRAY = [];
+
+    const MAX_ITERATION = 30;
+    class Evaluator {
+        getters;
+        compilationParams;
+        positionEncoder = new PositionBitsEncoder();
+        evaluatedCells = new Map();
+        formulaDependencies = lazy(new FormulaDependencyGraph());
+        blockedArrayFormulas = new Set();
+        spreadingRelations = new SpreadingRelation();
+        constructor(context, getters) {
+            this.getters = getters;
+            this.compilationParams = buildCompilationParameters(context, getters, (position) => this.computeCell(this.encodePosition(position)));
+        }
+        getEvaluatedCell(position) {
+            return this.evaluatedCells.get(this.encodePosition(position)) || createEvaluatedCell("");
+        }
+        getArrayFormulaSpreadingOn(position) {
+            const positionId = this.encodePosition(position);
+            const formulaPosition = this.getArrayFormulaSpreadingOnId(positionId);
+            return formulaPosition !== undefined ? this.decodePosition(formulaPosition) : undefined;
+        }
+        getEvaluatedPositions() {
+            return [...this.evaluatedCells.keys()].map(this.decodePosition.bind(this));
+        }
+        getArrayFormulaSpreadingOnId(positionId) {
+            if (!this.spreadingRelations.hasArrayFormulaResult(positionId)) {
+                return undefined;
+            }
+            const arrayFormulas = this.spreadingRelations.getFormulaPositionsSpreadingOn(positionId);
+            return Array.from(arrayFormulas).find((positionId) => !this.blockedArrayFormulas.has(positionId));
+        }
+        updateDependencies(position) {
+            const positionId = this.encodePosition(position);
+            this.formulaDependencies().removeAllDependencies(positionId);
+            const dependencies = this.getDirectDependencies(positionId);
+            this.formulaDependencies().addDependencies(positionId, dependencies);
+        }
+        evaluateCells(positions) {
+            const cells = positions.map(this.encodePosition.bind(this));
+            const cellsToCompute = new JetSet(cells);
+            const arrayFormulas = this.getArrayFormulasImpactedByChangesOf(cells);
+            cellsToCompute.add(...this.getCellsDependingOn(cells));
+            cellsToCompute.add(...arrayFormulas);
+            cellsToCompute.add(...this.getCellsDependingOn(arrayFormulas));
+            this.evaluate(cellsToCompute);
+        }
+        getArrayFormulasImpactedByChangesOf(positionIds) {
+            const impactedPositionIds = new JetSet();
+            for (const positionId of positionIds) {
+                const content = this.getCell(positionId)?.content;
+                const arrayFormulaPositionId = this.getArrayFormulaSpreadingOnId(positionId);
+                if (arrayFormulaPositionId !== undefined) {
+                    // take into account new collisions.
+                    impactedPositionIds.add(arrayFormulaPositionId);
+                }
+                if (!content) {
+                    // The previous content could have blocked some array formulas
+                    impactedPositionIds.add(...this.getArrayFormulasBlockedByOrSpreadingOn(positionId));
+                }
+            }
+            return impactedPositionIds;
+        }
+        buildDependencyGraph() {
+            this.blockedArrayFormulas = new Set();
+            this.spreadingRelations = new SpreadingRelation();
+            this.formulaDependencies = lazy(() => {
+                const dependencyGraph = new FormulaDependencyGraph();
+                for (const positionId of this.getAllCells()) {
+                    const dependencies = this.getDirectDependencies(positionId);
+                    dependencyGraph.addDependencies(positionId, dependencies);
+                }
+                return dependencyGraph;
+            });
+        }
+        evaluateAllCells() {
+            this.evaluatedCells = new Map();
+            this.evaluate(this.getAllCells());
+        }
+        getAllCells() {
+            const positionIds = new JetSet();
+            for (const sheetId of this.getters.getSheetIds()) {
+                const cellIds = this.getters.getCells(sheetId);
+                for (const cellId in cellIds) {
+                    positionIds.add(this.encodePosition(this.getters.getCellPosition(cellId)));
+                }
+            }
+            return positionIds;
+        }
+        getArrayFormulasBlockedByOrSpreadingOn(positionId) {
+            if (!this.spreadingRelations.hasArrayFormulaResult(positionId)) {
+                return [];
+            }
+            const arrayFormulas = this.spreadingRelations.getFormulaPositionsSpreadingOn(positionId);
+            const cells = new JetSet(arrayFormulas);
+            cells.add(...this.getCellsDependingOn(arrayFormulas));
+            return cells;
+        }
+        nextPositionsToUpdate = new JetSet();
+        cellsBeingComputed = new Set();
+        evaluate(cells) {
+            this.cellsBeingComputed = new Set();
+            this.nextPositionsToUpdate = cells;
+            let currentIteration = 0;
+            while (this.nextPositionsToUpdate.size && currentIteration++ < MAX_ITERATION) {
+                const positionIds = Array.from(this.nextPositionsToUpdate);
+                this.nextPositionsToUpdate.clear();
+                for (let i = 0; i < positionIds.length; ++i) {
+                    const cell = positionIds[i];
+                    this.evaluatedCells.delete(cell);
+                }
+                for (let i = 0; i < positionIds.length; ++i) {
+                    const cell = positionIds[i];
+                    this.setEvaluatedCell(cell, this.computeCell(cell));
+                }
+            }
+        }
+        setEvaluatedCell(positionId, evaluatedCell) {
+            if (this.nextPositionsToUpdate.has(positionId)) {
+                this.nextPositionsToUpdate.delete(positionId);
+            }
+            this.evaluatedCells.set(positionId, evaluatedCell);
+        }
+        computeCell(positionId) {
+            const evaluation = this.evaluatedCells.get(positionId);
+            if (evaluation) {
+                return evaluation; // already computed
+            }
+            if (!this.blockedArrayFormulas.has(positionId)) {
+                this.invalidateSpreading(positionId);
+            }
+            const cell = this.getCell(positionId);
+            if (cell === undefined) {
+                return createEvaluatedCell("");
+            }
+            const cellId = cell.id;
+            try {
+                if (this.cellsBeingComputed.has(cellId)) {
+                    throw new CircularDependencyError();
+                }
+                this.cellsBeingComputed.add(cellId);
+                return cell.isFormula
+                    ? this.computeFormulaCell(cell)
+                    : evaluateLiteral(cell.content, cell.format);
+            }
+            catch (e) {
+                return this.handleError(e, cell);
+            }
+            finally {
+                this.cellsBeingComputed.delete(cellId);
+            }
+        }
+        handleError(e, cell) {
+            if (!(e instanceof Error)) {
+                e = new Error(e);
+            }
+            const msg = e?.errorType || CellErrorType.GenericError;
+            // apply function name
+            const __lastFnCalled = this.compilationParams[2].__lastFnCalled || "";
+            const error = new EvaluationError(msg, e.message.replace("[[FUNCTION_NAME]]", __lastFnCalled), e.logLevel !== undefined ? e.logLevel : CellErrorLevel.error);
+            return errorCell(cell.content, error);
+        }
+        computeFormulaCell(cellData) {
+            const cellId = cellData.id;
+            this.compilationParams[2].__originCellXC = () => {
+                // compute the value lazily for performance reasons
+                const position = this.compilationParams[2].getters.getCellPosition(cellId);
+                return toXC(position.col, position.row);
+            };
+            const formulaReturn = cellData.compiledFormula.execute(cellData.dependencies, ...this.compilationParams);
+            assertFormulaReturnHasConsistentDimensions(formulaReturn);
+            const { value: computedValue, format: computedFormat } = formulaReturn;
+            if (!isMatrix(computedValue)) {
+                return createEvaluatedCell(computedValue, cellData.format || computedFormat);
+            }
+            const formulaPosition = this.getters.getCellPosition(cellId);
+            this.assertSheetHasEnoughSpaceToSpreadFormulaResult(formulaPosition, computedValue);
+            forEachSpreadPositionInMatrix(computedValue, this.updateSpreadRelation(formulaPosition));
+            forEachSpreadPositionInMatrix(computedValue, this.checkCollision(formulaPosition));
+            forEachSpreadPositionInMatrix(computedValue, 
+            // due the isMatrix check above, we know that formulaReturn is MatrixFunctionReturn
+            this.spreadValues(formulaPosition, formulaReturn));
+            const formatFromPosition = formatFromPositionAccess(computedFormat);
+            return createEvaluatedCell(computedValue[0][0], cellData.format || formatFromPosition(0, 0));
+        }
+        assertSheetHasEnoughSpaceToSpreadFormulaResult({ sheetId, col, row }, matrixResult) {
+            const numberOfCols = this.getters.getNumberCols(sheetId);
+            const numberOfRows = this.getters.getNumberRows(sheetId);
+            const enoughCols = col + matrixResult.length <= numberOfCols;
+            const enoughRows = row + matrixResult[0].length <= numberOfRows;
+            if (enoughCols && enoughRows) {
+                return;
+            }
+            if (enoughCols) {
+                throw new Error(_lt("Result couldn't be automatically expanded. Please insert more rows."));
+            }
+            if (enoughRows) {
+                throw new Error(_lt("Result couldn't be automatically expanded. Please insert more columns."));
+            }
+            throw new Error(_lt("Result couldn't be automatically expanded. Please insert more columns and rows."));
+        }
+        updateSpreadRelation({ sheetId, col, row, }) {
+            const arrayFormulaPositionId = this.encodePosition({ sheetId, col, row });
+            return (i, j) => {
+                const position = { sheetId, col: i + col, row: j + row };
+                const resultPositionId = this.encodePosition(position);
+                this.spreadingRelations.addRelation({ resultPositionId, arrayFormulaPositionId });
+            };
+        }
+        checkCollision({ sheetId, col, row }) {
+            const formulaPositionId = this.encodePosition({ sheetId, col, row });
+            return (i, j) => {
+                const position = { sheetId: sheetId, col: i + col, row: j + row };
+                const rawCell = this.getters.getCell(position);
+                if (rawCell?.content ||
+                    this.getters.getEvaluatedCell(position).type !== CellValueType.empty) {
+                    this.blockedArrayFormulas.add(formulaPositionId);
+                    throw new Error(_lt("Array result was not expanded because it would overwrite data in %s.", toXC(position.col, position.row)));
+                }
+                this.blockedArrayFormulas.delete(formulaPositionId);
+            };
+        }
+        spreadValues({ sheetId, col, row }, matrixResult) {
+            const formatFromPosition = formatFromPositionAccess(matrixResult.format);
+            return (i, j) => {
+                const position = { sheetId, col: i + col, row: j + row };
+                const cell = this.getters.getCell(position);
+                const format = cell?.format;
+                const evaluatedCell = createEvaluatedCell(matrixResult.value[i][j], format || formatFromPosition(i, j));
+                const positionId = this.encodePosition(position);
+                this.setEvaluatedCell(positionId, evaluatedCell);
+                // check if formula dependencies present in the spread zone
+                // if so, they need to be recomputed
+                this.nextPositionsToUpdate.add(...this.getCellsDependingOn([positionId]));
+            };
+        }
+        invalidateSpreading(positionId) {
+            if (!this.spreadingRelations.isArrayFormula(positionId)) {
+                return;
+            }
+            for (const child of this.spreadingRelations.getArrayResultPositionIds(positionId)) {
+                const content = this.getCell(child)?.content;
+                if (content) {
+                    // there's no point at re-evaluating overlapping array formulas,
+                    // there's still a collision
+                    continue;
+                }
+                this.evaluatedCells.delete(child);
+                this.nextPositionsToUpdate.add(...this.getCellsDependingOn([child]));
+                this.nextPositionsToUpdate.add(...this.getArrayFormulasBlockedByOrSpreadingOn(child));
+            }
+            this.spreadingRelations.removeNode(positionId);
+        }
+        // ----------------------------------------------------------
+        //                 COMMON FUNCTIONALITY
+        // ----------------------------------------------------------
+        getDirectDependencies(positionId) {
+            const cell = this.getCell(positionId);
+            if (!cell?.isFormula) {
+                return [];
+            }
+            const dependencies = [];
+            for (const range of cell.dependencies) {
+                if (range.invalidSheetName || range.invalidXc) {
+                    continue;
+                }
+                const sheetId = range.sheetId;
+                forEachPositionsInZone(range.zone, (col, row) => {
+                    dependencies.push(this.encodePosition({ sheetId, col, row }));
+                });
+            }
+            return dependencies;
+        }
+        getCellsDependingOn(positionIds) {
+            return this.formulaDependencies().getCellsDependingOn(positionIds);
+        }
+        getCell(positionId) {
+            return this.getters.getCell(this.decodePosition(positionId));
+        }
+        encodePosition(position) {
+            return this.positionEncoder.encode(position);
+        }
+        decodePosition(positionId) {
+            return this.positionEncoder.decode(positionId);
+        }
+    }
+    function forEachSpreadPositionInMatrix(matrix, callback) {
+        for (let i = 0; i < matrix.length; ++i) {
+            for (let j = 0; j < matrix[i].length; ++j) {
+                if (i === 0 && j === 0) {
+                    continue;
+                }
+                callback(i, j);
+            }
+        }
+    }
+    function formatFromPositionAccess(format) {
+        return isMatrix(format) ? (i, j) => format[i][j] : () => format;
+    }
+    function assertFormulaReturnHasConsistentDimensions(formulaReturn) {
+        const { value: computedValue, format: computedFormat } = formulaReturn;
+        if (!isMatrix(computedValue)) {
+            if (isMatrix(computedFormat)) {
+                throw new Error("A format matrix should never be associated with a scalar value");
+            }
+            return;
+        }
+        if (isMatrix(computedFormat)) {
+            const sameDimensions = computedValue.length === computedFormat.length &&
+                computedValue[0].length === computedFormat[0].length;
+            if (!sameDimensions) {
+                throw new Error("Formats and values should have the same dimensions!");
+            }
+        }
+    }
+    /**
+     * Encode (and decode) cell positions { sheetId, col, row }
+     * to a single integer.
+     *
+     * `col` and `row` values are encoded on 21 bits each (max 2^21 = 2_097_152),
+     * An incremental integer id is assigned to each different sheet id, starting at 0.
+     *
+     * e.g.
+     * Given { col: 10, row: 4, sheetId: "abcde" }
+     * we have:
+     *  - row "4" encoded on 21 bits:  000000000000000000100
+     *  - col "10" encoded on 21 bits: 000000000000000001010
+     *  - sheetId: let's say it's the 4th sheetId met, encoded to: 11
+     *
+     * The final encoded value is found by concatenating the 3 bit sequences:
+     *
+     * sheetId: 11
+     * col:       000000000000000001010
+     * row:                            000000000000000000100
+     * =>       11000000000000000001010000000000000000000100
+     *
+     * this binary sequence is the integer 13194160504836
+     */
+    class PositionBitsEncoder {
+        sheetMapping = {};
+        inverseSheetMapping = new Map();
+        constructor() {
+            try {
+                // @ts-ignore
+                o_spreadsheet.__DEBUG__ = o_spreadsheet.__DEBUG__ || {};
+                // @ts-ignore
+                o_spreadsheet.__DEBUG__.decodePosition = this.decode.bind(this);
+                // @ts-ignore
+                o_spreadsheet.__DEBUG__.encodePosition = this.encode.bind(this);
+            }
+            catch (error) { }
+        }
+        /**
+         * Encode a cell position to a single integer.
+         */
+        encode({ sheetId, col, row }) {
+            return (this.encodeSheet(sheetId) << 42n) | (BigInt(col) << 21n) | BigInt(row);
+        }
+        decode(id) {
+            // keep only the last 21 bits by AND-ing the bit sequence with 21 ones
+            const row = Number(id & 2097151n);
+            const col = Number((id >> 21n) & 2097151n);
+            const sheetId = this.decodeSheet(id >> 42n);
+            return { sheetId, col, row };
+        }
+        encodeSheet(sheetId) {
+            const sheetKey = this.sheetMapping[sheetId];
+            if (sheetKey === undefined) {
+                const newSheetKey = BigInt(Object.keys(this.sheetMapping).length);
+                this.sheetMapping[sheetId] = newSheetKey;
+                this.inverseSheetMapping.set(newSheetKey, sheetId);
+                return newSheetKey;
+            }
+            return sheetKey;
+        }
+        decodeSheet(sheetKey) {
+            const sheetId = this.inverseSheetMapping.get(sheetKey);
+            if (sheetId === undefined) {
+                throw new Error("Sheet id not found");
+            }
+            return sheetId;
+        }
+    }
+
+    const functions = functionRegistry.content;
+    //#region
+    // ---------------------------------------------------------------------------
+    // INTRODUCTION
+    // ---------------------------------------------------------------------------
+    // The evaluation plugin is in charge of computing the values of the cells.
+    // This is a fairly complex task for several reasons:
+    // Reason n°1: Cells can contain formulas that must be interpreted to know
+    // the final value of the cell. And these formulas can depend on other cells.
+    // ex A1:"=SUM(B1:B2)" we have to evaluate B1:B2 first to be able to evaluate A1.
+    // We say here that we have a 'formula dependency' between A1 and B1:B2.
+    // Reason n°2: A cell can assign value to other cells that haven't content.
+    // This concerns cells containing a formula that returns an array of values.
+    // ex A1:"=SPLIT('Odoo','d')" Evaluating A1 must assign the value "O" to A1 and
+    // "oo" to B1. We say here that we have a 'spread relation' between A1 and B1.
+    // B1 have a spread value from A1.
+    // Note that a cell can contain a formula which depends on other cells which
+    // themselves can:
+    // - contain formulas which depends on other cells (and so on).
+    // - contain a spread value from other formulas which depends on other cells
+    //   (and so on).
+    // I - How to build the evaluation ?
+    //    If we had only formulas dependencies to treat, the evaluation would be
+    //    simple: the formulas dependencies are directly deduced from the content
+    //    of the formulas. With the dependencies we are able to calculate which
+    //    formula must be evaluated before another.
+    //    Cycles
+    //    ------
+    //    We can also easily detect if the cells are included in reference cycles
+    //    and return an error in this case. ex: A1:"=B1" B1:"=C1" C1:"=A1"
+    //    The "#CYCLE" error must be returned for
+    //    all three cells.
+    //    But there's more! There are formulas referring to other cells but never
+    //    use them. This is the case for example
+    //    with the "IF" formula. ex:
+    //    A1:"=IF(D1,A2,B1)"
+    //    A2:"=A1"
+    //    In this case it is obvious that we have a cyclic dependency. But in practice
+    //    this will only exist if D1 is true.
+    //    For this reason, we believe that the evaluation should be **partly recursive**:
+    //    The function computing a formula cell starts by marking them as 'being evaluated'
+    //    and then call itself on the dependencies of the concerned cell. This allows
+    //    to evaluate the dependencies before the cell itself and to detect
+    //    if the cell that is being evaluated isn't part of a cycle.
+    // II - The spread relation anticipation problem
+    //    The biggest difficulty to solve with the evaluation lies in the fact that
+    //    we cannot anticipate the spread relations: cells impacted by the result array
+    //    of a formula are only determined after the array formula has been
+    //    evaluated. In the case where the impacted cells are used in other formulas,
+    //    this will require to re-evaluation other formulas (and so on...). ex:
+    //    A1:"=B2"
+    //    A2:"=SPLIT('Odoo','d')"
+    //    in the example above, A2 spreads on B2, but we will know it only after
+    //    the evaluation of A2. To be able to evaluate A1 correctly, we must therefore
+    //    reevaluate A1 after the evaluation of A2.
+    //    We could evaluate which formula spreads first. Except that the array formulas
+    //    can themselves depend on the spreads of other formulas. ex:
+    //    A1:"=SPLIT(B3,'d')"
+    //    A2:="odoo odoo"
+    //    A3:"=SPLIT(A2,' ')"
+    //    In the example above, A3 must be evaluated before A1 because A1 needs B3 which
+    //    can be modified by A3.
+    //    Therefore, there would be a spatial evaluation order to be respected between
+    //    the array formulas. We could imagine that, when an array formula depends
+    //    on a cell, then we evaluate the first formula that spreads located in the upper
+    //    left corner of this cell.
+    //    Although this possibility has been explored, it remains complicated to spatially
+    //    predict which formula should be evaluated before another, especially when
+    //    the array formulas are located in different sheets or when the array formulas
+    //    depends on the spreads of each other. ex:
+    //
+    //    A1:"=ARRAY_FORMULA_ALPHA(B2)"
+    //    A2:"=ARRAY_FORMULA_BETA(B1)"
+    //    In the example above, ARRAY_FORMULA_ALPHA and ARRAY_FORMULA_BETA are some
+    //    formulas that could spread depending on the value of B2 and B1. This could be a
+    //    cyclic dependency that we cannot anticipate.
+    //    And as with the "IF" formula, array formulas may not use their dependency.
+    //    It then becomes very difficult to manage...
+    //    Also, if we have a cycle, that doesn't mean it's bad. The cycle can converge to
+    //    a stable state at the scale of the sheets. Functionally, we don't want to forbid
+    //    convergent cycles. It is an interesting feature but which requires to re-evaluate
+    //    the cycle as many times as convergence is not reached.
+    // Thus, in order to respect the relations between the cells (formula dependencies and
+    // spread relations), the evaluation of the cells must:
+    // - respect a precise order (cells values used by another must be evaluated first) : As
+    //   we cannot anticipate which dependencies are really used by the formulas, we must
+    //   evaluate the cells in a recursive way;
+    // - be done as many times as necessary to ensure that all the cells have been correctly
+    //   evaluated in the correct order (in case of, for example, spreading relation cycles).
+    // The chosen solution is to reevaluate the formulas impacted by spreads as many times
+    // as necessary in several iterations, where evaluated cells can trigger the evaluation
+    // of other cells depending on it, at the next iteration.
+    //#endregion
+    class EvaluationPlugin extends UIPlugin {
+        static getters = [
+            "evaluateFormula",
+            "getRangeFormattedValues",
+            "getRangeValues",
+            "getRangeFormats",
+            "getEvaluatedCell",
+            "getEvaluatedCells",
+            "getEvaluatedCellsInZone",
+        ];
+        shouldRebuildDependenciesGraph = true;
+        evaluator;
+        compilationParams;
+        positionsToUpdate = [];
+        constructor(config) {
+            super(config);
+            this.evaluator = new Evaluator(config.custom, this.getters);
+            this.compilationParams = buildCompilationParameters(config.custom, this.getters, (position) => this.evaluator.getEvaluatedCell(position));
+        }
+        // ---------------------------------------------------------------------------
+        // Command Handling
+        // ---------------------------------------------------------------------------
+        beforeHandle(cmd) {
+            if (invalidateDependenciesCommands.has(cmd.type)) {
+                this.shouldRebuildDependenciesGraph = true;
+            }
+        }
+        handle(cmd) {
+            switch (cmd.type) {
+                case "UPDATE_CELL":
+                    if (!("content" in cmd || "format" in cmd) || this.shouldRebuildDependenciesGraph) {
+                        return;
+                    }
+                    this.positionsToUpdate.push(cmd);
+                    if ("content" in cmd) {
+                        this.evaluator.updateDependencies(cmd);
+                    }
+                    break;
+                case "EVALUATE_CELLS":
+                    this.evaluator.evaluateAllCells();
+                    break;
+            }
+        }
+        finalize() {
+            if (this.shouldRebuildDependenciesGraph) {
+                this.evaluator.buildDependencyGraph();
+                this.evaluator.evaluateAllCells();
+                this.shouldRebuildDependenciesGraph = false;
+            }
+            else if (this.positionsToUpdate.length) {
+                this.evaluator.evaluateCells(this.positionsToUpdate);
+            }
+            this.positionsToUpdate = [];
+        }
+        // ---------------------------------------------------------------------------
+        // Getters
+        // ---------------------------------------------------------------------------
+        evaluateFormula(formulaString, sheetId = this.getters.getActiveSheetId()) {
+            const compiledFormula = compile(formulaString);
+            const ranges = [];
+            for (let xc of compiledFormula.dependencies) {
+                ranges.push(this.getters.getRangeFromSheetXC(sheetId, xc));
+            }
+            return compiledFormula.execute(ranges, ...this.compilationParams).value;
+        }
+        /**
+         * Return the value of each cell in the range as they are displayed in the grid.
+         */
+        getRangeFormattedValues(range) {
+            const sheet = this.getters.tryGetSheet(range.sheetId);
+            if (sheet === undefined)
+                return [];
+            return this.getters
+                .getEvaluatedCellsInZone(sheet.id, range.zone)
+                .map((cell) => cell.formattedValue);
+        }
+        /**
+         * Return the value of each cell in the range.
+         */
+        getRangeValues(range) {
+            const sheet = this.getters.tryGetSheet(range.sheetId);
+            if (sheet === undefined)
+                return [];
+            return this.getters.getEvaluatedCellsInZone(sheet.id, range.zone).map((cell) => cell.value);
+        }
+        /**
+         * Return the format of each cell in the range.
+         */
+        getRangeFormats(range) {
+            const sheet = this.getters.tryGetSheet(range.sheetId);
+            if (sheet === undefined)
+                return [];
+            return this.getters.getEvaluatedCellsInZone(sheet.id, range.zone).map((cell) => cell.format);
+        }
+        getEvaluatedCell(position) {
+            return this.evaluator.getEvaluatedCell(position);
+        }
+        getEvaluatedCells(sheetId) {
+            const rawCells = this.getters.getCells(sheetId) || {};
+            const record = {};
+            for (let cellId of Object.keys(rawCells)) {
+                const position = this.getters.getCellPosition(cellId);
+                record[cellId] = this.getEvaluatedCell(position);
+            }
+            return record;
+        }
+        getEvaluatedCellsInZone(sheetId, zone) {
+            return positions(zone).map(({ col, row }) => this.getters.getEvaluatedCell({ sheetId, col, row }));
+        }
+        // ---------------------------------------------------------------------------
+        // Export
+        // ---------------------------------------------------------------------------
+        exportForExcel(data) {
+            for (const position of this.evaluator.getEvaluatedPositions()) {
+                const evaluatedCell = this.evaluator.getEvaluatedCell(position);
+                const xc = toXC(position.col, position.row);
+                const value = evaluatedCell.value;
+                let isFormula = false;
+                let newContent = undefined;
+                let newFormat = undefined;
+                let isExported = true;
+                const formulaCell = this.getCorrespondingFormulaCell(position);
+                if (formulaCell) {
+                    isExported = formulaCell.compiledFormula.tokens
+                        .filter((tk) => tk.type === "FUNCTION")
+                        .every((tk) => functions[tk.value.toUpperCase()].isExported);
+                    isFormula = isExported;
+                    if (!isExported) {
+                        newContent = value.toString();
+                        newFormat = evaluatedCell.format;
+                    }
+                }
+                const exportedSheetData = data.sheets.find((sheet) => sheet.id === position.sheetId);
+                const exportedCellData = exportedSheetData.cells[xc] || {};
+                const format = newFormat
+                    ? getItemId(newFormat, data.formats)
+                    : exportedCellData.format;
+                const content = !isExported ? newContent : exportedCellData.content;
+                exportedSheetData.cells[xc] = { ...exportedCellData, value, isFormula, content, format };
+            }
+        }
+        /**
+         * Returns the corresponding formula cell of a given cell
+         * It could be the formula present in the cell itself or the
+         * formula of the array formula that spreads to the cell
+         */
+        getCorrespondingFormulaCell(position) {
+            const cell = this.getters.getCell(position);
+            if (cell && cell.content) {
+                if (cell.isFormula && !isBadExpression(cell.content)) {
+                    return cell;
+                }
+                return undefined;
+            }
+            const spreadingFormulaPosition = this.evaluator.getArrayFormulaSpreadingOn(position);
+            if (spreadingFormulaPosition === undefined) {
+                return undefined;
+            }
+            const spreadingFormulaCell = this.getters.getCell(spreadingFormulaPosition);
+            if (spreadingFormulaCell?.isFormula) {
+                return spreadingFormulaCell;
+            }
+            return undefined;
+        }
+    }
+    function isBadExpression(formula) {
+        try {
+            compile(formula);
+            return false;
+        }
+        catch (error) {
+            return true;
+        }
     }
 
     /**
@@ -33203,329 +34207,6 @@
         }
     }
 
-    const functionMap = functionRegistry.mapping;
-    class EvaluationPlugin extends UIPlugin {
-        static getters = [
-            "evaluateFormula",
-            "getRangeFormattedValues",
-            "getRangeValues",
-            "getRangeFormats",
-            "getEvaluatedCell",
-            "getEvaluatedCells",
-            "getColEvaluatedCells",
-            "getEvaluatedCellsInZone",
-        ];
-        isUpToDate = false;
-        evaluatedCells = {};
-        evalContext;
-        lazyEvaluation;
-        constructor(config) {
-            super(config);
-            this.evalContext = config.custom;
-            this.lazyEvaluation = config.lazyEvaluation;
-        }
-        // ---------------------------------------------------------------------------
-        // Command Handling
-        // ---------------------------------------------------------------------------
-        handle(cmd) {
-            if (invalidateEvaluationCommands.has(cmd.type)) {
-                this.isUpToDate = false;
-            }
-            switch (cmd.type) {
-                case "UPDATE_CELL":
-                    if ("content" in cmd || "format" in cmd) {
-                        this.isUpToDate = false;
-                    }
-                    break;
-                case "EVALUATE_CELLS":
-                    this.evaluate();
-                    break;
-            }
-        }
-        finalize() {
-            if (!this.isUpToDate) {
-                this.evaluate();
-                this.isUpToDate = true;
-            }
-        }
-        // ---------------------------------------------------------------------------
-        // Getters
-        // ---------------------------------------------------------------------------
-        evaluateFormula(formulaString, sheetId = this.getters.getActiveSheetId()) {
-            const compiledFormula = compile(formulaString);
-            const params = this.getCompilationParameters((cell) => this.getEvaluatedCell(this.getters.getCellPosition(cell.id)));
-            const ranges = [];
-            for (let xc of compiledFormula.dependencies) {
-                ranges.push(this.getters.getRangeFromSheetXC(sheetId, xc));
-            }
-            return compiledFormula.execute(ranges, ...params).value;
-        }
-        /**
-         * Return the value of each cell in the range as they are displayed in the grid.
-         */
-        getRangeFormattedValues(range) {
-            const sheet = this.getters.tryGetSheet(range.sheetId);
-            if (sheet === undefined)
-                return [];
-            return this.getters
-                .getEvaluatedCellsInZone(sheet.id, range.zone)
-                .map((cell) => cell.formattedValue);
-        }
-        /**
-         * Return the value of each cell in the range.
-         */
-        getRangeValues(range) {
-            const sheet = this.getters.tryGetSheet(range.sheetId);
-            if (sheet === undefined)
-                return [];
-            return this.getters.getEvaluatedCellsInZone(sheet.id, range.zone).map((cell) => cell.value);
-        }
-        /**
-         * Return the format of each cell in the range.
-         */
-        getRangeFormats(range) {
-            const sheet = this.getters.tryGetSheet(range.sheetId);
-            if (sheet === undefined)
-                return [];
-            return this.getters.getEvaluatedCellsInZone(sheet.id, range.zone).map((cell) => cell.format);
-        }
-        getEvaluatedCell({ sheetId, col, row }) {
-            const cell = this.getters.getCell({ sheetId, col, row });
-            if (cell === undefined) {
-                return createEvaluatedCell("");
-            }
-            // the cell might have been created by a command in the current
-            // dispatch but the evaluation is not done yet.
-            return this.evaluatedCells[sheetId]?.[col]?.[row]?.() || createEvaluatedCell("");
-        }
-        getEvaluatedCells(sheetId) {
-            const rawCells = this.getters.getCells(sheetId) || {};
-            const record = {};
-            for (let cellId of Object.keys(rawCells)) {
-                const position = this.getters.getCellPosition(cellId);
-                record[cellId] = this.getEvaluatedCell(position);
-            }
-            return record;
-        }
-        /**
-         * Returns all the evaluated cells of a col
-         */
-        getColEvaluatedCells(sheetId, col) {
-            return Object.values(this.evaluatedCells[sheetId]?.[col] || [])
-                .filter(isDefined$1)
-                .map((lazyCell) => lazyCell());
-        }
-        getEvaluatedCellsInZone(sheetId, zone) {
-            return positions(zone).map(({ col, row }) => this.getters.getEvaluatedCell({ sheetId, col, row }));
-        }
-        // ---------------------------------------------------------------------------
-        // Evaluator
-        // ---------------------------------------------------------------------------
-        setEvaluatedCell(cellId, evaluatedCell) {
-            const { col, row, sheetId } = this.getters.getCellPosition(cellId);
-            if (!this.evaluatedCells[sheetId]) {
-                this.evaluatedCells[sheetId] = {};
-            }
-            if (!this.evaluatedCells[sheetId][col]) {
-                this.evaluatedCells[sheetId][col] = {};
-            }
-            this.evaluatedCells[sheetId][col][row] = evaluatedCell;
-            if (!this.lazyEvaluation) {
-                this.evaluatedCells[sheetId][col][row]();
-            }
-        }
-        *getAllCells() {
-            // use a generator function to avoid re-building a new object
-            for (const sheetId of this.getters.getSheetIds()) {
-                const cells = this.getters.getCells(sheetId);
-                for (const cellId in cells) {
-                    yield cells[cellId];
-                }
-            }
-        }
-        evaluate() {
-            this.evaluatedCells = {};
-            const cellsBeingComputed = new Set();
-            const computeCell = (cell) => {
-                const cellId = cell.id;
-                const { col, row, sheetId } = this.getters.getCellPosition(cellId);
-                const lazyEvaluation = this.evaluatedCells[sheetId]?.[col]?.[row];
-                if (lazyEvaluation) {
-                    return lazyEvaluation; // already computed
-                }
-                return lazy(() => {
-                    try {
-                        switch (cell.isFormula) {
-                            case true:
-                                return computeFormulaCell(cell);
-                            case false:
-                                return evaluateLiteral(cell.content, cell.format);
-                        }
-                    }
-                    catch (e) {
-                        return handleError(e, cell);
-                    }
-                });
-            };
-            const handleError = (e, cell) => {
-                if (!(e instanceof Error)) {
-                    e = new Error(e);
-                }
-                const msg = e?.errorType || CellErrorType.GenericError;
-                // apply function name
-                const __lastFnCalled = compilationParameters[2].__lastFnCalled || "";
-                const error = new EvaluationError(msg, e.message.replace("[[FUNCTION_NAME]]", __lastFnCalled), e.logLevel !== undefined ? e.logLevel : CellErrorLevel.error);
-                return errorCell(cell.content, error);
-            };
-            const computeFormulaCell = (cellData) => {
-                const cellId = cellData.id;
-                if (cellsBeingComputed.has(cellId)) {
-                    throw new CircularDependencyError();
-                }
-                compilationParameters[2].__originCellXC = () => {
-                    // compute the value lazily for performance reasons
-                    const position = compilationParameters[2].getters.getCellPosition(cellId);
-                    return toXC(position.col, position.row);
-                };
-                cellsBeingComputed.add(cellId);
-                const computedCell = cellData.compiledFormula.execute(cellData.dependencies, ...compilationParameters);
-                cellsBeingComputed.delete(cellId);
-                if (Array.isArray(computedCell.value)) {
-                    // if a value returns an array (like =A1:A3)
-                    throw new Error(_lt("This formula depends on invalid values"));
-                }
-                return createEvaluatedCell(computedCell.value, cellData.format || computedCell.format);
-            };
-            const compilationParameters = this.getCompilationParameters((cell) => computeCell(cell)());
-            for (const cell of this.getAllCells()) {
-                this.setEvaluatedCell(cell.id, computeCell(cell));
-            }
-        }
-        /**
-         * Return all functions necessary to properly evaluate a formula:
-         * - a refFn function to read any reference, cell or range of a normalized formula
-         * - a range function to convert any reference to a proper value array
-         * - an evaluation context
-         */
-        getCompilationParameters(computeCell) {
-            const evalContext = Object.assign(Object.create(functionMap), this.evalContext, {
-                getters: this.getters,
-            });
-            const getters = this.getters;
-            function readCell(range) {
-                let cell;
-                if (!getters.tryGetSheet(range.sheetId)) {
-                    throw new Error(_lt("Invalid sheet name"));
-                }
-                cell = getters.getCell({ sheetId: range.sheetId, col: range.zone.left, row: range.zone.top });
-                if (!cell || cell.content === "") {
-                    // magic "empty" value
-                    // Returning {value: null} instead of undefined will ensure that we don't
-                    // fall back on the default value of the argument provided to the formula's compute function
-                    return { value: null, format: cell?.format };
-                }
-                return getEvaluatedCell(cell);
-            }
-            const getEvaluatedCell = (cell) => {
-                const evaluatedCell = computeCell(cell);
-                if (evaluatedCell.type === CellValueType.error) {
-                    throw evaluatedCell.error;
-                }
-                return evaluatedCell;
-            };
-            /**
-             * Return the values of the cell(s) used in reference, but always in the format of a range even
-             * if a single cell is referenced. It is a list of col values. This is useful for the formulas that describe parameters as
-             * range<number> etc.
-             *
-             * Note that each col is possibly sparse: it only contain the values of cells
-             * that are actually present in the grid.
-             */
-            function range(range) {
-                const sheetId = range.sheetId;
-                if (!isZoneValid(range.zone)) {
-                    throw new InvalidReferenceError();
-                }
-                // Performance issue: Avoid fetching data on positions that are out of the spreadsheet
-                // e.g. A1:ZZZ9999 in a sheet with 10 cols and 10 rows should ignore everything past J10 and return a 10x10 array
-                const sheetZone = getters.getSheetZone(sheetId);
-                const result = [];
-                const zone = intersection(range.zone, sheetZone);
-                if (!zone) {
-                    result.push([]);
-                    return result;
-                }
-                // Performance issue: nested loop is faster than a map here
-                for (let col = zone.left; col <= zone.right; col++) {
-                    const rowValues = [];
-                    for (let row = zone.top; row <= zone.bottom; row++) {
-                        const cell = evalContext.getters.getCell({ sheetId: range.sheetId, col, row });
-                        rowValues.push(cell ? getEvaluatedCell(cell) : undefined);
-                    }
-                    result.push(rowValues);
-                }
-                return result;
-            }
-            /**
-             * Returns the value of the cell(s) used in reference
-             *
-             * @param range the references used
-             * @param isMeta if a reference is supposed to be used in a `meta` parameter as described in the
-             *        function for which this parameter is used, we just return the string of the parameter.
-             *        The `compute` of the formula's function must process it completely
-             */
-            function refFn(range, isMeta, functionName, paramNumber) {
-                if (isMeta) {
-                    // Use zoneToXc of zone instead of getRangeString to avoid sending unbounded ranges
-                    return { value: zoneToXc(range.zone) };
-                }
-                if (!isZoneValid(range.zone)) {
-                    throw new InvalidReferenceError();
-                }
-                // if the formula definition could have accepted a range, we would pass through the _range function and not here
-                if (range.zone.bottom !== range.zone.top || range.zone.left !== range.zone.right) {
-                    throw new Error(paramNumber
-                        ? _lt("Function %s expects the parameter %s to be a single value or a single cell reference, not a range.", functionName.toString(), paramNumber.toString())
-                        : _lt("Function %s expects its parameters to be single values or single cell references, not ranges.", functionName.toString()));
-                }
-                if (range.invalidSheetName) {
-                    throw new Error(_lt("Invalid sheet name: %s", range.invalidSheetName));
-                }
-                return readCell(range);
-            }
-            return [refFn, range, evalContext];
-        }
-        // ---------------------------------------------------------------------------
-        // Export
-        // ---------------------------------------------------------------------------
-        exportForExcel(data) {
-            for (let sheet of data.sheets) {
-                for (const xc in sheet.cells) {
-                    const position = { sheetId: sheet.id, ...toCartesian(xc) };
-                    const cell = this.getters.getCell(position);
-                    if (cell) {
-                        const exportedCellData = sheet.cells[xc];
-                        const evaluatedCell = this.getEvaluatedCell(position);
-                        exportedCellData.value = evaluatedCell.value;
-                        exportedCellData.isFormula = cell.isFormula && !this.isBadExpression(cell.content);
-                        if (cell.format !== evaluatedCell.format) {
-                            exportedCellData.computedFormat = evaluatedCell.format;
-                        }
-                    }
-                }
-            }
-        }
-        isBadExpression(formula) {
-            try {
-                compile(formula);
-                return false;
-            }
-            catch (error) {
-                return true;
-            }
-        }
-    }
-
     class EvaluationChartPlugin extends UIPlugin {
         static getters = ["getChartRuntime", "getBackgroundOfSingleCellChart"];
         charts = {};
@@ -33619,7 +34300,7 @@
                     }
                     break;
                 case "PASTE_CONDITIONAL_FORMAT":
-                    this.pasteCf(cmd.origin, cmd.target, cmd.operation);
+                    this.pasteCf(cmd.originPosition, cmd.targetPosition, cmd.operation);
                     break;
             }
         }
@@ -38604,18 +39285,7 @@
         // Command Handling
         // ---------------------------------------------------------------------------
         allowDispatch(cmd) {
-            switch (cmd.type) {
-                case "AUTORESIZE_ROWS":
-                case "AUTORESIZE_COLUMNS":
-                    try {
-                        this.getters.getSheet(cmd.sheetId);
-                        break;
-                    }
-                    catch (error) {
-                        return 27 /* CommandResult.InvalidSheetId */;
-                    }
-            }
-            return 0 /* CommandResult.Success */;
+            return this.chainValidations(this.checkSheetExists, this.checkZonesAreInSheet)(cmd);
         }
         handle(cmd) {
             switch (cmd.type) {
@@ -38650,7 +39320,8 @@
         getCellWidth(position) {
             const text = this.getCellText(position);
             const style = this.getters.getCellComputedStyle(position);
-            let contentWidth = this.getTextWidth(text, style);
+            const multiLineText = text.split(NEWLINE);
+            let contentWidth = Math.max(...multiLineText.map((line) => this.getTextWidth(line, style)));
             const icon = this.getters.getConditionalIcon(position);
             if (icon) {
                 contentWidth += computeIconWidth(this.getters.getCellStyle(position));
@@ -38814,6 +39485,31 @@
             }
             splitWord.push(wordPart);
             return splitWord;
+        }
+        /**
+         * Check that any "sheetId" in the command matches an existing
+         * sheet.
+         */
+        checkSheetExists(cmd) {
+            if ("sheetId" in cmd && this.getters.tryGetSheet(cmd.sheetId) === undefined) {
+                return 27 /* CommandResult.InvalidSheetId */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        /**
+         * Check if zones in the command are well formed and
+         * not outside the sheet.
+         */
+        checkZonesAreInSheet(cmd) {
+            const sheetId = "sheetId" in cmd ? cmd.sheetId : this.getters.tryGetActiveSheetId();
+            const zones = this.getters.getCommandZones(cmd);
+            if (!sheetId && zones.length > 0) {
+                return 92 /* CommandResult.NoActiveSheet */;
+            }
+            if (sheetId && zones.length > 0) {
+                return this.getters.checkZonesExistInSheet(sheetId, zones);
+            }
+            return 0 /* CommandResult.Success */;
         }
     }
 
@@ -39639,8 +40335,8 @@
                     this.pasteCell(origin, position, this.operation, clipboardOptions);
                     if (shouldPasteCF) {
                         this.dispatch("PASTE_CONDITIONAL_FORMAT", {
-                            origin: origin.position,
-                            target: position,
+                            originPosition: origin.position,
+                            targetPosition: position,
                             operation: this.operation,
                         });
                     }
@@ -40031,7 +40727,7 @@
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "CUT":
-                    const zones = cmd.target || this.getters.getSelectedZones();
+                    const zones = cmd.cutTarget || this.getters.getSelectedZones();
                     const state = this.getClipboardState(zones, cmd.type);
                     return state.isCutAllowed(zones);
                 case "PASTE":
@@ -40061,7 +40757,7 @@
             switch (cmd.type) {
                 case "COPY":
                 case "CUT":
-                    const zones = ("target" in cmd && cmd.target) || this.getters.getSelectedZones();
+                    const zones = ("cutTarget" in cmd && cmd.cutTarget) || this.getters.getSelectedZones();
                     this.state = this.getClipboardState(zones, cmd.type);
                     this.status = "visible";
                     break;
@@ -41017,6 +41713,7 @@
             "isSelected",
             "isSingleColSelected",
             "getElementsFromSelection",
+            "tryGetActiveSheetId",
         ];
         gridSelection = {
             anchor: {
@@ -41231,6 +41928,9 @@
         }
         getActiveSheetId() {
             return this.activeSheet.id;
+        }
+        tryGetActiveSheetId() {
+            return this.activeSheet?.id;
         }
         getActiveCell() {
             return this.getters.getEvaluatedCell(this.getActivePosition());
@@ -41478,7 +42178,7 @@
             const deltaCol = isBasedBefore && isCol ? thickness : 0;
             const deltaRow = isBasedBefore && !isCol ? thickness : 0;
             this.dispatch("CUT", {
-                target: [
+                cutTarget: [
                     {
                         left: isCol ? start + deltaCol : 0,
                         right: isCol ? end + deltaCol : this.getters.getNumberCols(cmd.sheetId) - 1,
@@ -43750,6 +44450,10 @@
         }
         checkViewportSize() {
             const { xRatio, yRatio } = this.env.model.getters.getFrozenSheetViewRatio(this.env.model.getters.getActiveSheetId());
+            if (!isFinite(xRatio) || !isFinite(yRatio)) {
+                // before mounting, the ratios can be NaN or Infinity if the viewport size is 0
+                return;
+            }
             if (yRatio > MAXIMAL_FREEZABLE_RATIO || xRatio > MAXIMAL_FREEZABLE_RATIO) {
                 if (this.isViewportTooSmall) {
                     return;
@@ -45721,44 +46425,30 @@
 
     function addFormula(cell) {
         const formula = cell.content;
-        const functions = functionRegistry.content;
-        const tokens = tokenize(formula);
         const attrs = [];
         let node = escapeXml ``;
-        const isExported = tokens
-            .filter((tk) => tk.type === "FUNCTION")
-            .every((tk) => functions[tk.value.toUpperCase()].isExported);
-        if (isExported) {
-            let cycle = escapeXml ``;
-            const XlsxFormula = adaptFormulaToExcel(formula);
-            // hack for cycles : if we don't set a value (be it 0 or #VALUE!), it will appear as invisible on excel,
-            // Making it very hard for the client to find where the recursion is.
-            if (cell.value === CellErrorType.CircularDependency) {
-                attrs.push(["t", "str"]);
-                cycle = escapeXml /*xml*/ `<v>${cell.value}</v>`;
-            }
-            node = escapeXml /*xml*/ `
+        let cycle = escapeXml ``;
+        const XlsxFormula = adaptFormulaToExcel(formula);
+        // hack for cycles : if we don't set a value (be it 0 or #VALUE!), it will appear as invisible on excel,
+        // Making it very hard for the client to find where the recursion is.
+        if (cell.value === CellErrorType.CircularDependency) {
+            attrs.push(["t", "str"]);
+            cycle = escapeXml /*xml*/ `<v>${cell.value}</v>`;
+        }
+        node = escapeXml /*xml*/ `
       <f>
         ${XlsxFormula}
       </f>
       ${cycle}
     `;
-            return { attrs, node };
-        }
-        else {
-            // Shouldn't we always output the value then ?
-            const value = cell.value;
-            const type = getCellType(value);
-            attrs.push(["t", type]);
-            node = escapeXml /*xml*/ `<v>${value}</v>`;
-            return { attrs, node };
-        }
+        return { attrs, node };
     }
     function addContent(content, sharedStrings, forceString = false) {
         let value = content;
         const attrs = [];
-        if (!forceString && ["TRUE", "FALSE"].includes(value.trim())) {
-            value = value === "TRUE" ? "1" : "0";
+        const clearValue = value.trim().toUpperCase();
+        if (!forceString && ["TRUE", "FALSE"].includes(clearValue)) {
+            value = clearValue === "TRUE" ? "1" : "0";
             attrs.push(["t", "b"]);
         }
         else if (forceString || !isNumber(value)) {
@@ -46972,6 +47662,7 @@
         coreGetters;
         uuidGenerator;
         handlers = [];
+        uiHandlers = [];
         coreHandlers = [];
         constructor(data = {}, config = {}, stateUpdateMessages = [], uuidGenerator = new UuidGenerator(), verboseImport = true) {
             super();
@@ -47011,17 +47702,20 @@
                 const plugin = this.setupUiPlugin(Plugin);
                 this.statefulUIPlugins.push(plugin);
                 this.handlers.push(plugin);
+                this.uiHandlers.push(plugin);
             }
             for (let Plugin of coreViewsPluginRegistry.getAll()) {
                 const plugin = this.setupUiPlugin(Plugin);
                 this.coreViewsPlugins.push(plugin);
                 this.handlers.push(plugin);
+                this.uiHandlers.push(plugin);
                 this.coreHandlers.push(plugin);
             }
             for (let Plugin of featurePluginRegistry.getAll()) {
                 const plugin = this.setupUiPlugin(Plugin);
                 this.featurePlugins.push(plugin);
                 this.handlers.push(plugin);
+                this.uiHandlers.push(plugin);
             }
             this.uuidGenerator.setIsFastStrategy(false);
             // starting plugins
@@ -47145,7 +47839,6 @@
                 moveClient: () => { },
                 snapshotRequested: false,
                 notifyUI: (payload) => this.trigger("notify-ui", payload),
-                lazyEvaluation: "lazyEvaluation" in config ? config.lazyEvaluation : true,
             };
         }
         setupCorePluginConfig() {
@@ -47168,7 +47861,6 @@
                 moveClient: this.session.move.bind(this.session),
                 custom: this.config.custom,
                 uiActions: this.config,
-                lazyEvaluation: this.config.lazyEvaluation,
                 session: this.session,
             };
         }
@@ -47190,7 +47882,7 @@
             return new DispatchResult(results.flat());
         }
         checkDispatchAllowedLocalCommand(command) {
-            const results = this.handlers.map((handler) => handler.allowDispatch(command));
+            const results = this.uiHandlers.map((handler) => handler.allowDispatch(command));
             return new DispatchResult(results.flat());
         }
         finalize() {
@@ -47509,9 +48201,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.0-alpha.8';
-    __info__.date = '2023-05-12T11:53:07.768Z';
-    __info__.hash = 'afee7d5';
+    __info__.version = '16.4.0-alpha.1';
+    __info__.date = '2023-05-25T13:13:29.198Z';
+    __info__.hash = '564c094';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
