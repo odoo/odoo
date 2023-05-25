@@ -2,23 +2,23 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.ChannelInvitation" owl="1">
-        <div class="o-discuss-ChannelInvitation d-flex flex-column" t-att-class="{ 'o-discuss-ChannelInvitation-has-size-constraints': props.hasSizeConstraints }">
+        <div class="o-discuss-ChannelInvitation bg-view d-flex flex-column" t-att-class="{ 'o-discuss-ChannelInvitation-has-size-constraints': props.hasSizeConstraints }">
             <t t-if="store.user">
                 <h3 class="mx-3 mt-3 mb-2">Invite people</h3>
                 <div class="mx-3 my-2">
-                    <input class="o-discuss-ChannelInvitation-search form-control" t-ref="input" placeholder="Type the name of a person" t-on-input="onInput"/>
+                    <input class="o-discuss-ChannelInvitation-search border form-control" t-ref="input" placeholder="Type the name of a person" t-on-input="onInput"/>
                 </div>
                 <div class="d-flex flex-column flex-grow-1 mx-0 py-2 overflow-auto">
                     <t t-foreach="state.selectablePartners" t-as="selectablePartner" t-key="selectablePartner.id">
-                        <div class="o-discuss-ChannelInvitation-selectable o_object_fit_cover d-flex align-items-center px-3 py-1 btn-light" t-on-click="() => this.onClickSelectablePartner(selectablePartner)">
+                        <div class="o-discuss-ChannelInvitation-selectable o_object_fit_cover d-flex align-items-center px-3 py-1 btn" t-on-click="() => this.onClickSelectablePartner(selectablePartner)">
                             <div class="d-flex align-items-center p-2">
-                                <div class="o-discuss-ChannelInvitation-avatar position-relative d-flex flex-shrink-0 bg-100">
-                                    <img class="w-100 h-100 rounded-circle o_object_fit_cover o_redirect"
+                                <div class="o-discuss-ChannelInvitation-avatar position-relative d-flex flex-shrink-0">
+                                    <img class="w-100 h-100 rounded o_object_fit_cover o_redirect"
                                          t-att-src="threadService.avatarUrl(selectablePartner, props.thread)"/>
-                                    <ImStatus persona="selectablePartner" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
+                                    <ImStatus persona="selectablePartner" className="'position-absolute top-100 start-100 translate-middle bg-view mt-n1 ms-n1'"/>
                                 </div>
                             </div>
-                            <span class="flex-grow-1 mx-2 text-truncate fs-6" t-esc="selectablePartner.name"/>
+                            <span class="flex-grow-1 mx-2 text-truncate text-start fs-6" t-esc="selectablePartner.name"/>
                             <input class="form-check-input flex-shrink-0" type="checkbox" t-att-checked="state.selectedPartners.includes(selectablePartner) ? 'checked' : undefined"/>
                         </div>
                     </t>
@@ -51,7 +51,7 @@
                 <h4 class="mx-3 mt-3 mb-2">Invitation Link</h4>
                 <div class="mx-3 mt-2 mb-3">
                     <div class="input-group">
-                        <input class="form-control" type="text" t-att-value="props.thread.invitationLink" readonly="" t-on-focus="onFocusInvitationLinkInput"/>
+                        <input class="border form-control" type="text" t-att-value="props.thread.invitationLink" readonly="" t-on-focus="onFocusInvitationLinkInput"/>
                         <button class="btn btn-primary" t-on-click="onClickCopy">
                             <i class="fa fa-copy"/>
                         </button>
