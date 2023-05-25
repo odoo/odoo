@@ -27,7 +27,15 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { ActionMenusItems } from "@web/search/cog_menu/action_menus_items";
 
-import { Component, onMounted, onWillStart, useEffect, useRef, useSubEnv } from "@odoo/owl";
+import {
+    Component,
+    onMounted,
+    onWillPatch,
+    onWillStart,
+    useEffect,
+    useRef,
+    useSubEnv,
+} from "@odoo/owl";
 
 // -----------------------------------------------------------------------------
 
@@ -146,6 +154,10 @@ export class ListController extends Component {
             () => [this.model.root.selection.length]
         );
         this.searchBarToggler = useSearchBarToggler();
+        this.firstLoad = true;
+        onWillPatch(() => {
+            this.firstLoad = false;
+        });
     }
 
     get modelParams() {

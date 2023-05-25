@@ -41,9 +41,10 @@ export class SearchBar extends Component {
 
         this.keepLast = new KeepLast();
 
-        this.inputRef = this.env.config.disableSearchBarAutofocus
-            ? useRef("autofocus")
-            : useAutofocus();
+        this.inputRef =
+            this.env.config.disableSearchBarAutofocus || !this.props.autofocus
+                ? useRef("autofocus")
+                : useAutofocus();
 
         useBus(this.env.searchModel, "focus-search", () => {
             this.inputRef.el.focus();
@@ -572,4 +573,9 @@ SearchBar.template = "web.SearchBar";
 SearchBar.components = {
     SearchBarMenu,
 };
-SearchBar.props = {};
+SearchBar.props = {
+    autofocus: { type: Boolean, optional: true },
+};
+SearchBar.defaultProps = {
+    autofocus: true,
+};

@@ -492,6 +492,31 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_list_button_add", "should not have the 'Create' button");
     });
 
+    QUnit.test(
+        "searchbar in listview doesn't take focus after unselected all items",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `<tree><field name="foo"/></tree>`,
+            });
+
+            assert.equal(
+                document.activeElement,
+                target.querySelector(".o_searchview_input"),
+                "The search input should be have the focus"
+            );
+            await click(target, `tbody .o_data_row:first-child input[type="checkbox"]`);
+            await click(target, `tbody input[type="checkbox"]:checked`);
+            assert.notEqual(
+                document.activeElement,
+                target.querySelector(".o_searchview_input"),
+                "The search input shouldn't have the focus"
+            );
+        }
+    );
+
     QUnit.test('list with delete="0"', async function (assert) {
         await makeView({
             type: "list",
