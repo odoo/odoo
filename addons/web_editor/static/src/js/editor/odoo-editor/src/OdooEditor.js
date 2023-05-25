@@ -3633,6 +3633,9 @@ export class OdooEditor extends EventTarget {
             const selection = this.document.getSelection();
             // Find previous character.
             let { focusNode, focusOffset } = selection;
+            if (!focusNode) {
+                return;
+            }
             let previousCharacter = focusOffset > 0 && focusNode.textContent[focusOffset - 1];
             if (!previousCharacter) {
                 focusNode = previousLeaf(focusNode);
@@ -3655,6 +3658,9 @@ export class OdooEditor extends EventTarget {
             const selection = this.document.getSelection();
             // Find next character.
             let { focusNode, focusOffset } = selection;
+            if (!focusNode) {
+                return;
+            }
             let nextCharacter = focusNode.textContent[focusOffset];
             if (!nextCharacter) {
                 focusNode = nextLeaf(focusNode);
