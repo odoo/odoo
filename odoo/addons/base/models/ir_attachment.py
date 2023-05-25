@@ -598,7 +598,7 @@ class IrAttachment(models.Model):
             more_ids = self.with_context(need=need)._search(
                 domain, offset + len(all_ids), limit, order, access_rights_uid,
             )
-            result.extend(more_ids[:limit - len(result)])
+            result.extend(list(more_ids)[:limit - len(result)])
 
         return self.browse(result)._as_query(order)
 
