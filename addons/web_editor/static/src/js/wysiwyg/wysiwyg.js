@@ -2168,6 +2168,8 @@ export class Wysiwyg extends Component {
                 buttonGroup.classList.add('d-none');
             }
         }
+        // Toolbar might have changed size, update its position.
+        this.odooEditor.updateToolbarPosition();
         // Update color of already opened colorpickers.
         setTimeout(() => {
             for (const colorType in this.colorPalettesProps) {
