@@ -66,7 +66,7 @@ class Job(models.Model):
     def _compute_website_url(self):
         super(Job, self)._compute_website_url()
         for job in self:
-            job.website_url = f'/jobs/detail/{slug(job)}'
+            job.website_url = f'/jobs/{slug(job)}'
 
     def set_open(self):
         self.write({'website_published': False})
