@@ -65,6 +65,7 @@
                             <field name="leave_validation_type" string="Approval" widget="radio"/>
                             <field name="responsible_ids"
                                 widget="many2many_tags"
+                                placeholder="Nobody will be notified"
                                 attrs="{
                                 'invisible': [('leave_validation_type', 'in', ['no_validation', 'manager']), '|', ('requires_allocation', '=', 'no'), ('allocation_validation_type', '!=', 'officer')]}"/>
                             <field name="request_unit"/>
