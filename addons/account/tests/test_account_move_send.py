@@ -463,10 +463,6 @@ class TestAccountMoveSendCommon(AccountTestInvoicingCommon):
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestAccountMoveSend(TestAccountMoveSendCommon):
 
-    @classmethod
-    def setUpClass(cls, chart_template_ref=None):
-        super().setUpClass(chart_template_ref=chart_template_ref)
-
     def test_invoice_single(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
         wizard = self.create_send_and_print(invoice)
@@ -544,6 +540,38 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
         self.assertTrue(invoice1.invoice_pdf_report_id)
         self.assertTrue(invoice2.invoice_pdf_report_id)
 
+    def test_invoice_multi_one_attachment_already_generated(self):
+        invoice1 = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        invoice2 = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        self.partner_a.email = "turlututu@tsointsoin"
+
+        # Generate the PDF of invoice1.
+        wizard = self.create_send_and_print(invoice1)
+        wizard.action_send_and_print()
+        self.assertTrue(invoice1.invoice_pdf_report_id)
+        invoice1_pdf_report = invoice1.invoice_pdf_report_id
+
+        # Generate the wizard in multi mode.
+        # Ensure the PDF is still the same for invoice1.
+        wizard = self.create_send_and_print(invoice1 + invoice2)
+        self.assertRecordValues(wizard, [{
+            'mode': 'invoice_multi',
+            'enable_download': False,
+            'checkbox_download': False,
+            'enable_send_mail': True,
+            'display_mail_composer': False,
+            'send_mail_readonly': False,
+            'checkbox_send_mail': True,
+            'mail_lang': False,
+            'mail_partner_ids': [],
+            'mail_subject': False,
+            'mail_body': False,
+            'mail_attachments_widget': False,
+        }])
+        wizard.action_send_and_print(from_cron=True)
+        self.assertRecordValues(invoice1, [{'invoice_pdf_report_id': invoice1_pdf_report.id}])
+        self.assertTrue(invoice2.invoice_pdf_report_id)
+
     def test_attachments(self):
         invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
 
@@ -607,3 +635,21 @@ class TestAccountMoveSend(TestAccountMoveSendCommon):
 
         # The PDF is not generated but a proforma.
         self.assertFalse(invoice.invoice_pdf_report_id)
+
+    def test_error_but_continue(self):
+        invoice = self.init_invoice("out_invoice", amounts=[1000], post=True)
+        wizard = self.create_send_and_print(invoice)
+
+        def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
+            invoice_data['error'] = 'prout'
+            invoice_data['error_but_continue'] = True
+
+        # Process.
+        with patch.object(type(wizard), '_hook_invoice_document_before_pdf_report_render', _hook_invoice_document_before_pdf_report_render):
+            results = wizard.action_send_and_print(allow_fallback_pdf=True)
+
+        self.assertEqual(results['type'], 'ir.actions.act_url')
+        self.assertRecordValues(wizard, [{'mode': 'done'}])
+
+        # The PDF is generated even in case of error.
+        self.assertTrue(invoice.invoice_pdf_report_id)

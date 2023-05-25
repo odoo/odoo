@@ -22,7 +22,10 @@ class AccountMoveSend(models.Model):
 
     @api.model
     def _get_default_enable_ubl_cii_xml(self, move):
-        return not move.invoice_pdf_report_id and move.is_sale_document() and move.partner_id.ubl_cii_format
+        return not move.invoice_pdf_report_id \
+            and not move.ubl_cii_xml_id \
+            and move.is_sale_document() \
+            and move.partner_id.ubl_cii_format
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -67,7 +70,7 @@ class AccountMoveSend(models.Model):
         # EXTENDS 'account'
         results = super()._get_placeholder_mail_attachments_data(move)
 
-        if self.enable_ubl_cii_xml and self.checkbox_ubl_cii_xml:
+        if self.mode == 'invoice_single' and self.enable_ubl_cii_xml and self.checkbox_ubl_cii_xml:
             builder = move.partner_id._get_edi_builder()
             filename = builder._export_invoice_filename(move)
             results.append({
