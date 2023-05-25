@@ -95,6 +95,7 @@ class AccountBankStatementLine(models.Model):
         help="The optional other currency if it is a multi-currency entry.",
     )
     amount_currency = fields.Monetary(
+        compute='_compute_amount_currency', store=True, readonly=False,
         string="Amount in Currency",
         currency_field='foreign_currency_id',
         help="The amount expressed in an optional other currency if it is a multi-currency entry.",
@@ -144,6 +145,19 @@ class AccountBankStatementLine(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+
+    @api.depends('foreign_currency_id', 'date', 'amount', 'company_id')
+    def _compute_amount_currency(self):
+        for st_line in self:
+            if not st_line.foreign_currency_id or not st_line.date:
+                st_line.amount_currency = False
+            else:
+                st_line.amount_currency = st_line.currency_id._convert(
+                    from_amount=st_line.amount,
+                    to_currency=st_line.foreign_currency_id,
+                    company=st_line.company_id,
+                    date=st_line.date,
+                )
 
     @api.depends('journal_id.currency_id')
     def _compute_currency_id(self):
