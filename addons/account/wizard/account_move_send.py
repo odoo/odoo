@@ -135,6 +135,70 @@ class AccountMoveSend(models.Model):
     def _get_default_email_from(self, mail_template, lang, move):
         return self._get_mail_default_field_value_from_template(mail_template, lang, move, 'email_from')
 
+    @api.model
+    def _get_placeholder_mail_attachments_data(self, move):
+        """ Returns all the placeholder data.
+        Should be extended to add placeholder based on the checkboxes.
+
+        :returns: A list of dictionary for each placeholder.
+        * id:               str: The (fake) id of the attachment, this is needed in rendering in t-key.
+        * name:             str: The name of the attachment.
+        * mimetype:         str: The mimetype of the attachment.
+        * placeholder       bool: Should be true to prevent download / deletion.
+        """
+        mode = self._get_default_mode_from_moves(move)
+        if mode != 'invoice_single':
+            return []
+
+        filename = move._get_invoice_pdf_report_filename()
+        return [{
+            'id': f'placeholder_{filename}',
+            'name': filename,
+            'mimetype': 'application/pdf',
+            'placeholder': True,
+        }]
+
+    @api.model
+    def _get_invoice_extra_attachments(self, move):
+        return move.invoice_pdf_report_id
+
+    @api.model
+    def _get_invoice_extra_attachments_data(self, move):
+        return [
+            {
+                'id': attachment.id,
+                'name': attachment.name,
+                'mimetype': attachment.mimetype,
+                'placeholder': False,
+            }
+            for attachment in self._get_invoice_extra_attachments(move)
+        ]
+
+    @api.model
+    def _get_mail_template_attachments_data(self, mail_template):
+        """ Returns all the placeholder data and mail template data
+        """
+        return [
+            {
+                'id': attachment.id,
+                'name': attachment.name,
+                'mimetype': attachment.mimetype,
+                'placeholder': False,
+                'mail_template_id': mail_template.id,
+            }
+            for attachment in mail_template.attachment_ids
+        ]
+
+    @api.model
+    def _get_default_email_attachment_data(self, mail_template, move):
+        return self._get_placeholder_mail_attachments_data(move) \
+               + self._get_invoice_extra_attachments_data(move) \
+               + self._get_mail_template_attachments_data(mail_template) \
+
+    @api.model
+    def _get_email_attachment_ids_from_attachment_data(self, mail_attachments_widget):
+        return [x['id'] for x in mail_attachments_widget if not x.get('placeholder')]
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
@@ -162,7 +226,7 @@ class AccountMoveSend(models.Model):
     @api.depends('enable_download')
     def _compute_checkbox_download(self):
         for wizard in self:
-            wizard.checkbox_download = wizard.company_id.invoice_is_print
+            wizard.checkbox_download = wizard.enable_download and wizard.company_id.invoice_is_print
 
     @api.depends('move_ids')
     def _compute_send_mail_extra_fields(self):
@@ -228,100 +292,122 @@ class AccountMoveSend(models.Model):
     @api.depends('mail_template_id', 'mail_lang')
     def _compute_mail_attachments_widget(self):
         for wizard in self:
-            if wizard.mail_attachments_widget: # When checkboxes are ticked in UI
-                wizard.mail_attachments_widget = wizard._get_placeholder_mail_attachments_data(wizard.move_ids)\
-                    + wizard._get_selected_attachments_data()
-            elif wizard.mode == 'invoice_single':
+            if wizard.mode == 'invoice_single':
+                manual_attachments_data = [x for x in wizard.mail_attachments_widget or [] if x.get('manual')]
                 wizard.mail_attachments_widget = wizard\
-                    ._get_default_mail_attachments_data(wizard.mail_template_id, wizard.move_ids)
+                    ._get_default_email_attachment_data(wizard.mail_template_id, wizard.move_ids) + manual_attachments_data
             else:
                 wizard.mail_attachments_widget = []
-
-    # -------------------------------------------------------------------------
-    # ATTACHMENTS
-    # -------------------------------------------------------------------------
-
-    @api.model
-    def _get_linked_attachments(self, move):
-        """ Returns all the attachments ids linked to the move to be sent in the email.
-        Should be extended to add attachments based on the checkboxes.
-        """
-        return move.invoice_pdf_report_id
-
-    def _get_mail_attachments_ids(self, mail_template, move):
-        """ Returns all the attachments ids linked to the move to be sent in the email
-        AND the attachments selected by the user or the one from the template (invoice multi)
-        """
-        self.ensure_one()
-        if self.mode == 'invoice_single':
-            return self._get_selected_attachments_ids() + self._get_linked_attachments(move).ids
-        else:
-            return mail_template.attachment_ids.ids + self._get_linked_attachments(move).ids
-
-    def _get_selected_attachments_ids(self):
-        """ Returns all the attachments ids selected by the user (invoice single)
-        """
-        return [vals['id'] for vals in self._get_selected_attachments_data()]
-
-    def _get_selected_attachments_data(self):
-        """ Returns all the attachments data selected by the user (invoice single)
-        """
-        return list(filter(lambda x: not x.get('placeholder'), self.mail_attachments_widget))
-
-    def _get_placeholder_mail_attachments_data(self, move):
-        """ Returns all the placeholder data.
-        Should be extended to add placeholder based on the checkboxes.
-
-        :returns: A list of dictionary for each placeholder.
-        * id:               str: The (fake) id of the attachment, this is needed in rendering in t-key.
-        * name:             str: The name of the attachment.
-        * mimetype:         str: The mimetype of the attachment.
-        * placeholder       bool: should be true to prevent download / deletion
-        """
-        self.ensure_one()
-        filename = self._get_invoice_pdf_report_filename(move)
-        return [{
-            'id': f'placeholder_{filename}',
-            'name': filename,
-            'mimetype': 'application/pdf',
-            'placeholder': True,
-        }]
-
-    def _get_default_mail_attachments_data(self, mail_template, move):
-        """ Returns all the placeholder data and mail template data
-        """
-        results = []
-
-        for attachment in mail_template.attachment_ids:
-            results.append({
-                'id': attachment.id,
-                'name': attachment.name,
-                'mimetype': attachment.mimetype,
-                'placeholder': False,
-            })
-
-        return self._get_placeholder_mail_attachments_data(move) + results
 
     # -------------------------------------------------------------------------
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
     @api.model
-    def _get_invoice_pdf_report_filename(self, move):
-        return f"{move.name.replace('/', '_')}.pdf"
+    def _need_invoice_document(self, invoice):
+        """ Determine if we need to generate the documents for the invoice passed as parameter.
 
-    @api.model
-    def _need_document(self, move):
-        return not move.invoice_pdf_report_id and move.state == 'posted'
+        :param invoice: An account.move record representing an invoice.
+        :return: True if the PDF / electronic documents must be generated, False otherwise.
+        """
+        return not invoice.invoice_pdf_report_id and invoice.state == 'posted'
 
-    @api.model
-    def _download(self, move):
-        """ Download the PDF. """
-        return {
-            'type': 'ir.actions.act_url',
-            'url': f'/web/content/{move.invoice_pdf_report_id.id}?download=true',
-            'close': True, # close the wizard
+    def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
+        """ Hook allowing to add some extra data for the invoice passed as parameter before the rendering of the pdf
+        report.
+
+        :param invoice:         An account.move record.
+        :param invoice_data:    The collected data for the invoice so far.
+        """
+        self.ensure_one()
+
+    def _prepare_invoice_pdf_report(self, invoice, invoice_data):
+        """ Prepare the pdf report for the invoice passed as parameter.
+
+        :param invoice:         An account.move record.
+        :param invoice_data:    The collected data for the invoice so far.
+        """
+        self.ensure_one()
+
+        content, _report_format = self.env['ir.actions.report']._render('account.account_invoices', invoice.ids)
+
+        invoice_data['pdf_attachment_values'] = {
+            'raw': content,
+            'name': invoice._get_invoice_pdf_report_filename(),
+            'mimetype': 'application/pdf',
+            'res_model': invoice._name,
+            'res_id': invoice.id,
+            'res_field': 'invoice_pdf_report_file', # Binary field
         }
+
+    def _prepare_invoice_proforma_pdf_report(self, invoice, invoice_data):
+        """ Prepare the proforma pdf report for the invoice passed as parameter.
+
+        :param invoice:         An account.move record.
+        :param invoice_data:    The collected data for the invoice so far.
+        """
+        self.ensure_one()
+
+        content, _report_format = self.env['ir.actions.report']._render('account.account_invoices', invoice.ids, data={'proforma': True})
+
+        invoice_data['proforma_pdf_attachment_values'] = {
+            'raw': content,
+            'name': invoice._get_invoice_proforma_pdf_report_filename(),
+            'mimetype': 'application/pdf',
+            'res_model': invoice._name,
+            'res_id': invoice.id,
+        }
+
+    def _hook_invoice_document_after_pdf_report_render(self, invoice, invoice_data):
+        """ Hook allowing to add some extra data for the invoice passed as parameter after the rendering of the
+        (proforma) pdf report.
+
+        :param invoice:         An account.move record.
+        :param invoice_data:    The collected data for the invoice so far.
+        """
+        self.ensure_one()
+
+    def _link_invoice_documents(self, invoice, invoice_data):
+        """ Create the attachments containing the pdf/electronic documents for the invoice passed as parameter.
+
+        :param invoice:         An account.move record.
+        :param invoice_data:    The collected data for the invoice so far.
+        """
+        # create an attachment that will become 'invoice_pdf_report_file'
+        # note: Binary is used for security reason
+        invoice.message_main_attachment_id = self.env['ir.attachment'].create(invoice_data['pdf_attachment_values'])
+        invoice.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
+        self.env.add_to_compute(invoice._fields['is_move_sent'], invoice)
+
+    def _hook_if_errors(self, moves_data, from_cron=False, allow_fallback_pdf=False):
+        """ Process errors found so far when generating the documents.
+
+        :param from_cron:   Flag indicating if the method is called from a cron. In that case, we avoid raising any
+                            error.
+        :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
+                                    proforma PDF report instead.
+        """
+        allow_raising = not from_cron and not allow_fallback_pdf
+        for move, move_data in moves_data.items():
+            error = move_data['error']
+            if allow_raising:
+                raise UserError(error)
+
+            move.with_context(no_new_invoice=True).message_post(body=error)
+
+    def _hook_if_success(self, moves_data, from_cron=False, allow_fallback_pdf=False):
+        """ Process successful documents.
+
+        :param from_cron:   Flag indicating if the method is called from a cron. In that case, we avoid raising any
+                            error.
+        :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
+                                    proforma PDF report instead.
+        """
+        send_mail = self.enable_send_mail and self.checkbox_send_mail
+
+        # Send mail.
+        if send_mail:
+            self._send_mails(moves_data)
 
     @api.model
     def _send_mail(self, mail_template, move, **kwargs):
@@ -345,120 +431,132 @@ class AccountMoveSend(models.Model):
                 },
             )
 
-    def _send_mails(self, moves):
+    def _get_mail_params(self, move):
+        self.ensure_one()
+
+        if self.mode == 'invoice_single':
+            # We must ensure the newly created PDF are added. At this point, the PDF has been generated but not added
+            # to 'mail_attachments_widget'.
+            attachment_ids = list(set(self._get_email_attachment_ids_from_attachment_data(
+                self.mail_attachments_widget + self._get_invoice_extra_attachments_data(self.move_ids)
+            )))
+            return {
+                'body': self.mail_body,
+                'subject': self.mail_subject,
+                'partner_ids': self.mail_partner_ids.ids,
+                'attachment_ids': attachment_ids,
+            }
+        elif self.mode == 'invoice_multi':
+            mail_template = self.mail_template_id
+            mail_lang = self._get_default_lang(mail_template, move)
+            return {
+                'body': self._get_default_mail_body(mail_template, mail_lang, move),
+                'subject': self._get_default_mail_subject(mail_template, mail_lang, move),
+                'partner_ids': self._get_default_mail_partners(mail_template, mail_lang, move).ids,
+                'attachment_ids': self._get_email_attachment_ids_from_attachment_data(
+                    self._get_default_email_attachment_data(mail_template, move)
+                ),
+            }
+
+    def _send_mails(self, moves_data):
+        self.ensure_one()
         subtype = self.env.ref('mail.mt_comment')
         mail_template = self.mail_template_id
 
-        for move in moves:
-            attachment_ids = self._get_mail_attachments_ids(mail_template, move)
+        for move, move_data in moves_data.items():
+            mail_params = self._get_mail_params(move)
+            if move_data.get('proforma_pdf_attachment'):
+                mail_params['attachment_ids'].append(move_data['proforma_pdf_attachment'].id)
+
             mail_lang = self.mail_lang or self._get_default_lang(mail_template, move)
-            partners = self.mail_partner_ids or self._get_default_mail_partners(mail_template, mail_lang, move)
-            body = self.mail_body or self._get_default_mail_body(mail_template, mail_lang, move)
-            subject = self.mail_subject or self._get_default_mail_subject(mail_template, mail_lang, move)
             email_from = self._get_default_email_from(mail_template, mail_lang, move)
             model_description = move.with_context(lang=mail_lang).type_name
 
             self._send_mail(
                 mail_template,
                 move,
-                body=body,
-                subject=subject,
-                email_from=email_from,
                 subtype_id=subtype.id,
-                partner_ids=partners.ids,
-                attachment_ids=attachment_ids,
                 model_description=model_description,
+                email_from=email_from,
+                **mail_params,
             )
 
-    def _generate_documents_success_hook(self, moves, from_cron):
-        send_mail = self.enable_send_mail and self.checkbox_send_mail
+    def _generate_invoice_documents(self, invoices_data, allow_fallback_pdf=False):
+        """ Generate the invoice PDF and electronic documents.
 
-        # Send mail.
-        if send_mail:
-            self._send_mails(moves)
-
-        return moves
-
-    def _generate_documents_failed_hook(self, errors, from_cron):
-        for move, error in errors:
-            if from_cron:
-                move\
-                    .with_context(no_new_invoice=True)\
-                    .message_post(body=error)
-            else:
-                raise UserError(error)
-
-    def _link_document(self, invoice, prepared_data):
-        """ Link prepared_data to the record
+        :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
+                                    proforma PDF report instead.
+        :param invoices_data:   The collected data for invoices so far.
         """
-        # create an attachment that will become 'invoice_pdf_report_file'
-        # note: Binary is used for security reason
-        self.env['ir.attachment'].create(prepared_data['pdf_attachment_values'])
-        invoice.invalidate_model(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
-        self.env.add_to_compute(invoice._fields['is_move_sent'], invoice)
+        for invoice, invoice_data in invoices_data.items():
+            if self._need_invoice_document(invoice):
+                self._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
+                if invoice_data.get('error') and not (allow_fallback_pdf and invoice_data.get('error_but_continue')):
+                    continue
 
-    def _postprocess_document(self, invoice, prepared_data):
-        """ Postprocess prepared_data before it gets linked to the record
+                self._prepare_invoice_pdf_report(invoice, invoice_data)
+                self._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
+                self._link_invoice_documents(invoice, invoice_data)
+
+    def _generate_invoice_fallback_documents(self, invoices_data):
+        """ Generate the invoice PDF and electronic documents.
+
+        :param invoices_data:   The collected data for invoices so far.
         """
-        self.ensure_one()
+        for invoice, invoice_data in invoices_data.items():
+            if self._need_invoice_document(invoice) and invoice_data.get('error'):
+                invoice_data.pop('error')
+                self._prepare_invoice_proforma_pdf_report(invoice, invoice_data)
+                self._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
+                invoice_data['proforma_pdf_attachment'] = self.env['ir.attachment']\
+                    .create(invoice_data.pop('proforma_pdf_attachment_values'))
 
-    def _render_document(self, invoice, prepared_data):
-        """ Extend prepared_data with the rendered documents
-        """
-        self.ensure_one()
-
-        content, _report_format = self.env['ir.actions.report']._render('account.account_invoices', invoice.ids)
-
-        prepared_data['pdf_attachment_values'] = {
-            'raw': content,
-            'name': self._get_invoice_pdf_report_filename(invoice),
-            'mimetype': 'application/pdf',
-            'res_model': invoice._name,
-            'res_id': invoice.id,
-            'res_field': 'invoice_pdf_report_file', # Binary field
+    @api.model
+    def _download(self, attachment_id):
+        """ Download the PDF. """
+        return {
+            'type': 'ir.actions.act_url',
+            'url': f'/web/content/{attachment_id}?download=true',
+            'close': True, # close the wizard
         }
 
-    def _prepare_document(self, invoice):
-        """ To be overridden by modules adding support for different action in send&print.
-        :return: 'prepared_data'
-            { 'error' : str - if any, will be raised
-              'xxx_values': {} - prefered naming for object to be linked as attachments
-              'xxx_options': {} - prefered naming for object to be used later on }
+    def action_send_and_print(self, from_cron=False, allow_fallback_pdf=False):
+        """ Create the documents and send them to the end customers.
+
+        :param from_cron:   Flag indicating if the method is called from a cron. In that case, we avoid raising any
+                            error.
+        :param allow_fallback_pdf:  In case of error when generating the documents for invoices, generate a
+                                    proforma PDF report instead.
         """
-        self.ensure_one()
-        return {}
-
-    def _generate_documents(self, moves, from_cron):
-        """ Main entry point to generate the invoice pdf and the related attachments.
-        """
-        success, errors = self.env['account.move'], []
-        for move in moves:
-            try:
-                if self._need_document(move):
-                    prepared_data = self._prepare_document(move)
-                    if prepared_data.get('error'):
-                        raise UserError(prepared_data['error'])
-                    else:
-                        self._render_document(move, prepared_data)
-                        self._postprocess_document(move, prepared_data)
-                        self._link_document(move, prepared_data)
-                success |= move
-            except UserError as e:
-                errors.append((move, str(e)))
-
-        return success, errors
-
-    def action_send_and_print(self, from_cron=False):
         self.ensure_one()
 
         download = self.enable_download and self.checkbox_download
-        generate_documents = self.mode == 'invoice_single' or from_cron
+        generate_invoice_documents = self.mode == 'invoice_single' or (self.mode == 'invoice_multi' and from_cron)
+        moves_data = {move: {} for move in self.move_ids}
 
-        if generate_documents:
-            success_moves, errors = self._generate_documents(self.move_ids, from_cron)
+        if generate_invoice_documents:
+            # Generate all invoice documents.
+            self._generate_invoice_documents(moves_data, allow_fallback_pdf=allow_fallback_pdf)
 
-            self._generate_documents_success_hook(success_moves, from_cron)
-            self._generate_documents_failed_hook(errors, from_cron)
+            # Manage errors.
+            errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}
+            if errors:
+                self._hook_if_errors(errors, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
+
+            # Cleanup the error if we don't want to block the regular pdf generation.
+            for move_data in errors.values():
+                if move_data.get('pdf_attachment_values'):
+                    move_data.pop('error')
+
+            # Fallback in case of error.
+            errors = {move: move_data for move, move_data in moves_data.items() if move_data.get('error')}
+            if allow_fallback_pdf and errors:
+                self._generate_invoice_fallback_documents(errors)
+
+            # Send mail.
+            success = {move: move_data for move, move_data in moves_data.items() if not move_data.get('error')}
+            if success:
+                self._hook_if_success(success, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
 
             self.mode = 'done'
 
@@ -466,7 +564,8 @@ class AccountMoveSend(models.Model):
             self.env.ref('account.ir_cron_account_move_send')._trigger()
 
         if download:
-            return self._download(self.move_ids)
+            attachment_id = self.move_ids.invoice_pdf_report_id.id or list(moves_data.values())[0]['proforma_pdf_attachment'].id
+            return self._download(attachment_id)
 
         return {'type': 'ir.actions.act_window_close'}
 
