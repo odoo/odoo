@@ -264,7 +264,6 @@
                             ('picking_type_id', '=', picking_type_id),
                             ('picking_type_id', '=', False),
                     ]"
-                    widget="many2one"
                     context="{'default_picking_type_id': picking_type_id}" readonly="state in ['cancel', 'done']"/>
             </xpath>
         </field>
