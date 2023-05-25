@@ -52,16 +52,16 @@ class AccountMoveSend(models.Model):
     @api.depends('enable_ubl_cii_xml')
     def _compute_checkbox_ubl_cii_xml(self):
         for wizard in self:
-            wizard.checkbox_ubl_cii_xml = True
+            wizard.checkbox_ubl_cii_xml = wizard.enable_ubl_cii_xml
 
     # -------------------------------------------------------------------------
     # ATTACHMENTS
     # -------------------------------------------------------------------------
 
     @api.model
-    def _get_linked_attachments(self, move):
+    def _get_invoice_extra_attachments(self, move):
         # EXTENDS 'account'
-        return super()._get_linked_attachments(move) + move.ubl_cii_xml_id
+        return super()._get_invoice_extra_attachments(move) + move.ubl_cii_xml_id
 
     def _get_placeholder_mail_attachments_data(self, move):
         # EXTENDS 'account'
@@ -83,9 +83,9 @@ class AccountMoveSend(models.Model):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
-    def _prepare_document(self, invoice):
+    def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS 'account'
-        results = super()._prepare_document(invoice)
+        super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
 
         if self.checkbox_ubl_cii_xml and self._get_default_enable_ubl_cii_xml(invoice):
             builder = invoice.partner_id._get_edi_builder()
@@ -95,41 +95,38 @@ class AccountMoveSend(models.Model):
 
             # Failed.
             if errors:
-                return {
-                    'error': "".join([
-                        _("Errors occured while creating the EDI document (format: %s):", builder._description),
-                        "\n",
-                        "<p><li>" + "</li><li>".join(errors) + "</li></p>" if self.mode == 'invoice_multi' \
-                            else "\n".join(errors)
-                    ]),
+                invoice_data['error'] = "".join([
+                    _("Errors occured while creating the EDI document (format: %s):", builder._description),
+                    "\n",
+                    "<p><li>" + "</li><li>".join(errors) + "</li></p>" if self.mode == 'invoice_multi' \
+                        else "\n".join(errors)
+                ])
+                invoice_data['error_but_continue'] = True
+            else:
+                invoice_data['ubl_cii_xml_attachment_values'] = {
+                    'name': filename,
+                    'raw': xml_content,
+                    'mimetype': 'application/xml',
+                    'res_model': invoice._name,
+                    'res_id': invoice.id,
+                    'res_field': 'ubl_cii_xml_file',  # Binary field
+                }
+                invoice_data['ubl_cii_xml_options'] = {
+                    'ubl_cii_format': invoice.partner_id.ubl_cii_format,
+                    'builder': builder,
                 }
 
-            results['ubl_cii_xml_attachment_values'] = {
-                'name': filename,
-                'raw': xml_content,
-                'mimetype': 'application/xml',
-                'res_model': invoice._name,
-                'res_id': invoice.id,
-                'res_field': 'ubl_cii_xml_file',  # Binary field
-            }
-            results['ubl_cii_xml_options'] = {
-                'ubl_cii_format': invoice.partner_id.ubl_cii_format,
-                'builder': builder,
-            }
-
-        return results
-
-    def _postprocess_document(self, invoice, prepared_data):
+    def _hook_invoice_document_after_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS 'account'
-        super()._postprocess_document(invoice, prepared_data)
+        super()._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
 
         # Add PDF to XML
-        if 'ubl_cii_xml_options' in prepared_data and prepared_data['ubl_cii_xml_options']['ubl_cii_format'] != 'facturx':
-            self._postprocess_invoice_ubl_xml(invoice, prepared_data)
+        if 'ubl_cii_xml_options' in invoice_data and invoice_data['ubl_cii_xml_options']['ubl_cii_format'] != 'facturx':
+            self._postprocess_invoice_ubl_xml(invoice, invoice_data)
 
         # Always silently generate a Factur-X and embed it inside the PDF (inter-portability)
-        if 'ubl_cii_xml_options' in prepared_data and prepared_data['ubl_cii_xml_options']['ubl_cii_format'] == 'facturx':
-            xml_facturx = prepared_data['ubl_cii_xml_attachment_values']['raw']
+        if 'ubl_cii_xml_options' in invoice_data and invoice_data['ubl_cii_xml_options']['ubl_cii_format'] == 'facturx':
+            xml_facturx = invoice_data['ubl_cii_xml_attachment_values']['raw']
         else:
             xml_facturx = self.env['account.edi.xml.cii']._export_invoice(invoice)[0]
 
@@ -144,7 +141,11 @@ class AccountMoveSend(models.Model):
             return
 
         # Read pdf content.
-        reader_buffer = io.BytesIO(prepared_data['pdf_attachment_values']['raw'])
+        if invoice_data.get('pdf_attachment_values'):
+            pdf_report_key = 'pdf_attachment_values'
+        else:
+            pdf_report_key = 'proforma_pdf_attachment_values'
+        reader_buffer = io.BytesIO(invoice_data[pdf_report_key]['raw'])
         reader = OdooPdfFileReader(reader_buffer, strict=False)
 
         # Post-process.
@@ -154,8 +155,8 @@ class AccountMoveSend(models.Model):
         writer.addAttachment('factur-x.xml', xml_facturx, subtype='text/xml')
 
         # PDF-A.
-        if 'ubl_cii_xml_options' in prepared_data \
-                and prepared_data['ubl_cii_xml_options']['ubl_cii_format'] == 'facturx' \
+        if 'ubl_cii_xml_options' in invoice_data \
+                and invoice_data['ubl_cii_xml_options']['ubl_cii_format'] == 'facturx' \
                 and not writer.is_pdfa:
             try:
                 writer.convert_to_pdfa()
@@ -176,19 +177,19 @@ class AccountMoveSend(models.Model):
         # Replace the current content.
         writer_buffer = io.BytesIO()
         writer.write(writer_buffer)
-        prepared_data['pdf_attachment_values']['raw'] = writer_buffer.getvalue()
+        invoice_data[pdf_report_key]['raw'] = writer_buffer.getvalue()
         reader_buffer.close()
         writer_buffer.close()
 
-    def _postprocess_invoice_ubl_xml(self, invoice, prepared_data):
+    def _postprocess_invoice_ubl_xml(self, invoice, invoice_data):
         # Add PDF to XML
-        tree = etree.fromstring(prepared_data['ubl_cii_xml_attachment_values']['raw'])
+        tree = etree.fromstring(invoice_data['ubl_cii_xml_attachment_values']['raw'])
         anchor_elements = tree.xpath("//*[local-name()='AccountingSupplierParty']")
         if not anchor_elements:
             return
 
-        filename = prepared_data['pdf_attachment_values']['name']
-        content = prepared_data['pdf_attachment_values']['raw']
+        filename = invoice_data['pdf_attachment_values']['name']
+        content = invoice_data['pdf_attachment_values']['raw']
         to_inject = f'''
             <cac:AdditionalDocumentReference
                 xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
@@ -207,14 +208,14 @@ class AccountMoveSend(models.Model):
 
         anchor_index = tree.index(anchor_elements[0])
         tree.insert(anchor_index, etree.fromstring(to_inject))
-        prepared_data['ubl_cii_xml_attachment_values']['raw'] = b"<?xml version='1.0' encoding='UTF-8'?>\n" \
+        invoice_data['ubl_cii_xml_attachment_values']['raw'] = b"<?xml version='1.0' encoding='UTF-8'?>\n" \
             + etree.tostring(cleanup_xml_node(tree))
 
-    def _link_document(self, invoice, prepared_data):
+    def _link_invoice_documents(self, invoice, invoice_data):
         # EXTENDS 'account'
-        super()._link_document(invoice, prepared_data)
+        super()._link_invoice_documents(invoice, invoice_data)
 
-        attachment_vals = prepared_data.get('ubl_cii_xml_attachment_values')
+        attachment_vals = invoice_data.get('ubl_cii_xml_attachment_values')
         if attachment_vals:
             self.env['ir.attachment'].create(attachment_vals)
-            invoice.invalidate_model(fnames=['ubl_cii_xml_id', 'ubl_cii_xml_file'])
+            invoice.invalidate_recordset(fnames=['ubl_cii_xml_id', 'ubl_cii_xml_file'])
