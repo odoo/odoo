@@ -20030,6 +20030,18 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       grid-template-columns: repeat(${ITEMS_PER_LINE}, 1fr);
       grid-gap: ${ITEM_HORIZONTAL_MARGIN * 2}px;
     }
+    .o-color-picker-toggler {
+      display: flex;
+      .o-color-picker-toggler-sign {
+        margin: auto auto;
+        width: 55%;
+        height: 55%;
+        .o-icon {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
     .o-color-picker-line-item {
       width: ${ITEM_EDGE_LENGTH}px;
       height: ${ITEM_EDGE_LENGTH}px;
@@ -44258,9 +44270,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.1.11';
-    __info__.date = '2023-05-12T11:50:57.119Z';
-    __info__.hash = 'd9a2cce';
+    __info__.version = '16.1.12';
+    __info__.date = '2023-05-25T13:10:31.810Z';
+    __info__.hash = 'b80dc51';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
