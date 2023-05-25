@@ -18,8 +18,7 @@
     <template id="payment_delivery_methods">
         <input t-att-value="delivery.id" t-att-id="'delivery_%i' % delivery.id" t-att-delivery_type="delivery.delivery_type" type="radio" name="delivery_type" t-att-checked="order.carrier_id and order.carrier_id.id == delivery.id and 'checked' or False"/>
         <label class="label-optional" t-field="delivery.name"/>
-        <t t-set='badge_class' t-value="'float-end ' + 'badge text-bg-secondary'" />
-        <span t-attf-class="#{badge_class} o_wsale_delivery_badge_price" name="price">Select to compute delivery rate</span>
+        <span class="o_wsale_delivery_badge_price float-end fw-bold" name="price">Select to compute delivery rate</span>
         <t t-set='delivery_method' t-value="delivery.delivery_type+'_use_locations'" />
         <div class="small">
             <div class="d-none">
@@ -44,7 +43,7 @@
         <xpath expr="//t[@t-if='website_sale_order.amount_total']" position="before">
             <div t-if="deliveries" id="delivery_carrier">
                 <t t-set="delivery_nb" t-value="len(deliveries)"/>
-                <h3 class="mb24">Choose a delivery method</h3>
+                <h4>Choose a delivery method</h4>
                 <div class="card border-0" id="delivery_method">
                     <ul class="list-group">
                     <t t-foreach="deliveries" t-as="delivery">
