@@ -1068,7 +1068,11 @@ class WebsiteSale(http.Controller):
         for k, v in values.items():
             # Convert the values for many2one fields to integer since they are used as IDs
             if k in partner_fields and partner_fields[k].type == 'many2one':
-                new_values[k] = bool(v) and int(v)
+                try:
+                    new_values[k] = bool(v) and int(v)
+                except ValueError as v:
+                    v.sentry_ignored = True
+                    raise
             # Store empty fields as `False` instead of empty strings `''` for consistency with other applications like
             # Contacts.
             elif v == '':
