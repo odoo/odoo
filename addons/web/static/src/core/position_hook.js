@@ -120,7 +120,8 @@ function getBestPosition(target, popper, iframe, { container, margin, position }
     const popBox = popper.getBoundingClientRect();
     const targetBox = target.getBoundingClientRect();
     const contBox = container.getBoundingClientRect();
-    const iframeBox = iframe?.getBoundingClientRect() || { top: 0, left: 0 };
+    const shouldAccountForIFrame = iframe && popper.ownerDocument !== target.ownerDocument;
+    const iframeBox = shouldAccountForIFrame ? iframe.getBoundingClientRect() : { top: 0, left: 0 };
 
     const containerIsHTMLNode = container === container.ownerDocument.firstElementChild;
 
