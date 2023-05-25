@@ -17,10 +17,11 @@ class AccountMoveSend(models.Model):
         help='Send the invoice via PEPPOL',
     )
     peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state')
+    # technical field needed for computing a warning text about the peppol configuration
     peppol_warning = fields.Char(
         string="Warning",
         compute="_compute_peppol_warning",
-    ) # technical field needed for computing a warning text about the peppol configuration
+    )
 
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
@@ -62,7 +63,7 @@ class AccountMoveSend(models.Model):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
-    def action_send_and_print(self, from_cron=False):
+    def action_send_and_print(self, from_cron=False, allow_fallback_pdf=False):
         # Extends the wizard to mark the move to be sent via PEPPOL first
         self.ensure_one()
 
@@ -71,72 +72,60 @@ class AccountMoveSend(models.Model):
                 if not move.peppol_move_state:
                     move.peppol_move_state = 'to_send'
 
-        return super().action_send_and_print(from_cron)
+        return super().action_send_and_print(from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
 
-    def _call_web_service(self, prepared_data_list):
+    def _call_web_service(self, invoices_data):
         # Overrides 'account'
+        super()._call_web_service(invoices_data)
+
         if not self.checkbox_send_peppol:
-            return super()._call_web_service(prepared_data_list)
+            return
 
         params = {'documents': []}
-        all_moves = self.env['account.move']
 
-        if not prepared_data_list:
-            # if a user tries to resend an invoice that has a peppol error state,
-            # the prepared_data_list is going to be empty, as the xml has been aready generated
-            error_moves = self.move_ids.filtered(lambda m: m.peppol_move_state == 'error')
-            if not error_moves:
-                return
-
-            for error_move in error_moves:
-                receiver_identification = f"{error_move.partner_id.peppol_eas}:{error_move.partner_id.peppol_endpoint}"
-                if not error_move.ubl_cii_xml_id:
-                    # this happens when a user manually deletes the xml file
-                    # but doesn't delete the pdf file
-                    # they should delete both if they want to regenerate attachments
-                    raise UserError(_('The following invoice does not have an XML attachment: %s', error_move.name))
-
-                params['documents'].append({
-                    'filename': error_move.name,
-                    'receiver': receiver_identification,
-                    'ubl': b64encode(error_move.ubl_cii_xml_id.raw).decode(),
-                })
-                all_moves |= error_move
-
-        for move, prepared_data in prepared_data_list:
-            if not prepared_data:
-                move.peppol_move_state = False
-                raise UserError(_('Please select the UBL format'))
-
-            if move.peppol_move_state not in ('to_send', 'error'):
+        invoices_data_peppol = {}
+        for invoice, invoice_data in invoices_data.items():
+            if invoice.peppol_move_state not in ('to_send', 'error'):
                 continue
 
-            xml_file = prepared_data['ubl_cii_xml_attachment_values']['raw']
-            filename = prepared_data['ubl_cii_xml_attachment_values']['name']
+            if invoice_data.get('ubl_cii_xml_attachment_values'):
+                xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
+                filename = invoice_data['ubl_cii_xml_attachment_values']['name']
+            elif invoice.ubl_cii_xml_id:
+                xml_file = invoice.ubl_cii_xml_id.raw
+                filename = invoice.ubl_cii_xml_id.name
+            else:
+                continue
 
-            if not move.partner_id.peppol_eas or not move.partner_id.peppol_endpoint:
+            if not invoice.partner_id.peppol_eas or not invoice.partner_id.peppol_endpoint:
                 # should never happen but in case it does, we need to handle it
-                move.peppol_move_state = 'error'
-                move._message_log(body=_('The partner is missing Peppol EAS and/or Endpoint identifier.'))
+                invoice.peppol_move_state = 'error'
+                invoice_data['error'] = _('The partner is missing Peppol EAS and/or Endpoint identifier.')
                 continue
 
-            if not move.partner_id.account_peppol_is_endpoint_valid:
-                move.peppol_move_state = 'error'
-                move._message_log(body=_('Please verify partner configuration in partner settings.'))
+            if not invoice.partner_id.account_peppol_is_endpoint_valid:
+                invoice.peppol_move_state = 'error'
+                invoice_data['error'] = _('Please verify partner configuration in partner settings.')
                 continue
 
-            receiver_identification = f"{move.partner_id.peppol_eas}:{move.partner_id.peppol_endpoint}"
+            receiver_identification = f"{invoice.partner_id.peppol_eas}:{invoice.partner_id.peppol_endpoint}"
             params['documents'].append({
                 'filename': filename,
                 'receiver': receiver_identification,
                 'ubl': b64encode(xml_file).decode(),
             })
-            all_moves |= move
+            invoices_data_peppol[invoice] = invoice_data
 
-        edi_user = self.env['account_edi_proxy_client.user'].search([
-            ('company_id', '=', self.company_id.id),
-            ('proxy_type', '=', 'peppol'),
-        ])
+        if not params['documents']:
+            return
+
+        edi_user = self.env['account_edi_proxy_client.user'].search(
+            [
+                ('company_id', '=', self.company_id.id),
+                ('proxy_type', '=', 'peppol'),
+            ],
+            limit=1,
+        )
 
         try:
             response = edi_user._make_request(
@@ -145,18 +134,20 @@ class AccountMoveSend(models.Model):
             )
             if response.get('error'):
                 # at the moment the only error that can happen here is ParticipantNotReady error
-                all_moves._message_log_batch(bodies=dict((move.id, response['error']['message']) for move in all_moves))
-                all_moves.peppol_move_state = 'error'
-                raise UserError(response['error']['message'])
+                for invoice, invoice_data in invoices_data_peppol.items():
+                    invoice.peppol_move_state = 'error'
+                    invoice_data['error'] = response['error']['message']
         except AccountEdiProxyError as e:
-            all_moves._message_log_batch(bodies=dict((move.id, e.message) for move in all_moves))
-            all_moves.peppol_move_state = 'error'
-            raise UserError(e.message)
+            for invoice, invoice_data in invoices_data_peppol.items():
+                invoice.peppol_move_state = 'error'
+                invoice_data['error'] = e.message
         else:
             # the response only contains message uuids,
             # so we have to rely on the order to connect peppol messages to account.move
-            for i, move in enumerate(all_moves):
-                move.peppol_message_uuid = response['messages'][i]['message_uuid']
-                move.peppol_move_state = 'processing'
+            invoices = self.env['account.move']
+            for i, (invoice, invoice_data) in enumerate(invoices_data_peppol.items()):
+                invoice.peppol_message_uuid = response['messages'][i]['message_uuid']
+                invoice.peppol_move_state = 'processing'
+                invoices |= invoice
             log_message = _('The document has been sent to the Peppol Access Point for processing')
-            all_moves._message_log_batch(bodies=dict((move.id, log_message) for move in all_moves))
+            invoices._message_log_batch(bodies=dict((invoice.id, log_message) for invoice in invoices_data_peppol))

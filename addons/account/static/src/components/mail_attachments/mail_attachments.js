@@ -47,6 +47,7 @@ export class MailAttachments extends Component {
                 name: file.filename,
                 mimetype: file.mimetype,
                 placeholder: false,
+                manual: true,
             });
         }
         this.props.record.update({ [this.props.name]: this.getValue().concat(extraFiles) });

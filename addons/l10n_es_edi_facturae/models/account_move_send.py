@@ -37,7 +37,7 @@ class AccountMoveSend(models.Model):
         # EXTENDS 'account'
         results = super()._get_placeholder_mail_attachments_data(move)
 
-        if self.l10n_es_edi_facturae_enable_xml and self.l10n_es_edi_facturae_checkbox_xml:
+        if self.mode == 'invoice_single' and self.l10n_es_edi_facturae_enable_xml and self.l10n_es_edi_facturae_checkbox_xml:
             filename = f'{move.name.replace("/", "_")}_facturae_signed.xml'
             results.append({
                 'id': f'placeholder_{filename}',
@@ -52,18 +52,19 @@ class AccountMoveSend(models.Model):
     # BUSINESS ACTIONS
     # -------------------------------------------------------------------------
 
-    def _prepare_document(self, invoice):
+    def _hook_invoice_document_before_pdf_report_render(self, invoice, invoice_data):
         # EXTENDS 'account'
-        results = super()._prepare_document(invoice)
+        results = super()._hook_invoice_document_before_pdf_report_render(invoice, invoice_data)
 
         if self.l10n_es_edi_facturae_checkbox_xml and invoice._l10n_es_edi_facturae_get_default_enable():
             try:
                 xml_content = invoice._l10n_es_edi_facturae_render_facturae()
             except Exception as error:
-                return {
-                    'error': "".join((_("Errors occured while creating the EDI document (format: %s):", "Facturae"),
-                        "\n", str(error))),
-                }
+                invoice_data['error'] = "".join((
+                    _("Errors occured while creating the EDI document (format: %s):", "Facturae"),
+                    "\n",
+                    str(error),
+                ))
 
             results['l10n_es_edi_facturae_attachment_values'] = {
                 'name': invoice._l10n_es_edi_facturae_get_filename(),
@@ -76,11 +77,11 @@ class AccountMoveSend(models.Model):
 
         return results
 
-    def _link_document(self, invoice, prepared_data):
+    def _link_invoice_documents(self, invoice, invoice_data):
         # EXTENDS 'account'
-        super()._link_document(invoice, prepared_data)
+        super()._link_invoice_documents(invoice, invoice_data)
 
-        attachment_vals = prepared_data.get('l10n_es_edi_facturae_attachment_values')
+        attachment_vals = invoice_data.get('l10n_es_edi_facturae_attachment_values')
         if attachment_vals:
             self.env['ir.attachment'].create(attachment_vals)
-            invoice.invalidate_model(fnames=['l10n_es_edi_facturae_xml_id', 'l10n_es_edi_facturae_xml_file'])
+            invoice.invalidate_recordset(fnames=['l10n_es_edi_facturae_xml_id', 'l10n_es_edi_facturae_xml_file'])

@@ -51,6 +51,7 @@
                 <div class="mt-5 clearfix">
                     <div class="page mb-4">
                         <h2>
+                            <span t-if="proforma">PROFORMA</span>
                             <span t-if="o.move_type == 'out_invoice' and o.state == 'posted'">Invoice</span>
                             <span t-elif="o.move_type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span>
                             <span t-elif="o.move_type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span>
