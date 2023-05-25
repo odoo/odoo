@@ -693,7 +693,9 @@ export function makeDraggableHook(hookParams) {
                 const { container, element, scrollParentX, scrollParentY } = current;
                 // Container rect
                 current.containerRect = dom.getRect(container, { adjust: true });
-
+                // Adjust container rect according to its overflowing size
+                current.containerRect.width = container.scrollWidth;
+                current.containerRect.height = container.scrollHeight;
                 // ScrollParent rect
                 current.scrollParentXRect = null;
                 current.scrollParentYRect = null;
@@ -702,7 +704,7 @@ export function makeDraggableHook(hookParams) {
                     if (scrollParentX) {
                         current.scrollParentXRect = dom.getRect(scrollParentX, { adjust: true });
                         const right = Math.min(
-                            current.containerRect.right,
+                            current.containerRect.left + container.scrollWidth,
                             current.scrollParentXRect.right
                         );
                         current.containerRect.x = Math.max(
@@ -714,7 +716,7 @@ export function makeDraggableHook(hookParams) {
                     if (scrollParentY) {
                         current.scrollParentYRect = dom.getRect(scrollParentY, { adjust: true });
                         const bottom = Math.min(
-                            current.containerRect.bottom,
+                            current.containerRect.top + container.scrollHeight,
                             current.scrollParentYRect.bottom
                         );
                         current.containerRect.y = Math.max(
