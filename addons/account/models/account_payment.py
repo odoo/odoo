@@ -37,7 +37,7 @@ class AccountPayment(models.Model):
         readonly=False, store=True,
         tracking=True,
         compute="_compute_is_internal_transfer")
-    qr_code = fields.Char(string="QR Code URL",
+    qr_code = fields.Html(string="QR Code URL",
         compute="_compute_qr_code")
     paired_internal_transfer_payment_id = fields.Many2one('account.payment',
         help="When an internal transfer is posted, a paired payment is created. "
