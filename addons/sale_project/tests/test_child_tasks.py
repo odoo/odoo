@@ -46,8 +46,8 @@ class TestNestedTaskUpdate(TransactionCase):
         self.assertTrue(parent.allow_billable, "The parent task should be billable as the project linked is billable")
         self.assertEqual(parent.partner_id, self.project.partner_id, "The partner set on the parent task should the one set on the project linked")
         self.assertFalse(child.project_id, "The project set on the subtask should be False by default")
-        self.assertFalse(child.allow_billable, "The subtask should not be billable as it is parent task since no project is set")
-        self.assertFalse(child.partner_id, "Subtask with no project should not have partner")
+        self.assertTrue(child.allow_billable, "The subtask should be billable since its parent task's project is billable")
+        self.assertEqual(child.partner_id, self.project.partner_id, "The partner set on the subtask should the one set on the project linked to the parent")
 
     def test_creating_subtask_user_id_on_parent_dont_go_on_child(self):
         parent = self.env['project.task'].create({'name': 'parent', 'user_ids': [(4, self.user.id)]})
@@ -216,3 +216,33 @@ class TestNestedTaskUpdate(TransactionCase):
         for child in children:
             self.assertEqual(child.sale_line_id, self.order_line)
             self.assertFalse(child.user_ids)
+
+    def test_allow_billable_on_subtasks(self):
+        parent = self.env['project.task'].create({
+            'name': 'Parent Task',
+            'project_id': self.project.id,
+            'child_ids': [
+                Command.create({
+                    'name': 'Subtask with project set',
+                    'project_id': self.project.id,
+                }),
+                Command.create({
+                    'name': 'Subtask without any project set',
+                    'child_ids': [Command.create({'name': 'Subsubtask'})],
+                }),
+            ],
+        })
+        subtask_with_project = parent.child_ids.filtered('project_id')
+        subtask_without_project = parent.child_ids - subtask_with_project
+        subsubtask = subtask_without_project.child_ids
+
+        self.assertTrue(self.project.allow_billable)
+        self.assertTrue(parent.allow_billable)
+        self.assertTrue(subtask_with_project.allow_billable)
+        self.assertTrue(subtask_without_project.allow_billable)
+        self.assertTrue(subsubtask.allow_billable)
+
+        project_non_billable = self.env['project.project'].create({'name': 'Non-billable project', 'allow_billable': False})
+        subtask_without_project.project_id = project_non_billable
+        self.assertFalse(subtask_without_project.allow_billable)
+        self.assertFalse(subsubtask.allow_billable)
