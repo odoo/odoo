@@ -132,6 +132,7 @@ class HolidaysRequest(models.Model):
     report_note = fields.Text('HR Comments', copy=False, groups="hr_holidays.group_hr_holidays_manager")
     user_id = fields.Many2one('res.users', string='User', related='employee_id.user_id', related_sudo=True, compute_sudo=True, store=True, readonly=True, index=True)
     manager_id = fields.Many2one('hr.employee', compute='_compute_from_employee_id', store=True, readonly=False)
+    is_user_only_responsible = fields.Boolean(compute="_compute_is_user_only_responsible")
     # leave type configuration
     holiday_status_id = fields.Many2one(
         "hr.leave.type", compute='_compute_from_employee_id',
@@ -194,7 +195,8 @@ class HolidaysRequest(models.Model):
         string='Allocation Mode', readonly=False, required=True, default='employee',
         help='By Employee: Allocation/Request for individual Employee, By Employee Tag: Allocation/Request for group of employees in category')
     employee_ids = fields.Many2many(
-        'hr.employee', compute='_compute_from_holiday_type', store=True, string='Employees', readonly=False, groups="hr_holidays.group_hr_holidays_user")
+        'hr.employee', compute='_compute_from_holiday_type', store=True, string='Employees', readonly=True, groups="hr_holidays.group_hr_holidays_responsible")
+    allowed_employee_ids = fields.Many2many('hr.employee', compute='_compute_allowed_employee_ids')
     multi_employee = fields.Boolean(
         compute='_compute_from_employee_ids', store=True, compute_sudo=False,
         help='Holds whether this allocation concerns more than 1 employee')
@@ -418,6 +420,17 @@ class HolidaysRequest(models.Model):
                 holiday.employee_id = False
             holiday.multi_employee = (len(holiday.employee_ids) > 1)
 
+    @api.depends_context('uid')
+    def _compute_allowed_employee_ids(self):
+        allowed_employees = self.env['hr.employee'].search([
+            ('active', '=', True),
+            ('company_id', 'in', self.env.companies.ids)])
+        if not self.env.user.has_group('hr_holidays.group_hr_holidays_user'):
+            user = self.env.user
+            self.allowed_employee_ids = allowed_employees.filtered(lambda emp: emp.user_id == user or emp.leave_manager_id == user)
+        else:
+            self.allowed_employee_ids = allowed_employees
+
     @api.depends('holiday_type')
     def _compute_from_holiday_type(self):
         allocation_from_domain = self.env['hr.leave.allocation']
@@ -462,6 +475,13 @@ class HolidaysRequest(models.Model):
             elif holiday.employee_id.user_id != self.env.user and holiday._origin.employee_id != holiday.employee_id:
                 if holiday.employee_id and not holiday.holiday_status_id.with_context(employee_id=holiday.employee_id.id).has_valid_allocation:
                     holiday.holiday_status_id = False
+
+    @api.depends_context('uid')
+    @api.depends('employee_id')
+    def _compute_is_user_only_responsible(self):
+        user = self.env.user
+        self.is_user_only_responsible = user.has_group('hr_holidays.group_hr_holidays_responsible')\
+            and not user.has_group('hr_holidays.group_hr_holidays_user')
 
     @api.depends('employee_id', 'holiday_type')
     def _compute_department_id(self):
@@ -1408,14 +1428,18 @@ class HolidaysRequest(models.Model):
                     holiday.check_access_rule('write')
 
                     # This handles states validate1 validate and refuse
-                    if holiday.employee_id == current_employee:
-                        raise UserError(_('Only a Time Off Manager can approve/refuse its own requests.'))
+                    if holiday.employee_id == current_employee\
+                            and self.env.user != holiday.employee_id.leave_manager_id\
+                            and not is_officer:
+                        raise UserError(_('Only a Time Off Officer or Manager can approve/refuse its own requests.'))
 
                     if (state == 'validate1' and val_type == 'both') and holiday.holiday_type == 'employee':
                         if not is_officer and self.env.user != holiday.employee_id.leave_manager_id:
                             raise UserError(_('You must be either %s\'s manager or Time off Manager to approve this leave') % (holiday.employee_id.name))
 
-                    if (state == 'validate' and val_type == 'manager') and self.env.user != (holiday.employee_id | holiday.sudo().employee_ids).leave_manager_id:
+                    if (state == 'validate' and val_type == 'manager')\
+                            and self.env.user != (holiday.employee_id | holiday.sudo().employee_ids).leave_manager_id\
+                            and not is_officer:
                         if holiday.employee_id:
                             employees = holiday.employee_id
                         else:
