@@ -247,7 +247,7 @@ class IrUiMenu(models.Model):
         :return: the menu root
         :rtype: dict('children': menu_nodes)
         """
-        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon', 'web_icon_data']
+        fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon']
         menu_roots = self.get_user_roots()
         menu_roots_data = menu_roots.read(fields) if menu_roots else []
         menu_root = {
@@ -277,6 +277,14 @@ class IrUiMenu(models.Model):
         # mapping, resulting in children being correctly set on the roots.
         menu_items.extend(menu_roots_data)
 
+        mi_attachments = self.env['ir.attachment'].sudo().search_read(
+            domain=[('res_model', '=', 'ir.ui.menu'),
+                    ('res_id', 'in', [menu_item['id'] for menu_item in menu_items if menu_item['id']]),
+                    ('res_field', '=', 'web_icon_data')],
+            fields=['res_id', 'datas', 'mimetype'])
+
+        mi_attachment_by_res_id = {attachment['res_id']: attachment for attachment in mi_attachments}
+
         # set children ids and xmlids
         menu_items_map = {menu_item["id"]: menu_item for menu_item in menu_items}
         for menu_item in menu_items:
@@ -286,6 +294,13 @@ class IrUiMenu(models.Model):
             if parent in menu_items_map:
                 menu_items_map[parent].setdefault(
                     'children', []).append(menu_item['id'])
+            attachment = mi_attachment_by_res_id.get(menu_item['id'])
+            if attachment:
+                menu_item['web_icon_data'] = attachment['datas']
+                menu_item['web_icon_data_mimetype'] = attachment['mimetype']
+            else:
+                menu_item['web_icon_data'] = False
+                menu_item['web_icon_data_mimetype'] = False
         all_menus.update(menu_items_map)
 
         # sort by sequence

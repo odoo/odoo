@@ -17,7 +17,6 @@ class LoadMenusTests(HttpCase):
 
     def test_load_menus(self):
         menu_loaded = self.url_open("/web/webclient/load_menus/1234")
-
         expected = {
             str(self.menu.id): {
                 "actionID": False,
@@ -28,6 +27,7 @@ class LoadMenusTests(HttpCase):
                 "name": "test_menu",
                 "webIcon": False,
                 "webIconData": False,
+                "webIconDataMimetype": False,
                 "xmlid": ""
             },
             "root": {
@@ -41,6 +41,7 @@ class LoadMenusTests(HttpCase):
                 "name": "root",
                 "webIcon": None,
                 "webIconData": None,
+                "webIconDataMimetype": None,
                 "xmlid": "",
                 "backgroundImage": None,
             }
