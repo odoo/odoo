@@ -173,7 +173,9 @@ class WebsiteSale(http.Controller):
     def _get_search_order(self, post):
         # OrderBy will be parsed in orm and so no direct sql injection
         # id is added to be sure that order is a unique sort key
-        order = post.get('order') or request.env['website'].get_current_website().shop_default_sort
+        order = post.get('order')
+        if order not in (product_map[0] for product_map in request.env['website']._get_product_sort_mapping()):
+            order = request.env['website'].get_current_website().shop_default_sort
         return 'is_published desc, %s, id desc' % order
 
     def _get_search_domain(self, search, category, attrib_values, search_in_description=True):
