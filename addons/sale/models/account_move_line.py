@@ -47,16 +47,13 @@ class AccountMoveLine(models.Model):
 
     def _sale_can_be_reinvoice(self):
         """ determine if the generated analytic line should be reinvoiced or not.
-            For Vendor Bill flow, if the product has a 'reinvoice policy' and is a cost, then we will find the SO on which reinvoice the AAL
-                if it is refund, we will update the quantity of the SO line
+            For Vendor Bill flow, if the product has a 'erinvoice policy' and is a cost, then we will find the SO on which reinvoice the AAL
         """
         self.ensure_one()
         if self.sale_line_ids:
             return False
-        is_refund = self.move_id.move_type in ('out_refund', 'in_refund')
-        return self.product_id.expense_policy not in [False, 'no'] and (
-                (self.currency_id.compare_amounts(self.balance, 0.0) == -1 and is_refund)
-                or (self.currency_id.compare_amounts(self.balance, 0.0) == 1 and not is_refund))
+        uom_precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        return float_compare(self.credit or 0.0, self.debit or 0.0, precision_digits=uom_precision_digits) != 1 and self.product_id.expense_policy not in [False, 'no']
 
     def _sale_create_reinvoice_sale_line(self):
 
@@ -92,8 +89,7 @@ class AccountMoveLine(models.Model):
 
             # find the existing sale.line or keep its creation values to process this in batch
             sale_line = None
-            if (move_line.product_id.expense_policy == 'sales_price' and move_line.product_id.invoice_policy == 'delivery') \
-                    or move_line.move_id.move_type in ('out_refund', 'in_refund'):  # for those case only, we can try to reuse one
+            if move_line.product_id.expense_policy == 'sales_price' and move_line.product_id.invoice_policy == 'delivery':  # for those case only, we can try to reuse one
                 map_entry_key = (sale_order.id, move_line.product_id.id, price)  # cache entry to limit the call to search
                 sale_line = existing_sale_line_cache.get(map_entry_key)
                 if sale_line:  # already search, so reuse it. sale_line can be sale.order.line record or index of a "to create values" in `sale_line_values_to_create`

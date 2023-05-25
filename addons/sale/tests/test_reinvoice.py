@@ -34,17 +34,6 @@ class TestReInvoice(TestSaleCommon):
             mail_create_nolog=True,
         )
 
-    def _create_sol(self, sale_order, product):
-        return self.env['sale.order.line'].create({
-            'name': product.name,
-            'product_id': product.id,
-            'product_uom_qty': 1,
-            'qty_delivered': 0,
-            'product_uom': product.uom_id.id,
-            'price_unit': product.list_price,
-            'order_id': sale_order.id,
-        })
-
     def test_at_cost(self):
         """ Test vendor bill at cost for product based on ordered and delivered quantities. """
         # create SO line and confirm SO (with only one line)
@@ -312,54 +301,3 @@ class TestReInvoice(TestSaleCommon):
         self.assertFalse(so_line4, "No re-invoicing should have created a new sale line with product #2")
         self.assertEqual(so_line1.qty_delivered, 1, "No re-invoicing should have impacted exising SO line 1")
         self.assertEqual(so_line2.qty_delivered, 1, "No re-invoicing should have impacted exising SO line 2")
-
-    def test_refund_delivered_reinvoiced(self):
-        """
-        Tests that when we refund a re-invoiced expense, the Quantity Delivered on the Sale Order Line is updated
-        - (1) We create a Sale Order
-        - (2) We create a bill to be re-invoiced
-        - (3) We create a partial credit note
-        -> The sale order lines created in (2) should be updated during (3) with the correct delivered quantity.
-        """
-        # create the setup
-        product_1 = self.company_data['product_order_cost']
-        product_2 = self.env['product.product'].create({
-            'name': 'Great Product',
-            'standard_price': 50.0,
-            'list_price': 100.0,
-            'type': 'consu',
-            'uom_id': self.env.ref('uom.product_uom_unit').id,
-            'uom_po_id': self.env.ref('uom.product_uom_unit').id,
-            'invoice_policy': 'order',
-            'expense_policy': 'cost',
-        })
-        self._create_sol(self.sale_order, product_1)
-        self._create_sol(self.sale_order, product_2)
-        self.sale_order.action_confirm()
-
-        # create the bill to be re-invoiced
-        bill_form = Form(self.AccountMove.with_context(default_move_type='in_invoice'))
-        bill_form.partner_id = self.partner_b
-        with bill_form.line_ids.new() as line_form:
-            line_form.product_id = product_1
-            line_form.quantity = 20.0
-            line_form.analytic_account_id = self.analytic_account
-        with bill_form.line_ids.new() as line_form:
-            line_form.product_id = product_2
-            line_form.quantity = 20.0
-            line_form.analytic_account_id = self.analytic_account
-        bill = bill_form.save()
-        bill.action_post()
-
-        self.assertRecordValues(self.sale_order.order_line[-2:], [{'qty_delivered': 20}, {'qty_delivered': 20}])
-
-        # create partial credit note
-        rbill_form = Form(bill._reverse_moves([{'invoice_date': '2023-03-31'}]))
-        with rbill_form.invoice_line_ids.edit(0) as line_form:
-            line_form.quantity = 10
-        with rbill_form.invoice_line_ids.edit(1) as line_form:
-            line_form.quantity = 5
-        rbill = rbill_form.save()
-        rbill.action_post()
-
-        self.assertRecordValues(self.sale_order.order_line[-2:], [{'qty_delivered': 10}, {'qty_delivered': 15}])
