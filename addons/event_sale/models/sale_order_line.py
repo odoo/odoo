@@ -14,6 +14,7 @@ class SaleOrderLine(models.Model):
         'event.event.ticket', string='Event Ticket',
         compute="_compute_event_ticket_id", store=True, readonly=False, precompute=True,
         help="Choose an event ticket and it will automatically create a registration for this event ticket.")
+    registration_ids = fields.One2many('event.registration', 'sale_order_line_id', string="Registrations")
 
     @api.depends('state', 'event_id')
     def _compute_product_uom_readonly(self):
@@ -21,37 +22,24 @@ class SaleOrderLine(models.Model):
         event_lines.update({'product_uom_readonly': True})
         super(SaleOrderLine, self - event_lines)._compute_product_uom_readonly()
 
-    def _update_registrations(self, confirm=True, cancel_to_draft=False, registration_data=None, mark_as_paid=False):
-        """ Create or update registrations linked to a sales order line. A sale
+    def _init_registrations(self):
+        """ Create registrations linked to a sales order line. A sale
         order line has a product_uom_qty attribute that will be the number of
-        registrations linked to this line. This method update existing registrations
-        and create new one for missing one. """
-        RegistrationSudo = self.env['event.registration'].sudo()
-        registrations = RegistrationSudo.search([('sale_order_line_id', 'in', self.ids)])
+        registrations linked to this line. """
         registrations_vals = []
         for so_line in self:
             if not so_line.product_type == 'event':
                 continue
-            existing_registrations = registrations.filtered(lambda self: self.sale_order_line_id.id == so_line.id)
-            if confirm:
-                existing_registrations.filtered(lambda self: self.state not in ['open', 'cancel']).action_confirm()
-            if mark_as_paid:
-                existing_registrations.filtered(lambda self: self.payment_status == 'to_pay')._action_set_paid()
-            if cancel_to_draft:
-                existing_registrations.filtered(lambda self: self.state == 'cancel').action_set_draft()
 
-            for _count in range(int(so_line.product_uom_qty) - len(existing_registrations)):
+            for _count in range(int(so_line.product_uom_qty) - len(so_line.registration_ids)):
                 values = {
                     'sale_order_line_id': so_line.id,
-                    'sale_order_id': so_line.order_id.id
+                    'sale_order_id': so_line.order_id.id,
                 }
-                # TDE CHECK: auto confirmation
-                if registration_data:
-                    values.update(registration_data.pop())
                 registrations_vals.append(values)
 
         if registrations_vals:
-            RegistrationSudo.create(registrations_vals)
+            self.env['event.registration'].sudo().create(registrations_vals)
         return True
 
     @api.depends('product_id')
@@ -81,16 +69,6 @@ class SaleOrderLine(models.Model):
         The custom name logic can be found below in _get_sale_order_line_multiline_description_sale.
         """
         super()._compute_name()
-
-    def unlink(self):
-        self._unlink_associated_registrations()
-        return super(SaleOrderLine, self).unlink()
-
-    def _cancel_associated_registrations(self):
-        self.env['event.registration'].search([('sale_order_line_id', 'in', self.ids)]).action_cancel()
-
-    def _unlink_associated_registrations(self):
-        self.env['event.registration'].search([('sale_order_line_id', 'in', self.ids)]).unlink()
 
     def _get_sale_order_line_multiline_description_sale(self):
         """ We override this method because we decided that:

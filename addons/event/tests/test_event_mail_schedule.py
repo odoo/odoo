@@ -36,7 +36,6 @@ class TestMailSchedule(EventCase, MockEmail):
                 'name': 'TestEventMail',
                 'create_date': now,
                 'user_id': self.user_eventmanager.id,
-                'auto_confirm': True,
                 'date_begin': event_date_begin,
                 'date_end': event_date_end,
                 'event_mail_ids': [
@@ -44,7 +43,7 @@ class TestMailSchedule(EventCase, MockEmail):
                         'interval_unit': 'now',
                         'interval_type': 'after_sub',
                         'template_ref': 'mail.template,%i' % self.env['ir.model.data']._xmlid_to_res_id('event.event_subscription')}),
-                    (0, 0, {  # one day after subscription
+                    (0, 0, {  # one hour after subscription
                         'interval_nbr': 1,
                         'interval_unit': 'hours',
                         'interval_type': 'after_sub',
@@ -208,13 +207,13 @@ class TestMailSchedule(EventCase, MockEmail):
         # NEW REGISTRATION EFFECT ON SCHEDULERS
         # --------------------------------------------------
 
-        test_event.write({'auto_confirm': False})
         with freeze_time(now_start), self.mock_mail_gateway():
             reg3 = self.env['event.registration'].create({
                 'create_date': now_start,
                 'event_id': test_event.id,
                 'name': 'Reg3',
                 'email': 'reg3@example.com',
+                'state': 'draft',
             })
 
         # no more seats
@@ -286,7 +285,6 @@ class TestMailSchedule(EventCase, MockEmail):
         # create event with default event_mail_ids lines
         test_event = self.env['event.event'].with_user(self.user_eventmanager).create({
             'name': "TestEvent",
-            'auto_confirm': True,
             'date_begin': datetime.now(),
             'date_end': datetime.now() + relativedelta(days=1),
             'seats_max': 2,
@@ -354,7 +352,6 @@ class TestMailSchedule(EventCase, MockEmail):
         with freeze_time(now):
             test_event = self.env['event.event'].with_user(self.user_eventmanager).create({
                 'name': 'TestEventMail',
-                'auto_confirm': True,
                 'date_begin': event_date_begin,
                 'date_end': event_date_end,
                 'event_mail_ids': [
