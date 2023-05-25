@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_message_tree_audit_log" model="ir.ui.view">
+        <field name="name">mail.message.tree.inherit.audit.log</field>
+        <field name="model">mail.message</field>
+        <field name="priority">99</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <tree edit="0" delete="0" create="0" action="action_open_document" type="object">
+                <field name="res_id" column_invisible="True"/>
+                <field name="date"/>
+                <field name="author_id" widget="many2one_avatar"/>
+                <field name="account_audit_log_move_id"/>
+                <field name="account_audit_log_preview"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_message_tree_audit_log_search" model="ir.ui.view">
+        <field name="name">mail.message.search</field>
+        <field name="model">mail.message</field>
+        <field name="priority">99</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <search string="Messages Search">
+                <field name="account_audit_log_move_id"/>
+                <field name="author_id"/>
+                <field name="date" string="Date"/>
+                <filter string="Update Only" name="update_only" domain="[('tracking_value_ids', '!=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="date" name="group_by_date" domain="[]" context="{'group_by': 'date'}"/>
+                    <filter string="Journal Entry" name="group_by_log_move_id" domain="[]" context="{'group_by': 'res_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_account_audit_trail_report" model="ir.actions.act_window">
+        <field name="name">Audit Trail</field>
+        <field name="res_model">mail.message</field>
+        <field name="view_id" ref="view_message_tree_audit_log"/>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+            To see the audit log you have to enable the audit trail option from settings
+            </p>
+        </field>
+        <field name="domain">[
+            ('model', '=', 'account.move'),
+            ('message_type', '=', 'notification'),
+            ('account_audit_log_move_id', '!=', False),
+            ('show_audit_log', '=', True),
+        ]</field>
+        <field name="search_view_id" ref="view_message_tree_audit_log_search"/>
+    </record>
+
+    <menuitem id="account_audit_trail_menu" name="Audit Trail" action="action_account_audit_trail_report" parent="account.account_reports_management_menu"/>
+</odoo>
