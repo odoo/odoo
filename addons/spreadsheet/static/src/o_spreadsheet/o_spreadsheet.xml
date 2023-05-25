@@ -106,7 +106,9 @@
         <div
           class="o-color-picker-toggler o-color-picker-line-item"
           t-on-click.stop="toggleColorPicker">
-          <div align="center">+</div>
+          <div class="o-color-picker-toggler-sign">
+            <t t-call="o-spreadsheet-Icon.PLUS"/>
+          </div>
         </div>
         <div
           t-foreach="env.model.getters.getCustomColors()"
@@ -1176,11 +1178,8 @@
   </t>
 
   <t t-name="o-spreadsheet-Icon.PLUS" owl="1">
-    <svg class="o-icon">
-      <path
-        fill="#000000"
-        d="M8,0 L10,0 L10,8 L18,8 L18,10 L10,10 L10,18 L8,18 L8,10 L0,10 L0,8 L8,8"
-      />
+    <svg class="o-icon" viewBox="0 0 18 18">
+      <path d="M8,0 L10,0 L10,8 L18,8 L18,10 L10,10 L10,18 L8,18 L8,10 L0,10 L0,8 L8,8"/>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.LIST" owl="1">
@@ -3249,7 +3248,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.0.10';
-  __info__.date = '2023-05-12T11:48:53.692Z';
-  __info__.hash = '115eda7';
+  __info__.version = '16.0.11';
+  __info__.date = '2023-05-25T13:09:28.186Z';
+  __info__.hash = 'd27e998';
 -->
