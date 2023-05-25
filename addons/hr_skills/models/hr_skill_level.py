@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
 
 
 class SkillLevel(models.Model):
@@ -29,28 +28,14 @@ class SkillLevel(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        levels = super().create(vals_list)
-        levels.skill_type_id._set_default_level()
-        return levels
+        skill_levels = super().create(vals_list)
+        for level in skill_levels:
+            if level.default_level:
+                level.skill_type_id.skill_level_ids.filtered(lambda r: r.id != level.id).default_level = False
+        return skill_levels
 
-    def write(self, values):
-        levels = super().write(values)
-        self.skill_type_id._set_default_level()
-        return levels
-
-    def unlink(self):
-        skill_types = self.skill_type_id
-        res = super().unlink()
-        skill_types._set_default_level()
+    def write(self, vals):
+        res = super().write(vals)
+        if vals.get('default_level'):
+            self.skill_type_id.skill_level_ids.filtered(lambda r: r.id != self.id).default_level = False
         return res
-
-    @api.constrains('default_level', 'skill_type_id')
-    def _constrains_default_level(self):
-        for skill_type in set(self.mapped('skill_type_id')):
-            if len(skill_type.skill_level_ids.filtered('default_level')) > 1:
-                raise ValidationError(_('Only one default level is allowed per skill type.'))
-
-    def action_set_default(self):
-        self.ensure_one()
-        self.skill_type_id.skill_level_ids.with_context(no_skill_level_check=True).default_level = False
-        self.default_level = True

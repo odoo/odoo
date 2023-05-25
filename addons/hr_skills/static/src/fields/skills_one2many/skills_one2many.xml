@@ -7,11 +7,39 @@
         <xpath expr="//thead" position="attributes">
             <attribute name="style">visibility: collapse;</attribute>
         </xpath>
+        <xpath expr="//table" position="before">
+            <div name="skills_header" class="text-uppercase fw-bolder small ms-3" style="margin-top: 2rem; box-shadow: 0 1px 0 #e6e6e6">
+                Skills <a t-on-click="openSkillsReport" class="fa fa-line-chart ms-1" ></a>
+            </div>
+        </xpath>
         <xpath expr="//table" position="after">
             <t t-if="!showTable">
-                <button t-on-click="props.onAdd" class="btn btn-secondary ms-4 mt-3" role="button" t-if="isEditable">
-                    Create a new entry
-                </button>
+                <t t-if="!anySkills">
+                    <div name="no_skills" class="ms-3 mt-3">
+                        <p>
+                            There are no skills defined in the library.<br/>
+                            Why not try adding some ?
+                        </p>
+                        <button t-on-click="skillTypesAction"
+                            class="btn btn-secondary ms-4 mt-3 text-center"
+                            role="button" t-if="isEditable">
+                            Create new Skills
+                        </button>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div name="skills_available" class="ms-3 mt-3">
+                        <p class="mt-3">You can add skills from our library to the employee profile.<br/>
+                        If skills are missing, they can be created by an HR officer.</p>
+                        <div class="ms-5">
+                             <button t-on-click="props.onAdd"
+                                class="btn btn-secondary ms-4 mt-3 text-center"
+                                role="button" t-if="isEditable">
+                                Pick a skill from the list
+                            </button>
+                        </div>
+                    </div>
+                </t>
             </t>
         </xpath>
     </t>
