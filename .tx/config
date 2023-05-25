@@ -10,6 +10,15 @@ resource_name          = account
 replace_edited_strings = false
 keep_translations      = false
 
+[o:odoo:p:odoo-17:r:account_audit_trail]
+file_filter            = addons/account_audit_trail/i18n/<lang>.po
+source_file            = addons/account_audit_trail/i18n/account_audit_trail.pot
+type                   = PO
+minimum_perc           = 0
+resource_name          = account_audit_trail
+replace_edited_strings = false
+keep_translations      = false
+
 [o:odoo:p:odoo-17:r:account_check_printing]
 file_filter            = addons/account_check_printing/i18n/<lang>.po
 source_file            = addons/account_check_printing/i18n/account_check_printing.pot
