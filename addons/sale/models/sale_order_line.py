@@ -1162,12 +1162,15 @@ class SaleOrderLine(models.Model):
 
     #=== CORE METHODS OVERRIDES ===#
 
+    def _get_partner_display(self):
+        self.ensure_one()
+        commercial_partner = self.order_partner_id.commercial_partner_id
+        return f'({commercial_partner.ref or commercial_partner.name})'
+
     def _additional_name_per_id(self):
         return {
-            so_line.id:
-            '(%s)' % (so_line.order_partner_id.ref or so_line.order_partner_id.name)
+            so_line.id: so_line._get_partner_display()
             for so_line in self
-            if so_line.order_partner_id.ref or so_line.order_partner_id.name
         }
 
     #=== HOOKS ===#
