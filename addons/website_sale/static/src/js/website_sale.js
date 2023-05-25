@@ -235,6 +235,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         'mouseup .o_wsale_filmstip_wrapper': '_onMouseUp',
         'mousemove .o_wsale_filmstip_wrapper': '_onMouseMove',
         'click .o_wsale_filmstip_wrapper' : '_onClickHandler',
+        'submit': '_onClickConfirmOrder',
     }),
 
     /**
@@ -952,6 +953,16 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      */
     _onClickReviewsLink: function () {
         $('#o_product_page_reviews_content').collapse('show');
+    },
+    /**
+     * Prevent multiclicks on confirm button when the form is submitted
+     *
+     * @private
+     */
+    _onClickConfirmOrder: function () {
+        const submitFormButton = $('form[name="o_wsale_confirm_order"]').find('button[type="submit"]');
+        submitFormButton.attr('disabled', true);
+        setTimeout(() => submitFormButton.attr('disabled', false), 5000);
     },
 
     // -------------------------------------
