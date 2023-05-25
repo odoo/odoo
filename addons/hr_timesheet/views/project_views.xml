@@ -151,7 +151,8 @@
                                     <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                         <div class="row">
                                             <div class="col-6">
-                                                <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}"/>
+                                                <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user"/>
+                                                <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user"/>
                                                 <strong><span><t t-esc="record.employee_id.value"/></span></strong>
                                             </div>
                                             <div class="col-6 float-end text-end">
@@ -177,7 +178,8 @@
                                  <group>
                                     <field name="date"/>
                                     <field name="user_id" invisible="1"/>
-                                    <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}"/>
+                                    <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user"/>
+                                    <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user"/>
                                     <field name="name" required="0"/>
                                     <field name="unit_amount" string="Duration" widget="float_time" decoration-danger="unit_amount &gt; 24"/>
                                     <field name="project_id" invisible="1"/>
