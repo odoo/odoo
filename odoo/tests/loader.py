@@ -17,10 +17,7 @@ def get_test_modules(module):
     """ Return a list of module for the addons potentially containing tests to
     feed unittest.TestLoader.loadTestsFromModule() """
     results = _get_tests_modules(importlib.util.find_spec(f'odoo.addons.{module}'))
-
-    upgrade_spec = importlib.util.find_spec(f'odoo.upgrade.{module}')
-    if upgrade_spec:
-        results += list(_get_upgrade_test_modules(module))
+    results += list(_get_upgrade_test_modules(module))
 
     return results
 
@@ -39,16 +36,25 @@ def _get_tests_modules(mod):
 
 
 def _get_upgrade_test_modules(module):
-    upg = importlib.import_module("odoo.upgrade")
-    for path in map(Path, upg.__path__):
-        for test in (path / module / "tests").glob("test_*.py"):
-            spec = importlib.util.spec_from_file_location(f"odoo.upgrade.{module}.tests.{test.stem}", test)
-            if not spec:
-                continue
-            pymod = importlib.util.module_from_spec(spec)
-            sys.modules[spec.name] = pymod
-            spec.loader.exec_module(pymod)
-            yield pymod
+    upgrade_modules = (
+        f"odoo.upgrade.{module}",
+        f"odoo.addons.{module}.migrations",
+        f"odoo.addons.{module}.upgrades",
+    )
+    for module_name in upgrade_modules:
+        if not importlib.util.find_spec(module_name):
+            continue
+
+        upg = importlib.import_module(module_name)
+        for path in map(Path, upg.__path__):
+            for test in path.glob("tests/test_*.py"):
+                spec = importlib.util.spec_from_file_location(f"{upg.__name__}.tests.{test.stem}", test)
+                if not spec:
+                    continue
+                pymod = importlib.util.module_from_spec(spec)
+                sys.modules[spec.name] = pymod
+                spec.loader.exec_module(pymod)
+                yield pymod
 
 
 def make_suite(module_names, position='at_install'):
