@@ -16947,6 +16947,18 @@
       grid-template-columns: repeat(${ITEMS_PER_LINE}, 1fr);
       grid-gap: ${ITEM_HORIZONTAL_MARGIN * 2}px;
     }
+    .o-color-picker-toggler {
+      display: flex;
+      .o-color-picker-toggler-sign {
+        margin: auto auto;
+        width: 55%;
+        height: 55%;
+        .o-icon {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
     .o-color-picker-line-item {
       width: ${ITEM_EDGE_LENGTH}px;
       height: ${ITEM_EDGE_LENGTH}px;
@@ -19539,7 +19551,14 @@
                 current = it.next();
             }
             if (current.value !== nodeToFind) {
-                throw new Error("Cannot find the node in the children of the element");
+                /** This situation can happen if the code is called while the selection is not currently on the ContentEditableHelper.
+                 * In this case, we return 0 because we don't know the size of the text before the selection.
+                 *
+                 * A known occurence is triggered since the introduction of commit d4663158 (PR #2038).
+                 *
+                 * FIXME: find a way to test eventhough the selection API is not available in jsDOM.
+                 */
+                return 0;
             }
             else {
                 if (!current.value.hasChildNodes()) {
@@ -37075,7 +37094,8 @@
         getCellWidth(position) {
             const text = this.getCellText(position);
             const style = this.getters.getCellComputedStyle(position);
-            let contentWidth = this.getTextWidth(text, style);
+            const multiLineText = text.split(NEWLINE);
+            let contentWidth = Math.max(...multiLineText.map((line) => this.getTextWidth(line, style)));
             const icon = this.getters.getConditionalIcon(position);
             if (icon) {
                 contentWidth += computeIconWidth(this.getters.getCellStyle(position));
@@ -45318,9 +45338,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.2.6';
-    __info__.date = '2023-05-12T11:52:03.912Z';
-    __info__.hash = '6848d25';
+    __info__.version = '16.2.7';
+    __info__.date = '2023-05-25T13:11:51.755Z';
+    __info__.hash = '047a6d5';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
