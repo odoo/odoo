@@ -1954,6 +1954,8 @@ const Wysiwyg = Widget.extend({
                 buttonGroup.classList.add('d-none');
             }
         }
+        // Toolbar might have changed size, update its position.
+        this.odooEditor.updateToolbarPosition();
         // Update color of already opened colorpickers.
         setTimeout(() => {
             for (let eventName in this.colorpickers) {
