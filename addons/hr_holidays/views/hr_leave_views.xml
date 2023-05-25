@@ -43,6 +43,29 @@
                 <field name="employee_id"/>
                 <field name="holiday_status_id"/>
                 <field name="name"/>
+                <filter domain="[
+                        ('state','in',['confirm']),
+                        '|',
+                        ('employee_id.user_id', '!=', uid),
+                        '&amp;',
+                        ('employee_id.user_id', '=', uid),
+                        ('employee_id.leave_manager_id', '=', uid)]"
+                    string="Waiting For Me"
+                    name="waiting_for_me"
+                    groups="hr_holidays.group_hr_holidays_responsible,!hr_holidays.group_hr_holidays_user"/>
+                <filter domain="[
+                        ('state','in',['confirm','validate1']),
+                        '|',
+                            ('employee_id.user_id', '!=', uid),
+                            '|',
+                                '&amp;',
+                                    ('state','=','confirm'),
+                                    ('holiday_status_id.leave_validation_type','=','hr'),
+                                ('state','=','validate1')]"
+                    string="Waiting For Me"
+                    name="waiting_for_me_manager"
+                    groups="hr_holidays.group_hr_holidays_user"/>
+                <separator/>
                 <filter domain="[('state','in',('confirm','validate1'))]" string="First Approval" name="approve"/>
                 <filter domain="[('state', '=', 'validate1')]" string="Second Approval" name="second_approval"/>
                 <filter string="Approved" domain="[('state', '=', 'validate')]" name="validated"/>
@@ -426,14 +449,15 @@
                 <attribute name="invisible">0</attribute>
             </xpath>
             <xpath expr="//field[@name='holiday_status_id']" position="before">
-                <field name="holiday_type" string="Mode"
-                    groups="hr_holidays.group_hr_holidays_user" readonly="state not in ['confirm', 'draft']"/>
+                <field name="is_user_only_responsible" invisible="1"/>
+                <field name="holiday_type" string="Mode" groups="hr_holidays.group_hr_holidays_user" readonly="state not in ['confirm', 'draft']"/>
                 <field name="mode_company_id" string="Company" groups="hr_holidays.group_hr_holidays_user" invisible="holiday_type != 'company'" readonly="state not in ['confirm', 'draft']" required="holiday_type == 'company'"/>
                 <field name="category_id" groups="hr_holidays.group_hr_holidays_user" invisible="holiday_type != 'category'" readonly="state not in ['confirm', 'draft']" required="holiday_type == 'category'"/>
                 <field name="department_id" groups="hr_holidays.group_hr_holidays_user" invisible="holiday_type != 'department'" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" required="holiday_type == 'department'"/>
-                    <field name="multi_employee" invisible="1" force_save="1"/>
-                    <field name="employee_id" groups="hr_holidays.group_hr_holidays_user" invisible="holiday_type != 'employee' or state != 'validate' or not employee_id" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" widget="many2one_avatar_user"/>
-                    <field name="employee_ids" groups="hr_holidays.group_hr_holidays_user" invisible="holiday_type != 'employee' or (state == 'validate' and employee_id)" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" required="holiday_type == 'employee' and state in ('draft', 'cancel', 'refuse')" widget="many2many_tags_avatar"/>
+                <field name="multi_employee" invisible="1" force_save="1"/>
+                    <field name="allowed_employee_ids" invisible="1"/>
+                    <field name="employee_id" groups="hr_holidays.group_hr_holidays_user" domain="[('id', 'in', allowed_employee_ids)]" invisible="holiday_type != 'employee' or state != 'validate' or not employee_id" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" widget="many2one_avatar_user"/>
+                    <field name="employee_ids" groups="hr_holidays.group_hr_holidays_user" domain="[('id', 'in', allowed_employee_ids)]" invisible="holiday_type != 'employee' or (state == 'validate' and employee_id)" readonly="state in ['cancel', 'refuse', 'validate', 'validate1']" required="holiday_type == 'employee' and state in ('draft', 'cancel', 'refuse')" widget="many2many_tags_avatar"/>
             </xpath>
             <field name="name" position="replace"/>
             <field name="user_id" position="before">
@@ -678,10 +702,8 @@
         <field name="view_mode">tree,kanban,form,calendar,activity</field>
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_manager"/>
         <field name="context">{
-            'search_default_approve': 1,
-            'search_default_my_team': 2,
-            'search_default_active_employee': 3,
-            'search_default_active_time_off': 4,
+            'search_default_waiting_for_me': 1,
+            'search_default_waiting_for_me_manager': 2,
             'hide_employee_name': 1,
             'holiday_status_display_name': False}
         </field>
