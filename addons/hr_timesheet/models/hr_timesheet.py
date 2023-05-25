@@ -50,7 +50,7 @@ class AccountAnalyticLine(models.Model):
     task_id = fields.Many2one(
         'project.task', 'Task', index='btree_not_null',
         compute='_compute_task_id', store=True, readonly=False,
-        domain="[('company_id', '=', company_id), ('project_id.allow_timesheets', '=', True), ('project_id', '=?', project_id)]")
+        domain="[('company_id', '=', company_id), ('project_root_id.allow_timesheets', '=', True), ('project_root_id', '=?', project_id)]")
     parent_task_id = fields.Many2one('project.task', related='task_id.parent_id', store=True)
     project_id = fields.Many2one(
         'project.project', 'Project', domain=_domain_project_id, index=True,
@@ -103,12 +103,12 @@ class AccountAnalyticLine(models.Model):
             if timesheet.project_id:
                 timesheet.partner_id = timesheet.task_id.partner_id or timesheet.project_id.partner_id
 
-    @api.depends('task_id', 'task_id.project_id')
+    @api.depends('task_id')
     def _compute_project_id(self):
         for line in self:
-            if not line.task_id.project_id or line.project_id == line.task_id.project_id:
+            if not line.task_id.project_root_id or line.project_id == line.task_id.project_root_id:
                 continue
-            line.project_id = line.task_id.project_id
+            line.project_id = line.task_id.project_root_id
 
     @api.depends('project_id')
     def _compute_task_id(self):
@@ -120,7 +120,7 @@ class AccountAnalyticLine(models.Model):
         # TODO KBA in master - check to do it "properly", currently:
         # This onchange is used to reset the task_id when the project changes.
         # Doing it in the compute will remove the task_id when the project of a task changes.
-        if self.project_id != self.task_id.project_id:
+        if self.project_id != self.task_id.project_root_id:
             self.task_id = False
 
     @api.depends('employee_id')
@@ -313,9 +313,9 @@ class AccountAnalyticLine(models.Model):
             tasks = self.env['project.task'].sudo().browse(task_ids)
             for task in tasks:
                 task_per_id[task.id] = task
-                if not task.project_id:
+                if not task.project_root_id:
                     raise ValidationError(_('Timesheets cannot be created on a private task.'))
-            account_ids = account_ids.union(tasks.analytic_account_id.ids, tasks.project_id.analytic_account_id.ids)
+            account_ids = account_ids.union(tasks.analytic_account_id.ids, tasks.project_root_id.analytic_account_id.ids)
 
         project_per_id = {}
         if project_ids:
@@ -335,7 +335,7 @@ class AccountAnalyticLine(models.Model):
             vals = vals_list[index]
             data = task_per_id[vals['task_id']] if vals.get('task_id') else project_per_id[vals['project_id']]
             if not vals.get('project_id'):
-                vals['project_id'] = data.project_id.id
+                vals['project_id'] = data.project_root_id.id
             if not vals.get('account_id'):
                 account = data._get_task_analytic_account_id() if vals.get('task_id') else data.analytic_account_id
                 if not account or not account.active:

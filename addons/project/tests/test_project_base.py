@@ -197,3 +197,32 @@ class TestProjectBase(TestProjectCommon):
         with self.assertRaises(UserError):
             # Cannot change the company of a project if the company of the partner is different
             self.project_pigs.company_id = company_1
+
+    def test_search_project_root_id(self):
+        project = self.env['project.project'].create({
+            'name': 'Test project',
+            'allow_milestones': False,
+        })
+        ProjectTask = self.env['project.task']
+        parent = ProjectTask.create({
+            'name': 'Test task',
+            'project_id': project.id,
+        })
+        child = ProjectTask.create({
+            'name': 'Test subtask',
+            'parent_id': parent.id,
+        })
+        tasks = parent | child
+
+        other_projects = self.project_goats + self.project_pigs
+
+        self.assertFalse(child.project_id)
+        self.assertEqual(child.project_root_id, parent.project_id)
+        self.assertEqual(parent.project_root_id, parent.project_id)
+        self.assertEqual(ProjectTask.search([('project_root_id', '=', project.id)]), tasks)
+        self.assertEqual(ProjectTask.search([('project_root_id', 'in', project.ids)]), tasks)
+        self.assertEqual(ProjectTask.search([('project_root_id.allow_milestones', '=', False)]), tasks)
+        self.assertEqual(ProjectTask.search(['!', ('project_root_id.allow_milestones', '=', True)]), tasks)
+        self.assertEqual(ProjectTask.search([('project_root_id', '=?', project.id)]), tasks)
+        self.assertEqual(ProjectTask.search([('project_root_id', 'not in', other_projects.ids), ('id', 'in', tasks.ids)]), tasks)
+        self.assertEqual(ProjectTask.search([('project_root_id', '!=', self.project_pigs.id), ('id', 'in', tasks.ids)]), tasks)

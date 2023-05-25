@@ -524,10 +524,10 @@ class ProjectTask(models.Model):
 
     sale_order_id = fields.Many2one(domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id', 'child_of', commercial_partner_id), ('partner_id', 'parent_of', partner_id)]")
     so_analytic_account_id = fields.Many2one(related='sale_order_id.analytic_account_id', string='Sale Order Analytic Account')
-    pricing_type = fields.Selection(related="project_id.pricing_type")
+    pricing_type = fields.Selection(related="project_root_id.pricing_type")
     is_project_map_empty = fields.Boolean("Is Project map empty", compute='_compute_is_project_map_empty')
     has_multi_sol = fields.Boolean(compute='_compute_has_multi_sol', compute_sudo=True)
-    timesheet_product_id = fields.Many2one(related="project_id.timesheet_product_id")
+    timesheet_product_id = fields.Many2one(related="project_root_id.timesheet_product_id")
     remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so', search='_search_remaining_hours_so', compute_sudo=True)
     remaining_hours_available = fields.Boolean(related="sale_line_id.remaining_hours_available")
 

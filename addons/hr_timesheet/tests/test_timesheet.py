@@ -484,16 +484,51 @@ class TestTimesheet(TestCommonTimesheet):
             3) Enter the 8 hour timesheet in the child task
             4) Check subtask Effective hours in parent task
         """
-        self.task1.child_ids = [Command.set([self.task2.id])]
-        self.env['account.analytic.line'].create({
+        subtask_with_project, subtask_without_project = self.env['project.task'].create([
+            {
+                'name': 'Subtask with project set',
+                'project_id': self.project_customer.id,
+            },
+            {
+                'name': 'Suubtask without project set',
+                'child_ids': [Command.create({'name': 'subsubtask without project set'})],
+            },
+        ])
+        subsubtask = subtask_without_project.child_ids
+        self.task1.child_ids = subtask_with_project + subtask_without_project
+        self.assertTrue(self.project_customer.allow_timesheets, 'The project should be timesheetable')
+        self.assertEqual(subtask_with_project.allow_timesheets, self.project_customer.allow_timesheets, 'The subtask should follow the settings of its project linked.')
+        Timesheet = self.env['account.analytic.line']
+        Timesheet.create({
             'name': 'FirstTimeSheet',
             'project_id': self.project_customer.id,
-            'task_id': self.task2.id,
+            'task_id': subtask_with_project.id,
             'unit_amount': 8.0,
             'employee_id': self.empl_employee2.id,
         })
         self.assertEqual(self.task1.subtask_effective_hours, 8, 'Hours Spent on Sub-tasks should be 8 hours in Parent Task')
-        self.task1.child_ids = [Command.clear()]
+
+        self.assertEqual(subtask_without_project.project_root_id, self.task1.project_id, 'The subtask without any project set should follow the settings of the project linked to its parent task.')
+        self.assertTrue(subtask_without_project.allow_timesheets, 'The subtask without any project set should be timesheetable because its parent task is timesheetable.')
+
+        self.assertEqual(subsubtask.project_root_id, self.task1.project_id, 'The subtask without any project set should follow the first project linked to its ancestors.')
+        self.assertTrue(subsubtask.allow_timesheets, 'The subtask without any project set should be timesheetable because its ancestor is timesheetable.')
+
+        Timesheet.create([
+            {
+                'name': '/',
+                'task_id': subtask_without_project.id,
+                'unit_amount': 1.0,
+                'employee_id': self.empl_employee2.id,
+            },
+            {
+                'name': '/',
+                'task_id': subsubtask.id,
+                'unit_amount': 1.0,
+                'employee_id': self.empl_employee2.id,
+            },
+        ])
+        self.assertEqual(self.task1.subtask_effective_hours, 10)
 
     def test_ensure_product_uom_set_in_timesheet(self):
         self.assertFalse(self.project_customer.timesheet_ids, 'No timesheet should be recorded in this project')
@@ -608,3 +643,25 @@ class TestTimesheet(TestCommonTimesheet):
         self.task2.unlink()
         with self.assertRaises(RedirectWarning):
             self.task1.unlink()
+
+    def test_cannot_convert_task_with_timesheets_in_private_task(self):
+        self.env['account.analytic.line'].create({
+            'name': '/',
+            'unit_amount': 1,
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'employee_id': self.empl_employee.id,
+        })
+        with self.assertRaises(UserError):
+            self.task1.project_id = False
+
+        self.task1.parent_id = self.task2
+        self.task1.project_id = False
+
+        with self.assertRaises(UserError):
+            self.task1.parent_id = False
+
+        self.task1.project_id = self.project_customer
+
+        with self.assertRaises(UserError):
+            self.task1.write({'project_id': False, 'parent_id': False})

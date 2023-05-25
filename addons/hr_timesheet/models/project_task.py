@@ -26,8 +26,9 @@ class Task(models.Model):
     _inherit = "project.task"
 
     project_id = fields.Many2one(domain=[('is_internal_project', '=', False)])
-    analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active', compute_sudo=True)
-    allow_timesheets = fields.Boolean("Allow timesheets", related='project_id.allow_timesheets', help="Timesheets can be logged on this task.", readonly=True)
+    project_root_id = fields.Many2one(domain=[('is_internal_project', '=', False)])
+    analytic_account_active = fields.Boolean("Active Analytic Account", compute='_compute_analytic_account_active', compute_sudo=True, recursive=True)
+    allow_timesheets = fields.Boolean("Allow timesheets", related="project_root_id.allow_timesheets", help="Timesheets can be logged on this task.", readonly=True, recursive=True)
     remaining_hours = fields.Float("Remaining Hours", compute='_compute_remaining_hours', store=True, readonly=True, help="Number of allocated hours minus the number of hours spent.")
     remaining_hours_percentage = fields.Float(compute='_compute_remaining_hours_percentage', search='_search_remaining_hours_percentage')
     effective_hours = fields.Float("Hours Spent", compute='_compute_effective_hours', compute_sudo=True, store=True)
@@ -54,7 +55,7 @@ class Task(models.Model):
     def _compute_encode_uom_in_days(self):
         self.encode_uom_in_days = self._uom_in_days()
 
-    @api.depends('analytic_account_id.active', 'project_id.analytic_account_id.active')
+    @api.depends('analytic_account_id.active', 'project_root_id.analytic_account_id.active')
     def _compute_analytic_account_active(self):
         """ Overridden in sale_timesheet """
         for task in self:
@@ -162,7 +163,13 @@ class Task(models.Model):
 
     def write(self, values):
         # a timesheet must have an analytic account (and a project)
-        if 'project_id' in values and not values.get('project_id') and self._get_timesheet():
+        is_removed_project = 'project_id' in values and not values['project_id']
+        is_removed_parent = 'parent_id' in values and not values['parent_id']
+        if (
+            ((is_removed_project and (not self.parent_id or is_removed_parent))
+            or (is_removed_parent and not (self.project_id or is_removed_project)))
+            and self._get_timesheet()
+        ):
             raise UserError(_('This task must be part of a project because there are some timesheets linked to it.'))
         res = super(Task, self).write(values)
 
