@@ -125,7 +125,7 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
                       skip_modules=None, report=None, models_to_check=None):
     """Migrates+Updates or Installs all module nodes from ``graph``
 
-       :param cr:
+       :param env:
        :param graph: graph of module nodes to load
        :param status: deprecated parameter, unused, left to avoid changing signature in 8.0
        :param perform_checks: whether module descriptors should be checked for validity (prints warnings
@@ -188,6 +188,7 @@ def load_module_graph(env, graph, status=None, perform_checks=True,
             py_module = sys.modules['odoo.addons.%s' % (module_name,)]
             pre_init = package.info.get('pre_init_hook')
             if pre_init:
+                registry.setup_models(env.cr)
                 getattr(py_module, pre_init)(env)
 
         model_names = registry.load(env.cr, package)
