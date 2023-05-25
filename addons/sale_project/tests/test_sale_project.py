@@ -325,7 +325,7 @@ class TestSaleProject(TestSaleProjectCommon):
             ]
         })
         sub_B_without = task_B.child_ids.filtered(lambda sub: sub.name == 'Sub B without project')
-        self.assertEqual(len(sub_B_without.sale_line_id), 0)
+        self.assertEqual(sub_B_without.sale_line_id, task_B.sale_line_id)
 
         # [CASE 4] Without parent --> use sale order line of the project
         task_D = self.env['project.task'].create({
