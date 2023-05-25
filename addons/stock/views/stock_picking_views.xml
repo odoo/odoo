@@ -384,8 +384,6 @@
                     <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" help="Draft Moves"/>
                     <filter name="waiting" string="Waiting" domain="[('state', 'in', ('confirmed', 'waiting'))]" help="Waiting Moves"/>
                     <filter name="available" string="Ready" domain="[('state', '=', 'assigned')]" help="Assigned Moves"/>
-                    <filter name="done" string="Done" domain="[('state', '=', 'done')]" help="Pickings already processed"/>
-                    <filter name="cancel" string="Cancelled" domain="[('state', '=', 'cancel')]" help="Cancelled Moves"/>
                     <separator/>
                     <filter name="reception" string="Receipts" domain="[('picking_type_code', '=', 'incoming')]"/>
                     <filter name="delivery" string="Deliveries" domain="[('picking_type_code', '=', 'outgoing')]"/>
