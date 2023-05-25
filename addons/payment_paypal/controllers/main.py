@@ -173,7 +173,9 @@ class PaypalController(http.Controller):
             # Handle the notification data
             tx_sudo._handle_notification_data('paypal', data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
-            _logger.exception("unable to handle the notification data; skipping to acknowledge")
+            _logger.warning(
+                "unable to handle the notification data; skipping to acknowledge", exc_info=True
+            )
         return ''
 
     @staticmethod
