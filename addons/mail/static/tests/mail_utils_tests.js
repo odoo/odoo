@@ -2,6 +2,8 @@
 
 import * as utils from "@mail/js/utils";
 
+import { start, startServer } from "@mail/../tests/helpers/test_utils";
+
 QUnit.module("Mail utils");
 
 QUnit.test("add_link utility function", function (assert) {
@@ -94,4 +96,64 @@ QUnit.test("addLink: linkify inside text node (2 occurrences)", function (assert
     assert.strictEqual(div.querySelectorAll(":scope a").length, 2);
     assert.strictEqual(div.querySelectorAll(":scope a")[0].textContent, "https://somelink.com");
     assert.strictEqual(div.querySelectorAll(":scope a")[1].textContent, "https://somelink2.com");
+});
+
+QUnit.test("url", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const { click, insertText, openDiscuss } = await start();
+    await openDiscuss(channelId);
+    // see: https://www.ietf.org/rfc/rfc1738.txt
+    const messageBody = "https://odoo.com?test=~^|`{}[]#";
+    await insertText(".o-mail-Composer-input", messageBody);
+    await click("button:contains(Send)");
+    assert.containsOnce($, `.o-mail-Message a:contains(${messageBody})`);
+});
+
+QUnit.test("url with comma at the end", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const { click, insertText, openDiscuss } = await start();
+    await openDiscuss(channelId);
+    const messageBody = "Go to https://odoo.com, it's great!";
+    await insertText(".o-mail-Composer-input", messageBody);
+    await click("button:contains(Send)");
+    assert.containsOnce($, `.o-mail-Message a:contains(https://odoo.com)`);
+    assert.containsOnce($, `.o-mail-Message:contains(${messageBody})`);
+});
+
+QUnit.test("url with dot at the end", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const { click, insertText, openDiscuss } = await start();
+    await openDiscuss(channelId);
+    const messageBody = "Go to https://odoo.com. It's great!";
+    await insertText(".o-mail-Composer-input", messageBody);
+    await click("button:contains(Send)");
+    assert.containsOnce($, `.o-mail-Message a:contains(https://odoo.com)`);
+    assert.containsOnce($, `.o-mail-Message:contains(${messageBody})`);
+});
+
+QUnit.test("url with semicolon at the end", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const { click, insertText, openDiscuss } = await start();
+    await openDiscuss(channelId);
+    const messageBody = "Go to https://odoo.com; it's great!";
+    await insertText(".o-mail-Composer-input", messageBody);
+    await click("button:contains(Send)");
+    assert.containsOnce($, `.o-mail-Message a:contains(https://odoo.com)`);
+    assert.containsOnce($, `.o-mail-Message:contains(${messageBody})`);
+});
+
+QUnit.test("url with ellipsis at the end", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const { click, insertText, openDiscuss } = await start();
+    await openDiscuss(channelId);
+    const messageBody = "Go to https://odoo.com... it's great!";
+    await insertText(".o-mail-Composer-input", messageBody);
+    await click("button:contains(Send)");
+    assert.containsOnce($, `.o-mail-Message a:contains(https://odoo.com)`);
+    assert.containsOnce($, `.o-mail-Message:contains(${messageBody})`);
 });
