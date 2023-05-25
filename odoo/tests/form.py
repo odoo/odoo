@@ -981,24 +981,31 @@ class M2MProxy(X2MProxy, collections.abc.Sequence):
 
 def read_record(record, fields):
     """ Read the given fields (field descriptions) on the given record. """
+    fields_spec = get_fields_spec(fields)
+    values = record.web_read(fields_spec)[0]
+    return convert_read_to_form(values, fields)
+
+
+def get_fields_spec(fields):
     result = {}
-    # don't read the id explicitly, not sure why but if any of the "magic" hr
-    # field is read alongside `id` then it blows up e.g.
-    # james.read(['barcode']) works fine but james.read(['id', 'barcode'])
-    # triggers an ACL error on barcode, likewise km_home_work or
-    # emergency_contact or whatever. Since we always get the id anyway, just
-    # remove it from the fields to read
-    field_names = [fname for fname in fields if fname != 'id']
-    if not field_names:
-        return result
-    for fname, value in record.read(field_names)[0].items():
+    for field, field_info in fields.items():
+        subview = field_info.get('edition_view')
+        result[field] = {'fields': get_fields_spec(subview['fields'])} if subview else {}
+    return result
+
+
+def convert_read_to_form(values, fields):
+    result = {}
+    for fname, value in values.items():
         field_info = fields[fname]
-        if field_info['type'] == 'many2one':
-            value = value and value[0]
+        if field_info['type'] == 'one2many':
+            subfields = field_info['edition_view']['fields']
+            value = [
+                (Command.UPDATE, vals['id'], UpdateDict(convert_read_to_form(vals, subfields)))
+                for vals in value
+            ]
         elif field_info['type'] == 'many2many':
-            value = [(Command.SET, 0, value or [])]
-        elif field_info['type'] == 'one2many':
-            value = [(Command.UPDATE, result, None) for result in value or []]
+            value = [Command.set(value)]
         elif field_info['type'] == 'datetime' and isinstance(value, datetime):
             value = odoo.fields.Datetime.to_string(value)
         elif field_info['type'] == 'date' and isinstance(value, date):
