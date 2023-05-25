@@ -208,7 +208,9 @@
           <div
             class="o-color-picker-toggler o-color-picker-line-item"
             t-on-click.stop="toggleColorPicker">
-            <div align="center">+</div>
+            <div class="o-color-picker-toggler-sign">
+              <t t-call="o-spreadsheet-Icon.PLUS"/>
+            </div>
           </div>
           <div
             t-foreach="env.model.getters.getCustomColors()"
@@ -517,7 +519,7 @@
       <div
         class="o-figure w-100 h-100"
         t-on-mousedown.stop="(ev) => this.onMouseDown(ev)"
-        t-on-contextmenu.prevent.stop="onContextMenu"
+        t-on-contextmenu.prevent.stop="(ev) => !env.model.getters.isReadonly() and this.onContextMenu(ev)"
         t-ref="figure"
         t-att-style="props.style"
         tabindex="0"
@@ -532,6 +534,7 @@
         <div class="o-figure-menu position-absolute m-2" t-if="!env.isDashboard()">
           <div
             class="o-figure-menu-item"
+            t-if="!env.model.getters.isReadonly()"
             t-on-click="showMenu"
             t-ref="menuButton"
             t-on-contextmenu.prevent.stop="showMenu">
@@ -1375,11 +1378,8 @@
   </t>
 
   <t t-name="o-spreadsheet-Icon.PLUS" owl="1">
-    <svg class="o-icon">
-      <path
-        fill="#000000"
-        d="M8,0 L10,0 L10,8 L18,8 L18,10 L10,10 L10,18 L8,18 L8,10 L0,10 L0,8 L8,8"
-      />
+    <svg class="o-icon" viewBox="0 0 18 18">
+      <path d="M8,0 L10,0 L10,8 L18,8 L18,10 L10,10 L10,18 L8,18 L8,10 L0,10 L0,8 L8,8"/>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.LIST" owl="1">
@@ -3505,7 +3505,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.2.6';
-  __info__.date = '2023-05-12T11:52:07.641Z';
-  __info__.hash = '6848d25';
+  __info__.version = '16.2.7';
+  __info__.date = '2023-05-25T13:11:55.179Z';
+  __info__.hash = '047a6d5';
 -->
