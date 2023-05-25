@@ -293,6 +293,75 @@ QUnit.module("Draggable", ({ beforeEach }) => {
         await cancelDrag(dragHelpers.cancel);
     });
 
+    QUnit.test("draggable area contains overflowing visible elements", async (assert) => {
+        const { advanceFrame } = mockAnimationFrame();
+        class List extends Component {
+            setup() {
+                useSortable({
+                    ref: useRef("renderer"),
+                    elements: ".item",
+                    groups: ".list",
+                    connectGroups: true,
+                });
+            }
+        }
+        List.template = xml`
+            <div class="controller" style="max-width: 900px; min-width: 900px;">
+                <div class="content" style="max-width: 600px;">
+                    <div t-ref="renderer" class="renderer d-flex" style="overflow: visible;">
+                        <div t-foreach="[1, 2, 3]" t-as="c" t-key="c" t-attf-class="list m-0 list{{ c }}">
+                            <div style="min-width: 300px; min-height: 50px;"
+                                t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-esc="'item' + l + '' + c" t-attf-class="item item{{ l + '' + c }}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        await mount(List, target);
+
+        const controller = target.querySelector(".controller");
+        const content = target.querySelector(".content");
+        const renderer = target.querySelector(".renderer");
+
+        assert.strictEqual(content.scrollLeft, 0);
+        assert.strictEqual(controller.getBoundingClientRect().width, 900);
+        assert.strictEqual(content.getBoundingClientRect().width, 600);
+        assert.strictEqual(renderer.getBoundingClientRect().width, 600);
+        assert.strictEqual(renderer.scrollWidth, 900);
+        assert.containsNone(target, ".item.o_dragged");
+
+        let dragHelpers = await drag(".item11");
+
+        // Drag first record of first group to the right
+        await dragHelpers.moveTo(".list3 .item");
+
+        // Next frame (normal time delta)
+        await advanceFrame();
+
+        // Verify that there is no scrolling
+        assert.strictEqual(content.scrollLeft, 0);
+        assert.containsOnce(target, ".item.o_dragged");
+
+        const dragged = target.querySelector(".item.o_dragged");
+        const sibling = target.querySelector(".list3 .item");
+        // Verify that the dragged element is allowed to go inside the
+        // overflowing part of the draggable container.
+        assert.strictEqual(
+            dragged.getBoundingClientRect().right,
+            900 + target.getBoundingClientRect().x
+        );
+        assert.strictEqual(
+            sibling.getBoundingClientRect().right,
+            900 + target.getBoundingClientRect().x
+        );
+
+        // Cancel drag: press "Escape"
+        await dragHelpers.cancel();
+        await nextTick();
+
+        assert.containsNone(target, ".item.o_dragged");
+    });
+
     QUnit.test("Dynamically disable sortable feature", async (assert) => {
         assert.expect(4);
 
