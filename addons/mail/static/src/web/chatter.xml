@@ -132,7 +132,7 @@
             <div class="d-flex align-items-center px-3">
                 <i class="fa fa-fw" t-att-class="state.showActivities ? 'fa-caret-down' : 'fa-caret-right'"/>
                 Planned Activities
-                <span t-if="!state.showActivities" class="badge text-bg-success"><t t-esc="activities.length"/></span>
+                <span t-if="!state.showActivities" class="badge rounded-pill ms-2 text-bg-success"><t t-esc="activities.length"/></span>
             </div>
             <hr class="flex-grow-1"/>
         </div>
