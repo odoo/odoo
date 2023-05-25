@@ -174,16 +174,13 @@ class AccountMoveSend(models.Model):
             display_messages = []
             if wizard.enable_send_mail:
                 invoices_without_mail_data = wizard.move_ids.filtered(lambda x: not x.partner_id.email)
-                if invoices_without_mail_data:
-                    if wizard.mode == 'invoice_multi':
-                        display_messages.append(_(
-                            "The following invoice(s) will not be sent by email, because the customers don't have email "
-                            "address: "
-                        ))
-                        display_messages.append(", ".join(invoices_without_mail_data.mapped('name')))
-                        send_mail_readonly = True
-                    else:
-                        display_messages.append(_("Please add an email address for your partner"))
+                if invoices_without_mail_data and wizard.mode == 'invoice_multi':
+                    display_messages.append(_(
+                        "The following invoice(s) will not be sent by email, because the customers don't have email "
+                        "address: "
+                    ))
+                    display_messages.append(", ".join(invoices_without_mail_data.mapped('name')))
+                    send_mail_readonly = True
 
             wizard.send_mail_readonly = send_mail_readonly
             wizard.send_mail_warning_message = "".join(display_messages) if display_messages else None
