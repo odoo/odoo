@@ -1024,3 +1024,22 @@ class TestAccountMove(AccountTestInvoicingCommon):
             {'name': 'Purchase Tax 15%', 'credit':   0.0, 'debit':  15.0, 'account_id': self.company_data['default_account_tax_purchase'].id, 'tax_ids': [],               'tax_base_amount': 100, 'tax_tag_invert': False,  'tax_repartition_line_id': purchase_invoice_rep_line.id},
             {'name': 'debit',            'credit':   0.0, 'debit': 100.0, 'account_id': test_account.id,                                      'tax_ids': purchase_tax.ids, 'tax_base_amount': 0,   'tax_tag_invert': False,  'tax_repartition_line_id': False},
         ])
+
+    @freeze_time('2021-10-01 00:00:00')
+    def test_change_journal_account_move(self):
+        """Changing the journal should change the name of the move"""
+        journal = self.env['account.journal'].create({
+            'name': 'awesome journal',
+            'type': 'general',
+            'code': 'AJ',
+        })
+        move = self.env['account.move'].with_context(default_move_type='entry')
+        with Form(move) as move_form:
+            self.assertEqual(move_form.name, 'MISC/2021/10/0001')
+            move_form.journal_id, journal = journal, move_form.journal_id
+            self.assertEqual(move_form.name, 'AJ/2021/10/0001')
+            # ensure we aren't burning any sequence by switching journal
+            move_form.journal_id, journal = journal, move_form.journal_id
+            self.assertEqual(move_form.name, 'MISC/2021/10/0001')
+            move_form.journal_id, journal = journal, move_form.journal_id
+            self.assertEqual(move_form.name, 'AJ/2021/10/0001')
