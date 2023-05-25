@@ -2105,6 +2105,28 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.verifySteps(["doAction"]);
     });
 
+    QUnit.test(`create event with default title in context (with quickCreate)`, async (assert) => {
+        assert.expect(1);
+
+        serverData.models.event.records = [];
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" mode="week" all_day="allday" />
+            `,
+            context: {
+                default_name: "Example Title",
+            },
+        });
+
+        await selectAllDayRange(target, "2016-12-14", "2016-12-15");
+        const input = target.querySelector(".o-calendar-quick-create--input");
+        assert.strictEqual(input.value, "Example Title");
+    });
+
     QUnit.test(`create all day event in week mode (no quickCreate)`, async (assert) => {
         assert.expect(1);
 
