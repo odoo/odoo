@@ -43,8 +43,10 @@
                             <field name="readonly_timesheet" invisible="1"/>
                             <field name="date" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                             <field name="user_id" invisible="1"/>
-                            <field name="employee_id" required="1" widget="many2one_avatar_employee"
-                                context="{'active_test': True}" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                            <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user"
+                                attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                            <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user"
+                                attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                             <field name="name" required="0" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                             <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24 or unit_amount &lt; 0"
                                 attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
@@ -53,6 +55,7 @@
                             <field name="company_id" invisible="1"/>
                         </tree>
                         <kanban class="o_kanban_mobile">
+                            <field name="readonly_timesheet" invisible="1"/>
                             <field name="date"/>
                             <field name="user_id"/>
                             <field name="name"/>
@@ -64,7 +67,10 @@
                                     <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                         <div class="row">
                                             <div class="col-6">
-                                                <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}"/>
+                                                <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user"
+                                                       attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                                                <field name="employee_id" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user"
+                                                       attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                                                 <strong><span><t t-esc="record.employee_id.value"/></span></strong>
                                             </div>
                                             <div class="col-6 float-end text-end">
@@ -91,7 +97,9 @@
                                     <field name="readonly_timesheet" invisible="1"/>
                                     <field name="date" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                                     <field name="user_id" invisible="1" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
-                                    <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}"
+                                    <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee.public'}" groups="!hr.group_hr_user"
+                                        attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                                    <field name="employee_id" required="1" widget="many2one_avatar_employee" context="{'active_test': True}" options="{'relation': 'hr.employee'}" groups="hr.group_hr_user"
                                         attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                                     <field name="name" required="0" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                                     <field name="unit_amount" string="Duration" widget="float_time" decoration-danger="unit_amount &gt; 24"
