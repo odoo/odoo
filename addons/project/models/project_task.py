@@ -151,6 +151,7 @@ class Task(models.Model):
 
     project_id = fields.Many2one('project.project', string='Project',
         index=True, tracking=True, check_company=True, change_default=True)
+    project_root_id = fields.Many2one('project.project', compute='_compute_project_root_id', search='_search_project_root_id', recursive=True)
     task_properties = fields.Properties('Properties', definition='project_id.task_properties_definition', copy=True)
     planned_hours = fields.Float("Allocated Time", tracking=True)
     subtask_planned_hours = fields.Float("Sub-tasks Planned Hours", compute='_compute_subtask_planned_hours',
@@ -289,6 +290,79 @@ class Task(models.Model):
         # Modify accordingly, this field is used to display the lock on the task's kanban card
         for task in self:
             task.is_private = not task.project_id and not task.parent_id
+
+    @api.depends('project_id', 'parent_id.project_id')
+    def _compute_project_root_id(self):
+        # project of the first ascendant that has one. Let's call it the root task.
+        for task in self:
+            task.project_root_id = task.project_id or task.parent_id.project_root_id
+
+    def _search_project_root_id(self, operator, value):
+        if operator not in ("in", "not in", "any", "not any", "=", "!=", "=?"):
+            raise UserError(_("Unsupported operator for search on project_root_id"))
+
+        where_query_1 = where_query_2 = "TRUE"
+        params = tuple()
+        if operator in ("any", "not any"):
+            query = self.env['project.project']._where_calc(value)
+            subquery_str, params = query.subselect()
+            where_operator = 'in' if operator == 'any' else 'not in'
+            where_query_1 = f"""
+                project_id {where_operator} ({subquery_str})
+            """
+            where_query_2 = f"""
+                project_root_id {'in' if operator == 'any' else 'not in'} ({subquery_str})
+            """
+        elif operator != "=?" or (value is not False and value is not None):
+            where_operator = operator if operator != '=?' else '='
+            where_query_1 = f"project_id {where_operator} %s"
+            where_query_2 = f"project_root_id {where_operator} %s"
+            if isinstance(value, (list, tuple)):
+                params = (tuple(value),)
+            else:
+                params = (value,)
+
+        self.env.cr.execute(
+            f"""
+                SELECT ARRAY_AGG(id)
+                  FROM project_task
+                 WHERE {where_query_1}
+                   AND project_id IS NOT NULL
+            """, params
+        )
+        task_ids = self._cr.fetchone()[0] or []
+
+        self.env.cr.execute(
+            f"""
+                WITH RECURSIVE project_hierarchy AS (
+                       SELECT pt.id,
+                              pt.parent_id,
+                              pt.project_id,
+                              pt.project_id AS project_root_id
+                         FROM project_task pt
+                        WHERE pt.project_id IS NULL
+                          AND pt.parent_id IS NOT NULL
+
+                    UNION ALL
+
+                       SELECT ph.id,
+                              pt.parent_id,
+                              ph.project_id,
+                              COALESCE(ph.project_root_id, pt.project_id) AS project_root_id
+                         FROM project_hierarchy ph
+                         JOIN project_task pt ON ph.parent_id = pt.id
+                )
+                SELECT ARRAY_AGG(id)
+                  FROM project_hierarchy
+                 WHERE {where_query_2}
+            """, params
+        )
+        if not self._cr.rowcount and not task_ids:
+            return expression.FALSE_DOMAIN
+        task_ids += self.env.cr.fetchone()[0] or []
+        if not task_ids:
+            return expression.FALSE_DOMAIN
+        return [('id', 'in', task_ids)]
 
     def _search_is_private(self, operator, value):
         if not isinstance(value, bool):
@@ -1548,7 +1622,7 @@ class Task(models.Model):
     # ---------------------------------------------------
     def _get_task_analytic_account_id(self):
         self.ensure_one()
-        return self.analytic_account_id or self.project_id.analytic_account_id
+        return self.analytic_account_id or self.project_root_id.analytic_account_id
 
     @api.model
     def get_unusual_days(self, date_from, date_to=None):
