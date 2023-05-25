@@ -205,7 +205,10 @@ class WebsiteForm(http.Controller):
         model_name = model.sudo().model
         if model_name == 'mail.mail':
             values.update({'reply_to': values.get('email_from')})
-        record = request.env[model_name].with_user(SUPERUSER_ID).with_context(mail_create_nosubscribe=True).create(values)
+        record = request.env[model_name].with_user(SUPERUSER_ID).with_context(
+            mail_create_nosubscribe=True,
+            commit_assetsbundle=False,
+        ).create(values)
 
         if custom or meta:
             _custom_label = "%s\n___________\n\n" % _("Other Information:")  # Title for custom fields
