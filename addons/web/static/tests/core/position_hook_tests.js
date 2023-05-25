@@ -6,6 +6,7 @@ import { registerCleanup } from "../helpers/cleanup";
 import {
     destroy,
     getFixture,
+    makeDeferred,
     mockAnimationFrame,
     mount,
     nextTick,
@@ -13,25 +14,44 @@ import {
     triggerEvent,
 } from "../helpers/utils";
 import { localization } from "@web/core/l10n/localization";
-
 import { Component, xml } from "@odoo/owl";
+
+const FLEXBOX_STYLE = {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+};
+const CONTAINER_STYLE = {
+    ...FLEXBOX_STYLE,
+    backgroundColor: "salmon",
+    height: "450px",
+    width: "450px",
+    margin: "25px",
+};
+const TARGET_STYLE = {
+    backgroundColor: "tomato",
+    height: "50px",
+    width: "50px",
+};
 let container;
 
 /**
  * @param {import("@web/core/position_hook").Options} popperOptions
  * @returns {Component}
  */
-function getTestComponent(popperOptions = {}) {
-    const target = document.createElement("div");
+function getTestComponent(popperOptions = {}, target = document.createElement("div")) {
+    popperOptions.container = popperOptions.container || container;
+
     target.id = "target";
-    target.style.backgroundColor = "yellow";
-    target.style.height = "50px";
-    target.style.width = "50px";
-    container.appendChild(target);
+    Object.assign(target.style, TARGET_STYLE);
+    if (!target.isConnected) {
+        // If the target is not in any DOM, we append it to the container by default
+        popperOptions.container.appendChild(target);
+    }
 
     class TestComp extends Component {
         setup() {
-            usePosition(target, { container, ...popperOptions });
+            usePosition(target, popperOptions);
         }
     }
     TestComp.template = xml`<div id="popper" t-ref="popper" />`;
@@ -43,12 +63,7 @@ QUnit.module("usePosition Hook", {
         // Force container style, to make these tests independent of screen size
         container = document.createElement("div");
         container.id = "container";
-        container.style.backgroundColor = "pink";
-        container.style.height = "450px";
-        container.style.width = "450px";
-        container.style.display = "flex";
-        container.style.alignItems = "center";
-        container.style.justifyContent = "center";
+        Object.assign(container.style, CONTAINER_STYLE);
         getFixture().prepend(container);
         registerCleanup(() => {
             getFixture().removeChild(container);
@@ -57,7 +72,7 @@ QUnit.module("usePosition Hook", {
         const sheet = document.createElement("style");
         sheet.textContent = `
             #popper {
-                background-color: cyan;
+                background-color: plum;
                 height: 100px;
                 width: 100px;
             }
@@ -185,6 +200,179 @@ QUnit.test("is positioned relative to its containing block", async (assert) => {
     // best positions are the same relative to the viewport
     assert.equal(popBox1.top, popBox2.top);
     assert.equal(popBox1.left, popBox2.left);
+});
+
+QUnit.test("iframe: popper is outside, target inside", async (assert) => {
+    // Prepare target inside iframe
+    const IFRAME_STYLE = {
+        margin: "25px",
+        height: "200px",
+        width: "400px",
+    };
+    const iframe = document.createElement("iframe");
+    Object.assign(iframe.style, IFRAME_STYLE);
+    iframe.srcdoc = `<div id="target" />`;
+    const def = makeDeferred();
+    iframe.onload = def.resolve;
+    container.appendChild(iframe);
+    await def;
+    const iframeBody = iframe.contentDocument.body;
+    Object.assign(iframeBody.style, {
+        ...FLEXBOX_STYLE,
+        backgroundColor: "papayawhip",
+        height: "300px",
+        width: "400px",
+        overflowX: "hidden",
+    });
+
+    // Prepare popper outside iframe
+    const popperTarget = iframe.contentDocument.getElementById("target");
+    let onPositionedArgs;
+    const Popper = getTestComponent(
+        {
+            onPositioned: (el, solution) => {
+                onPositionedArgs = { el, solution };
+                assert.step(`${solution.direction}-${solution.variant}`);
+            },
+        },
+        popperTarget
+    );
+    await mount(Popper, container);
+    assert.verifySteps(["bottom-middle"]);
+
+    // Check everything is rendered where it should be
+    assert.containsOnce(container, "#popper");
+    assert.containsNone(container, "#target");
+
+    assert.strictEqual(iframeBody.querySelectorAll("#target").length, 1);
+    assert.strictEqual(iframeBody.querySelectorAll("#popper").length, 0);
+
+    // Check the expected position
+    const { top: iframeTop, left: iframeLeft } = iframe.getBoundingClientRect();
+    let targetBox = popperTarget.getBoundingClientRect();
+    let popperBox = onPositionedArgs.el.getBoundingClientRect();
+    let expectedTop = iframeTop + targetBox.top + popperTarget.offsetHeight;
+    let expectedLeft =
+        iframeLeft + targetBox.left + popperTarget.offsetWidth / 2 - popperBox.width / 2;
+
+    assert.strictEqual(popperBox.top, expectedTop);
+    assert.strictEqual(popperBox.top, onPositionedArgs.solution.top);
+
+    assert.strictEqual(popperBox.left, expectedLeft);
+    assert.strictEqual(popperBox.left, onPositionedArgs.solution.left);
+
+    // Scrolling inside the iframe should reposition the popover accordingly
+    const previousPositionSolution = onPositionedArgs.solution;
+    const scrollOffset = 100;
+    const scrollable = iframe.contentDocument.documentElement;
+    scrollable.scrollTop = scrollOffset;
+    await nextTick();
+    assert.verifySteps(["bottom-middle"]);
+    assert.strictEqual(previousPositionSolution.top, onPositionedArgs.solution.top + scrollOffset);
+
+    // Check the expected position
+    targetBox = popperTarget.getBoundingClientRect();
+    popperBox = onPositionedArgs.el.getBoundingClientRect();
+    expectedTop = iframeTop + targetBox.top + popperTarget.offsetHeight;
+    expectedLeft = iframeLeft + targetBox.left + popperTarget.offsetWidth / 2 - popperBox.width / 2;
+
+    assert.strictEqual(popperBox.top, expectedTop);
+    assert.strictEqual(popperBox.top, onPositionedArgs.solution.top);
+
+    assert.strictEqual(popperBox.left, expectedLeft);
+    assert.strictEqual(popperBox.left, onPositionedArgs.solution.left);
+});
+
+QUnit.test("iframe: both popper and target inside", async (assert) => {
+    // Prepare target inside iframe
+    const IFRAME_STYLE = {
+        height: "300px",
+        width: "400px",
+    };
+    const iframe = document.createElement("iframe");
+    Object.assign(iframe.style, IFRAME_STYLE);
+    iframe.srcdoc = `<div id="inner-container" />`;
+    const def = makeDeferred();
+    iframe.onload = def.resolve;
+    container.appendChild(iframe);
+    await def;
+    const iframeBody = iframe.contentDocument.body;
+    Object.assign(iframeBody.style, {
+        ...FLEXBOX_STYLE,
+        backgroundColor: "papayawhip",
+        margin: "25px",
+        overflowX: "hidden",
+    });
+
+    const iframeSheet = iframe.contentDocument.createElement("style");
+    iframeSheet.textContent = `
+            #popper {
+                background-color: plum;
+                height: 100px;
+                width: 100px;
+            }
+        `;
+    iframe.contentDocument.head.appendChild(iframeSheet);
+
+    const innerContainer = iframe.contentDocument.getElementById("inner-container");
+    Object.assign(innerContainer.style, {
+        ...CONTAINER_STYLE,
+        backgroundColor: "khaki",
+    });
+
+    // Prepare popper inside iframe
+    let onPositionedArgs;
+    const Popper = getTestComponent({
+        container: innerContainer,
+        onPositioned: (el, solution) => {
+            onPositionedArgs = { el, solution };
+            assert.step(`${solution.direction}-${solution.variant}`);
+        },
+    });
+    await mount(Popper, innerContainer);
+    assert.verifySteps(["bottom-middle"]);
+
+    // Check everything is rendered where it should be
+    assert.strictEqual(innerContainer.ownerDocument, iframe.contentDocument);
+    assert.strictEqual(innerContainer.querySelectorAll("#target").length, 1);
+    assert.strictEqual(innerContainer.querySelectorAll("#popper").length, 1);
+    assert.strictEqual(iframeBody.querySelectorAll("#target").length, 1);
+    assert.strictEqual(iframeBody.querySelectorAll("#popper").length, 1);
+
+    // Check the expected position
+    const popperTarget = innerContainer.querySelector("#target");
+    // const { top: iframeTop, left: iframeLeft } = iframe.getBoundingClientRect();
+    let targetBox = popperTarget.getBoundingClientRect();
+    let popperBox = onPositionedArgs.el.getBoundingClientRect();
+    let expectedTop = targetBox.top + popperTarget.offsetHeight;
+    let expectedLeft = targetBox.left + popperTarget.offsetWidth / 2 - popperBox.width / 2;
+
+    assert.strictEqual(popperBox.top, expectedTop);
+    assert.strictEqual(popperBox.top, onPositionedArgs.solution.top);
+
+    assert.strictEqual(popperBox.left, expectedLeft);
+    assert.strictEqual(popperBox.left, onPositionedArgs.solution.left);
+
+    // Scrolling inside the iframe should reposition the popover accordingly
+    const previousPositionSolution = onPositionedArgs.solution;
+    const scrollOffset = 100;
+    const scrollable = iframe.contentDocument.documentElement;
+    scrollable.scrollTop = scrollOffset;
+    await nextTick();
+    assert.verifySteps(["bottom-middle"]);
+    assert.strictEqual(previousPositionSolution.top, onPositionedArgs.solution.top + scrollOffset);
+
+    // Check the expected position
+    targetBox = popperTarget.getBoundingClientRect();
+    popperBox = onPositionedArgs.el.getBoundingClientRect();
+    expectedTop = targetBox.top + popperTarget.offsetHeight;
+    expectedLeft = targetBox.left + popperTarget.offsetWidth / 2 - popperBox.width / 2;
+
+    assert.strictEqual(popperBox.top, expectedTop);
+    assert.strictEqual(popperBox.top, onPositionedArgs.solution.top);
+
+    assert.strictEqual(popperBox.left, expectedLeft);
+    assert.strictEqual(popperBox.left, onPositionedArgs.solution.left);
 });
 
 function getPositionTest(position, positionToCheck) {
