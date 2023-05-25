@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+from odoo import Command
 from odoo.addons.l10n_account_edi_ubl_cii_tests.tests.common import TestUBLCommon
+from odoo.addons.account.tests.test_account_move_send import TestAccountMoveSendCommon
 from odoo.tests import tagged
 import base64
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
-class TestUBLBE(TestUBLCommon):
+class TestUBLBE(TestUBLCommon, TestAccountMoveSendCommon):
 
     @classmethod
     def setUpClass(cls, chart_template_ref="be"):
@@ -66,6 +68,8 @@ class TestUBLBE(TestUBLCommon):
             'type_tax_use': 'sale',
             'country_id': cls.env.ref('base.be').id,
         })
+
+        cls.env.company.invoice_is_ubl_cii = True
 
     @classmethod
     def setup_company_data(cls, company_name, chart_template):
@@ -495,3 +499,84 @@ class TestUBLBE(TestUBLCommon):
             list_line_subtotals=[99], currency_id=self.currency_data['currency'].id, list_line_price_unit=[99],
             list_line_discount=[0], list_line_taxes=[tax_21+self.recupel], move_type='out_invoice',
         )
+
+    ####################################################
+    # Test Send & print
+    ####################################################
+
+    def test_send_and_print(self):
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            send=False,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'tax_ids': [Command.set(self.tax_21.ids)],
+                },
+            ],
+        )
+        wizard = self.create_send_and_print(invoice)
+        wizard._compute_send_mail_extra_fields()
+        self.assertRecordValues(wizard, [{
+            'mode': 'invoice_single',
+            'checkbox_ubl_cii_label': "Peppol BIS Billing 3.0",
+            'enable_ubl_cii_xml': True,
+            'checkbox_ubl_cii_xml': True,
+        }])
+        self._assert_mail_attachments_widget(wizard, [
+            {
+                'mimetype': 'application/pdf',
+                'name': 'INV_2017_00001.pdf',
+                'placeholder': True,
+            },
+            {
+                'mimetype': 'application/xml',
+                'name': 'INV_2017_00001_ubl_bis3.xml',
+                'placeholder': True,
+            },
+        ])
+        self.assertFalse(invoice.invoice_pdf_report_id)
+        self.assertFalse(invoice.ubl_cii_xml_id)
+
+        # Send.
+        wizard.action_send_and_print()
+        self.assertTrue(invoice.invoice_pdf_report_id)
+        self.assertTrue(invoice.ubl_cii_xml_id)
+        invoice_attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', invoice._name),
+            ('res_id', '=', invoice.id),
+            ('res_field', 'in', ('invoice_pdf_report_file', 'ubl_cii_xml_file')),
+        ])
+        self.assertEqual(len(invoice_attachments), 2)
+
+        # Send again.
+        wizard = self.create_send_and_print(invoice)
+        self.assertRecordValues(wizard, [{
+            'mode': 'invoice_single',
+            'checkbox_ubl_cii_label': 'Peppol BIS Billing 3.0',
+            'enable_ubl_cii_xml': False,
+            'checkbox_ubl_cii_xml': False,
+        }])
+        self._assert_mail_attachments_widget(wizard, [
+            {
+                'id': invoice.invoice_pdf_report_id.id,
+                'mimetype': 'application/pdf',
+                'name': 'INV_2019_00001.pdf',
+            },
+            {
+                'id': invoice.ubl_cii_xml_id.id,
+                'mimetype': 'application/xml',
+                'name': 'INV_2019_00001_ubl_bis3.xml',
+            },
+        ])
+        wizard.action_send_and_print()
+        self.assertTrue(invoice.invoice_pdf_report_id)
+        self.assertTrue(invoice.ubl_cii_xml_id)
+        invoice_attachments = self.env['ir.attachment'].search([
+            ('res_model', '=', invoice._name),
+            ('res_id', '=', invoice.id),
+            ('res_field', 'in', ('invoice_pdf_report_file', 'ubl_cii_xml_file')),
+        ])
+        self.assertEqual(len(invoice_attachments), 2)

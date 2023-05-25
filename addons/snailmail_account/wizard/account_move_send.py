@@ -15,6 +15,16 @@ class AccountMoveSend(models.Model):
     )
     send_by_post_warning_message = fields.Text(compute='_compute_send_by_post_warning_message')
 
+    def _get_available_field_values_in_multi(self, move):
+        # EXTENDS 'account'
+        values = super()._get_available_field_values_in_multi(move)
+        values['checkbox_send_by_post'] = self.checkbox_send_by_post
+        return values
+
+    # -------------------------------------------------------------------------
+    # COMPUTE METHODS
+    # -------------------------------------------------------------------------
+
     @api.depends('mode')
     def _compute_enable_send_by_post(self):
         for wizard in self:
@@ -54,18 +64,24 @@ class AccountMoveSend(models.Model):
             'attachment_id': move.invoice_pdf_report_id.id,
         }
 
-    def _generate_documents_success_hook(self, moves, from_cron):
+    def _hook_if_success(self, moves_data, from_cron=False, allow_fallback_pdf=False):
         # EXTENDS 'account'
-        moves = super()._generate_documents_success_hook(moves, from_cron)
+        super()._hook_if_success(moves_data, from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
 
         send_by_post = self.enable_send_by_post and self.checkbox_send_by_post
+        if not send_by_post:
+            return
 
-        if send_by_post:
-            self.env['snailmail.letter']\
-                .create([
-                    self._prepare_snailmail_letter_values(move)
-                    for move in moves
-                ])\
-                ._snailmail_print(immediate=False)
+        moves = self.env['account.move']
+        for move in moves_data:
+            moves |= move
+        moves = moves.filtered('invoice_pdf_report_id')
+        if not moves:
+            return
 
-        return moves
+        self.env['snailmail.letter']\
+            .create([
+                self._prepare_snailmail_letter_values(move)
+                for move in moves
+            ])\
+            ._snailmail_print(immediate=False)
