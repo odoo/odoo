@@ -10,9 +10,9 @@
                     <field name="pos_self_order_view_mode"/>
                     <div class="content-group d-flex gap-5" attrs="{'invisible': [('pos_self_order_view_mode','=',False)]}">
                         <div class="d-flex flex-column align-items-start w-50">
-                            <button class="btn btn-link p-0 w-100" name="pos_self_order.custom_link_action" type="action" string="Configure Buttons"/>
-                            <button class="btn btn-link p-0 w-100" name="generate_qr_codes_page" type="object" string="Generate Qr Codes"/>
-                            <button class="btn btn-link p-0 w-100" name="preview_self_order_app" type="object" string="Preview" />
+                            <button class="btn-link p-0" icon="oi-arrow-right" name="pos_self_order.custom_link_action" type="action" string="Configure Buttons"/>
+                            <button class="btn-link p-0" icon="oi-arrow-right" name="generate_qr_codes_page" type="object" string="Generate Qr Codes"/>
+                            <button class="btn-link p-0" icon="oi-arrow-right" name="preview_self_order_app" type="object" string="Preview" />
                         </div>
                         <div class="d-flex flex-column align-items-start">
                             <div class="d-flex flex-column align-items-start">
@@ -37,11 +37,11 @@
                     <field name="pos_self_order_kiosk_mode"/>
                     <div class="content-group d-flex gap-5" attrs="{'invisible': [('pos_self_order_kiosk_mode','=',False)]}">
                         <div class="d-flex flex-column align-items-start w-50">
-                            <button class="btn btn-link p-0 w-100" name="pos_self_order.custom_link_action" type="action" string="Configure Buttons"/>
                             <!-- FIXME: if there is no pos session, we cannot access the kiosk
                             we need to add a message to this preview button, otherwise if you click preview and don't have 
                             an open session it just looks like it doesn't work -->
-                            <button class="btn btn-link p-0 w-100" name="preview_self_order_app" type="object" string="Preview" />
+                            <button class="btn-link p-0" icon="oi-arrow-right" name="pos_self_order.custom_link_action" type="action" string="Configure Buttons"/>
+                            <button class="btn-link p-0" icon="oi-arrow-right" name="preview_self_order_app" type="object" string="Preview" />
                         </div>
                         <div class="d-flex flex-column align-items-start">
                             <div class="d-flex flex-column align-items-start">
