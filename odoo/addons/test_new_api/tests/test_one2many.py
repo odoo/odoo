@@ -302,3 +302,90 @@ class One2manyCase(TransactionCase):
             order.write({
                 'line_ids': [Command.link(line0.id), Command.link(line1.id)],
             })
+
+    def test_commands_inactive(self):
+        """
+        Check the behaviour of LINK, UNLINK, and CLEAR commands for one2many fields.
+        If this test is broken the optimization for load_records (see must_udpate)
+        may be broken.
+        """
+
+        def create_data(linked):
+            parent = self.env['test_new_api.model_active_field'].create({})
+            child = self.env['test_new_api.model_active_field'].create({'parent_id': parent.id if linked else False})
+            child.active = False
+            self.assertEqual(parent.children_ids.ids, [])
+            self.assertEqual(parent.with_context(active_test=False).children_ids.ids, [child.id] if linked else [])
+            return parent, child
+
+        fname = 'children_ids'
+        field = self.env['test_new_api.model_active_field']._fields[fname]
+
+        # Ensure that LINK command ADDS inactive records
+        parent, child = create_data(True)
+        # convert_to_cache with field values does not include inactive records
+        self.assertEqual(
+            field.convert_to_cache(parent[fname], parent),
+            (),
+        )
+        # we can get the inactive records explicitly
+        self.assertEqual(
+            field.convert_to_cache(parent.with_context(active_test=False)[fname], parent),
+            (child.id,),
+        )
+        commands = [Command.link(child.id)]
+        # convert_to_cache with LINK command includes inactive records
+        self.assertEqual(
+            field.convert_to_cache(commands, parent),
+            (child.id,),
+        )
+        # The right way to compare them
+        self.assertEqual(
+            field.convert_to_cache(parent.with_context(active_test=False)[fname], parent),
+            field.convert_to_cache(commands, parent),
+        )
+        # Running the commands and checking the result
+        parent.children_ids = commands
+        self.assertEqual(parent.children_ids.ids, [])
+        self.assertEqual(parent.with_context(active_test=False).children_ids.ids, [child.id])
+
+        # Ensure that UNLINK command REMOVES inactive records
+        parent, child = create_data(False)
+        commands = [Command.unlink(child.id)]
+        # convert_to_cache with UNLINK command removes inactive records
+        self.assertEqual(
+            field.convert_to_cache(commands, parent),
+            (),
+        )
+        # The right way to compare them
+        self.assertEqual(
+            field.convert_to_cache(parent.with_context(active_test=False)[fname], parent),
+            field.convert_to_cache(commands, parent),
+        )
+        # Running the commands and checking the result
+        parent.children_ids = commands
+        self.assertEqual(parent.children_ids.ids, [])
+        self.assertEqual(parent.with_context(active_test=False).children_ids.ids, [])
+
+        # Ensure that CLEAR command DOES NOT REMOVE inactive records
+        parent, child = create_data(True)
+        commands = [Command.clear()]
+        # convert_to_cache with CLEAR command is empty
+        self.assertEqual(
+            field.convert_to_cache(commands, parent),
+            (),
+        )
+        # convert_to_cache with field values does not include inactive records
+        self.assertEqual(
+            field.convert_to_cache(parent[fname], parent),
+            (),
+        )
+        # The right way to compare them
+        self.assertEqual(
+            field.convert_to_cache(parent[fname], parent),
+            field.convert_to_cache(commands, parent),
+        )
+        # Running the commands and checking the result
+        parent.children_ids = commands
+        self.assertEqual(parent.children_ids.ids, [])
+        self.assertEqual(parent.with_context(active_test=False).children_ids.ids, [child.id])

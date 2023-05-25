@@ -14,9 +14,18 @@
         </record>
 
         <!-- Enable the manufacturing in warehouse0 -->
-        <record id='stock.warehouse0' model='stock.warehouse'>
-            <field name='manufacture_to_resupply' eval='True'/>
-        </record>
+        <!--
+            For historical reasons MRP module has a dependency on the write to
+            the warehouse model at install. We thus force the write even if it
+            is already the default value. The write method in stock.warehouse
+            has many side effects that ensure the data is properly configured.
+            Not doing the write breaks the assumption of those checks being OK.
+            See #111364 for more details.
+        -->
+        <function model="stock.warehouse" name="write">
+            <value eval="[ref('stock.warehouse0')]"/>
+            <value name="vals" eval="{'manufacture_to_resupply': True}"/>
+        </function>
 
         <!--  Category for Blocking Reasons Workcenter -->
         <record id="category_availability" model="mrp.workcenter.productivity.loss.type">

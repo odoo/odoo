@@ -4412,9 +4412,38 @@ Fields:
                 imd.browse(d_id).unlink()
                 to_create.append(data)
 
+        def must_update(rec, fname, val):
+            """ Determine whether ``rec[fname]`` must be updated with ``val``. """
+            field = rec._fields.get(fname)
+            if field is None:
+                return True
+            if field.type in ('many2many', 'one2many'):
+                if not isinstance(val, list):
+                    return True
+                if not val:
+                    # nothing changes
+                    return False
+                if len(val) == 1:
+                    # multiple commands are complex to analyze, so we only
+                    # optimize some cases of single command updates
+                    [command] = val
+                    if command[0] == Command.LINK:
+                        return command[1] not in rec.with_context(active_test=False)[fname]._ids
+                    if command[0] == Command.UNLINK:
+                        return command[1] in rec.with_context(active_test=False)[fname]._ids
+                    elif command[0] == Command.CLEAR:
+                        return rec[fname]
+                return True
+            return field.convert_to_cache(rec[fname], rec) != field.convert_to_cache(val, rec)
+
         # update existing records
         for data in to_update:
-            data['record']._load_records_write(data['values'])
+            # we want to optimize a write that is not going to change anything, if we are **sure** it won't change
+            # note: the fact that we are not sure doesn't mean that it will change, it just that we cannot decide
+            # in a simple way that there is no change
+            # TODO: should we skip the checks for big changes? sort of len(data['values']) > 10?
+            if any(must_update(data['record'], fname, val) for fname, val in data['values'].items()):
+                data['record']._load_records_write(data['values'])
 
         # check for records to create with an XMLID from another module
         module = self.env.context.get('install_module')
