@@ -208,6 +208,22 @@ class TestM2M(TransactionCase):
             r2
         )
 
+    def test_set(self):
+        Sub = self.env['test_testing_utilities.sub2']
+        r1 = Sub.create({'name': "Item"})
+        r2 = Sub.create({'name': "Item2"})
+        r3 = Sub.create({'name': "Item3"})
+
+        with Form(self.env['test_testing_utilities.e']) as f:
+            f.m2m.set(r1 + r2)
+
+        self.assertEqual(f.record.m2m, r1 + r2)
+
+        with f:
+            f.m2m = r3
+
+        self.assertEqual(f.record.m2m, r3)
+
     def test_on_m2m_change(self):
         Sub = self.env['test_testing_utilities.sub2']
         f = Form(self.env['test_testing_utilities.e'])
