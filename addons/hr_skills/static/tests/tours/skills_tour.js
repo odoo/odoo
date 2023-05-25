@@ -73,7 +73,7 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
     },
     {
         content: "Add a new Skill",
-        trigger: ".o_field_skills_one2many button:contains('Create a new entry')",
+        trigger: ".o_field_skills_one2many button:contains('Pick a skill from the list')",
     },
     {
         content: "Select Music",
