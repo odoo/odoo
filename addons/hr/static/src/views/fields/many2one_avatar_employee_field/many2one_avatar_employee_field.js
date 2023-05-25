@@ -8,11 +8,7 @@ import {
     kanbanMany2OneAvatarUserField,
 } from "@mail/views/fields/many2one_avatar_user_field/many2one_avatar_user_field";
 
-export class Many2OneAvatarEmployeeField extends Many2OneAvatarUserField {
-    get relation() {
-        return 'hr.employee.public';
-    }
-}
+export class Many2OneAvatarEmployeeField extends Many2OneAvatarUserField { }
 
 export const many2OneAvatarEmployeeField = {
     ...many2OneAvatarUserField,
@@ -24,20 +20,21 @@ export const many2OneAvatarEmployeeField = {
     extractProps: (fieldInfo) => ({
         ...many2OneAvatarUserField.extractProps(fieldInfo),
         canQuickCreate: false,
+        relation: fieldInfo.options?.relation,
     }),
 };
 
 registry.category("fields").add("many2one_avatar_employee", many2OneAvatarEmployeeField);
 
-export class KanbanMany2OneAvatarEmployeeField extends KanbanMany2OneAvatarUserField {
-    get relation() {
-        return 'hr.employee.public';
-    }
-}
+export class KanbanMany2OneAvatarEmployeeField extends KanbanMany2OneAvatarUserField { }
 
 export const kanbanMany2OneAvatarEmployeeField = {
     ...kanbanMany2OneAvatarUserField,
     component: KanbanMany2OneAvatarEmployeeField,
+    extractProps: (fieldInfo) => ({
+        ...kanbanMany2OneAvatarUserField.extractProps(fieldInfo),
+        relation: fieldInfo.options?.relation,
+    })
 };
 
 registry
