@@ -27,7 +27,7 @@ _test_logger = logging.getLogger('odoo.tests')
 SMTP_TIMEOUT = 60
 
 
-class MailDeliveryException(Exception):
+class MailDeliveryException(UserError):
     """Specific exception subclass for mail delivery errors"""
 
 

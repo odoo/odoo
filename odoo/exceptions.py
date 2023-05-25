@@ -25,11 +25,11 @@ class UserError(Exception):
     state of a record. Semantically comparable to the generic 400 HTTP status codes.
     """
 
-    def __init__(self, message):
+    def __init__(self, message, *args, **kwargs):
         """
         :param message: exception message and frontend modal content
         """
-        super().__init__(message)
+        super().__init__(message, *args, **kwargs)
 
     @property
     def name(self):
