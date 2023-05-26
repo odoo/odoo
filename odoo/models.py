@@ -3125,6 +3125,11 @@ class BaseModel(metaclass=MetaModel):
 
         return translations, context
 
+    def _get_base_lang(self):
+        """ Returns the base language of the record. """
+        self.ensure_one()
+        return 'en_US'
+
     def _read_format(self, fnames, load='_classic_read'):
         """Returns a list of dictionaries mapping field names to their values,
         with one dictionary per record that exists.
