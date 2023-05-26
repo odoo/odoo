@@ -508,22 +508,21 @@ export class ThreadService {
         }
 
         if (partnerId) {
-            const localId = createLocalId("partner", partnerId);
-            let user = this.store.personas[localId]?.user;
-            if (!user) {
-                [user] = await this.orm.silent.searchRead(
+            const partner = this.personaService.insert({ id: partnerId, type: "partner" });
+            if (!partner.user) {
+                const [userId] = await this.orm.silent.search(
                     "res.users",
                     [["partner_id", "=", partnerId]],
-                    [],
                     { context: { active_test: false } }
                 );
-                if (!user) {
+                if (!userId) {
                     this.notificationService.add(
                         _t("You can only chat with partners that have a dedicated user."),
                         { type: "info" }
                     );
                     return;
                 }
+                partner.user = { id: userId };
             }
         }
 
