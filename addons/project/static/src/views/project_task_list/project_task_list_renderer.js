@@ -4,7 +4,7 @@ import { ListRenderer } from "@web/views/list/list_renderer";
 import { getRawValue } from "@web/views/kanban/kanban_record";
 
 export class ProjectTaskListRenderer extends ListRenderer {
-    getCellReadonly(column, record) {
+    isCellReadonly(column, record) {
         let readonly = false;
         const selection = this.props.list.selection;
         if (column.name === "stage_id" && selection.length) {
@@ -13,6 +13,6 @@ export class ProjectTaskListRenderer extends ListRenderer {
                 (task) => getRawValue(task, "project_id") !== projectId
             );
         }
-        return readonly || super.getCellReadonly(column, record);
+        return readonly || super.isCellReadonly(column, record);
     }
 }

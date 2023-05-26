@@ -258,7 +258,7 @@ export class ListRenderer extends Component {
     }
 
     getFieldProps(record, column) {
-        if (this.isCellReadonly(column, record)) {
+        if (this.isCellReadonly(column, record) || (this.props.activeActions?.edit === false && !record.isNew)) {
             return {
                 readonly: true,
             };
