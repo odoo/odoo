@@ -484,3 +484,10 @@ class View(models.Model):
 
     def _update_field_translations(self, fname, translations, digest=None):
         return super(View, self.with_context(no_cow=True))._update_field_translations(fname, translations, digest)
+
+    def _get_base_lang(self):
+        """ Returns the default language of the website as the base language if the record is bound to it """
+        self.ensure_one()
+        if website := self.website_id:
+            return website.default_lang_id.code
+        return super()._get_base_lang()
