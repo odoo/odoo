@@ -13041,6 +13041,13 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "coming to an action with an error from a form view with a dirty x2m",
         async function (assert) {
+            const handler = (ev) => {
+                // need to preventDefault to remove error from console (so python test pass)
+                ev.preventDefault();
+            };
+            window.addEventListener("unhandledrejection", handler);
+            registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
+
             class TestClientAction extends Component {
                 setup() {
                     throw new Error("Something went wrong");
@@ -13124,6 +13131,13 @@ QUnit.module("Views", (hooks) => {
     QUnit.test(
         "coming to an action with an error from a form view with a record in creation",
         async function (assert) {
+            const handler = (ev) => {
+                // need to preventDefault to remove error from console (so python test pass)
+                ev.preventDefault();
+            };
+            window.addEventListener("unhandledrejection", handler);
+            registerCleanup(() => window.removeEventListener("unhandledrejection", handler));
+
             class TestClientAction extends Component {
                 setup() {
                     throw new Error("Something went wrong");
