@@ -13,9 +13,9 @@ SectionOneToManyField.defaultProps = {
     ...X2ManyField.defaultProps,
     editable: "bottom",
 };
-SectionOneToManyField.additionalClasses = ["o_field_one2many"];
 
 registry.category("fields").add("section_one2many", {
     ...x2ManyField,
     component: SectionOneToManyField,
+    additionalClasses: [...x2ManyField.additionalClasses || [], "o_field_one2many"],
 });
