@@ -15,7 +15,13 @@ function identity(cmd) {
     return [cmd];
 }
 
-const { coreTypes, invalidateEvaluationCommands } = spreadsheet;
+const {
+    coreTypes,
+    invalidateEvaluationCommands,
+    invalidateCFEvaluationCommands,
+    invalidateDependenciesCommands,
+} = spreadsheet;
+
 const { cellMenuRegistry } = spreadsheet.registries;
 
 coreTypes.add("INSERT_ODOO_LIST");
@@ -28,6 +34,14 @@ coreTypes.add("ADD_LIST_DOMAIN");
 invalidateEvaluationCommands.add("UPDATE_ODOO_LIST_DOMAIN");
 invalidateEvaluationCommands.add("INSERT_ODOO_LIST");
 invalidateEvaluationCommands.add("REMOVE_ODOO_LIST");
+
+invalidateDependenciesCommands.add("UPDATE_ODOO_LIST_DOMAIN");
+invalidateDependenciesCommands.add("INSERT_ODOO_LIST");
+invalidateDependenciesCommands.add("REMOVE_ODOO_LIST");
+
+invalidateCFEvaluationCommands.add("UPDATE_ODOO_LIST_DOMAIN");
+invalidateCFEvaluationCommands.add("INSERT_ODOO_LIST");
+invalidateCFEvaluationCommands.add("REMOVE_ODOO_LIST");
 
 cellMenuRegistry.add("list_see_record", {
     name: _lt("See record"),

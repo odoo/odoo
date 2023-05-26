@@ -325,8 +325,10 @@
           <span>Custom</span>
         </div>
         <div class="colors-grid o-color-picker-toggler" t-on-click.stop="toggleColorPicker">
-          <div class="o-color-picker-line-item o-color-picker-toggler">
-            <div align="center">+</div>
+          <div class="o-color-picker-line-item o-color-picker-toggler-button">
+            <div class="o-color-picker-toggler-sign">
+              <t t-call="o-spreadsheet-Icon.PLUS"/>
+            </div>
           </div>
           <div
             t-foreach="env.model.getters.getCustomColors()"
@@ -635,7 +637,7 @@
       <div
         class="o-figure w-100 h-100"
         t-on-mousedown.stop="(ev) => this.onMouseDown(ev)"
-        t-on-contextmenu.prevent.stop="onContextMenu"
+        t-on-contextmenu.prevent.stop="(ev) => !env.model.getters.isReadonly() and this.onContextMenu(ev)"
         t-ref="figure"
         t-att-style="props.style"
         t-att-data-id="props.figure.id"
@@ -651,6 +653,7 @@
         <div class="o-figure-menu position-absolute m-2" t-if="!env.isDashboard()">
           <div
             class="o-figure-menu-item"
+            t-if="!env.model.getters.isReadonly()"
             t-on-click="showMenu"
             t-ref="menuButton"
             t-on-contextmenu.prevent.stop="showMenu">
@@ -1323,6 +1326,14 @@
       />
     </svg>
   </t>
+  <t t-name="o-spreadsheet-Icon.UNFREEZE" owl="1">
+    <svg class="o-icon">
+      <path
+        fill="currentColor"
+        d="M.5 17.5h16a1 1 0 0 0 1-1v-15a1 1 0 0 0-1-1h-15a1 1 0 0 0-1 1v15a1 1 0 0 0 1 1M5 6H2V2h3m0 9.5H2V7h3m0 9H2v-3.5h3M10.5 7v4.5H6V7m0 9v-3.5h4.5V16m5.5 0h-4.5v-3.5H16m0-1h-4.5V7H16m0-5v4h-4.5V2m-1 4H6V2h4.5"
+      />
+    </svg>
+  </t>
   <t t-name="o-spreadsheet-Icon.SHOW_HIDE_GRID" owl="1">
     <svg class="o-icon">
       <path
@@ -1741,7 +1752,7 @@
   </t>
 
   <t t-name="o-spreadsheet-Icon.PLUS" owl="1">
-    <svg class="o-icon">
+    <svg class="o-icon" viewBox="0 0 18 18">
       <path fill="currentColor" d="M8 0h2v8h8v2h-8v8H8v-8H0V8h8"/>
     </svg>
   </t>
@@ -1922,26 +1933,16 @@
   </t>
   <t t-name="o-spreadsheet-Icon.SORT_ASCENDING" owl="1">
     <svg class="o-icon" fill="currentColor">
-      <style>
-        .small {
-          font: bold 9px sans-serif;
-        }
-      </style>
       <path d="m3 13-1-1-1 1 3 3 3-3-1-1-1 1V0H3"/>
-      <text x="9" y="7" class="small">A</text>
-      <text x="9.3" y="15" class="small">Z</text>
+      <text x="9" y="7" class="small-text">A</text>
+      <text x="9.3" y="15" class="small-text">Z</text>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.SORT_DESCENDING" owl="1">
     <svg class="o-icon" fill="currentColor">
-      <style>
-        .small {
-          font: bold 9px sans-serif;
-        }
-      </style>
       <path d="m3 13.9-1-1-1 1 3 3 3-3-1-1-1 1V.9H3"/>
-      <text x="9.3" y="7.9" class="small">Z</text>
-      <text x="9" y="15.9" class="small">A</text>
+      <text x="9.3" y="7.9" class="small-text">Z</text>
+      <text x="9" y="15.9" class="small-text">A</text>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.FILTER_ICON" owl="1">
@@ -2025,16 +2026,8 @@
   </t>
   <t t-name="o-spreadsheet-Icon.FONT_SIZE" owl="1">
     <svg class="o-icon" fill="currentColor">
-      <style>
-        .small {
-          font: bold 9px sans-serif;
-        }
-        .heavy {
-          font: bold 16px sans-serif;
-        }
-      </style>
-      <text x="2" y="15" class="small">A</text>
-      <text x="6" y="15" class="heavy">A</text>
+      <text x="2" y="15" class="small-text">A</text>
+      <text x="6" y="15" class="heavy-text">A</text>
     </svg>
   </t>
   <t t-name="o-spreadsheet-Icon.TRIANGLE_EXCLAMATION" owl="1">
@@ -2050,6 +2043,14 @@
       <path
         fill="currentColor"
         d="M14 6v2h-4v2h4v2l3-3m-9 1V8H4V6L1 9l3 3v-2m3.5-6.5h3V7H12V3.5h3V2H3v1.5h3V7h1.5m3 7.5h-3V11H6v3.5H3V16h12v-1.5h-3V11h-1.5"
+      />
+    </svg>
+  </t>
+  <t t-name="o-spreadsheet-Icon.ERROR" owl="1">
+    <svg class="error-icon" width="14" height="14" viewBox="0 0 512 512">
+      <path
+        fill="currentColor"
+        d="M504 256c0 136.997-111.043 248-248 248S8 392.997 8 256C8 119.083 119.043 8 256 8s248 111.083 248 248zm-248 50c-25.405 0-46 20.595-46 46s20.595 46 46 46 46-20.595 46-46-20.595-46-46-46zm-43.673-165.346l7.418 136c.347 6.364 5.609 11.346 11.982 11.346h48.546c6.373 0 11.635-4.982 11.982-11.346l7.418-136c.375-6.874-5.098-12.654-11.982-12.654h-63.383c-6.884 0-12.356 5.78-11.981 12.654z"
       />
     </svg>
   </t>
@@ -2222,38 +2223,59 @@
         t-foreach="ranges"
         t-as="range"
         t-key="range.id"
-        class="o-selection-input"
+        class="o-selection-input d-flex flex-row"
         t-att-class="props.class">
-        <input
-          type="text"
-          spellcheck="false"
-          t-on-input="(ev) => this.onInputChanged(range.id, ev)"
-          t-on-focus="() => this.focus(range.id)"
-          t-on-keydown="onKeydown"
-          t-att-value="range.xc"
-          t-att-style="getColor(range)"
-          t-att-class="{
-            'o-focused' : range.isFocused,
-            'o-required': props.required,
-            'o-optional': !props.required,
-            'o-invalid': isInvalid || !range.isValidRange,
-            'text-decoration-underline': range.isFocused and state.mode === 'select-range'
-          }"
-          t-ref="{{range.isFocused ? 'focusedInput' : 'unfocusedInput' + range_index}}"
-        />
+        <div class="position-relative w-100">
+          <input
+            type="text"
+            spellcheck="false"
+            t-on-input="(ev) => this.onInputChanged(range.id, ev)"
+            t-on-focus="() => this.focus(range.id)"
+            t-on-keydown="onKeydown"
+            t-att-value="range.xc"
+            t-att-style="getColor(range)"
+            class="w-100"
+            t-att-class="{
+              'o-focused' : range.isFocused,
+              'o-required': props.required,
+              'o-optional': !props.required,
+              'o-invalid border-danger position-relative': isInvalid || !range.isValidRange,
+              'text-decoration-underline': range.isFocused and state.mode === 'select-range'
+            }"
+            t-ref="{{range.isFocused ? 'focusedInput' : 'unfocusedInput' + range_index}}"
+          />
+          <span
+            t-if="isInvalid || !range.isValidRange"
+            class="error-icon text-danger position-absolute"
+            title="This range is invalid">
+            <t t-call="o-spreadsheet-Icon.ERROR"/>
+          </span>
+        </div>
         <button
-          class="o-btn o-remove-selection"
+          class="o-btn border-0 bg-transparent fw-bold o-remove-selection"
           t-if="ranges.length > 1"
           t-on-click="() => this.removeInput(range.id)">
           ✕
         </button>
       </div>
 
-      <div class="o-selection-input">
-        <button class="o-btn-action o-add-selection" t-if="canAddRange" t-on-click="addEmptyInput">
+      <div class="o-selection-input d-flex flex-row">
+        <button
+          class="o-btn-action bg-transparent fw-bold o-add-selection"
+          t-if="canAddRange"
+          t-on-click="addEmptyInput">
           Add range
         </button>
-        <button class="o-btn-action o-selection-ok" t-if="hasFocus" t-on-click="confirm">
+        <button
+          class="o-btn-action bg-transparent fw-bold o-selection-ko"
+          t-if="isResettable"
+          t-on-click="reset">
+          Reset
+        </button>
+        <button
+          class="o-btn-action bg-transparent fw-bold o-selection-ok"
+          t-if="isConfirmable"
+          t-on-click="confirm">
           Confirm
         </button>
       </div>
@@ -2279,8 +2301,7 @@
       <div class="o-section o-data-series">
         <div class="o-section-title">Data Series</div>
         <SelectionInput
-          ranges="dataSeriesRanges"
-          isInvalid="isDatasetInvalid"
+          ranges="() => this.getDataSeriesRanges()"
           required="true"
           onSelectionChanged="(ranges) => this.onDataSeriesRangesChanged(ranges)"
           onSelectionConfirmed="() => this.onDataSeriesConfirmed()"
@@ -2289,7 +2310,7 @@
       <div class="o-section o-data-labels">
         <div class="o-section-title">Categories / Labels</div>
         <SelectionInput
-          ranges="[props.definition.labelRange || '']"
+          ranges="() => [this.getLabelRange()]"
           isInvalid="isLabelInvalid"
           hasSingleRange="true"
           onSelectionChanged="(ranges) => this.onLabelRangeChanged(ranges)"
@@ -2382,7 +2403,7 @@
       <div class="o-section o-data-series">
         <div class="o-section-title">Data range</div>
         <SelectionInput
-          ranges="[props.definition.dataRange || '']"
+          ranges="() => [this.getDataRange()]"
           isInvalid="isDataRangeInvalid"
           hasSingleRange="true"
           required="true"
@@ -2546,8 +2567,7 @@
       <div class="o-section o-data-series">
         <div class="o-section-title">Data Series</div>
         <SelectionInput
-          ranges="dataSeriesRanges"
-          isInvalid="isDatasetInvalid"
+          ranges="() => this.getDataSeriesRanges()"
           required="true"
           onSelectionChanged="(ranges) => this.onDataSeriesRangesChanged(ranges)"
           onSelectionConfirmed="() => this.onDataSeriesConfirmed()"
@@ -2556,7 +2576,7 @@
       <div class="o-section o-data-labels">
         <div class="o-section-title">Categories / Labels</div>
         <SelectionInput
-          ranges="[props.definition.labelRange || '']"
+          ranges="() => [this.getLabelRange()]"
           isInvalid="isLabelInvalid"
           hasSingleRange="true"
           onSelectionChanged="(ranges) => this.onLabelRangeChanged(ranges)"
@@ -2653,8 +2673,7 @@
       <div class="o-section o-data-series">
         <div class="o-section-title">Data Series</div>
         <SelectionInput
-          ranges="dataSeriesRanges"
-          isInvalid="isDatasetInvalid"
+          ranges="() => this.getDataSeriesRanges()"
           required="true"
           onSelectionChanged="(ranges) => this.onDataSeriesRangesChanged(ranges)"
           onSelectionConfirmed="() => this.onDataSeriesConfirmed()"
@@ -2663,7 +2682,7 @@
       <div class="o-section o-data-labels">
         <div class="o-section-title">Categories / Labels</div>
         <SelectionInput
-          ranges="[props.definition.labelRange || '']"
+          ranges="() => [this.getLabelRange()]"
           isInvalid="isLabelInvalid"
           hasSingleRange="true"
           onSelectionChanged="(ranges) => this.onLabelRangeChanged(ranges)"
@@ -2824,7 +2843,7 @@
       <div class="o-section o-data-series">
         <div class="o-section-title">Key value</div>
         <SelectionInput
-          ranges="[props.definition.keyValue || '']"
+          ranges="() => [this.getKeyValueRange()]"
           isInvalid="isKeyValueInvalid"
           hasSingleRange="true"
           required="true"
@@ -2836,7 +2855,7 @@
         <div class="o-section-title">Baseline configuration</div>
         <div class="o-section-subtitle">Baseline value</div>
         <SelectionInput
-          ranges="[props.definition.baseline || '']"
+          ranges="() => [this.getBaselineRange()]"
           isInvalid="isBaselineInvalid"
           hasSingleRange="true"
           onSelectionChanged="(ranges) => this.onBaselineRangeChanged(ranges)"
@@ -3123,7 +3142,7 @@
             <div class="o-section-title">Apply to range</div>
             <div class="o-selection-cf">
               <SelectionInput
-                ranges="state.currentCF.ranges"
+                ranges="() => state.currentCF.ranges"
                 class="'o-range'"
                 isInvalid="isRangeValid"
                 onSelectionChanged="(ranges) => this.onRangesChanged(ranges)"
@@ -3843,7 +3862,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.3.0-alpha.8';
-  __info__.date = '2023-05-12T11:53:11.552Z';
-  __info__.hash = 'afee7d5';
+  __info__.version = '16.4.0-alpha.2';
+  __info__.date = '2023-05-26T13:42:01.130Z';
+  __info__.hash = '82328ad';
 -->
