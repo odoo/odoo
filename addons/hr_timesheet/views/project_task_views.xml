@@ -19,7 +19,7 @@
                     <field name="subtask_count" invisible="1"/>
                     <label for="planned_hours" attrs="{'invisible': [('allow_timesheets', '=', False)]}"/>
                     <div class="text-nowrap" attrs="{'invisible': [('allow_timesheets', '=', False)]}">
-                        <field name="planned_hours" class="oe_inline" widget="float_time"/>
+                        <field name="planned_hours" class="oe_inline o_field_float_time" widget="timesheet_uom_no_toggle"/>
                         <span attrs="{'invisible': [('subtask_count', '=', 0)]}">
                             (incl. <field name="subtask_planned_hours" nolabel="1" widget="timesheet_uom_no_toggle" class="oe_inline"/> on
                             <span class="fw-bold text-dark"> Sub-tasks</span>)
