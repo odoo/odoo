@@ -1357,6 +1357,66 @@ QUnit.module("Fields", (hooks) => {
         assert.equal(items.length, 2);
     });
 
+    QUnit.test(
+        "properties: kanban view with multiple sources of properties definitions",
+        async function (assert) {
+            const definition = {
+                name: "property_integer",
+                string: "My Integer",
+                type: "integer",
+                view_in_kanban: true,
+            };
+            serverData.models.company.records.push({
+                id: 38,
+                display_name: "Company 2",
+                definitions: [definition],
+            });
+            serverData.models.partner.records.push({
+                id: 10,
+                display_name: "other partner",
+                properties: [
+                    {
+                        ...definition,
+                        value: 1,
+                    },
+                ],
+                company_id: 38,
+            });
+
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="company_id"/> <hr/>
+                                <field name="display_name"/> <hr/>
+                                <field name="properties" widget="properties"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            });
+
+            assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 5);
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
+                    (el) => el.textContent
+                ),
+                [
+                    "Company 1 first partner char valueB",
+                    "Company 1 second partner char valueCchar value 4",
+                    "Company 1 third partner ",
+                    "Company 1 fourth partner ",
+                    "Company 2 other partner 1",
+                ]
+            );
+        }
+    );
+
     /**
      * Check that the properties are shown when switching view.
      */
@@ -1390,7 +1450,8 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await click(target, ".o_switch_view.o_list");
-        assert.ok(target.querySelector(".o_optional_columns_dropdown"),
+        assert.ok(
+            target.querySelector(".o_optional_columns_dropdown"),
             "Properties should be added as optional columns."
         );
     });

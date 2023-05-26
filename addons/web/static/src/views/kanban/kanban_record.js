@@ -105,7 +105,7 @@ function getValue(record, fieldName) {
 
 export function getFormattedRecord(record) {
     const formattedRecord = {};
-    for (const fieldName in record.activeFields) {
+    for (const fieldName of record.fieldNames) {
         formattedRecord[fieldName] = {
             value: getValue(record, fieldName),
             raw_value: getRawValue(record, fieldName),
