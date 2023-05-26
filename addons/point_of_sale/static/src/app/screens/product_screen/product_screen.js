@@ -13,7 +13,7 @@ import { ControlButtonPopup } from "@point_of_sale/app/screens/product_screen/co
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 
 import { usePos } from "@point_of_sale/app/store/pos_hook";
-import { Component, onMounted, useState, useRef } from "@odoo/owl";
+import { Component, onMounted, useState } from "@odoo/owl";
 import { ErrorBarcodePopup } from "@point_of_sale/app/barcode/error_popup/barcode_error_popup";
 
 import { NumpadWidget } from "@point_of_sale/app/screens/product_screen/numpad/numpad";
@@ -39,7 +39,6 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         this.orm = useService("orm");
         this.notification = useService("pos_notification");
         this.numberBuffer = useService("number_buffer");
-        this.reminderRef = useRef("reminder");
         onMounted(this.onMounted);
 
         useBarcodeReader({
