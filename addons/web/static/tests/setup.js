@@ -8,7 +8,7 @@ import { browser, makeRAMLocalStorage } from "@web/core/browser/browser";
 import { nextTick, patchTimeZone, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { memoize } from "@web/core/utils/functions";
 import { registerCleanup } from "./helpers/cleanup";
-import { utils } from "./helpers/mock_env";
+import { prepareRegistriesWithCleanup } from "./helpers/mock_env";
 import { session as sessionInfo } from "@web/session";
 import { config as transitionConfig } from "@web/core/transition";
 import { loadLanguages } from "@web/core/l10n/translation";
@@ -19,8 +19,6 @@ import { patch } from "@web/core/utils/patch";
 import { App, whenReady } from "@odoo/owl";
 import { currencies } from "@web/core/currency";
 import "./helpers/session";
-
-const { prepareRegistriesWithCleanup } = utils;
 
 function stringifyObjectValues(obj, properties) {
     let res = "";

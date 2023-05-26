@@ -10,7 +10,7 @@ import { uiService } from "@web/core/ui/ui_service";
 import { useSetupView } from "@web/views/view_hook";
 import { ActionDialog } from "@web/webclient/actions/action_dialog";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
-import { makeTestEnv, utils } from "../../helpers/mock_env";
+import { makeTestEnv, prepareRegistriesWithCleanup } from "../../helpers/mock_env";
 import {
     fakeCompanyService,
     fakeCommandService,
@@ -33,7 +33,6 @@ import { editSearchView, editView, setDefaults, viewMetadata } from "@web/views/
 import { fieldService } from "@web/core/field_service";
 
 import { Component, xml } from "@odoo/owl";
-const { prepareRegistriesWithCleanup } = utils;
 
 export class DebugMenuParent extends Component {
     setup() {
