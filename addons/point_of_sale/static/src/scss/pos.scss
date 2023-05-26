@@ -669,11 +669,6 @@ td {
 .pos .button.validation:hover {
     background: darken($primary, 5%) !important;
 }
-@media screen and (max-width: 768px) {
-    .pos .button.validation {
-        height: calc(var(--btn-height-size) * 2);
-    }
-}
 .pos .button.validation .pay-circle {
     display: block;
     font-size: 32px;
@@ -687,6 +682,9 @@ td {
     position: relative;
     display: block;
     padding: 14px;
+}
+.pos .button.validation.with-more-button {
+    height: calc(var(--btn-height-size) * 2);
 }
 
 .pos .actionpad .button.mobile-more-button {
