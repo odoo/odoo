@@ -91,12 +91,11 @@ $grid-gutter-width: $o-horizontal-padding * 2 !default;
 //
 // Define common padding and border radius sizes and more.
 
-$border-color: $o-border-color!default;
+$border-color: $o-border-color !default;
 
 $border-radius: $o-border-radius !default;
 $border-radius-sm: $o-border-radius-sm !default;
 $border-radius-lg: $o-border-radius-lg !default;
-$border-color: $o-gray-300 !default;
 
 $component-active-color: $o-component-active-color !default;
 $component-active-bg: $o-component-active-bg !default;
@@ -174,7 +173,7 @@ $btn-border-radius-lg: $border-radius !default;
 //
 // Dropdown menu container and contents.
 
-$dropdown-border-color: $gray-300 !default;
+$dropdown-border-color: $border-color !default;
 
 $dropdown-link-color: $o-main-text-color !default;
 $dropdown-link-hover-color: $gray-900 !default;
@@ -233,9 +232,10 @@ $tooltip-opacity: 1 !default;
 // Popovers
 
 $popover-bg: $white !default;
-$popover-border-width: 0 !default;
+$popover-border-color: $border-color !default;
 $popover-border-radius: $border-radius !default;
 $popover-arrow-color: var(--popover-arrow-color, #{$popover-bg}) !default;
+$popover-arrow-outer-color: $popover-border-color !default;
 
 // Toasts
 
