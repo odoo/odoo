@@ -44,3 +44,9 @@ def post_init_hook(env):
     if request:
         env = env(context=request.default_context())
         request.website_routing = env['website'].get_current_website().id
+
+    env.cr.execute("""
+    UPDATE "ir_ui_view"
+    SET "arch_db_website" = "arch_db"
+    WHERE "website_id" IS NOT NULL;
+    """)

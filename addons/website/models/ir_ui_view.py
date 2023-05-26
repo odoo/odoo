@@ -26,6 +26,21 @@ class View(models.Model):
     visibility = fields.Selection([('', 'All'), ('connected', 'Signed In'), ('restricted_group', 'Restricted Group'), ('password', 'With Password')], default='')
     visibility_password = fields.Char(groups='base.group_system', copy=False)
     visibility_password_display = fields.Char(compute='_get_pwd', inverse='_set_pwd', groups='website.group_website_designer')
+    arch_db = fields.Text(inverse='_inverse_arch_db')
+    arch_db_website = fields.Text(string='Arch Blob for Website', translate=True)
+
+    @api.depends('arch_db', 'arch_fs', 'arch_updated', 'arch_db_website')
+    @api.depends_context('read_arch_from_file', 'lang')
+    def _compute_arch(self):
+        super()._compute_arch()
+        if not self.env.context.get('edit_translations'):
+            for view in self.filtered('website_id'):
+                if view.arch_db_website is not False and not (self._context.get('read_arch_from_file') or ('xml' in tools.config['dev_mode'] and not view.arch_updated)):
+                    view.arch = view.arch_db_website
+
+    def _inverse_arch_db(self):
+        for view in self.filtered('website_id'):
+            view.arch_db_website = view.arch_db
 
     @api.depends('visibility_password')
     def _get_pwd(self):
@@ -50,24 +65,24 @@ class View(models.Model):
         it should get one if one is present in the context. Also check that
         an explicit website_id in create values matches the one in the context.
         """
-        website_id = self.env.context.get('website_id', False)
-        if not website_id:
-            return super().create(vals_list)
 
-        for vals in vals_list:
-            if 'website_id' not in vals:
-                # Automatic addition of website ID during view creation if not
-                # specified but present in the context
-                vals['website_id'] = website_id
-            else:
-                # If website ID specified, automatic check that it is the same as
-                # the one in the context. Otherwise raise an error.
-                new_website_id = vals['website_id']
-                if not new_website_id:
-                    raise ValueError(f"Trying to create a generic view from a website {website_id} environment")
-                elif new_website_id != website_id:
-                    raise ValueError(f"Trying to create a view for website {new_website_id} from a website {website_id} environment")
-        return super().create(vals_list)
+        if website_id := self.env.context.get('website_id', False):
+            for vals in vals_list:
+                if 'website_id' not in vals:
+                    # Automatic addition of website ID during view creation if not
+                    # specified but present in the context
+                    vals['website_id'] = website_id
+                else:
+                    # If website ID specified, automatic check that it is the same as
+                    # the one in the context. Otherwise raise an error.
+                    new_website_id = vals['website_id']
+                    if not new_website_id:
+                        raise ValueError(f"Trying to create a generic view from a website {website_id} environment")
+                    elif new_website_id != website_id:
+                        raise ValueError(f"Trying to create a view for website {new_website_id} from a website {website_id} environment")
+        res = super().create(vals_list)
+        res.filtered('website_id')._populate_arch_db_website()
+        return res
 
     def name_get(self):
         if not (self._context.get('display_key') or self._context.get('display_website')):
@@ -90,7 +105,10 @@ class View(models.Model):
         '''
         current_website_id = self.env.context.get('website_id')
         if not current_website_id or self.env.context.get('no_cow'):
-            return super(View, self).write(vals)
+            res = super(View, self).write(vals)
+            if 'website_id' in vals:
+                self._populate_arch_db_website()
+            return res
 
         # We need to consider inactive views when handling multi-website cow
         # feature (to copy inactive children views, to search for specific
@@ -98,6 +116,7 @@ class View(models.Model):
         # Website-specific views need to be updated first because they might
         # be relocated to new ids by the cow if they are involved in the
         # inheritance tree.
+        new_website_specific_views = self.browse()
         for view in self.with_context(active_test=False).sorted(key='website_id', reverse=True):
             # Make sure views which are written in a website context receive
             # a value for their 'key' field
@@ -137,6 +156,7 @@ class View(models.Model):
             if vals.get('inherit_id'):
                 copy_vals['inherit_id'] = vals['inherit_id']
             website_specific_view = view.copy(copy_vals)
+            new_website_specific_views += website_specific_view
 
             view._create_website_specific_pages_for_view(website_specific_view,
                                                          view.env['website'].browse(current_website_id))
@@ -156,9 +176,28 @@ class View(models.Model):
                     # Trigger COW on inheriting views
                     inherit_child.write({'inherit_id': website_specific_view.id})
 
-            super(View, website_specific_view).write(vals)
+        new_website_specific_views._populate_arch_db_website()
+        super(View, new_website_specific_views).write(vals)
 
         return True
+
+    def reset_arch(self, mode='soft'):
+        super().reset_arch(mode=mode)
+        self._populate_arch_db_website(overwrite=True)
+
+    def _populate_arch_db_website(self, overwrite=False):
+        if not self:
+            return
+        self.flush_recordset(['website_id', 'arch_db', 'arch_db_website'])
+        self.invalidate_recordset(['arch_db_website'])
+        self.check_access_rights('write')
+        self.check_access_rule('write')
+        self.env.cr.execute(f"""
+            UPDATE "ir_ui_view"
+            SET "arch_db_website" = CASE WHEN "website_id" IS NULL THEN NULL ELSE "arch_db" END
+            WHERE "id" IN %s
+            {'' if overwrite else 'AND ("website_id" IS NULL) != ("arch_db_website" IS NULL)'}
+        """, (tuple(self.ids),))
 
     def _load_records_write_on_cow(self, cow_view, inherit_id, values):
         inherit_id = self.search([
@@ -505,4 +544,26 @@ class View(models.Model):
         return res
 
     def _update_field_translations(self, fname, translations, digest=None):
-        return super(View, self.with_context(no_cow=True))._update_field_translations(fname, translations, digest)
+        langs = tuple(translations.keys())
+        res = super(View, self.with_context(no_cow=True))._update_field_translations(fname, translations, digest)
+        if res and fname == 'arch_db':
+            self.confirm_arch_db(langs)
+        return res
+
+    def confirm_arch_db(self, langs):
+        langs = tuple(lang for lang, _ in self.env['res.lang'].get_installed() if lang in langs)
+        if not langs or not (views := self.filtered('website_id')):
+            return
+        views.flush_recordset(['arch_db'])
+        views.invalidate_recordset(['arch_db_website'])
+        cr = self.env.cr
+        cr.execute(f"""
+            UPDATE ir_ui_view
+            SET arch_db_website = arch_db_website || jsonb_build_object({
+                ', '.join(f"'{lang}', COALESCE(arch_db->>'{lang}', arch_db->>'en_US')" for lang in langs)
+            })
+            WHERE id in %s
+            AND arch_db IS NOT NULL
+        """, (tuple(views.ids),))
+        for view in views.with_context(lang=langs[0]):
+            view.arch_db_website = view.arch_db_website

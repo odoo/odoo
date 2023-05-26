@@ -1020,6 +1020,8 @@ class TestCowViewSaving(TestViewSavingCommon):
         self.env['ir.module.module']._load_module_terms(['website'], ['en_US', 'fr_BE', 'es_ES'], overwrite=True)
 
         specific_view.invalidate_model(['arch_db', 'arch'])
+        # update langs with empty translations to confirm existing translations imported by `_load_module_terms`
+        specific_view.update_field_translations('arch_db', {'en_US': {}, 'fr_BE': {}, 'es_ES': {}})
         self.assertEqual(specific_view.with_context(lang='fr_BE').arch, '<div>salut</div>',
                          "loading module translation copy translation from base to specific view")
 
