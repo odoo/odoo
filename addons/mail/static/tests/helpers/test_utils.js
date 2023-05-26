@@ -16,12 +16,11 @@ import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import {
     clearRegistryWithCleanup,
     registryNamesToCloneWithCleanup,
-    utils,
+    prepareRegistriesWithCleanup,
 } from "@web/../tests/helpers/mock_env";
 import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
-const { prepareRegistriesWithCleanup } = utils;
 const { afterNextRender } = App;
 
 // load emoji data once, when the test suite starts.
