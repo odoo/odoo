@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { memoize, uniqueId } from "@web/core/utils/functions";
+import { patchWithCleanup } from "../../helpers/utils";
 
 QUnit.module("utils", () => {
     QUnit.module("Functions");
@@ -70,6 +71,7 @@ QUnit.module("utils", () => {
     });
 
     QUnit.test("uniqueId", (assert) => {
+        patchWithCleanup(uniqueId, { nextId: 0 });
         assert.strictEqual(uniqueId("test_"), "test_1");
         assert.strictEqual(uniqueId("bla"), "bla2");
         assert.strictEqual(uniqueId("test_"), "test_3");
