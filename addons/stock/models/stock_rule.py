@@ -501,7 +501,7 @@ class ProcurementGroup(models.Model):
         """ Find a pull rule for the location_id, fallback on the parent
         locations if it could not be found.
         """
-        result = False
+        result = self.env['stock.rule']
         location = location_id
         while (not result) and location:
             domain = self._get_rule_domain(location, values)
