@@ -286,23 +286,10 @@
     padding: if(type-of($padding-base) == 'string', calc(#{$padding-base}/2) $padding-base, $padding-base/2 $padding-base);
     vertical-align: top;
     @include o-hover-text-color($body-color, $headings-color);
-
-    &:focus, &:active, &:focus:active {
-        outline: none;
-        box-shadow: none;
-    }
 }
 @mixin o-kanban-dropdown-open {
     position: relative;
-    background: $dropdown-bg;
     z-index: $zindex-dropdown + 1;
-
-    &:before {
-        @include o-position-absolute(100%, 0, auto, 0);
-        height: $dropdown-border-radius;
-        background-color: $dropdown-bg;
-        content: "";
-    }
 }
 @mixin o-kanban-colorpicker {
     max-width: 150px;
