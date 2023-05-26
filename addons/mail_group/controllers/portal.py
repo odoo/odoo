@@ -33,7 +33,7 @@ class PortalMailGroup(http.Controller):
 
         date_groups = []
 
-        locale = get_lang(self.env).code
+        locale = get_lang(request.env).code
         fmt = models.READ_GROUP_DISPLAY_FORMAT['month']
         interval = models.READ_GROUP_TIME_GRANULARITY['month']
         for start, count in results:
