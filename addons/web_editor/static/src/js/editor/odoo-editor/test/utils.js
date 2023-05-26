@@ -90,6 +90,13 @@ export function parseTextualSelection(testContainer) {
         node = next;
     }
     if (anchorNode && focusNode) {
+        // Correct for the addition of the link ZWS start characters.
+        if (anchorNode.nodeName === 'A' && anchorOffset) {
+            anchorOffset += 1;
+        }
+        if (focusNode.nodeName === 'A' && focusOffset) {
+            focusOffset += 1;
+        }
         return {
             anchorNode: anchorNode,
             anchorOffset: anchorOffset,
