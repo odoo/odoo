@@ -2595,11 +2595,6 @@ class MailThread(models.AbstractModel):
         groups = self._notify_get_groups(msg_vals=local_msg_vals)
         access_link = self._notify_get_action_link('view', **local_msg_vals)
 
-        if model_name:
-            view_title = _('View %s', model_name)
-        else:
-            view_title = _('View')
-
         # fill group_data with default_values if they are not complete
         for group_name, group_func, group_data in groups:
             group_data.setdefault('notification_group_name', group_name)
@@ -2608,7 +2603,6 @@ class MailThread(models.AbstractModel):
             group_data.setdefault('has_button_access', is_thread_notification)
             group_button_access = group_data.setdefault('button_access', {})
             group_button_access.setdefault('url', access_link)
-            group_button_access.setdefault('title', view_title)
             group_data.setdefault('actions', list())
             group_data.setdefault('recipients', list())
 
@@ -2617,6 +2611,14 @@ class MailThread(models.AbstractModel):
             for group_name, group_func, group_data in groups:
                 if group_func(recipient):
                     group_data['recipients'].append(recipient['id'])
+                    group_button_access = group_data['button_access']
+                    context = {'lang': recipient['lang']} if 'lang' in recipient else {}
+                    if model_name:
+                        view_title = _('View %s', model_name)
+                    else:
+                        view_title = _('View')
+                    group_button_access.setdefault('title', view_title)
+                    del context
                     break
 
         result = []
