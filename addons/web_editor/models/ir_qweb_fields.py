@@ -159,12 +159,13 @@ class Field(models.AbstractModel):
 
         if options['translate'] and field.type in ('char', 'text'):
             lang = record.env.lang or 'en_US'
-            if lang == 'en_US':
+            base_lang = record._get_base_lang()
+            if lang == base_lang:
                 attrs['data-oe-translation-state'] = 'translated'
             else:
-                value_en = record.with_context(lang='en_US')[field_name]
-                value_lang = record.with_context(lang=lang)[field_name]
-                attrs['data-oe-translation-state'] = 'translated' if value_en != value_lang else 'to_translate'
+                base_value = record.with_context(lang=base_lang)[field_name]
+                value = record[field_name]
+                attrs['data-oe-translation-state'] = 'translated' if base_value != value else 'to_translate'
 
         return attrs
 
