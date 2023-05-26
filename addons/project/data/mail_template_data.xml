@@ -122,5 +122,14 @@
     <span style="margin-top: 8px;">You have been assigned to the <t t-esc="model_description or 'document'"/> <t t-esc="object.display_name"/>.</span>
 </div>
         </template>
+
+        <!-- You have been invited to follow the task -->
+        <template id="task_invitation_follower">
+<div>
+    Hello <t t-out="partner_name"/>,
+    <br/><br/>
+    <span style="margin-top: 8px;">You have been invited to follow Task Document : <t t-out="object.display_name"/>.</span>
+</div>
+        </template>
     </data>
 </odoo>
