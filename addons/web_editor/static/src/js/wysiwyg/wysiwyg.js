@@ -623,7 +623,10 @@ export class Wysiwyg extends Component {
                         $target.data('popover-widget-initialized', this.linkPopover);
                     })();
                 }
-                $target.focus();
+                // Setting the focus on the closest contenteditable element
+                // resets the selection inside that element if no selection
+                // exists.
+                $target.closest('[contenteditable=true]').focus();
                 if ($target.closest('#wrapwrap').length && this.snippetsMenu) {
                     this.toggleLinkTools({
                         forceOpen: true,
@@ -1399,7 +1402,6 @@ export class Wysiwyg extends Component {
                     this.odooEditor.historyUnpauseSteps();
                     this.odooEditor.historyStep();
                     const link = data.linkDialog.$link[0];
-                    this.odooEditor.setContenteditableLink(link);
                     setSelection(link, 0, link, link.childNodes.length, false);
                     link.focus();
                 },
