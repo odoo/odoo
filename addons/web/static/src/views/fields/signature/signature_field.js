@@ -89,7 +89,6 @@ export class SignatureField extends Component {
     onClickSignature() {
         if (!this.props.readonly) {
             const nameAndSignatureProps = {
-                mode: "draw",
                 displaySignatureRatio: 3,
                 signatureType: "signature",
                 noInputName: true,
