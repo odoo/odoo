@@ -2230,7 +2230,6 @@ class AccountMoveLine(models.Model):
                 caba_reconcile_key = (transition_line.move_id, transition_line.account_id, transition_line.tax_repartition_line_id)
                 caba_lines_to_reconcile[caba_reconcile_key] |= transition_line
 
-
             # ==========================================================================
             # Generate the exchange difference journal items:
             # - to reset the balance of all transfer account to zero.
@@ -2421,7 +2420,9 @@ class AccountMoveLine(models.Model):
                 )
 
                 # Exchange difference for cash basis entries.
-                if is_cash_basis_needed:
+                # If we are fully reversing the entry, no need to fix anything since the journal entry
+                # is exactly the mirror of the source journal entry.
+                if is_cash_basis_needed and not self._context.get('move_reverse_cancel'):
                     caba_lines_to_reconcile = involved_lines._add_exchange_difference_cash_basis_vals(exchange_diff_vals)
 
                 # Create the exchange difference.

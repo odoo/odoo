@@ -5,17 +5,11 @@ import { WebsitePreview } from '@website/client_actions/website_preview/website_
 
 patch(WebsitePreview.prototype, 'website_slides_website_preview', {
     /**
+     * @todo remove me in master, the cleaning of iframe is now done
+     * globally in the website part
      * @override
      */
     _cleanIframeFallback() {
-        // Remove autoplay in all youtube videos urls so videos are not playing
-        // in the background
-        const playersEl = this.iframefallback.el.contentDocument.querySelectorAll('[id^=youtube-player]');
-        for (const playerEl of playersEl) {
-            const url = new URL(playerEl.src);
-            url.searchParams.delete('autoplay');
-            playerEl.src = url.toString();
-        }
         return this._super(...arguments);
     }
 });

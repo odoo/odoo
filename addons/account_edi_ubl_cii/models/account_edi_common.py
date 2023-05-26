@@ -338,14 +338,17 @@ class AccountEdiCommon(models.AbstractModel):
 
         return invoice
 
-    def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat):
+    def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat, country_code=False):
         """ Retrieve the partner, if no matching partner is found, create it (only if he has a vat and a name)
         """
         invoice.partner_id = self.env['account.edi.format']._retrieve_partner(name=name, phone=phone, mail=mail, vat=vat)
         if not invoice.partner_id and name and vat:
-            invoice.partner_id = self.env['res.partner'].create({'name': name, 'email': mail, 'phone': phone})
-            country_code = invoice.partner_id.commercial_partner_id.country_code
-            if vat and self.env['res.partner']._run_vat_test(vat, country_code, invoice.partner_id.is_company):
+            partner_vals = {'name': name, 'email': mail, 'phone': phone}
+            country = self.env.ref(f'base.{country_code.lower()}', raise_if_not_found=False) if country_code else False
+            if country:
+                partner_vals['country_id'] = country.id
+            invoice.partner_id = self.env['res.partner'].create(partner_vals)
+            if vat and self.env['res.partner']._run_vat_test(vat, country, invoice.partner_id.is_company):
                 invoice.partner_id.vat = vat
 
     def _import_fill_invoice_allowance_charge(self, tree, invoice, journal, qty_factor):

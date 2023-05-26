@@ -107,7 +107,7 @@ class AccountMove(models.Model):
     def _unlink_l10n_in_except_once_post(self):
         # Prevent deleting entries once it's posted for Indian Company only
         if any(m.country_code == 'IN' and m.posted_before for m in self) and not self._context.get('force_delete'):
-            raise UserError(_("To keep the audit trail, you can not delete journal entries once they have been posted"))
+            raise UserError(_("To keep the audit trail, you can not delete journal entries once they have been posted.\nInstead, you can cancel the journal entry."))
 
     def unlink(self):
         # Add logger here becouse in api ondelete account.move.line is deleted and we can't get total amount
