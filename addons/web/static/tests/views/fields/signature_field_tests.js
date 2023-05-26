@@ -84,6 +84,11 @@ QUnit.module("Fields", (hooks) => {
             ".modal .modal-body a.o_web_sign_auto_button",
             'should open a modal with "Auto" button'
         );
+        assert.hasClass(
+            target.querySelector(".o_web_sign_auto_button"),
+            "active",
+            "'Auto' panel is visible by default"
+        );
         assert.verifySteps(["Pop's Chock'lit"]);
     });
 
