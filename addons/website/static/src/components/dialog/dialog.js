@@ -108,7 +108,9 @@ export class AddPageDialog extends Component {
 
     async addPage() {
         const params = {'add_menu': this.state.addMenu || '', csrf_token};
-        const url = `/website/add/${encodeURIComponent(this.state.name)}`;
+        // Remove any leading slash.
+        const pageName = this.state.name.replace(/^\/*/, "");
+        const url = `/website/add/${encodeURIComponent(pageName)}`;
         const websiteId = parseInt(this.state.websiteId);
         if (this.props.selectWebsite) {
             params['website_id'] = websiteId;
