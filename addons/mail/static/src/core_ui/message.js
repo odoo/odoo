@@ -147,7 +147,6 @@ export class Message extends Component {
 
     get attClass() {
         return {
-            "o-highlighted-from-mention": this.message.isHighlightedFromMention,
             "o-highlighted bg-view shadow-lg": this.props.highlighted,
             "o-selfAuthored": this.message.isSelfAuthored,
             "o-selected": this.props.messageToReplyTo?.isSelected(
