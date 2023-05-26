@@ -66,6 +66,6 @@ class ResConfigSettings(models.TransientModel):
         if rating_project_request_email_template.active != self['group_project_rating']:
             rating_project_request_email_template.active = self['group_project_rating']
         if not self['group_project_recurring_tasks']:
-            self.env['project.task'].sudo().search([('recurring_task', '=', True)]).write({'recurring_task': False})
+            self.env['project.task'].sudo().search([('recurring_task', '=', True)]).with_context({"remove_recurrent_task": True}).write({'recurring_task': False})
 
         super().set_values()

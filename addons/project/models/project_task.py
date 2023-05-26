@@ -403,7 +403,7 @@ class Task(models.Model):
     def _inverse_state(self):
         last_task_id_per_recurrence_id = self.recurrence_id._get_last_task_id_per_recurrence_id()
         for task in self:
-            if task.state in CLOSED_STATES and task.id == last_task_id_per_recurrence_id.get(task.recurrence_id.id):
+            if task.recurring_task and task.state in CLOSED_STATES and task.id == last_task_id_per_recurrence_id.get(task.recurrence_id.id):
                 task.recurrence_id._create_next_occurrence(task)
 
     @api.depends_context('uid')
@@ -1048,8 +1048,8 @@ class Task(models.Model):
                 elif vals.get('recurring_task'):
                     recurrence = self.env['project.task.recurrence'].create(rec_values)
                     task.recurrence_id = recurrence.id
-
-        if 'recurring_task' in vals and not vals.get('recurring_task'):
+        if not vals.get('recurring_task', True) \
+            and (self.env.context.get("remove_recurrent_task") or len(self.recurrence_id.task_ids) == 1):
             self.recurrence_id.unlink()
 
         # The sudo is required for a portal user as the record update
