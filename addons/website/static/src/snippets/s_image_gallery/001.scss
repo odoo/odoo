@@ -141,47 +141,74 @@
         }
         &.s_image_gallery_indicators_arrows_boxed, &.s_image_gallery_indicators_arrows_rounded {
             .carousel {
-                .carousel-control-prev .fa,
-                .carousel-control-next .fa {
-                    text-shadow: none;
+                .carousel-control-prev,
+                .carousel-control-next {
+                    // Directional icons replaced by oi but keeping fa here, it
+                    // is still used by already dropped snippet
+                    .fa, .oi {
+                        text-shadow: none;
+                    }
                 }
             }
         }
         &.s_image_gallery_indicators_arrows_boxed {
             .carousel {
-                .carousel-control-prev .fa:before {
-                    content: "\f104";
-                    padding-right: 2px;
+                .carousel-control-prev {
+                    .fa:before {
+                        content: "\f104";
+                    }
+                    .oi:before, .fa:before {
+                        padding-right: 2px;
+                    }
                 }
-                .carousel-control-next .fa:before {
-                    content: "\f105";
-                    padding-left: 2px;
+                .carousel-control-next {
+                    .fa:before {
+                        content: "\f105";
+                    }
+                    .oi:before, .fa:before {
+                        padding-left: 2px;
+                    }
                 }
-                .carousel-control-prev .fa:before,
-                .carousel-control-next .fa:before {
-                    display: block;
-                    width: 3rem;
-                    height: 3rem;
-                    line-height: 3rem;
-                    color: black;
-                    background: white;
-                    font-size: 1.25rem;
-                    border: 1px solid $gray-500;
+                .carousel-control-prev,
+                .carousel-control-next {
+                    .fa:before, .oi:before {
+                            display: block;
+                            width: 3rem;
+                            height: 3rem;
+                            line-height: 3rem;
+                            color: black;
+                            background: white;
+                            border: 1px solid $gray-500;
+                    }
+                    .fa:before {
+                        font-size: 1.25rem;
+                    }
+                    .oi:before {
+                        font-size: 0.75rem;
+                    }
                 }
             }
         }
         &.s_image_gallery_indicators_arrows_rounded {
             .carousel {
-                .carousel-control-prev .fa:before { content: "\f060"; }
-                .carousel-control-next .fa:before { content: "\f061"; }
-                .carousel-control-prev .fa:before,
-                .carousel-control-next .fa:before {
-                    color: black;
-                    background: white;
-                    font-size: 1.25rem;
-                    border-radius: 50%;
-                    padding: 1.25rem;
-                    border: 1px solid $gray-500;
+                .carousel-control-prev {
+                    .fa:before { content: "\f060"; }
+                    .oi:before { content: "\e842"; }
+                }
+                .carousel-control-next {
+                    .fa:before { content: "\f061"; }
+                    .oi:before { content: "\e843"; }
+                }
+                .carousel-control-prev,
+                .carousel-control-next {
+                    .fa:before, .oi:before {
+                            color: black;
+                            background: white;
+                            font-size: 1.25rem;
+                            border-radius: 50%;
+                            padding: 1.25rem;
+                            border: 1px solid $gray-500;
+                    }
                 }
             }
         }
@@ -270,9 +297,11 @@
             align-items: center;
             height: 100%;
         }
-        .carousel-control-next .fa,
-        .carousel-control-prev .fa {
-            text-shadow: 0px 0px 3px $gray-800;
+        .carousel-control-next,
+        .carousel-control-prev {
+             .fa, .oi {
+                text-shadow: 0px 0px 3px $gray-800;
+            }
         }
     }
 }
