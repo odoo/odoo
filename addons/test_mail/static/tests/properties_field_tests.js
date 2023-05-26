@@ -40,7 +40,7 @@ async function testPropertyFieldAvatarOpenChat(assert, propertyType) {
     });
 
     const partnerId = pyEnv["res.partner"].create({ name: "Partner Test" });
-    const userId = pyEnv["res.users"].create({ name: "User Test" });
+    const userId = pyEnv["res.users"].create({ name: "User Test", partner_id: partnerId });
     const parentId = pyEnv["mail.test.properties"].create({ name: "Parent" });
     const value = propertyType === "many2one" ? [userId, "User Test"] : [[userId, "User Test"]];
     const childId = pyEnv["mail.test.properties"].create({
