@@ -22,6 +22,8 @@ const wysiwygUtils = require('@web_editor/js/common/wysiwyg_utils');
 const weUtils = require('web_editor.utils');
 const { PeerToPeer } = require('@web_editor/js/wysiwyg/PeerToPeer');
 const { Mutex } = require('web.concurrency');
+const { throttleForAnimation } = require('@web/core/utils/timing');
+const config = require('web.config');
 
 var _t = core._t;
 const QWeb = core.qweb;
@@ -690,6 +692,9 @@ const Wysiwyg = Widget.extend({
             window.removeEventListener('offline', this._checkConnectionChange);
         }
         window.removeEventListener('beforeunload', this._onBeforeUnload);
+        if (this.scrollContainer) {
+            this.scrollContainer.removeEventListener('scroll', this.updateToolbarPosition);
+        }
         this._super();
     },
     /**
@@ -1476,18 +1481,25 @@ const Wysiwyg = Widget.extend({
         if ($colorpickerGroup.length) {
             this._createPalette();
         }
-        // we need the Timeout to be sure the editable content is loaded
-        // before calculating the scrollParent() element.
-        setTimeout(() => {
-            const scrollableContainer = this.$el.scrollParent();
-            if (!options.snippets && scrollableContainer.length) {
-                this.odooEditor.addDomListener(
-                    scrollableContainer[0],
-                    'scroll',
-                    this.odooEditor.updateToolbarPosition.bind(this.odooEditor),
-                );
+        if (!options.snippets) {
+            const $baseElement = options.inIframe ? this.$iframe : this.$el;
+            this.scrollContainer = $baseElement.scrollParent()[0];
+            this.updateToolbarPosition =
+                throttleForAnimation(this.odooEditor.updateToolbarPosition.bind(this.odooEditor));
+            this.scrollContainer.addEventListener('scroll', this.updateToolbarPosition);
+            const updateScrollContainer = () => {
+                const newScrollContainer = $baseElement.scrollParent()[0];
+                if (newScrollContainer !== this.scrollContainer) {
+                    this.scrollContainer.removeEventListener('scroll', this.updateToolbarPosition);
+                    this.scrollContainer = newScrollContainer;
+                    this.scrollContainer.addEventListener('scroll', this.updateToolbarPosition);
+                }
             }
-        }, 0);
+            // The scroll container might change if the web client has its DOM updated.
+            core.bus.on('DOM_updated', this, updateScrollContainer);
+            // Same for window resize, but changes in the DOM take a while to complete.
+            config.device.bus.on('size_changed', this, () => setTimeout(updateScrollContainer, 1000));
+        }
     },
     /**
      * @private
