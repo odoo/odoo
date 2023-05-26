@@ -126,11 +126,12 @@ QuestionPageOneToManyField.defaultProps = {
     ...X2ManyField.defaultProps,
     editable: "bottom",
 };
-QuestionPageOneToManyField.additionalClasses = ["o_field_one2many"];
 
 export const questionPageOneToManyField = {
     ...x2ManyField,
     component: QuestionPageOneToManyField,
+    additionalClasses: [...x2ManyField.additionalClasses || [], "o_field_one2many"],
+    
 };
 
 registry.category("fields").add("question_page_one2many", questionPageOneToManyField);
