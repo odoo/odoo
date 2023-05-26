@@ -756,7 +756,7 @@ class Website(models.Model):
         key_copy = string
         inc = 0
         domain_static = self.get_current_website().website_domain()
-        while self.env['website.page'].with_context(active_test=False).sudo().search([('key', '=', key_copy)] + domain_static):
+        while self.env['ir.ui.view'].with_context(active_test=False).sudo().search([('key', '=', key_copy)] + domain_static):
             inc += 1
             key_copy = string + (inc and "-%s" % inc or "")
         return key_copy
