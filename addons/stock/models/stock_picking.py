@@ -1433,3 +1433,6 @@ class Picking(models.Model):
             body=message,
         )
         return True
+
+    def _get_report_lang(self):
+        return self.move_lines and self.move_lines[0].partner_id.lang or self.partner_id.lang or self.env.lang
