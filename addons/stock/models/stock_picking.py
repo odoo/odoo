@@ -1255,6 +1255,7 @@ class Picking(models.Model):
         bo_to_assign = self.env['stock.picking']
         for picking in self:
             moves_to_backorder = picking.move_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
+            moves_to_backorder._recompute_state()
             if moves_to_backorder:
                 backorder_picking = picking.copy({
                     'name': '/',
