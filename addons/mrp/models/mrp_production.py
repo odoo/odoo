@@ -1711,8 +1711,9 @@ class MrpProduction(models.Model):
         self.env['stock.move.line'].browse(move_lines_to_unlink).unlink()
         self.env['stock.move.line'].create(move_lines_vals)
 
+        workorders_to_cancel = self.env['mrp.workorder']
+        workorders_to_update = self.env['mrp.workorder']
         for production in self:
-            initial_qty = initial_qty_by_production[production]
             initial_workorder_remaining_qty = []
             bo = production_to_backorders[production]
 
@@ -1724,13 +1725,22 @@ class MrpProduction(models.Model):
             for workorder in production.workorder_ids:
                 initial_workorder_remaining_qty.append(max(workorder.qty_produced - workorder.qty_production, 0))
                 workorder.qty_produced = min(workorder.qty_produced, workorder.qty_production)
-            workorders_len = len(bo.workorder_ids)
+            workorders_len = len(production.workorder_ids)
             for index, workorder in enumerate(bo.workorder_ids):
-                remaining_qty = initial_workorder_remaining_qty[index // workorders_len]
+                remaining_qty = initial_workorder_remaining_qty[index % workorders_len]
                 if remaining_qty:
                     workorder.qty_produced = max(workorder.qty_production, remaining_qty)
                     initial_workorder_remaining_qty[index % workorders_len] = max(remaining_qty - workorder.qty_produced, 0)
+                    if not workorder.qty_remaining:
+                        workorders_to_cancel += workorder
+                    elif workorders_to_update[-1:].production_id != workorder.production_id:
+                        workorders_to_update += workorder
+                elif workorder.qty_remaining and workorders_to_update[-1:].production_id != workorder.production_id:
+                    workorders_to_update += workorder
 
+        workorders_to_cancel.action_cancel()
+        workorders_to_update.filtered(lambda wo: wo.next_work_order_id.production_availability == 'assigned').state = 'ready'
+        workorders_to_update.filtered(lambda wo: wo.next_work_order_id.production_availability != 'assigned').state = 'waiting'
         backorders._action_confirm_mo_backorders()
         return self.env['mrp.production'].browse(production_ids)
 
