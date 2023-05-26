@@ -501,6 +501,7 @@ class ProcurementGroup(models.Model):
         """ Find a pull rule for the location_id, fallback on the parent
         locations if it could not be found.
         """
+        self = self.with_context(active_test=True)
         result = False
         location = location_id
         while (not result) and location:
