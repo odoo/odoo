@@ -737,7 +737,7 @@
                 </tree>
                 <field name="date_deadline" position="after">
                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="show"/>
-                    <field name="my_activity_date_deadline" string="My Deadline" widget="remaining_days" options="{'allow_order': '1'}" optional="hide"/>
+                    <field name="my_activity_date_deadline" string="My Deadline" widget="remaining_days" optional="hide"/>
                     <field name="rating_active" column_invisible="True"/>
                     <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
                         decoration-warning="rating_last_text == 'ok'" decoration-success="rating_last_text == 'top'"
@@ -769,6 +769,22 @@
                     <attribute name="js_class">project_task_list</attribute>
                     <attribute name="default_group_by">stage_id</attribute>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_task_tree_from_systray" model="ir.ui.view">
+            <field name="name">project.task.tree</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="view_task_tree2"/>
+            <field name="mode">primary</field>
+            <field name="priority">100</field>
+            <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="default_group_by"></attribute>
+                </tree>
+                <field name="my_activity_date_deadline" position="attributes">
+                    <attribute name="optional">show</attribute>
+                </field>
             </field>
         </record>
 
@@ -1054,6 +1070,14 @@
             <field name="res_model">project.task</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="search_view_id" ref="view_task_search_form"/>
+        </record>
+
+        <record id="action_view_task_from_systray" model="ir.actions.act_window">
+            <field name="name">Tasks</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">tree,kanban</field>
+            <field name="search_view_id" ref="view_task_search_form"/>
+            <field name="view_id" ref="view_task_tree_from_systray"/>
         </record>
 
         <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">

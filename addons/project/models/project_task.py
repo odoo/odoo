@@ -936,7 +936,7 @@ class Task(models.Model):
                         default_project_id=project_id
                     ).default_get(['stage_id']).get('stage_id')
                 vals["stage_id"] = default_stage[project_id]
-            # user_ids change: update date_assign
+
             # Stage change: Update date_end if folded stage and date_last_stage_update
             if vals.get('stage_id'):
                 vals.update(self.update_date_end(vals['stage_id']))
@@ -963,6 +963,16 @@ class Task(models.Model):
             # if the portal user could really create the tasks based on the ir rule.
             tasks.with_user(self.env.user).check_access_rule('create')
         current_partner = self.env.user.partner_id
+
+        all_partner_emails = []
+        for task in tasks:
+            all_partner_emails += tools.email_split(task.email_cc)
+        partners = self.env['res.partner'].search([('email', 'in', all_partner_emails)])
+        partner_per_email = {
+            partner.email: partner
+            for partner in partners
+            if not all(u.share for u in partner.user_ids)
+        }
         for task in tasks:
             if task.project_id.privacy_visibility == 'portal':
                 task._portal_ensure_token()
@@ -970,6 +980,16 @@ class Task(models.Model):
                 task.message_subscribe(follower.partner_id.ids, follower.subtype_ids.ids)
             if current_partner not in task.message_partner_ids:
                 task.message_subscribe(current_partner.ids)
+            if task.email_cc:
+                partners_with_internal_user = self.env['res.partner']
+                for email in tools.email_split(task.email_cc):
+                    new_partner = partner_per_email.get(email)
+                    if new_partner:
+                        partners_with_internal_user |= new_partner
+                if not partners_with_internal_user:
+                    continue
+                task._send_email_notify_to_cc(partners_with_internal_user)
+                task.message_subscribe(partners_with_internal_user.ids)
         return tasks
 
     def write(self, vals):
@@ -1247,6 +1267,28 @@ class Task(models.Model):
         if self.stage_id:
             render_context['subtitles'].append(_('Stage: %s', self.stage_id.name))
         return render_context
+
+    def _send_email_notify_to_cc(self, partners_to_notify):
+        self.ensure_one()
+        template_id = self.env['ir.model.data']._xmlid_to_res_id('project.task_invitation_follower', raise_if_not_found=False)
+        if not template_id:
+            return
+        task_model_description = self.env['ir.model']._get(self._name).display_name
+        values = {
+            'object': self,
+        }
+        for partner in partners_to_notify:
+            values['partner_name'] = partner.name
+            assignation_msg = self.env['ir.qweb']._render('project.task_invitation_follower', values, minimal_qcontext=True)
+            self.message_notify(
+                subject=_('You have been invited to follow %s', self.display_name),
+                body=assignation_msg,
+                partner_ids=partner.ids,
+                record_name=self.display_name,
+                email_layout_xmlid='mail.mail_notification_layout',
+                model_description=task_model_description,
+                mail_auto_delete=True,
+            )
 
     @api.model
     def _task_message_auto_subscribe_notify(self, users_per_task):

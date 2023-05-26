@@ -346,3 +346,39 @@ class TestProjectBase(TestProjectCommon):
         for p in projects:
             self.assertEqual(fields.Date.to_string(p.date_start), '2021-09-25', f'The start date of {p.name} should be updated.')
             self.assertEqual(fields.Date.to_string(p.date), '2021-09-26', f'The expiration date of {p.name} should be updated.')
+
+    def test_create_task_in_batch_with_email_cc(self):
+        user_a, user_b, user_c = self.env['res.users'].create([{
+            'name': 'user A',
+            'login': 'loginA',
+            'email': 'email@bisous1',
+        }, {
+            'name': 'user B',
+            'login': 'loginB',
+            'email': 'email@bisous2',
+        }, {
+            'name': 'user C',
+            'login': 'loginC',
+            'email': 'email@bisous3',
+        }])
+        partner = self.env['res.partner'].create({
+            'name': 'partner',
+            'email': 'email@bisous4',
+        })
+        task_1, task_2 = self.env['project.task'].with_context({'mail_create_nolog': True}).create([{
+            'name': 'task 1',
+            'project_id': self.project_pigs.id,
+            'email_cc': 'email@bisous1, email@bisous2, email@bisous4'
+        }, {
+            'name': 'task 2',
+            'project_id': self.project_pigs.id,
+            'email_cc': 'email@bisous3, email@bisous2, email@bisous4'
+        }])
+        self.assertTrue(user_a.partner_id in task_1.message_partner_ids)
+        self.assertTrue(user_b.partner_id in task_1.message_partner_ids)
+        self.assertFalse(user_c.partner_id in task_1.message_partner_ids)
+        self.assertFalse(partner in task_1.message_partner_ids)
+        self.assertFalse(user_a.partner_id in task_2.message_partner_ids)
+        self.assertTrue(user_b.partner_id in task_2.message_partner_ids)
+        self.assertTrue(user_c.partner_id in task_2.message_partner_ids)
+        self.assertFalse(partner in task_2.message_partner_ids)
