@@ -171,7 +171,76 @@ class TestPickShip(TestStockCommon):
         picking_client._action_done()  # no new in order to create backorder
 
         backorder = self.env['stock.picking'].search([('backorder_id', '=', picking_client.id)])
-        self.assertEqual(backorder.state, 'waiting', 'Backorder should be waiting for reservation')
+        self.assertEqual(backorder.state, 'confirmed', 'Backorder should be waiting for reservation')
+
+    def test_mto_to_mts(self):
+        """
+            10 in stock, create pick and ship, change destination of pick, ship should become MTS
+        """
+        picking_pick, picking_ship = self.create_pick_ship()
+        self.env['stock.quant'].create({
+            'product_id': self.productA.id,
+            'location_id': self.stock_location,
+            'quantity': 10
+        })
+        (picking_pick + picking_ship).action_assign()
+        self.assertEqual(picking_pick.state, 'assigned')
+        self.assertEqual(picking_ship.state, 'waiting')
+        self.assertEqual(picking_ship.move_ids.procure_method, 'make_to_order')
+        picking_pick.location_dest_id = self.output_location
+        picking_pick.move_ids.location_dest_id = self.output_location
+        picking_pick.action_set_quantities_to_reservation()
+        picking_pick.button_validate()
+        self.assertEqual(picking_pick.state, 'done')
+        self.assertEqual(picking_ship.state, 'confirmed')
+        # ship source location remains unchanged
+        self.assertEqual(picking_ship.location_id.id, self.pack_location)
+        self.assertEqual(picking_ship.move_ids.procure_method, 'make_to_stock')
+
+    def test_mto_to_mts_2(self):
+        """
+            10 in stock, create pick and ship, cancel pick, ship should become MTS
+        """
+        picking_pick, picking_ship = self.create_pick_ship()
+        self.env['stock.quant'].create({
+            'product_id': self.productA.id,
+            'location_id': self.stock_location,
+            'quantity': 10
+        })
+        (picking_pick + picking_ship).action_assign()
+        self.assertEqual(picking_pick.state, 'assigned')
+        self.assertEqual(picking_ship.state, 'waiting')
+        self.assertEqual(picking_ship.move_ids.procure_method, 'make_to_order')
+        # this prevents cancel of ship move
+        picking_pick.move_ids.propagate_cancel = False
+        picking_pick.action_cancel()
+        self.assertEqual(picking_pick.state, 'cancel')
+        self.assertEqual(picking_ship.state, 'confirmed')
+        self.assertEqual(picking_ship.move_ids.procure_method, 'make_to_stock')
+
+    def test_mto_to_mts_3(self):
+        """
+            10 in stock, create pick and ship, change source of ship, ship should become MTS
+        """
+        picking_pick, picking_ship = self.create_pick_ship()
+        self.env['stock.quant'].create({
+            'product_id': self.productA.id,
+            'location_id': self.stock_location,
+            'quantity': 10
+        })
+        (picking_pick + picking_ship).action_assign()
+        self.assertEqual(picking_pick.state, 'assigned')
+        self.assertEqual(picking_ship.state, 'waiting')
+        self.assertEqual(picking_ship.move_ids.procure_method, 'make_to_order')
+        picking_ship.location_id = self.output_location
+        picking_ship.move_ids.location_id = self.output_location
+        picking_pick.action_set_quantities_to_reservation()
+        picking_pick.button_validate()
+        self.assertEqual(picking_pick.state, 'done')
+        self.assertEqual(picking_ship.state, 'confirmed')
+        # pick destination location remains unchanged
+        self.assertEqual(picking_pick.location_dest_id.id, self.pack_location)
+        self.assertEqual(picking_ship.move_ids.procure_method, 'make_to_stock')
 
     def test_mto_moves_transfer(self):
         """
