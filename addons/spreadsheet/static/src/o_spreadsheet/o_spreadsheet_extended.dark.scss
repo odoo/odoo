@@ -1,0 +1,26 @@
+// Force light theme for everything in o-spreadsheet until
+// we have the proper scss tool chain to support dark theme properly
+// in the library
+.o-spreadsheet {
+  .o-filter-menu {
+      background-color: #fff !important;
+  }
+  .o_field_tags .badge {
+      background-color: #fff !important;
+      color: #777 !important;
+  }
+  .o_field_selector_chain_part {
+      background: #f6f7fa !important;
+      border-color: #d5dae8 !important;
+  }
+  input {
+      color: #333 !important;
+  }
+  .o_input {
+      color: #777 !important;
+  }
+  .o_domain_leaf_info {
+      background: #f6f7fa !important;
+      border-color: #d5dae8 !important;
+  }
+}
