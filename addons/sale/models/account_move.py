@@ -10,6 +10,8 @@ class AccountMove(models.Model):
 
     @api.model
     def _get_invoice_default_sale_team(self):
+        if self.env.context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt'):
+            return
         return self.env['crm.team']._get_default_team_id()
 
     team_id = fields.Many2one(
@@ -56,6 +58,9 @@ class AccountMove(models.Model):
 
     @api.onchange('invoice_user_id')
     def onchange_user_id(self):
+        if self.env.context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt'):
+            return
+
         if self.invoice_user_id and self.invoice_user_id.sale_team_id:
             self.team_id = self.env['crm.team']._get_default_team_id(user_id=self.invoice_user_id.id, domain=[('company_id', '=', self.company_id.id)])
 
