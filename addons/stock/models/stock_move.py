@@ -1731,6 +1731,8 @@ class StockMove(models.Model):
                 .filtered(lambda p: p.quant_ids and len(p.quant_ids) > 1):
             if len(result_package.quant_ids.filtered(lambda q: not float_is_zero(abs(q.quantity) + abs(q.reserved_quantity), precision_rounding=q.product_uom_id.rounding)).mapped('location_id')) > 1:
                 raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
+        if any(ml.package_id and ml.package_id == ml.result_package_id for ml in moves_todo.move_line_ids):
+            self.env['stock.quant']._unlink_zero_quants()
         picking = moves_todo.mapped('picking_id')
         moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
 
