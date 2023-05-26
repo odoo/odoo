@@ -1001,3 +1001,20 @@ QUnit.test("Chat window in mobile are not foldable", async (assert) => {
     await nextAnimationFrame();
     assert.containsOnce($, ".o-mail-ChatWindow-content"); // content => non-folded
 });
+
+QUnit.test("Open chat window of new inviter", async (assert) => {
+    const pyEnv = await startServer();
+    await start();
+    const partnerId = pyEnv["res.partner"].create({ name: "Newbie" });
+    pyEnv["res.users"].create({ partner_id: partnerId });
+    // simulate receiving notification of new connection of inviting user
+    pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "res.users/connection", {
+        username: "Newbie",
+        partnerId,
+    });
+    await waitUntil(".o-mail-ChatWindow:contains(Newbie)");
+    assert.containsOnce(
+        $,
+        ".o_notification:contains(Newbie connected. This is their first connection. Wish them luck.)"
+    );
+});
