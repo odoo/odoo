@@ -28,6 +28,12 @@ class TestServerActionsBase(common.TransactionCase):
             'email': 'test.partner@test.example.com',
             'name': 'TestingPartner',
         })
+        self.test_partner2 = self.env['res.partner'].create({
+            'city': 'OrigCity',
+            'country_id': self.test_country.id,
+            'email': 'test.partner@test.example.com',
+            'name': 'TestingPartnerBis',
+        })
         self.context = {
             'active_model': 'res.partner',
             'active_id': self.test_partner.id,
@@ -113,6 +119,7 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             'code': ("partner_name = record.name + '_code'\n"
                      "record.env['res.partner'].create({'name': partner_name})"),
         })
+        self.context['active_ids'] = []
         run_res = self.action.with_context(self.context).run()
         self.assertFalse(run_res, 'ir_actions_server: code server action correctly finished should return False')
 
@@ -200,11 +207,28 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
             'fields_lines': [Command.create({'col1': self.res_partner_name_field.id, 'value': _name})],
         })
         run_res = self.action.with_context(self.context).run()
-        self.assertFalse(run_res, 'ir_actions_server: create record action correctly finished should return False')
+        self.assertFalse(run_res, 'ir_actions_server: write record action correctly finished should return False')
         # Test: partner updated
         partner = self.test_partner.search([('name', 'ilike', _name)])
         self.assertEqual(len(partner), 1, 'ir_actions_server: TODO')
         self.assertEqual(partner.city, 'OrigCity', 'ir_actions_server: TODO')
+
+    def test_30_crud_write_multi(self):
+        _name = 'TestNew'
+
+        partners = self.test_partner + self.test_partner2
+        names = partners.mapped('name')
+        self.context['active_ids'] = partners.ids
+
+        # Do: update partner name
+        self.action.write({
+            'state': 'object_write',
+            'fields_lines': [Command.create({'col1': self.res_partner_name_field.id, 'value': f'record.name + "{_name}"', 'evaluation_type':'equation'})],
+        })
+        run_res = self.action.with_context(self.context).run()
+        self.assertFalse(run_res, 'ir_actions_server: write record action correctly finished should return False')
+        # Test: partner updated
+        self.assertEqual(partners.mapped('name'), [n+_name for n in names])
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_40_multi(self):
