@@ -53,6 +53,10 @@ class Db(Command):
             help="delete `database` database before loading if it exists"
         )
         load.add_argument(
+            '-n', '--neutralize', action='store_const', default=False, const=True,
+            help="neutralize the database after restore"
+        )
+        load.add_argument(
             'database', nargs='?',
             help="database to create, defaults to dump file's name "
                  "(without extension)"
@@ -77,6 +81,10 @@ class Db(Command):
         duplicate.add_argument(
             '-f', '--force', action='store_const', default=False, const=True,
             help="delete `target` database before copying if it exists"
+        )
+        duplicate.add_argument(
+            '-n', '--neutralize', action='store_const', default=False, const=True,
+            help="neutralize the target database after duplicate"
         )
         duplicate.add_argument("source")
         duplicate.add_argument("target", help="database to copy `source` to, must not exist unless `-f` is specified in which case it will be dropped first")
@@ -136,7 +144,7 @@ class Db(Command):
             exit("Not a zipped dump file, use `pg_restore` to restore raw dumps,"
                  " and `psql` to execute sql dumps or scripts.")
 
-        restore_db(db=db_name, dump_file=dump_file, copy=True)
+        restore_db(db=db_name, dump_file=dump_file, copy=True, neutralize_database=args.neutralize)
 
     def dump(self, args):
         if args.dump_path == '-':
@@ -147,7 +155,7 @@ class Db(Command):
 
     def duplicate(self, args):
         self._check_target(args.target, delete_if_exists=args.force)
-        exp_duplicate_database(args.source, args.target)
+        exp_duplicate_database(args.source, args.target, neutralize_database=args.neutralize)
 
     def rename(self, args):
         self._check_target(args.target, delete_if_exists=args.force)

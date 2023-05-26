@@ -966,3 +966,61 @@ class TestAccountMove(AccountTestInvoicingCommon):
             {'name': 'CABA',   'debit': 0.0,   'credit': 20.0,  'account_id': tax_account.id,    'tax_ids': [],           'tax_line_id': caba_tax.id},
             {'name': 'credit', 'debit': 0.0,   'credit': 100.0, 'account_id': income_account.id, 'tax_ids': caba_tax.ids, 'tax_line_id': False},
         ])
+
+    def test_misc_with_taxes_reverse(self):
+        test_account = self.company_data['default_account_revenue']
+
+        # With a sale tax
+        sale_tax = self.company_data['default_tax_sale']
+
+        move_form = Form(self.env['account.move'])
+
+        with move_form.line_ids.new() as debit_line_form:
+            debit_line_form.name = 'debit'
+            debit_line_form.account_id = test_account
+            debit_line_form.debit = 115
+
+        with move_form.line_ids.new() as credit_line_form:
+            credit_line_form.name = 'credit'
+            credit_line_form.account_id = test_account
+            credit_line_form.credit = 100
+            credit_line_form.tax_ids.clear()
+            credit_line_form.tax_ids.add(sale_tax)
+
+        sale_move = move_form.save()
+
+        sale_invoice_rep_line = sale_tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+
+        self.assertRecordValues(sale_move.line_ids.sorted(lambda x: -x.balance), [
+            # pylint: disable=C0326
+            {'name': 'debit',   'debit': 115.0, 'credit':   0.0, 'account_id': test_account.id,                                  'tax_ids': [],           'tax_base_amount': 0,   'tax_tag_invert': False, 'tax_repartition_line_id': False},
+            {'name': 'Tax 15%', 'debit':   0.0, 'credit':  15.0, 'account_id': self.company_data['default_account_tax_sale'].id, 'tax_ids': [],           'tax_base_amount': 100, 'tax_tag_invert': True,  'tax_repartition_line_id': sale_invoice_rep_line.id},
+            {'name': 'credit',  'debit':   0.0, 'credit': 100.0, 'account_id': test_account.id,                                  'tax_ids': sale_tax.ids, 'tax_base_amount': 0,   'tax_tag_invert': True,  'tax_repartition_line_id': False},
+        ])
+
+        # Same with a purchase tax
+        purchase_tax = self.company_data['default_tax_purchase']
+
+        move_form = Form(self.env['account.move'])
+
+        with move_form.line_ids.new() as credit_line_form:
+            credit_line_form.name = 'credit'
+            credit_line_form.account_id = test_account
+            credit_line_form.credit = 115
+
+        with move_form.line_ids.new() as debit_line_form:
+            debit_line_form.name = 'debit'
+            debit_line_form.account_id = test_account
+            debit_line_form.debit = 100
+            debit_line_form.tax_ids.clear()
+            debit_line_form.tax_ids.add(purchase_tax)
+
+        purchase_move = move_form.save()
+
+        purchase_invoice_rep_line = purchase_tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+        self.assertRecordValues(purchase_move.line_ids.sorted(lambda x: x.balance), [
+            # pylint: disable=C0326
+            {'name': 'credit',           'credit': 115.0, 'debit':   0.0, 'account_id': test_account.id,                                      'tax_ids': [],               'tax_base_amount': 0,   'tax_tag_invert': False, 'tax_repartition_line_id': False},
+            {'name': 'Purchase Tax 15%', 'credit':   0.0, 'debit':  15.0, 'account_id': self.company_data['default_account_tax_purchase'].id, 'tax_ids': [],               'tax_base_amount': 100, 'tax_tag_invert': False,  'tax_repartition_line_id': purchase_invoice_rep_line.id},
+            {'name': 'debit',            'credit':   0.0, 'debit': 100.0, 'account_id': test_account.id,                                      'tax_ids': purchase_tax.ids, 'tax_base_amount': 0,   'tax_tag_invert': False,  'tax_repartition_line_id': False},
+        ])

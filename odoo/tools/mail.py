@@ -30,7 +30,7 @@ _logger = logging.getLogger(__name__)
 
 safe_attrs = clean.defs.safe_attrs | frozenset(
     ['style',
-     'data-o-mail-quote',  # quote detection
+     'data-o-mail-quote', 'data-o-mail-quote-node',  # quote detection
      'data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-type', 'data-oe-expression', 'data-oe-translation-initial-sha', 'data-oe-nodeid',
      'data-last-history-steps',
      'data-publish', 'data-id', 'data-res_id', 'data-interval', 'data-member_id', 'data-scroll-background-ratio', 'data-view-id',
