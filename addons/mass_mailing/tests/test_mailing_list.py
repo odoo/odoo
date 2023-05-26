@@ -29,7 +29,7 @@ class TestMailingContactToList(MassMailCommon):
 
         # create wizard with context values
         wizard_form = Form(self.env['mailing.contact.to.list'].with_context(default_contact_ids=contacts.ids))
-        self.assertEqual(wizard_form.contact_ids._get_ids(), contacts.ids)
+        self.assertEqual(wizard_form.contact_ids.ids, contacts.ids)
 
         # set mailing list and add contacts
         wizard_form.mailing_list_id = mailing
