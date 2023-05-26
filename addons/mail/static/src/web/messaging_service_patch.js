@@ -2,7 +2,9 @@
 
 import { Messaging, messagingService } from "@mail/core/messaging_service";
 import { createLocalId } from "@mail/utils/misc";
+import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
+import { sprintf } from "@web/core/utils/strings";
 
 patch(Messaging.prototype, "mail/web", {
     setup(env, services, initialThreadLocalId) {
@@ -10,6 +12,20 @@ patch(Messaging.prototype, "mail/web", {
         /** @type {import("@mail/chat/chat_window_service").ChatWindow} */
         this.chatWindowService = services["mail.chat_window"];
         this.ui = services["ui"];
+        this.bus.subscribe("res.users/connection", async ({ partnerId, username }) => {
+            // If the current user invited a new user, and the new user is
+            // connecting for the first time while the current user is present
+            // then open a chat for the current user with the new user.
+            const notification = sprintf(
+                _t("%(user)s connected. This is their first connection. Wish them luck."),
+                { user: username }
+            );
+            this.notificationService.add(notification, { type: "info" });
+            const chat = await this.threadService.getChat({ partnerId });
+            if (chat) {
+                this.chatWindowService.insert({ thread: chat });
+            }
+        });
     },
     initMessagingCallback(data) {
         this.loadFailures();
