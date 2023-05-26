@@ -23,7 +23,7 @@ patch(ChatWindow.prototype, "discuss", {
     },
     get actions() {
         const acts = this._super();
-        if (this.props.chatWindow.isOpen && this.thread?.type === "channel") {
+        if (this.props.chatWindow.isOpen && this.thread?.model === "discuss.channel") {
             acts.push({
                 id: "invite",
                 name:
