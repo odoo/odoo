@@ -87,7 +87,7 @@ class TestMailComposerForm(TestMailComposer):
         }))
         form.body = '<p>Hello</p>'
         self.assertEqual(
-            form.partner_ids._get_ids(), partner_classic.ids,
+            form.partner_ids.ids, partner_classic.ids,
             'Default populates the field'
         )
         saved_form = form.save()
@@ -119,7 +119,7 @@ class TestMailComposerForm(TestMailComposer):
         }))
         form.body = '<p>Hello</p>'
         self.assertEqual(
-            sorted(form.partner_ids._get_ids()),
+            sorted(form.partner_ids.ids),
             sorted((partner_private + partner_classic).ids),
             'Default populates the field'
         )
@@ -191,7 +191,7 @@ class TestMailComposerForm(TestMailComposer):
         self.assertEqual(new_partner.type, 'contact', 'Should create a new contact')
 
         self.assertEqual(
-            sorted(form.partner_ids._get_ids()),
+            sorted(form.partner_ids.ids),
             sorted((partner_private + partner_classic + partner_private_2 + new_partner).ids),
             'Template populates the field with both email_to and partner_to'
         )

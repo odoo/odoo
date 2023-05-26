@@ -497,7 +497,7 @@ class TestO2M(TransactionCase):
 
     def test_o2m_remove(self):
         def commands():
-            return [c[0] for c in f._values['line_ids']]
+            return [c[0] for c in f._values['line_ids'].to_commands()]
 
         with Form(self.env['test_testing_utilities.onchange_count']) as f:
             self.assertEqual(f.count, 0)
@@ -525,9 +525,9 @@ class TestO2M(TransactionCase):
 
         with Form(r) as f:
             f.line_ids.remove(0)
-            self.assertEqual(commands(), [2, 1])
+            self.assertEqual(commands(), [2])
             f.count = 1
-            self.assertEqual(commands(), [0, 2, 2], "should contain 1 '0' command and 2 deletions")
+            self.assertEqual(commands(), [0, 2, 2], "should contain 1 creation and 2 deletions")
         self.assertEqual(len(r.line_ids), 1)
 
     def test_o2m_self_recursive(self):
