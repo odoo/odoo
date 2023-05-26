@@ -25,13 +25,17 @@ class TestEventBoothSaleWData(TestEventBoothSaleCommon, TestSalesCommon):
             'date_tz': 'Europe/Brussels',
         })
 
-        cls.booth_1, cls.booth_2 = cls.env['event.booth'].create([
+        cls.booth_1, cls.booth_2, cls.booth_3 = cls.env['event.booth'].create([
             {
                 'name': 'Test Booth 1',
                 'booth_category_id': cls.event_booth_category_1.id,
                 'event_id': cls.event_0.id,
             }, {
                 'name': 'Test Booth 2',
+                'booth_category_id': cls.event_booth_category_1.id,
+                'event_id': cls.event_0.id,
+            }, {
+                'name': 'Test Booth 3',
                 'booth_category_id': cls.event_booth_category_1.id,
                 'event_id': cls.event_0.id,
             }
@@ -117,6 +121,46 @@ class TestEventBoothSale(TestEventBoothSaleWData):
                 booth.state, 'unavailable',
                 "Booth should not be available anymore.")
 
+    @users('user_sales_salesman')
+    def test_event_booth_registrations_inverse(self):
+        # Create sale order and add a booth
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.event_customer.id,
+            'pricelist_id': self.test_pricelist.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.event_booth_product.id,
+                    'event_id': self.event_0.id,
+                    'event_booth_category_id': self.event_booth_category_1.id,
+                    'event_booth_pending_ids': (self.booth_1 + self.booth_2).ids
+                })
+            ]
+        })
+
+        # Confirm the SO.
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.event_booth_count, 2,
+                         "Event Booth Count should be equal to 2.")
+        self.assertEqual(sale_order.order_line.event_booth_registration_ids.event_booth_id.ids,
+                         (self.booth_1 + self.booth_2).ids,
+                         "Booths not correctly linked with event_booth_registration.")
+
+        # Update booths
+        sale_order.write({
+            'order_line': [
+                Command.update(sale_order.order_line.id, {
+                    'event_booth_pending_ids':[Command.set((self.booth_2 + self.booth_3).ids)]
+                })
+            ]
+        })
+
+        # Confirm the SO.
+        sale_order.action_confirm()
+        self.assertEqual(sale_order.event_booth_count, 2,
+                         "Event Booth Count should be equal to 2.")
+        self.assertEqual(sale_order.order_line.event_booth_registration_ids.event_booth_id.ids,
+                         (self.booth_2 + self.booth_3).ids,
+                         "Booths not correctly linked with event_booth_registration.")
 
 @tagged('post_install', '-at_install')
 class TestEventBoothSaleInvoice(AccountTestInvoicingCommon, TestEventBoothSaleWData):
