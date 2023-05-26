@@ -273,6 +273,7 @@ export class Wysiwyg extends Component {
         this.colorpickers = {};
         this._onDocumentMousedown = this._onDocumentMousedown.bind(this);
         this._onBlur = this._onBlur.bind(this);
+        this._onScroll = this._onScroll.bind(this);
         this.customizableLinksSelector = 'a'
             + ':not([data-bs-toggle="tab"])'
             + ':not([data-bs-toggle="collapse"])'
@@ -947,6 +948,7 @@ export class Wysiwyg extends Component {
         for (const timeout of this.tooltipTimeouts) {
             clearTimeout(timeout);
         }
+        document.removeEventListener('scroll', this._onScroll, true);
     }
     /**
      * @override
@@ -1919,18 +1921,10 @@ export class Wysiwyg extends Component {
             }
             this._updateFaResizeButtons();
         });
-        // we need the Timeout to be sure the editable content is loaded
-        // before calculating the scrollParent() element.
-        setTimeout(() => {
-            const scrollableContainer = this.$el.scrollParent();
-            if (!options.snippets && scrollableContainer.length) {
-                this.odooEditor.addDomListener(
-                    scrollableContainer[0],
-                    'scroll',
-                    this.odooEditor.updateToolbarPosition.bind(this.odooEditor),
-                );
-            }
-        }, 0);
+        if (!options.snippets) {
+            // Scroll event does not bubble.
+            document.addEventListener('scroll', this._onScroll, true);
+        }
     }
     /**
      * @private
@@ -2762,6 +2756,11 @@ export class Wysiwyg extends Component {
             this._pendingBlur = true;
         } else {
             this.options.onWysiwygBlur && this.options.onWysiwygBlur();
+        }
+    }
+    _onScroll(ev) {
+        if (ev.target.contains(this.$editable[0])) {
+            this.odooEditor.updateToolbarPosition();
         }
     }
     _signalOffline() {
