@@ -587,6 +587,10 @@ class Channel(models.Model):
             to_activate.with_context(active_test=False).mapped('slide_ids').action_unarchive()
             super(Channel, to_activate).toggle_active()
 
+    # ---------------------------------------------------------
+    # MAILING
+    # ---------------------------------------------------------
+
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, parent_id=False, subtype_id=False, **kwargs):
         """ Temporary workaround to avoid spam. If someone replies on a channel
@@ -600,6 +604,56 @@ class Channel(models.Model):
             if parent_message.subtype_id and parent_message.subtype_id == self.env.ref('website_slides.mt_channel_slide_published'):
                 subtype_id = self.env.ref('mail.mt_note').id
         return super(Channel, self).message_post(parent_id=parent_id, subtype_id=subtype_id, **kwargs)
+
+    def _notify_get_recipients(self, message, msg_vals, **kwargs):
+        """ Override recipients computation as channel is not a standard
+        mail.thread document. Indeed there are no followers on a channel.
+        Instead of followers it has members that should be notified.
+
+        :param message: see ``MailThread._notify_get_recipients()``;
+        :param msg_vals: see ``MailThread._notify_get_recipients()``;
+        :param kwargs: see ``MailThread._notify_get_recipients()``;
+
+        :return recipients: structured data holding recipients data. See
+          ``MailThread._notify_thread()`` for more details about its content
+          and use;
+        """
+        recipients_data = super()._notify_get_recipients(message, msg_vals, **kwargs)
+
+        # get values from msg_vals or from message if msg_vals doen't exists
+        msg_sudo = message.sudo()
+        subtype_id = msg_vals.get('subtype_id') if msg_vals else msg_sudo.subtype_id.id
+        if not subtype_id or subtype_id != self.env['ir.model.data']._xmlid_to_res_id('website_slides.mt_channel_slide_published'):
+            return recipients_data
+
+        pids = msg_vals.get('partner_ids', []) if msg_vals else msg_sudo.partner_ids.ids
+        if pids:
+            self.env['slide.slide.partner'].flush_model(['partner_id'])
+            self.env['res.partner'].flush_model(['active', 'email', 'partner_share'])
+
+            sql_query = """
+                SELECT DISTINCT ON (partner.id) partner.id,
+                       partner.partner_share,
+                       users.notification_type
+                  FROM slide_slide_partner slide_partner
+             LEFT JOIN res_partner partner on partner.id = slide_partner.partner_id
+             LEFT JOIN res_users users on partner.id = users.partner_id
+                 WHERE partner.id != ANY(%s) AND partner.id != ANY(%s)"""
+            self.env.cr.execute(
+                sql_query,
+                (list(pids),)
+            )
+            for partner_id, partner_share, notif in self._cr.fetchall():
+                recipients_data.append({
+                    'id': partner_id,
+                    'share': partner_share,
+                    'active': True,
+                    'notif': notif or 'email',
+                    'type': 'user' if not partner_share and notif else 'customer',
+                    'groups': [],
+                })
+
+        return recipients_data
 
     # ---------------------------------------------------------
     # Business / Actions
@@ -680,7 +734,6 @@ class Channel(models.Model):
                 for partner in target_partners if partner.id not in existing_map[channel.id]
             ]
             slide_partners_sudo = self.env['slide.channel.partner'].sudo().create(to_create_values)
-            to_join.message_subscribe(partner_ids=target_partners.ids, subtype_ids=[self.env.ref('website_slides.mt_channel_slide_published').id])
             return slide_partners_sudo
         return self.env['slide.channel.partner'].sudo()
 
