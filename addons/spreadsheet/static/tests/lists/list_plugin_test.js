@@ -247,17 +247,6 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
 
     QUnit.test("don't fetch list data if no formula use it", async function (assert) {
         const spreadsheetData = {
-            sheets: [
-                {
-                    id: "sheet1",
-                },
-                {
-                    id: "sheet2",
-                    cells: {
-                        A1: { content: `=ODOO.LIST("1", "1", "foo")` },
-                    },
-                },
-            ],
             lists: {
                 1: {
                     id: 1,
@@ -279,7 +268,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             },
         });
         assert.verifySteps([]);
-        model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: "sheet1", sheetIdTo: "sheet2" });
+        setCellContent(model, "A1", `=ODOO.LIST("1", "1", "foo")`);
         /*
          * Ask a first time the value => It will trigger a loading of the data source.
          */
@@ -566,10 +555,10 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
             const model = await createModelWithDataSource({ spreadsheetData });
             const ds = model.getters.getListDataSource("1");
             assert.strictEqual(ds.maxPosition, 1);
-            assert.strictEqual(ds.maxPositionFetched, 0);
-            setCellContent(model, "A1", `=ODOO.LIST("1", "42", "foo", 2)`);
+            assert.strictEqual(ds.maxPositionFetched, 1);
+            setCellContent(model, "A1", `=ODOO.LIST("1", "42", "foo")`);
             assert.strictEqual(ds.maxPosition, 42);
-            assert.strictEqual(ds.maxPositionFetched, 0);
+            assert.strictEqual(ds.maxPositionFetched, 1);
             await waitForDataSourcesLoaded(model);
             assert.strictEqual(ds.maxPosition, 42);
             assert.strictEqual(ds.maxPositionFetched, 42);
