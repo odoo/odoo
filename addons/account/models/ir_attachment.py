@@ -49,7 +49,7 @@ class IrAttachment(models.Model):
             pdf_reader = OdooPdfFileReader(buffer, strict=False)
         except Exception as e:
             # Malformed pdf
-            _logger.exception("Error when reading the pdf: %s", e)
+            _logger.warning("Error when reading the pdf: %s", e, exc_info=True)
             return []
 
         # Process embedded files.
