@@ -9,6 +9,7 @@ import datetime
 import werkzeug
 
 from odoo import tools
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
@@ -402,11 +403,75 @@ class TestMailingControllers(TestMailingControllersCommon):
         )
         self.assertEqual(msg_create.body, Markup('<p>Mail Blacklist created</p>'))
 
+    def test_mailing_unsubscribe_from_my(self):
+        """ Test portal unsubscribe using the 'my' mailing-specific portal page.
+        It allows to opt-in / opt-out from mailing lists as well as to manage
+        blocklist (see tour).
+        Tour effects
+          * opt-in List3 from opt-out, opt-in List2, opt-out List1;
+          * add feedback (as new opt-out) 'My feedback';
+          * add email in block list;
+        """
+        test_feedback = "My feedback"
+        portal_user = mail_new_test_user(
+            self.env,
+            email=tools.formataddr(("Déboulonneur", "fleurus@example.com")),
+            groups='base.group_portal',
+            login='user_portal_fleurus',
+            name='Déboulonneut from Fleurus',
+            signature='--\nDéboulonneur',
+        )
+
+        for test_user in [portal_user]:  # self.user_marketing
+            with self.subTest(test_user=test_user):
+                _test_email, test_email_normalized = test_user.email, test_user.email_normalized
+                self.authenticate(test_user.login, test_user.login)
+
+                # launch 'my' mailing' tour
+                with freeze_time(self._reference_now):
+                    self.start_tour(
+                        "/mailing/my",
+                        "mailing_portal_unsubscribe_from_my",
+                        login=test_user.login,
+                    )
+
+                # fetch contact and its subscription and blacklist status, to see the tour effects
+                contact_l1 = self.mailing_list_1.contact_ids.filtered(
+                    lambda contact: contact.email == test_email_normalized
+                )
+                subscription_l1 = self.mailing_list_1.subscription_ids.filtered(
+                    lambda subscription: subscription.contact_id == contact_l1
+                )
+                contact_l2 = self.mailing_list_2.contact_ids.filtered(
+                    lambda contact: contact.email == test_email_normalized
+                )
+                subscription_l2 = self.mailing_list_3.subscription_ids.filtered(
+                    lambda subscription: subscription.contact_id == contact_l2
+                )
+                contact_l3 = self.mailing_list_3.contact_ids.filtered(
+                    lambda contact: contact.email == test_email_normalized
+                )
+                subscription_l3 = self.mailing_list_3.subscription_ids.filtered(
+                    lambda subscription: subscription.contact_id == contact_l3
+                )
+                self.assertEqual(contact_l2, contact_l3,
+                                'When creating new membership, should link with first found existing contact')
+                self.assertTrue(subscription_l1.opt_out)
+                self.assertFalse(subscription_l2.opt_out)
+                self.assertFalse(subscription_l3.opt_out)
+                for contact in (contact_l1 + contact_l3):
+                    msg_fb = contact.message_ids[0]
+                    self.assertEqual(
+                        msg_fb.body,
+                        Markup(f'<p>Feedback from {contact.email_normalized}: {test_feedback}</p>')
+                    )
+
     @mute_logger('odoo.http', 'odoo.addons.website.models.ir_ui_view')
     def test_mailing_view(self):
         """ Test preview of mailing. It requires either a token, either being
         mailing user. """
         test_mailing = self.test_mailing_on_documents.with_env(self.env)
+        shadow_mailing = test_mailing.copy()
         doc_id, email_normalized = self.user_marketing.partner_id.id, self.user_marketing.email_normalized
         hash_token = test_mailing._generate_mailing_recipient_token(doc_id, email_normalized)
         self.user_marketing.write({
@@ -415,17 +480,19 @@ class TestMailingControllers(TestMailingControllersCommon):
         self.authenticate('user_marketing', 'user_marketing')
 
         # TEST: various invalid cases
-        for test_doc_id, test_email, test_token, error_code in [
-            (doc_id, email_normalized, '', 400),  # no token
-            (doc_id, email_normalized, 'zboobs', 418),  # wrong token
-            (self.env.user.partner_id.id, email_normalized, hash_token, 418),  # mismatch
-            (doc_id, 'not.email@example.com', hash_token, 418),  # mismatch
+        for test_mid, test_doc_id, test_email, test_token, error_code in [
+            (test_mailing.id, doc_id, email_normalized, '', 400),  # no token
+            (test_mailing.id, doc_id, email_normalized, 'zboobs', 418),  # wrong token
+            (test_mailing.id, self.env.user.partner_id.id, email_normalized, hash_token, 418),  # mismatch
+            (test_mailing.id, doc_id, 'not.email@example.com', hash_token, 418),  # mismatch
+            (shadow_mailing.id, doc_id, email_normalized, hash_token, 418),  # valid credentials but wrong mailing_id
+            (0, doc_id, email_normalized, hash_token, 400),  # valid credentials but missing mailing_id
         ]:
-            with self.subTest(test_email=test_email, test_doc_id=test_doc_id, test_token=test_token):
+            with self.subTest(test_mid=test_mid, test_email=test_email, test_doc_id=test_doc_id, test_token=test_token):
                 res = self.url_open(
                     werkzeug.urls.url_join(
                         test_mailing.get_base_url(),
-                        f'mailing/{test_mailing.id}/view?email={test_email}&document_id={test_doc_id}&hash_token={test_token}',
+                        f'mailing/{test_mid}/view?email={test_email}&document_id={test_doc_id}&hash_token={test_token}',
                     )
                 )
                 self.assertEqual(res.status_code, error_code)
