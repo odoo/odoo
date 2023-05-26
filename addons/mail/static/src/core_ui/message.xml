@@ -83,8 +83,9 @@
                                         <div class="position-relative">
                                             <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
                                                 'border': state.isEditing,
-                                                'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.isNote,
-                                                'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.isNote,
+                                                'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.isNote and !message.isHighlightedFromMention,
+                                                'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.isNote and !message.isHighlightedFromMention,
+                                                'bg-warning-light border border-warning opacity-50': message.isHighlightedFromMention,
                                                 }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
                                             <div class="position-relative" t-att-class="{
                                                         'p-1': message.isNote,

@@ -961,7 +961,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.hasClass($(".o-mail-Message"), "o-highlighted-from-mention");
+        assert.hasClass($(".o-mail-Message-bubble"), "bg-warning-light");
     }
 );
 
@@ -987,7 +987,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        assert.doesNotHaveClass($(".o-mail-Message"), "o-highlighted-from-mention");
+        assert.doesNotHaveClass($(".o-mail-Message-bubble"), "bg-warning-light");
     }
 );
 
