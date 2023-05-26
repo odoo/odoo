@@ -3690,6 +3690,7 @@ X[]
                 });
                 it('should insert line breaks outside the edges of an anchor', async () => {
                     const pressEnter = editor => {
+                        editor._resetLinkZws(); // Any interaction causing insertParagraph should trigger this.
                         editor.document.execCommand('insertParagraph');
                     };
                     await testEditor(BasicEditor, {

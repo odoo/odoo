@@ -1995,6 +1995,7 @@ describe('Paste', () => {
                         // Pick the second command (Paste as URL)
                         triggerEvent(editor.editable, 'keydown', { key: 'ArrowDown' });
                         triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                        await nextTick();
                     },
                     contentAfter: `<p><a href="${url}">${url}</a>[]</p>`,
                 });
