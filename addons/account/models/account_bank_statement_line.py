@@ -151,9 +151,10 @@ class AccountBankStatementLine(models.Model):
     @api.depends('foreign_currency_id', 'date', 'amount', 'company_id')
     def _compute_amount_currency(self):
         for st_line in self:
-            if not st_line.foreign_currency_id or not st_line.date:
+            if not st_line.foreign_currency_id:
                 st_line.amount_currency = False
-            else:
+            elif st_line.date and not st_line.amount_currency:
+                # only convert if it hasn't been set already
                 st_line.amount_currency = st_line.currency_id._convert(
                     from_amount=st_line.amount,
                     to_currency=st_line.foreign_currency_id,
