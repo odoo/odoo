@@ -3,7 +3,7 @@
 
 <t t-name="mail.NotificationItem" owl="1">
     <ActionSwiper onLeftSwipe="props.onSwipeLeft ? props.onSwipeLeft : undefined" onRightSwipe="props.onSwipeRight ? props.onSwipeRight : undefined">
-        <div class="o-mail-NotificationItem d-flex cursor-pointer align-items-center p-1" t-att-class="{ 'o-muted': !props.hasMarkAsReadButton }" t-on-click="onClick">
+        <button class="o-mail-NotificationItem list-group-item list-group-item-action d-flex cursor-pointer align-items-center p-1" t-att-class="{ 'o-muted': !props.hasMarkAsReadButton }" t-on-click="onClick">
             <div class="position-relative o-bg-inherit m-1 flex-shrink-0" style="width:40px;height:40px;">
                 <img class="o_avatar w-100 h-100 rounded" alt="Notification Item Image" t-att-src="props.iconSrc"/>
                 <t t-slot="icon"/>
@@ -24,10 +24,10 @@
                         <t t-if="props.body" t-esc="props.body" name="notificationBody"/>
                     </div>
                     <div class="flex-grow-1"/>
-                    <i t-if="props.hasMarkAsReadButton" class="o-mail-NotificationItem-markAsRead fa fa-check d-flex ms-2 text-600 opacity-50 opacity-100-hover cursor-pointer" title="Mark As Read" t-ref="markAsRead"/>
+                    <i t-if="props.hasMarkAsReadButton" class="o-mail-NotificationItem-markAsRead btn btn-link text-success fa fa-check d-flex ms-2 p-0" title="Mark As Read" t-ref="markAsRead"/>
                 </div>
             </div>
-        </div>
+        </button>
     </ActionSwiper>
 </t>
 
