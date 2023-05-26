@@ -352,6 +352,30 @@ class TestCreateRecurrentEvents(TestRecurrentEvents):
             (datetime(2023, 4, 27, 7, 00), datetime(2023, 4, 27, 8, 00)),
         ])
 
+    def test_all_day_date(self):
+        recurrence = self.env['calendar.event'].with_context(
+            default_start=datetime(2019, 10, 22),
+            default_stop=datetime(2019, 10, 22),
+            default_start_date=date(2019, 10, 22),
+            default_stop_date=date(2019, 10, 22),
+        ).create({
+            'name': 'Recurrent Event',
+            'start': datetime(2019, 10, 22, 8, 0),
+            'stop': datetime(2019, 10, 22, 18, 0),
+            'start_date': date(2019, 10, 22),
+            'stop_date': date(2019, 10, 22),
+            'recurrency': True,
+            'rrule_type': 'weekly',
+            'tue': True,
+            'interval': 1,
+            'count': 2,
+            'event_tz': 'UTC',
+            'allday': True,
+        }).recurrence_id
+        events = recurrence.calendar_event_ids
+        self.assertEqual(events[0].start_date, date(2019, 10, 22), "The first event has the initial start date")
+        self.assertEqual(events[1].start_date, date(2019, 10, 29), "The start date of the second event is one week later")
+
 class TestUpdateRecurrentEvents(TestRecurrentEvents):
 
     @classmethod
