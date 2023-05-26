@@ -396,9 +396,13 @@ export class ExportDataDialog extends Component {
     }
 
     async setDefaultExportList() {
-        this.state.exportList = Object.values(this.knownFields).filter(
-            (e) => e.default_export || this.props.defaultExportList.find((i) => i.name === e.id)
-        );
+        if (this.props.context.default_template_id) {
+            this.loadExportList(this.props.context.default_template_id);
+        } else {
+            this.state.exportList = Object.values(this.knownFields).filter(
+                (e) => e.default_export || this.props.defaultExportList.find((i) => i.name === e.id)
+            );
+        }
     }
 
     setFormat(ev) {
