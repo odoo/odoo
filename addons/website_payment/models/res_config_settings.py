@@ -49,14 +49,19 @@ class ResConfigSettings(models.TransientModel):
         self.ensure_one()
         if not self.is_stripe_supported_country:
             return False
-        stripe = self.env.ref('payment.payment_provider_stripe')
+        stripe = self.env['payment.provider'].search(
+            [('company_id', '=', self.env.company.id), ('code', '=', 'stripe')]
+        )
         stripe.button_immediate_install()
         # This will make sure that a new request is made between the installation and the call to `action_stripe_connect_account`.
         return self.env['ir.actions.actions']._for_xml_id('website_payment.action_stripe_connect_account')
 
     def action_configure_first_provider(self):
         self.ensure_one()
-        stripe = self.env.ref('payment.payment_provider_stripe')
+        stripe = self.env['payment.provider'].search(
+            [('company_id', '=', self.env.company.id), ('code', '=', 'stripe')],
+            limit=1
+        )
         providers = self._get_activated_providers()
         return {
             'name': self.first_provider_label,
