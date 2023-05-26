@@ -2286,7 +2286,7 @@ class AccountMove(models.Model):
             # Apply the rounding on the Quick Edit mode only when adding a new line
             for move in self:
                 if 'tax_totals' in vals:
-                    super(AccountMove, move).write({'tax_totals': vals['tax_totals']})
+                    super(AccountMove, move.with_context(skip_invoice_sync=True)).write({'tax_totals': vals['tax_totals']})
 
         return res
 
