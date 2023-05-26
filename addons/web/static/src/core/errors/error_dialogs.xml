@@ -15,7 +15,7 @@
 
     <t t-name="web.RedirectWarningDialogFooter" owl="1">
       <button  class="btn btn-primary" t-on-click="onClick"><t t-esc="env._t(buttonText)"/></button>
-      <button  class="btn btn-secondary" t-on-click="onCancel">Cancel</button>
+      <button  class="btn btn-secondary" t-if="!hide_cancel_button" t-on-click="onCancel">Cancel</button>
     </t>
 
     <t t-name="web.Error504DialogBody" owl="1">

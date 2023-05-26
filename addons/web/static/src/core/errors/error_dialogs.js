@@ -127,12 +127,13 @@ export class RedirectWarningDialog extends Dialog {
         super.setup();
         this.actionService = useService("action");
         const { data, subType } = this.props;
-        const [message, actionId, buttonText, additional_context] = data.arguments;
+        const [message, actionId, buttonText, additional_context, hide_cancel_button] = data.arguments;
         this.title = capitalize(subType) || this.env._t("Odoo Warning");
         this.message = message;
         this.actionId = actionId;
         this.buttonText = buttonText;
         this.additionalContext = additional_context;
+        this.hide_cancel_button = hide_cancel_button;
     }
     async onClick() {
         const options = {};

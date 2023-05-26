@@ -106,7 +106,7 @@ class AccountMove(models.Model):
                     "res_id" : move.company_id.id,
                     "views": [[self.env.ref("base.view_company_form").id, "form"]],
                 }
-                raise RedirectWarning(msg, action, _('Go to Company configuration'))
+                raise RedirectWarning(msg, action, _('Go to Company configuration'), hide_cancel_button=True)
             elif move.journal_id.type == 'purchase':
                 move.l10n_in_state_id = company_unit_partner.state_id
 
