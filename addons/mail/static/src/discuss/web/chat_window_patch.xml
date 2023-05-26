@@ -3,7 +3,7 @@
     <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
         <xpath expr="//t[@name='thread content']" position="inside">
             <CallSettings t-if="state.activeMode === 'in-settings'" thread="thread" className="'flex-grow-1'"/>
-            <ChannelMemberList t-if="state.activeMode === 'member-list'" thread="thread" className="'flex-shrink-0 border-start w-100 h-100'"/>
+            <ChannelMemberList t-if="state.activeMode === 'member-list'" thread="thread" className="'flex-shrink-0 w-100 h-100'"/>
             <ChannelInvitation t-if="state.activeMode === 'add-users'" thread="thread" chatState="state"/>
         </xpath>
     </t>
