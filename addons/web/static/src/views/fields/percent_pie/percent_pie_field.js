@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { formatPercentage } from "../formatters";
 import { standardFieldProps } from "../standard_field_props";
 
 import { Component } from "@odoo/owl";
@@ -14,6 +15,10 @@ export class PercentPieField extends Component {
             right: rotateDeg < 180 ? rotateDeg : 0,
             value: rotateDeg,
         };
+    }
+    get formattedValue() {
+        const value = Math.round(this.props.value)
+        return formatPercentage(value / 100);
     }
 }
 
