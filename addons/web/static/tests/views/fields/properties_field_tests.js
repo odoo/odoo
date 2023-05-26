@@ -136,10 +136,10 @@ QUnit.module("Fields", (hooks) => {
                             id: 3,
                             display_name: "third partner",
                             properties: [
-                                {name: "property_1", type: "char"},
-                                {name: "property_2", type: "char", definition_deleted: true},
-                                {name: "property_3", type: "char", definition_changed: true},
-                                {name: "property_4", type: "char"},
+                                { name: "property_1", type: "char" },
+                                { name: "property_2", type: "char", definition_deleted: true },
+                                { name: "property_3", type: "char", definition_changed: true },
+                                { name: "property_4", type: "char" },
                             ],
                             company_id: 37,
                         },
@@ -147,8 +147,8 @@ QUnit.module("Fields", (hooks) => {
                             id: 4,
                             display_name: "fourth partner",
                             properties: [
-                                {name: "property_2", type: "char", definition_deleted: true},
-                                {name: "property_3", type: "char", definition_deleted: true},
+                                { name: "property_2", type: "char", definition_deleted: true },
+                                { name: "property_3", type: "char", definition_deleted: true },
                             ],
                             company_id: 37,
                         },
@@ -1352,6 +1352,66 @@ QUnit.module("Fields", (hooks) => {
         assert.equal(items.length, 2);
     });
 
+    QUnit.test(
+        "properties: kanban view with multiple sources of properties definitions",
+        async function (assert) {
+            const definition = {
+                name: "property_integer",
+                string: "My Integer",
+                type: "integer",
+                view_in_kanban: true,
+            };
+            serverData.models.company.records.push({
+                id: 38,
+                display_name: "Company 2",
+                definitions: [definition],
+            });
+            serverData.models.partner.records.push({
+                id: 10,
+                display_name: "other partner",
+                properties: [
+                    {
+                        ...definition,
+                        value: 1,
+                    },
+                ],
+                company_id: 38,
+            });
+
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="company_id"/> <hr/>
+                                <field name="display_name"/> <hr/>
+                                <field name="properties" widget="properties"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            });
+
+            assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 5);
+            assert.deepEqual(
+                [...target.querySelectorAll(".o_kanban_record:not(.o_kanban_ghost)")].map(
+                    (el) => el.textContent
+                ),
+                [
+                    "Company 1 first partner char valueB",
+                    "Company 1 second partner char valueCchar value 4",
+                    "Company 1 third partner ",
+                    "Company 1 fourth partner ",
+                    "Company 2 other partner 1",
+                ]
+            );
+        }
+    );
+
     /**
      * Check that the properties are shown when switching view.
      */
@@ -1385,7 +1445,8 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await click(target, ".o_switch_view.o_list");
-        assert.ok(target.querySelector(".o_optional_columns_dropdown"),
+        assert.ok(
+            target.querySelector(".o_optional_columns_dropdown"),
             "Properties should be added as optional columns."
         );
     });
@@ -1460,18 +1521,20 @@ QUnit.module("Fields", (hooks) => {
      * Check the behavior of the domain (properies with "definition_deleted" should be ignored).
      * In that case, some properties start without the flag "definition_deleted".
      */
-    QUnit.test("properties: form view and falsy domain, properties are not empty", async function (assert) {
-        async function mockRPC(route, { method, model, kwargs }) {
-            if (["check_access_rights", "check_access_rule"].includes(method)) {
-                return true;
+    QUnit.test(
+        "properties: form view and falsy domain, properties are not empty",
+        async function (assert) {
+            async function mockRPC(route, { method, model, kwargs }) {
+                if (["check_access_rights", "check_access_rule"].includes(method)) {
+                    return true;
+                }
             }
-        }
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 3,
-            serverData,
-            arch: `
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 3,
+                serverData,
+                arch: `
                 <form>
                     <sheet>
                         <group>
@@ -1484,45 +1547,48 @@ QUnit.module("Fields", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            mockRPC,
-        });
-        assert.ok(target.querySelector(".o_test_properties_not_empty"));
+                mockRPC,
+            });
+            assert.ok(target.querySelector(".o_test_properties_not_empty"));
 
-        // delete a property, 2 properties left
-        await click(target, ".o_property_field:first-child .o_field_property_open_popover");
-        await click(target, ".o_field_property_definition_delete");
-        await click(target, ".modal-content .btn-primary");
-        assert.ok(target.querySelector(".o_test_properties_not_empty"));
+            // delete a property, 2 properties left
+            await click(target, ".o_property_field:first-child .o_field_property_open_popover");
+            await click(target, ".o_field_property_definition_delete");
+            await click(target, ".modal-content .btn-primary");
+            assert.ok(target.querySelector(".o_test_properties_not_empty"));
 
-        // delete a property, 1 property left
-        await click(target, ".o_property_field:first-child .o_field_property_open_popover");
-        await click(target, ".o_field_property_definition_delete");
-        await click(target, ".modal-content .btn-primary");
-        assert.ok(target.querySelector(".o_test_properties_not_empty"));
+            // delete a property, 1 property left
+            await click(target, ".o_property_field:first-child .o_field_property_open_popover");
+            await click(target, ".o_field_property_definition_delete");
+            await click(target, ".modal-content .btn-primary");
+            assert.ok(target.querySelector(".o_test_properties_not_empty"));
 
-        // delete a property, no property left
-        await click(target, ".o_property_field:first-child .o_field_property_open_popover");
-        await click(target, ".o_field_property_definition_delete");
-        await click(target, ".modal-content .btn-primary");
-        assert.notOk(target.querySelector(".o_test_properties_not_empty"));
-    });
+            // delete a property, no property left
+            await click(target, ".o_property_field:first-child .o_field_property_open_popover");
+            await click(target, ".o_field_property_definition_delete");
+            await click(target, ".modal-content .btn-primary");
+            assert.notOk(target.querySelector(".o_test_properties_not_empty"));
+        }
+    );
 
     /**
      * Check the behavior of the domain (properties with "definition_deleted" should be ignored).
      * In that case, all properties start with the flag "definition_deleted".
      */
-    QUnit.test("properties: form view and falsy domain, properties are empty", async function (assert) {
-        async function mockRPC(route, { method, model, kwargs }) {
-            if (["check_access_rights", "check_access_rule"].includes(method)) {
-                return true;
+    QUnit.test(
+        "properties: form view and falsy domain, properties are empty",
+        async function (assert) {
+            async function mockRPC(route, { method, model, kwargs }) {
+                if (["check_access_rights", "check_access_rule"].includes(method)) {
+                    return true;
+                }
             }
-        }
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            resId: 4,
-            serverData,
-            arch: `
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 4,
+                serverData,
+                arch: `
                 <form>
                     <sheet>
                         <group>
@@ -1535,12 +1601,13 @@ QUnit.module("Fields", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            mockRPC,
-        });
-        assert.notOk(target.querySelector(".o_test_properties_not_empty"));
+                mockRPC,
+            });
+            assert.notOk(target.querySelector(".o_test_properties_not_empty"));
 
-        // create the first property
-        await click(target, ".o_field_property_add button");
-        assert.ok(target.querySelector(".o_test_properties_not_empty"));
-    });
+            // create the first property
+            await click(target, ".o_field_property_add button");
+            assert.ok(target.querySelector(".o_test_properties_not_empty"));
+        }
+    );
 });
