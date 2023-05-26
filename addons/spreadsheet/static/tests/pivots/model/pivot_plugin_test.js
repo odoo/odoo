@@ -351,17 +351,6 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
 
     QUnit.test("don't fetch pivot data if no formula use it", async function (assert) {
         const spreadsheetData = {
-            sheets: [
-                {
-                    id: "sheet1",
-                },
-                {
-                    id: "sheet2",
-                    cells: {
-                        A1: { content: `=ODOO.PIVOT("1", "probability")` },
-                    },
-                },
-            ],
             pivots: {
                 1: {
                     id: 1,
@@ -383,7 +372,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
             },
         });
         assert.verifySteps([]);
-        model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: "sheet1", sheetIdTo: "sheet2" });
+        setCellContent(model, "A1", `=ODOO.PIVOT("1", "probability")`);
         assert.equal(getCellValue(model, "A1"), "Loading...");
         await nextTick();
         assert.verifySteps([

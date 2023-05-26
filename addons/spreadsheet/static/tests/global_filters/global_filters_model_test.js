@@ -995,17 +995,6 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         "don't load data if a filter is added but the data is not needed",
         async function (assert) {
             const spreadsheetData = {
-                sheets: [
-                    {
-                        id: "sheet1",
-                    },
-                    {
-                        id: "sheet2",
-                        cells: {
-                            A1: { content: `=ODOO.PIVOT("1", "probability")` },
-                        },
-                    },
-                ],
                 pivots: {
                     1: {
                         id: 1,
@@ -1041,7 +1030,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 },
             });
             assert.verifySteps([]);
-            model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: "sheet1", sheetIdTo: "sheet2" });
+            setCellContent(model, "A1", `=ODOO.PIVOT("1", "probability")`);
             assert.equal(getCellValue(model, "A1"), "Loading...");
             await nextTick();
             assert.equal(getCellValue(model, "A1"), "");
@@ -1053,17 +1042,6 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         "don't load data if a filter is activated but the data is not needed",
         async function (assert) {
             const spreadsheetData = {
-                sheets: [
-                    {
-                        id: "sheet1",
-                    },
-                    {
-                        id: "sheet2",
-                        cells: {
-                            A1: { content: `=ODOO.PIVOT("1", "probability")` },
-                        },
-                    },
-                ],
                 pivots: {
                     1: {
                         id: 1,
@@ -1101,7 +1079,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
             });
 
             assert.verifySteps([]);
-            model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: "sheet1", sheetIdTo: "sheet2" });
+            setCellContent(model, "A1", `=ODOO.PIVOT("1", "probability")`);
             assert.equal(getCellValue(model, "A1"), "Loading...");
             await nextTick();
             assert.equal(getCellValue(model, "A1"), "");
