@@ -3,8 +3,8 @@
 
 import base64
 
-from odoo import fields, models, api
-
+from odoo import _, fields, models, api
+from odoo.exceptions import UserError
 
 class IrMailServer(models.Model):
     """Represents an SMTP server, able to send outgoing emails, with SSL and TLS capabilities."""
@@ -15,6 +15,13 @@ class IrMailServer(models.Model):
     smtp_authentication = fields.Selection(
         selection_add=[('gmail', 'Gmail OAuth Authentication')],
         ondelete={'gmail': 'set default'})
+
+    @api.constrains('smtp_authentication')
+    def _check_use_google_gmail_service(self):
+        if self.filtered(lambda server: server.smtp_authentication == 'gmail' and not server.smtp_user):
+            raise UserError(_(
+                    'Please fill the "Username" field with your Gmail username (your email address). '
+                    'This should be the same account as the one used for the Gmail OAuthentication Token.'))
 
     @api.onchange('smtp_encryption')
     def _onchange_encryption(self):
