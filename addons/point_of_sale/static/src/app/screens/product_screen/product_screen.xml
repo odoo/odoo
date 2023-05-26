@@ -29,7 +29,7 @@
                 <div class="rightpane" t-if="!ui.isSmall || pos.mobile_pane === 'right'">
                     <ProductsWidget />
                     <t t-if="ui.isSmall">
-                        <div class="product-reminder" t-if="showProductReminder" t-key="animationKey" t-ref="reminder">
+                        <div class="product-reminder" t-if="showProductReminder" t-key="animationKey">
                             <span><t t-esc="selectedOrderlineQuantity"/> <t t-esc="selectedOrderlineDisplayName"/></span>
                             <span><t t-esc="selectedOrderlineTotal"/></span>
                         </div>
