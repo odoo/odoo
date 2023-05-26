@@ -111,7 +111,7 @@ $-o-theme-text-colors: map-merge($theme-colors, $o-theme-text-colors);
 
     @each $-name, $-color in $-o-theme-text-colors{
         &.btn-#{$-name}, &.text-#{$-name} {
-            @include o-btn-link-variant($o-main-color-muted!important, o-text-color($-name) or $-color!important);
+            @include o-btn-link-variant($o-gray-600!important, o-text-color($-name) or $-color!important);
         }
     }
 }
@@ -246,7 +246,7 @@ $-o-bg-colors-custom: null;
 .btn-link {
     @each $-name, $-color in $o-text-colors-custom{
         &.btn-#{$-name}, &.text-#{$-name} {
-            @include o-btn-link-variant($o-main-color-muted!important, o-text-color($-name) or $-color!important);
+            @include o-btn-link-variant($o-gray-600!important, o-text-color($-name) or $-color!important);
         }
     }
 }

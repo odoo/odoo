@@ -19,7 +19,7 @@ $o-navbar-entry-bg--hover: rgba($o-black, .08) !default;
 $o-navbar-entry-color--active: $o-navbar-entry-color--hover !default;
 $o-navbar-entry-bg--active: $o-navbar-entry-bg--hover !default;
 
-$o-navbar-dropdown-menu-margin-top: 0px !default;
+$o-navbar-dropdown-menu-border-top: 0 !default;
 $o-navbar-dropdown-menu-border-radius: 0 0 $o-border-radius $o-border-radius !default;
 
 $o-navbar-brand-font-size: 1.2em !default;
@@ -46,10 +46,12 @@ $o-navbar-badge-text-shadow: 1px 1px 0 rgba($o-black, .3) !default;
     background: transparent;
     font-size: $o-navbar-entry-font-size;
 
-    @include o-hover-text-color(
-        var(--NavBar-entry-color, #{$o-navbar-entry-color}),
-        var(--NavBar-entry-color--hover, #{$o-navbar-entry-color--hover})
-    );
+    @if ($o-navbar-use-pills == false) {
+        @include o-hover-text-color(
+            var(--NavBar-entry-color, #{$o-navbar-entry-color}),
+            var(--NavBar-entry-color--hover, #{$o-navbar-entry-color--hover})
+        );
+    }
 }
 
 %-main-navbar-entry-spacing {
@@ -62,15 +64,17 @@ $o-navbar-badge-text-shadow: 1px 1px 0 rgba($o-black, .3) !default;
     line-height: calc(var(--o-navbar-height) - #{$o-navbar-padding-v * 2});
 }
 
-%-main-navbar-entry-bg-hover {
-    &:hover {
-        background-color: var(--NavBar-entry-backgroundColor--hover, #{$o-navbar-entry-bg--hover});
+@if ($o-navbar-use-pills == false) {
+    %-main-navbar-entry-bg-hover {
+        &:hover {
+            background-color: var(--NavBar-entry-backgroundColor--hover, #{$o-navbar-entry-bg--hover});
+        }
     }
-}
 
-%-main-navbar-entry-active {
+    %-main-navbar-entry-active {
     &, &:hover, &:focus {
-        background: var(--NavBar-entry-backgroundColor--active, #{$o-navbar-entry-bg--active});
-        color: var(--NavBar-entry-color--active, #{$o-navbar-entry-color--active});
+            background: var(--NavBar-entry-backgroundColor--active, #{$o-navbar-entry-bg--active});
+            color: var(--NavBar-entry-color--active, #{$o-navbar-entry-color--active});
+        }
     }
 }
