@@ -25,6 +25,7 @@ export class Messaging {
         this.store = services["mail.store"];
         this.rpc = services.rpc;
         this.orm = services.orm;
+        this.channelMemberService = services["discuss.channel.member"];
         /** @type {import("@mail/core/channel_member_service").ChannelMemberService} */
         this.channelMemberService = services["discuss.channel.member"];
         /** @type {import("@mail/attachments/attachment_service").AttachmentService} */
@@ -716,6 +717,7 @@ export const messagingService = {
         "notification",
         "presence",
         "mail.attachment",
+        "mail.chat_window",
         "mail.sound_effects",
         "mail.user_settings",
         "mail.thread",
