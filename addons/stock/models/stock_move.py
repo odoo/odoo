@@ -420,15 +420,6 @@ Please change the quantity done or the rounding precision of your unit of measur
         if err:
             raise UserError('\n'.join(err))
 
-    def _multi_line_quantity_done_set(self, quantity_done):
-        move_lines = self._get_move_lines()
-        # Bypass the error if we're trying to write the same value.
-        ml_quantity_done = 0
-        for move_line in move_lines:
-            ml_quantity_done += move_line.product_uom_id._compute_quantity(move_line.qty_done, self.product_uom, round=False)
-        if float_compare(quantity_done, ml_quantity_done, precision_rounding=self.product_uom.rounding) != 0:
-            raise UserError(_("Cannot set the done quantity from this stock move, work directly with the move lines."))
-
     def _set_product_qty(self):
         """ The meaning of product_qty field changed lately and is now a functional field computing the quantity
         in the default product UoM. This code has been added to raise an error if a write is made given a value
