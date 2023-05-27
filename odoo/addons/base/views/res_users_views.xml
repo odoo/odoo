@@ -62,7 +62,7 @@
             <field name="model">res.groups</field>
             <field name="arch" type="xml">
                 <search string="Groups">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('category_id','ilike',self)]" string="Group"/>
+                    <field name="name" filter_domain="['|', ('full_name','ilike',self), ('category_id','ilike',self)]" string="Group"/>
                     <separator orientation="vertical"/>
                     <field name="share"/>
                     <filter name="no_share" string="Internal Groups" domain="[('share','=',False)]"/>
