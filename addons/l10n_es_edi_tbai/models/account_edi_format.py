@@ -314,15 +314,21 @@ class AccountEdiFormat(models.Model):
 
         # Lines (detalle)
         refund_sign = (1 if values['is_refund'] else -1)
-        values['invoice_lines'] = [{
-            'line': line,
-            'discount': (discount := (line.balance / (1 - line.discount / 100) * line.discount / 100)) * refund_sign,
-            'unit_price': (line.balance + discount) / line.quantity * refund_sign,
-            'total': line.price_total * abs(line.balance / line.amount_currency if line.amount_currency != 0 else 1) * -refund_sign if not any(
-                [t.l10n_es_type == 'sujeto_isp' for t in line.tax_ids]) else abs(line.balance) * -refund_sign * (-1 if line.price_total < 0 else 1),
-            'description': regex_sub(r'[^0-9a-zA-Z ]', '', line.name)[:250],  # only keep characters allowed in description
-        } for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note'))]
-
+        invoice_lines = []
+        for line in invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_section', 'line_note')):
+            discount = line.balance / (1 - line.discount / 100) * line.discount / 100
+            if not any([t.l10n_es_type == 'sujeto_isp' for t in line.tax_ids]):
+                total = line.price_total * abs(line.balance / line.amount_currency if line.amount_currency != 0 else 1) * -refund_sign
+            else:
+                total = abs(line.balance) * -refund_sign * (-1 if line.price_total < 0 else 1)
+            invoice_lines.append({
+                'line': line,
+                'discount': discount * refund_sign,
+                'unit_price': (line.balance + discount) / line.quantity * refund_sign,
+                'total': total,
+                'description': regex_sub(r'[^0-9a-zA-Z ]', '', line.name)[:250]
+            })
+        values['invoice_lines'] = invoice_lines
         # Tax details (desglose)
         importe_total, desglose = self._l10n_es_tbai_get_importe_desglose(invoice)
         values['amount_total'] = importe_total
