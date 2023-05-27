@@ -19,7 +19,7 @@
     'category': 'Accounting/Localizations/Sale',
     'version': '0.1',
 
-    'depends': ['l10n_in_sale', 'l10n_in_stock'],
+    'depends': ['l10n_in_sale', 'l10n_in_stock', 'sale_stock'],
 
     'data': [
         'views/stock_warehouse_views.xml',

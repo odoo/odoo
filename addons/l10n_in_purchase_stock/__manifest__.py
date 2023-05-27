@@ -19,7 +19,7 @@
     'category': 'Accounting/Localizations/Purchase',
     'version': '1.0',
 
-    'depends': ['l10n_in_purchase', 'l10n_in_stock'],
+    'depends': ['l10n_in_purchase', 'l10n_in_stock', 'purchase_stock'],
 
     'data': [
         'views/stock_warehouse_views.xml',
