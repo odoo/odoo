@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -206,7 +206,7 @@ msgstr "Goedkeuren voor iedereen"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all_all
 msgid "All Expense Reports"
-msgstr "Alle declaratierapportages"
+msgstr "Alle onkostendeclaraties"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_all
@@ -258,6 +258,12 @@ msgstr "Kostenplaats"
 #: model:ir.model,name:hr_expense.model_account_analytic_account
 msgid "Analytic Account"
 msgstr "Kostenplaats"
+
+#. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_distribution_search
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__analytic_distribution_search
+msgid "Analytic Distribution Search"
+msgstr "Zoeken kostenplaatsdistributie"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_analytic_applicability
@@ -469,7 +475,7 @@ msgstr "Rapport aanmaken"
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_account
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
 msgid "Create a new expense report"
-msgstr "Maak een nieuw declaratierapport"
+msgstr "Maak een nieuwe onkostendeclaratie"
 
 #. module: hr_expense
 #. odoo-javascript
@@ -770,12 +776,12 @@ msgstr "Declaratie reden van afwijzen wizard"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_move_form_inherit_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_payment_form_inherit_expense
 msgid "Expense Report"
-msgstr "Declaratierapport"
+msgstr "Onkostendeclaratie"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__name
 msgid "Expense Report Summary"
-msgstr "Samenvatting declaratierapport"
+msgstr "Samenvatting onkostendeclaratie"
 
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_expense_report
@@ -783,17 +789,17 @@ msgstr "Samenvatting declaratierapport"
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_tree
 msgid "Expense Reports"
-msgstr "Declaratierapport"
+msgstr "Onkostendeclaratie"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_filtered
 msgid "Expense Reports Analysis"
-msgstr "Declaratieformulierenanalyse"
+msgstr "Analyse onkostendeclaraties"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_hr_expense_sheet_department_to_approve
 msgid "Expense Reports to Approve"
-msgstr "Goed te keuren declaratieformulieren"
+msgstr "Goed te keuren onkostendeclaraties"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_account_bank_statement_line__expense_sheet_id
@@ -843,17 +849,17 @@ msgstr "Reden van afwijzen van de declaratie"
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_approved
 msgid "Expense report approved"
-msgstr "Declaratie goed te keuren"
+msgstr "Goedgekeurde onkostendeclaratie"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_paid
 msgid "Expense report paid"
-msgstr "Declaratie betaald"
+msgstr "Betaalde onkostendeclaratie"
 
 #. module: hr_expense
 #: model:mail.message.subtype,description:hr_expense.mt_expense_refused
 msgid "Expense report refused"
-msgstr "Declaratie afgewezen"
+msgstr "Afgewezen onkostendeclaratie"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
@@ -899,12 +905,12 @@ msgstr "Declaratiesanalyse"
 #: model:ir.actions.report,name:hr_expense.action_report_hr_expense_sheet
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "Expenses Report"
-msgstr "Declaratierapport"
+msgstr "Onkostendeclaratie"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_department__expense_sheets_to_approve_count
 msgid "Expenses Reports to Approve"
-msgstr "Goed te keuren declaratieformulieren"
+msgstr "Goed te keuren onkostendeclaraties"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1290,7 +1296,7 @@ msgstr "Naam"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "New Expense Report"
-msgstr "Nieuw declaratierapport"
+msgstr "Nieuw onkostendeclaratie"
 
 #. module: hr_expense
 #. odoo-python
@@ -1351,12 +1357,12 @@ msgstr "Geen declaratiecategorieën gevonden. Laten we er een maken!"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_my_all
 msgid "No expense report found. Let's create one!"
-msgstr "Geen declaratierapport gevonden. Laten we er één maken!"
+msgstr "Geen onkostendeclaratie gevonden. Laten we er één maken!"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all
 msgid "No expense reports found. Let's create one!"
-msgstr "Geen declaratierapportage gevonden. Laten we er één maken!"
+msgstr "Geen onkostendeclaratie gevonden. Laten we er één maken!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
@@ -1943,7 +1949,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "The expense reports were successfully approved."
-msgstr "De declaraties zijn succesvol goedgekeurd."
+msgstr "De onkostendeclaraties zijn succesvol goedgekeurd."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -1961,7 +1967,7 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
-"De volgende goedgekeurde declaraties hebben een vergelijkbaar personeels-, "
+"De volgende goedgekeurde onkosten hebben een vergelijkbaar personeels-, "
 "bedrag en categorie dan sommige declaraties van dit rapport. Controleer of "
 "dit rapport geen duplicaten bevat."
 
@@ -1999,7 +2005,7 @@ msgstr "De som van na split-shut blijft hetzelfde"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "There are no expense reports to approve."
-msgstr "Er zijn geen declaraties om goed te keuren."
+msgstr "Er zijn geen onkostendeclaraties om goed te keuren."
 
 #. module: hr_expense
 #. odoo-javascript
@@ -2209,14 +2215,15 @@ msgstr "Wizard"
 #, python-format
 msgid "You are not authorized to edit the reference of this expense report."
 msgstr ""
-"Je bent niet gemachtigd om de referentie van deze declaratie te bewerken."
+"Je bent niet gemachtigd om de referentie van deze onkostendeclaratie te "
+"bewerken."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You are not authorized to edit this expense report."
-msgstr "Je bent niet gemachtigd om deze declaratie te bewerken."
+msgstr "Je bent niet gemachtigd om deze onkostendeclaratie te bewerken."
 
 #. module: hr_expense
 #. odoo-python
@@ -2320,15 +2327,15 @@ msgstr "Je kunt je eigen declaraties niet afwijzen"
 #, python-format
 msgid "You cannot report expenses for different employees in the same report."
 msgstr ""
-"Je kunt geen declaraties melden voor verschillende werknemers in hetzelfde "
-"rapport."
+"Je kunt geen onkosten melden voor verschillende werknemers in dezelfde "
+"declaratie."
 
 #. module: hr_expense
 #. odoo-python
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You cannot report the expenses without amount!"
-msgstr "Je kunt de declaratie niet zonder bedrag aangeven!"
+msgstr "Je kunt de onkosten niet zonder bedrag aangeven!"
 
 #. module: hr_expense
 #. odoo-python

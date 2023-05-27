@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
@@ -25,8 +25,8 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
-"        <t t-out=\"user.name  or ''\"/> requested you activate two-factor authentication to protect your account.<br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"        <t t-out=\"user.name  or ''\"></t> requested you activate two-factor authentication to protect your account.<br><br>\n"
 "        Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
 "        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.\n"
@@ -40,24 +40,9 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        안녕하세요 <t t-out=\"object.partner_id.name or ''\"/>님,<br/><br/>\n"
-"        <t t-out=\"user.name  or ''\"/>에서 귀하의 계정을 보호하기 위해 이중 인증을 활성화하도록 요청했습니다.<br/><br/>\n"
-"        이중 인증 (\"2FA\") 이란 이중 확인을 통한 인증 시스템입니다.\n"
-"        첫 번째는 비밀번호를 통하여, 두 번째는 전용 모바일 앱에서 받은 코드를 통해 이루어집니다.\n"
-"        Authy, Google Authenticator 또는 Microsoft Authenticator가 주로 많이 사용되고 있습니다.\n"
-"\n"
-"        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
-"            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
-"                이중인증 활성화하기\n"
-"            </a>\n"
-"        </p>\n"
-"    </p>\n"
-"</div>\n"
-"        "
 
 #. module: auth_totp_mail
+#. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid "Account Security"
@@ -69,6 +54,7 @@ msgid "Invitation to activate two-factor authentication on your Odoo account"
 msgstr ""
 
 #. module: auth_totp_mail
+#. odoo-python
 #: code:addons/auth_totp_mail/models/res_users.py:0
 #, python-format
 msgid ""

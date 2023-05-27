@@ -3079,7 +3079,7 @@ msgid ""
 "Account used as outstanding account when creating accounting payment records for bank payments."
 msgstr ""
 "Để trống để sử dụng tài khoản mặc định từ cài đặt công ty.\n"
-"Tài khoản được sử dụng làm tài khoản chưa thanh toán khi tạo bản ghi thanh toán kế toán cho các khoản thanh toán qua ngân hàng."
+"Tài khoản được sử dụng làm tài khoản chưa thanh toán khi tạo tập dữ liệu thanh toán kế toán cho các khoản thanh toán qua ngân hàng."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__receivable_account_id
@@ -6322,6 +6322,13 @@ msgstr ""
 "                        Vui lòng liên hệ với quản lý của bạn để chấp nhận chênh lệch đóng phiên."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
 msgid "The name of this POS Session must be unique !"
 msgstr "Tên của phiên POS này phải là duy nhất!"
@@ -6991,7 +6998,7 @@ msgstr "Loại thẻ được sử dụng"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trong dữ liệu."
+msgstr "Loại hoạt động ngoại lệ trên tập dữ liệu."
 
 #. module: point_of_sale
 #. odoo-python

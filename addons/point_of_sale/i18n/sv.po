@@ -5,7 +5,7 @@
 # Translators:
 # Robert Frykelius <robert.frykelius@linserv.se>, 2022
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2022
-# MikaelAtVertel, 2022
+# Mikael Carlsson <mikael.carlsson@vertel.se>, 2022
 # Patrik Lermon <patrik.lermon@gmail.com>, 2022
 # lynnliuying <lynn.liu1971@gmail.com>, 2022
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2022
@@ -24,6 +24,7 @@
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Lasse L, 2023
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Lasse L, 2023\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -928,6 +929,10 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"Förbättra dina försäljningar med olika typer av program: Kuponger, "
+"Kampanjer, Presentkort, Loyalty. Specifika villkor kan ställas in "
+"(produkter, kunder, minimiköpbelopp, period). Belöningar kan vara rabatter "
+"(% eller belopp) eller gratisprodukter."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6211,6 +6216,13 @@ msgid ""
 "The maximum difference allowed is %s.\n"
 "\n"
 "                        Please contact your manager to accept the closing difference."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
 msgstr ""
 
 #. module: point_of_sale

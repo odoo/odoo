@@ -10,6 +10,7 @@
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
 # lynnliuying <lynn.liu1971@gmail.com>, 2022
+# Lasse L, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: lynnliuying <lynn.liu1971@gmail.com>, 2022\n"
+"Last-Translator: Lasse L, 2023\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +56,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Enligt produktkonfigurationen kan den levererade mängden automatiskt beräknas av mekanismen :\n"
+" - Manuell: mängden ställs in manuellt på raden\n"
+" - Analytisk Från utgifter: mängden är summan av postade utgifter\n"
+" - Tidsrapport: mängden är summan av timmar registrerade på uppgifter kopplade till denna försäljningsrad\n"
+" - Lagerflyttningar: mängden kommer från bekräftade plockningar\n"
 
 #. module: sale_project
 #. odoo-javascript
@@ -314,6 +320,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"Ställ in kvantiteter manuellt på order: Fakturera baserat på den manuellt inmatade kvantiteten, utan att skapa ett analytiskt konto.\n"
+"Tidrapporter på kontrakt: Fakturera baserat på de loggade timmarna på den relaterade tidrapporten.\n"
+"Skapa en uppgift och spåra timmar: Skapa en uppgift vid validering av försäljningsordern och spåra arbetstimmar."
 
 #. module: sale_project
 #. odoo-python
