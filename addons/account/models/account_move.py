@@ -2871,9 +2871,11 @@ class AccountMove(models.Model):
 
         self.mapped('line_ids').remove_move_reconcile()
         self.write({'state': 'draft', 'is_move_sent': False})
+        return True
 
     def button_cancel(self):
         self.write({'auto_post': False, 'state': 'cancel'})
+        return True
 
     def action_invoice_sent(self):
         """ Open a window to compose an email, with the edi invoice template
