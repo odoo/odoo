@@ -6008,6 +6008,8 @@ msgid ""
 "Quants are auto-deleted when appropriate. If you must manually delete them, "
 "please ask a stock manager to do it."
 msgstr ""
+"Quants werden bei Bedarf automatisch gelöscht. Wenn Sie sie manuell löschen "
+"müssen, bitten Sie bitte einen Lagerverwalter, dies zu tun."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8192,6 +8194,16 @@ msgstr ""
 "Mengen dieses Produkts gibt, die einem anderen Unternehmen gehören."
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+"Das Unternehmen dieses Produkts kann nicht geändert werden, solange es "
+"Bestandsbewegungen gibt, die einem anderen Unternehmen gehören."
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -8604,7 +8616,7 @@ msgstr "Mengeneinheiten"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
 msgid "Unit of measure"
-msgstr ""
+msgstr "Maßeinheit"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -9753,3 +9765,13 @@ msgstr ""
 #, python-format
 msgid "Global Visibility Days"
 msgstr "Globale Sichtbarkeitstage"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allow to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
+"Es ist nicht möglich, reservierte Mengen zu importieren, Sie müssen die "
+"Menge direkt verwenden."
