@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 06:42+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 11:05+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -36,7 +36,7 @@ msgstr ""
 "\n"
 "        Definiert die Quelle für die Erzeugung von Arbeitseinträgen\n"
 "\n"
-"        Arbeitsplan: Die Arbeitseinträge werden aus den unten stehenden Arbeitsstunden generiert.\n"
+"        Arbeitsplan: Die Arbeitseinträge werden aus den unten stehenden Arbeitszeiten generiert.\n"
 "        Anwesenheiten: Die Arbeitseinträge werden aus den Anwesenheiten des Mitarbeiters generiert. (erfordert die Anwesenheiten-App)\n"
 "        Planung: Die Arbeitseinträge werden aus der Planung des Mitarbeiters generiert. (erfordert die Planungsapp)\n"
 "    "
@@ -76,16 +76,19 @@ msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
 msgid ""
-"<span class=\"text-muted\">Attention: Regenerating these work entries will result in all the manual\n"
-"                        configurations (work entry type, homeworking location, ...) to be lost.</span>"
+"<span class=\"text-muted\">Warning: The work entry regeneration will delete "
+"all manual changes on the selected period.</span>"
 msgstr ""
-"<span class=\"text-muted\">Achtung! Wenn Sie diese Arbeitseinträge neu generieren, gehen alle manuellen\n"
-"                        Konfigurationen (Art des Arbeitseintrags, Ort der Heimarbeit ...) verloren.</span>"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
 msgid "Allow the work entry type to be linked with time off types."
 msgstr "Erlauben Sie die Verknüpfung der Arbeitseintragsart mit Urlaubsarten."
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid "Cancel"
+msgstr "Stornieren"
 
 #. module: hr_work_entry_contract
 #: model:hr.work.entry.type,name:hr_work_entry_contract.work_entry_type_compensatory
@@ -106,11 +109,6 @@ msgstr "Erstellt von"
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__create_date
 msgid "Created on"
 msgstr "Erstellt am"
-
-#. module: hr_work_entry_contract
-#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
-msgid "Discard"
-msgstr "Verwerfen"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,field_description:hr_work_entry_contract.field_hr_work_entry_regeneration_wizard__display_name

@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-17 06:42+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 11:05+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -2312,7 +2312,7 @@ msgstr "Nikolaus"
 #: code:addons/mail/static/src/components/thread_view/thread_view.xml:0
 #, python-format
 msgid "Click here to retry"
-msgstr "Hier klicken um es erneut zu versuchen"
+msgstr "Hier klicken, um es erneut zu versuchen"
 
 #. module: mail
 #. odoo-javascript
@@ -2326,7 +2326,7 @@ msgstr "Klicken Sie auf Ihre Nachricht"
 #: code:addons/mail/static/src/components/message_in_reply_to_view/message_in_reply_to_view.xml:0
 #, python-format
 msgid "Click to see the attachments"
-msgstr "Klicken um die Anhänge zu sehen"
+msgstr "Klicken, um die Anhänge zu sehen"
 
 #. module: mail
 #. odoo-javascript
@@ -2583,7 +2583,7 @@ msgstr "Inhalte"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_member__fold_state
 msgid "Conversation Fold State"
-msgstr "Konversation in eingeklapptem Status"
+msgstr "Unterhaltung in eingeklapptem Status"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_member__is_minimized
@@ -2763,7 +2763,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr "Benutzerdefinierte abgeprallte Nachricht"
+msgstr "Benutzerdefinierte unzustellbare Nachricht"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -3002,7 +3002,7 @@ msgstr "Nachrichtenkopie löschen"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__state__exception
 msgid "Delivery Failed"
-msgstr "Versand gescheitert"
+msgstr "Zustellung fehlgeschlagen"
 
 #. module: mail
 #. odoo-javascript
@@ -3092,6 +3092,7 @@ msgstr "Verbindung zum RTC-Call durch den Server unterbrochen"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -3672,7 +3673,7 @@ msgstr "Europäisch"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__everyone
 msgid "Everyone"
-msgstr "Alle Benutzer"
+msgstr "Jeder"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__notification_status__exception
@@ -3755,7 +3756,7 @@ msgid ""
 "Failure reason. This is usually the exception thrown by the email server, "
 "stored to ease the debugging of mailing issues."
 msgstr ""
-"Fehlerursache. Dies ist üblicherweise eine Meldung des E-Mail Servers, die "
+"Fehlerursache. Dies ist üblicherweise eine Meldung des E-Mail-Servers, die "
 "gespeichert wird, um die E-Mail-Fehlersuche zu erleichtern."
 
 #. module: mail
@@ -4094,13 +4095,6 @@ msgid "Generic User From Record"
 msgstr "Generischer Benutzer aus Datensatz"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid "Go to the configuration panel"
-msgstr "Benutzen Sie das Hauptmenü"
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__group
 msgid "Group"
 msgstr "Gruppe"
@@ -4310,8 +4304,8 @@ msgstr "Verberge den Untertyp in den Abonnenten Optionen"
 msgid ""
 "Hide to public / portal users, independently from subtype configuration."
 msgstr ""
-"Ausblenden für öffentliche / Portalbenutzer, unabhängig von der "
-"Konfiguration des Subtyps."
+"Ausblenden für öffentliche/Portalbenutzer, unabhängig von der Konfiguration "
+"des Subtyps."
 
 #. module: mail
 #. odoo-javascript
@@ -5791,6 +5785,13 @@ msgid "Mark as done"
 msgstr "Als erledigt markieren"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "Media devices unobtainable"
+msgstr ""
+
+#. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
 msgid "Meeting"
 msgstr "Meeting"
@@ -6849,7 +6850,7 @@ msgstr "Nur interne Benutzer können in Odoo Benachrichtigungen erhalten"
 #, python-format
 msgid "Only logged notes can have their content updated on model '%s'"
 msgstr ""
-"Nur bei protokollierten Notizen kann der Inhalt im Modell '%s' aktualisiert "
+"Nur bei protokollierten Notizen kann der Inhalt im Modell „%s“ aktualisiert "
 "werden."
 
 #. module: mail
@@ -7135,7 +7136,7 @@ msgstr "Übergeordnetes Modell"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_parent_thread_id
 msgid "Parent Record Thread ID"
-msgstr "Zugehörige Diskussion"
+msgstr "Thread-ID des übergeordneten Datensatzes"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_parent_model_id
@@ -7405,7 +7406,7 @@ msgstr "Vorangehende Aktivitäten"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__reply_to
 msgid "Preferred response address"
-msgstr "Bevorzugte Antwort-Adresse"
+msgstr "Bevorzugte Antwortadresse"
 
 #. module: mail
 #. odoo-javascript
@@ -7690,7 +7691,7 @@ msgstr "Datensatz"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_force_thread_id
 msgid "Record Thread ID"
-msgstr "Aufzeichnung Diskussion ID"
+msgstr "Thread-ID des Datensatzes"
 
 #. module: mail
 #. odoo-python
@@ -7972,7 +7973,7 @@ msgid "Review All Templates"
 msgstr "Alle Vorlagen einsehen"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
+#: model:ir.model.fields,field_description:mail.field_mail_mail__body_content
 msgid "Rich-text Contents"
 msgstr "Rich-Text Inhalte"
 
@@ -8036,6 +8037,13 @@ msgstr "SOS-Taste"
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
 msgid "SSL"
 msgstr "SSL"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "SSL might not be set up properly"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
@@ -8336,7 +8344,7 @@ msgstr "Mitteilung versenden"
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tree
 #, python-format
 msgid "Send Now"
-msgstr "Sofort senden"
+msgstr "Jetzt senden"
 
 #. module: mail
 #. odoo-javascript
@@ -9074,6 +9082,11 @@ msgid "Test & Confirm"
 msgstr "Testen & Bestätigen"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
+msgid "Text Contents"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
@@ -9264,11 +9277,11 @@ msgid ""
 "the sender (From) address, or will use the Administrator account if no "
 "system user is found for that address."
 msgstr ""
-"Besitzer, der als Folge des Empfangs einer E-Mails an diesen Alias "
+"Der Besitzer, der als Folge des Empfangs einer E-Mails an diesen Alias "
 "​​erstellt wurde. Wenn dieses Feld nicht ausgefüllt wird, wird das System "
-"versuchen, den richtigen Besitzer auf der Basis des Absenders zu finden oder"
-" das Administrator-Konto verwenden, wenn kein System-Benutzer für diese "
-"Adresse gefunden wird."
+"versuchen, den richtigen Besitzer auf Grundlage des Absenders (Von) zu "
+"finden oder das Administratorkonto verwenden, wenn kein Systembenutzer für "
+"diese Adresse gefunden wird."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__scheduled_date
@@ -9301,7 +9314,7 @@ msgstr "Der Server „%s“ kann nicht verwendet werden, da er archiviert ist."
 #: code:addons/mail/static/src/models/blur_manager.js:0
 #, python-format
 msgid "The source stream was removed before the beginning of the blur process"
-msgstr "Der Quellstrom wurde vor Beginng des Trübungsverfahrens entfernt"
+msgstr "Der Quellstrom wurde vor Beginn des Trübungsverfahrens entfernt"
 
 #. module: mail
 #. odoo-javascript
@@ -9415,7 +9428,7 @@ msgstr "Dieser Benutzer kann nicht zu diesem Kanal hinzugefügt werden"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Thread"
-msgstr "Beitrag"
+msgstr "Thread"
 
 #. module: mail
 #. odoo-javascript
@@ -9424,7 +9437,7 @@ msgstr "Beitrag"
 #: code:addons/mail/static/src/components/thread_needaction_preview/thread_needaction_preview.xml:0
 #, python-format
 msgid "Thread Image"
-msgstr "Thread Bild"
+msgstr "Thread-Bild"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__timezone
@@ -9652,7 +9665,7 @@ msgstr "Kamera einschalten"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_token
 msgid "Twilio Account Auth Token"
-msgstr "Twilio Account Auth Token"
+msgstr "Auth-Token für Twilio-Konto"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_sid
@@ -9931,10 +9944,10 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
-"Verwenden Sie einen \"Bestimmten Benutzer\", um bei der nächsten Aktivität "
-"immer denselben Benutzer zugewiesen  zu bekommen.Verwenden Sie 'Generierter "
-"Benutzer aus Datensatz', um den Feldnamen des Benutzers anzugeben, der im "
-"Datensatz ausgewählt werden soll."
+"Verwenden Sie einen „Bestimmten Benutzer“, um bei der nächsten Aktivität "
+"immer denselben Benutzer zugewiesen  zu bekommen. Verwenden Sie  „Aus "
+"Datensatz generierter Benutzer“, um den Feldnamen des Benutzers anzugeben, "
+"der im Datensatz ausgewählt werden soll."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_twilio_rtc_servers
@@ -10026,7 +10039,7 @@ msgstr "Benutzerspezifische Benachrichtigung"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__activity_user_field_name
 #: model:ir.model.fields,field_description:mail.field_ir_cron__activity_user_field_name
 msgid "User field name"
-msgstr "Benutzer Feld Name"
+msgstr "Benutzer-Feldname"
 
 #. module: mail
 #. odoo-javascript
@@ -10448,17 +10461,6 @@ msgstr "Sie können nur das Profil von bestehenden Benutzern öffnen."
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid ""
-"You cannot create a new user from here.\n"
-" To create new user please go to configuration panel."
-msgstr ""
-"Sie können hier keinen neuen Benutzer erstellen.\n"
-" Zur Erstellung eines neuen Benutzer gehen Sie bitte zu den Einstellungen."
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -10561,7 +10563,7 @@ msgstr "Sie: "
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_light
 msgid "Your"
-msgstr "Ihr"
+msgstr "Ihr(e)"
 
 #. module: mail
 #. odoo-javascript

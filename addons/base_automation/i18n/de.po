@@ -85,13 +85,13 @@ msgstr "Archiviert"
 #: model:ir.model,name:base_automation.model_base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__ir_actions_server__usage__base_automation
 msgid "Automated Action"
-msgstr "Automatische Aktion"
+msgstr "Automatisierte Aktion"
 
 #. module: base_automation
 #: model:ir.actions.act_window,name:base_automation.base_automation_act
 #: model:ir.ui.menu,name:base_automation.menu_base_automation_form
 msgid "Automated Actions"
-msgstr "Automatische Aktionen"
+msgstr "Automatisierte Aktionen"
 
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_tree
@@ -155,7 +155,11 @@ msgid ""
 "EMail: send directly emails\n"
 "Post as Message: post on document and notify followers\n"
 "Post as Note: log a note on document"
-msgstr "Methode für E-Mail-Versand wählen:"
+msgstr ""
+"Methode für E-Mail-Versand wählen:\n"
+"E-Mail: E-Mails direkt versenden\n"
+"Als Nachricht hinterlassen: in Dokument hinterlassen und Follower benachrichtigen\n"
+"Als Notiz hinterlassen: eine Notiz im Dokument hinterlassen"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
@@ -299,7 +303,7 @@ msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
 msgstr ""
-"Bei Verfügbarkeit muß diese Kondition vor Ausführung der Aktionsregel "
+"Falls vorhanden, muss diese Bedingung vor Ausführung der Aktionsregel "
 "erfüllt sein."
 
 #. module: base_automation
@@ -308,8 +312,8 @@ msgid ""
 "If present, this condition must be satisfied before the update of the "
 "record."
 msgstr ""
-"Falls vorhanden, muß diese Bedingung vor der Aktualisierung des Datensatzes "
-"erfüllt werden."
+"Falls vorhanden, muss diese Bedingung vor der Aktualisierung des Datensatzes"
+" erfüllt werden."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -393,12 +397,12 @@ msgstr "OnChange Auslösende Felder"
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
 msgid "On Creation"
-msgstr "Bei Erstellung"
+msgstr "Beim Erstellen"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create_or_write
 msgid "On Creation & Update"
-msgstr "Bei Erstellung und Aktualisierung"
+msgstr "Beim Erstellen und Aktualisieren"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_unlink
@@ -416,8 +420,8 @@ msgid ""
 "Optional help text for the users with a description of the target view, such"
 " as its usage and purpose."
 msgstr ""
-"Optionaler Hilfetext für Benutzer mit der Beschreibung der Ansicht, deren "
-"Verwendung und Aufgabe."
+"Optionaler Hilfetext für Benutzer mit der Beschreibung der Zielansicht, "
+"deren Verwendung und Zweck."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__link_field_id
@@ -431,7 +435,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__code
 msgid "Python Code"
-msgstr "Python Code"
+msgstr "Python-Code"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
@@ -464,8 +468,8 @@ msgid ""
 "Setting a value makes this action available in the sidebar for the given "
 "model."
 msgstr ""
-"Das Setzen eines Wertes macht diese Aktion in der Sidebar für das gegebene "
-"Modell verfügbar."
+"Durch das Setzen eines Wertes wird diese Aktion in der Seitenleiste für das "
+"angegebene Modell verfügbar."
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -485,12 +489,12 @@ msgstr "Zusammenfassung"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_id
 msgid "Target Model"
-msgstr "Ziel-Modell"
+msgstr "Zielmodell"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__crud_model_name
 msgid "Target Model Name"
-msgstr "Ziel-Model Name"
+msgstr "Zielmodellname"
 
 #. module: base_automation
 #. odoo-python
@@ -500,8 +504,8 @@ msgid ""
 "The \"%(trigger_value)s\" %(trigger_label)s can only be used with the "
 "\"%(state_value)s\" action type"
 msgstr ""
-"Der \"%(trigger_value)s\" %(trigger_label)s kann nur benutzt werden mit "
-"dem\"%(state_value)s\" Aktionstyp"
+"„%(trigger_value)s“ %(trigger_label)s kann nur benutzt werden mit dem "
+"Aktionstyp „%(state_value)s“."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__trigger_field_ids
@@ -576,15 +580,15 @@ msgid ""
 " 'Generic User From Record' to specify the field name of the user to choose "
 "on the record."
 msgstr ""
-"Verwenden Sie einen \"Bestimmten Benutzer\", um bei der nächsten Aktivität "
-"immer denselben Benutzer zugewiesen  zu bekommen.Verwenden Sie 'Generierter "
-"Benutzer aus Datensatz', um den Feldnamen des Benutzers anzugeben, der im "
-"Datensatz ausgewählt werden soll."
+"Verwenden Sie einen „Bestimmten Benutzer“, um bei der nächsten Aktivität "
+"immer denselben Benutzer zugewiesen  zu bekommen. Verwenden Sie  „Aus "
+"Datensatz generierter Benutzer“, um den Feldnamen des Benutzers anzugeben, "
+"der im Datensatz ausgewählt werden soll."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_calendar_id
 msgid "Use Calendar"
-msgstr "Benutze Kalender"
+msgstr "Kalender verwenden"
 
 #. module: base_automation
 #: model_terms:ir.actions.act_window,help:base_automation.base_automation_act
@@ -604,7 +608,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_field_name
 msgid "User field name"
-msgstr "Benutzer Feld Name"
+msgstr "Benutzer-Feldname"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__fields_lines
@@ -661,7 +665,7 @@ msgid ""
 msgstr ""
 "Schreiben Sie Python-Code, den die Aktion ausführen wird. Einige Variablen "
 "stehen zur Verfügung. Hilfe zum Python-Ausdruck finden Sie auf der "
-"Registerkarte \"Hilfe\"."
+"Registerkarte „Hilfe“."
 
 #. module: base_automation
 #. odoo-javascript
@@ -670,7 +674,7 @@ msgstr ""
 msgid ""
 "You can ask an administrator to disable or correct this automated action."
 msgstr ""
-"Sie können einen Administrator bitten die automatisierte Aufgabe zu "
+"Sie können einen Administrator bitten die automatisierte Aktion zu "
 "deaktivieren oder zu korrigieren."
 
 #. module: base_automation
@@ -679,8 +683,8 @@ msgstr ""
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
-"Sie können diese automatisierte Aufgabe deaktivieren oder bearbeiten, um das"
-" Problem zu beheben."
+"Sie können diese automatisierte Aktion deaktivieren oder bearbeiten, um das "
+"Problem zu beheben."
 
 #. module: base_automation
 #. odoo-python

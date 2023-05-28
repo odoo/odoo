@@ -6,17 +6,17 @@
 # Wolfgang Taferner, 2023
 # Ermin Trevisan <trevi@twanda.com>, 2023
 # Felix Schubert <felix.schubert@go-erp.com>, 2023
-# Friederike Fasterling-Nesselbosch, 2023
-# Martin Trigaux, 2023
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2023
 # Niyas Raphy, 2023
+# Friederike Fasterling-Nesselbosch, 2023
+# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 14:37+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -155,6 +155,11 @@ msgid ""
 msgstr ""
 ".\n"
 "         Manuelle Aktionen können erforderlich sein."
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_computer_desk_leg_product_template
+msgid "18″ x 2½″ Square Leg"
+msgstr "46×6,5cm Tischbein (quadratisch)"
 
 #. module: mrp
 #. odoo-python
@@ -1028,6 +1033,11 @@ msgstr ""
 "Stücklistenprodukt übereinstimmen."
 
 #. module: mrp
+#: model:product.template,name:mrp.product_product_computer_desk_bolt_product_template
+msgid "Bolt"
+msgstr "Schraubbolzen"
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_special_line/mrp_bom_overview_special_line.xml:0
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_byproducts
@@ -1224,7 +1234,9 @@ msgid "Component Status"
 msgstr "Komponentenstatus"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
+#. odoo-javascript
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Component of Draft MO"
 msgstr "Komponente des Fertigungsauftragsentwurfs"
 
@@ -1269,10 +1281,9 @@ msgstr "Anhand der Stückliste berechnen"
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
 "buying or manufacturing the components and/or subassemblies."
+"                                       Also note that purchase security lead"
+" times will be added when appropriate."
 msgstr ""
-"Berechnen Sie die Tage, die erforderlich sind, um alle Komponenten aus der "
-"Stückliste zu beschaffen, indem Sie die Komponenten und/oder Unterbaugruppen"
-" entweder kaufen oder fertigen."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1463,11 +1474,11 @@ msgstr "Eine neue Arbeitsauftragsleistung erstellen"
 #: model:ir.model.fields,help:mrp.field_product_product__days_to_prepare_mo
 #: model:ir.model.fields,help:mrp.field_product_template__days_to_prepare_mo
 msgid ""
-"Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
-"Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism."
+"Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+"Note that security lead times will also be considered when appropriate."
 msgstr ""
 "Erstellen und bestätigen Sie Fertigungsaufträge einige Tage im Voraus, um genügend Zeit zu haben, Komponenten aufzufüllen oder halbfertige Produkte herzustellen.\n"
-"Beachten Sie, dass dies keinen Einfluss auf den Termin des Fertigungsauftrag hat, der immer noch den Just-in-Time-Mechanismus respektiert."
+"Beachten Sie, dass gegebenenfalls auch Sicherheitsvorlaufzeiten berücksichtigt werden."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -1835,6 +1846,21 @@ msgstr "Herunterladen"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_workorder_form_view_filter
 msgid "Draft"
 msgstr "Entwurf"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_drawer_drawer_product_template
+msgid "Drawer Black"
+msgstr "Schublade schwarz"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_drawer_case_product_template
+msgid "Drawer Case Black"
+msgstr "Schubladenkoffer Schwarz"
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_drawer_drawer_product_template
+msgid "Drawer on casters for great usability."
+msgstr "Schublade auf Rollen für hervorragende Benutzerfreundlichkeit."
 
 #. module: mrp
 #. odoo-python
@@ -2324,8 +2350,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the resource "
 "record without removing it."
 msgstr ""
-"Wenn das aktive Feld auf Falsch gesetzt ist, kann die Ansicht der Ressource "
-"ausgeblendet werden."
+"Wenn das aktive Feld auf Falsch gesetzt ist, können Sie den "
+"Ressourcendatensatz ausblenden, ohne ihn zu entfernen."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__image_height
@@ -2357,7 +2383,7 @@ msgstr "Betroffene Übertragung(en):"
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "Import Template for Bills of Materials"
-msgstr "Vorlage für Stücklisten importieren"
+msgstr "Importvorlage für Stücklisten"
 
 #. module: mrp
 #. odoo-python
@@ -2582,6 +2608,11 @@ msgstr ""
 "Stücklistenkonfiguration bereit."
 
 #. module: mrp
+#: model_terms:product.template,description:mrp.product_product_wood_ply_product_template
+msgid "Layers that are stick together to assemble wood panels."
+msgstr "Schichten, die zusammenkleben, um Holzplatten zu montieren."
+
+#. module: mrp
 #. odoo-javascript
 #: code:addons/mrp/static/src/components/bom_overview_table/mrp_bom_overview_table.xml:0
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -2758,6 +2789,11 @@ msgid "Manual Consumption"
 msgstr "Manueller Verbrauch"
 
 #. module: mrp
+#: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption_readonly
+msgid "Manual Consumption Readonly"
+msgstr "Manueller Verbrauch Schreibgeschützt"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle_manual
 msgid "Manual Duration"
 msgstr "Manuelle Dauer"
@@ -2845,8 +2881,8 @@ msgstr "Fertigung"
 
 #. module: mrp
 #. odoo-javascript
-#: code:addons/mrp/static/src/xml/report_stock_forecasted.xml:0
-#: code:addons/mrp/static/src/xml/report_stock_forecasted.xml:0
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_buttons.xml:0
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_buttons.xml:0
 #, python-format
 msgid "Manufacturing Forecast"
 msgstr "Fertigungsprognose"
@@ -2995,7 +3031,7 @@ msgstr "Nachrichten"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__mimetype
 msgid "Mime Type"
-msgstr "Mime Typ"
+msgstr "Mime-Typ"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_warehouse_orderpoint
@@ -3621,6 +3657,21 @@ msgid "Planning Issues"
 msgstr "Probleme bei der Planung"
 
 #. module: mrp
+#: model:product.template,name:mrp.product_product_plastic_laminate_product_template
+msgid "Plastic Laminate"
+msgstr "Kunststoff-Laminat"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_wood_ply_product_template
+msgid "Ply Layer"
+msgstr ""
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_ply_veneer_product_template
+msgid "Ply Veneer"
+msgstr "Ply Veneer"
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__json_popover
 msgid "Popover Data JSON"
 msgstr "JSON-Pop-over-Daten"
@@ -3905,7 +3956,9 @@ msgid "Production Workcenter"
 msgstr "Produktionsarbeitsplatz"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
+#. odoo-javascript
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Production of Draft MO"
 msgstr "Produktion eines Fertigungsauftragsentwurfs"
 
@@ -4134,7 +4187,9 @@ msgid "Reporting"
 msgstr "Berichtswesen"
 
 #. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
+#. odoo-javascript
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
+#, python-format
 msgid "Reserve"
 msgstr "Reservieren"
 
@@ -4299,6 +4354,11 @@ msgid "Scraps"
 msgstr "Ausschuss"
 
 #. module: mrp
+#: model:product.template,name:mrp.product_product_computer_desk_screw_product_template
+msgid "Screw"
+msgstr "Schraube"
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_search_view
 msgid "Search"
 msgstr "Suchen"
@@ -4376,6 +4436,11 @@ msgstr "Sequenzbestand nach Fertigung"
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "Serial Mass Produce"
 msgstr "Serielle Massenproduktion"
+
+#. module: mrp
+#: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
+msgid "Set Quantities & Validate"
+msgstr "Mengen einstellen & validieren"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_change_production_qty_wizard
@@ -4486,6 +4551,16 @@ msgstr "Diashow"
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
 msgid "Slot into workcenter calendar once planned"
 msgstr "Nach der Planung in den Kalender des Arbeitsplatzes einfügen"
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_computer_desk_head_product_template
+msgid "Solid wood is a durable natural material."
+msgstr "Massivholz ist ein beständiges Naturmaterial."
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_computer_desk_product_template
+msgid "Solid wood table."
+msgstr "Tisch aus Massivholz."
 
 #. module: mrp
 #. odoo-python
@@ -4606,6 +4681,16 @@ msgstr "Produktion aufteilen"
 #: model:ir.actions.act_window,name:mrp.action_mrp_production_split_multi
 msgid "Split productions"
 msgstr "Produktionen aufteilen"
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_computer_desk_screw_product_template
+msgid "Stainless steel screw"
+msgstr "Edelstahlschraube"
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_computer_desk_bolt_product_template
+msgid "Stainless steel screw full (dia - 5mm, Length - 10mm)"
+msgstr "Edelstahlschraube vollständig (Durchm. 5 mm, Länge 10 mm)"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
@@ -4738,6 +4823,31 @@ msgstr "Vergabe der Produktion einiger Produkte an Subunternehmer"
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
 msgid "Subcontracting"
 msgstr "An Subunternehmer vergeben"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_computer_desk_product_template
+msgid "Table"
+msgstr "Tisch"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_table_kit_product_template
+msgid "Table Kit"
+msgstr "Tischset"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_computer_desk_leg_product_template
+msgid "Table Leg"
+msgstr "Tischbein"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_computer_desk_head_product_template
+msgid "Table Top"
+msgstr "Tischplatte"
+
+#. module: mrp
+#: model_terms:product.template,description:mrp.product_product_table_kit_product_template
+msgid "Table kit"
+msgstr "Tischset"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__tag_ids
@@ -5205,6 +5315,11 @@ msgid "Today Activities"
 msgstr "Heutige Aktivitäten"
 
 #. module: mrp
+#: model_terms:product.template,description:mrp.product_product_wood_wear_product_template
+msgid "Top layer of a wood panel."
+msgstr "Deckschicht einer Holzplatte."
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_bom_tree_view
 msgid "Total Duration"
 msgstr "Gesamtdauer"
@@ -5439,10 +5554,12 @@ msgid "Unplan"
 msgstr "Planung aufheben"
 
 #. module: mrp
+#. odoo-javascript
+#: code:addons/mrp/static/src/mrp_forecasted/forecasted_details.xml:0
 #: model:ir.actions.server,name:mrp.mrp_production_action_unreserve_tree
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_tree_view
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_report_product_product_replenishment
+#, python-format
 msgid "Unreserve"
 msgstr "Reservierung abbrechen"
 
@@ -5627,6 +5744,11 @@ msgid "Warnings"
 msgstr "Warnungen"
 
 #. module: mrp
+#: model:product.template,name:mrp.product_product_wood_wear_product_template
+msgid "Wear Layer"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__website_id
 msgid "Website"
 msgstr "Website"
@@ -5729,6 +5851,11 @@ msgid "Wizard to mark as done or create back order"
 msgstr ""
 "Assistent, um als erledigt zu markieren oder einen rückständigen Auftrag zu "
 "erstellen"
+
+#. module: mrp
+#: model:product.template,name:mrp.product_product_wood_panel_product_template
+msgid "Wood Panel"
+msgstr "Holzplatte"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -6242,6 +6369,13 @@ msgstr ""
 #, python-format
 msgid "You need to provide a lot for the finished product."
 msgstr "Sie müssen viel für das fertige Produkt bereitstellen."
+
+#. module: mrp
+#. odoo-python
+#: code:addons/mrp/wizard/mrp_consumption_warning.py:0
+#, python-format
+msgid "You need to supply Lot/Serial Number"
+msgstr "Sie müssen eine Los-/Seriennummer zur Verfügung stellen."
 
 #. module: mrp
 #. odoo-python

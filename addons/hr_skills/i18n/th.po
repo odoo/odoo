@@ -3,18 +3,19 @@
 # 	* hr_skills
 # 
 # Translators:
-# surapas haemaprasertsuk <surapas@gmail.com>, 2022
-# Martin Trigaux, 2022
-# Wichanon Jamwutthipreecha, 2022
+# surapas haemaprasertsuk <surapas@gmail.com>, 2023
+# Amin Cheloh <amincheloh@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Wichanon Jamwutthipreecha, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
-"PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Wichanon Jamwutthipreecha, 2022\n"
-"Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
+"POT-Creation-Date: 2023-02-17 06:42+0000\n"
+"PO-Revision-Date: 2023-01-17 11:04+0000\n"
+"Last-Translator: Wichanon Jamwutthipreecha, 2023\n"
+"Language-Team: Thai (https://app.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,7 +23,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: hr_skills
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many.xml:0
 #: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
 #, python-format
@@ -30,7 +31,7 @@ msgid "ADD"
 msgstr "เพิ่ม"
 
 #. module: hr_skills
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_skills/static/src/xml/resume_templates.xml:0
 #, python-format
 msgid "CREATE A NEW ENTRY"
@@ -44,10 +45,10 @@ msgstr "คลาสสิก"
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_report__company_id
 msgid "Company"
-msgstr "บริษัทเดียว"
+msgstr "บริษัท"
 
 #. module: hr_skills
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/skills_one2many.xml:0
 #, python-format
 msgid "Create a new entry"
@@ -76,7 +77,7 @@ msgid "Created on"
 msgstr "สร้างเมื่อ"
 
 #. module: hr_skills
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_skills/static/src/fields/resume_one2many.xml:0
 #, python-format
 msgid "Current"
@@ -198,17 +199,6 @@ msgid ""
 msgstr ""
 
 #. module: hr_skills
-#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill____last_update
-#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log____last_update
-#: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line____last_update
-#: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type____last_update
-#: model:ir.model.fields,field_description:hr_skills.field_hr_skill____last_update
-#: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level____last_update
-#: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type____last_update
-msgid "Last Modified on"
-msgstr "แก้ไขครั้งล่าสุดเมื่อ"
-
-#. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__write_uid
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill_log__write_uid
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__write_uid
@@ -256,13 +246,14 @@ msgid "Name"
 msgstr "ชื่อ"
 
 #. module: hr_skills
+#. odoo-python
 #: code:addons/hr_skills/models/hr_skill_level.py:0
 #, python-format
 msgid "Only one default level is allowed per skill type."
 msgstr ""
 
 #. module: hr_skills
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_skills/static/src/views/skills_list_renderer.js:0
 #, python-format
 msgid "Other"
@@ -433,12 +424,14 @@ msgid "Skills History"
 msgstr ""
 
 #. module: hr_skills
+#. odoo-python
 #: code:addons/hr_skills/models/hr_employee_skill.py:0
 #, python-format
 msgid "The skill %(name)s and skill type %(type)s doesn't match"
 msgstr "ทักษะ %(name)s และประเภททักษะ %(type)s ไม่ตรงกัน"
 
 #. module: hr_skills
+#. odoo-python
 #: code:addons/hr_skills/models/hr_employee_skill.py:0
 #, python-format
 msgid "The skill level %(level)s is not valid for skill type: %(type)s"
@@ -452,7 +445,7 @@ msgstr "วันที่เริ่มต้นต้องอยู่ก่
 #. module: hr_skills
 #: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_form
 msgid "Title"
-msgstr "ชื่อเรื่อง"
+msgstr "คำนำหน้าชื่อ"
 
 #. module: hr_skills
 #: model:ir.model.constraint,message:hr_skills.constraint_hr_employee_skill__unique_skill
