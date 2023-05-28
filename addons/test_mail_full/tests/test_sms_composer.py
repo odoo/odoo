@@ -145,7 +145,7 @@ class TestSMSComposerComment(TestMailFullCommon, TestRecipients):
                     'number_field_name': 'phone_nbr',
                 })
 
-        self.assertFalse(composer.recipient_single_valid)
+        self.assertTrue(composer.recipient_single_valid)
         self.assertEqual(composer.recipient_single_description, self.test_record.customer_id.display_name)
 
     def test_composer_internals(self):
