@@ -8,7 +8,7 @@
 # Luiz Fernando <lfpsgs@outlook.com>, 2022
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2022
 # Alan Moreira <alanmoreirax@gmail.com>, 2022
-# Richard Imgärtchen, 2023
+# ff68f1f9b02a0effe4204ba86a8b106e_92c9ca6, 2023
 # Martin Trigaux, 2023
 # Leonardo Meneguzzi, 2023
 # Kevilyn Rosa, 2023
@@ -42,7 +42,7 @@ msgstr "DEVOLUÇÃO"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/NumpadWidget.xml:0
 #, python-format
 msgid "% Disc"
-msgstr "% Desc"
+msgstr "% desc"
 
 #. module: point_of_sale
 #. odoo-python
@@ -779,7 +779,7 @@ msgstr "Listas de preços disponiveis"
 #: model:ir.model.fields,field_description:point_of_sale.field_product_template__available_in_pos
 #: model_terms:ir.ui.view,arch_db:point_of_sale.product_template_search_view_pos
 msgid "Available in POS"
-msgstr "Disponivel no POS"
+msgstr "Disponível no PDV"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__average_price
@@ -903,6 +903,10 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"Impulsione as suas vendas com vários tipos de programas: cupons, promoções, "
+"cartões-presente, fidelidade. É possível definir condições específicas "
+"(produtos, clientes, quantidade mínima de compra, período). As recompensas "
+"podem ser descontos (% ou um valor fixo) ou produtos gratuitos."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1969,7 +1973,7 @@ msgstr "Resumo"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Disc.%"
-msgstr "Desc.%"
+msgstr "% desc."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -2460,7 +2464,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_search
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_report_pos_order_search
 msgid "Group By"
-msgstr "Agrupar Por"
+msgstr "Agrupar por"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_uom_category__is_pos_groupable
@@ -3852,7 +3856,7 @@ msgstr "Sequência de IDs de linha de pedido"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__lines
 msgid "Order Lines"
-msgstr "Itens do Pedido"
+msgstr "Itens do pedido"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__name
@@ -3964,7 +3968,7 @@ msgstr "Linhas da Ordem de Venda"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
 msgid "POS Orders"
-msgstr "Ordens de Vendas"
+msgstr "Pedidos do PDV"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree_all_sales_lines
@@ -4420,7 +4424,7 @@ msgstr "Interface de PdV"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_pivot
 #, python-format
 msgid "PoS Orders"
-msgstr "Encomendas PoS"
+msgstr "Pedidos do PDV"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.product_pos_category_action
@@ -4903,7 +4907,7 @@ msgstr "Variação do Produto"
 #: model:ir.actions.act_window,name:point_of_sale.product_product_action
 #: model:ir.ui.menu,name:point_of_sale.pos_config_menu_action_product_product
 msgid "Product Variants"
-msgstr "Variantes de Produto"
+msgstr "Variantes de produto"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4951,7 +4955,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Promotions, Coupons, Gift Card & Loyalty Program"
-msgstr ""
+msgstr "Promoções, cupons, cartão-presente e programa de fidelidade"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5842,7 +5846,7 @@ msgstr "Iniciar categoria"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__start_date
 msgid "Start Date"
-msgstr "Data de Início"
+msgstr "Data de início"
 
 #. module: point_of_sale
 #. odoo-python
@@ -5977,7 +5981,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
 msgid "Sum of subtotals"
-msgstr "Soma dos Subtotais"
+msgstr "Soma dos subtotais"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6051,7 +6055,7 @@ msgstr "Mostrar Taxas"
 #: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerDetailsEdit.xml:0
 #, python-format
 msgid "Tax ID"
-msgstr "ID do Imposto"
+msgstr "CPF/CNPJ"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tax_regime_selection
@@ -6243,6 +6247,13 @@ msgid ""
 "The maximum difference allowed is %s.\n"
 "\n"
 "                        Please contact your manager to accept the closing difference."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
 msgstr ""
 
 #. module: point_of_sale
@@ -6752,7 +6763,7 @@ msgstr "Para Pesar Com Escala"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__to_invoice
 msgid "To invoice"
-msgstr "Para faturar"
+msgstr "A faturar"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_payment_form

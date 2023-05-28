@@ -855,7 +855,7 @@ msgstr "Bankbetalingen"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr "Bankafschriftregel"
+msgstr "Rekeningafschriftregel"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6347,6 +6347,13 @@ msgstr ""
 "                        Neem contact op met je manager om het sluitingsverschil te accepteren."
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr "De naam van de Munten/Biljetten moet een nummer zijn."
+
+#. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
 msgid "The name of this POS Session must be unique !"
 msgstr "De naam van de kassa moet uniek zijn per sessie!"
@@ -7430,8 +7437,7 @@ msgstr "Je kunt de kassa niet sluiten als bestellingen nog in concept zijn"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot create a session before the accounting lock date."
-msgstr ""
-"Je kunt geen sessie aanmaken voor de boekhoudkundige vergrendelingsdatum."
+msgstr "Je kunt geen sessie aanmaken voor de boekhoudkundige blokeerdatum."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7440,8 +7446,8 @@ msgstr ""
 msgid ""
 "You cannot delete a bank statement line linked to Point of Sale session."
 msgstr ""
-"Je kunt een bankafschriftregel die is gekoppeld aan een Kassa-sessie niet "
-"verwijderen."
+"Je kunt een rekeningafschriftregel die is gekoppeld aan een Kassa-sessie "
+"niet verwijderen."
 
 #. module: point_of_sale
 #. odoo-python
