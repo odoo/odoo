@@ -9,7 +9,6 @@
 # Giacomo Grasso <giacomo.grasso.82@gmail.com>, 2020
 # efraimbiffi <eab@odoo.com>, 2020
 # Martin Trigaux, 2020
-# Giovanni Perteghella <giovanni@perteghella.org>, 2020
 # Paolo Valier, 2020
 # David Minneci <david@numeko.it>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
@@ -403,22 +402,22 @@ msgstr "Buckaroo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
 msgid "Callback Document ID"
-msgstr ""
+msgstr "ID documento di richiamata"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_model_id
 msgid "Callback Document Model"
-msgstr "Callback Document Model"
+msgstr "Modello documento di richiamata"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr ""
+msgstr "Hash di richiamata"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
 msgid "Callback Method"
-msgstr "Metodo di callback"
+msgstr "Metodo di richiamata"
 
 #. module: payment
 #. openerp-web
@@ -841,12 +840,12 @@ msgstr "Modulo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__view_template_id
 msgid "Form Button Template"
-msgstr "Modello pulsante scheda"
+msgstr "Modello pulsante modulo"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__type__form_save
 msgid "Form with tokenization"
-msgstr "Modulo con token"
+msgstr "Modulo con assegnazione token"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -950,6 +949,10 @@ msgid ""
 "             acquirer. Watch out, test and production modes require\n"
 "             different credentials."
 msgstr ""
+"In modalità test viene elaborato un finto pagamento tramite\n"
+"             un'interfaccia di test. Questa modalità viene suggerita all'impostazione\n"
+"             del sistema. Fare attenzione, le modalità di test e produzione\n"
+"             richiedono credenziali diverse."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inbound_payment_method_ids
@@ -980,7 +983,7 @@ msgstr "Installato"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
 msgid "Internal reference of the TX"
-msgstr "Riferimento interno del TX"
+msgstr "Riferimento interno TX"
 
 #. module: payment
 #. openerp-web
@@ -1577,7 +1580,7 @@ msgstr "Il riferimento deve essere univoco."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
 msgid "Reference of the TX as stored in the acquirer database"
-msgstr "Riferimento di TX come memorizzato nel database del sistema"
+msgstr "Riferimento TX come memorizzato nel database del sistema"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_id
@@ -1603,12 +1606,12 @@ msgstr "Campi obbligatori non compilati: %s"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__return_url
 msgid "Return URL after payment"
-msgstr ""
+msgstr "URL di ritorno dopo il pagamento"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__registration_view_template_id
 msgid "S2S Form Template"
-msgstr "Modello scheda S2S"
+msgstr "Modello modulo S2S"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_sepa_direct_debit
@@ -1623,7 +1626,7 @@ msgstr "Salvataggio carte"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "Save my payment data"
-msgstr "Salva i miei dati di pagamento"
+msgstr "Salva dati di pagamento"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.payment_token_action
@@ -1825,6 +1828,8 @@ msgid ""
 "The transaction was aborted because you are not the customer of this "
 "invoice. Log in as %s to be able to use this payment method."
 msgstr ""
+"La transazione è stata interrotta, non è stata effettuata dal cliente della "
+"fattura. Per usare questo metodo di pagamento accedere come %s."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
@@ -1926,6 +1931,8 @@ msgid ""
 "Trigger a transaction of 1 currency unit and its refund to check the validity of new credit cards entered in the customer portal.\n"
 "        Without this check, the validity will be verified at the very first transaction."
 msgstr ""
+"Attiva una transazione di 1 unità di valuta e relativo rimborso per controllare la validità della nuova carta di credito inserita nel portale clienti.\n"
+"        Senza questo controllo, la validità viene verificata alla prima transazione."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__type
