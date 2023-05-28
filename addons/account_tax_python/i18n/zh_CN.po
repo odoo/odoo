@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
 "Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -46,7 +46,6 @@ msgstr ""
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
 msgid "Applicable Code"
 msgstr "适用代码"
 
@@ -72,25 +71,6 @@ msgstr ""
 ":param partner: res.partner记录集单项或无"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
-msgid ""
-"Compute the amount of the tax by setting the variable 'result'.\n"
-"\n"
-":param base_amount: float, actual amount on which the tax is applied\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"通过设置变量“结果”计算税额。\n"
-"\n"
-":param base_amount：浮动，实际计税金额\n"
-":param price_unit：浮动\n"
-":param quantity：浮动\n"
-":param product: product.product记录集单项或无\n"
-":param partner: res.partner记录集单项或无"
-
-#. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
 msgid ""
 "Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
@@ -110,28 +90,8 @@ msgstr ""
 ":param partner: res.partner记录集单项或无"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
-msgid ""
-"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
-"\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"通过设置变量“结果”为正确或错误来决定是否计算税额。\n"
-"\n"
-":param price_unit：浮动\n"
-":param quantity：浮动\n"
-":param company: res.company记录集单项\n"
-":param product: product.product记录集单项或无\n"
-":param partner: res.partner记录集单项或无"
-
-#. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
-#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
 msgid "Python Code"
 msgstr "Python代码"
 
@@ -142,11 +102,5 @@ msgstr "税项"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
 msgid "Tax Computation"
 msgstr "税费计算"
-
-#. module: account_tax_python
-#: model:ir.model,name:account_tax_python.model_account_tax_template
-msgid "Templates for Taxes"
-msgstr "税项模板"

@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:10+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -85,6 +85,8 @@ msgid ""
 "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-success "
 "me-1\" role=\"img\" aria-label=\"Available\" title=\"Available\"/>"
 msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-success "
+"me-1\" role=\"img\" aria-label=\"Available\" title=\"Available\"/>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_employees_view_kanban
@@ -92,6 +94,8 @@ msgid ""
 "<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
 "                                    </span>"
 msgstr ""
+"<span id=\"oe_hr_attendance_status\" class=\"fa fa-circle text-warning me-1\" role=\"img\" aria-label=\"Not available\" title=\"Not available\">\n"
+"                                    </span>"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -240,6 +244,13 @@ msgid "Back Camera"
 msgstr ""
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/client_action/kiosk_mode/kiosk_mode.xml:0
+#, python-format
+msgid "Barcode"
+msgstr "Codice a barre"
+
+#. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_kiosk_mode__barcode
 msgid "Barcode / RFID"
 msgstr ""
@@ -360,6 +371,13 @@ msgid "Company"
 msgstr "Azienda"
 
 #. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/client_action/kiosk_mode/kiosk_mode.xml:0
+#, python-format
+msgid "Company Logo"
+msgstr "Logo azienda"
+
+#. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Compare attendance with working hours set on employee."
 msgstr "Confronta le presenze con le ore di lavoro impostate sul dipendente."
@@ -442,6 +460,14 @@ msgstr "Nome visualizzato"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Display Time"
+msgstr ""
+
+#. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#, python-format
+msgid ""
+"Do not have access, user cannot edit the attendances that are not his own."
 msgstr ""
 
 #. module: hr_attendance
@@ -644,6 +670,14 @@ msgstr "ID"
 
 #. module: hr_attendance
 #. odoo-javascript
+#: code:addons/hr_attendance/static/src/client_action/kiosk_mode/kiosk_mode.xml:0
+#: code:addons/hr_attendance/static/src/client_action/kiosk_mode/kiosk_mode.xml:0
+#, python-format
+msgid "Identify Manually"
+msgstr "Identifica manualmente"
+
+#. module: hr_attendance
+#. odoo-javascript
 #: code:addons/hr_attendance/static/src/client_action/greeting_message/greeting_message.js:0
 #, python-format
 msgid "If a job is worth doing, it is worth doing well!"
@@ -741,6 +775,13 @@ msgstr "Dipendente pubblico"
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_report
 msgid "Reporting"
 msgstr "Rendiconto"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/client_action/kiosk_mode/kiosk_mode.xml:0
+#, python-format
+msgid "Scan your badge"
+msgstr "Scansiona il tuo badge"
 
 #. module: hr_attendance
 #: model:ir.model.fields.selection,name:hr_attendance.selection__res_company__attendance_barcode_source__scanner
@@ -874,6 +915,13 @@ msgstr "Vuoi uscire?"
 #, python-format
 msgid "Warning"
 msgstr "Avviso"
+
+#. module: hr_attendance
+#. odoo-javascript
+#: code:addons/hr_attendance/static/src/client_action/kiosk_mode/kiosk_mode.xml:0
+#, python-format
+msgid "Welcome to"
+msgstr "Benvenuto a"
 
 #. module: hr_attendance
 #. odoo-javascript

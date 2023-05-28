@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
@@ -28,7 +28,7 @@ msgid "Additional info"
 msgstr "Información adicional"
 
 #. module: partner_autocomplete
-#. openerp-web
+#. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
 msgid "Buy more credits"
@@ -40,6 +40,7 @@ msgid "Companies"
 msgstr "Empresas"
 
 #. module: partner_autocomplete
+#. odoo-python
 #: code:addons/partner_autocomplete/models/res_company.py:0
 #, python-format
 msgid "Company auto-completed by Odoo Partner Autocomplete Service"
@@ -90,12 +91,7 @@ msgid "HTTP Routing"
 msgstr "Enrutamiento HTTP"
 
 #. module: partner_autocomplete
-#: model:ir.model,name:partner_autocomplete.model_iap_account
-msgid "IAP Account"
-msgstr "Cuenta IAP"
-
-#. module: partner_autocomplete
-#. openerp-web
+#. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
 #, python-format
 msgid "IAP Account Token missing"
@@ -122,11 +118,6 @@ msgid "Is synched"
 msgstr "Está sincronizado"
 
 #. module: partner_autocomplete
-#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync____last_update
-msgid "Last Modified on"
-msgstr "Última modificación el:"
-
-#. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__write_uid
 msgid "Last Updated by"
 msgstr "Última actualización por"
@@ -137,13 +128,14 @@ msgid "Last Updated on"
 msgstr "Última actualización el"
 
 #. module: partner_autocomplete
+#. odoo-python
 #: code:addons/partner_autocomplete/models/iap_autocomplete_api.py:0
 #, python-format
 msgid "No account token"
 msgstr "No token de cuenta"
 
 #. module: partner_autocomplete
-#. openerp-web
+#. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
 #, python-format
 msgid "Not enough credits for Partner Autocomplete"
@@ -156,8 +148,6 @@ msgstr "Partner"
 
 #. module: partner_autocomplete
 #: model:ir.actions.server,name:partner_autocomplete.ir_cron_partner_autocomplete_ir_actions_server
-#: model:ir.cron,cron_name:partner_autocomplete.ir_cron_partner_autocomplete
-#: model:ir.cron,name:partner_autocomplete.ir_cron_partner_autocomplete
 msgid "Partner Autocomplete : Sync with remote DB"
 msgstr "Autocompletar contacto: sincronización con la base de datos remota"
 
@@ -167,33 +157,37 @@ msgid "Partner Autocomplete Sync"
 msgstr "Sincronización para autocompletar un contacto"
 
 #. module: partner_autocomplete
+#. odoo-python
 #: code:addons/partner_autocomplete/models/res_partner.py:0
 #, python-format
 msgid "Partner created by Odoo Partner Autocomplete Service"
 msgstr "Contacto creado por el servicio de autocompletado de contacto de Odoo"
 
 #. module: partner_autocomplete
-#. openerp-web
+#. odoo-javascript
+#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
 msgid "Placeholder"
 msgstr "Marcador de posición"
 
 #. module: partner_autocomplete
-#. openerp-web
+#. odoo-javascript
+#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_fieldchar.js:0
 #: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_many2one.js:0
 #, python-format
 msgid "Searching Autocomplete..."
 msgstr "Buscar en autocompletar...."
 
 #. module: partner_autocomplete
-#. openerp-web
+#. odoo-javascript
 #: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
 msgid "Set Your Account Token"
 msgstr "Configure el token de su cuenta"
 
 #. module: partner_autocomplete
+#. odoo-python
 #: code:addons/partner_autocomplete/models/iap_autocomplete_api.py:0
 #, python-format
 msgid "Test mode"

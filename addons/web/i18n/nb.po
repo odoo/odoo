@@ -11,16 +11,16 @@
 # Eirik Halvorsen <eirik386@gmail.com>, 2023
 # Marius Stedjan <marius@stedjan.com>, 2023
 # Henning Fyllingsnes, 2023
-# Jorunn D. Newth, 2023
 # Martin Trigaux, 2023
+# Jorunn D. Newth, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:16+0000\n"
+"POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Jorunn D. Newth, 2023\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -781,6 +781,8 @@ msgstr "Bruk"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/list/list_controller.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 #, python-format
 msgid "Archive"
@@ -812,23 +814,8 @@ msgstr "Er du sikker på at du vil arkivere de valgte postene?"
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #, python-format
-msgid "Are you sure that you want to archive all this record?"
-msgstr "Er du sikker på at du vil arkivere denne?"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/form/form_controller.js:0
-#: code:addons/web/static/src/legacy/js/views/form/form_controller.js:0
-#, python-format
 msgid "Are you sure that you want to archive this record?"
 msgstr "Er du sikker på at du vil arkivere denne?"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
-#, python-format
-msgid "Are you sure that you want to remove this column ?"
-msgstr "Er du sikker på at du vil fjerne denne kolonnen?"
 
 #. module: web
 #. odoo-javascript
@@ -892,6 +879,16 @@ msgstr ""
 #, python-format
 msgid "Ascending"
 msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.xml:0
+#: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.xml:0
+#: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.xml:0
+#: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.xml:0
+#, python-format
+msgid "Assign"
+msgstr "Tildel"
 
 #. module: web
 #. odoo-javascript
@@ -1323,6 +1320,7 @@ msgstr "Kontekst:"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/fields/x2many/x2many_field.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 #, python-format
 msgid "Control panel buttons"
@@ -3849,16 +3847,6 @@ msgstr "Hurtigopprett"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.xml:0
-#: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.xml:0
-#, python-format
-msgid "Quick assign"
-msgstr ""
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 #, python-format
 msgid ""
@@ -4006,10 +3994,6 @@ msgstr "Gjenstående dager"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
-#: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.xml:0
-#: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #, python-format
@@ -4267,6 +4251,20 @@ msgstr ""
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Search for records"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.js:0
+#, python-format
+msgid "Search user..."
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.js:0
+#, python-format
+msgid "Search users..."
 msgstr ""
 
 #. module: web
@@ -5662,6 +5660,7 @@ msgstr "underordnet av"
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "contains"
 msgstr "inneholder"
@@ -5698,6 +5697,7 @@ msgstr "inneholder ikke"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "doesn't contain"
@@ -5858,6 +5858,7 @@ msgstr "er mellom"
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is equal to"
 msgstr "er lik"
@@ -5889,6 +5890,7 @@ msgstr "er ikke ="
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is not equal to"
 msgstr "er ikke lik"
@@ -5908,6 +5910,8 @@ msgstr "er ikke lik"
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is not set"
 msgstr "er ikke satt"
@@ -5922,6 +5926,8 @@ msgstr "er ikke satt"
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
@@ -6108,6 +6114,13 @@ msgstr "eller"
 #, python-format
 msgid "parent of"
 msgstr "overordnet av"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.xml:0
+#, python-format
+msgid "props.placeholder"
+msgstr ""
 
 #. module: web
 #. odoo-javascript

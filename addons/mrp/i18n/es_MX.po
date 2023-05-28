@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Lucia Pacheco, 2023
 # Cécile Collart <cco@odoo.com>, 2023
 # Martin Trigaux, 2023
@@ -12,14 +11,15 @@
 # Iran Villalobos López, 2023
 # Fernanda Alvarez, 2023
 # Aimée Mendoza Sánchez, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:09+0000\n"
+"POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,7 +82,7 @@ msgstr "# Órdenes de trabajo"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_template__used_in_bom_count
 msgid "# of BoM Where is Used"
-msgstr "Número de LdM donde se utiliza"
+msgstr "Número de lista de materiales donde se utiliza"
 
 #. module: mrp
 #. odoo-python
@@ -122,7 +122,7 @@ msgstr "%s no pueden ser eliminados. Intente cancelarlos antes."
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_bom_structure
 msgid "'Bom Overview - %s' % object.display_name"
-msgstr "'Resumen de la LdM - %s' % object.display_name"
+msgstr "'Resumen de la lista de materiales - %s' % object.display_name"
 
 #. module: mrp
 #: model:ir.actions.report,print_report_name:mrp.action_report_finished_product
@@ -511,7 +511,7 @@ msgstr "Actividades"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_exception_decoration
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Decoración de actividad  de excepción"
+msgstr "Decoración de actividad de excepción"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_state
@@ -544,7 +544,8 @@ msgid ""
 msgstr ""
 "Agregue subproductos a las listas de materiales. Esto se puede usar para "
 "obtener varios productos terminados al mismo tiempo. Sin esta opción, solo "
-"puede hacer:  A + B = C. Con ella: A + B = C + D."
+"puede hacer:  A + B = C. Sin embargo, con la opción puede hacer: A + B = C +"
+" D."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -791,15 +792,15 @@ msgid ""
 " which components should be sent to the subcontractor."
 msgstr ""
 "Tiempo medio de entrega en días para fabricar este producto. En el caso de "
-"una LdM de varios niveles, se agregarán los plazos de fabricación de los "
-"componentes. En caso de que el producto sea subcontratado, esto puede "
-"utilizarse para determinar la fecha en la que los componentes deben enviarse"
-" al subcontratista."
+"una lista de materiales de varios niveles, se agregarán los plazos de "
+"fabricación de los componentes. En caso de que el producto sea "
+"subcontratado, esto puede utilizarse para determinar la fecha en la que los "
+"componentes deben enviarse al subcontratista."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_report_bom_structure
 msgid "BOM Overview Report"
-msgstr "Reporte de resumen de LdM"
+msgstr "Reporte del resumen de la lista de materiales"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_product_product__variant_bom_ids
@@ -1287,9 +1288,9 @@ msgstr "Calcular según el tiempo registrado"
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
 "buying or manufacturing the components and/or subassemblies."
+"                                                       Also note that "
+"purchase security lead times will be added when appropriate."
 msgstr ""
-"Calcular los días necesarios para reabastecer todos los componentes de la "
-"LdM, ya sea al comprar o fabricar los componentes y/o subconjuntos."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1478,11 +1479,9 @@ msgstr "Crear un nuevo rendimiento de órdenes de trabajo"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__days_to_prepare_mo
 msgid ""
-"Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
-"Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism."
+"Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+"Note that security lead times will also be considered when appropriate."
 msgstr ""
-"Crear y confirmar las órdenes de fabricación con estos días de antelación, para tener el tiempo suficiente de reabastecer los componentes o fabricar productos semiterminados.\n"
-"Tome en cuenta que esto no afecta la fecha programada de la orden de fabricación, la cual aún respeta el mecanismo \"justo a tiempo\"."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -2462,6 +2461,13 @@ msgid "In Progress"
 msgstr "En progreso"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/report/mrp_report_mo_overview.py:0
+#, python-format
+msgid "In Transit"
+msgstr "En tránsito "
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__index_content
 msgid "Indexed Content"
 msgstr "Contenido indexado"
@@ -3059,11 +3065,6 @@ msgstr "Fabricaciones"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_mark_done
 msgid "Mark as Done"
-msgstr "Marcar como hecho"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
-msgid "Mark as done"
 msgstr "Marcar como hecho"
 
 #. module: mrp
@@ -4745,6 +4746,7 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
+#: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Some workorders require another workorder to be completed first"
 msgstr ""
@@ -5448,13 +5450,6 @@ msgstr "Por lanzar"
 #, python-format
 msgid "To Order"
 msgstr "Por ordenar"
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_mo_overview.py:0
-#, python-format
-msgid "In Transit"
-msgstr "En tránsito "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban

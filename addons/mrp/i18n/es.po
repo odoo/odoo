@@ -6,11 +6,11 @@
 # Patricia Lorenzo Bartolomé, 2023
 # Víctor Martínez <victor.martinez@tecnativa.com>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # oihane <oihanecruce@gmail.com>, 2023
 # Ernesto Tejeda <ernesto.tejeda87@gmail.com>, 2023
 # Camille Dantinne <cmd@odoo.com>, 2023
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2023
-# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # Martin Trigaux, 2023
 # Carlos Gómez, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
@@ -19,7 +19,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:09+0000\n"
+"POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
 "Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -1276,9 +1276,9 @@ msgstr "Calcular según el tiempo registrado"
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
 "buying or manufacturing the components and/or subassemblies."
+"                                                       Also note that "
+"purchase security lead times will be added when appropriate."
 msgstr ""
-"Calcular los días necesarios para reabastecer todos los componentes de la "
-"LdM, ya sea comprando o fabricando los componentes y/o subconjuntos."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1467,11 +1467,9 @@ msgstr "Crear un nuevo rendimiento de órdenes de trabajo"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__days_to_prepare_mo
 msgid ""
-"Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
-"Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism."
+"Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+"Note that security lead times will also be considered when appropriate."
 msgstr ""
-"Crear y confirmar las órdenes de fabricación con estos días de antelación, para tener el tiempo suficiente de reabastecer los componentes o fabricar productos semiterminados.\n"
-"Tome en cuenta que esto no afecta la fecha programada de la orden de fabricación, la cual aún respeta el mecanismo \"justo a tiempo\"."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -2444,6 +2442,13 @@ msgid "In Progress"
 msgstr "En proceso"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/report/mrp_report_mo_overview.py:0
+#, python-format
+msgid "In Transit"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__index_content
 msgid "Indexed Content"
 msgstr "Contenido indexado"
@@ -3042,11 +3047,6 @@ msgstr ""
 #: model:ir.actions.server,name:mrp.action_production_order_mark_done
 msgid "Mark as Done"
 msgstr "Marcar como Hecho"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
-msgid "Mark as done"
-msgstr "Marcar como hecho"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -4724,6 +4724,7 @@ msgstr ""
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
+#: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Some workorders require another workorder to be completed first"
 msgstr ""
@@ -5412,13 +5413,6 @@ msgstr "Lanzar"
 #, python-format
 msgid "To Order"
 msgstr "Para Ordenar"
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_mo_overview.py:0
-#, python-format
-msgid "In Transit"
-msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban

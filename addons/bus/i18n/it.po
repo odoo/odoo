@@ -3,15 +3,15 @@
 # 	* bus
 # 
 # Translators:
-# Luca Carlo, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Luca Carlo, 2023
 # Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -58,11 +58,6 @@ msgid "Display Name"
 msgstr "Nome visualizzato"
 
 #. module: bus
-#: model:ir.model,name:bus.model_ir_http
-msgid "HTTP Routing"
-msgstr "Instradamento HTTP"
-
-#. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
 #: model:ir.model.fields,field_description:bus.field_bus_presence__id
 msgid "ID"
@@ -74,12 +69,6 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:bus.field_res_users__im_status
 msgid "IM Status"
 msgstr "Stato IM"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus____last_update
-#: model:ir.model.fields,field_description:bus.field_bus_presence____last_update
-msgid "Last Modified on"
-msgstr "Ultima modifica il"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__last_poll
@@ -122,7 +111,7 @@ msgid "Online"
 msgstr "In linea"
 
 #. module: bus
-#. openerp-web
+#. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 #, python-format
@@ -130,7 +119,7 @@ msgid "Refresh"
 msgstr "Ricarica"
 
 #. module: bus
-#. openerp-web
+#. odoo-javascript
 #: code:addons/bus/static/src/services/assets_watchdog_service.js:0
 #, python-format
 msgid "The page appears to be out of date."
@@ -150,13 +139,6 @@ msgstr "Presenza utente"
 #: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
 msgid "Users"
 msgstr "Utenti"
-
-#. module: bus
-#. openerp-web
-#: code:addons/bus/static/src/services/bus_service.js:0
-#, python-format
-msgid "Websocket connection lost. Trying to reconnect..."
-msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_ir_websocket

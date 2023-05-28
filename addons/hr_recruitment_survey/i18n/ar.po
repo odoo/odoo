@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:13+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -25,7 +25,7 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant name]</t><br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant name]</t><br><br>\n"
 "        <t>\n"
 "            You've progressed through the recruitment process and we would like you to answer some questions.\n"
 "        </t>\n"
@@ -37,7 +37,7 @@ msgid ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the interview for <t t-out=\"format_date(object.deadline)\">[deadline date]</t>.<br/><br/>\n"
+"            Please answer the interview for <t t-out=\"format_date(object.deadline)\">[deadline date]</t>.<br><br>\n"
 "        </t>\n"
 "        <t>\n"
 "            We wish you good luck! Thank you in advance for your participation.\n"
@@ -46,60 +46,6 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        عزيزنا <t t-out=\"object.partner_id.name or 'applicant'\">[اسم المتقدم للوظيفة]</t><br/><br/>\n"
-"        <t>\n"
-"            لقد انتقلت إلى المراحل التالية من مراحل التوظيف، ونريد منك أن تجيب على بعض الأسئلة.\n"
-"        </t>\n"
-"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                <t>\n"
-"                    ابدأ بمقابلة العمل المكتوبة\n"
-"                </t>\n"
-"            </a>\n"
-"        </div>\n"
-"        <t t-if=\"object.deadline\">\n"
-"            يرجى الإجابة على مقابلة العمل قبل <t t-out=\"format_date(object.deadline)\">[تاريخ الموعد النهائي]</t>.<br/><br/>\n"
-"        </t>\n"
-"        <t>\n"
-"            نتمنى لك حظاً موفقاً! نشكرك على مشاركتك.\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"            "
-
-#. module: hr_recruitment_survey
-#: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
-msgid ""
-"<p>Please fill information about you: who you are, what are your education, experience, and activities.\n"
-"    It will help us managing your application.</p>"
-msgstr ""
-"<p>رجاءً قم بملء المعلومات عن نفسك: من أنت، وماذا درست، وما خبرتك، والأنشطة التي تقوم بها.\n"
-"    سوف يساعدنا ذلك على التعامل مع تقديمك.</p> "
-
-#. module: hr_recruitment_survey
-#: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
-#: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
-msgid ""
-"<p>Please summarize your education history: schools, location, diplomas, "
-"...</p>"
-msgstr ""
-"<p>يرجى تلخيص مسيرتك التعليمية: المدارس التي ارتدتها، المواقع، شهادات "
-"الدبلوم، ...</p> "
-
-#. module: hr_recruitment_survey
-#: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
-msgid ""
-"<p>Please tell us a bit more about yourself: what are your main activities, "
-"...</p>"
-msgstr "<p>أخبرنا المزيد عن نفسك رجاءً: الأنشطة التي تمارسها عادةً، ...</p> "
-
-#. module: hr_recruitment_survey
-#: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
-msgid ""
-"<p>What are your main knowledge regarding the job you are applying to?</p>"
-msgstr "<p>ما هي معرفتك الأساسية فيما يتعلق بالوظيفة التي تقدم لها؟</p> "
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -141,7 +87,6 @@ msgstr ""
 "المقابلة من جميع المتقدمين الذين يتقدمون لهذه الوظيفة "
 
 #. module: hr_recruitment_survey
-#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_job_survey_inherit
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Display Interview Form"
 msgstr "عرض استمارة المقابلة "
@@ -254,11 +199,31 @@ msgstr ""
 " "
 
 #. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
+msgid ""
+"Please fill information about you: who you are, what are your education, experience, and activities.\n"
+"    It will help us managing your application."
+msgstr ""
+
+#. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 #, python-format
 msgid "Please provide an applicant name."
 msgstr "يرجى ذكر اسم المتقدم للوظيفة "
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
+msgid ""
+"Please summarize your education history: schools, location, diplomas, ..."
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
+msgid ""
+"Please tell us a bit more about yourself: what are your main activities, ..."
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
@@ -333,6 +298,11 @@ msgstr "فائق الأهمية "
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q3
 msgid "Were you referred by an employee?"
 msgstr "هل تمت إحالتك من قِبَل موظف؟ "
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
+msgid "What are your main knowledge regarding the job you are applying to?"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8

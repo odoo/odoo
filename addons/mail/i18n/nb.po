@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:09+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
@@ -4035,13 +4035,6 @@ msgid "Generic User From Record"
 msgstr ""
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid "Go to the configuration panel"
-msgstr "Gå til konfigurasjonspanelet"
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__group
 msgid "Group"
 msgstr "Gruppe"
@@ -5767,6 +5760,13 @@ msgstr "Marker som gjøremål"
 #, python-format
 msgid "Mark as done"
 msgstr "Marker som fullført"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "Media devices unobtainable"
+msgstr ""
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
@@ -7997,16 +7997,16 @@ msgid "SSL"
 msgstr "SSL"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
-msgid "SSL/TLS"
-msgstr "SSL/TLS"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/call_settings_menu.js:0
 #, python-format
 msgid "SSL might not be set up properly"
 msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
+msgid "SSL/TLS"
+msgstr "SSL/TLS"
 
 #. module: mail
 #. odoo-javascript
@@ -10368,17 +10368,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid ""
-"You cannot create a new user from here.\n"
-" To create new user please go to configuration panel."
-msgstr ""
-"Du kan ikke opprette nye brukere herfra.\n"
-"For å opprette ny bruker, gå til konfigurasjonspanelet."
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -10436,6 +10425,13 @@ msgid ""
 msgstr ""
 "Du kan legge til filer i denne malen, som skal legges til all e-post som "
 "blir opprettet fra denne malen."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_template.py:0
+#, python-format
+msgid "You may not define a template on an abstract model: %s"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -24084,13 +24080,6 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "medal"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/models/call_settings_menu.js:0
-#, python-format
-msgid "Media devices unobtainable"
 msgstr ""
 
 #. module: mail

@@ -6,14 +6,15 @@
 # Friederike Fasterling-Nesselbosch, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:13+0000\n"
+"POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,62 +38,44 @@ msgstr "<br/> Sarai avvisato non appena verrà pubblicato un nuovo contenuto."
 #: model:mail.template,body_html:mail_group.mail_template_list_subscribe
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                Hello,<br/><br/>\n"
-"                You have requested to be subscribed to the mailing list <strong t-out=\"object.name or ''\"/>.\n"
-"                <br/><br/>\n"
-"                To confirm, please visit the following link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
-"                <br/><br/>\n"
+"                Hello,<br><br>\n"
+"                You have requested to be subscribed to the mailing list <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                To confirm, please visit the following link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
 "                If this was a mistake or you did not requested this action, please ignore this message.\n"
 "            </div>\n"
 "        "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"               Buongiorno,<br/><br/>\n"
-"  Hai chiesto di essere iscritto alla mailing list<strong t-out=\"object.name or ''\"/>.\n"
-"                <br/><br/>\n"
-"Per confermare, visita il seguente link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
-"                <br/><br/>\n"
-"                Se questo è stato un errore o non hai richiesto questa azione, ignora questo messaggio.\n"
-"            </div>\n"
-"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
-"                Hello,<br/><br/>\n"
-"                You have requested to be unsubscribed to the mailing list <strong t-out=\"object.name or ''\"/>.\n"
-"                <br/><br/>\n"
-"                To confirm, please visit the following link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
-"                <br/><br/>\n"
+"                Hello,<br><br>\n"
+"                You have requested to be unsubscribed to the mailing list <strong t-out=\"object.name or ''\"></strong>.\n"
+"                <br><br>\n"
+"                To confirm, please visit the following link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>.\n"
+"                <br><br>\n"
 "                If this was a mistake or you did not requested this action, please ignore this message.\n"
 "            </div>\n"
 "        "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"                Ciao,<br/><br/>\n"
-"  Hai chiesto di essere rimosso dalla mailing list<strong t-out=\"object.name or ''\"/>.\n"
-"                <br/><br/>\n"
-"                 Per confermare, visita il seguente link:\n"
-" <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>.\n"
-"                <br/><br/>\n"
-"                Se questo è stato un errore o non hai richiesto questa azione, ignora questo messaggio.\n"
-"            </div>"
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_guidelines
 msgid ""
 "<div>\n"
-"                <p>Hello <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
+"                <p>Hello <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
 "                <p>Please find below the guidelines of the {{ object.mail_group_id.name }} mailing list.</p>\n"
-"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
 "            </div>\n"
 "        "
 msgstr ""
 "<div>\n"
-"                <p>Ciao <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
-"                <p>Di seguito trovi le linee guida della mailing list {{ object.mail_group_id.name }}.</p>\n"
-"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
+"                <p>Ciao <t t-out=\"object.partner_id.name or ''\"></t>,</p>\n"
+"                <p>di seguito trovi le linee guida per la mailing list {{ object.mail_group_id.name }}.</p>\n"
+"                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"></t></p>\n"
 "            </div>\n"
 "        "
 
@@ -159,6 +142,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_groups
 msgid "<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope-o me-1\" role=\"img\" aria-label=\"Alias\" "
+"title=\"Alias\"/>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.group_name
@@ -724,12 +709,12 @@ msgstr ""
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_subscribe
 msgid "Mail Group: Mailing List Subscription"
-msgstr ""
+msgstr "Gruppo di posta: iscrizione mailing list"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_unsubscribe
 msgid "Mail Group: Mailing List Unsubscription"
-msgstr ""
+msgstr "Gruppo di posta: annullamento iscrizione mailing list"
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_guidelines
@@ -1249,11 +1234,14 @@ msgstr "Inviare linee guida ai nuovi iscritti"
 #: model:mail.template,description:mail_group.mail_template_guidelines
 msgid "Sent to people who subscribed to a mailing group with group guidelines"
 msgstr ""
+"E-mail inviata alle persone che si sono iscritte ad un gruppo di posta "
+"regolato da linee guida"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_unsubscribe
 msgid "Sent to people who unsubscribed from a mailing group"
 msgstr ""
+"E-mail inviata alle persone che annullano l'iscrizione ad un gruppo di posta"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
@@ -1285,7 +1273,7 @@ msgstr "Iscriviti"
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_subscribe
 msgid "Subscription confirmation to a mailing group"
-msgstr ""
+msgstr "Conferma iscrizione mailing list"
 
 #. module: mail_group
 #. odoo-python

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-30 07:14+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -261,6 +261,12 @@ msgid "Analytic Distribution"
 msgstr "Kostenstellen Distribution"
 
 #. module: hr_expense
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense__analytic_distribution_search
+#: model:ir.model.fields,field_description:hr_expense.field_hr_expense_split__analytic_distribution_search
+msgid "Analytic Distribution Search"
+msgstr "Suche nach Kostenstellenverteilung"
+
+#. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
 msgstr "Anwendbarkeit des Analyseplans"
@@ -357,6 +363,8 @@ msgid ""
 "Both price-included and price-excluded taxes will behave as price-included "
 "taxes for expenses."
 msgstr ""
+"Sowohl Steuern, die im Preis inbegriffen sind, als auch solche die nicht im "
+"Preis enthalten sind, werden als Steuern im Preis für Spesen betrachtet."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__can_approve
@@ -1492,7 +1500,7 @@ msgstr "Zahlungsstatus"
 #: code:addons/hr_expense/models/account_payment.py:0
 #, python-format
 msgid "Payment created for: %s"
-msgstr ""
+msgstr "Zahlung erstellt für: %s"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -2293,6 +2301,8 @@ msgid ""
 "You cannot do this modification since the payment is linked to an expense "
 "report."
 msgstr ""
+"Diese Änderung ist nicht möglich, da die Zahlung mit einer Spesenabrechnung "
+"verknüpft ist."
 
 #. module: hr_expense
 #. odoo-python

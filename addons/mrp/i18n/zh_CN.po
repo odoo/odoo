@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:09+0000\n"
+"POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
 "Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -1251,7 +1251,9 @@ msgstr "根据跟踪时间进行计算"
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
 "buying or manufacturing the components and/or subassemblies."
-msgstr "计算通过购买或生产组件和/或子总成从物料清单（BOM）重新供应所有组件所需的天数。"
+"                                                       Also note that "
+"purchase security lead times will be added when appropriate."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1435,11 +1437,9 @@ msgstr "创建新的工单绩效"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__days_to_prepare_mo
 msgid ""
-"Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
-"Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism."
+"Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+"Note that security lead times will also be considered when appropriate."
 msgstr ""
-"提前创建并确认生产订单、以便有充足时间补充组件或生产半成品的天数。\n"
-"请注意，这不会影响生产订单（MO）排定日期，生产订单仍遵循准时机制。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -2385,6 +2385,13 @@ msgid "In Progress"
 msgstr "进行中"
 
 #. module: mrp
+#. odoo-python
+#: code:addons/mrp/report/mrp_report_mo_overview.py:0
+#, python-format
+msgid "In Transit"
+msgstr ""
+
+#. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__index_content
 msgid "Indexed Content"
 msgstr "索引内容"
@@ -2966,11 +2973,6 @@ msgstr "生产"
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_mark_done
 msgid "Mark as Done"
-msgstr "标记为已完成"
-
-#. module: mrp
-#: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_tree_editable_view
-msgid "Mark as done"
 msgstr "标记为已完成"
 
 #. module: mrp
@@ -4613,6 +4615,7 @@ msgstr "部分工单已开始，不能取消安排该生产订单。"
 #. module: mrp
 #. odoo-python
 #: code:addons/mrp/models/mrp_workorder.py:0
+#: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "Some workorders require another workorder to be completed first"
 msgstr "部分工单要求先完成另外工单"
@@ -5262,13 +5265,6 @@ msgstr "待启动"
 #, python-format
 msgid "To Order"
 msgstr "待订购"
-
-#. module: mrp
-#. odoo-python
-#: code:addons/mrp/report/mrp_report_mo_overview.py:0
-#, python-format
-msgid "In Transit"
-msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban

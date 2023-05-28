@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:08+0000\n"
+"POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -79,7 +79,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
 #, python-format
 msgid "%s product(s) found for \"%s\"."
 msgstr "%s Produkt(e) gefunden für „%s“."
@@ -243,7 +243,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "<strong>Amount of discounts</strong>:"
-msgstr ""
+msgstr "<strong>Anzahl Rabatte</strong>:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -263,7 +263,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "<strong>Number of discounts</strong>:"
-msgstr ""
+msgstr "<strong>Anzahl Rabatte</strong>:"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -749,8 +749,8 @@ msgstr "Sobald wie möglich"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__closing
-msgid "At the session closing"
-msgstr "Beim Schließen der Sitzung"
+msgid "At the session closing (faster)"
+msgstr "Beim Schließen der Sitzung (schneller)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_update_stock_quantities
@@ -1700,6 +1700,9 @@ msgstr "Benutzerdefinierte Kopf- & Fußzeile"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ActionpadWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ActionpadWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ActionpadWidget.xml:0
+#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/CustomerButton.xml:0
+#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/CustomerButton.xml:0
+#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/CustomerButton.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__partner_id
@@ -1887,7 +1890,7 @@ msgstr "Standard-Journale"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SetPricelistButton.js:0
 #, python-format
 msgid "Default Price"
-msgstr ""
+msgstr "Standardpreis"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pricelist_id
@@ -1974,7 +1977,7 @@ msgstr "Bezahlte Aufträge entfernen"
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.js:0
 #, python-format
 msgid "Delete Paid Orders?"
-msgstr ""
+msgstr "Bezahlte Aufträge löschen?"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1988,7 +1991,7 @@ msgstr "Unbezahlte Aufträge entfernen"
 #: code:addons/point_of_sale/static/src/app/debug/debug_widget.js:0
 #, python-format
 msgid "Delete Unpaid Orders?"
-msgstr ""
+msgstr "Unbezahlte Aufträge löschen?"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.desk_organizer_product_template
@@ -2092,6 +2095,7 @@ msgstr "Rabatthinweis"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/SaleDetailsReport.xml:0
 #: code:addons/point_of_sale/static/src/xml/SaleDetailsReport.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
@@ -2761,8 +2765,8 @@ msgstr "Um einen Verkauf zu löschen muss diese neu oder storniert sein."
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__real
-msgid "In real time (recommended)"
-msgstr "In Echtzeit (empfohlen)"
+msgid "In real time (accurate but slower)"
+msgstr "In Echtzeit (genau, aber langsamer)"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3472,6 +3476,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Network Error"
@@ -3571,14 +3576,6 @@ msgstr ""
 "gehen und einen aus dem Rechnungsraster installieren."
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#, python-format
-msgid "No customer found for"
-msgstr "Kein Kunde gefunden für"
-
-#. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all_filtered
@@ -3591,6 +3588,20 @@ msgstr "Noch keine Daten vorhanden!"
 #, python-format
 msgid "No link to an invoice for %s."
 msgstr "Kein Link zu einer Rechnung für %s."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/PartnerListScreen/PartnerListScreen.js:0
+#, python-format
+msgid "No more customer found for \"%s\"."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
+#, python-format
+msgid "No more product found for \"%s\"."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3613,7 +3624,7 @@ msgstr "Kein Produkt gefunden für"
 #: code:addons/point_of_sale/controllers/main.py:0
 #, python-format
 msgid "No sale order found."
-msgstr ""
+msgstr "Kein Verkaufsauftrag gefunden."
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_session
@@ -3990,7 +4001,7 @@ msgstr "Auftragszeilen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Order reference"
-msgstr ""
+msgstr "Auftragsreferenz"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4168,9 +4179,9 @@ msgstr "Zahlungsauftrag"
 #. module: point_of_sale
 #. odoo-javascript
 #. odoo-python
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductScreen.xml:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4796,7 +4807,7 @@ msgstr "PoS Sitzungen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_daily_sales_reports_wizard
 msgid "Pos session"
-msgstr ""
+msgstr "Kassensitzung"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_posbox
@@ -5062,6 +5073,17 @@ msgid "Product information"
 msgstr "Produktinformationen"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
+#, python-format
+msgid ""
+"Product is not loaded. Tried loading the product from the server but there "
+"is a network error."
+msgstr ""
+"Das Produkt wurde nicht geladen. Es wurde versucht, das Produkt vom Server "
+"zu laden, aber es liegt ein Netzwerkfehler vor."
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Product prices on receipts"
 msgstr "Produktpreise auf Belegen"
@@ -5137,6 +5159,13 @@ msgstr "Menge"
 #, python-format
 msgid "REASON"
 msgstr "BEGRÜNDUNG"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/SaleDetailsReport.xml:0
+#, python-format
+msgid "REFUNDED:"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
@@ -5226,10 +5255,10 @@ msgstr "Anzeige aktualisieren"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #, python-format
 msgid "Refund"
 msgstr "Rückerstattung"
@@ -5491,6 +5520,13 @@ msgid "SN"
 msgstr "SN"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/SaleDetailsReport.xml:0
+#, python-format
+msgid "SOLD:"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
 msgid "Sale Line Count"
 msgstr "Anzahl der Verkaufslinien"
@@ -5591,7 +5627,7 @@ msgstr "Kunden suchen ..."
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid "Search Orders..."
 msgstr "Suche Aufträge..."
@@ -5611,9 +5647,10 @@ msgstr "Suche Verkaufsauftrag"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
+#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
-msgid "Search database"
-msgstr "Datenbank durchsuchen"
+msgid "Search more"
+msgstr "Mehr suchen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_token
@@ -5783,7 +5820,7 @@ msgstr "Sitzungs-ID"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
 msgid "Session ID:"
-msgstr ""
+msgstr "Sitzungs-ID"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_move_id
@@ -6542,14 +6579,14 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/app/error_handlers/error_handlers.js:0
 #, python-format
 msgid "The order couldn't be sent to the server because you are offline"
-msgstr ""
+msgstr "Der Auftrag konnte nicht gesendet werden, weil Sie offline sind"
 
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "The order has been already paid."
-msgstr ""
+msgstr "Der Auftrag wurde bereits bezahlt."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6757,20 +6794,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_end
 msgid "Theoretical Closing Balance"
 msgstr "Errechneter Endsaldo"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#, python-format
-msgid "There are no customers."
-msgstr "Es gibt keine Kunden."
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#, python-format
-msgid "There are no loaded customers."
-msgstr "Es wurden keine Kunden geladen."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7722,7 +7745,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/SaveButton.js:0
 #, python-format
 msgid "You cannot save an empty order"
-msgstr ""
+msgstr "Sie können keinen leeren Auftrag speichern"
 
 #. module: point_of_sale
 #. odoo-python
@@ -7738,6 +7761,15 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "You cannot use the same journal on multiples cash payment methods."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You don't have the access rights to get the point of sale closing control "
+"data."
 msgstr ""
 
 #. module: point_of_sale
@@ -7965,7 +7997,7 @@ msgstr "powered by"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_request_with_code
 msgid "qx9h1"
-msgstr ""
+msgstr "qx9h1"
 
 #. module: point_of_sale
 #. odoo-python
@@ -8018,11 +8050,3 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "Waren Duplikate bestehender Aufträge"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid ""
-"You don't have the access rights to get the point of sale closing control "
-"data."
-msgstr ""

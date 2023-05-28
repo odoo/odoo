@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~14.4\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-12 07:50+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -47,7 +47,6 @@ msgstr ""
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
 msgid "Applicable Code"
 msgstr "Toepasbare code"
 
@@ -73,25 +72,6 @@ msgstr ""
 ":param relatie: res.relatie recordset singleton of None"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
-msgid ""
-"Compute the amount of the tax by setting the variable 'result'.\n"
-"\n"
-":param base_amount: float, actual amount on which the tax is applied\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"Bereken het bedrag van de BTW door de variabele 'result' in te stellen.\n"
-"\n"
-":param base_amount: float, het werkelijke bedrag waarover de BTW berekend wordt\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton of None\n"
-":param relatie: res.relatie recordset singleton of None"
-
-#. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
 msgid ""
 "Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
@@ -111,27 +91,8 @@ msgstr ""
 ":param relatie: res.relatie recordset singleton of None"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
-msgid ""
-"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
-"\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
-msgstr ""
-"Bepaal of de BTW zal toegepast worden door de variabele 'result' op True of False te plaatsen.\n"
-"\n"
-":param price_unit: float\n"
-":param quantity: float\n"
-":param product: product.product recordset singleton of None\n"
-":param relatie: res.relatie recordset singleton of None"
-
-#. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
 #: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax__amount_type__code
-#: model:ir.model.fields.selection,name:account_tax_python.selection__account_tax_template__amount_type__code
 msgid "Python Code"
 msgstr "Python code"
 
@@ -142,11 +103,5 @@ msgstr "BTW"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
 msgid "Tax Computation"
 msgstr "BTW berekening"
-
-#. module: account_tax_python
-#: model:ir.model,name:account_tax_python.model_account_tax_template
-msgid "Templates for Taxes"
-msgstr "Sjablonen voor BTW"

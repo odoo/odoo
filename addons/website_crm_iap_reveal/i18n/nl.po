@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -135,6 +135,7 @@ msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: website_crm_iap_reveal
+#. odoo-python
 #: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Enter Valid Regex."
@@ -176,11 +177,6 @@ msgid "High"
 msgstr "Hoog"
 
 #. module: website_crm_iap_reveal
-#: model:ir.model,name:website_crm_iap_reveal.model_iap_account
-msgid "IAP Account"
-msgstr "IAP account"
-
-#. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_lead__reveal_iap_credits
 msgid "IAP Credits"
 msgstr "IAP Credits"
@@ -201,12 +197,6 @@ msgstr "IP-adres"
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__industry_tag_ids
 msgid "Industries"
 msgstr "Industrieën"
-
-#. module: website_crm_iap_reveal
-#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule____last_update
-#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view____last_update
-msgid "Last Modified on"
-msgstr "Laatst gewijzigd op"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__write_uid
@@ -248,19 +238,7 @@ msgid "Lead Generation Views"
 msgstr "Lead geneer weergaves"
 
 #. module: website_crm_iap_reveal
-#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
-#, python-format
-msgid ""
-"Lead Generation requires a GeoIP resolver which could not be found on your "
-"system. Please consult https://pypi.org/project/GeoIP/."
-msgstr ""
-"Lead Generatie vereist een GeoIP resolver die niet op je systeem kon worden "
-"gevonden. Consulteer https://pypi.org/project/GeoIP/ aub."
-
-#. module: website_crm_iap_reveal
 #: model:ir.actions.server,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead_ir_actions_server
-#: model:ir.cron,cron_name:website_crm_iap_reveal.ir_cron_crm_reveal_lead
-#: model:ir.cron,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead
 msgid "Lead Generation: Leads/Opportunities Generation"
 msgstr "Leadgeneratie: Leads/Verkoopkansen generatie"
 
@@ -299,12 +277,6 @@ msgstr "Maximaal 5 contacten zijn toegestaan!"
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__priority__1
 msgid "Medium"
 msgstr "Medium"
-
-#. module: website_crm_iap_reveal
-#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
-#, python-format
-msgid "Missing Library"
-msgstr "Ontbrekende bibliotheek"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_view__reveal_state__not_found
@@ -360,6 +332,7 @@ msgid "Opportunity Generation Conditions"
 msgstr "Condities genereren verkoopkanse"
 
 #. module: website_crm_iap_reveal
+#. odoo-python
 #: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Opportunity created by Odoo Lead Generation"

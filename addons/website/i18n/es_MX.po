@@ -17,7 +17,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:08+0000\n"
+"POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
@@ -503,6 +503,7 @@ msgstr "<b>Agregar</b> la imagen seleccionada."
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
@@ -4168,7 +4169,7 @@ msgstr "Habilite la facturación en su Proyecto de Google"
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_model__website_form_access
 msgid "Enable the form builder feature for this model."
-msgstr "Habilitar la función de creación de formularios para este modelo."
+msgstr "Habilite la función de creación de formularios para este modelo."
 
 #. module: website
 #. odoo-javascript
@@ -4800,7 +4801,7 @@ msgstr "Contactar"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__social_github
 msgid "GitHub Account"
-msgstr "Cuenta GitHub"
+msgstr "Cuenta de GitHub"
 
 #. module: website
 #: model:website.configurator.feature,description:website.feature_module_forum
@@ -4859,16 +4860,16 @@ msgid ""
 "customers. Simple words communicate better than big words and pompous "
 "language."
 msgstr ""
-"Una buena copia comienza con entender cómo su producto o servicio ayuda a "
-"sus clientes. Las palabras simples se comunican mejor que las palabras "
-"grandes y el lenguaje pomposo."
+"Para escribir un buen copy debe entender cómo su producto o servicio ayuda a"
+" sus clientes. Las palabras simples dicen mucho más que un lenguaje pomposo "
+"y rimbombante."
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "Good job! It's time to <b>Save</b> your work."
-msgstr "¡Buen trabajo! Es hora de <b>guardar</b> su trabajo."
+msgstr "¡Bien hecho! Es hora de <b>guardar</b> su trabajo."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics
@@ -4898,7 +4899,7 @@ msgstr "Mapa de Google"
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
 #, python-format
 msgid "Google Map API Key"
-msgstr "Clave de la API de Google Map"
+msgstr "Clave de la API de Google Maps"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__google_maps_api_key
@@ -4940,11 +4941,11 @@ msgid ""
 " story will sound fake and lack emotion. No one will be interested. Write "
 "for one person. If it’s genuine for the one, it’s genuine for the rest."
 msgstr ""
-"Las grandes historias son <b>para todos</b> incluso si solo fueron escritas "
+"Las grandes historias son <b>para todos</b> incluso si se escribieron "
 "<b>para una sola persona</b>. Si trata de escribirla pensando en un público "
-"amplio y general, su historia sonará falsa y faltante de emoción. A nadie le"
+"amplio y general, su historia sonará falsa y no será emocionante. A nadie le"
 " interesará. Escriba para una persona. Si es genuina para una persona, lo "
-"será para el resto."
+"será para las demás."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_block
@@ -4965,7 +4966,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Grid"
-msgstr "Rejilla"
+msgstr "Tabla"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.menu_search
@@ -6676,11 +6677,6 @@ msgid "Mobile"
 msgstr "Móvil"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.snippets
-msgid "Mobile Preview"
-msgstr "Vista previa en celular"
-
-#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
@@ -6688,7 +6684,12 @@ msgid "Mobile Alignment"
 msgstr "Alineación móvil"
 
 #. module: website
-#. openerp-web
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Mobile Preview"
+msgstr "Vista previa en celular"
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Mobile menu"

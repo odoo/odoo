@@ -5,17 +5,17 @@
 # Translators:
 # Shigurefox <tom.liang@omniwaresoft.com.tw>, 2023
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
-# Tony Ng, 2023
 # Benson <Benson.Dr@Gmail.com>, 2023
 # Martin Trigaux, 2023
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 10:27+0000\n"
+"POT-Creation-Date: 2023-05-26 07:04+0000\n"
 "PO-Revision-Date: 2023-05-02 09:42+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -939,6 +939,22 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_lv
+msgid ""
+"\n"
+"        Chart of Accounts (COA) Template for Latvia's Accounting.\n"
+"        This module also includes:\n"
+"        * Tax groups,\n"
+"        * Most common Latvian Taxes,\n"
+"        * Fiscal positions,\n"
+"        * Latvian bank list.\n"
+"\n"
+"        author is Allegro IT (visit for more information https://www.allegro.lv)\n"
+"        co-author is Chick.Farm (visit for more information https://www.myacc.cloud)\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_lt
 msgid ""
 "\n"
@@ -1553,6 +1569,14 @@ msgstr ""
 "        如果您增加了授權，請使用它為應收憑單產生 SDD 付款\n"
 "        在其驗證後為其擁有者. 如果您執行以下操作，您將看到一條錯誤訊息\n"
 "        嘗試在無法使用授權付款的應收憑單上使用此方法. "
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_cf_turnstile
+msgid ""
+"\n"
+"        This module implements Cloudflare Turnstile so that you can prevent bot spam on your forms.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_recaptcha
@@ -2618,6 +2642,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ee_reports
+msgid ""
+"\n"
+"Accounting Reports for Estonia\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_co_reports
 msgid ""
 "\n"
@@ -2642,6 +2674,17 @@ msgstr ""
 "Accounting reports for Denmark\n"
 "=================================\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ec_reports
+msgid ""
+"\n"
+"Accounting reports for Ecuador\n"
+"==============================\n"
+"* Adds Balance Sheet report adapted for Ecuador\n"
+"* Adds Profit and Loss report adapted for Ecuador\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi_reports
@@ -2766,6 +2809,16 @@ msgid ""
 "This module allow to generate the IRAS Audit File.\n"
 " - To generate the IRAS Audit File, go to Accounting -> Reporting -> IRAS Audit File\n"
 "    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_tn_reports
+msgid ""
+"\n"
+"Accounting reports for Tunisia\n"
+"================================\n"
+"\n"
+"     "
 msgstr ""
 
 #. module: base
@@ -4640,6 +4693,19 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ec_edi
+msgid ""
+"\n"
+"EDI Ecuadorian Localization\n"
+"===========================\n"
+"Adds electronic documents with its XML, RIDE, with electronic signature and direct connection to tax authority SRI,\n"
+"\n"
+"The supported documents are Invoices, Credit Notes, Debit Notes, Purchase Liquidations and Withholds\n"
+"\n"
+"Includes automations to easily predict the withholding tax to be applied to each purchase invoice\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
 msgid ""
 "\n"
@@ -5340,37 +5406,7 @@ msgid ""
 "* Identification types\n"
 "* Ecuador banks\n"
 "* Partners: Consumidor Final, SRI, IESS, and also basic VAT validation\n"
-"    "
 msgstr ""
-"\n"
-"Functional\n"
-"----------\n"
-"\n"
-"This module adds accounting features for Ecuadorian localization, which\n"
-"represent the minimum requirements to operate a business in Ecuador in compliance\n"
-"with local regulation bodies such as the ecuadorian tax authority -SRI- and the \n"
-"Superintendency of Companies -Super Intendencia de Compañías-\n"
-"\n"
-"Follow the next configuration steps:\n"
-"1. Go to your company and configure your country as Ecuador\n"
-"2. Install the invoicing or accounting module, everything will be handled automatically\n"
-"\n"
-"Highlights:\n"
-"* Ecuadorian chart of accounts will be automatically installed, based on example provided by Super Intendencia de Compañías\n"
-"* List of taxes (including withholds) will also be installed, you can switch off the ones your company doesn't use\n"
-"* Fiscal position, document types, list of local banks, list of local states, etc, will also be installed\n"
-"\n"
-"Technical\n"
-"---------\n"
-"Master Data:\n"
-"* Chart of Accounts, based on recomendation by Super Cías\n"
-"* Ecuadorian Taxes, Tax Tags, and Tax Groups\n"
-"* Ecuadorian Fiscal Positions\n"
-"* Document types (there are about 41 purchase documents types in Ecuador)\n"
-"* Identification types\n"
-"* Ecuador banks\n"
-"* Partners: Consumidor Final, SRI, IESS, and also basic VAT validation\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_pos
@@ -5633,6 +5669,7 @@ msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hk_hr_payroll
+#: model:ir.module.module,description:base.module_l10n_hk_hr_payroll_hsbc_autopay
 msgid ""
 "\n"
 "Hong Kong Payroll Rules.\n"
@@ -8286,6 +8323,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ee
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Estonia in Odoo.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
 msgid ""
 "\n"
@@ -8664,6 +8709,14 @@ msgstr ""
 "    • 蒙古使用的主要稅種\n"
 "\n"
 "財務需求繳款人:巴克斯胡·洛多伊克胡. 布曼IT有限責任公司\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_tn
+msgid ""
+"\n"
+"This is the module to manage the accounting chart for Tunisia in Odoo.\n"
+"=======================================================================\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
@@ -15244,6 +15297,11 @@ msgid "Close the onboarding panel"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_cf_turnstile
+msgid "Cloudflare Turnstile"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.cc
 msgid "Cocos (Keeling) Islands"
 msgstr "科科斯(基林)群島"
@@ -15745,7 +15803,7 @@ msgstr "連接測試成功！"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_consolidation
 msgid "Consolidation"
-msgstr "Consolidation"
+msgstr "合併報表"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__name
@@ -16702,7 +16760,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_board
 msgid "Dashboards"
-msgstr "各類概覽畫面"
+msgstr "概覽畫面"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_data_cleaning
@@ -17786,6 +17844,16 @@ msgid "Ecuadorian Accounting"
 msgstr "厄瓜多爾 會計"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ec_edi
+msgid "Ecuadorian Accounting EDI"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ec_reports
+msgid "Ecuadorian Accounting Reports"
+msgstr ""
+
+#. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_P
 msgid "Education"
 msgstr "教育"
@@ -18218,6 +18286,16 @@ msgstr "違反約束時返回的錯誤消息."
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid ""
+"Error while parsing or validating view:\n"
+"\n"
+"%(error)s"
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_ui_view.py:0
+#, python-format
+msgid ""
 "Error while validating view near:\n"
 "\n"
 "%(fivelines)s\n"
@@ -18226,19 +18304,6 @@ msgstr ""
 "驗證附近檢視時出錯:\n"
 "\n"
 "%(fivelines)s\n"
-"%(error)s"
-
-#. module: base
-#. odoo-python
-#: code:addons/base/models/ir_ui_view.py:0
-#, python-format
-msgid ""
-"Error while validating view:\n"
-"\n"
-"%(error)s"
-msgstr ""
-"驗證檢視時出錯:\n"
-"\n"
 "%(error)s"
 
 #. module: base
@@ -18252,6 +18317,16 @@ msgstr "錯誤!不能建立循環引用的功能表."
 #: model:res.country,name:base.ee
 msgid "Estonia"
 msgstr "愛沙尼亞"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ee
+msgid "Estonia - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ee_reports
+msgid "Estonia - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.sz
@@ -20445,6 +20520,11 @@ msgid "Hong Kong - Payroll"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_hk_hr_payroll_hsbc_autopay
+msgid "Hong Kong - Payroll HSBC AutoPay"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hk_hr_payroll_account
 msgid "Hong Kong - Payroll with Accounting"
 msgstr ""
@@ -22380,6 +22460,11 @@ msgid "Latvia"
 msgstr "拉脫維亞"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_lv
+msgid "Latvia - Accounting"
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.config_wizard_step_view_form
 #: model_terms:ir.ui.view,arch_db:base.ir_actions_todo_tree
 msgid "Launch"
@@ -22551,6 +22636,11 @@ msgstr "連結欄位"
 #: model:ir.module.module,shortdesc:base.module_website_links
 msgid "Link Tracker"
 msgstr "連結追蹤"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_pos_sale_stock_renting
+msgid "Link between PoS and Stock Rental."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_timesheet_grid_holidays
@@ -28187,13 +28277,6 @@ msgstr "在選擇值之前，請將模型設定為建立"
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_model.py:0
-#, python-format
-msgid "Please specify a valid model for the object relation"
-msgstr "請為對像關係指定有效的模型"
-
-#. module: base
-#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid ""
@@ -28212,7 +28295,7 @@ msgstr ""
 #: model:ir.module.category,name:base.module_category_sales_point_of_sale
 #: model:ir.module.module,shortdesc:base.module_point_of_sale
 msgid "Point of Sale"
-msgstr "POS營業點"
+msgstr "POS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_loyalty
@@ -28223,6 +28306,11 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_pos_discount
 msgid "Point of Sale Discounts"
 msgstr "POS折扣"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_sale_stock_renting
+msgid "Point of Sale Rental Stock"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_settle_due
@@ -34032,6 +34120,16 @@ msgid "Tunisia"
 msgstr "突尼斯"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tn
+msgid "Tunisia - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_tn_reports
+msgid "Tunisia - Accounting Reports"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.tr
 msgid "Turkey"
 msgstr "土耳其"
@@ -35192,6 +35290,11 @@ msgid "WMS Accounting"
 msgstr "WMS會計"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_data_merge_stock_account
+msgid "WMS Accounting Merge"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_landed_costs
 msgid "WMS Landed Costs"
 msgstr "WMS到岸成本"
@@ -35205,6 +35308,12 @@ msgstr "瓦利斯群島和富圖納群島"
 #: model:ir.module.module,shortdesc:base.module_stock_picking_batch
 msgid "Warehouse Management: Batch Transfer"
 msgstr "倉庫管理: 批量轉移"
+
+#. module: base
+#: model:ir.module.module,description:base.module_data_merge_stock_account
+#: model:ir.module.module,summary:base.module_data_merge_stock_account
+msgid "Warn user in case of products merging"
+msgstr ""
 
 #. module: base
 #. odoo-python

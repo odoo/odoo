@@ -10,9 +10,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.2\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-11 14:34+0000\n"
+"POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
@@ -138,6 +138,7 @@ msgid "Display Name"
 msgstr "Nombre mostrado"
 
 #. module: website_crm_iap_reveal
+#. odoo-python
 #: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Enter Valid Regex."
@@ -179,11 +180,6 @@ msgid "High"
 msgstr "Alta"
 
 #. module: website_crm_iap_reveal
-#: model:ir.model,name:website_crm_iap_reveal.model_iap_account
-msgid "IAP Account"
-msgstr "Cuenta IAP"
-
-#. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_lead__reveal_iap_credits
 msgid "IAP Credits"
 msgstr "Créditos IAP"
@@ -204,12 +200,6 @@ msgstr "Dirección IP"
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__industry_tag_ids
 msgid "Industries"
 msgstr "Industrias"
-
-#. module: website_crm_iap_reveal
-#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule____last_update
-#: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_view____last_update
-msgid "Last Modified on"
-msgstr "Última modificación el"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields,field_description:website_crm_iap_reveal.field_crm_reveal_rule__write_uid
@@ -251,20 +241,7 @@ msgid "Lead Generation Views"
 msgstr "Vistas de generación de clientes potenciales"
 
 #. module: website_crm_iap_reveal
-#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
-#, python-format
-msgid ""
-"Lead Generation requires a GeoIP resolver which could not be found on your "
-"system. Please consult https://pypi.org/project/GeoIP/."
-msgstr ""
-"La generación de clientes potenciales requiere un \"GeoIP resolver\" que no "
-"pudo encontrarse en tu sistema. Por favor, consulta "
-"https://pypi.org/project/GeoIP/"
-
-#. module: website_crm_iap_reveal
 #: model:ir.actions.server,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead_ir_actions_server
-#: model:ir.cron,cron_name:website_crm_iap_reveal.ir_cron_crm_reveal_lead
-#: model:ir.cron,name:website_crm_iap_reveal.ir_cron_crm_reveal_lead
 msgid "Lead Generation: Leads/Opportunities Generation"
 msgstr ""
 "Generación de clientes potenciales: Generación de clientes potenciales y "
@@ -305,12 +282,6 @@ msgstr "¡Se permiten un máximo de 5 contactos!"
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_rule__priority__1
 msgid "Medium"
 msgstr "Media"
-
-#. module: website_crm_iap_reveal
-#: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
-#, python-format
-msgid "Missing Library"
-msgstr "Biblioteca Faltante"
 
 #. module: website_crm_iap_reveal
 #: model:ir.model.fields.selection,name:website_crm_iap_reveal.selection__crm_reveal_view__reveal_state__not_found
@@ -366,6 +337,7 @@ msgid "Opportunity Generation Conditions"
 msgstr "Condiciones de generación de oportunidades"
 
 #. module: website_crm_iap_reveal
+#. odoo-python
 #: code:addons/website_crm_iap_reveal/models/crm_reveal_rule.py:0
 #, python-format
 msgid "Opportunity created by Odoo Lead Generation"

@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:08+0000\n"
+"POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Tony Ng, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -346,71 +346,38 @@ msgstr "<br>如果產品在<b>%s</b>中數量不足，將觸發一條規則，�
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
 "        We are glad to inform you that your order has been shipped.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
+"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
 "                    </t>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
 "                </t>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
 "            </t>\n"
 "            </strong>\n"
 "        </t>\n"
-"        <br/><br/>\n"
-"        Please find your delivery order attached for more details.<br/><br/>\n"
+"        <br><br>\n"
+"        Please find your delivery order attached for more details.<br><br>\n"
 "        Thank you,\n"
 "        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 "        "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
-"        We are glad to inform you that your order has been shipped.\n"
-"        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
-"            Your tracking reference is\n"
-"            <strong>\n"
-"            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
-"                <t t-if=\"multiple_carrier_tracking\">\n"
-"                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
-"                    </t>\n"
-"                </t>\n"
-"                <t t-else=\"\">\n"
-"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
-"                </t>\n"
-"            </t>\n"
-"            <t t-else=\"\">\n"
-"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
-"            </t>\n"
-"            </strong>\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"        Please find your delivery order attached for more details.<br/><br/>\n"
-"        Thank you,\n"
-"        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"        "
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_view_kanban
@@ -530,11 +497,6 @@ msgstr "<span>未分配包裝的產品</span>"
 #: model_terms:ir.ui.view,arch_db:stock.report_delivery_document
 msgid "<span>Remaining quantities not yet delivered:</span>"
 msgstr "<span>尚未交付的剩餘數量:</span>"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_form
-msgid "<span>kg</span>"
-msgstr "<span>公斤</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_package_type_form
@@ -3915,6 +3877,15 @@ msgstr "完成數量是否可以編輯"
 
 #. module: stock
 #. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allow to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
+
+#. module: stock
+#. odoo-python
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -3993,11 +3964,6 @@ msgid ""
 "Keep the <strong>Difference</strong> (the Counted Quantity will be updated "
 "to reflect the same difference as when you counted)"
 msgstr "保持<strong>差異</strong>(盤點的數量將更新至庫存，並將您盤點時的盤差紀錄到系統中)"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.report_lot_label
-msgid "LN/SN:"
-msgstr "批次/序列號:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_picking_label_type__label_type
@@ -4524,13 +4490,9 @@ msgstr "最大數量"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__max_weight
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__max_weight
+#: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_tree
 msgid "Max Weight"
 msgstr "最大重量"
-
-#. module: stock
-#: model_terms:ir.ui.view,arch_db:stock.stock_storage_category_tree
-msgid "Max Weight (kg)"
-msgstr "最大重量(公斤)"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_positive_max_weight
@@ -4608,7 +4570,6 @@ msgstr "最小庫存規則"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_label_layout__move_ids
-#: model:ir.model.fields,field_description:stock.field_report_stock_quantity__move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_assign_serial__move_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_quant_reserve__move_id
@@ -8436,6 +8397,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -8893,6 +8855,11 @@ msgid "Unit of Measure Name"
 msgstr "單位名稱"
 
 #. module: stock
+#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
+msgid "Unit of measure"
+msgstr "量度單位"
+
+#. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
 msgstr "測量單位"
@@ -8905,11 +8872,6 @@ msgstr "計量單位"
 #. module: stock
 #: model:ir.ui.menu,name:stock.product_uom_menu
 msgid "Units of Measures"
-msgstr "量度單位"
-
-#. module: stock
-#: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
-msgid "Unit of measure"
 msgstr "量度單位"
 
 #. module: stock
@@ -9323,6 +9285,11 @@ msgstr "重量"
 #: model:ir.model.fields,help:stock.field_stock_package_type__base_weight
 msgid "Weight of the package type"
 msgstr "此包裝類型重量"
+
+#. module: stock
+#: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
+msgid "Weight unit"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name

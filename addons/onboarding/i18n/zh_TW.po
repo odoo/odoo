@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2023-05-26 06:32+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -125,14 +125,6 @@ msgid "Just done"
 msgstr "完成"
 
 #. module: onboarding
-#: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding____last_update
-#: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step____last_update
-#: model:ir.model.fields,field_description:onboarding.field_onboarding_progress____last_update
-#: model:ir.model.fields,field_description:onboarding.field_onboarding_progress_step____last_update
-msgid "Last Modified on"
-msgstr "最後修改"
-
-#. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding__write_uid
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__write_uid
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_progress__write_uid
@@ -149,6 +141,7 @@ msgid "Last Updated on"
 msgstr "最後更新於"
 
 #. module: onboarding
+#. odoo-python
 #: code:addons/onboarding/models/onboarding_step.py:0
 #, python-format
 msgid "Let's do it"
@@ -322,6 +315,7 @@ msgid "Should be done per company?"
 msgstr ""
 
 #. module: onboarding
+#. odoo-python
 #: code:addons/onboarding/models/onboarding_step.py:0
 #, python-format
 msgid "Step Completed! - Click to review"
@@ -340,13 +334,6 @@ msgstr ""
 #. module: onboarding
 #: model:ir.model.fields,field_description:onboarding.field_onboarding_onboarding_step__done_text
 msgid "Text to show when step is completed"
-msgstr ""
-
-#. module: onboarding
-#: model:ir.model.constraint,message:onboarding.constraint_onboarding_progress_onboarding_company_uniq
-msgid ""
-"There cannot be multiple records of the same onboarding completion for the "
-"same company."
 msgstr ""
 
 #. module: onboarding

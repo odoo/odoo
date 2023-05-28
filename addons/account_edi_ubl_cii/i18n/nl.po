@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:11+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -474,8 +474,14 @@ msgstr ""
 " </li></p>"
 
 #. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "A payment of %s was detected."
+msgstr "Een betaling van %s werd gedetecteerd."
+
+#. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_a_nz
 msgid "A-NZ BIS Billing 3.0"
 msgstr "A-NZ BIS Billing 3.0"
 
@@ -487,12 +493,6 @@ msgstr "Boeking verzenden"
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, python-format
-msgid "A payment of %s was detected."
-msgstr "Een betaling van %s werd gedetecteerd."
-
-#. module: account_edi_ubl_cii
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Articles 226 items 11 to 15 Directive 2006/112/EN"
@@ -561,14 +561,6 @@ msgid ""
 msgstr ""
 "Kan valuta niet ophalen: %s. Heb je de optie voor meerdere valuta's "
 "ingeschakeld en de valuta geactiveerd?"
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
-#, python-format
-msgid "Could not retrieve the %s."
-msgstr "Kon de %s niet ophalen."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -748,8 +740,18 @@ msgstr "Output btw, normaal tarief"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_bis3
-msgid "Peppol Bis Billing 3.0"
-msgstr "Peppol Bis Billing 3.0"
+msgid "Peppol BIS Billing 3.0"
+msgstr "Peppol BIS Billing 3.0"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_a_nz
+msgid "Peppol BIS Billing 3.0 A-NZ"
+msgstr "Peppol BIS Billing 3.0 A-NZ"
+
+#. module: account_edi_ubl_cii
+#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_sg
+msgid "Peppol BIS Billing 3.0 SG"
+msgstr "Peppol BIS Billing 3.0 SG"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields,field_description:account_edi_ubl_cii.field_res_partner__peppol_endpoint
@@ -765,20 +767,20 @@ msgstr "Peppol e-address (EAS)"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
-#: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__ubl_sg
 msgid "SG BIS Billing 3.0"
 msgstr "SG BIS Billing 3.0"
-
-#. module: account_edi_ubl_cii
-#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
-#, python-format
-msgid "Tax '%s' is invalid: %s"
-msgstr "BTW '%s' is ongeldig: %s"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_nl
 msgid "SI-UBL 2.0 (NLCIUS)"
 msgstr "SI-UBL 2.0 (NLCIUS)"
+
+#. module: account_edi_ubl_cii
+#. odoo-python
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "Tax '%s' is invalid: %s"
+msgstr "BTW '%s' is ongeldig: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -889,8 +891,8 @@ msgstr ""
 
 #. module: account_edi_ubl_cii
 #: model:ir.model.fields.selection,name:account_edi_ubl_cii.selection__res_partner__ubl_cii_format__xrechnung
-msgid "XRechnung (UBL)"
-msgstr "XRechnung (UBL)"
+msgid "XRechnung CIUS"
+msgstr "XRechnung CIUS"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -904,14 +906,6 @@ msgstr ""
 "Je moet ten minste één btw per factuurregel opnemen. [BR-CO-04]-Elke "
 "factuurregel (BG-25) wordt gecategoriseerd met een btw-categoriecode voor "
 "gefactureerd artikel (BT-151)."
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
-#, python-format
-msgid "customer"
-msgstr "klant"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -932,11 +926,3 @@ msgstr "fx"
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
 msgstr "urn:factur-x:pdfa:CrossIndustryDocument:invoice:1p0#"
-
-#. module: account_edi_ubl_cii
-#. odoo-python
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_cii_facturx.py:0
-#: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
-#, python-format
-msgid "vendor"
-msgstr "leverancier"

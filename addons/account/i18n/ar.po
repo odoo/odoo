@@ -11,16 +11,16 @@
 # Mustafa Rawi <mustafa@cubexco.com>, 2023
 # Ziani Ahmed (Zity), 2023
 # Martin Trigaux, 2023
-# Radwan Hallak <rdwan.hlak@gmail.com>, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
+# Radwan Hallak <rdwan.hlak@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:07+0000\n"
+"POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Last-Translator: Radwan Hallak <rdwan.hlak@gmail.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -127,6 +127,13 @@ msgstr "%d حركات"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid "%s (%s)"
+msgstr "%s (%s)"
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_tax.py:0
 #, python-format
 msgid "%s (Copy)"
@@ -204,6 +211,14 @@ msgstr "%s ليس حقلاً محفوظاً "
 #, python-format
 msgid "%s.copy"
 msgstr "%s.نسخ"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "(Discount)"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -354,7 +369,7 @@ msgid ""
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Here is your\n"
 "        <t t-if=\"object.name\">\n"
 "            credit note <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
@@ -367,47 +382,16 @@ msgid ""
 "        </t>\n"
 "        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        عزيزي\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">براندن فريمان</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)،\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">براندن فريمان</t>،\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"        إليك\n"
-"        <t t-if=\"object.name\">\n"
-"            إشعار الدائن الخاص بك <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            الإشعار الدائن\n"
-"        </t>\n"
-"        <t t-if=\"object.invoice_origin\">\n"
-"            (مع المرجع: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
-"        </t>\n"
-"        وتبلغ قيمته <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
-"        من <t t-out=\"object.company_id.name or ''\">شركتك</t>.\n"
-"        <br/><br/>\n"
-"        لا تتردد في التواصل معنا إدا كانت لديك أي أسئلة أو استفسارات.\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>ميتشل آدمن</t>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -421,7 +405,7 @@ msgid ""
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Here is your\n"
 "        <t t-if=\"object.name\">\n"
 "            invoice <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
@@ -440,98 +424,41 @@ msgid ""
 "        <t t-else=\"\">\n"
 "            Please remit payment at your earliest convenience.\n"
 "            <t t-if=\"object.payment_reference\">\n"
-"                <br/><br/>\n"
+"                <br><br>\n"
 "                Please use the following communication for your payment: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
 "            </t>\n"
 "        </t>\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        عزيزي\n"
-"        <t t-if=\"object.partner_id.parent_id\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">براندن فريمان</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)،\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            <t t-out=\"object.partner_id.name or ''\">براندن فريمان</t>،\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"        إليك\n"
-"        <t t-if=\"object.name\">\n"
-"            فاتورتك <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            الفاتورة\n"
-"        </t>\n"
-"        <t t-if=\"object.invoice_origin\">\n"
-"            (مع المرجع: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
-"        </t>\n"
-"        وتبلغ قيمته <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
-"        من <t t-out=\"object.company_id.name or ''\">شركتك</t>.\n"
-"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
-"            تم تسديد هذه الفاتورة بالفعل.\n"
-"        </t>\n"
-"        <t t-else=\"\">\n"
-"            الرجاء تحويل المدفوعات في أقرب وقت ممكن.\n"
-"            <t t-if=\"object.payment_reference\">\n"
-"                <br/><br/>\n"
-"                الرجاء استخدام المرجع التالي لإكمال عملية الدفع: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
-"            </t>\n"
-"        </t>\n"
-"        <br/><br/>\n"
-"        لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو استفسارات.\n"
-"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--ميتشل آدمن</t>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
-"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
 "        Thank you for your payment.\n"
 "        Here is your payment receipt <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> amounting\n"
 "        to <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Best regards,\n"
 "        <t t-if=\"not is_html_empty(user.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br><br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        عزيزي <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
-"        شركراً لإتمامك لعملية الدفع.\n"
-"        إليك إيصال الدفع <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> الذي تبلغ قيمته\n"
-"        <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> من <t t-out=\"object.company_id.name or ''\">شركتك</t>.\n"
-"        <br/><br/>\n"
-"        لا تتردد في التواصل معنا إذا كانت لديك أي أسئلة أو استفسارات.\n"
-"        <br/><br/>\n"
-"        مع تحيات،\n"
-"        <t t-if=\"not is_html_empty(user.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>ميتشل آدمن</t>\n"
-"        </t>\n"
-"    </p>\n"
-"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -890,13 +817,6 @@ msgstr "<span role=\"separator\">عرض</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "<span title=\"Balance in General Ledger\">Balance in GL</span>"
-msgstr ""
-"<span title=\"الرصيد المتوفر في دفتر الأستاذ العام \">الرصيد المتوفر في دفتر"
-" الأستاذ العام</span> "
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Latest Statement</span>"
 msgstr "<span title=\"آخر كشف حساب\">آخر كشف حساب</span>"
 
@@ -1035,6 +955,11 @@ msgstr "<span>مرجع</span>"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
 msgstr "<span>إعداد التقارير</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "<span>Running Balance</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1334,17 +1259,6 @@ msgstr "يجب أن يحتوي كشف الحساب على بنود من نفس �
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr "لا يمكن تحديد الوضع المالي الضريبي لنفس الضريبة سوى مرة واحدة "
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-#, python-format
-msgid ""
-"A tax should only use tags from its country. You should use another tax and "
-"a fiscal position if you wish to uses the tags from foreign tax reports."
-msgstr ""
-"يجب أن تستخدم الضريبة علامات من بلدها فقط. سيتوجب عليك استخدام ضريبة ووضع "
-"مالي آخرين إذا كنت ترغب في استخدام العلامات من تقارير الضرائب الأجنبية. "
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -2477,6 +2391,12 @@ msgid "Analytic Distribution Models"
 msgstr "نماذج التوزيع التحليلية "
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution_search
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution_search
+msgid "Analytic Distribution Search"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
 msgid "Analytic Filter"
 msgstr "عامل تصفية تحليلي "
@@ -2919,11 +2839,6 @@ msgstr "رمز مُعرِف البنك "
 #: model:ir.model.fields,field_description:account.field_res_company__bank_journal_ids
 msgid "Bank Journals"
 msgstr "اليوميات البنكية"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
-msgid "Bank Matched"
-msgstr "تمت مطابقة البنك "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__bank_partner_id
@@ -4097,6 +4012,11 @@ msgid "Counterpart Entries"
 msgstr "قيود مقابلة "
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Countries for which the company has a VAT number"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_id
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__country_id
@@ -4622,6 +4542,11 @@ msgstr "الرصيد الحالي "
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__liability_current
 msgid "Current Liabilities"
 msgstr "الالتزامات المتداولة "
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__current_statement_balance
+msgid "Current Statement Balance"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity_unaffected
@@ -5516,6 +5441,13 @@ msgid "Download"
 msgstr "تنزيل "
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/settings_form_view/res_config_dev_tool.xml:0
+#, python-format
+msgid "Download XSD files (XML validation)"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__advance_tax_payment_account_id
 msgid ""
 "Downpayments posted on this account will be considered by the Tax Closing "
@@ -5667,6 +5599,11 @@ msgstr "مرجع مورد مكرر. ربما تكون أدخلت نفس الفا
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "تقارير ديناميكية"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
+msgid "Dynamic domain used for the tag that can be set on tax"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
@@ -6204,6 +6141,7 @@ msgstr "الفترات المالية"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_move__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_payment__fiscal_position_id
+#: model:ir.model.fields,field_description:account.field_res_company__fiscal_position_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_position_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
@@ -6386,6 +6324,11 @@ msgstr "خسائر تحويل العملة الأجنبية "
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
 msgstr "معرّف الضريبة الأجنبية "
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign VAT countries"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -6681,6 +6624,11 @@ msgstr "يحتوي على قيود مسواة "
 #: model:ir.model.fields,field_description:account.field_account_journal__has_sequence_holes
 msgid "Has Sequence Holes"
 msgstr "يحتوي على ثغرات في التسلسل "
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__has_statement_lines
+msgid "Has Statement Lines"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
@@ -7770,8 +7718,10 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__is_move_sent
 #: model:ir.model.fields,help:account.field_account_move__is_move_sent
 #: model:ir.model.fields,help:account.field_account_payment__is_move_sent
-msgid "It indicates that the invoice/payment has been sent."
-msgstr "يشير إلى أن الفاتورة قد تم إرسالها. "
+msgid ""
+"It indicates that the invoice/payment has been sent or the PDF has been "
+"generated."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -9011,6 +8961,11 @@ msgstr "نوع النشاط التالي"
 #: model:ir.model.fields.selection,name:account.selection__account_move__auto_post__no
 msgid "No"
 msgstr "لا"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
+msgid "No Bank Matching"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
@@ -14662,6 +14617,8 @@ msgstr "المعاملات غير المسواة "
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_tax.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed
@@ -16264,6 +16221,11 @@ msgid ""
 msgstr ""
 "يحتفظ بحق طلب دفعات فوائد ثابتة قد تصل قيمتها إلى 10% من الإجمالي المتبقي "
 "المستحَق. "
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
+msgid "tag domain"
+msgstr ""
 
 #. module: account
 #. odoo-python

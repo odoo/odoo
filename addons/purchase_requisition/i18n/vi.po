@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:14+0000\n"
+"POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -54,7 +54,7 @@ msgstr "<strong>SL</strong>"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "<strong>Reference </strong>"
-msgstr "<strong>Mã </strong>"
+msgstr "<strong>Mã tham chiếu</strong>"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
@@ -104,7 +104,7 @@ msgstr "Trạng thái hoạt động"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Biểu tượng kiểu hoạt động"
+msgstr "Biểu tượng loại hoạt động"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_product_supplierinfo__purchase_requisition_id
@@ -126,7 +126,7 @@ msgstr "Loại lựa chọn hợp đồng"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__name
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_type_form
 msgid "Agreement Type"
-msgstr "Loại yêu hợp đồng"
+msgstr "Loại hợp đồng"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order__alternative_po_ids
@@ -165,7 +165,12 @@ msgstr "Ví dụ về hợp đồng mua hàng là một hợp đồng khung."
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution
 msgid "Analytic Distribution"
-msgstr "Phân bổ KT Quản trị"
+msgstr "Phân bổ phân tích"
+
+#. module: purchase_requisition
+#: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution_search
+msgid "Analytic Distribution Search"
+msgstr ""
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_precision
@@ -239,7 +244,7 @@ msgstr "Chọn"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__partner_id
 msgid "Choose a vendor for alternative PO"
-msgstr "Chọn nhà cung cấp cho đơn mua hàng dự trù"
+msgstr "Chọn nhà cung cấp cho đơn mua hàng dự trù"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
@@ -320,7 +325,7 @@ msgid ""
 "                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
 msgstr ""
 "Tạo một thông báo mời thầu bằng cách thêm yêu cầu báo giá dự trù cho các nhà cung cấp khác nhau.\n"
-"                            Sau đó chọn nhà cung cấp có sự hội tụ tốt nhất giữa thời gian giao hàng, tỷ lệ giao hàng đúng hạn và/hoặc tổng tiền.\n"
+"                            Sau đó chọn nhà cung cấp có sự kết hợp hoàn hảo nhất giữa thời gian giao hàng, tỷ lệ giao hàng đúng hạn và/hoặc tổng tiền.\n"
 "                            Bằng cách so sánh chi tiết sản phẩm, bạn cũng có thể quyết định đặt mua một số sản phẩm từ nhà cung cấp này và những sản phẩm khác từ nhà cung cấp khác."
 
 #. module: purchase_requisition
@@ -388,7 +393,7 @@ msgstr "Mô tả"
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__display_name
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_type__display_name
 msgid "Display Name"
-msgstr "Tên Hiển thị"
+msgstr "Tên hiển thị"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__line_copy__none
@@ -429,8 +434,8 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement to benefit\n"
 "            from the negotiated prices."
 msgstr ""
-"Đối với một hợp đồng khung, bạn có thể ghi nhận hợp đồng cho một chu kỳ\n"
-"             cụ thể (vd: 1 năm) và bạn đặt hàng theo hợp đồng này, để hưởng lợi từ\n"
+"Đối với một hợp đồng khung, bạn có thể ghi nhận hợp đồng cho một kỳ cụ thể\n"
+"             (vd: 1 năm) và bạn đặt hàng theo hợp đồng này, để hưởng lợi từ\n"
 "             chính sách giá đã đàm phán."
 
 #. module: purchase_requisition
@@ -658,7 +663,7 @@ msgstr "Đơn hàng"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__qty_ordered
 msgid "Ordered Quantities"
-msgstr "Số lượng đặt hàng"
+msgstr "Số lượng đã đặt"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__ordering_date
@@ -749,7 +754,7 @@ msgstr "Mục đơn mua hàng"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 msgid "Purchase Order Lines"
-msgstr "Mục đơn mua hàng"
+msgstr "Chi tiết đơn mua hàng"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__purchase_ids
@@ -832,7 +837,7 @@ msgstr "Yêu cầu báo giá"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.report_purchaserequisitions
 msgid "Requests for Quotation Details"
-msgstr "Chi tiết Yêu cầu báo giá"
+msgstr "Chi tiết yêu cầu báo giá"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_search_inherit
@@ -896,7 +901,7 @@ msgid ""
 "Set active to false to hide the Purchase Agreement Types without removing "
 "it."
 msgstr ""
-"Đặt đang hoạt động thành sai để ẩn Loại Hợp đồng Mua hàng mà không cần xóa. "
+"Đặt đang hoạt động thành sai để ẩn Loại hợp đồng mua hàng mà không cần xóa. "
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition_type__quantity_copy__none
@@ -933,12 +938,12 @@ msgstr "Chứng từ gốc"
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "Start a new purchase agreement"
-msgstr "Tạo mới hợp đồng mua hàng"
+msgstr "Tạo một hợp đồng mua hàng mới"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state_blanket_order
 msgid "State Blanket Order"
-msgstr "Hợp đồng khung"
+msgstr "Trạng thái hợp đồng khung"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state
@@ -977,7 +982,7 @@ msgstr "Model kỹ thuật để nhóm đơn mua hàng cho thông báo mời th�
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
 msgid "Terms and Conditions"
-msgstr "Điều khoản và Điều kiện"
+msgstr "Điều khoản và điều kiện"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__schedule_date
@@ -1043,7 +1048,7 @@ msgstr "Tổng"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Loại hoạt động ngoại lệ trong dữ liệu."
+msgstr "Loại hoạt động ngoại lệ trong tập dữ liệu."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__price_unit

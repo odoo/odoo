@@ -12,9 +12,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
 "Last-Translator: Pedro Filipe <pedro2.10@hotmail.com>, 2023\n"
 "Language-Team: Portuguese (https://app.transifex.com/odoo/teams/41243/pt/)\n"
@@ -25,37 +25,35 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
 
 #. module: microsoft_calendar
+#. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Days"
 msgstr ""
 
 #. module: microsoft_calendar
+#. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Hours"
 msgstr ""
 
 #. module: microsoft_calendar
+#. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Minutes"
 msgstr ""
 
 #. module: microsoft_calendar
+#. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid "%s - At time of event"
 msgstr ""
 
 #. module: microsoft_calendar
-#. openerp-web
-#: code:addons/microsoft_calendar/static/src/xml/base_calendar.xml:0
-#, python-format
-msgid "&nbsp;Outlook"
-msgstr ""
-
-#. module: microsoft_calendar
+#. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid "(No title)"
@@ -69,8 +67,8 @@ msgid "Active"
 msgstr "Ativo"
 
 #. module: microsoft_calendar
-#. openerp-web
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
+#. odoo-javascript
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid ""
 "An administrator needs to configure Outlook Synchronization before you can "
@@ -78,6 +76,7 @@ msgid ""
 msgstr ""
 
 #. module: microsoft_calendar
+#. odoo-python
 #: code:addons/microsoft_calendar/models/res_users.py:0
 #, python-format
 msgid ""
@@ -86,13 +85,6 @@ msgid ""
 "secret on the Microsoft Azure portal or try to stop and restart your "
 "calendar synchronisation."
 msgstr ""
-
-#. module: microsoft_calendar
-#. openerp-web
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
-#, python-format
-msgid "Are you sure you want to delete this record ?"
-msgstr "Tem a certeza que pretende eliminar este registo?"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_attendee
@@ -125,9 +117,9 @@ msgid "Config Settings"
 msgstr "Definições de Configuração"
 
 #. module: microsoft_calendar
-#. openerp-web
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
+#. odoo-javascript
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid "Configuration"
 msgstr "Configuração"
@@ -138,13 +130,6 @@ msgid "Confirm"
 msgstr "Confirmar"
 
 #. module: microsoft_calendar
-#. openerp-web
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
-#, python-format
-msgid "Confirmation"
-msgstr "Confirmação"
-
-#. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__create_uid
 msgid "Created by"
 msgstr "Criado por"
@@ -153,13 +138,6 @@ msgstr "Criado por"
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__create_date
 msgid "Created on"
 msgstr "Criado em"
-
-#. module: microsoft_calendar
-#. openerp-web
-#: code:addons/microsoft_calendar/static/src/xml/microsoft_calendar_popover.xml:0
-#, python-format
-msgid "Delete"
-msgstr "Eliminar"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__delete_odoo
@@ -187,6 +165,7 @@ msgid "Event Recurrence Rule"
 msgstr ""
 
 #. module: microsoft_calendar
+#. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid ""
@@ -208,11 +187,6 @@ msgid ""
 msgstr ""
 "Se o campo ativo for definido como falso, permitirá ocultar a informação do "
 "alarme de evento sem a remover."
-
-#. module: microsoft_calendar
-#: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset____last_update
-msgid "Last Modified on"
-msgstr "Última Modificação em"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__write_uid
@@ -288,6 +262,7 @@ msgid "Next Synchronization"
 msgstr "Sincronização Seguinte"
 
 #. module: microsoft_calendar
+#. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid "Notification"
@@ -301,8 +276,9 @@ msgid "Organizer event Id"
 msgstr ""
 
 #. module: microsoft_calendar
-#. openerp-web
-#: code:addons/microsoft_calendar/static/src/xml/base_calendar.xml:0
+#. odoo-javascript
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.xml:0
 #, python-format
 msgid "Outlook"
 msgstr "Outlook"
@@ -318,6 +294,7 @@ msgid "Outlook Synchronization stopped"
 msgstr ""
 
 #. module: microsoft_calendar
+#. odoo-python
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid ""
@@ -328,8 +305,6 @@ msgstr ""
 
 #. module: microsoft_calendar
 #: model:ir.actions.server,name:microsoft_calendar.ir_cron_sync_all_cals_ir_actions_server
-#: model:ir.cron,cron_name:microsoft_calendar.ir_cron_sync_all_cals
-#: model:ir.cron,name:microsoft_calendar.ir_cron_sync_all_cals
 msgid "Outlook: synchronization"
 msgstr ""
 
@@ -349,8 +324,8 @@ msgid "Reset Outlook Calendar Account"
 msgstr ""
 
 #. module: microsoft_calendar
-#. openerp-web
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
+#. odoo-javascript
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid "Success"
 msgstr "Sucesso"
@@ -371,8 +346,8 @@ msgid "Synchronize only new events"
 msgstr ""
 
 #. module: microsoft_calendar
-#. openerp-web
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
+#. odoo-javascript
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid ""
 "The Outlook Synchronization needs to be configured before you can use it, do"
@@ -380,14 +355,15 @@ msgid ""
 msgstr ""
 
 #. module: microsoft_calendar
+#. odoo-python
 #: code:addons/microsoft_calendar/models/res_users.py:0
 #, python-format
 msgid "The account for the Outlook Calendar service is not configured."
 msgstr ""
 
 #. module: microsoft_calendar
-#. openerp-web
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
+#. odoo-javascript
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid "The synchronization with Outlook calendar was successfully stopped."
 msgstr ""
@@ -426,8 +402,8 @@ msgid "User's Existing Events"
 msgstr ""
 
 #. module: microsoft_calendar
-#. openerp-web
-#: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
+#. odoo-javascript
+#: code:addons/microsoft_calendar/static/src/views/microsoft_calendar/microsoft_calendar_controller.js:0
 #, python-format
 msgid ""
 "You are about to stop the synchronization of your calendar with Outlook. Are"

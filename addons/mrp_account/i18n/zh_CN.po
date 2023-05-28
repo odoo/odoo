@@ -9,9 +9,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:01+0000\n"
+"POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
 "Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -22,6 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: mrp_account
+#. odoo-python
 #: code:addons/mrp_account/models/mrp_production.py:0
 #: model:ir.model,name:mrp_account.model_account_analytic_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_bom__analytic_account_id
@@ -57,6 +58,7 @@ msgid "Bill of Material"
 msgstr "物料清单"
 
 #. module: mrp_account
+#. odoo-python
 #: code:addons/mrp_account/models/analytic_account.py:0
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
@@ -93,11 +95,6 @@ msgid ""
 msgstr "使用物料清单的产品和操作计算价格，仅限已生产产品。"
 
 #. module: mrp_account
-#: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
-msgid "Cost Recorded"
-msgstr "已记录成本"
-
-#. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
 msgid "Extra Unit Cost"
 msgstr "额外单位成本"
@@ -113,6 +110,7 @@ msgid "Manufacturing Order"
 msgstr "生产订单"
 
 #. module: mrp_account
+#. odoo-python
 #: code:addons/mrp_account/models/analytic_account.py:0
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_ids
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
@@ -198,15 +196,11 @@ msgid "Work Order Count"
 msgstr "工单计数"
 
 #. module: mrp_account
+#. odoo-python
 #: code:addons/mrp_account/models/analytic_account.py:0
 #, python-format
 msgid "Work Orders"
 msgstr "工单"
-
-#. module: mrp_account
-#: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
-msgid "Workcenter Productivity Log"
-msgstr "工作中心生产力日志"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__workcenter_ids

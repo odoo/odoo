@@ -1,25 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * note
+# 	* note
 # 
 # Translators:
-# SHIMIZU Taku <shimizu.taku@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
-# Manami Hashi <manami@roomsfor.hk>, 2018
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2018
-# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2018
-# kent_ocean <ke.tanabe@gmail.com>, 2018
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
-# 城谷 龍弥 <tatsuya.shirotani@pro-spire.co.jp>, 2018
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
+# Andy Yiu, 2023
+# Martin Trigaux, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: 城谷 龍弥 <tatsuya.shirotani@pro-spire.co.jp>, 2018\n"
-"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"POT-Creation-Date: 2023-03-23 09:10+0000\n"
+"PO-Revision-Date: 2023-03-23 10:40+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -27,15 +22,38 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
+msgstr ""
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
+msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Action"
+msgstr "アクション"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
 msgid "Action Needed"
 msgstr "要アクション"
 
 #. module: note
+#: model:ir.model.fields,help:note.field_mail_activity_type__category
+msgid ""
+"Actions may trigger specific behavior like opening calendar view or "
+"automatically mark as done when a document is uploaded"
+msgstr ""
+"アクションは、カレンダービューを開くなどの特定の動作をトリガーしたり、ドキュメントのアップロード時に完了として自動的にマークを付けたりする場合があります"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Active"
-msgstr "有効"
+msgstr "有効化"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_ids
@@ -48,6 +66,11 @@ msgid "Activity"
 msgstr "活動"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "例外活動文字装飾"
+
+#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_state
 msgid "Activity State"
 msgstr "活動状態"
@@ -58,28 +81,33 @@ msgid "Activity Type"
 msgstr "活動タイプ"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "活動種別アイコン"
+
+#. module: note
 #: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid "Add a new personal note"
-msgstr ""
+msgstr "新規個人メモ追加"
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.note_tag_action
 msgid "Add a new tag"
-msgstr ""
+msgstr "新しいタグを追加"
 
 #. module: note
-#. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:14
+#. odoo-javascript
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Add a note"
-msgstr ""
+msgstr "メモを追加"
 
 #. module: note
-#. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:6
+#. odoo-javascript
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Add new note"
-msgstr ""
+msgstr "新規メモ追加"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -89,7 +117,7 @@ msgstr "アーカイブ"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "添付数"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -97,18 +125,8 @@ msgid "By sticky note Category"
 msgstr "付箋メモカテゴリ"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_mail_activity_type__category
-msgid "Categories may trigger specific behavior like opening calendar view"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
-msgid "Category"
-msgstr "カテゴリ"
-
-#. module: note
-#. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:10
+#. odoo-javascript
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Channel"
 msgstr "チャネル"
@@ -118,6 +136,11 @@ msgstr "チャネル"
 #: model:ir.model.fields,field_description:note.field_note_tag__color
 msgid "Color Index"
 msgstr "カラーインデクス"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__company_id
+msgid "Company"
+msgstr "会社"
 
 #. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
@@ -156,11 +179,6 @@ msgid "Display Name"
 msgstr "表示名"
 
 #. module: note
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
-msgid "Dropdown menu"
-msgstr ""
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
 msgid "Folded by Default"
 msgstr "デフォルトで折りたたむ"
@@ -176,24 +194,29 @@ msgid "Followers"
 msgstr "フォロワー"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "フォロワー (チャネル)"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "フォロワー (取引先)"
 
 #. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font awesomeのアイコン 例. fa-tasks"
+
+#. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Future Activities"
-msgstr "将来の活動"
+msgstr "今後の活動"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
 msgstr "グループ化"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__has_message
+msgid "Has Message"
+msgstr "メッセージあり"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__id
@@ -203,31 +226,29 @@ msgid "ID"
 msgstr "ID"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_note__message_unread
-msgid "If checked new messages require your attention."
-msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
+#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_icon
+msgid "Icon"
+msgstr "アイコン"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "例外活動を示すアイコン"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "チェックされている場合は、新しいメッセージに注意が必要です。"
+msgstr "チェックした場合は、新しいメッセージに注意が必要です。"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "チェックした場合は、一部のメッセージに配信エラーが発生されました。"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
 msgid "Is Follower"
 msgstr "フォロー中　"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note____last_update
-#: model:ir.model.fields,field_description:note.field_note_stage____last_update
-#: model:ir.model.fields,field_description:note.field_note_tag____last_update
-msgid "Last Modified on"
-msgstr "最終更新日"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__write_uid
@@ -249,24 +270,14 @@ msgid "Late Activities"
 msgstr "遅れた活動"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
-msgid "Main Attachment"
-msgstr ""
-
-#. module: note
-#: selection:mail.activity.type,category:0
-msgid "Meeting"
-msgstr "打ち合わせ"
-
-#. module: note
 #: model:note.stage,name:note.note_stage_01
 msgid "Meeting Minutes"
-msgstr ""
+msgstr "議事録"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "メッセージ配信エラー"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_ids
@@ -274,14 +285,19 @@ msgid "Messages"
 msgstr "メッセージ"
 
 #. module: note
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
-msgid "My Activities"
-msgstr "自分の活動"
+#: model:ir.model.fields,field_description:note.field_note_note__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "活動期限"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
 msgstr "新規"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "次の活動カレンダーイベント"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
@@ -291,7 +307,7 @@ msgstr "次の活動期限"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_summary
 msgid "Next Activity Summary"
-msgstr "次の活動サマリ"
+msgstr "次の活動概要"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_type_id
@@ -303,7 +319,7 @@ msgstr "次の活動タイプ"
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Note"
-msgstr "ノート"
+msgstr "メモ"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__memo
@@ -326,11 +342,12 @@ msgid "Note Tag"
 msgstr "ノートタグ"
 
 #. module: note
-#: code:addons/note/models/res_users.py:61
+#. odoo-python
+#: code:addons/note/models/res_users.py:0
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_02
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #, python-format
 msgid "Notes"
 msgstr "ノート"
@@ -345,37 +362,22 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
 msgid "Number of Actions"
-msgstr "アクションの数"
+msgstr "アクション数"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
-msgid "Number of error"
-msgstr ""
+msgid "Number of errors"
+msgstr "エラー数"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "アクションを必要とするメッセージの数"
+msgstr "アクションが必要なメッセージの数"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__message_unread_counter
-msgid "Number of unread messages"
-msgstr "未読メッセージ件数"
-
-#. module: note
-#: selection:mail.activity.type,category:0
-msgid "Other"
-msgstr "その他"
-
-#. module: note
-#: selection:note.note,activity_state:0
-msgid "Overdue"
-msgstr "滞納"
+msgstr "配信エラーが発生されたメッセージ数"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__user_id
@@ -384,41 +386,31 @@ msgid "Owner"
 msgstr "オーナー"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_stage__user_id
-msgid "Owner of the note stage"
-msgstr "ノートステージのオーナー"
-
-#. module: note
-#: selection:note.note,activity_state:0
-msgid "Planned"
-msgstr "予定済"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity__note_id
 msgid "Related Note"
 msgstr ""
 
 #. module: note
-#. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:23
+#. odoo-javascript
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Remember..."
 msgstr ""
 
 #. module: note
-#: selection:mail.activity.type,category:0
+#: model:ir.model.fields.selection,name:note.selection__mail_activity_type__category__reminder
 #: model:mail.activity.type,name:note.mail_activity_data_reminder
 msgid "Reminder"
-msgstr ""
+msgstr "リマインダー"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_user_id
 msgid "Responsible User"
-msgstr "担当者"
+msgstr "担当ユーザ"
 
 #. module: note
-#. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:25
+#. odoo-javascript
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "SAVE"
 msgstr ""
@@ -427,19 +419,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
 #: model:ir.model.fields,field_description:note.field_note_stage__sequence
 msgid "Sequence"
-msgstr "付番"
-
-#. module: note
-#. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:18
-#, python-format
-msgid "Set date and time"
-msgstr ""
+msgstr "シーケンス"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Show all records which has next action date is before today"
-msgstr "次のアクションの日付が今日より前のすべてのレコードを表示する"
+msgstr "次のアクションの日付が今日より前のすべてのレコードを表示"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__stage_id
@@ -482,6 +467,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"活動に基づいての状態\n"
+"延滞: 期限は既に過ぎました\n"
+"当日: 活動日は本日です\n"
+"予定: 将来の活動。"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_tag__name
@@ -489,9 +478,9 @@ msgid "Tag Name"
 msgstr "タグ名"
 
 #. module: note
-#: sql_constraint:note.tag:0
-msgid "Tag name already exists !"
-msgstr "そのタグ名は既に使われています！"
+#: model:ir.model.constraint,message:note.constraint_note_tag_name_uniq
+msgid "Tag name already exists!"
+msgstr ""
 
 #. module: note
 #: model:ir.actions.act_window,name:note.note_tag_action
@@ -504,12 +493,11 @@ msgid "Tags"
 msgstr "タグ"
 
 #. module: note
-#. openerp-web
-#: code:addons/note/static/src/js/systray_activity_menu.js:97
-#: selection:note.note,activity_state:0
+#. odoo-javascript
+#: code:addons/note/static/src/models/activity_menu_view.js:0
 #, python-format
 msgid "Today"
-msgstr "本日"
+msgstr "今日"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -522,31 +510,11 @@ msgid "Todo"
 msgstr "Todo"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_unread
-msgid "Unread Messages"
-msgstr "未読メッセージ"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "未読メッセージカウンター"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_stage__sequence
-msgid "Used to order the note stages"
-msgstr "ノートステージの注文に使用されます"
+#: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "記録上の例外活動の種類。"
 
 #. module: note
 #: model:ir.model,name:note.model_res_users
-msgid "Users"
+msgid "User"
 msgstr "ユーザ"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__website_message_ids
-msgid "Website Messages"
-msgstr "ウェブサイトメッセージ"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__website_message_ids
-msgid "Website communication history"
-msgstr "ウェブサイトコミュニケーション履歴"

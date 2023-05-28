@@ -3,7 +3,6 @@
 # 	* hr_work_entry
 # 
 # Translators:
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
 # Martin Trigaux, 2023
@@ -12,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:10+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -31,8 +30,8 @@ msgstr "%s werkboekingen"
 
 #. module: hr_work_entry
 #: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
-msgid "<span class=\"ml8\">Hours</span>"
-msgstr "<span class=\"ml8\">Uren</span>"
+msgid "<span>Hours</span>"
+msgstr "<span>Uren</span>"
 
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__active
@@ -129,6 +128,11 @@ msgid "Department"
 msgstr "Afdeling"
 
 #. module: hr_work_entry
+#: model_terms:ir.ui.view,arch_db:hr_work_entry.hr_work_entry_view_form
+msgid "Description"
+msgstr "Omschrijving"
+
+#. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_user_work_entry_employee__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__display_name
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__display_name
@@ -139,6 +143,11 @@ msgstr "Schermnaam"
 #: model:ir.model.fields.selection,name:hr_work_entry.selection__hr_work_entry__state__draft
 msgid "Draft"
 msgstr "Concept"
+
+#. module: hr_work_entry
+#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__duration
+msgid "Duration"
+msgstr "Duur"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_hr_employee
@@ -227,12 +236,7 @@ msgstr "Overuren"
 #. module: hr_work_entry
 #: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry_type__code
 msgid "Payroll Code"
-msgstr "Loonstrook code"
-
-#. module: hr_work_entry
-#: model:ir.model.fields,field_description:hr_work_entry.field_hr_work_entry__duration
-msgid "Duration"
-msgstr "Duur"
+msgstr "Loonadministratie code"
 
 #. module: hr_work_entry
 #: model:ir.model,name:hr_work_entry.model_resource_calendar_leaves

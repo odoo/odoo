@@ -16,7 +16,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:16+0000\n"
+"POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -797,6 +797,8 @@ msgstr "Appliquer"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/form/form_controller.js:0
+#: code:addons/web/static/src/views/list/list_controller.js:0
 #: code:addons/web/static/src/views/list/list_controller.js:0
 #, python-format
 msgid "Archive"
@@ -831,23 +833,8 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #, python-format
-msgid "Are you sure that you want to archive all this record?"
-msgstr "Êtes-vous sûr de vouloir archiver tous ces enregistrements ?"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/form/form_controller.js:0
-#: code:addons/web/static/src/legacy/js/views/form/form_controller.js:0
-#, python-format
 msgid "Are you sure that you want to archive this record?"
 msgstr "Êtes-vous sûr de vraiment vouloir archiver cet enregistrement ?"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/legacy/js/views/kanban/kanban_column.js:0
-#, python-format
-msgid "Are you sure that you want to remove this column ?"
-msgstr "Etes-vous sûr de vouloir supprimer cette colonne ?"
 
 #. module: web
 #. odoo-javascript
@@ -913,6 +900,16 @@ msgstr "Comme texte par défaut quand aucune valeur n'est définie"
 #, python-format
 msgid "Ascending"
 msgstr "Ascendant"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.xml:0
+#: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.xml:0
+#: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.xml:0
+#: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.xml:0
+#, python-format
+msgid "Assign"
+msgstr "Assigner"
 
 #. module: web
 #. odoo-javascript
@@ -1349,6 +1346,7 @@ msgstr "Contexte :"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
+#: code:addons/web/static/src/views/fields/x2many/x2many_field.xml:0
 #: code:addons/web/static/src/views/list/list_controller.xml:0
 #, python-format
 msgid "Control panel buttons"
@@ -3906,16 +3904,6 @@ msgstr "Ajout rapide"
 
 #. module: web
 #. odoo-javascript
-#: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.xml:0
-#: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.xml:0
-#, python-format
-msgid "Quick assign"
-msgstr "Assignation rapide"
-
-#. module: web
-#. odoo-javascript
 #: code:addons/web/static/src/search/search_panel/search_panel.xml:0
 #, python-format
 msgid ""
@@ -4065,10 +4053,6 @@ msgstr "Jours restants"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
 #: code:addons/web/static/src/search/search_bar/search_bar.xml:0
-#: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.xml:0
-#: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.xml:0
-#: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.xml:0
 #: code:addons/web/static/src/views/fields/relational_utils.xml:0
 #: code:addons/web/static/src/views/form/form_controller.xml:0
 #, python-format
@@ -4327,6 +4311,20 @@ msgstr "Rechercher un menu..."
 #, python-format
 msgid "Search for records"
 msgstr "Rechercher des enregistrements"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2one_avatar/many2one_avatar_field.js:0
+#, python-format
+msgid "Search user..."
+msgstr "Rechercher un utilisateur..."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.js:0
+#, python-format
+msgid "Search users..."
+msgstr "Rechercher des utilisateurs..."
 
 #. module: web
 #. odoo-javascript
@@ -5764,6 +5762,7 @@ msgstr "enfant de"
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "contains"
 msgstr "contient"
@@ -5800,6 +5799,7 @@ msgstr "ne contient pas"
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "doesn't contain"
@@ -5960,6 +5960,7 @@ msgstr "est entre"
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is equal to"
 msgstr "est égal à"
@@ -5991,6 +5992,7 @@ msgstr "n'est pas ="
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is not equal to"
 msgstr "est différent de"
@@ -6010,6 +6012,8 @@ msgstr "est différent de"
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #, python-format
 msgid "is not set"
 msgstr "n’est pas défini"
@@ -6024,6 +6028,8 @@ msgstr "n’est pas défini"
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/control_panel/search_utils.js:0
 #: code:addons/web/static/src/legacy/js/widgets/domain_selector.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
+#: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
 #: code:addons/web/static/src/search/filter_menu/custom_filter_item.js:0
@@ -6211,6 +6217,13 @@ msgstr "ou"
 #, python-format
 msgid "parent of"
 msgstr "parent de"
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/many2many_tags_avatar/many2many_tags_avatar_field.xml:0
+#, python-format
+msgid "props.placeholder"
+msgstr "props.placeholder"
 
 #. module: web
 #. odoo-javascript

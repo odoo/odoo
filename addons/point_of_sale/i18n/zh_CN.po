@@ -7,15 +7,15 @@
 # Emily Jia <eji@odoo.com>, 2023
 # Raymond Yu <cl_yu@hotmail.com>, 2023
 # Jeffery CHEN <jeffery9@gmail.com>, 2023
-# Martin Trigaux, 2023
 # digitalliuzg8888, 2023
+# Martin Trigaux, 2023
 # 稀饭~~ <wangwhai@qq.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:08+0000\n"
+"POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -80,7 +80,7 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidgetControlPanel.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
 #, python-format
 msgid "%s product(s) found for \"%s\"."
 msgstr "%s 找到 “%s” 的产品."
@@ -719,8 +719,8 @@ msgstr "尽快"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__closing
-msgid "At the session closing"
-msgstr "在会话关闭时"
+msgid "At the session closing (faster)"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_update_stock_quantities
@@ -1657,6 +1657,9 @@ msgstr "自定义页眉和页脚"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ActionpadWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ActionpadWidget.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ActionpadWidget.xml:0
+#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/CustomerButton.xml:0
+#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/CustomerButton.xml:0
+#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/CustomerButton.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__partner_id
@@ -2044,6 +2047,7 @@ msgstr "折扣通告"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/SaleDetailsReport.xml:0
 #: code:addons/point_of_sale/static/src/xml/SaleDetailsReport.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
@@ -2690,8 +2694,8 @@ msgstr "只有新的或被取消的销售流水可以删除."
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__real
-msgid "In real time (recommended)"
-msgstr "实时（推荐）"
+msgid "In real time (accurate but slower)"
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3386,6 +3390,7 @@ msgstr "需要提供下述凭证的盈利科目用于过账盈利金额：%s"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/ControlButtons/InvoiceButton.js:0
 #, python-format
 msgid "Network Error"
@@ -3481,14 +3486,6 @@ msgid ""
 msgstr "没有配置科目表，转到“配置/设置”菜单，从发票选项卡安装。"
 
 #. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#, python-format
-msgid "No customer found for"
-msgstr "未找到客户"
-
-#. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_sale_graph
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_report_pos_order_all_filtered
@@ -3501,6 +3498,20 @@ msgstr "还没有数据耶！"
 #, python-format
 msgid "No link to an invoice for %s."
 msgstr "该结算单没有链接用来%s."
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/PartnerListScreen/PartnerListScreen.js:0
+#, python-format
+msgid "No more customer found for \"%s\"."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
+#, python-format
+msgid "No more product found for \"%s\"."
+msgstr ""
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4069,9 +4080,9 @@ msgstr "支付订单"
 #. module: point_of_sale
 #. odoo-javascript
 #. odoo-python
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductScreen.xml:0
 #: code:addons/point_of_sale/wizard/pos_payment.py:0
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -4944,6 +4955,15 @@ msgid "Product information"
 msgstr "产品信息"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductsWidget.js:0
+#, python-format
+msgid ""
+"Product is not loaded. Tried loading the product from the server but there "
+"is a network error."
+msgstr "产品未加载。尝试从服务器加载产品但是有网络故障。"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Product prices on receipts"
 msgstr "收据上的产品价格"
@@ -5019,6 +5039,13 @@ msgstr "数量"
 #, python-format
 msgid "REASON"
 msgstr "原因"
+
+#. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/SaleDetailsReport.xml:0
+#, python-format
+msgid "REFUNDED:"
+msgstr "退款："
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__rating_ids
@@ -5108,10 +5135,10 @@ msgstr "刷新显示"
 
 #. module: point_of_sale
 #. odoo-javascript
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ControlButtons/RefundButton.xml:0
-#: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
 #, python-format
 msgid "Refund"
 msgstr "退款"
@@ -5371,6 +5398,13 @@ msgid "SN"
 msgstr "SN"
 
 #. module: point_of_sale
+#. odoo-javascript
+#: code:addons/point_of_sale/static/src/xml/SaleDetailsReport.xml:0
+#, python-format
+msgid "SOLD:"
+msgstr "出售："
+
+#. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__nbr_lines
 msgid "Sale Line Count"
 msgstr "销售行数"
@@ -5469,7 +5503,7 @@ msgstr "搜索顾客……"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/TicketScreen/TicketScreen.xml:0
+#: code:addons/point_of_sale/static/src/js/Screens/TicketScreen/TicketScreen.js:0
 #, python-format
 msgid "Search Orders..."
 msgstr "搜索订单..."
@@ -5489,9 +5523,10 @@ msgstr "搜索销售订单"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
+#: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
-msgid "Search database"
-msgstr "搜索数据库"
+msgid "Search more"
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__access_token
@@ -6555,20 +6590,6 @@ msgstr "理论期末余额"
 
 #. module: point_of_sale
 #. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#, python-format
-msgid "There are no customers."
-msgstr "没有顾客"
-
-#. module: point_of_sale
-#. odoo-javascript
-#: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerListScreen.xml:0
-#, python-format
-msgid "There are no loaded customers."
-msgstr "没有加载的顾客"
-
-#. module: point_of_sale
-#. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
 msgid "There are no products in this category."
@@ -7477,6 +7498,15 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
+"You don't have the access rights to get the point of sale closing control "
+"data."
+msgstr ""
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
 "You have enabled the \"Identify Customer\" option for %s payment method,but "
 "the order %s does not contain a customer."
 msgstr "您已为%s付款方式启用了“识别客户”选项，但订单%s不包含客户。"
@@ -7740,11 +7770,3 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "与当前订单重复"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid ""
-"You don't have the access rights to get the point of sale closing control "
-"data."
-msgstr ""

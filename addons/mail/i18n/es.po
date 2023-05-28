@@ -23,14 +23,15 @@
 # Daniel Blanco <daniel@blancomartin.cl>, 2023
 # Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Fernanda Alvarez, 2023
+# Iran Villalobos López, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:09+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Iran Villalobos López, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4126,13 +4127,6 @@ msgid "Generic User From Record"
 msgstr "Usuario genérico del registro"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid "Go to the configuration panel"
-msgstr "Ir al panel de configuración"
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__group
 msgid "Group"
 msgstr "Grupo"
@@ -5893,6 +5887,13 @@ msgstr "Marcar 'Por realizar'"
 #, python-format
 msgid "Mark as done"
 msgstr "Marcar como hecho"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "Media devices unobtainable"
+msgstr ""
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
@@ -8195,16 +8196,16 @@ msgid "SSL"
 msgstr "SSL"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
-msgid "SSL/TLS"
-msgstr "SSL/TLS"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/call_settings_menu.js:0
 #, python-format
 msgid "SSL might not be set up properly"
 msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
+msgid "SSL/TLS"
+msgstr "SSL/TLS"
 
 #. module: mail
 #. odoo-javascript
@@ -10635,17 +10636,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid ""
-"You cannot create a new user from here.\n"
-" To create new user please go to configuration panel."
-msgstr ""
-"No puede crear un nuevo usuario desde aquí.\n"
-"Para crear un nuevo usuario, vaya al panel de configuración"
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -10709,6 +10699,13 @@ msgid ""
 msgstr ""
 "Puede adjuntar archivos a esta plantilla, para ser añadidos a todos los "
 "e-mails creados desde ella."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_template.py:0
+#, python-format
+msgid "You may not define a template on an abstract model: %s"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -17417,7 +17414,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "entry"
-msgstr ""
+msgstr "asiento"
 
 #. module: mail
 #. odoo-javascript
@@ -24362,13 +24359,6 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "medal"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/models/call_settings_menu.js:0
-#, python-format
-msgid "Media devices unobtainable"
 msgstr ""
 
 #. module: mail

@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Jolien De Paepe, 2023
-# Ruani Lazzarotto <ruanilazzarotto@gmail.com>, 2023
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Kevilyn Rosa, 2023
+# Layna Nascimento, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:16+0000\n"
+"POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Kevilyn Rosa, 2023\n"
+"Last-Translator: Layna Nascimento, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,20 +123,20 @@ msgstr "<b>Palestra de Introdução</b>:"
 #: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
+"    Dear <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br>\n"
 "    We are pleased to inform you that your proposal <t t-out=\"object.name or ''\">What This Event Is All About</t> has been accepted and confirmed for the event <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t>.\n"
-"    <br/>\n"
+"    <br>\n"
 "    You will find more details here:\n"
 "    <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
 "            View Talk\n"
 "        </a>\n"
 "    </div>\n"
-"    <br/><br/>\n"
+"    <br><br>\n"
 "    Thank you,\n"
 "    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>"
 msgstr ""
@@ -784,7 +784,7 @@ msgstr "Editar Faixa"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_contact_details
 msgid "Email"
-msgstr "Email"
+msgstr "E-mail"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__mail_template_id
@@ -1000,7 +1000,7 @@ msgstr "Rótulo Kanban Cinza"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Group By"
-msgstr "Agrupar Por"
+msgstr "Agrupar por"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_l3_11
@@ -1407,7 +1407,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
 msgid "Medium"
-msgstr "Mídia"
+msgstr "Meio"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type

@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:09+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -4144,13 +4144,6 @@ msgid "Generic User From Record"
 msgstr "Algemene gebruiker van record"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid "Go to the configuration panel"
-msgstr "Ga naar het configuratiepaneel"
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__group
 msgid "Group"
 msgstr "Groep"
@@ -5931,6 +5924,13 @@ msgstr "Markeren als nog te doen"
 #, python-format
 msgid "Mark as done"
 msgstr "Markeren als gereed"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "Media devices unobtainable"
+msgstr "Media-apparaten onbereikbaar"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
@@ -8239,16 +8239,16 @@ msgid "SSL"
 msgstr "SSL"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
-msgid "SSL/TLS"
-msgstr "SSL/TLS"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/call_settings_menu.js:0
 #, python-format
 msgid "SSL might not be set up properly"
 msgstr "SSL is misschien niet goed ingesteld"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
+msgid "SSL/TLS"
+msgstr "SSL/TLS"
 
 #. module: mail
 #. odoo-javascript
@@ -10434,7 +10434,7 @@ msgstr "Kanalen bekijken of eraan deelnemen"
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
 msgid "Viewer"
-msgstr "Toeschouwer"
+msgstr "Viewer"
 
 #. module: mail
 #. odoo-javascript
@@ -10705,17 +10705,6 @@ msgstr "Je kan dit bericht zonder problemen negeren"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid ""
-"You cannot create a new user from here.\n"
-" To create new user please go to configuration panel."
-msgstr ""
-"Je kunt vanaf hier geen nieuwe gebruiker aanmaken.\n"
-" Ga naar de instellingen om een nieuwe gebruiker aan te maken."
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -10779,6 +10768,13 @@ msgid ""
 msgstr ""
 "Je kunt bestanden toevoegen aan dit sjabloon. Deze worden vervolgens "
 "toegevoegd aan alle e-mails op basis van dit sjabloon"
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_template.py:0
+#, python-format
+msgid "You may not define a template on an abstract model: %s"
+msgstr "Je mag geen sjabloon bepalen op een abstract model: %s"
 
 #. module: mail
 #. odoo-javascript
@@ -24439,13 +24435,6 @@ msgstr "mechanisch been"
 #, python-format
 msgid "medal"
 msgstr "medaille"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/models/call_settings_menu.js:0
-#, python-format
-msgid "Media devices unobtainable"
-msgstr "Media-apparaten onbereikbaar"
 
 #. module: mail
 #. odoo-javascript

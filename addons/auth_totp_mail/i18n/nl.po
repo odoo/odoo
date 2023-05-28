@@ -3,7 +3,6 @@
 # 	* auth_totp_mail
 # 
 # Translators:
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # 
@@ -11,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:11+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -26,8 +25,8 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
-"        <t t-out=\"user.name  or ''\"/> requested you activate two-factor authentication to protect your account.<br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"        <t t-out=\"user.name  or ''\"></t> requested you activate two-factor authentication to protect your account.<br><br>\n"
 "        Two-factor Authentication (\"2FA\") is a system of double authentication.\n"
 "        The first one is done with your password and the second one with a code you get from a dedicated mobile app.\n"
 "        Popular ones include Authy, Google Authenticator or the Microsoft Authenticator.\n"
@@ -43,11 +42,11 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Beste <t t-out=\"object.partner_id.name or ''\"/><br/><br/>\n"
-"        <t t-out=\"user.name  or ''\"/> heeft je verzocht om tweestapsverificatie te activeren om je account te beschermen.<br/><br/>\n"
-"           Tweestapsverificatie (\"2FA\") is een systeem van dubbele authenticatie.\n"
-"           De eerste doe je met je wachtwoord en de tweede met een code die je krijgt van een speciale mobiele app.\n"
-"           Populaire zijn onder meer: Authy, Google Authenticator of de Microsoft Authenticator.\n"
+"        Beste <t t-out=\"object.partner_id.name or ''\"></t><br><br>\n"
+"        <t t-out=\"user.name  or ''\"></t> heeft je verzocht om de tweestapsverificatie te activeren om je account te beschermen.<br><br>\n"
+"        Tweestapsverificatie (\"2FA\") is een systeem van dubbele authenticatie.\n"
+"        De eerste doe je met je wachtwoord en de tweede met een code die je krijgt van een speciale mobiele app.\n"
+"        Populaire apps zijn onder andere Authy, Google Authenticator of Microsoft Authenticator.\n"
 "\n"
 "        <p style=\"margin: 16px 0px 16px 0px; text-align: center;\">\n"
 "            <a t-att-href=\"object.get_totp_invite_url()\" style=\"background-color:#875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
@@ -55,7 +54,8 @@ msgstr ""
 "            </a>\n"
 "        </p>\n"
 "    </p>\n"
-"</div>"
+"</div>\n"
+"        "
 
 #. module: auth_totp_mail
 #: model_terms:ir.ui.view,arch_db:auth_totp_mail.account_security_setting_update

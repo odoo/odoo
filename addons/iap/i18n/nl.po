@@ -7,9 +7,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~15.4\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 14:06+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -30,15 +30,15 @@ msgid "Account Token"
 msgstr "Account token"
 
 #. module: iap
-#. openerp-web
+#. odoo-javascript
+#: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
 #: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
-#: code:addons/iap/static/src/xml/iap_templates.xml:0
 #, python-format
 msgid "Buy credits"
 msgstr "Credits kopen"
 
 #. module: iap
-#. openerp-web
+#. odoo-javascript
 #: code:addons/iap/static/src/xml/iap_templates.xml:0
 #, python-format
 msgid "Cancel"
@@ -70,11 +70,6 @@ msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: iap
-#: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
-msgid "Documentation"
-msgstr "Documentatie"
-
-#. module: iap
 #: model:ir.ui.menu,name:iap.iap_root_menu
 msgid "IAP"
 msgstr "IAP"
@@ -103,16 +98,11 @@ msgid "ID"
 msgstr "ID"
 
 #. module: iap
-#. openerp-web
+#. odoo-javascript
 #: code:addons/iap/static/src/xml/iap_templates.xml:0
 #, python-format
 msgid "Insufficient credit to perform this service."
 msgstr "Ontoereikend krediet om deze service uit te voeren."
-
-#. module: iap
-#: model:ir.model.fields,field_description:iap.field_iap_account____last_update
-msgid "Last Modified on"
-msgstr "Laatst gewijzigd op"
 
 #. module: iap
 #: model:ir.model.fields,field_description:iap.field_iap_account__write_uid
@@ -140,13 +130,14 @@ msgid "Service Name"
 msgstr "Naam dienst"
 
 #. module: iap
-#. openerp-web
+#. odoo-javascript
 #: code:addons/iap/static/src/js/insufficient_credit_error_handler.js:0
 #, python-format
 msgid "Start a Trial at Odoo"
 msgstr "Start een proefperiode bij Odoo"
 
 #. module: iap
+#. odoo-python
 #: code:addons/iap/tools/iap_tools.py:0
 #, python-format
 msgid ""
@@ -158,8 +149,8 @@ msgstr ""
 "probeerde op te nemen, was %s"
 
 #. module: iap
-#. openerp-web
-#: code:addons/iap/static/src/xml/iap_templates.xml:0
+#. odoo-javascript
+#: code:addons/iap/static/src/action_buttons_widget/action_buttons_widget.xml:0
 #: model_terms:ir.ui.view,arch_db:iap.res_config_settings_view_form
 #, python-format
 msgid "View My Services"

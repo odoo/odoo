@@ -14,7 +14,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:08+0000\n"
+"POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -215,29 +215,29 @@ msgstr ""
 #: model:mail.template,body_html:project.rating_project_request_email_template
 msgid ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
-"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"></t>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"                Hello <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br><br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                Hello,<br/><br/>\n"
+"                Hello,<br><br>\n"
 "            </t>\n"
 "            Please take a moment to rate our services related to the task \"<strong t-out=\"object.name or ''\">Planning and budget</strong>\"\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                assigned to <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br/>\n"
+"                assigned to <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong>.<br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                .<br/>\n"
+"                .<br>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <strong>Tell us how you feel about our service</strong><br/>\n"
+"                    <strong>Tell us how you feel about our service</strong><br>\n"
 "                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(click on one of these smileys)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
@@ -245,17 +245,17 @@ msgid ""
 "                        <tr>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
-"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
-"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\"/>\n"
+"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
-"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\"/>\n"
+"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -266,10 +266,10 @@ msgid ""
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            We appreciate your feedback. It helps us to improve continuously.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br/><br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey has been sent because your task has been moved to the stage <b t-out=\"object.stage_id.name or ''\">In progress</b></span>\n"
+"                <br><br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey has been sent because your task has been moved to the stage <b t-out=\"object.stage_id.name or ''\">In progress</b></span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey is sent <b t-out=\"object.project_id.rating_status_period or ''\">Weekly</b> as long as the task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
+"                <br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">This customer survey is sent <b t-out=\"object.project_id.rating_status_period or ''\">Weekly</b> as long as the task is in the <b t-out=\"object.stage_id.name or ''\">In progress</b> stage.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -278,29 +278,29 @@ msgid ""
 "            "
 msgstr ""
 "<div>\n"
-"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
-"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"></t>\n"
+"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"></t>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            <t t-if=\"partner.name\">\n"
-"                Hallo <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"                Hallo <t t-out=\"partner.name or ''\">Brandon Freeman</t>,<br><br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                Hallo,<br/><br/>\n"
+"                Hallo,<br><br>\n"
 "            </t>\n"
 "            Bitte nehmen Sie sich einen Moment Zeit und bewerten Sie unsere Dienste im Zusammenhang mit der Aufgabe „<strong t-out=\"object.name or ''\">Planung und Budget</strong>“,\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                das <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong> zugewiesen war.<br/>\n"
+"                das <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell Admin</strong> zugewiesen war.<br>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                .<br/>\n"
+"                .<br>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "        <tr><td style=\"text-align: center;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
-"                    <strong>Ihre Meinung zu unseren Dienstleistungen ist uns wichtig!</strong><br/>\n"
+"                    <strong>Ihre Meinung zu unseren Dienstleistungen ist uns wichtig!</strong><br>\n"
 "                    <span style=\"font-size: 12px; opacity: 0.5; color: #454748;\">(klicken Sie auf einen dieser Smileys)</span>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"font-size: 13px;\">\n"
@@ -308,17 +308,17 @@ msgstr ""
 "                        <tr>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/5\">\n"
-"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\"/>\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Satisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/3\">\n"
-"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\"/>\n"
+"                                    <img alt=\"Okay\" src=\"/rating/static/src/img/rating_3.png\" title=\"Okay\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                            <td>\n"
 "                                <a t-attf-href=\"/rate/{{ access_token }}/1\">\n"
-"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\"/>\n"
+"                                    <img alt=\"Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Dissatisfied\">\n"
 "                                </a>\n"
 "                            </td>\n"
 "                        </tr>\n"
@@ -329,10 +329,10 @@ msgstr ""
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            Wir schätzen Ihr Feedback. Es hilft uns, uns kontinuierlich zu verbessern.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br/><br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Diese Kundenumfrage wurde versendet, weil Ihre Aufgabe in die Phase <b t-out=\"object.stage_id.name or ''\">In Bearbeitung</b> verschoben wurde.</span>\n"
+"                <br><br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Diese Kundenumfrage wurde versendet, weil Ihre Aufgabe in die Phase <b t-out=\"object.stage_id.name or ''\">In Bearbeitung</b> verschoben wurde.</span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodic'\">\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Diese Kundenumfrage wird <b t-out=\"object.project_id.rating_status_period or ''\">Wöchentlich</b> versandt, solange sich die Aufgabe in der Phase <b t-out=\"object.stage_id.name or ''\">In Bearbeitung</b> befindet.</span>\n"
+"                <br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Diese Kundenumfrage wird <b t-out=\"object.project_id.rating_status_period or ''\">Wöchentlich</b> versandt, solange sich die Aufgabe in der Phase <b t-out=\"object.stage_id.name or ''\">In Bearbeitung</b> befindet.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -344,42 +344,52 @@ msgstr ""
 #: model:mail.template,body_html:project.project_done_email_template
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
 "    It is my pleasure to let you know that we have successfully completed the project \"<strong t-out=\"object.name or ''\">Renovations</strong>\".\n"
 "    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
-"<br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">You are receiving this email because your project has been moved to the stage <b t-out=\"object.stage_id.name or ''\">Done</b></span>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    Hallo <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    Es ist mir eine Freude, Ihnen mitzuteilen, dass wir das Projekt „<strong t-out=\"object.name or ''\">Renovierungen</strong>“ erfolgreich abgeschlossen haben.\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"<br><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\" groups=\"project.group_project_stages\">Sie erhalten diese E-Mail, weil Ihr Projekt in die nächste Phase <b t-out=\"object.stage_id.name or ''\">Erledigt</b> verschoben wurde.</span>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
 msgid ""
 "<div>\n"
-"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
-"    Thank you for your enquiry.<br/>\n"
+"    Dear <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    Thank you for your enquiry.<br>\n"
 "    If you have any questions, please let us know.\n"
-"    <br/><br/>\n"
+"    <br><br>\n"
 "    Thank you,\n"
 "    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
 "        "
 msgstr ""
 "<div>\n"
-"    Hallo <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
-"    Danke für Ihre Anfrage.<br/>\n"
+"    Hallo <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br>\n"
+"    Danke für Ihre Anfrage.<br>\n"
 "    Sollten Sie Fragen haben, lassen Sie es uns bitte wissen.\n"
-"    <br/><br/>\n"
+"    <br><br>\n"
 "    Vielen Dank,\n"
 "    <t t-if=\"user.signature\">\n"
-"        <br/>\n"
-"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"        <br>\n"
+"        <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "    </t>\n"
 "</div>\n"
 "        "
@@ -427,6 +437,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "<i class=\"fa fa-warning\"/>&amp;nbsp;"
 msgstr "<i class=\"fa fa-warning\"/>&amp;nbsp;"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "<i title=\"Private Task\" class=\"fa fa-lock\"/>"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -488,6 +503,18 @@ msgstr "<span class=\"o_stat_text\">Aufgaben</span>"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">in Recurrence</span>"
 msgstr "<span class=\"o_stat_text\">mit Serie</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid ""
+"<span title=\"See Subtasks\" class=\"subtask_list_button fa fa-check-"
+"square-o me-1\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+msgid "<span title=\"e\" class=\"fa fa-check-square-o me-1\"/>"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -1127,7 +1154,7 @@ msgstr "Brainstorm"
 #. module: project
 #: model:project.tags,name:project.project_tags_00
 msgid "Bug"
-msgstr ""
+msgstr "Fehler"
 
 #. module: project
 #. odoo-python
@@ -1226,6 +1253,11 @@ msgstr "Beendet am"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_closed
 msgid "Closed State"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__closed_subtask_count
+msgid "Closed Sub-tasks Count"
 msgstr ""
 
 #. module: project
@@ -1501,8 +1533,8 @@ msgstr "Währung"
 
 #. module: project
 #. odoo-python
-#: code:addons/project/models/project_task.py:0
-#: code:addons/project/models/project_task.py:0
+#: code:addons/project/models/project.py:0
+#: code:addons/project/models/project.py:0
 #, python-format
 msgid "Current Stage: %s"
 msgstr ""
@@ -2991,7 +3023,7 @@ msgstr "Neu"
 #. module: project
 #: model:project.tags,name:project.project_tags_01
 msgid "New Feature"
-msgstr ""
+msgstr "Neue Funktion"
 
 #. module: project
 #. odoo-javascript
@@ -3740,7 +3772,7 @@ msgstr "Produktbeschreibung ..."
 #. module: project
 #: model:mail.template,subject:project.project_done_email_template
 msgid "Project status - {{ object.name }}"
-msgstr ""
+msgstr "Projektstatus - {{ object.name }}"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -3750,7 +3782,7 @@ msgstr "Projektaufgaben"
 #. module: project
 #: model:mail.template,name:project.project_done_email_template
 msgid "Project: Project Completed"
-msgstr ""
+msgstr "Projekt: Projekt abgeschlossen"
 
 #. module: project
 #: model:mail.template,name:project.mail_template_data_project_task
@@ -4214,11 +4246,6 @@ msgid "Security Token"
 msgstr "Sicherheits-Token"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.view_task_kanban
-msgid "See Subtasks"
-msgstr ""
-
-#. module: project
 #. odoo-javascript
 #: code:addons/project/static/src/project_sharing/components/chatter/chatter_composer.xml:0
 #: model_terms:ir.ui.view,arch_db:project.project_share_wizard_view_form
@@ -4265,6 +4292,8 @@ msgid ""
 "Set on project's stages to inform customers when a project reaches that "
 "stage"
 msgstr ""
+"Einstellen der Projektphasen, um die Kunden zu informieren, wenn ein Projekt"
+" diese Phase erreicht"
 
 #. module: project
 #. odoo-javascript
@@ -5203,7 +5232,7 @@ msgstr "Aktualisierung erstellt"
 #. module: project
 #: model:project.tags,name:project.project_tags_03
 msgid "Usability"
-msgstr ""
+msgstr "Benutzerfreundlichkeit"
 
 #. module: project
 #. odoo-javascript
@@ -5480,17 +5509,6 @@ msgstr "Jährlich"
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_unit__year
 msgid "Years"
 msgstr "Jahre"
-
-#. module: project
-#: model:ir.model.fields,help:project.field_project_task__tag_ids
-msgid ""
-"You can only see tags that are already present in your project. If you try "
-"creating a tag that is already existing in other projects, it won't generate"
-" any duplicates."
-msgstr ""
-"Sie können nur Stichwörter sehen, die schon in Ihrem Projekt vorhanden sind."
-" Wenn Sie versuchen, ein Stichwort zu erstellen, das bereits in anderen "
-"Projekten besteht, werden keine Duplikate erzeugt."
 
 #. module: project
 #. odoo-python

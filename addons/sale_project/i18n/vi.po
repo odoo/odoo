@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~16.1\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:54+0000\n"
+"POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -51,7 +51,7 @@ msgstr "Đơn bán hàng của %(name)s"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 msgid "<span class=\"o_stat_text\">Sales Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Đơn bán hàng</span>"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -62,7 +62,7 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Theo cấu hình sản phẩm, số lượng đã giao có thể được tính tự động theo cơ chế :\n"
+"Theo cấu hình sản phẩm, số lượng đã giao có thể được tính tự động theo cơ chế:\n"
 "  - Thủ công: số lượng được đặt thủ công trên mục\n"
 "  - Phân tích từ chi phí: số lượng dựa trên tổng các khoản chi phí đã ghi nhận\n"
 "  - Bảng chấm công: số lượng là tổng số giờ được ghi nhận của nhiệm vụ liên kết với mục bán hàng\n"
@@ -80,14 +80,14 @@ msgstr "Tất cả hạng mục đã được tải"
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Based on Delivered Quantity (Manual)"
-msgstr "Dựa trên Số lượng đã đặt (Thủ công)"
+msgstr "Dựa trên số lượng đã giao (Thủ công)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Based on Milestones"
-msgstr "Dựa theo mốc thời gian"
+msgstr "Dựa trên mốc thời gian"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__allow_billable
@@ -175,9 +175,9 @@ msgid ""
 " for the order with a task for each sales order line to track the time "
 "spent."
 msgstr ""
-"Lập hóa đơn số lượng đã đặt ngay khi dịch vụ này được bán. Tạo một dự án cho"
-" đơn hàng với nhiệm vụ cho mỗi mục đơn bán hàng để theo dõi thời gian xử lý."
-" "
+"Lập hóa đơn cho số lượng đã đặt ngay khi dịch vụ này được bán. Tạo một dự án"
+" cho đơn hàng với nhiệm vụ cho mỗi mục đơn bán hàng để theo dõi thời gian xử"
+" lý. "
 
 #. module: sale_project
 #. odoo-python
@@ -267,7 +267,7 @@ msgid ""
 "order with a task for each sales order line to track the time spent."
 msgstr ""
 "Lập hoá đơn cho mốc thời gian khi bạn đạt được. Tạo một dự án cho đơn hàng "
-"với nhiệm vụ cho mỗi mục đơn bán hàng để theo dõi thời gian xử lý. "
+"với nhiệm vụ cho mỗi mục đơn bán hàng để theo dõi thời gian xử lý."
 
 #. module: sale_project
 #. odoo-python
@@ -278,7 +278,7 @@ msgid ""
 "project to track the time spent."
 msgstr ""
 "Lập hoá đơn cho mốc thời gian khi bạn đạt được. Tạo một nhiệm vụ trong dự án"
-" hiện có để theo dõi thời gian xử lý. "
+" hiện có để theo dõi thời gian xử lý."
 
 #. module: sale_project
 #. odoo-python
@@ -294,7 +294,7 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Invoice your time and material to customers"
-msgstr "Xuất hóa đơn thời gian và nguyên vật liệu cho khách hàng"
+msgstr "Lập hóa đơn thời gian và nguyên liệu cho khách hàng"
 
 #. module: sale_project
 #. odoo-javascript
@@ -319,7 +319,7 @@ msgstr "Chính sách xuất hóa đơn"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__is_product_milestone
 msgid "Is Product Milestone"
-msgstr "Là Mốc thời gian sản phẩm"
+msgstr "Là mốc thời gian sản phẩm"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_account_move_line
@@ -350,7 +350,7 @@ msgstr ""
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Materials"
-msgstr "Nguyên vật liệu"
+msgstr "Nguyên liệu"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
@@ -467,7 +467,7 @@ msgstr "Dự án"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr "Dự án & Nhiệm vụ"
+msgstr "Dự án & nhiệm vụ"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_milestone
@@ -502,7 +502,7 @@ msgstr "Dự án"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_ids
 msgid "Projects used in this sales order."
-msgstr "Các dự án được sử dụng trong đơn hàng này."
+msgstr "Các dự án được sử dụng trong đơn bán hàng này."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__quantity_percentage
@@ -529,7 +529,7 @@ msgstr "Bán hàng"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales & Invoicing"
-msgstr "Bán hàng & Hoá đơn"
+msgstr "Bán hàng & hoá đơn"
 
 #. module: sale_project
 #. odoo-python
@@ -576,8 +576,8 @@ msgstr ""
 "Xóa hạng mục đơn bán hàng để ngăn việc lập hoá đơn thanh toán cho nhiệm vụ này. Bạn cũng có thể thay đổi hoặc xóa hạng mục đơn bán hàng của từng mục nhập bảng chấm công riêng lẻ."
 
 #. module: sale_project
-#. odoo-python
 #. odoo-javascript
+#. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
@@ -730,7 +730,7 @@ msgstr "Nhiệm vụ này đã được tạo từ: %s (%s)"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
 msgid "To invoice"
-msgstr "Chờ xuất hoá đơn"
+msgstr "Cần xuất hoá đơn"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_type
@@ -754,7 +754,7 @@ msgstr "Hoá đơn nhà cung cấp"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
-msgstr ""
+msgstr "Xem đơn bán hàng"
 
 #. module: sale_project
 #. odoo-python

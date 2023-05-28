@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:03+0000\n"
+"POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -154,12 +154,6 @@ msgid "ID"
 msgstr "ID"
 
 #. module: uom
-#: model:ir.model.fields,field_description:uom.field_uom_category____last_update
-#: model:ir.model.fields,field_description:uom.field_uom_uom____last_update
-msgid "Last Modified on"
-msgstr "Chỉnh sửa lần cuối vào"
-
-#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_uid
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
 msgid "Last Updated by"
@@ -228,6 +222,7 @@ msgid "Smaller than the reference Unit of Measure"
 msgstr "Nhỏ hơn đơn vị gốc của nhóm này"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
@@ -261,6 +256,7 @@ msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr "Tỷ lệ chuyển đổi cho một đơn vị đo lương không thể = 0!"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
@@ -279,6 +275,7 @@ msgid "The rounding precision must be strictly positive."
 msgstr "The rounding precision must be strictly positive."
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid ""
@@ -350,18 +347,21 @@ msgstr ""
 "            lại lẫn nhau. Ví dụ, trong nhóm <i>'Thời gian'</i>, bạn sẽ có            các đơn vị đo lường như: giờ, ngày, phút.\n"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s must have at least one reference unit of measure."
 msgstr ""
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should have a reference unit of measure."
 msgstr ""
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
@@ -378,6 +378,7 @@ msgid "Volume"
 msgstr "Thể tích"
 
 #. module: uom
+#. odoo-python
 #: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "Warning for %s"

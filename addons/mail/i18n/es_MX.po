@@ -9,17 +9,17 @@
 # Martin Trigaux, 2023
 # Aimée Mendoza Sánchez, 2023
 # Iran Villalobos López, 2023
-# Fernanda Alvarez, 2023
 # Lucia Pacheco, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:09+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4152,13 +4152,6 @@ msgid "Generic User From Record"
 msgstr "Usuario genérico del registro"
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid "Go to the configuration panel"
-msgstr "Ir al panel de configuración"
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__group
 msgid "Group"
 msgstr "Grupo"
@@ -4679,7 +4672,7 @@ msgstr "Image 512"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_link_preview__image_mimetype
 msgid "Image MIME type"
-msgstr "Imagen de MIMO"
+msgstr "Imagen tipo MIMO"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
@@ -4747,7 +4740,7 @@ msgstr "Servidores de correo entrante"
 msgid ""
 "Indicates this activity has been created automatically and not by any user."
 msgstr ""
-"Indica que esta actividad se creó automáticamente y no por un usuario."
+"Indica que esta actividad se creó automáticamente y no la creó un usuario."
 
 #. module: mail
 #. odoo-javascript
@@ -4876,7 +4869,7 @@ msgstr ""
 msgid ""
 "Invalid template or view source record %(svalue)s, is %(model)s instead"
 msgstr ""
-"Pplantilla o registro de origen de visa no válido %(svalue)s, es %(model)s "
+"Plantilla o registro de origen de vista no válido %(svalue)s, es %(model)s "
 "por el contrario"
 
 #. module: mail
@@ -4944,14 +4937,14 @@ msgstr "Invitar gente"
 #: code:addons/mail/static/src/models/channel_invitation_form.js:0
 #, python-format
 msgid "Invite to Channel"
-msgstr "Invitar a canal"
+msgstr "Invitar al canal"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/channel_invitation_form.js:0
 #, python-format
 msgid "Invite to group chat"
-msgstr "Invitar a chat grupal"
+msgstr "Invitar al chat grupal"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -4995,7 +4988,7 @@ msgstr "Es un miembro"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__is_read
 msgid "Is Read"
-msgstr "Se lee"
+msgstr "Se leyó"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_chat
@@ -5023,12 +5016,12 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_muted
 msgid "Is microphone muted"
-msgstr "Está silenciado el micrófono"
+msgstr "El micrófono está silenciado"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_member__is_pinned
 msgid "Is pinned on the interface"
-msgstr "Está fijada en la interfaz"
+msgstr "La interfaz está fijada"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_camera_on
@@ -5132,7 +5125,7 @@ msgstr "Símbolo japonés para principiante"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "Japanese wind socks"
-msgstr "Campanilla de viento"
+msgstr "Koinobori"
 
 #. module: mail
 #. odoo-javascript
@@ -5492,7 +5485,7 @@ msgstr "Atrasado"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Late Activities"
-msgstr "Actividades tardías"
+msgstr "Actividades atrasadas"
 
 #. module: mail
 #. odoo-javascript
@@ -5566,7 +5559,7 @@ msgstr "Libra"
 #: model_terms:ir.ui.view,arch_db:mail.mail_link_preview_view_form
 #: model_terms:ir.ui.view,arch_db:mail.mail_link_preview_view_tree
 msgid "Link Previews"
-msgstr "Vista previa de enlace"
+msgstr "Vista previa del enlace"
 
 #. module: mail
 #. odoo-javascript
@@ -5945,6 +5938,13 @@ msgid "Mark as done"
 msgstr "Marcar como listo"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "Media devices unobtainable"
+msgstr "Dispositivos multimedia no disponibles"
+
+#. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
 msgid "Meeting"
 msgstr "Reunión"
@@ -6274,8 +6274,8 @@ msgid ""
 "Modifying the model can have an impact on existing activities using this "
 "activity type, be careful."
 msgstr ""
-"Tenga cuidado, la modificación del modelo puede tener un impacto en las "
-"actividades existentes que utilizan este tipo de actividad."
+"Tenga cuidado, si modifica el modelo puede afectar las actividades "
+"existentes que utilizan este tipo de actividad."
 
 #. module: mail
 #: model:ir.model,name:mail.model_base_module_uninstall
@@ -6388,7 +6388,7 @@ msgstr "Botón NUEVO"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "NG"
-msgstr "Malo (NG)"
+msgstr "NG"
 
 #. module: mail
 #. odoo-javascript
@@ -6396,7 +6396,7 @@ msgstr "Malo (NG)"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "NG button"
-msgstr "Botón malo (NG)"
+msgstr "Botón NG"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__name
@@ -6521,7 +6521,7 @@ msgstr "Siguiente tipo de actividad"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__has_recommended_activities
 msgid "Next activities available"
-msgstr "Actividades siguientes disponibles"
+msgstr "Siguientes actividades disponibles"
 
 #. module: mail
 #. odoo-javascript
@@ -6658,7 +6658,7 @@ msgstr "No se encontraron usuarios"
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__category__default
 #, python-format
 msgid "None"
-msgstr "Ninguna\\v"
+msgstr "Ninguna"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_gateway_allowed__email_normalized
@@ -8264,16 +8264,16 @@ msgid "SSL"
 msgstr "SSL"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
-msgid "SSL/TLS"
-msgstr "SSL/TLS"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/call_settings_menu.js:0
 #, python-format
 msgid "SSL might not be set up properly"
 msgstr "La SSL podría no estar configurada correctamente"
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
+msgid "SSL/TLS"
+msgstr "SSL/TLS"
 
 #. module: mail
 #. odoo-javascript
@@ -10739,17 +10739,6 @@ msgstr "Puede ignorar este mensaje de forma segura"
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid ""
-"You cannot create a new user from here.\n"
-" To create new user please go to configuration panel."
-msgstr ""
-"No se puede crear un nuevo usuario desde aquí.\n"
-"Para crear un nuevo usuario, vaya al panel de configuración"
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -10813,6 +10802,13 @@ msgid ""
 msgstr ""
 "Puede adjuntar archivos a esta plantilla para que se añadan a todos los "
 "correos electrónicos creados desde la misma."
+
+#. module: mail
+#. odoo-python
+#: code:addons/mail/models/mail_template.py:0
+#, python-format
+msgid "You may not define a template on an abstract model: %s"
+msgstr "No puede definir una plantilla en un modelo abstracto: %s"
 
 #. module: mail
 #. odoo-javascript
@@ -24477,13 +24473,6 @@ msgstr "pierna mecánica"
 #, python-format
 msgid "medal"
 msgstr "medalla"
-
-#. module: mail
-#. odoo-javascript
-#: code:addons/mail/static/src/models/call_settings_menu.js:0
-#, python-format
-msgid "Media devices unobtainable"
-msgstr "Dispositivos multimedia no disponibles"
 
 #. module: mail
 #. odoo-javascript

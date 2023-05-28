@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:08+0000\n"
+"POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -224,6 +224,21 @@ msgid ""
 msgstr ""
 "<i class=\"fa fa-shopping-cart me-2\"/>\n"
 "                                                <span style=\"font-weight: bold\">加入購物車</span>"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
+msgid "<option value=\"\" selected=\"true\">-</option>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">Country...</option>"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "<option value=\"\">State / Province...</option>"
+msgstr ""
 
 #. module: website_sale
 #. odoo-python
@@ -467,17 +482,17 @@ msgid ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <h1 style=\"color:#A9A9A9;\">THERE'S SOMETHING IN YOUR CART.</h1>\n"
-"                    Would you like to complete your purchase?<br/><br/>\n"
+"                    Would you like to complete your purchase?<br><br>\n"
 "                    <t t-if=\"object.order_line\">\n"
 "                        <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
-"                            <hr/>\n"
+"                            <hr>\n"
 "                            <table width=\"100%\">\n"
 "                                <tr>\n"
 "                                    <td style=\"padding: 10px; width:150px;\">\n"
-"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\"/>\n"
+"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"Product image\">\n"
 "                                    </td>\n"
 "                                    <td>\n"
-"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Desk Combination</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] Desk Combination Desk combination, black-brown: chair + desk + drawer.</t>\n"
+"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] Desk Combination</strong><br><t t-out=\"line.name or ''\">[FURN_7800] Desk Combination Desk combination, black-brown: chair + desk + drawer.</t>\n"
 "                                    </td>\n"
 "                                    <td width=\"100px\" align=\"right\">\n"
 "                                        <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom.name or ''\">Units</t>\n"
@@ -485,14 +500,14 @@ msgid ""
 "                                </tr>\n"
 "                            </table>\n"
 "                        </t>\n"
-"                        <hr/>\n"
+"                        <hr>\n"
 "                    </t>\n"
 "                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
 "                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                            Resume order\n"
 "                        </a>\n"
 "                    </div>\n"
-"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"></t>\n"
 "                    <div style=\"text-align: center;\"><strong>Thank you for shopping with <t t-out=\"company.name or ''\">My Company (San Francisco)</t>!</strong></div>\n"
 "                </td></tr>\n"
 "            </table>\n"
@@ -502,48 +517,6 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 0px; background-color: white; color: #454748; border-collapse:separate;\">\n"
-"<tbody>\n"
-"    <!-- CONTENT -->\n"
-"    <tr>\n"
-"        <td align=\"center\" style=\"min-width: 590px;\">\n"
-"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
-"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"                    <h1 style=\"color:#A9A9A9;\">喂，你的購物車仍有貨品！</h1>\n"
-"                    你想完成這次購物嗎？<br/><br/>\n"
-"                    <t t-if=\"object.order_line\">\n"
-"                        <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
-"                            <hr/>\n"
-"                            <table width=\"100%\">\n"
-"                                <tr>\n"
-"                                    <td style=\"padding: 10px; width:150px;\">\n"
-"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"產品圖片\"/>\n"
-"                                    </td>\n"
-"                                    <td>\n"
-"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] 書桌組合</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] 書桌組合 (書桌組合, 黑啡色)：椅 + 書桌 + 抽屜櫃</t>\n"
-"                                    </td>\n"
-"                                    <td width=\"100px\" align=\"right\">\n"
-"                                        <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom.name or ''\">單位</t>\n"
-"                                    </td>\n"
-"                                </tr>\n"
-"                            </table>\n"
-"                        </t>\n"
-"                        <hr/>\n"
-"                    </t>\n"
-"                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
-"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
-"                            恢復訂單，繼續購物\n"
-"                        </a>\n"
-"                    </div>\n"
-"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
-"                    <div style=\"text-align: center;\"><strong>多謝惠顧 <t t-out=\"company.name or ''\">My Company (San Francisco)</t>！</strong></div>\n"
-"                </td></tr>\n"
-"            </table>\n"
-"        </td>\n"
-"    </tr>\n"
-"</tbody>\n"
-"</table>\n"
-"            "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
@@ -625,21 +598,11 @@ msgstr "關於產品交叉銷售"
 
 #. module: website_sale
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_10
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_11
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_13
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_14
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_16
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_17
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_18
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_2
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_3
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_4
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_5
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_7
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_8
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_9
 msgid "About us"
 msgstr "關於我們"
 
@@ -840,21 +803,11 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_10
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_11
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_13
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_14
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_16
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_17
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_18
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_2
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_3
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_4
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_5
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_7
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_8
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_9
 msgid ""
 "As a leading professional services firm,\n"
 "                                we know that success is all about the\n"
@@ -1437,11 +1390,6 @@ msgid "Country"
 msgstr "國家"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "Country..."
-msgstr "國家..."
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Create"
 msgstr "建立"
@@ -2012,21 +1960,11 @@ msgstr "進入購物車"
 
 #. module: website_sale
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_10
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_11
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_13
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_14
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_16
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_17
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_18
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_2
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_3
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_4
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_5
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_7
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_8
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_9
 msgid ""
 "Great quotation templates will significantly\n"
 "                                <strong>boost your success rate</strong>. The\n"
@@ -2129,21 +2067,11 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_10
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_11
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_13
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_14
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_16
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_17
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_18
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_2
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_3
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_4
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_5
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_7
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_8
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_9
 msgid ""
 "If you edit a quotation from the 'Preview' of a quotation, you will\n"
 "                        update that quotation only. If you edit the quotation\n"
@@ -2852,61 +2780,31 @@ msgstr "訂單/天"
 
 #. module: website_sale
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_10
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_11
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_13
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_14
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_16
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_17
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_18
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_2
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_3
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_4
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_5
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_7
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_8
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_9
 msgid "Our Offer"
 msgstr "我們的報價"
 
 #. module: website_sale
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_10
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_11
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_13
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_14
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_16
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_17
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_18
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_2
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_3
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_4
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_5
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_7
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_8
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_9
 msgid "Our Quality"
 msgstr "我們的品質"
 
 #. module: website_sale
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_10
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_11
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_13
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_14
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_16
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_17
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_18
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_2
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_3
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_4
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_5
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_7
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_8
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_9
 msgid "Our Service"
 msgstr "我們的服務"
 
@@ -3058,21 +2956,11 @@ msgstr "前一年"
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_10
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_11
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_13
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_14
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_16
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_17
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_18
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_2
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_3
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_4
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_5
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_7
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_8
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_9
 #, python-format
 msgid "Price"
 msgstr "價格"
@@ -3307,21 +3195,11 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_10
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_11
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_13
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_14
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_16
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_17
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_18
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_2
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_3
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_4
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_5
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_7
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_8
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_9
 msgid ""
 "Product quality is the foundation we\n"
 "                                stand on; we build it with a relentless\n"
@@ -4024,11 +3902,6 @@ msgid "State / Province"
 msgstr "縣市"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
-msgid "State / Province..."
-msgstr "州/省..."
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_provider_state
 msgid "State of the website sale onboarding payment provider step"
 msgstr ""
@@ -4285,21 +4158,11 @@ msgstr "此組合不存在"
 
 #. module: website_sale
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_10
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_11
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_13
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_14
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_16
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_17
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_18
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_2
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_3
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_4
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_5
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_7
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_8
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_9
 msgid ""
 "This is a <strong>sample quotation template</strong>. You should\n"
 "                                customize it to fit your own needs from the <i>Sales</i>\n"
@@ -4599,21 +4462,11 @@ msgstr "質保，由生產廠家發給產品的買家，廠家承諾在指定時
 
 #. module: website_sale
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_10
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_11
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_13
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_14
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_16
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_17
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_18
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_2
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_3
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_4
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_5
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_7
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_8
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_9
 msgid ""
 "We always ensure that our products are\n"
 "                                set at a fair price so that you will be\n"
@@ -4799,21 +4652,11 @@ msgstr ""
 
 #. module: website_sale
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_1
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_10
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_11
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_13
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_14
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_16
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_17
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_18
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_2
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_3
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_4
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_5
 #: model_terms:sale.order,website_description:website_sale.website_sale_order_6
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_7
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_8
-#: model_terms:sale.order,website_description:website_sale.website_sale_order_9
 msgid ""
 "You can <strong>set a description per product</strong>. Odoo will\n"
 "                        automatically create a quotation using the descriptions\n"

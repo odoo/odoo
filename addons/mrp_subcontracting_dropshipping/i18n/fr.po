@@ -4,13 +4,14 @@
 # 
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2023
+# Jolien De Paepe, 2023
 # Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 10:54+0000\n"
+"POT-Creation-Date: 2023-05-25 12:56+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
@@ -67,21 +68,18 @@ msgid "Is a Subcontracting Location?"
 msgstr "Est un emplacement de sous-traitance ?"
 
 #. module: mrp_subcontracting_dropshipping
-#. odoo-python
-#: code:addons/mrp_subcontracting_dropshipping/models/purchase.py:0
-#, python-format
-msgid ""
-"It appears some components in this RFQ are not meant for subcontracting. "
-"Please create a separate order for these."
-msgstr ""
-"Il semblerait que certaines composants de cette demande de prix ne sont pas "
-"destinées à la sous-traitance. Veuillez corriger ou créer une commande "
-"séparée pour ceux-ci. "
-
-#. module: mrp_subcontracting_dropshipping
 #: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
 msgstr "Règle d'inventaire minimum"
+
+#. module: mrp_subcontracting_dropshipping
+#. odoo-python
+#: code:addons/mrp_subcontracting_dropshipping/models/purchase.py:0
+#, python-format
+msgid "Please note this purchase order is for subcontracting purposes."
+msgstr ""
+"Veuillez noter que ce bon de commande est destiné à des fins de sous-"
+"traitance."
 
 #. module: mrp_subcontracting_dropshipping
 #: model:ir.model,name:mrp_subcontracting_dropshipping.model_purchase_order
@@ -112,3 +110,10 @@ msgstr "Transfert"
 #: model:ir.model,name:mrp_subcontracting_dropshipping.model_stock_warehouse
 msgid "Warehouse"
 msgstr "Entrepôt"
+
+#. module: mrp_subcontracting_dropshipping
+#. odoo-python
+#: code:addons/mrp_subcontracting_dropshipping/models/purchase.py:0
+#, python-format
+msgid "Warning"
+msgstr "Avertissement"
