@@ -1131,8 +1131,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        KeyPay Payroll-integratie\n"
-"        Deze module synchroniseert alle betalingsrunjournalen van KeyPay naar Odoo.\n"
+"        KeyPay Loonadministratie integratie\n"
+"        Deze module synchroniseert alle betalingsrundagboeken van KeyPay naar Odoo.\n"
 "    "
 
 #. module: base
@@ -2265,7 +2265,7 @@ msgstr ""
 "\n"
 "** Naam rekeninghouder ** - Kan hier worden ingevoerd, indien vereist. Over het algemeen niet\n"
 "goedgekeurd door de banken op ABA-bestandsoverdrachten, maar kan worden weergegeven bij de begunstigde\n"
-"bankafschrift tegen de betaling.\n"
+"rekeningafschrift tegen de betaling.\n"
 "\n"
 "- Bankrekeningen van leveranciers kunnen op dezelfde plaats worden opgezet, maar dat is het wel\n"
 "over het algemeen gemakkelijker om ze in te stellen vanaf de partner van voor de verkoper.\n"
@@ -2390,7 +2390,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Boekhoudgegevens voor KSA Payroll-regels.\n"
+"Boekhoudgegevens voor KSA loonregels.\n"
 "=======================================================\n"
 "\n"
 "    "
@@ -2405,7 +2405,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Boekhoudgegevens voor VAE-loonlijstregels.\n"
+"Boekhoudgegevens voor VAE-loonregels.\n"
 "================================================== =====\n"
 "\n"
 "    "
@@ -3472,7 +3472,7 @@ msgstr ""
 "Batchbetalingen maken het mogelijk om betalingen te groeperen.\n"
 "\n"
 "Ze worden namelijk, maar niet alleen, gebruikt om verschillende cheques te groeperen voordat ze in een enkele batch bij de bank worden gestort.\n"
-"Het totaal gestorte bedrag verschijnt dan als één transactie op je bankafschrift.\n"
+"Het totaal gestorte bedrag verschijnt dan als één transactie op je rekeningafschrift.\n"
 "Wanneer je aflettert, selecteer je eenvoudig de bijbehorende batchbetaling om alle betalingen in de batch af te stemmen.\n"
 "    "
 
@@ -3495,7 +3495,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Belgische salaris regels.\n"
+"Belgische loonregels.\n"
 "======================\n"
 "\n"
 "    * Werknemer details\n"
@@ -4688,7 +4688,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Franse loonadministratie\n"
+"Franse loonregels\n"
 "======================\n"
 "\n"
 "    - Configuratie van de module hr_payroll voor de Franse localisatie\n"
@@ -5229,7 +5229,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Generieke loonlijst systeem voor integratie met boekhouden.\n"
+"Generieke loonadministratie systeem voor integratie met boekhouden.\n"
 "==================================================\n"
 "    * Kostencodering\n"
 "    * Betalingscodering\n"
@@ -5660,7 +5660,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Regels voor salarisadministratie en einde dienst in Saoedi-Arabië\n"
+"Regels voor loonadministratie en einde dienst in Saoedi-Arabië\n"
 "===========================================================\n"
 "\n"
 "    "
@@ -6284,10 +6284,10 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Module om CAMT-bankafschriften te importeren.\n"
+"Module om CAMT-rekeningafschriften te importeren.\n"
 "======================================\n"
 "\n"
-"Verbeter de import van bankafschriften ter ondersteuning van het door SEPA aanbevolen Cash Management-formaat (CAMT.053)."
+"Verbeter de import van rekeningafschriften ter ondersteuning van het door SEPA aanbevolen Cash Management-formaat (CAMT.053)."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_coda
@@ -6340,7 +6340,7 @@ msgid ""
 "If required, you can manually adjust the descriptions via the CODA configuration menu.\n"
 msgstr ""
 "\n"
-"Module om CODA bankafschriften te importeren.\n"
+"Module om CODA rekeningafschriften te importeren.\n"
 "======================================\n"
 "\n"
 "CODA bestanden in V2 formaat van Belgische bankrekeningen zijn ondersteund.\n"
@@ -6355,23 +6355,23 @@ msgstr ""
 "* Ondersteuning voor meerdere dagboeken per bankrekeningnummer.\n"
 "* Ondersteuning voor meerdere afschriften van verschillende bankrekeningen in één\n"
 "CODA bestand.\n"
-"* Ondersteuning voor 'alleen parsen' van CODA bankafschriften (gedefinieerd als type='info' op\n"
-"de CODA bankafschrift configuratie parameter records).\n"
+"* Ondersteuning voor 'alleen parsen' van CODA rekeningafschriften (gedefinieerd als type='info' op\n"
+"de CODA rekeningafschrift configuratie parameter records).\n"
 "* Multitaal CODA parsing, parsing configuratie data voorzien voor EN,\n"
 "NL, FR,\n"
 "\n"
 "De machine leesbare CODA bestanden worden geparsed en opgeslagen in menselijk leesbaar formaat in\n"
-"CODA bankafschriften. Bankafschriften worden ook gegenereerd met een subset van\n"
+"CODA rekeningafschriften. Rekeningafschriften worden ook gegenereerd met een subset van\n"
 "de CODA informatie (alleen de transactieregels die vereisten zijn voor de\n"
-"aanmaak van de financiële boeking records). Het CODA bankafschrift is een\n"
+"aanmaak van de financiële boeking records). Het CODA rekeningafschrift is een\n"
 "'alleen-lezen' object, derhalve blijft het een betrouwbare weergaven van het originele\n"
-"CODA bestand waarbij de bankafschriften worden gewijzigd waar nodig door de financiële\n"
+"CODA bestand waarbij de rekeningafschriften worden gewijzigd waar nodig door de financiële\n"
 "bedrijfsprocessen.\n"
 "\n"
-"CODA bankafschriften die geconfigureerd zijn als type 'info' genereren enkel CODA bankafschriften.\n"
+"CODA rekeningafschriften die geconfigureerd zijn als type 'info' genereren enkel CODA rekeningafschriften.\n"
 "\n"
 "Het verwijderen van een object in de CODA verwerking resulteert in het verwijderen van het\n"
-"gehele geassocieerde object. De verwijdering van een CODA bestand dat meerdere bankafschriften bevat\n"
+"gehele geassocieerde object. De verwijdering van een CODA bestand dat meerdere rekeningafschriften bevat\n"
 "zal ook de geassocieerde afschriften verwijderen.\n"
 "\n"
 "In plaats van een handmatige wijziging van het gegenereerde afschrift, kun je ook het\n"
@@ -6402,11 +6402,11 @@ msgid ""
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
 "\n"
-"Module om CSV bankafschriften te importeren.\n"
+"Module om CSV rekeningafschriften te importeren.\n"
 "======================================\n"
 "\n"
 "Deze module staat je toe om machine leesbare CSV bestanden te importeren in Odoo: ze worden geparsed en opgeslagen in een menselijk formaat onder\n"
-"Boekhouding/Kas en bank/Bankafschriften.\n"
+"Boekhouding/Kas en bank/Rekeningafschriften.\n"
 "\n"
 "Belangrijke opmerking\n"
 "---------------------------------------------\n"
@@ -6428,13 +6428,13 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Module om OFX bankafschriften te importeren.\n"
+"Module om OFX rekeningafschriften te importeren.\n"
 "======================================\n"
 "\n"
 "Deze module staat je toe om machine leesbare OFX bestanden te importeren in Odoo: ze worden geparsed en opgeslagen in een menselijk leesbaar formaat onder\n"
-"Boekhouding \\ Bank en Kas \\ Bankafschriften.\n"
+"Boekhouding \\ Bank en Kas \\ Rekeningafschriften.\n"
 "\n"
-"Bankafschriften kunnen als een subset van de OFX informatie gegenereerd worden (alleen de transactieregelsdie vereist zijn voor de \n"
+"Rekeningafschriften kunnen als een subset van de OFX informatie gegenereerd worden (alleen de transactieregelsdie vereist zijn voor de \n"
 "aanmaak van de financiële administratie records)."
 
 #. module: base
@@ -6453,11 +6453,11 @@ msgid ""
 "Whenever possible, you should use a more appropriate file format like OFX.\n"
 msgstr ""
 "\n"
-"Module om QIF bankafschriften te importeren.\n"
+"Module om QIF rekeningafschriften te importeren.\n"
 "======================================\n"
 "\n"
 "Deze module staat je toe om machine leesbare QIF bestanden te importeren in Odoo: ze worden geparsed en opgeslagen in een menselijk formaat onder\n"
-"Boekhouding/Kas en bank/Bankafschriften.\n"
+"Boekhouding/Kas en bank/Rekeningafschriften.\n"
 "\n"
 "Belangrijke opmerking\n"
 "---------------------------------------------\n"
@@ -8540,7 +8540,7 @@ msgid ""
 "It should never be used in production environment. Make sure to disable it before going live.\n"
 msgstr ""
 "\n"
-"Deze module voegt een eenvoudige betalingsprovider toe waarmee testbetalingen kunnen worden gedaan.\n"
+"Deze module voegt een eenvoudige betaalprovider toe waarmee testbetalingen kunnen worden gedaan.\n"
 "Het mag nooit worden gebruikt in een productieomgeving. Zorg ervoor dat je deze uitschakelt voordat je live gaat.\n"
 
 #. module: base
@@ -9546,7 +9546,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Regels voor salarisadministratie en einde dienst in de Verenigde Arabische Emiraten.\n"
+"Regels voor loonadministratie en einde dienst in de Verenigde Arabische Emiraten.\n"
 "================================================== =====\n"
 "\n"
 "    "
@@ -9866,7 +9866,7 @@ msgstr ""
 "\n"
 "Met deze module kunnen gebruikers bankjournalen koppelen aan hun\n"
 "online bankrekeningen (voor ondersteunde bankinstellingen) en configureren\n"
-"een periodieke en automatische synchronisatie van hun bankafschriften.\n"
+"een periodieke en automatische synchronisatie van hun rekeningafschriften.\n"
 "    "
 
 #. module: base
@@ -9882,7 +9882,7 @@ msgstr ""
 "\n"
 "Worldline SIPS Payment Acquirer voor online betalingen\n"
 "\n"
-"Implementeert de Worldline SIPS API voor betalingsproviders.\n"
+"Implementeert de Worldline SIPS API voor betaalproviders.\n"
 "Andere SIPS-providers zijn mogelijk compatibel, hoewel dit het geval is\n"
 "niet gegarandeerd."
 
@@ -12798,7 +12798,7 @@ msgstr "Australië - Boekhouding"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_au_keypay
 msgid "Australian Payroll using KeyPay Integration"
-msgstr "Australische salarisadministratie met KeyPay-integratie"
+msgstr "Australische loonadministratie met KeyPay-integratie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au_reports
@@ -12860,7 +12860,7 @@ msgstr "Naam auteur"
 #: model:ir.module.module,description:base.module_payment_authorize
 #: model:ir.module.module,shortdesc:base.module_payment_authorize
 msgid "Authorize.Net Payment Acquirer"
-msgstr "Authorize.net betalingsprovider"
+msgstr "Authorize.net betaalprovider"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__auto_install_required
@@ -13415,7 +13415,7 @@ msgstr "België - E-Invoicing (UBL 2.0, e-fff)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_coda
 msgid "Belgium - Import Bank CODA Statements"
-msgstr "België - Importeren CODA bankafschriften"
+msgstr "België - Importeren CODA rekeningafschriften"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll
@@ -13430,7 +13430,7 @@ msgstr "België - Loonadministratie - Wagenpark"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_account
 msgid "Belgium - Payroll with Accounting"
-msgstr "België - Loonstroken met boekhouding"
+msgstr "België - Loonadministratie met boekhouding"
 
 #. module: base
 #: model:res.country,name:base.bz
@@ -18701,7 +18701,7 @@ msgid ""
 "\n"
 "OFX and QIF imports are available in Enterprise version."
 msgstr ""
-"Generieke wizard om bankafschriften te importeren.\n"
+"Generieke wizard om rekeningafschriften te importeren.\n"
 "\n"
 "(Deze module bevat geen import formaten).\n"
 "\n"
@@ -20043,12 +20043,12 @@ msgstr "Importeren van Amazon orders en het synchroniseren van leveringen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_camt
 msgid "Import CAMT Bank Statement"
-msgstr "Importeer CAMT bankafschriften"
+msgstr "Importeer CAMT rekeningafschriften"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_csv
 msgid "Import CSV Bank Statement"
-msgstr "Importeer CSV bankafschriften"
+msgstr "Importeer CSV rekeningafschriften"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_winbooks_import
@@ -20058,12 +20058,12 @@ msgstr "Importeer data van Winbooks"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_ofx
 msgid "Import OFX Bank Statement"
-msgstr "Importeer OFX bankafschriften"
+msgstr "Importeer OFX rekeningafschriften"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import_qif
 msgid "Import QIF Bank Statement"
-msgstr "Importeer QIF bankafschriften"
+msgstr "Importeer QIF rekeningafschriften"
 
 #. module: base
 #: code:addons/base/models/res_partner.py:0
@@ -20958,12 +20958,12 @@ msgstr "K.S.A - Factuur"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll
 msgid "K.S.A. - Payroll"
-msgstr "K.S.A. - salarisadministratie"
+msgstr "K.S.A. - Loonadministratie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_hr_payroll_account
 msgid "K.S.A. - Payroll with Accounting"
-msgstr "KSA - Salaris met boekhouding"
+msgstr "KSA - Loonadministratie met boekhouding"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_sa_pos
@@ -21015,7 +21015,7 @@ msgstr "Sleutel moet uniek zijn."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au_keypay
 msgid "Keypay Australian Payroll"
-msgstr "Keypay Australische salarisadministratie"
+msgstr "Keypay Australische loonadministratie"
 
 #. module: base
 #: model:res.country,name:base.ki
@@ -22277,7 +22277,7 @@ msgstr "Beheer je documenten om contracten af te sluiten"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_payroll
 msgid "Manage your employee payroll records"
-msgstr "Beheer je werknemer salarisregels"
+msgstr "Beheer je werknemer loonboekingen"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_planning
@@ -24359,11 +24359,10 @@ msgstr ""
 "Odoo Personeelszaken\n"
 "--------------------\n"
 "\n"
-"Met Odoo <a href=\"https://www.odoo.com/app/employees\">Human Resources</a>,\n"
-"beheer het belangrijkste kapitaal in je bedrijf: mensen\n"
+"Beheer met Odoo <a href=\"https://www.odoo.com/app/employees\">Personeelszaken</a>, het belangrijkste kapitaal in je bedrijf: mensen\n"
 "\n"
-"Beheer al je HR-activiteiten eenvoudig: kennisdeling, recruitment,\n"
-"beoordelingen, urenstaten, contracten, presentielijsten, salarisadministratie, etc.\n"
+"Beheer al je HR-activiteiten eenvoudig: kennisdeling, werving & selectie,\n"
+"beoordelingen, urenstaten, contracten, aanwezigheden, loonadministratie, enz.\n"
 "\n"
 "Elke behoefte wordt geleverd door een specifieke app die je op aanvraag activeert.\n"
 "\n"
@@ -24371,47 +24370,46 @@ msgstr ""
 "---------------------\n"
 "\n"
 "Houd alle belangrijke informatie in het adresboek van je bedrijf bij. Sommige\n"
-"informatie is beperkt tot HR-managers, andere zijn openbaar om gemakkelijk te kunnen bekijken\n"
-"collega's.\n"
+"informatie is beperkt tot HR-managers, andere zijn openbaar om gemakkelijk collega's te kunnen opzoeken.\n"
 "\n"
 "Neem werknemerscontracten op en ontvang meldingen wanneer ze moeten worden verlengd.\n"
 "\n"
 "Stroomlijn je wervingsproces\n"
 "-----------------------------------\n"
 "\n"
-"Indexeer cv's, volg sollicitanten, zoek profielen met <a href=\"https://www.odoo.com/app/employees\">Odoo HR</a>.\n"
+"Indexeer cv's, volg sollicitanten, zoek profielen met <a href=\"https://www.odoo.com/app/employees\">Odoo Personeelszaken</a>.\n"
 "\n"
 "Plaats vacatures en houd elke ontvangen sollicitatie bij. Volg sollicitanten\n"
-"in je recruitmentproces met de slimme kanban view.\n"
+"in je wervingsproces dankzij de slimme kanban-weergave.\n"
 "\n"
-"Bespaar tijd door bepaalde communicatie te automatiseren met e-mailsjablonen. CV's zijn:\n"
+"Bespaar tijd door bepaalde communicatie te automatiseren met e-mailsjablonen. Cv's zijn:\n"
 "automatisch geïndexeerd, zodat je gemakkelijk specifieke profielen kunt vinden.\n"
 "\n"
-"Zakelijk sociaal netwerk\n"
+"Enterprise Social Network\n"
 "-------------------------\n"
 "\n"
-"Doorbreek informatiesilo's. Deel kennis en best practices met iedereen\n"
+"Doorbreek informatiesilo's. Deel kennis en best practices met alle\n"
 "werknemers. Volg specifieke mensen of documenten en sluit je aan bij interessegroepen om\n"
 "expertise en documenten delen.\n"
 "\n"
-"Communiceer in realtime met je collega's met de livechat op de website.\n"
+"Communiceer in realtime met je collega's dankzij de livechat op de website.\n"
 "\n"
 "Tijd en aanwezigheid bijhouden\n"
 "--------------------------\n"
 "\n"
-"Houd de bestede tijd bij per project, klant of taak. Het is gemakkelijk om op te nemen\n"
-"urenstaten of controleer de aanwezigheid voor elke werknemer. Krijg je analytische boekhouding\n"
+"Houd de bestede tijd bij per project, klant of taak. Het is gemakkelijk om urenstaten op te nemen\n"
+"of de aanwezigheid voor elke werknemer te controleren. Krijg je analytische boekhouding\n"
 "automatisch gepost op basis van de tijd besteed aan je projecten.\n"
 "\n"
 "Beheer van verlof\n"
 "-----------------\n"
 "\n"
 "Houd de door elke werknemer opgebouwde vakantiedagen bij. Werknemers voeren hun\n"
-"verzoeken (betaald verlof, ziekteverlof, enz.), voor managers om goed te keuren en\n"
-"bevestigen. Het is allemaal gedaan in slechts een paar klikken. De agenda van elke werknemer is:\n"
+"verzoeken (betaald verlof, ziekteverlof, enz.) in en hun managers dienen deze goedkeuren en\n"
+"bevestigen. Het is allemaal gedaan in slechts een paar klikken. De agenda van elke werknemer is\n"
 "dienovereenkomstig bijgewerkt.\n"
 "\n"
-"Houd de personeelskosten bij\n"
+"Houd de personeelsonkosten bij\n"
 "-------------------------------\n"
 "\n"
 "Weg met het papierwerk en volg de onkosten van werknemers direct in Odoo.\n"
@@ -24419,13 +24417,14 @@ msgstr ""
 "terugbetaling van werknemers, boeking in de boekhouding en doorfacturatie aan\n"
 "klanten.\n"
 "\n"
-"Volg periodieke taxaties\n"
+"Volg periodieke evaluaties\n"
 "--------------------------\n"
 "\n"
 "Stel beoordelingsplannen en/of enquêtes op voor je werknemers en bekijk hun\n"
-"evolutie. Definieer stappen voor interviews en Odoo zal managers op de hoogte stellen of\n"
-"ondergeschikten automatisch om beoordelingen voor te bereiden. Blijf op de hoogte van de voortgang van\n"
-"je personeel periodiek.\n"
+"evolutie. Definieer stappen voor interviews en Odoo zal managers of ondergeschikten\n"
+"automatische op de hoogte stellen\n"
+"om beoordelingen voor te bereiden. Blijf periodiek op de hoogte van de voortgang van\n"
+"je personeel.\n"
 "\n"
 "Betrokkenheid vergroten met gamification\n"
 "----------------------------------\n"
@@ -24433,8 +24432,8 @@ msgstr ""
 "### Definieer een duidelijk doel en geef realtime feedback\n"
 "\n"
 "Inspireer prestaties met uitdagingen, doelen en beloningen. Definieer duidelijke doelstellingen\n"
-"en realtime feedback en tastbare resultaten te bieden. Laat de top zien\n"
-"artiesten naar het hele kanaal en publiekelijk erkennen dat ze goed werk hebben geleverd.\n"
+"en geef realtime feedback en tastbare resultaten. Laat de toppresteerders zien\n"
+"aan het hele kanaal en erken publiekelijk dat ze goed werk hebben geleverd.\n"
 "\n"
 "### Leaderboards\n"
 "\n"
@@ -25892,7 +25891,7 @@ msgstr "OdooBot voor livechat"
 #: model:ir.module.module,description:base.module_payment_ogone
 #: model:ir.module.module,shortdesc:base.module_payment_ogone
 msgid "Ogone Payment Acquirer"
-msgstr "Ogone betalingsprovider"
+msgstr "Ogone betaalprovider"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_failures_dialog
@@ -25974,7 +25973,7 @@ msgstr "Online afspraak"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_online_synchronization
 msgid "Online Bank Statement Synchronization"
-msgstr "Synchronisatie van online bankafschriften"
+msgstr "Synchronisatie van online rekeningafschriften"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_booth_sale
@@ -26978,12 +26977,12 @@ msgstr "Betaling - Boekhouding"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment
 msgid "Payment Acquirer"
-msgstr "Betalingsprovider"
+msgstr "Betaalprovider"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment
 msgid "Payment Acquirer Base Module"
-msgstr "Basismodule betalingsprovider"
+msgstr "Basismodule betaalprovider"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_adyen
@@ -27070,12 +27069,12 @@ msgstr "Paypal betaalprovider"
 #: model:ir.module.category,name:base.module_category_human_resources_payroll
 #: model:ir.module.module,shortdesc:base.module_hr_payroll
 msgid "Payroll"
-msgstr "Loonstrook"
+msgstr "Loonadministratie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account
 msgid "Payroll Accounting"
-msgstr "Loonadministratie"
+msgstr "Loonadministratie Boekhouding"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_payroll_localization
@@ -27090,7 +27089,7 @@ msgstr "PayuLatam betaalprovider"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payumoney
 msgid "PayuMoney Payment Acquirer"
-msgstr " PayuMoney betalingsprovider"
+msgstr " PayuMoney betaalprovider"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_payulatam
@@ -27771,7 +27770,7 @@ msgstr "Project samenvoegen actie"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_hr_payroll_account
 msgid "Project Payroll Accounting"
-msgstr "Project Salarisadministratie"
+msgstr "Project Loonadministratie Boekhouding"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_project_forecast
@@ -27831,7 +27830,7 @@ msgstr "Project van documenten"
 #. module: base
 #: model:ir.module.module,summary:base.module_project_hr_payroll_account
 msgid "Project payroll accounting"
-msgstr "Project salarisadministratie"
+msgstr "Project Loonadministratie Boekhouding"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_project_account
@@ -28916,7 +28915,7 @@ msgstr "SEPA automatische incasso"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_payroll_account_sepa
 msgid "SEPA Payments for Payroll"
-msgstr "SEPA betalingen voor loonlijst"
+msgstr "SEPA betalingen voor Loonadministratie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_sms
@@ -29073,7 +29072,7 @@ msgstr "Salarisconfigurator - Feestdagen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary_payroll
 msgid "Salary Configurator - Payroll"
-msgstr "Salaris Configurator"
+msgstr "Loonadministratie Configurator"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary
@@ -30461,7 +30460,7 @@ msgstr "Straat2"
 #: model:ir.module.module,description:base.module_payment_stripe
 #: model:ir.module.module,shortdesc:base.module_payment_stripe
 msgid "Stripe Payment Acquirer"
-msgstr "Stripe betalingsprovider"
+msgstr "Stripe betaalprovider"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_translation__type__model_terms
@@ -32584,12 +32583,12 @@ msgstr "Je.A.E. - Boekhouding"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll
 msgid "U.A.E. - Payroll"
-msgstr "VAE - Loonlijst"
+msgstr "VAE - Loonadministratie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_hr_payroll_account
 msgid "U.A.E. - Payroll with Accounting"
-msgstr "VAE - Salaris met boekhouding"
+msgstr "VAE - Loonadministratie met boekhouding"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ae_pos
@@ -33972,7 +33971,7 @@ msgstr "Venster-acties"
 #: model:ir.module.module,description:base.module_payment_transfer
 #: model:ir.module.module,shortdesc:base.module_payment_transfer
 msgid "Wire Transfer Payment Acquirer"
-msgstr "Bankoverschrijving betalingsprovider"
+msgstr "Bankoverschrijving betaalprovider"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_line__wizard_id
@@ -34882,7 +34881,7 @@ msgstr "one2many"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_payroll
 msgid "payroll"
-msgstr "Loonstrook"
+msgstr "loonadministratie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_planning_calendar

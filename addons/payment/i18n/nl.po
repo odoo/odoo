@@ -101,7 +101,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 msgid "<strong>No suitable payment acquirer could be found.</strong>"
-msgstr "<strong>Er is geen geschikte betalingsprovider gevonden.</strong>"
+msgstr "<strong>Er is geen geschikte betaalprovider gevonden.</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -121,7 +121,7 @@ msgid ""
 msgstr ""
 "<strong>Waarschuwing!</strong> Er is een terugbetaling in behandeling voor deze betaling.\n"
 "                        Wacht even totdat het is verwerkt. Als de terugbetaling nog steeds in behandeling is over een\n"
-"                        enkele minuten, controleer de configuratie van je betalingsprovider."
+"                        enkele minuten, controleer de configuratie van je betaalprovider."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -129,7 +129,7 @@ msgid ""
 "<strong>Warning</strong> Creating a payment acquirer from the <em>CREATE</em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>Waarschuwing</strong> Het maken van een betalingsprovider via de knop <em>CREATE</em> wordt niet ondersteund.\n"
+"<strong>Waarschuwing</strong> Het maken van een betaalprovider via de knop <em>CREATE</em> wordt niet ondersteund.\n"
 "                        Gebruik in plaats daarvan de actie <em>Dupliceren</em>."
 
 #. module: payment
@@ -278,7 +278,7 @@ msgstr "Alipay"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__payment_acquirer_selection
 msgid "Allow Payment Acquirer"
-msgstr "Betalingsprovider toelaten"
+msgstr "Betaalprovider toelaten"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__allow_tokenization
@@ -575,7 +575,7 @@ msgstr "Token maken"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_acquirer
 msgid "Create a new payment acquirer"
-msgstr "Maak een nieuwe betalingsprovider aan"
+msgstr "Maak een nieuwe betaalprovider aan"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
@@ -872,9 +872,9 @@ msgid ""
 "to pay via this one. If 'All' is selected, customers can pay via any "
 "available payment acquirer."
 msgstr ""
-"Als een specifieke betalingsprovider wordt geselecteerd, kunnen klanten "
-"enkel via deze provider betalen. Als 'Alle'  is geselecteerd, kunnen klanten"
-" via elke beschikbare betalingsprovider betalen."
+"Als een specifieke betaalprovider wordt geselecteerd, kunnen klanten enkel "
+"via deze provider betalen. Als 'Alle'  is geselecteerd, kunnen klanten via "
+"elke beschikbare betaalprovider betalen."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -1296,7 +1296,7 @@ msgstr "Betaling"
 #: model:ir.model.fields,field_description:payment.field_account_payment_method_line__payment_acquirer_id
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
 msgid "Payment Acquirer"
-msgstr "Betalingsprovider"
+msgstr "Betaalprovider"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
@@ -1308,7 +1308,7 @@ msgstr "Betaalproviders"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__available_acquirer_ids
 msgid "Payment Acquirers Available"
-msgstr "Betalingsprovider beschikbaar"
+msgstr "Betaalprovider beschikbaar"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__payment_amount
@@ -1420,7 +1420,7 @@ msgstr "Betalingstransacties gekoppeld aan token"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer_onboarding_wizard
 msgid "Payment acquire onboarding wizard"
-msgstr "Betalingsprovider onboarding wizard"
+msgstr "Betaalprovider onboarding wizard"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment
@@ -1836,7 +1836,7 @@ msgid ""
 "The countries for which this payment acquirer is available.\n"
 "If none is set, it is available for all countries."
 msgstr ""
-"De landen waarvoor deze betalingsprovider beschikbaar is.\n"
+"De landen waarvoor deze betaalprovider beschikbaar is.\n"
 "Als er geen is ingesteld, is deze beschikbaar voor alle landen."
 
 #. module: payment
@@ -2046,7 +2046,7 @@ msgid ""
 "acquirers. Setting an email for this partner is advised."
 msgstr ""
 "Deze partner heeft geen e-mailadres, wat problemen kan veroorzaken bij "
-"sommige betalingsproviders. Het instellen van een e-mail voor deze partner "
+"sommige betaalproviders. Het instellen van een e-mail voor deze partner "
 "wordt aangeraden."
 
 #. module: payment
@@ -2085,7 +2085,7 @@ msgid ""
 "acquirers: %s"
 msgstr ""
 "Transactieautorisatie wordt niet ondersteund door de volgende "
-"betalingsproviders: %s"
+"betaalproviders: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_bank_statement_line__transaction_ids
@@ -2211,7 +2211,7 @@ msgstr "We verwerken je betaling, een moment geduld..."
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "We are waiting for the payment acquirer to confirm the payment."
-msgstr "We wachten op de betalingsprovider om de betaling te bevestigen."
+msgstr "We wachten op de betaalprovider om de betaling te bevestigen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
@@ -2255,7 +2255,7 @@ msgstr ""
 #, python-format
 msgid "You cannot delete a view that is used by a payment acquirer."
 msgstr ""
-"Je kunt een weergave die wordt gebruikt door een betalingsprovider niet "
+"Je kunt een weergave die wordt gebruikt door een betaalprovider niet "
 "verwijderen."
 
 #. module: payment
@@ -2263,7 +2263,7 @@ msgstr ""
 #, python-format
 msgid "You cannot delete the payment acquirer %s; archive it instead."
 msgstr ""
-"Je kan de betalingsprovider %s niet verwijderen; archiveer hem in de plaats."
+"Je kan de betaalprovider %s niet verwijderen; archiveer hem in de plaats."
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
