@@ -6,12 +6,13 @@
         <field name="root_line_ids">
             <record id="total_vat_payable" model="account.tax.report.line">
                 <field name="name">[20] VAT PAYABLE/REFUNDABLE (Total A - Total B)</field>
-                <field name="formula"> (VAT4 + VAT4A + (SEC6 * 60/100 + SEC7) + VAT11 + VAT12) - (VAT14 + VAT14A + VAT15 + VAT16 + VAT17 + VAT18)</field>
+                <field name="formula">TotalA - TotalB</field>
                 <field name="sequence" eval="1"/>
                 <field name="children_line_ids">
                     <record id="total_output_tax" model="account.tax.report.line">
                         <field name="name">[13] Total A: TOTAL OUTPUT TAX (4 + 4A + 9 + 11 + 12)</field>
                         <field name="sequence" eval="1"/>
+                        <field name="code">TotalA</field>
                         <field name="formula">VAT4 + VAT4A + (SEC6 * 60/100 + SEC7) + VAT11 + VAT12</field>
                         <field name="children_line_ids">
                             <record id="standard_rate_exclude_capital_goods_service" model="account.tax.report.line">
@@ -127,6 +128,7 @@
                     <record id="total_input_tax" model="account.tax.report.line">
                         <field name="name">[19] Total B: TOTAL INPUT TAX (14 + 14A + 15 + 15A + 16 + 17 + 18)</field>
                         <field name="sequence" eval="2"/>
+                        <field name="code">TotalB</field>
                         <field name="formula">VAT14 + VAT14A + VAT15 + VAT15A + VAT16 + VAT17 + VAT18</field>
                         <field name="children_line_ids">
                             <record id="capital_goods_services_supplied" model="account.tax.report.line">
