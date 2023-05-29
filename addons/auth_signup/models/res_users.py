@@ -135,9 +135,9 @@ class ResUsers(models.Model):
             raise ValueError(_('Signup: invalid template user'))
 
         if not values.get('login'):
-            raise ValueError(_('Signup: no login given for new user'))
+            raise UserError(_('Signup: no login given for new user'))
         if not values.get('partner_id') and not values.get('name'):
-            raise ValueError(_('Signup: no name or partner given for new user'))
+            raise UserError(_('Signup: no name or partner given for new user'))
 
         # create a copy of the template user (attached to a specific partner_id if given)
         values['active'] = True
