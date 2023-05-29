@@ -2076,7 +2076,7 @@ class Task(models.Model):
                         task_ids_per_stage[task.stage_id].append(task.id)
                     for stage, task_ids in task_ids_per_stage.items():
                         tasks = self.browse(task_ids)
-                        tasks._track_set_log_message(_lt("Current Stage: %s", stage.name))
+                        tasks._track_set_log_message(_("Current Stage: %s", stage.name))
                 else:
                     self._track_set_log_message(_("Current Stage: %s", self.stage_id.name))
 
