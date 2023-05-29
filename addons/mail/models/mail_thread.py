@@ -1106,11 +1106,13 @@ class MailThread(models.AbstractModel):
                 return [route]
 
         # ValueError if no routes found and if no bounce occurred
-        raise ValueError(
+        exc = ValueError(
             'No possible route found for incoming message from %s to %s (Message-Id %s:). '
             'Create an appropriate mail.alias or force the destination model.' %
             (email_from, email_to, message_id)
         )
+        exc.sentry_ignored = True
+        raise exc
 
     @api.model
     def _message_route_process(self, message, message_dict, routes):
