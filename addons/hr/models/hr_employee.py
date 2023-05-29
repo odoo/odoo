@@ -160,14 +160,16 @@ class HrEmployeePrivate(models.Model):
         super()._compute_avatar_128()
 
     def _compute_avatar(self, avatar_field, image_field):
+        employee_wo_user_or_image_ids = []
         for employee in self:
+            if not (employee.user_id or employee._origin[image_field]):
+                employee_wo_user_or_image_ids.append(employee.id)
+                continue
             avatar = employee._origin[image_field]
-            if not avatar:
-                if employee.user_id:
-                    avatar = employee.user_id[avatar_field]
-                else:
-                    avatar = base64.b64encode(employee._avatar_get_placeholder())
+            if not avatar and employee.user_id:
+                avatar = employee.user_id[avatar_field]
             employee[avatar_field] = avatar
+        super(HrEmployeePrivate, self.browse(employee_wo_user_or_image_ids))._compute_avatar(avatar_field, image_field)
 
     def action_create_user(self):
         self.ensure_one()
