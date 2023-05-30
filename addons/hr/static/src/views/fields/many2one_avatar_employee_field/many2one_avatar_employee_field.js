@@ -21,6 +21,10 @@ export const many2OneAvatarEmployeeField = {
         ...many2OneAvatarUserField.additionalClasses,
         "o_field_many2one_avatar_user",
     ],
+    extractProps: (fieldInfo, dynamicInfo) => ({
+        ...many2OneAvatarUserField.extractProps(fieldInfo, dynamicInfo),
+        canQuickCreate: false,
+    }),
 };
 
 registry.category("fields").add("many2one_avatar_employee", many2OneAvatarEmployeeField);
