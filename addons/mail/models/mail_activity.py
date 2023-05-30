@@ -420,7 +420,7 @@ class MailActivity(models.Model):
         if not self.env.is_superuser():
             allowed_ids = self._search(domain)
             if allowed_ids:
-                domain = expression.AND([domain, [('id', 'in', allowed_ids)]])
+                domain = expression.AND([domain, [('id', 'in', allowed_ids._ids)]])
             else:
                 # force void result if no allowed ids found
                 domain = expression.AND([domain, [(0, '=', 1)]])
