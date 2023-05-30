@@ -22,6 +22,10 @@ export const many2ManyTagsAvatarEmployeeField = {
         ...many2ManyTagsAvatarUserField.additionalClasses,
         "o_field_many2many_avatar_user",
     ],
+    extractProps: (fieldInfo, dynamicInfo) => ({
+        ...many2ManyTagsAvatarUserField.extractProps(fieldInfo, dynamicInfo),
+        canQuickCreate: false,
+    }),
 };
 
 registry.category("fields").add("many2many_avatar_employee", many2ManyTagsAvatarEmployeeField);
