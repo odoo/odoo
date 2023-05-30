@@ -155,6 +155,9 @@ var ModelFieldSelector = Widget.extend({
         this.$value.html(core.qweb.render(this.template + ".value", {
             chain: this.popover.chain,
             pages: this.popover.pages,
+            findByName : (array, name) => {
+                return (array || []).find((arr) => arr.name === name)
+            }
         }));
 
         // Toggle the warning message

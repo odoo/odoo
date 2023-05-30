@@ -326,15 +326,14 @@ datetime.timedelta = py.type('timedelta', null, {
                 ss = s;
             });
         });
-        var s = _.str.sprintf("%d:%02d:%02d", hh, mm, ss);
+        var s = `${hh.toFixed(0)}:${mm.toFixed(0).padStart(2,"0")}:${ss.toFixed(0).padStart(2,"0")}` 
         if (this.days) {
-            s = _.str.sprintf("%d day%s, %s",
-                this.days,
-                (this.days != 1 && this.days != -1) ? 's' : '',
-                s);
+                s = `${this.days.toFixed(0)} day${
+                    this.days != 1 && this.days != -1 ? "s" : ""
+                }, ${s}`;
         }
         if (this.microseconds) {
-            s = _.str.sprintf("%s.%06d", s, this.microseconds);
+                s = `${s}.${this.microseconds.toFixed(0).padStart(6, "0")}`;
         }
         return py.str.fromJSON(s);
     },
@@ -545,12 +544,18 @@ datetime.datetime = py.type('datetime', null, {
         return py.str.fromJSON(args.format.toJSON()
             .replace(/%([A-Za-z])/g, function (m, c) {
                 switch (c) {
-                case 'Y': return _.str.sprintf('%04d', self.year);
-                case 'm': return _.str.sprintf('%02d', self.month);
-                case 'd': return _.str.sprintf('%02d', self.day);
-                case 'H': return _.str.sprintf('%02d', self.hour);
-                case 'M': return _.str.sprintf('%02d', self.minute);
-                case 'S': return _.str.sprintf('%02d', self.second);
+                        case "Y":
+                            return self.year.toFixed(0).padStart(4, "0");
+                        case "m":
+                            return self.month.toFixed(0).padStart(2, "0");
+                        case "d":
+                            return self.day.toFixed(0).padStart(2, "0");
+                        case "H":
+                            return self.hour.toFixed(0).padStart(2, "0");
+                        case "M":
+                            return self.minute.toFixed(0).padStart(2, "0");
+                        case "S":
+                            return self.second.toFixed(0).padStart(2, "0");
                 }
                 throw new Error('ValueError: No known conversion for ' + m);
             }));
@@ -635,8 +640,8 @@ datetime.date = py.type('date', null, {
             .replace(/%([A-Za-z])/g, function (m, c) {
                 switch (c) {
                 case 'Y': return self.year;
-                case 'm': return _.str.sprintf('%02d', self.month);
-                case 'd': return _.str.sprintf('%02d', self.day);
+                case 'm': return self.month.toFixed(0).padStart(2, "0");
+                case 'd': return  self.day.toFixed(0).padStart(2, "0");
                 }
                 throw new Error('ValueError: No known conversion for ' + m);
             }));
@@ -786,9 +791,13 @@ time.strftime = py.PY_def.fromJSON(function () {
     return py.PY_call(py.PY_getAttr(d, 'strftime'), [args.format]);
 });
 
-var args = _.map(('year month day hour minute second '
-                + 'years months weeks days hours minutes seconds '
-                + 'weekday leapdays yearday nlyearday').split(' '), function (arg) {
+var args = (
+    'year month day hour minute second '+ 
+    'years months weeks days hours minutes seconds '+ 
+    'weekday leapdays yearday nlyearday'
+)
+.split(" ")
+.map( (arg) => {
     switch (arg) {
         case 'years':case 'months':case 'days':case 'leapdays':case 'weeks':
         case 'hours':case 'minutes':case 'seconds':

@@ -76,8 +76,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/session.js',
             'web/static/src/legacy/js/core/cookie_utils.js',
 
-            'web/static/lib/underscore/underscore.js',
-            'web/static/lib/underscore.string/lib/underscore.string.js',
             'web/static/lib/moment/moment.js',
             'web/static/lib/luxon/luxon.js',
             'web/static/lib/owl/owl.js',
@@ -123,7 +121,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/libs/download.js',
             'web/static/src/legacy/js/libs/jquery.js',
             'web/static/src/legacy/js/libs/moment.js',
-            'web/static/src/legacy/js/libs/underscore.js',
             'web/static/src/legacy/js/libs/pdfjs.js',
             'web/static/src/legacy/js/libs/zoomodoo.js',
             'web/static/src/legacy/js/libs/jSignatureCustom.js',
@@ -307,8 +304,6 @@ This module provides the core of the Odoo Web Client.
 
             ('include', 'web.assets_frontend_minimal'),
 
-            'web/static/lib/underscore/underscore.js',
-            'web/static/lib/underscore.string/lib/underscore.string.js',
             'web/static/lib/moment/moment.js',
             'web/static/lib/owl/owl.js',
             'web/static/lib/owl/odoo_module.js',
@@ -354,7 +349,6 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/js/libs/download.js',
             'web/static/src/legacy/js/libs/jquery.js',
             'web/static/src/legacy/js/libs/moment.js',
-            'web/static/src/legacy/js/libs/underscore.js',
             'web/static/src/legacy/js/libs/pdfjs.js',
             'web/static/src/legacy/js/libs/zoomodoo.js',
             'web/static/src/legacy/js/libs/jSignatureCustom.js',
