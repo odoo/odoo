@@ -1246,4 +1246,30 @@ QUnit.module("Components", (hooks) => {
             ["equal", "not_equal", "set", "not_set"]
         );
     });
+
+    QUnit.test("no button 'New Rule' (readonly mode)", async (assert) => {
+        await makeDomainSelector({
+            readonly: true,
+            domain: `[("bar", "=", True)]`,
+        });
+        assert.containsOnce(target, ".o_domain_leaf");
+        assert.containsNone(target, "a[role=button]");
+    });
+
+    QUnit.test("button 'New Rule' (edit mode)", async (assert) => {
+        await makeDomainSelector();
+        assert.containsNone(target, ".o_domain_leaf");
+        assert.containsOnce(target, ".o_domain_add_first_node_button");
+        assert.containsNone(target, "a[role=button]");
+
+        await click(target, ".o_domain_add_first_node_button");
+        assert.containsOnce(target, ".o_domain_leaf");
+        assert.containsNone(target, ".o_domain_add_first_node_button");
+        assert.containsOnce(target, "a[role=button]");
+
+        await click(target, "a[role=button]");
+        assert.containsN(target, ".o_domain_leaf", 2);
+        assert.containsNone(target, ".o_domain_add_first_node_button");
+        assert.containsOnce(target, "a[role=button]");
+    });
 });
