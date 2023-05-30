@@ -18,6 +18,9 @@
                     <t t-call="web._DomainSelector.branch.connector" />
                     <span> of the following rules:</span>
                     <t t-call="web._DomainSelector.branch.children" />
+                    <t t-if="!props.readonly">
+                        <a href="#" class="pt-1 ms-1 d-block" role="button" t-on-click="() => this.insertRootLeaf(node)">New Rule</a>
+                    </t>
                 </t>
             </t>
             <t t-else="">
@@ -39,8 +42,8 @@
         <div class="o_domain_node_control_panel" role="toolbar" aria-label="Domain node">
             <button
                 class="btn o_domain_add_node_button"
-                title="Add node"
-                aria-label="Add node"
+                title="Add New Rule"
+                aria-label="Add New Rule"
                 t-on-click="() => this.insertLeaf(parent, node)"
                 t-on-mouseenter="(ev) => this.highlightNode(ev.target, true, 'o_hover_add_node')"
                 t-on-mouseleave="(ev) => this.highlightNode(ev.target, false, 'o_hover_add_node')"
