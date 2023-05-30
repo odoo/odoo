@@ -1277,7 +1277,7 @@ export class PosGlobalState extends PosModel {
             taxes = [...taxes].sort(function (tax1, tax2) {
                 return tax1.sequence - tax2.sequence;
             });
-            _(taxes).each(function (tax) {
+            taxes.forEach((tax) => {
                 if (tax.amount_type === "group") {
                     all_taxes = _collect_taxes(tax.children_tax_ids, all_taxes);
                 } else {
@@ -1328,7 +1328,7 @@ export class PosGlobalState extends PosModel {
 
         var cached_tax_amounts = {};
         if (handle_price_include) {
-            _(taxes.reverse()).each(function (tax) {
+            taxes.reverse().forEach(function (tax) {
                 if (tax.include_base_amount) {
                     base = recompute_base(
                         base,
@@ -1378,7 +1378,7 @@ export class PosGlobalState extends PosModel {
         var taxes_vals = [];
         i = 0;
         var cumulated_tax_included_amount = 0;
-        _(taxes.reverse()).each(function (tax) {
+        taxes.reverse().forEach(function (tax) {
             if (tax.price_include || tax.is_base_affected) {
                 var tax_base_amount = base;
             } else {
@@ -2458,7 +2458,7 @@ export class Orderline extends PosModel {
             qty,
             this.pos.currency.rounding
         );
-        _(all_taxes.taxes).each(function (tax) {
+        all_taxes.taxes.forEach(function (tax) {
             taxtotal += tax.amount;
             taxdetail[tax.id] = tax.amount;
         });
@@ -2481,7 +2481,7 @@ export class Orderline extends PosModel {
             var mapped_included_taxes = [];
             var new_included_taxes = [];
             var self = this;
-            _(taxes).each(function (tax) {
+            taxes.forEach((tax) => {
                 var line_taxes = self.pos.get_taxes_after_fp([tax.id], order.fiscal_position);
                 if (line_taxes.length && line_taxes[0].price_include) {
                     new_included_taxes = new_included_taxes.concat(line_taxes);

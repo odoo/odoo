@@ -1,5 +1,7 @@
 /** @odoo-module alias=web.QWeb **/
 
+import { uniqueId } from "@web/core/utils/functions";
+import { range } from "@web/core/utils/numbers";
 import translation from "web.translation";
 
 var _t = translation._t;
@@ -18,7 +20,9 @@ function QWeb(debug, default_dict, enableTranslation) {
     }
     var qweb = new QWeb2.Engine();
     qweb.default_dict = Object.assign({}, default_dict || {}, {
-        '_' : _,
+        // '_' : _,
+        'uniqueId': uniqueId,
+        'range' : range,
         'JSON': JSON,
         '_t' : translation._t,
         '__debug__': debug,

@@ -278,10 +278,10 @@
             if (!self.check_error_fields({})) {
                 if (this.fileInputError) {
                     const errorMessage = this.fileInputError.type === "number"
-                        ? _.str.sprintf(_t(
+                        ? sprintf(_t(
                             "Please fill in the form correctly. You uploaded too many files. (Maximum %s files)"
                         ), this.fileInputError.limit)
-                        : _.str.sprintf(_t(
+                        : sprintf(_t(
                             "Please fill in the form correctly. The file \"%s\" is too big. (Maximum %s MB)"
                         ), this.fileInputError.fileName, this.fileInputError.limit);
                     this.update_status("error", errorMessage);

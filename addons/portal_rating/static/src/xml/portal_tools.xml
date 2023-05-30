@@ -8,13 +8,13 @@
              t-att-style="inline_mode ? 'display:inline' : ''"
              t-attf-aria-label="#{Math.round(val * 100) / 100} stars on 5"
              t-attf-title="#{Math.round(val * 100) / 100} stars on 5">
-            <t t-foreach="_.range(0, val_integer)" t-as="num">
+            <t t-foreach="range(0, val_integer)" t-as="num">
                 <i class="fa fa-star" role="img"></i>
             </t>
             <t t-if="val_decimal">
                 <i class="fa fa-star-half-o" role="img"></i>
             </t>
-            <t t-foreach="_.range(0, empty_star)" t-as="num">
+            <t t-foreach="range(0, empty_star)" t-as="num">
                 <i class="fa fa-star text-black-25" role="img"></i>
             </t>
         </div>
@@ -74,13 +74,13 @@
             <t t-set="empty_star" t-value="5 - (val_integer+Math.ceil(val_decimal))"/>
 
             <div class="stars enabled">
-                <t t-foreach="_.range(0, val_integer)" t-as="num">
+                <t t-foreach="range(0, val_integer)" t-as="num">
                     <i class="fa fa-star" role="img" aria-label="Full star"></i>
                 </t>
                 <t t-if="val_decimal">
                     <i class="fa fa-star-half-o" role="img" aria-label="Half a star"></i>
                 </t>
-                <t t-foreach="_.range(0, empty_star)" t-as="num">
+                <t t-foreach="range(0, empty_star)" t-as="num">
                     <i class="fa fa-star-o text-black-25" role="img" aria-label="Empty star"></i>
                 </t>
             </div>

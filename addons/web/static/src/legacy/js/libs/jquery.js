@@ -114,7 +114,7 @@ $.fn.extend({
         events = events.split(' ');
         return this.each(function () {
             var el = this;
-            _.each(events, function (evNameNamespaced) {
+            events.forEach((evNameNamespaced) => {
                 var evName = evNameNamespaced.split('.')[0];
                 var handler = $._data(el, 'events')[evName].pop();
                 $._data(el, 'events')[evName].unshift(handler);
