@@ -6,7 +6,7 @@ from functools import lru_cache
 
 from odoo import api, fields, models, Command, _
 from odoo.exceptions import ValidationError, UserError
-from odoo.tools import frozendict, formatLang, format_date, float_compare, Query
+from odoo.tools import frozendict, formatLang, format_date, float_compare, float_round, Query
 from odoo.tools.sql import create_index
 from odoo.addons.web.controllers.utils import clean_action
 
@@ -817,6 +817,8 @@ class AccountMoveLine(models.Model):
             if line.display_type != 'product':
                 line.price_total = line.price_subtotal = False
             # Compute 'price_subtotal'.
+            price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
+            line.price_unit = float_round(line.price_unit, precision_digits=price_unit_prec)
             line_discount_price_unit = line.price_unit * (1 - (line.discount / 100.0))
             subtotal = line.quantity * line_discount_price_unit
 

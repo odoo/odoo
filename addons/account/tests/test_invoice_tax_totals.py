@@ -2,6 +2,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.fields import Command
 from odoo.tests import tagged
+from odoo.tests.common import Form
 
 
 @tagged('post_install', '-at_install')
@@ -103,6 +104,12 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'invoice_date': '2019-01-01',
             'invoice_line_ids': invoice_lines_vals,
         })
+
+    def _get_document_field_mapping(self, document):
+        return {
+            'quantity': 'quantity',
+            'lines': 'invoice_line_ids',
+        }
 
     def test_multiple_tax_lines(self):
         tax_10 = self.env['account.tax'].create({
@@ -790,3 +797,24 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             move.invoice_cash_rounding_id = cash_rounding
             self.assertEqual(move.tax_totals['amount_total'], 115)
             self.assertEqual(move.tax_totals['amount_total_rounded'], 120)
+
+    def test_form_product_price_rounding(self):
+        price_unit_prec = self.env['decimal.precision'].search([('name', '=', 'Product Price')], limit=1)
+        self.assertTrue(bool(price_unit_prec), "The decimal precision for Product Price is required for this test")
+        price_unit_prec.digits = 2
+
+        document = self._create_document_for_tax_totals_test([
+            (1.0, self.env['account.tax']),
+        ])
+
+        field_mappings = self._get_document_field_mapping(document)
+        quantity_field_name = field_mappings['quantity']
+        lines_field_name = field_mappings['lines']
+
+        document_form = Form(document)
+        with document_form.__getattr__(lines_field_name).edit(0) as line:
+            line.__setattr__(quantity_field_name, 2)
+            line.price_unit = 52.205
+
+        self.assertEqual(line.price_subtotal, 104.42)
+        self.assertEqual(line.price_unit, 52.21)

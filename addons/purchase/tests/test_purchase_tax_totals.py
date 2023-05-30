@@ -34,3 +34,9 @@ class PurchaseTestTaxTotals(TestTaxTotals):
             'partner_id': self.partner_a.id,
             'order_line': lines_vals,
         })
+
+    def _get_document_field_mapping(self, document):
+        return {
+            'quantity': 'product_qty',
+            'lines': 'order_line',
+        }

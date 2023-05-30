@@ -997,6 +997,8 @@ class PurchaseOrderLine(models.Model):
     @api.depends('product_qty', 'price_unit', 'taxes_id')
     def _compute_amount(self):
         for line in self:
+            price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
+            line.price_unit = float_round(line.price_unit, precision_digits=price_unit_prec)
             tax_results = self.env['account.tax']._compute_taxes([line._convert_to_tax_base_line_dict()])
             totals = list(tax_results['totals'].values())[0]
             amount_untaxed = totals['amount_untaxed']
