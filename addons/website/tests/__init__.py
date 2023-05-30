@@ -12,6 +12,7 @@ from . import test_disable_unused_snippets_assets
 from . import test_fuzzy
 from . import test_get_current_website
 from . import test_http_endpoint
+from . import test_ir_asset
 from . import test_lang_url
 from . import test_menu
 from . import test_page
