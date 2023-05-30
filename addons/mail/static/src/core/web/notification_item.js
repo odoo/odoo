@@ -2,6 +2,7 @@
 
 import { ImStatus } from "@mail/core/common/im_status";
 import { RelativeTime } from "@mail/core/common/relative_time";
+import { useHover } from "@mail/utils/common/hooks";
 
 import { Component, useRef } from "@odoo/owl";
 
@@ -28,6 +29,7 @@ export class NotificationItem extends Component {
 
     setup() {
         this.markAsReadRef = useRef("markAsRead");
+        this.rootHover = useHover("root");
     }
 
     onClick(ev) {

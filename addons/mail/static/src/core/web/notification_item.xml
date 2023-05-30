@@ -3,7 +3,7 @@
 
 <t t-name="mail.NotificationItem" owl="1">
     <ActionSwiper onLeftSwipe="props.onSwipeLeft ? props.onSwipeLeft : undefined" onRightSwipe="props.onSwipeRight ? props.onSwipeRight : undefined">
-        <div class="o-mail-NotificationItem d-flex cursor-pointer align-items-center p-1" t-att-class="{ 'o-muted': !props.hasMarkAsReadButton }" t-on-click="onClick">
+        <div class="o-mail-NotificationItem d-flex cursor-pointer align-items-center p-1" t-att-class="{ 'o-muted': !props.hasMarkAsReadButton }" t-on-click="onClick" t-ref="root">
             <div class="position-relative o-bg-inherit m-1 flex-shrink-0" style="width:40px;height:40px;">
                 <img class="o_avatar w-100 h-100 rounded" alt="Notification Item Image" t-att-src="props.iconSrc"/>
                 <t t-slot="icon"/>
@@ -11,9 +11,8 @@
             <div class="d-flex flex-column flex-grow-1 align-self-start m-2 overflow-auto">
                 <div class="d-flex text-nowrap">
                     <span class="o-mail-NotificationItem-name text-truncate" t-att-class="props.hasMarkAsReadButton ? 'fw-bolder' : 'fw-bold'" t-esc="props.displayName"/>
-                    <span t-if="props.counter > 0" class="o-mail-NotificationItem-counter mx-1" t-att-class="props.hasMarkAsReadButton ? 'fw-bolder' : fw-bold"> (<t t-esc="props.counter"/>)</span>
                     <span class="flex-grow-1"/>
-                    <small t-if="props.datetime" class="o-mail-NotificationItem-date text-muted opacity-50 ms-2">
+                    <small t-if="props.datetime" class="o-mail-NotificationItem-date ms-2" t-att-class="{ 'opacity-75 fw-bold': props.counter > 0, 'opacity-50 text-muted': props.counter === 0 }">
                         <RelativeTime datetime="props.datetime"/>
                     </small>
 
@@ -24,7 +23,10 @@
                         <t t-if="props.body" t-esc="props.body" name="notificationBody"/>
                     </div>
                     <div class="flex-grow-1"/>
-                    <i t-if="props.hasMarkAsReadButton" class="o-mail-NotificationItem-markAsRead fa fa-check d-flex ms-2 text-600 opacity-50 opacity-100-hover cursor-pointer" title="Mark As Read" t-ref="markAsRead"/>
+                    <div class="d-flex align-items-center">
+                        <span t-if="props.counter > 0 and !rootHover.isHover" class="o-mail-NotificationItem-badge o-discuss-badge d-flex align-items-center justify-content-center m-0 badge rounded-pill fw-bold o-mail-NotificationItem-counter"><t t-esc="props.counter"/></span>
+                        <span t-if="props.hasMarkAsReadButton and rootHover.isHover" class="o-mail-NotificationItem-badge o-discuss-badgeShape text-success d-flex align-items-center justify-content-center m-0 badge rounded-pill fw-bold o-mail-NotificationItem-markAsRead fa fa-check text-600 opacity-50 opacity-100-hover cursor-pointer" title="Mark As Read" t-ref="markAsRead"/>
+                    </div>
                 </div>
             </div>
         </div>

@@ -293,7 +293,7 @@ QUnit.test("No counter if category is folded and without unread messages", async
     await openDiscuss();
     assert.containsNone(
         $,
-        ".o-mail-DiscussCategory-livechat .o-mail-DiscussCategory-counter",
+        ".o-mail-DiscussCategory-livechat .o-discuss-badge",
         "should not have a counter if the category is unfolded and with unread messages"
     );
 });
@@ -324,10 +324,7 @@ QUnit.test(
         });
         const { openDiscuss } = await start();
         await openDiscuss();
-        assert.strictEqual(
-            $(".o-mail-DiscussCategory-livechat .o-mail-DiscussCategory-counter").text(),
-            "1"
-        );
+        assert.strictEqual($(".o-mail-DiscussCategory-livechat .o-discuss-badge").text(), "1");
     }
 );
 

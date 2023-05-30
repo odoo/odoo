@@ -24,3 +24,21 @@ $o-mail-NotificationItem-muted-hover-background-color:
     }
 }
 
+.o-mail-NotificationItem-badge {
+    padding: 3px 6px !important;
+}
+
+.o-mail-NotificationItem-markAsRead {
+    background-color: transparent !important;
+
+    &:hover {
+        color: $success !important;
+        background-color: rgba(0, 0, 0, 0.075) !important;
+    }
+}
+
+.o-mail-NotificationItem-text:before {
+    // invisible character so that typing status bar has constant height, regardless of text content.
+    content: "\200b"; /* unicode zero width space character */
+}
+

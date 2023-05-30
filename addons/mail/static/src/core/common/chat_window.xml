@@ -28,10 +28,10 @@
                     'ms-3 me-1 my-0': !thread,
                 }"
             />
-            <div t-if="thread and thread.isChannel and thread.message_unread_counter > 0" class="mx-1 my-0" t-ref="unreadCounter">
-                (<t t-out="thread.message_unread_counter"/>)
-            </div>
             <div class="flex-grow-1"/>
+            <div t-if="thread and thread.needactionCounter > 0" class="o-mail-ChatWindow-counter mx-1 my-0 badge rounded-pill fw-bold o-discuss-badge" t-ref="needactionCounter">
+                <t t-out="thread.needactionCounter"/>
+            </div>
             <t t-if="threadActions.actions.length > 1">
                  <t t-set="firstAction" t-value="threadActions.actions[0]"/>
                  <button class="o-mail-ChatWindow-command btn d-flex p-2 opacity-75 opacity-100-hover" t-att-title="firstAction.name" t-on-click.stop="() => firstAction.onSelect()"><i t-att-class="firstAction.icon"/></button>
