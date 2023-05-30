@@ -49,8 +49,8 @@ function getDefaultDomain(fieldDefs) {
         fieldDef = fieldDefs[name];
         if (fieldDef) {
             const operator = getDefaultOperator(fieldDef);
-            const defaultValue = getDefaultFieldValue(fieldDef);
-            return new Domain([[fieldDef.name, operator, defaultValue]]).toString();
+            const defaultValue = getDefaultFieldValue(fieldDef, operator.key);
+            return new Domain([[fieldDef.name, operator.symbol, defaultValue]]).toString();
         }
     }
     return new Domain([["id", "=", 1]]).toString();
