@@ -106,7 +106,7 @@ function wrap_context(context) {
 
 function eval_contexts(contexts, evaluation_context) {
     evaluation_context = Object.assign(pycontext(), evaluation_context || {});
-    return _(contexts).reduce(function (result_context, ctx) {
+    return contexts.reduce((result_context, ctx) => {
         // __eval_context evaluations can lead to some of `contexts`'s
         // values being null, skip them as well as empty contexts
         if (Object.keys(ctx || {}).length === 0) { return result_context; }
@@ -143,7 +143,7 @@ function eval_domains(domains, evaluation_context) {
         domains[0].length === 1 &&
         (domains[0][0] === "|" || domains[0][0] === "!")
     );
-    _(domains).each(function (domain) {
+    (domains || []).forEach(function (domain) {
         if (typeof domain === "string") {
             // wrap raw strings in domain
             domain = { __ref: 'domain', __debug: domain };
@@ -189,7 +189,7 @@ function get_normalized_domain(domain_array) {
 function eval_groupbys(contexts, evaluation_context) {
     evaluation_context = Object.assign(pycontext(), evaluation_context || {});
     var result_group = [];
-    _(contexts).each(function (ctx) {
+    (contexts || []).forEach(function (ctx) {
         if (typeof ctx === "string") {
             // wrap raw strings in context
             ctx = { __ref: 'context', __debug: ctx };

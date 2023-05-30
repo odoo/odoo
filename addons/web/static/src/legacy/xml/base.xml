@@ -478,7 +478,7 @@
                 <t t-esc="fieldName"/>
             </t>
             <t t-else="">
-                <t t-set="fieldInfo" t-value="_.findWhere(pages[fieldName_index], {'name': fieldName})"/>
+                <t t-set="fieldInfo" t-value="findByName(pages[fieldName_index], fieldName)"/>
                 <t t-esc="fieldInfo &amp;&amp; fieldInfo.string || '?'"/>
             </t>
         </span>
@@ -504,7 +504,7 @@
 
 <t t-name="web.datepicker">
     <t t-set="placeholder" t-value="widget.getParent().node and widget.getParent().node.attrs.placeholder"/>
-    <t t-set="datepickerID" t-value="_.uniqueId('datepicker')"/>
+    <t t-set="datepickerID" t-value="uniqueId('datepicker')"/>
     <div class="o_datepicker" aria-atomic="true" t-att-id="datepickerID" data-target-input="nearest">
         <input type="text"
             class="o_datepicker_input o_input datetimepicker-input"
