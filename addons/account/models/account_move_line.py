@@ -213,7 +213,7 @@ class AccountMoveLine(models.Model):
     # inverted when computing its total for each tag (for sales invoices, for # example)
     tax_tag_invert = fields.Boolean(
         string="Invert Tags",
-        compute='_compute_tax_tag_invert', store=True, readonly=False,
+        compute='_compute_tax_tag_invert', store=True, readonly=False, copy=False,
     )
 
     # === Reconciliation fields === #
@@ -767,12 +767,9 @@ class AccountMoveLine(models.Model):
                 is_refund = record.is_refund
                 tax_type = tax.type_tax_use
                 record.tax_tag_invert = (tax_type == 'purchase' and is_refund) or (tax_type == 'sale' and not is_refund)
-
             else:
                 # For invoices with taxes
                 record.tax_tag_invert = record.move_id.is_inbound()
-            if record.move_id.tax_cash_basis_origin_move_id and (record.move_id.reversed_entry_id or record.tax_base_amount < 0):
-                record.tax_tag_invert = not record.tax_tag_invert
 
     @api.depends('product_id')
     def _compute_product_uom_id(self):
@@ -1016,21 +1013,24 @@ class AccountMoveLine(models.Model):
             epd_needed_vals['price_subtotal'] += line.price_subtotal * percentage
             line.epd_needed = {k: frozendict(v) for k, v in epd_needed.items()}
 
-    @api.depends('move_id.move_type', 'balance', 'tax_ids')
+    @api.depends('move_id.move_type', 'balance', 'tax_repartition_line_id', 'tax_ids')
     def _compute_is_refund(self):
         for line in self:
             is_refund = False
             if line.move_id.move_type in ('out_refund', 'in_refund'):
                 is_refund = True
             elif line.move_id.move_type == 'entry':
-                taxes = line.tax_repartition_line_id.tax_id or line.tax_ids[:1]
-                tax_type = set(taxes.mapped('type_tax_use'))
-                if tax_type == {'sale'} and line.credit == 0:
-                    is_refund = True
-                elif tax_type == {'purchase'} and line.debit == 0:
-                    is_refund = True
-                if line.tax_repartition_line_id.factor_percent < 0:
-                    is_refund = not is_refund
+                if line.tax_repartition_line_id:
+                    is_refund = line.tax_repartition_line_id.document_type == 'refund'
+                else:
+                    tax_type = line.tax_ids[:1].type_tax_use
+                    if tax_type == 'sale' and line.credit == 0:
+                        is_refund = True
+                    elif tax_type == 'purchase' and line.debit == 0:
+                        is_refund = True
+
+                    if line.tax_ids and line.move_id.reversed_entry_id:
+                        is_refund = not is_refund
             line.is_refund = is_refund
 
     @api.depends('date_maturity')
