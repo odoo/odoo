@@ -27,10 +27,14 @@
         'pos_self_order.assets_self_order': [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
-            ('include', 'web._assets_primary_variables'),
+
             'web/static/src/scss/pre_variables.scss',
-            'web/static/lib/bootstrap/scss/_functions.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
+
+            ('include', 'web._assets_bootstrap_backend'),
+
+            ('include', 'web._assets_primary_variables'),
+            'web/static/lib/bootstrap/scss/_functions.scss',
             ('include', 'web._assets_bootstrap'),
             'web/static/src/boot.js',
             'web/static/src/env.js',
