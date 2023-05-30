@@ -102,7 +102,7 @@ export class CalendarModel extends Model {
         return this.meta.hasEditDialog;
     }
     get hasQuickCreate() {
-        return this.meta.hasQuickCreate;
+        return Boolean(this.meta.quickCreate);
     }
     get isDateHidden() {
         return this.meta.isDateHidden;
@@ -136,7 +136,8 @@ export class CalendarModel extends Model {
     }
 
     get quickCreateFormViewId() {
-        return this.meta.quickCreateFormViewId;
+        const quickCreate = parseInt(this.meta.quickCreate);
+        return quickCreate ? quickCreate : false;
     }
 
     get defaultFilterLabel() {

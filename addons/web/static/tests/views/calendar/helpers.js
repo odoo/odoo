@@ -230,7 +230,7 @@ function makeFakeModelState() {
         isTimeHidden: false,
         hasAllDaySlot: true,
         hasEditDialog: false,
-        hasQuickCreate: false,
+        quickCreate: false,
         popoverFields: {
             name: Field.parseFieldNode(fakeFieldNode, fakeModels, "event", "calendar"),
         },

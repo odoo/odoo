@@ -34,8 +34,7 @@ QUnit.test("defaults", (assert) => {
         filtersInfo: {},
         formViewId: false,
         hasEditDialog: false,
-        hasQuickCreate: true,
-        quickCreateFormViewId: false,
+        quickCreate: true,
         isDateHidden: false,
         isTimeHidden: false,
         popoverFields: {},
@@ -88,14 +87,15 @@ QUnit.test("hasEditDialog", (assert) => {
     check(assert, "event_open_popup", "0", "hasEditDialog", false);
 });
 
-QUnit.test("hasQuickCreate", (assert) => {
-    check(assert, "quick_add", "", "hasQuickCreate", true);
-    check(assert, "quick_add", "true", "hasQuickCreate", true);
-    check(assert, "quick_add", "True", "hasQuickCreate", true);
-    check(assert, "quick_add", "1", "hasQuickCreate", true);
-    check(assert, "quick_add", "false", "hasQuickCreate", false);
-    check(assert, "quick_add", "False", "hasQuickCreate", false);
-    check(assert, "quick_add", "0", "hasQuickCreate", false);
+QUnit.test("quickCreate", (assert) => {
+    check(assert, "quick_add", "", "quickCreate", true);
+    check(assert, "quick_add", "true", "quickCreate", true);
+    check(assert, "quick_add", "True", "quickCreate", true);
+    check(assert, "quick_add", "1", "quickCreate", true);
+    check(assert, "quick_add", "false", "quickCreate", false);
+    check(assert, "quick_add", "False", "quickCreate", false);
+    check(assert, "quick_add", "0", "quickCreate", false);
+    check(assert, "quick_add", "12", "quickCreate", 12);
 });
 
 QUnit.test("isDateHidden", (assert) => {

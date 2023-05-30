@@ -116,11 +116,33 @@ export class CalendarController extends Component {
         };
     }
 
+    getQuickCreateFormViewProps(record) {
+        const rawRecord = this.model.buildRawRecord(record);
+        const context = this.model.makeContextDefaults(rawRecord);
+        return {
+            resModel: this.model.resModel,
+            viewId: this.model.quickCreateFormViewId,
+            context,
+        };
+    }
+
     createRecord(record) {
         if (!this.model.canCreate) {
             return;
         }
         if (this.model.hasQuickCreate) {
+            if (this.model.quickCreateFormViewId) {
+                return new Promise((resolve) => {
+                    this.displayDialog(
+                        this.constructor.components.QuickCreateFormView,
+                        this.getQuickCreateFormViewProps(record),
+                        {
+                            onClose: () => resolve(),
+                        }
+                    );
+                });
+            }
+
             return new Promise((resolve) => {
                 this.displayDialog(
                     this.constructor.components.QuickCreate,
@@ -223,6 +245,7 @@ CalendarController.components = {
     FilterPanel: CalendarFilterPanel,
     MobileFilterPanel: CalendarMobileFilterPanel,
     QuickCreate: CalendarQuickCreate,
+    QuickCreateFormView: FormViewDialog,
     Layout,
     SearchBar,
     ViewScaleSelector,
