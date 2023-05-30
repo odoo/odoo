@@ -109,8 +109,6 @@ class IrAsset(models.Model):
         records matching the bundle are also applied to the current list.
 
         :param bundle: name of the bundle from which to fetch the file paths
-        :param addons: list of addon names as strings. The files returned will
-            only be contained in the given addons.
         :param css: boolean: whether or not to include style files
         :param js: boolean: whether or not to include script files and template
             files
