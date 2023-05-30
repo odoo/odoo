@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+
 from odoo import fields, models, api
+from markupsafe import escape
 
 
 class PosSelfOrderCustomLink(models.Model):
@@ -37,4 +39,4 @@ class PosSelfOrderCustomLink(models.Model):
     def _compute_link_html(self):
         for link in self:
             if link.name:
-                link.link_html = f"<a class=\"btn btn-{link.style} w-100\">{link.name}</a>"
+                link.link_html = f"<a class=\"btn btn-{link.style} w-100\">{escape(link.name)}</a>"
