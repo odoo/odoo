@@ -1638,8 +1638,10 @@ export class Order extends PosModel {
             const note = orderline.getNote();
             const productKey = `${product.id} - ${orderline.get_full_product_name()} - ${note}`;
             const lineKey = `${orderline.uuid} - ${note}`;
-
-            if (prepaCategoryIds.has(product.pos_categ_id[0]) || prepaCategoryIds.size === 0) {
+            if (
+                prepaCategoryIds.size === 0 ||
+                this.pos.db.any_of_is_subcategory(product.pos_categ_ids, [...prepaCategoryIds])
+            ) {
                 const quantity = orderline.get_quantity();
                 const quantityDiff = oldChanges[lineKey]
                     ? quantity - oldChanges[lineKey].quantity
@@ -1664,7 +1666,6 @@ export class Order extends PosModel {
                 orderline.setHasChange(false);
             }
         }
-
         // Checks whether an orderline has been deleted from the order since it
         // was last sent to the preparation tools. If so we add this to the changes.
         for (const [lineKey, lineResume] of Object.entries(this.lastOrderPrepaChange)) {
@@ -2265,26 +2266,6 @@ export class Order extends PosModel {
         }
 
         return fulldetails;
-    }
-    // Returns a total only for the orderlines with products belonging to the category
-    get_total_for_category_with_tax(categ_id) {
-        var total = 0;
-        var self = this;
-
-        if (categ_id instanceof Array) {
-            for (var i = 0; i < categ_id.length; i++) {
-                total += this.get_total_for_category_with_tax(categ_id[i]);
-            }
-            return total;
-        }
-
-        this.orderlines.forEach(function (line) {
-            if (self.pos.db.category_contains(categ_id, line.product.id)) {
-                total += line.get_price_with_tax();
-            }
-        });
-
-        return total;
     }
     get_total_for_taxes(tax_id) {
         var total = 0;

@@ -9,7 +9,7 @@
                <filter name="filter_to_availabe_pos" string="Available in POS" domain="[('available_in_pos', '=', True)]"/>
             </filter>
             <filter name="categ_id" position="after">
-                <filter string="POS Product Category" name="pos_categ_id" context="{'group_by':'pos_categ_id'}"/>
+                <filter string="POS Product Category" name="pos_categ_ids" context="{'group_by':'pos_categ_ids'}"/>
             </filter>
         </field>
     </record>
@@ -68,7 +68,7 @@
                 <group name="pos" string="Point of Sale" attrs="{'invisible': [('sale_ok','=',False)]}">
                     <field name="available_in_pos"/>
                     <field name="to_weight" attrs="{'invisible': [('available_in_pos', '=', False)]}"/>
-                    <field name="pos_categ_id" attrs="{'invisible': [('available_in_pos', '=', False)]}" string="Category"/>
+                    <field name="pos_categ_ids" widget="many2many_tags" groups="point_of_sale.group_pos_user" attrs="{'invisible': [('available_in_pos', '=', False)]}" string="Category"/>
                 </group>
             </xpath>
         </field>
@@ -122,7 +122,7 @@
         <field name="inherit_id" ref="product.product_template_tree_view"/>
         <field name="arch" type="xml">
             <field name="categ_id" position="before">
-                <field name="pos_categ_id" optional="hide" string="POS Product Category"/>
+                <field name="pos_categ_ids" widget="many2many_tags" groups="point_of_sale.group_pos_user" optional="hide" string="POS Product Category"/>
             </field>
         </field>
     </record>
@@ -133,7 +133,7 @@
         <field name="inherit_id" ref="product.product_product_tree_view"/>
         <field name="arch" type="xml">
             <field name="categ_id" position="before">
-                <field name="pos_categ_id" optional="hide" string="POS Product Category"/>
+                <field name="pos_categ_ids" widget="many2many_tags" groups="point_of_sale.group_pos_user" optional="hide" string="POS Product Category"/>
             </field>
         </field>
     </record>

@@ -106,7 +106,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'taxes_id': False,
             'weight': 0.01,
             'to_weight': True,
-            'pos_categ_id': pos_categ_misc.id,
+            'pos_categ_ids': [(4, pos_categ_misc.id)],
         })
         cls.wall_shelf = env['product.product'].create({
             'name': 'Wall Shelf Unit',
@@ -137,14 +137,14 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'available_in_pos': True,
             'list_price': 1.98,
             'taxes_id': False,
-            'pos_categ_id': pos_categ_desks.id,
+            'pos_categ_ids': [(4, pos_categ_desks.id)],
         })
         cls.letter_tray = env['product.product'].create({
             'name': 'Letter Tray',
             'available_in_pos': True,
             'list_price': 4.80,
             'taxes_id': False,
-            'pos_categ_id': pos_categ_chairs.id,
+            'pos_categ_ids': [(4, pos_categ_chairs.id)],
         })
         cls.desk_organizer = env['product.product'].create({
             'name': 'Desk Organizer',

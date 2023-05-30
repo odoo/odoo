@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <odoo>
 
         <!-- ******  Basic Restaurant Setup ***** -->
@@ -22,7 +21,7 @@
             <field name="list_price">7.0</field>
             <field name="name">Margherita</field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="food"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-pizza.png"/>
         </record>
@@ -31,7 +30,7 @@
             <field name="list_price">7.0</field>
             <field name="name">Funghi</field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="food"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-pizza.png"/>
         </record>
@@ -40,7 +39,7 @@
             <field name="list_price">7.0</field>
             <field name="name">Vegetarian</field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="food"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-pizza.png"/>
         </record>
@@ -49,7 +48,7 @@
             <field name="list_price">4.5</field>
             <field name="name">Pasta Bolognese</field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="food"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-pasta.jpg"/>
         </record>
@@ -58,7 +57,7 @@
             <field name="list_price">5.5</field>
             <field name="name">Pasta 4 formaggi </field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="food"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-pasta-4f.jpg"/>
         </record>
@@ -67,7 +66,7 @@
             <field name="list_price">7.5</field>
             <field name="name">Bacon Burger</field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="food"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-burger.jpg"/>
         </record>
@@ -76,7 +75,7 @@
             <field name="list_price">7.0</field>
             <field name="name">Cheese Burger</field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="food"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-cheeseburger.jpg"/>
         </record>
@@ -85,7 +84,7 @@
             <field name="list_price">3.0</field>
             <field name="name">Chicken Curry Sandwich</field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="food"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-sandwich.jpg"/>
         </record>
@@ -94,7 +93,7 @@
             <field name="list_price">3.0</field>
             <field name="name">Spicy Tuna Sandwich</field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="food"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-tuna.jpg"/>
         </record>
@@ -103,7 +102,7 @@
             <field name="list_price">3.9</field>
             <field name="name">Mozzarella Sandwich</field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="food"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-mozza.jpg"/>
         </record>
@@ -112,7 +111,7 @@
             <field name="list_price">3.4</field>
             <field name="name">Club Sandwich</field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="food"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-club.jpg"/>
         </record>
@@ -121,7 +120,7 @@
             <field name="list_price">12.0</field>
             <field name="name">Lunch Maki 18pc</field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="food"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-maki.jpg"/>
         </record>
@@ -130,7 +129,7 @@
             <field name="list_price">13.80</field>
             <field name="name">Lunch Salmon 20pc</field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="food"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-salmon.jpg"/>
         </record>
@@ -139,7 +138,7 @@
             <field name="list_price">14.0</field>
             <field name="name">Lunch Temaki mix 3pc</field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="food"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-temaki.jpg"/>
         </record>
@@ -148,7 +147,7 @@
             <field name="list_price">9.25</field>
             <field name="name">Salmon and Avocado</field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="food"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('food')])]"/>
             <field name="categ_id" ref="pos_restaurant.product_category_pos_food"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-salmon-avocado.jpg"/>
         </record>
@@ -159,7 +158,7 @@
             <field name="list_price">2.20</field>
             <field name="name">Coca-Cola</field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="drinks"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
             <field name="categ_id" ref="point_of_sale.product_category_pos"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-coke.jpg"/>
         </record>
@@ -169,7 +168,7 @@
             <field name="list_price">2.20</field>
             <field name="name">Water</field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="drinks"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
             <field name="categ_id" ref="point_of_sale.product_category_pos"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-water.jpg"/>
         </record>
@@ -179,7 +178,7 @@
             <field name="list_price">2.20</field>
             <field name="name">Minute Maid</field>
             <field name="weight">0.01</field>
-            <field name="pos_categ_id" ref="drinks"/>
+            <field name="pos_categ_ids" eval="[(6, 0, [ref('drinks')])]"/>
             <field name="categ_id" ref="point_of_sale.product_category_pos"/>
             <field name="image_1920" type="base64" file="pos_restaurant/static/img/th-minute_maid.jpg"/>
         </record>
@@ -504,5 +503,5 @@
             <field name="position_v">315</field>
         </record>
 
-        <function model="pos.config" name="add_cash_payment_method" />
+        <function model="pos.config" name="add_cash_payment_method"/>
 </odoo>

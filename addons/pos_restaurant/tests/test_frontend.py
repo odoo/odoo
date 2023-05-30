@@ -39,13 +39,6 @@ class TestFrontend(odoo.tests.HttpCase):
             'journal_id': second_cash_journal.id,
         })
 
-        printer = self.env['pos.printer'].create({
-            'name': 'Preparation Printer',
-            'epson_printer_ip': '127.0.0.1',
-            'printer_type': 'epson_epos',
-            'product_categories_ids': [drinks_category.id]
-        })
-
         pos_config = self.env['pos.config'].create({
             'name': 'Bar',
             'module_pos_restaurant': True,
@@ -144,7 +137,7 @@ class TestFrontend(odoo.tests.HttpCase):
             'list_price': 2.20,
             'name': 'Coca-Cola',
             'weight': 0.01,
-            'pos_categ_id': drinks_category.id,
+            'pos_categ_ids': [(4, drinks_category.id)],
             'categ_id': self.env.ref('point_of_sale.product_category_pos').id,
             'taxes_id': [(6, 0, [])],
         })
@@ -154,7 +147,7 @@ class TestFrontend(odoo.tests.HttpCase):
             'list_price': 2.20,
             'name': 'Water',
             'weight': 0.01,
-            'pos_categ_id': drinks_category.id,
+            'pos_categ_ids': [(4, drinks_category.id)],
             'categ_id': self.env.ref('point_of_sale.product_category_pos').id,
             'taxes_id': [(6, 0, [])],
         })
@@ -164,7 +157,7 @@ class TestFrontend(odoo.tests.HttpCase):
             'list_price': 2.20,
             'name': 'Minute Maid',
             'weight': 0.01,
-            'pos_categ_id': drinks_category.id,
+            'pos_categ_ids': [(4, drinks_category.id)],
             'categ_id': self.env.ref('point_of_sale.product_category_pos').id,
             'taxes_id': [(6, 0, [])],
         })

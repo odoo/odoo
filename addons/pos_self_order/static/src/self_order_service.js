@@ -50,7 +50,7 @@ export class SelfOrder {
         this.products = this.products.map((p) => {
             const product = new Product(p, this);
 
-            this.tagList.add(product.tag);
+            this.tagList.add(...product.tags);
             this.productByIds[product.id] = product;
 
             return product;
@@ -67,7 +67,13 @@ export class SelfOrder {
             );
         }
 
-        this.productsGroupedByTag = groupBy(this.products, "tag");
+        this.productsGroupedByTag = this._getProductsGroupedByTag(this.products);
+    }
+    _getProductsGroupedByTag(products) {
+        const productsDuplicatedSuchThatEachHasOneTag = products.flatMap((product) =>
+            product.tags.map((tag) => ({ ...product, tag }))
+        );
+        return groupBy(productsDuplicatedSuchThatEachHasOneTag, "tag");
     }
 
     saveOrderToLocalStorage(orders) {
