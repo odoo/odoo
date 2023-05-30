@@ -153,37 +153,8 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
         padding-bottom: 0.75rem;
     }
 
-    #o_wsale_offcanvas {
-        width: 80%;
-        max-width: $offcanvas-horizontal-width;
-
-        .o_searchbar_form .dropdown-menu {
-            right: 0;
-        }
-
-        #o_wsale_offcanvas_content {
-            @include o-wsale-scrollbar-subdle();
-        }
-
-        .o_wsale_offcanvas_title {
-            &::after, &:not(.collapsed)::after {
-                width: .75rem;
-                height: .75rem;
-                background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='#{$headings-color}'><path transform='#{rotate(45, 8, 8)}' d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/></svg>");
-                background-size: .75rem;
-            }
-
-            &:not(.collapsed)::after {
-                transform: rotate(-45deg);
-            }
-
-            // Since this nav is visible on mobile only, remove all visual
-            // effects related to keyboard/mouse navigation.
-            &, &:focus, &:hover {
-                box-shadow: none;
-                z-index: 0;
-            }
-        }
+    #o_wsale_offcanvas_content {
+        @include o-wsale-scrollbar-subdle();
     }
 
     #products_grid_before {

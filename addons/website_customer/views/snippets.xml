@@ -3,7 +3,7 @@
 
 <template id="snippet_options" inherit_id="website.snippet_options" name="Customer Snippet Options">
     <xpath expr="." position="inside">
-        <div data-selector="main:has(#ref_left_column)" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="References Page">
+        <div data-selector=".o_wcrm_filters_top" data-page-options="true" groups="website.group_website_designer" data-no-check="true" string="References Page">
             <we-checkbox string="Countries Filter"
                          data-customize-website-views="website_customer.opt_country_list"
                          data-no-preview="true"
@@ -16,10 +16,12 @@
                          data-customize-website-views="website_customer.opt_tag_list"
                          data-no-preview="true"
                          data-reload="/"/>
-            <we-checkbox string="Show Map"
-                         data-customize-website-views="website_customer.opt_country"
-                         data-no-preview="true"
-                         data-reload="/"/>
+            <t t-if="google_maps_api_key">
+                <we-checkbox string="Show Map"
+                            data-customize-website-views="website_customer.opt_country"
+                            data-no-preview="true"
+                            data-reload="/"/>
+            </t>
         </div>
     </xpath>
 </template>

@@ -345,32 +345,6 @@ img, .media_iframe_video, .o_image {
         }
     }
 
-    address {
-        span[itemprop="name"] {
-            margin-bottom: 0.3em;
-        }
-
-        div[itemprop="address"] > div {
-            position: relative;
-
-            span[itemprop="streetAddress"] {
-                line-height: 1.2;
-                margin-bottom: 0.3em;
-            }
-
-            .fa {
-                @include o-position-absolute(0, $left: 0);
-                line-height: $line-height-base;
-
-                + span, + div {
-                    display: block;
-                    // FontAwesome '.fa-fw' fixed-with + margin
-                    padding-left: 1.28571429em + 0.5em;
-                }
-            }
-        }
-    }
-
     .o_my_sidebar div[itemprop="address"] > div {
         margin-top: 0.5em;
     }
@@ -388,6 +362,37 @@ img, .media_iframe_video, .o_image {
 
     table.table tr {
         word-wrap: break-word;
+    }
+}
+
+.o_portal_address {
+    span[itemprop="name"] {
+        margin-bottom: 0.3em;
+    }
+
+    div[itemprop="address"] > div {
+        position: relative;
+
+        span[itemprop="streetAddress"] {
+            line-height: 1.2;
+            margin-bottom: 0.3em;
+        }
+
+        .fa {
+            @include o-position-absolute(0, $left: 0);
+            line-height: $line-height-base;
+
+            + span, + div, + a {
+                display: block;
+                // FontAwesome '.fa-fw' fixed-with + margin
+                padding-left: 1.28571429em + 0.5em;
+            }
+        }
+
+        span[itemprop="email"] {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     }
 }
 
