@@ -154,8 +154,15 @@
                                                     class="oe_account_terms mt-5 w-100"
                                                     placeholder="Insert your terms &amp; conditions here..."/>
                                         </div>
-                                        <div class="mt8" attrs="{'invisible': [('terms_type', '!=', 'html')]}">
+                                        <field name="module_website" invisible="1"/>
+                                        <div class="mt8" attrs="{'invisible': ['|', ('terms_type', '!=', 'html'), ('module_website', '==', True)]}">
                                             <button name="action_update_terms" icon="oi-arrow-right" type="object" string="Update Terms" class="btn-link"/>
+                                        </div>
+                                        <div class="mt8" attrs="{'invisible': [('terms_type', '!=', 'html'), ('module_website', '==', False)]}">
+                                            <strong class="align-top">URL: </strong><field name="terms_url"/>
+                                            <div>
+                                                <button name='action_update_terms_website' icon="oi-arrow-right" type="object" string="Edit in Website Builder" class="btn-link"/>
+                                            </div>
                                         </div>
                                         <field name="preview_ready" invisible="1"/>
                                         <div class="mt4 ms-1" attrs="{'invisible': [('preview_ready', '=', False)]}">

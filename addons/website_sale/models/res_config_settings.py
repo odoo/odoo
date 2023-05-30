@@ -29,7 +29,6 @@ class ResConfigSettings(models.TransientModel):
     cart_abandoned_delay = fields.Float(string="Send After", related='website_id.cart_abandoned_delay', readonly=False)
     send_abandoned_cart_email = fields.Boolean('Abandoned Email', related='website_id.send_abandoned_cart_email', readonly=False)
     add_to_cart_action = fields.Selection(related='website_id.add_to_cart_action', readonly=False)
-    terms_url = fields.Char(compute='_compute_terms_url', string="URL", help="A preview will be available at this URL.")
 
     module_delivery_mondialrelay = fields.Boolean("Mondial Relay Connector")
     group_product_pricelist = fields.Boolean(
@@ -55,11 +54,6 @@ class ResConfigSettings(models.TransientModel):
         readonly=False,
         related='website_id.show_line_subtotals_tax_selection',
     )
-
-    @api.depends('website_id')
-    def _compute_terms_url(self):
-        for record in self:
-            record.terms_url = '%s/terms' % record.website_id.get_base_url()
 
     @api.model
     def get_values(self):
@@ -100,10 +94,6 @@ class ResConfigSettings(models.TransientModel):
                 record.website_id.auth_signup_uninvited = 'b2c'
             else:
                 record.website_id.auth_signup_uninvited = 'b2b'
-
-    def action_update_terms(self):
-        self.ensure_one()
-        return self.env["website"].get_client_action('/terms', True)
 
     def action_open_extra_info(self):
         self.ensure_one()

@@ -2,6 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
+
+from werkzeug.urls import url_join
 
 
 class ResConfigSettings(models.TransientModel):
@@ -99,6 +102,8 @@ class ResConfigSettings(models.TransientModel):
     module_account_taxcloud = fields.Boolean(string="Account TaxCloud")
     module_account_invoice_extract = fields.Boolean(string="Document Digitization")
     module_snailmail_account = fields.Boolean(string="Snailmail")
+    module_website = fields.Boolean(string="Website")
+    terms_url = fields.Char(compute='_compute_terms_url', string="URL", help="A preview will be available at this URL.")
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', readonly=False)
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal", readonly=False)
     account_cash_basis_base_account_id = fields.Many2one(
@@ -188,6 +193,11 @@ class ResConfigSettings(models.TransientModel):
                 setting.account_default_credit_limit,
                 self.company_id.id
             )
+    @api.depends('company_id')
+    def _compute_terms_url(self):
+        for setting in self:
+            if setting.module_website:
+                setting.terms_url = url_join(setting.website_id.get_base_url(), '/terms')
 
     @api.depends('company_id')
     def _compute_has_chart_of_accounts(self):
@@ -237,3 +247,9 @@ class ResConfigSettings(models.TransientModel):
             'target': 'new',
             'res_id': self.company_id.id,
         }
+
+    def action_update_terms_website(self):
+        self.ensure_one()
+        if not self.module_website:
+            raise UserError(_("The website module is not installed."))
+        return self.env["website"].get_client_action('/terms', True)
