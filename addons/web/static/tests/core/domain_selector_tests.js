@@ -27,6 +27,7 @@ import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import { getPickerApplyButton, getPickerCell } from "./datetime/datetime_test_helpers";
 import { openModelFieldSelectorPopover } from "./model_field_selector_tests";
+import { nameService } from "@web/core/name_service";
 
 let serverData;
 let target;
@@ -91,9 +92,19 @@ QUnit.module("Components", (hooks) => {
                             relation: "product",
                             searchable: true,
                         },
+                        date: { string: "Date", type: "date", searchable: true },
                         datetime: { string: "Date Time", type: "datetime", searchable: true },
                         int: { string: "Integer", type: "integer", searchable: true },
                         json_field: { string: "Json Field", type: "json", searchable: true },
+                        state: {
+                            string: "State",
+                            type: "selection",
+                            selection: [
+                                ["abc", "ABC"],
+                                ["def", "DEF"],
+                                ["ghi", "GHI"],
+                            ],
+                        },
                     },
                     records: [
                         { id: 1, foo: "yop", bar: true, product_id: 37 },
@@ -120,6 +131,7 @@ QUnit.module("Components", (hooks) => {
         registry.category("services").add("hotkey", hotkeyService);
         registry.category("services").add("localization", makeFakeLocalizationService());
         registry.category("services").add("field", fieldService);
+        registry.category("services").add("name", nameService);
 
         target = getFixture();
     });
@@ -496,7 +508,7 @@ QUnit.module("Components", (hooks) => {
             domain: `[['foo', 'like', 'kikou']]`,
             readonly: true,
         });
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo like "kikou"`);
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo like kikou`);
     });
 
     QUnit.test("operator fallback (edit mode)", async (assert) => {
@@ -528,16 +540,6 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("selection field with operator change from 'is set' to '='", async (assert) => {
-        serverData.models.partner.fields.state = {
-            string: "State",
-            type: "selection",
-            selection: [
-                ["abc", "ABC"],
-                ["def", "DEF"],
-                ["ghi", "GHI"],
-            ],
-        };
-
         await makeDomainSelector({ domain: `[['state', '!=', False]]` });
 
         assert.strictEqual(
@@ -557,31 +559,12 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("show correct operator", async (assert) => {
-        serverData.models.partner.fields.state = {
-            string: "State",
-            type: "selection",
-            selection: [
-                ["abc", "ABC"],
-                ["def", "DEF"],
-                ["ghi", "GHI"],
-            ],
-        };
         await makeDomainSelector({ domain: `[['state', 'in', ['abc']]]` });
         const select = target.querySelector(".o_domain_leaf_operator_select");
         assert.strictEqual(select.options[select.options.selectedIndex].text, "is in");
     });
 
     QUnit.test("multi selection", async (assert) => {
-        serverData.models.partner.fields.state = {
-            string: "State",
-            type: "selection",
-            selection: [
-                ["a", "A"],
-                ["b", "B"],
-                ["c", "C"],
-            ],
-        };
-
         class Parent extends Component {
             setup() {
                 this.domain = `[("state", "in", ["a", "b", "c"])]`;
@@ -893,7 +876,7 @@ QUnit.module("Components", (hooks) => {
         });
         assert.strictEqual(
             target.querySelector(".o_domain_selector").innerText,
-            `Match records with any of the following rules:\ncreate_date\nis between "2023-04-01 00:00:00" and "2023-04-30 23:59:59"\n0\n= 1`
+            `Match records with any of the following rules:\ncreate_date\nis between 2023-04-01 00:00:00 and 2023-04-30 23:59:59\n0\n= 1`
         );
     });
 
@@ -922,99 +905,99 @@ QUnit.module("Components", (hooks) => {
         const toTest = [
             {
                 domain: `["!", ("foo", "=", "abc")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= "abc"`,
+                result: `Match records with all of the following rules:\nFoo\n!= abc`,
             },
             {
                 domain: `["!", "!", ("foo", "=", "abc")]`,
-                result: `Match records with all of the following rules:\nFoo\n= "abc"`,
+                result: `Match records with all of the following rules:\nFoo\n= abc`,
             },
             {
                 domain: `["!", "!", "!", ("foo", "=", "abc")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= "abc"`,
+                result: `Match records with all of the following rules:\nFoo\n!= abc`,
             },
             {
                 domain: `["!", "&", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n!= "abc"\nFoo\n!= "def"`,
+                result: `Match records with any of the following rules:\nFoo\n!= abc\nFoo\n!= def`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= "abc"\nFoo\n!= "def"`,
+                result: `Match records with all of the following rules:\nFoo\n!= abc\nFoo\n!= def`,
             },
             {
                 domain: `["&", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= "abc"\nFoo\n= "def"`,
+                result: `Match records with all of the following rules:\nFoo\n!= abc\nFoo\n= def`,
             },
             {
                 domain: `["&", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+                result: `Match records with all of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["&", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n= "abc"\nFoo\n!= "def"`,
+                result: `Match records with all of the following rules:\nFoo\n= abc\nFoo\n!= def`,
             },
             {
                 domain: `["&", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+                result: `Match records with all of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["|", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n!= "abc"\nFoo\n= "def"`,
+                result: `Match records with any of the following rules:\nFoo\n!= abc\nFoo\n= def`,
             },
             {
                 domain: `["|", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+                result: `Match records with any of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["|", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n= "abc"\nFoo\n!= "def"`,
+                result: `Match records with any of the following rules:\nFoo\n= abc\nFoo\n!= def`,
             },
             {
                 domain: `["|", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+                result: `Match records with any of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["&", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with all of the following rules:\nany\nof:\nFoo\n!= "abc"\nFoo\n!= "def"\nFoo\n= "ghi"`,
+                result: `Match records with all of the following rules:\nany\nof:\nFoo\n!= abc\nFoo\n!= def\nFoo\n= ghi`,
             },
             {
                 domain: `["&", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= "abc"\nFoo\n!= "def"\nFoo\n= "ghi"`,
+                result: `Match records with all of the following rules:\nFoo\n!= abc\nFoo\n!= def\nFoo\n= ghi`,
             },
             {
                 domain: `["|", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with any of the following rules:\nFoo\n!= "abc"\nFoo\n!= "def"\nFoo\n= "ghi"`,
+                result: `Match records with any of the following rules:\nFoo\n!= abc\nFoo\n!= def\nFoo\n= ghi`,
             },
             {
                 domain: `["|", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with any of the following rules:\nall\nof:\nFoo\n!= "abc"\nFoo\n!= "def"\nFoo\n= "ghi"`,
+                result: `Match records with any of the following rules:\nall\nof:\nFoo\n!= abc\nFoo\n!= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "&", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with any of the following rules:\nFoo\n!= "abc"\nFoo\n!= "def"\nFoo\n!= "ghi"`,
+                result: `Match records with any of the following rules:\nFoo\n!= abc\nFoo\n!= def\nFoo\n!= ghi`,
             },
             {
                 domain: `["!", "|", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= "abc"\nFoo\n!= "def"\nFoo\n!= "ghi"`,
+                result: `Match records with all of the following rules:\nFoo\n!= abc\nFoo\n!= def\nFoo\n!= ghi`,
             },
             {
                 domain: `["!", "&", "|", ("foo", "=", "abc"), "!", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with any of the following rules:\nall\nof:\nFoo\n!= "abc"\nFoo\n= "def"\nFoo\n!= "ghi"`,
+                result: `Match records with any of the following rules:\nall\nof:\nFoo\n!= abc\nFoo\n= def\nFoo\n!= ghi`,
             },
             {
                 domain: `["!", "|", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with all of the following rules:\nany\nof:\nFoo\n!= "abc"\nFoo\n!= "def"\nFoo\n!= "ghi"`,
+                result: `Match records with all of the following rules:\nany\nof:\nFoo\n!= abc\nFoo\n!= def\nFoo\n!= ghi`,
             },
             {
                 domain: `["!", "&", ("foo", "=", "abc"), "|", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with any of the following rules:\nFoo\n!= "abc"\nall\nof:\nFoo\n!= "def"\nFoo\n!= "ghi"`,
+                result: `Match records with any of the following rules:\nFoo\n!= abc\nall\nof:\nFoo\n!= def\nFoo\n!= ghi`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), ("foo", "!=", "ghi")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= "abc"\nany\nof:\nFoo\n!= "def"\nFoo\n= "ghi"`,
+                result: `Match records with all of the following rules:\nFoo\n!= abc\nany\nof:\nFoo\n!= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "!=", "def"), "!", ("foo", "=", "ghi")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= "abc"\nany\nof:\nFoo\n= "def"\nFoo\n= "ghi"`,
+                result: `Match records with all of the following rules:\nFoo\n!= abc\nany\nof:\nFoo\n= def\nFoo\n= ghi`,
             },
         ];
 
@@ -1039,99 +1022,99 @@ QUnit.module("Components", (hooks) => {
         const toTest = [
             {
                 domain: `["!", ("foo", "=", "abc")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= "abc"`,
+                result: `Match records with all of the following rules:\nFoo\n!= abc`,
             },
             {
                 domain: `["!", "!", ("foo", "=", "abc")]`,
-                result: `Match records with all of the following rules:\nFoo\n= "abc"`,
+                result: `Match records with all of the following rules:\nFoo\n= abc`,
             },
             {
                 domain: `["!", "!", "!", ("foo", "=", "abc")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= "abc"`,
+                result: `Match records with all of the following rules:\nFoo\n!= abc`,
             },
             {
                 domain: `["!", "&", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with not all of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+                result: `Match records with not all of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with none of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+                result: `Match records with none of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["&", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n!= "abc"\nFoo\n= "def"`,
+                result: `Match records with all of the following rules:\nFoo\n!= abc\nFoo\n= def`,
             },
             {
                 domain: `["&", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+                result: `Match records with all of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["&", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n= "abc"\nFoo\n!= "def"`,
+                result: `Match records with all of the following rules:\nFoo\n= abc\nFoo\n!= def`,
             },
             {
                 domain: `["&", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-                result: `Match records with all of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+                result: `Match records with all of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["|", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n!= "abc"\nFoo\n= "def"`,
+                result: `Match records with any of the following rules:\nFoo\n!= abc\nFoo\n= def`,
             },
             {
                 domain: `["|", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+                result: `Match records with any of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["|", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n= "abc"\nFoo\n!= "def"`,
+                result: `Match records with any of the following rules:\nFoo\n= abc\nFoo\n!= def`,
             },
             {
                 domain: `["|", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
-                result: `Match records with any of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+                result: `Match records with any of the following rules:\nFoo\n= abc\nFoo\n= def`,
             },
             {
                 domain: `["&", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with all of the following rules:\nnot all\nof:\nFoo\n= "abc"\nFoo\n= "def"\nFoo\n= "ghi"`,
+                result: `Match records with all of the following rules:\nnot all\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["&", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with all of the following rules:\nnone\nof:\nFoo\n= "abc"\nFoo\n= "def"\nFoo\n= "ghi"`,
+                result: `Match records with all of the following rules:\nnone\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["|", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with any of the following rules:\nnot all\nof:\nFoo\n= "abc"\nFoo\n= "def"\nFoo\n= "ghi"`,
+                result: `Match records with any of the following rules:\nnot all\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["|", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with any of the following rules:\nnone\nof:\nFoo\n= "abc"\nFoo\n= "def"\nFoo\n= "ghi"`,
+                result: `Match records with any of the following rules:\nnone\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "&", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with not all of the following rules:\nFoo\n= "abc"\nFoo\n= "def"\nFoo\n= "ghi"`,
+                result: `Match records with not all of the following rules:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "|", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with none of the following rules:\nFoo\n= "abc"\nFoo\n= "def"\nFoo\n= "ghi"`,
+                result: `Match records with none of the following rules:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "&", "|", ("foo", "=", "abc"), "!", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with not all of the following rules:\nany\nof:\nFoo\n= "abc"\nFoo\n!= "def"\nFoo\n= "ghi"`,
+                result: `Match records with not all of the following rules:\nany\nof:\nFoo\n= abc\nFoo\n!= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "|", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with none of the following rules:\nall\nof:\nFoo\n= "abc"\nFoo\n= "def"\nFoo\n= "ghi"`,
+                result: `Match records with none of the following rules:\nall\nof:\nFoo\n= abc\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "&", ("foo", "=", "abc"), "|", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with not all of the following rules:\nFoo\n= "abc"\nany\nof:\nFoo\n= "def"\nFoo\n= "ghi"`,
+                result: `Match records with not all of the following rules:\nFoo\n= abc\nany\nof:\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
-                result: `Match records with none of the following rules:\nFoo\n= "abc"\nall\nof:\nFoo\n= "def"\nFoo\n= "ghi"`,
+                result: `Match records with none of the following rules:\nFoo\n= abc\nall\nof:\nFoo\n= def\nFoo\n= ghi`,
             },
             {
                 domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), "!", ("foo", "=", "ghi")]`,
-                result: `Match records with none of the following rules:\nFoo\n= "abc"\nall\nof:\nFoo\n= "def"\nFoo\n!= "ghi"`,
+                result: `Match records with none of the following rules:\nFoo\n= abc\nall\nof:\nFoo\n= def\nFoo\n!= ghi`,
             },
         ];
 
@@ -1292,9 +1275,9 @@ QUnit.module("Components", (hooks) => {
             domain: `[("bar","=",false)]`,
             readonly: true,
         });
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Baris not set`);
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Bar is not set`);
         await parent.set(`[("bar","=",true)]`);
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Baris set`);
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Bar is set`);
     });
 
     QUnit.test("Edit the value for field char and an operator in", async (assert) => {
@@ -1352,10 +1335,10 @@ QUnit.module("Components", (hooks) => {
             domain: `[("foo", "hop", "a")]`,
             readonly: true,
         });
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo "hop" "a"`);
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo "hop" a`);
 
         await parent.set(`[("foo", hop, "a")]`);
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo hop "a"`);
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo hop a`);
     });
 
     QUnit.test("display of an unknown operator (edit)", async (assert) => {
@@ -1375,10 +1358,10 @@ QUnit.module("Components", (hooks) => {
             domain: `["!", ("foo", "hop", "a")]`,
             readonly: true,
         });
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo not "hop" "a"`);
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo not "hop" a`);
 
         await parent.set(`["!", ("foo", hop, "a")]`);
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo not hop "a"`);
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo not hop a`);
     });
 
     QUnit.test("display of an operator without negation defined (readonly)", async (assert) => {
@@ -1387,7 +1370,7 @@ QUnit.module("Components", (hooks) => {
             domain: `["!", ("foo", "=?", "a")]`,
             readonly: true,
         });
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo not =? "a"`);
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo not =? a`);
     });
 
     QUnit.test("display of an operator without negation defined (edit)", async (assert) => {
@@ -1412,5 +1395,242 @@ QUnit.module("Components", (hooks) => {
             domain: `["!", (expr, "parent_of", "a")]`,
         });
         assert.strictEqual(getSelectedOperator(target), `not parent of`);
+    });
+
+    QUnit.test("boolean field (readonly)", async (assert) => {
+        const parent = await makeDomainSelector({
+            readonly: true,
+            domain: `[]`,
+        });
+        await parent.set(`[("bar", "=", True)]`);
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, "Bar is set");
+        await parent.set(`[("bar", "=", False)]`);
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, "Bar is not set");
+        await parent.set(`[("bar", "!=", True)]`);
+        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, "Bar is not set");
+        await parent.set(`[("bar", "!=", False)]`);
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf").textContent,
+            "Bar is not not set"
+        );
+    });
+
+    QUnit.test("integer field (readonly)", async (assert) => {
+        const parent = await makeDomainSelector({
+            readonly: true,
+            domain: `[]`,
+        });
+        const toTest = [
+            { domain: `[("int", "=", True)]`, text: `Integer = true` },
+            { domain: `[("int", "=", False)]`, text: `Integer is not set ` },
+            { domain: `[("int", "!=", True)]`, text: `Integer != true` },
+            { domain: `[("int", "!=", False)]`, text: `Integer is set ` },
+            { domain: `[("int", "=", 1)]`, text: `Integer = 1` },
+            { domain: `[("int", "!=", 1)]`, text: `Integer != 1` },
+            { domain: `[("int", "<", 1)]`, text: `Integer < 1` },
+            { domain: `[("int", "<=", 1)]`, text: `Integer <= 1` },
+            { domain: `[("int", ">", 1)]`, text: `Integer > 1` },
+            { domain: `[("int", ">=", 1)]`, text: `Integer >= 1` },
+            {
+                domain: `["&", ("int", ">=", 1),("int","<=", 2)]`,
+                text: `Integer is between 1 and 2`,
+            },
+        ];
+        for (const { domain, text } of toTest) {
+            await parent.set(domain);
+            assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, text);
+        }
+    });
+
+    QUnit.test("date field (readonly)", async (assert) => {
+        const parent = await makeDomainSelector({
+            readonly: true,
+            domain: `[]`,
+        });
+        const toTest = [
+            { domain: `[("date", "=", False)]`, text: `Date is not set ` },
+            { domain: `[("date", "!=", False)]`, text: `Date is set ` },
+            { domain: `[("date", "=", "2023-07-03")]`, text: `Date = 2023-07-03` },
+            { domain: `[("date", "=", context_today())]`, text: `Date = context_today()` },
+            { domain: `[("date", "!=", "2023-07-03")]`, text: `Date != 2023-07-03` },
+            { domain: `[("date", "<", "2023-07-03")]`, text: `Date < 2023-07-03` },
+            { domain: `[("date", "<=", "2023-07-03")]`, text: `Date <= 2023-07-03` },
+            { domain: `[("date", ">", "2023-07-03")]`, text: `Date > 2023-07-03` },
+            { domain: `[("date", ">=", "2023-07-03")]`, text: `Date >= 2023-07-03` },
+            {
+                domain: `["&", ("date", ">=", "2023-07-03"),("date","<=", "2023-07-15")]`,
+                text: `Date is between 2023-07-03 and 2023-07-15`,
+            },
+            {
+                domain: `["&", ("date", ">=", "2023-07-03"),("date","<=", context_today())]`,
+                text: `Date is between "2023-07-03" and context_today()`,
+            },
+        ];
+        for (const { domain, text } of toTest) {
+            await parent.set(domain);
+            assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, text);
+        }
+    });
+
+    QUnit.test("char field (readonly)", async (assert) => {
+        const parent = await makeDomainSelector({
+            readonly: true,
+            domain: `[]`,
+        });
+        const toTest = [
+            { domain: `[("foo", "=", False)]`, text: `Foo is not set ` },
+            { domain: `[("foo", "!=", False)]`, text: `Foo is set ` },
+            { domain: `[("foo", "=", "abc")]`, text: `Foo = abc` },
+            { domain: `[("foo", "=", expr)]`, text: `Foo = expr` },
+            { domain: `[("foo", "!=", "abc")]`, text: `Foo != abc` },
+            { domain: `[("foo", "ilike", "abc")]`, text: `Foo contains abc` },
+            { domain: `[("foo", "not ilike", "abc")]`, text: `Foo does not contain abc` },
+            { domain: `[("foo", "in", ["abc", "def"])]`, text: `Foo is in ( abc , def )` },
+            { domain: `[("foo", "not in", ["abc", "def"])]`, text: `Foo is not in ( abc , def )` },
+        ];
+        for (const { domain, text } of toTest) {
+            await parent.set(domain);
+            assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, text);
+        }
+    });
+
+    QUnit.test("selection field (readonly)", async (assert) => {
+        const parent = await makeDomainSelector({
+            readonly: true,
+            domain: `[]`,
+        });
+        const toTest = [
+            { domain: `[("state", "=", False)]`, text: `State is not set ` },
+            { domain: `[("state", "!=", False)]`, text: `State is set ` },
+            { domain: `[("state", "=", "abc")]`, text: `State = ABC` },
+            { domain: `[("state", "=", expr)]`, text: `State = expr` },
+            { domain: `[("state", "!=", "abc")]`, text: `State != ABC` },
+            { domain: `[("state", "in", ["abc", "def"])]`, text: `State is in ( ABC , DEF )` },
+            {
+                domain: `[("state", "not in", ["abc", "def"])]`,
+                text: `State is not in ( ABC , DEF )`,
+            },
+            {
+                domain: `[("state", "not in", ["abc", expr])]`,
+                text: `State is not in ( "ABC" , expr )`,
+            },
+        ];
+        for (const { domain, text } of toTest) {
+            await parent.set(domain);
+            assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, text);
+        }
+    });
+
+    QUnit.test("selection property (readonly)", async (assert) => {
+        serverData.models.partner.fields.properties = {
+            string: "Properties",
+            type: "properties",
+            definition_record: "product_id",
+            definition_record_field: "definitions",
+            searchable: true,
+        };
+        serverData.models.product.fields.definitions = {
+            string: "Definitions",
+            type: "properties_definition",
+        };
+        serverData.models.product.records[0].definitions = [
+            {
+                name: "selection_prop",
+                string: "Selection",
+                type: "selection",
+                selection: [
+                    ["abc", "ABC"],
+                    ["def", "DEF"],
+                ],
+            },
+        ];
+        const parent = await makeDomainSelector({
+            readonly: true,
+            domain: `[]`,
+        });
+        const toTest = [
+            {
+                domain: `[("properties.selection_prop", "=", False)]`,
+                text: `PropertiesSelection is not set `,
+            },
+            {
+                domain: `[("properties.selection_prop", "!=", False)]`,
+                text: `PropertiesSelection is set `,
+            },
+            {
+                domain: `[("properties.selection_prop", "=", "abc")]`,
+                text: `PropertiesSelection = ABC`,
+            },
+            {
+                domain: `[("properties.selection_prop", "=", expr)]`,
+                text: `PropertiesSelection = expr`,
+            },
+            {
+                domain: `[("properties.selection_prop", "!=", "abc")]`,
+                text: `PropertiesSelection != ABC`,
+            },
+        ];
+        for (const { domain, text } of toTest) {
+            await parent.set(domain);
+            assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, text);
+        }
+    });
+
+    QUnit.test("many2one field (readonly)", async (assert) => {
+        const toTest = [
+            {
+                domain: `[("product_id", "=", 37)]`,
+                text: "Product = xphone",
+            },
+            {
+                domain: `[("product_id", "=", 2)]`,
+                text: "Product = Inaccessible/missing record ID: 2",
+            },
+            {
+                domain: `[("product_id", "!=", 37)]`,
+                text: "Product != xphone",
+            },
+            {
+                domain: `[("product_id", "=", False)]`,
+                text: "Product is not set ",
+            },
+            {
+                domain: `[("product_id", "!=", False)]`,
+                text: "Product is set ",
+            },
+            {
+                domain: `[("product_id", "in", [])]`,
+                text: "Product is in (  )",
+            },
+            {
+                domain: `[("product_id", "in", [41, 37])]`,
+                text: "Product is in ( xpad , xphone )",
+            },
+            {
+                domain: `[("product_id", "in", [1, 37])]`,
+                text: "Product is in ( Inaccessible/missing record ID: 1 , xphone )",
+            },
+            {
+                domain: `[("product_id", "in", [1, uid, 37])]`,
+                text: 'Product is in ( Inaccessible/missing record ID: 1 , uid , "xphone" )',
+            },
+            {
+                domain: `[("product_id", "in", ["abc"])]`,
+                text: "Product is in ( abc )",
+            },
+            {
+                domain: `[("product_id", "in", 37)]`,
+                text: "Product is in xphone",
+            },
+            {
+                domain: `[("product_id", "in", 2)]`,
+                text: "Product is in Inaccessible/missing record ID: 2",
+            },
+        ];
+        const parent = await makeDomainSelector({ readonly: true });
+        for (const { domain, text } of toTest) {
+            await parent.set(domain);
+            assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, text);
+        }
     });
 });

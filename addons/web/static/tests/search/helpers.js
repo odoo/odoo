@@ -25,6 +25,7 @@ import { getDefaultConfig } from "@web/views/view";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { nameService } from "@web/core/name_service";
 
 const serviceRegistry = registry.category("services");
 const favoriteMenuRegistry = registry.category("favoriteMenu");
@@ -34,6 +35,7 @@ export function setupControlPanelServiceRegistry() {
     serviceRegistry.add("dialog", dialogService);
     serviceRegistry.add("field", fieldService);
     serviceRegistry.add("hotkey", hotkeyService);
+    serviceRegistry.add("name", nameService);
     serviceRegistry.add("notification", notificationService);
     serviceRegistry.add("orm", ormService);
     serviceRegistry.add("popover", popoverService);
