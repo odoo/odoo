@@ -55,6 +55,7 @@ import { overlayService } from "@web/core/overlay/overlay_service";
 
 import { Component, onMounted, xml } from "@odoo/owl";
 import { fieldService } from "@web/core/field_service";
+import { nameService } from "@web/core/name_service";
 
 const actionRegistry = registry.category("actions");
 const serviceRegistry = registry.category("services");
@@ -90,6 +91,7 @@ export function setupWebClientRegistries() {
         legacy_service_provider: () => legacyServiceProvider,
         localization: () => makeFakeLocalizationService(),
         menu: () => menuService,
+        name: () => nameService,
         notification: () => notificationService,
         orm: () => ormService,
         overlay: () => overlayService,

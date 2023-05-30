@@ -13,6 +13,7 @@ import { makeFakeLocalizationService } from "../helpers/mock_services";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { fieldService } from "@web/core/field_service";
 import { popoverService } from "@web/core/popover/popover_service";
+import { nameService } from "@web/core/name_service";
 
 /**
  * @typedef {Record<keyof DomainSelectorDialog.props, any>} Props
@@ -94,6 +95,7 @@ QUnit.module("Components", (hooks) => {
         registry.category("services").add("localization", makeFakeLocalizationService());
         registry.category("services").add("popover", popoverService);
         registry.category("services").add("field", fieldService);
+        registry.category("services").add("name", nameService);
 
         fixture = getFixture();
     });
