@@ -9,13 +9,15 @@ import { localization } from "@web/core/l10n/localization";
  */
 
 /**
- * @typedef {{
- *  popper?: string;
- *  container?: HTMLElement | (() => HTMLElement);
- *  margin?: number;
- *  position?: Direction | Position;
- *  onPositioned?: PositionEventHandler;
- * }} Options
+ * @typedef Options
+ * @property {string} [popper="popper"] useRef reference to the popper element
+ * @property {HTMLElement} [container] container element
+ * @property {number} [margin=0]
+ *  margin in pixels between the popper and the target.
+ * @property {Direction | Position} [position="bottom"]
+ *  position of the popper relative to the target
+ * @property {PositionEventHandler} [onPositioned]
+ *  callback called everytime the popper has just been positioned
  *
  * @typedef {keyof DirectionsData} DirectionsDataKey
  * @typedef {{
@@ -91,8 +93,9 @@ function getIFrame(el) {
  * to the requested position.
  * The positioning data used to determine each possible position is based on
  * the target, popper, and container sizes.
- * Particularly, a popper must not overflow the container in any direction,
- * it should actually stay at `margin` distance from the border to look good.
+ * Particularly, a popper must not overflow the container in any direction.
+ * The popper will stay at `margin` distance from its target. One could also
+ * use the CSS margins of the popper element to achieve the same result.
  *
  * @param {HTMLElement} target
  * @param {HTMLElement} popper
@@ -116,6 +119,16 @@ function getBestPosition(target, popper, iframe, { container, margin, position }
         container = container();
     }
 
+    // Account for popper actual margins
+    const popperStyle = getComputedStyle(popper);
+    const { marginTop, marginLeft, marginRight, marginBottom } = popperStyle;
+    const popMargins = {
+        top: parseFloat(marginTop),
+        left: parseFloat(marginLeft),
+        right: parseFloat(marginRight),
+        bottom: parseFloat(marginBottom),
+    };
+
     // Boxes
     const popBox = popper.getBoundingClientRect();
     const targetBox = target.getBoundingClientRect();
@@ -128,10 +141,10 @@ function getBestPosition(target, popper, iframe, { container, margin, position }
     // Compute positioning data
     /** @type {DirectionsData} */
     const directionsData = {
-        t: iframeBox.top + targetBox.top - popBox.height - margin,
-        b: iframeBox.top + targetBox.bottom + margin,
-        r: iframeBox.left + targetBox.right + margin,
-        l: iframeBox.left + targetBox.left - popBox.width - margin,
+        t: iframeBox.top + targetBox.top - popMargins.bottom - popBox.height - margin,
+        b: iframeBox.top + targetBox.bottom + popMargins.top + margin,
+        r: iframeBox.left + targetBox.right + popMargins.left + margin,
+        l: iframeBox.left + targetBox.left - popMargins.right - popBox.width - margin,
     };
     /** @type {VariantsData} */
     const variantsData = {
@@ -153,8 +166,8 @@ function getBestPosition(target, popper, iframe, { container, margin, position }
 
         if (containerRestricted) {
             const [directionSize, variantSize] = vertical
-                ? [popBox.height + margin, popBox.width]
-                : [popBox.width, popBox.height + margin];
+                ? [popBox.height, popBox.width]
+                : [popBox.width, popBox.height];
             let [directionMin, directionMax] = vertical
                 ? [contBox.top, contBox.bottom]
                 : [contBox.left, contBox.right];
