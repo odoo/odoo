@@ -644,6 +644,7 @@ class Applicant(models.Model):
                 if new_partner.create_date.date() == fields.Date.today():
                     new_partner.write({
                         'type': 'private',
+                        'name': self.partner_name or self.email_from,
                         'phone': self.partner_phone,
                         'mobile': self.partner_mobile,
                     })
