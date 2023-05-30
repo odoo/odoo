@@ -36,6 +36,7 @@ class CalendarLeaves(models.Model):
         domain = []
         for date in time_domain_dict:
             domain = expression.OR([domain, [
+                    ('employee_company_id', '=', date['company_id']),
                     ('date_to', '>', date['date_from']),
                     ('date_from', '<', date['date_to'])]
             ])
@@ -43,6 +44,7 @@ class CalendarLeaves(models.Model):
 
     def _get_time_domain_dict(self):
         return [{
+            'company_id' : record.company_id.id,
             'date_from' : record.date_from,
             'date_to' : record.date_to
         } for record in self if not record.resource_id]
