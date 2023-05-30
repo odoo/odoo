@@ -7,10 +7,8 @@
         <t t-set="additional_title">Resellers</t>
         <div id="wrap">
             <div class="oe_structure" id="oe_structure_website_crm_partner_assign_layout_1"/>
-            <div class="container mt16">
-                <div class="row">
-                    <t t-out="0" />
-                </div>
+            <div class="container my-4">
+                <t t-out="0" />
             </div>
             <div class="oe_structure" id="oe_structure_website_crm_partner_assign_layout_2"/>
         </div>
@@ -19,98 +17,169 @@
 
 <template id="index" name="Find Resellers">
     <t t-call="website_crm_partner_assign.layout">
-        <div class="col-lg-12">
-            <h1 class="text-center">
-                Looking For a Local Store?
-            </h1><h2 class="text-center text-muted">
-                Contact a reseller
-            </h2>
-        </div>
-
-        <div class="col-lg-3 mb32" id="partner_left">
-
-            <ul id="reseller_grades" class="nav nav-pills flex-column mt16">
-                <li class="nav-header nav-item"><h3>Filter by Level</h3></li>
-                <t t-foreach="grades" t-as="grade">
-                    <li class="nav-item">
+        <div class="o_wcrm_filters_top d-flex d-print-none align-items-center justify-content-end flex-wrap gap-2 w-100">
+            <h4 class="my-0 me-auto pe-sm-4">
+                Find a reseller <t t-foreach="countries" t-as="country"><span t-if="country['active'] and country['country_id'][0] != 0 and country['country_id']">in <t t-out="country['country_id'][1]"/></span></t>
+            </h4>
+            <div class="dropdown d-none d-lg-block">
+                <a role="button" href="#" data-bs-toggle="dropdown" t-attf-class="dropdown-toggle btn btn-light #{'d-none' if not partners else ''}" aria-expanded="true" aria-label="Open categories dropdown">
+                    <t t-foreach="grades" t-as="grade">
+                        <span t-if="grade['active']" t-out="grade['grade_id'][1]"/>
+                    </t>
+                </a>
+                <div class="dropdown-menu">
+                    <t t-foreach="grades" t-as="grade">
                         <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
-                           t-attf-class="nav-link#{grade['active'] and ' active' or ''}">
-                            <span class="badge rounded-pill float-end" t-esc="grade['grade_id_count'] or ''"/>
-                            <t t-esc="grade['grade_id'][1]"/>
-                        </a>
-                    </li>
-                </t>
-            </ul>
-
-            <ul id="reseller_countries" class="nav nav-pills flex-column mt16">
-                <li class="nav-header nav-item"><h3>Filter by Country</h3></li>
-                <t t-foreach="countries" t-as="country">
-                    <li t-if="country['country_id']" class="nav-item">
+                        class="dropdown-item" t-out="grade['grade_id'][1]"/>
+                    </t>
+                </div>
+            </div>
+            <div class="dropdown d-none d-lg-block">
+                <a role="button" href="#" data-bs-toggle="dropdown" t-attf-class="dropdown-toggle btn btn-light #{'d-none' if not partners else ''}" aria-expanded="true" aria-label="Open countries dropdown">
+                    <t t-foreach="countries" t-as="country">
+                        <span t-if="partners and country['active']" t-out="country['country_id'][1]"/>
+                    </t>
+                </a>
+                <div class="dropdown-menu">
+                    <t t-foreach="countries" t-as="country" t-if="country['country_id']">
                         <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
-                           t-attf-class="nav-link#{country['active'] and ' active' or ''}">
-                            <span class="badge rounded-pill float-end" t-esc="country['country_id_count'] or ''"/>
-                            <t t-esc="country['country_id'][1]"/>
-                        </a>
-                    </li>
-                </t>
-            </ul>
-
-        </div>
-
-        <div class="col-lg-8 offset-lg-1" id="ref_content">
-            <div class="d-flex p-2">
-                <t t-call="website.pager"/>
-                <form action="" method="get" class="ms-auto">
-                    <div class="mb-3">
-                        <input t-if="country_all" type="hidden" name="country_all" value="True" />
-                        <input type="text" name="search" class="search-query form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
+                        class="dropdown-item" t-out="country['country_id'][1]"/>
+                    </t>
+                </div>
+            </div>
+            <div class="o_wcrm_search d-flex w-100 w-lg-auto">
+                <form class="flex-grow-1" action="" method="get">
+                    <input t-if="country_all" type="hidden" name="country_all" value="True" />
+                    <div class="input-group" role="search">
+                        <input type="text" name="search" class="search-query form-control border-0 bg-light" placeholder="Search" t-att-value="searches.get('search', '')"/>
+                        <button type="submit" aria-label="Search" title="Search" class="oe_search_button btn btn-light">
+                            <i class="oi oi-search"/>
+                        </button>
                     </div>
                 </form>
+                <button class="btn btn-light position-relative ms-2 d-lg-none"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#o_wcrm_offcanvas">
+                    <i class="fa fa-sliders"/>
+                </button>
             </div>
-            <div>
-                <p t-if="not partners">No result found</p>
-                <t t-foreach="partners" t-as="partner">
-                    <t t-if="last_grade != partner.grade_id.id">
-                        <h3 class="text-center mt-4">
-                            <span t-field="partner.grade_id"/>
-                            <t t-call="website.publish_management">
-                                <t t-set="object" t-value="partner.grade_id"/>
-                                <t t-set="publish_edit" t-value="True"/>
-                            </t>
-                        </h3>
-                        <t t-set="last_grade" t-value="partner.grade_id.id"/>
-                    </t>
-                    <div class="d-flex mt-3">
-                        <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}"
-                           t-field="partner.avatar_128"
-                           class="me-3 text-center o_width_128"
-                           t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'
-                        ></a>
-                        <div class="flex-grow-1 o_partner_body" style="min-height: 64px;">
-                            <a t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}">
-                                <span t-field="partner.display_name"/>
-                            </a>
-                            <div t-field="partner.website_short_description"/>
-                            <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
-                                <small><a t-attf-href="/partners/#{slug(partner)}#right_column">
-                                    <t t-esc="partner.implemented_partner_count"/> reference(s)
-                                </a></small>
-                            </t>
+        </div>
+        <!-- Off canvas filters on mobile-->
+        <div id="o_wcrm_offcanvas" class="o_website_offcanvas offcanvas offcanvas-end d-lg-none p-0 overflow-visible">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title">Filters</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
+            </div>
+            <div class="offcanvas-body p-0">
+                <div class="accordion accordion-flush">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target=".o_wcrm_offcanvas_grade"
+                                aria-expanded="false"
+                                aria-controls="o_wcrm_offcanvas_grade">
+                                Filter by category
+                            </button>
+                        </h2>
+                        <div class="o_wcrm_offcanvas_grade accordion-collapse collapse">
+                            <div class="accordion-body pt-0">
+                                <ul class="list-group list-group-flush">
+                                    <t t-foreach="grades" t-as="grade">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
+                                            <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
+                                            class="text-reset" aria-label="See categories filters">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" t-attf-name="#{grade['grade_id'][1]}" t-att-checked="bool(grade['active'])"/>
+                                                    <label class="form-check-label" t-attf-for="#{grade['grade_id'][1]}" t-out="grade['grade_id'][1]"/>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
                         </div>
                     </div>
-                </t>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button border-top collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target=".o_wcrm_offcanvas_country"
+                                aria-expanded="false"
+                                aria-controls="o_wcrm_offcanvas_country">
+                                Filter by country
+                            </button>
+                        </h2>
+                        <div class="o_wcrm_offcanvas_country accordion-collapse collapse">
+                            <div class="accordion-body pt-0">
+                                <ul class="list-group list-group-flush">
+                                    <t t-foreach="countries" t-as="country">
+                                        <li t-if="country['country_id']" class="list-group-item d-flex justify-content-between align-items-center ps-0 pb-0 border-0">
+                                            <a t-attf-href="/partners#{ current_grade and '/grade/%s' % slug(current_grade) or ''}#{country['country_id'][0] and '/country/%s' % country['country_id'][0] or '' }#{ '?' + (search_path or '') + (country['country_id'][0] == 0 and '&amp;country_all=True' or '')}"
+                                            class="text-reset" aria-label="See countries filters">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" t-attf-name="#{country['country_id'][1]}" t-att-checked="bool(country['active'])"/>
+                                                    <label class="form-check-label" t-attf-for="#{country['country_id'][1]}" t-out="country['country_id'][1]"/>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class='navbar'>
+        </div>
+        <div class="row mb-4">
+            <div class="my-5 py-5 text-center" t-if="not partners">
+                <h5>No results found for "<span t-out="searches.get('search', '')"/>"</h5>
+                <a href="/partners">See all resellers</a>
+            </div>
+            <t t-set="last_grade" t-value="None"/>
+            <t t-foreach="partners" t-as="partner">
+                <t t-if="last_grade != partner.grade_id.id">
+                    <h5 class="mt-4 mb-2 col-12">
+                        <span t-field="partner.grade_id"/> Resellers
+                        <t t-call="website.publish_management">
+                            <t t-set="object" t-value="partner.grade_id"/>
+                            <t t-set="publish_edit" t-value="True"/>
+                        </t>
+                    </h5>
+                    <t t-set="last_grade" t-value="partner.grade_id.id"/>
+                </t>
+                <div class="col-md-4 col-xl-3 col-12 mb-4">
+                    <div class="card h-100 text-decoration-none">
+                        <a class="text-decoration-none" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}" aria-label="Go to reseller">
+                            <div t-field="partner.image_1920"
+                                class="card-img-top border-bottom"
+                                t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img img-fluid h-100 w-100 mw-100", "style": "max-height: 208px; min-height: 208px; object-fit: cover"}'
+                                />
+                            <div class="card-body">
+                                <h5 class="card-title m-0" t-attf-href="/partners/#{slug(partner)}?#{current_grade and 'grade_id=%s&amp;' % current_grade.id}#{current_country and 'country_id=%s' % current_country.id}" t-field="partner.display_name"/>
+                                <small id="o_wcrm_partners_address"/>
+                                <small class="o_wcrm_short_description text-muted overflow-hidden" t-field="partner.website_short_description"/>
+                                <small t-if="not partner.website_short_description" class="css_editable_mode_hidden text-muted fst-italic" groups="website.group_website_restricted_editor">
+                                    Edit to add a short description
+                                </small>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </t>
+            <div class="navbar">
                 <t t-call="website.pager">
-                   <t t-set="classname" t-valuef="float-start"/>
+                   <t t-set="classname" t-valuef="mx-auto"/>
                 </t>
             </div>
         </div>
     </t>
 </template>
 
-<template id="ref_country" inherit_id="website_crm_partner_assign.index" name="Left World Map">
-    <xpath expr="//ul[@id='reseller_countries']" position="after">
+<template id="ref_country" inherit_id="website_crm_partner_assign.index" name="World Map">
+    <xpath expr="//div[hasclass('o_wcrm_search')]" position="inside">
         <t t-if="google_maps_api_key">
             <!-- modal for large map -->
             <div role="dialog" class="modal fade partner_map_modal" tabindex="-1">
@@ -118,54 +187,71 @@
                 <div class="modal-content">
                     <header class="modal-header">
                         <h4 class="modal-title">World Map</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
                     </header>
-                    <iframe t-attf-src="/google_map/?width=898&amp;height=485&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
-                    style="width:898px; height:485px; border:0; padding:0; margin:0;"></iframe>
+                    <iframe t-attf-src="/google_map/?height=485&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
+                    style="height:485px;"/>
                 </div>
               </div>
             </div>
             <!-- modal end -->
-            <h3>World Map<button class="btn btn-link" data-bs-toggle="modal" data-bs-target=".partner_map_modal"><span class="fa fa-external-link" role="img" aria-label="External link" title="External link"/></button></h3>
-            <ul class="nav">
-                <iframe t-attf-src="/google_map?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/partners/"
-                    style="width:260px; height:240px; border:0; padding:0; margin:0;" scrolling="no"></iframe>
-            </ul>
+            <div class="btn-group ms-2">
+                <button class="btn btn-light border-primary active">
+                    <i class="fa fa-th-large"/>
+                </button>
+                <button class="btn btn-light" data-bs-toggle="modal" data-bs-target=".partner_map_modal">
+                    <i class="fa fa-map-marker" role="img" aria-label="Open map" title="Open map"/>
+                </button>
+            </div>
         </t>
+    </xpath>
+</template>
+
+<template id="o_wcrm_partner_address" inherit_id="website_crm_partner_assign.index" name="Address">
+    <xpath expr="//small[@id='o_wcrm_partners_address']" position="inside">
+        <div t-field="partner.self" 
+            t-options="{
+                'widget': 'contact',
+                'fields': ['country_id']
+            }"
+            class="py-2"
+        />
     </xpath>
 </template>
 
 <template id="partner" name="Partner Detail">
     <t t-call="website_crm_partner_assign.layout">
-        <div class="col-lg-5">
-            <ol t-if="not edit_page" class="breadcrumb">
-                <li class="breadcrumb-item"><a t-attf-href="/partners#{current_grade and '/grade/%s' % slug(current_grade)}#{current_country and '/country/%s' % slug(current_country)}">Our Partners</a></li>
-                <li class="breadcrumb-item active"><span t-field="partner.display_name"/></li>
-            </ol>
+        <div t-if="not edit_page" class="mb-3">
+            <a t-attf-href="/partners#{current_grade and '/grade/%s' % slug(current_grade)}#{current_country and '/country/%s' % slug(current_country)}" aria-label="Back to resellers list"><i class="fa fa-chevron-left me-2"/>Back to resellers</a>
         </div>
         <t t-call="website_partner.partner_detail">
             <t t-set="right_column">
-                <div id="right_column" class="mb16"><t t-call="website_crm_partner_assign.references_block"/></div>
+                <div id="right_column"><t t-call="website_crm_partner_assign.references_block"/></div>
             </t>
         </t>
     </t>
 </template>
 
 <template id="grade_in_detail" inherit_id="website_partner.partner_detail">
-  <xpath expr="//*[@id='partner_name']" position="after">
-    <h3 class="col-lg-12 text-center text-muted" t-if="partner.grade_id and partner.grade_id.website_published">
-      <span t-field="partner.grade_id"/></h3>
-  </xpath>
+    <xpath expr="//*[@id='partner_name']" position="before">
+        <span class="col-lg-12 text-muted" t-if="partner.grade_id and partner.grade_id.website_published">
+            <span t-field="partner.grade_id"/>
+        </span>
+    </xpath>
 </template>
 
 <template id="references_block" name="Partner References Block">
     <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
-        <h3 id="references">References</h3>
-        <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="d-flex mt-3">
-            <span t-field="reference.avatar_128" class="d-block me-3 text-center o_width_128" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'/>
-            <div class="flex-grow-1" style="min-height: 64px;">
-                <span t-field="reference.self"/>
-                <div t-field='reference.website_short_description'/>
+        <h4 id="references">References</h4>
+        <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="card mt-3 border-0">
+            <div class="row">
+                <div class="col-md-2">
+                    <span t-field="reference.avatar_128" class="d-flex justify-content-center h-100" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img-fluid rounded"}'/>
+                </div>
+                <div class="card-body col-md-10">
+                    <span t-field="reference.self"/>
+                    <div t-field='reference.website_short_description'/>
+                </div>
             </div>
         </div>
     </t>

@@ -490,8 +490,10 @@
     <!-- OffCanvas Nav -->
     <template id="website_sale.o_wsale_offcanvas" name="Offcanvas">
         <aside id="o_wsale_offcanvas"
-               class="offcanvas offcanvas-end p-0">
-
+               class="o_website_offcanvas offcanvas offcanvas-end p-0">
+            <div class="offcanvas-header justify-content-end">
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
+            </div>
             <div t-if="category" class="offcanvas-body d-lg-none flex-grow-0 overflow-visible">
                 <t t-call="website_sale.search">
                     <t t-set="search" t-value="original_search or search"/>
