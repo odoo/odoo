@@ -228,6 +228,8 @@ class ResConfigSettings(models.TransientModel):
 
     def action_update_terms(self):
         self.ensure_one()
+        if hasattr(self, 'website_id') and self.env.user.has_group('website.group_website_designer'):
+            return self.env["website"].get_client_action('/terms', True)
         return {
             'name': _('Update Terms & Conditions'),
             'type': 'ir.actions.act_window',
