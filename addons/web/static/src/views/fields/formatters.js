@@ -188,7 +188,9 @@ export function formatFloat(value, options = {}) {
     } else {
         precision = 2;
     }
-    const formatted = (value || 0).toFixed(precision).split(".");
+    const factor = Math.pow(10, precision);
+    value = Math.round((value || 0) * factor) / factor;
+    const formatted = value.toFixed(precision).split(".");
     formatted[0] = insertThousandsSep(formatted[0], thousandsSep, grouping);
     if (options.noTrailingZeros) {
         formatted[1] = formatted[1].replace(/0+$/, "");
