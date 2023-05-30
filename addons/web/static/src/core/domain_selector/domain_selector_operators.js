@@ -17,8 +17,8 @@ export const OPERATOR_DESCRIPTIONS = [
     { key: "not_like", label: _lt("not like"), symbol: "not like", valueCount: 1 },
     { key: "ilike", label: _lt("contains"), symbol: "ilike", valueCount: 1 },
     { key: "not_ilike", label: _lt("does not contain"), symbol: "not ilike", valueCount: 1 },
-    { key: "in", label: _lt("in"), symbol: "in", valueCount: "variable" },
-    { key: "not_in", label: _lt("not in"), symbol: "not in", valueCount: "variable" },
+    { key: "in", label: _lt("is in"), symbol: "in", valueCount: "variable" },
+    { key: "not_in", label: _lt("is not in"), symbol: "not in", valueCount: "variable" },
     { key: "child_of", label: _lt("child of"), symbol: "child_of", valueCount: 1 },
     { key: "parent_of", label: _lt("parent of"), symbol: "parent_of", valueCount: 1 },
 
