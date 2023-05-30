@@ -59,11 +59,13 @@
         align-items: flex-start;
         flex: 4;
         min-width: 0;
+    }
+
+    .o_control_panel_actions {
+        gap: map-get($spacers, 2);
 
         .o-filter-value {
             min-height: 25px;
-            margin-left: 8px;
-            margin-right: 8px;
             min-width: 100px;
 
             .o_field_many2many_tags {
@@ -73,7 +75,7 @@
             .o_field_many2manytags,
             .date_filter_values {
                 display: flex;
-                gap: 3px;
+                gap: map-get($spacers, 2);
                 align-items: baseline;
             }
         }
