@@ -36,34 +36,29 @@ export class AttendeeCalendarController extends CalendarController {
         });
     }
 
+    getQuickCreateFormViewProps(record) {
+        const props = super.getQuickCreateFormViewProps(record);
+        const onDialogClosed = () => {
+            this.model.load();
+        };
+        return {
+            ...props,
+            size: "md",
+            goToFullEvent: (contextData) => {
+                const fullContext = {
+                    ...props.context,
+                    ...contextData
+                };
+                this.goToFullEvent(false, fullContext)
+            },
+            onRecordSaved: () => onDialogClosed(),
+        };
+    }
+
     async editRecord(record, context = {}) {
         if (record.id) {
             return this.goToFullEvent(record.id, context);
         }
-        const onDialogClosed = () => {
-            this.model.load();
-        };
-        return new Promise((resolve) => {
-            this.displayDialog(
-                CalendarQuickCreate, {
-                    viewId: this.model.quickCreateFormViewId,
-                    resModel: "calendar.event",
-                    size: "md",
-                    context,
-                    goToFullEvent: (contextData) => {
-                        const fullContext = {
-                            ...context,
-                            ...contextData
-                        };
-                        this.goToFullEvent(false, fullContext)
-                    },
-                    onRecordSaved: () => resolve(onDialogClosed()),
-                    onRecordDiscarded: () => resolve(onDialogClosed())
-                }, {
-                    onClose: () => resolve()
-                }
-            );
-        });
     }
 
     /**
@@ -120,3 +115,7 @@ export class AttendeeCalendarController extends CalendarController {
     }
 }
 AttendeeCalendarController.template = "calendar.AttendeeCalendarController";
+AttendeeCalendarController.components = {
+    ...AttendeeCalendarController.components,
+    QuickCreateFormView: CalendarQuickCreate,
+}

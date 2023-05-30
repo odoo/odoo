@@ -29,13 +29,12 @@ export class CalendarArchParser extends XMLParser {
         let scale = "week";
         let canCreate = true;
         let canDelete = true;
-        let hasQuickCreate = true;
+        let quickCreate = true;
         let hasEditDialog = false;
         let showUnusualDays = false;
         let isDateHidden = false;
         let isTimeHidden = false;
         let formViewId = false;
-        let quickCreateFormViewId = false;
         const popoverFields = {};
         const filtersInfo = {};
 
@@ -85,7 +84,14 @@ export class CalendarArchParser extends XMLParser {
                         canDelete = archParseBoolean(node.getAttribute("delete"), true);
                     }
                     if (node.hasAttribute("quick_add")) {
-                        hasQuickCreate = archParseBoolean(node.getAttribute("quick_add"), true);
+                        quickCreate = archParseBoolean(node.getAttribute("quick_add"), true);
+                        // quick_add could contain either false, true or an id for a form view
+                        if (quickCreate) {
+                            const viewId = parseInt(node.getAttribute("quick_add"), 10);
+                            if (viewId > 1) {
+                                quickCreate = viewId;
+                            }
+                        }
                     }
                     if (node.hasAttribute("event_open_popup")) {
                         hasEditDialog = archParseBoolean(node.getAttribute("event_open_popup"));
@@ -101,12 +107,6 @@ export class CalendarArchParser extends XMLParser {
                     }
                     if (node.hasAttribute("form_view_id")) {
                         formViewId = parseInt(node.getAttribute("form_view_id"), 10);
-                    }
-                    if (node.hasAttribute("quick_create_form_view_id")) {
-                        quickCreateFormViewId = parseInt(
-                            node.getAttribute("quick_create_form_view_id"),
-                            10
-                        );
                     }
 
                     break;
@@ -189,9 +189,8 @@ export class CalendarArchParser extends XMLParser {
             fieldNames: [...fieldNames],
             filtersInfo,
             formViewId,
-            quickCreateFormViewId,
             hasEditDialog,
-            hasQuickCreate,
+            quickCreate,
             isDateHidden,
             isTimeHidden,
             popoverFields,
