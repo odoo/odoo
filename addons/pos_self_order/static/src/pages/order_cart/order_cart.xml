@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.OrderCart" owl="1">
+        <div class="d-flex flex-column dvh-100">
+            <NavBar customText="'Cart'" />
+            <main class="h-100 bg-100 overflow-auto">
+                <Lines order="this.selfOrder.currentOrder" />
+            </main>
+            <t t-call="pos_self_order.OrderButton"/>
+        </div>
+    </t>
+    <t t-name="pos_self_order.OrderButton" owl="1">
+        <div class="d-flex flex-column align-items-center w-100 p-3 bg-white shadow-lg">
+            <t t-set="order" t-value="selfOrder.currentOrder"/>
+            <PriceDetails tax="order.amount_tax" total="order.amount_total"/>
+            <button t-on-click="processOrder" t-attf-class="{{ !order.isChange() ? 'disabled' : '' }} o_self_order_main_button btn btn-primary w-100 px-2 py-3 mt-2 rounded">
+                <t t-esc="buttonToShow" />
+                <t t-if="!order.isChange()">
+                    already sent
+                </t>
+        </div>
+    </t>
+</templates>

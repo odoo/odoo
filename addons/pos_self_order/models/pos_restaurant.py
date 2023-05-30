@@ -42,6 +42,7 @@ class RestaurantTable(models.Model):
     def _get_data_for_qr_codes_page(self, url: Callable[[Optional[int]], str]) -> List[Dict]:
         return [
             {
+                "access_token": table.access_token,
                 "id": table.id,
                 "name": table.name,
                 "url": url(table.id),

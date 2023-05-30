@@ -39,11 +39,11 @@ def get_any_pos_config_sudo() -> PosConfig:
     ) or _raise(werkzeug.exceptions.NotFound())
 
 
-def get_table_sudo(table_access_token: Optional[str]) -> Optional[RestaurantTable]:
-    return table_access_token and (
+def get_table_sudo(access_token: Optional[str]) -> Optional[RestaurantTable]:
+    return access_token and (
         request.env["restaurant.table"]
         .sudo()
-        .search([("access_token", "=", table_access_token), ("active", "=", True)], limit=1)
+        .search([("access_token", "=", access_token), ("active", "=", True)], limit=1)
     )
 
 

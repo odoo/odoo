@@ -61,15 +61,21 @@ class PosConfig(models.Model):
         directly on the fields, but `module_pos_restaurant` would not be
         known at the time that the function for this default value would run)
         """
-        for vals in vals_list:
-            if vals.get("module_pos_restaurant"):
-                vals.update(
-                    {
-                        "self_order_view_mode": True,
-                        "self_order_table_mode": True,
-                    }
-                )
-        return super().create(vals_list)
+        pos_config_ids = super().create(vals_list)
+
+        for pos_config_id in pos_config_ids:
+            if pos_config_id.module_pos_restaurant:
+                pos_config_id.self_order_view_mode = True
+                pos_config_id.self_order_table_mode = True
+
+                self.env['pos_self_order.custom_link'].create({
+                    'url': '/menu/%s/products' % pos_config_id.id,
+                    'name': 'View Menu',
+                    'pos_config_ids': pos_config_id,
+                    'style': 'primary',
+                })
+
+        return pos_config_ids
 
     @api.depends("module_pos_restaurant")
     def _compute_self_order(self):
@@ -86,14 +92,14 @@ class PosConfig(models.Model):
         base_route = f"/menu/{self.id}"
         if not self.self_order_table_mode:
             return base_route
-        table_access_token = (
+        access_token = (
             self.env["restaurant.table"]
             .search(
                 [("active", "=", True), *(table_id and [("id", "=", table_id)] or [])], limit=1
             )
             .access_token
         )
-        return f"{base_route}?at={table_access_token}"
+        return f"{base_route}?at={access_token}"
 
     def _get_self_order_url(self, table_id: Optional[int] = None) -> str:
         self.ensure_one()
@@ -165,7 +171,6 @@ class PosConfig(models.Model):
             "custom_links": self._get_self_order_custom_links(),
             "products": self._get_available_products()._get_self_order_data(self),
             "has_active_session": self.has_active_session,
-            "orderline_unique_keys": PosOrderLine._get_unique_keys(),
         }
 
     def _generate_data_for_qr_codes_page(self, cols: int = 4) -> Dict[str, List[Dict]]:

@@ -4,80 +4,51 @@
 import re
 from typing import Dict, Union
 
-from odoo import models
+from odoo import models, fields
 
 
 class PosOrderLine(models.Model):
     _inherit = "pos.order.line"
 
+    # For the moment we need this to keep attributes consistency between the server and client_side.
+    selected_attributes = fields.Json(string="Selected Attributes")
+
+    # FIXME: uuid already pass in pos and move note in pos_restaurant.
     def _export_for_ui(self, orderline):
         return {
-            "uuid": orderline.uuid,
-            "note": orderline.note,
+            'uuid': orderline.uuid,
+            'note': orderline.note,
             **super()._export_for_ui(orderline),
         }
-
-    def _get_description(self):
-        """
-        The pos sends a "description" key to the backend, which is a string containing the selected value for
-        each attribute of the product, separated by a comma. In the db we end up storing the
-        "full_product_name", which is composed of the product name and the description.
-        :line.full_product_name: ex: "Desk Organizer (M, Leather)"
-        :return: ex: "M, Leather"
-        """
-        self.ensure_one()
-        description = re.findall(r"\(([^)]+)\)", self.full_product_name)
-        if description:
-            # It might happen that the product has a name with parenthesis. ex: "Salad (Vegie)"
-            # In that case the full_product_name will be "Salad (Vegie) (Small)", but are interested in returning the variant "Small"
-            # That's why we return the last element of the list
-            return description[-1]
-        return ""
-
-    @staticmethod
-    def _get_unique_keys():
-        """
-        These are the keys that define the uniqueness of an orderline.
-        We use them to check if 2 orderlines can be merged or not.
-        """
-        return ["product_id", "description", "customer_note"]
 
 
 class PosOrder(models.Model):
     _inherit = "pos.order"
 
     def _export_for_self_order(self) -> Dict:
-        """
-        Given an order, it returns a dictionary with the keys that we need in the frontend
-        """
         self.ensure_one()
+
         return {
+            "id": self.id,
+            "pos_config_id": self.config_id.id,
             "pos_reference": self.pos_reference,
             "access_token": self.access_token,
             "state": self.state,
             "date": str(self.date_order),
             "amount_total": self.amount_total,
             "amount_tax": self.amount_tax,
-            "items": [
+            "lines": [
                 {
+                    "id": line.id,
+                    "price_subtotal": line.price_subtotal,
+                    "price_subtotal_incl": line.price_subtotal_incl,
                     "product_id": line.product_id.id,
+                    "selected_attributes": line.selected_attributes,
+                    "uuid": line.uuid,
                     "qty": line.qty,
                     "customer_note": line.customer_note,
-                    "price_extra": line.product_id._get_price_info(
-                        self.config_id,
-                        line.price_extra,
-                    ),
-                    "description": line._get_description(),
+                    "full_product_name": line.full_product_name,
                 }
                 for line in self.lines
             ],
-        }
-
-    def _get_self_order_data(self) -> Dict[str, Union[str, int]]:
-        return {
-            "id": self.pos_reference,
-            "sequence_number": self.sequence_number,
-            "access_token": self.access_token,
-            "session_id": self.session_id.id,
-            "table_id": self.table_id.id,
         }

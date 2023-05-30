@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.SelfOrderRoot" owl="1">
+        <Router pos_config_id="selfOrder.pos_config_id">
+            <t t-set-slot="default" route="`/menu/${selfOrder.pos_config_id}`">
+                <LandingPage />
+            </t>
+            <t t-set-slot="productList" route="`/menu/${selfOrder.pos_config_id}/products`">
+                <ProductList />
+            </t>
+            <t t-set-slot="product" route="`/menu/${selfOrder.pos_config_id}/products/{int:product_id}`" t-slot-scope="url">
+                <ProductMainView product="selfOrder.productByIds[url.product_id]"/>
+            </t>
+            <t t-set-slot="cart" route="`/menu/${selfOrder.pos_config_id}/cart`">
+                <OrderCart />
+            </t>
+            <t t-set-slot="orderHistory" route="`/menu/${selfOrder.pos_config_id}/orders`">
+                <OrdersHistory />
+            </t>
+        </Router>
+        <MainComponentsContainer />
+    </t>
+</templates>

@@ -9,13 +9,13 @@
     "auto_install": ["pos_restaurant"],
     "demo": [
         "demo/pos_restaurant_demo.xml",
+        "demo/custom_link_data.xml",
     ],
     "data": [
         "security/ir.model.access.csv",
         "views/index.xml",
         "views/qr_code.xml",
         "views/custom_link_views.xml",
-        "data/custom_link_data.xml",
         "data/restaurant_table_data.xml",
         "views/res_config_settings_views.xml",
         "views/point_of_sale_dashboard.xml",
@@ -35,6 +35,8 @@
             "web/static/src/session.js",
             "web/static/src/core/utils/transitions.scss",
             "web/static/src/core/**/*",
+            ("remove", "web/static/src/core/browser/router_service.js"),
+            ("remove", "web/static/src/core/debug/**/*"),
             "web/static/lib/owl/owl.js",
             "web/static/lib/owl/odoo_module.js",
             "web/static/lib/luxon/luxon.js",
@@ -43,6 +45,11 @@
             "web/static/lib/odoo_ui_icons/*",
             "pos_self_order/static/src/**/*",
             "point_of_sale/static/src/utils.js",
+            # bus service
+            'bus/static/src/services/bus_service.js',
+            'bus/static/src/bus_parameters_service.js',
+            'bus/static/src/multi_tab_service.js',
+            'bus/static/src/workers/*',
         ],
         "pos_self_order.assets_tests": [
             "web/static/lib/jquery/jquery.js",

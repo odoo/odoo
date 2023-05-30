@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.Lines" owl="1">
+        <t t-foreach="lines" t-as="line" t-key="line.uuid">
+            <div
+                t-attf-class="o_self_order_item_card position-relative d-flex align-items-start w-100 bg-white px-3 py-2 overflow-hidden"
+                t-on-click="() => this.clickOnLine(line)"
+                >
+                <div class="d-flex w-100 py-1 justify-content-between">
+                    <div t-attf-class="d-flex {{ line.qty ? 'flex-column align-items-start' : 'flex-row align-items-center' }} text-900 fw-bold fs-6">
+                        <t t-set="lineName" t-value="getNameAndDescription(line)" />
+                        <h3 class="mb-0" t-esc="lineName.productName" />
+                        <span
+                            t-if="line.qty"
+                            class="flex-grow-1 me-3 small text-muted"
+                            t-esc="`${line.qty} x ${selfOrder.formatMonetary(selfOrder.productByIds[line.product_id].prices)}`"
+                            />
+                        <span
+                            t-if="lineName.attributes"
+                            class="m-0 text-muted small break-line"
+                            t-esc="lineName.attributes"
+                            />
+                        <div t-if="line.customer_note" class="d-inline-block m-0 text-muted small break-line">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true" />
+                            <span t-esc="line.customer_note" class="ms-1" />
+                        </div>
+                    </div>
+                    <span
+                        t-attf-class="card-text small"
+                        t-esc="this.selfOrder.formatMonetary(line.qty * selfOrder.productByIds[line.product_id].prices)"
+                        />
+                </div>
+            </div>
+        </t>
+    </t>
+</templates>

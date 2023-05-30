@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.ProductCard" owl="1">
+        <div
+            t-attf-class="{{props.class}} o_self_order_item_card position-relative d-flex align-items-start w-100 bg-white px-3 py-2 overflow-hidden"
+            t-on-click="clickOnProduct"
+            t-ref="currentProductCard"
+            >
+            <div class="d-flex flex-column w-100 py-1">
+                <div class="d-flex flex-row align-items-center text-900 fw-bold fs-6">
+                    <span
+                        class="d-flex align-items-center me-1 text-primary fw-bolder"
+                        t-if="quantityInCart and selfOrder.table"
+                        t-esc="`${quantityInCart}x`"
+                        />
+                    <h3 class="mb-0" t-esc="props.product.name" />
+                </div>
+                <span class="card-text small" t-esc="getTotalPriceString()" />
+                <p
+                    t-if="props.product.description_sale"
+                    class="o_self_order_item_card_description m-0 text-muted small break-line"
+                    t-esc="props.product.description_sale"
+                    />
+            </div>
+            <img
+                class="o_self_order_item_card_image h-100 w-100 ms-2 rounded-3 border border-light bg-light"
+                t-attf-src="/menu/get-image/{{ props.product.id }}"
+                alt="Product image"
+                loading="lazy"
+                onerror="this.remove()"
+                />
+            <span t-if="quantityInCart and selfOrder.table" class="position-absolute top-0 start-0 h-100 border-start border-5 border-primary" />
+        </div>
+    </t>
+</templates>

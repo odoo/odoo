@@ -62,6 +62,7 @@ class ProductProduct(models.Model):
                 )
         return attributes
 
+    # FIXME: this method should be verified about price computation (pricelist taxes....)
     def _get_price_info(
         self, pos_config: PosConfig, price: Optional[float] = None, qty: int = 1
     ) -> Dict[str, float]:
