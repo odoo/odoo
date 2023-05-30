@@ -6,13 +6,15 @@ import { onWillUnmount, useEffect, useExternalListener, useRef } from "@odoo/owl
 import { localization } from "@web/core/l10n/localization";
 
 /**
- * @typedef {{
- *  popper?: string;
- *  container?: HTMLElement;
- *  margin?: number;
- *  position?: Direction | Position;
- *  onPositioned?: (popperElement: HTMLElement, solution: PositioningSolution) => void;
- * }} Options
+ * @typedef Options
+ * @property {string} [popper="popper"] useRef reference to the popper element
+ * @property {HTMLElement} [container] container element
+ * @property {number} [margin=0]
+ *  margin in pixels between the popper and the reference.
+ * @property {Direction | Position} [position="bottom"]
+ *  position of the popper relative to the reference
+ * @property {(popperElement: HTMLElement, solution: PositioningSolution) => void} [onPositioned]
+ *  callback called everytime the popper has just been positioned
  *
  * @typedef {keyof DirectionsData} DirectionsDataKey
  * @typedef {{
@@ -72,8 +74,9 @@ const DEFAULTS = {
  * to the requested position.
  * The positioning data used to determine each possible position is based on
  * the reference, popper, and container sizes.
- * Particularly, a popper must not overflow the container in any direction,
- * it should actually stay at `margin` distance from the border to look good.
+ * Particularly, a popper must not overflow the container in any direction.
+ * The popper will stay at `margin` distance from its reference. One could also
+ * use the CSS margins of the popper element to achieve the same result.
  *
  * @param {HTMLElement} reference
  * @param {HTMLElement} popper
@@ -88,6 +91,16 @@ function getBestPosition(reference, popper, { container, margin, position }) {
     const directions = DIRECTION_FLIP_ORDER[directionKey];
     const variants = VARIANT_FLIP_ORDER[variantKey];
 
+    // Account for popper actual margins
+    const popperStyle = getComputedStyle(popper);
+    const { marginTop, marginLeft, marginRight, marginBottom } = popperStyle;
+    const popMargins = {
+        top: parseFloat(marginTop),
+        left: parseFloat(marginLeft),
+        right: parseFloat(marginRight),
+        bottom: parseFloat(marginBottom),
+    };
+
     // Boxes
     const popBox = popper.getBoundingClientRect();
     const refBox = reference.getBoundingClientRect();
@@ -98,10 +111,10 @@ function getBestPosition(reference, popper, { container, margin, position }) {
     // Compute positioning data
     /** @type {DirectionsData} */
     const directionsData = {
-        t: refBox.top - popBox.height - margin,
-        b: refBox.bottom + margin,
-        r: refBox.right + margin,
-        l: refBox.left - popBox.width - margin,
+        t: refBox.top - popMargins.bottom - popBox.height - margin,
+        b: refBox.bottom + popMargins.top + margin,
+        r: refBox.right + popMargins.left + margin,
+        l: refBox.left - popMargins.right - popBox.width - margin,
     };
     /** @type {VariantsData} */
     const variantsData = {
@@ -121,8 +134,8 @@ function getBestPosition(reference, popper, { container, margin, position }) {
 
         if (containerRestricted) {
             const [directionSize, variantSize] = vertical
-                ? [popBox.height + margin, popBox.width]
-                : [popBox.width, popBox.height + margin];
+                ? [popBox.height, popBox.width]
+                : [popBox.width, popBox.height];
             let [directionMin, directionMax] = vertical
                 ? [contBox.top, contBox.bottom]
                 : [contBox.left, contBox.right];
@@ -193,9 +206,6 @@ function getBestPosition(reference, popper, { container, margin, position }) {
  * If the requested position does not fit the container, other positions will be
  * tried in different direction and variant flip orders (depending on the requested position).
  * If no position is found that fits the container, the requested position stays used.
- *
- * When the final position is applied, a corresponding CSS class is also added to the popper.
- * This could be used to further styling.
  *
  * @param {HTMLElement} reference
  * @param {HTMLElement} popper
