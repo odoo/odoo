@@ -98,6 +98,7 @@ class TestActivityRights(TestActivityCommon):
         )
         self.assertEqual(1, read_group_result[0]['summary_count'])
         self.assertEqual('Summary', read_group_result[0]['summary'])
+        self.assertEqual(self.env['mail.activity'].search(read_group_result[0]['__domain']), test_activity)
 
         # cannot read_group activities if no access to the document
         with patch.object(MailTestActivity, 'check_access_rights', autospec=True, side_effect=_employee_crash):
