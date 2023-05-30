@@ -362,13 +362,13 @@ class ChatbotScriptStep(models.Model):
         self.ensure_one()
 
         return {
-            'chatbot_script_step_id': self.id,
-            'chatbot_step_answers': [{
+            'id': self.id,
+            'answers': [{
                 'id': answer.id,
                 'label': answer.name,
-                'redirect_link': answer.redirect_link,
+                'redirectLink': answer.redirect_link,
             } for answer in self.answer_ids],
-            'chatbot_step_message': plaintext2html(self.message) if not is_html_empty(self.message) else False,
-            'chatbot_step_is_last': self._is_last_step(),
-            'chatbot_step_type': self.step_type
+            'message': plaintext2html(self.message) if not is_html_empty(self.message) else False,
+            'isLast': self._is_last_step(),
+            'type': self.step_type
         }

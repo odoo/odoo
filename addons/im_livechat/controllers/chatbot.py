@@ -69,17 +69,17 @@ class LivechatChatbotScriptController(http.Controller):
         return {
             'chatbot_posted_message': posted_message.message_format()[0] if posted_message else None,
             'chatbot_step': {
-                'chatbot_operator_found': next_step.step_type == 'forward_operator' and len(
+                'operatorFound': next_step.step_type == 'forward_operator' and len(
                     discuss_channel.channel_member_ids) > 2,
-                'chatbot_script_step_id': next_step.id,
-                'chatbot_step_answers': [{
+                'id': next_step.id,
+                'answers': [{
                     'id': answer.id,
                     'label': answer.name,
-                    'redirect_link': answer.redirect_link,
+                    'redirectLink': answer.redirect_link,
                 } for answer in next_step.answer_ids],
-                'chatbot_step_is_last': next_step._is_last_step(discuss_channel),
-                'chatbot_step_message': plaintext2html(next_step.message) if not is_html_empty(next_step.message) else False,
-                'chatbot_step_type': next_step.step_type,
+                'isLast': next_step._is_last_step(discuss_channel),
+                'message': plaintext2html(next_step.message) if not is_html_empty(next_step.message) else False,
+                'type': next_step.step_type,
             }
         }
 

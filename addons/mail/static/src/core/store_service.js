@@ -132,7 +132,7 @@ export class Store {
     /** @type {Object.<number, import("@mail/attachments/attachment_model").Attachment>} */
     attachments = {};
 
-    /** @type {import("@mail/web/chat_window/chat_window_model").ChatWindow[]} */
+    /** @type {import("@mail/chat_window/chat_window_model").ChatWindow[]} */
     chatWindows = [];
 
     /** @type {Object.<number, import("@mail/core/message_model").Message>} */

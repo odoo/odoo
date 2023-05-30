@@ -103,14 +103,16 @@ export function useEmojiPicker(ref, props, options = {}) {
     };
 }
 
-const _loadEmoji = memoize(() => getBundle("mail.assets_emoji").then(loadBundle));
+export const loader = {
+    loadEmoji: memoize(() => getBundle("mail.assets_emoji").then(loadBundle)),
+};
 
 /**
  * @returns {import("@mail/emoji_picker/emoji_data")}
  */
 export async function loadEmoji() {
     try {
-        await _loadEmoji();
+        await loader.loadEmoji();
         return odoo.runtimeImport("@mail/emoji_picker/emoji_data");
     } catch {
         // Could be intentional (tour ended successfully while emoji still loading)

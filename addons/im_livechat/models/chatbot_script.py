@@ -185,10 +185,10 @@ class ChatbotScript(models.Model):
         self.ensure_one()
 
         return {
-            'chatbot_script_id': self.id,
-            'chatbot_name': self.title,
-            'chatbot_operator_partner_id': self.operator_partner_id.id,
-            'chatbot_welcome_steps': [
+            'scriptId': self.id,
+            'name': self.title,
+            'partnerId': self.operator_partner_id.id,
+            'welcomeSteps': [
                 step._format_for_frontend()
                 for step in self._get_welcome_steps()
             ]

@@ -25,13 +25,8 @@ Allow website visitors to chat with the collaborators. This module also brings a
         'data/website_livechat_chatbot_demo.xml',
     ],
     'assets': {
-        'im_livechat.assets_public_livechat': [
-            'website_livechat/static/src/legacy/public_models/**/*',
-            'website_livechat/static/src/legacy/widgets/**/*',
-        ],
-        'web.assets_frontend': [
-            'website_livechat/static/src/legacy/public_livechat.js',
-            'website_livechat/static/src/legacy/public_livechat.scss',
+        'im_livechat.assets_core': [
+            'website_livechat/static/src/embed/**/*',
         ],
         'website.assets_wysiwyg': [
             'website_livechat/static/src/scss/**/*',
@@ -41,8 +36,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
         ],
         'web.assets_backend': [
             'website_livechat/static/src/**/*',
-            ('remove', 'website_livechat/static/src/external_lib/**/*'),
-            ('remove', 'website_livechat/static/src/legacy/**/*'),
+            ('remove', 'website_livechat/static/src/embed/**/*'),
             ('remove', 'website_livechat/static/src/scss/**/*'),
         ],
         'web.assets_tests': [
@@ -53,12 +47,15 @@ Allow website visitors to chat with the collaborators. This module also brings a
         ],
         'web.qunit_suite_tests': [
             'website_livechat/static/tests/**/*',
+            ('remove', 'website_livechat/static/tests/embed/**/*'),
             ('remove', 'website_livechat/static/tests/tours/**/*'),
             ('remove', 'website_livechat/static/tests/helpers/**/*.js'),
         ],
-        'im_livechat.external_lib': [
-            'website_livechat/static/src/external_lib/**/*',
-            'website_livechat/static/src/legacy/public_livechat.scss',
+        'im_livechat.embed_test_assets': [
+            'website_livechat/static/src/embed/**/*',
+        ],
+        'im_livechat.qunit_embed_suite': [
+            'website_livechat/static/tests/embed/**/*',
         ],
     },
     'license': 'LGPL-3',

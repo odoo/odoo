@@ -20,7 +20,7 @@ export class MessageSeenIndicator extends Component {
     get hasEveryoneSeen() {
         const otherDidNotSee = [...this.props.thread.seenInfos].filter((seenInfo) => {
             return (
-                seenInfo.partner.id !== this.props.message.author.id &&
+                seenInfo.partner.id !== this.props.message.author?.id &&
                 (!seenInfo.lastSeenMessage || seenInfo.lastSeenMessage.id < this.props.message.id)
             );
         });
@@ -28,12 +28,13 @@ export class MessageSeenIndicator extends Component {
     }
 
     get hasEveryoneReceived() {
-        return !([...this.props.thread.seenInfos].some((seenInfo) => {
+        return ![...this.props.thread.seenInfos].some((seenInfo) => {
             return (
                 seenInfo.partner.id !== this.props.message.author.id &&
-                (!seenInfo.lastFetchedMessage || seenInfo.lastFetchedMessage.id < this.props.message.id)
+                (!seenInfo.lastFetchedMessage ||
+                    seenInfo.lastFetchedMessage.id < this.props.message.id)
             );
-        }));
+        });
     }
 
     get isMessagePreviousToLastSelfMessageSeenByEveryone() {
@@ -46,7 +47,7 @@ export class MessageSeenIndicator extends Component {
     get hasSomeoneSeen() {
         const otherSeen = [...this.props.thread.seenInfos].filter(
             (seenInfo) =>
-                seenInfo.partner.id !== this.props.message.author.id &&
+                seenInfo.partner.id !== this.props.message.author?.id &&
                 seenInfo.lastSeenMessage?.id >= this.props.message.id
         );
         return otherSeen.length > 0;
@@ -55,7 +56,7 @@ export class MessageSeenIndicator extends Component {
     get hasSomeoneFetched() {
         const otherFetched = [...this.props.thread.seenInfos].filter(
             (seenInfo) =>
-                seenInfo.partner.id !== this.props.message.author.id &&
+                seenInfo.partner.id !== this.props.message.author?.id &&
                 seenInfo.lastFetchedMessage?.id >= this.props.message.id
         );
         return otherFetched.length > 0;
