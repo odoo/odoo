@@ -31,4 +31,46 @@ patch(MockServer.prototype, "im_livechat/models/discuss_channel", {
         }
         return channelInfos;
     },
+
+    /**
+     * Simulates `_close_livechat_session` on `discuss.channel`.
+     *
+     * @param {Object} channel
+     */
+    _mockDiscussChannel_closeLivechatSession(channel) {
+        if (!channel.livechat_active) {
+            return;
+        }
+        this.pyEnv.write("discuss.channel", [[channel.id], { livechat_active: false }]);
+        if (channel.message_ids.length === 0) {
+            return;
+        }
+        this._mockDiscussChannelMessagePost(channel.id, {
+            body: this._mockDiscussChannel_getVisitorLeaveMessage(),
+            message_type: "comment",
+            subtype_xmlid: "mail.mt_comment",
+        });
+    },
+
+    /**
+     * Simulates `_channel_fetch_message` on `discuss.channel`.
+     */
+    _mockDiscussChannel_channel_fetch_message(channelId, lastId, limit) {
+        const domain = [
+            ["model", "=", "discuss.channel"],
+            ["res_id", "=", channelId],
+        ];
+        if (lastId) {
+            domain.push(["id", "<", lastId]);
+        }
+        const messages = this._mockMailMessage_MessageFetch(domain, limit);
+        return this._mockMailMessageMessageFormat(messages.map(({ id }) => id));
+    },
+
+    /**
+     * Simulates `_get_visitor_leave_message` on `discuss.channel`.
+     */
+    _mockDiscussChannel_getVisitorLeaveMessage() {
+        return "Visitor has left the conversation.";
+    },
 });

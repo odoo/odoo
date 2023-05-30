@@ -209,7 +209,7 @@ export class Thread {
         }
         if (this.type === "group" && !this.name) {
             const listFormatter = new Intl.ListFormat(
-                this._store.env.services["user"].lang.replace("_", "-"),
+                this._store.env.services["user"].lang?.replace("_", "-"),
                 { type: "conjunction", style: "long" }
             );
             return listFormatter.format(
@@ -311,6 +311,13 @@ export class Thread {
         );
     }
 
+    /**
+     * @param {import("@mail/core/message_model").Message} message
+     */
+    hasMessage(message) {
+        return this.messages.some(({ id }) => id === message.id);
+    }
+
     get invitationLink() {
         if (!this.uuid || this.type === "chat") {
             return undefined;
@@ -342,7 +349,7 @@ export class Thread {
 
     get lastSelfMessageSeenByEveryone() {
         const otherSeenInfos = [...this.seenInfos].filter(
-            (seenInfo) => seenInfo.partner.id !== this._store.self.id
+            (seenInfo) => seenInfo.partner.id !== this._store.self?.id
         );
         if (otherSeenInfos.length === 0) {
             return false;

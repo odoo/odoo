@@ -26,7 +26,7 @@ export class MessagingMenu extends Component {
         this.store = useStore();
         this.hasTouch = hasTouch;
         this.notification = useState(useService("mail.notification.permission"));
-        /** @type {import("@mail/web/chat_window/chat_window_service").ChatWindowService} */
+        /** @type {import("@mail/chat_window/chat_window_service").ChatWindowService} */
         this.chatWindowService = useState(useService("mail.chat_window"));
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));

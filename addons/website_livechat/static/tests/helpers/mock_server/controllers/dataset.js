@@ -7,7 +7,7 @@ patch(MockServer.prototype, "website_livechat/controllers/dataset", {
     /**
      * @override
      */
-     async _performRPC(route, { args, method, model }) {
+    async _performRPC(route, { args, method, model }) {
         if (
             route === "/web/dataset/call_button" &&
             model === "website.visitor" &&

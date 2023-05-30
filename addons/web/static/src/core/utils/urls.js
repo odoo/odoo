@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { session } from "@web/session";
 import { browser } from "../browser/browser";
 
 /**
@@ -39,7 +40,7 @@ export function getOrigin(origin) {
  * @param {string} [options.origin]: a precomputed origin
  */
 export function url(route, queryParams, options = {}) {
-    const origin = getOrigin(options.origin);
+    const origin = getOrigin(options.origin ?? session.origin);
     if (!route) {
         return origin;
     }

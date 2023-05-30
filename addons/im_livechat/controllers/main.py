@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 
 from odoo import http, tools, _
@@ -12,18 +13,40 @@ class LivechatController(http.Controller):
     # Note: the `cors` attribute on many routes is meant to allow the livechat
     # to be embedded in an external website.
 
-    @http.route('/im_livechat/external_lib.<any(css,js):ext>', type='http', auth='public')
-    def livechat_lib(self, ext, **kwargs):
-        # _get_asset return the bundle html code (script and link list) but we want to use the attachment content
-        bundle = 'im_livechat.external_lib'
+    @http.route('/im_livechat/external_lib.<any(css,js):ext>', type='http', auth='public', cors='*')
+    def external_lib(self, ext, **kwargs):
+        """ Preserve compatibility with legacy livechat imports. Only
+        serves javascript since the css will be fetched by the shadow
+        DOM of the livechat to avoid conflicts.
+        """
+        bundle = 'im_livechat.assets_embed'
         files, _ = request.env["ir.qweb"]._get_asset_content(bundle)
         asset = AssetsBundle(bundle, files)
+        if ext == 'css':
+            raise request.not_found()
+        stream = request.env['ir.binary']._get_stream_from(asset.js())
+        return stream.get_response()
 
-        mock_attachment = getattr(asset, ext)()
-        if isinstance(mock_attachment, list):  # suppose that CSS asset will not required to be split in pages
-            mock_attachment = mock_attachment[0]
+    @http.route('/im_livechat/assets_embed.<any(css, js):ext>', type='http', auth='public', cors='*')
+    def assets_embed(self, ext, **kwargs):
+        bundle = 'im_livechat.assets_embed'
+        files, _ = request.env["ir.qweb"]._get_asset_content(bundle)
+        asset = AssetsBundle(bundle, files)
+        if ext not in ('css', 'js'):
+            raise request.not_found()
+        stream = request.env['ir.binary']._get_stream_from(getattr(asset, ext)())
+        return stream.get_response()
 
-        stream = request.env['ir.binary']._get_stream_from(mock_attachment)
+    @http.route('/im_livechat/font-awesome', type='http', auth='none', cors="*")
+    def fontawesome(self, **kwargs):
+        return http.Stream.from_path('web/static/src/libs/fontawesome/fonts/fontawesome-webfont.woff2').get_response()
+
+    @http.route('/im_livechat/emoji_bundle', type='http', auth='public', cors='*')
+    def get_emoji_bundle(self):
+        bundle = 'mail.assets_emoji'
+        files, _ = request.env["ir.qweb"]._get_asset_content(bundle)
+        asset = AssetsBundle(bundle, files)
+        stream = request.env['ir.binary']._get_stream_from(asset.js())
         return stream.get_response()
 
     @http.route('/im_livechat/load_templates', type='json', auth='none', cors="*")
@@ -202,7 +225,7 @@ class LivechatController(http.Controller):
         if channel:
             channel._email_livechat_transcript(email)
 
-    @http.route('/im_livechat/visitor_leave_session', type='json', auth="public")
+    @http.route('/im_livechat/visitor_leave_session', type='json', auth="public", cors="*")
     def visitor_leave_session(self, uuid):
         """ Called when the livechat visitor leaves the conversation.
          This will clean the chat request and warn the operator that the conversation is over.
@@ -213,7 +236,9 @@ class LivechatController(http.Controller):
             discuss_channel._close_livechat_session()
 
     @http.route('/im_livechat/chat_post', type="json", auth="public", cors="*")
-    def im_livechat_chat_post(self, uuid, message_content):
+    def im_livechat_chat_post(self, uuid, message_content, context=None):
+        if context:
+            request.update_context(**context)
         channel = request.env["discuss.channel"].sudo().search([('uuid', '=', uuid)], limit=1)
         if not channel:
             return False
@@ -226,7 +251,7 @@ class LivechatController(http.Controller):
             author_id = False
             email_from = channel.anonymous_name or channel.create_uid.company_id.catchall_formatted
         # post a message without adding followers to the channel. email_from=False avoid to get author from email data
-        body = tools.plaintext2html(message_content)
+        body = Markup(message_content) # contains html such as links.
         message = channel.with_context(mail_create_nosubscribe=True).message_post(
             author_id=author_id,
             email_from=email_from,
@@ -234,7 +259,10 @@ class LivechatController(http.Controller):
             message_type='comment',
             subtype_xmlid='mail.mt_comment'
         )
-        return message.id if message else False
+        message_format = message.message_format()[0]
+        if 'temporary_id' in request.context:
+            message_format['temporary_id'] = request.env.context['temporary_id']
+        return message.message_format()[0] if message else False
 
     @http.route(['/im_livechat/chat_history'], type="json", auth="public", cors="*")
     def im_livechat_chat_history(self, uuid, last_id=False, limit=20):
