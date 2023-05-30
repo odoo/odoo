@@ -198,7 +198,7 @@ class StockRule(models.Model):
         if not manufacture_rule:
             return delay, delay_description
         manufacture_rule.ensure_one()
-        bom = values.get('bom') or (product.variant_bom_ids or product.bom_ids)[:1]
+        bom = values.get('bom') or self.env['mrp.bom']._bom_find(product, picking_type=manufacture_rule.picking_type_id, company_id=manufacture_rule.company_id.id)[product]
         manufacture_delay = bom.produce_delay
         delay += manufacture_delay
         if not bypass_delay_description:
