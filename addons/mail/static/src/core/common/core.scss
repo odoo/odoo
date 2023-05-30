@@ -2,6 +2,18 @@
     background-color: inherit;
 }
 
+.o-discuss-badge {
+    --o-discuss-badge-bg: #{$o-success}; // sync with --o-navbar-badge-bg
+    color: $white !important;
+    background-color: var(--o-discuss-badge-bg) !important;
+}
+
+.o-discuss-badge, .o-discuss-badgeShape {
+    display: flex;
+    transform: translate(0, 0) !important; // cancel systray style on badge
+    font-size: 0.7em !important;
+}
+
 .o-min-width-0 {
     min-width: 0;
 }

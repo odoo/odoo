@@ -10,11 +10,11 @@ import {
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
-import { browser } from "@web/core/browser/browser";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+import { patchWithCleanup, triggerEvent, triggerHotkey } from "@web/../tests/helpers/utils";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import { browser } from "@web/core/browser/browser";
 
 QUnit.module("messaging menu");
 
@@ -182,7 +182,7 @@ QUnit.test("grouped notifications by document", async (assert) => {
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     assert.containsOnce($, ".o-mail-NotificationItem");
-    assert.containsOnce($, ".o-mail-NotificationItem:contains(Partner (2))");
+    assert.containsOnce($, ".o-mail-NotificationItem:contains(Partner) .badge:contains(2)");
     assert.containsNone($, ".o-mail-ChatWindow");
 
     await click(".o-mail-NotificationItem");
@@ -241,7 +241,7 @@ QUnit.test("grouped notifications by document model", async (assert) => {
         },
     });
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-mail-NotificationItem:contains(Partner (2))");
+    assert.containsOnce($, ".o-mail-NotificationItem:contains(Partner) .badge:contains(2)");
 
     $(".o-mail-NotificationItem")[0].click();
     assert.verifySteps(["do_action"]);
@@ -339,12 +339,14 @@ QUnit.test("mark unread channel as read", async (assert) => {
         },
     });
     await click(".o_menu_systray i[aria-label='Messages']");
-    assert.containsOnce($, ".o-mail-NotificationItem i[title='Mark As Read']");
+    await triggerEvent($(".o-mail-NotificationItem")[0], null, "mouseenter");
+    assert.containsOnce($, ".o-mail-NotificationItem [title='Mark As Read']");
 
-    await click(".o-mail-NotificationItem i[title='Mark As Read']");
+    await click(".o-mail-NotificationItem [title='Mark As Read']");
     assert.verifySteps(["set_last_seen_message"]);
     assert.hasClass($(".o-mail-NotificationItem"), "o-muted");
-    assert.containsNone($, ".o-mail-NotificationItem i[title='Mark As Read']");
+    await triggerEvent($(".o-mail-NotificationItem")[0], null, "mouseenter");
+    assert.containsNone($, ".o-mail-NotificationItem [title='Mark As Read']");
     assert.containsNone($, ".o-mail-ChatWindow");
 });
 
@@ -372,9 +374,10 @@ QUnit.test("mark failure as read", async (assert) => {
         $,
         ".o-mail-NotificationItem:contains(An error occurred when sending an email)"
     );
-    assert.containsOnce($, ".o-mail-NotificationItem:contains(Channel) i[title='Mark As Read']");
+    await triggerEvent($(".o-mail-NotificationItem:contains(Channel)")[0], null, "mouseenter");
+    assert.containsOnce($, ".o-mail-NotificationItem:contains(Channel) [title='Mark As Read']");
 
-    await click(".o-mail-NotificationItem i[title='Mark As Read']");
+    await click(".o-mail-NotificationItem [title='Mark As Read']");
     assert.containsNone($, ".o-mail-NotificationItem:contains(Channel)");
     assert.containsNone(
         $,
@@ -428,7 +431,7 @@ QUnit.test("different discuss.channel are not grouped", async (assert) => {
     await click(".o_menu_systray i[aria-label='Messages']");
     assert.containsN($, ".o-mail-NotificationItem", 4);
 
-    const group_1 = $(".o-mail-NotificationItem:contains(Channel (2)):first");
+    const group_1 = $(".o-mail-NotificationItem:contains(Channel):first");
     await click(group_1);
     assert.containsOnce($, ".o-mail-ChatWindow");
 });
@@ -869,7 +872,8 @@ QUnit.test(
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         assert.containsN($, ".o-mail-NotificationItem", 1);
-        assert.ok($(".o-mail-NotificationItem").text().includes("Test (1)"));
+        assert.ok($(".o-mail-NotificationItem").text().includes("Test"));
+        assert.ok($(".o-mail-NotificationItem .badge").text().includes("1"));
         assert.ok($(".o-mail-NotificationItem").text().includes("Message with needaction"));
     }
 );
@@ -891,7 +895,7 @@ QUnit.test("chat should show unread counter on receiving new messages", async (a
     await click(".o_menu_systray i[aria-label='Messages']");
     assert.containsOnce($, ".o-mail-NotificationItem");
     assert.containsOnce($, ".o-mail-NotificationItem:contains(Partner1)");
-    assert.containsNone($, ".o-mail-NotificationItem:contains('Partner1 (1)')");
+    assert.containsNone($, ".o-mail-NotificationItem .badge:contains('1')");
     // simulate receiving a new message
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     pyEnv["bus.bus"]._sendone(channel, "discuss.channel/new_message", {
@@ -904,7 +908,7 @@ QUnit.test("chat should show unread counter on receiving new messages", async (a
             res_id: channelId,
         },
     });
-    await waitUntil(".o-mail-NotificationItem:contains('Partner1 (1)')");
+    await waitUntil(".o-mail-NotificationItem .badge:contains('1')");
 });
 
 QUnit.test("preview for channel should show latest non-deleted message", async (assert) => {

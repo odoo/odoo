@@ -38,8 +38,8 @@
             <t t-esc="mailbox.name"/>
         </div>
         <div t-attf-class="flex-grow-1 {{ mailbox.counter === 0 ? 'me-3': '' }}"/>
-        <div t-if="mailbox.counter > 0" t-attf-class="badge rounded-pill {{ mailbox.id === 'starred' ? 'bg-400 text-light' : 'text-bg-primary' }} ms-1 me-3">
-            <t t-esc="mailbox.counter"/>
+        <div t-if="mailbox.counter > 0">
+            <span t-attf-class="o-mail-DiscussSidebar-badge badge rounded-pill o-discuss-badge {{ mailbox.id === 'starred' ? 'bg-400 text-light' : '' }} ms-1 me-3 fw-bold" t-esc="mailbox.counter"/>
         </div>
     </button>
 </t>
@@ -56,7 +56,7 @@
             <i t-if="category.canView" t-attf-class="fa fa-cog {{ hover_class }}" title="View or join channels" t-on-click="() => this.openCategory(category)" role="img"/>
             <i t-if="category.canAdd and category.isOpen" class="o-mail-DiscussCategory-add" t-attf-class="fa fa-plus {{ hover_class }} ms-1" t-on-click="() => this.addToCategory(category)" t-att-title="category.addTitle" role="img"/>
         </div>
-        <div t-if="!category.isOpen and threadService.getDiscussCategoryCounter(category.id) > 0" class="o-mail-DiscussCategory-counter badge rounded-pill text-bg-primary me-3">
+        <div t-if="!category.isOpen and threadService.getDiscussCategoryCounter(category.id) > 0" class="o-mail-DiscussSidebar-badge badge rounded-pill me-3 o-discuss-badge fw-bold">
             <t t-esc="threadService.getDiscussCategoryCounter(category.id)"/>
         </div>
     </div>
@@ -99,8 +99,8 @@
             <div t-if="threadService.canUnpin(thread)" t-attf-class="fa fa-times ms-1 {{ hover_class }}" t-on-click.stop="() => threadService.unpin(thread)" title="Unpin Conversation" role="img"/>
         </div>
         <div t-if="Object.keys(thread.rtcSessions).length > 0" class="fa fa-volume-up ms-1 me-3" t-att-class="{ 'text-danger': rtc.state.channel?.id === thread.id }"/>
-        <div t-if="counter > 0" t-attf-class="o-mail-DiscussCategoryItem-counter badge rounded-pill text-bg-primary ms-1 me-3">
-            <t t-esc="counter"/>
+        <div t-if="counter > 0">
+            <span t-attf-class="o-mail-DiscussSidebar-badge badge rounded-pill o-discuss-badge ms-1 me-3 fw-bold" t-esc="counter"/>
         </div>
     </button>
 </t>

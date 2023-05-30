@@ -33,8 +33,8 @@ QUnit.test("new message from operator displays unread counter", async (assert) =
             thread_model: "discuss.channel",
         });
     });
-    await waitUntil(".o-mail-ChatWindow-header:contains((1))");
-    assert.containsOnce($, ".o-mail-ChatWindow-header:contains((1))");
+    await waitUntil(".o-mail-ChatWindow-header:contains(1)");
+    assert.containsOnce($, ".o-mail-ChatWindow-header:contains(1)");
 });
 
 QUnit.test("focus on unread livechat marks it as read", async (assert) => {

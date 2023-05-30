@@ -10,7 +10,7 @@
             />
            <t t-else="">$0</t>
         </xpath>
-        <xpath expr="//*[@t-ref='unreadCounter']" position="replace">
+        <xpath expr="//*[@t-ref='needactionCounter']" position="replace">
             <t t-if="!chatbotService.active">$0</t>
         </xpath>
         <xpath expr="//*[hasclass('o-mail-ChatWindow-header')]" position="attributes">

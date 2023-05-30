@@ -277,6 +277,10 @@ export class Thread {
         return createLocalId(this.model, this.id);
     }
 
+    get needactionCounter() {
+        return this.isChatChannel ? this.message_unread_counter : this.message_needaction_counter;
+    }
+
     /** @returns {import("@mail/core/common/message_model").Message | undefined} */
     get newestMessage() {
         return [...this.messages].reverse().find((msg) => !msg.isEmpty);

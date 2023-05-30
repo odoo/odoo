@@ -352,11 +352,11 @@ QUnit.test("chat - channel should count unread message [REQUIRE FOCUS]", async (
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem-counter");
-    assert.strictEqual($(".o-mail-DiscussCategoryItem-counter").text(), "1");
+    assert.containsOnce($, ".o-discuss-badge");
+    assert.strictEqual($(".o-discuss-badge").text(), "1");
 
     await click(".o-mail-DiscussCategoryItem:contains(Demo)");
-    assert.containsNone($, ".o-mail-DiscussCategoryItem-counter");
+    assert.containsNone($, ".o-discuss-badge");
 });
 
 QUnit.test("mark channel as seen on last message visible [REQUIRE FOCUS]", async (assert) => {
@@ -1178,7 +1178,7 @@ QUnit.test("Group unread counter up to date after mention is marked as seen", as
     ]);
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem-counter");
+    assert.containsOnce($, ".o-mail-DiscussCategoryItem .o-discuss-badge");
     await click(".o-mail-DiscussCategoryItem");
-    await waitUntil(".o-mail-DiscussCategoryItem-counter", 0);
+    await waitUntil(".o-discuss-badge", 0);
 });
