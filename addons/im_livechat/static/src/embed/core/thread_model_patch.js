@@ -12,6 +12,10 @@ patch(Thread.prototype, "im_livechat", {
         return this.type === "livechat" || this._super();
     },
 
+    get isChatChannel() {
+        return this.type === "livechat" || this._super();
+    },
+
     get isLastMessageFromCustomer() {
         if (this.type !== "livechat") {
             return this._super();

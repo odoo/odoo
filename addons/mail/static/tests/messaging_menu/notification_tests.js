@@ -3,7 +3,7 @@
 import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 
 QUnit.module("notification");
 
@@ -58,6 +58,11 @@ QUnit.test("mark as read", async (assert) => {
     });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
+    await triggerEvent(
+        $(".o-mail-NotificationItem-name:contains(Channel)").closest(".o-mail-NotificationItem")[0],
+        null,
+        "mouseenter"
+    );
     assert.containsOnce(
         $(".o-mail-NotificationItem-name:contains(Channel)").closest(".o-mail-NotificationItem"),
         ".o-mail-NotificationItem-markAsRead"

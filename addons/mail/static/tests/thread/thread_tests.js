@@ -919,10 +919,9 @@ QUnit.test(
             id: channelId,
             message: formattedMessage,
         });
-        await waitUntil(".o-mail-DiscussCategoryItem-counter:contains(1)");
         await waitUntil("button:contains(Inbox) .badge:contains(1)");
         await click("button:contains(General)");
-        await waitUntil(".o-mail-DiscussCategoryItem-counter", 0);
+        await waitUntil(".o-discuss-badge", 0);
         await waitUntil("button:contains(Inbox) .badge", 0);
         assert.verifySteps(["mark-all-messages-as-read"]);
     }
@@ -981,10 +980,10 @@ QUnit.test("can be marked as read while loading", async function (assert) {
         },
     });
     await openDiscuss(undefined, { waitUntilMessagesLoaded: false });
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem-counter:contains(1)");
+    assert.containsOnce($, ".o-discuss-badge:contains(1)");
     await click(".o-mail-DiscussCategoryItem:contains(Demo)");
     await afterNextRender(loadDeferred.resolve);
-    assert.containsNone($, ".o-mail-DiscussCategoryItem-counter");
+    assert.containsNone($, ".o-discuss-badge");
 });
 
 QUnit.test(

@@ -81,7 +81,7 @@
                 <t t-set="message" t-value="thread.isChatChannel or (thread.type === 'channel' and !thread.hasNeedactionMessages) ? thread.newestMessage : thread.newestNeedactionMessage"/>
                 <NotificationItem
                     body="message?.inlineBody"
-                    counter="thread.isChatChannel ? thread.message_unread_counter : thread.hasNeedactionMessages ? thread.message_needaction_counter : undefined"
+                    counter="thread.needactionCounter"
                     datetime="message?.datetime"
                     displayName="thread.displayName"
                     iconSrc="thread.imgUrl"
