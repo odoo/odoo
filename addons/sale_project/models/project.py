@@ -266,17 +266,27 @@ class Project(models.Model):
             f'{ProjectMilestone._table}.sale_line_id',
         )
 
-        SaleOrderLine = self.env['sale.order.line']
-        sol_query = SaleOrderLine._search([])
-        sol_query.order = None
-        sol_query.add_where('analytic_distribution ? %s', [str(analytic_account_id) for analytic_account_id in self.analytic_account_id.ids])
-        sol_query_str, sol_params = sol_query.select(
-            f'{SaleOrderLine._table}.project_id AS id',
-            f'{SaleOrderLine._table}.id AS sale_line_id',
-        )
+        query_string_list = [project_query_str, task_query_str, milestone_query_str]
+        all_where_params = project_params + task_params + milestone_params
+        current_user = self.env.user
+        if current_user.has_group('sales_team.group_sale_salesman'):
+            sol_domain = []
+            if not current_user.has_group('sales_team.group_sale_salesman_all_leads'):
+                sol_domain = [('order_id.user_id', '=', current_user.id)]
+            SaleOrderLine = self.env['sale.order.line']
+            sol_query = SaleOrderLine._search(sol_domain)
+            sol_query.order = None
+            sol_query.add_where('analytic_distribution ? %s', [str(analytic_account_id) for analytic_account_id in self.analytic_account_id.ids])
+            sol_query_str, sol_params = sol_query.select(
+                f'{SaleOrderLine._table}.project_id AS id',
+                f'{SaleOrderLine._table}.id AS sale_line_id',
+            )
+            query_string_list.append(sol_query_str)
+            all_where_params += sol_params
 
-        query = Query(self._cr, 'project_sale_order_item', ' UNION '.join([project_query_str, task_query_str, milestone_query_str, sol_query_str]))
-        query._where_params = project_params + task_params + milestone_params + sol_params
+        query = Query(self._cr, 'project_sale_order_item', ' UNION '.join(query_string_list))
+        query._where_params = all_where_params
+
         return query
 
     def get_panel_data(self):
