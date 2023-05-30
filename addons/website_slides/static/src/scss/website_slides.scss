@@ -619,10 +619,11 @@ $line-height-truncate: 1.25em;
     }
 }
 
-// Enforce the height of the lesson header, so the DOM element size do not change
-// when the completion progressbar become visible / hidden
-.o_wslides_lesson_header_container {
-    height: 80px;
+.hidden-progressbar-completed-tag {
+    visibility: hidden;
+    @include media-breakpoint-down(sm) {
+        display: none !important;
+    }
 }
 
 .o_wslides_fs_sidebar_section {
