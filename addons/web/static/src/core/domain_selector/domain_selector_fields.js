@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, useRef } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 import { selectOperators } from "@web/core/domain_selector/domain_selector_operators";
 import {
     deserializeDate,
@@ -14,6 +14,7 @@ import { toPyValue } from "@web/core/py_js/py_utils";
 import { registry } from "@web/core/registry";
 import { DateTimeInput } from "../datetime/datetime_input";
 import { DomainValueExpr } from "./domain_selector_nodes";
+import { TagsList } from "@web/core/tags_list/tags_list";
 
 const { DateTime } = luxon;
 
@@ -47,32 +48,25 @@ class Select extends Component {
 }
 
 class TagInput extends Component {
+    static components = { TagsList };
     static props = ["value", "update"];
     static template = "web.DomainSelector.TagInput";
-
-    setup() {
-        this.inputRef = useRef("input");
+    get value() {
+        return Array.isArray(this.props.value) ? this.props.value : [this.props.value];
     }
-
-    getTagValue(tag) {
-        return tag instanceof DomainValueExpr ? tag.expr : tag;
+    get tags() {
+        return this.value.map((val, index) => ({
+            text: val instanceof DomainValueExpr ? val.expr : String(val),
+            colorIndex: typeof val === "string" ? 0 : 2,
+            onDelete: () => {
+                this.props.update([...this.value.slice(0, index), ...this.value.slice(index + 1)]);
+            },
+        }));
     }
-
-    removeTag(tagIndex) {
-        return this.props.update([
-            ...this.props.value.slice(0, tagIndex),
-            ...this.props.value.slice(tagIndex + 1),
-        ]);
-    }
-
-    addTag(value) {
-        return this.props.update([...this.props.value, value]);
-    }
-
-    onBtnClick() {
-        const value = this.inputRef.el.value;
-        this.inputRef.el.value = "";
-        return this.addTag(value);
+    onChange(ev) {
+        const newVal = ev.currentTarget.value;
+        ev.currentTarget.value = "";
+        this.props.update([...this.value, newVal]);
     }
 }
 
@@ -331,7 +325,7 @@ const PROPERTIES_RELATIONAL = {
 // ----------------------------------------------------------------------------
 
 const JSON_FIELD = {
-    operators: ["equal", "not_equal", "ilike", "not_ilike","set", "not_set"],
+    operators: ["equal", "not_equal", "ilike", "not_ilike", "set", "not_set"],
     editors: {
         default: makeEditor(Input),
     },
