@@ -1233,7 +1233,7 @@ class TestQueries(TransactionCase):
 
         Model.name_search('partner')
         with self.assertQueries(['''
-            SELECT "ir_model"."id"
+            SELECT "ir_model"."id", "ir_model"."name"->>'en_US'
             FROM "ir_model"
             WHERE (
                 ("ir_model"."name"->>'en_US' ILIKE %s)
@@ -1246,7 +1246,7 @@ class TestQueries(TransactionCase):
 
         Model.name_search('partner', operator='not ilike')
         with self.assertQueries(['''
-            SELECT "ir_model"."id"
+            SELECT "ir_model"."id", "ir_model"."name"->>'en_US'
             FROM "ir_model"
             WHERE (
                 ("ir_model"."name" is NULL OR "ir_model"."name"->>'en_US' not ilike %s)
