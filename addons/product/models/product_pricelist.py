@@ -560,6 +560,11 @@ class PricelistItem(models.Model):
             template_rules.update({'applied_on': '1_product'})
             (self-variants_rules-template_rules).update({'applied_on': '3_global'})
 
+    @api.onchange('price_round')
+    def _onchange_price_round(self):
+        if any(item.price_round and item.price_round < 0.0 for item in self):
+            raise ValidationError(_("The rounding method must be strictly positive."))
+
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
