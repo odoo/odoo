@@ -79,13 +79,9 @@
                             <field name="allocation_validation_type" string="Approval" widget="radio" attrs="{'invisible': ['|', ('requires_allocation', '=', 'no'), ('employee_requests', '=', 'no')]}"/>
                         </group>
                     </group>
-                    <group name="visual" id="visual" >
-                        <group colspan="2" string="Display Option">
-                        </group>
-                        <group colspan="2">
-                            <field name="color" widget="color_picker" />
-                            <field class="o_time_off_icon_types d-flex flex-wrap" name="icon_id" widget="hr_holidays_radio_image" options="{'horizontal': true}"/>
-                        </group>
+                    <group name="visual" id="visual" string="Display Option" class="mw-100 col-lg-12">
+                        <field name="color" widget="color_picker" />
+                        <field class="o_time_off_icon_types d-flex flex-wrap" name="icon_id" widget="hr_holidays_radio_image" options="{'horizontal': true}"/>
                     </group>
                 </sheet>
             </form>
