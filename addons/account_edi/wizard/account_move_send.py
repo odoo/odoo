@@ -15,6 +15,7 @@ class AccountMoveSend(models.Model):
                 'mimetype': attachment_sudo.mimetype,
                 'placeholder': False,
             }]
+        return []
 
     def _get_default_mail_attachments_data(self, mail_template, move):
         """ Returns all the placeholder data and mail template data
