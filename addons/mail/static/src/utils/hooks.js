@@ -237,12 +237,6 @@ export function useSelection({ refName, model, preserveOnClickAwayPredicate = ()
             });
         }
     }
-    function clear() {
-        if (!ref.el) {
-            return;
-        }
-        ref.el.selectionStart = ref.el.selectionEnd = ref.el.value.length;
-    }
     onExternalClick(refName, async (ev) => {
         if (await preserveOnClickAwayPredicate(ev)) {
             return;
@@ -250,10 +244,9 @@ export function useSelection({ refName, model, preserveOnClickAwayPredicate = ()
         if (!ref.el) {
             return;
         }
-        clear();
         Object.assign(model, {
-            start: ref.el.selectionStart,
-            end: ref.el.selectionEnd,
+            start: ref.el.value.length,
+            end: ref.el.value.length,
             direction: ref.el.selectionDirection,
         });
     });
@@ -264,7 +257,6 @@ export function useSelection({ refName, model, preserveOnClickAwayPredicate = ()
         document.removeEventListener("selectionchange", onSelectionChange);
     });
     return {
-        clear,
         restore() {
             ref.el?.setSelectionRange(model.start, model.end, model.direction);
         },
