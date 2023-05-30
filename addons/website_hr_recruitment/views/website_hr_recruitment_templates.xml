@@ -670,7 +670,7 @@
 <template id="topbar_customizations" name="Topbar">
     <!-- Sets -->
     <t t-set="current_country_param" t-value="'&amp;is_remote=1' if is_remote else ('&amp;country_id=%s' % country_id.id if country_id else '')"/>
-    <t t-set="current_department_param" t-value="'&amp;department_id=%s' % department_id.id if department_id else 'is_other_department=1' if is_other_department else ''"/>
+    <t t-set="current_department_param" t-value="'&amp;department_id=%s' % department_id.id if department_id else '&amp;is_other_department=1' if is_other_department else ''"/>
     <t t-set="current_office_param" t-value="'' if is_remote else '&amp;office_id=%s' % office_id.id if office_id else ''"/>
     <t t-set="current_employment_type_param" t-value="'&amp;is_untyped=1' if is_untyped else ('&amp;contract_type_id=%s' % contract_type_id.id if contract_type_id else '')"/>
     <t t-set="opt_jobs_filter_countries" t-value="is_view_active('website_hr_recruitment.job_filter_by_countries')"/>
