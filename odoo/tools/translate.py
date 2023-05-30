@@ -1367,6 +1367,18 @@ class TranslationImporter:
             Model = env[model_name]
             model_table = Model._table
             for field_name, field_dictionary in model_dictionary.items():
+                # we do this to tell lxml that the xml nodes should be printed as HTML nodes
+                # otherwise browser assumes that 'self-closing' tags are opening tags, left unclosed
+                field = self.env[model_name]._fields.get(field_name)
+                if field.translate and field.type == 'html':
+                    for translations in field_dictionary.values():
+                        for lang, translation in translations.items():
+                            try:
+                                # this is a normalisation step for auto-closing t tags
+                                translations[lang] = etree.tostring(etree.HTML(translation).find('body')[0], method='html', encoding='unicode')
+                            except Exception:
+                                continue
+
                 for sub_field_dictionary in cr.split_for_in_conditions(field_dictionary.items()):
                     # [xmlid, translations, xmlid, translations, ...]
                     params = []
