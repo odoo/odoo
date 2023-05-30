@@ -20,7 +20,13 @@ import { FACET_ICONS, FACET_COLORS } from "./utils/misc";
 
 import { EventBus, toRaw } from "@odoo/owl";
 import { toDomain, toTree, formatValue, normalizeValue } from "@web/core/domain_tree";
-import { createVirtualOperators, extractPathsFromDomain } from "@web/core/domain_selector/utils";
+import {
+    createVirtualOperators,
+    extractIdsFromDomain,
+    extractPathsFromDomain,
+    leafToString,
+    useLoadDisplayNames,
+} from "@web/core/domain_selector/utils";
 import { useLoadFieldInfo, useLoadPathDescription } from "@web/core/model_field_selector/utils";
 import { _t } from "@web/core/l10n/translation";
 import { getOperatorInfo } from "@web/core/domain_selector/domain_selector_operators";
@@ -214,11 +220,17 @@ function simplifyTree(tree, isRoot = true) {
  * @param {boolean} [isSubExpression=true]
  * @returns {string}
  */
-export function getDomainTreeDescription(tree, getDescription, isSubExpression = true) {
+function getDomainTreeDescription(
+    tree,
+    getFieldDef,
+    getDescription,
+    displayNames,
+    isSubExpression = true
+) {
     if (tree.type === "connector") {
         // we assume that the domain tree is normalized (--> there is at least two children)
         const childDescriptions = tree.children.map((c) =>
-            getDomainTreeDescription(c, getDescription)
+            getDomainTreeDescription(c, getFieldDef, getDescription, displayNames)
         );
         const separator = tree.value === "&" ? _t("and") : _t("or");
         let description = childDescriptions.join(` ${separator} `);
@@ -230,43 +242,28 @@ export function getDomainTreeDescription(tree, getDescription, isSubExpression =
         }
         return description;
     }
-
-    const { path, operator, value } = tree;
-    const operatorInfo = getOperatorInfo(operator);
-
-    let description = `${getDescription(path)} ${operatorInfo.label} `;
-
-    if (["set", "not_set"].includes(operatorInfo.key)) {
-        description = description.trim();
-    } else if (["is", "is_not"].includes(operatorInfo.key)) {
-        description += value ? _t("set") : _t("not set");
-    } else {
-        const values = Array.isArray(value) ? value : [value];
-        let join;
-        let addParenthesis;
-        switch (operator) {
-            case "between":
-                join = _t("and");
-                addParenthesis = false;
-                break;
-            case "in":
-            case "not in":
-                join = ",";
-                addParenthesis = true;
-                break;
-            default:
-                join = _t("or");
-                addParenthesis = values.length > 1;
-        }
-        const jointedValues = values.map((val) => String(val)).join(` ${join} `);
+    const { negate, operator, path, value } = tree;
+    const fieldDef = getFieldDef(path);
+    const operatorInfo = getOperatorInfo(operator, negate);
+    const { operatorDescription, valueDescription } = leafToString(
+        fieldDef,
+        operatorInfo,
+        value,
+        displayNames[fieldDef?.relation]
+    );
+    let description = `${getDescription(path)} ${operatorDescription} `;
+    if (valueDescription) {
+        const { values, join, addParenthesis } = valueDescription;
+        const jointedValues = values.join(` ${join} `);
         description += addParenthesis ? `( ${jointedValues} )` : jointedValues;
     }
     return description;
 }
 
-export function useGetDomainTreeDescription(fieldService) {
+function useGetDomainTreeDescription(fieldService, nameService) {
     const loadFieldInfo = useLoadFieldInfo(fieldService);
     const loadPathDescription = useLoadPathDescription(fieldService);
+    const loadDisplayNames = useLoadDisplayNames(nameService);
     return async (resModel, tree) => {
         tree = simplifyTree(tree);
         const domain = toDomain(tree);
@@ -287,8 +284,16 @@ export function useGetDomainTreeDescription(fieldService) {
         await Promise.all(promises);
         const getFieldDef = (path) => pathFieldDefs[formatValue(path)];
         const getDescription = (path) => pathDescriptions[formatValue(path)];
+        const idsByModel = extractIdsFromDomain(domain, getFieldDef);
         const treeWithVirtualOperators = createVirtualOperators(tree, getFieldDef);
-        return getDomainTreeDescription(treeWithVirtualOperators, getDescription, false);
+        const displayNames = await loadDisplayNames(idsByModel);
+        return getDomainTreeDescription(
+            treeWithVirtualOperators,
+            getFieldDef,
+            getDescription,
+            displayNames,
+            false
+        );
     };
 }
 
@@ -310,12 +315,12 @@ export class SearchModel extends EventBus {
      */
     setup(services) {
         // services
-        const { field: fieldService, orm, user, view } = services;
+        const { field: fieldService, name: nameService, orm, user, view } = services;
         this.orm = orm;
         this.userService = user;
         this.viewService = view;
 
-        this.getDomainTreeDescription = useGetDomainTreeDescription(fieldService);
+        this.getDomainTreeDescription = useGetDomainTreeDescription(fieldService, nameService);
 
         // used to manage search items related to date/datetime fields
         this.referenceMoment = DateTime.local();

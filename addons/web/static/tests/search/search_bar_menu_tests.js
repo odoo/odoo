@@ -1677,7 +1677,7 @@ QUnit.module("Search", (hooks) => {
             await editInput(target, ".o_domain_debug_input", `[("foo", "in", [uid, 1, "a"])]`);
             await click(target.querySelector(".modal footer button"));
 
-            assert.deepEqual(getFacetTexts(target), [`Foo is in ( uid , 1 , a )`]);
+            assert.deepEqual(getFacetTexts(target), [`Foo is in ( uid , 1 , "a" )`]);
             assert.deepEqual(getDomain(controlPanel), [
                 ["foo", "in", [7, 1, "a"]], // uid = 7
             ]);
@@ -1793,6 +1793,50 @@ QUnit.module("Search", (hooks) => {
 
             assert.deepEqual(getFacetTexts(target), ["Boolean is not set"]);
             assert.deepEqual(getDomain(controlPanel), [["boolean", "!=", true]]);
+        });
+
+        QUnit.test("display names in facets", async function (assert) {
+            patchWithCleanup(odoo, { debug: true });
+            serverData.models.partner = {
+                fields: {},
+                records: [
+                    { id: 1, display_name: "John" },
+                    { id: 2, display_name: "David" },
+                ],
+            };
+
+            const controlPanel = await makeWithSearch({
+                serverData,
+                resModel: "foo",
+                Component: SearchBar,
+                searchMenuTypes: ["filter"],
+                searchViewId: false,
+                searchViewArch: `<search />`,
+            });
+            await toggleSearchBarMenu(target);
+            await openAddCustomFilterDialog(target);
+            await editInput(
+                target,
+                ".o_domain_debug_input",
+                `[("bar", "=", 1 ), ("bar", "in", [2, 5555]), ("bar", "!=", false), ("id", "=", 2)]`
+            );
+            await click(target.querySelector(".modal footer button"));
+
+            assert.deepEqual(getFacetTexts(target), [
+                "Bar = John",
+                "Bar is in ( David , Inaccessible/missing record ID: 5555 )",
+                "Bar is set",
+                "ID = 2",
+            ]);
+            assert.deepEqual(getDomain(controlPanel), [
+                "&",
+                ["bar", "=", 1],
+                "&",
+                ["bar", "in", [2, 5555]],
+                "&",
+                ["bar", "!=", false],
+                ["id", "=", 2],
+            ]);
         });
     });
 });
