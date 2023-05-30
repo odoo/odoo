@@ -63,6 +63,7 @@ class SaleOrder(models.Model):
         upsellable_orders = self.filtered(lambda so:
             so.state == 'sale'
             and so.invoice_status != 'upselling'
+            and so.id
             and (so.user_id or so.partner_id.user_id)  # salesperson needed to assign upsell activity
         )
         for order in upsellable_orders:
