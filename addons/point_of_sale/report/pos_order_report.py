@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, tools
+from odoo import fields, models, tools
 
 
 class PosOrderReport(models.Model):
@@ -32,7 +32,6 @@ class PosOrderReport(models.Model):
     product_categ_id = fields.Many2one('product.category', string='Product Category', readonly=True)
     invoiced = fields.Boolean(readonly=True)
     config_id = fields.Many2one('pos.config', string='Point of Sale', readonly=True)
-    pos_categ_id = fields.Many2one('pos.category', string='PoS Category', readonly=True)
     pricelist_id = fields.Many2one('product.pricelist', string='Pricelist', readonly=True)
     session_id = fields.Many2one('pos.session', string='Session', readonly=True)
     margin = fields.Float(string='Margin', readonly=True)
@@ -62,7 +61,6 @@ class PosOrderReport(models.Model):
                 pt.categ_id AS product_categ_id,
                 p.product_tmpl_id,
                 ps.config_id,
-                pt.pos_categ_id,
                 s.pricelist_id,
                 s.session_id,
                 s.account_move IS NOT NULL AS invoiced,
@@ -88,7 +86,7 @@ class PosOrderReport(models.Model):
                 s.user_id, s.company_id, s.sale_journal,
                 s.pricelist_id, s.account_move, s.create_date, s.session_id,
                 l.product_id,
-                pt.categ_id, pt.pos_categ_id,
+                pt.categ_id,
                 p.product_tmpl_id,
                 ps.config_id
         """

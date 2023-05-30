@@ -1913,7 +1913,7 @@ class PosSession(models.Model):
             ('company_id', '=', self.config_id.company_id.id), ('company_id', '=', False)
         ]
         if self.config_id.limit_categories and self.config_id.iface_available_categ_ids:
-            domain = AND([domain, [('pos_categ_id', 'in', self.config_id.iface_available_categ_ids.ids)]])
+            domain = AND([domain, [('pos_categ_ids', 'in', self.config_id.iface_available_categ_ids.ids)]])
         if self.config_id.iface_tipproduct:
             domain = OR([domain, [('id', '=', self.config_id.tip_product_id.id)]])
 
@@ -1921,7 +1921,7 @@ class PosSession(models.Model):
             'search_params': {
                 'domain': domain,
                 'fields': [
-                    'display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id', 'barcode',
+                    'display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode',
                     'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'product_tmpl_id', 'tracking',
                     'write_date', 'available_in_pos', 'attribute_line_ids', 'active', 'image_128'
                 ],
@@ -2048,42 +2048,6 @@ class PosSession(models.Model):
             amount += order.amount_paid
 
         return amount
-
-    def get_total_sold_refund_per_category(self, group_by_user_id=None):
-        total_sold_per_user_per_category = {}
-        total_refund_per_user_per_category = {}
-
-        for order in self.order_ids:
-            if group_by_user_id:
-                user_id = order.user_id.id
-            else:
-                # use a user_id of 0 to keep the logic between with user group and without user group the same
-                user_id = 0
-
-            if user_id not in total_sold_per_user_per_category:
-                total_sold_per_user_per_category[user_id] = {}
-                total_refund_per_user_per_category[user_id] = {}
-
-            total_sold_per_category = total_sold_per_user_per_category[user_id]
-            total_refund_per_category = total_refund_per_user_per_category[user_id]
-
-            for line in order.lines:
-                key = line.product_id.pos_categ_id.name or "None"
-                if line.qty >= 0:
-                    if key in total_sold_per_category:
-                        total_sold_per_category[key] += line.price_subtotal_incl
-                    else:
-                        total_sold_per_category[key] = line.price_subtotal_incl
-                else:
-                    if key in total_refund_per_category:
-                        total_refund_per_category[key] += line.price_subtotal_incl
-                    else:
-                        total_refund_per_category[key] = line.price_subtotal_incl
-
-        if group_by_user_id or not total_sold_per_user_per_category:
-            return list(total_sold_per_user_per_category.items()), list(total_refund_per_user_per_category.items())
-        else:
-            return list(total_sold_per_user_per_category[0].items()), list(total_refund_per_user_per_category[0].items())
 
     def get_pos_ui_product_pricelists_by_ids(self, pricelist_ids):
         params = self._loader_params_product_pricelist()

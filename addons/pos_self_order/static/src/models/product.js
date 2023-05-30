@@ -10,7 +10,7 @@ export class Product extends Reactive {
             name,
             product_id,
             description_sale,
-            tag,
+            tags,
             is_pos_groupable,
         },
         selfOrder
@@ -27,7 +27,7 @@ export class Product extends Reactive {
         this.attributes = product.attributes;
         this.name = product.name;
         this.description_sale = product.description_sale;
-        this.tag = product.tag;
+        this.tags = product.tags;
         this.is_pos_groupable = product.is_pos_groupable;
 
         // data

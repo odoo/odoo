@@ -153,11 +153,10 @@ class PosConfig(models.Model):
                     *(
                         self.limit_categories
                         and self.iface_available_categ_ids
-                        and [("pos_categ_id", "in", self.iface_available_categ_ids.ids)]
+                        and [("pos_categ_ids", "in", self.iface_available_categ_ids.ids)]
                         or []
                     ),
                 ],
-                order="pos_categ_id.sequence asc nulls last",
             )
         )
 
