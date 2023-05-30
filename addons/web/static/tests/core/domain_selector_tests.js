@@ -5,6 +5,7 @@ import {
     editInput,
     editSelect,
     getFixture,
+    getNodesTextContent,
     mount,
     nextTick,
     patchDate,
@@ -1303,5 +1304,54 @@ QUnit.module("Components", (hooks) => {
         assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Baris not set`);
         await parent.set(`[("bar","=",true)]`);
         assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Baris set`);
+    });
+
+    QUnit.test("Edit the value for field char and an operator in", async (assert) => {
+        const parent = await makeDomainSelector({
+            resModel: "partner",
+            domain: `[("foo", "in", ["a", "b", uid])]`,
+            update: (domain) => {
+                assert.step(domain);
+            },
+        });
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
+            "a",
+            "b",
+            "uid",
+        ]);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_ds_value_cell .o_tag")].map((el) => el.dataset.color),
+            ["0", "0", "2"]
+        );
+        assert.containsOnce(target, ".o_domain_leaf_value_input");
+
+        await editInput(target, ".o_domain_leaf_value_input", "c");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
+            "a",
+            "b",
+            "uid",
+            "c",
+        ]);
+        assert.verifySteps([`[("foo", "in", ["a", "b", uid, "c"])]`]);
+
+        await click(target.querySelectorAll(".o_tag .o_delete")[2]);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
+            "a",
+            "b",
+            "c",
+        ]);
+        assert.verifySteps([`[("foo", "in", ["a", "b", "c"])]`]);
+
+        await parent.set(`[("foo", "in", "a")]`);
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
+            "a",
+        ]);
+
+        await editInput(target, ".o_domain_leaf_value_input", "b");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_ds_value_cell .o_tag")), [
+            "a",
+            "b",
+        ]);
+        assert.verifySteps([`[("foo", "in", ["a", "b"])]`]);
     });
 });
