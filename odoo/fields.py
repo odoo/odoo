@@ -3830,6 +3830,11 @@ class PropertiesDefinition(Field):
             if not property_model and 'domain' in property_definition:
                 del property_definition['domain']
 
+            if property_definition.get('type') in ('selection', 'tags'):
+                # always set at least an empty array if there's no option
+                key = property_definition['type']
+                property_definition[key] = property_definition.get(key) or []
+
             property_domain = property_definition.get('domain')
             if property_domain:
                 # some fields in the domain might have been removed
