@@ -6,9 +6,9 @@
             <field name="model">account.move.send</field>
             <field name="inherit_id" ref="account.account_move_send_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[@name='standard_options']" position="before">
+                <xpath expr="//div[@name='warnings']" position="inside">
                     <field name="enable_peppol" invisible="1"/>
-                    <div class="alert alert-warning text-center" role="alert" attrs="{
+                    <div class="alert alert-warning" role="alert" attrs="{
                                 'invisible': ['|',
                                     ('checkbox_send_peppol', '!=', True),
                                     ('peppol_warning', '=', False),

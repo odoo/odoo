@@ -146,13 +146,8 @@ class AccountMoveSend(models.Model):
         if not params['documents']:
             return
 
-        edi_user = self.env['account_edi_proxy_client.user'].search(
-            [
-                ('company_id', '=', self.company_id.id),
-                ('proxy_type', '=', 'peppol'),
-            ],
-            limit=1,
-        )
+        edi_user = self.company_id.account_edi_proxy_client_ids.filtered(
+            lambda u: u.proxy_type == 'peppol')
 
         try:
             response = edi_user._make_request(

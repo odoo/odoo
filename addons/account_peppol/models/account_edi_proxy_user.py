@@ -3,9 +3,9 @@
 
 import logging
 
-from odoo import fields, models, tools, _
-from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
+from odoo import _, fields, models, tools
 from odoo.exceptions import UserError
+from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 
 _logger = logging.getLogger(__name__)
 
@@ -13,9 +13,15 @@ _logger = logging.getLogger(__name__)
 class AccountEdiProxyClientUser(models.Model):
     _inherit = 'account_edi_proxy_client.user'
 
+    peppol_migration_key = fields.Char(string="Migration Key")
+    peppol_verification_code = fields.Char(string='SMS verification code')
     proxy_type = fields.Selection(
         selection_add=[('peppol', 'PEPPOL')],
     )
+
+    # -------------------------------------------------------------------------
+    # HELPER METHODS
+    # -------------------------------------------------------------------------
 
     def _get_proxy_urls(self):
         urls = super()._get_proxy_urls()
@@ -38,6 +44,15 @@ class AccountEdiProxyClientUser(models.Model):
 
         return super()._get_server_url(proxy_type, edi_mode)
 
+    def _get_proxy_identification(self, company):
+        if not company.peppol_eas or not company.peppol_endpoint:
+            raise UserError(_("Please fill in the EAS code and the Participant ID code."))
+        return f'{company.peppol_eas}:{company.peppol_endpoint}'
+
+    # -------------------------------------------------------------------------
+    # COMPUTE METHODS
+    # -------------------------------------------------------------------------
+
     def _compute_proxy_type(self):
         # Extends account_edi_proxy_client
         super()._compute_proxy_type()
@@ -45,11 +60,9 @@ class AccountEdiProxyClientUser(models.Model):
             if user.company_id.is_account_peppol_participant:
                 user.proxy_type = 'peppol'
 
-    def _get_proxy_identification(self, company):
-        if not company.peppol_eas or not company.peppol_endpoint:
-            raise UserError(
-                _("Please fill in the EAS code and the Participant ID code in the company's partner form."))
-        return f'{company.peppol_eas}:{company.peppol_endpoint}'
+    # -------------------------------------------------------------------------
+    # BUSINESS ACTIONS
+    # -------------------------------------------------------------------------
 
     def _cron_peppol_get_new_documents(self):
         # Retrieve all new Peppol documents for every edi user in the database
@@ -136,6 +149,7 @@ class AccountEdiProxyClientUser(models.Model):
                     else:
                         move._message_log(
                             body=_('Peppol document has been received successfully'))
+                # pylint: disable=broad-except
                 except Exception:
                     # if the invoice creation fails for any reason,
                     # we want to create an empty invoice with the attachment
@@ -205,7 +219,7 @@ class AccountEdiProxyClientUser(models.Model):
 
     def _cron_peppol_get_participant_status(self):
         edi_users = self.env['account_edi_proxy_client.user'].search(
-            [('company_id.account_peppol_proxy_state', 'in', ('pending', 'manually_approved'))])
+            [('company_id.account_peppol_proxy_state', '=', 'pending')])
 
         for edi_user in edi_users:
             try:
@@ -215,5 +229,5 @@ class AccountEdiProxyClientUser(models.Model):
                 _logger.error('Error while updating Peppol participant status: %s', e)
                 continue
 
-            if proxy_user['peppol_state'] != 'draft':
+            if proxy_user['peppol_state'] in {'active', 'rejected', 'canceled'}:
                 edi_user.company_id.account_peppol_proxy_state = proxy_user['peppol_state']

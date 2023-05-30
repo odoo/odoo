@@ -24,4 +24,9 @@
         'wizard/account_move_send_views.xml',
     ],
     'license': 'LGPL-3',
+    'assets': {
+        'web.assets_backend': [
+            'account_peppol/static/src/components/**/*',
+        ],
+    }
 }
