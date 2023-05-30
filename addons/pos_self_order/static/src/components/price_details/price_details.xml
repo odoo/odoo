@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.PriceDetails" owl="1">
+        <div class="d-grid gap-2 w-100 w-100 pb-3">
+            <div class="d-flex justify-content-between text-muted">
+                Tax:
+                <span t-if="!selfOrder.priceLoading" t-esc="selfOrder.formatMonetary(props.tax)"/>
+                <span t-else="" class="spinner-border o-self-order-spinner-custom-height"></span>
+            </div>
+            <div class="d-flex justify-content-between fw-bold">
+                Total:
+                <span t-if="!selfOrder.priceLoading" t-esc="selfOrder.formatMonetary(props.total)"/>
+            </div>
+        </div>
+    </t>
+</templates>

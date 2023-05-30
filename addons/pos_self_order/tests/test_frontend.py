@@ -19,29 +19,48 @@ class TestFrontendMobile(odoo.tests.HttpCase):
                 "self_order_table_mode": False,
             }
         )
-        basic_product = lambda i: {
-            "name": f"Product {i} test",
-            "type": "product",
-            "available_in_pos": True,
-            "list_price": i,
-            "taxes_id": False,
-        }
-        self.env["product.product"].create([basic_product(i) for i in range(1, 1000)])
 
-    def test_self_order_view_mode_tour(self):
+        # we need a default tax fixed at 15% to all product because in the test prices are based on this tax.
+        # some time with the localization this may not be the case. So we force it.
+        self.env['product.product'].search([]).taxes_id = self.env['account.tax'].create({
+            'name': 'Default Tax for Self Order',
+            'amount': 15,
+            'amount_type': 'percent',
+        })
+
+    def test_self_order_menu_only_tour(self):
         self.pos_config.self_order_table_mode = False
         self.start_tour(
             self.pos_config._get_self_order_route(),
-            "pos_qr_menu_tour",
+            "self_order_menu_only_tour",
             login=None,
+            watch=True,
         )
 
-    def test_self_order_tour(self):
+    def test_self_order_pay_after_meal_tour(self):
         self.pos_config.self_order_table_mode = True
         self.pos_config.self_order_pay_after = "meal"
         self.pos_config.open_ui()
         self.start_tour(
             self.pos_config._get_self_order_route(),
-            "self_order_tour",
+            "self_order_after_meal_cart_tour",
             login=None,
+            watch=True
+        )
+        self.start_tour(
+            self.pos_config._get_self_order_route(),
+            "self_order_after_meal_product_tour",
+            login=None,
+        )
+
+    def test_self_order_pay_after_each_tour(self):
+        self.pos_config.self_order_table_mode = True
+        self.pos_config.self_order_pay_after = "each"
+        self.pos_config.open_ui()
+
+        self.start_tour(
+            self.pos_config._get_self_order_route(),
+            "self_order_after_each_cart_tour",
+            login=None,
+            watch=True
         )

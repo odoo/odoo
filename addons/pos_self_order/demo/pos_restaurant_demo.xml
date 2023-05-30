@@ -4,12 +4,12 @@
         <record id="pos_restaurant.pos_config_restaurant" model="pos.config">
             <field name="self_order_view_mode">True</field>
             <field name="self_order_table_mode">True</field>
-            <field name="self_order_image" 
-                model="pos.config" 
+            <field name="self_order_image"
+                model="pos.config"
                 eval="obj().env.ref('pos_restaurant.pos_config_restaurant')._self_order_default_image()"
                 />
-            <field name="self_order_image_name" 
-                model="pos.config" 
+            <field name="self_order_image_name"
+                model="pos.config"
                 eval="obj().env.ref('pos_restaurant.pos_config_restaurant')._self_order_default_image_name()"
                 />
         </record>
