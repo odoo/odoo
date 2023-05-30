@@ -35,17 +35,17 @@
                 have to keep using "page-break-after" -->
                     <div style="page-break-after: always;">
                         <h3 t-if="floor.get('name')" t-out="floor['name']" class="mb-5"/>
-                        <div 
-                            t-foreach="floor['rows_of_tables']" 
+                        <div
+                            t-foreach="floor['rows_of_tables']"
                             t-as="row_of_tables"
                             class="d-flex"
                             >
-                            <t t-foreach="row_of_tables" 
+                            <t t-foreach="row_of_tables"
                                 t-as="table"
                                 t-call="pos_self_order.qr_code"
                                 />
                         </div>
-                    </div>  
+                    </div>
                 </t>
             </div>
         </t>
@@ -55,31 +55,34 @@
         <t t-set="qr_code_size" t-value="180"/>
         <div style="padding: 0px 40px; margin-bottom:40px; page-break-inside: avoid;">
             <!-- This page-break-inside does not seem to work;
-            It would be nice to have the qr codes so the title is never on 
+            It would be nice to have the qr codes so the title is never on
             a different page then the qr code itself -->
-            <h4 class="fw-bold text-center" 
-                style="margin-top: 20px" 
+            <h4 class="fw-bold text-center"
+                style="margin-top: 20px"
                 t-if="table['id']"
                 >
-                Table: <t t-esc="table['name']"/>   
+                Table: <t t-esc="table['name']"/>
             </h4>
             <div class="p-3">
                 <div class="mt-1 mb-4 position-relative top-0 start-0">
-                    <img t-att-src="'/report/barcode/QR/%s?width=%s&amp;height=%s&amp;barLevel=H' %(table['url'], qr_code_size, qr_code_size)" 
+                    <img t-att-src="'/report/barcode/QR/%s?width=%s&amp;height=%s&amp;barLevel=H' %(table['url'], qr_code_size, qr_code_size)"
                         class="position-relative top-0 start-0"
                     />
                     <t t-call="pos_self_order.first_letter_of_odoo_logo_svg"/>
                 </div>
             </div>
+            <div class="text-center">
+                 (<t t-esc="table['access_token']"/>)
+            </div>
         </div>
     </template>
 
     <template id="first_letter_of_odoo_logo_svg">
-        <svg 
+        <svg
             class="position-absolute top-50 start-50"
             style="-webkit-transform: translate(-50%, -50%);"
-            t-att-width="qr_code_size/4" 
-            t-att-height="qr_code_size/4" 
+            t-att-width="qr_code_size/4"
+            t-att-height="qr_code_size/4"
             viewBox="0 0 120 120" fill="none"
             xmlns="http://www.w3.org/2000/svg"
         >
@@ -90,6 +93,6 @@
                     <path d="M59.5166 89.6961C75.8029 89.6961 89.0055 76.4935 89.0055 60.2072C89.0055 43.9209 75.8029 30.7182 59.5166 30.7182C43.2303 30.7182 30.0276 43.9209 30.0276 60.2072C30.0276 76.4935 43.2303 89.6961 59.5166 89.6961Z" fill="white"/>
                 </g>
             </g>
-        </svg> 
+        </svg>
     </template>
 </odoo>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_self_order.ProductList" owl="1">
+        <div class="d-flex flex-column dvh-100">
+            <header class="bg-white shadow-sm">
+                <NavBar class="shouldNavbarBeShown() ? '' : 'o_self_order_navbar_hide' " />
+                <div class="o_self_order_searchbar_filter d-flex justify-content-start align-items-center p-0 m-0 border-bottom">
+                    <div t-if="search.isFocused" class="input-group d-flex align-items-center" >
+                        <input type="text"
+                            class="form-control p-3 border-0 shadow-none"
+                            placeholder="Pizza"
+                            t-model="search.input"/>
+                        <div class="px-2">
+                            <button class="btn bg-200 rounded" t-on-click="closeSearch">
+                                <i class="fa fa-times"/>
+                            </button>
+                        </div>
+                    </div>
+                    <t t-else="">
+                        <ul t-ref="tagList" class="nav nav-pills flex-nowrap flex-grow-1 px-2 border-end overflow-auto">
+                            <t t-foreach="Array.from(selfOrder.tagList)" t-as="tag" t-key="tag">
+                                <li class="nav-item mx-1 py-2"
+                                    t-on-click="() => this.tagOnClick(tag)">
+                                    <span
+                                        t-attf-class="user-select-none nav-link py-2 rounded {{currentProductGroup.name === tag ? 'active' : 'text-dark'}}"
+                                        t-ref="tag_{{tag}}"
+                                        t-esc="tag"/>
+                                </li>
+                            </t>
+                        </ul>
+                        <button class="btn btn-link text-dark px-3" t-on-click="focusSearch">
+                            <i class="oi oi-search px-1"/>
+                        </button>
+                    </t>
+                </div>
+            </header>
+            <!-- the body is set to overflow: hidden and this div is set to overflow-auto
+            this way we only scroll on the product list, and not on the whole page, which includes the navbar -->
+            <main t-ref="productsList" class="bg-white overflow-auto d-flex flex-row flex-wrap">
+                <t t-if="search.isFocused">
+                    <t t-set="filteredProducts" t-value="filteredProducts()"/>
+                    <p t-if="!filteredProducts?.length" class="mx-auto mt-3 text-center">No products found</p>
+                    <t t-foreach="filteredProducts" t-as="product" t-key="product.id">
+                        <ProductCard product="product"
+                                    class="'w-md-50 w-xl-25'"/>
+                    </t>
+                </t>
+                <t t-else="">
+                    <t t-set="tags" t-value="Object.keys(selfOrder.productsGroupedByTag)" />
+                    <p t-if="!tags?.length" class="mx-auto mt-3 text-center">No products found</p>
+                    <t t-foreach="tags" t-as="tag" t-key="tag">
+                        <section t-if="selfOrder.productsGroupedByTag[tag].length" t-ref="productsWithTag_{{tag}}" class="w-100 d-flex flex-wrap">
+                            <h3 class="w-100 m-0 mt-n1 pb-3 pt-4 px-3 bg-light" t-esc="tag" />
+                            <t t-foreach="selfOrder.productsGroupedByTag[tag]" t-as="product" t-key="product.id">
+                                <!-- If this is the product that we last visited, we use currentProductCard to
+                                get a reference to it -->
+                                <ProductCard product="product"
+                                    currentProductCard="product.id === selfOrder.lastEditedProductId and currentProductCard"
+                                    class="'w-md-50 w-xl-25'"/>
+                            </t>
+                        </section>
+                    </t>
+                </t>
+            </main>
+
+            <!-- we use flex-grow-1 to push the button to the bottom of the page
+            ( normally there would be many products, so the page would be long enough to push the button to the bottom,
+            but if there are no products (for example if you search for something that does not exist), the button
+            would be at the top of the page )
+            -->
+            <div class="flex-grow-1"></div>
+            <div t-if="selfOrder.table and selfOrder.currentOrder.totalQuantity" class="d-flex flex-column align-items-center w-100 p-3 bg-white shadow-lg">
+                <t t-set="order" t-value="selfOrder.currentOrder"/>
+                <button t-on-click="() => this.router.navigate('cart')" class="o_self_order_main_button btn btn-primary w-100 px-2 py-3 mt-2 rounded">
+                    <div class="d-flex align-items-center justify-content-between mx-2">
+                        <i class="fa fa-shopping-cart pe-2" aria-hidden="true"/>
+                        <p class="m-0">Review (<t t-esc="order.totalQuantity" />)</p>
+                        <span t-if="!selfOrder.priceLoading" class="ms-auto" t-esc="selfOrder.formatMonetary(order.amount_total)"/>
+                        <span t-else="" class="spinner-border o-self-order-spinner-custom-height ms-auto"></span>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </t>
+    <t t-name="pos_self_order.SearchBox" owl="1">
+        <div class="input-group d-flex align-items-center">
+            <input type="text"
+                class="form-control p-3 border-0 shadow-none"
+                placeholder="Pizza"
+                t-model="search.input"/>
+            <div class="px-2">
+                <button class="btn bg-200 rounded" t-on-click="closeSearch">
+                    <i class="fa fa-times"/>
+                </button>
+            </div>
+        </div>
+    </t>
+    <t t-name="pos_self_order.SearchIcon" owl="1">
+        <button class="btn btn-link text-dark px-3" t-on-click="focusSearch">
+            <i class="oi oi-search px-1"/>
+        </button>
+    </t>
+</templates>

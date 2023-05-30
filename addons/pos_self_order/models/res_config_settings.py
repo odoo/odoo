@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
 class ResConfigSettings(models.TransientModel):
@@ -70,6 +71,9 @@ class ResConfigSettings(models.TransientModel):
         """
         Generate the data needed to print the QR codes page
         """
+        if len(self.pos_config_id.floor_ids.table_ids) == 0:
+            raise UserError(_("Before you can create QR codes, you need to create tables for the restaurant."))
+
         return self.env.ref("pos_self_order.report_self_order_qr_codes_page").report_action(
             [], data=self.pos_config_id._generate_data_for_qr_codes_page(cols=3)
         )

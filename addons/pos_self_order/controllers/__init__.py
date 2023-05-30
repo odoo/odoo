@@ -1,4 +1,4 @@
 # -*- coding: utf-8 -*-
 
-from . import qr_menu
-from . import ordering
+from . import entry
+from . import orders
