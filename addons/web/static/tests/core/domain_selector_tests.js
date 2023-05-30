@@ -571,7 +571,7 @@ QUnit.module("Components", (hooks) => {
         };
         await makeDomainSelector({ domain: `[['state', 'in', ['abc']]]` });
         const select = target.querySelector(".o_domain_leaf_operator_select");
-        assert.strictEqual(select.options[select.options.selectedIndex].text, "in");
+        assert.strictEqual(select.options[select.options.selectedIndex].text, "is in");
     });
 
     QUnit.test("multi selection", async (assert) => {
