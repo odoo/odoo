@@ -408,7 +408,6 @@ class ResCompany(models.Model):
     def setting_init_fiscal_year_action(self):
         """ Called by the 'Fiscal Year Opening' button of the setup bar."""
         company = self.env.company
-        company.create_op_move_if_non_existant()
         new_wizard = self.env['account.financial.year.op'].create({'company_id': company.id})
         view_id = self.env.ref('account.setup_financial_year_opening_form').id
 
@@ -431,9 +430,6 @@ class ResCompany(models.Model):
         # If an opening move has already been posted, we open the tree view showing all the accounts
         if company.opening_move_posted():
             return 'account.action_account_form'
-
-        # Otherwise, we create the opening move
-        company.create_op_move_if_non_existant()
 
         # Then, we open will open a custom tree view allowing to edit opening balances of the account
         view_id = self.env.ref('account.init_accounts_tree').id
