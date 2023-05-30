@@ -411,7 +411,7 @@ $o-we-toolbar-color-clickable-active: $o-we-bg-darkest;
 
 
 body:not(.editor_has_snippets) {
-    .oe-toolbar {
+    > .oe-toolbar {
         // Bootstrap sets .modal z-index at 1050. Ensure toolbar is visible in
         // modals. Only apply this to the toolbar if it's not in a snippets menu.
         z-index: 1051;
