@@ -35,6 +35,7 @@
         -->
         <form name="o_payment_checkout"
               class="o_payment_form mt-3 clearfix"
+              t-att-id="'o_checkout_test'"
               t-att-data-reference-prefix="reference_prefix"
               t-att-data-amount="amount"
               t-att-data-currency-id="currency and currency.id"
@@ -91,7 +92,7 @@
                                 <div class="ms-4 fst-italic small text-muted">
                                     Managed by
                                     <span t-esc="dict(provider._fields['code']._description_selection(provider.env))[provider.code]"/>
-                                    — created on 
+                                    — created on
                                     <span t-esc="token.create_date.date()"/>
                                 </div>
                             </label>
@@ -225,7 +226,7 @@
             <t t-set="footer_template_id"
                t-value="footer_template_id or 'payment.footer'"/>
             <!-- === Tokens === -->
-            <t t-if="token_count > 0"> 
+            <t t-if="token_count > 0">
                 <span class="fs-4">Saved payment methods</span>
                 <div class="card">
                     <t t-foreach="tokens" t-as="token">
@@ -261,9 +262,9 @@
                             <div class="fst-italic small text-muted">
                                     Managed by
                                     <span t-esc="dict(provider._fields['code']._description_selection(provider.env))[provider.code]"/>
-                                    – created on 
+                                    – created on
                                     <span t-esc="token.create_date.date()"/>
-                            </div>                      
+                            </div>
                         </div>
                         <!-- === Token inline form === -->
                         <div t-attf-id="o_payment_token_inline_manage_form_{{token.id}}"

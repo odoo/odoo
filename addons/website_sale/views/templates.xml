@@ -1930,8 +1930,9 @@
                         </div>
                         <div class="col-12 offset-xl-1 col-lg-5 col-xl-4 order-lg-2">
                             <t t-call="website_sale.cart_summary">
+                                <t t-set="main_cta_custom_attr" t-value="{'name':'o_payment_submit_button', 'disabled':true, 'data-icon-class':'fa-angle-right', 'type':'submit', 'form':'o_checkout_test'}"/>
                                 <t t-set="main_cta_text" t-value="'Sign in' if redirect_to_sign_in else 'Pay now'"/>
-                                <t t-set="main_cta_href" t-value="redirect_url"/>
+                                <t t-set="main_cta_href" t-value="'#'"/>
                                 <t t-set="back_cta_text" t-value=" 'Continue shopping'"/>
                                 <t t-set="back_cta_href" t-value="'/shop'"/>
                             </t>
@@ -1951,7 +1952,6 @@
                                 <div t-if="providers or tokens" id="payment_method" class="mt-4">
                                     <t t-call="payment.checkout">
                                         <t t-set="footer_template_id" t-value="'website_sale.payment_footer'"/>
-                                        <t t-set="submit_button_label">Pay Now</t>
                                     </t>
                                 </div>
                                 <div t-else="" class="alert alert-warning">
@@ -1987,9 +1987,7 @@
                                  id="payment_method">
                                 <form name="o_wsale_confirm_order" target="_self" action="/shop/payment/validate" method="post">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
-                                    <t t-call="website_sale.payment_footer">
-                                        <t t-set="submit_button_label">Confirm Order</t>
-                                    </t>
+                                    <t t-call="website_sale.payment_footer"/>
                                 </form>
                             </div>
                         </div>
@@ -2001,22 +1999,7 @@
     </template>
 
     <template id="payment_footer" name="Payment">
-        <div name="o_checkbox_container"
-             class="form-check mt-2 o_accept_tc_button"/>
-        <div class="float-start mt-2">
-            <a role="button" href="/shop/cart" class="btn btn-secondary">
-                <i class="oi oi-chevron-left"/> Return to Cart
-            </a>
-        </div>
-        <div class="float-end mt-2">
-            <button name="o_payment_submit_button"
-                    type="submit"
-                    class="btn btn-primary"
-                    disabled="true"
-                    data-icon-class="oi-chevron-right">
-                <t t-esc="submit_button_label"/> <i class="oi oi-chevron-right"/>
-            </button>
-        </div>
+        <div name="o_checkbox_container" class="form-check mt-2 o_accept_tc_button"/>
     </template>
 
     <template id="payment_sale_note" inherit_id="payment_footer" name="Accept Terms &amp; Conditions" active="False">
@@ -2053,12 +2036,13 @@
 
     <template id="cta_buttons_navigation" name="Navigation buttons">
         <div class="d-flex flex-column mt-4">
-            <a role="button" t-if="website_sale_order and website_sale_order.website_order_line and not address_form_submit"
-               class="btn btn-primary w-100"
-               t-attf-href="{{ main_cta_href }}">
+            <button t-if="website_sale_order and website_sale_order.website_order_line and not address_form_submit"
+                    class="btn btn-primary w-100"
+                    t-att="main_cta_custom_attr"
+                    t-attf-onclick="window.location.href='{{main_cta_href}}';">
                 <t t-out="main_cta_text"/>
                 <i class="fw-light fa fa-angle-right ms-2"/>
-            </a>
+            </button>
             <div class="position-relative w-100 d-flex justify-content-center align-items-center my-2 opacity-75">
                 <hr class="w-100"/>
                 <span class="px-3">or</span>

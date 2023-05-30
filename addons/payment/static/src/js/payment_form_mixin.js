@@ -35,6 +35,10 @@
         // Private
         //--------------------------------------------------------------------------
 
+        _getSubmitButton() {
+            return this.$('button[name="o_payment_submit_button"]');
+        },
+
         /**
          * Disable the submit button.
          *
@@ -46,7 +50,7 @@
          * @return {undefined}
          */
         _disableButton(showLoadingAnimation = true) {
-            const $submitButton = $('button[name="o_payment_submit_button"]');
+            const $submitButton = this._getSubmitButton();
             const iconClass = $submitButton.data('icon-class');
             $submitButton.attr('disabled', true);
             if (showLoadingAnimation) {
@@ -140,7 +144,7 @@
          */
         _enableButton: function () {
             if (this._isButtonReady()) {
-                const $submitButton = this.$('button[name="o_payment_submit_button"]');
+                const $submitButton = this._getSubmitButton();
                 const iconClass = $submitButton.data('icon-class');
                 $submitButton.attr('disabled', false);
                 $submitButton.find('i').addClass(iconClass);
