@@ -330,4 +330,13 @@ class TestItEdiExport(TestItEdi):
             ],
         })
         invoice.action_post()
-        self._assert_export_invoice(invoice, 'invoice_negative_price.xml')
+
+        with self.subTest('invoice'):
+            self._assert_export_invoice(invoice, 'invoice_negative_price.xml')
+
+        credit_note = invoice._reverse_moves([{
+            'invoice_date': '2022-03-24',
+        }])
+
+        with self.subTest('credit note'):
+            self._assert_export_invoice(credit_note, 'credit_note_negative_price.xml')
