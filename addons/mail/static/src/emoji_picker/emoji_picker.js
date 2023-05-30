@@ -306,7 +306,7 @@ export class EmojiPicker extends Component {
             return;
         }
         const coords = this.gridRef.el.getBoundingClientRect();
-        const res = document.elementFromPoint(coords.x, coords.y);
+        const res = document.elementFromPoint(coords.x, coords.y + 1); // +1 for Firefox
         if (!res) {
             return;
         }
