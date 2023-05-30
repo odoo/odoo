@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { PinnedMessagesPanel } from "@mail/discuss/message_pin/pinned_messages_panel";
-import { ChatWindow, MODES } from "@mail/web/chat_window/chat_window";
+import { ChatWindow, MODES } from "@mail/chat_window/chat_window";
 import { useChildSubEnv } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";

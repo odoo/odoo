@@ -34,13 +34,14 @@ class MailMessage(models.Model):
                     chatbot_message_id = self.env['chatbot.message'].sudo().search([
                         ('mail_message_id', '=', message_sudo.id)], limit=1)
                     if chatbot_message_id.script_step_id:
-                        vals['chatbot_script_step_id'] = chatbot_message_id.script_step_id.id
-                        if chatbot_message_id.script_step_id.step_type == 'question_selection':
-                            vals['chatbot_step_answers'] = [{
+                        vals['chatbotStep'] = {
+                            'id': chatbot_message_id.script_step_id.id,
+                            'answers': [] if chatbot_message_id.script_step_id.step_type != 'question_selection' else [{
                                 'id': answer.id,
                                 'label': answer.name,
-                                'redirect_link': answer.redirect_link,
-                            } for answer in chatbot_message_id.script_step_id.answer_ids]
-                    if chatbot_message_id.user_script_answer_id:
-                        vals['chatbot_selected_answer_id'] = chatbot_message_id.user_script_answer_id.id
+                                'redirectLink': answer.redirect_link,
+                            } for answer in chatbot_message_id.script_step_id.answer_ids],
+                            'selectedAnswerId': chatbot_message_id.user_script_answer_id.id,
+
+                        }
         return vals_list

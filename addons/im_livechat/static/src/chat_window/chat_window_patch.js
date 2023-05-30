@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { ChatWindow } from "@mail/web/chat_window/chat_window";
+import { ChatWindow } from "@mail/chat_window/chat_window";
 import { patch } from "@web/core/utils/patch";
 
 patch(ChatWindow.prototype, "im_livechat", {

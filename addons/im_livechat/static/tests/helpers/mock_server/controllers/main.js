@@ -12,13 +12,21 @@ patch(MockServer.prototype, "im_livechat/controllers/main", {
             const channel_id = args.channel_id;
             const anonymous_name = args.anonymous_name;
             const previous_operator_id = args.previous_operator_id;
+            const persisted = args.persisted;
             const context = args.context;
             return this._mockRouteImLivechatGetSession(
                 channel_id,
                 anonymous_name,
-                previous_operator_id,
+                parseInt(previous_operator_id),
+                persisted,
                 context
             );
+        }
+        if (route === "/im_livechat/init") {
+            return this._mockRouteImLivechatInit(args.channel_id);
+        }
+        if (route === "/im_livechat/visitor_leave_session") {
+            return this._mockRouteVisitorLeaveSession(args.uuid);
         }
         if (route === "/im_livechat/notify_typing") {
             const uuid = args.uuid;
@@ -32,6 +40,16 @@ patch(MockServer.prototype, "im_livechat/controllers/main", {
             const context = args.context;
             return this._mockRouteImLivechatChatPost(uuid, message_content, context);
         }
+        if (route === "/im_livechat/feedback") {
+            const { uuid, rate, reason } = args;
+            return this._mockRouteImLivechatFeedback(uuid, rate, reason);
+        }
+        if (route === "/im_livechat/email_livechat_transcript") {
+            return true;
+        }
+        if (route === "/im_livechat/chat_history") {
+            return this._mockRouteImLivechatChatHistory(args.uuid, args.last_id, args.limit);
+        }
         return this._super(...arguments);
     },
     /**
@@ -44,7 +62,13 @@ patch(MockServer.prototype, "im_livechat/controllers/main", {
      * @param {Object} [context={}]
      * @returns {Object}
      */
-    _mockRouteImLivechatGetSession(channel_id, anonymous_name, previous_operator_id, context = {}) {
+    _mockRouteImLivechatGetSession(
+        channel_id,
+        anonymous_name,
+        previous_operator_id,
+        persisted,
+        context = {}
+    ) {
         let user_id;
         let country_id;
         if ("mockedUserId" in context) {
@@ -71,7 +95,8 @@ patch(MockServer.prototype, "im_livechat/controllers/main", {
             anonymous_name,
             previous_operator_id,
             user_id,
-            country_id
+            country_id,
+            persisted
         );
     },
     /**
@@ -139,5 +164,69 @@ patch(MockServer.prototype, "im_livechat/controllers/main", {
             },
             context
         );
+    },
+    /**
+     * Simulates the `/im_livechat/visitor_leave_session` route.
+     *
+     * @param {string} uuid
+     */
+    _mockRouteVisitorLeaveSession(uuid) {
+        const channel = this.pyEnv["discuss.channel"].searchRead([["uuid", "=", uuid]]);
+        if (!channel) {
+            return;
+        }
+        this._mockDiscussChannel_closeLivechatSession(channel);
+    },
+
+    /**
+     * Simulates the `/im_livechat/feedback` route.
+     *
+     * @param {string} uuid
+     * @param {number} rate
+     * @param {string|undefined} reason
+     * @returns
+     */
+    _mockRouteImLivechatFeedback(uuid, rate, reason) {
+        let [channel] = this.pyEnv["discuss.channel"].searchRead([["uuid", "=", uuid]]);
+        if (!channel) {
+            return false;
+        }
+        const values = {
+            rating: rate,
+            consumed: true,
+            feedback: reason,
+            is_internal: false,
+            res_id: channel.id,
+            res_model: "discuss.channel",
+            rated_partner_id: channel.channel_partner_ids[0],
+        };
+        if (channel.rating_ids.length === 0) {
+            this.pyEnv["rating.rating"].create(values);
+        } else {
+            this.pyEnv["rating.rating"].write([channel.rating_ids[0]], values);
+        }
+        [channel] = this.pyEnv["discuss.channel"].searchRead([["uuid", "=", uuid]]);
+        return channel.rating_ids[0];
+    },
+
+    /**
+     * Simulates the `/im_livechat/chat_history` route.
+     */
+    _mockRouteImLivechatChatHistory(uuid, lastId, limit = 20) {
+        const [channel] = this.pyEnv["discuss.channel"].searchRead([["uuid", "=", uuid]]);
+        if (!channel) {
+            return [];
+        }
+        return this._mockDiscussChannel_channel_fetch_message(channel.id, lastId, limit);
+    },
+
+    /**
+     * Simulates the `/im_livechat/init` route.
+     */
+    _mockRouteImLivechatInit(channelId) {
+        return {
+            available_for_me: true,
+            rule: {},
+        };
     },
 });

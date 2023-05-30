@@ -7,7 +7,7 @@ import { multiTabService } from "@bus/multi_tab_service";
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 
 import { ActivityMenu } from "@mail/web/activity/activity_menu";
-import { ChatWindowContainer } from "@mail/web/chat_window/chat_window_container";
+import { ChatWindowContainer } from "@mail/chat_window/chat_window_container";
 import { MessagingMenu } from "@mail/web/messaging_menu/messaging_menu";
 import { messagingService } from "@mail/core/messaging_service";
 import { CallInvitations } from "@mail/rtc/call_invitations";
@@ -25,7 +25,7 @@ import { userSettingsService } from "@mail/core/user_settings_service";
 import { rtcService } from "@mail/rtc/rtc_service";
 import { suggestionService } from "@mail/composer/suggestion_service";
 import { storeService } from "@mail/core/store_service";
-import { chatWindowService } from "@mail/web/chat_window/chat_window_service";
+import { chatWindowService } from "@mail/chat_window/chat_window_service";
 import { threadService } from "@mail/core/thread_service";
 import { messageService } from "@mail/core/message_service";
 import { activityService } from "@mail/web/activity/activity_service";
@@ -160,7 +160,7 @@ export async function setupMessagingServiceRegistries({
     loadingBaseDelayDuration = 0,
     messagingBus,
     services,
-}) {
+} = {}) {
     const serviceRegistry = registry.category("services");
 
     const OriginalAudio = window.Audio;

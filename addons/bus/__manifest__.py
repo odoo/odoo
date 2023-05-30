@@ -24,11 +24,12 @@
             'bus/static/src/workers/websocket_worker.js',
             'bus/static/src/workers/websocket_worker_utils.js',
         ],
+        'web.tests_assets': [
+            'bus/static/tests/helpers/**/*',
+        ],
         'web.qunit_suite_tests': [
             'bus/static/tests/**/*.js',
-        ],
-        'web.qunit_mobile_suite_tests': [
-            'bus/static/tests/helpers/**/*.js',
+            ('remove', 'bus/static/tests/helpers/**/*'),
         ],
         'bus.websocket_worker_assets': [
             'web/static/src/legacy/js/promise_extension.js',

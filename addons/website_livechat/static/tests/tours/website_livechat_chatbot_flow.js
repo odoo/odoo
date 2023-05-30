@@ -2,29 +2,14 @@
 
 import { registry } from "@web/core/registry";
 
-// Due to some issue with assets bundles, the current file can be loaded while
-// LivechatButtonView isn't, causing the patch to fail as the original model was
-// not registered beforehand. The following import is intended to stop the
-// execution of this file if @im_livechat/public_models/livechat_button_view is
-// not part of the current assets bundles (as trying to import it will silently
-// crash).
-import "@im_livechat/legacy/public_models/livechat_button_view";
-
-const messagesContain = (text) => `div.o_thread_message_content:contains("${text}")`;
+const messagesContain = (text) => `.o-mail-Message:contains("${text}")`;
 
 registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
     test: true,
+    shadow_dom: ".o-livechat-root",
     steps: [
         {
             trigger: messagesContain("Hello! I'm a bot!"),
-            async run() {
-                const { messaging } = await odoo.__DEBUG__;
-                /**
-                 * Make it a bit faster than the default delay (3500ms).
-                 * Also debounce waiting for more user inputs for only 500ms.
-                 */
-                messaging.publicLivechatGlobal.chatbot.update({ isWebsiteLivechatTourFlow: true });
-            },
         },
         {
             trigger: messagesContain("I help lost visitors find their way."),
@@ -35,7 +20,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             run: () => {}, // check question_selection message is posted
         },
         {
-            trigger: '.o_livechat_chatbot_options li:contains("I want to buy the software")',
+            trigger: 'li:contains("I want to buy the software")',
             run: "click",
         },
         {
@@ -47,14 +32,14 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             run: () => {}, // check ask email step following selecting option A
         },
         {
-            trigger: "input.o_composer_text_field",
+            trigger: ".o-mail-Composer-input ",
             run: "text No, you won't get my email!",
         },
         {
-            trigger: "input.o_composer_text_field",
-            run: () => {
-                $("input.o_composer_text_field").trigger(
-                    $.Event("keydown", { which: $.ui.keyCode.ENTER })
+            trigger: ".o-mail-Composer-input",
+            run() {
+                this.$anchor[0].dispatchEvent(
+                    new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },
         },
@@ -65,14 +50,14 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             run: () => {}, // check invalid email detected and the bot asks for a retry
         },
         {
-            trigger: "input.o_composer_text_field",
+            trigger: ".o-mail-Composer-input",
             run: "text okfine@fakeemail.com",
         },
         {
-            trigger: "input.o_composer_text_field",
-            run: () => {
-                $("input.o_composer_text_field").trigger(
-                    $.Event("keydown", { which: $.ui.keyCode.ENTER })
+            trigger: ".o-mail-Composer-input",
+            run() {
+                this.$anchor[0].dispatchEvent(
+                    new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },
         },
@@ -85,14 +70,14 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             run: () => {}, // should ask for website now
         },
         {
-            trigger: "input.o_composer_text_field",
+            trigger: ".o-mail-Composer-input",
             run: "text https://www.fakeaddress.com",
         },
         {
-            trigger: "input.o_composer_text_field",
-            run: () => {
-                $("input.o_composer_text_field").trigger(
-                    $.Event("keydown", { which: $.ui.keyCode.ENTER })
+            trigger: ".o-mail-Composer-input",
+            run() {
+                this.$anchor[0].dispatchEvent(
+                    new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },
         },
@@ -101,47 +86,48 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             run: () => {}, // should ask for feedback now
         },
         {
-            trigger: "input.o_composer_text_field",
+            trigger: ".o-mail-Composer-input",
             run: "text Yes, actually, I'm glad you asked!",
         },
         {
-            trigger: "input.o_composer_text_field",
-            run: () => {
-                $("input.o_composer_text_field").trigger(
-                    $.Event("keydown", { which: $.ui.keyCode.ENTER })
+            trigger: ".o-mail-Composer-input",
+            run() {
+                this.$anchor[0].dispatchEvent(
+                    new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },
         },
         {
-            trigger: "input.o_composer_text_field",
+            trigger: ".o-mail-Composer-input",
             run: "text I think it's outrageous that you ask for all my personal information!",
         },
         {
-            trigger: "input.o_composer_text_field",
-            run: () => {
-                $("input.o_composer_text_field").trigger(
-                    $.Event("keydown", { which: $.ui.keyCode.ENTER })
+            trigger: ".o-mail-Composer-input",
+            run() {
+                this.$anchor[0].dispatchEvent(
+                    new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },
         },
         {
-            trigger: "input.o_composer_text_field",
+            trigger: ".o-mail-Composer-input",
             run: "text I will be sure to take this to your manager!",
         },
         {
-            trigger: "input.o_composer_text_field",
-            run: () => {
-                $("input.o_composer_text_field").trigger(
-                    $.Event("keydown", { which: $.ui.keyCode.ENTER })
+            trigger: ".o-mail-Composer-input",
+            run() {
+                this.$anchor[0].dispatchEvent(
+                    new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },
         },
         {
             trigger: messagesContain("Ok bye!"),
+            timeout: 15000, // multiline step, so we need to wait a bit longer
             run: () => {}, // last step is displayed
         },
         {
-            trigger: ".o_livechat_chatbot_restart",
+            trigger: ".o-mail-ChatWindow-command[title='Restart Conversation']",
             run: "click",
         },
         {
@@ -161,7 +147,7 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             run: () => {}, // check question_selection message is posted
         },
         {
-            trigger: '.o_livechat_chatbot_options li:contains("Pricing Question")',
+            trigger: 'li:contains("Pricing Question")',
             run: "click",
         },
         {
@@ -179,14 +165,14 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             run: () => {}, // should ask for website now
         },
         {
-            trigger: "input.o_composer_text_field",
+            trigger: ".o-mail-Composer-input",
             run: "text no",
         },
         {
-            trigger: "input.o_composer_text_field",
-            run: () => {
-                $("input.o_composer_text_field").trigger(
-                    $.Event("keydown", { which: $.ui.keyCode.ENTER })
+            trigger: ".o-mail-Composer-input",
+            run() {
+                this.$anchor[0].dispatchEvent(
+                    new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },
         },
@@ -195,14 +181,14 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
             run: () => {}, // should ask for feedback now
         },
         {
-            trigger: "input.o_composer_text_field",
+            trigger: ".o-mail-Composer-input",
             run: "text no, nothing so say",
         },
         {
-            trigger: "input.o_composer_text_field",
-            run: () => {
-                $("input.o_composer_text_field").trigger(
-                    $.Event("keydown", { which: $.ui.keyCode.ENTER })
+            trigger: ".o-mail-Composer-input",
+            run() {
+                this.$anchor[0].dispatchEvent(
+                    new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
                 );
             },
         },
@@ -211,7 +197,8 @@ registry.category("web_tour.tours").add("website_livechat_chatbot_flow_tour", {
         },
         {
             // wait for chatbot script to finish.
-            trigger: ".o_livechat_chatbot_restart",
+            trigger: ".o-mail-ChatWindow-command[title='Restart Conversation']",
+            timeout: 15000, // multiline step, so we need to wait a bit longer
             run() {},
         },
     ],

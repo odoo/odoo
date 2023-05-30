@@ -1,0 +1,31 @@
+.o-mail-ChatWindow {
+    height: 480px;
+    width: $o-mail-ChatWindow-width;
+    z-index: 999; // messaging menu is dropdown (1000)
+    box-shadow: -5px -5px 10px rgba(#000000, 0.09);
+    outline: none;
+
+    &.o-folded {
+        height: $o-mail-Discuss-headerHeight;
+    }
+
+    .o-mail-ChatWindow-command {
+        color: inherit !important;
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.075);
+        }
+    }
+}
+
+.o-mail-ChatWindow-closePanel {
+    z-index: 2;
+}
+
+.o-mail-ChatWindow-header {
+    height: $o-mail-Discuss-headerHeight;
+
+    .o-mail-ChatWindow-threadAvatar img {
+        height: 28px;
+        width: 28px;
+    }
+}

@@ -36,7 +36,7 @@ import { url } from "@web/core/utils/urls";
 
 /**
  * @typedef {Object} Props
- * @property {boolean} [hasActions]
+ * @property {boolean} [hasActions=true]
  * @property {boolean} [highlighted]
  * @property {function} [onParentMessageClick]
  * @property {import("@mail/core/message_model").Message} message
@@ -279,9 +279,7 @@ export class Message extends Component {
     }
 
     get isAlignedRight() {
-        return Boolean(
-            this.env.inChatWindow && this.user.partnerId === this.props.message.author?.id
-        );
+        return Boolean(this.env.inChatWindow && this.props.message.isSelfAuthored);
     }
 
     get isOriginThread() {
@@ -462,14 +460,6 @@ export class Message extends Component {
                 mail_message_to_resend: this.message.id,
             },
         });
-    }
-
-    get imStatusClassName() {
-        let res = "position-absolute bottom-0 end-0";
-        if (this.hasOpenChatFeature) {
-            res += " cursor-pointer";
-        }
-        return res;
     }
 
     /**

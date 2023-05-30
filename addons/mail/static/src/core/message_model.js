@@ -135,6 +135,10 @@ export class Message {
         return this.needaction_partner_ids.includes(this._store.user?.id);
     }
 
+    get hasActions() {
+        return !this.isTransient;
+    }
+
     /**
      * @returns {boolean}
      */
