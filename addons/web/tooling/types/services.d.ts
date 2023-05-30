@@ -9,6 +9,7 @@ declare module "services" {
     import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
     import { httpService } from "@web/core/network/http_service";
     import { menuService } from "@web/webclient/menus/menu_service";
+    import { nameService } from "@web/core/name_service";
     import { notificationService } from "@web/core/notifications/notification_service";
     import { ormService } from "@web/core/orm_service";
     import { popoverService } from "@web/core/popover/popover_service";
@@ -30,6 +31,7 @@ declare module "services" {
         hotkey: ReturnType<typeof hotkeyService.start>;
         http: ReturnType<typeof httpService.start>;
         menu: Awaited<ReturnType<typeof menuService.start>>;
+        name: ReturnType<typeof nameService.start>;
         notification: ReturnType<typeof notificationService.start>;
         orm: ReturnType<typeof ormService.start>;
         popover: ReturnType<typeof popoverService.start>;
