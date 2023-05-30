@@ -33,6 +33,22 @@ export const SlideCoursePage = publicWidget.Widget.extend({
     },
 
     /**
+     * @override
+     */
+    start: function () {
+        // TODO: we need to clean this code and make the changes in the view in master
+        const $completed = $('.o_wslides_channel_completion_completed');
+        const $progressbar = $('.o_wslides_channel_completion_progressbar');
+        if($progressbar.hasClass('d-none')){
+            $progressbar.removeClass('d-none').addClass('d-flex').addClass('hidden-progressbar-completed-tag');
+        }
+        if($completed.hasClass('d-none')){
+            $completed.removeClass('d-none').addClass('hidden-progressbar-completed-tag');
+        }
+        return this._super.apply(this, arguments)
+    },
+
+    /**
      * Greens up the bullet when the slide is completed
      *
      * @public
@@ -71,12 +87,12 @@ export const SlideCoursePage = publicWidget.Widget.extend({
 
         if (completion < 100) {
             // Hide the "Completed" text and show the progress bar
-            $completed.addClass('d-none');
-            $progressbar.removeClass('d-none').addClass('d-flex');
+            $completed.addClass('hidden-progressbar-completed-tag');
+            $progressbar.removeClass('hidden-progressbar-completed-tag');
         } else {
             // Hide the progress bar and show the "Completed" text
-            $completed.removeClass('d-none');
-            $progressbar.addClass('d-none').removeClass('d-flex');
+            $completed.removeClass('hidden-progressbar-completed-tag');
+            $progressbar.addClass('hidden-progressbar-completed-tag');
         }
 
         $progressbar.find('.progress-bar').css('width', `${completion}%`);
