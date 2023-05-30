@@ -19,7 +19,7 @@ body.l10n_ch_qr{
 
     /* Disable custom bakground */
     .o_report_layout_striped {
-        background: none;
+        background-color: white;
         min-height: 0;
     }
 }
@@ -53,7 +53,7 @@ body.l10n_ch_qr{
     }
 
     /* New QR Bill code */
-    background-color: white;
+    background-color: white !important;
 
     /* Disable custom font-family */
     .o_company_2_layout {
@@ -77,6 +77,7 @@ body.l10n_ch_qr{
     }
 
     .swissqr_receipt {
+        background-color: white !important;
         position: absolute;
         left: 0mm;
         top: 192mm * $l10n-ch-qr-ratio;
@@ -121,6 +122,7 @@ body.l10n_ch_qr{
     }
 
     .swissqr_body {
+        background-color: white !important;
         position: absolute;
         top: 192mm * $l10n-ch-qr-ratio;
         left: 62mm * $l10n-ch-qr-ratio;
