@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0+e\n"
+"Project-Id-Version: Odoo Server 16.4alpha1+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-29 14:31+0000\n"
-"PO-Revision-Date: 2022-03-29 14:31+0000\n"
+"POT-Creation-Date: 2023-05-31 09:04+0000\n"
+"PO-Revision-Date: 2023-05-31 09:04+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: it\n"
@@ -17,77 +17,92 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "%s has an amount of 0.0, you must indicate the kind of exoneration."
 msgstr "%s ha valore di 0.0, devi indicare il tipo di esenzione."
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "%s must have a VAT number"
 msgstr "%s deve avere una Partita IVA"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "%s must have a city."
 msgstr "%s deve avere una Cittá."
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "%s must have a codice fiscale number"
 msgstr "%s deve avere un Codice Fiscale"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "%s must have a country"
 msgstr "%s deve avere una Nazione"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "%s must have a country."
 msgstr "%s deve avere una Nazione."
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "%s must have a post code of length 5."
 msgstr "%s deve avere un CAP di lunghezza 5."
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "%s must have a post code."
 msgstr "%s deve avere un CAP."
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "%s must have a street."
 msgstr "%s deve avere un Indirizzo."
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_invoice.py:0
 #, python-format
-msgid "'Scissione dei pagamenti' is not compatible with exoneration of kind 'N6'"
-msgstr "'Scissione dei pagamenti' non è compatibile con l'esenzione di tipo 'N6'"
+msgid ""
+"'Scissione dei pagamenti' is not compatible with exoneration of kind 'N6'"
+msgstr ""
+"'Scissione dei pagamenti' non è compatibile con l'esenzione di tipo 'N6'"
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">\n"
-"                                        Fattura Elettronica mode\n"
-"                                    </span>"
-msgstr "<span class=\"o_form_label\">Modalitá Fattura Elettronica</span>"
+"                                Fattura Elettronica mode\n"
+"                            </span>\n"
+"                            <span class=\"fa fa-lg fa-building-o\" title="
+"\"Values set here are company-specific.\"/>"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Allow Odoo to process invoices</span>"
-msgstr "<span class=\"o_form_label\">Permetti ad Odoo di inviare le fatture</span>"
+msgstr ""
+"<span class=\"o_form_label\">Permetti ad Odoo di inviare le fatture</span>"
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
@@ -95,22 +110,39 @@ msgid "A Demo service is in use."
 msgstr "Un servizio Demo è in uso"
 
 #. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/account_invoice.py:0
-#, python-format
-msgid "A simplified invoice was created instead of an ordinary one. This is because the invoice                                     is a domestic invoice with a total amount of less than or equal to 400€ and the customer's address is incomplete."
-msgstr ""
-
-#. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/res_company.py:0
-#, python-format
-msgid "All fields about the Economic and Administrative Index must be completed."
-msgstr "Tutti i campi che riguardano l'Indice Economico e Amministrativo devono essere completati."
-
-#. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "All quantities should be positive."
+msgid ""
+"A simplified invoice was created instead of an ordinary one. This is because "
+"the invoice                 is a domestic invoice with a total amount of "
+"less than or equal to 400€ and the customer's address is incomplete."
 msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model,name:l10n_it_edi.model_account_chart_template
+msgid "Account Chart Template"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model,name:l10n_it_edi.model_account_edi_proxy_client_user
+msgid "Account EDI proxy user"
+msgstr ""
+
+#. module: l10n_it_edi
+#: model:ir.model,name:l10n_it_edi.model_account_move_send
+msgid "Account Move Send"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/res_company.py:0
+#, python-format
+msgid ""
+"All fields about the Economic and Administrative Index must be completed."
+msgstr ""
+"Tutti i campi che riguardano l'Indice Economico e Amministrativo devono "
+"essere completati."
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
@@ -118,18 +150,26 @@ msgid "An Official or Test service has been registered."
 msgstr "É giá stato registrato un servizio Ufficiale o di Test."
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "Attached file is empty"
 msgstr "Il file allegato è vuoto"
 
 #. module: l10n_it_edi
+#: model:ir.model,name:l10n_it_edi.model_ir_attachment
+msgid "Attachment"
+msgstr "Allegato"
+
+#. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "Attachment from XML"
 msgstr "Allegato dall'XML"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "Bank account not found, useful informations from XML file:"
@@ -141,9 +181,11 @@ msgid "By checking this box, I accept that Odoo may process my invoices."
 msgstr "Selezionando questa casella, accetto che Odoo invii le mie fatture."
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "Cannot apply Reverse Charge to a bill which contains both services and goods."
+msgid ""
+"Cannot apply Reverse Charge to a bill which contains both services and goods."
 msgstr ""
 
 #. module: l10n_it_edi
@@ -189,9 +231,21 @@ msgid "Created by"
 msgstr "Creato da"
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_invoice.py:0
+#, python-format
+msgid "Created from attachment in %s"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__create_date
 msgid "Created on"
 msgstr "Creato il"
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_line_it_FatturaPA
+msgid "Currency"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_bank_statement_line__l10n_it_ddt_id
@@ -219,16 +273,30 @@ msgid "Demo"
 msgstr "Demo"
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_edi_format__display_name
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__display_name
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax__display_name
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__l10n_it_pa_index
+#: model:ir.model.fields,field_description:l10n_it_edi.field_res_users__l10n_it_pa_index
+msgid "Destination Code"
+msgstr "Codice Destinatario"
+
+#. module: l10n_it_edi
+#: model:ir.model.constraint,message:l10n_it_edi.constraint_res_partner_l10n_it_pa_index
+msgid "Destination Code must have between 6 and 7 characters."
+msgstr "Il Codice Destinatario deve avere 6/7 caratteri"
+
+#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__display_name
-#: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__display_name
-#: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Nome visualizzato"
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#, python-format
+msgid "Document date invalid in XML file:"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_invoice.py:0
 #, python-format
 msgid "E-Invoice is generated on %s by %s"
@@ -255,6 +323,11 @@ msgid "Electronic Document Invoicing"
 msgstr "Interscambio di dati in formato elettronico"
 
 #. module: l10n_it_edi
+#: model:ir.model,name:l10n_it_edi.model_account_edi_document
+msgid "Electronic Document for an account.move"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_form_l10n_it
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_company_form_l10n_it
 msgid "Electronic Invoicing"
@@ -266,6 +339,11 @@ msgstr "Fatturazione Elettronica"
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_payment__l10n_it_einvoice_id
 msgid "Electronic invoice"
 msgstr "Fattura Elettronica"
+
+#. module: l10n_it_edi
+#: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_line_it_FatturaPA
+msgid "Exch.Rate"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax__l10n_it_kind_exoneration
@@ -293,8 +371,6 @@ msgstr "Transazione FatturaPA"
 
 #. module: l10n_it_edi
 #: model:ir.actions.server,name:l10n_it_edi.ir_cron_receive_fattura_pa_invoice_ir_actions_server
-#: model:ir.cron,cron_name:l10n_it_edi.ir_cron_receive_fattura_pa_invoice
-#: model:ir.cron,name:l10n_it_edi.ir_cron_receive_fattura_pa_invoice
 msgid "FatturaPA: Receive invoices from the exchange system"
 msgstr "FatturaPA: Ricezione fatture dal Sistema d'Interscambio"
 
@@ -309,14 +385,7 @@ msgid "Has exoneration of tax (Italy)"
 msgstr "Esente dalle tasse (Italia)"
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_edi_format__id
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move__id
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax__id
-#: model:ir.model.fields,field_description:l10n_it_edi.field_fetchmail_server__id
-#: model:ir.model.fields,field_description:l10n_it_edi.field_ir_mail_server__id
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__id
-#: model:ir.model.fields,field_description:l10n_it_edi.field_res_company__id
-#: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -326,31 +395,60 @@ msgid "INTERNAL"
 msgstr "INTERNO"
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/res_company.py:0
+#, python-format
+msgid ""
+"If one of Share Capital or Sole Shareholder is present, then they must be "
+"both filled out."
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_invoice.py:0
 #, python-format
-msgid "If the tax has exoneration, you must enter a kind of exoneration, a law reference and the amount of the tax must be 0.0."
-msgstr "Se l'Imposta risulta essere un'Esenzione, bisogna compilare il Tipo di Esenzione e il suo valore dev'essere 0.0."
+msgid ""
+"If the tax has exoneration, you must enter a kind of exoneration, a law "
+"reference and the amount of the tax must be 0.0."
+msgstr ""
+"Se l'Imposta risulta essere un'Esenzione, bisogna compilare il Tipo di "
+"Esenzione e il suo valore dev'essere 0.0."
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_config_settings_view_form
 msgid ""
-"In demo mode Odoo will just simulate the sending of invoices to the government.<br/>\n"
-"                                        In test mode (experimental) Odoo will send the invoices to a non-production service.\n"
-"                                        Saving this change will direct all companies on this database to this use this configuration.\n"
-"                                        Once registered for testing or official, the mode cannot be changed."
-msgstr "In modalità Demo, Odoo simula l'invio delle fatture all'Agenzia delle Entrate. In modalità Test (sperimentale) Odoo invia le fatture a un servizio non ufficiale. Una volta salvata l'impostazione, tutte le aziende nel database utilizzano questa configurazione. Una volta registrata, la modalità non può essere cambiata."
+"In demo mode Odoo will just simulate the sending of invoices to the "
+"government.<br/>\n"
+"                                In test mode (experimental) Odoo will send "
+"the invoices to a non-production service.\n"
+"                                Saving this change will direct all companies "
+"on this database to this use this configuration.\n"
+"                                Once registered for testing or official, the "
+"mode cannot be changed."
+msgstr ""
+"In modalità Demo, Odoo simula l'invio delle fatture all'Agenzia delle "
+"Entrate. In modalità Test (sperimentale) Odoo invia le fatture a un servizio "
+"non ufficiale. Una volta salvata l'impostazione, tutte le aziende nel "
+"database utilizzano questa configurazione. Una volta registrata, la modalità "
+"non può essere cambiata."
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "In line %s, you must select one and only one tax by line."
+msgid "In line %s, you must select one and only one tax."
 msgstr ""
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/res_partner.py:0
 #, python-format
-msgid "Invalid Codice Fiscale '%s': should be like 'MRTMTT91D08F205J' for physical person and '12345678901' or 'IT12345678901' for businesses."
-msgstr "Codice Fiscale non valido '%s': dev'essere come 'MRTMTT91D08F205J' per persone fisiche e '12345678901' o 'IT12345678901' per le aziende"
+msgid ""
+"Invalid Codice Fiscale '%s': should be like 'MRTMTT91D08F205J' for physical "
+"person and '12345670546' for businesses."
+msgstr ""
+"Codice Fiscale non valido '%s': dev'essere come 'MRTMTT91D08F205J' per "
+"persone fisiche e '12345670546' per le aziende"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__invoice_id
@@ -358,10 +456,16 @@ msgid "Invoice Reference"
 msgstr "Riferimento Fattura"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "Invoices for PA are not managed by Odoo, you can download the document and send it on your own."
-msgstr "Le Fatture per la Pubblica Amministrazione non sono gestite da Odoo. É possibile scaricare il documento e inviarlo tramite il sito dell'Agenzia delle Entrate."
+msgid ""
+"Invoices for PA are not managed by Odoo, you can download the document and "
+"send it on your own."
+msgstr ""
+"Le Fatture per la Pubblica Amministrazione non sono gestite da Odoo. É "
+"possibile scaricare il documento e inviarlo tramite il sito dell'Agenzia "
+"delle Entrate."
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_res_config_settings__is_edi_proxy_active
@@ -369,6 +473,12 @@ msgid "Is Edi Proxy Active"
 msgstr "É attivo il Proxy EDI"
 
 #. module: l10n_it_edi
+#: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_edi_proxy_client_user__proxy_type__l10n_it_edi
+msgid "Italian EDI"
+msgstr ""
+
+#. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #: code:addons/l10n_it_edi/models/account_invoice.py:0
 #, python-format
@@ -413,16 +523,6 @@ msgid "L10N It Has Tax Representative"
 msgstr "Ha rappresentante fiscale"
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_edi_format____last_update
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_move____last_update
-#: model:ir.model.fields,field_description:l10n_it_edi.field_account_tax____last_update
-#: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt____last_update
-#: model:ir.model.fields,field_description:l10n_it_edi.field_res_company____last_update
-#: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner____last_update
-msgid "Last Modified on"
-msgstr "Data Modifica"
-
-#. module: l10n_it_edi
 #: model:ir.model.fields,field_description:l10n_it_edi.field_l10n_it_ddt__write_uid
 msgid "Last Updated by"
 msgstr "Ultimo aggiornamento di"
@@ -449,14 +549,29 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_res_company__l10n_it_eco_index_share_capital
-msgid "Mandatory if the seller/provider is a company with share        capital (SpA, SApA, Srl), this field must contain the amount        of share capital actually paid up as resulting from the last        financial statement"
-msgstr "Obbligatorio se il venditore/fornitore è una azienda con capitale sociale (SpA, SApA, Srl), rappresenta l'ammontare del capitale sociale attuale come risulta dall'ultimo rendiconto finanziario."
+msgid ""
+"Mandatory if the seller/provider is a company with share        capital "
+"(SpA, SApA, Srl), this field must contain the amount        of share capital "
+"actually paid up as resulting from the last        financial statement"
+msgstr ""
+"Obbligatorio se il venditore/fornitore è una azienda con capitale sociale "
+"(SpA, SApA, Srl), rappresenta l'ammontare del capitale sociale attuale come "
+"risulta dall'ultimo rendiconto finanziario."
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_res_partner__l10n_it_pa_index
 #: model:ir.model.fields,help:l10n_it_edi.field_res_users__l10n_it_pa_index
-msgid "Must contain the 6-character (or 7) code, present in the PA              Index in the information relative to the electronic invoicing service,              associated with the office which, within the addressee administration, deals              with receiving (and processing) the invoice."
-msgstr "Deve contenere il codice da 6-7 caratteri presente nell'indice della PA nelle informazioni relative al servizio di Fatturazione Elettronica, associato all'ufficio dell'amministrazione che riceverá (ed elaborerá) la Fattura."
+msgid ""
+"Must contain the 6-character (or 7) code, present in the PA              "
+"Index in the information relative to the electronic invoicing "
+"service,              associated with the office which, within the addressee "
+"administration, deals              with receiving (and processing) the "
+"invoice."
+msgstr ""
+"Deve contenere il codice da 6-7 caratteri presente nell'indice della PA "
+"nelle informazioni relative al servizio di Fatturazione Elettronica, "
+"associato all'ufficio dell'amministrazione che riceverá (ed elaborerá) la "
+"Fattura."
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_eco_index_sole_shareholder__no
@@ -479,17 +594,6 @@ msgid "Official"
 msgstr "Ufficiale"
 
 #. module: l10n_it_edi
-#: model:ir.model.fields,field_description:l10n_it_edi.field_res_partner__l10n_it_pa_index
-#: model:ir.model.fields,field_description:l10n_it_edi.field_res_users__l10n_it_pa_index
-msgid "Destination Code"
-msgstr "Codice Destinatario"
-
-#. module: l10n_it_edi
-#: model:ir.model.constraint,message:l10n_it_edi.constraint_res_partner_l10n_it_pa_index
-msgid "Destination Code must have between 6 and 7 characters."
-msgstr "Il Codice Destinatario deve avere 6/7 caratteri"
-
-#. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_it_FatturaPA_export
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_it_simplified_FatturaPA_export
 msgid "PDF"
@@ -502,15 +606,26 @@ msgid "PEC e-mail"
 msgstr "Email PEC"
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#, python-format
+msgid "Payment due date invalid in XML file:"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_eco_index_sole_shareholder__sm
 msgid "Più soci"
 msgstr ""
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "Please fill your codice fiscale to be able to receive invoices from FatturaPA"
-msgstr "Per favore, inserire il Codice Fiscale per poter ricevere le fatture da FatturaPA"
+msgid ""
+"Please fill your codice fiscale to be able to receive invoices from FatturaPA"
+msgstr ""
+"Per favore, inserire il Codice Fiscale per poter ricevere le fatture da "
+"FatturaPA"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_res_company__l10n_it_tax_system
@@ -523,11 +638,17 @@ msgid "Province of the register-of-companies office"
 msgstr "Provincia dell'ufficio del Registro delle Imprese"
 
 #. module: l10n_it_edi
+#: model:ir.model.fields,field_description:l10n_it_edi.field_account_edi_proxy_client_user__proxy_type
+msgid "Proxy type"
+msgstr ""
+
+#. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.account_invoice_it_FatturaPA_export
 msgid "SI"
 msgstr "SI"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "Service momentarily unavailable"
@@ -574,16 +695,11 @@ msgid "Tax has a tax exoneration."
 msgstr "La tassa ha un'Esenzione."
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "Tax not found with percentage: %s and exoneration %s for the article: %s"
-msgstr "L'imposta con percentuale: %s e Esenzione %s per il prodotto: %s non è stata trovata."
-
-#. module: l10n_it_edi
-#: code:addons/l10n_it_edi/models/account_edi_format.py:0
-#, python-format
-msgid "Tax not found with percentage: %s for the article: %s"
-msgstr "L'imposta con percentuale: %s per il prodotto: %s non è stata trovata"
+msgid "Tax not found for line with description '%s'"
+msgstr ""
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_company_form_l10n_it
@@ -596,10 +712,12 @@ msgid "Tax representative partner"
 msgstr "Rappresentante fiscale del partner"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "Tax representative partner %s of %s must have a tax number."
-msgstr "Il rappresentante fiscale del partner %s di %s deve avere un codice fiscale."
+msgstr ""
+"Il rappresentante fiscale del partner %s di %s deve avere un codice fiscale."
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_config_settings__l10n_it_edi_sdicoop_demo_mode__test
@@ -607,16 +725,24 @@ msgid "Test (experimental)"
 msgstr "Test (sperimentale)"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "The buyer, %s, or his company must have a VAT number and/or a tax code (Codice Fiscale)."
+msgid ""
+"The buyer, %s, or his company must have a VAT number and/or a tax code "
+"(Codice Fiscale)."
 msgstr ""
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/res_config_settings.py:0
 #, python-format
-msgid "The company has already registered with the service as 'Test' or 'Official', it cannot change."
-msgstr "L'Azienda è giá registrata al servizio con la modalitá Test o Officiale, non può essere cambiata."
+msgid ""
+"The company has already registered with the service as 'Test' or 'Official', "
+"it cannot change."
+msgstr ""
+"L'Azienda è giá registrata al servizio con la modalitá Test o Officiale, non "
+"può essere cambiata."
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_eco_index_liquidation_state__ls
@@ -629,54 +755,109 @@ msgid "The company is not in a state of liquidation"
 msgstr "La compagnia non è in stato di liquidazione"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "The filename is duplicated. Try again (or adjust the FatturaPA Filename sequence). Original message from the SDI: %s"
+msgid ""
+"The filename is duplicated. Try again (or adjust the FatturaPA Filename "
+"sequence). Original message from the SDI: %s"
 msgstr ""
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "The invoice has been issued, but the delivery to the Addressee has failed. You will be required to send a courtesy copy of the invoice to your customer through another channel, outside of the Exchange System, and promptly notify him that the original is deposited in his personal area on the portal \"Invoices and Fees\" of the Revenue Agency."
-msgstr "La fattura è stata inviata, ma la consegna al Destinatario è fallita. É necessario mandare una copia di cortesia della fattura al cliente tramite un altro canale al di fuori dell'SdI, e notificarlo che l'originale è depositato nella sua Area Personale all' interno del portale 'Fatture e Corrispettivi' sul sito dell'Agenzia delle Entrate"
+msgid ""
+"The invoice has been correctly issued. The Public Administration recipient "
+"had 15 days to either accept or refused this document, but they did not "
+"reply, so from now on we consider it accepted."
+msgstr ""
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "The invoice has been issued, but the delivery to the Public Administration has failed. The Exchange System will contact them to report the problem and request that they provide a solution. During the following 10 days, the Exchange System will try to forward the FatturaPA file to the Public Administration in question again. Should this also fail, the System will notify Odoo of the failed delivery, and you will be required to send the invoice to the Administration through another channel, outside of the Exchange System."
-msgstr "La fattura è stata inviata, ma la consegna alla Pubblica Amministrazione è fallita. Il Sistema d'Interscambio contatterá il Destinatario per far rapporto sul problema, e richiederá che venga approntata una soluzione. Durante i 10 giorni successivi, il Sistema d'Interscambio proverá a inoltrare il file FatturaPA in questione ancora. Dovesse fallire anche questo tentativo, il sistema notificherá Odoo della mancata consegna, e sará necessario inviare la fattura tramite un altro canale, al di fuori dell'SdI"
+msgid ""
+"The invoice has been issued, but the delivery to the Addressee has failed. "
+"You will be required to send a courtesy copy of the invoice to your customer "
+"through another channel, outside of the Exchange System, and promptly notify "
+"him that the original is deposited in his personal area on the portal "
+"\"Invoices and Fees\" of the Revenue Agency."
+msgstr ""
+"La fattura è stata inviata, ma la consegna al Destinatario è fallita. É "
+"necessario mandare una copia di cortesia della fattura al cliente tramite un "
+"altro canale al di fuori dell'SdI, e notificarlo che l'originale è "
+"depositato nella sua Area Personale all' interno del portale 'Fatture e "
+"Corrispettivi' sul sito dell'Agenzia delle Entrate"
 
 #. module: l10n_it_edi
+#. odoo-python
+#: code:addons/l10n_it_edi/models/account_edi_format.py:0
+#, python-format
+msgid ""
+"The invoice has been issued, but the delivery to the Public Administration "
+"has failed. The Exchange System will contact them to report the problem and "
+"request that they provide a solution. During the following 10 days, the "
+"Exchange System will try to forward the FatturaPA file to the Public "
+"Administration in question again. Should this also fail, the System will "
+"notify Odoo of the failed delivery, and you will be required to send the "
+"invoice to the Administration through another channel, outside of the "
+"Exchange System."
+msgstr ""
+"La fattura è stata inviata, ma la consegna alla Pubblica Amministrazione è "
+"fallita. Il Sistema d'Interscambio contatterá il Destinatario per far "
+"rapporto sul problema, e richiederá che venga approntata una soluzione. "
+"Durante i 10 giorni successivi, il Sistema d'Interscambio proverá a "
+"inoltrare il file FatturaPA in questione ancora. Dovesse fallire anche "
+"questo tentativo, il sistema notificherá Odoo della mancata consegna, e sará "
+"necessario inviare la fattura tramite un altro canale, al di fuori dell'SdI"
+
+#. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "The invoice has been refused by the Exchange System"
 msgstr "La fattura è stata rifiutata dal Sistema d'Interscambio"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "The invoice has been succesfully transmitted. The addressee has 15 days to accept or reject it."
-msgstr "La fattura è stata trasmessa con successo. Il Destinatario ha 15 giorni per accettarla o rifiutarla."
+msgid ""
+"The invoice has been succesfully transmitted. The addressee has 15 days to "
+"accept or reject it."
+msgstr ""
+"La fattura è stata trasmessa con successo. Il Destinatario ha 15 giorni per "
+"accettarla o rifiutarla."
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "The invoice was refused by the addressee."
 msgstr "La fattura è stata rifiutata dal Destinatario."
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "The invoice was sent to FatturaPA, but we are still awaiting a response. Click the link above to check for an update."
+msgid ""
+"The invoice was sent to FatturaPA, but we are still awaiting a response. "
+"Click the link above to check for an update."
 msgstr ""
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "The maximum length for VAT number is 30. %s have a VAT number too long: %s."
-msgstr "La lunghezza minima per la Partita IVA è 30. %s ha una Partita IVA troppo lunga: %s."
+msgid ""
+"The maximum length for VAT number is 30. %s have a VAT number too long: %s."
+msgstr ""
+"La lunghezza minima per la Partita IVA è 30. %s ha una Partita IVA troppo "
+"lunga: %s."
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "The seller's company must have a tax system."
@@ -686,7 +867,8 @@ msgstr "L'azienda del venditore deve avere specificato un Sistema Fiscale."
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_company_form_l10n_it
 msgid ""
 "The seller/provider is a company listed on the register of companies and as\n"
-"                            such must also indicate the registration data on all documents (art. 2250, Italian\n"
+"                            such must also indicate the registration data on "
+"all documents (art. 2250, Italian\n"
 "                            Civil Code)"
 msgstr ""
 "Il venditore/fornitore è un'azienda presente nel Registro delle Imprese\n"
@@ -695,39 +877,65 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_res_company__l10n_it_has_eco_index
-msgid "The seller/provider is a company listed on the register of companies and as        such must also indicate the registration data on all documents (art. 2250, Italian        Civil Code)"
+msgid ""
+"The seller/provider is a company listed on the register of companies and "
+"as        such must also indicate the registration data on all documents "
+"(art. 2250, Italian        Civil Code)"
 msgstr ""
-"Il venditore/fornitore è un'azienda presente nel Registro delle Impresee come tale deve indicare i dati di registrazione su tutti i documenti\n"
+"Il venditore/fornitore è un'azienda presente nel Registro delle Impresee "
+"come tale deve indicare i dati di registrazione su tutti i documenti\n"
 "(art. 2250 del Codice Civile)"
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_res_company__l10n_it_has_tax_representative
-msgid "The seller/provider is a non-resident subject which        carries out transactions in Italy with relevance for VAT        purposes and which takes avail of a tax representative in        Italy"
-msgstr "Il venditore/fornitore è un soggetto non-residente che svolge le sue transazioni in Italia con rilevanza fiscale e che fa riferimento  a un rappresentante fiscale in Italia."
+msgid ""
+"The seller/provider is a non-resident subject which        carries out "
+"transactions in Italy with relevance for VAT        purposes and which takes "
+"avail of a tax representative in        Italy"
+msgstr ""
+"Il venditore/fornitore è un soggetto non-residente che svolge le sue "
+"transazioni in Italia con rilevanza fiscale e che fa riferimento  a un "
+"rappresentante fiscale in Italia."
 
 #. module: l10n_it_edi
 #: model_terms:ir.ui.view,arch_db:l10n_it_edi.res_company_form_l10n_it
 msgid ""
-"The seller/provider is a non-resident subject which carries out transactions in Italy\n"
-"                            with relevance for VAT purposes and which takes avail of a tax representative in Italy"
-msgstr "Il venditore/fornitore è un soggetto non-residente che svolge le sue transazioni in Italia con rilevanza fiscale e che fa riferimento  a un rappresentante fiscale in Italia."
+"The seller/provider is a non-resident subject which carries out transactions "
+"in Italy\n"
+"                            with relevance for VAT purposes and which takes "
+"avail of a tax representative in Italy"
+msgstr ""
+"Il venditore/fornitore è un soggetto non-residente che svolge le sue "
+"transazioni in Italia con rilevanza fiscale e che fa riferimento  a un "
+"rappresentante fiscale in Italia."
 
 #. module: l10n_it_edi
 #: model:ir.model.fields,help:l10n_it_edi.field_res_company__l10n_it_eco_index_number
-msgid "This field must contain the number under which the        seller/provider is listed on the register of companies."
-msgstr "Questo campo deve contenere il numero sotto il quale è presente nel Registro delle Imprese"
+msgid ""
+"This field must contain the number under which the        seller/provider is "
+"listed on the register of companies."
+msgstr ""
+"Questo campo deve contenere il numero sotto il quale è presente nel Registro "
+"delle Imprese"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid ""
-"This invoice number had already been submitted to the SdI, so it is set as Sent. Please verify that the system is correctly configured, because the correct flow does not need to send the same invoice twice for any reason.\n"
+"This invoice number had already been submitted to the SdI, so it is set as "
+"Sent. Please verify that the system is correctly configured, because the "
+"correct flow does not need to send the same invoice twice for any reason.\n"
 " Original message from the SDI: %s"
 msgstr ""
-"Una fattura con questo numero è giá stata inviata all'SdI, quindi viene impostata come inviata. Per favore, verificare che il sistema sia configurato correttamente, perchè in nessun caso il sistema ha motivo di inviare la stessa fattura più volte.\n"
+"Una fattura con questo numero è giá stata inviata all'SdI, quindi viene "
+"impostata come inviata. Per favore, verificare che il sistema sia "
+"configurato correttamente, perchè in nessun caso il sistema ha motivo di "
+"inviare la stessa fattura più volte.\n"
 "Messaggio originale dall'SdI: %s"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "Total amount from the XML File: %s"
@@ -750,12 +958,14 @@ msgid "Transport document number"
 msgstr "Numero Documento Di Trasporto"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "Transport informations from XML file:"
 msgstr "Informazioni di Trasporto dal file XML:"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "Unauthorized user"
@@ -767,42 +977,54 @@ msgid "VAT due date"
 msgstr "Data scadenza IVA"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "Vendor bills sent as self-invoices to the SdI require a valid PA Index (Codice Destinatario) on the company's contact."
+msgid ""
+"Vendor bills sent as self-invoices to the SdI require a valid PA Index "
+"(Codice Destinatario) on the company's contact."
 msgstr ""
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "Vendor not found, useful informations from XML file:"
 msgstr "Fornitore non trovato, informazioni dal file XML:"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "You are not allowed to check the status of this invoice."
 msgstr "Non sei autorizzato a controllare lo stato di questa fattura."
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
-msgid "You must accept the terms and conditions in the settings to use FatturaPA."
-msgstr "Devi accettare i Termini e le Condizioni d'uso nelle impostazioni per poter utilizzare FatturaPA."
+msgid ""
+"You must accept the terms and conditions in the settings to use FatturaPA."
+msgstr ""
+"Devi accettare i Termini e le Condizioni d'uso nelle impostazioni per poter "
+"utilizzare FatturaPA."
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 #, python-format
 msgid "You must select a tax representative."
 msgstr "Devi selezionare un rappresentante fiscale"
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 #, python-format
 msgid "Your tax representative partner must have a country."
 msgstr "Il tuo rappresentante fiscale deve avere una Nazione."
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/res_company.py:0
 #, python-format
 msgid "Your tax representative partner must have a tax number."
@@ -825,7 +1047,9 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n2_1
-msgid "[N2.1] Non soggette ad IVA ai sensi degli artt. Da 7 a 7-septies del DPR 633/72"
+msgid ""
+"[N2.1] Non soggette ad IVA ai sensi degli artt. Da 7 a 7-septies del DPR "
+"633/72"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -855,7 +1079,8 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n3_4
-msgid "[N3.4] Non imponibili – operazioni assimilate alle cessioni all’esportazione"
+msgid ""
+"[N3.4] Non imponibili – operazioni assimilate alle cessioni all’esportazione"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -865,7 +1090,9 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n3_6
-msgid "[N3.6] Non imponibili – altre operazioni che non concorrono alla formazione del plafond"
+msgid ""
+"[N3.6] Non imponibili – altre operazioni che non concorrono alla formazione "
+"del plafond"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -885,7 +1112,9 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n6_1
-msgid "[N6.1] Inversione contabile – cessione di rottami e altri materiali di recupero"
+msgid ""
+"[N6.1] Inversione contabile – cessione di rottami e altri materiali di "
+"recupero"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -915,7 +1144,8 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n6_7
-msgid "[N6.7] Inversione contabile – prestazioni comparto edile esettori connessi"
+msgid ""
+"[N6.7] Inversione contabile – prestazioni comparto edile esettori connessi"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -930,12 +1160,18 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n6
-msgid "[N6] Inversione contabile (per le operazioni in reverse charge ovvero nei casi di autofatturazione per acquisti extra UE di servizi ovvero per importazioni di beni nei soli casi previsti)"
+msgid ""
+"[N6] Inversione contabile (per le operazioni in reverse charge ovvero nei "
+"casi di autofatturazione per acquisti extra UE di servizi ovvero per "
+"importazioni di beni nei soli casi previsti)"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__account_tax__l10n_it_kind_exoneration__n7
-msgid "[N7] IVA assolta in altro stato UE (vendite a distanza ex art. 40 c. 3 e 4 e art. 41 c. 1 lett. b,  DL 331/93; prestazione di servizi di telecomunicazioni, tele-radiodiffusione ed elettronici ex art. 7-sexies lett. f, g, art. 74-sexies DPR 633/72)"
+msgid ""
+"[N7] IVA assolta in altro stato UE (prestazione di servizi di "
+"telecomunicazioni, tele-radiodiffusione ed elettronici ex art. 7-octies, "
+"comma 1 lett. a, b, art. 74-sexies DPR 633/72)"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -950,7 +1186,8 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_tax_system__rf04
-msgid "[RF04] Agricoltura e attività connesse e pesca (artt.34 e 34-bis, DPR 633/72)"
+msgid ""
+"[RF04] Agricoltura e attività connesse e pesca (artt.34 e 34-bis, DPR 633/72)"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -975,12 +1212,16 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_tax_system__rf09
-msgid "[RF09] Rivendita documenti di trasporto pubblico e di sosta (art.74, c.1, DPR  633/72)"
+msgid ""
+"[RF09] Rivendita documenti di trasporto pubblico e di sosta (art.74, c.1, "
+"DPR  633/72)"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_tax_system__rf10
-msgid "[RF10] Intrattenimenti, giochi e altre attività di cui alla tariffa allegata al DPR 640/72 (art.74, c.6, DPR 633/72)"
+msgid ""
+"[RF10] Intrattenimenti, giochi e altre attività di cui alla tariffa allegata "
+"al DPR 640/72 (art.74, c.6, DPR 633/72)"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1000,12 +1241,16 @@ msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_tax_system__rf14
-msgid "[RF14] Rivendita beni usati, oggetti d’arte, d’antiquariato o da collezione (art.36, DL 41/95)"
+msgid ""
+"[RF14] Rivendita beni usati, oggetti d’arte, d’antiquariato o da collezione "
+"(art.36, DL 41/95)"
 msgstr ""
 
 #. module: l10n_it_edi
 #: model:ir.model.fields.selection,name:l10n_it_edi.selection__res_company__l10n_it_tax_system__rf15
-msgid "[RF15] Agenzie di vendite all’asta di oggetti d’arte, antiquariato o da collezione (art.40-bis, DL 41/95)"
+msgid ""
+"[RF15] Agenzie di vendite all’asta di oggetti d’arte, antiquariato o da "
+"collezione (art.40-bis, DL 41/95)"
 msgstr ""
 
 #. module: l10n_it_edi
@@ -1034,7 +1279,21 @@ msgid "[S] Scissione dei pagamenti"
 msgstr ""
 
 #. module: l10n_it_edi
+#. odoo-python
 #: code:addons/l10n_it_edi/models/account_edi_format.py:0
 #, python-format
 msgid "from XML file:"
 msgstr "dal file XML:"
+
+#~ msgid "Last Modified on"
+#~ msgstr "Data Modifica"
+
+#~ msgid ""
+#~ "Tax not found with percentage: %s and exoneration %s for the article: %s"
+#~ msgstr ""
+#~ "L'imposta con percentuale: %s e Esenzione %s per il prodotto: %s non è "
+#~ "stata trovata."
+
+#~ msgid "Tax not found with percentage: %s for the article: %s"
+#~ msgstr ""
+#~ "L'imposta con percentuale: %s per il prodotto: %s non è stata trovata"
