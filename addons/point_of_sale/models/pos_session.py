@@ -1752,8 +1752,8 @@ class PosSession(models.Model):
             aggregates=["factor_percent:sum"],
         )
         tax_id_to_factor_sum = {tax.id: factor_sum / 100 for tax, factor_sum in groups}
-        for tax in taxes:
-            tax['sum_repartition_factor'] = tax_id_to_factor_sum[tax['id']]
+        for tax in filter(lambda t: t['amount_type'] != 'group', taxes):
+            tax['sum_repartition_factor'] = tax_id_to_factor_sum.get(tax['id'], 0)
 
         return taxes
 
