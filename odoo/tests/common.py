@@ -298,6 +298,7 @@ class MetaCase(type):
             cls.test_tags = {'standard', 'at_install'}
             cls.test_module = cls.__module__.split('.')[2]
             cls.test_class = cls.__name__
+            cls.test_sequence = 0
 
 
 class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
