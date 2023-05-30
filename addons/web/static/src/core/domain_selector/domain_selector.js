@@ -192,7 +192,7 @@ export class DomainSelector extends Component {
         const pathInfo = { path, fieldDef };
         node.pathInfo = pathInfo;
         node.operatorInfo = getOperatorsInfo(pathInfo.fieldDef)[0];
-        node.value = getDefaultFieldValue(pathInfo.fieldDef);
+        node.value = getDefaultFieldValue(pathInfo.fieldDef, node.operatorInfo.key);
         this.notifyChanges();
     }
 
@@ -213,12 +213,18 @@ export class DomainSelector extends Component {
                 }
                 // binary operator with a non array value
                 case 1: {
-                    node.value = getDefaultFieldValue(node.pathInfo.fieldDef);
+                    node.value = getDefaultFieldValue(
+                        node.pathInfo.fieldDef,
+                        node.operatorInfo.key
+                    );
                     break;
                 }
                 // binary operator with a fixed sized array value
                 default: {
-                    const defaultValue = getDefaultFieldValue(node.pathInfo.fieldDef);
+                    const defaultValue = getDefaultFieldValue(
+                        node.pathInfo.fieldDef,
+                        node.operatorInfo.key
+                    );
                     node.value = Array(node.operatorInfo.valueCount).fill(defaultValue);
                     break;
                 }
@@ -237,7 +243,10 @@ export class DomainSelector extends Component {
     }
 
     removeExprValue(node) {
-        this.updateLeafValue(node, getDefaultFieldValue(node.pathInfo.fieldDef));
+        this.updateLeafValue(
+            node,
+            getDefaultFieldValue(node.pathInfo.fieldDef, node.operatorInfo.key)
+        );
     }
 
     onDebugValueChange(value) {

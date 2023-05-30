@@ -388,12 +388,12 @@ export function getOperatorsInfo(fieldDef) {
     return selectOperators(descr.operators);
 }
 
-export function getDefaultFieldValue(fieldDef) {
+export function getDefaultFieldValue(fieldDef, operatorKey) {
     const descr = getFieldInfo(fieldDef);
-    return descr.defaultValue(fieldDef);
+    return descr.defaultValue(fieldDef, operatorKey);
 }
 
 export function getDefaultOperator(fieldDef) {
     const [firstOperator] = getOperatorsInfo(fieldDef);
-    return firstOperator.symbol;
+    return firstOperator;
 }
