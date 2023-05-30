@@ -17,11 +17,11 @@
         <field name="weight">0.01</field>
         <field name="to_weight">True</field>
         <field name="barcode">2100002000003</field>
-        <field name="taxes_id" eval='[(5,)]'/>
+        <field name="taxes_id" eval="[(5,)]"/>
         <field name="categ_id" ref="product.product_category_1"/>
-        <field name="pos_categ_id" ref="pos_category_furniture"/>
-        <field name="uom_id" ref="uom.product_uom_unit" />
-        <field name="uom_po_id" ref="uom.product_uom_unit" />
+        <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_furniture')])]"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
         <field name="image_1920" type="base64" file="point_of_sale/static/img/wall_shelf_unit.png"/>
     </record>
 
@@ -32,12 +32,12 @@
         <field name="default_code">FURN_0008</field>
         <field name="type">product</field>
         <field name="weight">0.01</field>
-        <field name="taxes_id" eval='[(5,)]'/>
+        <field name="taxes_id" eval="[(5,)]"/>
         <field name="categ_id" ref="product.product_category_1"/>
-        <field name="pos_categ_id" ref="pos_category_furniture"/>
+        <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_furniture')])]"/>
         <field name="to_weight">True</field>
-        <field name="uom_id" ref="uom.product_uom_unit" />
-        <field name="uom_po_id" ref="uom.product_uom_unit" />
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
         <field name="image_1920" type="base64" file="point_of_sale/static/img/small_shelf.png"/>
     </record>
 
@@ -50,9 +50,9 @@
         <field name="weight">0.01</field>
         <field name="to_weight">True</field>
         <field name="categ_id" ref="product.product_category_1"/>
-        <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-        <field name="uom_id" ref="uom.product_uom_unit" />
-        <field name="uom_po_id" ref="uom.product_uom_unit" />
+        <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
         <field name="image_1920" type="base64" file="point_of_sale/static/img/monitor_stand.png"/>
     </record>
 
@@ -66,9 +66,9 @@
         <field name="type">product</field>
         <field name="weight">0.01</field>
         <field name="categ_id" ref="product.product_category_1"/>
-        <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-        <field name="uom_id" ref="uom.product_uom_unit" />
-        <field name="uom_po_id" ref="uom.product_uom_unit" />
+        <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
         <field name="image_1920" type="base64" file="point_of_sale/static/img/desk_organizer.png"/>
     </record>
 
@@ -80,9 +80,9 @@
         <field name="default_code">CONS_0001</field>
         <field name="to_weight">True</field>
         <field name="categ_id" ref="product.product_category_1"/>
-        <field name="pos_categ_id" ref="pos_category_miscellaneous"/>
-        <field name="uom_id" ref="uom.product_uom_unit" />
-        <field name="uom_po_id" ref="uom.product_uom_unit" />
+        <field name="pos_categ_ids" eval="[(6, 0, [ref('pos_category_miscellaneous')])]"/>
+        <field name="uom_id" ref="uom.product_uom_unit"/>
+        <field name="uom_po_id" ref="uom.product_uom_unit"/>
         <field name="image_1920" type="base64" file="point_of_sale/static/img/whiteboard_pen.png"/>
     </record>
 </odoo>

@@ -654,7 +654,10 @@ class PosConfig(models.Model):
                         t.available_in_pos
                     AND t.sale_ok
                     AND (t.company_id=%(company_id)s OR t.company_id IS NULL)
-                    AND %(available_categ_ids)s IS NULL OR t.pos_categ_id=ANY(%(available_categ_ids)s)
+                    AND (%(available_categ_ids)s IS NULL OR EXISTS (
+                        SELECT 1 FROM pos_category_product_template_rel
+                        WHERE product_template_id = t.id
+                        AND pos_category_id = ANY(%(available_categ_ids)s)))
                 )    OR p.id=%(tip_product_id)s
              ORDER BY t.priority DESC,
                       t.detailed_type DESC,

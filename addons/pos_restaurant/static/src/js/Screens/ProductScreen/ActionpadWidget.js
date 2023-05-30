@@ -8,9 +8,7 @@ import { nbsp } from "@web/core/utils/strings";
 
 patch(ActionpadWidget.prototype, "point_of_sale.ActionpadWidget", {
     get swapButton() {
-        return (
-            this.props.actionType === "payment" && this.pos.config.module_pos_restaurant
-        );
+        return this.props.actionType === "payment" && this.pos.config.module_pos_restaurant;
     },
     get currentOrder() {
         return this.pos.get_order();
@@ -57,8 +55,8 @@ patch(ActionpadWidget.prototype, "point_of_sale.ActionpadWidget", {
         const orderChange = this.currentOrder.getOrderChanges().orderlines;
         for (const idx in orderChange) {
             const orderline = orderChange[idx];
-            const category = this.pos.db.get_product_by_id(orderline.product_id)
-                .pos_categ_id[1];
+            const categoryId = this.pos.db.get_product_by_id(orderline.product_id).pos_categ_ids[0];
+            const category = this.pos.db.category_by_id[categoryId].name;
             const numProd = orderline.quantity;
             categories[category] = categories[category] ? categories[category] + numProd : numProd;
         }

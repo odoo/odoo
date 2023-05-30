@@ -101,7 +101,7 @@ class ProductProduct(models.Model):
                 "name": product._get_name(),
                 "product_id": product.id,
                 "description_sale": product.description_sale,
-                "tag": product.pos_categ_id.name if product.pos_categ_id else "Other",
+                "tags": product.pos_categ_ids.mapped("name") or ["Other"],
                 "is_pos_groupable": product.uom_id.is_pos_groupable,
             }
             for product in self

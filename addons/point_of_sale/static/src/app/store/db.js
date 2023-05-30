@@ -133,17 +133,7 @@ export class PosDB {
         }
         make_ancestors(this.root_category_id, []);
     }
-    category_contains(categ_id, product_id) {
-        var product = this.product_by_id[product_id];
-        if (product) {
-            var cid = product.pos_categ_id[0];
-            while (cid && cid !== categ_id) {
-                cid = this.category_parent[cid];
-            }
-            return !!cid;
-        }
-        return false;
-    }
+
     /* loads a record store from the database. returns default if nothing is found */
     load(store, deft) {
         if (CACHE[store] !== undefined) {
@@ -193,33 +183,35 @@ export class PosDB {
             }
             if (product.available_in_pos) {
                 var search_string = unaccent(this._product_search_string(product));
-                var categ_id = product.pos_categ_id
-                    ? product.pos_categ_id[0]
-                    : this.root_category_id;
+                const all_categ_ids = product.pos_categ_ids.length
+                    ? product.pos_categ_ids
+                    : [this.root_category_id];
                 product.product_tmpl_id = product.product_tmpl_id[0];
-                if (!stored_categories[categ_id]) {
-                    stored_categories[categ_id] = [];
-                }
-                stored_categories[categ_id].push(product.id);
-
-                if (this.category_search_string[categ_id] === undefined) {
-                    this.category_search_string[categ_id] = "";
-                }
-                this.category_search_string[categ_id] += search_string;
-
-                var ancestors = this.get_category_ancestors_ids(categ_id) || [];
-
-                for (var j = 0, jlen = ancestors.length; j < jlen; j++) {
-                    var ancestor = ancestors[j];
-                    if (!stored_categories[ancestor]) {
-                        stored_categories[ancestor] = [];
+                for (const categ_id of all_categ_ids) {
+                    if (!stored_categories[categ_id]) {
+                        stored_categories[categ_id] = [];
                     }
-                    stored_categories[ancestor].push(product.id);
+                    stored_categories[categ_id].push(product.id);
 
-                    if (this.category_search_string[ancestor] === undefined) {
-                        this.category_search_string[ancestor] = "";
+                    if (this.category_search_string[categ_id] === undefined) {
+                        this.category_search_string[categ_id] = "";
                     }
-                    this.category_search_string[ancestor] += search_string;
+                    this.category_search_string[categ_id] += search_string;
+
+                    var ancestors = this.get_category_ancestors_ids(categ_id) || [];
+
+                    for (var j = 0, jlen = ancestors.length; j < jlen; j++) {
+                        var ancestor = ancestors[j];
+                        if (!stored_categories[ancestor]) {
+                            stored_categories[ancestor] = [];
+                        }
+                        stored_categories[ancestor].push(product.id);
+
+                        if (this.category_search_string[ancestor] === undefined) {
+                            this.category_search_string[ancestor] = "";
+                        }
+                        this.category_search_string[ancestor] += search_string;
+                    }
                 }
             }
             this.product_by_id[product.id] = product;
@@ -408,13 +400,18 @@ export class PosDB {
         }
         return undefined;
     }
+
+    shouldAddProduct(product, list) {
+        return product.active && product.available_in_pos && !list.includes(product);
+    }
+
     get_product_by_category(category_id) {
         var product_ids = this.product_by_category_id[category_id];
         var list = [];
         if (product_ids) {
             for (var i = 0, len = Math.min(product_ids.length, this.limit); i < len; i++) {
                 const product = this.product_by_id[product_ids[i]];
-                if (!(product.active && product.available_in_pos)) {
+                if (!this.shouldAddProduct(product, list)) {
                     continue;
                 }
                 list.push(product);
@@ -441,7 +438,7 @@ export class PosDB {
             if (r) {
                 var id = Number(r[1]);
                 const product = this.get_product_by_id(id);
-                if (!(product.active && product.available_in_pos)) {
+                if (!this.shouldAddProduct(product, results)) {
                     continue;
                 }
                 results.push(product);
@@ -451,22 +448,41 @@ export class PosDB {
         }
         return results;
     }
-    /* from a product id, and a list of category ids, returns
-     * true if the product belongs to one of the provided category
+    /**
+     * returns true if the product belongs to one of the provided categories
      * or one of its child categories.
+     * @param {number[]} category_ids
+     * @param {number} product_id
+     * @returns {boolean}
      */
     is_product_in_category(category_ids, product_id) {
-        let cat = this.get_product_by_id(product_id).pos_categ_id[0];
-        while (cat) {
-            for (const cat_id of category_ids) {
-                if (cat == cat_id) {
-                    // The == is important, ids may be strings
-                    return true;
-                }
-            }
-            cat = this.get_category_parent_id(cat);
-        }
-        return false;
+        const product_categ_ids = this.get_product_by_id(product_id).pos_categ_ids;
+        return this.any_of_is_subcategory(product_categ_ids, category_ids);
+    }
+
+    /**
+     * Recursively check if any of `subcategory_ids` belongs to any of the `category_ids`
+     * @param {number[]} subcategory_ids
+     * @param {number[]} category_ids
+     * @returns {boolean}
+     */
+    any_of_is_subcategory(subcategory_ids, category_ids) {
+        return subcategory_ids.some((subcategory_id) =>
+            this.is_subcategory(subcategory_id, category_ids)
+        );
+    }
+    /**
+     * Recursively check if a `subcategory_id` a child of any of the provided `category_ids`.
+     * @param {number} subcategory_id
+     * @param {number[]} category_ids
+     * @returns {boolean}
+     */
+    is_subcategory(subcategory_id, category_ids) {
+        const check = (categ_id) => categ_id && this.is_subcategory(categ_id, category_ids);
+        return (
+            category_ids.includes(Number(subcategory_id)) ||
+            check(this.get_category_parent_id(subcategory_id))
+        );
     }
 
     /* paid orders */

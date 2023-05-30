@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
+from typing import List, Tuple
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 
@@ -24,14 +27,13 @@ class PosCategory(models.Model):
     # field to determine whether a pos.category has an image or not.
     has_image = fields.Boolean(compute='_compute_has_image')
 
-    def name_get(self):
-        def get_names(cat):
-            res = []
-            while cat:
-                res.append(cat.name)
-                cat = cat.parent_id
-            return res
-        return [(cat.id, " / ".join(reversed(get_names(cat)))) for cat in self if cat.name]
+    def _get_hierarchy(self) -> List[str]:
+        """ Returns a list representing the hierarchy of the categories. """
+        self.ensure_one()
+        return (self.parent_id._get_hierarchy() if self.parent_id else []) + [self.name]
+
+    def name_get(self) -> List[Tuple[int, str]]:
+        return [(category.id, " / ".join(category._get_hierarchy())) for category in self if category.name]
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_session_open(self):
