@@ -65,7 +65,9 @@ class ResPartner(models.Model):
         participant = f'{self.peppol_eas}:{self.peppol_endpoint}'.lower()
         hash_participant = md5(participant.lower().encode()).hexdigest()
         endpoint_participant = parse.quote_plus(f"iso6523-actorid-upis::{participant}")
-        smp_url = f"http://B-{hash_participant}.iso6523-actorid-upis.edelivery.tech.ec.europa.eu/{endpoint_participant}"
+        peppol_param = self.env['ir.config_parameter'].sudo().get_param('account_peppol.edi.mode', False)
+        sml_zone = 'acc.edelivery' if peppol_param == 'test' else 'edelivery'
+        smp_url = f"http://B-{hash_participant}.iso6523-actorid-upis.{sml_zone}.tech.ec.europa.eu/{endpoint_participant}"
         self.account_peppol_validity_last_check = fields.Date.context_today(self)
         try:
             response = requests.get(smp_url, timeout=TIMEOUT)

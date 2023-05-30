@@ -65,7 +65,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             'partner_id': cls.env.company.partner_id.id,
         })
 
-    def create_move(self, partner, account_revenue=False, account_expense=False):
+    def create_move(self, partner):
         return self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': partner.id,

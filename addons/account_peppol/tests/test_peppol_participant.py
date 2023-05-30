@@ -3,10 +3,11 @@
 from contextlib import contextmanager
 from freezegun import freeze_time
 from unittest.mock import Mock, patch
+from psycopg2 import IntegrityError
 
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import ValidationError
 from odoo.tests.common import tagged, TransactionCase
-from odoo.tools import file_open
+from odoo.tools import mute_logger
 
 ID_CLIENT = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
 FAKE_UUID = 'yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy'
@@ -31,6 +32,10 @@ class TestPeppolParticipant(TransactionCase):
             elif url.endswith('/iap/account_edi/2/create_user'):
                 response.json = lambda: {'result': {
                     'id_client': ID_CLIENT, 'refresh_token': FAKE_UUID}}
+            elif url.endswith('/api/peppol/1/send_verification_code')\
+                    or url.endswith('/api/peppol/1/update_user')\
+                    or url.endswith('/api/peppol/1/verify_phone_number'):
+                response.json = lambda: {'result': {}}
             else:
                 raise Exception(f'Unexpected request: {url}')
 
@@ -60,20 +65,19 @@ class TestPeppolParticipant(TransactionCase):
             'is_account_peppol_participant': True,
             'account_peppol_eas': '9925',
             'account_peppol_endpoint': '0000000000',
+            'account_peppol_phone_number': '+32483123456',
         })
         company = self.env.company
-
-        with file_open(PDF_FILE_PATH, 'rb') as pdf_file:
-            settings.account_peppol_attachment_ids = self.env['ir.attachment'].create({
-                'mimetype': 'application/pdf',
-                'name': 'peppol_id_test.pdf',
-                'raw': pdf_file.read(),
-            }).ids
 
         settings.execute()
 
         with self._patch_peppol_requests():
             settings.button_create_peppol_proxy_user()
+            self.assertEqual(company.account_peppol_proxy_state, 'not_verified')
+            settings.button_send_peppol_verification_code()
+            self.assertEqual(company.account_peppol_proxy_state, 'sent_verification')
+            settings.account_peppol_verification_code = '123456'
+            settings.button_check_peppol_verification_code()
             self.assertEqual(company.account_peppol_proxy_state, 'pending')
             self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
             self.assertEqual(company.account_peppol_proxy_state, 'active')
@@ -86,24 +90,19 @@ class TestPeppolParticipant(TransactionCase):
             'is_account_peppol_participant': True,
             'account_peppol_eas': '9925',
             'account_peppol_endpoint': '0000000000',
+            'account_peppol_phone_number': '+32483123456',
         })
         company = self.env.company
-
-        with file_open(PDF_FILE_PATH, 'rb') as pdf_file:
-            settings.account_peppol_attachment_ids = self.env['ir.attachment'].create({
-                'mimetype': 'application/pdf',
-                'name': 'peppol_id_test.pdf',
-                'raw': pdf_file.read(),
-            }).ids
 
         settings.execute()
 
         with self._patch_peppol_requests(reject=True):
             settings.button_create_peppol_proxy_user()
-            self.assertEqual(company.account_peppol_proxy_state, 'pending')
+            company.account_peppol_proxy_state = 'pending'
             self.env['account_edi_proxy_client.user']._cron_peppol_get_participant_status()
             self.assertEqual(company.account_peppol_proxy_state, 'rejected')
 
+    @mute_logger('odoo.sql_db')
     def test_create_duplicate_participant(self):
         # should not be possible to create a duplicate participant
         settings = self.env['res.config.settings'].create({})
@@ -111,19 +110,13 @@ class TestPeppolParticipant(TransactionCase):
             'is_account_peppol_participant': True,
             'account_peppol_eas': '9925',
             'account_peppol_endpoint': '0000000000',
+            'account_peppol_phone_number': '+32483123456',
         })
-
-        with file_open(PDF_FILE_PATH, 'rb') as pdf_file:
-            settings.account_peppol_attachment_ids = self.env['ir.attachment'].create({
-                'mimetype': 'application/pdf',
-                'name': 'peppol_id_test.pdf',
-                'raw': pdf_file.read(),
-            }).ids
 
         settings.execute()
 
         with self._patch_peppol_requests():
             settings.button_create_peppol_proxy_user()
-            self.assertEqual(settings.account_peppol_proxy_state, 'pending')
-            with self.assertRaises(UserError), self.cr.savepoint():
+            with self.assertRaises(IntegrityError), self.cr.savepoint():
+                settings.account_peppol_proxy_state = 'not_registered'
                 settings.button_create_peppol_proxy_user()

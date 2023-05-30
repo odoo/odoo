@@ -46,7 +46,7 @@ EAS_MAPPING = {
     'AT': {'9915': 'vat'},
     'AU': {'0151': 'vat'},
     'BA': {'9924': 'vat'},
-    'BE': {'9925': 'vat'},
+    'BE': {'9925': 'vat', '0208': 'company_registry'},
     'BG': {'9926': 'vat'},
     'CH': {'9927': 'vat'},
     'CY': {'9928': 'vat'},

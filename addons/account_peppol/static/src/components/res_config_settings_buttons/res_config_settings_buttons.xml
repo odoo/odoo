@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates>
+    <t t-name="account_peppol.ActionButtons" owl="1">
+        <xpath expr="//div[hasclass('action_buttons')]" position="inside">
+            <div class="d-flex" colspan="2">
+                <div class="mt-3">
+                    <button type="button"
+                            class="btn btn-primary"
+                            t-on-click="createUser"
+                            t-if="proxyState === 'not_registered'">
+                            Validate registration
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <button type="button"
+                            class="btn btn-secondary me-1"
+                            t-on-click="showConfirmation"
+                            t-if="proxyState === 'active'">
+                            Migrate registration to another service
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <button type="button"
+                            class="btn btn-primary"
+                            t-on-click="updateDetails"
+                            t-if="['pending', 'manually_approved', 'active'].includes(proxyState)">
+                            Update contact details
+                    </button>
+                </div>
+                <div class="mt-3">
+                    <button type="button"
+                            class="btn btn-primary"
+                            t-on-click="checkCode"
+                            t-if="proxyState === 'sent_verification'">
+                            Confirm
+                    </button>
+                </div>
+            </div>
+        </xpath>
+    </t>
+</templates>
