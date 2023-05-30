@@ -144,21 +144,18 @@
 
     <t t-name="web._DomainSelector.condition:readonly" owl="1">
         <ModelFieldSelector path="node.path" resModel="props.resModel" readonly="true" />
-        <t t-if="typeof node.value === 'boolean'">is<t t-if="node.value ? ['is_not', '!='].includes(node.operator) : ['is', '='].includes(node.operator)"> not</t> set</t>
-        <t t-else="">
-            <t t-set="operatorInfo" t-value="getOperatorInfo(node)" />
-            <span class="o_domain_leaf_operator"> <t t-esc="operatorInfo.label" /></span>
-            <t t-set="values" t-value="Array.isArray(node.value) ? node.value : [node.value]" />
-            <t t-set="operator" t-value="operatorInfo.operator" />
-            <t t-set="connector" t-value="operatorInfo.operator === 'between' ? 'and' : 'or'" />
-            <t t-foreach="values" t-as="value" t-key="value_index">
-                <span class="o_domain_leaf_value text-primary">
-                    <t t-if="typeof value === 'string'"> "<t t-esc="value"/>"</t>
-                    <t t-elif="isExprValue(value)"> <t t-esc="node.value.expr"/></t>
-                    <t t-else=""> <t t-esc="value"/></t>
-                </span>
-                <t t-if="!value_last"> <t t-esc="connector" /> </t>
+        <t t-set="description" t-value="getDescription(node)"/>
+        <span class="o_domain_leaf_operator"> <t t-esc="description.operatorDescription" /> </span>
+        <t t-if="description.valueDescription">
+            <t t-set="values" t-value="description.valueDescription.values"/>
+            <t t-set="join" t-value="description.valueDescription.join"/>
+            <t t-set="addParenthesis" t-value="description.valueDescription.addParenthesis"/>
+            <t t-if="addParenthesis">( </t>
+            <t t-foreach="values" t-as="val" t-key="val_index">
+                <span class="o_domain_leaf_value text-primary"><t t-esc="val"/></span>
+                <t t-if="!val_last"> <t t-esc="join" /> </t>
             </t>
+            <t t-if="addParenthesis"> )</t>
         </t>
     </t>
 

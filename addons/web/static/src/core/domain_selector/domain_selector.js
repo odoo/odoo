@@ -4,8 +4,11 @@ import {
     buildDomain,
     buildDomainSelectorTree,
     cloneTree,
+    extractIdsFromDomain,
     extractPathsFromDomain,
+    leafToString,
     useGetDefaultLeafDomain,
+    useLoadDisplayNames,
 } from "@web/core/domain_selector/utils";
 import { Component, onWillStart, onWillUpdateProps } from "@odoo/owl";
 import { Domain } from "@web/core/domain";
@@ -52,6 +55,7 @@ export class DomainSelector extends Component {
 
     setup() {
         this.getDefaultLeafDomain = useGetDefaultLeafDomain();
+        this.loadDisplayNames = useLoadDisplayNames();
         this.loadFieldInfo = useLoadFieldInfo();
         this.tree = null;
         onWillStart(() => this.onPropsUpdated(this.props));
@@ -96,6 +100,11 @@ export class DomainSelector extends Component {
         ]);
 
         await this.loadFieldDefs(p.resModel, paths);
+
+        if (p.readonly) {
+            const idsByModel = extractIdsFromDomain(domain, this.getFieldDef.bind(this));
+            this.displayNames = await this.loadDisplayNames(idsByModel);
+        }
 
         const options = {
             defaultConnector: p.defaultConnector,
@@ -181,6 +190,13 @@ export class DomainSelector extends Component {
         const index = parent.children.indexOf(node);
         parent.children.splice(index, 1);
         this.notifyChanges();
+    }
+
+    getDescription(node) {
+        const { path, value } = node;
+        const fieldDef = this.getFieldDef(path);
+        const operatorInfo = this.getOperatorInfo(node);
+        return leafToString(fieldDef, operatorInfo, value, this.displayNames[fieldDef?.relation]);
     }
 
     resetDomain() {
