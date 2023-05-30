@@ -1750,8 +1750,8 @@ class PosSession(models.Model):
             groupby=["tax_id"],
         )
         tax_id_to_factor_sum = {g['tax_id'][0]: g['factor_percent']/100 for g in groups}
-        for tax in taxes:
-            tax['sum_repartition_factor'] = tax_id_to_factor_sum[tax['id']]
+        for tax in filter(lambda t: t['amount_type'] != 'group', taxes):
+            tax['sum_repartition_factor'] = tax_id_to_factor_sum.get(tax['id'], 0)
 
         return taxes
 
