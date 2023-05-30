@@ -353,7 +353,7 @@ class ReportBomStructure(models.AbstractModel):
         company = bom.company_id or self.env.company
         operation_index = 0
         for operation in bom.operation_ids:
-            if operation._skip_operation_line(product):
+            if not product or operation._skip_operation_line(product):
                 continue
             capacity = operation.workcenter_id._get_capacity(product)
             operation_cycle = float_round(qty / capacity, precision_rounding=1, rounding_method='UP')
