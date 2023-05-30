@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import pytz
 
 from collections import defaultdict
@@ -8,10 +9,12 @@ from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, exceptions, fields, models, _, Command
+from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools import is_html_empty
 from odoo.tools.misc import clean_context, get_lang
 
+_logger = logging.getLogger(__name__)
 
 class MailActivity(models.Model):
     """ An actual activity to perform. Activities are linked to
@@ -616,6 +619,31 @@ class MailActivity(models.Model):
             'activity_res_ids': sorted(res_id_to_deadline, key=lambda item: res_id_to_deadline[item]),
             'grouped_activities': activity_data,
         }
+
+    # ----------------------------------------------------------------------
+    # CRON
+    # ----------------------------------------------------------------------
+
+    def _cron_delete_activities_of_archived_users(self, batch_size=1000):
+        """
+        Delete activities of archived users
+        :param batch_size: Max number of activities to delete per cron trigger
+        """
+        groups = self.env['mail.activity']._read_group(
+            domain=[('user_id', 'in', self.env['res.users']._search([('active', '=', False)]))],
+            groupby=['user_id'],
+            aggregates=['id:recordset'],
+            limit=batch_size,
+        )
+        activities_to_delete = self.env['mail.activity']
+        for _, activities in groups:
+            activities_to_delete += activities
+        if activities_to_delete:
+            try:
+                activities_to_delete.unlink()
+            except (AccessError, UserError):
+                self.env.cr.rollback()
+                _logger.error("Failed to delete activities of archived users.")
 
     # ----------------------------------------------------------------------
     # TOOLS

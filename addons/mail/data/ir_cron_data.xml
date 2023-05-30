@@ -65,5 +65,18 @@
             <field name="code">model._send_notifications_cron()</field>
             <field name="state">code</field>
         </record>
+
+        <record id="ir_cron_activity_delete_of_archived_users" model="ir.cron">
+            <field name="name">Activity: Delete Activities Of Archived Users</field>
+            <field name="model_id" ref="mail.model_mail_activity"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_delete_activities_of_archived_users(batch_size=10000)</field>
+            <field name="active" eval="False"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
     </data>
 </odoo>
