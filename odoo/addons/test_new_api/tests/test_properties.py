@@ -931,6 +931,16 @@ class PropertiesCase(TestPropertiesMixin):
                 }
             ]
 
+        self.message_3.attributes = [{
+            'type': 'selection',
+            'name': 'new_selection',
+            'string': 'My Selection',
+            'definition_changed': True,
+        }]
+        values = self.message_3.read(['attributes'])[0]['attributes'][0]
+        self.assertEqual(values.get('name'), 'new_selection')
+        self.assertEqual(values.get('selection'), [], 'Selection key should be at least an empty array (never False)')
+
     def test_properties_field_tags(self):
         """Test the behavior of the tag property.
 
@@ -1006,6 +1016,16 @@ class PropertiesCase(TestPropertiesMixin):
                     ],
                 },
             ]
+
+        self.message_3.attributes = [{
+            'type': 'tags',
+            'name': 'new_tags',
+            'string': 'My tags',
+            'definition_changed': True,
+        }]
+        values = self.message_3.read(['attributes'])[0]['attributes'][0]
+        self.assertEqual(values.get('name'), 'new_tags')
+        self.assertEqual(values.get('tags'), [], 'Tags key should be at least an empty array (never False)')
 
     @mute_logger('odoo.models.unlink', 'odoo.fields')
     def test_properties_field_many2many_basic(self):
