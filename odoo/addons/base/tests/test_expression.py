@@ -1228,12 +1228,8 @@ class TestQueries(TransactionCase):
         # search on both 'name' and 'model'
         self.assertEqual(Model._rec_names_search, ['name', 'model'])
 
-        # warmup
-        Model.name_search('foo')
-
-        Model.name_search('partner')
         with self.assertQueries(['''
-            SELECT "ir_model"."id"
+            SELECT "ir_model"."id", "ir_model"."name"->>'en_US'
             FROM "ir_model"
             WHERE (
                 ("ir_model"."name"->>'en_US' ILIKE %s)
@@ -1244,9 +1240,8 @@ class TestQueries(TransactionCase):
         ''']):
             Model.name_search('foo')
 
-        Model.name_search('partner', operator='not ilike')
         with self.assertQueries(['''
-            SELECT "ir_model"."id"
+            SELECT "ir_model"."id", "ir_model"."name"->>'en_US'
             FROM "ir_model"
             WHERE (
                 ("ir_model"."name" is NULL OR "ir_model"."name"->>'en_US' not ilike %s)

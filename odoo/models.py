@@ -1685,7 +1685,15 @@ class BaseModel(metaclass=MetaModel):
         :return: list of pairs ``(id, text_repr)`` for all matching records.
         """
         ids = self._name_search(name, args, operator, limit=limit, order=self._order)
-        return [(record.id, record.display_name) for record in self.browse(ids).sudo()]
+
+        if isinstance(ids, Query):
+            records = self._fetch_query(ids, self._determine_fields_to_fetch(['display_name']))
+        else:
+            # Some override of `_name_search` return list of ids.
+            records = self.browse(ids)
+            records.fetch(['display_name'])
+
+        return [(record.id, record.display_name) for record in records.sudo()]
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
