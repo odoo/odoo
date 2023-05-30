@@ -477,10 +477,9 @@ class MrpProduction(models.Model):
         ], ['company_id'], ['id:array_agg'])
         location_by_company = {company.id: ids for company, ids in location_by_company}
         for production in self:
-            if production.product_id:
-                production.production_location_id = production.product_id.with_company(production.company_id).property_stock_production
-            else:
-                production.production_location_id = location_by_company.get(production.company_id.id)[0]
+            prod_loc = production.product_id.with_company(production.company_id).property_stock_production
+            comp_locs = location_by_company.get(production.company_id.id)
+            production.production_location_id = prod_loc or (comp_locs and comp_locs[0])
 
     @api.depends('product_id.tracking')
     def _compute_show_lots(self):
