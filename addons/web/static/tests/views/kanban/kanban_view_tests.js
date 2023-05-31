@@ -398,6 +398,49 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("Hide tooltip when user click inside a kanban headers item", async (assert) => {
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
+        serviceRegistry.add("tooltip", tooltipService);
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban default_group_by="product_id">
+                    <field name="product_id" options='{"group_by_tooltip": {"name": "Name"}}'/>
+                    <templates>
+                        <t t-name="kanban-box"/>
+                    </templates>
+                </kanban>`,
+        });
+        assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
+        assert.containsN(target, ".o_column_title", 2);
+
+        await mouseEnter(
+            target,
+            ".o_kanban_group:first-child .o_kanban_header_title .o_column_title"
+        );
+        assert.containsOnce(target, ".o-tooltip");
+
+        await click(
+            target,
+            ".o_kanban_group:first-child .o_kanban_header_title .o_kanban_quick_add"
+        );
+        assert.containsNone(target, ".o-tooltip");
+
+        await mouseEnter(
+            target,
+            ".o_kanban_group:first-child .o_kanban_header_title .o_column_title"
+        );
+        assert.containsOnce(target, ".o-tooltip");
+
+        await click(target, ".o_kanban_group:first-child .o_kanban_header_title .fa-gear");
+        await nextTick();
+        assert.containsNone(target, ".o-tooltip");
+    });
+
     QUnit.test("generic tags are case insensitive", async function (assert) {
         await makeView({
             type: "kanban",
@@ -8758,7 +8801,7 @@ QUnit.module("Views", (hooks) => {
             "first column should have a default title for when no value is provided"
         );
 
-        const groupsTitle = [...target.querySelectorAll(".o_kanban_group .o_kanban_header_title")];
+        const groupsTitle = [...target.querySelectorAll(".o_kanban_group .o_kanban_header_title .o_column_title")];
         await mouseEnter(groupsTitle[0]);
         assert.containsNone(
             target,
@@ -8815,17 +8858,17 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
         assert.containsN(target, ".o_column_title", 2);
 
-        await mouseEnter(target.querySelectorAll(".o_kanban_group .o_kanban_header_title")[0]);
+        await mouseEnter(target.querySelectorAll(".o_kanban_group .o_kanban_header_title .o_column_title")[0]);
         assert.containsNone(target, ".o-tooltip");
 
         await triggerEvent(
-            target.querySelectorAll(".o_kanban_group .o_kanban_header_title")[0],
+            target.querySelectorAll(".o_kanban_group .o_kanban_header_title .o_column_title")[0],
             null,
             "mouseleave"
         );
         assert.containsNone(target, ".o-tooltip");
 
-        await mouseEnter(target.querySelectorAll(".o_kanban_group .o_kanban_header_title")[0]);
+        await mouseEnter(target.querySelectorAll(".o_kanban_group .o_kanban_header_title .o_column_title")[0]);
         assert.containsNone(target, ".o-tooltip");
 
         prom.resolve();
@@ -8861,19 +8904,19 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await mouseEnter(target.querySelectorAll(".o_kanban_group .o_kanban_header_title")[0]);
+        await mouseEnter(target.querySelectorAll(".o_kanban_group .o_kanban_header_title .o_column_title")[0]);
         assert.containsOnce(target, ".o-tooltip");
         assert.strictEqual(target.querySelector(".o-tooltip").textContent.trim(), "Namehello");
         assert.verifySteps(["read: product"]);
 
         await triggerEvent(
-            target.querySelectorAll(".o_kanban_group .o_kanban_header_title")[0],
+            target.querySelectorAll(".o_kanban_group .o_kanban_header_title .o_column_title")[0],
             null,
             "mouseleave"
         );
         assert.containsNone(target, ".o-tooltip", "tooltip should be closed");
 
-        await mouseEnter(target.querySelectorAll(".o_kanban_group .o_kanban_header_title")[0]);
+        await mouseEnter(target.querySelectorAll(".o_kanban_group .o_kanban_header_title .o_column_title")[0]);
         assert.containsOnce(target, ".o-tooltip");
         assert.strictEqual(target.querySelector(".o-tooltip").textContent.trim(), "Namehello");
         assert.verifySteps([]);
