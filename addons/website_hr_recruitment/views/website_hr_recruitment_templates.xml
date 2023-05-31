@@ -627,14 +627,14 @@
                                                         <div class="col-lg-5 pb16 o_not_editable">
                                                             <img t-att-src="image_data_uri(job_sudo.user_id.avatar_256)" class="img-fluid" loading="lazy"/>
                                                         </div>
-                                                        <div class="col-lg-7">
-                                                            <h2 class="o_default_snippet_text" t-field="job_sudo.user_id.name"/>
-                                                            <p class="fw-light" t-field="job_sudo.user_id.job_title"/>
+                                                        <div class="col-lg-7 px-1">
+                                                            <h2 class="o_default_snippet_text text-truncate" t-field="job_sudo.user_id.name"/>
+                                                            <p class="fw-light text-truncate" t-field="job_sudo.user_id.job_title"/>
                                                         </div>
                                                     </div>
                                                     <div class="row">
-                                                        <ul class="list-unstyled">
-                                                            <li><i class="fa fa-phone fa-fw me-2"></i><span class="o_force_ltr" t-field="job_sudo.user_id.work_phone"/></li>
+                                                        <ul class="list-unstyled mb-0">
+                                                            <li t-if="job_sudo.user_id.work_phone"><i class="fa fa-phone fa-fw me-2"></i><span class="o_force_ltr" t-field="job_sudo.user_id.work_phone"/></li>
                                                             <li class="d-inline-flex align-items-baseline"><i class="fa fa-envelope fa-fw me-2"></i><span><a class="text-break" t-attf-href="mailto:#{job_sudo.user_id.email}" t-field="job_sudo.user_id.email"/></span></li>
                                                         </ul>
                                                     </div>
