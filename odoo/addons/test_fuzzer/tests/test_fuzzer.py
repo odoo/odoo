@@ -1,8 +1,9 @@
 import inspect
-from typing import Callable, TypeVar, Any
+from typing import TypeVar
 
 import psycopg2
 
+from odoo.addons.test_fuzzer.injection import *
 from odoo.exceptions import UserError
 from odoo.tests import common
 
@@ -11,9 +12,9 @@ class TestFuzzer(common.TransactionCase):
     def setUp(self):
         super(TestFuzzer, self).setUp()
         self.fuzzer_model = self.env['test.fuzzer.model']
+        self.fuzzer_model_methods = get_public_functions(self.fuzzer_model)
         self.fuzzer_record = self.create_canary_record()
 
-        self.fuzzer_model_methods = get_public_functions(self.fuzzer_model)
         self.default_args = {
             "domain": [],
             "fields": ["n"],
@@ -21,6 +22,20 @@ class TestFuzzer(common.TransactionCase):
             "field_names": ["n"],
             "data": [[]],
             "operation": "read",
+        }
+
+        self.injections: dict[str, [Injection]] = {
+            "domain": construct_where_clause_injections("n"),
+            "order": construct_field_reference_injections("n"),
+            "fields": wrap_payload(construct_field_reference_injections("n"), lambda payload: [payload]),
+            "field_names": wrap_payload(construct_field_reference_injections("n"), lambda payload: [payload]),
+            "groupby": construct_field_reference_injections("n"),
+            "vals": wrap_payload(construct_field_reference_injections("n"), lambda payload: {payload: "1337"}),
+            "vals_list": wrap_payload(construct_field_reference_injections("n"), lambda payload: [{payload: "1337"}]) +
+                         wrap_payload(construct_field_reference_injections(
+                             "n", expect_error=True, with_closing_parenthesis=True),
+                             lambda payload: [{"n": payload}]
+                         ),
         }
 
     def create_canary_record(self):
@@ -45,24 +60,24 @@ class TestFuzzer(common.TransactionCase):
             if parameter == "self":
                 continue
 
-            injections = get_injections_for_parameter(parameter)
+            injections = self.injections.get(parameter)
             if injections is None:
                 print(f"\tUnfuzzed parameter {parameter}")
                 continue
 
             for injection in injections:
                 fuzzed_args = args.copy()
-                fuzzed_args[parameter] = injection
+                fuzzed_args[parameter] = injection.payload
 
-                print(f"\t{parameter}=`{injection}`... ", end="")
+                print(f"\t{parameter}=`{injection.payload}`... ", end="")
 
-                throws_error = False
+                throws_exception = False
                 caught_during_validation = False
 
                 try:
                     function(self.fuzzer_record, **fuzzed_args)
                 except (UserError, ValueError, KeyError) as e:
-                    throws_error = True
+                    throws_exception = True
                     caught_during_validation = True
 
                     print()
@@ -70,7 +85,7 @@ class TestFuzzer(common.TransactionCase):
 
                 except psycopg2.Error as e:
                     # TODO: Maybe capture more precise errors.
-                    throws_error = True
+                    throws_exception = True
                     caught_during_validation = False
 
                     print()
@@ -78,14 +93,15 @@ class TestFuzzer(common.TransactionCase):
 
                 if self.did_injection_succeed():
                     print("FAIL")
-                elif throws_error and caught_during_validation:
+                elif injection.expect_error and throws_exception and caught_during_validation:
                     print("OK")
-                elif throws_error and not caught_during_validation:
+                elif injection.expect_error and throws_exception and not caught_during_validation:
                     print("ERROR IN DB")
-                elif not throws_error:
-                    print("NO ERROR")
+                elif injection.expect_error and not throws_exception:
+                    print("NO ERRORS")
                 else:
-                    assert False
+                    assert not injection.expect_error and not throws_exception
+                    print("OK")
 
     def did_injection_succeed(self):
         count = self.fuzzer_model.search_count([])
@@ -94,85 +110,6 @@ class TestFuzzer(common.TransactionCase):
             self.fuzzer_record = self.create_canary_record()
             return True
         return False
-
-
-delete_from_table = "delete from test_fuzzer_model"
-
-
-def get_injections_for_parameter(parameter: str) -> list[Any] | None:
-    if parameter == "domain":
-        return create_domain_injections("n")
-    if parameter == "order":
-        return create_order_injections("n")
-    if parameter == "fields":
-        return create_fields_injections("n")
-    if parameter == "field_names":
-        return create_fields_injections("n")
-    if parameter == "groupby":
-        return create_groupby_injections("n")
-    if parameter == "vals":
-        return create_vals_injections("n")
-    if parameter == "vals_list":
-        return create_vals_list_injections("n")
-    return None
-
-
-def create_quoted_field_name(field_name: str) -> list[str]:
-    return [
-        f"""{field_name}""",
-        f"""{field_name}\"""",
-        f"""{field_name}'""",
-        f"""{field_name}\\""",
-    ]
-
-
-def create_where_injections(field_name: str) -> list[list[tuple[str, str, Any]]]:
-    return [
-        [(fr"""{field_name} = "1337"); {delete_from_table} -- -""", "=", "1337")]
-        for field_name in create_quoted_field_name(field_name)
-    ]
-
-
-def create_column_name_injections(field_name: str, right_parenthesis=False) -> list[str]:
-    return [
-        f"""{field_name}{")" if right_parenthesis else ""}; {delete_from_table} -- -"""
-        for field_name in create_quoted_field_name(field_name)
-    ]
-
-
-def create_domain_injections(field_name: str) -> list[list[tuple[str, str, Any]]]:
-    return create_where_injections(field_name)
-
-
-def create_order_injections(field_name: str) -> list[str]:
-    return create_column_name_injections(field_name)
-
-
-def create_fields_injections(field_name: str) -> list[list[str]]:
-    return [[injection] for injection in create_column_name_injections(field_name)]
-
-
-def create_groupby_injections(field_name: str) -> list[str]:
-    return create_column_name_injections(field_name)
-
-
-def create_vals_injections(field_name: str) -> list[dict[str, int]]:
-    return [{injection: "1337"} for injection in create_column_name_injections(field_name)]
-
-
-def create_vals_list_injections(field_name: str) -> list[list[dict[str, str]]]:
-    field_name_injections = [
-        [{field_name: "1337"}]
-        for field_name in create_column_name_injections(field_name)
-    ]
-
-    # TODO: Absence of an error should be OK.
-    value_injections = [
-        [{"n": value}]
-        for value in create_column_name_injections(field_name, right_parenthesis=True)
-    ]
-
-    return field_name_injections + value_injections
 
 
 def get_public_functions(obj: object) -> list[(inspect.Signature, Callable)]:

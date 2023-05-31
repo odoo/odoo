@@ -1,0 +1,47 @@
+import dataclasses
+from dataclasses import dataclass
+from typing import Any, Callable
+
+
+@dataclass
+class Injection:
+    payload: Any
+    expect_error: bool
+
+
+def construct_where_clause_injections(payload: Any, expect_error=True) -> list[Injection]:
+    return [construct_where_clause_injection(payload, expect_error)
+            for payload in create_quoted_payloads(payload)]
+
+
+def construct_field_reference_injections(payload: Any, expect_error=True,
+                                         with_closing_parenthesis=False) -> list[Injection]:
+    return [construct_field_reference_injection(payload, expect_error, with_closing_parenthesis)
+            for payload in create_quoted_payloads(payload)]
+
+
+def wrap_payload(injections: list[Injection], f: Callable[[Any], Any]) -> list[Injection]:
+    return [dataclasses.replace(injection, payload=f(injection.payload)) for injection in injections]
+
+
+def construct_where_clause_injection(payload: Any, expect_error: bool) -> Injection:
+    payload = [(fr"""{payload} = "1337"); {delete_from_table} -- -""", "=", "1337")]
+    return Injection(payload, expect_error)
+
+
+def construct_field_reference_injection(payload: Any, expect_error: bool,
+                                        with_closing_parenthesis: bool) -> Injection:
+    payload = f"""{payload}{")" if with_closing_parenthesis else ""}; {delete_from_table} -- -"""
+    return Injection(payload, expect_error)
+
+
+def create_quoted_payloads(payload: str) -> list[str]:
+    return [
+        f"""{payload}""",
+        f"""{payload}\"""",
+        f"""{payload}'""",
+        f"""{payload}\\""",
+    ]
+
+
+delete_from_table = "delete from test_fuzzer_model"
