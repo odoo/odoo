@@ -78,5 +78,18 @@
             <field name="numbercall">-1</field>
             <field name="doall" eval="False"/>
         </record>
+
+        <record id="ir_cron_activity_delete_old_overdue" model="ir.cron">
+            <field name="name">Activity: Delete Old Overdue Activities</field>
+            <field name="model_id" ref="mail.model_mail_activity"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_delete_overdue_activities(older_than_days=1095, time_window_days=3, batch_size=10000)</field>
+            <field name="active" eval="False"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+        </record>
     </data>
 </odoo>

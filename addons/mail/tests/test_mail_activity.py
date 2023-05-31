@@ -2,6 +2,8 @@
 
 import random
 from contextlib import contextmanager
+from datetime import datetime, timedelta
+from freezegun import freeze_time
 from unittest.mock import patch
 
 from odoo.tests.common import tagged, HttpCase, TransactionCase
@@ -60,3 +62,40 @@ class TestMailActivity(TransactionCase):
         for user in active_users:
             activities = self.env['mail.activity'].search([('user_id', '=', user.id)])
             self.assertEqual(len(activities), 1)
+
+    def test_delete_old_overdue_activities(self):
+        """
+        Validate the behaviour of `_cron_delete_overdue_activities`
+        """
+        @contextmanager
+        def _mock_db_cursor():
+            with patch.object(type(self.env.cr), 'rollback', lambda x: None):
+                yield
+
+        FREEZE_DATE = '2023-05-30'
+        OLD_OVERDUE_DAYS_THRESHOLD = 2
+        DAY_RANGE = 10
+        TIME_WINDOW = 2
+        dummy_user = self.env['res.users'].create({
+                'name': "some name",
+                'login': "someemail@example.com",
+                'password': "S3cUr4DP@sSw0rD",
+        })
+        dummy_lead = self.env['crm.lead'].create({'name': 'dummy_lead'})
+        dates = [datetime.fromisoformat(FREEZE_DATE) - timedelta(days=day_delta) for day_delta in range(-DAY_RANGE, DAY_RANGE)]
+        activities = self.env['mail.activity']
+        for date in dates:
+            activities += dummy_lead.activity_schedule(user_id=dummy_user.id, date_deadline=date.date())
+        not_overdue_activities_count = len(activities.filtered_domain([('state', '!=', 'overdue')]))
+        activity_count = len(activities)
+        activities_ids = activities.ids
+        with freeze_time(FREEZE_DATE), _mock_db_cursor():
+            activities._cron_delete_overdue_activities(older_than_days=OLD_OVERDUE_DAYS_THRESHOLD, time_window_days=TIME_WINDOW)
+        leftover_activities = self.env['mail.activity'].search([('id', 'in', activities_ids)])
+        self.assertEqual(len(leftover_activities), activity_count - TIME_WINDOW, "More or less activity were removed than expected")
+        self.assertFalse(leftover_activities.filtered_domain([
+            ('date_deadline', '<=', datetime.fromisoformat(FREEZE_DATE) - timedelta(days=OLD_OVERDUE_DAYS_THRESHOLD)),
+            ('date_deadline', '>', datetime.fromisoformat(FREEZE_DATE) - timedelta(days=OLD_OVERDUE_DAYS_THRESHOLD + TIME_WINDOW)),
+        ]), "All activities in the timeframe should have been deleted.")
+        self.assertEqual(len(leftover_activities.filtered_domain([('state', '!=', 'overdue')])), not_overdue_activities_count,
+                         "No activities that weren't overdue should have been touched.")

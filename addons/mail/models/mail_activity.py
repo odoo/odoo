@@ -5,7 +5,7 @@ import logging
 import pytz
 
 from collections import defaultdict
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, exceptions, fields, models, _, Command
@@ -644,6 +644,29 @@ class MailActivity(models.Model):
             except (AccessError, UserError):
                 self.env.cr.rollback()
                 _logger.error("Failed to delete activities of archived users.")
+
+    def _cron_delete_overdue_activities(self, older_than_days, time_window_days=None, batch_size=1000):
+        """
+        Delete overdue activities which deadline is older than `older_than_days`
+        :param int older_than_days: number of days the activity's deadline should be older than
+        :param int time_window_days: time window in days before `older_than_days` of activities to consider for deletion
+        :param int batch_size: maximum of activities to delete per cron trigger
+        """
+        assert older_than_days > 0
+        deadline_threshold_dt = datetime.now() - timedelta(days=older_than_days)
+        domain = [('date_deadline', '<=', deadline_threshold_dt)]
+        if time_window_days is not None:
+            domain.extend([('date_deadline', '>', deadline_threshold_dt - timedelta(days=time_window_days))])
+        if self:  # makes the cron testable
+            old_overdue_activities = self.filtered_domain(domain)
+        else:
+            old_overdue_activities = self.env['mail.activity'].search(domain, limit=batch_size, order='id')
+        if old_overdue_activities:
+            try:
+                old_overdue_activities.unlink()
+            except (AccessError, UserError):
+                self.env.cr.rollback()
+                _logger.error("Failed to delete old overdue activities.")
 
     # ----------------------------------------------------------------------
     # TOOLS
