@@ -1039,7 +1039,7 @@ class AccountMoveLine(models.Model):
                         'amount_currency': 0.0,
                         'balance': 0.0,
                         'price_subtotal': 0.0,
-                        'tax_ids': [],
+                        'tax_ids': [Command.clear()],
                     },
                 )
                 epd_needed_vals['amount_currency'] += line.amount_currency * percentage * line_percentage
