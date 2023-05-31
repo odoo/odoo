@@ -483,7 +483,7 @@
         </record>
 
         <record id="portal_share_action" model="ir.actions.act_window">
-            <field name="name">Share</field>
+            <field name="name">Share Task</field>
             <field name="res_model">portal.share</field>
             <field name="view_mode">form</field>
             <field name="context">{'dialog_size': 'medium'}</field>
@@ -578,7 +578,7 @@
                     <templates>
                     <t t-name="kanban-menu" t-if="!selection_mode" groups="base.group_user">
                         <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
-                        <a name="%(portal.portal_share_action)d" role="menuitem" type="action" class="dropdown-item" context="{'dialog_size': 'medium'}">Share</a>
+                        <a name="%(portal.portal_share_action)d" role="menuitem" type="action" class="dropdown-item" context="{'dialog_size': 'medium'}">Share Task</a>
                         <div role="separator" class="dropdown-divider"></div>
                         <ul class="oe_kanban_colorpicker" data-field="color"/>
                     </t>
