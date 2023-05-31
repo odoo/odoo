@@ -43,6 +43,8 @@ import {
     isEmptyBlock,
     unwrapContents,
     getCursorDirection,
+    firstLeaf,
+    lastLeaf,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
@@ -345,12 +347,12 @@ export const editorCommands = {
 
     // Change tags
     setTag(editor, tagName) {
-        const restoreCursor = preserveCursor(editor.document);
         const range = getDeepRange(editor.editable, { correctTripleClick: true });
         const selectedBlocks = [...new Set(getTraversedNodes(editor.editable, range).map(closestBlock))];
         const deepestSelectedBlocks = selectedBlocks.filter(block => (
             !descendants(block).some(descendant => selectedBlocks.includes(descendant))
         ));
+        const [anchorNode, anchorOffset, focusNode, focusOffset] = [firstLeaf(range.startContainer), range.startOffset, lastLeaf(range.endContainer), range.endOffset];
         for (const block of deepestSelectedBlocks) {
             if (
                 ['P', 'PRE', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'LI', 'BLOCKQUOTE'].includes(
@@ -381,7 +383,7 @@ export const editorCommands = {
                 children.forEach(child => newBlock.appendChild(child));
             }
         }
-        restoreCursor();
+        setSelection(...[anchorNode, anchorOffset, focusNode, focusOffset]);
         editor.historyStep();
     },
 

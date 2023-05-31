@@ -1850,6 +1850,21 @@ X[]
                     });
                 });
             });
+            describe('Nested Elements', () => {
+                it('should delete a h1 insdie a td immediately after insertion', async () => {
+                    await testEditor(BasicEditor, {
+                        contentBefore: '<table class="table table-bordered"><tbody><tr><td>[]<br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table>',
+                        stepFunction: async editor => {
+                            await insertText(editor,'/');
+                            await insertText(editor, 'Heading');
+                            triggerEvent(editor.editable,'keyup');
+                            triggerEvent(editor.editable,'keydown', {key: 'Enter'});
+                            await deleteBackward(editor);
+                        },
+                        contentAfter: '<table class="table table-bordered"><tbody><tr><td><p>[]<br></p></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table>',
+                    });
+                });
+            })
             describe('Merging different types of elements', () => {
                 it('should merge a paragraph with text into a paragraph with text', async () => {
                     await testEditor(BasicEditor, {
