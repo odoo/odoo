@@ -3850,20 +3850,11 @@ var BasicModel = AbstractModel.extend({
      * current values for the record, with commands for x2manys fields.
      *
      * @param {Object} record an element of type 'record'
-     * @param {boolean} [forDomain=false] if true, x2many values are a list of
-     *   ids instead of a list of commands
      * @returns Object
      */
-    _getRecordEvalContext: function (record, forDomain) {
-        var self = this;
+    _getRecordEvalContext: function (record) {
         var relDataPoint;
         var context = Object.assign({}, record.data, record._changes);
-
-        // calls _generateX2ManyCommands for a given field, and returns the array of commands
-        function _generateX2ManyCommands(fieldName) {
-            var commands = self._generateX2ManyCommands(record, {fieldNames: [fieldName]});
-            return commands[fieldName];
-        }
 
         for (var fieldName in context) {
             var field = record.fields[fieldName];
@@ -3892,11 +3883,7 @@ var BasicModel = AbstractModel.extend({
                     relDataPoint = this._applyX2ManyOperations(this.localData[context[fieldName]]);
                     ids = relDataPoint.res_ids.slice(0);
                 }
-                if (!forDomain) {
-                    // when sent to the server, the x2manys values must be a list
-                    // of commands in a context, but the list of ids in a domain
-                    ids.toJSON = _generateX2ManyCommands.bind(null, fieldName);
-                } else if (field.type === 'one2many') { // Ids are evaluated as a list of ids
+                if (field.type === 'one2many') { // Ids are evaluated as a list of ids
                     /* Filtering out virtual ids from the ids list
                      * The server will crash if there are virtual ids in there
                      * The webClient doesn't do literal id list comparison like ids == list
@@ -3911,15 +3898,9 @@ var BasicModel = AbstractModel.extend({
         return context;
     },
 
-    _getLazyRecordEvalContext: function (record, forDomain) {
+    _getLazyRecordEvalContext: function (record) {
         let self = this;
         let relDataPoint;
-
-        // calls _generateX2ManyCommands for a given field, and returns the array of commands
-        function _generateX2ManyCommands(fieldName) {
-            var commands = self._generateX2ManyCommands(record, {fieldNames: [fieldName]});
-            return commands[fieldName];
-        }
 
         return new Proxy({}, {
             has(target, key) {
@@ -3961,11 +3942,7 @@ var BasicModel = AbstractModel.extend({
                         relDataPoint = self._applyX2ManyOperations(self.localData[fieldValue]);
                         ids = relDataPoint.res_ids.slice(0);
                     }
-                    if (!forDomain) {
-                        // when sent to the server, the x2manys values must be a list
-                        // of commands in a context, but the list of ids in a domain
-                        ids.toJSON = _generateX2ManyCommands.bind(null, fieldName);
-                    } else if (field.type === 'one2many') { // Ids are evaluated as a list of ids
+                    if (field.type === 'one2many') { // Ids are evaluated as a list of ids
                         /* Filtering out virtual ids from the ids list
                         * The server will crash if there are virtual ids in there
                         * The webClient doesn't do literal id list comparison like ids == list
