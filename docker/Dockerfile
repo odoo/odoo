@@ -42,8 +42,10 @@ RUN curl -sL -o /tmp/ghostscript-9.56.1-linux-x86_64.tgz https://github.com/Arti
 
 # odoo directories
 RUN useradd -s /usr/bin/nologin --create-home --password odoo odoo \
+  && mkdir /home/odoo/.local \
+  && chown odoo:odoo /home/odoo/.local \
   && mkdir --parents /opt/odoo/tests \
-  && chown --recursive odoo:odoo /opt/odoo/tests
+  && chown --recursive odoo:odoo /opt/odoo
 
 # msfonts
 COPY docker/msfonts.sh /tmp/msfonts.sh
@@ -51,8 +53,6 @@ RUN chmod +x /tmp/msfonts.sh; sync; /tmp/msfonts.sh; rm -rf /tmp/msfonts.sh
 
 # pip dependencies
 COPY requirements.txt /tmp/requirements.txt
-# 2to3 was removed from setuptools v58.0.0 which will break the build
-# https://setuptools.readthedocs.io/en/latest/history.html#breaking-changes
 RUN pip3 install --no-cache-dir setuptools --upgrade \
     && pip3 install --no-cache-dir --upgrade pip \
     && pip3 install --no-cache-dir -r /tmp/requirements.txt \
@@ -65,3 +65,4 @@ COPY --chown=odoo:odoo . .
 
 EXPOSE 8069 8072
 USER odoo
+VOLUME ["/home/odoo/.local"]
