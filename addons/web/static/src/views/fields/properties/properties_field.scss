@@ -51,18 +51,22 @@
 }
 
 .o_field_property_label {
-    width: 150px;
+    width: 180px;
 
     &:hover .o_field_property_open_popover,
-    .o_field_property_open_popover:focus {
+    .o_field_property_open_popover:focus,
+    &:hover .oi-draggable,
+    .oi-draggable:focus {
         opacity: 1;
     }
-    .o_field_property_open_popover {
+    .o_field_property_open_popover,
+    .oi-draggable {
         opacity: 0;
         cursor: pointer;
         transition: 0.1s;
     }
-    .o_field_property_open_popover:hover {
+    .o_field_property_open_popover:hover,
+    .oi-draggable:hover {
         color: $primary;
     }
 }
@@ -103,4 +107,40 @@
     user-select: none;
     height: 20px;
     box-shadow: 0 $border-width 0 $o-form-separator-color;
+}
+
+.o_field_properties {
+    .oi-draggable {
+        cursor: url(/web/static/img/openhand.cur), grab;
+    }
+}
+
+.o_property_dragging {
+    // make the background transparent for "o_property_drag_group" effect
+    input {
+        background: transparent;
+    }
+
+    // disabled click interaction when dragging on those elements
+    .o_field_property_open_popover,
+    .o_field_property_label,
+    input {
+        pointer-events: none;
+    }
+
+    .o_property_drag_item {
+        opacity: 0.7;
+        transform: rotate(2deg);
+    }
+
+    .o_field_property_add {
+        display: none;
+    }
+}
+
+.o_field_properties div:not([columns="1"]) .o_property_drag_group {
+    // highlight effect on the group is activated only in multi-columns
+    box-sizing: border-box;
+    background-color: #{tint-color($o-action, 90%)};
+    border: 1px solid #{$o-action};
 }

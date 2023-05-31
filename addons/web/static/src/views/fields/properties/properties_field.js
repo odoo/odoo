@@ -14,6 +14,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { reposition } from "@web/core/position_hook";
 import { archParseBoolean } from "@web/views/utils";
 import { pick } from "@web/core/utils/objects";
+import { useSortable } from "@web/core/utils/sortable";
 
 import { Component, useRef, useState, useEffect, onWillStart } from "@odoo/owl";
 
@@ -79,6 +80,92 @@ export class PropertiesField extends Component {
         );
 
         useEffect(() => this._movePopoverIfNeeded());
+
+        // sort properties
+        useSortable({
+            enable: () => !this.props.readonly && this.state.canChangeDefinition,
+            ref: this.propertiesRef,
+            handle: ".o_field_property_label .oi-draggable",
+            // on mono-column layout, allow to move before a separator to make the usage more fluid
+            elements:
+                this.renderedColumnsCount === 1
+                    ? "*:is(.o_property_field, .o_field_property_group_label)"
+                    : ".o_property_field",
+            groups: ".o_property_group",
+            connectGroups: true,
+            cursor: "grabbing",
+            onDragStart: ({ element, group }) => {
+                this.propertiesRef.el.classList.add("o_property_dragging");
+                element.classList.add("o_property_drag_item");
+                group.classList.add("o_property_drag_group");
+                // without this, if we edit a char property, move it,
+                // the change will be reset when we drop the property
+                document.activeElement.blur();
+            },
+            onDrop: async ({ parent, element, next, previous }) => {
+                const from = element.getAttribute("property-name");
+                let to = previous && previous.getAttribute("property-name");
+                let moveBefore = false;
+                if (!to && next) {
+                    // we move the element at the first position inside a group
+                    // or at the first position of a column
+                    if (next.classList.contains("o_field_property_group_label")) {
+                        // mono-column layout, move before the separator
+                        next = next.closest(".o_property_group");
+                    }
+                    to = next.getAttribute("property-name");
+                    moveBefore = !!to;
+                }
+                if (!to) {
+                    // we move in an empty group or outside of the DOM element
+                    // move the element at the end of the group
+                    const groupName = parent.getAttribute("property-name");
+                    const group = this.groupedPropertiesList.find(
+                        (group) => group.name === groupName
+                    );
+                    to = group.elements.length ? group.elements.at(-1).name : groupName;
+                }
+                await this.onPropertyMoveTo(from, to, moveBefore);
+            },
+            onDragEnd: ({ element }) => {
+                this.propertiesRef.el.classList.remove("o_property_dragging");
+                element.classList.remove("o_property_drag_item");
+                const targetGroup = this.propertiesRef.el.querySelector(".o_property_drag_group");
+                if (targetGroup) {
+                    targetGroup.classList.remove("o_property_drag_group");
+                }
+            },
+            onGroupEnter: ({ group }) => {
+                group.classList.add("o_property_drag_group");
+                this._unfoldSeparators([group.getAttribute("property-name")], true);
+            },
+            onGroupLeave: ({ group }) => {
+                group.classList.remove("o_property_drag_group");
+            },
+        });
+
+        // sort group of properties
+        useSortable({
+            enable: () => !this.props.readonly && this.state.canChangeDefinition,
+            ref: this.propertiesRef,
+            handle: ".o_field_property_group_label .oi-draggable",
+            elements: ".o_property_group:not([property-name=''])",
+            cursor: "grabbing",
+            onDragStart: ({ element }) => {
+                this.propertiesRef.el.classList.add("o_property_dragging");
+                element.classList.add("o_property_drag_item");
+                document.activeElement.blur();
+            },
+            onDrop: async ({ element, previous }) => {
+                const from = element.getAttribute("property-name");
+                const to = previous && previous.getAttribute("property-name");
+                await this.onGroupMoveTo(from, to);
+            },
+            onDragEnd: ({ element }) => {
+                this.propertiesRef.el.classList.remove("o_property_dragging");
+                element.classList.remove("o_property_drag_item");
+            },
+        });
     }
 
     /* --------------------------------------------------------
@@ -277,6 +364,99 @@ export class PropertiesField extends Component {
         await this.props.record.update({ [this.props.name]: propertiesValues });
         // move the popover once the DOM is updated
         this.movePopoverToProperty = propertyName;
+    }
+
+    /**
+     * Move a property after the target property.
+     *
+     * @param {string} propertyName
+     * @param {string} toPropertyName, the target property
+     *  (null if we move the property to the first index)
+     */
+    onPropertyMoveTo(propertyName, toPropertyName, moveBefore) {
+        const propertiesValues = this.propertiesList || [];
+
+        let fromIndex = propertiesValues.findIndex((property) => property.name === propertyName);
+        let toIndex = propertiesValues.findIndex((property) => property.name === toPropertyName);
+        const columnSize = Math.ceil(propertiesValues.length / this.renderedColumnsCount);
+
+        // if we have no separator at first, we might want to create some
+        // to keep the initial column separation (only if needed, if we move properties
+        // inside the same column we do nothing)
+        if (
+            this.renderedColumnsCount > 1 &&
+            !propertiesValues.some((p, index) => index !== 0 && p.type === "separator") &&
+            Math.floor(fromIndex / columnSize) !== Math.floor(toIndex / columnSize)
+        ) {
+            const newSeparators = [];
+            for (let col = 0; col < this.renderedColumnsCount; ++col) {
+                const separatorIndex = columnSize * col + newSeparators.length;
+                if (propertiesValues[separatorIndex].type === "separator") {
+                    continue;
+                }
+                const newSeparator = {
+                    type: "separator",
+                    string: _t("Group %s", col + 1),
+                    name: this.generatePropertyName(),
+                };
+                newSeparators.push(newSeparator.name);
+                propertiesValues.splice(separatorIndex, 0, newSeparator);
+            }
+            this._unfoldSeparators(newSeparators, true);
+            toPropertyName = toPropertyName || propertiesValues[0].name;
+
+            // indexes might have changed
+            fromIndex = propertiesValues.findIndex((property) => property.name === propertyName);
+            toIndex = propertiesValues.findIndex((property) => property.name === toPropertyName);
+        }
+
+        if (moveBefore) {
+            toIndex--;
+        }
+        if (toIndex < fromIndex) {
+            // the first splice operation will change the index
+            toIndex++;
+        }
+        propertiesValues.splice(toIndex, 0, propertiesValues.splice(fromIndex, 1)[0]);
+        propertiesValues[0].definition_changed = true;
+        this.props.record.update({ [this.props.name]: propertiesValues });
+    }
+
+    /**
+     * Move a group of properties after the target group.
+     *
+     * @param {string} propertyName
+     * @param {string} toPropertyName, the target group (separator)
+     *  (null if we move the group to the first index)
+     */
+    onGroupMoveTo(propertyName, toPropertyName) {
+        const propertiesValues = this.propertiesList || [];
+        const fromIndex = propertiesValues.findIndex((property) => property.name === propertyName);
+        const toIndex = propertiesValues.findIndex((property) => property.name === toPropertyName);
+        if (
+            propertiesValues[fromIndex].type !== "separator" ||
+            (toIndex >= 0 && propertiesValues[toIndex].type !== "separator")
+        ) {
+            throw new Error("Something went wrong");
+        }
+
+        // find the next separator index
+        const getNextSeparatorIndex = (startIndex) => {
+            const nextSeparatorIndex = propertiesValues.findIndex(
+                (property, index) => property.type === "separator" && index > startIndex
+            );
+            return nextSeparatorIndex < 0 ? propertiesValues.length : nextSeparatorIndex;
+        };
+        const groupSize = getNextSeparatorIndex(fromIndex) - fromIndex;
+        let targetIndex = getNextSeparatorIndex(toIndex);
+        if (targetIndex > fromIndex) {
+            // the size of the array will change after the first splice
+            // so we need to correct the index
+            targetIndex -= groupSize;
+        }
+        propertiesValues.splice(targetIndex, 0, ...propertiesValues.splice(fromIndex, groupSize));
+        propertiesValues[0].definition_changed = true;
+        this.props.record.update({ [this.props.name]: propertiesValues });
     }
 
     /**
