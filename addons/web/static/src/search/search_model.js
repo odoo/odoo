@@ -1014,6 +1014,9 @@ export class SearchModel extends EventBus {
 
         for (const { definitionRecordId, definitionRecordName, definitions } of result) {
             for (const definition of definitions) {
+                if (definition.type === "separator") {
+                    continue;
+                }
                 const existingSearchItem = existingFieldProperties[definition.name];
                 if (existingSearchItem) {
                     // already in the list, can happen if we unfold the properties field

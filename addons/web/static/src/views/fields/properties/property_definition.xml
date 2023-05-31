@@ -133,7 +133,7 @@
                         </div>
                     </div>
                 </div>
-                <div t-if="!['tags', 'selection'].includes(state.propertyDefinition.type)
+                <div t-if="!['tags', 'selection', 'separator'].includes(state.propertyDefinition.type)
                     and (!['many2one', 'many2many'].includes(state.propertyDefinition.type)
                     || (state.propertyDefinition.comodel and state.propertyDefinition.comodel.length))"
                     class="o_field_property_definition_value d-contents mb-3 mb-sm-0">
@@ -156,7 +156,8 @@
                         onChange.bind="onDefaultChange"
                     />
                 </div>
-                <div t-if="!props.hideKanbanOption" class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
+                <div t-if="!props.hideKanbanOption and state.propertyDefinition.type !== 'separator'"
+                    class="o_field_property_definition_kanban d-contents mb-3 mb-sm-0">
                     <label t-att-for="getUniqueDomID('kanban')" class="o_form_label align-self-center text-900">
                         Display in Cards
                         <sup class="text-info" title="Whether or not this Property Field is displayed in the Calendar, Cards &amp; Kanban views">?</sup>
