@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { evalDomain } from "@web/core/domain";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Notebook } from "@web/core/notebook/notebook";
 import { Setting } from "./setting/setting";
 import { Field } from "@web/views/fields/field";
@@ -30,6 +30,7 @@ import {
 
 export class FormRenderer extends Component {
     setup() {
+        this.evaluateBooleanExpr = evaluateBooleanExpr;
         const { archInfo, Compiler, record } = this.props;
         const { arch, xmlDoc } = archInfo;
         const templates = { FormRenderer: xmlDoc };
@@ -78,10 +79,6 @@ export class FormRenderer extends Component {
 
     get shouldAutoFocus() {
         return !this.props.archInfo.disableAutofocus;
-    }
-
-    evalDomainFromRecord(record, expr) {
-        return evalDomain(expr, record.evalContext);
     }
 }
 

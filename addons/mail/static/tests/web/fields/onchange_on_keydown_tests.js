@@ -96,7 +96,7 @@ QUnit.test(
             resId: 1,
             arch: `
             <form>
-                <field name="description" onchange_on_keydown="True" attrs="{'invisible': [('display_name','=','yop')]}"/>
+                <field name="description" onchange_on_keydown="True" invisible="display_name == 'yop'"/>
                 <field name="display_name"/>
             </form>`,
             mockRPC(route, params) {

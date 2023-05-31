@@ -16,11 +16,14 @@ export const BUILTINS = {
             case "boolean":
                 return value;
             case "object":
-                if (value === null) {
+                if (value === null || value === undefined) {
                     return false;
                 }
                 if (value.isTrue) {
                     return value.isTrue();
+                }
+                if (value instanceof Array) {
+                    return !!value.length;
                 }
                 return true;
         }

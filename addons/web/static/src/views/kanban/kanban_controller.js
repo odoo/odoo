@@ -4,6 +4,7 @@ import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_d
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { SearchBar } from "@web/search/search_bar/search_bar";
@@ -205,6 +206,10 @@ export class KanbanController extends Component {
             cancel: () => {},
         });
     }
+
+    evalViewModifier(modifier) {
+        return evaluateBooleanExpr(modifier, {context: this.props.context});
+    };
 
     async openRecord(record, mode) {
         const activeIds = this.model.root.records.map((datapoint) => datapoint.resId);

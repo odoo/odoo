@@ -1,11 +1,15 @@
 /** @odoo-module **/
 
-import { Domain, evalDomain } from "@web/core/domain";
-import { evaluateExpr } from "@web/core/py_js/py";
+import { Domain } from "@web/core/domain";
+import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { utils } from "@web/core/ui/ui_service";
 import { getFieldContext } from "@web/model/relational_model/utils";
-import { archParseBoolean, getClassNameFromDecoration, X2M_TYPES } from "@web/views/utils";
+import {
+    archParseBoolean,
+    getClassNameFromDecoration,
+    X2M_TYPES,
+} from "@web/views/utils";
 import { getTooltipInfo } from "./field_tooltip";
 
 import { Component, xml } from "@odoo/owl";
@@ -39,8 +43,8 @@ export function getFieldFromRegistry(fieldType, widget, viewType, jsClass) {
 }
 
 export function fieldVisualFeedback(field, record, fieldName, fieldInfo) {
-    const modifiers = fieldInfo.modifiers || {};
-    const readonly = evalDomain(modifiers.readonly, record.evalContext);
+    const readonly = evaluateBooleanExpr(fieldInfo.readonly, record.evalContext);
+    const required = evaluateBooleanExpr(fieldInfo.required, record.evalContext);
     const inEdit = record.isInEdition;
 
     let empty = !record.isNew;
@@ -52,7 +56,7 @@ export function fieldVisualFeedback(field, record, fieldName, fieldInfo) {
     empty = inEdit ? empty && readonly : empty;
     return {
         readonly,
-        required: evalDomain(modifiers.required, record.evalContext),
+        required,
         invalid: record.isFieldInvalid(fieldName),
         empty,
     };
@@ -67,7 +71,10 @@ export function getPropertyFieldInfo(propertyField) {
         type,
         widget: type,
         options: {},
-        modifiers: {},
+        column_invisible: "False",
+        invisible: "False",
+        readonly: "False",
+        required: "False",
         attrs: {},
         relatedPropertyField,
 
@@ -76,7 +83,6 @@ export function getPropertyFieldInfo(propertyField) {
         help: undefined,
         onChange: false,
         forceSave: false,
-        alwaysInvisible: false,
         decorations: {},
         // ???
     };
@@ -150,7 +156,7 @@ export class Field extends Component {
             const { decorations } = fieldInfo;
             const evalContext = record.evalContext;
             for (const decoName in decorations) {
-                const value = evaluateExpr(decorations[decoName], evalContext);
+                const value = evaluateBooleanExpr(decorations[decoName], evalContext);
                 classNames[getClassNameFromDecoration(decoName)] = value;
             }
         }
@@ -164,16 +170,13 @@ export class Field extends Component {
 
     get fieldComponentProps() {
         const record = this.props.record;
-        const evalContext = record.evalContext;
-        const readonly = this.props.readonly === true;
+        let readonly = this.props.readonly || false;
 
-        let readonlyFromModifiers = false;
         let propsFromNode = {};
         if (this.props.fieldInfo) {
+            const evalContext = record.getEvalContext?.(false) || record.evalContext;
             let fieldInfo = this.props.fieldInfo;
-
-            const modifiers = fieldInfo.modifiers || {};
-            readonlyFromModifiers = evalDomain(modifiers.readonly, evalContext);
+            readonly = readonly || evaluateBooleanExpr(fieldInfo.readonly, evalContext);
 
             if (this.field.extractProps) {
                 if (this.props.attrs) {
@@ -182,14 +185,13 @@ export class Field extends Component {
                         attrs: { ...fieldInfo.attrs, ...this.props.attrs },
                     };
                 }
+
                 const dynamicInfo = {
                     get context() {
                         return getFieldContext(record, fieldInfo.name, fieldInfo.context);
                     },
                     domain() {
-                        const evalContext = record.getEvalContext
-                            ? record.getEvalContext(true)
-                            : record.evalContext;
+                        const evalContext = record.getEvalContext?.(true) || record.evalContext;
                         if (fieldInfo.domain) {
                             return new Domain(evaluateExpr(fieldInfo.domain, evalContext)).toList();
                         }
@@ -198,14 +200,8 @@ export class Field extends Component {
                             ? new Domain(evaluateExpr(domain, evalContext)).toList()
                             : domain || [];
                     },
-                    readonly: readonly || readonlyFromModifiers,
-                    get required() {
-                        return (
-                            fieldInfo.modifiers &&
-                            fieldInfo.modifiers.required &&
-                            evalDomain(fieldInfo.modifiers.required, record.evalContext)
-                        );
-                    },
+                    required: evaluateBooleanExpr(fieldInfo.required, evalContext),
+                    readonly: readonly,
                 };
                 propsFromNode = this.field.extractProps(fieldInfo, dynamicInfo);
             }
@@ -221,7 +217,7 @@ export class Field extends Component {
         delete props.readonly;
 
         return {
-            readonly: readonly || !record.isInEdition || readonlyFromModifiers || false,
+            readonly: readonly || !record.isInEdition || false,
             ...propsFromNode,
             ...props,
         };
@@ -246,13 +242,15 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
     const name = node.getAttribute("name");
     const widget = node.getAttribute("widget");
     const fields = models[modelName];
+    if (!fields[name]) {
+        throw new Error(`"${modelName}"."${name}" field is undefined.`);
+    }
     const field = getFieldFromRegistry(fields[name].type, widget, viewType, jsClass);
     const fieldInfo = {
         name,
         type: fields[name].type,
         viewType,
         widget,
-        modifiers: {},
         field,
         context: "{}",
         string: fields[name].string,
@@ -260,11 +258,21 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         onChange: false,
         forceSave: false,
         options: {},
-        alwaysInvisible: false,
         decorations: {},
         attrs: {},
         domain: undefined,
     };
+
+    for (const attr of ["invisible", "column_invisible", "readonly", "required"]) {
+        fieldInfo[attr] = node.getAttribute(attr);
+        if (fieldInfo[attr] === "True") {
+            if (attr === "column_invisible") {
+                fieldInfo.invisible = "True";
+            }
+        } else if (fieldInfo[attr] === null && fields[name][attr]) {
+            fieldInfo[attr] = "True";
+        }
+    }
 
     for (const { name, value } of node.attributes) {
         if (["name", "widget"].includes(name)) {
@@ -273,11 +281,6 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         }
         if (["context", "string", "help", "domain"].includes(name)) {
             fieldInfo[name] = value;
-        } else if (name === "modifiers") {
-            fieldInfo.modifiers = JSON.parse(value);
-            fieldInfo.alwaysInvisible =
-                fieldInfo.modifiers.invisible === true ||
-                fieldInfo.modifiers.column_invisible === true;
         } else if (name === "on_change") {
             fieldInfo.onChange = archParseBoolean(value);
         } else if (name === "options") {
@@ -293,7 +296,7 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         }
     }
     if (name === "id") {
-        fieldInfo.modifiers.readonly = true;
+        fieldInfo.readonly = 'True';
     }
 
     if (widget === "handle") {

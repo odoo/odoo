@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
-import { evalDomain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
-import { evaluateExpr } from "@web/core/py_js/py";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { omit } from "@web/core/utils/objects";
 
@@ -37,12 +36,7 @@ class CopyClipboardField extends Component {
         return this.props.record.fields[this.props.name].type;
     }
     get disabled() {
-        const context = this.props.record.evalContext;
-        const evaluated = this.props.disabledExpr ? evaluateExpr(this.props.disabledExpr) : false;
-        if (evaluated instanceof Array) {
-            return evalDomain(evaluated, context);
-        }
-        return Boolean(evaluated);
+        return this.props.disabledExpr ? evaluateBooleanExpr(this.props.disabledExpr, this.props.record.evalContext) : false;
     }
 }
 

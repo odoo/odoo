@@ -276,7 +276,7 @@ QUnit.module("Fields", (hooks) => {
                 <form>
                     <sheet>
                         <group>
-                            <field name="foo" widget="url" attrs="{'readonly': True}" />
+                            <field name="foo" widget="url" readonly="True" />
                             <field name="foo2" />
                         </group>
                     </sheet>

@@ -288,11 +288,11 @@ QUnit.module("Views", ({ beforeEach }) => {
                 <form>
                     <field name="name" />
                     <field name="allday" />
-                    <group attrs="{'invisible': [['allday', '=', True]]}">
+                    <group invisible="allday">
                         <field name="start" />
                         <field name="stop" />
                     </group>
-                    <group attrs="{'invisible': [['allday', '=', False]]}">
+                    <group invisible="not allday">
                         <field name="start_date" />
                         <field name="stop_date" />
                     </group>
@@ -301,8 +301,8 @@ QUnit.module("Views", ({ beforeEach }) => {
                 "event,1,form": `
                 <form>
                     <field name="allday" invisible="1" />
-                    <field name="start" attrs="{'invisible': [['allday', '=', False]]}" />
-                    <field name="stop" attrs="{'invisible': [['allday', '=', True]]}" />
+                    <field name="start" invisible="not allday" />
+                    <field name="stop" invisible="allday" />
                 </form>
             `,
             },
@@ -1370,8 +1370,8 @@ QUnit.module("Views", ({ beforeEach }) => {
                 <calendar date_start="start" date_stop="stop" all_day="allday" mode="week">
                     <field name="priority" widget="priority" readonly="1" />
                     <field name="is_hatched" invisible="1" />
-                    <field name="partner_id" attrs="{'invisible': [['is_hatched', '=', False]]}" />
-                    <field name="start" attrs="{'invisible': [['is_hatched', '=', True]]}" />
+                    <field name="partner_id" invisible="not is_hatched" />
+                    <field name="start" invisible="is_hatched" />
                 </calendar>
             `,
         });
@@ -4692,7 +4692,8 @@ QUnit.module("Views", ({ beforeEach }) => {
             serverData,
             arch: `
                 <calendar date_start="start" date_stop="stop" all_day="allday" mode="month">
-                    <field name="name" attrs="{'readonly': [['unknown_field', '=', 42]]}" />
+                    <field name="delay" invisible="True" />
+                    <field name="name" readonly="delay == 42" />
                 </calendar>
             `,
         });
@@ -4709,7 +4710,8 @@ QUnit.module("Views", ({ beforeEach }) => {
             serverData,
             arch: `
                 <calendar date_start="start" date_stop="stop" all_day="allday" mode="month" scales="month,year">
-                    <field name="name" attrs="{'readonly': [['unknown_field', '=', 42]]}" />
+                    <field name="delay" invisible="True" />
+                    <field name="name" readonly="delay == 42" />
                 </calendar>
             `,
         });

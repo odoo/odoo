@@ -55,7 +55,7 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             arch: /*xml*/ `
                 <tree string="Colors" editable="top">
-                    <field name="tz_offset" invisible="True"/>
+                    <field name="tz_offset" column_invisible="True"/>
                     <field name="color" widget="timezone_mismatch" />
                 </tree>
             `,

@@ -2619,7 +2619,7 @@ QUnit.module("Views", (hooks) => {
         serverData.views["partner,some_view_ref,form"] =
             "<form>" +
             '<field name="foo" required="1"/>' +
-            '<field name="int_field" attrs=\'{"invisible": [["foo", "=", false]]}\'/>' +
+            '<field name="int_field" invisible="not foo"/>' +
             "</form>";
 
         await makeView({
@@ -8047,11 +8047,8 @@ QUnit.module("Views", (hooks) => {
                 '<field name="bar"/>' +
                 '<field name="state"/>' +
                 '<templates><div t-name="kanban-box">' +
-                '<button class="o_btn_test_1" type="object" name="a1" ' +
-                "attrs=\"{'invisible': [['foo', '!=', 'yop']]}\"/>" +
-                '<button class="o_btn_test_2" type="object" name="a2" ' +
-                "attrs=\"{'invisible': [['bar', '=', True]]}\" " +
-                'states="abc,def"/>' +
+                '<button class="o_btn_test_1" type="object" name="a1" invisible="foo != \'yop\'"/>' +
+                '<button class="o_btn_test_2" type="object" name="a2" invisible="bar and state not in [\'abc\', \'def\']"/>' +
                 "</div></templates>" +
                 "</kanban>",
         });
@@ -8221,7 +8218,7 @@ QUnit.module("Views", (hooks) => {
                     <templates>
                         <t t-name="kanban-box">
                             <div>
-                                <field name="foo" attrs="{'invisible': [['id', '=', 1]]}"/>
+                                <field name="foo" invisible="id == 1"/>
                             </div>
                         </t>
                     </templates>
@@ -8396,7 +8393,7 @@ QUnit.module("Views", (hooks) => {
             arch: `
                 <kanban>
                     <field name="bar" />
-                    <field name="product_id" attrs="{'readonly': [('bar', '!=', True)]}"/>
+                    <field name="product_id" readonly="not bar"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div><field name="id"/></div>
@@ -8563,7 +8560,7 @@ QUnit.module("Views", (hooks) => {
                         <t t-name="kanban-box">
                             <div>
                                 <field name="foo"/>
-                                <button type="object" attrs="{'invisible':['|', ('bar','=',True), ('category_ids', '!=', [])]}" class="btn btn-primary float-end" name="arbitrary">Join</button>
+                                <button type="object" invisible="bar or category_ids" class="btn btn-primary float-end" name="arbitrary">Join</button>
                             </div>
                         </t>
                     </templates>

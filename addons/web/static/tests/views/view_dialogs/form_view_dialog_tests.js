@@ -107,11 +107,11 @@ QUnit.module("ViewDialogs", (hooks) => {
             "partner,false,form": `
                 <form>
                     <field name="bar"/>
-                    <footer attrs="{'invisible': [('bar','=',False)]}">
+                    <footer invisible="not bar">
                         <button>Hello</button>
                         <button>World</button>
                     </footer>
-                    <footer attrs="{'invisible': [('bar','!=',False)]}">
+                    <footer invisible="bar">
                         <button>Foo</button>
                     </footer>
                 </form>`,

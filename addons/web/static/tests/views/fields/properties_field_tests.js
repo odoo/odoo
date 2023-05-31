@@ -1818,7 +1818,7 @@ QUnit.module("Fields", (hooks) => {
                             <field name="company_id"/>
                             <field name="display_name"/>
                             <field name="properties" widget="properties"/>
-                            <div class="o_test_properties_not_empty" attrs="{'invisible': [('properties', '=', [])]}">
+                            <div class="o_test_properties_not_empty" invisible="not properties">
                                 Properties not empty
                             </div>
                         </group>
@@ -1872,7 +1872,7 @@ QUnit.module("Fields", (hooks) => {
                             <field name="company_id"/>
                             <field name="display_name"/>
                             <field name="properties" widget="properties"/>
-                            <div class="o_test_properties_not_empty" attrs="{'invisible': [('properties', '=', [])]}">
+                            <div class="o_test_properties_not_empty" invisible="not properties">
                                 Properties not empty
                             </div>
                         </group>

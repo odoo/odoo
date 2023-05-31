@@ -10,7 +10,6 @@ import {
     serializeDate,
     serializeDateTime,
 } from "@web/core/l10n/dates";
-import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { intersection, unique } from "@web/core/utils/arrays";
 import { deepCopy, pick } from "@web/core/utils/objects";
@@ -319,7 +318,6 @@ export class MockServer {
         function isNodeProcessed(node) {
             return processedNodes.findIndex((n) => n.isSameNode(node)) > -1;
         }
-        const modifiersNames = ["invisible", "readonly", "required"];
         const onchanges = params.models[modelName].onchanges || {};
         const fieldNodes = {};
         const groupbyNodes = {};
@@ -332,8 +330,6 @@ export class MockServer {
         }
         const editableView = editable && this._editableNode(doc, modelName);
         const onchangeAbleView = this._onchangeAbleView(doc);
-        const modifiersFromModel = this._modifiersFromModel(doc);
-        const inTreeView = ["tree", "list"].includes(doc.tagName);
         const inFormView = doc.tagName === "form";
         // mock _postprocess_access_rights
         const isBaseModel = !context.base_model_name || modelName === context.base_model_name;
@@ -350,89 +346,29 @@ export class MockServer {
             if (node.nodeType === Node.TEXT_NODE) {
                 return false;
             }
-            const modifiers = {};
+            ['required', 'readonly', 'invisible', 'column_invisible'].forEach((attr) => {
+                const value = node.getAttribute(attr);
+                if (value === '1' || value === 'true') {
+                    node.setAttribute(attr, 'True');
+                }
+            });
             const isField = node.tagName === "field";
             const isGroupby = node.tagName === "groupby";
             if (isField) {
                 const fieldName = node.getAttribute("name");
                 fieldNodes[fieldName] = {
                     node,
-                    isInvisible: node.getAttribute("invisible"),
+                    isInvisible: node.getAttribute("invisible") === "True",
                     isEditable: editableView && this._editableNode(node, modelName),
                 };
-                // 'transfer_field_to_modifiers' simulation
                 const field = fields[fieldName];
                 if (!field) {
                     throw new Error("Field " + fieldName + " does not exist");
                 }
-                const defaultValues = {};
-                const stateExceptions = {}; // what is this ?
-
-                modifiersFromModel.forEach((attr) => {
-                    stateExceptions[attr] = [];
-                    defaultValues[attr] = !!field[attr];
-                });
-                // LPE: what is this ?
-                /*    for (const [state, modifs] of Object.entries(field.states || {})) {      
-                            modifs.forEach((modif) => {
-                                if (defaultValues[modif[0]] !== modif[1]) {
-                                    stateExceptions[modif[0]].append(state);
-                                }
-                            });
-                        });*/
-                Object.entries(defaultValues).forEach(([attr, defaultValue]) => {
-                    if (stateExceptions[attr].length) {
-                        modifiers[attr] = [
-                            ["state", defaultValue ? "not in" : "in", stateExceptions[attr]],
-                        ];
-                    } else {
-                        modifiers[attr] = defaultValue;
-                    }
-                });
             } else if (isGroupby && !isNodeProcessed(node)) {
                 const groupbyName = node.getAttribute("name");
                 fieldNodes[groupbyName] = { node };
                 groupbyNodes[groupbyName] = node;
-            }
-            // 'transfer_node_to_modifiers' simulation
-            let attrs = node.getAttribute("attrs");
-            node.removeAttribute("attrs");
-            if (attrs) {
-                attrs = evaluateExpr(attrs);
-                Object.assign(modifiers, attrs);
-            }
-            const states = node.getAttribute("states");
-            node.removeAttribute("states");
-            if (states) {
-                if (!modifiers.invisible) {
-                    modifiers.invisible = [];
-                }
-                modifiers.invisible.push(["state", "not in", states.split(",")]);
-            }
-            const inListHeader = inTreeView && node.closest("header");
-            modifiersNames.forEach((attr) => {
-                const mod = node.getAttribute(attr);
-                node.removeAttribute(attr);
-                if (mod) {
-                    const v = evaluateExpr(mod, context) ? true : false;
-                    if (inTreeView && !inListHeader && attr === "invisible") {
-                        modifiers.column_invisible = v;
-                    } else if (v || !(attr in modifiers) || !Array.isArray(modifiers[attr])) {
-                        modifiers[attr] = v;
-                    }
-                }
-            });
-            modifiersNames.forEach((attr) => {
-                if (
-                    attr in modifiers &&
-                    (!!modifiers[attr] === false ||
-                        (Array.isArray(modifiers[attr]) && !modifiers[attr].length))
-                ) {
-                    delete modifiers[attr];
-                }
-            });
-            if (Object.keys(modifiers).length) {
-                node.setAttribute("modifiers", JSON.stringify(modifiers));
             }
             if (isGroupby && !isNodeProcessed(node)) {
                 return false;
@@ -480,8 +416,7 @@ export class MockServer {
                 Array.from(node.children).forEach((childNode) => {
                     if (childNode.tagName) {
                         relFields = Object.assign({}, params.models[relModel].fields);
-                        // this is hackhish, but _getView modifies the subview document in place,
-                        // especially to generate the "modifiers" attribute
+                        // this is hackhish, but _getView modifies the subview document in place
                         const { models } = this._getView({
                             models: params.models,
                             arch: childNode,
@@ -553,16 +488,7 @@ export class MockServer {
             case "field": {
                 const fname = node.getAttribute("name");
                 const field = this.models[modelName].fields[fname];
-                return (
-                    (!field.readonly ||
-                        (field.states &&
-                            Object.values(field.states).some((item) =>
-                                item.includes("readonly")
-                            ))) &&
-                    (!["1", "True"].includes(node.getAttribute("readonly")) ||
-                        Object.keys(evaluateExpr(node.getAttribute("attrs") || "{}") || {}).length >
-                            0)
-                );
+                return !field.readonly && node.getAttribute("readonly") !== "True" && node.getAttribute("readonly") !== "1";
             }
             default:
                 return false;
@@ -577,14 +503,6 @@ export class MockServer {
         } else if (node.tagName === "kanban") {
             return true;
         }
-    }
-
-    _modifiersFromModel(node) {
-        const modifiersNames = ["invisible"];
-        if (["kanban", "tree", "form"].includes(node.tagName)) {
-            modifiersNames.push(...["readonly", "required"]);
-        }
-        return modifiersNames;
     }
 
     /**

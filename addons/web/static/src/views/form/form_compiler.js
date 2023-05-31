@@ -134,17 +134,19 @@ export class FormCompiler extends ViewCompiler {
         let hasContent = false;
         for (const child of el.children) {
             const invisible = getModifier(child, "invisible");
-            if (this.isAlwaysInvisible(invisible, params)) {
+            if (!params.compileInvisibleNodes && (invisible === "True" || invisible === "1")) {
                 continue;
             }
             hasContent = true;
             let isVisibleExpr;
-            if (typeof invisible === "boolean") {
-                isVisibleExpr = `${invisible ? false : true}`;
+            if (!invisible || invisible === "False" || invisible === "0") {
+                isVisibleExpr = "true";
+            } else if (invisible === "True" || invisible === "1") {
+                isVisibleExpr = "false";
             } else {
-                isVisibleExpr = `!__comp__.evalDomainFromRecord(__comp__.props.record,${JSON.stringify(
+                isVisibleExpr = `!__comp__.evaluateBooleanExpr(${JSON.stringify(
                     invisible
-                )})`;
+                )},__comp__.props.record.evalContext)`;
             }
             const mainSlot = createElement("t", {
                 "t-set-slot": `slot_${slotId++}`,
@@ -277,7 +279,7 @@ export class FormCompiler extends ViewCompiler {
             }
 
             const invisible = getModifier(child, "invisible");
-            if (this.isAlwaysInvisible(invisible, params)) {
+            if (!params.compileInvisibleNodes && (invisible === "True" || invisible === "1")) {
                 continue;
             }
 
@@ -340,12 +342,14 @@ export class FormCompiler extends ViewCompiler {
 
             if (slotContent && !isTextNode(slotContent)) {
                 let isVisibleExpr;
-                if (typeof invisible === "boolean") {
-                    isVisibleExpr = `${invisible ? false : true}`;
+                if (!invisible || invisible === "False" || invisible === "0") {
+                    isVisibleExpr = "true";
+                } else if (invisible === "True" || invisible === "1") {
+                    isVisibleExpr = "false";
                 } else {
-                    isVisibleExpr = `!__comp__.evalDomainFromRecord(__comp__.props.record,${JSON.stringify(
+                    isVisibleExpr = `!__comp__.evaluateBooleanExpr(${JSON.stringify(
                         invisible
-                    )})`;
+                    )},__comp__.props.record.evalContext)`;
                 }
                 mainSlot.setAttribute("isVisible", isVisibleExpr);
                 if (itemSpan > 0) {
@@ -499,7 +503,7 @@ export class FormCompiler extends ViewCompiler {
                 continue;
             }
             const invisible = getModifier(child, "invisible");
-            if (this.isAlwaysInvisible(invisible, params)) {
+            if (!params.compileInvisibleNodes && (invisible === "True" || invisible === "1")) {
                 continue;
             }
 
@@ -537,15 +541,17 @@ export class FormCompiler extends ViewCompiler {
                 };
             }
 
-            let isVisible;
-            if (typeof invisible === "boolean") {
-                isVisible = `${!invisible}`;
+            let isVisibleExpr;
+            if (!invisible || invisible === "False" || invisible === "0") {
+                isVisibleExpr = "true";
+            } else if (invisible === "True" || invisible === "1") {
+                isVisibleExpr = "false";
             } else {
-                isVisible = `!__comp__.evalDomainFromRecord(__comp__.props.record,${JSON.stringify(
+                isVisibleExpr = `!__comp__.evaluateBooleanExpr(${JSON.stringify(
                     invisible
-                )})`;
+                )},__comp__.props.record.evalContext)`;
             }
-            pageSlot.setAttribute("isVisible", isVisible);
+            pageSlot.setAttribute("isVisible", isVisibleExpr);
 
             for (const contents of child.children) {
                 append(pageSlot, this.compileNode(contents, { ...params, currentSlot: pageSlot }));

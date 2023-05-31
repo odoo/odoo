@@ -140,11 +140,7 @@ export function encodeObjectForTemplate(obj) {
  * @returns {boolean | boolean[]}
  */
 export function getModifier(el, modifierName) {
-    // cf python side def transfer_node_to_modifiers
-    // modifiers' string are evaluated to their boolean or array form
-    const modifiers = JSON.parse(el.getAttribute("modifiers") || "{}");
-    const mod = modifierName in modifiers ? modifiers[modifierName] : false;
-    return typeof mod !== "boolean" ? mod : !!mod;
+    return el.getAttribute(modifierName);
 }
 
 /**
@@ -229,16 +225,16 @@ export class ViewCompiler {
      * @returns {Element}
      */
     applyInvisible(invisible, compiled, params) {
-        if (!invisible) {
+        if (!invisible || invisible === "False") {
             return compiled;
         }
-        if (typeof invisible === "boolean") {
+        if (invisible === "True" || invisible === "1") {
             return;
         }
         const recordExpr = params.recordExpr || "__comp__.props.record";
-        let isVisileExpr = `!__comp__.evalDomainFromRecord(${recordExpr},${JSON.stringify(
+        let isVisileExpr = `!__comp__.evaluateBooleanExpr(${JSON.stringify(
             invisible
-        )})`;
+        )},${recordExpr}.evalContext)`;
         if (compiled.hasAttribute("t-if")) {
             const formerTif = compiled.getAttribute("t-if");
             isVisileExpr = `( ${formerTif} ) and ${isVisileExpr}`;
@@ -275,7 +271,7 @@ export class ViewCompiler {
         let invisible;
         if (evalInvisible) {
             invisible = getModifier(node, "invisible");
-            if (this.isAlwaysInvisible(invisible, params)) {
+            if (!params.compileInvisibleNodes && (invisible === "True" || invisible === "1")) {
                 return;
             }
         }
@@ -394,7 +390,7 @@ export class ViewCompiler {
      */
     compileGenericNode(el, params) {
         const compiled = createElement(el.nodeName.toLowerCase());
-        const metaAttrs = ["modifiers", "attrs", "invisible", "readonly"];
+        const metaAttrs = ["column_invisible", "invisible", "readonly", "required"];
         for (const attr of el.attributes) {
             if (metaAttrs.includes(attr.name)) {
                 continue;
@@ -427,15 +423,6 @@ export class ViewCompiler {
         props.widgetInfo = `__comp__.props.archInfo.widgetNodes['${widgetId}']`;
         const widget = createElement("Widget", props);
         return assignOwlDirectives(widget, el);
-    }
-
-    /**
-     * @param {any} invisibleModifer
-     * @param {{ enableInvisible?: boolean }} params
-     * @returns {boolean}
-     */
-    isAlwaysInvisible(invisibleModifer, params) {
-        return !params.enableInvisible && typeof invisibleModifer === "boolean" && invisibleModifer;
     }
 
     validateNode(node) {

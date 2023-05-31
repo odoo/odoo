@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { evaluateExpr } from "@web/core/py_js/py";
+import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 
 QUnit.module("py", {}, () => {
     QUnit.module("interpreter", () => {
@@ -29,6 +29,8 @@ QUnit.module("py", {}, () => {
             assert.strictEqual(evaluateExpr('""'), "");
             assert.strictEqual(evaluateExpr('"foo"'), "foo");
             assert.strictEqual(evaluateExpr("'foo'"), "foo");
+            assert.strictEqual(evaluateExpr("'FOO'.lower()"), "foo");
+            assert.strictEqual(evaluateExpr("'foo'.upper()"), "FOO");
         });
 
         QUnit.test("boolean", (assert) => {
@@ -96,6 +98,7 @@ QUnit.module("py", {}, () => {
             assert.strictEqual(evaluateExpr("not False"), true);
             assert.strictEqual(evaluateExpr("not foo", { foo: false }), true);
             assert.strictEqual(evaluateExpr("not None"), true);
+            assert.strictEqual(evaluateExpr("not []"), true);
             assert.strictEqual(evaluateExpr("True == False or True == True"), true);
             assert.strictEqual(evaluateExpr("False == True and False"), false);
         });
@@ -123,6 +126,7 @@ QUnit.module("py", {}, () => {
             assert.strictEqual(evaluateExpr('None or "bar"'), "bar");
             assert.strictEqual(evaluateExpr("False or None"), null);
             assert.strictEqual(evaluateExpr("0 or 1"), 1);
+            assert.strictEqual(evaluateExpr("[] or False"), false);
         });
 
         QUnit.module("values from context");
@@ -321,6 +325,22 @@ QUnit.module("py", {}, () => {
             assert.strictEqual(evaluateExpr("{'a': 1}.get('b', 54)"), 54);
         });
 
+        QUnit.test("can get values from values 'context'", (assert) => {
+            assert.strictEqual(evaluateExpr("context.get('a')", { context: { a: 123 } }), 123);
+            const values = { context: { a: { b: { c: 321 } } } };
+            assert.strictEqual(evaluateExpr("context.get('a').b.c", values), 321);
+            assert.strictEqual(evaluateExpr("context.get('a', {'e': 5}).b.c", values), 321);
+            assert.strictEqual(evaluateExpr("context.get('d', 3)", values), 3);
+            assert.strictEqual(evaluateExpr("context.get('d', {'e': 5})['e']", values), 5);
+        });
+
+        QUnit.test("can check if a key is in the 'context'", (assert) => {
+            assert.strictEqual(evaluateExpr("'a' in context", { context: { a: 123 } }), true);
+            assert.strictEqual(evaluateExpr("'a' in context", { context: { b: 123 } }), false);
+            assert.strictEqual(evaluateExpr("'a' not in context", { context: { a: 123 } }), false);
+            assert.strictEqual(evaluateExpr("'a' not in context", { context: { b: 123 } }), true);
+        });
+
         QUnit.module("objects");
 
         QUnit.test("can read values from object", (assert) => {
@@ -349,6 +369,43 @@ QUnit.module("py", {}, () => {
 
         QUnit.test("tuple in list", (assert) => {
             assert.deepEqual(evaluateExpr("[(1 + 2,'foo', True)]"), [[3, "foo", true]]);
+        });
+
+        QUnit.module("evaluate to boolean");
+
+        QUnit.test("simple expression", (assert) => {
+            assert.strictEqual(evaluateBooleanExpr("12"), true);
+            assert.strictEqual(evaluateBooleanExpr("0"), false);
+            assert.strictEqual(evaluateBooleanExpr("0 + 3 - 1"), true);
+            assert.strictEqual(evaluateBooleanExpr("0 + 3 - 1 - 2"), false);
+            assert.strictEqual(evaluateBooleanExpr('"foo"'), true);
+            assert.strictEqual(evaluateBooleanExpr("[1]"), true);
+            assert.strictEqual(evaluateBooleanExpr("[]"), false);
+        });
+
+        QUnit.test("use contextual values", (assert) => {
+            assert.strictEqual(evaluateBooleanExpr("a", {a: 12}), true);
+            assert.strictEqual(evaluateBooleanExpr("a", {a: 0}), false);
+            assert.strictEqual(evaluateBooleanExpr("0 + 3 - a", {a: 1}), true);
+            assert.strictEqual(evaluateBooleanExpr("0 + 3 - a - 2", {a: 1}), false);
+            assert.strictEqual(evaluateBooleanExpr("0 + 3 - a - b", {a: 1, b: 2}), false);
+            assert.strictEqual(evaluateBooleanExpr('a', {a: "foo"}), true);
+            assert.strictEqual(evaluateBooleanExpr("a", {a: [1]}), true);
+            assert.strictEqual(evaluateBooleanExpr("a", {a: []}), false);
+        });
+
+        QUnit.test("throw if has missing value", (assert) => {
+            assert.throws(() => evaluateBooleanExpr("a", {b: 0}));
+            assert.strictEqual(evaluateBooleanExpr("1 or a"), true);  // do not throw (lazy value)
+            assert.throws(() => evaluateBooleanExpr("0 or a"));
+            assert.throws(() => evaluateBooleanExpr("a or b", {b: true}));
+            assert.throws(() => evaluateBooleanExpr("a and b", {b: true}));
+            assert.throws(() => evaluateBooleanExpr("a()"));
+            assert.throws(() => evaluateBooleanExpr("a[0]"));
+            assert.throws(() => evaluateBooleanExpr("a.b"));
+            assert.throws(() => evaluateBooleanExpr("0 + 3 - a", {b: 1}));
+            assert.throws(() => evaluateBooleanExpr("0 + 3 - a - 2", {b: 1}));
+            assert.throws(() => evaluateBooleanExpr("0 + 3 - a - b", {b: 2}));
         });
     });
 });

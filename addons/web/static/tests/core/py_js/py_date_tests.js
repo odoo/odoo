@@ -333,7 +333,7 @@ QUnit.module("py", {}, () => {
             QUnit.test("throws when period negative", (assert) => {
                 const matcher = (errorMessage) => {
                     return function match(err) {
-                        return err.message === errorMessage;
+                        return err.message.includes(errorMessage);
                     };
                 };
 
