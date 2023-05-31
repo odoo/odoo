@@ -23,10 +23,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='lot_id']" position="after">
                 <field name="use_expiration_date" invisible="1"/>
-                <field name="expiration_date" optional="hide" invisible="context.get('hide_removal_date')"
-                    attrs="{'readonly': ['|', ('tracking', '=', 'none'), ('use_expiration_date', '=', False)]}"/>
-                <field name="removal_date" optional="hide"
-                    invisible="context.get('hide_removal_date')" attrs="{'readonly': ['|', ('tracking', '=', 'none'), ('use_expiration_date', '=', False)]}"/>
+                <field name="expiration_date" optional="hide" invisible="context.get('hide_removal_date')"/>
+                <field name="removal_date" optional="hide" invisible="context.get('hide_removal_date')"/>
             </xpath>
         </field>
     </record>
@@ -39,8 +37,7 @@
             <xpath expr="//field[@name='lot_id']" position="after">
                 <field name="use_expiration_date" invisible="1"/>
                 <field name="expiration_date" groups="stock.group_production_lot"
-                    optional="hide" invisible="context.get('hide_removal_date')"
-                    attrs="{'readonly': ['|', '|', ('tracking', '=', 'none'), ('lot_id', '=', False), ('use_expiration_date', '=', False)]}"/>
+                    optional="hide" invisible="context.get('hide_removal_date')"/>
             </xpath>
         </field>
     </record>
