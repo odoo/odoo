@@ -4,6 +4,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.tools.safe_eval import safe_eval
 
 
@@ -202,6 +203,18 @@ class SaleOrder(models.Model):
                 'default_sale_line_id': default_sale_line.id,
             }
         }
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        created_records = super().create(vals_list)
+        project = self.env['project.project'].browse(self.env.context.get('create_for_project_id'))
+        if project:
+            service_sol = next((sol for sol in created_records.order_line if sol.is_service), False)
+            if not service_sol:
+                raise UserError(_('This Sales Order must contain at least one product of type "Service".'))
+            if not project.sale_line_id:
+                project.sale_line_id = service_sol
+        return created_records
 
     def write(self, values):
         if 'state' in values and values['state'] == 'cancel':
