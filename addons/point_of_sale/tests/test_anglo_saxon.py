@@ -226,10 +226,14 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
     def test_cogs_with_ship_later_no_invoicing(self):
         # This test will check that the correct journal entries are created when a product in real time valuation
         # is sold using the ship later option and no invoice is created in a company using anglo-saxon
+
         self.pos_config.open_session_cb(check_coa=False)
         current_session = self.pos_config.current_session_id
         self.cash_journal.loss_account_id = self.account
         current_session.set_cashbox_pos(0, None)
+
+        # 2 step delivery method
+        self.warehouse.delivery_steps = 'pick_ship'
 
         # I create a PoS order with 1 unit of New product at 450 EUR
         self.pos_order_pos0 = self.PosOrder.create({
@@ -272,6 +276,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         current_session_id.close_session_from_ui()
         self.assertEqual(current_session_id.state, 'closed', 'Check that session is closed')
 
+        self.assertEqual(len(current_session.picking_ids), 2, "There should be 2 pickings")
         current_session.picking_ids.move_ids_without_package.quantity_done = 1
         current_session.picking_ids.button_validate()
 
