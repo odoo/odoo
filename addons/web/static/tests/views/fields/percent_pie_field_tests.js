@@ -69,7 +69,9 @@ QUnit.module("Fields", (hooks) => {
             "should have 10% as pie value since int_field=10"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_percent_pie.o_field_widget .o_pie").style.background,
+            target
+                .querySelector(".o_field_percent_pie.o_field_widget .o_pie")
+                .style.background.replaceAll(/\s+/g, " "),
             "conic-gradient( var(--PercentPieField-color-active) 0% 10%, var(--PercentPieField-color-static) 0% 100% )",
             "pie should have a background computed for its value of 10%"
         );
@@ -103,7 +105,9 @@ QUnit.module("Fields", (hooks) => {
             "should have 80% as pie value since int_field=80"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_percent_pie.o_field_widget .o_pie").style.background,
+            target
+                .querySelector(".o_field_percent_pie.o_field_widget .o_pie")
+                .style.background.replaceAll(/\s+/g, " "),
             "conic-gradient( var(--PercentPieField-color-active) 0% 80%, var(--PercentPieField-color-static) 0% 100% )",
             "pie should have a background computed for its value of 80%"
         );
