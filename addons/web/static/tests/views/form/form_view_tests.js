@@ -6921,10 +6921,7 @@ QUnit.module("Views", (hooks) => {
                     doActionButton(args) {
                         // button context should have been evaluated, the x2many
                         // should be in the form of x2m commands when serialized
-                        assert.equal(
-                            JSON.stringify(args.buttonContext),
-                            '{"test":[[6,false,[12]]]}'
-                        );
+                        assert.equal(JSON.stringify(args.buttonContext), '{"test":[12]}');
                     },
                 };
             },

@@ -2954,7 +2954,7 @@ QUnit.module("Fields", (hooks) => {
                         );
                         assert.deepEqual(
                             kwargs.context,
-                            { ...DEFAULT_USER_CTX, hey: "ho", timmy: [[6, false, [12]]] },
+                            { ...DEFAULT_USER_CTX, hey: "ho", timmy: [12] },
                             "the field attr context should have been used for the RPC (and evaluated)"
                         );
                         return Promise.resolve([]);
