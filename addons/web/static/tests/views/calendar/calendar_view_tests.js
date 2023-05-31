@@ -2707,6 +2707,23 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
     });
 
+    QUnit.test("Colors: use available colors when attr is not number", async (assert) => {
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" color="name">
+                    <field name="partner_ids" write_model="filter_partner" write_field="partner_id" filter_field="partner_checked"  />
+                </calendar>
+            `,
+        });
+        const colorClass = Array.from(findEvent(target, 1).classList).find(className => className.startsWith("o_calendar_color_"));
+        assert.notOk(isNaN(Number(colorClass.split("_").at(-1))));
+        await clickEvent(target, 1);
+        assert.hasClass(target.querySelector(".o_cw_popover"), colorClass);
+    });
+
     QUnit.test(`Add filters and specific color`, async (assert) => {
         serverData.models.event_type.records.push({
             id: 4,
