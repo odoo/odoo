@@ -121,10 +121,10 @@ class Project(models.Model):
         action_window = {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
-            'name': _("%(name)s's Sales Order", name=self.name),
-            "context": {"create": False, "show_sale": True},
+            'name': _("%(name)s's Sales Orders", name=self.name),
+            "context": {"create": self.env.context.get('create_for_project_id'), "show_sale": True},
         }
-        if len(all_sale_orders) == 1:
+        if len(all_sale_orders) <= 1:
             action_window.update({
                 "res_id": all_sale_orders.id,
                 "views": [[False, "form"]],
