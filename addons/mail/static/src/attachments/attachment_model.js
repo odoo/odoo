@@ -90,8 +90,9 @@ export class Attachment {
 
     get defaultSource() {
         const route = url(this.urlRoute, this.urlQueryParams);
+        const encodedRoute = encodeURIComponent(route)
         if (this.isPdf) {
-            return `/web/static/lib/pdfjs/web/viewer.html?file=${route}#pagemode=none`;
+            return `/web/static/lib/pdfjs/web/viewer.html?file=${encodedRoute}#pagemode=none`;
         }
         if (this.isUrlYoutube) {
             const urlArr = this.url.split("/");
