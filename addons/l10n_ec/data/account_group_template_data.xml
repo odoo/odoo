@@ -122,6 +122,13 @@
             <field name="parent_id" ref="ec1105"/>
         </record>
 
+        <record id="ec110502" model="account.group.template">
+            <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
+            <field name="code_prefix_start">110502</field>
+            <field name="name">Crédito Tributario de la Empresa</field>
+            <field name="parent_id" ref="ec1105"/>
+        </record>
+
         <record id="ec12" model="account.group.template">
             <field name="chart_template_id" eval="ref('l10n_ec.l10n_ec_ifrs')"/>
             <field name="code_prefix_start">12</field>
