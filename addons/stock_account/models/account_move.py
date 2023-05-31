@@ -13,11 +13,8 @@ class AccountMove(models.Model):
     def _compute_show_reset_to_draft_button(self):
         super()._compute_show_reset_to_draft_button()
         for move in self:
-            for line in move.line_ids:
-                # if a line has correction layers hide the 'Reset to Darft' button
-                if line.sudo()._get_stock_valuation_layers(move).stock_valuation_layer_ids.filtered('account_move_line_id'):
-                    move.show_reset_to_draft_button = False
-                    break
+            if move.sudo().line_ids.stock_valuation_layer_ids:
+                move.show_reset_to_draft_button = False
 
     # -------------------------------------------------------------------------
     # OVERRIDE METHODS
@@ -185,6 +182,8 @@ class AccountMove(models.Model):
                 continue
 
             stock_moves = move._stock_account_get_last_step_stock_moves()
+            # In case we return a return, we have to provide the related AMLs so all can be reconciled
+            stock_moves |= stock_moves.origin_returned_move_id
 
             if not stock_moves:
                 continue
@@ -217,7 +216,7 @@ class AccountMove(models.Model):
                     correction_amls = product_account_moves - stock_aml - invoice_aml
                     # Reconcile.
                     if correction_amls:
-                        if sum(correction_amls.mapped('balance')) > 0:
+                        if sum(correction_amls.mapped('balance')) > 0 or all(aml.is_same_currency for aml in correction_amls):
                             product_account_moves.with_context(no_exchange_difference=True).reconcile()
                         else:
                             (invoice_aml | correction_amls).with_context(no_exchange_difference=True).reconcile()
