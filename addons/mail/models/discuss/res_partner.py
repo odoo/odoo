@@ -21,16 +21,14 @@ class ResPartner(models.Model):
         self.ensure_one()
         channels = self.env["discuss.channel"]
         # get the channels and groups
+        channels = self.env["discuss.channel"].search([
+            ("channel_type", "in", ("channel", "group")),
+            ("channel_partner_ids", "in", [self.id]),
+        ])
+        # get the channels which are pinned and not of type channel or group
         channels |= self.env["discuss.channel"].search(
             [
-                ("channel_type", "in", ("channel", "group")),
-                ("channel_partner_ids", "in", [self.id]),
-            ]
-        )
-        # get the pinned direct messages
-        channels |= self.env["discuss.channel"].search(
-            [
-                ("channel_type", "=", "chat"),
+                ("channel_type", "not in", ("channel", "group")),
                 (
                     "channel_member_ids",
                     "in",

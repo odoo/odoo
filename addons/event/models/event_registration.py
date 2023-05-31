@@ -40,6 +40,7 @@ class EventRegistration(models.Model):
     date_closed = fields.Datetime(
         string='Attended Date', compute='_compute_date_closed',
         readonly=False, store=True)
+    date_range = fields.Char("Date Range", compute='_compute_date_range')
     event_begin_date = fields.Datetime(string="Event Start Date", related='event_id.date_begin', readonly=True)
     event_end_date = fields.Datetime(string="Event End Date", related='event_id.date_end', readonly=True)
     event_organizer_id = fields.Many2one(string='Event Organizer', related='event_id.organizer_id', readonly=True)
@@ -105,6 +106,11 @@ class EventRegistration(models.Model):
                     registration.date_closed = self.env.cr.now()
                 else:
                     registration.date_closed = False
+
+    def _compute_date_range(self):
+        for registration in self:
+            lang_code = registration.partner_id.lang or self.env.user.lang
+            registration.date_range = registration.get_date_range_str(lang_code=lang_code)
 
     @api.constrains('event_id', 'event_ticket_id')
     def _check_event_ticket(self):

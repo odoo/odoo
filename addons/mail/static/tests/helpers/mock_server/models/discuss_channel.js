@@ -264,6 +264,9 @@ patch(MockServer.prototype, {
         const [channel] = this.getRecords("discuss.channel", [["id", "in", ids]]);
         const partners = this.getRecords("res.partner", [["id", "in", partner_ids]]);
         for (const partner of partners) {
+            if (partner.id === this.pyEnv.currentPartnerId) {
+                continue;
+            }
             const body = `<div class="o_mail_notification">invited ${partner.name} to the channel</div>`;
             const message_type = "notification";
             const subtype_xmlid = "mail.mt_comment";

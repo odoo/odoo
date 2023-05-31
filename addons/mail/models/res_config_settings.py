@@ -38,6 +38,7 @@ class ResConfigSettings(models.TransientModel):
     )
     email_primary_color = fields.Char(related='company_id.email_primary_color', readonly=False)
     email_secondary_color = fields.Char(related='company_id.email_secondary_color', readonly=False)
+    module_whatsapp = fields.Boolean('WhatsApp Integration')
 
     tenor_api_key = fields.Char(
         'Tenor API key',

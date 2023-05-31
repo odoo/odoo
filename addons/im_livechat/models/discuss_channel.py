@@ -36,11 +36,8 @@ class DiscussChannel(models.Model):
             end = record.message_ids[0].date if record.message_ids else fields.Datetime.now()
             record.duration = (end - start).total_seconds() / 3600
 
-    def _compute_is_chat(self):
-        super()._compute_is_chat()
-        for record in self:
-            if record.channel_type == 'livechat':
-                record.is_chat = True
+    def _get_chat_channel_types(self):
+        return super()._get_chat_channel_types() + ['livechat']
 
     def _channel_message_notifications(self, message, message_format=False):
         """ When a anonymous user create a discuss.channel, the operator is not notify (to avoid massive polling when
