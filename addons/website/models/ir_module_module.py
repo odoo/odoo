@@ -407,6 +407,8 @@ class IrModuleModule(models.Model):
             result = website.button_go_website(mode_edit=True)
         if result.get('tag') == 'website_preview' and result.get('context', {}).get('params', {}).get('enable_editor'):
             result['context']['params']['with_loader'] = True
+            # Todo in master: remove no_edit_on_mobile param.
+            result['context']['params']['no_edit_on_mobile'] = True
         return result
 
     def button_remove_theme(self):
