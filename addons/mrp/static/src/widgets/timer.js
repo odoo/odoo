@@ -16,7 +16,7 @@ function formatMinutes(value) {
         value = Math.abs(value);
     }
     let min = Math.floor(value);
-    let sec = Math.floor((value % 1) * 60);
+    let sec = Math.round((value % 1) * 60);
     sec = `${sec}`.padStart(2, "0");
     min = `${min}`.padStart(2, "0");
     return `${isNegative ? "-" : ""}${min}:${sec}`;
