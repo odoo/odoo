@@ -85,12 +85,14 @@ class AccountMove(models.Model):
                 raise RedirectWarning(msg, action, _('Go to Company configuration'))
             move.l10n_in_gstin = move.partner_id.vat
             if not move.l10n_in_gstin and move.l10n_in_gst_treatment in ['regular', 'composition', 'special_economic_zone', 'deemed_export']:
-                raise ValidationError(_(
+                exc = ValidationError(_(
                     "Partner %(partner_name)s (%(partner_id)s) GSTIN is required under GST Treatment %(name)s",
                     partner_name=move.partner_id.name,
                     partner_id=move.partner_id.id,
                     name=gst_treatment_name_mapping.get(move.l10n_in_gst_treatment)
                 ))
+                exc.sentry_ignored = True
+                raise exc
         return posted
 
     def _l10n_in_get_warehouse_address(self):
