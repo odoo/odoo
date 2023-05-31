@@ -22,19 +22,19 @@ odoo.define('payment_authorize.payment_form', require => {
         _getInlineFormInputs: function (providerId) {
             if (this.authorizeInfo.payment_method_type === "credit_card") {
                 return {
-                    card: document.getElementById(`o_authorize_card_${providerId}`),
-                    month: document.getElementById(`o_authorize_month_${providerId}`),
-                    year: document.getElementById(`o_authorize_year_${providerId}`),
-                    code: document.getElementById(`o_authorize_code_${providerId}`),
+                    card: this.el.querySelector(`#o_authorize_card_${providerId}`),
+                    month: this.el.querySelector(`#o_authorize_month_${providerId}`),
+                    year: this.el.querySelector(`#o_authorize_year_${providerId}`),
+                    code: this.el.querySelector(`#o_authorize_code_${providerId}`),
                 };
             } else {
                 return {
-                    accountName: document.getElementById(`o_authorize_account_name_${providerId}`),
-                    accountNumber: document.getElementById(
-                        `o_authorize_account_number_${providerId}`
+                    accountName: this.el.querySelector(`#o_authorize_account_name_${providerId}`),
+                    accountNumber: this.el.querySelector(
+                        `#o_authorize_account_number_${providerId}`
                     ),
-                    abaNumber: document.getElementById(`o_authorize_aba_number_${providerId}`),
-                    accountType: document.getElementById(`o_authorize_account_type_${providerId}`),
+                    abaNumber: this.el.querySelector(`#o_authorize_aba_number_${providerId}`),
+                    accountType: this.el.querySelector(`#o_authorize_account_type_${providerId}`),
                 };
             }
         },
