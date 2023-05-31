@@ -1474,7 +1474,10 @@ def format_time(env, value, tz=False, time_format='medium', lang_code=False):
         if isinstance(value, str):
             value = odoo.fields.Datetime.from_string(value)
         tz_name = tz or env.user.tz or 'UTC'
-        utc_datetime = pytz.utc.localize(value, is_dst=False)
+        if value.tzinfo:
+            utc_datetime = value.astimezone(pytz.utc)
+        else:
+            utc_datetime = pytz.utc.localize(value, is_dst=False)
         try:
             context_tz = pytz.timezone(tz_name)
             localized_datetime = utc_datetime.astimezone(context_tz)
