@@ -6,3 +6,4 @@ from . import stock_traceability
 from . import stock_lot
 from . import account_move
 from . import product
+from . import mail_compose_message
