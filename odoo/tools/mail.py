@@ -218,6 +218,8 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         })
 
     try:
+        src = src.replace('--!>', '-->')
+        src = re.sub(r'(<!-->|<!--->)', '<!-- -->', src)
         # some corner cases make the parser crash (such as <SCRIPT/XSS SRC=\"http://ha.ckers.org/xss.js\"></SCRIPT> in test_mail)
         cleaner = _Cleaner(**kwargs)
         cleaned = cleaner.clean_html(src)
