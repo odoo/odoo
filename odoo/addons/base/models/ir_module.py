@@ -233,7 +233,7 @@ class Module(models.Model):
                 path_parts = module.icon.split('/')
                 path = modules.get_module_resource(path_parts[1], *path_parts[2:])
             elif module.id:
-                path = modules.module.get_module_icon(module.name)
+                path = modules.module.get_module_icon_path(module)
             else:
                 path = ''
             if path:
