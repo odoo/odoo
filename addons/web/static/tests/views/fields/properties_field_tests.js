@@ -2307,4 +2307,151 @@ QUnit.module("Fields", (hooks) => {
             "fake.model,1337": [],
         });
     });
+
+    QUnit.test("properties: separators drag and drop", async function (assert) {
+        // 2 columns view, 5 properties
+        await makePropertiesGroupView([false, false, false, false, false]);
+        assert.deepEqual(getGroups(), [
+            [
+                ["", ""],
+                ["Property 1", "property_1"],
+                ["Property 2", "property_2"],
+                ["Property 3", "property_3"],
+            ],
+            [
+                ["", ""],
+                ["Property 4", "property_4"],
+                ["Property 5", "property_5"],
+            ],
+        ]);
+
+        const getPropertyHandleElement = (propertyName) => {
+            return target.querySelector(`*[property-name='${propertyName}'] .oi-draggable`);
+        };
+
+        // if we move properties inside the same column, do not generate the group
+        await dragAndDrop(
+            getPropertyHandleElement("property_1"),
+            getPropertyHandleElement("property_3")
+        );
+        assert.deepEqual(getGroups(), [
+            [
+                ["", ""],
+                ["Property 2", "property_2"],
+                ["Property 3", "property_3"],
+                ["Property 1", "property_1"],
+            ],
+            [
+                ["", ""],
+                ["Property 4", "property_4"],
+                ["Property 5", "property_5"],
+            ],
+        ]);
+
+        // but if we move a property in a different column, we need to generate the group
+        await dragAndDrop(
+            getPropertyHandleElement("property_3"),
+            getPropertyHandleElement("property_4")
+        );
+
+        assert.deepEqual(getGroups(), [
+            [
+                // should have generated new separator
+                // to keep the column separation
+                ["GROUP 1", "property_gen_2"],
+                ["Property 2", "property_2"],
+                ["Property 1", "property_1"],
+            ],
+            [
+                ["GROUP 2", "property_gen_3"],
+                ["Property 3", "property_3"],
+                ["Property 4", "property_4"],
+                ["Property 5", "property_5"],
+            ],
+        ]);
+
+        // fold the first group
+        await click(target, "div[property-name='property_gen_2'] .o_field_property_group_label");
+
+        // drag and drop the firth property in the folded group
+        await dragAndDrop(
+            getPropertyHandleElement("property_5"),
+            getPropertyHandleElement("property_gen_2")
+        );
+
+        // should unfold automatically
+        assert.deepEqual(getGroups(), [
+            [
+                ["GROUP 1", "property_gen_2"],
+                ["Property 2", "property_2"],
+                ["Property 1", "property_1"],
+                ["Property 5", "property_5"],
+            ],
+            [
+                ["GROUP 2", "property_gen_3"],
+                ["Property 3", "property_3"],
+                ["Property 4", "property_4"],
+            ],
+        ]);
+
+        // drag and drop the first group at the second position
+        await dragAndDrop(
+            getPropertyHandleElement("property_gen_2"),
+            getPropertyHandleElement("property_gen_3")
+        );
+
+        assert.deepEqual(getGroups(), [
+            [
+                ["GROUP 2", "property_gen_3"],
+                ["Property 3", "property_3"],
+                ["Property 4", "property_4"],
+            ],
+            [
+                ["GROUP 1", "property_gen_2"],
+                ["Property 2", "property_2"],
+                ["Property 1", "property_1"],
+                ["Property 5", "property_5"],
+            ],
+        ]);
+
+        // move property 3 at the last position of the other group
+        await dragAndDrop(
+            getPropertyHandleElement("property_3"),
+            getPropertyHandleElement("property_gen_2")
+        );
+
+        assert.deepEqual(getGroups(), [
+            [
+                ["GROUP 2", "property_gen_3"],
+                ["Property 4", "property_4"],
+            ],
+            [
+                ["GROUP 1", "property_gen_2"],
+                ["Property 2", "property_2"],
+                ["Property 1", "property_1"],
+                ["Property 5", "property_5"],
+                ["Property 3", "property_3"],
+            ],
+        ]);
+
+        // move property 3 at the first position of its group
+        await dragAndDrop(
+            getPropertyHandleElement("property_3"),
+            getPropertyHandleElement("property_2")
+        );
+
+        assert.deepEqual(getGroups(), [
+            [
+                ["GROUP 2", "property_gen_3"],
+                ["Property 4", "property_4"],
+            ],
+            [
+                ["GROUP 1", "property_gen_2"],
+                ["Property 3", "property_3"],
+                ["Property 2", "property_2"],
+                ["Property 1", "property_1"],
+                ["Property 5", "property_5"],
+            ],
+        ]);
+    });
 });
