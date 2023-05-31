@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+import werkzeug
 
 from datetime import timedelta
 from markupsafe import Markup, escape
@@ -24,12 +25,19 @@ class MassMailController(http.Controller):
             available for them;
           * hash_token is not required for generic page for logged user, aka
             if no mailing_id is given;
+          * hash_token is not required for mailing specific page if the user
+            is a mailing user;
+          * hash_token is not required for generic page for logged user, aka
+            if no mailing_id is given and if mailing_id is not required;
           * hash_token always requires the triplet mailing_id, email and
             document_id, as it indicates it comes from a mailing email and
             is used when comparing hashes;
         """
-        if not hash_token and (mailing_id or request.env.user._is_public()):
-            raise BadRequest()
+        if not hash_token:
+            if request.env.user._is_public():
+                raise BadRequest()
+            if mailing_id and not request.env.user.has_group('mass_mailing.group_mass_mailing_user'):
+                raise BadRequest()
         if hash_token and (not mailing_id or not email or not document_id):
             raise BadRequest()
         if mailing_id:
@@ -130,13 +138,17 @@ class MassMailController(http.Controller):
         )
 
     def _mailing_unsubscribe_from_document(self, mailing, document_id, email, hash_token):
-        message = Markup(
-            _(
+        if document_id:
+            message = Markup(_(
                 'Blocklist request from unsubscribe link of mailing %(mailing_link)s (document %(record_link)s)',
                 **self._format_bl_request(mailing, document_id)
-            )
-        )
-        _blocklist_rec = request.env['mail.blacklist'].sudo()._add(email, message=message)
+            ))
+        else:
+            message = Markup(_(
+                'Blocklist request from unsubscribe link of mailing %(mailing_link)s (direct link usage)',
+                **self._format_bl_request(mailing, document_id)
+            ))
+        _blocklist_rec = request.env['mail.blacklist'].sudo()._add(email, message=Markup('<p>%s</p>') % message)
 
         return request.render(
             'mass_mailing.page_mailing_unsubscribe',
@@ -308,7 +320,7 @@ class MassMailController(http.Controller):
     @http.route(['/unsubscribe_from_list'], type='http', website=True, multilang=False, auth='public', sitemap=False)
     def mailing_unsubscribe_placeholder_link(self, **post):
         """Dummy route so placeholder is not prefixed by language, MUST have multilang=False"""
-        raise BadRequest()
+        return request.redirect('/mailing/my', code=301, local=True)
 
     # ------------------------------------------------------------
     # TRACKING
@@ -372,12 +384,6 @@ class MassMailController(http.Controller):
             )
         except NotFound as e:
             raise Unauthorized() from e
-        except (BadRequest, Unauthorized):
-            if not request.env.user.has_group('mass_mailing.group_mass_mailing_user'):
-                raise
-            mailing_sudo = request.env['mailing.mailing'].sudo().browse(mailing_id).exists()
-            if not mailing_sudo:
-                raise
 
         # do not force lang, will simply use user context
         document_id = int(document_id) if document_id and document_id.isdigit() else 0
@@ -388,10 +394,19 @@ class MassMailController(http.Controller):
             options={'post_process': False}
         )[document_id]
         # Update generic URLs (without parameters) to final ones
-        html_markupsafe = html_markupsafe.replace(
-            '/unsubscribe_from_list',
-            mailing_sudo._get_unsubscribe_url(email, document_id)
-        )
+        if document_id:
+            html_markupsafe = html_markupsafe.replace(
+                '/unsubscribe_from_list',
+                mailing_sudo._get_unsubscribe_url(email, document_id)
+            )
+        else:  # when manually trying a /view on a mailing, not through email link
+            html_markupsafe = html_markupsafe.replace(
+                '/unsubscribe_from_list',
+                werkzeug.urls.url_join(
+                    mailing_sudo.get_base_url(),
+                    f'/mailing/{mailing_sudo.id}/unsubscribe',
+                )
+            )
 
         return request.render(
             'mass_mailing.mailing_view',
@@ -462,5 +477,7 @@ class MassMailController(http.Controller):
         mailing_model_name = request.env['ir.model']._get(mailing.mailing_model_real).display_name
         return {
             'mailing_link': Markup(f'<a href="#" data-oe-model="mailing.mailing" data-oe-id="{mailing.id}">{escape(mailing.subject)}</a>'),
-            'record_link': Markup(f'<a href="#" data-oe-model="{escape(mailing.mailing_model_real)}" data-oe-id="{int(document_id)}">{escape(mailing_model_name)}</a>'),
+            'record_link': Markup(
+                f'<a href="#" data-oe-model="{escape(mailing.mailing_model_real)}" data-oe-id="{int(document_id)}">{escape(mailing_model_name)}</a>'
+            ) if document_id else '',
         }
