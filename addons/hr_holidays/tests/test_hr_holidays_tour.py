@@ -1,5 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from freezegun import freeze_time
+
 from odoo.tests import HttpCase
 from odoo.tests.common import tagged
 
@@ -8,6 +10,7 @@ from datetime import date
 
 @tagged('post_install', '-at_install')
 class TestHrHolidaysTour(HttpCase):
+    @freeze_time('01/17/2022')
     def test_hr_holidays_tour(self):
         admin_user = self.env.ref('base.user_admin')
         admin_employee = admin_user.employee_id
