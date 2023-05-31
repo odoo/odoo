@@ -247,6 +247,13 @@ def get_module_icon(module):
         return ('/' + module + '/') + '/'.join(iconpath)
     return '/base/'  + '/'.join(iconpath)
 
+def get_module_icon_path(module):
+    iconpath = ['static', 'description', 'icon.png']
+    path = get_module_resource(module.name, *iconpath)
+    if not path:
+        path = get_module_resource('base', *iconpath)
+    return path
+
 def module_manifest(path):
     """Returns path to module manifest if one can be found under `path`, else `None`."""
     if not path:
