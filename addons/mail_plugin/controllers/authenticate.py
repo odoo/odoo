@@ -11,6 +11,7 @@ import werkzeug
 
 from odoo import http
 from odoo.http import request
+from werkzeug.exceptions import NotFound
 
 _logger = logging.getLogger(__name__)
 
@@ -92,6 +93,8 @@ class Authenticate(http.Controller):
     # Using UTC explicitly in case of a distributed system where the generation and the signature verification do not
     # necessarily happen on the same server
     def _generate_auth_code(self, scope, name):
+        if not request.env.user._is_internal():
+            raise NotFound()
         auth_dict = {
             'scope': scope,
             'name': name,
