@@ -72,14 +72,13 @@ def _as_validation_error(env, exc):
     """ Return the IntegrityError encapsuled in a nice ValidationError """
 
     unknown = _('Unknown')
+    model = DotDict({'_name': unknown.lower(), '_description': unknown})
+    field = DotDict({'name': unknown.lower(), 'string': unknown})
     for _name, rclass in env.registry.items():
         if exc.diag.table_name == rclass._table:
             model = rclass
-            field = model._fields.get(exc.diag.column_name)
+            field = model._fields.get(exc.diag.column_name) or field
             break
-    else:
-        model = DotDict({'_name': unknown.lower(), '_description': unknown})
-        field = DotDict({'name': unknown.lower(), 'string': unknown})
 
     if exc.pgcode == errorcodes.NOT_NULL_VIOLATION:
         return ValidationError(_(
