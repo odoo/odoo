@@ -1119,7 +1119,7 @@ class Task(models.Model):
     # Subtasks
     # ---------------------------------------------------
 
-    @api.depends('parent_id', 'project_id', 'is_private')
+    @api.depends('parent_id.partner_id', 'project_id', 'is_private')
     def _compute_partner_id(self):
         """ Compute the partner_id when the tasks have no partner_id.
 
