@@ -14,22 +14,6 @@
             </xpath>
         </field>
     </record>
-    <record id="view_picking_tree_batch" model="ir.ui.view">
-        <field name="name">stock_picking_batch.picking.tree.batch</field>
-        <field name="model">stock.picking</field>
-        <field name="mode">primary</field>
-        <field name="priority" eval="1000"/>
-        <field name="arch" type="xml">
-            <tree>
-                <field name="name"/>
-                <field name="scheduled_date" readonly="state in ['cancel', 'done']"/>
-                <field name="location_id" readonly="state == 'done'"/>
-                <field name="backorder_id"/>
-                <field name="origin" readonly="state in ['cancel', 'done']"/>
-                <field name="state"/>
-            </tree>
-        </field>
-    </record>
 
     <record id="view_picking_move_tree_inherited" model="ir.ui.view">
         <field name="name">stock_picking_batch.picking.move.tree</field>
@@ -142,7 +126,7 @@
                         <page string="Transfers">
                             <field name="allowed_picking_ids" invisible="1"/>
                             <field name="picking_ids" widget="many2many" mode="tree,kanban"
-                                context="{'form_view_ref': 'stock_picking_batch.view_picking_form_inherited', 'tree_view_ref': 'stock_picking_batch.view_picking_tree_batch'}" readonly="state not in ['draft', 'in_progress']"/>
+                                context="{'form_view_ref': 'stock_picking_batch.view_picking_form_inherited'}" readonly="state not in ['draft', 'in_progress']"/>
                         </page>
                     </notebook>
                 </sheet>
