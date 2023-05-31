@@ -2,14 +2,14 @@
 <odoo>
     <data noupdate="1">
         <template id="hr_expense_template_refuse_reason">
-            <p>Your Expense Report <t t-esc="name"/> has been refused</p>
+            <p>Your Expense Report <t t-out="name"/> has been refused</p>
             <ul class="o_timeline_tracking_value_list">
-                <li>Reason: <t t-esc="reason"/></li>
+                <li>Reason: <t t-out="reason"/></li>
             </ul>
         </template>
 
         <template id="hr_expense_template_register">
-            <p>Dear <t t-esc="expense.employee_id.name"/>,</p>
+            <p>Dear <t t-out="expense.employee_id.name"/>,</p>
             <p>
                 Your expense has been successfully registered.
                 <t t-if="expense.employee_id.user_id">
@@ -17,14 +17,14 @@
                 </t>
             </p>
             <p t-if="expense.product_id">
-                Category: <t t-esc="expense.product_id.name"/>
+                Category: <t t-out="expense.product_id.name"/>
             </p>
             <div t-else="">
                 <p>Category: not found</p>
                 <p>The first word of the email subject did not correspond to any category code. You'll have to set the category manually on the expense.</p>
             </div>
             <p>
-                Price: <t t-esc="expense.unit_amount"/><t t-esc="expense.currency_id.symbol"/>
+                Price: <t t-out="expense.unit_amount"/><t t-out="expense.currency_id.symbol"/>
             </p>
             <p t-if="expense.employee_id.user_id">
                 <br/>
