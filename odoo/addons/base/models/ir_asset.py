@@ -257,7 +257,7 @@ class IrAsset(models.Model):
 
         def mapper(addon):
             manif = odoo.modules.module.get_manifest(addon)
-            from_terp = IrModule.get_values_from_terp(manif)
+            from_terp = IrModule.get_values_from_terp(manif)[0]
             from_terp['name'] = addon
             from_terp['depends'] = manif.get('depends', ['base'])
             return from_terp
