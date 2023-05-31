@@ -145,6 +145,7 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                             break
                         else:
                             comment = content
+                    assert spec_content
                     source = copy.deepcopy(spec_content)
                     # only keep the t-name of a template root node
                     t_name = node.get('t-name')
