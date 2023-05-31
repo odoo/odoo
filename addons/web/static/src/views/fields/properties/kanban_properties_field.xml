@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.KanbanPropertiesField" owl="1">
-        <div t-ref="properties" class="w-100">
+        <div t-ref="properties" class="w-100 mt-2 fw-normal text-muted">
             <div class="o_kanban_property_field d-inline-flex flex-column justify-content-center align-items-start w-100 my-1"
                 t-foreach="propertiesList"
                 t-as="propertyConfiguration"
                 t-key="propertyConfiguration.name"
-                t-if="(propertyConfiguration.value || ['integer', 'float'].includes(propertyConfiguration.type)) and propertyConfiguration.view_in_kanban">
-                <div class="mw-100 text-truncate">
+                t-if="propertyConfiguration.value and propertyConfiguration.view_in_kanban">
+                <!-- We purposefully hide 'Falsy' values such as a False boolean or a 0 value integer field. -->
+                <div class="mw-100 text-truncate d-flex gap-2"
+                    t-att-class="{'border rounded-3 ps-2' : propertyConfiguration.type === 'boolean'}">
+                    <label t-if="['integer', 'float', 'date', 'datetime', 'boolean'].includes(propertyConfiguration.type)"
+                        t-att-class="{'fw-bold' : propertyConfiguration.type !== 'boolean'}" t-out="propertyConfiguration.string"/>
                     <PropertyValue
                         id="generateUniqueDomID()"
                         canChangeDefinition="state.canChangeDefinition"
