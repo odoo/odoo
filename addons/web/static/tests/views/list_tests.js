@@ -8411,13 +8411,13 @@ QUnit.module('Views', {
             arch:
                 `<tree multi_edit="1">
                     <field name="foo"/>
-                    <field name="int_field"/>
+                    <field name="int_field" required="1"/>
                 </tree>`,
             data: this.data,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 if (args.method === 'write') {
-                    assert.deepEqual(args.args, [[1, 2], { int_field: 666 }],
+                    assert.deepEqual(args.args, [[1, 2], { int_field: 0 }],
                         "should write on multi records");
                 } else if (args.method === 'read') {
                     if (args.args[0].length !== 1) {
@@ -8451,7 +8451,7 @@ QUnit.module('Views', {
             "changes have been discarded and row is back to readonly");
 
         await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_data_cell:eq(1)'));
-        await testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), 666);
+        await testUtils.fields.editInput(list.$('.o_field_widget[name=int_field]'), 0);
         await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_data_cell:eq(0)'));
 
         assert.containsOnce(document.body, '.modal',
@@ -8462,9 +8462,9 @@ QUnit.module('Views', {
         await testUtils.dom.click($('.modal .btn-primary'));
 
         assert.verifySteps(['write', 'read']);
-        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "yop666",
+        assert.strictEqual(list.$('.o_data_row:eq(0) .o_data_cell').text(), "yop0",
             "the first row should be updated");
-        assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell').text(), "blip666",
+        assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell').text(), "blip0",
             "the second row should be updated");
         assert.containsNone(list, '.o_data_cell input.o_field_widget',
             "no field should be editable anymore");

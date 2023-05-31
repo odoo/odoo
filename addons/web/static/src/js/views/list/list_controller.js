@@ -504,6 +504,21 @@ var ListController = BasicController.extend({
             isDomainSelected: this.isDomainSelected,
         });
     },
+    _isValueSet(fieldType, value) {
+        switch (fieldType) {
+            case 'boolean':
+            case 'one2many':
+            case 'many2many':
+            case 'integer':
+            case 'monetary':
+            case 'float':
+                return true;
+            case 'selection':
+                return value !== false;
+            default:
+                return !!value;
+        }
+    },
     /**
      * Saves multiple records at once. This method is called by the _onFieldChanged method
      * since the record must be confirmed as soon as the focus leaves a dirty cell.
@@ -523,7 +538,8 @@ var ListController = BasicController.extend({
         var validRecordIds = recordIds.reduce((result, nextRecordId) => {
             var record = this.model.get(nextRecordId);
             var modifiers = this.renderer._registerModifiers(node, record);
-            if (!modifiers.readonly && (!modifiers.required || value)) {
+            const fieldType = record.fields[fieldName].type;
+            if (!modifiers.readonly && (!modifiers.required || this._isValueSet(fieldType, value))) {
                 result.push(nextRecordId);
             }
             return result;
