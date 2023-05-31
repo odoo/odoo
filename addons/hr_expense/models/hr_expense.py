@@ -352,8 +352,9 @@ class HrExpense(models.Model):
             raise UserError(_("You need to have at least one category that can be expensed in your database to proceed!"))
 
         for attachment in attachments:
+            attachment_name = '.'.join(attachment.name.split('.')[:-1])
             expense = self.env['hr.expense'].create({
-                'name': product.display_name,
+                'name': attachment_name,
                 'unit_amount': 0,
                 'product_id': product.id,
             })
