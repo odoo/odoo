@@ -255,6 +255,47 @@ class TestMailingControllers(TestMailingControllersCommon):
                 )
                 self.assertEqual(msg_create.body, Markup('<p>Mail Blacklist created</p>'))
 
+    def test_mailing_unsubscribe_from_document_tour_mailing_user(self):
+        """ Test portal unsubscribe on mailings performed on documents (not
+        mailing lists or contacts) using a generic '/unsubscribe' link allowing
+        mailing users to see and edit unsubcribe page.
+
+        Tour effects
+          * unsubscribe from mailing based on a document = blocklist;
+          * add feedback (block list): Other reason, with 'My feedback' feedback;
+          * remove email from exclusion list;
+          * re-add email to exclusion list;
+        """
+        # update user to link it with existing mailing contacts and allow the tour
+        # to run; test without and with mailing group
+        self.user_marketing.write({
+            'email': tools.formataddr(("Déboulonneur", "fleurus@example.com")),
+            'groups_id': [(3, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
+        })
+        test_mailing = self.test_mailing_on_documents.with_env(self.env)
+        self.authenticate('user_marketing', 'user_marketing')
+
+        # no group -> no direct access to /unsubscribe
+        res = self.url_open(
+            werkzeug.urls.url_join(
+                test_mailing.get_base_url(),
+                f'mailing/{test_mailing.id}/unsubscribe',
+            )
+        )
+        self.assertEqual(res.status_code, 400)
+
+        # group -> direct access to /unsubscribe should wokr
+        self.user_marketing.write({
+            'groups_id': [(4, self.env.ref('mass_mailing.group_mass_mailing_user').id)],
+        })
+        # launch unsubscription tour
+        with freeze_time(self._reference_now):
+            self.start_tour(
+                f"/mailing/{test_mailing.id}/unsubscribe",
+                "mailing_portal_unsubscribe_from_document_with_lists",
+                login=self.user_marketing.login,
+            )
+
     def test_mailing_unsubscribe_from_list_tour(self):
         """ Test portal unsubscribe on mailings performed on mailing lists. Their
         effect is to opt-out from the mailing list.
