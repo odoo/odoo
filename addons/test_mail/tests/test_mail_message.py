@@ -70,7 +70,7 @@ class TestMessageValues(MailCommon):
         self.assertFalse(message.sudo()._filter_empty(), 'Still having attachments')
 
         # Subtype content
-        note_subtype.write({'description': 'Very important discussions'})
+        note_subtype.sudo().write({'description': 'Very important discussions'})
         record._message_update_content(message, '', [])
         self.assertFalse(message.attachment_ids)
         self.assertEqual(message.notified_partner_ids, self.partner_admin)
@@ -78,7 +78,7 @@ class TestMessageValues(MailCommon):
         self.assertFalse(message.sudo()._filter_empty(), 'Subtype with description')
 
         # Completely void now
-        note_subtype.write({'description': ''})
+        note_subtype.sudo().write({'description': ''})
         self.assertEqual(message.sudo()._filter_empty(), message)
         record._message_update_content(message, '', [])
         self.assertFalse(message.notified_partner_ids)
