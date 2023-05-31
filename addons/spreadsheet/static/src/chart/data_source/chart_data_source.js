@@ -2,7 +2,7 @@
 
 import { OdooViewsDataSource } from "@spreadsheet/data_sources/odoo_views_data_source";
 import { _t } from "@web/core/l10n/translation";
-import { GraphModel as ChartModel} from "@web/views/graph/graph_model";
+import { GraphModel as ChartModel } from "@web/views/graph/graph_model";
 
 export default class ChartDataSource extends OdooViewsDataSource {
     /**
@@ -11,6 +11,11 @@ export default class ChartDataSource extends OdooViewsDataSource {
      */
     constructor(services, params) {
         super(services, params);
+        this._metaData.measure = params.measure;
+        this._metaData.order = params.orderBy ? (params.orderBy.asc ? "ASC" : "DESC") : null;
+        this._metaData.groupBy = params.groupBy;
+        this._metaData.mode = params.mode;
+        this._metaData.fieldAttrs = {};
     }
 
     /**
@@ -18,19 +23,9 @@ export default class ChartDataSource extends OdooViewsDataSource {
      */
     async _load() {
         await super._load();
-        const metaData = {
-            fieldAttrs: {},
-            ...this._metaData,
-        };
-        this._model = new ChartModel(
-            {
-                _t,
-            },
-            metaData,
-            {
-                orm: this._orm,
-            }
-        );
+        this._model = new ChartModel({ _t }, this._metaData, {
+            orm: this._orm,
+        });
         await this._model.load(this._searchParams);
     }
 

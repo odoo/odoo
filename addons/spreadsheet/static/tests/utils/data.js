@@ -82,7 +82,7 @@ export function getBasicServerData() {
  *
  * @returns { {definition: Object, columns: Array<Object>}}
  */
-export function generateListDefinition(model, columns, data = getBasicData()) {
+export function generateListDefinition(listId, model, columns, data = getBasicData()) {
     const cols = [];
     for (const name of columns) {
         cols.push({
@@ -92,15 +92,12 @@ export function generateListDefinition(model, columns, data = getBasicData()) {
     }
     return {
         definition: {
-            metaData: {
-                resModel: model,
-                columns,
-            },
-            searchParams: {
-                domain: [],
-                context: {},
-                orderBy: [],
-            },
+            id: listId,
+            model: model,
+            columns,
+            domain: [],
+            context: {},
+            orderBy: [],
             name: "List",
         },
         columns: cols,

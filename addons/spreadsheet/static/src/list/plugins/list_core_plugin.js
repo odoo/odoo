@@ -19,7 +19,7 @@ import { getFirstListFunction, getNumberOfListFormulas } from "../list_helpers";
  * @property {string} id The id of the list
  * @property {string} model The technical name of the model we are listing
  * @property {string} name Name of the list
- * @property {Array<string>} orderBy
+ * @property {Array<object>} orderBy
  *
  * @typedef {Object} List
  * @property {string} id
@@ -55,7 +55,7 @@ export default class ListCorePlugin extends CorePlugin {
     allowDispatch(cmd) {
         switch (cmd.type) {
             case "INSERT_ODOO_LIST":
-                if (cmd.id !== this.nextId.toString()) {
+                if (cmd.definition.id !== this.nextId.toString()) {
                     return CommandResult.InvalidNextId;
                 }
                 if (this.lists[cmd.id]) {
@@ -87,26 +87,18 @@ export default class ListCorePlugin extends CorePlugin {
     handle(cmd) {
         switch (cmd.type) {
             case "INSERT_ODOO_LIST": {
-                const {
-                    sheetId,
-                    col,
-                    row,
-                    id,
-                    definition,
-                    dataSourceId,
-                    linesNumber,
-                    columns,
-                } = cmd;
+                const { sheetId, col, row, definition, dataSourceId, linesNumber } = cmd;
                 const anchor = [col, row];
-                this._addList(id, definition, dataSourceId, linesNumber);
-                this._insertList(sheetId, anchor, id, linesNumber, columns);
-                this.history.update("nextId", parseInt(id, 10) + 1)
+                this._addList(definition, dataSourceId, linesNumber);
+                this._insertList(sheetId, anchor, definition.id, linesNumber, definition.columns);
+                this.history.update("nextId", parseInt(definition.id, 10) + 1);
                 break;
             }
             case "RE_INSERT_ODOO_LIST": {
-                const { sheetId, col, row, id, linesNumber, columns } = cmd;
+                const { sheetId, col, row, id, linesNumber } = cmd;
                 const anchor = [col, row];
-                this._insertList(sheetId, anchor, id, linesNumber, columns);
+                const definition = this.getListDefinition(id);
+                this._insertList(sheetId, anchor, id, linesNumber, definition.columns);
                 break;
             }
             case "RENAME_ODOO_LIST": {
@@ -120,14 +112,7 @@ export default class ListCorePlugin extends CorePlugin {
                 break;
             }
             case "UPDATE_ODOO_LIST_DOMAIN": {
-                this.history.update(
-                    "lists",
-                    cmd.listId,
-                    "definition",
-                    "searchParams",
-                    "domain",
-                    cmd.domain
-                );
+                this.history.update("lists", cmd.listId, "definition", "domain", cmd.domain);
                 const list = this.lists[cmd.listId];
                 this.dataSources.add(list.dataSourceId, ListDataSource, list.definition);
                 break;
@@ -267,16 +252,7 @@ export default class ListCorePlugin extends CorePlugin {
      * @returns {ListDefinition}
      */
     getListDefinition(id) {
-        const def = this.lists[id].definition;
-        return {
-            columns: [...def.metaData.columns],
-            domain: [...def.searchParams.domain],
-            model: def.metaData.resModel,
-            context: { ...def.searchParams.context },
-            orderBy: [...def.searchParams.orderBy],
-            id,
-            name: def.name,
-        };
+        return this.lists[id].definition;
     }
 
     /**
@@ -333,8 +309,9 @@ export default class ListCorePlugin extends CorePlugin {
         }
     }
 
-    _addList(id, definition, dataSourceId, limit, fieldMatching = {}) {
+    _addList(definition, dataSourceId, limit, fieldMatching = {}) {
         const lists = { ...this.lists };
+        const id = definition.id;
         lists[id] = {
             id,
             definition,
@@ -372,7 +349,7 @@ export default class ListCorePlugin extends CorePlugin {
                 sheetId,
                 col,
                 row,
-                content: `=ODOO.LIST.HEADER(${id},"${column.name}")`,
+                content: `=ODOO.LIST.HEADER(${id},"${column}")`,
             });
             col++;
         }
@@ -400,7 +377,7 @@ export default class ListCorePlugin extends CorePlugin {
                     sheetId,
                     col,
                     row,
-                    content: `=ODOO.LIST(${id},${i},"${column.name}")`,
+                    content: `=ODOO.LIST(${id},${i},"${column}")`,
                 });
                 col++;
             }
@@ -453,20 +430,8 @@ export default class ListCorePlugin extends CorePlugin {
      */
     import(data) {
         if (data.lists) {
-            for (const [id, list] of Object.entries(data.lists)) {
-                const definition = {
-                    metaData: {
-                        resModel: list.model,
-                        columns: list.columns,
-                    },
-                    searchParams: {
-                        domain: list.domain,
-                        context: list.context,
-                        orderBy: list.orderBy,
-                    },
-                    name: list.name,
-                };
-                this._addList(id, definition, this.uuidGenerator.uuidv4(), 0, list.fieldMatching);
+            for (const list of Object.values(data.lists)) {
+                this._addList(list, this.uuidGenerator.uuidv4(), 0, list.fieldMatching);
             }
         }
         this.nextId = data.listNextId || getMaxObjectId(this.lists) + 1;

@@ -17,7 +17,7 @@
  * @property {boolean} [defaultsToCurrentPeriod]
  * @property {string|Array<string>|Object} defaultValue Default Value
  * @property {number} [modelID] ID of the related model
- * @property {string} [modelName] Name of the related model
+ * @property {string} [model] Name of the related model
  */
 
 export const globalFiltersFieldMatchers = {};
@@ -188,9 +188,7 @@ export class GlobalFiltersCorePlugin extends spreadsheet.CorePlugin {
      * @param {Object} data
      */
     export(data) {
-        data.globalFilters = this.getGlobalFilters().map((filter) => ({
-            ...filter,
-        }));
+        data.globalFilters = this.getGlobalFilters();
     }
 
     // ---------------------------------------------------------------------

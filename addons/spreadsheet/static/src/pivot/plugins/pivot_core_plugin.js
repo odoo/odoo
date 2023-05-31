@@ -11,7 +11,7 @@
  * @property {Object} context
  * @property {string} name
  * @property {string} id
- * @property {Object | null} sortedColumn
+ * @property {Object} [orderBy]
  *
  * @typedef {Object} Pivot
  * @property {string} id
@@ -66,7 +66,7 @@ export default class PivotCorePlugin extends CorePlugin {
                 }
                 break;
             case "INSERT_PIVOT":
-                if (cmd.id !== this.nextId.toString()) {
+                if (cmd.definition.id !== this.nextId.toString()) {
                     return CommandResult.InvalidNextId;
                 }
                 break;
@@ -87,14 +87,14 @@ export default class PivotCorePlugin extends CorePlugin {
     handle(cmd) {
         switch (cmd.type) {
             case "INSERT_PIVOT": {
-                const { sheetId, col, row, id, definition, dataSourceId } = cmd;
+                const { sheetId, col, row, definition, dataSourceId } = cmd;
                 /** @type [number,number] */
                 const anchor = [col, row];
                 const { cols, rows, measures } = cmd.table;
                 const table = new SpreadsheetPivotTable(cols, rows, measures);
-                this._addPivot(id, definition, dataSourceId);
-                this._insertPivot(sheetId, anchor, id, table);
-                this.history.update("nextId", parseInt(id, 10) + 1);
+                this._addPivot(definition, dataSourceId);
+                this._insertPivot(sheetId, anchor, definition.id, table);
+                this.history.update("nextId", parseInt(definition.id, 10) + 1);
                 break;
             }
             case "RE_INSERT_PIVOT": {
@@ -117,14 +117,7 @@ export default class PivotCorePlugin extends CorePlugin {
                 break;
             }
             case "UPDATE_ODOO_PIVOT_DOMAIN": {
-                this.history.update(
-                    "pivots",
-                    cmd.pivotId,
-                    "definition",
-                    "searchParams",
-                    "domain",
-                    cmd.domain
-                );
+                this.history.update("pivots", cmd.pivotId, "definition", "domain", cmd.domain);
                 const pivot = this.pivots[cmd.pivotId];
                 this.dataSources.add(pivot.dataSourceId, PivotDataSource, pivot.definition);
                 break;
@@ -214,18 +207,7 @@ export default class PivotCorePlugin extends CorePlugin {
      * @returns {PivotDefinition}
      */
     getPivotDefinition(id) {
-        const def = this.pivots[id].definition;
-        return {
-            colGroupBys: [...def.metaData.colGroupBys],
-            context: { ...def.searchParams.context },
-            domain: [...def.searchParams.domain],
-            id,
-            measures: [...def.metaData.activeMeasures],
-            model: def.metaData.resModel,
-            rowGroupBys: [...def.metaData.rowGroupBys],
-            name: def.name,
-            sortedColumn: def.metaData.sortedColumn ? { ...def.metaData.sortedColumn } : null,
-        };
+        return this.pivots[id].definition;
     }
 
     /**
@@ -292,12 +274,12 @@ export default class PivotCorePlugin extends CorePlugin {
     }
 
     /**
-     * @param {string} id
      * @param {PivotDefinition} definition
      * @param {string} dataSourceId
      */
-    _addPivot(id, definition, dataSourceId, fieldMatching = {}) {
+    _addPivot(definition, dataSourceId, fieldMatching = {}) {
         const pivots = { ...this.pivots };
+        const id = definition.id;
         pivots[id] = {
             id,
             definition,
@@ -502,30 +484,8 @@ export default class PivotCorePlugin extends CorePlugin {
      */
     import(data) {
         if (data.pivots) {
-            for (const [id, pivot] of Object.entries(data.pivots)) {
-                const definition = {
-                    metaData: {
-                        colGroupBys: pivot.colGroupBys,
-                        rowGroupBys: pivot.rowGroupBys,
-                        activeMeasures: pivot.measures.map((elt) => elt.field),
-                        resModel: pivot.model,
-                        sortedColumn: !pivot.sortedColumn
-                            ? undefined
-                            : {
-                                  groupId: pivot.sortedColumn.groupId,
-                                  measure: pivot.sortedColumn.measure,
-                                  order: pivot.sortedColumn.order,
-                              },
-                    },
-                    searchParams: {
-                        groupBy: [],
-                        orderBy: [],
-                        domain: pivot.domain,
-                        context: pivot.context,
-                    },
-                    name: pivot.name,
-                };
-                this._addPivot(id, definition, this.uuidGenerator.uuidv4(), pivot.fieldMatching);
+            for (const pivot of Object.values(data.pivots)) {
+                this._addPivot(pivot, this.uuidGenerator.uuidv4(), pivot.fieldMatching);
             }
         }
         this.nextId = data.pivotNextId || getMaxObjectId(this.pivots) + 1;
@@ -539,7 +499,6 @@ export default class PivotCorePlugin extends CorePlugin {
         data.pivots = {};
         for (const id in this.pivots) {
             data.pivots[id] = JSON.parse(JSON.stringify(this.getPivotDefinition(id)));
-            data.pivots[id].measures = data.pivots[id].measures.map((elt) => ({ field: elt }));
             data.pivots[id].fieldMatching = this.pivots[id].fieldMatching;
         }
         data.pivotNextId = this.nextId;

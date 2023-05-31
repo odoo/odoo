@@ -93,14 +93,17 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(computedDomain[0], "&");
     });
 
-    QUnit.test("Can add a global filter with an empty field matching (no field chain)", async function (assert) {
-        const { model } = await createSpreadsheetWithPivotAndList();
-        assert.equal(model.getters.getGlobalFilters().length, 0);
-        await addGlobalFilter(model, LAST_YEAR_FILTER, { pivot: {1: {}} });
-        assert.equal(model.getters.getGlobalFilters().length, 1);
-        const computedDomain = model.getters.getPivotComputedDomain("1");
-        assert.deepEqual(computedDomain, []);
-    });
+    QUnit.test(
+        "Can add a global filter with an empty field matching (no field chain)",
+        async function (assert) {
+            const { model } = await createSpreadsheetWithPivotAndList();
+            assert.equal(model.getters.getGlobalFilters().length, 0);
+            await addGlobalFilter(model, LAST_YEAR_FILTER, { pivot: { 1: {} } });
+            assert.equal(model.getters.getGlobalFilters().length, 1);
+            const computedDomain = model.getters.getPivotComputedDomain("1");
+            assert.deepEqual(computedDomain, []);
+        }
+    );
 
     QUnit.test("Can delete a global filter", async function (assert) {
         assert.expect(4);
@@ -660,7 +663,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                 id: "42",
                 type: "relation",
                 label: "Relation Filter",
-                modelName: "partner",
+                model: "partner",
             },
         });
         await nextTick();
@@ -826,7 +829,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     id: "42",
                     type: "relation",
                     label: "Relation Filter",
-                    modelName: "product",
+                    model: "product",
                     defaultValue: [41],
                 },
             },
@@ -855,7 +858,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                         id: 1,
                         colGroupBys: ["foo"],
                         domain: [],
-                        measures: [{ field: "probability", operator: "avg" }],
+                        measures: ["probability"],
                         model: "partner",
                         rowGroupBys: ["bar"],
                         context: {},
@@ -907,7 +910,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                         id: 1,
                         colGroupBys: ["foo"],
                         domain: [],
-                        measures: [{ field: "probability", operator: "avg" }],
+                        measures: ["probability"],
                         model: "partner",
                         rowGroupBys: ["bar"],
                         context: {},
@@ -953,7 +956,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                     id: 1,
                     colGroupBys: ["foo"],
                     domain: [],
-                    measures: [{ field: "probability", operator: "avg" }],
+                    measures: ["probability"],
                     model: "partner",
                     rowGroupBys: ["bar"],
                     context: {},
@@ -1009,7 +1012,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                         id: 1,
                         colGroupBys: ["foo"],
                         domain: [],
-                        measures: [{ field: "probability", operator: "avg" }],
+                        measures: ["probability"],
                         model: "partner",
                         rowGroupBys: ["bar"],
                         context: {},
@@ -1067,7 +1070,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
                         id: 1,
                         colGroupBys: ["foo"],
                         domain: [],
-                        measures: [{ field: "probability", operator: "avg" }],
+                        measures: ["probability"],
                         model: "partner",
                         rowGroupBys: ["bar"],
                         context: {},

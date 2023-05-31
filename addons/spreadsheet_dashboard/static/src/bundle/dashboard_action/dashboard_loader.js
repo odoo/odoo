@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { DataSources } from "@spreadsheet/data_sources/data_sources";
-import { migrate } from "@spreadsheet/o_spreadsheet/migration";
+import { migrate, upgradeRevisions } from "@spreadsheet/o_spreadsheet/migration";
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
 
 const { Model } = spreadsheet;
@@ -215,7 +215,7 @@ export class DashboardLoader {
                 mode: "dashboard",
                 dataSources,
             },
-            revisions
+            upgradeRevisions(revisions)
         );
         this._activateFirstSheet(model);
         dataSources.addEventListener("data-source-updated", () => model.dispatch("EVALUATE_CELLS"));

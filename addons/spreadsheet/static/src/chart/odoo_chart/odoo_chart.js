@@ -6,28 +6,22 @@ import ChartDataSource from "../data_source/chart_data_source";
 const { AbstractChart, CommandResult } = spreadsheet;
 
 /**
- * @typedef {import("@web/search/search_model").SearchParams} SearchParams
  *
- * @typedef MetaData
- * @property {Array<Object>} domains
+ * @typedef ChartDataSourceDefinition
+ * @property {string} id
+ * @property {string} model
+ * @property {Array<Object>} domain
+ * @property {Object} context
  * @property {Array<string>} groupBy
  * @property {string} measure
- * @property {string} mode
- * @property {string} [order]
- * @property {string} resModel
- * @property {boolean} stacked
+ * @property {object} [orderBy]
  *
  * @typedef OdooChartDefinition
  * @property {string} type
- * @property {MetaData} metaData
- * @property {SearchParams} searchParams
+ * @property {ChartDataSourceDefinition} dataSourceDefinition
  * @property {string} title
  * @property {string} background
  * @property {string} legendPosition
- *
- * @typedef OdooChartDefinitionDataSource
- * @property {MetaData} metaData
- * @property {SearchParams} searchParams
  *
  */
 
@@ -40,8 +34,10 @@ export class OdooChart extends AbstractChart {
     constructor(definition, sheetId, getters) {
         super(definition, sheetId, getters);
         this.type = definition.type;
-        this.metaData = definition.metaData;
-        this.searchParams = definition.searchParams;
+        this.dataSourceDefinition = {
+            ...definition.dataSourceDefinition,
+            mode: this.type.replace("odoo_", ""),
+        };
         this.legendPosition = definition.legendPosition;
         this.background = definition.background;
         this.dataSource = undefined;
@@ -60,19 +56,6 @@ export class OdooChart extends AbstractChart {
     }
 
     /**
-     * @returns {OdooChartDefinitionDataSource}
-     */
-    getDefinitionForDataSource() {
-        return {
-            metaData: {
-                ...this.metaData,
-                mode: this.type.replace("odoo_", ""),
-            },
-            searchParams: this.searchParams,
-        };
-    }
-
-    /**
      * @returns {OdooChartDefinition}
      */
     getDefinition() {
@@ -81,8 +64,7 @@ export class OdooChart extends AbstractChart {
             title: this.title,
             background: this.background,
             legendPosition: this.legendPosition,
-            metaData: this.metaData,
-            searchParams: this.searchParams,
+            dataSourceDefinition: this.dataSourceDefinition,
             type: this.type,
         };
     }
@@ -125,8 +107,7 @@ export class OdooChart extends AbstractChart {
     setDataSource(dataSource) {
         if (dataSource instanceof ChartDataSource) {
             this.dataSource = dataSource;
-        }
-        else {
+        } else {
             throw new Error("Only ChartDataSources can be added.");
         }
     }

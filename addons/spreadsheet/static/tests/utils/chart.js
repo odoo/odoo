@@ -46,18 +46,13 @@ export async function createSpreadsheetWithChart(params = {}) {
 
 function getChartDefinition(type) {
     return {
-        metaData: {
+        dataSourceDefinition: {
             groupBy: ["foo", "bar"],
             measure: "__count",
-            order: null,
-            resModel: "partner",
-        },
-        searchParams: {
-            comparison: null,
+            orderBy: undefined,
+            model: "partner",
             context: {},
             domain: [],
-            groupBy: [],
-            orderBy: [],
         },
         stacked: true,
         title: "Partners",

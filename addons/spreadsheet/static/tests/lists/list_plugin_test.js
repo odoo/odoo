@@ -482,7 +482,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
                     type: "relation",
                     label: "test",
                     defaultValue: [41],
-                    modelName: undefined,
+                    model: undefined,
                     rangeType: undefined,
                 },
             },

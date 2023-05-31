@@ -15,6 +15,17 @@ export default class PivotDataSource extends OdooViewsDataSource {
      */
     constructor(services, params) {
         super(services, params);
+        this._metaData.colGroupBys = params.colGroupBys;
+        this._metaData.rowGroupBys = params.rowGroupBys;
+        this._metaData.activeMeasures = params.measures;
+        this._metaData.sortedColumn = params.orderBy
+            ? {
+                  groupId: params.orderBy.groupId,
+                  measure: params.orderBy.field,
+                  order: params.orderBy.asc ? "asc" : "desc",
+                  originIndexes: [0], // not sure it's useful
+              }
+            : null;
     }
 
     async _load() {

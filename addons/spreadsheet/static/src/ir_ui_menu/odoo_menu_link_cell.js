@@ -13,7 +13,7 @@ const IR_MENU_XML_ID_PREFIX = "odoo://ir_menu_xml_id/";
  * @typedef Action
  * @property {Array} domain
  * @property {Object} context
- * @property {string} modelName
+ * @property {string} model
  * @property {string} orderBy
  * @property {Array<[boolean, string]} views
  *
@@ -157,7 +157,7 @@ export class OdooViewLinkCell extends LinkCell {
             {
                 type: "ir.actions.act_window",
                 name: this.urlRepresentation,
-                res_model: this._action.modelName,
+                res_model: this._action.model,
                 views: this._action.views,
                 target: "current",
                 domain: this._action.domain,

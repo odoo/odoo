@@ -20,15 +20,17 @@ const uuidGenerator = new spreadsheet.helpers.UuidGenerator();
  * @param {string} [params.sheetId]
  */
 export function insertListInSpreadsheet(model, params) {
-    const { definition, columns } = generateListDefinition(params.model, params.columns);
+    const { definition, columns } = generateListDefinition(
+        model.getters.getNextListId(),
+        params.model,
+        params.columns
+    );
     const [col, row] = params.position || [0, 0];
-
     model.dispatch("INSERT_ODOO_LIST", {
         sheetId: params.sheetId || model.getters.getActiveSheetId(),
         definition,
         linesNumber: params.linesNumber || 10,
         columns,
-        id: model.getters.getNextListId(),
         col,
         row,
         dataSourceId: uuidGenerator.uuidv4(),
