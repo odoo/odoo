@@ -7,6 +7,7 @@ import re
 import stdnum
 from stdnum.eu.vat import check_vies
 from stdnum.exceptions import InvalidComponent
+from zeep.exceptions import Fault
 import logging
 
 from odoo import api, models, tools, _
@@ -112,7 +113,10 @@ class ResPartner(models.Model):
     def _check_vies(self, vat):
         # Store the VIES result in the cache. In case an exception is raised during the request
         # (e.g. service unavailable), the fallback on simple_vat_check is not kept in cache.
-        return check_vies(vat)
+        try:
+            return check_vies(vat)
+        except Fault:
+            return False
 
     @api.model
     def vies_vat_check(self, country_code, vat_number):
@@ -120,7 +124,7 @@ class ResPartner(models.Model):
             # Validate against  VAT Information Exchange System (VIES)
             # see also http://ec.europa.eu/taxation_customs/vies/
             vies_result = self._check_vies(country_code.upper() + vat_number)
-            return vies_result['valid']
+            return vies_result and vies_result['valid']
         except InvalidComponent:
             return False
         except Exception:
