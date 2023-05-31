@@ -439,7 +439,7 @@
                                         <ul class="oe_kanban_colorpicker" data-field="color" role="popup"/>
                                     </div>
                                     <div role="menuitem" class="col-6" groups="project.group_project_manager">
-                                        <a t-if="record.privacy_visibility.raw_value == 'portal'" class="dropdown-item" role="menuitem" name="%(project.project_share_wizard_action)d" type="action" context="{'dialog_size': 'medium'}">Share</a>
+                                        <a t-if="record.privacy_visibility.raw_value == 'portal'" class="dropdown-item" role="menuitem" name="%(project.project_share_wizard_action)d" type="action" context="{'dialog_size': 'medium'}">Share Project</a>
                                         <a class="dropdown-item" role="menuitem" type="edit">Settings</a>
                                     </div>
                                     <div class="o_kanban_card_manage_section o_kanban_manage_view col-12 ps-0" groups="!project.group_project_manager">
