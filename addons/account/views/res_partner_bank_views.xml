@@ -58,8 +58,7 @@
             <field name="model">res.partner.bank</field>
             <field name="inherit_id" ref="base.view_partner_bank_search"/>
             <field name="arch" type="xml">
-                <xpath expr="//search" position="replace">
-                    <search string="Bank Accounts">
+                <xpath expr="//search" position="inside">
                         <filter string="Trusted" name="trusted" domain="[('allow_out_payment', '=', True)]"/>
                         <filter string="Untrusted" name="untrusted" domain="[('allow_out_payment', '=', False)]"/>
                         <filter string="To validate" name="to_validate" domain="[('allow_out_payment', '=', False), ('related_moves', '!=', False)]"/>
@@ -75,7 +74,6 @@
                             <filter string="Created On" name="groupby_create_date" context="{'group_by': 'create_date'}"/>
                             <filter string="Created By" name="groupby_create_by" context="{'group_by': 'create_uid'}"/>
                         </group>
-                    </search>
                 </xpath>
             </field>
         </record>
