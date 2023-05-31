@@ -386,3 +386,31 @@ class TestRepair(AccountTestInvoicingCommon):
             ('company_id', '=', repair.company_id.id),
         ], limit=1)
         self.assertEqual(repair.operations[0].location_dest_id, location_dest_id)
+
+    def test_repair_order_send_to_self(self):
+        # when sender(logged in user) is also present in recipients of the mail composer,
+        # user should receive mail.
+        product_to_repair = self.product_product_5
+        partner = self.res_partner_address_1
+        repair_order = self.env['repair.order'].with_user(self.env.user).create({
+            'product_id': product_to_repair.id,
+            'product_uom': product_to_repair.uom_id.id,
+            'address_id': partner.id,
+            'guarantee_limit': '2019-01-01',
+            'location_id': self.stock_warehouse.lot_stock_id.id,
+            'partner_id': self.env.user.partner_id.id
+        })
+        email_ctx = repair_order.action_send_mail().get('context', {})
+        # We need to prevent auto mail deletion, and so we copy the template and send the mail with
+        # added configuration in copied template. It will allow us to check whether mail is being
+        # sent to to author or not (in case author is present in 'Recipients' of composer).
+        mail_template = self.env['mail.template'].browse(email_ctx.get('default_template_id')).copy({'auto_delete': False})
+        # send the mail with same user as customer
+        repair_order.with_context(**email_ctx).with_user(self.env.user).message_post_with_source(
+            mail_template,
+            subtype_xmlid='mail.mt_comment',
+        )
+        mail_message = repair_order.message_ids[0]
+        self.assertEqual(mail_message.author_id, repair_order.partner_id, 'Repair: author should be same as customer')
+        self.assertEqual(mail_message.author_id, mail_message.partner_ids, 'Repair: author should be in composer recipients thanks to "partner_to" field set on template')
+        self.assertEqual(mail_message.partner_ids, mail_message.sudo().mail_ids.recipient_ids, 'Repair: author should receive mail due to presence in composer recipients')
