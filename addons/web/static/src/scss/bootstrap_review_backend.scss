@@ -91,7 +91,7 @@
         }
 
         &:not(:first-child) {
-            margin-left: $btn-border-width;
+            margin-left: var(--btn-group-gap, $btn-border-width); 
         }
     }
 }
