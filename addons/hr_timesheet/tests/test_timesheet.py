@@ -5,7 +5,7 @@ from lxml import etree
 
 from odoo.fields import Command
 from odoo.tests.common import TransactionCase, Form
-from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.exceptions import AccessError, RedirectWarning, UserError, ValidationError
 
 
 class TestCommonTimesheet(TransactionCase):
@@ -596,3 +596,15 @@ class TestTimesheet(TestCommonTimesheet):
         self.env.company.timesheet_encode_uom_id = self.env.ref('uom.product_uom_day')
         self.assertEqual(project.total_timesheet_time, 8, "Total timesheet time should be 8 hours")
         self.assertEqual(project.timesheet_encode_uom_id.name, 'Days', "Timesheet encode uom should be 'Days'")
+
+    def test_unlink_task_with_timesheet(self):
+        self.env['account.analytic.line'].create({
+            'project_id': self.project_customer.id,
+            'task_id': self.task1.id,
+            'name': 'timesheet',
+            'unit_amount': 4,
+            'employee_id': self.empl_employee.id,
+        })
+        self.task2.unlink()
+        with self.assertRaises(RedirectWarning):
+            self.task1.unlink()
