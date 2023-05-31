@@ -26,6 +26,7 @@ class Project(models.Model):
             "It can be modified on each task and timesheet entry individually if necessary.")
     sale_order_id = fields.Many2one(string='Sales Order', related='sale_line_id.order_id', help="Sales order to which the project is linked.")
     has_any_so_to_invoice = fields.Boolean('Has SO to Invoice', compute='_compute_has_any_so_to_invoice')
+    sale_order_line_count = fields.Integer(compute='_compute_sale_order_count', groups='sales_team.group_sale_salesman')
     sale_order_count = fields.Integer(compute='_compute_sale_order_count', groups='sales_team.group_sale_salesman')
     has_any_so_with_nothing_to_invoice = fields.Boolean('Has a SO with an invoice status of No', compute='_compute_has_any_so_with_nothing_to_invoice')
     invoice_count = fields.Integer(compute='_compute_invoice_count', groups='account.group_account_readonly')
@@ -94,7 +95,9 @@ class Project(models.Model):
     def _compute_sale_order_count(self):
         sale_order_items_per_project_id = self._fetch_sale_order_items_per_project_id({'project.task': [('state', 'not in', list(CLOSED_STATES))]})
         for project in self:
-            project.sale_order_count = len(sale_order_items_per_project_id.get(project.id, self.env['sale.order.line']).order_id)
+            sale_order_lines = sale_order_items_per_project_id.get(project.id, self.env['sale.order.line'])
+            project.sale_order_line_count = len(sale_order_lines)
+            project.sale_order_count = len(sale_order_lines.order_id)
 
     def _compute_invoice_count(self):
         query = self.env['account.move.line']._search([('move_id.move_type', 'in', ['out_invoice', 'out_refund'])])
@@ -114,6 +117,35 @@ class Project(models.Model):
     def _compute_display_sales_stat_buttons(self):
         for project in self:
             project.display_sales_stat_buttons = project.allow_billable and project.partner_id
+
+    def action_view_sols(self):
+        self.ensure_one()
+        all_sale_order_lines = self._fetch_sale_order_items({'project.task': [('state', 'not in', list(CLOSED_STATES))]})
+        action_window = {
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.order.line',
+            'name': _("%(name)s's Sales Order Items", name=self.name),
+            'context': {
+                'show_sale': True,
+                'link_to_project': self.id,
+                'form_view_ref': 'sale_project.sale_order_line_view_form_editable', # Necessary for some logic in the form view
+                'default_partner_id': self.partner_id.id,
+                'default_company_id': self.company_id.id,
+                'default_order_id': self.sale_order_id.id,
+            },
+            'views': [(self.env.ref('sale_project.sale_order_line_view_form_editable').id, 'form')],
+        }
+        if len(all_sale_order_lines) <= 1:
+            action_window['res_id'] = all_sale_order_lines.id
+        else:
+            action_window.update({
+                'domain': [('id', 'in', all_sale_order_lines.ids)],
+                'views': [
+                    (self.env.ref('sale_project.view_order_line_tree_with_create').id, 'tree'),
+                    (self.env.ref('sale_project.sale_order_line_view_form_editable').id, 'form'),
+                ],
+            })
+        return action_window
 
     def action_view_sos(self):
         self.ensure_one()
@@ -615,6 +647,16 @@ class Project(models.Model):
                 'action': 'action_view_sos',
                 'show': self_sudo.display_sales_stat_buttons and self_sudo.sale_order_count > 0,
                 'sequence': 27,
+            })
+        if self.user_has_groups('sales_team.group_sale_salesman_all_leads'):
+            buttons.append({
+                'icon': 'dollar',
+                'text': _lt('Sales Order Items'),
+                'number': self.sale_order_line_count,
+                'action_type': 'object',
+                'action': 'action_view_sols',
+                'show': self.display_sales_stat_buttons,
+                'sequence': 28,
             })
         if self.user_has_groups('account.group_account_readonly'):
             self_sudo = self.sudo()
