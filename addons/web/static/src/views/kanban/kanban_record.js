@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { ColorList } from "@web/core/colorlist/colorlist";
-import { evalDomain } from "@web/core/domain";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
@@ -179,6 +179,7 @@ export function isHtmlEmpty(innerHTML = "") {
 
 export class KanbanRecord extends Component {
     setup() {
+        this.evaluateBooleanExpr = evaluateBooleanExpr;
         this.action = useService("action");
         this.dialog = useService("dialog");
         this.notification = useService("notification");
@@ -241,10 +242,6 @@ export class KanbanRecord extends Component {
             editable,
             isHtmlEmpty,
         };
-    }
-
-    evalDomainFromRecord(record, expr) {
-        return evalDomain(expr, record.evalContext);
     }
 
     getRecordClasses() {

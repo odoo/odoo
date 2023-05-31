@@ -104,7 +104,7 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                 <form>
                     <group>
-                        <field name="timmy" widget="many2many_checkboxes" attrs="{'readonly': true}" />
+                        <field name="timmy" widget="many2many_checkboxes" readonly="True" />
                     </group>
                 </form>`,
         });

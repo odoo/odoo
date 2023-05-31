@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
-import { evalDomain } from "@web/core/domain";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { editModelDebug } from "@web/core/debug/debug_utils";
 import { formatDateTime, deserializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
@@ -68,6 +68,9 @@ export function editView({ accessRights, component, env }) {
         viewId = component.props.viewInfo.view_id;
         type = component.props.viewInfo.type;
         type = type === "tree" ? "list" : type;
+    }
+    if (!type) {
+        return;
     }
     const displayName = type[0].toUpperCase() + type.slice(1);
     const description = env._t("Edit View: ") + displayName;
@@ -221,8 +224,8 @@ class SetDefaultDialog extends Component {
                 // ignore fields which are empty, invisible, readonly, o2m or m2m
                 if (
                     !value ||
-                    evalDomain(this.activeFields[fieldName].invisible, evalContext) ||
-                    evalDomain(this.activeFields[fieldName].readonly, evalContext) ||
+                    evaluateBooleanExpr(this.activeFields[fieldName].invisible, evalContext) ||
+                    evaluateBooleanExpr(this.activeFields[fieldName].readonly, evalContext) ||
                     fieldInfo.type === "one2many" ||
                     fieldInfo.type === "many2many" ||
                     fieldInfo.type === "binary" ||

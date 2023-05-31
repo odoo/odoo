@@ -21,7 +21,7 @@ const DEFAULT_QUICK_CREATE_VIEW = {
     // note: the required modifier is written in the format returned by the server
     arch: /* xml */ `
         <form>
-            <field name="display_name" placeholder="Title" modifiers='{"required": true}' />
+            <field name="display_name" placeholder="Title" required="True" />
         </form>`,
 };
 const DEFAULT_QUICK_CREATE_FIELDS = {

@@ -340,7 +340,7 @@ export function getActionManagerServerData() {
         "partner,666,form": `<form>
       <header></header>
       <sheet>
-      <div class="oe_button_box" name="button_box" modifiers="{}">
+      <div class="oe_button_box" name="button_box">
       <button class="oe_stat_button" type="action" name="1" icon="fa-star" context="{'default_partner': active_id}">
       <field string="Partners" name="o2m" widget="statinfo"/>
       </button>

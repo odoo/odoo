@@ -51,6 +51,7 @@ export class KanbanRenderer extends Component {
         "deleteRecord",
         "openRecord",
         "readonly",
+        "evalViewModifier",
         "forceGlobalClick?",
         "noContentHelp?",
         "scrollTop?",
@@ -221,14 +222,13 @@ export class KanbanRenderer extends Component {
         const fieldNodes = Object.values(this.props.archInfo.fieldNodes).filter(
             (fieldNode) => fieldNode.name === groupByField.name
         );
-        let isReadonly;
+        let isReadonly = this.props.list.fields[groupByField.name].readonly;
         if (
+            !isReadonly &&
             fieldNodes.length &&
-            fieldNodes.some((fieldNode) => "readonly" in fieldNode.modifiers)
+            fieldNodes.some((fieldNode) => "readonly" in fieldNode)
         ) {
-            isReadonly = fieldNodes.every((fieldNode) => fieldNode.modifiers.readonly === true);
-        } else {
-            isReadonly = this.props.list.fields[groupByField.name].readonly;
+            isReadonly = fieldNodes.every((fieldNode) => fieldNode.readonly === 'True');
         }
         return !isReadonly && this.isMovableField(groupByField);
     }

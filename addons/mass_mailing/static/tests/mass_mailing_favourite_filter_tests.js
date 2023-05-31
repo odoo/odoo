@@ -459,7 +459,7 @@ QUnit.module('favorite filter widget', (hooks) => {
                     <field name="display_name"/>
                     <field name="subject"/>
                     <field name="mailing_model_name" invisible="1"/>
-                    <field name="mailing_model_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                    <field name="mailing_model_id" readonly="state != 'draft'"/>
                     <field name="mailing_filter_count" />
                     <field name="mailing_filter_id" widget="mailing_filter" options="{'no_create': '1', 'no_open': '1', 'domain_field': 'mailing_domain', 'model': 'mailing_model_id'}"/>
                     <field name="state" widget="statusbar" options="{'clickable' : '1'}"/>

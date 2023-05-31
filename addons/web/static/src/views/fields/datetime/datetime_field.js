@@ -24,7 +24,7 @@ import { standardFieldProps } from "../standard_field_props";
  *  maxDate?: string;
  *  minDate?: string;
  *  placeholder?: string;
- *  required?: boolean;
+ *  required?: string | boolean;
  *  rounding?: number;
  *  startDateField?: string;
  *  warnFuture?: boolean;
@@ -41,7 +41,7 @@ export class DateTimeField extends Component {
         maxDate: { type: String, optional: true },
         minDate: { type: String, optional: true },
         placeholder: { type: String, optional: true },
-        required: { type: Boolean, optional: true },
+        required: { type: [Boolean, String], optional: true },
         rounding: { type: Number, optional: true },
         startDateField: { type: String, optional: true },
         warnFuture: { type: Boolean, optional: true },
@@ -267,27 +267,27 @@ export const dateField = {
         },
     ],
     supportedTypes: ["date"],
-    extractProps: ({ attrs, modifiers, options }) => ({
+    extractProps: ({ attrs, options }, dynamicInfo) => ({
         endDateField: options[END_DATE_FIELD_OPTION],
         maxDate: options.max_date,
         minDate: options.min_date,
         placeholder: attrs.placeholder,
-        required: Boolean(modifiers.required),
+        required: 'required' in attrs ? attrs.required : dynamicInfo.required,
         rounding: options.rounding && parseInt(options.rounding, 10),
         startDateField: options[START_DATE_FIELD_OPTION],
         warnFuture: archParseBoolean(options.warn_future),
     }),
-    fieldDependencies: ({ type, modifiers, options }) => {
+    fieldDependencies: ({ type, attrs, options }) => {
         const deps = [];
         if (options[START_DATE_FIELD_OPTION]) {
-            deps.push({ name: options[START_DATE_FIELD_OPTION], type, modifiers });
+            deps.push({ name: options[START_DATE_FIELD_OPTION], type, attrs });
             if (options[END_DATE_FIELD_OPTION]) {
                 console.warn(
                     `A field cannot have both ${START_DATE_FIELD_OPTION} and ${END_DATE_FIELD_OPTION} options at the same time`
                 );
             }
         } else if (options[END_DATE_FIELD_OPTION]) {
-            deps.push({ name: options[END_DATE_FIELD_OPTION], type, modifiers });
+            deps.push({ name: options[END_DATE_FIELD_OPTION], type, attrs });
         }
         return deps;
     },

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { Dialog } from "@web/core/dialog/dialog";
-import { evalDomain } from "@web/core/domain";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { is24HourFormat } from "@web/core/l10n/dates";
 import { Field } from "@web/views/fields/field";
 import { Record } from "@web/views/record";
@@ -33,7 +33,7 @@ export class CalendarCommonPopover extends Component {
     }
 
     isInvisible(fieldNode, record) {
-        return evalDomain(fieldNode.modifiers.invisible, record.evalContext);
+        return evaluateBooleanExpr(fieldNode.invisible, record.evalContext);
     }
 
     computeDateTimeAndDuration() {

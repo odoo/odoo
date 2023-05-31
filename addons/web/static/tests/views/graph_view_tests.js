@@ -2416,8 +2416,8 @@ QUnit.module("Views", (hooks) => {
             <graph type="pie">
                 <field name="revenue" type="measure"/>
                 <field name="date" interval="day"/>
-                <field name="foo" modifiers='{"invisible": false}'/>
-                <field name="bar" modifiers='{"invisible": true}' string="My invisible field"/>
+                <field name="foo" invisible="False"/>
+                <field name="bar" invisible="True" string="My invisible field"/>
                 <field name="id"/>
                 <field name="fighters" string="FooFighters"/>
             </graph>

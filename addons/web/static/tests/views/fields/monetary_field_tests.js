@@ -400,7 +400,7 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                 <tree editable="bottom">
                     <field name="float_field" widget="monetary"/>
-                    <field name="currency_id" invisible="1"/>
+                    <field name="currency_id" column_invisible="1"/>
                 </tree>`,
         });
 
@@ -495,7 +495,7 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                 <tree editable="bottom">
                     <field name="monetary_field"/>
-                    <field name="currency_id" invisible="1"/>
+                    <field name="currency_id" column_invisible="1"/>
                 </tree>`,
         });
 

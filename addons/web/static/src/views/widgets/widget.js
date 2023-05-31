@@ -1,7 +1,6 @@
 /* @odoo-module */
 
-import { evalDomain } from "@web/core/domain";
-import { evaluateExpr } from "@web/core/py_js/py";
+import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 
 import { Component, xml } from "@odoo/owl";
@@ -45,8 +44,7 @@ export class Widget extends Component {
         let propsFromNode = {};
         if (this.props.widgetInfo) {
             const widgetInfo = this.props.widgetInfo;
-            const modifiers = widgetInfo.modifiers || {};
-            readonlyFromModifiers = evalDomain(modifiers.readonly, evalContext);
+            readonlyFromModifiers = evaluateBooleanExpr(widgetInfo.attrs.readonly, evalContext);
             propsFromNode = this.widget.extractProps ? this.widget.extractProps(widgetInfo) : {};
         }
 
@@ -67,7 +65,6 @@ Widget.parseWidgetNode = function (node) {
     const widget = viewWidgetRegistry.get(name);
     const widgetInfo = {
         name,
-        modifiers: {},
         widget,
         options: {},
         attrs: {},
@@ -78,9 +75,7 @@ Widget.parseWidgetNode = function (node) {
             // avoid adding name and widget to attrs
             continue;
         }
-        if (name === "modifiers") {
-            widgetInfo.modifiers = JSON.parse(value);
-        } else if (name === "options") {
+        if (name === "options") {
             widgetInfo.options = evaluateExpr(value);
         } else if (!name.startsWith("t-att")) {
             // all other (non dynamic) attributes

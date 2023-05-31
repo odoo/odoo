@@ -16,8 +16,7 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
         let canMoveRecords = super.canMoveRecords;
         if (!canMoveRecords && this.canResequenceRecords && this.props.list.isGroupedByPersonalStages) {
             const { groupByField } = this.props.list;
-            const { modifiers } = groupByField;
-            canMoveRecords = !(modifiers && modifiers.readonly);
+            canMoveRecords = groupByField.readonly !== "True";
         }
         return canMoveRecords;
     }
@@ -25,9 +24,8 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
     get canResequenceGroups() {
         let canResequenceGroups = super.canResequenceGroups;
         if (!canResequenceGroups && this.props.list.isGroupedByPersonalStages) {
-            const { modifiers } = this.props.list.groupByField;
             const { groupsDraggable } = this.props.archInfo;
-            canResequenceGroups = groupsDraggable && !(modifiers && modifiers.readonly);
+            canResequenceGroups = groupsDraggable && groupsDraggable.readonly !== "True";
         }
         return canResequenceGroups;
     }

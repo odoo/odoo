@@ -3,7 +3,7 @@
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { makeContext } from "@web/core/context";
 import { Dialog } from "@web/core/dialog/dialog";
-import { evalDomain } from "@web/core/domain";
+import { Domain } from "@web/core/domain";
 import { RPCError } from "@web/core/network/rpc_service";
 import { Cache } from "@web/core/utils/cache";
 import {
@@ -121,7 +121,7 @@ export function useActiveActions({
         let evalFn = () => actionName !== "write";
         if (!isNull(crudOptions[actionName])) {
             const action = crudOptions[actionName];
-            evalFn = (evalContext) => evalDomain(action, evalContext);
+            evalFn = (evalContext) => Boolean(action && new Domain(action).contains(evalContext));
         }
 
         if (actionName in subViewActiveActions) {

@@ -3,13 +3,13 @@
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { makeContext } from "@web/core/context";
-import { evalDomain } from "@web/core/domain";
 import { useDebugCategory } from "@web/core/debug/debug_context";
 import { registry } from "@web/core/registry";
 import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { createElement } from "@web/core/utils/xml";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { standardViewProps } from "@web/views/standard_view_props";
@@ -48,7 +48,7 @@ export async function loadSubViews(
         if (!isX2Many(field)) {
             continue; // what follows only concerns x2many fields
         }
-        if (fieldInfo.alwaysInvisible) {
+        if (fieldInfo.invisible === "True" || fieldInfo.invisible === "1") {
             continue; // no need to fetch the sub view if the field is always invisible
         }
         if (!fieldInfo.field.useSubView) {
@@ -110,6 +110,7 @@ export async function loadSubViews(
 
 export class FormController extends Component {
     setup() {
+        this.evaluateBooleanExpr = evaluateBooleanExpr;
         this.dialogService = useService("dialog");
         this.router = useService("router");
         this.user = useService("user");
@@ -558,10 +559,6 @@ export class FormController extends Component {
         }
         result["o_field_highlight"] = size < SIZES.SM || hasTouch();
         return result;
-    }
-
-    evalDomainFromRecord(record, expr) {
-        return evalDomain(expr, record.evalContext);
     }
 }
 

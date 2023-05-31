@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { makeContext } from "@web/core/context";
-import { evalDomain } from "@web/core/domain";
+import { evaluateBooleanExpr } from "@web/core/py_js/py";
 import { _t } from "@web/core/l10n/translation";
 import { Pager } from "@web/core/pager/pager";
 import { registry } from "@web/core/registry";
@@ -191,6 +191,9 @@ export class X2ManyField extends Component {
             archInfo,
             list: this.list,
             openRecord: this.openRecord.bind(this),
+            evalViewModifier: (modifier) => {
+                return evaluateBooleanExpr(modifier, this.list.evalContext);
+            },
         };
 
         if (this.props.viewMode === "kanban") {
@@ -207,32 +210,9 @@ export class X2ManyField extends Component {
             return props;
         }
 
-        // handle column_invisible modifiers
-        const columns = archInfo.columns
-            .map((col) => {
-                // first remove (column_)invisible buttons in button_groups
-                if (col.type === "button_group") {
-                    const buttons = col.buttons.filter((button) => {
-                        return !this.evalColumnInvisibleModifier(button.modifiers);
-                    });
-                    return { ...col, buttons };
-                }
-                return col;
-            })
-            .filter((col) => {
-                // filter out (column_)invisible fields and empty button_groups
-                if (col.type === "field") {
-                    return !this.evalColumnInvisibleModifier(col.modifiers);
-                } else if (col.type === "button_group") {
-                    return col.buttons.length > 0;
-                }
-                return true;
-            });
-
         const editable =
             (this.archInfo.activeActions.edit && archInfo.editable) || this.props.editable;
         props.activeActions = this.activeActions;
-        props.archInfo = { ...archInfo, columns };
         props.cycleOnTab = false;
         props.editable = !this.props.readonly && editable;
         props.nestedKeyOptionalFieldsData = this.nestedKeyOptionalFieldsData;
@@ -242,13 +222,6 @@ export class X2ManyField extends Component {
             this.onAdd(params);
         };
         return props;
-    }
-
-    evalColumnInvisibleModifier(modifiers) {
-        if ("column_invisible" in modifiers) {
-            return evalDomain(modifiers.column_invisible, this.list.evalContext);
-        }
-        return false;
     }
 
     async onAdd({ context, editable } = {}) {

@@ -1,10 +1,11 @@
 /** @odoo-module */
 
+import { Field } from "@web/views/fields/field";
 import { XMLParser } from "@web/core/utils/xml";
 import { stringToOrderBy } from "@web/search/utils/order_by";
-import { Field } from "@web/views/fields/field";
 import { archParseBoolean, getActiveActions, getDecoration, processButton } from "@web/views/utils";
 import { encodeObjectForTemplate } from "@web/views/view_compiler";
+import { combineModifiers } from "@web/model/relational_model/utils";
 import { Widget } from "@web/views/widgets/widget";
 
 export class GroupListArchParser extends XMLParser {
@@ -36,10 +37,6 @@ export class GroupListArchParser extends XMLParser {
 }
 
 export class ListArchParser extends XMLParser {
-    isColumnVisible(columnInvisibleModifier) {
-        return columnInvisibleModifier !== true;
-    }
-
     parseFieldNode(node, models, modelName) {
         return Field.parseFieldNode(node, models, modelName, "list");
     }
@@ -77,25 +74,24 @@ export class ListArchParser extends XMLParser {
                 buttonGroup = undefined;
             }
             if (node.tagName === "button") {
-                const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
-                if (this.isColumnVisible(modifiers.column_invisible)) {
-                    const button = {
-                        ...this.processButton(node),
-                        defaultRank: "btn-link",
-                        type: "button",
-                        id: buttonId++,
+                const button = {
+                    ...this.processButton(node),
+                    defaultRank: "btn-link",
+                    type: "button",
+                    id: buttonId++,
+                };
+                if (buttonGroup) {
+                    buttonGroup.buttons.push(button);
+                    buttonGroup.column_invisible = combineModifiers(buttonGroup.column_invisible, node.getAttribute('column_invisible'), "AND");
+                } else {
+                    buttonGroup = {
+                        id: `column_${nextId++}`,
+                        type: "button_group",
+                        buttons: [button],
+                        hasLabel: false,
+                        column_invisible: node.getAttribute('column_invisible'),
                     };
-                    if (buttonGroup) {
-                        buttonGroup.buttons.push(button);
-                    } else {
-                        buttonGroup = {
-                            id: `column_${nextId++}`,
-                            type: "button_group",
-                            buttons: [button],
-                            hasLabel: false,
-                        };
-                        columns.push(buttonGroup);
-                    }
+                    columns.push(buttonGroup);
                 }
             } else if (node.tagName === "field") {
                 const fieldInfo = this.parseFieldNode(node, models, modelName);
@@ -108,20 +104,18 @@ export class ListArchParser extends XMLParser {
                 if (fieldInfo.isHandle) {
                     handleField = fieldInfo.name;
                 }
-                if (this.isColumnVisible(fieldInfo.modifiers.column_invisible)) {
-                    const label = fieldInfo.field.label;
-                    columns.push({
-                        ...fieldInfo,
-                        id: `column_${nextId++}`,
-                        className: node.getAttribute("class"), // for oe_edit_only and oe_read_only
-                        optional: node.getAttribute("optional") || false,
-                        type: "field",
-                        hasLabel: !(
-                            archParseBoolean(fieldInfo.attrs.nolabel) || fieldInfo.field.noLabel
-                        ),
-                        label: (fieldInfo.widget && label && label.toString()) || fieldInfo.string,
-                    });
-                }
+                const label = fieldInfo.field.label;
+                columns.push({
+                    ...fieldInfo,
+                    id: `column_${nextId++}`,
+                    className: node.getAttribute("class"), // for oe_edit_only and oe_read_only
+                    optional: node.getAttribute("optional") || false,
+                    type: "field",
+                    hasLabel: !(
+                        archParseBoolean(fieldInfo.attrs.nolabel) || fieldInfo.field.noLabel
+                    ),
+                    label: (fieldInfo.widget && label && label.toString()) || fieldInfo.string,
+                });
                 return false;
             } else if (node.tagName === "widget") {
                 const widgetInfo = this.parseWidgetNode(node);
@@ -155,7 +149,7 @@ export class ListArchParser extends XMLParser {
                 };
                 return false;
             } else if (node.tagName === "header") {
-                // AAB: not sure we need to handle invisible="1" button as the usecase seems way
+                // AAB: not sure we need to handle invisible="True" button as the usecase seems way
                 // less relevant than for fields (so for buttons, relying on the modifiers logic
                 // that applies later on could be enough, even if the value is always true)
                 headerButtons = [...node.children]
@@ -163,8 +157,7 @@ export class ListArchParser extends XMLParser {
                         ...this.processButton(node),
                         type: "button",
                         id: buttonId++,
-                    }))
-                    .filter((button) => button.modifiers.invisible !== true);
+                    }));
                 return false;
             } else if (node.tagName === "control") {
                 for (const childNode of node.children) {

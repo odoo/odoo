@@ -59,7 +59,7 @@ QUnit.test("basic rendering", async (assert) => {
             <form>
                 <field name="lines" widget="slide_category_one2many">
                     <tree>
-                        <field name="is_category" invisible="1"/>
+                        <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="display_name"/>
                         <field name="int"/>
@@ -87,7 +87,7 @@ QUnit.test("click on section behaves as usual in readonly mode", async (assert) 
             <form>
                 <field name="lines" widget="slide_category_one2many">
                     <tree>
-                        <field name="is_category" invisible="1"/>
+                        <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="int"/>
                     </tree>
@@ -109,7 +109,7 @@ QUnit.test("click on section edit the section in place", async (assert) => {
             <form>
                 <field name="lines" widget="slide_category_one2many">
                     <tree>
-                        <field name="is_category" invisible="1"/>
+                        <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="int"/>
                     </tree>
@@ -131,7 +131,7 @@ QUnit.test("click on real line opens a dialog", async (assert) => {
             <form>
                 <field name="lines" widget="slide_category_one2many">
                     <tree>
-                        <field name="is_category" invisible="1"/>
+                        <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="int"/>
                     </tree>
@@ -152,7 +152,7 @@ QUnit.test("can create section inline", async (assert) => {
             <form>
                 <field name="lines" widget="slide_category_one2many">
                     <tree>
-                        <field name="is_category" invisible="1"/>
+                        <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="int"/>
                         <control>
@@ -180,7 +180,7 @@ QUnit.test("creates real record in form dialog", async (assert) => {
             <form>
                 <field name="lines" widget="slide_category_one2many">
                     <tree>
-                        <field name="is_category" invisible="1"/>
+                        <field name="is_category" column_invisible="1"/>
                         <field name="name"/>
                         <field name="int"/>
                         <control>
