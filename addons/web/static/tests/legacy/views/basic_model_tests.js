@@ -2055,8 +2055,8 @@
                 product_ids: [37, 41],
             }, "x2many values in context manipulated client-side should be lists of ids");
             assert.strictEqual(JSON.stringify(context),
-                "{\"category\":[[6,false,[12]]],\"product_ids\":[[4,37,false],[4,41,false]]}",
-                "x2many values in context sent to the server should be commands");
+                '{"category":[12],"product_ids":[37,41]}',
+                "x2many values in context sent to the server should be lists of ids");
             assert.deepEqual(domain, [
                 ['id', 'in', [12]],
                 ['id', 'in', [37, 41]],

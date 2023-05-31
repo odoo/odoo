@@ -4997,11 +4997,8 @@ QUnit.module("Fields", (hooks) => {
                 mockRPC(route, args) {
                     if (args.method === "name_search") {
                         const { p, timmy } = args.kwargs.context;
-                        assert.deepEqual(p, [
-                            [4, 2, false],
-                            [4, 3, false],
-                        ]);
-                        assert.deepEqual(timmy, [[6, false, [12]]]);
+                        assert.deepEqual(p, [2, 3]);
+                        assert.deepEqual(timmy, [12]);
                     }
                 },
             });
@@ -5089,8 +5086,6 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test("one2many field with context", async function (assert) {
         assert.expect(2);
 
-        let counter = 0;
-
         await makeView({
             type: "form",
             resModel: "partner",
@@ -5108,19 +5103,11 @@ QUnit.module("Fields", (hooks) => {
             resId: 1,
             mockRPC(route, args) {
                 if (args.method === "onchange") {
-                    const expected =
-                        counter === 0
-                            ? [[4, 2, false]]
-                            : [
-                                  [4, 2, false],
-                                  [0, args.kwargs.context.turtles[1][1], { turtle_foo: "hammer" }],
-                              ];
                     assert.deepEqual(
                         args.kwargs.context.turtles,
-                        expected,
+                        [2],
                         "should have properly evaluated turtles key in context"
                     );
-                    counter++;
                 }
             },
         });
