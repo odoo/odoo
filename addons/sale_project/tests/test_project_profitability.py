@@ -42,6 +42,12 @@ class TestProjectProfitabilityCommon(Common):
             'service_tracking': 'task_global_project',
             'project_id': cls.project.id,
         })
+        cls.down_payment_product = cls.env['product.product'].create({
+            'name': "downpayment product, used to simulate down payments",
+            'standard_price': 30,
+            'type': 'service',
+            'service_policy': 'ordered_prepaid',
+        })
         cls.sale_order = cls.env['sale.order'].with_context(tracking_disable=True).create({
             'partner_id': cls.partner.id,
             'partner_invoice_id': cls.partner.id,
@@ -164,7 +170,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         self.assertNotEqual(self.delivery_service_order_line.untaxed_amount_to_invoice, 0.0)
         self.assertEqual(self.delivery_service_order_line.untaxed_amount_invoiced, 0.0)
 
-        # create an invoice
+        # Create an invoice.
         context = {
             'active_model': 'sale.order',
             'active_ids': self.sale_order.ids,
@@ -213,7 +219,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             }
         )
 
-        # Add 2 sales order items in the SO
+        # Add 2 sales order items in the SO.
         SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True, default_order_id=self.sale_order.id)
         manual_service_order_line = SaleOrderLine.create({
             'product_id': self.product_delivery_service.id,
@@ -308,6 +314,37 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                 },
             },
         )
+        # Create a down payment for a fixed amount of 115.
+        Downpayment = {
+            'active_model': 'sale.order',
+            'active_ids': self.sale_order.ids,
+            'active_id': self.sale_order.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
+        }
+        downpayment = self.env['sale.advance.payment.inv'].with_context(Downpayment).create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 115,
+            'deposit_account_id': self.company_data['default_account_revenue'].id,
+        })
+        # When a down payment is created, the default 15% tax is included. The SOL associated it then created by removing the taxed amount.
+        # Therefore, the amount of the dp is higher than the amount of the sol created.
+        down_payment_invoiced = 100.01
+        downpayment.create_invoices()
+        self.sale_order.invoice_ids[2].action_post()
+        # Ensures the down payment is correctly computed for the project profitability.
+        self._assert_dict_equal(invoice_type, sequence_per_invoice_type, material_order_line, service_sols, manual_service_order_line, down_payment_invoiced)
+
+        # Create a second down payment for a fixed amount of 115.
+        downpayment = self.env['sale.advance.payment.inv'].with_context(Downpayment).create({
+            'advance_payment_method': 'fixed',
+            'fixed_amount': 115,
+            'deposit_account_id': self.company_data['default_account_revenue'].id,
+        })
+        down_payment_invoiced = 2 * down_payment_invoiced
+        downpayment.create_invoices()
+        self.sale_order.invoice_ids[3].action_post()
+        # Ensures the 2 down payments are correctly computed for the project profitability.
+        self._assert_dict_equal(invoice_type, sequence_per_invoice_type, material_order_line, service_sols, manual_service_order_line, down_payment_invoiced)
 
         self.sale_order._action_cancel()
         self.assertDictEqual(
@@ -318,6 +355,48 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                     'data': [
                         {'id': 'other_revenues', 'sequence': sequence_per_invoice_type['other_revenues'], 'invoiced': 100.0, 'to_invoice': 0.0}],
                     'total': {'to_invoice': 0.0, 'invoiced': 100},
+                },
+                'costs': {
+                    'data': [{'id': 'other_costs', 'sequence': sequence_per_invoice_type['other_costs'], 'billed': -100.0, 'to_bill': 0.0}],
+                    'total': {'billed': -100.0, 'to_bill': 0.0},
+                },
+            },
+        )
+
+    def _assert_dict_equal(self, invoice_type, sequence_per_invoice_type, material_order_line, service_sols, manual_service_order_line, down_payment_invoiced):
+        self.assertDictEqual(
+            self.project._get_profitability_items(False),
+            {
+                'revenues': {
+                    'data': [
+                        {
+                            'id': 'other_revenues',
+                            'sequence': sequence_per_invoice_type['other_revenues'],
+                            'invoiced': 100.0,
+                            'to_invoice': 0.0,
+                        },
+                        {
+                            'id': 'downpayments', 'sequence': 20, 'invoiced': down_payment_invoiced,
+                            'to_invoice': -down_payment_invoiced,
+                        },
+                        {
+                            'id': invoice_type,
+                            'sequence': sequence_per_invoice_type[invoice_type],
+                            'invoiced': manual_service_order_line.untaxed_amount_invoiced,
+                            'to_invoice': sum(service_sols.mapped('untaxed_amount_to_invoice')),
+                        },
+                        {
+                            'id': 'materials',
+                            'sequence': sequence_per_invoice_type['materials'],
+                            'invoiced': material_order_line.untaxed_amount_invoiced,
+                            'to_invoice': material_order_line.untaxed_amount_to_invoice,
+                        },
+                    ],
+                    'total': {
+                        'invoiced': manual_service_order_line.untaxed_amount_invoiced + material_order_line.untaxed_amount_invoiced + down_payment_invoiced + 100,
+                        'to_invoice': sum(service_sols.mapped(
+                            'untaxed_amount_to_invoice')) + material_order_line.untaxed_amount_to_invoice - down_payment_invoiced,
+                    },
                 },
                 'costs': {
                     'data': [{'id': 'other_costs', 'sequence': sequence_per_invoice_type['other_costs'], 'billed': -100.0, 'to_bill': 0.0}],
@@ -354,7 +433,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         })
         # the bill_1 is in draft, therefore it should have the cost "to_invoice" same as the -product_price (untaxed)
         self.assertDictEqual(
-            self.project._get_profitability_items(False)['revenues'],
+            self.project._get_profitability_items(with_action=False)['revenues'],
             {
                 'data': [{
                     'id': 'other_invoice_revenues',
@@ -369,7 +448,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         invoice_1.action_post()
         # we posted the invoice_1, therefore the revenue "invoiced" should be -product_price, to_invoice should be back to 0
         self.assertDictEqual(
-            self.project._get_profitability_items(False)['revenues'],
+            self.project._get_profitability_items(with_action=False)['revenues'],
             {
                 'data': [{
                     'id': 'other_invoice_revenues',
@@ -403,7 +482,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         })
         # invoice_2 is not posted, therefore its cost should be "to_invoice" = - sum of all product_price * qty for each line
         self.assertDictEqual(
-            self.project._get_profitability_items(False)['revenues'],
+            self.project._get_profitability_items(with_action=False)['revenues'],
             {
                 'data': [{
                     'id': 'other_invoice_revenues',
