@@ -5,4 +5,4 @@ class FuzzerModel(models.Model):
     _name = 'test.fuzzer.model'
     _description = 'Test fuzzer model'
 
-    n = fields.Integer()
+    n = fields.Char()
