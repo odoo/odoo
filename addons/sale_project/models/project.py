@@ -149,7 +149,7 @@ class Project(models.Model):
             action['views'] = [(False, v) for v in view_types]
             return action
 
-        if section_name == 'other_invoice_revenues':
+        if section_name in ['other_invoice_revenues', 'downpayments']:
             action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_out_invoice_type")
             action['domain'] = domain if domain else []
             if res_id:
@@ -336,6 +336,7 @@ class Project(models.Model):
             'service_revenues': _lt('Other Services'),
             'materials': _lt('Materials'),
             'other_invoice_revenues': _lt('Customer Invoices'),
+            'downpayments': _lt('Down Payments'),
         }
 
     def _get_profitability_sequence_per_invoice_type(self):
@@ -344,6 +345,7 @@ class Project(models.Model):
             'service_revenues': 6,
             'materials': 7,
             'other_invoice_revenues': 9,
+            'downpayments': 20,
         }
 
     def _get_service_policy_to_invoice_type(self):
@@ -360,7 +362,6 @@ class Project(models.Model):
             [
                 ('product_id', '!=', False),
                 ('is_expense', '=', False),
-                ('is_downpayment', '=', False),
                 ('state', 'in', ['sale', 'done']),
                 '|', ('qty_to_invoice', '>', 0), ('qty_invoiced', '>', 0),
             ],
@@ -370,20 +371,48 @@ class Project(models.Model):
     def _get_revenues_items_from_sol(self, domain=None, with_action=True):
         sale_line_read_group = self.env['sale.order.line'].sudo()._read_group(
             self._get_profitability_sale_order_items_domain(domain),
-            ['product_id'],
+            ['product_id', 'is_downpayment'],
             ['id:array_agg', 'untaxed_amount_to_invoice:sum', 'untaxed_amount_invoiced:sum'],
         )
         display_sol_action = with_action and len(self) == 1 and self.user_has_groups('sales_team.group_sale_salesman')
         revenues_dict = {}
         total_to_invoice = total_invoiced = 0.0
+        data = []
+        sequence_per_invoice_type = self._get_profitability_sequence_per_invoice_type()
         if sale_line_read_group:
-            sols_per_product = {
-                product.id: (
-                    untaxed_amount_to_invoice,
-                    untaxed_amount_invoiced,
-                    ids,
-                ) for product, ids, untaxed_amount_to_invoice, untaxed_amount_invoiced in sale_line_read_group
-            }
+            sols_per_product = {}
+            downpayment_amount_invoiced = 0
+            downpayment_sol_ids = []
+            for product_id, is_downpayment, sol_ids, total_amount_to_invoice, total_amount_invoiced in sale_line_read_group:
+                if is_downpayment:
+                    downpayment_amount_invoiced += total_amount_invoiced
+                    downpayment_sol_ids += sol_ids
+                else:
+                    sols_per_product[product_id.id] = (
+                        total_amount_to_invoice,
+                        total_amount_invoiced,
+                        sol_ids,
+                    )
+            if downpayment_amount_invoiced:
+                downpayments_data = {
+                    'id': 'downpayments',
+                    'sequence': sequence_per_invoice_type['downpayments'],
+                    'invoiced': downpayment_amount_invoiced,
+                    'to_invoice': -downpayment_amount_invoiced
+                }
+                if with_action and self.user_has_groups('sales_team.group_sale_salesman_all_leads, account.group_account_invoice, account.group_account_readonly'):
+                    invoices = self.env['account.move'].search([('line_ids.sale_line_ids', 'in', downpayment_sol_ids)])
+                    args = ['downpayments', [('id', 'in', invoices.ids)]]
+                    if len(invoices) == 1:
+                        args.append(invoices.id)
+                    downpayments_data['action'] = {
+                        'name': 'action_profitability_items',
+                        'type': 'object',
+                        'args': json.dumps(args),
+                    }
+                data += [downpayments_data]
+                total_invoiced += downpayment_amount_invoiced
+                total_to_invoice -= downpayment_amount_invoiced
             product_read_group = self.env['product.product'].sudo()._read_group(
                 [('id', 'in', list(sols_per_product)), ('expense_policy', '=', 'no')],
                 ['invoice_policy', 'service_type', 'type'],
@@ -427,8 +456,13 @@ class Project(models.Model):
                         action_params['res_id'] = sale_order_items.id
                     materials['action'] = action_params
         sequence_per_invoice_type = self._get_profitability_sequence_per_invoice_type()
+        data += [{
+            'id': invoice_type,
+            'sequence': sequence_per_invoice_type[invoice_type],
+            **vals,
+        } for invoice_type, vals in revenues_dict.items()]
         return {
-            'data': [{'id': invoice_type, 'sequence': sequence_per_invoice_type[invoice_type], **vals} for invoice_type, vals in revenues_dict.items()],
+            'data': data,
             'total': {'to_invoice': total_to_invoice, 'invoiced': total_invoiced},
         }
 
