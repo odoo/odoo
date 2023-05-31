@@ -6,6 +6,7 @@ from datetime import datetime
 from freezegun import freeze_time
 from unittest.mock import patch
 
+import odoo
 from odoo import fields
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase, tagged
@@ -356,6 +357,61 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             'property_account_creditor_price_difference_categ': cls.product1.product_tmpl_id.get_product_accounts()['expense'],
             'property_valuation': 'real_time',
         })
+
+        old_action_post = odoo.addons.account.models.account_move.AccountMove.action_post
+        old_create = odoo.models.BaseModel.create
+
+        def new_action_post(self):
+            """ Force the creation of tracking values. """
+            res = old_action_post(self)
+            if self:
+                cls.env.flush_all()
+                cls.cr.flush()
+            return res
+
+        def new_create(self, vals_list):
+            cls.cr._now = datetime.now()
+            return old_create(self, vals_list)
+
+        post_patch = patch('odoo.addons.account.models.account_move.AccountMove.action_post', new_action_post)
+        create_patch = patch('odoo.models.BaseModel.create', new_create)
+        cls.startClassPatcher(post_patch)
+        cls.startClassPatcher(create_patch)
+
+    def _bill(self, po, qty=None, price=None):
+        action = po.action_create_invoice()
+        bill = self.env["account.move"].browse(action["res_id"])
+        bill.invoice_date = fields.Date.today()
+        if qty is not None:
+            bill.invoice_line_ids.quantity = qty
+        if price is not None:
+            bill.invoice_line_ids.price_unit = price
+        bill.action_post()
+        return bill
+
+    def _refund(self, inv, qty=None):
+        ctx = {'active_ids': inv.ids, 'active_id': inv.id, 'active_model': 'account.move'}
+        method = 'cancel' if qty is None else 'refund'
+        credit_note_wizard = self.env['account.move.reversal'].with_context(ctx).create({
+            'refund_method': method,
+            'journal_id': inv.journal_id.id,
+        })
+        rinv = self.env['account.move'].browse(credit_note_wizard.reverse_moves()['res_id'])
+        if method == 'refund':
+            rinv.invoice_line_ids.quantity = qty
+            rinv.action_post()
+        return rinv
+
+    def _return(self, picking, qty=None):
+        wizard_form = Form(self.env['stock.return.picking'].with_context(active_ids=picking.ids, active_id=picking.id, active_model='stock.picking'))
+        wizard = wizard_form.save()
+        qty = qty or wizard.product_return_moves.quantity
+        wizard.product_return_moves.quantity = qty
+        action = wizard.create_returns()
+        return_picking = self.env["stock.picking"].browse(action["res_id"])
+        return_picking.move_ids.move_line_ids.qty_done = qty
+        return_picking.button_validate()
+        return return_picking
 
     def test_change_currency_rate_average_1(self):
         """ Confirm a purchase order in another currency and create the associated receipt, change
@@ -1874,3 +1930,497 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         full_reconcile = input_amls[0].full_reconcile_id
         self.assertTrue(full_reconcile)
         self.assertTrue(all(aml.full_reconcile_id == full_reconcile for aml in input_amls))
+
+    def test_pdiff_and_credit_notes(self):
+        """
+        Auto FIFO
+        PO 12 @ 10
+        Receive with backorders: 4, 3 and then 5
+            Will generate 3 SVL
+        Bill:
+            BILL01: 3 @ 12
+            BILL02: 2 @ 11
+            BILL03: 1 @ 15
+            BILL04: 4 @ 9
+            BILL05: 2 @ 10
+            -: Refund 1 from BILL01
+            -: Refund all from BILL02
+            -: Refund 2 from BILL04
+            -: Refund 1 from BILL05
+            BILL06: 6 @ 18
+        """
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 12
+            po_line.price_unit = 10.0
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt01 = po.picking_ids
+        receipt01.move_ids.move_line_ids.qty_done = 4
+        action = receipt01.button_validate()
+        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(action['context'])).save()
+        backorder_wizard.process()
+
+        receipt02 = receipt01.backorder_ids
+        receipt02.move_ids.move_line_ids.qty_done = 3
+        action = receipt02.button_validate()
+        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(action['context'])).save()
+        backorder_wizard.process()
+
+        receipt03 = receipt02.backorder_ids
+        receipt03.move_ids.move_line_ids.qty_done = 5
+        receipt03.button_validate()
+
+        expected_svl_values = [40, 30, 50]
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+
+        # pylint: disable=bad-whitespace
+        for qty,    price,  expected_svl_values,                                expected_svl_remaining_values in [
+            (3.0,   12.0,   [40.0, 30.0, 50.0, 6.0],                            [46.0, 30.0, 50.0, 0.0]),
+            (2.0,   11.0,   [40.0, 30.0, 50.0, 6.0, 1.0, 1.0],                  [47.0, 31.0, 50.0, 0.0, 0.0, 0.0]),
+            (1.0,   15.0,   [40.0, 30.0, 50.0, 6.0, 1.0, 1.0, 5.0],             [47.0, 36.0, 50.0, 0.0, 0.0, 0.0, 0.0]),
+            (4.0,   9.0,    [40.0, 30.0, 50.0, 6.0, 1.0, 1.0, 5.0, -1.0, -3.0], [47.0, 35.0, 47.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
+            (2.0,   10.0,   [40.0, 30.0, 50.0, 6.0, 1.0, 1.0, 5.0, -1.0, -3.0], [47.0, 35.0, 47.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]),
+        ]:
+            self._bill(po, qty, price)
+            self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values, 'Err while invoicing %s @ %s' % (qty, price))
+            self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values, 'Err while invoicing %s @ %s' % (qty, price))
+
+        bill01, bill02, _bill03, bill04, bill05 = po.invoice_ids.sorted('id')
+
+        self._refund(bill01, 1.0)
+        expected_svl_values += [-2.0]
+        expected_svl_remaining_values += [0.0]
+        # should impact the first layer
+        expected_svl_remaining_values[0] -= 2.0
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        self._refund(bill02)
+        expected_svl_values += [-1.0, -1.0]
+        expected_svl_remaining_values += [0.0, 0.0]
+        # should impact the two first layers
+        expected_svl_remaining_values[0] -= 1.0
+        expected_svl_remaining_values[1] -= 1.0
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        self._refund(bill04, 2.0)
+        expected_svl_values += [1.0, 1.0]
+        expected_svl_remaining_values += [0.0, 0.0]
+        # should impact the two last layers
+        expected_svl_remaining_values[1] += 1.0
+        expected_svl_remaining_values[2] += 1.0
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        self._refund(bill05, 1.0)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        self._bill(po, price=18.0)
+        expected_svl_values += [16.0, 16.0, 16.0]
+        expected_svl_remaining_values += [0.0, 0.0, 0.0]
+        # should impact all layers
+        expected_svl_remaining_values[0] += 16.0
+        expected_svl_remaining_values[1] += 16.0
+        expected_svl_remaining_values[2] += 16.0
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        accounts = self.product1.product_tmpl_id._get_product_accounts()
+        stock_in_amls = self.env['account.move.line'].search([('account_id', '=', accounts['stock_input'].id)], order='id')
+        self.assertRecordValues(stock_in_amls, [
+            # Receipts
+            {'debit': 0.0, 'credit': 40.0},
+            {'debit': 0.0, 'credit': 30.0},
+            {'debit': 0.0, 'credit': 50.0},
+            # Bill01 3 @ 12
+            {'debit': 36.0, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 6.0},
+            # Bill02 2 @ 11
+            {'debit': 22.0, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 1.0},
+            {'debit': 0.0, 'credit': 1.0},
+            # Bill03 1 @ 15
+            {'debit': 15.0, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 5.0},
+            # Bill04 4 @ 9
+            {'debit': 36.0, 'credit': 0.0},
+            {'debit': 1.0, 'credit': 0.0},
+            {'debit': 3.0, 'credit': 0.0},
+            # Bill05 2 @ 10
+            {'debit': 20.0, 'credit': 0.0},
+            # Refund 1 from BILL01
+            {'debit': 0.0, 'credit': 12.0},
+            {'debit': 2.0, 'credit': 0.0},
+            # Refund all from BILL02
+            {'debit': 0.0, 'credit': 22.0},
+            {'debit': 1.0, 'credit': 0.0},
+            {'debit': 1.0, 'credit': 0.0},
+            # Refund 2 from BILL04
+            {'debit': 0.0, 'credit': 18.0},
+            {'debit': 0.0, 'credit': 1.0},
+            {'debit': 0.0, 'credit': 1.0},
+            # Refund 1 from BILL05
+            {'debit': 0.0, 'credit': 10.0},
+            # BILL06: 6 @ 18
+            {'debit': 108.0, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 16.0},
+            {'debit': 0.0, 'credit': 16.0},
+            {'debit': 0.0, 'credit': 16.0},
+        ])
+        self.assertTrue(all(aml.full_reconcile_id for aml in stock_in_amls))
+
+    def test_pdiff_with_credit_notes_and_delivered_qties(self):
+        """
+        Auto FIFO
+        IN 10 @ 10
+        Bill 10 @ 12
+        OUT 3
+        Full Refund
+        Bill 10 @ 9
+        OUT 1
+        Full Refund
+        Bill 10 @ 10
+        """
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+        expected_svl_values = []
+        expected_svl_remaining_values = []
+
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        stock_location = warehouse.lot_stock_id
+        customer_location = self.env.ref('stock.stock_location_customers')
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 10
+            po_line.price_unit = 10.0
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids.move_line_ids.qty_done = 10
+        receipt.button_validate()
+        expected_svl_values += [100.0]
+        expected_svl_remaining_values += [100.0]
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        bill01 = self._bill(po, price=12)
+        expected_svl_values += [20.0]
+        expected_svl_remaining_values += [0.0]
+        expected_svl_remaining_values[0] += 20.0  # should impact the layer of the receipt
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        delivery = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'move_ids': [(0, 0, {
+                'name': self.product1.name,
+                'product_id': self.product1.id,
+                'product_uom_qty': 3,
+                'product_uom': self.product1.uom_id.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.move_ids.quantity_done = 3.0
+        delivery.button_validate()
+        expected_svl_values += [-36.0]
+        expected_svl_remaining_values += [0.0]
+        expected_svl_remaining_values[0] -= 36.0  # should impact the layer of the receipt
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        self._refund(bill01)
+        expected_svl_values += [-14.0]
+        expected_svl_remaining_values += [0.0]
+        expected_svl_remaining_values[0] -= 14.0  # should impact the layer of the receipt
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        bill02 = self._bill(po, price=9)
+        expected_svl_values += [-7.0]
+        expected_svl_remaining_values += [0.0]
+        expected_svl_remaining_values[0] -= 7.0  # should impact the layer of the receipt
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        delivery = self.env['stock.picking'].create({
+            'location_id': stock_location.id,
+            'location_dest_id': customer_location.id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'move_ids': [(0, 0, {
+                'name': self.product1.name,
+                'product_id': self.product1.id,
+                'product_uom_qty': 1,
+                'product_uom': self.product1.uom_id.id,
+                'location_id': stock_location.id,
+                'location_dest_id': customer_location.id,
+            })],
+        })
+        delivery.action_confirm()
+        delivery.move_ids.quantity_done = 1.0
+        delivery.button_validate()
+        expected_svl_values += [-9.0]
+        expected_svl_remaining_values += [0.0]
+        expected_svl_remaining_values[0] -= 9.0  # should impact the layer of the receipt
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        self._refund(bill02)
+        expected_svl_values += [6.0]
+        expected_svl_remaining_values += [0.0]
+        expected_svl_remaining_values[0] += 6.0  # should impact the layer of the receipt
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        self._bill(po)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        accounts = self.product1.product_tmpl_id._get_product_accounts()
+        stock_in_amls = self.env['account.move.line'].search([('account_id', '=', accounts['stock_input'].id)], order='id')
+        self.assertRecordValues(stock_in_amls, [
+            # IN 10 @ 10
+            {'debit': 0.0, 'credit': 100.0},
+            # Bill 10 @ 12
+            {'debit': 120.0, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 20.0},
+            # (OUT 3)
+            # Refund: here, we skip the 3 products delivered in the meantime,
+            #   i.e. we only compensate the on-hand quantity (hence the $14
+            #   instead of $20)
+            {'debit': 0.0, 'credit': 120.0},
+            {'debit': 14.0, 'credit': 0.0},
+            # Bill 10 @ 9
+            {'debit': 90.0, 'credit': 0.0},
+            {'debit': 3.0, 'credit': 0.0},
+            {'debit': 7.0, 'credit': 0.0},
+            # (OUT 1)
+            # Refund: again, we skip the product delivered in the meantime.
+            #   We have $3 which is the reversing entry of the inital bill
+            #   and 6$ from the stock valuation correction
+            {'debit': 0.0, 'credit': 90.0},
+            {'debit': 0.0, 'credit': 3.0},
+            {'debit': 0.0, 'credit': 6.0},
+            # Bill 10 @ 10
+            {'debit': 100.0, 'credit': 0},
+        ])
+
+        self.assertEqual(sum(stock_in_amls.mapped('debit')) - sum(stock_in_amls.mapped('credit')), -5,
+                         "There should be a difference because of the skipped products while posting the refunds (see "
+                         "comments in above `assertRecordValues`). The value is the sum of the price differences of each "
+                         "delivery: 3 * $2 + 1 * $-1). The user will have to manually add some account entries to "
+                         "balance the accounts")
+
+    def test_pdiff_with_returns_and_credit_notes(self):
+        """
+        Auto FIFO
+        IN 10 @ 10
+        Return 3
+        IN (Return) 3
+        Bill 10 @ 12
+            This step will impact 7 products of the first layer and 3 products
+            of the last one (i.e. the second IN)
+        Return 1
+        Refund 1 (from PO)
+        Return 5
+        Refund 5 (from initial bill)
+        """
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+        accounts = self.product1.product_tmpl_id._get_product_accounts()
+        expected_svl_values = []
+        expected_svl_remaining_values = []
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 10
+            po_line.price_unit = 10.0
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt = po.picking_ids
+        receipt.move_ids.move_line_ids.qty_done = 10
+        receipt.button_validate()
+        expected_svl_values += [100.0]
+        expected_svl_remaining_values += [100.0]
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        return01 = self._return(receipt, qty=3)
+        expected_svl_values += [-30.0]
+        expected_svl_remaining_values += [0.0]
+        expected_svl_remaining_values[0] -= 30
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        self._return(return01)
+        expected_svl_values += [30.0]
+        expected_svl_remaining_values += [30.0]
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        bill = self._bill(po, price=12)
+        # two new layers because we have 7 remaining products in the first in-layer and 3 in the second one
+        expected_svl_values += [14.0, 6.0]
+        expected_svl_remaining_values += [0.0, 0.0]
+        expected_svl_remaining_values[0] += 14.0
+        # `expected_svl_remaining_values[1]` is the return, it does not change
+        expected_svl_remaining_values[2] += 6.0
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        stock_in_amls = self.env['account.move.line'].search([('account_id', '=', accounts['stock_input'].id)])
+        self.assertTrue(stock_in_amls)
+        self.assertTrue(all(aml.full_reconcile_id for aml in stock_in_amls))
+
+        self._return(receipt, qty=1)
+        expected_svl_values += [-12.0]
+        expected_svl_remaining_values += [0.0]
+        expected_svl_remaining_values[0] -= 12.0
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        refund = self._bill(po, price=12)
+        self.assertEqual(refund.move_type, 'in_refund')
+        stock_in_amls = self.env['account.move.line'].search([('account_id', '=', accounts['stock_input'].id)])
+        self.assertTrue(stock_in_amls)
+        self.assertTrue(all(aml.full_reconcile_id for aml in stock_in_amls))
+
+        self._return(receipt, qty=5)
+        expected_svl_values += [-60.0]
+        expected_svl_remaining_values += [0.0]
+        expected_svl_remaining_values[0] -= 60.0
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+
+        self._refund(bill, qty=5)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('value'), expected_svl_values)
+        self.assertEqual(self.product1.stock_valuation_layer_ids.mapped('remaining_value'), expected_svl_remaining_values)
+        stock_in_amls = self.env['account.move.line'].search([('account_id', '=', accounts['stock_input'].id)], order='id')
+        self.assertRecordValues(stock_in_amls, [
+            # IN 10 @ 10
+            {'debit': 0.0, 'credit': 100.0},
+            # Return 3
+            {'debit': 30.0, 'credit': 0.0},
+            # IN (Return) 3
+            {'debit': 0.0, 'credit': 30.0},
+            # Bill 10 @ 12
+            {'debit': 120, 'credit': 0.0},
+            {'debit': 0.0, 'credit': 14.0},
+            {'debit': 0.0, 'credit': 6.0},
+            # Return 1
+            {'debit': 12.0, 'credit': 0.0},
+            # Refund 1
+            {'debit': 0, 'credit': 12.0},
+            # Return 5
+            {'debit': 60.0, 'credit': 0.0},
+            # Refund 5
+            {'debit': 0.0, 'credit': 60.0},
+        ])
+        self.assertTrue(all(aml.full_reconcile_id for aml in stock_in_amls))
+
+    def _test_pdiff_and_order_between_bills_common(self):
+        self.product1.categ_id.property_cost_method = 'fifo'
+        self.product1.categ_id.property_valuation = 'real_time'
+
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_id
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.product1
+            po_line.product_qty = 2
+            po_line.price_unit = 10.0
+        po = po_form.save()
+        po.button_confirm()
+
+        receipt01 = po.picking_ids
+        receipt01.move_ids.move_line_ids.qty_done = 1
+        action = receipt01.button_validate()
+        backorder_wizard = Form(self.env['stock.backorder.confirmation'].with_context(action['context'])).save()
+        backorder_wizard.process()
+
+        receipt02 = receipt01.backorder_ids
+        receipt02.move_ids.move_line_ids.qty_done = 1
+        receipt02.button_validate()
+
+        bill01 = self._bill(po, 1.0, 11)
+
+        ctx = {'active_ids': bill01.ids, 'active_id': bill01.id, 'active_model': 'account.move'}
+        credit_note_wizard = self.env['account.move.reversal'].with_context(ctx).create({
+            'refund_method': "refund",
+            'journal_id': bill01.journal_id.id,
+        })
+        refund = self.env['account.move'].browse(credit_note_wizard.reverse_moves()['res_id'])
+
+        action = po.action_create_invoice()
+        bill02 = self.env["account.move"].browse(action["res_id"])
+        bill02.invoice_date = fields.Date.today()
+        bill02.invoice_line_ids.quantity = 1.0
+        bill02.invoice_line_ids.price_unit = 12
+
+        return po, refund, bill02
+
+    def test_pdiff_and_order_between_bills_01(self):
+        """
+        Auto fifo
+        IN 1 @ 10 -> SVL01
+        IN 1 @ 10 -> SVL02
+        BILL01 1 @ 11
+            Should impact SVL01
+        Create draft Refund
+        Create draft BILL02 1 @ 12
+        Post Refund
+        Post BILL02
+            Should impact SVL01
+        Bill03 1 @ 13
+            Should impact SVL02
+        """
+        po, refund, bill02 = self._test_pdiff_and_order_between_bills_common()
+        refund.action_post()
+        bill02.action_post()
+        self._bill(po, price=13)
+
+        svls = self.product1.stock_valuation_layer_ids
+        self.assertEqual(svls.mapped('remaining_value'), [12.0, 13.0, 0.0, 0.0, 0.0, 0.0])
+        self.assertEqual(svls.mapped('value'), [10.0, 10.0, 1.0, -1.0, 2.0, 3.0])
+
+    def test_pdiff_and_order_between_bills_02(self):
+        """
+        Auto fifo
+        IN 1 @ 10 -> SVL01
+        IN 1 @ 10 -> SVL02
+        BILL01 1 @ 11
+            Should impact SVL01
+        Create draft Refund
+        Create draft BILL02 1 @ 12
+        Post BILL02
+            Should impact SVL02
+        Post Refund
+        Bill03 1 @ 13
+            Should impact SVL01
+        """
+        po, refund, bill02 = self._test_pdiff_and_order_between_bills_common()
+        bill02.action_post()
+        refund.action_post()
+        self._bill(po, price=13)
+
+        svls = self.product1.stock_valuation_layer_ids
+        self.assertEqual(svls.mapped('remaining_value'), [13.0, 12.0, 0.0, 0.0, 0.0, 0.0])
+        self.assertEqual(svls.mapped('value'), [10.0, 10.0, 1.0, 2.0, -1.0, 3.0])
