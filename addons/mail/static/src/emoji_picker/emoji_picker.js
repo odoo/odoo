@@ -20,6 +20,19 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { memoize } from "@web/core/utils/functions";
 import { escapeRegExp } from "@web/core/utils/strings";
 
+export function useEmojiPickerStoreScroll() {
+    const storeScroll = {
+        scrollValue: 0,
+        set: (value) => {
+            storeScroll.scrollValue = value;
+        },
+        get: () => {
+            return storeScroll.scrollValue;
+        },
+    };
+    return storeScroll;
+}
+
 /**
  *
  * @param {import("@web/core/utils/hooks").Ref} [ref]
@@ -31,15 +44,7 @@ import { escapeRegExp } from "@web/core/utils/strings";
 export function useEmojiPicker(ref, props, options = {}) {
     const targets = [];
     const popover = usePopover(EmojiPicker, { ...options, popoverClass: "o-fast-popover" });
-    props.storeScroll = {
-        scrollValue: 0,
-        set: (value) => {
-            props.storeScroll.scrollValue = value;
-        },
-        get: () => {
-            return props.storeScroll.scrollValue;
-        },
-    };
+    props.storeScroll = useEmojiPickerStoreScroll();
 
     /**
      * @param {import("@web/core/utils/hooks").Ref} ref
@@ -121,8 +126,15 @@ export async function loadEmoji() {
 export const EMOJI_PER_ROW = 9;
 
 export class EmojiPicker extends Component {
-    static props = ["onSelect", "close", "onClose?", "storeScroll?"];
-    static defaultProps = { onClose: () => {} };
+    static props = [
+        "onSelect",
+        "close",
+        "onClose?",
+        "restorePositionOnSelect?",
+        "storeScroll?",
+        "className?",
+    ];
+    static defaultProps = { onClose: () => {}, className: "", restorePositionOnSelect: true };
     static template = "mail.EmojiPicker";
 
     recent = [];
@@ -294,7 +306,9 @@ export class EmojiPicker extends Component {
         this.recent[codepoints] ??= 0;
         this.recent[codepoints]++;
         browser.localStorage.setItem("mail.emoji.frequent", JSON.stringify(this.recent));
-        this.gridRef.el.scrollTop = 0;
+        if (this.props.restorePositionOnSelect && !ev.shiftKey) {
+            this.gridRef.el.scrollTop = 0;
+        }
         if (!ev.shiftKey) {
             this.props.close();
             this.props.onClose();

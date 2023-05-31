@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.EmojiPicker" owl="1">
-    <div class="o-mail-EmojiPicker bg-view" t-att-class="emojis.length === 0 ? 'd-flex flex-column align-items-center justify-content-center' : ''" t-on-click="onClick" t-on-keydown="onKeydown">
+    <div class="o-mail-EmojiPicker bg-view" t-attf-class=" {{props.className}} {{emojis.length === 0 ? 'd-flex flex-column align-items-center justify-content-center' : ''}} {{env.isSmall ? 'o-small' : ''}}" t-on-click="onClick" t-on-keydown="onKeydown">
         <t t-if="emojis.length === 0">
             <span class="o-mail-EmojiPicker-empty">😵‍💫</span>
             <span class="fs-5 text-muted">Failed to load emojis...</span>

@@ -2,12 +2,16 @@
 
 import { AttachmentList } from "@mail/attachments/attachment_list";
 import { useAttachmentUploader } from "@mail/attachments/attachment_uploader_hook";
-import { useSelection } from "@mail/utils/hooks";
+import { useSelection, onExternalClick } from "@mail/utils/hooks";
 import { isDragSourceExternalFile, isEventHandled, markEventHandled } from "@mail/utils/misc";
 import { Component, onMounted, useChildSubEnv, useEffect, useRef, useState } from "@odoo/owl";
 import { useDropzone } from "../dropzone/dropzone_hook";
 import { useMessaging, useStore } from "../core/messaging_hook";
-import { useEmojiPicker } from "../emoji_picker/emoji_picker";
+import {
+    useEmojiPicker,
+    useEmojiPickerStoreScroll,
+    EmojiPicker,
+} from "../emoji_picker/emoji_picker";
 
 import { sprintf } from "@web/core/utils/strings";
 import { escapeAndCompactTextContent } from "../utils/format.js";
@@ -37,6 +41,7 @@ import { MessageConfirmDialog } from "../core_ui/message_confirm_dialog";
 export class Composer extends Component {
     static components = {
         AttachmentList,
+        EmojiPicker,
         FileUploader,
         NavigableList,
     };
@@ -79,6 +84,7 @@ export class Composer extends Component {
         this.state = useState({
             autofocus: 0,
             active: true,
+            showEmojiPicker: false,
         });
         this.selection = useSelection({
             refName: "textarea",
@@ -97,7 +103,7 @@ export class Composer extends Component {
             },
         });
         this.suggestion = this.store.user ? useSuggestion() : undefined;
-        this.markEventHandled = markEventHandled;
+        this.useEmojiPickerStoreScroll = useEmojiPickerStoreScroll;
         if (this.props.dropzoneRef && this.allowUpload) {
             useDropzone(
                 this.props.dropzoneRef,
@@ -117,10 +123,13 @@ export class Composer extends Component {
         useChildSubEnv({
             inComposer: true,
         });
-        useEmojiPicker(useRef("emoji-picker"), {
-            onSelect: (str) => this.addEmoji(str),
-            onClose: () => this.state.autofocus++,
-        });
+        if (!this.env.isSmall) {
+            useEmojiPicker(useRef("emoji-picker"), {
+                onSelect: (str) => this.addEmoji(str),
+                onClose: () => this.state.autofocus++,
+            });
+        }
+        onExternalClick("composer", () => (this.state.showEmojiPicker = false));
         useEffect(
             (focus) => {
                 if (focus && this.ref.el) {
@@ -331,6 +340,13 @@ export class Composer extends Component {
         }
     }
 
+    onClickTextarea(ev) {
+        markEventHandled(ev, "composer.onClickTextarea");
+        if (this.state.showEmojiPicker) {
+            this.state.showEmojiPicker = false;
+        }
+    }
+
     onClickAddAttachment(ev) {
         markEventHandled(ev, "composer.clickOnAddAttachment");
         this.state.autofocus++;
@@ -376,6 +392,7 @@ export class Composer extends Component {
     }
 
     onClickAddEmoji(ev) {
+        this.state.showEmojiPicker = !this.state.showEmojiPicker;
         markEventHandled(ev, "composer.clickOnAddEmoji");
     }
 

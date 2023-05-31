@@ -9,6 +9,14 @@
     "content";
     grid-template-rows: 30px 35px 1fr;
 
+    &.o-small {
+        grid-template-areas:
+        "search"
+        "content"
+        "header" !important;
+        grid-template-rows: 35px 1fr 30px !important;
+    }
+
     .o-mail-Emoji {
         width: 30px;
         font-size: 1rem;
