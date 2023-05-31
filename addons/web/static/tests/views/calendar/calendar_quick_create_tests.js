@@ -19,6 +19,7 @@ async function start(params = {}) {
         record: {},
         close() {},
         editRecord() {},
+        name,
         ...props,
     });
 }

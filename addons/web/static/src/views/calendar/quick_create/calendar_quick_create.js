@@ -83,4 +83,5 @@ CalendarQuickCreate.props = {
     record: Object,
     model: Object,
     editRecord: Function,
+    name: String,
 };
