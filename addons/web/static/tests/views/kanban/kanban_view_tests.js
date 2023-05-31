@@ -10,6 +10,7 @@ import {
     getFixture,
     getNodesTextContent,
     makeDeferred,
+    mouseEnter,
     nextTick,
     patchWithCleanup,
     selectDropdownItem,
@@ -363,6 +364,49 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 4);
         assert.containsN(target, ".o_kanban_ghost", 6);
         assert.containsOnce(target, ".o_kanban_record:contains(gnap)");
+    });
+
+    QUnit.test("Hide tooltip when user click inside a kanban headers item", async (assert) => {
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
+        serviceRegistry.add("tooltip", tooltipService);
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban default_group_by="product_id">
+                    <field name="product_id" options='{"group_by_tooltip": {"name": "Name"}}'/>
+                    <templates>
+                        <t t-name="kanban-box"/>
+                    </templates>
+                </kanban>`,
+        });
+        assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
+        assert.containsN(target, ".o_column_title", 2);
+
+        await mouseEnter(
+            target,
+            ".o_kanban_group:first-child .o_kanban_header_title .o_column_title"
+        );
+        assert.containsOnce(target, ".o-tooltip");
+
+        await click(
+            target,
+            ".o_kanban_group:first-child .o_kanban_header_title .o_kanban_quick_add"
+        );
+        assert.containsNone(target, ".o-tooltip");
+
+        await mouseEnter(
+            target,
+            ".o_kanban_group:first-child .o_kanban_header_title .o_column_title"
+        );
+        assert.containsOnce(target, ".o-tooltip");
+
+        await click(target, ".o_kanban_group:first-child .o_kanban_header_title .fa-gear");
+        await nextTick();
+        assert.containsNone(target, ".o-tooltip");
     });
 
     QUnit.test("generic tags are case insensitive", async function (assert) {
@@ -8509,12 +8553,12 @@ QUnit.module("Views", (hooks) => {
             "first column should have a default title for when no value is provided"
         );
         assert.ok(
-            !target.querySelector(".o_kanban_group:first-child .o_kanban_header_title").dataset
+            !target.querySelector(".o_kanban_group:first-child .o_kanban_header_title .o_column_title").dataset
                 .tooltipInfo,
             "tooltip of first column should not defined, since group_by_tooltip title and the many2one field has no value"
         );
         assert.ok(
-            !target.querySelector(".o_kanban_group:first-child .o_kanban_header_title").dataset
+            !target.querySelector(".o_kanban_group:first-child .o_kanban_header_title .o_column_title").dataset
                 .tooltipTemplate,
             "tooltip of first column should not defined, since group_by_tooltip title and the many2one field has no value"
         );
@@ -8524,13 +8568,13 @@ QUnit.module("Views", (hooks) => {
             "second column should have a title with a value from the many2one"
         );
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_header_title").dataset
+            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_header_title .o_column_title").dataset
                 .tooltipInfo,
             `{"entries":[{"title":"Kikou","value":"hello"}]}`,
             "second column should have a tooltip with the group_by_tooltip title and many2one field value"
         );
         assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_header_title").dataset
+            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_header_title .o_column_title").dataset
                 .tooltipTemplate,
             "web.KanbanGroupTooltip",
             "second column should have a tooltip with the group_by_tooltip title and many2one field value"
@@ -8566,22 +8610,22 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_column_title", 2);
         assert.strictEqual(
             target
-                .querySelectorAll(".o_kanban_header_title")[0]
+                .querySelectorAll(".o_kanban_header_title .o_column_title")[0]
                 .getAttribute("data-tooltip-template"),
             null
         );
         assert.strictEqual(
-            target.querySelectorAll(".o_kanban_header_title")[0].getAttribute("data-tooltip-info"),
+            target.querySelectorAll(".o_kanban_header_title .o_column_title")[0].getAttribute("data-tooltip-info"),
             null
         );
         assert.strictEqual(
             target
-                .querySelectorAll(".o_kanban_header_title")[1]
+                .querySelectorAll(".o_kanban_header_title .o_column_title")[1]
                 .getAttribute("data-tooltip-template"),
             null
         );
         assert.strictEqual(
-            target.querySelectorAll(".o_kanban_header_title")[1].getAttribute("data-tooltip-info"),
+            target.querySelectorAll(".o_kanban_header_title .o_column_title")[1].getAttribute("data-tooltip-info"),
             null
         );
         prom.resolve();
@@ -8589,22 +8633,22 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(
             target
-                .querySelectorAll(".o_kanban_header_title")[0]
+                .querySelectorAll(".o_kanban_header_title .o_column_title")[0]
                 .getAttribute("data-tooltip-template"),
             "web.KanbanGroupTooltip"
         );
         assert.strictEqual(
             target
-                .querySelectorAll(".o_kanban_header_title")[1]
+                .querySelectorAll(".o_kanban_header_title .o_column_title")[1]
                 .getAttribute("data-tooltip-template"),
             "web.KanbanGroupTooltip"
         );
         assert.strictEqual(
-            target.querySelectorAll(".o_kanban_header_title")[0].getAttribute("data-tooltip-info"),
+            target.querySelectorAll(".o_kanban_header_title .o_column_title")[0].getAttribute("data-tooltip-info"),
             '{"entries":[{"title":"Name","value":"hello"}]}'
         );
         assert.strictEqual(
-            target.querySelectorAll(".o_kanban_header_title")[1].getAttribute("data-tooltip-info"),
+            target.querySelectorAll(".o_kanban_header_title .o_column_title")[1].getAttribute("data-tooltip-info"),
             '{"entries":[{"title":"Name","value":"xmo"}]}'
         );
     });
@@ -8663,11 +8707,11 @@ QUnit.module("Views", (hooks) => {
         await nextTick();
 
         assert.strictEqual(
-            target.querySelectorAll(".o_kanban_header_title")[0].getAttribute("data-tooltip-info"),
+            target.querySelectorAll(".o_kanban_header_title .o_column_title")[0].getAttribute("data-tooltip-info"),
             '{"entries":[{"title":"Name","value":"hello"}]}'
         );
         assert.strictEqual(
-            target.querySelectorAll(".o_kanban_header_title")[1].getAttribute("data-tooltip-info"),
+            target.querySelectorAll(".o_kanban_header_title .o_column_title")[1].getAttribute("data-tooltip-info"),
             '{"entries":[{"title":"Name","value":"xm"}]}'
         );
     });
