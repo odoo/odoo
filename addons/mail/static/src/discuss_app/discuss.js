@@ -40,9 +40,7 @@ export class Discuss extends Component {
         FileUploader,
         ImStatus,
     };
-    static props = {
-        public: { type: Boolean, optional: true },
-    };
+    static props = {};
     static template = "mail.Discuss";
 
     setup() {
@@ -98,7 +96,7 @@ export class Discuss extends Component {
     }
 
     get channelAvatar() {
-        return this.props.public
+        return this.store.inPublicPage
             ? url(
                   `/discuss/channel/${this.thread.id}/avatar_128?unique=${this.thread?.avatarCacheKey}`
               )
