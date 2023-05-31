@@ -871,7 +871,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: /* xml */ `
                 <form>
-                    <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}" attrs="{'required':[('datetime', '!=', False), ('datetime_end', '!=', False)]}"/>
+                    <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}" required="datetime and datetime_end"/>
                 </form>`,
             resId: 1,
         });

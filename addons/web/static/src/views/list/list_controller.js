@@ -2,7 +2,7 @@
 
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { download } from "@web/core/network/download";
-import { evaluateExpr } from "@web/core/py_js/py";
+import { evaluateExpr, evaluateBooleanExpr } from "@web/core/py_js/py";
 import { unique } from "@web/core/utils/arrays";
 import { useService, useBus } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
@@ -378,6 +378,10 @@ export class ListController extends Component {
             record.toggleSelection(false);
         });
         this.model.root.selectDomain(false);
+    }
+
+    evalViewModifier(modifier) {
+        return evaluateBooleanExpr(modifier, this.model.root.evalContext);
     }
 
     get className() {

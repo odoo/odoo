@@ -294,7 +294,7 @@ Ho-ho-hoooo Merry Christmas`,
                     <sheet>
                         <div>
                             <field name="text_field" disabled="1" widget="CopyClipboardButton"/>
-                            <field name="char_field" disabled="[('char_field', '=', 'yop')]" widget="CopyClipboardButton"/>
+                            <field name="char_field" disabled="char_field == 'yop'" widget="CopyClipboardButton"/>
                             <field name="char_field" widget="char"/>
                         </div>
                     </sheet>

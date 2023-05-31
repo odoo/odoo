@@ -104,8 +104,8 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                 arch: `
                     <form>
                         <header>
-                            <button string="Confirm" attrs="{'invisible': [['display_name', '=', 'first record']]}" />
-                            <button string="Do it" attrs="{'invisible': [['display_name', '=', 'first record']]}" />
+                            <button string="Confirm" invisible="display_name == 'first record'" />
+                            <button string="Do it" invisible="display_name == 'first record'" />
                         </header>
                         <sheet>
                             <group>
@@ -145,7 +145,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                 arch: `
                     <form>
                         <header>
-                            <button string="Hola" attrs="{'invisible': [['display_name', '=', 'first record']]}" />
+                            <button string="Hola" invisible="display_name == 'first record'" />
                             <button string="Ciao" />
                         </header>
                         <sheet>
@@ -197,7 +197,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                     <form>
                         <header>
                             <widget name="attach_document" string="Attach document" />
-                            <button string="Ciao" attrs="{'invisible': [['display_name', '=', 'first record']]}" />
+                            <button string="Ciao" invisible="display_name == 'first record'" />
                         </header>
                         <sheet>
                             <group>
@@ -251,8 +251,8 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
                     <form>
                         <header>
                             <button string="Just more than one" />
-                            <button string="Confirm" attrs="{'invisible': [['display_name', '=', '']]}" />
-                            <button string="Do it" attrs="{'invisible': [['display_name', '!=', '']]}" />
+                            <button string="Confirm" invisible="display_name == ''" />
+                            <button string="Do it" invisible="display_name != ''" />
                         </header>
                         <sheet>
                             <field name="display_name" />

@@ -109,7 +109,7 @@ QUnit.module('field html', (hooks) => {
             arch: `
                 <form>
                     <field name="display_name"/>
-                    <field name="body_arch" widget="mass_mailing_html" attrs="{'invisible': [['display_name', '=', 'hide']]}"/>
+                    <field name="body_arch" widget="mass_mailing_html" invisible="display_name == 'hide'"/>
                 </form>`,
         });
 

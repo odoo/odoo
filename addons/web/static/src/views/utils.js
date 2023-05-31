@@ -2,6 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { combineModifiers } from "@web/model/relational_model/utils";
 
 export const X2M_TYPES = ["one2many", "many2many"];
 const NUMERIC_TYPES = ["integer", "float", "monetary"];
@@ -27,7 +28,6 @@ export const BUTTON_CLICK_PARAMS = [
     "special",
     "effect",
     "help",
-    "modifiers",
     // WOWL SAD: is adding the support for debounce attribute here justified or should we
     // just override compileButton in kanban compiler to add the debounce?
     "debounce",
@@ -61,7 +61,7 @@ export function addDependencies(deps, activeFields, fields) {
                 attrs: {},
                 options: {},
                 ...dependency,
-                modifiers: { invisible: true, ...dependency.modifiers },
+                invisible: "True",
             };
         }
         if (!(name in fields)) {
@@ -268,9 +268,12 @@ export function processButton(node) {
         title: node.getAttribute("title") || undefined,
         string: node.getAttribute("string") || undefined,
         options: JSON.parse(node.getAttribute("options") || "{}"),
-        modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
         display: node.getAttribute("display") || "selection",
         clickParams,
+        column_invisible: node.getAttribute("column_invisible"),
+        invisible: combineModifiers(node.getAttribute("column_invisible"), node.getAttribute("invisible"), "OR"),
+        readonly: node.getAttribute("readonly"),
+        required: node.getAttribute("required"),
     };
 }
 

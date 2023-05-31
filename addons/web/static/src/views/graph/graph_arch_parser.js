@@ -55,8 +55,7 @@ export class GraphArchParser extends XMLParser {
                         }
                         archInfo.fieldAttrs[fieldName].string = string;
                     }
-                    const modifiers = JSON.parse(node.getAttribute("modifiers") || "{}");
-                    if (modifiers.invisible === true) {
+                    if (node.getAttribute("invisible") === "True" || node.getAttribute("invisible") === "1") {
                         if (!archInfo.fieldAttrs[fieldName]) {
                             archInfo.fieldAttrs[fieldName] = {};
                         }
