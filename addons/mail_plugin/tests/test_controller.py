@@ -6,6 +6,7 @@ from unittest.mock import Mock, patch
 
 from odoo.addons.iap.tools import iap_tools
 from odoo.addons.mail_plugin.tests.common import TestMailPluginControllerCommon, mock_auth_method_outlook
+from odoo.exceptions import AccessError
 
 
 class TestMailPluginController(TestMailPluginControllerCommon):
@@ -125,6 +126,39 @@ class TestMailPluginController(TestMailPluginControllerCommon):
         second_company_id = result["partner"]["company"]["id"]
         self.assertEqual(first_company_id, second_company_id, "Should not create a new company")
         self.assertEqual(result["partner"]["company"]["additionalInfo"]["iap_information"], "test")
+
+    def test_get_partner_no_access(self):
+        """Test the case where the partner has been enriched by someone else, but we can't access it."""
+        partner = self.env["res.partner"].create({"name": "Test", "website": "https://test.example.com"})
+        self.env["res.partner.iap"].create({
+            "partner_id": partner.id,
+            "iap_search_domain": "@test.example.com",
+        })
+
+        # sanity check, we can access the partner
+        result = self.mock_plugin_partner_get(
+            "Test", "test@test.example.com",
+            lambda _, domain: {"name": "Name", "email": "test@test.example.com"},
+        )
+        self.assertEqual(result["partner"]["company"]["website"], "https://test.example.com")
+
+        # now we can't access it
+        def _check_access_rule(record, operation, *args, **kwargs):
+            if operation == "read" and record == partner:
+                raise AccessError("No Access")
+            return True
+
+        with patch.object(type(partner), 'check_access_rule', _check_access_rule):
+            result = self.mock_plugin_partner_get(
+                "Test", "test@test.example.com",
+                lambda _, domain: {"name": "Name", "email": "test@test.example.com"},
+            )
+        self.assertEqual(result["partner"]["company"].get("id"), partner.id)
+        self.assertEqual(result["partner"]["company"].get("name"), "No Access")
+        self.assertFalse(result["partner"]["company"].get("website"))
+
+        partners = self.env["res.partner"].search([("email", "=", partner.email)])
+        self.assertEqual(partners, partner, "Should not have created a new partner")
 
     def test_get_partner_no_email_returned_by_iap(self):
         """Test the case where IAP do not return an email address.
