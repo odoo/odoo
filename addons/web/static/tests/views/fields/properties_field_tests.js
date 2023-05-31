@@ -1411,11 +1411,116 @@ QUnit.module("Fields", (hooks) => {
                     "Company 1 second partner char valueCchar value 4",
                     "Company 1 third partner ",
                     "Company 1 fourth partner ",
-                    "Company 2 other partner 1",
+                    "Company 2 other partner My Integer1",
                 ]
             );
         }
     );
+
+    /**
+     * To check label for int, float, boolean, date and datetime fields.
+     *  Also check if border class is applied to boolean field or not.
+     */
+    QUnit.test("properties: kanban view with label and border", async function (assert) {
+        serverData.models.partner.records.push({
+            id: 12,
+            display_name: "fifth partner",
+            properties: [
+                {
+                    name: "property_integer",
+                    string: "My Integer",
+                    type: "integer",
+                    value: 12,
+                    view_in_kanban: true,
+                },
+                {
+                    name: "property_float",
+                    string: "My Float",
+                    type: "float",
+                    value: 12.2,
+                    view_in_kanban: true,
+                },
+                {
+                    name: "property_date",
+                    string: "My Date",
+                    type: "date",
+                    value: "2023-06-05",
+                    view_in_kanban: true,
+                },
+                {
+                    name: "property_datetime",
+                    string: "My Datetime",
+                    type: "datetime",
+                    value: "2023-06-05 11:05:00",
+                    view_in_kanban: true,
+                },
+                {
+                    name: "property_checkbox",
+                    string: "My Checkbox",
+                    type: "boolean",
+                    value: true,
+                    view_in_kanban: true,
+                },
+            ],
+            company_id: 37,
+        });
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="company_id"/> <hr/>
+                                <field name="display_name"/> <hr/>
+                                <field name="properties" widget="properties"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+
+        // check for label in integer, float, date and datetime field
+        assert.strictEqual(
+            target.querySelector(
+                ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(1) label"
+            ).innerText,
+            "My Integer"
+        );
+        assert.strictEqual(
+            target.querySelector(
+                ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(2) label"
+            ).innerText,
+            "My Float"
+        );
+        assert.strictEqual(
+            target.querySelector(
+                ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(3) label"
+            ).innerText,
+            "My Date"
+        );
+        assert.strictEqual(
+            target.querySelector(
+                ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(4) label"
+            ).innerText,
+            "My Datetime"
+        );
+
+        //check that label and border class is present for checkbox field
+        assert.containsOnce(
+            target,
+            ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(5) .border"
+        );
+        assert.strictEqual(
+            target.querySelector(
+                ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(5) label"
+            ).innerText,
+            "My Checkbox"
+        );
+    });
 
     /**
      * Check that the properties are shown when switching view.
