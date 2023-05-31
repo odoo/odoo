@@ -18,7 +18,11 @@
     'category': 'Accounting/Localizations/Purchase',
     'version': '1.0',
 
-    'depends': ['l10n_in_purchase', 'l10n_in_stock'],
+    'depends': [
+        'l10n_in_purchase',
+        'l10n_in_stock',
+        'purchase_stock'
+    ],
 
     'auto_install': True,
     'license': 'LGPL-3',
