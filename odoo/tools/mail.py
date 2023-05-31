@@ -198,6 +198,8 @@ def html_normalize(src, filter_callback=None):
     src = doctype.sub(u"", src)
 
     try:
+        src = src.replace('--!>', '-->')
+        src = re.sub(r'(<!-->|<!--->)', '<!-- -->', src)
         doc = html.fromstring(src)
     except etree.ParserError as e:
         # HTML comment only string, whitespace only..
