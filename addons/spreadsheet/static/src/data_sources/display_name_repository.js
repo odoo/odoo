@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { Deferred } from "@web/core/utils/concurrency";
 import { LoadingDataError } from "../o_spreadsheet/errors";
 import BatchEndpoint, { Request } from "./server_data";
 
@@ -45,8 +44,8 @@ export class DisplayNameRepository {
          * {
          *     "res.country": {
          *         1: {
+         *              "state": "COMPLETED"
          *              "value": "Belgium",
-         *              "deferred": Deferred<"Belgium">,
          *     },
          * }
          */
@@ -54,21 +53,6 @@ export class DisplayNameRepository {
         this._displayNames = {};
         this._orm = orm;
         this._endpoints = {};
-    }
-
-    /**
-     * Get the display name of the given record.
-     *
-     * @param {string} model
-     * @param {number} id
-     * @returns {Promise<string>}
-     */
-    async getDisplayNameAsync(model, id) {
-        const displayNameResult = this._displayNames[model] && this._displayNames[model][id];
-        if (!displayNameResult) {
-            return this._fetchDisplayName(model, id);
-        }
-        return displayNameResult.deferred;
     }
 
     /**
@@ -83,11 +67,8 @@ export class DisplayNameRepository {
         if (!this._displayNames[model]) {
             this._displayNames[model] = {};
         }
-        const deferred = new Deferred();
-        deferred.resolve(displayName);
         this._displayNames[model][id] = {
             state: "COMPLETED",
-            deferred,
             value: displayName,
         };
     }
@@ -101,11 +82,11 @@ export class DisplayNameRepository {
      * @returns {string}
      */
     getDisplayName(model, id) {
-        const displayNameResult = this._displayNames[model] && this._displayNames[model][id];
+        const displayNameResult = this._displayNames[model]?.[id];
         if (!displayNameResult) {
             // Catch the error to prevent the error from being thrown in the
             // background.
-            this._fetchDisplayName(model, id).catch(() => {});
+            this._fetchDisplayName(model, id);
             throw new LoadingDataError();
         }
         switch (displayNameResult.state) {
@@ -146,11 +127,8 @@ export class DisplayNameRepository {
      * @private
      */
     _assignResult(request, result) {
-        const deferred = this._displayNames[request.resModel][request.args[0]].deferred;
-        deferred.resolve(result && result[1]);
         this._displayNames[request.resModel][request.args[0]] = {
             state: "COMPLETED",
-            deferred,
             value: result && result[1],
         };
     }
@@ -165,13 +143,7 @@ export class DisplayNameRepository {
      * @private
      */
     _assignError(request, error) {
-        const deferred = this._displayNames[request.resModel][request.args[0]].deferred;
-        deferred.reject(error);
-        this._displayNames[request.resModel][request.args[0]] = {
-            state: "ERROR",
-            deferred,
-            error,
-        };
+        this._displayNames[request.resModel][request.args[0]] = { state: "ERROR", error };
     }
 
     /**
@@ -185,18 +157,13 @@ export class DisplayNameRepository {
      * @private
      * @returns {Deferred<string>}
      */
-    async _fetchDisplayName(model, id) {
-        const deferred = new Deferred();
+    _fetchDisplayName(model, id) {
         if (!this._displayNames[model]) {
             this._displayNames[model] = {};
         }
-        this._displayNames[model][id] = {
-            state: "PENDING",
-            deferred,
-        };
+        this._displayNames[model][id] = { state: "PENDING" };
         const endpoint = this._getEndpoint(model);
         const request = new Request(model, "name_get", [id]);
         endpoint.call(request);
-        return deferred;
     }
 }
