@@ -3269,8 +3269,12 @@ class Properties(Field):
     _description_definition_record_field = property(attrgetter('definition_record_field'))
 
     ALLOWED_TYPES = (
-        'boolean', 'integer', 'float', 'char', 'date',
-        'datetime', 'many2one', 'many2many', 'selection', 'tags',
+        # standard types
+        'boolean', 'integer', 'float', 'char', 'date', 'datetime',
+        # relational like types
+        'many2one', 'many2many', 'selection', 'tags',
+        # UI types
+         'separator',
     )
 
     def _setup_attrs(self, model_class, name):
@@ -3741,6 +3745,10 @@ class Properties(Field):
             property_type = property_definition.get('type')
             property_model = property_definition.get('comodel')
 
+            if property_type == 'separator':
+                # "separator" is used as a visual separator in the form view UI
+                # it does not have a value and does not need to be stored on children
+                continue
             if property_type not in ('integer', 'float') or property_value != 0:
                 property_value = property_value or False
             if property_type in ('many2one', 'many2many') and property_model and property_value:
