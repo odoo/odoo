@@ -16,8 +16,7 @@ class TestAccessRightsControllers(BaseUsersCommon, HttpCase, SaleCommon):
         portal_so = self.sale_order.copy()
         portal_so.message_subscribe(self.user_portal.partner_id.ids)
 
-        portal_so._portal_ensure_token()
-        token = portal_so.access_token
+        token = portal_so._portal_ensure_token()
 
         self.authenticate(None, None)
 
@@ -50,9 +49,9 @@ class TestAccessRightsControllers(BaseUsersCommon, HttpCase, SaleCommon):
 
         self.authenticate(self.user_portal.login, self.user_portal.login)
 
-        # do not need the token when logged in
+        # portal users needs the access_token
         req = self.url_open(
-            url='/my/orders/%s?report_type=pdf' % portal_so.id,
+            url=f'{portal_so.access_url}?report_type=pdf&access_token={token}',
             allow_redirects=False,
         )
         self.assertEqual(req.status_code, 200)

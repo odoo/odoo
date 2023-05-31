@@ -27,16 +27,14 @@ class TestControllersAccessRights(HttpCase, TestSaleCommon):
 
         # Try to open SO/DO using the access token or being connected as portal user
         for login in (None, self.portal_user.login):
-            so_url = '/my/orders/%s' % so.id
-            picking_url = '/my/picking/pdf/%s' % picking.id
+            so_url = so.access_url
+            picking_url = f'{so_url}/picking/{picking.id}'
 
             self.authenticate(login, login)
 
-            if not login:
-                so._portal_ensure_token()
-                so_token = so.access_token
-                so_url = '%s?access_token=%s' % (so_url, so_token)
-                picking_url = '%s?access_token=%s' % (picking_url, so_token)
+            so_token = so._portal_ensure_token()
+            so_url = '%s?access_token=%s' % (so_url, so_token)
+            picking_url = '%s?access_token=%s' % (picking_url, so_token)
 
             response = self.url_open(
                 url=so_url,
