@@ -6,7 +6,7 @@ import itertools
 import logging
 
 from odoo import _, api, fields, models, tools, Command
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, UserError, AccessError
 from odoo.tools import is_html_empty
 from odoo.tools.safe_eval import safe_eval, time
 
@@ -88,6 +88,35 @@ class MailTemplate(models.Model):
     # access
     can_write = fields.Boolean(compute='_compute_can_write',
                                help='The current user can edit the template.')
+
+    def _constrain_template_rendering_generate_template(self):
+        self.ensure_one()
+        model = self.model_id.model
+        if not model:
+            return
+        record = self.env[model].search([], limit=1)
+        if not record.ids:
+            return
+        mail_template_fields = [
+            'body_html',
+            'subject',
+            'email_cc',
+            'email_from',
+            'email_to',
+            'partner_to'
+        ]
+        return self._generate_template(record.ids, mail_template_fields)
+
+    @api.constrains('body_html', 'subject', 'email_cc', 'email_from', 'email_to', 'partner_to')
+    def _constrain_template_rendering(self):
+        for template in self:
+            try:
+                with self.env.cr.savepoint():
+                    template._constrain_template_rendering_generate_template()
+            except AccessError:
+                raise
+            except Exception:
+                raise ValidationError(_("There are issues in the Architecture of this template"))
 
     # Overrides of mail.render.mixin
     @api.depends('model')
