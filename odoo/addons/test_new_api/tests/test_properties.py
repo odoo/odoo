@@ -952,6 +952,29 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertEqual(values.get('name'), 'new_selection')
         self.assertEqual(values.get('selection'), [], 'Selection key should be at least an empty array (never False)')
 
+    def test_properties_field_separator(self):
+        """Test the separator properties."""
+        self.message_1.attributes = [
+            {'name': 'boolean_value', 'value': 0, 'type': 'boolean', 'definition_changed': True},
+            {'type': 'separator', 'name': 'separator', 'string': 'Group 1'},
+            {'name': 'int_value', 'value': 0, 'type': 'integer'},
+        ]
+
+        sql_definition = self._get_sql_definition(self.discussion_1)
+        self.assertEqual(
+            sql_definition,
+            [
+                {'name': 'boolean_value', 'type': 'boolean'},
+                {'name': 'separator', 'type': 'separator', 'string': 'Group 1'},
+                {'name': 'int_value', 'type': 'integer'},
+            ],
+        )
+
+        sql_values = self._get_sql_properties(self.message_1)
+        self.assertEqual(
+            sql_values, {'int_value': False, 'boolean_value': False},
+            msg='Separator should never be stored on the children, only in the definition record')
+
     def test_properties_field_tags(self):
         """Test the behavior of the tag property.
 
