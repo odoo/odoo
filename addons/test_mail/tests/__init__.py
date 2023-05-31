@@ -19,3 +19,4 @@ from . import test_message_track
 from . import test_performance
 from . import test_ui
 from . import test_mail_management
+from . import test_mail_security
