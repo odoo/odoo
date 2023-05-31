@@ -14,6 +14,7 @@ import { routeToUrl } from "@web/core/browser/router_service";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { sprintf } from "@web/core/utils/strings";
 import wUtils from 'website.utils';
+import config from "web.config";
 
 const { Component, onWillStart, onMounted, onWillUnmount, useRef, useEffect, useState } = owl;
 
@@ -89,6 +90,14 @@ export class WebsitePreview extends Component {
             if (this.isRestored) {
                 return;
             }
+
+            const isScreenLargeEnoughForEdit =
+                config.device.size_class >= config.device.SIZES.MD;
+            if (!isScreenLargeEnoughForEdit && this.props.action.context.params) {
+                this.props.action.context.params.enable_editor = false;
+                this.props.action.context.params.with_loader = false;
+            }
+
             this.websiteService.context.showNewContentModal = this.props.action.context.params && this.props.action.context.params.display_new_content;
             this.websiteService.context.edition = this.props.action.context.params && !!this.props.action.context.params.enable_editor;
             this.websiteService.context.translation = this.props.action.context.params && !!this.props.action.context.params.edit_translations;
