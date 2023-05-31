@@ -120,6 +120,8 @@ class StockPicking(models.Model):
     def _action_done(self):
         res = super(StockPicking, self)._action_done()
         for rec in self:
+            if rec.picking_type_id.code != 'outgoing':
+                continue
             if rec.pos_order_id.to_ship and not rec.pos_order_id.to_invoice:
                 order_cost = sum(line.total_cost for line in rec.pos_order_id.lines)
                 move_vals = {
