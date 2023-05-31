@@ -857,6 +857,9 @@ class Website(models.Model):
         ]
         for model, _table, column, _translate in html_fields_attributes:
             Model = self.env[model]
+            if not Model.check_access_rights('read', raise_exception=False):
+                continue
+
             # Generate the exact domain to search for the URL in this field
             domains = []
             for url, website_domain in search_criteria:
