@@ -190,7 +190,9 @@ class GoogleEvent(abc.Set):
         if not self.is_recurrent():
             return None
         # Check if ids are the same
-        if re.match(r'(\w+_)', self.recurringEventId).group(1) != re.match(r'(\w+_)', self.id).group(1):
+        id_value = re.match(r'(\w+_)', self.id)
+        recurringEventId_value = re.match(r'(\w+_)', self.recurringEventId)
+        if not id_value or not recurringEventId_value or id_value.group(1) != recurringEventId_value.group(1):
             return None
         ID_RANGE = re.search(r'\w+_R\d+T\d+', self.recurringEventId).group()
         TIMESTAMP = re.search(r'\d+T\d+Z', self.id).group()
