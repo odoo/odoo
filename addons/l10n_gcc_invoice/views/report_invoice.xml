@@ -450,7 +450,7 @@
                 <div t-if="o.currency_id != o.company_id.currency_id"
                      class="row clearfix ms-auto text-nowrap border-top border-bottom p-2">
                     <t t-set="exchange_rate"
-                       t-value="abs(o.amount_total_signed) / o.amount_total"/>
+                       t-value="abs(o.amount_total_signed) / o.amount_total if o.amount_total else 0"/>
                     <div name="exchange_rate" t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'}">
                         <strong>سعر الصرف</strong><br/>
                         <strong>Exchange Rate</strong>
