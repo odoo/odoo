@@ -1,8 +1,8 @@
 /* @odoo-module */
 
-import { CallSettings } from "@mail/discuss/call_settings";
-import { ChannelInvitation } from "@mail/discuss/channel_invitation";
-import { ChannelMemberList } from "@mail/discuss/channel_member_list";
+import { CallSettings } from "@mail/discuss/core/call_settings";
+import { ChannelInvitation } from "@mail/discuss/core/channel_invitation";
+import { ChannelMemberList } from "@mail/discuss/core/channel_member_list";
 import { Discuss } from "@mail/discuss_app/discuss";
 import { useRef } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
