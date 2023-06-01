@@ -189,6 +189,6 @@ QUnit.test(
         await click(fixture.querySelector(".o_cp_top_right .fa-times"));
 
         assert.containsNone(fixture, ".o_cp_top_right .fa-times");
-        assert.equal(year.value, "Select year...");
+        assert.equal(year.value, "");
     }
 );

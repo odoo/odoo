@@ -1613,7 +1613,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_data_cell"));
         assert.containsOnce(target, ".o_selected_row");
 
-        await click(target, ".o_datepicker input");
+        await click(target, ".o_datepicker .o_datepicker_input");
         assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
         triggerHotkey("Escape");
         await nextTick();
@@ -1641,7 +1641,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_list_button_add"));
         assert.containsOnce(target, ".o_selected_row");
 
-        await click(target, ".o_datepicker input");
+        await click(target, ".o_datepicker .o_datepicker_input");
         assert.containsOnce(
             document.body,
             ".bootstrap-datetimepicker-widget",
@@ -8064,7 +8064,7 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o_field_widget[name=foo] input")
         );
 
-        await click(target, ".o_field_widget[name=date] input");
+        await click(target, ".o_field_widget[name=date] .o_datepicker_input");
         assert.strictEqual(
             document.activeElement,
             target.querySelector(".o_field_widget[name=date] input")
@@ -17184,19 +17184,22 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(td2.textContent, "61%");
     });
 
-    QUnit.test("Formatted group operator with digit precision on the field definition", async function (assert) {
-        serverData.models.foo.fields.qux.digits = [16, 3];
-        await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch: '<tree><field name="qux"/></tree>',
-            groupBy: ["bar"],
-        });
-        const [td1, td2] = target.querySelectorAll("td.o_list_number");
-        assert.strictEqual(td1.textContent, "9.000");
-        assert.strictEqual(td2.textContent, "10.400");
-    });
+    QUnit.test(
+        "Formatted group operator with digit precision on the field definition",
+        async function (assert) {
+            serverData.models.foo.fields.qux.digits = [16, 3];
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: '<tree><field name="qux"/></tree>',
+                groupBy: ["bar"],
+            });
+            const [td1, td2] = target.querySelectorAll("td.o_list_number");
+            assert.strictEqual(td1.textContent, "9.000");
+            assert.strictEqual(td2.textContent, "10.400");
+        }
+    );
 
     QUnit.test("list view does not crash when clicked button cell", async function (assert) {
         await makeView({
@@ -17915,7 +17918,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_field_cell.o_date_cell", 3);
 
         await click(target.querySelector(".o_field_cell.o_date_cell"));
-        await click(target, ".o_datepicker input");
+        await click(target, ".o_datepicker .o_datepicker_input");
         await click(document.querySelector(".datepicker-days td[data-day='12/19/2022']"));
         await clickSave(target);
 
@@ -17974,7 +17977,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_field_cell.o_datetime_cell", 3);
 
         await click(target.querySelector(".o_field_cell.o_datetime_cell"));
-        await click(target, ".o_datepicker input");
+        await click(target, ".o_datepicker .o_datepicker_input");
         await click(document.querySelector(".datepicker-days td[data-day='12/19/2022']"));
         await click(document, ".bootstrap-datetimepicker-widget a[data-action='close']");
         await clickSave(target);
