@@ -1,0 +1,111 @@
+/** @odoo-module **/
+
+import { BranchDomainNode, LeafDomainNode } from "@web/core/domain_selector/domain_selector_nodes";
+import { findOperator, parseOperator } from "@web/core/domain_selector/domain_selector_operators";
+
+export class DomainTreeBuilder {
+    build(domain, fieldDefs) {
+        const nodeIterator = domain.ast.value.values();
+        const nextNode = () => {
+            const it = nodeIterator.next();
+            return it.done ? null : it.value;
+        };
+
+        const rawNode = nextNode();
+        const node =
+            rawNode && this.isBranch(rawNode)
+                ? new BranchDomainNode(this.getBranchOperator(rawNode))
+                : new BranchDomainNode("AND");
+        if (rawNode) {
+            this.buildNode(node, rawNode, nextNode, fieldDefs);
+        }
+
+        return node;
+    }
+
+    /** @private */
+    buildNode(parent, rawNode, nextNode, fieldDefs, negate = false) {
+        if (rawNode.value === "!") {
+            this.buildNode(parent, nextNode(), nextNode, fieldDefs, !negate);
+        } else if (this.isBranch(rawNode)) {
+            this.buildBranch(parent, rawNode, nextNode, fieldDefs, negate);
+        } else {
+            this.buildLeaf(parent, rawNode, fieldDefs, negate);
+        }
+    }
+
+    /** @private */
+    buildLeaf(parent, rawNode, fieldDefs, negate) {
+        const field = this.getLeafFieldName(rawNode);
+        const operatorInfo = this.getLeafOperatorInfo(rawNode, fieldDefs[field].type);
+        const value = this.isLeafValueArray(rawNode)
+            ? this.getLeafValue(rawNode).map((v) => v.value)
+            : this.getLeafValue(rawNode);
+        parent.add(
+            new LeafDomainNode(
+                { ...fieldDefs[field], name: field.toString() },
+                operatorInfo,
+                value,
+                negate
+            )
+        );
+    }
+
+    /** @private */
+    buildBranch(parent, rawNode, nextNode, fieldDefs, negate) {
+        let newParent = parent;
+        const currentOperator = this.getBranchOperator(rawNode);
+        if (currentOperator !== parent.operator) {
+            newParent = new BranchDomainNode(currentOperator, [], negate);
+            parent.add(newParent);
+        }
+        this.buildNode(newParent, nextNode(), nextNode, fieldDefs);
+        this.buildNode(newParent, nextNode(), nextNode, fieldDefs);
+    }
+
+    /** @private */
+    isBranch(rawNode) {
+        return rawNode.type === 1 && ["&", "|"].includes(rawNode.value);
+    }
+
+    /** @private */
+    getBranchOperator(rawNode) {
+        switch (rawNode.value) {
+            case "&":
+                return "AND";
+            case "|":
+                return "OR";
+        }
+    }
+
+    /** @private */
+    getLeafFieldName(rawNode) {
+        return rawNode.value[0].value;
+    }
+
+    /** @private */
+    getLeafOperatorInfo(rawNode, fieldType) {
+        const rawOperator = rawNode.value[1].value;
+        if (fieldType === "boolean") {
+            return findOperator(rawOperator === "=" ? "is" : "is_not");
+        } else if (rawNode.value[2].type === 2) {
+            return findOperator(rawOperator === "!=" ? "set" : "not_set");
+        } else {
+            return parseOperator(rawOperator);
+        }
+    }
+
+    /** @private */
+    getLeafValue(rawNode) {
+        const valueAst = rawNode.value[2];
+        if (valueAst.type === 6 && valueAst.op === "-" && valueAst.right.type === 0) {
+            return -valueAst.right.value;
+        }
+        return valueAst.value;
+    }
+
+    /** @private */
+    isLeafValueArray(rawNode) {
+        return [4, 10].includes(rawNode.value[2].type);
+    }
+}

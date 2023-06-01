@@ -41,9 +41,19 @@ const TITLES = {
 };
 
 export class BranchDomainNode extends DomainNode {
+<<<<<<< HEAD
     constructor(connector, children = [], negate = false) {
         super("branch", negate);
         this.connector = connector;
+||||||| parent of 3bab38298d9 (temp)
+    constructor(operator, children = []) {
+        super("branch");
+        this.operator = operator;
+=======
+    constructor(operator, children = [], negate = false) {
+        super("branch", negate);
+        this.operator = operator;
+>>>>>>> 3bab38298d9 (temp)
         this.children = children;
     }
 
@@ -80,10 +90,22 @@ export class BranchDomainNode extends DomainNode {
 // ----------------------------------------------------------------------------
 
 export class LeafDomainNode extends DomainNode {
+<<<<<<< HEAD
     constructor(pathInfo, operatorInfo, value, negate = false) {
         super("leaf", negate);
         this.pathInfo = pathInfo;
         this.operatorInfo = operatorInfo;
+||||||| parent of 3bab38298d9 (temp)
+    constructor(field, operator, value) {
+        super("leaf");
+        this.field = field;
+        this.operator = operator;
+=======
+    constructor(field, operator, value, negate = false) {
+        super("leaf", negate);
+        this.field = field;
+        this.operator = operator;
+>>>>>>> 3bab38298d9 (temp)
         this.value = value;
     }
 
@@ -109,7 +131,13 @@ export class LeafDomainNode extends DomainNode {
     }
 
     clone() {
+<<<<<<< HEAD
         return new LeafDomainNode(this.pathInfo, this.operatorInfo, this.value, this.negate);
+||||||| parent of 3bab38298d9 (temp)
+        return new LeafDomainNode(this.field, this.operator, this.value);
+=======
+        return new LeafDomainNode(this.field, this.operator, this.value, this.negate);
+>>>>>>> 3bab38298d9 (temp)
     }
 }
 

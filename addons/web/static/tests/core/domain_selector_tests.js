@@ -1272,4 +1272,16 @@ QUnit.module("Components", (hooks) => {
         assert.containsNone(target, ".o_domain_add_first_node_button");
         assert.containsOnce(target, "a[role=button]");
     });
+
+    QUnit.test("do not crash with connector '!'", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.domain = `["!", ("foo", "=", "abc")]`;
+            }
+        }
+        Parent.components = { DomainSelector };
+        Parent.template = xml`<DomainSelector resModel="'partner'" value="domain" readonly="false"/>`;
+        await mountComponent(Parent);
+        assert.containsOnce(target, ".o_domain_node.o_domain_leaf");
+    });
 });
