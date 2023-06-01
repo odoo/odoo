@@ -1,8 +1,8 @@
 /* @odoo-module */
 
-import { CallSettings } from "@mail/discuss/call_settings";
-import { ChannelInvitation } from "@mail/discuss/channel_invitation";
-import { ChannelMemberList } from "@mail/discuss/channel_member_list";
+import { CallSettings } from "@mail/discuss/core/call_settings";
+import { ChannelInvitation } from "@mail/discuss/core/channel_invitation";
+import { ChannelMemberList } from "@mail/discuss/core/channel_member_list";
 import { ChatWindow } from "@mail/web/chat_window/chat_window";
 import { patch } from "@web/core/utils/patch";
 import { _t } from "@web/core/l10n/translation";
