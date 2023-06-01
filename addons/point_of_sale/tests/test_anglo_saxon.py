@@ -233,6 +233,9 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         self.cash_journal.loss_account_id = self.account
         current_session.set_cashbox_pos(0, None)
 
+        # 2 step delivery method
+        self.warehouse.delivery_steps = 'pick_ship'
+
         # I create a PoS order with 1 unit of New product at 450 EUR
         self.pos_order_pos0 = self.PosOrder.create({
             'company_id': self.company.id,
@@ -273,6 +276,7 @@ class TestAngloSaxonFlow(TestAngloSaxonCommon):
         current_session_id.close_session_from_ui()
         self.assertEqual(current_session_id.state, 'closed', 'Check that session is closed')
 
+        self.assertEqual(len(current_session.picking_ids), 2, "There should be 2 pickings")
         current_session.picking_ids.move_ids_without_package.quantity_done = 1
         current_session.picking_ids.button_validate()
 
