@@ -1164,22 +1164,7 @@ class MrpProduction(models.Model):
 
     def _set_lot_producing(self):
         self.ensure_one()
-        if self.product_id.tracking == 'lot':
-            name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
-            exist_lot = self.env['stock.lot'].search([
-                ('product_id', '=', self.product_id.id),
-                ('company_id', '=', self.company_id.id),
-                ('name', '=', name),
-            ], limit=1)
-            if exist_lot:
-                name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
-        else:
-            name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id) or self.env['ir.sequence'].next_by_code('stock.lot.serial')
-        self.lot_producing_id = self.env['stock.lot'].create({
-            'product_id': self.product_id.id,
-            'company_id': self.company_id.id,
-            'name': name,
-        })
+        self.lot_producing_id = self.env['stock.lot'].create(self._prepare_stock_lot_values())
 
     def action_view_mrp_production_childs(self):
         self.ensure_one()
@@ -1229,6 +1214,25 @@ class MrpProduction(models.Model):
             'name': _("Backorder MO's"),
             'domain': [('id', 'in', backorder_ids)],
             'view_mode': 'tree,form',
+        }
+
+    def _prepare_stock_lot_values(self):
+        self.ensure_one()
+        if self.product_id.tracking == 'lot':
+            name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
+            exist_lot = self.env['stock.lot'].search([
+                ('product_id', '=', self.product_id.id),
+                ('company_id', '=', self.company_id.id),
+                ('name', '=', name),
+            ], limit=1)
+            if exist_lot:
+                name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
+        else:
+            name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id) or self.env['ir.sequence'].next_by_code('stock.lot.serial')
+        return {
+            'product_id': self.product_id.id,
+            'company_id': self.company_id.id,
+            'name': name,
         }
 
     def action_generate_serial(self):
