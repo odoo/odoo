@@ -34,7 +34,7 @@ class Applicant(models.Model):
         inverse='_inverse_partner_email', store=True, index='trigram')
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact", copy=False)
-    create_date = fields.Datetime("Creation Date", readonly=True)
+    create_date = fields.Datetime("Applied on", readonly=True)
     stage_id = fields.Many2one('hr.recruitment.stage', 'Stage', ondelete='restrict', tracking=True,
                                compute='_compute_stage', store=True, readonly=False,
                                domain="['|', ('job_ids', '=', False), ('job_ids', '=', job_id)]",
