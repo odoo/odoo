@@ -9,7 +9,7 @@
                     'o-highlighted bg-view shadow-lg': props.highlighted,
                     'o-selfAuthored': message.isSelfAuthored,
                     'o-selected': props.messageToReplyTo?.isSelected(props.thread, props.message),
-                    'o-squashed pt-1': props.squashed,
+                    'o-squashed pt-0': props.squashed,
                     'mt-1': !props.squashed and props.thread and !env.pinnedPanel,
                     'px-3': !props.isInChatWindow and !env.pinnedPanel,
                     'px-1': props.isInChatWindow,
@@ -99,7 +99,7 @@
                                                 }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
                                             <div class="position-relative" t-att-class="{
                                                         'p-1': message.isNote,
-                                                        'o-mail-Message-body mb-0 p-3': !message.isNote,
+                                                        'o-mail-Message-body mb-0 p-2': !message.isNote,
                                                         'align-self-start text-break rounded-end-3 rounded-bottom-3': !state.isEditing and !message.isNote,
                                                         'o-mail-Message-editable flex-grow-1': state.isEditing,
                                                         }" t-ref="body">
