@@ -1208,7 +1208,7 @@ class MrpProduction(models.Model):
             'view_mode': 'tree,form',
         }
 
-    def action_generate_serial(self):
+    def _prepare_stock_lot_values(self):
         self.ensure_one()
         if self.product_id.tracking == 'lot':
             name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
@@ -1221,11 +1221,15 @@ class MrpProduction(models.Model):
                 name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
         else:
             name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id) or self.env['ir.sequence'].next_by_code('stock.lot.serial')
-        self.lot_producing_id = self.env['stock.lot'].create({
+        return {
             'product_id': self.product_id.id,
             'company_id': self.company_id.id,
             'name': name,
-        })
+        }
+
+    def action_generate_serial(self):
+        self.ensure_one()
+        self.lot_producing_id = self.env['stock.lot'].create(self._prepare_stock_lot_values())
         if self.product_id.tracking == 'serial':
             self._set_qty_producing()
 
