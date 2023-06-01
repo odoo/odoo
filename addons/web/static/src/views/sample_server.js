@@ -370,6 +370,7 @@ export class SampleServer {
      * @returns {Array[]} a list of [id, display_name]
      */
     _mockNameGet(params) {
+        throw new Error("name_get is deprecated, it shouldn't be called");
         const { model, args } = params;
         let ids = args[0];
         if (!args.length) {

@@ -427,7 +427,7 @@ QUnit.module("spreadsheet > pivot plugin", {}, () => {
                     assert.step(`${model}/${method}`);
                     await dataPromise;
                 }
-                if (model === "product" && method === "name_get") {
+                if (model === "product" && method === "read") {
                     assert.ok(false, "should not be called because data is put in cache");
                 }
                 return result;

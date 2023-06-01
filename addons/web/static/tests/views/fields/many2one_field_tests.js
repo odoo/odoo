@@ -347,7 +347,7 @@ QUnit.module("Fields", (hooks) => {
                     <field name="trululu" context="{'blip': int_field, 'blop': 3}" options="{'always_reload': 1}" />
                 </form>`,
             mockRPC(route, { method, kwargs }) {
-                if (method === "name_get") {
+                if (method === "read") {
                     assert.strictEqual(
                         kwargs.context.blip,
                         undefined,
@@ -423,7 +423,7 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, { method, kwargs }) {
-                if (method === "name_get" && kwargs.context.show_address) {
+                if (method === "read" && kwargs.context.show_address) {
                     return [[4, "aaa\nStreet\nCity ZIP"]];
                 }
             },
@@ -462,7 +462,7 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, { args, kwargs, method }) {
-                if (method === "name_get" && kwargs.context.show_address) {
+                if (method === "read" && kwargs.context.show_address) {
                     return args.map((id) => [id, namegets[id]]);
                 }
             },
@@ -522,7 +522,7 @@ QUnit.module("Fields", (hooks) => {
                         <field name="turtles" />
                     </form>`,
                 mockRPC(route, { kwargs, method, model }) {
-                    if (method === "name_get" && kwargs.context.show_address) {
+                    if (method === "read" && kwargs.context.show_address) {
                         return [[2, "second record\nrue morgue\nparis 75013"]];
                     }
                 },
@@ -566,7 +566,7 @@ QUnit.module("Fields", (hooks) => {
                         <field name="turtles" />
                     </form>`,
                 mockRPC(route, { kwargs, method, model }) {
-                    if (method === "name_get" && kwargs.context.show_address) {
+                    if (method === "read" && kwargs.context.show_address) {
                         return [[2, "second record\nrue morgue\nparis 75013"]];
                     }
                 },
@@ -1429,7 +1429,7 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, { args, kwargs, method }) {
-                if (method === "name_get") {
+                if (method === "read") {
                     assert.step(method);
                     return args.map((id) => [id, namegets[id]]);
                 }
@@ -1439,7 +1439,7 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
-        assert.verifySteps(["name_get"]);
+        assert.verifySteps(["read"]);
 
         const input = target.querySelector(".o_field_widget input");
 
@@ -1463,7 +1463,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".dropdown-menu li"));
 
         // Check the selection has been taken into account
-        assert.verifySteps(["name_get"]);
+        assert.verifySteps(["read"]);
         assert.strictEqual(input.value, "fizz");
         assert.strictEqual(
             target.querySelector(".o_field_many2one_extra").innerHTML,
@@ -1542,14 +1542,14 @@ QUnit.module("Fields", (hooks) => {
                     <field name="trululu" options="{'always_reload': 1}" readonly="1" />
                 </form>`,
             mockRPC(route, { method }) {
-                if (method === "name_get") {
+                if (method === "read") {
                     count++;
                     return Promise.resolve([[1, "first record\nand some address"]]);
                 }
             },
         });
 
-        assert.strictEqual(count, 1, "an extra name_get should have been done");
+        assert.strictEqual(count, 1, "an extra read should have been done");
         assert.ok(
             target.querySelector("a.o_form_uri").textContent.includes("and some address"),
             "should display additional result"
@@ -1569,14 +1569,14 @@ QUnit.module("Fields", (hooks) => {
                     <field name="trululu" options="{'always_reload': 1}" />
                 </form>`,
             mockRPC(route, { method }) {
-                if (method === "name_get") {
+                if (method === "read") {
                     count++;
                     return Promise.resolve([[1, "first record\nand some address"]]);
                 }
             },
         });
 
-        assert.strictEqual(count, 1, "an extra name_get should have been done");
+        assert.strictEqual(count, 1, "an extra read should have been done");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='trululu'] input").value,
             "first record",
@@ -1987,8 +1987,8 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, { method }) {
-                if (method === "name_get") {
-                    throw new Error("Nameget should not be called");
+                if (method === "read") {
+                    throw new Error("read should not be called");
                 }
             },
         });
@@ -2026,8 +2026,8 @@ QUnit.module("Fields", (hooks) => {
                         </sheet>
                     </form>`,
                 mockRPC(route, { method }) {
-                    if (method === "name_get") {
-                        throw new Error("Nameget should not be called");
+                    if (method === "read") {
+                        throw new Error("read should not be called");
                     }
                 },
             });
@@ -2115,7 +2115,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("list in form: name_get with unique ids (default_get)", async function (assert) {
+    QUnit.test("list in form: read with unique ids (default_get)", async function (assert) {
         serverData.models.partner.records[0].display_name = "MyTrululu";
         serverData.models.partner.fields.p.default = [
             [0, 0, { trululu: 1, p: [] }],
@@ -2137,8 +2137,8 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, { method }) {
-                if (method === "name_get") {
-                    throw new Error("should not call name_get");
+                if (method === "read") {
+                    throw new Error("should not call read");
                 }
             },
         });
@@ -2838,16 +2838,16 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             mockRPC(route, { args, method }) {
                 count++;
-                if (method === "name_get" && args[0] === 2) {
+                if (method === "read" && args[0] === 2) {
                     // LPE: any call_kw route can take either [ids] or id as the first
                     // argument as model.browse() in python supports both
-                    // With the basic_model, name_get is passed only an id, not an array
+                    // With the basic_model, read is passed only an id, not an array
                     return Promise.resolve([[2, "hello world\nso much noise"]]);
                 }
             },
         });
 
-        assert.strictEqual(count, 3, "should have done 3 rpcs (get_views, onchange and name_get)");
+        assert.strictEqual(count, 3, "should have done 3 rpcs (get_views, onchange and read)");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='trululu'] input").value,
             "hello world",

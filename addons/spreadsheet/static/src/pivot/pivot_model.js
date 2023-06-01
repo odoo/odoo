@@ -117,7 +117,7 @@ export function parsePivotFormulaFieldValue(field, groupValue) {
 
 /**
  * This class is an extension of PivotModel with some additional information
- * that we need in spreadsheet (name_get, isUsedInSheet, ...)
+ * that we need in spreadsheet (display_name, isUsedInSheet, ...)
  */
 export class SpreadsheetPivotModel extends PivotModel {
     /**

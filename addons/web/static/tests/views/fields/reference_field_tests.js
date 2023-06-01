@@ -253,7 +253,7 @@ QUnit.module("Fields", (hooks) => {
                 "name_create",
                 "create",
                 "read",
-                "name_get",
+                "read",
             ],
             "The name_create method should have been called"
         );
@@ -613,13 +613,13 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, { method, model }) {
-                if (method === "name_get") {
+                if (method === "read") {
                     assert.step(model);
                 }
             },
         });
 
-        assert.verifySteps(["product"], "the first name_get should have been done");
+        assert.verifySteps(["product"], "the first read should have been done");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='reference'] select").value,
             "product",
@@ -634,7 +634,7 @@ QUnit.module("Fields", (hooks) => {
         // trigger onchange
         await editInput(target, ".o_field_widget[name=int_field] input", 12);
 
-        assert.verifySteps(["partner_type"], "the second name_get should have been done");
+        assert.verifySteps(["partner_type"], "the second read should have been done");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='reference'] select").value,
             "partner_type",
@@ -706,13 +706,13 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
             mockRPC(route, { model, method }) {
-                if (model === "product" && method === "name_get") {
+                if (model === "product" && method === "read") {
                     nbNameGet++;
                 }
             },
         });
 
-        assert.strictEqual(nbNameGet, 1, "the first name_get should have been done");
+        assert.strictEqual(nbNameGet, 1, "the first display_name read should have been done");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=foo]").textContent,
             "xphone",
@@ -722,7 +722,7 @@ QUnit.module("Fields", (hooks) => {
         // trigger onchange
         await editInput(target, ".o_field_widget[name=int_field] input", 41);
 
-        assert.strictEqual(nbNameGet, 2, "the second name_get should have been done");
+        assert.strictEqual(nbNameGet, 2, "the second display_name read should have been done");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=foo]").textContent,
             "xpad",

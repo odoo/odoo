@@ -590,7 +590,7 @@ export class MockServer {
     /**
      * Converts an Object representing a record to actual return Object of the
      * python `onchange` method.
-     * Specifically, it applies `name_get` on many2one's and transforms raw id
+     * Specifically, it reads `display_name` on many2one's and transforms raw id
      * list in orm command lists for x2many's.
      * For x2m fields that add or update records (ORM commands 0 and 1), it is
      * recursive.
@@ -603,7 +603,6 @@ export class MockServer {
         Object.entries(values).forEach(([fname, val]) => {
             const field = this.models[modelName].fields[fname];
             if (field.type === "many2one" && typeof val === "number") {
-                // implicit name_get
                 const m2oRecord = this.models[field.relation].records.find((r) => r.id === val);
                 values[fname] = [val, m2oRecord.display_name];
             } else if (field.type === "one2many" || field.type === "many2many") {
@@ -883,6 +882,7 @@ export class MockServer {
      * @returns {Array[]} a list of [id, display_name]
      */
     mockNameGet(model, args) {
+        throw new Error("name_get shouldn't be called, it is now deprecated");
         var ids = args[0];
         if (!args.length) {
             throw new Error("name_get: expected one argument");

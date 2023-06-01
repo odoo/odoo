@@ -4765,11 +4765,11 @@ QUnit.module("Views", (hooks) => {
             "web_read_group",
             "web_search_read",
             "web_search_read",
-            "name_get",
+            "read",
             "web_read_group",
             "web_search_read",
             "web_search_read",
-            "name_get",
+            "read",
         ]);
     });
 

@@ -237,8 +237,8 @@ export default class GlobalFiltersUIPlugin extends spreadsheet.UIPlugin {
                     return "";
                 }
                 if (!this.recordsDisplayName[filter.id]) {
-                    this.orm.call(filter.modelName, "name_get", [value]).then((result) => {
-                        const names = result.map(([, name]) => name);
+                    this.orm.call(filter.modelName, "read", [value, ["display_name"]]).then((result) => {
+                        const names = result.map(({display_name}) => display_name);
                         this.recordsDisplayName[filter.id] = names;
                         this.dispatch("EVALUATE_CELLS", {
                             sheetId: this.getters.getActiveSheetId(),

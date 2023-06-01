@@ -1020,7 +1020,7 @@ QUnit.module("Search", (hooks) => {
 
         const def = makeDeferred();
         const mockRPC = async (_, args) => {
-            if (args.method === "name_get") {
+            if (args.method === "read") {
                 await def;
             }
         };
