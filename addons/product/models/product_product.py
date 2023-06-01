@@ -7,7 +7,7 @@ from collections import defaultdict
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
-from odoo.tools import float_compare
+from odoo.tools import float_compare, groupby
 from odoo.tools.misc import unique
 
 
@@ -197,26 +197,48 @@ class ProductProduct(models.Model):
         self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS product_product_combination_unique ON %s (product_tmpl_id, combination_indices) WHERE active is true"
             % self._table)
 
+    def _get_barcodes_by_company(self):
+        return [
+            (company_id, [p.barcode for p in products if p.barcode])
+            for company_id, products in groupby(self, lambda p: p.company_id.id)
+        ]
+
+    def _get_barcode_search_domain(self, barcodes_within_company, company_id):
+        domain = [('barcode', 'in', barcodes_within_company)]
+        if company_id:
+            domain.append(('company_id', 'in', (False, company_id)))
+        return domain
+
+    def _check_duplicated_product_barcodes(self, barcodes_within_company, company_id):
+        domain = self._get_barcode_search_domain(barcodes_within_company, company_id)
+        products_by_barcode = self.sudo().read_group(domain, ['barcode', 'id:array_agg'], ['barcode'])
+
+        duplicates_as_str = "\n".join(
+            _(
+                "- Barcode \"%s\" already assigned to product(s): %s",
+                record['barcode'], ", ".join(p.display_name for p in self.search([('id', 'in', record['id'])]))
+            )
+            for record in products_by_barcode if len(record['id']) > 1
+        )
+        if duplicates_as_str.strip():
+            duplicates_as_str += _(
+                "\n\nNote: products that you don't have access to will not be shown above."
+            )
+            raise ValidationError(_("Barcode(s) already assigned:\n\n%s", duplicates_as_str))
+
+    def _check_duplicated_packaging_barcodes(self, barcodes_within_company, company_id):
+        packaging_domain = self._get_barcode_search_domain(barcodes_within_company, company_id)
+        if self.env['product.packaging'].sudo().search(packaging_domain, order="id", limit=1):
+            raise ValidationError(_("A packaging already uses the barcode"))
+
     @api.constrains('barcode')
     def _check_barcode_uniqueness(self):
         """ With GS1 nomenclature, products and packagings use the same pattern. Therefore, we need
         to ensure the uniqueness between products' barcodes and packagings' ones"""
-        all_barcode = [b for b in self.mapped('barcode') if b]
-        domain = [('barcode', 'in', all_barcode)]
-        matched_products = self.sudo().search(domain, order='id')
-        if len(matched_products) > len(all_barcode):  # It means that you find more than `self` -> there are duplicates
-            products_by_barcode = defaultdict(list)
-            for product in matched_products:
-                products_by_barcode[product.barcode].append(product)
-
-            duplicates_as_str = "\n".join(
-                _("- Barcode \"%s\" already assigned to product(s): %s", barcode, ", ".join(p.display_name for p in products))
-                for barcode, products in products_by_barcode.items() if len(products) > 1
-            )
-            raise ValidationError(_("Barcode(s) already assigned:\n\n%s", duplicates_as_str))
-
-        if self.env['product.packaging'].search(domain, order="id", limit=1):
-            raise ValidationError(_("A packaging already uses the barcode"))
+        # Barcodes should only be unique within a company
+        for company_id, barcodes_within_company in self._get_barcodes_by_company():
+            self._check_duplicated_product_barcodes(barcodes_within_company, company_id)
+            self._check_duplicated_packaging_barcodes(barcodes_within_company, company_id)
 
     def _get_invoice_policy(self):
         return False
