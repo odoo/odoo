@@ -417,8 +417,9 @@ export const editorCommands = {
     removeFormat: editor => {
         editor.document.execCommand('removeFormat');
         for (const node of getTraversedNodes(editor.editable)) {
-            // The only possible background image on text is the gradient.
-            closestElement(node).style.backgroundImage = '';
+            const closestNode = closestElement(node);
+            closestNode.removeAttribute("style");
+            closestNode.removeAttribute("color");
         }
     },
 

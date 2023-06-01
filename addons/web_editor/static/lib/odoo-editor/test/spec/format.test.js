@@ -938,6 +938,27 @@ describe('setTagName', () => {
                 contentAfter: '<div><h1>[ab]</h1></div>',
             });
         });
+        it('should remove the background image while turning a p>font into a heading 1>span', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<div><p><font class="text-gradient" style="background-image: linear-gradient(135deg, rgb(255, 204, 51) 0%, rgb(226, 51, 255) 100%);">[ab]</font></p></div>',
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: '<div><h1><span>[ab]</span></h1></div>',
+            });
+        });
+        it('should remove the background color when turning a paragraph (with mutliple Shift+Enter) into h1.', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<div><p><font style="background-color: rgb(0, 255, 0);">[abc</font><br><font style="background-color: rgb(0, 255, 0);">def</font><br><font style="background-color: rgb(0, 255, 0);">ghi</font><br><font style="background-color: rgb(0, 255, 0);">jkl]</font></p></div>`,
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: `<div><h1>[abc<br><span>def</span><br><span>ghi</span><br>jkl]</h1></div>`,
+            });
+        });
+        it('should remove the font color when turning a paragraph (with mutliple Shift+Enter) into h1.', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<div><h1>[abc<br><font color="#00ff00">def</font><br><font color="#00ff00">ghi</font><br>jkl]</h1></div>`,
+                stepFunction: editor => editor.execCommand('setTag', 'h1'),
+                contentAfter: `<div><h1>[abc<br>def<br>ghi<br>jkl]</h1></div>`,
+            });
+        });
         it('should turn three table cells with paragraph to table cells with heading 1', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<table><tbody><tr><td><p>[a</p></td><td><p>b</p></td><td><p>c]</p></td></tr></tbody></table>',
