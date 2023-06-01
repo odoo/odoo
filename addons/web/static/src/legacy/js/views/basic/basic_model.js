@@ -175,6 +175,8 @@ var BasicModel = AbstractModel.extend({
         // real and sample data.
         this.__id = 0;
         this._super.apply(this, arguments);
+
+        this.urgentSaveInProgress = {};
     },
 
     //--------------------------------------------------------------------------
@@ -1170,7 +1172,13 @@ var BasicModel = AbstractModel.extend({
                 }
 
                 // in the case of a write, only perform the RPC if there are changes to save
-                if (method === 'create' || changedFields.length) {
+                if ((method === 'create' || changedFields.length)) {
+                    if (record.saveInProgress) {
+                        resolve();
+                        return;
+                    }
+                    record.saveInProgress = true;
+
                     var args = method === 'write' ? [[record.data.id], changes] : [changes];
                     self._rpc({
                             model: record.model,
@@ -1190,6 +1198,7 @@ var BasicModel = AbstractModel.extend({
 
                             // Erase changes as they have been applied
                             record._changes = {};
+                            record.saveInProgress = false;
 
                             // Optionally clear the DataManager's cache
                             self._invalidateCache(record);
@@ -1224,8 +1233,16 @@ var BasicModel = AbstractModel.extend({
             });
             return prom;
         }
+        // if (this.urgentSaveInProgress[recordID]) {
+        //     return this.urgentSaveInProgress[recordID];
+        // }
+
         if (this.bypassMutex) {
             return _save();
+            // this.urgentSaveInProgress[recordID] = _save().then(() => {
+            //     delete this.urgentSaveInProgress[recordID];
+            // });
+            // return this.urgentSaveInProgress[recordID];
         } else {
             return this.mutex.exec(_save);
         }
