@@ -40,7 +40,6 @@ odoo.define('pos_discount.DiscountButton', function(require) {
             lines.filter(line => line.get_product() === product)
                 .forEach(line => order.remove_orderline(line));
 
-            const is_tips_product = (line) => this.env.pos.config.tip_product_id && line.product.id === this.env.pos.config.tip_product_id[0];
             // Add one discount line per tax group
             let linesByTax = order.get_orderlines_grouped_by_tax_ids();
             for (let [tax_ids, lines] of Object.entries(linesByTax)) {
@@ -49,7 +48,7 @@ odoo.define('pos_discount.DiscountButton', function(require) {
                 let tax_ids_array = tax_ids.split(',').filter(id => id !== '').map(id => Number(id));
 
                 let baseToDiscount = order.calculate_base_amount(
-                    tax_ids_array, lines.filter(ll => !ll.is_program_reward && !ll.gift_card_id && !is_tips_product(ll))
+                    tax_ids_array, lines.filter(ll => ll.isGlobalDiscountApplicable())
                 );
 
                 // We add the price as manually set to avoid recomputation when changing customer.
