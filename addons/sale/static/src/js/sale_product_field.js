@@ -2,49 +2,25 @@
 
 import { registry } from '@web/core/registry';
 import { Many2OneField, many2OneField } from '@web/views/fields/many2one/many2one_field';
+import { useEffect } from '@odoo/owl';
 
 export class SaleOrderLineProductField extends Many2OneField {
 
     setup() {
         super.setup();
-        const { update } = this;
-        this.update = async (value) => {
-            await update(value);
-            let newValue = false;
-            // NB: quick creation doesn't go through here, but through quickCreate
-            // below
-            if (value) {
-                if (Array.isArray(value[0]) && this.props.record.data[this.props.name] != value[0]) {
-                    // product (existing)
-                    newValue = true;
-                } else {
-                    // new product (Create & edit)
-                    // value[0] is a dict of creation values
-                    newValue = true;
-                }
-            }
-            if (newValue) {
-                if (this.relation === 'product.template') {
+        let isMounted = false;
+        const relation = this.props.record.fields[this.props.name].relation;
+        useEffect(value => {   
+            if (!isMounted) {
+                isMounted = true;
+            } else if (value) {
+                if (relation === 'product.template') {
                     this._onProductTemplateUpdate();
                 } else {
                     this._onProductUpdate();
                 }
             }
-        };
-
-        if (this.props.canQuickCreate) {
-            // HACK to make quick creation also open
-            //      configurators if needed
-            this.quickCreate = async (name, params = {}) => {
-                await this.props.record.update({ [this.props.name]: [false, name]});
-
-                if (this.relation === 'product.template') {
-                    this._onProductTemplateUpdate();
-                } else {
-                    this._onProductUpdate();
-                }
-            };
-        }
+        }, () => [Array.isArray(this.value) && this.value[0]]);
     }
 
     get isProductClickable() {
