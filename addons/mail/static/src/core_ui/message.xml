@@ -3,14 +3,15 @@
 
     <t t-name="mail.Message" owl="1">
         <ActionSwiper onRightSwipe="hasTouch() and isInInbox ? { action: () => this.messageService.setDone(this.message), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
-            <div class="o-mail-Message position-relative py-1"
+            <div class="o-mail-Message position-relative"
                 t-att-class="{
                     'o-pinnedPanel': env.pinnedPanel,
                     'o-highlighted bg-view shadow-lg': props.highlighted,
                     'o-selfAuthored': message.isSelfAuthored,
                     'o-selected': props.messageToReplyTo?.isSelected(props.thread, props.message),
-                    'o-squashed pt-1': props.squashed,
-                    'mt-1': !props.squashed and props.thread and !env.pinnedPanel,
+                    'o-squashed pb-1': props.squashed,
+                    'py-1': !props.squashed,
+                    'mt-2': !props.squashed and props.thread and !env.pinnedPanel,
                     'px-3': !props.isInChatWindow and !env.pinnedPanel,
                     'px-1': props.isInChatWindow,
                     'opacity-50': props.messageToReplyTo?.isNotSelected(props.thread, props.message),
@@ -44,7 +45,7 @@
                         </t>
                     </div>
                     <div class="w-100 overflow-auto" t-att-class="{ 'flex-grow-1': message.composer }">
-                        <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline">
+                        <div t-if="!props.squashed" class="o-mail-Message-header d-flex flex-wrap align-items-baseline mb-1 lh-1">
                             <span t-if="(message.author or message.email_from) and shouldDisplayAuthorName" class="o-mail-Message-author" t-att-class="{ 'cursor-pointer o_redirect': hasAuthorClickable }" t-att-title="authorText" t-on-click="ev => this.onClickAuthor(ev)">
                                 <strong class="me-1 text-truncate"><t t-if="message.author" t-esc="message.author.name"/><t t-else="" t-esc="message.email_from"/></strong>
                             </span>
@@ -99,7 +100,7 @@
                                                 }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
                                             <div class="position-relative" t-att-class="{
                                                         'p-1': message.isNote,
-                                                        'o-mail-Message-body mb-0 p-3': !message.isNote,
+                                                        'o-mail-Message-body mb-0 py-2 px-3': !message.isNote,
                                                         'align-self-start text-break rounded-end-3 rounded-bottom-3': !state.isEditing and !message.isNote,
                                                         'o-mail-Message-editable flex-grow-1': state.isEditing,
                                                         }" t-ref="body">
