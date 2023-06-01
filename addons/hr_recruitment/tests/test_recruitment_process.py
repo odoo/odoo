@@ -49,8 +49,8 @@ class TestRecruitmentProcess(TestHrCommon):
             ('res_model', '=', self.env['hr.applicant']._name),
             ('res_id', '=', applicant.id)])
         self.assertEqual(applicant.name, 'Application for the post of Jr.application Programmer.', 'Applicant name does not match.')
-        self.assertEqual(applicant.stage_id, self.env.ref('hr_recruitment.stage_job1'),
-            "Stage should be 'Initial qualification' and is '%s'." % (applicant.stage_id.name))
+        self.assertEqual(applicant.stage_id, self.env.ref('hr_recruitment.stage_job0'),
+            "Stage should be 'New' and is '%s'." % (applicant.stage_id.name))
         self.assertTrue(resume_ids, 'Resume is not attached.')
         # I assign the Job position to the applicant
         applicant.write({'job_id': self.job_developer.id})

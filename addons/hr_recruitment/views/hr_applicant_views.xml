@@ -5,11 +5,12 @@
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <tree string="Applicants" multi_edit="1" sample="1">
+            <tree string="Applicants" multi_edit="1" sample="1" decoration-danger="application_status == 'refused'">
                 <field name="message_needaction" invisible="1"/>
                 <field name="last_stage_id" invisible="1"/>
                 <field name="date_last_stage_update" invisible="1"/>
                 <field name="partner_name" readonly="1" optional="show"/>
+                <field name="create_date" readonly="1" widget="date" optional="show"/>
                 <field name="type_id" invisible="1"/>
                 <field name="job_id" optional="show"/>
                 <field name="name" readonly="1" optional="show"/>
@@ -22,7 +23,6 @@
                 <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                 <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                 <field name="interviewer_ids" widget="many2many_avatar_user" optional="hide"/>
-                <field name="create_date" readonly="1" widget="date" optional="show"/>
                 <field name="partner_phone" widget="phone" readonly="1" optional="hide"/>
                 <field name="medium_id" optional="hide"/>
                 <field name="source_id" readonly="1" optional="hide"/>
@@ -321,7 +321,7 @@
                 <field name="activity_state" />
                 <field name="refuse_reason_id" />
                 <field name="application_status" />
-                <progressbar field="activity_state" colors='{"planned": "success", "overdue": "danger", "today": "warning"}'/>
+                <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
                 <templates>
                     <t t-name="kanban-menu">
                         <a role="menuitem" name="action_makeMeeting" type="object" class="dropdown-item">Schedule Interview</a>
