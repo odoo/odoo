@@ -42,9 +42,22 @@ export class SignatureField extends Component {
     }
 
     get getUrl() {
+<<<<<<< HEAD
         const { name, previewImage, record } = this.props;
         if (this.state.isValid && this.value) {
             if (isBinarySize(this.value)) {
+||||||| parent of 8e81987a2c6 (temp)
+        const { name, previewImage, record, value } = this.props;
+        if (this.state.isValid && value) {
+            if (isBinarySize(value)) {
+=======
+        const { name, previewImage, record, value } = this.props;
+        if (this.state.isValid && value) {
+            if (isBinarySize(value)) {
+                if (!this.rawCacheKey) {
+                    this.rawCacheKey = this.props.record.data.__last_update;
+                }
+>>>>>>> 8e81987a2c6 (temp)
                 return url("/web/image", {
                     model: record.resModel,
                     id: record.resId,
@@ -135,10 +148,18 @@ export class SignatureField extends Component {
      * @private
      */
     uploadSignature({ signatureImage }) {
+<<<<<<< HEAD
         return this.props.record.update({ [this.props.name]: signatureImage[1] || false });
+||||||| parent of 8e81987a2c6 (temp)
+        return this.props.update(signatureImage[1] || false);
+=======
+        this.rawCacheKey = null;
+        return this.props.update(signatureImage[1] || false);
+>>>>>>> 8e81987a2c6 (temp)
     }
 }
 
+<<<<<<< HEAD
 export const signatureField = {
     component: SignatureField,
     extractProps: ({ attrs, options }) => ({
@@ -148,6 +169,50 @@ export const signatureField = {
         previewImage: options.preview_image,
         width: options.size ? options.size[0] || undefined : attrs.width,
     }),
+||||||| parent of 8e81987a2c6 (temp)
+SignatureField.template = "web.SignatureField";
+SignatureField.props = {
+    ...standardFieldProps,
+    defaultFont: { type: String },
+    fullName: { type: String, optional: true },
+    height: { type: Number, optional: true },
+    previewImage: { type: String, optional: true },
+    width: { type: Number, optional: true },
+};
+SignatureField.extractProps = ({ attrs }) => {
+    const { options, width, height } = attrs;
+    return {
+        defaultFont: attrs.options.default_font || "",
+        fullName: attrs.options.full_name,
+        height: options.size ? options.size[1] || undefined : height,
+        previewImage: attrs.options.preview_image,
+        width: options.size ? options.size[0] || undefined : width,
+    };
+=======
+SignatureField.template = "web.SignatureField";
+SignatureField.props = {
+    ...standardFieldProps,
+    defaultFont: { type: String },
+    fullName: { type: String, optional: true },
+    height: { type: Number, optional: true },
+    previewImage: { type: String, optional: true },
+    width: { type: Number, optional: true },
+};
+
+SignatureField.fieldDependencies = {
+    __last_update: { type: "datetime" },
+};
+
+SignatureField.extractProps = ({ attrs }) => {
+    const { options, width, height } = attrs;
+    return {
+        defaultFont: attrs.options.default_font || "",
+        fullName: attrs.options.full_name,
+        height: options.size ? options.size[1] || undefined : height,
+        previewImage: attrs.options.preview_image,
+        width: options.size ? options.size[0] || undefined : width,
+    };
+>>>>>>> 8e81987a2c6 (temp)
 };
 
 registry.category("fields").add("signature", signatureField);
