@@ -13,8 +13,7 @@
     </t>
 
     <t t-name="board.Content" owl="1">
-        <!-- Note: need to add mobile support that i just removed for now -->
-        <div class="o-dashboard-header d-flex justify-content-end">
+        <div t-if="!env.isSmall" class="o-dashboard-header d-flex justify-content-end">
             <Dropdown togglerClass="'btn btn-secondary m-2 p-2'">
                 <t t-set-slot="toggler">
                     <img t-attf-src="/board/static/img/layout_{{board.layout}}.png" width="16" height="16" alt=""/>
