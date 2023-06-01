@@ -888,7 +888,9 @@ export class PosGlobalState extends PosModel {
             otherPaymentMethods.forEach((pm) => {
                 if (pm.type === "bank") {
                     state.payments[pm.id] = {
-                        counted: this.env.utils.roundCurrency(pm.amount),
+                        counted: this.env.utils
+                            .roundCurrency(pm.amount)
+                            .toFixed(this.currency.decimal_places),
                         difference: 0,
                         number: pm.number,
                     };
