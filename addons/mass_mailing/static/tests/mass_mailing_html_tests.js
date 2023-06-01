@@ -3,8 +3,15 @@
 import * as ajax from "web.ajax";
 import weTestUtils from "web_editor.test_utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
-import * as testUtils from "@web/../tests/helpers/utils";
+import {
+    editInput,
+    getFixture,
+    makeDeferred,
+    nextTick,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 import * as legacyTestUtils from "web.test_utils";
+import { assets } from "@web/core/assets";
 
 let serverData;
 let fixture;
@@ -12,7 +19,7 @@ let fixture;
 QUnit.module('mass_mailing', {}, function () {
 QUnit.module('field html', (hooks) => {
     hooks.beforeEach(() => {
-        fixture = testUtils.getFixture();
+        fixture = getFixture();
         const models = weTestUtils.wysiwygData({
             'mailing.mailing': {
                 fields: {
@@ -91,12 +98,43 @@ QUnit.module('field html', (hooks) => {
                 '   />'+
                 '</form>',
         });
-        await testUtils.nextTick();
+        await nextTick();
         let fieldReadonly = fixture.querySelector('.o_field_widget[name="body_html"]');
         let fieldEdit = fixture.querySelector('.o_field_widget[name="body_arch"]');
 
         assert.strictEqual($(fieldReadonly).css('display'), 'none', "should hide the readonly mode");
         assert.strictEqual($(fieldEdit).css('display'), 'block', "should display the edit mode");
+    });
+
+    QUnit.test('component destroyed while loading', async function (assert) {
+        const def = makeDeferred();
+        patchWithCleanup(assets, {
+            loadBundle() {
+                assert.step("loadBundle");
+                return def;
+            }
+        })
+
+        await makeView({
+            type: "form",
+            resModel: 'mailing.mailing',
+            resId: 1,
+            serverData,
+            arch: `
+                <form>
+                    <field name="display_name"/>
+                    <field name="body_arch" widget="mass_mailing_html" attrs="{'invisible': [['display_name', '=', 'hide']]}"/>
+                </form>`,
+        });
+
+        assert.containsOnce(fixture, ".o_field_widget[name=body_arch]");
+        await editInput(fixture, ".o_field_widget[name=display_name] input", "hide");
+        assert.containsNone(fixture, ".o_field_widget[name=body_arch]");
+
+        def.resolve();
+        await nextTick();
+        assert.containsNone(fixture, ".o_field_widget[name=body_arch]");
+        assert.verifySteps(["loadBundle"]);
     });
 });
 });
