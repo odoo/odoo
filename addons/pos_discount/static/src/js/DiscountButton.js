@@ -52,7 +52,10 @@ class DiscountButton extends PosComponent {
                 .filter((id) => id !== "")
                 .map((id) => Number(id));
 
-            const baseToDiscount = order.calculate_base_amount(tax_ids_array, lines.filter(ll => !ll.reward_id && (!this.env.pos.config.tip_product_id || ll.product.id !== this.env.pos.config.tip_product_id[0])));
+            const baseToDiscount = order.calculate_base_amount(
+                tax_ids_array,
+                lines.filter((ll) => ll.isGlobalDiscountApplicable())
+            );
 
             // We add the price as manually set to avoid recomputation when changing customer.
             const discount = (-pc / 100.0) * baseToDiscount;
