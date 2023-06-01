@@ -115,9 +115,19 @@ class MrpWorkorder(models.Model):
         'stock.move.line', 'workorder_id', 'Moves to Track',
         help="Inventory moves for which you must scan a lot number at this work order")
     finished_lot_id = fields.Many2one(
+<<<<<<< HEAD
         'stock.lot', string='Lot/Serial Number', related='production_id.lot_producing_id',
         domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]",
         readonly=False, check_company=True)
+||||||| parent of f0d79a20e20 (temp)
+        'stock.production.lot', string='Lot/Serial Number', compute='_compute_finished_lot_id',
+        inverse='_set_finished_lot_id', domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]",
+        check_company=True)
+=======
+        'stock.production.lot', string='Lot/Serial Number', compute='_compute_finished_lot_id',
+        inverse='_set_finished_lot_id', domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]",
+        check_company=True, search='_search_finished_lot_id')
+>>>>>>> f0d79a20e20 (temp)
     time_ids = fields.One2many(
         'mrp.workcenter.productivity', 'workorder_id', copy=False)
     is_user_working = fields.Boolean(
@@ -218,6 +228,31 @@ class MrpWorkorder(models.Model):
                 'replan': color_icon not in [False, 'text-primary']
             })
 
+<<<<<<< HEAD
+||||||| parent of f0d79a20e20 (temp)
+    @api.depends('production_id.lot_producing_id')
+    def _compute_finished_lot_id(self):
+        for workorder in self:
+            workorder.finished_lot_id = workorder.production_id.lot_producing_id
+
+    def _set_finished_lot_id(self):
+        for workorder in self:
+            workorder.production_id.lot_producing_id = workorder.finished_lot_id
+
+=======
+    @api.depends('production_id.lot_producing_id')
+    def _compute_finished_lot_id(self):
+        for workorder in self:
+            workorder.finished_lot_id = workorder.production_id.lot_producing_id
+
+    def _search_finished_lot_id(self, operator, value):
+        return [('production_id.lot_producing_id', operator, value)]
+
+    def _set_finished_lot_id(self):
+        for workorder in self:
+            workorder.production_id.lot_producing_id = workorder.finished_lot_id
+
+>>>>>>> f0d79a20e20 (temp)
     @api.depends('production_id.qty_producing')
     def _compute_qty_producing(self):
         for workorder in self:
