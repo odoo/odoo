@@ -35,7 +35,7 @@
                 <button
                     t-if="!props.readonly"
                     class="btn btn-link btn-sm"
-                    t-on-click="onOptionCreate"
+                    t-on-click="() => this.onOptionCreate(this.options.length)"
                     t-ref="addButton">
                     <i class="fa fa-plus"/>
                     Add a Value

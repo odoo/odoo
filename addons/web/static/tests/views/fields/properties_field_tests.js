@@ -561,11 +561,32 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_property_selection_option:nth-child(2) .fa-trash-o");
         options = popover.querySelectorAll(".o_field_property_selection_option");
         assert.strictEqual(options.length, 3, "Should have removed the second option");
-        const optionValues = [...options].map((option) => option.querySelector("input").value);
         assert.deepEqual(
-            optionValues,
+            [...options].map((option) => option.querySelector("input").value),
             ["A", "C", "New option"],
             "Should have removed the second option"
+        );
+
+        // focus should be in option C
+        assert.strictEqual(document.activeElement, options[1].querySelector("input"));
+        // test that pressing 'Enter' inserts a new option after the one currently focused (and not last).
+        await triggerEvent(
+            target,
+            ".o_field_property_selection_option:nth-child(2) input",
+            "keydown",
+            { key: "Enter" }
+        );
+        await editInput(
+            target,
+            ".o_field_property_selection_option:nth-child(3) input",
+            "New option 2"
+        );
+        options = popover.querySelectorAll(".o_field_property_selection_option");
+        assert.strictEqual(options.length, 4, "Should have added a new option");
+        assert.deepEqual(
+            [...options].map((option) => option.querySelector("input").value),
+            ["A", "C", "New option 2", "New option"],
+            "Should have added a new option at the correct spot"
         );
     });
 
