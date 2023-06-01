@@ -1220,7 +1220,10 @@ var BasicModel = AbstractModel.extend({
                                 }
                                 resolve(changedFields);
                             }
-                        }).guardedCatch(reject);
+                        }).guardedCatch((...args) => {
+                            record.saveInProgress = false;
+                            reject(...args);
+                        });
                 } else {
                     resolve(changedFields);
                 }
