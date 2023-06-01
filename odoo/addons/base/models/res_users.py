@@ -1695,6 +1695,14 @@ class UsersView(models.Model):
         self._add_reified_groups(group_fields, values)
         return values
 
+    def _determine_fields_to_fetch(self, field_names, ignore_when_in_cache=False):
+        valid_fields = partition(is_reified_group, field_names)[1]
+        return super()._determine_fields_to_fetch(valid_fields, ignore_when_in_cache)
+
+    def _read_format(self, fnames, load='_classic_read'):
+        valid_fields = partition(is_reified_group, fnames)[1]
+        return super()._read_format(valid_fields, load)
+
     def onchange(self, values, field_name, field_onchange):
         # field_name can be either a string, a list or Falsy
         if isinstance(field_name, list):
