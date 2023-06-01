@@ -28,10 +28,6 @@
                                 <span><strong>Vendor Address:</strong></span>
                                 <t t-set="show_partner" t-value="True" />
                             </div>
-                            <div t-if="o.picking_type_id.code=='internal' and partner">
-                                <span><strong>Warehouse Address:</strong></span>
-                                <t t-set="show_partner" t-value="True" />
-                            </div>
                             <div t-if="o.picking_type_id.code=='outgoing' and partner and partner != partner.commercial_partner_id">
                                 <span><strong>Customer Address:</strong></span>
                                 <t t-set="show_partner" t-value="True" />
