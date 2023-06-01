@@ -16532,6 +16532,20 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(td2.textContent, "61%");
     });
 
+    QUnit.test("Formatted group operator with digit precision on the field definition", async function (assert) {
+        serverData.models.foo.fields.qux.digits = [16, 3];
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="qux"/></tree>',
+            groupBy: ["bar"],
+        });
+        const [td1, td2] = target.querySelectorAll("td.o_list_number");
+        assert.strictEqual(td1.textContent, "9.000");
+        assert.strictEqual(td2.textContent, "10.400");
+    });
+
     QUnit.test("list view does not crash when clicked button cell", async function (assert) {
         await makeView({
             type: "list",

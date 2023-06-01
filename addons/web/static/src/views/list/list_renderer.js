@@ -592,14 +592,14 @@ export class ListRenderer extends Component {
 
     formatAggregateValue(group, column) {
         const { widget, rawAttrs } = column;
-        const fieldType = this.props.list.fields[column.name].type;
+        const field = this.props.list.fields[column.name];
         const aggregateValue = group.aggregates[column.name];
         if (!(column.name in group.aggregates)) {
             return "";
         }
-        const formatter = formatters.get(widget, false) || formatters.get(fieldType, false);
+        const formatter = formatters.get(widget, false) || formatters.get(field.type, false);
         const formatOptions = {
-            digits: rawAttrs.digits ? JSON.parse(rawAttrs.digits) : undefined,
+            digits: rawAttrs.digits ? JSON.parse(rawAttrs.digits) : field.digits,
             escape: true,
         };
         return formatter ? formatter(aggregateValue, formatOptions) : aggregateValue;
