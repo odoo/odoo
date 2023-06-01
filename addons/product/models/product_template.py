@@ -192,6 +192,11 @@ class ProductTemplate(models.Model):
         for p in self:
             p.product_variant_id = p.product_variant_ids[:1].id
 
+    @api.constrains('company_id')
+    def _check_barcode_uniqueness(self):
+        for template in self:
+            template.product_variant_ids._check_barcode_uniqueness()
+
     @api.depends('company_id')
     def _compute_currency_id(self):
         main_company = self.env['res.company']._get_main_company()
