@@ -20,21 +20,21 @@ registry.category("web_tour.tours").add('account_tax_group', {
     },
     {
         content: "Go to Vendors",
-        trigger: 'a:contains("Vendors")',
+        trigger: 'span:contains("Vendors")',
     },
     {
         content: "Go to Bills",
-        trigger: 'span:contains("Bills")',
+        trigger: 'a:contains("Bills")',
     },
     {
-        extra_trigger: '.breadcrumb:contains("Bills")',
+        extra_trigger: '.o_breadcrumb .text-truncate:contains("Bills")',
         content: "Create new bill",
-        trigger: '.o_list_button_add',
+        trigger: '.o_control_panel_main_buttons .d-none .o_list_button_add',
     },
     // Set a vendor
     {
         content: "Add vendor",
-        trigger: 'div.o_field_widget.o_field_many2one[name="partner_id"] div input',
+        trigger: 'div.o_field_widget.o_field_res_partner_many2one[name="partner_id"] div input',
         run: 'text Azure Interior',
     },
     {
@@ -48,11 +48,11 @@ registry.category("web_tour.tours").add('account_tax_group', {
     },
     {
         content: "Select input",
-        trigger: 'div[name="invoice_line_ids"] .o_list_view .o_selected_row .o_list_many2one:first input',
+        trigger: 'div[name="invoice_line_ids"] .o_selected_row .o_list_many2one[name="product_id"] input',
     },
     {
         content: "Type item",
-        trigger: 'div[name="invoice_line_ids"] .o_list_view .o_selected_row .o_list_many2one:first input',
+        trigger: 'div[name="invoice_line_ids"] .o_selected_row .o_list_many2one[name="product_id"] input',
         run: "text Large Desk",
     },
     {
@@ -86,16 +86,16 @@ registry.category("web_tour.tours").add('account_tax_group', {
     // Modify the quantity of the object
     {
         content: "Select item quantity",
-        trigger: 'div[name="invoice_line_ids"] .o_list_view tbody tr.o_data_row .o_list_number[title="1.00"]',
+        trigger: 'div[name="invoice_line_ids"] tbody tr.o_data_row .o_list_number[name="quantity"]',
     },
     {
         content: "Change item quantity",
-        trigger: 'div[name="invoice_line_ids"] .o_list_view tbody tr.o_data_row .o_list_number[title="1.00"] input',
+        trigger: 'div[name="invoice_line_ids"] tbody tr.o_data_row .o_list_number[name="quantity"] input',
         run: 'text 2',
     },
     {
         content: "Valid the new value",
-        trigger: 'div[name="invoice_line_ids"] .o_list_view tbody tr.o_data_row .o_list_number[title="1.00"] input',
+        trigger: 'div[name="invoice_line_ids"] tbody tr.o_data_row .o_list_number[name="quantity"] input',
         run: function (actions) {
             let keydownEvent = jQuery.Event('keydown');
             keydownEvent.which = 13;
@@ -110,6 +110,23 @@ registry.category("web_tour.tours").add('account_tax_group', {
     // Check new tax group value
     {
         content: "Check new value of tax group",
+        trigger: '.o_tax_group_amount_value:contains("389.70")',
+    },
+    {
+        content: "Edit tax value",
+        trigger: '.o_tax_group_edit_input input',
+        run: 'text 2'
+    },
+    {
+        content: "Check new value of total",
+        trigger: '.oe_subtotal_footer_separator:contains("2,600.00")',
+    },
+    {
+        content: "Discard changes",
+        trigger: '.o_form_button_cancel',
+    },
+    {
+        content: "Check tax value is reset",
         trigger: '.o_tax_group_amount_value:contains("389.70")',
     },
 ]});
