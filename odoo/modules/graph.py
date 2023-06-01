@@ -56,17 +56,10 @@ _logger = logging.getLogger(__name__)
 # phase 1: module1 -> module2 -> module3 -> module4 -> module5 -> module6
 #
 # If there are some modules need update(init/upgrade)
-# Since the Odoo update module by module(not perfect but successful solution), we sacrifice some determinacy of
-# overriding order while installing modules to avoid raising errors.
 # For example,
 # 'installed' : base, module1, module2, module3, module4, module6
 # 'to install': module5
-# module6 extends modelA with an extra field1 = fields.Char(required=True, default='value')
-# If the loading order is base -> module1 -> module2 -> module3 -> module4 -> module5 -> module6
-# While loading and installing module5, module6 hasn't been loaded. If module5 imports a new record for modelA as data
-# while installing, field1 won't be populated to the database and violates the not-null constraint
-# So we load those non-'to install' modules at first if possible and then those 'to install' modules in the next phase
-# As a result, the updating order is
+# the updating order is
 # phase 0: base
 # phase 1: module1 -> module2 -> module3 -> module4 -> module6
 # phase 2: module5
@@ -124,7 +117,7 @@ class lazy_recursive_property(tools.lazy_property):
             return self
         _visited = f'_{self.fget.__name__}_visited'
         if getattr(obj, _visited, False):
-            raise RecursionError
+            raise RecursionError()
         setattr(obj, _visited, True)
         value = self.fget(obj)
         delattr(obj, _visited)
@@ -162,19 +155,26 @@ class Package:
 
     @lazy_recursive_property
     def phase(self) -> int:
+        if not self.depends:
+            return 0
+
         if not self.package_graph._update_module:
-            return 1 if self.depends else 0
+            return 1
+
+        def not_in_the_same_phase(package: 'Package', dependency: 'Package') -> bool:
+            return (package.state == 'to install') ^ (dependency.state == 'to install') or dependency.name == 'base'
+
         return max(
-            package.phase + 1 if (package.state == 'to install') ^ (self.state == 'to install') or package.name == 'base'
-            else package.phase for package in self.depends
-        ) if self.depends else 0
+            dependency.phase + 1 if not_in_the_same_phase(self, dependency) else dependency.phase
+            for dependency in self.depends
+        )
 
     @property
-    def loading_order(self) -> Tuple[int, str]:
+    def loading_sort_key(self) -> Tuple[int, str]:
         return self.depth, self.name
 
     @property
-    def updating_order(self) -> Tuple[int, int, str]:
+    def updating_sort_key(self) -> Tuple[int, int, str]:
         return self.phase, self.depth, self.name
 
     def demo_installable(self) -> bool:
@@ -190,8 +190,8 @@ class PackageGraph:
         self._packages: Dict[str, Package] = {}
         self._cr = cr
         self._update_module = update_module
-        self._sort_key = (lambda package: package.updating_order) \
-            if update_module else (lambda package: package.loading_order)
+        self._sort_key = (lambda package: package.updating_sort_key) \
+            if update_module else (lambda package: package.loading_sort_key)
 
     def __contains__(self, name: str) -> bool:
         return name in self._packages

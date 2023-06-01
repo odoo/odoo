@@ -75,7 +75,9 @@ class Registry(Mapping):
         """ Create and return a new registry for the given database name. """
         t0 = time.time()
 
-        force_test = not (tools.config.options['init'] or tools.config.options['update']) and tools.config.options['test_enable']
+        force_test = not tools.config.options['init'] and \
+            not tools.config.options['update'] and \
+            tools.config.options['test_enable']
 
         ready = False
         init_kwargs = {}
@@ -92,7 +94,7 @@ class Registry(Mapping):
             try:
                 registry.setup_signaling()
                 try:
-                    odoo.modules.load_modules(db_name, update_module=update_module, force_test=force_test, _force_demo=force_demo)
+                    odoo.modules.load_modules(registry, update_module=update_module, force_test=force_test, force_demo_=force_demo)
                 except Exception:
                     odoo.modules.reset_modules_state(db_name)
                     raise
@@ -106,19 +108,20 @@ class Registry(Mapping):
             # 2. module A is 'to remove'.
             ready = registry.ready
             if not ready:
-                force_test = False
+                force_demo = force_test = False
                 update_module = registry.has_modules_to_update
                 init_kwargs = {
                     attr: getattr(registry, attr)
-                    for attr in ['_assertion_report', 'updated_modules', 'models_to_check', 'has_modules_removed', '_database_translated_fields', 'loaded_xmlids']
+                    for attr in ['_assertion_report', 'updated_modules', 'models_to_fixup', 'has_modules_removed', '_database_translated_fields', 'loaded_xmlids']
                 }
 
         registry._init = False
         registry.registry_invalidated = bool(update_module)
         registry.new = registry.init = registry.registries = None
-        registry.check_table_exist = registry.has_to_update_modules = False
+        registry.has_modules_removed = registry.has_to_update_modules = False
 
         _logger.info("Registry loaded in %.3fs", time.time() - t0)
+
         return registry
 
     def init(self, db_name, **kwargs):
@@ -135,12 +138,12 @@ class Registry(Mapping):
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
         self.updated_modules = OrderedSet()  # installed/updated modules
-        # models_to_check includes models which
+        # models_to_fixup includes models which
         # 1. are updated and then loaded
         # 2. are updated with the temporary updating order but not the final loading order
         # 3. are removed in while uninstalling
         # 4. has fields to untranslate
-        self.models_to_check = OrderedSet()
+        self.models_to_fixup = OrderedSet()
         self.has_modules_removed = False
         self.has_modules_to_update = False
         self.loaded_xmlids = set()
@@ -534,7 +537,7 @@ class Registry(Mapping):
 
         if 'module' in context:
             _logger.info('module %s: creating or updating database tables', context['module'])
-        elif context.get('models_to_check', False):
+        elif context.get('models_to_fixup', False):
             _logger.info("verifying fields for every extended model")
 
         env = odoo.api.Environment(cr, SUPERUSER_ID, context)
