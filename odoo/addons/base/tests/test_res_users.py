@@ -283,8 +283,8 @@ class TestUsers2(TransactionCase):
         self.assertEqual(user.groups_id & groups, groups)
         self.assertEqual(user.read([fname])[0][fname], group2.id)
 
-    def test_read_group_with_reified_field(self):
-        """ Check that read_group gets rid of reified fields"""
+    def test_read_list_with_reified_field(self):
+        """ Check that read_group and search_read get rid of reified fields"""
         User = self.env['res.users']
         fnames = ['name', 'email', 'login']
 
@@ -298,7 +298,13 @@ class TestUsers2(TransactionCase):
         # check that the reified field name has no effect in fields
         res_with_reified = User.read_group([], fnames + [reified_fname], ['company_id'])
         res_without_reified = User.read_group([], fnames, ['company_id'])
-        self.assertEqual(res_with_reified, res_without_reified, "Reified fields should be ignored")
+        self.assertEqual(res_with_reified, res_without_reified, "Reified fields should be ignored in read_group")
+
+        # check that the reified fields are not considered invalid in search_read
+        # and are ignored
+        res_with_reified = User.search_read([], fnames + [reified_fname])
+        res_without_reified = User.search_read([], fnames)
+        self.assertEqual(res_with_reified, res_without_reified, "Reified fields should be ignored in search_read")
 
         # Verify that the read_group is raising an error if reified field is used as groupby
         with self.assertRaises(ValueError):
