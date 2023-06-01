@@ -391,7 +391,7 @@ export class GraphModel extends Model {
         let processedDataPoints = [];
         if (mode === "line") {
             processedDataPoints = this.dataPoints.filter(
-                (dataPoint) => dataPoint.labels[0] !== this._getDefaultFilterLabel(groupBy[0]),
+                (dataPoint) => dataPoint.labels[0] !== this._getDefaultFilterLabel(groupBy[0].fieldName),
             );
         } else if (mode === "pie") {
             processedDataPoints = this.dataPoints.filter(
@@ -513,7 +513,7 @@ export class GraphModel extends Model {
                     if (type === "boolean") {
                         label = `${val}`; // toUpperCase?
                     } else if (val === false) {
-                        label = this._getDefaultFilterLabel(gb);
+                        label = this._getDefaultFilterLabel(fieldName);
                     } else if (["many2many", "many2one"].includes(type)) {
                         const [id, name] = val;
                         const key = JSON.stringify([fieldName, name]);
