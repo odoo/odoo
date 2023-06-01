@@ -1,4 +1,4 @@
-byuanit, 2023-05-25
+China, 2023-05-25
 
 I hereby agree to the terms of the Odoo Individual Contributor License Agreement v1.0.
 
