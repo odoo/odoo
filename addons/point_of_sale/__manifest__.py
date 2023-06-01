@@ -120,7 +120,8 @@
             # PoS files
             'point_of_sale/static/src/**/*',
             ('remove', 'point_of_sale/static/src/backend/**/*'),
-            ('remove', 'point_of_sale/static/src/entry/**/*'), # entry is only included in the prod bundle
+            # main.js boots the pos app, it is only included in the prod bundle as tests mount the app themselves
+            ('remove', 'point_of_sale/static/src/app/main.js'),
             # tour system FIXME: can this be added only in test mode? Are there any onboarding tours in PoS?
             'web/static/lib/jquery/jquery.js',
             'web_tour/static/src/tour_pointer/**/*',
@@ -137,7 +138,7 @@
         # Bundle that starts the pos, loaded on /pos/ui
         'point_of_sale.assets_prod': [
             ('include', 'point_of_sale._assets_pos'),
-            'point_of_sale/static/src/entry/main.js',
+            'point_of_sale/static/src/app/main.js',
         ],
         # Bundle for the unit tests at /pos/ui/tests
         'point_of_sale.assets_qunit_tests': [
