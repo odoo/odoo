@@ -625,8 +625,10 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
 
-            await editInput(target, ".o_field_widget input", "01/08/22");
-            await triggerEvent(target, ".o_field_widget input", "keydown", { key: "Enter" });
+            await editInput(target, ".o_field_widget .o_datepicker_input", "01/08/22");
+            await triggerEvent(target, ".o_field_widget .o_datepicker_input", "keydown", {
+                key: "Enter",
+            });
 
             assert.strictEqual(target.querySelector(".o_field_widget input").value, "01/08/2022");
 
