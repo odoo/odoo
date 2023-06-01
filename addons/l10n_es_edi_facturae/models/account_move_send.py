@@ -58,7 +58,7 @@ class AccountMoveSend(models.Model):
 
         if self.l10n_es_edi_facturae_checkbox_xml and invoice._l10n_es_edi_facturae_get_default_enable():
             try:
-                xml_content = invoice._l10n_es_edi_facturae_render_facturae(invoice)
+                xml_content = invoice._l10n_es_edi_facturae_render_facturae()
             except Exception as error:
                 return {
                     'error': "".join((_("Errors occured while creating the EDI document (format: %s):", "Facturae"),
