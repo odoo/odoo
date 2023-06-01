@@ -29,6 +29,7 @@ from odoo.tools.view_validation import valid_view, get_variable_names, get_domai
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 from odoo.models import check_method_name
 from odoo.osv.expression import expression
+from odoo.addons.base.models.ir_qweb import QWebException
 
 _logger = logging.getLogger(__name__)
 
@@ -293,7 +294,7 @@ actual arch.
     model_id = fields.Many2one("ir.model", string="Model of the view", compute='_compute_model_id', inverse='_inverse_compute_model_id')
 
     @api.depends('arch_db', 'arch_fs', 'arch_updated')
-    @api.depends_context('read_arch_from_file', 'lang')
+    @api.depends_context('read_arch_from_file')
     def _compute_arch(self):
         def resolve_external_ids(arch_fs, view_xml_id):
             def replacer(m):
@@ -431,6 +432,21 @@ actual arch.
                         self._raise_view_error(message, node)
         return True
 
+    def _validate_render_report(self):
+        for view in self:
+            arch_value = 't-call="%s"' % view.xml_id
+            parent_views = self.env['ir.ui.view'].search([('type', '=', 'qweb'), ('arch_db', 'ilike', arch_value)])
+            if parent_views:
+                return parent_views._validate_render_report()
+            report = self.env['ir.actions.report'].search([('report_name', '=', view.xml_id)], limit=1)
+            if len(report) < 1:
+                return
+            report_data = self.env[report.model].search([], limit=1)
+            if len(report_data) < 1:
+                return
+            context = dict(self.env.context)
+            report.with_context(context)._render(report.report_name, [report_data.id])
+
     @api.constrains('arch_db')
     def _check_xml(self):
         # Sanity checks: the view should not break anything upon rendering!
@@ -446,8 +462,9 @@ actual arch.
                     view._valid_inheritance(view_arch)
                 combined_arch = view._get_combined_arch()
                 if view.type == 'qweb':
+                    view._validate_render_report()
                     continue
-            except (etree.ParseError, ValueError) as e:
+            except (etree.ParseError, ValueError, QWebException) as e:
                 err = ValidationError(_(
                     "Error while parsing or validating view:\n\n%(error)s",
                     error=tools.ustr(e),
