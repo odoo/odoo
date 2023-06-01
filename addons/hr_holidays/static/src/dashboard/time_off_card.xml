@@ -10,7 +10,7 @@
             <t t-if="data and data.icon">
                 <img t-att-src="data.icon" />
             </t>
-            <t t-esc="duration"/>
+            <t t-esc="durationFormatted"/>
         </span>
         <div class="text-uppercase">
             <t t-if="data.request_unit == 'hour'" name="duration_unit">hours</t>

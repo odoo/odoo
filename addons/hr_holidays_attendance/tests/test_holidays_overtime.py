@@ -251,3 +251,52 @@ class TestHolidaysOvertime(TransactionCase):
             .new({'reason': 'Test remove holiday'}) \
             .action_cancel_leave()
         self.assertFalse(leave.overtime_id.exists())
+
+    def test_deduct_extra_hours_validation(self):
+        self.new_attendance(check_in=datetime(2023, 5, 27, 8), check_out=datetime(2023, 5, 27, 16))
+        self.new_attendance(check_in=datetime(2023, 5, 28, 8), check_out=datetime(2023, 5, 28, 15))
+        self.assertEqual(self.employee.total_overtime, 15)
+
+        # Mock the triggering of "deduct extra hours" button: it creates an allocation with
+        # "deduct_extra_hours" in the context.
+        alloc = self.env['hr.leave.allocation'].with_context(deduct_extra_hours=True).create({
+            'name': 'test allocation',
+            'holiday_status_id': self.leave_type_employee_allocation.id,
+            'employee_id': self.employee.id,
+            'number_of_days': 1,
+            'state': 'draft',
+            'date_from': time.strftime('%Y-1-1'),
+            'date_to': time.strftime('%Y-12-31'),
+        })
+        self.assertEqual(alloc.state, 'confirm')
+        # create the same allocation and try to confirm it, it should fail
+        try:
+            self.env['hr.leave.allocation'].with_context(deduct_extra_hours=True).create({
+                'name': 'test allocation',
+                'holiday_status_id': self.leave_type_employee_allocation.id,
+                'employee_id': self.employee.id,
+                'number_of_days': 1,
+                'state': 'draft',
+                'date_from': time.strftime('%Y-1-1'),
+                'date_to': time.strftime('%Y-12-31'),
+            })
+            self.assertEqual(1, 0, "There should be not enough overtime for a second day allocation")
+        except ValidationError:
+            pass
+
+    def test_deduct_extra_hours_no_validation(self):
+        self.new_attendance(check_in=datetime(2023, 5, 27, 8), check_out=datetime(2023, 5, 27, 16))
+        self.new_attendance(check_in=datetime(2023, 5, 28, 8), check_out=datetime(2023, 5, 28, 15))
+        self.assertEqual(self.employee.total_overtime, 15)
+
+        # create an allocation for a leave type that does not require validation, it should be validated automatically
+        alloc = self.env['hr.leave.allocation'].with_context(deduct_extra_hours=True).create({
+            'name': 'test allocation',
+            'holiday_status_id': self.leave_type_no_alloc.id,
+            'employee_id': self.employee.id,
+            'number_of_days': 1,
+            'state': 'draft',
+            'date_from': time.strftime('%Y-1-1'),
+            'date_to': time.strftime('%Y-12-31'),
+        })
+        self.assertEqual(alloc.state, 'validate')
