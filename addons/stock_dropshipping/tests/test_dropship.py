@@ -6,32 +6,53 @@ from odoo.tools import mute_logger
 
 
 class TestDropship(common.TransactionCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.dropshipping_route = cls.env.ref('stock_dropshipping.route_drop_shipping')
+        cls.supplier = cls.env['res.partner'].create({'name': 'Vendor'})
+        cls.customer = cls.env['res.partner'].create({'name': 'Customer'})
+        # dropship route to be added in test
+        cls.dropship_product = cls.env['product.product'].create({
+            'name': "Pen drive",
+            'type': "product",
+            'categ_id': cls.env.ref('product.product_category_1').id,
+            'lst_price': 100.0,
+            'standard_price': 0.0,
+            'uom_id': cls.env.ref('uom.product_uom_unit').id,
+            'uom_po_id': cls.env.ref('uom.product_uom_unit').id,
+            'seller_ids': [(0, 0, {
+                'delay': 1,
+                'partner_id': cls.supplier.id,
+                'min_qty': 2.0
+            })],
+        })
+
+        cls.lot_dropship_product = cls.env['product.product'].create({
+            'name': "Serial product",
+            'tracking': 'lot',
+            'seller_ids': [(0, 0, {
+                'partner_id': cls.supplier.id,
+            })],
+            'route_ids': [(4, cls.dropshipping_route.id, 0)]
+        })
+
     def test_change_qty(self):
         # enable the dropship and MTO route on the product
-        prod = self.env['product.product'].create({'name': 'Large Desk'})
-        dropshipping_route = self.env.ref('stock_dropshipping.route_drop_shipping')
         mto_route = self.env.ref('stock.route_warehouse0_mto')
-        prod.write({'route_ids': [(6, 0, [dropshipping_route.id, mto_route.id])]})
+        self.dropship_product.write({'route_ids': [(6, 0, [self.dropshipping_route.id, mto_route.id])]})
 
-        # add a vendor
-        vendor1 = self.env['res.partner'].create({'name': 'vendor1'})
-        seller1 = self.env['product.supplierinfo'].create({
-            'partner_id': vendor1.id,
-            'price': 8,
-        })
-        prod.write({'seller_ids': [(6, 0, [seller1.id])]})
-
-        # sell one unit of this product
-        cust = self.env['res.partner'].create({'name': 'customer1'})
+        # sell one unit of dropship product
         so = self.env['sale.order'].create({
-            'partner_id': cust.id,
-            'partner_invoice_id': cust.id,
-            'partner_shipping_id': cust.id,
+            'partner_id': self.customer.id,
+            'partner_invoice_id': self.customer.id,
+            'partner_shipping_id': self.customer.id,
             'order_line': [(0, 0, {
-                'name': prod.name,
-                'product_id': prod.id,
+                'name': self.dropship_product.name,
+                'product_id': self.dropship_product.id,
                 'product_uom_qty': 1.00,
-                'product_uom': prod.uom_id.id,
+                'product_uom': self.dropship_product.uom_id.id,
                 'price_unit': 12,
             })],
             'picking_policy': 'direct',
@@ -54,7 +75,7 @@ class TestDropship(common.TransactionCase):
         # Create a new so line
         sol2 = self.env['sale.order.line'].create({
             'order_id': so.id,
-            'product_id': prod.id,
+            'product_id': self.dropship_product.id,
             'product_uom_qty': 3.00,
             'price_unit': 12,
         })
@@ -69,37 +90,18 @@ class TestDropship(common.TransactionCase):
         # Required for `route_id` to be visible in the view
         self.env.user.groups_id += self.env.ref('stock.group_adv_location')
 
-        # Create a vendor
-        supplier_dropship = self.env['res.partner'].create({'name': 'Vendor of Dropshipping test'})
-
-        # Create new product without any routes
-        drop_shop_product = self.env['product.product'].create({
-            'name': "Pen drive",
-            'type': "product",
-            'categ_id': self.env.ref('product.product_category_1').id,
-            'lst_price': 100.0,
-            'standard_price': 0.0,
-            'uom_id': self.env.ref('uom.product_uom_unit').id,
-            'uom_po_id': self.env.ref('uom.product_uom_unit').id,
-            'seller_ids': [(0, 0, {
-                'delay': 1,
-                'partner_id': supplier_dropship.id,
-                'min_qty': 2.0
-            })]
-        })
-
         # Create a sales order with a line of 200 PCE incoming shipment, with route_id drop shipping
         so_form = Form(self.env['sale.order'])
-        so_form.partner_id = self.env['res.partner'].create({'name': 'My Test Partner'})
+        so_form.partner_id = self.customer
         so_form.payment_term_id = self.env.ref('account.account_payment_term_end_following_month')
         with mute_logger('odoo.tests.common.onchange'):
             # otherwise complains that there's not enough inventory and
             # apparently that's normal according to @jco and @sle
             with so_form.order_line.new() as line:
-                line.product_id = drop_shop_product
+                line.product_id = self.dropship_product
                 line.product_uom_qty = 200
                 line.price_unit = 1.00
-                line.route_id = self.env.ref('stock_dropshipping.route_drop_shipping')
+                line.route_id = self.dropshipping_route
         sale_order_drp_shpng = so_form.save()
 
         # Confirm sales order
@@ -109,7 +111,7 @@ class TestDropship(common.TransactionCase):
         self.assertTrue(sale_order_drp_shpng.procurement_group_id, 'SO should have procurement group')
 
         # Check a quotation was created to a certain vendor and confirm so it becomes a confirmed purchase order
-        purchase = self.env['purchase.order'].search([('partner_id', '=', supplier_dropship.id)])
+        purchase = self.env['purchase.order'].search([('partner_id', '=', self.supplier.id)])
         self.assertTrue(purchase, "an RFQ should have been created by the scheduler")
         purchase.button_confirm()
         self.assertEqual(purchase.state, 'purchase', 'Purchase order should be in the approved state')
@@ -127,7 +129,7 @@ class TestDropship(common.TransactionCase):
         # Check one move line was created in Customers location with 200 pieces
         move_line = self.env['stock.move.line'].search([
             ('location_dest_id', '=', self.env.ref('stock.stock_location_customers').id),
-            ('product_id', '=', drop_shop_product.id)])
+            ('product_id', '=', self.dropship_product.id)])
         self.assertEqual(len(move_line.ids), 1, 'There should be exactly one move line')
 
     def test_sale_order_picking_partner(self):
@@ -181,3 +183,26 @@ class TestDropship(common.TransactionCase):
         # Check the partner of the related picking and move
         self.assertEqual(sale_order.picking_ids.partner_id, supplier_dropship)
         self.assertEqual(sale_order.picking_ids.move_ids.partner_id, customer)
+
+    def test_dropshipped_lot_last_delivery(self):
+        """ Check if the `last_delivery_partner_id` of a `stock.lot` is computed correctly
+            in case the last delivery is a dropship transfer
+        """
+        # Create a sale order
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.customer.id,
+            'order_line': [(0, 0, {
+                'product_id': self.lot_dropship_product.id
+            })]
+        })
+        sale_order.action_confirm()
+        # Confirm PO
+        purchase = self.env['purchase.order'].search([('partner_id', '=', self.supplier.id)])
+        self.assertTrue(purchase, "an RFQ should have been created")
+        purchase.button_confirm()
+        sale_order.picking_ids.move_line_ids.lot_name = '123'
+        sale_order.picking_ids.action_set_quantities_to_reservation()
+        sale_order.picking_ids.button_validate()
+        self.assertEqual(sale_order.picking_ids.state, 'done')
+        self.assertEqual(sale_order.picking_ids.move_line_ids.lot_id.name, '123')
+        self.assertEqual(sale_order.picking_ids.move_line_ids.lot_id.last_delivery_partner_id, self.customer)

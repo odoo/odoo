@@ -200,14 +200,17 @@ class StockLot(models.Model):
             })
         return action
 
+    def _get_delivery_ids_by_lot_domain(self):
+        return [
+            ('lot_id', 'in', self.ids),
+            ('state', '=', 'done'),
+            '|', ('picking_code', '=', 'outgoing'), ('produce_line_ids', '!=', False),
+        ]
+
     def _find_delivery_ids_by_lot(self, lot_path=None, delivery_by_lot=None):
         if lot_path is None:
             lot_path = set()
-        domain = [
-            ('lot_id', 'in', self.ids),
-            ('state', '=', 'done'),
-            '|', ('picking_code', '=', 'outgoing'), ('produce_line_ids', '!=', False)
-        ]
+        domain = self._get_delivery_ids_by_lot_domain()
         move_lines = self.env['stock.move.line'].search(domain)
         moves_by_lot = {
             lot_id: {'producing_lines': set(), 'barren_lines': set()}
