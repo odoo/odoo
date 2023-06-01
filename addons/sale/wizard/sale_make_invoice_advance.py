@@ -353,7 +353,36 @@ class SaleAdvancePaymentInv(models.TransientModel):
         del context
         return so_values
 
+<<<<<<< HEAD
     def _prepare_invoice_values(self, order, so_lines):
+||||||| parent of 496c893dbba (temp)
+    def _get_down_payment_amount(self, order):
+        self.ensure_one()
+        if self.advance_payment_method == 'percentage':
+            if all(self.product_id.taxes_id.mapped('price_include')):
+                amount = order.amount_total * self.amount / 100
+            else:
+                amount = order.amount_untaxed * self.amount / 100
+        else:  # Fixed amount
+            amount = self.fixed_amount
+        return amount
+
+    def _prepare_invoice_values(self, order, so_line):
+=======
+    def _get_down_payment_amount(self, order):
+        self.ensure_one()
+        if self.advance_payment_method == 'percentage':
+            advance_product_taxes = self.product_id.taxes_id.filtered(lambda tax: tax.company_id == order.company_id)
+            if all(order.fiscal_position_id.map_tax(advance_product_taxes).mapped('price_include')):
+                amount = order.amount_total * self.amount / 100
+            else:
+                amount = order.amount_untaxed * self.amount / 100
+        else:  # Fixed amount
+            amount = self.fixed_amount
+        return amount
+
+    def _prepare_invoice_values(self, order, so_line):
+>>>>>>> 496c893dbba (temp)
         self.ensure_one()
         return {
             **order._prepare_invoice(),
