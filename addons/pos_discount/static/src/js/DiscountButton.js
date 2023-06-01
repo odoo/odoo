@@ -60,11 +60,7 @@ export class DiscountButton extends Component {
 
             const baseToDiscount = order.calculate_base_amount(
                 tax_ids_array,
-                lines.filter(
-                    (line) =>
-                        !globalState.config.tip_product_id ||
-                        line.product.id !== globalState.config.tip_product_id[0]
-                )
+                lines.filter((ll) => ll.isGlobalDiscountApplicable())
             );
 
             // We add the price as manually set to avoid recomputation when changing customer.
