@@ -161,13 +161,9 @@ class TestAccountComposerPerformance(AccountMoveSendBase):
         for test_move in test_moves:
             self.assertFalse(test_move.is_move_sent)
 
-        default_ctx = test_moves.action_send_and_print()['context']
-        default_ctx['default_mail_template_id'] = move_template.id
-        composer_form = Form(
-            self.env['account.move.send'].with_context(default_ctx)
-        )
-        composer_form.checkbox_ubl_cii_xml = False
-        composer = composer_form.save()
+        composer = self.env['account.move.send']\
+            .with_context(active_model='account.move', active_ids=test_moves.ids)\
+            .create({'mail_template_id': move_template.id})
 
         with self.mock_mail_gateway(mail_unlink_sent=False):
             composer.action_send_and_print(from_cron=True)
@@ -237,13 +233,9 @@ class TestAccountComposerPerformance(AccountMoveSendBase):
         test_customer = self.test_customers[0].with_env(self.env)
         move_template = self.move_template.with_env(self.env)
 
-        default_ctx = test_move.action_send_and_print()['context']
-        default_ctx['default_mail_template_id'] = move_template.id
-        composer_form = Form(
-            self.env['account.move.send'].with_context(default_ctx)
-        )
-        composer_form.checkbox_ubl_cii_xml = False
-        composer = composer_form.save()
+        composer = self.env['account.move.send']\
+            .with_context(active_model='account.move', active_ids=test_move.ids)\
+            .create({'mail_template_id': move_template.id})
 
         with self.mock_mail_gateway(mail_unlink_sent=False), \
              self.mock_mail_app():
@@ -329,13 +321,9 @@ class TestAccountComposerPerformance(AccountMoveSendBase):
         test_customer = self.test_customers[1].with_env(self.env)
         move_template = self.move_template.with_env(self.env)
 
-        default_ctx = test_move.action_send_and_print()['context']
-        default_ctx['default_mail_template_id'] = move_template.id
-        composer_form = Form(
-            self.env['account.move.send'].with_context(default_ctx)
-        )
-        composer_form.checkbox_ubl_cii_xml = False
-        composer = composer_form.save()
+        composer = self.env['account.move.send']\
+            .with_context(active_model='account.move', active_ids=test_move.ids)\
+            .create({'mail_template_id': move_template.id})
 
         with self.mock_mail_gateway(mail_unlink_sent=False), \
              self.mock_mail_app():
@@ -421,23 +409,26 @@ class TestAccountComposerPerformance(AccountMoveSendBase):
         allowing them to view the invoice without needing to log in.
         """
         test_move = self.test_account_moves[1].with_env(self.env)
+        move_template = self.move_template.with_env(self.env)
 
         additional_partner = self.env['res.partner'].create({
             'name': "Additional Partner",
             'email': "additional@example.com",
         })
 
-        default_ctx = test_move.action_send_and_print()['context']
-        composer_form = Form(
-            self.env['account.move.send'].with_context(default_ctx)
-        )
-        composer_form.mail_partner_ids.add(additional_partner)
-        composer_form.checkbox_ubl_cii_xml = False
-        composer = composer_form.save()
+        composer = self.env['account.move.send']\
+            .with_context(active_model='account.move', active_ids=test_move.ids)\
+            .create({'mail_template_id': move_template.id, 'mail_partner_ids': additional_partner.ids})
 
         with self.mock_mail_gateway(mail_unlink_sent=False):
             composer.action_send_and_print()
 
+        self.assertMailMail(
+            test_move.partner_id,
+            'sent',
+            author=self.user_account_other.partner_id,
+            content='access_token='
+        )
         self.assertMailMail(
             additional_partner,
             'sent',
