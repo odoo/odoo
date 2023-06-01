@@ -906,8 +906,9 @@ var ListController = BasicController.extend({
                 // that triggered the event, otherwise ev.target is the legacy field
                 // Widget that triggered the event
                 const target = ev.data.__originalComponent || ev.target;
+                const node = target.__node || ev.data.node;
                 this.multipleRecordsSavingPromise =
-                    this._saveMultipleRecords(ev.data.dataPointID, target.__node, ev.data.changes);
+                    this._saveMultipleRecords(ev.data.dataPointID, node, ev.data.changes);
             };
             // deal with edition of multiple lines
             ev.data.onSuccess = saveMulti; // will ask confirmation, and save
