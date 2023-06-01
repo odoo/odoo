@@ -636,4 +636,16 @@ QUnit.module("Components", (hooks) => {
         await click(target, ".o_field_selector");
         await click(target, ".o_field_selector_popover .o_field_selector_item[data-name=foo]");
     });
+
+    QUnit.test("do not crash with connector '!'", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.domain = `["!", ("foo", "=", "abc")]`;
+            }
+        }
+        Parent.components = { DomainSelector };
+        Parent.template = xml`<DomainSelector resModel="'partner'" value="domain" readonly="false"/>`;
+        await mountComponent(Parent);
+        assert.containsOnce(target, ".o_domain_node.o_domain_leaf");
+    });
 });
