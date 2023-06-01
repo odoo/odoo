@@ -172,8 +172,8 @@ $-o-theme-text-colors: null;
 }
 
 .bg-transparent{
-    --bg-opacity: 0;
-    @extend %-bg-black;
+    @include o-print-color($o-black, background-color, bg-opacity-value);
+    --bg-opacity-value: 0;
 }
 
 // 2. Generate legacy opacity-variations classes for both white and black. We
