@@ -952,7 +952,16 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             dataPointModel: record.model,
             dataPointID: record.id,
             isComingFromTranslationAlert: ev.data.isComingFromTranslationAlert,
+<<<<<<< HEAD:addons/web/static/src/legacy/js/views/basic/basic_controller.js
             context: record.getContext(),
+||||||| parent of 7d5ed10cab0 (temp):addons/web/static/src/js/views/basic/basic_controller.js
+            isText: result.context.translation_type === 'text',
+            showSrc: result.context.translation_show_src,
+=======
+            isText: result.context.translation_type === 'text',
+            showSrc: result.context.translation_show_src,
+            node: ev.target && ev.target.__node,
+>>>>>>> 7d5ed10cab0 (temp):addons/web/static/src/js/views/basic/basic_controller.js
         });
         return this.translationDialog.open();
     },

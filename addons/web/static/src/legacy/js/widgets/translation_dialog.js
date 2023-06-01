@@ -31,7 +31,16 @@ odoo.define('web.TranslationDialog', function (require) {
             this.dataPointID = options.dataPointID;
             this.isComingFromTranslationAlert = options.isComingFromTranslationAlert;
             this.currentInterfaceLanguage = session.user_context.lang;
+<<<<<<< HEAD:addons/web/static/src/legacy/js/widgets/translation_dialog.js
             this.context = options.context;
+||||||| parent of 7d5ed10cab0 (temp):addons/web/static/src/js/widgets/translation_dialog.js
+            this.isText = options.isText;
+            this.showSrc = options.showSrc;
+=======
+            this.isText = options.isText;
+            this.showSrc = options.showSrc;
+            this.node = options.node;
+>>>>>>> 7d5ed10cab0 (temp):addons/web/static/src/js/widgets/translation_dialog.js
 
             this._super(parent, _.extend({
                 size: 'large',
@@ -146,6 +155,7 @@ odoo.define('web.TranslationDialog', function (require) {
                             dataPointID: this.dataPointID,
                             changes: changes,
                             doNotSetDirty: false,
+                            node: this.node,
                         };
                     }
                 }
