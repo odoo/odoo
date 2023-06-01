@@ -120,6 +120,8 @@ class StockPicking(models.Model):
     def _action_done(self):
         res = super()._action_done()
         for rec in self:
+            if rec.picking_type_id.code != 'outgoing':
+                continue
             if rec.pos_order_id.shipping_date and not rec.pos_order_id.to_invoice:
                 cost_per_account = defaultdict(lambda: 0.0)
                 for line in rec.pos_order_id.lines:
