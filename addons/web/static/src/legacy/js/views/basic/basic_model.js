@@ -1589,7 +1589,16 @@ var BasicModel = AbstractModel.extend({
         options = options || {};
         record._changes = record._changes || {};
         if (!options.doNotSetDirty) {
-            record._isDirty = true;
+            // Check if the changes can dirty.
+            for (const fieldName of Object.keys(changes)) {
+                const fieldInfo = Object.values(record.fieldsInfo).find(el => el[fieldName]);
+                const fieldNameInfo = fieldInfo && fieldInfo[fieldName];
+                const fieldNameInfoOptions = fieldNameInfo && fieldNameInfo.options;
+                const changeCanDirty = !(fieldNameInfoOptions && fieldNameInfoOptions.no_dirty);
+                if (changeCanDirty) {
+                    record._isDirty = true;
+                }
+            }
         }
         var initialData = {};
         this._visitChildren(record, function (elem) {
