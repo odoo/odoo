@@ -7,7 +7,7 @@ import { registry } from "@web/core/registry";
 
 export const CHAT_WINDOW_END_GAP_WIDTH = 10; // for a single end, multiply by 2 for left and right together.
 export const CHAT_WINDOW_INBETWEEN_WIDTH = 5;
-export const CHAT_WINDOW_WIDTH = 340;
+export const CHAT_WINDOW_WIDTH = 360; // same value as $o-mail-ChatWindow-width
 export const CHAT_WINDOW_HIDDEN_WIDTH = 55;
 
 export class ChatWindowService {
