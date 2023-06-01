@@ -1,5 +1,11 @@
 /** @odoo-module **/
-import { click, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import {
+    click,
+    dragAndDrop,
+    getFixture,
+    makeDeferred,
+    patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { NameAndSignature } from "@web/core/signature/name_and_signature";
 
@@ -47,6 +53,55 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.module("Signature Field");
+
+    QUnit.test("signature can be drawned", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: `<form>
+                        <field name="sign" widget="signature" />
+                    </form>`,
+            mockRPC: async (route) => {
+                if (route === "/web/sign/get_fonts/") {
+                    return {};
+                }
+            },
+        });
+
+        assert.containsNone(target, "div[name=sign] img.o_signature");
+        assert.containsOnce(
+            target,
+            "div[name=sign] div.o_signature svg",
+            "should have a valid signature widget"
+        );
+
+        // Click on the widget to open signature modal
+        await click(target, "div[name=sign] div.o_signature");
+        assert.containsOnce(target, ".modal .modal-body .o_web_sign_name_and_signature");
+        assert.containsNone(target, ".modal .btn.btn-primary:not([disabled])");
+
+        // Use a drag&drop simulation to draw a signature
+        const def = makeDeferred();
+        const $jSignatureEl = $(target.querySelector(".modal .o_web_sign_signature"));
+        $jSignatureEl.on("change", def.resolve);
+        await dragAndDrop("canvas.jSignature", "canvas.jSignature");
+        await def; // makes sure the signature stroke is taken into account by jSignature
+        assert.containsOnce(target, ".modal .btn.btn-primary:not([disabled])");
+
+        // Click on "Adopt and Sign" button
+        await click(target, ".modal .btn.btn-primary:not([disabled])");
+        assert.containsNone(target, ".modal");
+
+        // The signature widget should now display the signature img
+        assert.containsNone(target, "div[name=sign] div.o_signature svg");
+        assert.containsOnce(target, "div[name=sign] img.o_signature");
+
+        const signImgSrc = target.querySelector("div[name=sign] img.o_signature").dataset.src;
+        assert.notOk(signImgSrc.includes("placeholder"));
+        assert.ok(signImgSrc.startsWith("data:image/png;base64,"));
+    });
 
     QUnit.test("Set simple field in 'full_name' node option", async function (assert) {
         patchWithCleanup(NameAndSignature.prototype, {
