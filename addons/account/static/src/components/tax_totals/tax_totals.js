@@ -143,7 +143,7 @@ export class TaxTotalsComponent extends Component {
     }
 
     formatData(props) {
-        let totals = props.value;
+        let totals = structuredClone(props.value);
         const currencyFmtOpts = { currencyId: props.record.data.currency_id && props.record.data.currency_id[0] };
 
         let amount_untaxed = totals.amount_untaxed;
