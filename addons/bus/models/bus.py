@@ -48,7 +48,7 @@ class ImBus(models.Model):
     channel = fields.Char('Channel')
     message = fields.Char('Message')
 
-    @api.autovacuum
+    @api.model
     def _gc_messages(self):
         timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT*2)
         domain = [('create_date', '<', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
