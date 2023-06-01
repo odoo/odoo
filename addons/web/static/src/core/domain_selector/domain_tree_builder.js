@@ -24,32 +24,39 @@ export class DomainTreeBuilder {
     }
 
     /** @private */
-    buildNode(parent, rawNode, nextNode, fieldDefs) {
-        if (this.isBranch(rawNode)) {
-            this.buildBranch(parent, rawNode, nextNode, fieldDefs);
+    buildNode(parent, rawNode, nextNode, fieldDefs, negate = false) {
+        if (rawNode.value === "!") {
+            this.buildNode(parent, nextNode(), nextNode, fieldDefs, !negate);
+        } else if (this.isBranch(rawNode)) {
+            this.buildBranch(parent, rawNode, nextNode, fieldDefs, negate);
         } else {
-            this.buildLeaf(parent, rawNode, fieldDefs);
+            this.buildLeaf(parent, rawNode, fieldDefs, negate);
         }
     }
 
     /** @private */
-    buildLeaf(parent, rawNode, fieldDefs) {
+    buildLeaf(parent, rawNode, fieldDefs, negate) {
         const field = this.getLeafFieldName(rawNode);
         const operatorInfo = this.getLeafOperatorInfo(rawNode, fieldDefs[field].type);
         const value = this.isLeafValueArray(rawNode)
             ? this.getLeafValue(rawNode).map((v) => v.value)
             : this.getLeafValue(rawNode);
         parent.add(
-            new LeafDomainNode({ ...fieldDefs[field], name: field.toString() }, operatorInfo, value)
+            new LeafDomainNode(
+                { ...fieldDefs[field], name: field.toString() },
+                operatorInfo,
+                value,
+                negate
+            )
         );
     }
 
     /** @private */
-    buildBranch(parent, rawNode, nextNode, fieldDefs) {
+    buildBranch(parent, rawNode, nextNode, fieldDefs, negate) {
         let newParent = parent;
         const currentOperator = this.getBranchOperator(rawNode);
         if (currentOperator !== parent.operator) {
-            newParent = new BranchDomainNode(currentOperator);
+            newParent = new BranchDomainNode(currentOperator, [], negate);
             parent.add(newParent);
         }
         this.buildNode(newParent, nextNode(), nextNode, fieldDefs);
@@ -58,7 +65,7 @@ export class DomainTreeBuilder {
 
     /** @private */
     isBranch(rawNode) {
-        return rawNode.type === 1 && ["&", "|", "!"].includes(rawNode.value);
+        return rawNode.type === 1 && ["&", "|"].includes(rawNode.value);
     }
 
     /** @private */
@@ -68,8 +75,6 @@ export class DomainTreeBuilder {
                 return "AND";
             case "|":
                 return "OR";
-            case "!":
-                return "NOT";
         }
     }
 

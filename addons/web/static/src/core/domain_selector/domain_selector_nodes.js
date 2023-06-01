@@ -5,9 +5,10 @@ import { Domain } from "@web/core/domain";
 class DomainNode {
     static nextId = 0;
 
-    constructor(type) {
+    constructor(type, negate) {
         this.id = ++DomainNode.nextId;
         this.type = type;
+        this.negate = negate;
     }
 
     toDomain() {
@@ -18,8 +19,8 @@ class DomainNode {
 // ----------------------------------------------------------------------------
 
 export class BranchDomainNode extends DomainNode {
-    constructor(operator, children = []) {
-        super("branch");
+    constructor(operator, children = [], negate = false) {
+        super("branch", negate);
         this.operator = operator;
         this.children = children;
     }
@@ -49,8 +50,8 @@ export class BranchDomainNode extends DomainNode {
 // ----------------------------------------------------------------------------
 
 export class LeafDomainNode extends DomainNode {
-    constructor(field, operator, value) {
-        super("leaf");
+    constructor(field, operator, value, negate = false) {
+        super("leaf", negate);
         this.field = field;
         this.operator = operator;
         this.value = value;
@@ -61,6 +62,6 @@ export class LeafDomainNode extends DomainNode {
     }
 
     clone() {
-        return new LeafDomainNode(this.field, this.operator, this.value);
+        return new LeafDomainNode(this.field, this.operator, this.value, this.negate);
     }
 }
