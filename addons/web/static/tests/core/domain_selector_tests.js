@@ -1272,4 +1272,20 @@ QUnit.module("Components", (hooks) => {
         assert.containsNone(target, ".o_domain_add_first_node_button");
         assert.containsOnce(target, "a[role=button]");
     });
+
+    QUnit.test("updating path should also update operator if invalid", async (assert) => {
+        await mountComponent(DomainSelector, {
+            props: {
+                resModel: "partner",
+                domain: `[("id", "<", 0)]`,
+                readonly: false,
+                update: (domain) => {
+                    assert.strictEqual(domain, `[("foo", "=", "")]`);
+                },
+            },
+        });
+
+        await click(target, ".o_model_field_selector");
+        await click(target, ".o_model_field_selector_popover_item[data-name=foo] button");
+    });
 });
