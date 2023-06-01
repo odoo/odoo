@@ -223,7 +223,7 @@ export async function editConditionValue(el, index, value, valueIndex = 0, trigg
     const condition = findItem(el, `.o_filter_condition`, index);
     const target = findItem(
         condition,
-        ".o_generator_menu_value input,.o_generator_menu_value select",
+        ".o_generator_menu_value input:not([type=hidden]),.o_generator_menu_value select",
         valueIndex
     );
     target.value = value;

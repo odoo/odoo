@@ -1190,12 +1190,12 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // edit date property
-        await click(target, ".o_property_field[property-name=property_1] input");
+        await click(target, ".o_property_field[property-name=property_1] .o_datepicker_input");
         await click(document.body, ".datepicker [data-day='12/31/2018']");
         assert.equal(target.querySelector("[property-name=property_1] input").value, "12/31/2018");
 
         // edit date time property
-        await click(target, ".o_property_field[property-name=property_2] input");
+        await click(target, ".o_property_field[property-name=property_2] .o_datepicker_input");
         await click(document.body, ".datepicker [data-day='12/31/2018']");
         await click(document.body, ".picker-switch [data-action=togglePicker]");
         await click(document.body, ".timepicker [data-action=incrementHours]");
