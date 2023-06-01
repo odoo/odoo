@@ -12,18 +12,23 @@ export class PropertyDefinitionSelection extends Component {
         // when we create a new option, it's added in the state
         // when we have finished to edit it (blur / enter) we propagate
         // the new value in the props
-        this.state = useState({ newOption: null });
+        this.state = useState({
+            newOption: null,
+        });
 
         this.propertyDefinitionSelectionRef = useRef("propertyDefinitionSelection");
         this.addButtonRef = useRef("addButton");
 
         useEffect(() => {
             // automatically give the focus to the new option if it is empty
+            if (!this.state.newOption) {
+                return;
+            }
             const inputs = this.propertyDefinitionSelectionRef.el.querySelectorAll(
                 ".o_field_property_selection_option input"
             );
-            if (inputs && inputs.length && !inputs[inputs.length - 1].value) {
-                inputs[inputs.length - 1].focus();
+            if (inputs && inputs.length && !inputs[this.state.newOption.index].value) {
+                inputs[this.state.newOption.index].focus();
             }
         });
     }
@@ -51,7 +56,11 @@ export class PropertyDefinitionSelection extends Component {
      */
     get optionsVisible() {
         const options = this.options || [];
-        return this.state.newOption ? [...options, this.state.newOption] : options;
+        const newOption = this.state.newOption;
+        if (newOption) {
+            options.splice(newOption.index, 0, [newOption.name, ""]);
+        }
+        return options;
     }
 
     /* --------------------------------------------------------
@@ -61,8 +70,11 @@ export class PropertyDefinitionSelection extends Component {
     /**
      * Add a new empty selection option.
      */
-    onOptionCreate() {
-        this.state.newOption = [uuid(), ""];
+    onOptionCreate(index) {
+        this.state.newOption = {
+            index: index,
+            name: uuid(),
+        };
     }
 
     /**
@@ -93,7 +105,7 @@ export class PropertyDefinitionSelection extends Component {
         const nonEmptyOptions = options.filter((option) => option[1] && option[1].length);
         this.props.onOptionsChange(nonEmptyOptions);
 
-        if (this.state.newOption && this.state.newOption[1] && this.state.newOption[1].length) {
+        if (this.state.newOption) {
             // the new option has been propagated in the props
             this.state.newOption = null;
         }
@@ -117,7 +129,7 @@ export class PropertyDefinitionSelection extends Component {
             // if the value is empty, just ignore and cancel the event
             event.stopPropagation();
             event.preventDefault();
-        } else if (optionIndex >= this.options.length) {
+        } else if (optionIndex === this.state.newOption?.index) {
             // we remove the focus from the new empty option, remove it
             this.state.newOption = null;
         }
@@ -144,7 +156,7 @@ export class PropertyDefinitionSelection extends Component {
             }
 
             this.onOptionChange(event, optionIndex);
-            this.onOptionCreate();
+            this.onOptionCreate(optionIndex + 1);
         } else if (["ArrowUp", "ArrowDown"].includes(event.key)) {
             event.stopPropagation();
             event.preventDefault();
