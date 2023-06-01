@@ -17,6 +17,10 @@ export class BoardController extends Component {
         this.board = useState(this.props.board);
         this.rpc = useService("rpc");
         this.dialogService = useService("dialog");
+        if (this.env.isSmall) {
+            this.board.layout = "1";
+            this.board.colNumber = 1;
+        }
         const mainRef = useRef("main");
         useSortable({
             ref: mainRef,
@@ -107,7 +111,7 @@ export class BoardController extends Component {
         const root = document.createElement("rendertostring");
         blockDom.mount(bdom, root);
         const result = xmlSerializer.serializeToString(root);
-        const arch = result.slice(result.indexOf('<', 1), result.indexOf('</rendertostring>'));
+        const arch = result.slice(result.indexOf("<", 1), result.indexOf("</rendertostring>"));
 
         this.rpc("/web/view/edit_custom", {
             custom_id: this.board.customViewId,
