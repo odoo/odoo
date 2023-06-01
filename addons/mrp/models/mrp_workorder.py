@@ -127,7 +127,7 @@ class MrpWorkorder(models.Model):
     finished_lot_id = fields.Many2one(
         'stock.production.lot', string='Lot/Serial Number', compute='_compute_finished_lot_id',
         inverse='_set_finished_lot_id', domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]",
-        check_company=True)
+        check_company=True, search='_search_finished_lot_id')
     time_ids = fields.One2many(
         'mrp.workcenter.productivity', 'workorder_id', copy=False)
     is_user_working = fields.Boolean(
@@ -223,6 +223,9 @@ class MrpWorkorder(models.Model):
     def _compute_finished_lot_id(self):
         for workorder in self:
             workorder.finished_lot_id = workorder.production_id.lot_producing_id
+
+    def _search_finished_lot_id(self, operator, value):
+        return [('production_id.lot_producing_id', operator, value)]
 
     def _set_finished_lot_id(self):
         for workorder in self:
