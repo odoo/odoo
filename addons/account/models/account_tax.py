@@ -653,6 +653,16 @@ class AccountTax(models.Model):
                         total_included_checkpoints[i] = base
                         store_included_tax_total = False
                 i -= 1
+            # In case we're computing the total_excluded from a value that includes the taxes, we should check if an
+            # early pay discount (must be mixed) was applied on that value. If so, we apply the discount to the tax.
+            # In one example: let's say: base = 100, discount = 2%, tax = 21%
+            # the total will be calculated as: total = base + (base * (1 - discount)) * tax
+            # If we manipulate the equation to get the base from the total, we'll have base = total / ((1 - discount) * tax + 1)
+            # In the recompute_base function, it's missing the (1-discount) multiplication with the tax so we apply it here.
+            # This only handles the case of a single percentage tax.
+            if self._context.get('early_pay_discount_mixed', False):
+                discount_percentage = self._context.get('discount_percentage')
+                incl_percent_amount *= (1.0 - discount_percentage / 100.0)
 
         total_excluded = currency.round(recompute_base(base, incl_fixed_amount, incl_percent_amount, incl_division_amount))
 

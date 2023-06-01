@@ -2647,7 +2647,12 @@ class AccountMove(models.Model):
                     self.journal_id.company_id.account_purchase_tax_id
                 )
             taxes = self.fiscal_position_id.map_tax(taxes)
-        price_untaxed = taxes.with_context(force_price_include=True).compute_all(
+
+        # When a payment term has an early discount set to "Always (upon invoice)", recomputing the untaxed amount
+        # should take in consideration the discount percentage otherwise we'd get a wrong value.
+        discount_percentage = self.invoice_payment_term_id.discount_percentage or 0
+        epd_computation_mixed = self.invoice_payment_term_id.early_pay_discount_computation == 'mixed'
+        price_untaxed = taxes.with_context(force_price_include=True, early_pay_discount_mixed=epd_computation_mixed, discount_percentage=discount_percentage).compute_all(
             self.quick_edit_total_amount - self.tax_totals['amount_total'])['total_excluded']
         return {'account_id': account_id, 'tax_ids': taxes.ids, 'price_unit': price_untaxed}
 
