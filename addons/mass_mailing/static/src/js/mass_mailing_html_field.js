@@ -19,6 +19,7 @@ const {
     onWillStart,
     useSubEnv,
     onWillUpdateProps,
+    status,
 } = owl;
 
 export class MassMailingHtmlField extends HtmlField {
@@ -147,6 +148,10 @@ export class MassMailingHtmlField extends HtmlField {
 
         const assets = await getBundle("mass_mailing.assets_wysiwyg");
         await loadBundle(assets);
+
+        if (status(this) === "destroyed") {
+            return;
+        }
 
         await this._resetIframe();
     }
