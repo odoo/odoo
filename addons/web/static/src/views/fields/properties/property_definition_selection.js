@@ -4,6 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { uuid } from "../../utils";
 
 import { Component, useState, useRef, useEffect } from "@odoo/owl";
+import { useSortable } from "@web/core/utils/sortable";
 
 export class PropertyDefinitionSelection extends Component {
     setup() {
@@ -30,6 +31,19 @@ export class PropertyDefinitionSelection extends Component {
             if (inputs && inputs.length && !inputs[this.state.newOption.index].value) {
                 inputs[this.state.newOption.index].focus();
             }
+        });
+
+        useSortable({
+            enable: () => this.props.canChangeDefinition && !this.props.readonly,
+            ref: this.propertyDefinitionSelectionRef,
+            handle: ".o_field_property_selection_drag",
+            elements: ".o_field_property_selection_option",
+            cursor: "grabbing",
+            onDrop: async ({ element, previous }) => {
+                const movedOption = element.getAttribute("option-name");
+                const destinationOption = previous && previous.getAttribute("option-name");
+                await this.onOptionMoveTo(movedOption, destinationOption);
+            },
         });
     }
 
@@ -115,12 +129,19 @@ export class PropertyDefinitionSelection extends Component {
      * Loose focus on an option, should cancel the newly
      * created option if we didn't write on it.
      *
+     * The attribute `_ignoreBlur` can be set if we don't want to remove
+     * the option if it's empty (and it will re-gain the focus at the
+     * next `useEffect` call).
+     *
      * @param {event} event
      * @param {integer} optionIndex
      */
     onOptionBlur(event, optionIndex) {
         if (event.target.value && event.target.value.length) {
             // losing the focus on an non-empty option should have no effect
+            return;
+        } else if (this._ignoreBlur) {
+            this._ignoreBlur = false;
             return;
         }
 
@@ -196,6 +217,64 @@ export class PropertyDefinitionSelection extends Component {
     onOptionDelete(optionIndex) {
         const options = this.optionsVisible;
         options.splice(optionIndex, 1);
+        this.props.onOptionsChange(options);
+    }
+
+    /**
+     * Move an option after an other one.
+     *
+     * @param {string} from, the option to move
+     * @param {string} to, the target option
+     *      (null if we move the option at the first index)
+     */
+    onOptionMoveTo(movedOption, destinationOption) {
+        this._ignoreBlur = true;
+
+        let options = this.optionsVisible;
+        // if destinationOption is null, destinationOptionIndex will be -1 which is intended
+        let destinationOptionIndex = options.findIndex((option) => option[0] == destinationOption);
+        const movedOptionIndex = options.findIndex((option) => option[0] == movedOption);
+        if (destinationOptionIndex < movedOptionIndex) {
+            // the first splice operation won't change the index (and we except it to decrease it)
+            // for example if we have [A, B, C], and we move C such that it becomes [A, C, B]
+            // destinationOption is A and the destination index is 0, but we need the index to be 1
+            // (if the destination is after the moved option, the first splice will fix it for us)
+            destinationOptionIndex++;
+        }
+
+        const activeEl = document.activeElement;
+        if (
+            activeEl &&
+            this.propertyDefinitionSelectionRef.el.contains(activeEl) &&
+            activeEl.tagName === "INPUT"
+        ) {
+            const optionName = activeEl
+                .closest(".o_field_property_selection_option")
+                .getAttribute("option-name");
+            const editedOptionIndex = options.findIndex((option) => option[0] === optionName);
+            // we might be editing the value and drag and drop something else just after
+            options[editedOptionIndex][1] = activeEl.value;
+        }
+
+        options.splice(destinationOptionIndex, 0, options.splice(movedOptionIndex, 1)[0]);
+
+        if (this.state.newOption) {
+            const newOptionIndex = options.findIndex(
+                (option) => option[0] === this.state.newOption.name
+            );
+            if (!options[newOptionIndex][1]?.length) {
+                // if there's an empty option, fix it's index in the state
+                // and do not propagate it in the props
+                this.state.newOption = {
+                    ...this.state.newOption,
+                    index: newOptionIndex,
+                };
+                options = options.filter((option) => option[0] !== this.state.newOption.name);
+            } else {
+                this.state.newOption = null;
+            }
+        }
+
         this.props.onOptionsChange(options);
     }
 }
