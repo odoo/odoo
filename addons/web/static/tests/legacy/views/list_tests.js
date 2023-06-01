@@ -3628,6 +3628,54 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('fields are translatable in multi-editable list view', async function (assert) {
+        assert.expect(1);
+        var multiLang = _t.database.multi_lang;
+        _t.database.multi_lang = true;
+        this.data.foo.fields.foo.translate = true;
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            session: {
+                user_context: {lang: 'en_US'},
+            },
+            mockRPC: function (route, args) {
+                if (route === "/web/dataset/call_button" && args.method === 'translate_fields') {
+                    return Promise.resolve({
+                        domain: [],
+                        context: {search_default_name: 'foo,foo'},
+                    });
+                }
+                if (route === "/web/dataset/call_kw/res.lang/get_installed") {
+                    return Promise.resolve([["en_US","English"], ["fr_BE", "Frenglish"]]);
+                }
+                return this._super.apply(this, arguments);
+            },
+            arch: '<tree multi_edit="1">' +
+                        '<field name="foo" required="1"/>' +
+                    '</tree>',
+        });
+
+        await testUtils.dom.click(list.$('.o_data_row:first .o_list_record_selector input').first());
+        await testUtils.nextTick();
+        await testUtils.dom.click(list.$('.o_data_row:first .o_list_char'));
+        await testUtils.nextTick();
+        await testUtils.dom.click(list.$('input.o_field_translate+span.o_field_translate'));
+        await testUtils.nextTick();
+
+        await testUtils.fields.editInput($('.o_translation_dialog input:first'), 'bla_');
+        await testUtils.nextTick();
+
+        await testUtils.modal.clickButton('Save');
+        assert.strictEqual($('.o_data_row:first .o_list_char').text(), 'bla_');
+
+        _t.database.multi_lang = multiLang;
+        list.destroy();
+    });
+
+
     QUnit.test('long words in text cells should break into smaller lines', async function (assert) {
         assert.expect(2);
 
