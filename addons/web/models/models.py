@@ -957,9 +957,14 @@ class Base(models.AbstractModel):
                 cache = self.env.cache
                 for field_name in sub_fields_spec:
                     field = lines._fields[field_name]
-                    cache.update_raw(
-                        new_lines, field, map(copy.copy, cache.get_values(lines, field)),
-                    )
+                    if field.type in ('one2many', 'many2many'):
+                        line_values = [
+                            tuple(NewId(id_) for id_ in ids)
+                            for ids in cache.get_values(lines, field)
+                        ]
+                    else:
+                        line_values = map(copy.copy, cache.get_values(lines, field))
+                    cache.update_raw(new_lines, field, line_values)
 
         # Isolate changed values, to handle inconsistent data sent from the
         # client side: when a form view contains two one2many fields that

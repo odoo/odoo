@@ -861,6 +861,44 @@ class TestOnchange2(SavepointCaseWithUserDemo):
             ],
         })
 
+    def test_one2many_field_with_many2many_subfield(self):
+        """ test relational fields with a context on their one2many container field """
+        tag1 = self.env['test_new_api.multi.tag'].create({'name': 'a1'})
+        tag2 = self.env['test_new_api.multi.tag'].create({'name': 'a2'})
+        multi = self.env['test_new_api.multi'].create({})
+        line = multi.lines.create({
+            'multi': multi.id,
+            'tags': [Command.set(tag1.ids)],
+        })
+
+        # having 'lines' below force the prefetching of the subfields 'name'
+        # and 'tags'; this test ensures that the ids of 'tags' are "newified"
+        # in the new record
+        values = {
+            'lines': [(Command.CREATE, 'virtual1', {'name': 'X', 'tags': []})],
+            'tags': [Command.link(tag2.id)],
+        }
+        fields_spec = {
+            'name': {},
+            'lines': {'fields': {
+                'name': {},
+                'tags': {},
+            }},
+            'tags': {},
+        }
+        self.env.invalidate_all()
+        result = multi.onchange2(values, ['tags'], fields_spec)
+        self.assertEqual(result['value'], {
+            'lines': [
+                Command.update(line.id, {
+                    'tags': [(Command.LINK, tag2.id, {})],
+                }),
+                Command.update('virtual1', {
+                    'tags': [(Command.LINK, tag2.id, {})],
+                }),
+            ],
+        })
+
 
 class TestComputeOnchange2(common.TransactionCase):
 
