@@ -524,6 +524,20 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
             with self.subTest(params=params):
                 assertAppliedRate(*params)
 
+    def test_for_presence_single_suspense_line(self):
+        statement_line = self.env['account.bank.statement.line'].create({
+            'journal_id': self.bank_journal_3.id,
+            'date': '2019-01-01',
+            'payment_ref': 'line_1',
+            'amount': 0.0,
+        })
+
+        with self.assertRaises(UserError):
+            statement_line.line_ids = [Command.create({
+                'account_id': statement_line.journal_id.suspense_account_id.id,
+                'balance': 0.0,
+            })]
+
     def test_zero_amount_statement_line(self):
         ''' Ensure the statement line is directly marked as reconciled when having an amount of zero. '''
         self.company_data['company'].account_journal_suspense_account_id.reconcile = False
