@@ -13120,4 +13120,74 @@ QUnit.module("Fields", (hooks) => {
         const record = model.root.data.line_ids.records[0];
         assert.strictEqual(typeof record.data.date, "object");
     });
+
+    QUnit.test("add a row to an x2many and ask canBeRemoved twice", async function (assert) {
+        // This test simulates that the view is asked twice to save its changes because the user
+        // is leaving. Before the corresponding fix, the changes in the x2many field weren't
+        // removed after the save, and as a consequence they were saved twice (i.e. the row was
+        // created twice).
+
+        const def = makeDeferred();
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "test",
+                res_model: "partner",
+                res_id: 1,
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+            },
+            2: {
+                id: 2,
+                name: "another action",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "list"]],
+            }
+        };
+        serverData.views = {
+            "partner,false,list": `<tree><field name="int_field"/></tree>`,
+            "partner,false,search": `<search/>`,
+            "partner,false,form": `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom">
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+        };
+
+        const mockRPC = async (route, args) => {
+            if (args.method === "write") {
+                assert.step("write");
+                assert.deepEqual(args.args[1], {
+                    p: [[0, args.args[1].p[0][1], { display_name: "a name" }]],
+                });
+            }
+            if (args.method === "web_search_read") {
+                return def;
+            }
+        };
+
+        const webClient = await createWebClient({ serverData, mockRPC });
+        await doAction(webClient, 1);
+        assert.containsOnce(target, ".o_form_view");
+
+        // add a row in the x2many
+        await click(target, ".o_field_x2many_list_row_add a");
+        await editInput(target, ".o_field_widget[name=display_name] input", "a name");
+        assert.containsOnce(target, ".o_data_row");
+
+        doAction(webClient, 2);
+        await nextTick();
+        doAction(webClient, 2);
+        await nextTick();
+        assert.verifySteps(["write"]);
+
+        def.resolve();
+        await nextTick();
+        assert.containsOnce(target, ".o_list_view");
+        assert.verifySteps([]);
+    });
 });
