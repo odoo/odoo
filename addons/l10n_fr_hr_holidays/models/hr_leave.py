@@ -12,7 +12,13 @@ class HrLeave(models.Model):
     l10n_fr_date_to_changed = fields.Boolean()
 
     def _get_fr_date_to(self, vals):
-        assert 'employee_id' in vals or len(self) == 1
+        # The french date_to is meant to be computed only in very specific cases:
+        # - there is only one employee affected by the leave
+        # - the employee company is french
+        # - the leave_type is the reference leave_type of that company
+        # If any of those condition is not filled, the initial date_to is returned
+        if 'employee_id' not in vals and not len(self) == 1:
+            return vals['date_to']
         employee = self.env['hr.employee'].browse(vals['employee_id']).sudo() if 'employee_id' in vals else self.employee_id
         employee_calendar = employee.resource_calendar_id
         company_calendar = employee.company_id.resource_calendar_id
@@ -26,14 +32,14 @@ class HrLeave(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            vals['date_to'] = self._get_fr_date_to(vals)  # returns the initial date_to if no change needed
+            vals['date_to'] = self._get_fr_date_to(vals)
         return super().create(vals_list)
 
     def write(self, vals):
         if 'date_to' not in vals:
             return super().write(vals)
         if 'employee_id' in vals:
-            vals['date_to'] = self._get_fr_date_to(vals)  # returns the initial date_to if no change needed
+            vals['date_to'] = self._get_fr_date_to(vals)
             return super().write(vals)
         else:
             # Different employees could share different calendars
