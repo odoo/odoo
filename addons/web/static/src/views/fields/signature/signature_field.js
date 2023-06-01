@@ -42,9 +42,9 @@ export class SignatureField extends Component {
     }
 
     get getUrl() {
-        const { name, previewImage, record, value } = this.props;
-        if (this.state.isValid && value) {
-            if (isBinarySize(value)) {
+        const { name, previewImage, record } = this.props;
+        if (this.state.isValid && this.value) {
+            if (isBinarySize(this.value)) {
                 return url("/web/image", {
                     model: record.resModel,
                     id: record.resId,
@@ -62,9 +62,9 @@ export class SignatureField extends Component {
     }
 
     get sizeStyle() {
-        let { width, height, value } = this.props;
+        let { width, height } = this.props;
 
-        if (!value) {
+        if (!this.value) {
             if (width && height) {
                 width = Math.min(width, this.displaySignatureRatio * height);
                 height = width / this.displaySignatureRatio;
@@ -83,6 +83,10 @@ export class SignatureField extends Component {
             style += `height:${height}px; max-height:${height}px;`;
         }
         return style;
+    }
+
+    get value() {
+        return this.props.record.data[this.props.name];
     }
 
     onClickSignature() {
