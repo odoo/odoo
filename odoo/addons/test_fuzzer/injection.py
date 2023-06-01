@@ -1,5 +1,6 @@
 import dataclasses
 from dataclasses import dataclass
+from math import inf, nan
 from typing import Any, Callable
 
 
@@ -18,6 +19,10 @@ def construct_field_reference_injections(payload: Any, expect_error=True,
                                          with_closing_parenthesis=False) -> list[Injection]:
     return [construct_field_reference_injection(payload, expect_error, with_closing_parenthesis)
             for payload in create_quoted_payloads(payload)]
+
+
+def construct_injections(payloads: list[Any], expect_error=True) -> list[Injection]:
+    return [Injection(payload, expect_error) for payload in payloads]
 
 
 def wrap_payload(injections: list[Injection], f: Callable[[Any], Any]) -> list[Injection]:
@@ -41,6 +46,17 @@ def create_quoted_payloads(payload: str) -> list[str]:
         f"""{payload}\"""",
         f"""{payload}'""",
         f"""{payload}\\""",
+    ]
+
+
+def create_id_payloads() -> list[int]:
+    return [
+        -1,
+        0,
+        99999999999999,
+        inf,
+        -inf,
+        nan,
     ]
 
 
