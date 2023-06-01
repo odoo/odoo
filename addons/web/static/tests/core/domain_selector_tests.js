@@ -659,4 +659,20 @@ QUnit.module("Components", (hooks) => {
         await mountComponent(Parent);
         assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "undefined");
     });
+
+    QUnit.test("updating path should also update operator if invalid", async (assert) => {
+        await mountComponent(DomainSelector, {
+            props: {
+                resModel: "partner",
+                value: `[("id", "<", 0)]`,
+                readonly: false,
+                update: (domain) => {
+                    assert.strictEqual(domain, `[("foo", "=", "")]`);
+                },
+            },
+        });
+
+        await click(target, ".o_field_selector");
+        await click(target, ".o_field_selector_popover .o_field_selector_item[data-name=foo]");
+    });
 });
