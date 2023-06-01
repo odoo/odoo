@@ -53,7 +53,7 @@ def create_id_payloads() -> list[int]:
     return [
         -1,
         0,
-        99999999999999,
+        2**64,
         inf,
         -inf,
         nan,

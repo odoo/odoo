@@ -3,7 +3,7 @@ from typing import TypeVar
 
 import psycopg2
 
-from odoo import registry
+from odoo import registry, tools
 from odoo.addons.test_fuzzer.injection import *
 from odoo.exceptions import UserError
 from odoo.tests import common
@@ -88,7 +88,8 @@ class TestFuzzer(common.TransactionCase):
                 self.savepoint = self.cr.savepoint()
 
                 try:
-                    function(self.fuzzer_record, **fuzzed_args)
+                    with tools.mute_logger('odoo.sql_db'):
+                        function(self.fuzzer_record, **fuzzed_args)
                     self.cr.commit()
                 except (UserError, ValueError, KeyError):
                     throws_exception = True
@@ -102,8 +103,8 @@ class TestFuzzer(common.TransactionCase):
                     caught_during_validation = False
                     execute_method_called_correctly = was_execute_method_called_correctly()
 
-                    print()
-                    print(f"\t\t {e.__class__} {e}... ", end="")
+                    # print()
+                    # print(f"\t\t {e.__class__} {e}... ", end="")
 
                 if self.did_injection_succeed():
                     print("FAIL")
