@@ -79,8 +79,12 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(parseInteger("-100"), -100);
         assert.strictEqual(parseInteger("1,000"), 1000);
         assert.strictEqual(parseInteger("1,000,000"), 1000000);
+        assert.strictEqual(parseInteger("-2,147,483,648"), -2147483648);
+        assert.strictEqual(parseInteger("2,147,483,647"), 2147483647);
         expectInvalidNumberError(assert, parseInteger, "1.000.000");
         expectInvalidNumberError(assert, parseInteger, "1,234.567");
+        expectInvalidNumberError(assert, parseInteger, "-2,147,483,649");
+        expectInvalidNumberError(assert, parseInteger, "2,147,483,648");
 
         patchWithCleanup(localization, { decimalPoint: ",", thousandsSep: "." });
 
