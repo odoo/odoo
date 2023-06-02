@@ -379,6 +379,13 @@ class Project(models.Model):
             else:
                 project.access_instruction_message = ''
 
+    @api.onchange('date_start', 'date')
+    def _onchange_planned_date(self):
+        if not self.date and self.date_start:
+            self.date_start = False
+        elif not self.date_start and self.date:
+            self.date = False
+
     @api.model
     def _map_tasks_default_valeus(self, task, project):
         """ get the default value for the copied task on project duplication """
@@ -465,6 +472,21 @@ class Project(models.Model):
             vals.pop('last_update_status')
         if vals.get('privacy_visibility'):
             self._change_privacy_visibility(vals['privacy_visibility'])
+
+        date_start = vals.get('date_start', True)
+        date_end = vals.get('date', True)
+        if not date_start or not date_end:
+            vals['date_start'] = False
+            vals['date'] = False
+        else:
+            no_current_date_begin = not all(project.date_start for project in self)
+            no_current_date_end = not all(project.date for project in self)
+            date_start_update = 'date_start' in vals
+            date_end_update = 'date' in vals
+            if (date_start_update and no_current_date_end and not date_end_update):
+                del vals['date_start']
+            elif (date_end_update and no_current_date_begin and not date_start_update):
+                del vals['date']
 
         res = super(Project, self).write(vals) if vals else True
 
