@@ -12,6 +12,7 @@
                     <img class="o-mail-MessageInReply-avatar me-2 rounded" t-att-src="authorAvatarUrl" t-att-title="message.parentMessage.author?.name ?? message.parentMessage.email_from" alt="Avatar"/>
                     <span class="o-mail-MessageInReply-content overflow-hidden">
                         <b>@<t t-out="message.parentMessage.author?.name ?? message.parentMessage.email_from"/></b>:
+                        <br t-if="env.inChatWindow and !props.alignedRight"/>
                         <span class="o-mail-MessageInReply-message ms-1 text-break">
                             <t t-if="!message.parentMessage.isBodyEmpty">
                                 <t t-out="message.parentMessage.body"/>
