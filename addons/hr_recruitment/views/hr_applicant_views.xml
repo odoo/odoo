@@ -575,30 +575,6 @@
         action="hr_recruitment_degree_action"
         sequence="1" groups="base.group_no_one"/>
 
-    <!--Hr Employee inherit search view-->
-    <record id="hr_employee_view_search" model="ir.ui.view">
-        <field name="name">hr.employee.search.inherit</field>
-        <field name="model">hr.employee</field>
-        <field name="inherit_id" ref="hr.view_employee_filter"/>
-        <field name="arch" type="xml">
-            <xpath expr="//field[@name='job_id']" position="after">
-                <filter name="hiring_date" string="Hiring Date" date="create_date" groups="hr_recruitment.group_hr_recruitment_user"/>
-            </xpath>
-        </field>
-    </record>
-
-    <record id="hr_employee_action_from_department" model="ir.actions.act_window">
-        <field name="name">Newly Hired Employees</field>
-        <field name="res_model">hr.employee</field>
-        <field name="view_mode">kanban,tree,form</field>
-        <field name="context">{
-            'search_default_newly_hired_employee': 1,
-            'search_default_department_id': [active_id],
-            'default_department_id': active_id}
-        </field>
-        <field name="search_view_id" ref="hr_employee_view_search"/>
-    </record>
-
     <record id="hr_applicant_view_pivot" model="ir.ui.view">
         <field name="name">hr.applicant.pivot</field>
         <field name="model">hr.applicant</field>

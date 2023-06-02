@@ -58,6 +58,26 @@ class HrEmployeeBase(models.AbstractModel):
         ('presence_to_define', 'To define'),
         ('presence_undetermined', 'Undetermined')], compute='_compute_presence_icon')
     show_hr_icon_display = fields.Boolean(compute='_compute_presence_icon')
+    newly_hired = fields.Boolean('Newly Hired', compute='_compute_newly_hired', search='_search_newly_hired')
+
+    @api.model
+    def _get_new_hire_field(self):
+        return 'create_date'
+
+    def _compute_newly_hired(self):
+        new_hire_field = self._get_new_hire_field()
+        new_hire_date = fields.Datetime.now() - timedelta(days=90)
+        for employee in self:
+            employee.newly_hired = employee[new_hire_field] > new_hire_date
+
+    def _search_newly_hired(self, operator, value):
+        new_hire_field = self._get_new_hire_field()
+        new_hires = self.env['hr.employee'].sudo().search([
+            (new_hire_field, '>', fields.Datetime.now() - timedelta(days=90))
+        ])
+
+        op = 'in' if value and operator == '=' or not value and operator != '=' else 'not in'
+        return [('id', op, new_hires.ids)]
 
 
     def _get_valid_employee_for_user(self):
