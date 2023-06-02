@@ -14,6 +14,9 @@ export class ActivityModel extends RelationalModel {
     async load(params = {}) {
         this.originalDomain = params.domain ? [...params.domain] : [];
         params.domain?.push(["activity_ids", "!=", false]);
+        if (params && "groupBy" in params) {
+            params.groupBy = [];
+        }
         this.activityData = await this.fetchActivityData(params);
         await super.load(params);
     }
