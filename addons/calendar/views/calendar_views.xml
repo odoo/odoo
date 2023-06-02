@@ -192,7 +192,6 @@
                                         <field name="partner_ids" widget="many2manyattendee"
                                             placeholder="Select attendees..."
                                             context="{'force_email':True}"
-                                            domain="[('type','!=','private')]"
                                             class="oe_inline"
                                             attrs="{'readonly': [('user_can_edit', '=', False)]}"
                                         />
@@ -321,7 +320,6 @@
                         <field name="partner_ids" widget="many2manyattendee"
                             placeholder="Select attendees..."
                             context="{'force_email':True}"
-                            domain="[('type','!=','private')]"
                             class="oe_inline"
                         />
                         <label for="videocall_location" class="opacity-100"/>

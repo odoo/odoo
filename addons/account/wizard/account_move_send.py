@@ -55,7 +55,6 @@ class AccountMoveSend(models.Model):
     mail_partner_ids = fields.Many2many(
         comodel_name='res.partner',
         string="Recipients",
-        domain=[('type', '!=', 'private')],
         compute='_compute_mail_partner_ids',
         store=True,
         readonly=False,

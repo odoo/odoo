@@ -53,7 +53,7 @@ class TestDigestCommon(mail_test.MailCommon):
           previous month
         """
         # regular employee can't necessarily access "private" addresses
-        partners = cls.env['res.partner'].search([('type', '!=', 'private')])
+        partners = cls.env['res.partner'].search([])
         messages = cls.env['mail.message']
         counter = itertools.count()
 
