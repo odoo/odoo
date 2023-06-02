@@ -1,6 +1,11 @@
 /** @odoo-module **/
-import { makeDeferred } from "@mail/utils/deferred";
-import { click, dragAndDrop, getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
+import {
+  click,
+  dragAndDrop,
+  getFixture,
+  makeDeferred,
+  patchWithCleanup,
+} from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { NameAndSignature } from "@web/core/signature/name_and_signature";
 
