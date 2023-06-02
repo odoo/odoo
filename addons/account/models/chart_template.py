@@ -615,7 +615,7 @@ class AccountChartTemplate(models.Model):
             company.default_cash_difference_income_account_id = self.env['account.account'].create({
                 'name': _('Cash Difference Gain'),
                 'code': self.env['account.account']._search_new_account_code(company, self.code_digits, '999'),
-                'account_type': 'income',
+                'account_type': 'income_other',
                 'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
                 'company_id': company.id,
             })
