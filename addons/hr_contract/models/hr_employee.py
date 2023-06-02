@@ -20,6 +20,14 @@ class EmployeePublic(models.Model):
         return [('id', 'in', employees.ids)]
 
 
+class EmployeeBase(models.AbstractModel):
+    _inherit = "hr.employee.base"
+
+    @api.model
+    def _get_new_hire_field(self):
+        return 'first_contract_date'
+
+
 class Employee(models.Model):
     _inherit = "hr.employee"
 

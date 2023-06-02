@@ -7,20 +7,7 @@ from datetime import timedelta
 class HrEmployee(models.Model):
     _inherit = "hr.employee"
 
-    newly_hired_employee = fields.Boolean('Newly hired employee', compute='_compute_newly_hired_employee',
-                                          search='_search_newly_hired_employee')
     applicant_id = fields.One2many('hr.applicant', 'emp_id', 'Applicant')
-
-    def _compute_newly_hired_employee(self):
-        now = fields.Datetime.now()
-        for employee in self:
-            employee.newly_hired_employee = bool(employee.create_date > (now - timedelta(days=90)))
-
-    def _search_newly_hired_employee(self, operator, value):
-        employees = self.env['hr.employee'].search([
-            ('create_date', '>', fields.Datetime.now() - timedelta(days=90))
-        ])
-        return [('id', 'in', employees.ids)]
 
     @api.model_create_multi
     def create(self, vals_list):
