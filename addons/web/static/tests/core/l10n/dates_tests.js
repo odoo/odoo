@@ -299,6 +299,34 @@ QUnit.module(
             unpatch(localization, "patch loc");
         });
 
+        QUnit.debug(
+            "parseDateTime: arab locale, latin numbering system as input",
+            async (assert) => {
+                const dateFormat = strftimeToLuxonFormat("%d %b, %Y");
+                const timeFormat = strftimeToLuxonFormat("%I:%M:%S");
+                patch(localization, "ar", {
+                    dateFormat,
+                    timeFormat,
+                    dateTimeFormat: `${dateFormat} ${timeFormat}`,
+                });
+
+                // TO MESSAGe
+                // Before WOWL we were using MomentJS.
+                // Now it has been replaced by luxon.js, and it's stricter with the numbering system.
+                // With MomentJS we
+                const originalLocale = Settings.defaultLocale;
+                Settings.defaultLocale = "ar-001";
+                Settings.defaultNumberingSystem = "arab";
+
+                assert.equal(parseDateTime("22 01, 2023").toISO(), "2023-01-22T00:00:00.000+01:00");
+                assert.equal(parseDateTime("22/01/2023").toISO(), "2023-01-22T00:00:00.000+01:00");
+                assert.equal(parseDateTime("2023-01-22").toISO(), "2023-01-22T00:00:00.000+01:00");
+
+                Settings.defaultLocale = originalLocale;
+                unpatch(localization, "ar");
+            }
+        );
+
         QUnit.test("parseDateTime without separator", async (assert) => {
             const dateFormat = strftimeToLuxonFormat("%d.%m/%Y");
             const timeFormat = strftimeToLuxonFormat("%H:%M:%S");

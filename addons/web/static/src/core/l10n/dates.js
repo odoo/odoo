@@ -142,7 +142,7 @@ export const strftimeToLuxonFormat = memoize(function strftimeToLuxonFormat(valu
             if (inToken && normalizeFormatTable[character] !== undefined) {
                 character = normalizeFormatTable[character];
             } else {
-                character = "'" + character + "'";  // luxon escape
+                character = "'" + character + "'"; // luxon escape
             }
         }
         output.push(character);
@@ -369,8 +369,13 @@ export function parseDateTime(value, options = {}) {
                 return actualPart;
             })
             .join("");
-
         result = DateTime.fromFormat(valWoSeps, fmtWoSeps, parseOpts);
+
+        // Try with "latn" as numberingSystem
+        if (!isValidDateTime(result) && parseOpts.numberingSystem !== "latn") {
+            const tempParseOpts = { ...parseOpts, numberingSystem: "latn" };
+            result = DateTime.fromFormat(valWoSeps, fmtWoSeps, tempParseOpts);
+        }
     }
 
     // Try with defaul ISO or SQL formats

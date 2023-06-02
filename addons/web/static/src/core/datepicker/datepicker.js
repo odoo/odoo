@@ -87,7 +87,7 @@ export class DatePicker extends Component {
             this.datePickerShown = true;
             this.inputRef.el.select();
         });
-        window.$(this.rootRef.el).on("hide.datetimepicker", ({date}) => {
+        window.$(this.rootRef.el).on("hide.datetimepicker", ({ date }) => {
             this.datePickerShown = false;
             this.onDateChange({ eventDate: date, useStatic: true });
         });
@@ -122,13 +122,16 @@ export class DatePicker extends Component {
      * @returns {boolean}
      */
     isValidStaticFormat(format) {
-        return /^[\d\s\/.,:-]+$/.test(DateTime.local().toFormat(format));
+        return true;
+        // return /^[\d\s\/.,:-]+$/.test(DateTime.local().toFormat(format));
     }
 
     getOptions(useStatic = false) {
         return {
             format:
-                !useStatic || this.isValidStaticFormat(this.format) ? this.format : this.staticFormat,
+                !useStatic || this.isValidStaticFormat(this.format)
+                    ? this.format
+                    : this.staticFormat,
             locale: this.props.locale || (this.date && this.date.locale),
         };
     }
@@ -218,7 +221,10 @@ export class DatePicker extends Component {
      */
     onDateChange({ eventDate, useStatic } = {}) {
         const { value } = this.inputRef.el;
-        let parsedDate = value && eventDate ? momentToLuxon(eventDate).setLocale(this.getOptions().locale): null;
+        let parsedDate =
+            value && eventDate
+                ? momentToLuxon(eventDate).setLocale(this.getOptions().locale)
+                : null;
         if (!parsedDate) {
             const options = this.getOptions(useStatic);
             parsedDate = this.parseValue(value, options)[0];
