@@ -285,6 +285,24 @@
         </record>
         <menuitem action="ir_action_window" id="menu_ir_action_window" parent="base.next_id_6"/>
 
+        <record id="view_client_action_tree" model="ir.ui.view">
+            <field name="name">Client Actions</field>
+            <field name="model">ir.actions.client</field>
+            <field name="arch" type="xml">
+                <tree string="Client Actions">
+                    <field name="name"/>
+                    <field name="tag"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="ir_client_actions_report" model="ir.actions.act_window">
+            <field name="name">Client Actions</field>
+            <field name="res_model">ir.actions.client</field>
+            <field name="view_id" ref="view_client_action_tree"/>
+        </record>
+        <menuitem action="ir_client_actions_report" id="menu_ir_client_actions_report" parent="base.next_id_6"/>
+
         <!-- ir.actions.server -->
 
         <record id="view_server_action_form" model="ir.ui.view">
