@@ -16,85 +16,83 @@
     .o_date_item_cell {
         --DateTimePicker__Cell-border-radius-start: 0;
         --DateTimePicker__Cell-border-radius-end: 0;
-
+        position: relative;
         border-radius: var(--DateTimePicker__Cell-border-radius-start)
             var(--DateTimePicker__Cell-border-radius-end)
             var(--DateTimePicker__Cell-border-radius-end)
             var(--DateTimePicker__Cell-border-radius-start);
     }
 
-    .o_highlighted {
-        --bg-opacity: 0.25;
-    }
-
     .o_selected {
-        --bg-opacity: 0.5;
+        &,.o_current {
+            color: $o-component-active-color;
+        }
+        
+        &:not(.o_select_start, .o_select_end) {
+            background: $o-component-active-bg;
+        }
     }
 
-    .o_current {
-        --bg-opacity: 0.75;
+    .o_current:not(.o_select_start,.o_select_end),
+    .o_highlight_start:not(.o_selected),
+    .o_highlight_end:not(.o_selected),
+    .o_select_start,
+    .o_select_end {
 
-        color: var(--white);
+        &::before {
+            content: "";
+            position: absolute;
+            box-shadow: inset 0 0 0 1px $o-component-active-border;
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 100%;
+            z-index: 1;
+        }
     }
+
 
     .o_select_start,
     .o_select_end {
-        --bg-opacity: 1;
-
-        color: var(--white);
-    }
-
-    .o_select_start:not(.o_highlighted),
-    .o_highlight_start {
-        &.o_cell_md {
-            --DateTimePicker__Cell-border-radius-start: 0.3rem;
-        }
-        &.o_cell_lg {
-            --DateTimePicker__Cell-border-radius-start: 0.5rem;
-        }
-    }
-
-    .o_select_end:not(.o_highlighted),
-    .o_highlight_end {
-        &.o_cell_md {
-            --DateTimePicker__Cell-border-radius-end: 0.3rem;
-        }
-        &.o_cell_lg {
-            --DateTimePicker__Cell-border-radius-end: 0.5rem;
-        }
-    }
-
-    .o_today:not(.o_out_of_range) {
-        --DateTimePicker__Today-border-color: var(--primary);
-        --DateTimePicker__Today-border-offset: 2px;
-        --DateTimePicker__Today-border-width: 5px;
-
-        color: var(--DateTimePicker__Today-border-color);
-        position: relative;
-        box-shadow: inset 0 0 0 var(--DateTimePicker__Today-border-offset)
-            var(--DateTimePicker__Today-border-color);
-        font-weight: bold;
-
-        &.o_selected,
-        &.o_current {
-            --DateTimePicker__Today-border-color: white;
-        }
-
         &:before {
+            background: mix(lighten($o-component-active-border, 10%), $o-component-active-bg, 15%);
+        }
+
+        &:after {
             content: "";
-            right: var(--DateTimePicker__Today-border-offset);
-            bottom: var(--DateTimePicker__Today-border-offset);
-            border: solid transparent;
-            border-width: 0 0 var(--DateTimePicker__Today-border-width)
-                var(--DateTimePicker__Today-border-width);
-            border-bottom-color: var(--DateTimePicker__Today-border-color);
             position: absolute;
+            background: transparent;
+            width: 50%;
+            aspect-ratio: 1/2;
+        }
+
+        &:not(.o_select_end):after {
+            right: 0;
+            background: $o-component-active-bg;
+        }
+
+        &:not(.o_select_start):after {
+            right: 50%;
+            background: $o-component-active-bg;
+        }
+    }
+
+    .o_today:not(.o_out_of_range) span {
+        position: relative;
+
+        &::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: $spacer * -.25;
+            transform: translateX(-50%);
+            width: 0.95em;
+            height: 0.2em;
+            border-radius: $border-radius-pill;
+            background: $danger;
         }
     }
 
     .o_out_of_range {
-        --bg-opacity: 0.5;
-
         color: var(--gray-400);
     }
 
@@ -121,14 +119,26 @@
 
     // Utilities
 
-    .o_datetime_button:hover {
-        background-color: var(--gray-100);
-        border-color: var(--gray-200);
+    .o_date_item_picker {
+        .o_datetime_button {
+            &.o_selected, &:hover, &.o_today:not(.o_selected):hover {
+                &:not(.o_select_start, .o_select_end) {
+                    background-color: $o-component-active-bg;
+                    color: $o-component-active-color;
+                }
+            }  
+        }
     }
 
     .o_center {
         display: grid;
         place-items: center;
+    }
+
+    // Compute  spacing  between the two month by compensating buttons size and tables gap
+    
+    .o_zoom_out {
+        gap: o-to-rem($btn-border-width) * 4 + o-to-rem($o-font-size-base) * 2 + o-to-rem($btn-padding-x * 4);
     }
 
     .o_cell_md {

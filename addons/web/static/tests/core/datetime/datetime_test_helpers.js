@@ -39,7 +39,7 @@ export function assertDateTimePicker(expectedParams) {
         const expectedTitle = ensureArray(title);
         assert.containsOnce(fixture, ".o_datetime_picker_header");
         assert.deepEqual(
-            getTexts(".o_datetime_picker_header", "h5"),
+            getTexts(".o_datetime_picker_header", "strong"),
             expectedTitle,
             `title should be "${expectedTitle.join(" - ")}"`
         );
