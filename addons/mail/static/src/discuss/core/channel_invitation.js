@@ -19,6 +19,8 @@ export class ChannelInvitation extends Component {
         this.notification = useService("notification");
         this.threadService = useState(useService("mail.thread"));
         this.personaService = useService("mail.persona");
+        /** @type {import("@mail/composer/suggestion_service").SuggestionService} */
+        this.suggestionService = useService("mail.suggestion");
         this.ui = useService("ui");
         this.inputRef = useRef("input");
         this.searchStr = "";
@@ -56,7 +58,11 @@ export class ChannelInvitation extends Component {
             });
             selectablePartners.push(newPartner);
         }
-        this.state.selectablePartners = selectablePartners;
+        this.state.selectablePartners = this.suggestionService.sortPartnerSuggestions(
+            selectablePartners,
+            this.searchStr,
+            this.props.thread
+        );
         this.state.searchResultCount = results["count"];
     }
 

@@ -142,7 +142,52 @@ export class SuggestionService {
                 }
             }
         }
-        const sortFunc = (p1, p2) => {
+        return {
+            type: "Partner",
+            mainSuggestions: sort
+                ? this.sortPartnerSuggestions(mainSuggestionList, cleanedSearchTerm, thread)
+                : mainSuggestionList,
+            extraSuggestions: sort
+                ? this.sortPartnerSuggestions(extraSuggestionList, cleanedSearchTerm, thread)
+                : extraSuggestionList,
+        };
+    }
+
+    /**
+     * @param {[import("@mail/core/persona_model").Persona]} [partners]
+     * @param {String} [searchTerm]
+     * @param {import("@mail/core/thread_model").Thread} thread
+     * @returns {[import("@mail/core/persona_model").Persona]}
+     */
+    sortPartnerSuggestions(partners, searchTerm = "", thread = undefined) {
+        const cleanedSearchTerm = cleanTerm(searchTerm);
+        /**
+         * Ordering:
+         * - recent chat partners
+         * - internal users
+         * - channel members
+         * - thread followers
+         * - longgest match of name, alphabetically if having same length of match
+         * - longgest match of email, alphabetically if having same length of match
+         * - id
+         */
+        return partners.sort((p1, p2) => {
+            const recentChatPartnerIds = this.personaService.getRecentChatPartnerIds();
+            const recentChatIndex_p1 = recentChatPartnerIds.findIndex(
+                (partnerId) => partnerId === p1.id
+            );
+            const recentChatIndex_p2 = recentChatPartnerIds.findIndex(
+                (partnerId) => partnerId === p2.id
+            );
+            if (recentChatIndex_p1 !== -1 && recentChatIndex_p2 === -1) {
+                return -1;
+            } else if (recentChatIndex_p1 === -1 && recentChatIndex_p2 !== -1) {
+                return 1;
+            } else if (recentChatIndex_p1 < recentChatIndex_p2) {
+                return -1;
+            } else if (recentChatIndex_p1 > recentChatIndex_p2) {
+                return 1;
+            }
             const isAInternalUser = p1.user?.isInternalUser;
             const isBInternalUser = p2.user?.isInternalUser;
             if (isAInternalUser && !isBInternalUser) {
@@ -151,7 +196,7 @@ export class SuggestionService {
             if (!isAInternalUser && isBInternalUser) {
                 return 1;
             }
-            if (thread.model === "discuss.channel") {
+            if (thread?.model === "discuss.channel") {
                 const isMember1 = thread.channelMembers.some((member) => member.persona === p1);
                 const isMember2 = thread.channelMembers.some((member) => member.persona === p2);
                 if (isMember1 && !isMember2) {
@@ -212,12 +257,7 @@ export class SuggestionService {
                 return 1;
             }
             return p1.id - p2.id;
-        };
-        return {
-            type: "Partner",
-            mainSuggestions: sort ? mainSuggestionList.sort(sortFunc) : mainSuggestionList,
-            extraSuggestions: sort ? extraSuggestionList.sort(sortFunc) : extraSuggestionList,
-        };
+        });
     }
 
     searchChannelSuggestions(cleanedSearchTerm, thread, sort) {
