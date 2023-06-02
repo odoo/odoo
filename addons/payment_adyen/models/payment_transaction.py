@@ -94,12 +94,19 @@ class PaymentTransaction(models.Model):
             data.update(captureDelayHours=0)
 
         # Make the payment request to Adyen
-        response_content = self.provider_id._adyen_make_request(
-            url_field_name='adyen_checkout_api_url',
-            endpoint='/payments',
-            payload=data,
-            method='POST',
-        )
+        try:
+            response_content = self.provider_id._adyen_make_request(
+                url_field_name='adyen_checkout_api_url',
+                endpoint='/payments',
+                payload=data,
+                method='POST',
+            )
+        except ValidationError as e:
+            if self.operation == 'offline':
+                self._set_error(e)  # Log the error message on linked documents' chatter.
+                return  # There is nothing to process.
+            else:
+                raise e
 
         # Handle the payment request response
         _logger.info(

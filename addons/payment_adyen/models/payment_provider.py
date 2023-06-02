@@ -117,15 +117,19 @@ class PaymentProvider(models.Model):
         headers = {'X-API-Key': self.adyen_api_key}
         try:
             response = requests.request(method, url, json=payload, headers=headers, timeout=60)
-            response.raise_for_status()
+            try:
+                response.raise_for_status()
+            except requests.exceptions.HTTPError:
+                _logger.exception(
+                    "invalid API request at %s with data %s: %s", url, payload, response.text
+                )
+                msg = response.json().get('message', '')
+                raise ValidationError(
+                    "Adyen: " + _("The communication with the API failed. Details: %s", msg)
+                )
         except requests.exceptions.ConnectionError:
             _logger.exception("unable to reach endpoint at %s", url)
             raise ValidationError("Adyen: " + _("Could not establish the connection to the API."))
-        except requests.exceptions.HTTPError as error:
-            _logger.exception(
-                "invalid API request at %s with data %s: %s", url, payload, error.response.text
-            )
-            raise ValidationError("Adyen: " + _("The communication with the API failed."))
         return response.json()
 
     def _adyen_compute_shopper_reference(self, partner_id):
