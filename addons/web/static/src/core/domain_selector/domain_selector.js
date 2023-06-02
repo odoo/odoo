@@ -101,7 +101,11 @@ export class DomainSelector extends Component {
 
         this.tree.isSupported = true;
 
-        const options = { defaultConnector: p.defaultConnector, distributeNot: !p.isDebugMode };
+        const options = {
+            defaultConnector: p.defaultConnector,
+            distributeNot: !p.isDebugMode,
+            previousTree: this.tree.root,
+        };
         this.tree.root = buildDomainSelectorTree(domain, pathsInfo, options);
         this.defaultLeaf = buildDomainSelectorTree(
             defaultLeafDomain,
