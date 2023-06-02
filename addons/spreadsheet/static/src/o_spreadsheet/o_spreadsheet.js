@@ -17841,7 +17841,7 @@
             return !!this.state.labelsDispatchResult?.isCancelledBecause(33 /* CommandResult.InvalidLabelRange */);
         }
         onUpdateDataSetsHaveTitle(ev) {
-            this.props.updateChart({
+            this.props.updateChart(this.props.figureId, {
                 dataSetsHaveTitle: ev.target.checked,
             });
         }
@@ -17853,7 +17853,7 @@
             this.dataSeriesRanges = ranges;
         }
         onDataSeriesConfirmed() {
-            this.state.datasetDispatchResult = this.props.updateChart({
+            this.state.datasetDispatchResult = this.props.updateChart(this.props.figureId, {
                 dataSets: this.dataSeriesRanges,
             });
         }
@@ -17865,12 +17865,12 @@
             this.labelRange = ranges[0];
         }
         onLabelRangeConfirmed() {
-            this.state.labelsDispatchResult = this.props.updateChart({
+            this.state.labelsDispatchResult = this.props.updateChart(this.props.figureId, {
                 labelRange: this.labelRange,
             });
         }
         onUpdateAggregated(ev) {
-            this.props.updateChart({
+            this.props.updateChart(this.props.figureId, {
                 aggregated: ev.target.checked,
             });
         }
@@ -17900,12 +17900,12 @@
     class BarConfigPanel extends LineBarPieConfigPanel {
         static template = "o-spreadsheet-BarConfigPanel";
         onUpdateStacked(ev) {
-            this.props.updateChart({
+            this.props.updateChart(this.props.figureId, {
                 stacked: ev.target.checked,
             });
         }
         onUpdateAggregated(ev) {
-            this.props.updateChart({
+            this.props.updateChart(this.props.figureId, {
                 aggregated: ev.target.checked,
             });
         }
@@ -18242,17 +18242,17 @@
             this.state.fillColorTool = !this.state.fillColorTool;
         }
         updateBackgroundColor(color) {
-            this.props.updateChart({
+            this.props.updateChart(this.props.figureId, {
                 background: color,
             });
         }
         updateTitle(ev) {
-            this.props.updateChart({
+            this.props.updateChart(this.props.figureId, {
                 title: ev.target.value,
             });
         }
         updateSelect(attr, ev) {
-            this.props.updateChart({
+            this.props.updateChart(this.props.figureId, {
                 [attr]: ev.target.value,
             });
         }
@@ -18285,7 +18285,7 @@
             this.dataRange = ranges[0];
         }
         updateDataRange() {
-            this.state.dataRangeDispatchResult = this.props.updateChart({
+            this.state.dataRangeDispatchResult = this.props.updateChart(this.props.figureId, {
                 dataRange: this.dataRange,
             });
         }
@@ -18343,12 +18343,12 @@
         }
         updateBackgroundColor(color) {
             this.state.openedMenu = undefined;
-            this.props.updateChart({
+            this.props.updateChart(this.props.figureId, {
                 background: color,
             });
         }
         updateTitle(ev) {
-            this.props.updateChart({
+            this.props.updateChart(this.props.figureId, {
                 title: ev.target.value,
             });
         }
@@ -18413,7 +18413,7 @@
             }
         }
         updateSectionRule(sectionRule) {
-            this.state.sectionRuleDispatchResult = this.props.updateChart({
+            this.state.sectionRuleDispatchResult = this.props.updateChart(this.props.figureId, {
                 sectionRule,
             });
         }
@@ -18437,17 +18437,17 @@
             return false;
         }
         onUpdateLabelsAsText(ev) {
-            this.props.updateChart({
+            this.props.updateChart(this.props.figureId, {
                 labelsAsText: ev.target.checked,
             });
         }
         onUpdateStacked(ev) {
-            this.props.updateChart({
+            this.props.updateChart(this.props.figureId, {
                 stacked: ev.target.checked,
             });
         }
         onUpdateAggregated(ev) {
-            this.props.updateChart({
+            this.props.updateChart(this.props.figureId, {
                 aggregated: ev.target.checked,
             });
         }
@@ -18483,7 +18483,7 @@
             this.keyValue = ranges[0];
         }
         updateKeyValueRange() {
-            this.state.keyValueDispatchResult = this.props.updateChart({
+            this.state.keyValueDispatchResult = this.props.updateChart(this.props.figureId, {
                 keyValue: this.keyValue,
             });
         }
@@ -18491,12 +18491,12 @@
             this.baseline = ranges[0];
         }
         updateBaselineRange() {
-            this.state.baselineDispatchResult = this.props.updateChart({
+            this.state.baselineDispatchResult = this.props.updateChart(this.props.figureId, {
                 baseline: this.baseline,
             });
         }
         updateBaselineMode(ev) {
-            this.props.updateChart({ baselineMode: ev.target.value });
+            this.props.updateChart(this.props.figureId, { baselineMode: ev.target.value });
         }
     }
     ScorecardChartConfigPanel.props = {
@@ -18515,12 +18515,12 @@
             owl.useExternalListener(window, "click", this.closeMenus);
         }
         updateTitle(ev) {
-            this.props.updateChart({
+            this.props.updateChart(this.props.figureId, {
                 title: ev.target.value,
             });
         }
         updateBaselineDescr(ev) {
-            this.props.updateChart({ baselineDescr: ev.target.value });
+            this.props.updateChart(this.props.figureId, { baselineDescr: ev.target.value });
         }
         toggleColorPicker(colorPickerId) {
             if (this.state.openedColorPicker === colorPickerId) {
@@ -18533,13 +18533,13 @@
         setColor(color, colorPickerId) {
             switch (colorPickerId) {
                 case "backgroundColor":
-                    this.props.updateChart({ background: color });
+                    this.props.updateChart(this.props.figureId, { background: color });
                     break;
                 case "baselineColorDown":
-                    this.props.updateChart({ baselineColorDown: color });
+                    this.props.updateChart(this.props.figureId, { baselineColorDown: color });
                     break;
                 case "baselineColorUp":
-                    this.props.updateChart({ baselineColorUp: color });
+                    this.props.updateChart(this.props.figureId, { baselineColorUp: color });
                     break;
             }
             this.closeMenus();
@@ -18604,12 +18604,8 @@
     class ChartPanel extends owl.Component {
         static template = "o-spreadsheet-ChartPanel";
         state;
-        shouldUpdateChart = true;
         get figureId() {
             return this.state.figureId;
-        }
-        get sheetId() {
-            return this.state.sheetId;
         }
         setup() {
             const selectedFigureId = this.env.model.getters.getSelectedFigureId();
@@ -18620,17 +18616,11 @@
             this.state = owl.useState({
                 panel: "configuration",
                 figureId: selectedFigureId,
-                sheetId: this.env.model.getters.getActiveSheetId(),
             });
             owl.onWillUpdateProps(() => {
                 const selectedFigureId = this.env.model.getters.getSelectedFigureId();
                 if (selectedFigureId && selectedFigureId !== this.state.figureId) {
                     this.state.figureId = selectedFigureId;
-                    this.state.sheetId = this.env.model.getters.getActiveSheetId();
-                    this.shouldUpdateChart = false;
-                }
-                else {
-                    this.shouldUpdateChart = true;
                 }
                 if (!this.env.model.getters.isChartDefined(this.figureId)) {
                     this.props.onCloseSidePanel();
@@ -18638,8 +18628,8 @@
                 }
             });
         }
-        updateChart(updateDefinition) {
-            if (!this.shouldUpdateChart) {
+        updateChart(figureId, updateDefinition) {
+            if (figureId !== this.figureId) {
                 return;
             }
             const definition = {
@@ -18648,8 +18638,8 @@
             };
             return this.env.model.dispatch("UPDATE_CHART", {
                 definition,
-                id: this.figureId,
-                sheetId: this.sheetId,
+                id: figureId,
+                sheetId: this.env.model.getters.getFigureSheetId(figureId),
             });
         }
         onTypeChange(type) {
@@ -18661,7 +18651,7 @@
             this.env.model.dispatch("UPDATE_CHART", {
                 definition,
                 id: this.figureId,
-                sheetId: this.sheetId,
+                sheetId: this.env.model.getters.getFigureSheetId(this.figureId),
             });
         }
         get chartPanel() {
@@ -24483,6 +24473,16 @@
         64: "000000",
         65: "FFFFFF", // system background
     };
+    const IMAGE_MIMETYPE_EXTENSION_MAPPING = {
+        "image/avif": "avif",
+        "image/bmp": "bmp",
+        "image/gif": "gif",
+        "image/vnd.microsoft.icon": "ico",
+        "image/jpeg": "jpeg",
+        "image/png": "png",
+        "image/tiff": "tiff",
+        "image/webp": "webp",
+    };
 
     /**
      * Most of the functions could stay private, but are exported for testing purposes
@@ -26961,6 +26961,11 @@
     function createOverride(partName, contentType) {
         return escapeXml /*xml*/ `
     <Override ContentType="${contentType}" PartName="${partName}" />
+  `;
+    }
+    function createDefaultXMLElement(extension, contentType) {
+        return escapeXml /*xml*/ `
+    <Default Extension="${extension}" ContentType="${contentType}" />
   `;
     }
     function joinXmlNodes(xmlNodes) {
@@ -41730,7 +41735,7 @@
             const file = await this.getImageFromUser();
             const path = await this.fileStore.upload(file);
             const size = await this.getImageSize(path);
-            return { path, size };
+            return { path, size, mimetype: file.type };
         }
         getImageFromUser() {
             return new Promise((resolve, reject) => {
@@ -46811,8 +46816,7 @@
             // Figures and Charts
             let drawingNode = escapeXml ``;
             const drawingRelIds = [];
-            const charts = sheet.charts;
-            for (const chart of charts) {
+            for (const chart of sheet.charts) {
                 const xlsxChartId = convertChartId(chart.id);
                 const chartRelId = addRelsToFile(construct.relsFiles, `xl/drawings/_rels/drawing${sheetIndex}.xml.rels`, {
                     target: `../charts/chart${xlsxChartId}.xml`,
@@ -46821,20 +46825,27 @@
                 drawingRelIds.push(chartRelId);
                 files.push(createXMLFile(createChart(chart, sheetIndex, data), `xl/charts/chart${xlsxChartId}.xml`, "chart"));
             }
-            const images = sheet.images;
-            for (const image of images) {
+            for (const image of sheet.images) {
+                const mimeType = image.data.mimetype;
+                if (mimeType === undefined)
+                    continue;
+                const extension = IMAGE_MIMETYPE_EXTENSION_MAPPING[mimeType];
+                // only support exporting images with mimetypes specified in the mapping
+                if (extension === undefined)
+                    continue;
                 const xlsxImageId = convertImageId(image.id);
+                let imageFileName = `image${xlsxImageId}.${extension}`;
                 const imageRelId = addRelsToFile(construct.relsFiles, `xl/drawings/_rels/drawing${sheetIndex}.xml.rels`, {
-                    target: `../media/image${xlsxImageId}`,
+                    target: `../media/${imageFileName}`,
                     type: XLSX_RELATION_TYPE.image,
                 });
                 drawingRelIds.push(imageRelId);
                 files.push({
-                    path: `xl/media/image${xlsxImageId}`,
-                    imagePath: image.data.path,
+                    path: `xl/media/${imageFileName}`,
+                    imageSrc: image.data.path,
                 });
             }
-            const drawings = [...charts, ...images];
+            const drawings = [...sheet.charts, ...sheet.images];
             if (drawings.length) {
                 const drawingRelId = addRelsToFile(construct.relsFiles, `xl/worksheets/_rels/sheet${sheetIndex}.xml.rels`, {
                     target: `../drawings/drawing${sheetIndex}.xml`,
@@ -46953,6 +46964,8 @@
     }
     function createContentTypes(files) {
         const overrideNodes = [];
+        // hard-code supported image mimetypes
+        const imageDefaultNodes = Object.entries(IMAGE_MIMETYPE_EXTENSION_MAPPING).map(([mimetype, extension]) => createDefaultXMLElement(extension, mimetype));
         for (const file of files) {
             if ("contentType" in file && file.contentType) {
                 overrideNodes.push(createOverride("/" + file.path, CONTENT_TYPES[file.contentType]));
@@ -46968,6 +46981,7 @@
         ];
         const xml = escapeXml /*xml*/ `
     <Types xmlns="${NAMESPACE["Types"]}">
+      ${joinXmlNodes(Object.values(imageDefaultNodes))}
       <Default ${formatAttributes(relsAttributes)} />
       <Default ${formatAttributes(xmlAttributes)} />
       ${joinXmlNodes(overrideNodes)}
@@ -47582,9 +47596,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.1';
-    __info__.date = '2023-05-25T13:12:39.949Z';
-    __info__.hash = 'b3cfd2c';
+    __info__.version = '16.3.2';
+    __info__.date = '2023-06-02T10:55:35.007Z';
+    __info__.hash = '69a4378';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
