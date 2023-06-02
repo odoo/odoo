@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { OrderlineDetails } from "./OrderlineDetails";
+import { OrderlineDetails } from "@point_of_sale/app/screens/ticket_screen/order_details/orderline_details";
 import { Component } from "@odoo/owl";
 
 /**

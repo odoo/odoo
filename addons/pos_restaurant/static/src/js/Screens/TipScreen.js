@@ -3,9 +3,9 @@
 import { parseFloat } from "@web/views/fields/parsers";
 import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
-import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { Component, useRef, onMounted } from "@odoo/owl";
 

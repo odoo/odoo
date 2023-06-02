@@ -5,7 +5,7 @@ import { Transition } from "@web/core/transition";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { ErrorHandler } from "@web/core/utils/components";
 import { Navbar } from "@point_of_sale/app/navbar/navbar";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { reactive, Component, onMounted } from "@odoo/owl";
 
 /**

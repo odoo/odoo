@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import { Order } from "@point_of_sale/js/models";
+import { Order } from "@point_of_sale/app/store/models";
 
-import { SplitOrderline } from "./SplitOrderline";
+import { SplitOrderline } from "@pos_restaurant/js/Screens/SplitBillScreen/SplitOrderline";
 import { registry } from "@web/core/registry";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, useState } from "@odoo/owl";
 import { groupBy } from "@web/core/utils/arrays";
 

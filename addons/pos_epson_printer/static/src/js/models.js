@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { PosGlobalState } from "@point_of_sale/js/models";
+import { PosGlobalState } from "@point_of_sale/app/store/models";
 import { EpsonPrinter } from "@pos_epson_printer/js/epson_printer";
 import { patch } from "@web/core/utils/patch";
 

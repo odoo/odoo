@@ -1,22 +1,22 @@
 /** @odoo-module */
 
-import { Order } from "@point_of_sale/js/models";
+import { Order } from "@point_of_sale/app/store/models";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { parseFloat } from "@web/views/fields/parsers";
 import { _lt } from "@web/core/l10n/translation";
 
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
-import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 
-import { ActionpadWidget } from "../ProductScreen/ActionpadWidget";
-import { InvoiceButton } from "../TicketScreen/ControlButtons/InvoiceButton";
-import { NumpadWidget } from "../ProductScreen/NumpadWidget";
-import { OrderDetails } from "../TicketScreen/OrderDetails";
-import { ReprintReceiptButton } from "./ControlButtons/ReprintReceiptButton";
-import { SearchBar } from "../../Misc/SearchBar";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
+import { InvoiceButton } from "@point_of_sale/app/screens/ticket_screen/invoice_button/invoice_button";
+import { NumpadWidget } from "@point_of_sale/app/screens/product_screen/numpad/numpad";
+import { OrderDetails } from "@point_of_sale/app/screens/ticket_screen/order_details/order_details";
+import { ReprintReceiptButton } from "@point_of_sale/app/screens/ticket_screen/reprint_receipt_button/reprint_receipt_button";
+import { SearchBar } from "@point_of_sale/app/screens/ticket_screen/search_bar/search_bar";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, useState } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
 

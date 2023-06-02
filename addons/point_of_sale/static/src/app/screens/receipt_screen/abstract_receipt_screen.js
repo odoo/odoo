@@ -1,8 +1,8 @@
 /** @odoo-module */
 
 import { useService } from "@web/core/utils/hooks";
-import { ConfirmPopup } from "../Popups/ConfirmPopup";
-import { ErrorPopup } from "../Popups/ErrorPopup";
+import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { Component, useRef } from "@odoo/owl";
 
 /**

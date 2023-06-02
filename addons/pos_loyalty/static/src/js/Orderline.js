@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Orderline } from "@point_of_sale/js/Screens/ProductScreen/Orderline";
+import { Orderline } from "@point_of_sale/app/screens/product_screen/orderline/orderline";
 import { patch } from "@web/core/utils/patch";
 
 patch(Orderline.prototype, "pos_loyalty.Orderline", {

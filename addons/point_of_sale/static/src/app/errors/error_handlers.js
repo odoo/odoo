@@ -3,9 +3,9 @@
 import { registry } from "@web/core/registry";
 import { odooExceptionTitleMap } from "@web/core/errors/error_dialogs";
 import { ConnectionLostError, RPCError } from "@web/core/network/rpc_service";
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
-import { ErrorTracebackPopup } from "@point_of_sale/js/Popups/ErrorTracebackPopup";
-import { OfflineErrorPopup } from "@point_of_sale/js/Popups/OfflineErrorPopup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { ErrorTracebackPopup } from "@point_of_sale/app/errors/popups/error_traceback_popup";
+import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
 import { _t } from "@web/core/l10n/translation";
 
 export function identifyError(error) {

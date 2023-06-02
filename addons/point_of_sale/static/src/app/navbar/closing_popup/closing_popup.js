@@ -1,17 +1,17 @@
 /** @odoo-module */
 
-import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import { SaleDetailsButton } from "../ChromeWidgets/SaleDetailsButton";
-import { ConfirmPopup } from "./ConfirmPopup";
-import { MoneyDetailsPopup } from "./MoneyDetailsPopup";
+import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
+import { SaleDetailsButton } from "@point_of_sale/app/navbar/sale_details_button/sale_details_button";
+import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
+import { MoneyDetailsPopup } from "@point_of_sale/app/utils/money_details_popup/money_details_popup";
 import { useService } from "@web/core/utils/hooks";
-import { AlertPopup } from "./AlertPopup";
-import { ErrorPopup } from "./ErrorPopup";
+import { AlertPopup } from "@point_of_sale/app/utils/alert_popup/alert_popup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { useState } from "@odoo/owl";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
-import { identifyError } from "@point_of_sale/app/error_handlers/error_handlers";
+import { identifyError } from "@point_of_sale/app/errors/error_handlers";
 import { _t } from "@web/core/l10n/translation";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { sprintf } from "@web/core/utils/strings";
 
 export class ClosePosPopup extends AbstractAwaitablePopup {

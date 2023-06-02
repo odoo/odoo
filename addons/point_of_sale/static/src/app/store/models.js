@@ -1,9 +1,9 @@
 /** @odoo-module */
 /* global waitForWebfonts */
 
-import { PosDB } from "@point_of_sale/js/db";
+import { PosDB } from "@point_of_sale/app/store/db";
 import { formatFloat } from "@web/views/fields/formatters";
-import { uuidv4, batched, deduceUrl } from "@point_of_sale/js/utils";
+import { uuidv4, batched, deduceUrl } from "@point_of_sale/utils";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 // FIXME POSREF - unify use of native parseFloat and web's parseFloat. We probably don't need the native version.
 import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
@@ -13,11 +13,11 @@ import {
     roundPrecision as round_pr,
     floatIsZero,
 } from "@web/core/utils/numbers";
-import { ErrorPopup } from "./Popups/ErrorPopup";
-import { ProductConfiguratorPopup } from "@point_of_sale/js/Popups/ProductConfiguratorPopup";
-import { EditListPopup } from "@point_of_sale/js/Popups/EditListPopup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { ProductConfiguratorPopup } from "@point_of_sale/app/store/product_configurator_popup/product_configurator_popup";
+import { EditListPopup } from "@point_of_sale/app/store/select_lot_popup/select_lot_popup";
 import { markRaw, reactive } from "@odoo/owl";
-import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
+import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { sprintf } from "@web/core/utils/strings";
 import { Mutex } from "@web/core/utils/concurrency";
 import { memoize } from "@web/core/utils/functions";

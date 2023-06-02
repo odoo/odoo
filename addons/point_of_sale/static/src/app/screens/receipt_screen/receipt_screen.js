@@ -1,12 +1,12 @@
 /** @odoo-module */
 
-import { useErrorHandlers } from "@point_of_sale/js/custom_hooks";
-import { AbstractReceiptScreen } from "@point_of_sale/js/Misc/AbstractReceiptScreen";
-import { OfflineErrorPopup } from "@point_of_sale/js/Popups/OfflineErrorPopup";
+import { useErrorHandlers } from "@point_of_sale/app/utils/hooks";
+import { AbstractReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/abstract_receipt_screen";
+import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
 import { registry } from "@web/core/registry";
-import { OrderReceipt } from "./OrderReceipt";
+import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/receipt";
 import { onMounted, useRef, status, useState, onWillStart } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { BasePrinter } from "@point_of_sale/app/printer/base_printer";
 

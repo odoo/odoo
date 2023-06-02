@@ -1,15 +1,15 @@
 /** @odoo-module **/
 
-import { Order, Orderline, PosGlobalState } from "@point_of_sale/js/models";
+import { Order, Orderline, PosGlobalState } from "@point_of_sale/app/store/models";
 import { Mutex } from "@web/core/utils/concurrency";
 import concurrency from "web.concurrency";
 import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
-import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
+import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { Domain, InvalidDomainError } from "@web/core/domain";
 import { sprintf } from "@web/core/utils/strings";
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
 // FIXME: Perhaps MutexedDropPrevious can be replaced by the new KeepLast.
 // > This might require thorough investigation on how _updateRewards work.

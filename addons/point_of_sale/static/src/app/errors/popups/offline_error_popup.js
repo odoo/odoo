@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import { usePos } from "@point_of_sale/app/pos_hook";
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { _lt } from "@web/core/l10n/translation";
 
 /**

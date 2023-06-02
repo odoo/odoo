@@ -4,7 +4,7 @@ import { Component } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
 import { formatFloat } from "@web/views/fields/formatters";
 import { roundPrecision as round_pr } from "@web/core/utils/numbers";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 /**
  * @props {pos.order.line} line

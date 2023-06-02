@@ -1,11 +1,10 @@
 /** @odoo-module */
 
-import { HWPrinter } from "../printer/hw_printer";
+import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { EventBus, reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { effect } from "@point_of_sale/utils";
-import { deduceUrl } from "@point_of_sale/js/utils";
+import { effect, deduceUrl } from "@point_of_sale/utils";
 
 /**
  * This object interfaces with the local proxy to communicate to the various hardware devices

@@ -1,12 +1,12 @@
 /** @odoo-module */
 
 import { useService } from "@web/core/utils/hooks";
-import { EditListPopup } from "@point_of_sale/js/Popups/EditListPopup";
+import { EditListPopup } from "@point_of_sale/app/store/select_lot_popup/select_lot_popup";
 
-import { Orderline } from "./Orderline";
-import { OrderSummary } from "./OrderSummary";
+import { Orderline } from "@point_of_sale/app/screens/product_screen/orderline/orderline";
+import { OrderSummary } from "@point_of_sale/app/screens/product_screen/order_summary/order_summary";
 import { Component, useEffect, useRef } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class OrderWidget extends Component {
     static components = { Orderline, OrderSummary };

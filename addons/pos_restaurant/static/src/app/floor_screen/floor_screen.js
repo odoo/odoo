@@ -4,15 +4,15 @@ import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 
-import { TextInputPopup } from "@point_of_sale/js/Popups/TextInputPopup";
-import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
-import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
+import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
+import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
-import { EditableTable } from "./editable_table";
-import { EditBar } from "./edit_bar";
-import { Table } from "./table";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { EditableTable } from "@pos_restaurant/app/floor_screen/editable_table";
+import { EditBar } from "@pos_restaurant/app/floor_screen/edit_bar";
+import { Table } from "@pos_restaurant/app/floor_screen/table";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import {
     Component,

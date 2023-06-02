@@ -3,8 +3,8 @@
 import { registry } from "@web/core/registry";
 import { Mutex } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
-import { ErrorBarcodePopup } from "@point_of_sale/js/Popups/ErrorBarcodePopup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { ErrorBarcodePopup } from "@point_of_sale/app/barcode/error_popup/barcode_error_popup";
 import { BarcodeParser } from "@barcodes/js/barcode_parser";
 
 export class BarcodeReader {

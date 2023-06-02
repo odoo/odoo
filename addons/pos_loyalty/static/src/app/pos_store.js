@@ -1,11 +1,11 @@
 /** @odoo-module */
 
 import { patch } from "@web/core/utils/patch";
-import { PosStore } from "@point_of_sale/app/pos_store";
+import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { _t } from "@web/core/l10n/translation";
-import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
-import { TextInputPopup } from "@point_of_sale/js/Popups/TextInputPopup";
+import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
 
 patch(PosStore.prototype, "pos_loyalty.PosStore", {
     async addProductFromUi(product, options) {

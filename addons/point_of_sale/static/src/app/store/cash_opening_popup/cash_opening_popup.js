@@ -1,9 +1,9 @@
 /** @odoo-module */
 
-import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
+import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
-import { usePos } from "@point_of_sale/app/pos_hook";
-import { MoneyDetailsPopup } from "./MoneyDetailsPopup";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { MoneyDetailsPopup } from "@point_of_sale/app/utils/money_details_popup/money_details_popup";
 import { useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 

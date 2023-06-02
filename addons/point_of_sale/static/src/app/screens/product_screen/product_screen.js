@@ -1,25 +1,25 @@
 /** @odoo-module */
 
-import { ControlButtonsMixin } from "@point_of_sale/js/ControlButtonsMixin";
+import { ControlButtonsMixin } from "@point_of_sale/app/utils/control_buttons_mixin";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { useBarcodeReader } from "@point_of_sale/app/barcode_reader_hook";
+import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook";
 import { parseFloat } from "@web/views/fields/parsers";
 import { _lt } from "@web/core/l10n/translation";
 
-import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
-import { ControlButtonPopup } from "@point_of_sale/js/Popups/ControlButtonPopup";
+import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { ControlButtonPopup } from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons_popup";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onMounted, useState, useRef } from "@odoo/owl";
-import { ErrorBarcodePopup } from "@point_of_sale/js/Popups/ErrorBarcodePopup";
+import { ErrorBarcodePopup } from "@point_of_sale/app/barcode/error_popup/barcode_error_popup";
 
-import { NumpadWidget } from "./NumpadWidget";
-import { OrderWidget } from "./OrderWidget";
-import { ProductsWidget } from "./ProductsWidget";
-import { ActionpadWidget } from "./ActionpadWidget";
+import { NumpadWidget } from "@point_of_sale/app/screens/product_screen/numpad/numpad";
+import { OrderWidget } from "@point_of_sale/app/screens/product_screen/order/order";
+import { ProductsWidget } from "@point_of_sale/app/screens/product_screen/product_list/product_list";
+import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 
 export class ProductScreen extends ControlButtonsMixin(Component) {
     static template = "ProductScreen";

@@ -1,9 +1,9 @@
 /** @odoo-module */
-import { TicketScreen } from "@point_of_sale/js/Screens/TicketScreen/TicketScreen";
+import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { parseFloat } from "@web/views/fields/parsers";
-import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
+import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { Component, useState } from "@odoo/owl";
 
 patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {

@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { useService } from "@web/core/utils/hooks";
-import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component } from "@odoo/owl";
 
 export class RewardButton extends Component {

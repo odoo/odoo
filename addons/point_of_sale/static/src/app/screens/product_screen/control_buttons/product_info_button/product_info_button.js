@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { useService } from "@web/core/utils/hooks";
-import { ProductInfoPopup } from "@point_of_sale/js/Popups/ProductInfoPopup";
+import { ProductInfoPopup } from "@point_of_sale/app/screens/product_screen/product_info_popup/product_info_popup";
 import { Component } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class ProductInfoButton extends Component {
     static template = "ProductInfoButton";
