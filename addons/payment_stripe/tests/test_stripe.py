@@ -3,6 +3,8 @@
 import sys
 from unittest.mock import patch
 
+from werkzeug.urls import url_encode, url_join
+
 from odoo.tests import tagged
 from odoo.tools import mute_logger
 
@@ -15,31 +17,36 @@ from odoo.addons.payment_stripe.tests.common import StripeCommon
 class StripeTest(StripeCommon, PaymentHttpCommon):
 
     def test_processing_values(self):
-        dummy_session_id = 'cs_test_sbTG0yGwTszAqFUP8Ulecr1bUwEyQEo29M8taYvdP7UA6Qr37qX6uA6w'
-        tx = self._create_transaction(flow='redirect')  # We don't really care what the flow is here.
+        dummy_client_secret = 'pi_123456789_secret_dummy_123456789'
+        tx = self._create_transaction(flow='direct')  # We don't really care what the flow is here.
 
         # Ensure no external API call is done, we only want to check the processing values logic
-        def mock_stripe_create_checkout_session(self):
-            return {'id': dummy_session_id}
+        def mock_stripe_stripe_create_intent(self):
+            return {'client_secret': dummy_client_secret}
 
         with patch.object(
-            type(self.env['payment.transaction']), '_stripe_create_checkout_session',
-            mock_stripe_create_checkout_session,
+            type(self.env['payment.transaction']), '_stripe_create_intent',
+            mock_stripe_stripe_create_intent,
         ), mute_logger('odoo.addons.payment.models.payment_transaction'):
             processing_values = tx._get_processing_values()
 
-        self.assertEqual(processing_values['publishable_key'], self.stripe.stripe_publishable_key)
-        self.assertEqual(processing_values['session_id'], dummy_session_id)
+        self.assertEqual(processing_values['client_secret'], dummy_client_secret)
+
+        base_url = self.provider.get_base_url()
+        return_url = url_join(
+            base_url, f'{StripeController._return_url}?{url_encode({"reference": tx.reference})}'
+        )
+        self.assertEqual(processing_values['return_url'], return_url)
 
     @mute_logger('odoo.addons.payment_stripe.models.payment_transaction')
     def test_tx_state_after_send_capture_request(self):
         self.provider.capture_manually = True
-        tx = self._create_transaction('redirect', state='authorized')
+        tx = self._create_transaction('direct', state='authorized')
 
         with patch(
             'odoo.addons.payment_stripe.models.payment_provider.PaymentProvider'
             '._stripe_make_request',
-            return_value={'status': 'succeeded'},
+            return_value={'id': 'pi_3KTk9zAlCFm536g81Wy7RCPH', 'status': 'succeeded'},
         ):
             tx._send_capture_request()
         self.assertEqual(
@@ -54,7 +61,7 @@ class StripeTest(StripeCommon, PaymentHttpCommon):
         with patch(
             'odoo.addons.payment_stripe.models.payment_provider.PaymentProvider'
             '._stripe_make_request',
-            return_value={'status': 'canceled'},
+            return_value={'id': 'pi_3KTk9zAlCFm536g81Wy7RCPH', 'status': 'canceled'},
         ):
             tx._send_void_request()
         self.assertEqual(
