@@ -5,6 +5,7 @@ import babel
 import copy
 import logging
 import re
+import traceback
 
 from lxml import html
 from markupsafe import Markup
@@ -325,8 +326,9 @@ class MailRenderMixin(models.AbstractModel):
                     ) from e
                 _logger.info("Failed to render template : %s", template_src, exc_info=True)
                 raise UserError(
-                    _("Failed to render QWeb template : %(template_src)s)",
-                      template_src=template_src)
+                    _("Failed to render QWeb template : %(template_src)s\n\n%(template_traceback)s)",
+                      template_src=template_src,
+                      template_traceback=traceback.format_exc())
                     ) from e
             results[record.id] = render_result
 
