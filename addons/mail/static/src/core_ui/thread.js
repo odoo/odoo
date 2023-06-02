@@ -4,6 +4,7 @@ import {
     Component,
     onMounted,
     onWillStart,
+    onWillUnmount,
     onWillUpdateProps,
     useEffect,
     useRef,
@@ -129,10 +130,19 @@ export class Thread extends Component {
             }
         });
         onWillStart(() => {
-            this.threadService.fetchNewMessages(this.props.thread);
+            this.threadService
+                .fetchNewMessages(this.props.thread)
+                .then(() => this.threadService.subscribe(this.props.thread));
         });
         onWillUpdateProps((nextProps) => {
-            this.threadService.fetchNewMessages(nextProps.thread);
+            if (nextProps.thread !== this.props.thread) {
+                this.threadService.unsubscribe(this.props.thread);
+                this.threadService.subscribe(nextProps.thread);
+                this.threadService.fetchNewMessages(nextProps.thread);
+            }
+        });
+        onWillUnmount(() => {
+            this.threadService.unsubscribe(this.props.thread);
         });
     }
 
