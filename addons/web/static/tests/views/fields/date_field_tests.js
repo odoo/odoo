@@ -601,7 +601,7 @@ QUnit.module("Fields", (hooks) => {
             "input date field should be the same as it was in the view form"
         );
         assert.strictEqual(
-            target.querySelector(".o_zoom_out h5").textContent,
+            target.querySelector(".o_zoom_out strong").textContent,
             "februar 2017",
             "Norwegian locale should be correctly applied"
         );
