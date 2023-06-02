@@ -1747,15 +1747,6 @@ const Wysiwyg = Widget.extend({
             selection.addRange(range);
             // Always hide the unlink button on media.
             this.toolbar.$el.find('#unlink').toggleClass('d-none', true);
-            // Show the floatingtoolbar on the topleft of the media.
-            if (this.options.autohideToolbar) {
-                const imagePosition = this.lastMediaClicked.getBoundingClientRect();
-                this.toolbar.$el.css({
-                    visibility: 'visible',
-                    top: imagePosition.top + 10 + 'px',
-                    left: imagePosition.left + 10 + 'px',
-                });
-            }
             // Toggle the 'active' class on the active image tool buttons.
             for (const button of this.toolbar.$el.find('#image-shape div, #fa-spin')) {
                 button.classList.toggle('active', $(e.target).hasClass(button.id));
