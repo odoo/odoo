@@ -16,10 +16,10 @@ export class DomainValueExpr {
 class DomainNode {
     static nextId = 0;
 
-    constructor(type, negate) {
-        this.id = ++DomainNode.nextId;
+    constructor(type, options = {}) {
+        this.id = options.id ?? ++DomainNode.nextId;
         this.type = type;
-        this.negate = negate;
+        this.negate = options.negate ?? false;
     }
 
     toDomain() {
@@ -41,8 +41,8 @@ const TITLES = {
 };
 
 export class BranchDomainNode extends DomainNode {
-    constructor(connector, children = [], negate = false) {
-        super("branch", negate);
+    constructor(connector, children, options = {}) {
+        super("branch", options);
         this.connector = connector;
         this.children = children;
     }
@@ -80,8 +80,8 @@ export class BranchDomainNode extends DomainNode {
 // ----------------------------------------------------------------------------
 
 export class LeafDomainNode extends DomainNode {
-    constructor(pathInfo, operatorInfo, value, negate = false) {
-        super("leaf", negate);
+    constructor(pathInfo, operatorInfo, value, options = {}) {
+        super("leaf", options);
         this.pathInfo = pathInfo;
         this.operatorInfo = operatorInfo;
         this.value = value;
@@ -109,7 +109,9 @@ export class LeafDomainNode extends DomainNode {
     }
 
     clone() {
-        return new LeafDomainNode(this.pathInfo, this.operatorInfo, this.value, this.negate);
+        return new LeafDomainNode(this.pathInfo, this.operatorInfo, this.value, {
+            negate: this.negate,
+        });
     }
 }
 
@@ -173,19 +175,26 @@ export function getLeafOperatorInfo(tree, fieldDef) {
 /**
  * @param {import("@web/core/domain_tree").Tree} tree
  * @param {Object} pathsInfo
+ * @param {LeafDomainNode|BranchDomainNode} [previousTree]
  * @returns {LeafDomainNode|BranchDomainNode}
  */
-export function toDomainSelectorTree(tree, pathsInfo) {
+export function toDomainSelectorTree(tree, pathsInfo, previousTree = null) {
     if (tree.type === "condition") {
         const path = tree.path;
         const negate = tree.negate;
         const pathInfo = pathsInfo[path];
         const operatorInfo = getLeafOperatorInfo(tree, pathInfo.fieldDef);
         const value = getValue(tree.valueAST);
-        return new LeafDomainNode(pathInfo, operatorInfo, value, negate);
+        const id = previousTree instanceof LeafDomainNode ? previousTree.id : null;
+        return new LeafDomainNode(pathInfo, operatorInfo, value, { negate, id });
     }
     const connector = tree.value === "&" ? "AND" : "OR";
     const negate = tree.negate;
-    const children = tree.children.map((child) => toDomainSelectorTree(child, pathsInfo));
-    return new BranchDomainNode(connector, children, negate);
+    const children = tree.children.map((child, index) => {
+        const subTree =
+            previousTree instanceof BranchDomainNode ? previousTree.children[index] : null;
+        return toDomainSelectorTree(child, pathsInfo, subTree);
+    });
+    const id = previousTree instanceof BranchDomainNode ? previousTree.id : null;
+    return new BranchDomainNode(connector, children, { negate, id });
 }
