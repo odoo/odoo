@@ -5,6 +5,7 @@ import babel
 import copy
 import logging
 import re
+import traceback
 
 from lxml import html
 from markupsafe import Markup
@@ -313,7 +314,7 @@ class MailRenderMixin(models.AbstractModel):
                     group = self.env.ref('mail.group_mail_template_editor')
                     raise AccessError(_('Only users belonging to the "%s" group can modify dynamic templates.', group.name)) from e
                 _logger.info("Failed to render template : %s", template_src, exc_info=True)
-                raise UserError(_("Failed to render QWeb template : %s)", template_src)) from e
+                raise UserError(_("Failed to render QWeb template : %s\n\n%s)", template_src, traceback.format_exc())) from e
             results[record.id] = render_result
 
         return results
