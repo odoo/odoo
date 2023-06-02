@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import { usePos } from "@point_of_sale/app/pos_hook";
-import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { Component } from "@odoo/owl";
 
 export class PrintBillButton extends Component {

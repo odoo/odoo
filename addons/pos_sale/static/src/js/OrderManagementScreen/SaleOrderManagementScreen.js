@@ -4,18 +4,18 @@ import { sprintf } from "@web/core/utils/strings";
 import { parseFloat } from "@web/views/fields/parsers";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
-import { ControlButtonsMixin } from "@point_of_sale/js/ControlButtonsMixin";
-import { Orderline } from "@point_of_sale/js/models";
+import { ControlButtonsMixin } from "@point_of_sale/app/utils/control_buttons_mixin";
+import { Orderline } from "@point_of_sale/app/store/models";
 
-import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
-import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
-import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
+import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
+import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
 
-import { SaleOrderList } from "./SaleOrderList";
-import { SaleOrderManagementControlPanel } from "./SaleOrderManagementControlPanel";
+import { SaleOrderList } from "@pos_sale/js/OrderManagementScreen/SaleOrderList";
+import { SaleOrderManagementControlPanel } from "@pos_sale/js/OrderManagementScreen/SaleOrderManagementControlPanel";
 import { Component, onMounted, useRef } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 /**
  * ID getter to take into account falsy many2one value.

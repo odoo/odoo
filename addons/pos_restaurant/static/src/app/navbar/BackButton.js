@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import { BackButton } from "@point_of_sale/app/navbar/BackButton";
-import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { BackButton } from "@point_of_sale/app/navbar/back_button/back_button";
+import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { TipScreen } from "@pos_restaurant/js/Screens/TipScreen";
 import { patch } from "@web/core/utils/patch";
 

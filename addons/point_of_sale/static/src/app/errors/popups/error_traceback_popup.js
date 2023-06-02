@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { _lt } from "@web/core/l10n/translation";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 // formerly ErrorTracebackPopupWidget
 export class ErrorTracebackPopup extends ErrorPopup {

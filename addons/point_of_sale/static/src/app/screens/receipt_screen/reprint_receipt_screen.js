@@ -1,9 +1,9 @@
 /** @odoo-module */
 
-import { usePos } from "@point_of_sale/app/pos_hook";
-import { AbstractReceiptScreen } from "@point_of_sale/js/Misc/AbstractReceiptScreen";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { AbstractReceiptScreen } from "@point_of_sale/app/screens/receipt_screen/abstract_receipt_screen";
 import { registry } from "@web/core/registry";
-import { OrderReceipt } from "../ReceiptScreen/OrderReceipt";
+import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/receipt";
 
 export class ReprintReceiptScreen extends AbstractReceiptScreen {
     static template = "ReprintReceiptScreen";

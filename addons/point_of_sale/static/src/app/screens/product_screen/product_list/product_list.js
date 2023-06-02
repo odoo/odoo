@@ -1,15 +1,15 @@
 /** @odoo-module */
 
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
-import { identifyError } from "@point_of_sale/app/error_handlers/error_handlers";
+import { identifyError } from "@point_of_sale/app/errors/error_handlers";
 import { ConnectionLostError, ConnectionAbortedError } from "@web/core/network/rpc_service";
 
-import { ProductItem } from "./ProductItem";
-import { ProductsWidgetControlPanel } from "./ProductsWidgetControlPanel";
+import { ProductItem } from "@point_of_sale/app/screens/product_screen/product/product";
+import { ProductsWidgetControlPanel } from "@point_of_sale/app/screens/product_screen/product_list/control_panel/control_panel";
 import { Component, useState } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
-import { OfflineErrorPopup } from "@point_of_sale/js/Popups/OfflineErrorPopup";
+import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
 
 export class ProductsWidget extends Component {
     static components = { ProductItem, ProductsWidgetControlPanel };

@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { OrderReceipt } from "@point_of_sale/js/Screens/ReceiptScreen/OrderReceipt";
+import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/receipt";
 import { patch } from "@web/core/utils/patch";
 
 patch(OrderReceipt.prototype, "pos_mercury.OrderReceipt", {

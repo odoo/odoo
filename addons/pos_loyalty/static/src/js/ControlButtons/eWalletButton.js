@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
-import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
+import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { useService } from "@web/core/utils/hooks";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component } from "@odoo/owl";
 
 export class eWalletButton extends Component {

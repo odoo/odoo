@@ -1,9 +1,9 @@
 /** @odoo-module */
 
 import { debounce } from "@web/core/utils/timing";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 
-import { CategoryButton } from "./CategoryButton";
+import { CategoryButton } from "@point_of_sale/app/screens/product_screen/category_button/category_button";
 
 import { Component, onMounted, onWillUnmount, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";

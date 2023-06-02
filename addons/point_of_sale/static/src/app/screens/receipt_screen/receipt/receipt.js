@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import { usePos } from "@point_of_sale/app/pos_hook";
-import { WrappedProductNameLines } from "./WrappedProductNameLines";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { WrappedProductNameLines } from "@point_of_sale/app/screens/receipt_screen/receipt/wrapped_product_name";
 import { Component, onWillUpdateProps } from "@odoo/owl";
 
 export class OrderReceipt extends Component {

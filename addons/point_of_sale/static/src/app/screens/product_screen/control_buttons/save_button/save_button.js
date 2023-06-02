@@ -1,8 +1,8 @@
 /** @odoo-module */
 
 import { Component } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/pos_hook";
-import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
+import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { useService } from "@web/core/utils/hooks";
 
 export class SaveButton extends Component {

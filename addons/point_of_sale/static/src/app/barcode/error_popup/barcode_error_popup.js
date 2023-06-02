@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { _lt } from "@web/core/l10n/translation";
 
 export class ErrorBarcodePopup extends ErrorPopup {

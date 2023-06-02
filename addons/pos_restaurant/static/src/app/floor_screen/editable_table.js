@@ -1,9 +1,9 @@
 /** @odoo-module */
 
-import { getLimits, useMovable, constrain } from "@point_of_sale/app/movable_hook";
+import { getLimits, useMovable, constrain } from "@point_of_sale/app/utils/movable_hook";
 import { onWillUnmount, useEffect, useRef, Component } from "@odoo/owl";
-import { Table } from "./table";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { Table } from "@pos_restaurant/app/floor_screen/table";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 const MIN_TABLE_SIZE = 30; // px
 

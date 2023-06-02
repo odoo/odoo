@@ -4,9 +4,9 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { useService } from "@web/core/utils/hooks";
 
-import { PartnerLine } from "./PartnerLine";
-import { PartnerDetailsEdit } from "./PartnerDetailsEdit";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { PartnerLine } from "@point_of_sale/app/screens/partner_list/partner_line/partner_line";
+import { PartnerDetailsEdit } from "@point_of_sale/app/screens/partner_list/partner_editor/partner_editor";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, onWillUnmount, useRef, useState } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
 

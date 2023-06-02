@@ -2,13 +2,13 @@
 
 import { parseFloat } from "@web/views/fields/parsers";
 import { Transition } from "@web/core/transition";
-import { constrain, getLimits, useMovable } from "@point_of_sale/app/movable_hook";
-import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
-import { OrderImportPopup } from "@point_of_sale/js/Popups/OrderImportPopup";
+import { constrain, getLimits, useMovable } from "@point_of_sale/app/utils/movable_hook";
+import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
+import { OrderImportPopup } from "@point_of_sale/app/debug/order_import_popup/order_import_popup";
 import { useBus, useService } from "@web/core/utils/hooks";
 
 import { useEffect, useRef, useState, Component } from "@odoo/owl";
-import { usePos } from "../pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class DebugWidget extends Component {
     static components = { Transition };
