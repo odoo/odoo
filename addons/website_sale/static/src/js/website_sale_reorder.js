@@ -148,7 +148,7 @@ export class ReorderDialog extends Component {
         product.combinationInfo = await this.rpc("/sale/get_combination_info_website", {
             product_template_id: product.product_template_id,
             product_id: product.product_id,
-            combination: [],
+            combination: product.combination,
             add_qty: product.qty,
             pricelist_id: false,
             context: {
@@ -212,6 +212,8 @@ export class ReorderDialog extends Component {
             await this.rpc("/shop/cart/update_json", {
                 product_id: product.product_id,
                 add_qty: product.qty,
+                no_variant_attribute_values: JSON.stringify(product.no_variant_attribute_values),
+                product_custom_attribute_values: JSON.stringify(product.product_custom_attribute_values),
             });
         }
     }
