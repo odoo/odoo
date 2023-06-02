@@ -3,6 +3,7 @@
 import { Component, onWillStart, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { Domain } from "@web/core/domain";
+import { currencies } from "@web/core/currency";
 import { errorService } from "@web/core/errors/error_service";
 import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
@@ -3774,6 +3775,70 @@ QUnit.module("Views", (hooks) => {
 
         assert.strictEqual(target.querySelectorAll("tfoot td")[1].textContent, "$\u00a02000.00");
     });
+
+    QUnit.test("aggregates monetary with custom digits (same currency)", async function (assert) {
+        serverData.models.foo.records = serverData.models.foo.records.map((record) => ({
+            ...record,
+            currency_id: 1,
+        }));
+        patchWithCleanup(currencies, {
+            1: { ...currencies[1], digits: [42, 4] },
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="amount" sum="Sum"/>
+                    <field name="currency_id"/>
+                </tree>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll("tbody [name='amount']")), [
+            "$\u00a01200.0000",
+            "$\u00a0500.0000",
+            "$\u00a0300.0000",
+            "$\u00a00.0000",
+        ]);
+
+        assert.strictEqual(target.querySelectorAll("tfoot td")[1].textContent, "$\u00a02000.0000");
+    });
+
+    QUnit.test(
+        "aggregates float with monetary widget and custom digits (same currency)",
+        async function (assert) {
+            serverData.models.foo.records = serverData.models.foo.records.map((record) => ({
+                ...record,
+                currency_id: 1,
+            }));
+            patchWithCleanup(currencies, {
+                1: { ...currencies[1], digits: [42, 4] },
+            });
+
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
+                <tree>
+                    <field name="qux" widget="monetary" sum="Sum"/>
+                    <field name="currency_id"/>
+                </tree>`,
+            });
+
+            assert.deepEqual(
+                getNodesTextContent(target.querySelectorAll("tbody .o_monetary_cell")),
+                ["$\u00a00.4000", "$\u00a013.0000", "$\u00a0-3.0000", "$\u00a09.0000"]
+            );
+
+            assert.strictEqual(
+                target.querySelectorAll("tfoot td")[1].textContent,
+                "$\u00a019.4000"
+            );
+        }
+    );
 
     QUnit.test(
         "currency_field is taken into account when formatting monetary values",
