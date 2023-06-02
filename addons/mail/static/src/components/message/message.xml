@@ -81,6 +81,25 @@
                                         Anonymous
                                     </div>
                                 </t>
+                                <t t-if="threadView and messageView.message.originThread and messageView.message.originThread === threadView.thread and messageView.message.notifications.length > 0">
+                                    <t t-if="messageView.message.failureNotifications.length > 0">
+                                        <span class="o_Message_notificationIconClickable o-error mr-1" role="button" tabindex="0" t-on-click="_onClickFailure">
+                                            <i name="failureIcon" class="o_Message_notificationIcon fa fa-envelope" role="img" aria-label="Delivery failure"/>
+                                        </span>
+                                    </t>
+                                    <t t-else="">
+                                        <Popover>
+                                            <span class="o_Message_notificationIconClickable mr-1">
+                                                <i name="notificationIcon" class="o_Message_notificationIcon fa fa-envelope-o"/>
+                                            </span>
+                                            <t t-set="opened">
+                                                <NotificationPopover
+                                                    notificationLocalIds="messageView.message.notifications.map(notification => notification.localId)"
+                                                />
+                                            </t>
+                                        </Popover>
+                                    </t>
+                                </t>
                                 <t t-if="messageView.message.date">
                                     <div class="o_Message_date o_Message_headerDate" t-att-class="{ 'o-message-selected': isSelected }" t-att-title="datetime">
                                         - <t t-esc="messageView.message.dateFromNow"/>
@@ -98,25 +117,6 @@
                                             on <a class="o_Message_originThreadLink" t-att-href="messageView.message.originThread.url" t-on-click="_onClickOriginThread"><t t-if="messageView.message.originThread.displayName"><t t-esc="messageView.message.originThread.displayName"/></t><t t-else="">document</t></a>
                                         </t>
                                     </div>
-                                </t>
-                                <t t-if="threadView and messageView.message.originThread and messageView.message.originThread === threadView.thread and messageView.message.notifications.length > 0">
-                                    <t t-if="messageView.message.failureNotifications.length > 0">
-                                        <span class="o_Message_notificationIconClickable o-error" role="button" tabindex="0" t-on-click="_onClickFailure">
-                                            <i name="failureIcon" class="o_Message_notificationIcon fa fa-envelope" role="img" aria-label="Delivery failure"/>
-                                        </span>
-                                    </t>
-                                    <t t-else="">
-                                        <Popover>
-                                            <span class="o_Message_notificationIconClickable">
-                                                <i name="notificationIcon" class="o_Message_notificationIcon fa fa-envelope-o"/>
-                                            </span>
-                                            <t t-set="opened">
-                                                <NotificationPopover
-                                                    notificationLocalIds="messageView.message.notifications.map(notification => notification.localId)"
-                                                />
-                                            </t>
-                                        </Popover>
-                                    </t>
                                 </t>
                             </div>
                         </t>
