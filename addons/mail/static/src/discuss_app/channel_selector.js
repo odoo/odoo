@@ -20,6 +20,8 @@ export class ChannelSelector extends Component {
         this.store = useStore();
         this.threadService = useState(useService("mail.thread"));
         this.personaService = useService("mail.persona");
+        /** @type {import("@mail/composer/suggestion_service").SuggestionService} */
+        this.suggestionService = useService("mail.suggestion");
         this.orm = useService("orm");
         this.state = useState({
             value: "",
@@ -65,14 +67,16 @@ export class ChannelSelector extends Component {
                     10,
                     this.state.selectedPartners,
                 ]);
-                const suggestions = results.map((data) => {
-                    this.personaService.insert({ ...data, type: "partner" });
-                    return {
-                        classList: "o-mail-ChannelSelector-suggestion",
-                        label: data.name,
-                        partner: data,
-                    };
-                });
+                const suggestions = this.suggestionService
+                    .sortPartnerSuggestions(results, cleanedTerm)
+                    .map((data) => {
+                        this.personaService.insert({ ...data, type: "partner" });
+                        return {
+                            classList: "o-mail-ChannelSelector-suggestion",
+                            label: data.name,
+                            partner: data,
+                        };
+                    });
                 if (this.store.self.name.includes(cleanedTerm)) {
                     suggestions.push({
                         classList: "o-mail-ChannelSelector-suggestion",

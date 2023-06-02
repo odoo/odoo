@@ -2,6 +2,7 @@
 
 import { Composer } from "@mail/composer/composer";
 import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("suggestion", {
@@ -62,3 +63,63 @@ QUnit.test(
         assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
     }
 );
+
+QUnit.test("Sort partner suggestions by recent chats", async (assert) => {
+    const pyEnv = await startServer();
+    const [partner_1, partner_2, partner_3] = pyEnv["res.partner"].create([
+        { name: "User 1" },
+        { name: "User 2" },
+        { name: "User 3" },
+    ]);
+    pyEnv["res.users"].create([
+        { partner_id: partner_1 },
+        { partner_id: partner_2 },
+        { partner_id: partner_3 },
+    ]);
+    pyEnv["discuss.channel"].create([
+        { name: "General", channel_type: "channel" },
+        {
+            channel_member_ids: [
+                Command.create({
+                    last_interest_dt: "2023-01-01 00:00:00",
+                    partner_id: pyEnv.currentPartnerId,
+                }),
+                Command.create({ partner_id: partner_1 }),
+            ],
+            channel_type: "chat",
+        },
+        {
+            channel_member_ids: [
+                Command.create({
+                    last_interest_dt: "2023-01-01 00:00:00",
+                    partner_id: pyEnv.currentPartnerId,
+                }),
+                Command.create({ partner_id: partner_2 }),
+            ],
+            channel_type: "chat",
+        },
+        {
+            channel_member_ids: [
+                Command.create({
+                    last_interest_dt: "2023-01-01 00:00:00",
+                    partner_id: pyEnv.currentPartnerId,
+                }),
+                Command.create({ partner_id: partner_3 }),
+            ],
+            channel_type: "chat",
+        },
+    ]);
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await click(".o-mail-DiscussCategoryItem:contains('User 2')");
+    await insertText(".o-mail-Composer-input", "This is a test");
+    await click(".o-mail-Composer-send:not(:disabled)");
+    assert.containsOnce($, ".o-mail-Message:contains('This is a test')");
+    await click(".o-mail-DiscussCategoryItem:contains('General')");
+    await insertText(".o-mail-Composer-input", "@");
+    await insertText(".o-mail-Composer-input", "User");
+    assert.containsN($, ".o-mail-Composer-suggestion", 3);
+    assert.strictEqual($(".o-mail-Composer-suggestion").eq(0).text(), "User 2");
+    assert.strictEqual($(".o-mail-Composer-suggestion").eq(1).text(), "User 1");
+    assert.strictEqual($(".o-mail-Composer-suggestion").eq(2).text(), "User 3");
+});
