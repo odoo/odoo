@@ -9,6 +9,42 @@ from odoo.tools import mute_logger
 
 
 class TestSlideInternals(slides_common.SlidesCase):
+    def test_compute_category_completion_time(self):
+        """
+            Check that we properly calculate the completion time of a course without error, after deleting a slide.
+        """
+        self.category2 = self.env['slide.slide'].with_user(self.user_officer).create({
+            'name': 'Cooking Tips For Dieting',
+            'channel_id': self.channel.id,
+            'is_category': True,
+            'is_published': True,
+            'sequence': 5,
+        })
+        self.slide_4 = self.env['slide.slide'].with_user(self.user_officer).create({
+            'name': 'Vegan Diet',
+            'channel_id': self.channel.id,
+            'slide_category': 'document',
+            'is_published': True,
+            'completion_time': 5.0,
+            'sequence': 6,
+        })
+        self.slide_5 = self.env['slide.slide'].with_user(self.user_officer).create({
+            'name': 'Normal Diet',
+            'channel_id': self.channel.id,
+            'slide_category': 'document',
+            'is_published': True,
+            'completion_time': 1.5,
+            'sequence': 7,
+        })
+
+        before_unlink = self.category2.completion_time
+        self.assertEqual(before_unlink, self.slide_4.completion_time + self.slide_5.completion_time)
+
+        self.channel.slide_ids[6].sudo().unlink()
+        self.category2._compute_category_completion_time()
+
+        after_unlink = self.category2.completion_time
+        self.assertEqual(after_unlink, self.slide_4.completion_time)
 
     @mute_logger('odoo.sql_db')
     @users('user_manager')
