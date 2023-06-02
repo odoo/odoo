@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_is_zero, OrderedSet
+from odoo.tools import float_compare, float_is_zero, OrderedSet
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -46,6 +46,10 @@ class StockMove(models.Model):
         # If the move is a return, use the original move's price unit.
         if self.origin_returned_move_id and self.origin_returned_move_id.sudo().stock_valuation_layer_ids:
             layers = self.origin_returned_move_id.sudo().stock_valuation_layer_ids
+            # dropshipping create additional positive svl to make sure there is no impact on the stock valuation
+            # We need to remove them from the computation of the price unit.
+            if self.origin_returned_move_id._is_dropshipped():
+                layers = layers.filtered(lambda l: float_compare(l.value, 0, precision_rounding=l.product_id.uom_id.rounding) <= 0)
             layers |= layers.stock_valuation_layer_ids
             quantity = sum(layers.mapped("quantity"))
             return layers.currency_id.round(sum(layers.mapped("value")) / quantity) if not float_is_zero(quantity, precision_rounding=layers.uom_id.rounding) else 0
