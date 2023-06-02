@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Chrome } from "@point_of_sale/js/Chrome";
+import { Chrome } from "@point_of_sale/app/pos_app";
 import { Loader } from "@point_of_sale/app/loader/loader";
 import { setLoadXmlDefaultApp, templates } from "@web/core/assets";
 import { App, mount, reactive, whenReady } from "@odoo/owl";

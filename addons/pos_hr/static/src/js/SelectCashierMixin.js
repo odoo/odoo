@@ -3,12 +3,12 @@
 
 import { _t } from "@web/core/l10n/translation";
 
-import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
-import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
+import { SelectionPopup } from "@point_of_sale/app/utils/input_popups/selection_popup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { useService } from "@web/core/utils/hooks";
-import { useBarcodeReader } from "@point_of_sale/app/barcode_reader_hook";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { useBarcodeReader } from "@point_of_sale/app/barcode/barcode_reader_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export function useCashierSelector(
     { onCashierChanged, exclusive } = { onCashierChanged: () => {}, exclusive: false }

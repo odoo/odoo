@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Component, useState } from "@odoo/owl";
-import { SaleOrderRow } from "./SaleOrderRow";
+import { SaleOrderRow } from "@pos_sale/js/OrderManagementScreen/SaleOrderRow";
 import { useService } from "@web/core/utils/hooks";
 
 /**

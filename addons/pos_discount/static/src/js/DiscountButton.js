@@ -1,12 +1,12 @@
 /** @odoo-module */
 
-import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { useService } from "@web/core/utils/hooks";
-import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { NumberPopup } from "@point_of_sale/app/utils/input_popups/number_popup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { Component } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class DiscountButton extends Component {
     static template = "DiscountButton";

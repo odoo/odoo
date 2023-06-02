@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Component, useState } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 
 // Previously UsernameWidget

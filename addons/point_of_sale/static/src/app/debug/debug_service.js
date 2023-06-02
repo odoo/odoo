@@ -2,10 +2,10 @@
 
 import { reactive } from "@odoo/owl";
 import { registry } from "@web/core/registry";
-import { DebugWidget } from "./debug_widget";
 import { withComputedProperties } from "@point_of_sale/utils";
+import { DebugWidget } from "@point_of_sale/app/debug/debug_widget";
 
-const debugService = {
+export const debugService = {
     /**
      * @param {{ debug: string }} env
      */

@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { patch } from "@web/core/utils/patch";
-import { PosBus } from "@point_of_sale/app/pos_bus";
+import { PosBus } from "@point_of_sale/app/bus/pos_bus_service";
 
 patch(PosBus.prototype, "pos_restaurant.PosBus", {
     // Override

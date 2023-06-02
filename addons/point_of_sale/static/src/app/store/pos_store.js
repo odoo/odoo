@@ -1,16 +1,16 @@
 /** @odoo-module */
 
-import { PosGlobalState } from "@point_of_sale/js/models";
+import { PosGlobalState } from "@point_of_sale/app/store/models";
 
 import { registry } from "@web/core/registry";
-import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
+import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
 import { Reactive } from "@point_of_sale/utils";
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { _t } from "@web/core/l10n/translation";
-import { CashOpeningPopup } from "@point_of_sale/js/Popups/CashOpeningPopup";
+import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";
 import { sprintf } from "@web/core/utils/strings";
-import { PaymentScreen } from "@point_of_sale/js/Screens/PaymentScreen/PaymentScreen";
-import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
+import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 
 export class PosStore extends Reactive {
     hasBigScrollBars = false;

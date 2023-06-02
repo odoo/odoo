@@ -1,7 +1,6 @@
 /** @odoo-module */
 
-import { batched } from "@point_of_sale/js/utils";
-import { effect, Reactive } from "@point_of_sale/utils";
+import { batched, effect, Reactive } from "@point_of_sale/utils";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
 

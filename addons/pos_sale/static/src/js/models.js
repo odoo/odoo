@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Order, Orderline } from "@point_of_sale/js/models";
+import { Order, Orderline } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 
 patch(Order.prototype, "pos_sale.Order", {

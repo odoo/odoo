@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import { useAutoFocusToLast } from "@point_of_sale/js/custom_hooks";
+import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
+import { useAutoFocusToLast } from "@point_of_sale/app/utils/hooks";
 import { _lt } from "@web/core/l10n/translation";
 import { useState } from "@odoo/owl";
-import { EditListInput } from "./EditListInput";
+import { EditListInput } from "@point_of_sale/app/store/select_lot_popup/edit_list_input/edit_list_input";
 
 /**
  * Given a array of { id, text }, we show the user this popup to be able to modify this given array.

@@ -1,8 +1,8 @@
 /** @odoo-module */
-import { OfflineErrorPopup } from "./Popups/OfflineErrorPopup";
-import { ConfirmPopup } from "./Popups/ConfirmPopup";
-import { ErrorTracebackPopup } from "./Popups/ErrorTracebackPopup";
-import { ErrorPopup } from "./Popups/ErrorPopup";
+import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
+import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
+import { ErrorTracebackPopup } from "@point_of_sale/app/errors/popups/error_traceback_popup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { useEnv, onMounted, onPatched, useComponent, useRef } from "@odoo/owl";
 
 /**

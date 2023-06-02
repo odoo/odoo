@@ -5,7 +5,7 @@
  * -----
  *
  * ```
- * import const { startSteps, getSteps, createTourMethods } from "@point_of_sale/js/utils";
+ * import const { startSteps, getSteps, createTourMethods } from "@point_of_sale/utils";
  * import const { Other } from "@point_of_sale/../tests/OtherMethods";
  *
  * // 1. Define classes Do, Check and Execute having methods that
