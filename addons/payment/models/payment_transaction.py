@@ -516,6 +516,20 @@ class PaymentTransaction(models.Model):
         """
         return dict()
 
+    def _get_mandate_values(self):
+        """ Return a dict of module-specific values used to create a mandate.
+
+        For a module to add its own mandate values, it must overwrite this method and return a dict
+        of module-specific values.
+
+        Note: `self.ensure_one()`
+
+        :return: The dict of module-specific mandate values.
+        :rtype: dict
+        """
+        self.ensure_one()
+        return dict()
+
     def _send_payment_request(self):
         """ Request the provider handling the transaction to make the payment.
 

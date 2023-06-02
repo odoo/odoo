@@ -1,29 +1,52 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from collections import namedtuple
-
-
 API_VERSION = '2019-05-16'  # The API version of Stripe implemented in this module
 
 # Stripe proxy URL
 PROXY_URL = 'https://stripe.api.odoo.com/api/stripe/'
 
-# Support payment method types
-PMT = namedtuple('PaymentMethodType', ['name', 'countries', 'currencies', 'recurrence'])
-PAYMENT_METHOD_TYPES = [
-    PMT('card', [], [], 'recurring'),
-    PMT('ideal', ['nl'], ['eur'], 'punctual'),
-    PMT('bancontact', ['be'], ['eur'], 'punctual'),
-    PMT('eps', ['at'], ['eur'], 'punctual'),
-    PMT('giropay', ['de'], ['eur'], 'punctual'),
-    PMT('p24', ['pl'], ['eur', 'pln'], 'punctual'),
-]
+# The payment methods for which Stripe supports tokenization.
+# See https://stripe.com/docs/payments/payment-methods/integration-options.
+PAYMENT_METHODS_TOKENIZATION_SUPPORT = {
+    'acss_debit': True,
+    'affirm': False,
+    'afterpay_clearpay': False,
+    'alipay': False,
+    'apple_pay': True,
+    'au_becs_debit': True,
+    'bacs_debit': False,  # Stripe doesn't support saving BACS with setupIntent.
+    'bancontact': True,
+    'blik': False,
+    'boleto': True,
+    'card': True,
+    'cashapp': True,
+    'customer_balance': False,
+    'eps': False,
+    'fpx': False,
+    'giropay': False,
+    'google_pay': True,
+    'grabpay': False,
+    'ideal': True,
+    'klarna': False,
+    'konbini': False,
+    'link': True,
+    'mobilepay': False,
+    'oxxo': False,
+    'p24': False,
+    'paynow': False,
+    'paypal': True,
+    'promptpay': False,
+    'sepa_debit': True,
+    'sofort': True,
+    'us_bank_account': True,
+    'wechat_pay': False,
+    'zip': False,
+}
 
-# Mapping of transaction states to Stripe objects ({Payment,Setup}Intent, Charge, Refund) statuses.
+# Mapping of transaction states to Stripe objects ({Payment,Setup}Intent, Refund) statuses.
 # For each object's exhaustive status list, see:
 # https://stripe.com/docs/api/payment_intents/object#payment_intent_object-status
 # https://stripe.com/docs/api/setup_intents/object#setup_intent_object-status
-# https://stripe.com/docs/api/charges/object#charge_object-status
 # https://stripe.com/docs/api/refunds/object#refund_object-status
 STATUS_MAPPING = {
     'draft': ('requires_confirmation', 'requires_action'),
@@ -36,6 +59,7 @@ STATUS_MAPPING = {
 
 # Events which are handled by the webhook
 HANDLED_WEBHOOK_EVENTS = [
+    'payment_intent.processing',
     'payment_intent.amount_capturable_updated',
     'payment_intent.succeeded',
     'payment_intent.payment_failed',

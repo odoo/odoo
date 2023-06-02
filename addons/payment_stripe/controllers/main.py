@@ -2,7 +2,6 @@
 
 import hashlib
 import hmac
-import json
 import logging
 import pprint
 from datetime import datetime
@@ -23,73 +22,60 @@ _logger = logging.getLogger(__name__)
 
 
 class StripeController(http.Controller):
-    _checkout_return_url = '/payment/stripe/checkout_return'
-    _validation_return_url = '/payment/stripe/validation_return'
+    _return_url = '/payment/stripe/return'
     _webhook_url = '/payment/stripe/webhook'
     _apple_pay_domain_association_url = '/.well-known/apple-developer-merchantid-domain-association'
     WEBHOOK_AGE_TOLERANCE = 10*60  # seconds
 
-    @http.route(_checkout_return_url, type='http', auth='public', csrf=False)
-    def stripe_return_from_checkout(self, **data):
-        """ Process the notification data sent by Stripe after redirection from checkout.
+    @http.route(_return_url, type='http', methods=['GET'], auth='public')
+    def stripe_return(self, **data):
+        """ Process the notification data sent by Stripe after redirection from payment.
 
-        :param dict data: The GET params appended to the URL in `_stripe_create_checkout_session`
+        Customers go through this route regardless of whether the payment was direct or with
+        redirection to Stripe or to an external service (e.g., for strong authentication).
+
+        :param dict data: The notification data, including the reference appended to the URL in
+                          `_get_specific_processing_values`.
         """
-        # Retrieve the tx based on the tx reference included in the return url
+        # Retrieve the transaction based on the reference included in the return url.
         tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
             'stripe', data
         )
 
-        # Fetch the PaymentIntent, Charge and PaymentMethod objects from Stripe
-        payment_intent = tx_sudo.provider_id._stripe_make_request(
-            f'payment_intents/{tx_sudo.stripe_payment_intent}', method='GET'
-        )
-        _logger.info("received payment_intents response:\n%s", pprint.pformat(payment_intent))
-        self._include_payment_intent_in_notification_data(payment_intent, data)
+        if tx_sudo.operation != 'validation':
+            # Fetch the PaymentIntent and PaymentMethod objects from Stripe.
+            payment_intent = tx_sudo.provider_id._stripe_make_request(
+                f'payment_intents/{data.get("payment_intent")}',
+                payload={'expand[]': 'payment_method'},  # Expand all required objects.
+                method='GET',
+            )
+            _logger.info("Received payment_intents response:\n%s", pprint.pformat(payment_intent))
+            self._include_payment_intent_in_notification_data(payment_intent, data)
+        else:
+            # Fetch the SetupIntent and PaymentMethod objects from Stripe.
+            setup_intent = tx_sudo.provider_id._stripe_make_request(
+                f'setup_intents/{data.get("setup_intent")}',
+                payload={'expand[]': 'payment_method'},  # Expand all required objects.
+                method='GET',
+            )
+            _logger.info("Received setup_intents response:\n%s", pprint.pformat(setup_intent))
+            self._include_setup_intent_in_notification_data(setup_intent, data)
 
-        # Handle the notification data crafted with Stripe API objects
+        # Handle the notification data crafted with Stripe API's objects.
         tx_sudo._handle_notification_data('stripe', data)
 
-        # Redirect the user to the status page
-        return request.redirect('/payment/status')
-
-    @http.route(_validation_return_url, type='http', auth='public', csrf=False)
-    def stripe_return_from_validation(self, **data):
-        """ Process the notification data sent by Stripe after redirection for validation.
-
-        :param dict data: The GET params appended to the URL in `_stripe_create_checkout_session`
-        """
-        # Retrieve the transaction based on the tx reference included in the return url
-        tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-            'stripe', data
-        )
-
-        # Fetch the Session, SetupIntent and PaymentMethod objects from Stripe
-        checkout_session = tx_sudo.provider_id._stripe_make_request(
-            f'checkout/sessions/{data.get("checkout_session_id")}',
-            payload={'expand[]': 'setup_intent.payment_method'},  # Expand all required objects
-            method='GET'
-        )
-        _logger.info("received checkout/session response:\n%s", pprint.pformat(checkout_session))
-        self._include_setup_intent_in_notification_data(
-            checkout_session.get('setup_intent', {}), data
-        )
-
-        # Handle the notification data crafted with Stripe API objects
-        tx_sudo._handle_notification_data('stripe', data)
-
-        # Redirect the user to the status page
+        # Redirect the user to the status page.
         return request.redirect('/payment/status')
 
     @http.route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
     def stripe_webhook(self):
         """ Process the notification data sent by Stripe to the webhook.
 
-        :return: An empty string to acknowledge the notification
+        :return: An empty string to acknowledge the notification.
         :rtype: str
         """
         event = request.get_json_data()
-        _logger.info("notification received from Stripe with data:\n%s", pprint.pformat(event))
+        _logger.info("Notification received from Stripe with data:\n%s", pprint.pformat(event))
         try:
             if event['type'] in HANDLED_WEBHOOK_EVENTS:
                 stripe_object = event['data']['object']  # {Payment,Setup}Intent, Charge, or Refund.
@@ -107,6 +93,14 @@ class StripeController(http.Controller):
 
                 # Handle the notification data.
                 if event['type'].startswith('payment_intent'):  # Payment operation.
+                    if tx_sudo.tokenize:
+                        payment_method = tx_sudo.provider_id._stripe_make_request(
+                            f'payment_methods/{stripe_object["payment_method"]}', method='GET'
+                        )
+                        _logger.info(
+                            "Received payment_methods response:\n%s", pprint.pformat(payment_method)
+                        )
+                        stripe_object['payment_method'] = payment_method
                     self._include_payment_intent_in_notification_data(stripe_object, data)
                 elif event['type'].startswith('setup_intent'):  # Validation operation.
                     # Fetch the missing PaymentMethod object.
@@ -114,7 +108,7 @@ class StripeController(http.Controller):
                         f'payment_methods/{stripe_object["payment_method"]}', method='GET'
                     )
                     _logger.info(
-                        "received payment_methods response:\n%s", pprint.pformat(payment_method)
+                        "Received payment_methods response:\n%s", pprint.pformat(payment_method)
                     )
                     stripe_object['payment_method'] = payment_method
                     self._include_setup_intent_in_notification_data(stripe_object, data)
@@ -160,13 +154,10 @@ class StripeController(http.Controller):
 
     @staticmethod
     def _include_payment_intent_in_notification_data(payment_intent, notification_data):
-        notification_data.update({'payment_intent': payment_intent})
-        if payment_intent.get('charges', {}).get('total_count', 0) > 0:
-            charge = payment_intent['charges']['data'][0]  # Use the latest charge object
-            notification_data.update({
-                'charge': charge,
-                'payment_method': charge.get('payment_method_details'),
-            })
+        notification_data.update({
+            'payment_intent': payment_intent,
+            'payment_method': payment_intent.get('payment_method'),
+        })
 
     @staticmethod
     def _include_setup_intent_in_notification_data(setup_intent, notification_data):
