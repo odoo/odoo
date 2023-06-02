@@ -12,6 +12,10 @@ class LeaveReport(models.Model):
 
     employee_id = fields.Many2one('hr.employee', string="Employee", readonly=True)
     active_employee = fields.Boolean(readonly=True)
+    requires_allocation = fields.Selection([
+        ('yes', 'Yes'),
+        ('no', 'No Limit')
+    ], readonly=True)
     number_of_days = fields.Float('Number of Days', readonly=True, group_operator="sum")
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
     leave_type = fields.Many2one("hr.leave.type", string="Time Off Type", readonly=True)
@@ -47,7 +51,8 @@ class LeaveReport(models.Model):
                 leaves.state as state,
                 leaves.date_from as date_from,
                 leaves.date_to as date_to,
-                leaves.company_id as company_id
+                leaves.company_id as company_id,
+                hr_leave_type.requires_allocation as requires_allocation
                 FROM (SELECT
                     allocation.employee_id as employee_id,
                     employee.active as active_employee,
@@ -65,8 +70,10 @@ class LeaveReport(models.Model):
                 FROM hr_leave_allocation as allocation
                 INNER JOIN hr_employee as employee ON (allocation.employee_id = employee.id)
                 LEFT JOIN 
-                    (SELECT holiday_status_id, employee_id, sum(number_of_days) as number_of_days 
-                    FROM hr_leave GROUP BY holiday_status_id, employee_id) request 
+                    (SELECT holiday_status_id, employee_id, sum(number_of_days) as number_of_days
+                    FROM hr_leave
+                    WHERE active = True
+                    GROUP BY holiday_status_id, employee_id) request
                 on (allocation.employee_id=request.employee_id and allocation.holiday_status_id = request.holiday_status_id)
                 UNION ALL SELECT
                     request.employee_id as employee_id,
@@ -83,7 +90,10 @@ class LeaveReport(models.Model):
                     END as holiday_status,
                     request.employee_company_id as company_id
                 FROM hr_leave as request
-                INNER JOIN hr_employee as employee ON (request.employee_id = employee.id)) leaves
+                INNER JOIN hr_employee as employee
+                ON (request.employee_id = employee.id)
+                WHERE request.active = True) leaves
+                LEFT JOIN hr_leave_type ON (hr_leave_type.id = leaves.leave_type)
             );
         """)
 
