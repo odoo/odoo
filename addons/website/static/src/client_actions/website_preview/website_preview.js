@@ -447,7 +447,7 @@ export class WebsitePreview extends Component {
     _cleanIframeFallback() {
         // Remove autoplay in all iframes urls so videos are not
         // playing in the background
-        const iframesEl = this.iframefallback.el.contentDocument.querySelectorAll("iframe");
+        const iframesEl = this.iframefallback.el.contentDocument.querySelectorAll('iframe[src]:not([src=""])');
         for (const iframeEl of iframesEl) {
             const url = new URL(iframeEl.src);
             url.searchParams.delete('autoplay');

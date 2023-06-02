@@ -355,6 +355,8 @@ export class HtmlField extends Component {
             const t = document.createElement('T');
             t.setAttribute('t-out', dynamicPlaceholder);
             this.wysiwyg.odooEditor.execCommand('insert', t);
+            // Ensure the dynamic placeholder <t> element is sanitized.
+            this.wysiwyg.odooEditor.sanitize(t);
         }
     }
     onDynamicPlaceholderClose() {
@@ -377,15 +379,21 @@ export class HtmlField extends Component {
     }
     async commitChanges({ urgent } = {}) {
         if (this._isDirty() || urgent) {
+            let toInlinePromise;
+            if (this.wysiwyg) {
+                this.wysiwyg.odooEditor.observerUnactive('commitChanges');
+                await this.wysiwyg.saveModifiedImages();
+                if (this.props.isInlineStyle) {
+                    // Avoid listening to changes made during the _toInline process.
+                    toInlinePromise = this._toInline();
+                }
+            }
             if (urgent) {
                 await this.updateValue();
             }
             if (this.wysiwyg) {
-                // Avoid listening to changes made during the _toInline process.
-                this.wysiwyg.odooEditor.observerUnactive('commitChanges');
-                await this.wysiwyg.saveModifiedImages();
                 if (this.props.isInlineStyle) {
-                    await this._toInline();
+                    await toInlinePromise;
                 }
                 this.wysiwyg.odooEditor.observerActive('commitChanges');
             }
@@ -550,11 +558,10 @@ export class HtmlField extends Component {
      */
     async _toInline() {
         const $editable = this.wysiwyg.getEditable();
+        this.wysiwyg.odooEditor.sanitize(this.wysiwyg.odooEditor.editable);
         const html = this.wysiwyg.getValue();
         const $odooEditor = $editable.closest('.odoo-editor-editable');
         // Save correct nodes references.
-        const originalContents = document.createDocumentFragment();
-        originalContents.append(...$editable[0].childNodes);
         // Remove temporarily the class so that css editing will not be converted.
         $odooEditor.removeClass('odoo-editor-editable');
         $editable.html(html);
@@ -562,7 +569,8 @@ export class HtmlField extends Component {
         await toInline($editable, this.cssRules, this.wysiwyg.$iframe);
         $odooEditor.addClass('odoo-editor-editable');
 
-        $editable[0].replaceChildren(...originalContents.childNodes);
+        this.wysiwyg.setValue($editable.html());
+        this.wysiwyg.odooEditor.sanitize(this.wysiwyg.odooEditor.editable);
     }
     async _getWysiwygClass() {
         return getWysiwygClass();
@@ -578,7 +586,10 @@ export class HtmlField extends Component {
         }]));
     }
     _onWysiwygBlur() {
-        this.commitChanges();
+        // Avoid save on blur if the html field is in inline mode.
+        if (!this.props.isInlineStyle) {
+            this.commitChanges();
+        }
     }
     async _onReadonlyClickChecklist(ev) {
         if (ev.offsetX > 0) {
@@ -682,6 +693,9 @@ HtmlField.extractProps = ({ attrs, field }) => {
     };
     if ('collaborative' in attrs.options) {
         wysiwygOptions.collaborative = attrs.options.collaborative;
+    }
+    if ('style-inline' in attrs.options) {
+        wysiwygOptions.inlineStyle = Boolean(attrs.options['style-inline']);
     }
     if ('allowCommandImage' in attrs.options) {
         // Set the option only if it is explicitly set in the view so a default
