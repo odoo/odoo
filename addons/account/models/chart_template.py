@@ -579,7 +579,7 @@ class AccountChartTemplate(models.AbstractModel):
                 'name': _("Cash Difference Gain"),
                 'prefix': '999',
                 'code_digits': code_digits,
-                'account_type': 'expense',
+                'account_type': 'income_other',
                 'tag_ids': [(6, 0, self.ref('account.account_tag_investing').ids)],
             },
             'default_cash_difference_expense_account_id': {
