@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
+    <t t-name="mail.MessageViewNotification" owl="1">
+        <div t-if="messageListViewItemOwner and message.originThread and message.originThread === messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread and message.notifications.length > 0" t-att-class="{ 'mx-2': isInChatWindowAndIsAlignedRight }">
+            <span t-if="message.failureNotifications.length > 0" class="o_MessageView_notificationIconClickable o-error cursor-pointer text-danger" role="button" tabindex="0" t-on-click="onClickFailure">
+                <i class="o_MessageView_notificationIcon" t-att-class="failureNotificationIconClassName" role="img" aria-label="Delivery failure"/> <span t-if="failureNotificationIconLabel" t-out="failureNotificationIconLabel"/>
+            </span>
+            <span t-else="" class="o_MessageView_notificationIconClickable text-600 cursor-pointer" t-on-click="onClickNotificationIcon" t-ref="notificationIcon">
+                <i class="o_MessageView_notificationIcon" t-att-class="notificationIconClassName"/> <span t-if="notificationIconLabel" t-out="notificationIconLabel"/>
+            </span>
+        </div>
+    </t>
+
     <t t-name="mail.MessageView" owl="1">
         <div class="o_MessageView position-relative py-1"
             t-att-class="{
@@ -64,6 +75,7 @@
                         <strong t-else="" class="o_MessageView_authorName me-2 text-truncate text-muted">
                             Anonymous
                         </strong>
+                        <t t-if="isInChatWindowAndIsAlignedRight" t-call="mail.MessageViewNotification"/>
                         <small t-if="message.date" class="o_MessageView_date o_MessageView_headerDate text-muted opacity-50" t-att-class="{ 'o-message-selected': isSelected, 'me-2': !(isInChatWindowAndIsAlignedRight) }" t-att-title="message.datetime">
                             <span t-if="isShowingAuthorName">-</span> <t t-esc="dateFromNow"/>
                         </small>
@@ -76,14 +88,7 @@
                                 on <a class="o_MessageView_originThreadLink fs-6" t-att-href="message.originThread.url" t-on-click="onClickOriginThread"><t t-if="message.originThread.displayName"><t t-esc="message.originThread.displayName"/></t><t t-else="">document</t></a>
                             </t>
                         </small>
-                        <div t-if="messageListViewItemOwner and message.originThread and message.originThread === messageListViewItemOwner.messageListViewOwner.threadViewOwner.thread and message.notifications.length > 0" t-att-class="{ 'ms-2': isInChatWindowAndIsAlignedRight }">
-                            <span t-if="message.failureNotifications.length > 0" class="o_MessageView_notificationIconClickable o-error cursor-pointer text-danger" role="button" tabindex="0" t-on-click="onClickFailure">
-                                <i class="o_MessageView_notificationIcon" t-att-class="failureNotificationIconClassName" role="img" aria-label="Delivery failure"/> <span t-if="failureNotificationIconLabel" t-out="failureNotificationIconLabel"/>
-                            </span>
-                            <span t-else="" class="o_MessageView_notificationIconClickable text-600 cursor-pointer" t-on-click="onClickNotificationIcon" t-ref="notificationIcon">
-                                <i class="o_MessageView_notificationIcon" t-att-class="notificationIconClassName"/> <span t-if="notificationIconLabel" t-out="notificationIconLabel"/>
-                            </span>
-                        </div>
+                        <t t-if="!isInChatWindowAndIsAlignedRight" t-call="mail.MessageViewNotification"/>
                     </div>
                     <div
                         class="o_MessageView_bubbleWrap position-relative d-flex align-items-start"
