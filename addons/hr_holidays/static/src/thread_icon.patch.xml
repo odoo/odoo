@@ -4,7 +4,7 @@
         <xpath expr="//*[@name='chat_static']" position="replace">
             <div t-if="chatPartner.im_status === 'leave_online'" class="o-mail-ThreadIcon-online fa fa-fw fa-plane" title="Online"/>
             <div t-elif="chatPartner.im_status === 'leave_offline'" class="fa fa-fw fa-plane" title="Out of office"/>
-            <div t-elif="chatPartner.im_status === 'leave_away'" class="fa fa-fw fa-plane text-warning" title="Away"/>
+            <div t-elif="chatPartner.im_status === 'leave_away'" class="fa fa-fw fa-plane o-yellow" title="Away"/>
             <t t-else="">$0</t>
         </xpath>
     </t>
