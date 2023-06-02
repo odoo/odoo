@@ -1661,7 +1661,7 @@ class Website(models.Model):
         :param limit: maximum number of records fetched per model to build the word list
         :return: yields words
         """
-        match_pattern = r'[\w-]{%s,}' % min(4, len(search) - 3)
+        match_pattern = r'[\w./-]{%s,}' % min(4, len(search) - 3)
         similarity_threshold = 0.3
         for search_detail in search_details:
             model_name, fields = search_detail['model'], search_detail['search_fields']
@@ -1815,7 +1815,7 @@ class Website(models.Model):
         :param limit: maximum number of records fetched per model to build the word list
         :return: yields words
         """
-        match_pattern = r'[\w-]{%s,}' % min(4, len(search) - 3)
+        match_pattern = r'[\w./-]{%s,}' % min(4, len(search) - 3)
         first = escape_psql(search[0])
         for search_detail in search_details:
             model_name, fields = search_detail['model'], search_detail['search_fields']
