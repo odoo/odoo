@@ -198,8 +198,8 @@
     <record id="project_1_task_1_account_analytic_line_14" model="account.analytic.line">
         <field name="name">Quality analysis</field>
         <field name="employee_id" ref="hr.employee_admin"/>
-        <field name="date" eval="(DateTime.now() + relativedelta(days=-28)).strftime('%Y-%m-%d')"/>
-        <field name="unit_amount">2</field>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=28)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">2.0</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_1"/>
         <field name="amount">-60.0</field>
@@ -310,6 +310,16 @@
         <field name="employee_id" ref="hr.employee_jth"/>
         <field name="date" eval="(DateTime.now() + relativedelta(days=-55)).strftime('%Y-%m-%d')"/>
         <field name="unit_amount">2</field>
+        <field name="project_id" ref="project.project_project_1"/>
+        <field name="task_id" ref="project.project_1_task_1"/>
+        <field name="amount">-60.0</field>
+    </record>
+
+    <record id="project_1_task_1_account_analytic_line_26" model="account.analytic.line">
+        <field name="name">Call</field>
+        <field name="employee_id" ref="hr.employee_zest"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-48)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">2.0</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_1"/>
         <field name="amount">-60.0</field>
@@ -553,6 +563,26 @@
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_2"/>
         <field name="amount">-30.0</field>
+    </record>
+
+    <record id="project_1_task_2_account_analytic_line_25" model="account.analytic.line">
+        <field name="name">Delivery</field>
+        <field name="employee_id" ref="hr.employee_saje"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-8)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">1.0</field>
+        <field name="project_id" ref="project.project_project_1"/>
+        <field name="task_id" ref="project.project_1_task_2"/>
+        <field name="amount">-30.0</field>
+    </record>
+
+    <record id="project_1_task_2_account_analytic_line_26" model="account.analytic.line">
+        <field name="name">Delivery</field>
+        <field name="employee_id" ref="hr.employee_saje"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-7)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">2.0</field>
+        <field name="project_id" ref="project.project_project_1"/>
+        <field name="task_id" ref="project.project_1_task_2"/>
+        <field name="amount">-60.0</field>
     </record>
 
     <record id="project_1_task_5_account_analytic_line_1" model="account.analytic.line">
@@ -848,7 +878,7 @@
     <record id="project_1_task_5_account_analytic_line_30" model="account.analytic.line">
         <field name="name">Delivery</field>
         <field name="employee_id" ref="hr.employee_admin"/>
-        <field name="date" eval="(DateTime.now() + relativedelta(days=-50)).strftime('%Y-%m-%d')"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=40)).strftime('%Y-%m-%d')"/>
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_5"/>
@@ -863,6 +893,26 @@
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_5"/>
         <field name="amount">-90.0</field>
+    </record>
+
+    <record id="project_1_task_5_account_analytic_line_32" model="account.analytic.line">
+        <field name="name">Requirements analysis</field>
+        <field name="employee_id" ref="hr.employee_zest"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-10)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">2.0</field>
+        <field name="project_id" ref="project.project_project_1"/>
+        <field name="task_id" ref="project.project_1_task_5"/>
+        <field name="amount">-60.0</field>
+    </record>
+
+    <record id="project_1_task_5_account_analytic_line_33" model="account.analytic.line">
+        <field name="name">Delivery</field>
+        <field name="employee_id" ref="hr.employee_saje"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-4)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">2.0</field>
+        <field name="project_id" ref="project.project_project_1"/>
+        <field name="task_id" ref="project.project_1_task_5"/>
+        <field name="amount">-60.0</field>
     </record>
 
     <record id="project_1_task_6_account_analytic_line_1" model="account.analytic.line">
@@ -1018,7 +1068,7 @@
     <record id="project_1_task_6_account_analytic_line_16" model="account.analytic.line">
         <field name="name">Design</field>
         <field name="employee_id" ref="hr.employee_admin"/>
-        <field name="date" eval="(DateTime.now() + relativedelta(days=-29)).strftime('%Y-%m-%d')"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=29)).strftime('%Y-%m-%d')"/>
         <field name="unit_amount">1</field>
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_6"/>
@@ -1123,6 +1173,36 @@
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_6"/>
         <field name="amount">-90.0</field>
+    </record>
+
+    <record id="project_1_task_6_account_analytic_line_27" model="account.analytic.line">
+        <field name="name">Delivery</field>
+        <field name="employee_id" ref="hr.employee_zest"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-7)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">1.0</field>
+        <field name="project_id" ref="project.project_project_1"/>
+        <field name="task_id" ref="project.project_1_task_6"/>
+        <field name="amount">-30.0</field>
+    </record>
+
+    <record id="project_1_task_6_account_analytic_line_28" model="account.analytic.line">
+        <field name="name">Design</field>
+        <field name="employee_id" ref="hr.employee_zest"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-5)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">1.0</field>
+        <field name="project_id" ref="project.project_project_1"/>
+        <field name="task_id" ref="project.project_1_task_6"/>
+        <field name="amount">-30.0</field>
+    </record>
+
+    <record id="project_1_task_6_account_analytic_line_29" model="account.analytic.line">
+        <field name="name">Presentation</field>
+        <field name="employee_id" ref="hr.employee_saje"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-6)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">1.0</field>
+        <field name="project_id" ref="project.project_project_1"/>
+        <field name="task_id" ref="project.project_1_task_6"/>
+        <field name="amount">-30.0</field>
     </record>
 
     <record id="project_1_task_7_account_analytic_line_1" model="account.analytic.line">
@@ -1353,6 +1433,16 @@
         <field name="project_id" ref="project.project_project_1"/>
         <field name="task_id" ref="project.project_1_task_7"/>
         <field name="amount">-30.0</field>
+    </record>
+
+    <record id="project_1_task_7_account_analytic_line_24" model="account.analytic.line">
+        <field name="name">Quality analysis</field>
+        <field name="employee_id" ref="hr.employee_saje"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-10)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">3.0</field>
+        <field name="project_id" ref="project.project_project_1"/>
+        <field name="task_id" ref="project.project_1_task_7"/>
+        <field name="amount">-90.0</field>
     </record>
 
     <record id="project_1_task_8_account_analytic_line_1" model="account.analytic.line">
@@ -2145,6 +2235,26 @@
         <field name="amount">-30.0</field>
     </record>
 
+    <record id="project_2_task_1_account_analytic_line_24" model="account.analytic.line">
+        <field name="name">Call</field>
+        <field name="employee_id" ref="hr.employee_zest"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-3)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">2.0</field>
+        <field name="project_id" ref="project.project_project_2"/>
+        <field name="task_id" ref="project.project_2_task_1"/>
+        <field name="amount">-60.0</field>
+    </record>
+
+    <record id="project_2_task_1_account_analytic_line_25" model="account.analytic.line">
+        <field name="name">Call</field>
+        <field name="employee_id" ref="hr.employee_saje"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-14)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">3.0</field>
+        <field name="project_id" ref="project.project_project_2"/>
+        <field name="task_id" ref="project.project_2_task_1"/>
+        <field name="amount">-90.0</field>
+    </record>
+
     <record id="project_2_task_2_account_analytic_line_1" model="account.analytic.line">
         <field name="name">Requirements analysis</field>
         <field name="employee_id" ref="hr.employee_hne"/>
@@ -2290,6 +2400,36 @@
         <field name="employee_id" ref="hr.employee_jth"/>
         <field name="date" eval="(DateTime.now() + relativedelta(days=-9)).strftime('%Y-%m-%d')"/>
         <field name="unit_amount">1</field>
+        <field name="project_id" ref="project.project_project_2"/>
+        <field name="task_id" ref="project.project_2_task_2"/>
+        <field name="amount">-30.0</field>
+    </record>
+
+    <record id="project_2_task_2_account_analytic_line_16" model="account.analytic.line">
+        <field name="name">Quality analysis</field>
+        <field name="employee_id" ref="hr.employee_zest"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-9)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">2.0</field>
+        <field name="project_id" ref="project.project_project_2"/>
+        <field name="task_id" ref="project.project_2_task_2"/>
+        <field name="amount">-60.0</field>
+    </record>
+
+    <record id="project_2_task_2_account_analytic_line_17" model="account.analytic.line">
+        <field name="name">Delivery</field>
+        <field name="employee_id" ref="hr.employee_zest"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-7)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">2.0</field>
+        <field name="project_id" ref="project.project_project_2"/>
+        <field name="task_id" ref="project.project_2_task_2"/>
+        <field name="amount">-60.0</field>
+    </record>
+
+    <record id="project_2_task_2_account_analytic_line_18" model="account.analytic.line">
+        <field name="name">Sprint</field>
+        <field name="employee_id" ref="hr.employee_saje"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-5)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">1.0</field>
         <field name="project_id" ref="project.project_project_2"/>
         <field name="task_id" ref="project.project_2_task_2"/>
         <field name="amount">-30.0</field>
@@ -2565,6 +2705,26 @@
         <field name="amount">-30.0</field>
     </record>
 
+    <record id="project_2_task_3_account_analytic_line_28" model="account.analytic.line">
+        <field name="name">Requirements analysis</field>
+        <field name="employee_id" ref="hr.employee_zest"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-8)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">2.0</field>
+        <field name="project_id" ref="project.project_project_2"/>
+        <field name="task_id" ref="project.project_2_task_3"/>
+        <field name="amount">-60.0</field>
+    </record>
+
+    <record id="project_2_task_3_account_analytic_line_29" model="account.analytic.line">
+        <field name="name">Quality analysis</field>
+        <field name="employee_id" ref="hr.employee_saje"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-8)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">2.0</field>
+        <field name="project_id" ref="project.project_project_2"/>
+        <field name="task_id" ref="project.project_2_task_3"/>
+        <field name="amount">-60.0</field>
+    </record>
+
     <record id="project_2_task_4_account_analytic_line_1" model="account.analytic.line">
         <field name="name">Requirements analysis</field>
         <field name="employee_id" ref="hr.employee_stw"/>
@@ -2763,6 +2923,16 @@
         <field name="project_id" ref="project.project_project_2"/>
         <field name="task_id" ref="project.project_2_task_4"/>
         <field name="amount">-90.0</field>
+    </record>
+
+    <record id="project_2_task_4_account_analytic_line_21" model="account.analytic.line">
+        <field name="name">Call</field>
+        <field name="employee_id" ref="hr.employee_zest"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-1)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">2.0</field>
+        <field name="project_id" ref="project.project_project_2"/>
+        <field name="task_id" ref="project.project_2_task_4"/>
+        <field name="amount">-60.0</field>
     </record>
 
     <record id="project_2_task_5_account_analytic_line_1" model="account.analytic.line">
@@ -2983,6 +3153,16 @@
         <field name="project_id" ref="project.project_project_2"/>
         <field name="task_id" ref="project.project_2_task_5"/>
         <field name="amount">-30.0</field>
+    </record>
+
+    <record id="project_2_task_5_account_analytic_line_23" model="account.analytic.line">
+        <field name="name">Delivery</field>
+        <field name="employee_id" ref="hr.employee_zest"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=-5)).strftime('%Y-%m-%d')"/>
+        <field name="unit_amount">2.0</field>
+        <field name="project_id" ref="project.project_project_2"/>
+        <field name="task_id" ref="project.project_2_task_5"/>
+        <field name="amount">-60.0</field>
     </record>
 
     <record id="project_2_task_6_account_analytic_line_1" model="account.analytic.line">
@@ -3278,7 +3458,7 @@
     <record id="project_2_task_7_account_analytic_line_5" model="account.analytic.line">
         <field name="name">On Site Visit</field>
         <field name="employee_id" ref="hr.employee_admin"/>
-        <field name="date" eval="(DateTime.now() + relativedelta(days=-4)).strftime('%Y-%m-%d')"/>
+        <field name="date" eval="(DateTime.now() + relativedelta(days=40)).strftime('%Y-%m-%d')"/>
         <field name="unit_amount">3</field>
         <field name="project_id" ref="project.project_project_2"/>
         <field name="task_id" ref="project.project_2_task_7"/>
