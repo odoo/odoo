@@ -2775,6 +2775,11 @@ export class Order extends PosModel {
 
         this.lastOrderPrepaChange = this.lastOrderPrepaChange || {};
     }
+
+    getEmailItems() {
+        return [_t("the receipt")].concat(this.is_to_invoice() ? [_t("the invoice")] : []);
+    }
+
     save_to_db() {
         if (!this.temporary && !this.locked && !this.finalized) {
             this.assert_editable();

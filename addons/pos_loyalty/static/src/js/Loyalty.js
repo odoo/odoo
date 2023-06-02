@@ -347,6 +347,14 @@ patch(Order.prototype, "pos_loyalty.Order", {
         // order is properly assigned. @see _checkMissingCoupons
         this.invalidCoupons = true;
     },
+
+    /** @override */
+    getEmailItems() {
+        return this._super(...arguments).concat(
+            this.has_pdf_gift_card ? [_t("the gift cards")] : []
+        );
+    },
+
     export_as_JSON() {
         const json = this._super(...arguments);
         json.disabledRewards = [...this.disabledRewards];
