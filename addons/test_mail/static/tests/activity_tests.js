@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { ActivityModel } from "@mail/views/activity/activity_model";
 import { ActivityRenderer } from "@mail/views/activity/activity_renderer";
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
 
@@ -515,6 +516,42 @@ QUnit.module("test_mail", {}, function () {
             document.querySelector(".o_search_options .dropdown.o_favorite_menu > button"),
             "favorites should be available in view search"
         );
+    });
+
+    QUnit.test("activity view: group_by in the action has no effect", async function (assert) {
+        assert.expect(1);
+
+        patchWithCleanup(ActivityModel.prototype, {
+            async load(params) {
+                // force params to have a groupBy set, the model should ignore this value during the load
+                params.groupBy = ["user_id"];
+                await this._super(params);
+            },
+        });
+
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "MailTestActivity Action",
+                res_model: "mail.test.activity",
+                type: "ir.actions.act_window",
+                views: [[false, "activity"]],
+            },
+        };
+
+        const mockRPC = (route, args) => {
+            if (args.method === "get_activity_data") {
+                assert.strictEqual(
+                    args.kwargs.groupby,
+                    undefined,
+                    "groupby should have been removed from the load params"
+                );
+            }
+        };
+
+        const { webClient } = await start({ serverData, mockRPC });
+
+        await doAction(webClient, 1);
     });
 
     QUnit.test(
