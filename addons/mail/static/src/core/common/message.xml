@@ -35,6 +35,7 @@
                             <span t-if="(message.author or message.email_from) and shouldDisplayAuthorName" class="o-mail-Message-author">
                                 <strong class="me-1 text-truncate"><t t-if="message.author" t-esc="message.author.name"/><t t-else="" t-esc="message.email_from"/></strong>
                             </span>
+                            <t t-if="!isAlignedRight" t-call="mail.Message.notification"/>
                             <small t-if="!message.isTransient" class="o-mail-Message-date text-muted opacity-50" t-att-class="{ 'me-2': !isAlignedRight }" t-att-title="message.datetimeShort">
                                 <t t-if="shouldDisplayAuthorName">- </t>
                                 <RelativeTime datetime="message.datetime"/>
@@ -57,11 +58,7 @@
                                     <i class="fa fa-calendar-o"/>
                                 </span>
                             </div>
-                            <div t-if="message.originThread?.eq(props.thread) and message.notifications.length > 0" t-att-class="{ 'ms-2': !isAlignedRight }">
-                                <span class="o-mail-Message-notification cursor-pointer" t-att-class="message.failureNotifications.length > 0 ? 'text-danger' : text-600" role="button" tabindex="0" t-on-click="onClickNotification">
-                                    <i t-att-class="message.notifications[0].icon" role="img" aria-label="Delivery failure"/> <span t-if="message.notifications[0].label" t-out="message.notifications[0].label"/>
-                                </span>
-                            </div>
+                            <t t-if="isAlignedRight" t-call="mail.Message.notification"/>
                         </div>
                         <div
                             class="position-relative d-flex"
@@ -158,6 +155,14 @@
                 </t>
             </Dropdown>
         </div>
+    </div>
+</t>
+
+<t t-name="mail.Message.notification">
+    <div t-if="message.originThread?.eq(props.thread) and message.notifications.length > 0" class="mx-1">
+        <span class="o-mail-Message-notification cursor-pointer" t-att-class="message.failureNotifications.length > 0 ? 'text-danger' : text-600" role="button" tabindex="0" t-on-click="onClickNotification">
+            <i t-att-class="message.notifications[0].icon" role="img" aria-label="Delivery failure"/> <span t-if="message.notifications[0].label" t-out="message.notifications[0].label"/>
+        </span>
     </div>
 </t>
 
