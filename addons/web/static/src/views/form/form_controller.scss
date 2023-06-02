@@ -5,23 +5,11 @@
         padding-left: $o-horizontal-padding*2;
     }
 }
-@mixin o-form-nosheet-inner-left-padding {
-    padding-left: $o-horizontal-padding;
-}
 @mixin o-form-sheet-inner-right-padding {
     padding-right: $o-horizontal-padding;
     @include media-breakpoint-up(lg, $o-extra-grid-breakpoints) {
         padding-right: $o-horizontal-padding*2;
     }
-}
-// Compensate margins
-@mixin o-form-sheet-negative-margin {
-    margin-left: calc(var(--formView-sheet-padding-x) * -1);
-    margin-right: calc(var(--formView-sheet-padding-x) * -1);
-}
-@mixin o-form-nosheet-negative-margin {
-    margin-left: calc(var(--formView-sheet-padding-x) * -1);
-    margin-right: calc(var(--formView-sheet-padding-x) * -1);
 }
 
 // XXS form view specific rules
@@ -62,19 +50,6 @@
 }
 
 .o_form_view {
-    // Component custom properties
-    --formView-sheetBg-padding-top: #{map-get($spacers, 2)};
-    --formView-sheetBg-padding-x: #{map-get($spacers, 3)};
-
-    --formView-sheet-padding-y: #{map-get($spacers, 3)};
-    --formView-sheet-padding-x: #{map-get($spacers, 3)};
-    --formView-sheet-padding-y-xxl: #{map-get($spacers, 4)};
-    --formView-sheet-padding-x-xxl: #{map-get($spacers, 4)};
-    --formView-sheet-border-color: #{$border-color};
-    --formView-sheet-border-width: #{$border-width};
-    --formView-sheet-border-radius: #{$border-radius};
-    --formView-sheet-background: #{$o-view-background-color};
-
     @include media-breakpoint-up(md) {
         display: flex;
         flex-flow: column nowrap;
@@ -239,20 +214,22 @@
 
     // No sheet
     &.o_form_nosheet, .o_form_nosheet {
-        @include o-webclient-padding($top: $o-sheet-vpadding, $bottom: $o-sheet-vpadding);
+        // Since 16.3 the `o_form_nosheet` element acts as a sheet filling the
+        // entire available room. To define its properties we use sheet's CSS
+        // variables in order to keep consistency and ease inner components
+        // contextual adaptations (notepad, alerts, listView...).
+        --formView-sheet-padding-y: #{$o-sheet-vpadding};
+        --formView-sheet-padding-x: #{$o-horizontal-padding};
 
-        .o_form_statusbar {
-            margin: (-$o-sheet-vpadding) (-$o-horizontal-padding) $o-sheet-vpadding (-$o-horizontal-padding);
-        }
-        .oe_button_box {
-            @include o-form-nosheet-negative-margin;
-        }
+        padding: var(--formView-sheet-padding-y) var(--formView-sheet-padding-x);
+        background-color: $o-view-background-color;
 
         .o_notebook {
             > .tab-content > .tab-pane > :first-child:not(.o_group) {
                 // These elements will appear attached to the tabs
                 &.o_field_x2many.o_field_x2many_list {
-                    @include o-form-nosheet-negative-margin;
+                    margin-left: calc(var(--formView-sheet-padding-x) * -1);
+                    margin-right: calc(var(--formView-sheet-padding-x) * -1);
                 }
             }
         }
@@ -260,42 +237,58 @@
 
     // Sheet BG
     .o_form_sheet_bg {
-        padding-top: var(--formView-sheetBg-padding-top);
-        padding-left: var(--formView-sheetBg-padding-left, var(--formView-sheetBg-padding-x));
-        padding-right: var(--formView-sheetBg-padding-right, var(--formView-sheetBg-padding-x));
+        --formView-sheetBg-padding-x: #{map-get($spacers, 3)};
+
+        padding-top: map-get($spacers, 2);
+        padding-left: var(--formView-sheetBg-padding-x);
+        padding-right: var(--formView-sheetBg-padding-x);
         width: 100%;
         max-width: $o-form-view-sheet-max-width;
         margin-right: auto; // Always align to le left
-
-        @include media-breakpoint-down(md) {
-            --formView-sheetBg-padding-x: var(--formView-sheetBg-padding-x-sm, 0);
-        }
     }
 
     // Sheet
     .o_form_sheet {
+        --formView-sheet-padding-y: #{map-get($spacers, 3)};
+        --formView-sheet-padding-x: #{map-get($spacers, 3)};
+
+        margin: 0 var(--formView-sheet-margin-x, calc(var(--formView-sheetBg-padding-x) * -1));
         padding: var(--formView-sheet-padding-y) var(--formView-sheet-padding-x);
         border-style: solid;
-        border-color: var(--formView-sheet-border-color);
-        border-width: var(--formView-sheet-border-width);
-        border-radius: var(--formView-sheet-border-radius);
-        background-color: var(--formView-sheet-background);
+        border-color: $border-color;
+        border-width: var(--formView-sheet-border-width, 1px 0 1px 0);
+        border-radius: var(--formView-sheet-border-radius, 0);
+        background-color: $o-view-background-color;
 
-        @include media-breakpoint-down(md) {
-            --formView-sheet-padding-y: #{map-get($spacers, 4)};
-            --formView-sheet-padding-x: #{map-get($spacers, 3)};
-            --formView-sheet-border-width: 0 0 1px 0;
-            --formView-sheet-border-radius: 0;
+        @include media-breakpoint-up(md) {
+            --formView-sheet-padding-y: var(--formView-sheet-padding-y-md, #{map-get($spacers, 3)});
+            --formView-sheet-margin-x: var(--formView-sheet-margin-x-md, 0);
+            --formView-sheet-border-width: var(--formView-sheet-border-width-md, #{$border-width});
+            --formView-sheet-border-radius: var(--formView-sheet-border-radius-md, #{$border-radius});
+        }
+
+        @include media-breakpoint-up(lg) {
+            --formView-sheet-padding-y: var(--formView-sheet-padding-y-lg, #{map-get($spacers, 4)});
+            --formView-sheet-padding-x: var(--formView-sheet-padding-x-lg, #{map-get($spacers, 4)});
         }
 
         @include media-breakpoint-up(xxl, $o-extra-grid-breakpoints) {
-            --formView-sheet-padding-y: var(--formView-sheet-padding-y-xxl);
-            --formView-sheet-padding-x: var(--formView-sheet-padding-x-xxl);
+            --formView-sheet-padding-y: var(--formView-sheet-padding-y-xxl, #{map-get($spacers, 3)});
+            --formView-sheet-padding-x: var(--formView-sheet-padding-x-xxl, #{map-get($spacers, 3)});
         }
 
         // Selection
         > .o_selection {
             float: right;
+        }
+    }
+
+    // Alerts
+    .alert {
+        --alert-padding-y: #{map-get($spacers, 2)};
+
+        .o_field_widget, .o_field_widget p {
+            margin-bottom: 0;
         }
     }
 
@@ -319,10 +312,6 @@
         > .o_field_widget {
             align-self: flex-start;
             margin-bottom: 0px;
-        }
-
-        @include media-breakpoint-down(md) {
-            border-bottom: $border-width solid $border-color;
         }
     }
 
@@ -426,7 +415,6 @@
         --columns: 1;
         gap: map-get($spacers, 2) $o-horizontal-padding;
         margin-bottom: map-get($spacers, 2);
-        max-width: 700px;
 
         span, .o_field_boolean, .oe_avatar, .o_form_uri {
             &.o_field_widget {
@@ -544,22 +532,17 @@
                     }
 
                     // Full width on first x2many or on second x2many if first is invisible
-                    &:not(.o_group) .o_field_x2many.o_field_x2many_list,
-                    &.o_invisible_modifier + .o_field_widget .o_field_x2many.o_field_x2many_list  {
-                        display: block;
-                        width: auto;
-                        @include o-form-sheet-negative-margin;
-                        margin-top: -$o-horizontal-padding;
+                    &:not(.o_group), &.o_invisible_modifier {
+                        .o_field_x2many.o_field_x2many_list .o_list_renderer {
+                            --ListRenderer-margin-x: var(--notebook-margin-x);
+                            --ListRenderer-table-padding-x: var(--notebook-padding-x);
 
-                        // use original padding-left for handle cell in editable list
-                        tr > :first-child.o_handle_cell {
-                            padding-left: 0.3rem;
-                        }
-                        tr > :first-child {
-                            @include o-form-sheet-inner-left-padding;
-                        }
-                        tr > :last-child {
-                            @include o-form-sheet-inner-right-padding;
+                            margin-top: -$o-horizontal-padding;
+
+                            // use original padding-left for handle cell in editable list
+                            tr > :first-child.o_handle_cell {
+                                padding-left: 0.3rem;
+                            }
                         }
                     }
                 }
@@ -998,68 +981,44 @@
     .o_form_view {
         min-height: auto;
 
-        .o_statusbar_buttons > .btn {
-            /**
-             * Override to prevent the status bar from increasing height when
-             * inside dialog due to the original margin on those buttons. This
-             * prevents the other status buttons, those on the far right of the
-             * bar, from having a gap between their bottom and the bottom border
-             * of the status bar itself.
-             */
-            margin-top: 2px;
-            margin-bottom: 2px;
+        --formView-sheetBg-padding-top: #{map-get($spacers, 2)};
+        --formView-sheetBg-padding-x: #{$modal-inner-padding};
+    }
+
+    .o_form_sheet {
+        --formView-sheet-margin-x: 0;
+        --formView-sheet-padding-y: #{map-get($spacers, 2)};
+        --formView-sheet-padding-y-md: #{map-get($spacers, 2)};
+        --formView-sheet-padding-y-lg: #{map-get($spacers, 2)};
+        --formView-sheet-padding-y-xxl: #{map-get($spacers, 2)};
+        --formView-sheet-padding-x: 0;
+        --formView-sheet-padding-x-md: 0;
+        --formView-sheet-padding-x-lg: 0;
+        --formView-sheet-padding-x-xxl: 0;
+        --formView-sheet-border-radius: 0;
+        --formView-sheet-border-width: 0;
+        --formView-sheet-border-width-md: 0;
+    }
+
+    .o-form-buttonbox {
+        --ButtonBox-margin-bottom: #{map-get($spacers, 2)};
+    }
+
+    .o_notebook {
+        --notebook-margin-x: calc(var(--formView-sheetBg-padding-x) * -1);
+        --notebook-padding-x: var(--formView-sheetBg-padding-x);
+    }
+
+    &.o_onboarding_payment_provider_wizard .o_form_renderer {
+        a[type="action"] {
+            color: $link-color;
+            cursor: pointer;
         }
+    }
 
-        .o_form_sheet_bg {
-            /**
-             * Reset all paddings and margins to 0.
-             * Make the view fill all available room.
-             */
-            --formView-sheetBg-padding-top: 0;
-            --formView-sheetBg-padding-x: 0;
-            --formView-sheet-padding: 0;
-            --formView-sheet-border-radius: 0;
-
-            width: 100%;
-
-            > .o_form_statusbar, > .alert {
-                /**
-                 * Override to prevent the status bar from overflowing on its
-                 * far right. The original value is a negative margin that
-                 * is supposed to compensate unwanted padding of the original
-                 * view but the view inside dialog already has this padding
-                 * removed.
-                 */
-                margin-left: 0;
-                margin-right: 0;
-            }
-
-            > .o_form_sheet {
-                box-shadow: none;
-                width: 100%;
-                margin: 0 auto;
-                max-width: none;
-                /**
-                 * Override to prevent double border, because the borders of the
-                 * dialog itself or the borders of other surrounding elements
-                 * (status bar, dialog footer) already act as a border for the
-                 * sheet when inside dialog.
-                 */
-                border: none;
-            }
-        }
-
-        &.o_onboarding_payment_provider_wizard .o_form_renderer {
-            a[type="action"] {
-                color: $link-color;
-                cursor: pointer;
-            }
-        }
-
-        @include media-breakpoint-down(lg) {
-            .o_group.o_inner_group .o_wrap_label {
-                min-width: 100px;
-            }
+    @include media-breakpoint-down(lg) {
+        .o_group.o_inner_group .o_wrap_label {
+            min-width: 100px;
         }
     }
 

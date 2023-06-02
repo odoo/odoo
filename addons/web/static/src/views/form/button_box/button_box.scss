@@ -6,6 +6,8 @@
     $-stat-button-icon-size: 1.5em;
     $-stat-button-icon-margin-end: $btn-padding-x * 0.5;
 
+    margin-bottom: var(--ButtonBox-margin-bottom, 0);
+
     %-stat-button-container {
         display: flex;
         flex-direction: column;
@@ -41,6 +43,10 @@
         padding-top: 0;
         padding-bottom: 0;
         height: $-stat-button-height;
+
+        @include media-breakpoint-up(md) {
+            min-width: 7.5em; // Arbitrary
+        }
 
         .o_button_icon {
             font-size: $-stat-button-icon-size;
@@ -113,6 +119,8 @@
 
     // "More" button and dropdown
     .oe_stat_button.dropdown {
+        min-width: auto;
+
         > .o_button_more {
             width: 100%;
             height: 100%;

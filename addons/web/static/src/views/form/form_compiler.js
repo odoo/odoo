@@ -403,7 +403,7 @@ export class FormCompiler extends ViewCompiler {
     compileHeader(el, params) {
         const statusBar = createElement("div");
         statusBar.className =
-            "o_form_statusbar position-relative d-flex justify-content-between mb-2 px-3 pb-2 pb-md-0 px-md-0";
+            "o_form_statusbar position-relative d-flex justify-content-between mb-md-2 pb-2 pb-md-0";
         const buttons = [];
         const others = [];
         for (const child of el.childNodes) {
