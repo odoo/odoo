@@ -39,13 +39,15 @@
 /// way. It applies the desired color to a specified rule using CSS variables.
 /// ---------------------------------------------------------------------------
 /// @param {color} $-color
-///     Desidered color
+///     Desired color
 /// @param {string} $-rule
 ///     CSS property to be affected
 /// @param {string} $-css-opacity-var
-///     CSS varible defining the opacity
+///     CSS variable defining the opacity
+/// @param {number} $-opacity-value
+///     Optional change the default opacity
 /// ---------------------------------------------------------------------------
-@mixin o-print-color($-color, $-rule, $-css-opacity-var) {
-    --#{$-rule}: RGBA(#{to-rgb($-color)}, var(--#{$-css-opacity-var}, 1));
+@mixin o-print-color($-color, $-rule, $-css-opacity-var, $-opacity-value: 1) {
+    --#{$-rule}: RGBA(#{to-rgb($-color)}, var(--#{$-css-opacity-var}, #{$-opacity-value}));
     #{$-rule}: var(--#{$-rule}) !important;
 }

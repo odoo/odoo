@@ -208,6 +208,19 @@ $-o-grayscale-opacities: map-remove($o-opacities, 0, 100);
 // 3. Cleanup temporary map
 $-o-grayscale-opacities: null;
 
+// Bootstrap text-muted, text-body class
+// ============================================================================
+
+// 1. Allow the use of the --text-opacity CSS variable on the text-muted and
+// text-body.
+
+.text-muted {
+    @include o-print-color($o-main-text-color, color, text-opacity, 0.76);
+}
+
+.text-body {
+    @include o-print-color($o-main-text-color, color, text-opacity);
+}
 
 // Odoo custom text/bg colors classes generation
 // ============================================================================
