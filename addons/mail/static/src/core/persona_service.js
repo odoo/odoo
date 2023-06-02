@@ -55,6 +55,30 @@ export class PersonaService {
             this.store.registeredImStatusPartners?.push(persona.id);
         }
     }
+
+    /**
+     * List of known partner ids with a direct chat, ordered
+     * by most recent interest (1st item being the most recent)
+     *
+     * @returns {[integer]}
+     */
+    getRecentChatPartnerIds() {
+        return Object.values(this.store.threads)
+            .filter((thread) => thread.type === "chat")
+            .sort((a, b) => {
+                if (!a.lastInterestDateTime && !b.lastInterestDateTime) {
+                    return 0;
+                }
+                if (a.lastInterestDateTime && !b.lastInterestDateTime) {
+                    return -1;
+                }
+                if (!a.lastInterestDateTime && b.lastInterestDateTime) {
+                    return 1;
+                }
+                return b.lastInterestDateTime.ts - a.lastInterestDateTime.ts;
+            })
+            .map((thread) => thread.chatPartnerId);
+    }
 }
 
 export const personaService = {

@@ -32,17 +32,21 @@ commandProviderRegistry.add("mail.partner", {
         /** @type {import("@mail/core/messaging_service").Messaging} */
         const messaging = env.services["mail.messaging"];
         const threadService = env.services["mail.thread"];
+        /** @type {import("@mail/composer/suggestion_service").SuggestionService} */
+        const suggestionService = env.services["mail.suggestion"];
         const results = await messaging.searchPartners(options.searchValue);
-        return results.map(function (partner) {
-            return {
-                Component: DialogCommand,
-                action() {
-                    threadService.openChat({ partnerId: partner.id });
-                },
-                name: partner.name,
-                props: { email: partner.email },
-            };
-        });
+        return suggestionService
+            .sortPartnerSuggestions(results, options.searchValue)
+            .map(function (partner) {
+                return {
+                    Component: DialogCommand,
+                    action() {
+                        threadService.openChat({ partnerId: partner.id });
+                    },
+                    name: partner.name,
+                    props: { email: partner.email },
+                };
+            });
     },
 });
 
