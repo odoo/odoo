@@ -385,7 +385,6 @@ class Applicant(models.Model):
                 raise UserError(_('You must define a Contact Name for this applicant.'))
             self.partner_id = self.env['res.partner'].create({
                 'is_company': False,
-                'type': 'private',
                 'name': self.partner_name,
                 'email': self.email_from,
                 'phone': self.partner_phone,
@@ -550,7 +549,6 @@ class Applicant(models.Model):
             if new_partner:
                 if new_partner.create_date.date() == fields.Date.today():
                     new_partner.write({
-                        'type': 'private',
                         'name': self.partner_name or self.email_from,
                         'phone': self.partner_phone,
                         'mobile': self.partner_mobile,
@@ -571,7 +569,6 @@ class Applicant(models.Model):
                 raise UserError(_('Please provide an applicant name.'))
             self.partner_id = self.env['res.partner'].create({
                 'is_company': False,
-                'type': 'private',
                 'name': self.partner_name,
                 'email': self.email_from,
                 'phone': self.partner_phone,

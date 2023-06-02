@@ -305,11 +305,11 @@ class GoogleSync(models.AbstractModel):
     def _get_sync_partner(self, emails):
         normalized_emails = [email_normalize(contact) for contact in emails if email_normalize(contact)]
         user_partners = self.env['mail.thread']._mail_search_on_user(normalized_emails, extra_domain=[('share', '=', False)])
-        partners = [user_partner for user_partner in user_partners if user_partner.type != 'private']
+        partners = list(user_partners)
         remaining = [email for email in normalized_emails if
                      email not in [partner.email_normalized for partner in partners]]
         if remaining:
-            partners += self.env['mail.thread']._mail_find_partner_from_emails(remaining, records=self, force_create=True, extra_domain=[('type', '!=', 'private')])
+            partners += self.env['mail.thread']._mail_find_partner_from_emails(remaining, records=self, force_create=True)
         unsorted_partners = self.env['res.partner'].browse([p.id for p in partners])
         # partners needs to be sorted according to the emails order provided by google
         k = {value: idx for idx, value in enumerate(emails)}

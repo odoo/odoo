@@ -1,10 +1,5 @@
 <?xml version="1.0"?>
 <odoo>
-        <record id="group_private_addresses" model="res.groups">
-            <field name="name">Access to Private Addresses</field>
-            <field name="category_id" ref="base.module_category_hidden"/>
-        </record>
-
     <data noupdate="1">
         <!-- TODO Remove me? Ony group system -->
         <record model="ir.rule" id="res_users_log_rule">
@@ -74,37 +69,6 @@
             <field name="name">change user password rule</field>
             <field name="model_id" ref="model_change_password_user"/>
             <field name="domain_force">[('create_uid', '=', user.id)]</field>
-        </record>
-
-        <!-- Security restriction for private addresses -->
-        <record id="res_partner_rule_private_employee" model="ir.rule">
-            <field name="name">res.partner.rule.private.employee</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="domain_force">
-                ['|', ('type', '!=', 'private'), ('type', '=', False)]
-            </field>
-            <field name="groups" eval="[
-                Command.link(ref('base.group_user')),
-            ]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
-        </record>
-        <!-- Relex previous rule for group_private_addresses -->
-        <record id="res_partner_rule_private_group" model="ir.rule">
-            <field name="name">res.partner.rule.private.group</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="domain_force">
-                [('type', '=', 'private')]
-            </field>
-            <field name="groups" eval="[
-                Command.link(ref('base.group_private_addresses'))
-            ]"/>
-            <field name="perm_read" eval="True"/>
-            <field name="perm_write" eval="True"/>
-            <field name="perm_create" eval="True"/>
-            <field name="perm_unlink" eval="True"/>
         </record>
 
         <!-- Restrict modifications on ir.filters to owner only -->

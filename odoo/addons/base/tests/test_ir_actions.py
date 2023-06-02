@@ -339,14 +339,6 @@ ZeroDivisionError: division by zero""" % self.test_server_action.id
         self_demo.with_context(self.context).run()
         self.assertEqual(self.test_partner.date, date.today())
 
-        # but can not write on private address
-        self.test_partner.type = "private"
-        with self.assertRaises(AccessError):
-            self.test_partner.with_user(user_demo.id).check_access_rule("write")
-        # nor execute a server action on it
-        with self.assertRaises(AccessError), mute_logger('odoo.addons.base.models.ir_actions'):
-            self_demo.with_context(self.context).run()
-
 
 class TestCustomFields(common.TransactionCase):
     MODEL = 'res.partner'

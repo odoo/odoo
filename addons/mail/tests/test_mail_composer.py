@@ -40,7 +40,6 @@ class TestMailComposer(MailCommon):
             'name': 'Test template with mso conditionals',
         })
 
-
 @tagged('mail_composer')
 class TestMailComposerForm(TestMailComposer):
     """ Test mail composer form view usage. """
@@ -48,23 +47,23 @@ class TestMailComposerForm(TestMailComposer):
     @classmethod
     def setUpClass(cls):
         super(TestMailComposerForm, cls).setUpClass()
-
-        cls.user_employee.write({'groups_id': [
-            (4, cls.env.ref('base.group_private_addresses').id),
-            (4, cls.env.ref('base.group_partner_manager').id),
-        ]})
+        cls.other_company = cls.env['res.company'].create({'name': 'Other Company'})
+        cls.user_employee.write({
+            'groups_id': [(4, cls.env.ref('base.group_partner_manager').id)],
+            'company_ids': [(4, cls.other_company.id)]
+        })
         cls.partner_private, cls.partner_private_2, cls.partner_classic = cls.env['res.partner'].create([
             {
                 'email': 'private.customer@text.example.com',
                 'phone': '0032455112233',
                 'name': 'Private Customer',
-                'type': 'private',
+                'company_id': cls.other_company.id,
             },
             {
                 'email': 'private.customer.2@test.example.com',
                 'phone': '0032455445566',
                 'name': 'Private Customer 2',
-                'type': 'private',
+                'company_id': cls.other_company.id,
             },
             {
                 'email': 'not.private@test.example.com',
@@ -143,8 +142,8 @@ class TestMailComposerForm(TestMailComposer):
     def test_composer_default_recipients_private_norights(self):
         """ Test usage of a private partner in composer when not having the
         rights to see them, as default value """
-        self.user_employee.write({'groups_id': [
-            (3, self.env.ref('base.group_private_addresses').id),
+        self.user_employee.write({'company_ids': [
+            (3, self.other_company.id),
         ]})
         with self.assertRaises(AccessError):
             _name = self.partner_private.with_env(self.env).name
@@ -162,7 +161,7 @@ class TestMailComposerForm(TestMailComposer):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     @users('employee')
     def test_composer_template_recipients_private(self):
-        """ Test usage of a private partner in composer, comint from template
+        """ Test usage of a private partner in composer, coming from template
         value """
         email_to_new = 'new.customer@test.example.com'
         self.mail_template.write({
@@ -198,9 +197,8 @@ class TestMailComposerForm(TestMailComposer):
         )
         saved_form = form.save()
         self.assertEqual(
-            # saved_form.partner_ids, partner_private + partner_classic + partner_private_2 + new_partner,
-            saved_form.partner_ids, partner_classic + new_partner,
-            'Template value is kept at save (FIXME: loosing private partner)'
+            saved_form.partner_ids, partner_private + partner_classic + partner_private_2 + new_partner,
+            'Template value is kept at save'
         )
 
         with self.mock_mail_gateway():
@@ -210,8 +208,8 @@ class TestMailComposerForm(TestMailComposer):
         self.assertIn('<h1>Hello sir!</h1>', message.body)
         # self.assertEqual(message.partner_ids, partner_private + partner_classic + partner_private_2 + new_partner)
         self.assertEqual(
-            message.partner_ids, partner_classic + new_partner,
-            'FIXME: loosing private partner'
+            message.partner_ids, partner_private + partner_classic + partner_private_2 + new_partner,
+            'Should not loosing unreadable partners'
         )
         self.assertEqual(message.subject, 'MSO FTW')
 
