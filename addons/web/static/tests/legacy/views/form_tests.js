@@ -10810,6 +10810,41 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('Auto save: click on save and save on closing tab/browser', async function (assert) {
+        const def = testUtils.makeTestPromise();
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="display_name"/>
+                        <field name="name" required="1"/>
+                    </group>
+                </form>`,
+            res_id: 1,
+            async mockRPC(route, { method, model }) {
+                if (method === "write" && model === "partner") {
+                    assert.step("write");
+                    await def;
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.editInput(form.$('.o_field_widget[name="display_name"]'), 'test');
+
+        await testUtils.form.clickSave(form);
+        window.dispatchEvent(new Event("beforeunload"));
+        await testUtils.nextTick();
+        def.resolve();
+        assert.verifySteps(['write']);
+
+        form.destroy();
+    });
+
     QUnit.test('Quick Edition: click on a quick editable field', async function (assert) {
         assert.expect(3);
 
@@ -11908,6 +11943,58 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('input[name=foo]').val(), "foo default",
                         "should contain input with initial value");
 
+        form.destroy();
+    });
+
+    QUnit.test('field "length" with value 0: readonly fields are not sent when saving', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.length = {string: 'Length', type: 'float', default: 0 };
+        this.data.partner.fields.foo.default = "foo default";
+
+        // define an onchange on display_name to check that the value of readonly
+        // fields is correctly sent for onchanges
+        this.data.partner.onchanges = {
+            display_name: function () {},
+            p: function () {},
+        };
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                    <field name="p">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                        <form string="Partners">
+                            <field name="length"/>
+                            <field name="display_name"/>
+                            <field name="foo" attrs="{\'readonly\': [[\'display_name\', \'=\', \'readonly\']]}"/>
+                        </form>
+                    </field>
+                </form>`,
+            mockRPC: function (route, args) {
+                if (args.method === 'create') {
+                    assert.deepEqual(args.args[0], {
+                        p: [[0, args.args[0].p[0][1], {length: 0, display_name: 'readonly'}]]
+                    }, "should not have sent the value of the readonly field");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        assert.containsOnce(document.body, '.modal input.o_field_widget[name=foo]',
+            'foo should be editable');
+        await testUtils.fields.editInput($('.modal .o_field_widget[name=foo]'), 'foo value');
+        await testUtils.fields.editInput($('.modal .o_field_widget[name=display_name]'), 'readonly');
+        assert.containsOnce(document.body, '.modal span.o_field_widget[name=foo]',
+            'foo should be readonly');
+        await testUtils.dom.clickFirst($('.modal-footer .btn-primary'));
+
+        await testUtils.form.clickSave(form); // save the record
         form.destroy();
     });
 
