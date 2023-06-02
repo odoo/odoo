@@ -1171,12 +1171,8 @@ class Task(models.Model):
             message, msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
-        if self.date_deadline:
-            render_context['subtitles'].append(
-                _('Deadline: %s', self.date_deadline.strftime(get_lang(self.env).date_format)))
-        elif self.date_assign:
-            render_context['subtitles'].append(
-                _('Assigned On: %s', self.date_assign.strftime(get_lang(self.env).date_format)))
+        if self.stage_id:
+            render_context['subtitles'].append(_('Stage: %s', self.stage_id.name))
         return render_context
 
     @api.model
