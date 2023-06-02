@@ -312,7 +312,7 @@ class AccountReportLine(models.Model):
     aggregation_formula = fields.Char(string="Aggregation Formula Shortcut", help="Internal field to shorten expression_ids creation for the aggregation engine", inverse='_inverse_aggregation_formula', store=False)
 
     _sql_constraints = [
-        ('code_uniq', 'unique (code)', "A report line with the same code already exists."),
+        ('code_uniq', 'unique (report_id, code)', "A report line with the same code already exists."),
     ]
 
     @api.depends('parent_id.hierarchy_level')
