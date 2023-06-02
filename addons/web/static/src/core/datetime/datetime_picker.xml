@@ -4,7 +4,7 @@
         <div class="d-flex gap-3">
             <t t-foreach="items" t-as="month" t-key="month.id">
                 <div
-                    class="o_date_picker d-grid flex-grow-1 rounded overflow-hidden"
+                    class="o_date_picker d-grid flex-grow-1 bg-view rounded overflow-auto"
                     t-on-pointerleave="() => (state.hoveredDate = null)"
                 >
                     <t t-foreach="month.daysOfWeek" t-as="dayOfWeek" t-key="dayOfWeek[0]">
@@ -28,52 +28,54 @@
                             <button
                                 class="o_date_item_cell o_datetime_button o_center o_cell_md btn p-1 border-0 fw-normal"
                                 t-att-class="{
-                                    'o_selected bg-primary': arInfo.isSelected,
+                                    'o_selected': arInfo.isSelected,
                                     o_select_start: arInfo.isSelectStart,
                                     o_select_end: arInfo.isSelectEnd,
-                                    'o_highlighted bg-primary': arInfo.isHighlighted,
+                                    'o_highlighted': arInfo.isHighlighted,
                                     o_highlight_start: arInfo.isHighlightStart,
                                     o_highlight_end: arInfo.isHighlightEnd,
                                     o_current: arInfo.isCurrent,
                                     o_today: itemInfo.includesToday,
                                     o_out_of_range: itemInfo.isOutOfRange or itemInfo.isInvalid,
-                                    'border-bottom': !week_last,
                                 }"
                                 t-att-disabled="itemInfo.isInvalid"
                                 t-on-pointerenter="() => (state.hoveredDate = itemInfo.range[0])"
-                                t-on-click="() => this.zoomOrSelect(itemInfo)"
-                                t-esc="itemInfo.label"
-                            />
+                                t-on-click="() => this.zoomOrSelect(itemInfo)">
+                                <span t-esc="itemInfo.label" class="z-index-1"/>
+                            </button>
                         </t>
                     </t>
                 </div>
             </t>
         </div>
-        <div class="d-flex justify-content-around position-relative">
-            <t t-if="props.type === 'datetime'">
-                <t t-foreach="state.timeValues" t-as="timeValue" t-key="timeValue_index">
-                    <div
-                        class="o_time_picker d-flex align-items-center justify-content-center gap-1"
-                    >
-                        <t t-call="web.DateTimePicker.Select">
-                            <t t-set="unitIndex" t-value="0" />
-                            <t t-set="unitList" t-value="availableHours" />
-                        </t>
-                        <span>:</span>
-                        <t t-call="web.DateTimePicker.Select">
-                            <t t-set="unitIndex" t-value="1" />
-                            <t t-set="unitList" t-value="availableMinutes" />
-                        </t>
-                        <t t-if="meridiems">
+        <div class="d-flex flex-column flex-md-row justify-content-center position-relative gap-4 gap-md-3">
+            <div class="d-flex gap-3 w-100 justify-content-center">
+                <t t-if="props.type === 'datetime'">
+                    <t t-foreach="state.timeValues" t-as="timeValue" t-key="timeValue_index">
+                        <div
+                            class="o_time_picker d-flex align-items-center justify-content-center w-lg-50 w-100 gap-1"
+                        >
                             <t t-call="web.DateTimePicker.Select">
-                                <t t-set="unitIndex" t-value="3" />
-                                <t t-set="unitList" t-value="meridiems" />
+                                <t t-set="unitIndex" t-value="0" />
+                                <t t-set="unitList" t-value="availableHours" />
                             </t>
-                        </t>
-                    </div>
+                            <span>:</span>
+                            <t t-call="web.DateTimePicker.Select">
+                                <t t-set="unitIndex" t-value="1" />
+                                <t t-set="unitList" t-value="availableMinutes" />
+                            </t>
+                            <t t-if="meridiems">
+                                <t t-call="web.DateTimePicker.Select">
+                                    <t t-set="unitIndex" t-value="3" />
+                                    <t t-set="unitList" t-value="meridiems" />
+                                </t>
+                            </t>
+                        </div>
+                    </t>
                 </t>
-            </t>
-            <div class="o_datetime_buttons position-absolute end-0 bottom-0">
+            </div>
+
+            <div t-attf-class="o_datetime_buttons position-md-absolute end-0">
                 <t t-slot="buttons" />
             </div>
         </div>
@@ -84,21 +86,21 @@
             <t t-foreach="items" t-as="itemInfo" t-key="itemInfo.id">
                 <t t-set="arInfo" t-value="getActiveRangeInfo(itemInfo)" />
                 <button
-                    class="o_date_item_cell o_datetime_button o_center o_cell_lg btn p-1"
+                    class="o_date_item_cell o_datetime_button btn o_center o_cell_lg btn p-1 border-0"
                     t-att-class="{
-                        'o_selected bg-primary': arInfo.isSelected,
+                        'o_selected': arInfo.isSelected,
                         o_select_start: arInfo.isSelectStart,
                         o_select_end: arInfo.isSelectEnd,
-                        'o_highlighted bg-primary': arInfo.isHighlighted,
+                        'o_highlighted': arInfo.isHighlighted,
                         o_highlight_start: arInfo.isHighlightStart,
                         o_highlight_end: arInfo.isHighlightEnd,
                         o_today: itemInfo.includesToday,
                         o_out_of_range: itemInfo.isOutOfRange or itemInfo.isInvalid,
                     }"
                     t-att-disabled="itemInfo.isInvalid"
-                    t-on-click="() => this.zoomOrSelect(itemInfo)"
-                    t-esc="itemInfo.label"
-                />
+                    t-on-click="() => this.zoomOrSelect(itemInfo)">
+                    <span t-esc="itemInfo.label" class="z-index-1"/>
+                </button>
             </t>
         </div>
     </t>
@@ -106,7 +108,7 @@
     <t t-name="web.DateTimePicker.Select" owl="1">
         <!-- Requires: { unitIndex: number, unitList: [any, string][], timeValue_index: number } -->
         <select
-            class="o_time_picker_select o_input border-1"
+            class="o_time_picker_select form-control form-control-sm w-auto"
             t-model="timeValue[unitIndex]"
             t-on-change="() => this.selectTime(timeValue_index)"
         >
@@ -123,28 +125,25 @@
 
     <t t-name="web.DateTimePicker" owl="1">
         <div
-            class="o_datetime_picker bg-view d-flex flex-column p-3 gap-2 user-select-none"
+            class="o_datetime_picker d-flex flex-column gap-2 p-2 p-lg-3 user-select-none"
             t-attf-style="--DateTimePicker__Day-template-columns: {{ isRange ? 7 : 8 }}"
         >
             <nav class="o_datetime_picker_header btn-group">
-                <button class="o_previous btn btn-secondary flex-grow-0" t-on-click="previous">
-                    <span class="oi oi-chevron-left" t-att-title="activePrecisionLevel.prevTitle" />
+                <button class="o_previous btn btn-light flex-grow-0" t-on-click="previous">
+                    <i class="oi oi-chevron-left" t-att-title="activePrecisionLevel.prevTitle" />
                 </button>
                 <button
-                    class="o_zoom_out o_datetime_button btn d-flex align-items-center justify-content-around text-truncate opacity-100"
+                    class="o_zoom_out o_datetime_button btn btn-light d-flex align-items-center justify-content-around px-0 text-truncate"
                     t-att-disabled="isLastPrecisionLevel"
                     t-att-title="!isLastPrecisionLevel and activePrecisionLevel.mainTitle"
                     t-on-click="zoomOut"
                 >
                     <t t-foreach="titles" t-as="title" t-key="title">
-                        <h5 class="o_header_part fw-bold m-0" t-esc="title" />
+                        <strong t-attf-class="o_header_part fs-5 {{ isRange ? 'flex-basis-50' : 'flex-basis-100'}}" t-esc="title" />
                     </t>
                 </button>
-                <button class="o_next btn btn-secondary flex-grow-0" t-on-click="next">
-                    <span
-                        class="oi oi-chevron-right"
-                        t-att-title="activePrecisionLevel.nextTitle"
-                    />
+                <button class="o_next btn btn-light flex-grow-0" t-on-click="next">
+                    <i class="oi oi-chevron-right" t-att-title="activePrecisionLevel.nextTitle" />
                 </button>
             </nav>
             <t t-if="state.precision === 'days'">
