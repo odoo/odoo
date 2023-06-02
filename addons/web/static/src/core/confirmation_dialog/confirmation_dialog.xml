@@ -3,7 +3,7 @@
 
   <t t-name="web.ConfirmationDialog" owl="1">
     <Dialog size="'md'" title="props.title" modalRef="modalRef">
-      <t t-esc="props.body" />
+      <t t-out="props.body" />
       <t t-set-slot="footer" owl="1">
         <button class="btn btn-primary" t-on-click="_confirm" t-esc="props.confirmLabel"/>
         <button t-if="props.cancel" class="btn btn-secondary" t-on-click="_cancel" t-esc="props.cancelLabel"/>
@@ -13,7 +13,7 @@
 
   <t t-name="web.AlertDialog" owl="1">
     <Dialog size="'sm'" title="props.title" contentClass="props.contentClass">
-      <t t-esc="props.body" />
+      <t t-out="props.body" />
       <t t-set-slot="footer" owl="1">
         <button class="btn btn-primary" t-on-click="_confirm" t-esc="props.confirmLabel"/>
         <button t-if="props.cancel" class="btn btn-secondary" t-on-click="_cancel" t-esc="props.cancelLabel"/>

@@ -391,8 +391,8 @@ export class FormController extends Component {
         await this.model.root.duplicate();
     }
 
-    async deleteRecord() {
-        const dialogProps = {
+    get deleteConfirmationDialogProps() {
+        return {
             body: this.env._t("Are you sure you want to delete this record?"),
             confirm: async () => {
                 await this.model.root.delete();
@@ -403,7 +403,10 @@ export class FormController extends Component {
             confirmLabel: this.env._t("Delete"),
             cancel: () => {},
         };
-        this.dialogService.add(ConfirmationDialog, dialogProps);
+    }
+
+    async deleteRecord() {
+        this.dialogService.add(ConfirmationDialog, this.deleteConfirmationDialogProps);
     }
 
     disableButtons() {

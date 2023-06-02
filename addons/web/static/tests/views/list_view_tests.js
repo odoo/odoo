@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, onWillStart, xml } from "@odoo/owl";
+import { Component, markup, onWillStart, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { Domain } from "@web/core/domain";
 import { currencies } from "@web/core/currency";
@@ -5432,6 +5432,48 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["unlink"]);
 
         assert.containsN(target, "tbody td.o_list_record_selector", 3, "should have 3 records");
+    });
+
+    QUnit.test("custom delete confirmation dialog", async (assert) => {
+
+        const listView = registry.category("views").get("list");
+        class CautiousController extends listView.Controller {
+            get deleteConfirmationDialogProps() {
+                const props = super.deleteConfirmationDialogProps;
+                props.body = markup(`<span class="text-danger">These are the consequences</span><br/>${props.body}`);
+                return props;
+            }
+        }
+        registry.category("views").add("caution", {
+            ...listView,
+            Controller: CautiousController,
+        });
+
+        await makeView({
+            resModel: "foo",
+            type: "list",
+            arch: `
+                <tree js_class="caution">
+                    <field name="foo"/>
+                </tree>
+            `,
+            serverData,
+            actionMenus: {},
+        });
+
+        await click(target.querySelector("tbody td.o_list_record_selector:first-child input"));
+        assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
+
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Delete");
+        assert.containsOnce(
+            document.body,
+            ".modal:contains('you sure') .text-danger:contains('consequences')",
+            "confirmation dialog should have markup and more"
+        );
+
+        await click(document, "body .modal footer button.btn-secondary");
+        assert.containsN(target, "tbody td.o_list_record_selector", 4, "nothing deleted, 4 records remain");
     });
 
     QUnit.test(
