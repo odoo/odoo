@@ -1,10 +1,13 @@
 // ------- List renderer -------
 .o_list_renderer {
-    --ListRenderer-table-padding-y: #{$table-cell-padding-x-sm};
+    --ListRenderer-table-padding-x: #{$table-cell-padding-x-sm};
     --ListRenderer-thead-padding-y: #{map-get($spacers, 4)};
     --ListRenderer-thead-bg-color:  #{$o-webclient-background-color};
     --ListRenderer-thead-border-end-color: #{$border-color};
     --ListRenderer-tfoot-bg-color: #{$o-list-footer-bg-color};
+
+    margin-left: var(--ListRenderer-margin-x, unset);
+    margin-right: var(--ListRenderer-margin-x, unset);
 
     // sticky header on desktop
     @include media-breakpoint-up(md) {
@@ -21,9 +24,9 @@
         background-clip: padding-box;
     }
 
-    .o_list_view &  {
+    .o_list_view & {
         --ListRenderer-thead-padding-y: #{$table-cell-padding-y-sm};
-        --ListRenderer-table-padding-y: #{$o-horizontal-padding};
+        --ListRenderer-table-padding-x: #{$o-horizontal-padding};
     }
 
     .o_list_table {
@@ -37,11 +40,11 @@
 
         > thead, > tbody, > tfoot {
             > tr > :first-child {
-                padding-left: var(--ListRenderer-table-padding-y);
+                padding-left: var(--ListRenderer-table-padding-x);
             }
 
             > tr > :last-child {
-                padding-right: var(--ListRenderer-table-padding-y);
+                padding-right: var(--ListRenderer-table-padding-x);
             }
 
             > tr > :empty {
@@ -438,7 +441,7 @@
 
             // first-child will be hidden so add left padding to second child
             & + * {
-                padding-left: var(--ListRenderer-table-padding-y);
+                padding-left: var(--ListRenderer-table-padding-x);
             }
         }
     }
