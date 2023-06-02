@@ -33,6 +33,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { hasTouch } from "@web/core/browser/feature_detection";
 import { url } from "@web/core/utils/urls";
+import { sprintf } from "@web/core/utils/strings";
 
 /**
  * @typedef {Object} Props
@@ -315,15 +316,20 @@ export class Message extends Component {
     }
 
     onClickPin() {
-        const prompt = this.message.pinned_at
-            ? _t("Are you sure you want to remove this pinned message?")
-            : _t(
-                  "The following message will be pinned to the channel. Are you sure you want to continue?"
-              );
+        const thread = this.message.originThread;
         this.env.services.dialog.add(MessageConfirmDialog, {
+            confirmColor: this.message.pinned_at ? "btn-danger" : undefined,
+            confirmText: this.message.pinned_at ? _t("Yes, remove it please") : _t("Yeah, pin it!"),
             message: this.message,
             messageComponent: Message,
-            prompt,
+            prompt: this.message.pinned_at
+                ? _t("Well nothing lasts forever, but are you sure you want to unpin this message?")
+                : sprintf(
+                      _t("You sure want this message pinned to %(conversation)s forever and ever?"),
+                      { conversation: thread.prefix + thread.displayName }
+                  ),
+            size: "md",
+            title: this.message.pinned_at ? _t("Unpin Message") : _t("Pin It"),
             onConfirm: () => this.messageService.setPin(this.message, !this.message.pinned_at),
         });
     }

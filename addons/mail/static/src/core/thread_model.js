@@ -344,6 +344,10 @@ export class Thread {
         return this.messages.filter((message) => !message.isTransient);
     }
 
+    get prefix() {
+        return this.isChatChannel ? "@" : "#";
+    }
+
     get lastSelfMessageSeenByEveryone() {
         const otherSeenInfos = [...this.seenInfos].filter(
             (seenInfo) => seenInfo.partner.id !== this._store.self.id

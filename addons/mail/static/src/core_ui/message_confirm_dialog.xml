@@ -2,13 +2,13 @@
 <templates xml:space="preserve">
 
 <t t-name="mail.MessageConfirmDialog" owl="1">
-    <Dialog size="'xl'" title="title">
+    <Dialog size="props.size" title="props.title">
         <p class="mx-3 mb-3" t-esc="props.prompt"/>
         <blockquote class="mx-3 mb-3 fst-normal" style="pointer-events:none;">
             <t t-component="props.messageComponent" message="props.message" hasActions="false"/>
         </blockquote>
         <t t-set-slot="footer">
-            <button class="btn btn-primary me-2" t-on-click="onClickConfirm">Confirm</button>
+            <button class="btn me-2" t-att-class="props.confirmColor" t-on-click="onClickConfirm" t-out="props.confirmText"/>
             <button class="btn btn-secondary me-2" t-on-click="props.close">Cancel</button>
         </t>
     </Dialog>
