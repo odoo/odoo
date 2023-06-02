@@ -54,6 +54,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
             }
         });
     }
+
     _addNewOrder() {
         this.pos.globalState.add_new_order();
     }

@@ -159,6 +159,7 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
                 for (const [actionId, active_ids] of Object.entries(payload.coupon_report)) {
                     await this.report.download(actionId, active_ids);
                 }
+                order.has_pdf_gift_card = Object.keys(payload.coupon_report).length > 0;
             }
             order.new_coupon_info = payload.new_coupon_info;
         }
