@@ -608,11 +608,12 @@ export class ListRenderer extends Component {
             if (type !== "integer" && type !== "float" && type !== "monetary") {
                 continue;
             }
+            const { attrs, widget } = column;
             let currencyId;
-            if (type === "monetary") {
+            if (type === "monetary" || widget === "monetary") {
                 const currencyField =
-                    this.props.list.activeFields[column.name].options.currency_field ||
-                    this.fields[column.name].currency_field ||
+                    this.props.list.activeFields[fieldName].options.currency_field ||
+                    this.fields[fieldName].currency_field ||
                     "currency_id";
                 if (!(currencyField in this.props.list.activeFields)) {
                     aggregates[fieldName] = {
@@ -621,7 +622,7 @@ export class ListRenderer extends Component {
                     };
                     continue;
                 }
-                currencyId = values[0][currencyField]?.[0];
+                currencyId = values[0][currencyField] && values[0][currencyField][0];
                 if (currencyId) {
                     const sameCurrency = values.every(
                         (value) => currencyId === value[currencyField][0]
@@ -635,7 +636,6 @@ export class ListRenderer extends Component {
                     }
                 }
             }
-            const { attrs, widget } = column;
             const func =
                 (attrs.sum && "sum") ||
                 (attrs.avg && "avg") ||
