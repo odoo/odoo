@@ -1763,6 +1763,8 @@ class CustomerPortal(portal.CustomerPortal):
         for line in sale_order.order_line:
             if line.display_type:
                 continue
+            if line._is_delivery():
+                continue
             res = {
                 'product_template_id': line.product_id.product_tmpl_id.id,
                 'product_id': line.product_id.id,
