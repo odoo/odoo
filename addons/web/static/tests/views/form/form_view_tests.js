@@ -11601,6 +11601,43 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["save"], "should not prevent unload");
     });
 
+    QUnit.test("Auto save: click on save and save on closing tab/browser", async function (assert) {
+        const def = makeDeferred();
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <group>
+                        <field name="p">
+                            <tree editable="top">
+                                <field name="display_name"/>
+                            </tree>
+                        </field>
+                    </group>
+                </form>`,
+            resId: 1,
+            async mockRPC(route, { args, method, model }) {
+                if (method === "write" && model === "partner") {
+                    assert.step("write");
+                    await def;
+                }
+            },
+        });
+
+        await addRow(target);
+
+        await editInput(target, '.o_field_widget[name="display_name"] input', "test");
+        await clickSave(target);
+        const evnt = new Event("beforeunload");
+        evnt.preventDefault = () => assert.step("prevented");
+        window.dispatchEvent(evnt);
+        await nextTick();
+        def.resolve();
+        assert.verifySteps(["write"]);
+    });
+
     QUnit.test("Auto save: save on closing tab/browser (invalid field)", async function (assert) {
         assert.expect(2);
 
