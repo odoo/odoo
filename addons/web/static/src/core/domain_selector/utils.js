@@ -23,7 +23,7 @@ export function buildDomain(domainSelectorTree) {
  */
 export function buildDomainSelectorTree(domain, pathsInfo, options = {}) {
     const tree = toTree(domain, options);
-    return toDomainSelectorTree(tree, pathsInfo);
+    return toDomainSelectorTree(tree, pathsInfo, options.previousTree);
 }
 
 /**
