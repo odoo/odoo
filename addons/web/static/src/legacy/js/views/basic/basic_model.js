@@ -1168,6 +1168,12 @@ var BasicModel = AbstractModel.extend({
 
                 // in the case of a write, only perform the RPC if there are changes to save
                 if (method === 'create' || changedFields.length) {
+                    // Prevents multiple create/write when a save and urgentSave on occur at the same time.
+                    // We only want to do a create/write.
+                    if (record.saveInProgress) {
+                        return;
+                    }
+                    record.saveInProgress = true;
                     var args = method === 'write' ? [[record.data.id], changes] : [changes];
                     self._rpc({
                             model: record.model,
@@ -1202,6 +1208,7 @@ var BasicModel = AbstractModel.extend({
 
                             self.unfreezeOrder(record.id);
 
+                            record.saveInProgress = false;
                             // Update the data directly or reload them
                             if (shouldReload) {
                                 self._fetchRecord(record).then(function () {
@@ -1211,7 +1218,10 @@ var BasicModel = AbstractModel.extend({
                                 _.extend(record.data, _changes);
                                 resolve(changedFields);
                             }
-                        }).guardedCatch(reject);
+                        }).guardedCatch((...args) => {
+                            record.saveInProgress = false;
+                            reject(...args)
+                        });
                 } else {
                     resolve(changedFields);
                 }
