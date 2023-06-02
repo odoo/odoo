@@ -258,7 +258,7 @@ class Slide(models.Model):
     def _get_placeholder_filename(self, field):
         return self.channel_id._get_placeholder_filename(field)
 
-    @api.depends('channel_id.slide_ids.is_category', 'channel_id.slide_ids.sequence')
+    @api.depends('channel_id.slide_ids.is_category', 'channel_id.slide_ids.sequence', 'channel_id.slide_ids.slide_ids')
     def _compute_category_id(self):
         """ Will take all the slides of the channel for which the index is higher
         than the index of this category and lower than the index of the next category.
