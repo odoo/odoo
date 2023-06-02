@@ -1516,8 +1516,8 @@ class BaseModel(metaclass=MetaModel):
         :returns: at most ``limit`` records matching the search criteria
         :raise AccessError: if user is not allowed to access requested information
         """
-        if isinstance(args, dict):
-            args = self.dict_to_domain(args)
+        if isinstance(domain, dict):
+            domain = self.dict_to_domain(domain)
 
         res = self._search(domain, offset=offset, limit=limit, order=order, count=count)
         return res if count else self.browse(res)
