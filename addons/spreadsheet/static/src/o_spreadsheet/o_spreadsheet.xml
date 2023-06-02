@@ -431,12 +431,10 @@
         t-att-contenteditable="env.model.getters.isReadonly() ? 'false' : 'true'"
         spellcheck="false"
         t-on-keydown="onKeydown"
-        t-on-mousedown="onMousedown"
         t-on-mousewheel.stop=""
         t-on-input="onInput"
-        t-on-keyup="onKeyup"
         t-on-click="onClick"
-        t-on-blur="onBlur"
+        t-on-keyup="onKeyup"
         t-on-paste.stop=""
         t-on-compositionstart="onCompositionStart"
         t-on-compositionend="onCompositionEnd"
@@ -3156,7 +3154,7 @@
                 t-on-click="() => this.changeRuleType('CellIsRule')">
                 <input
                   class="form-check-input o_radio_input"
-                  t-attf-checked="{{state.currentCFType === 'CellIsRule'}}"
+                  t-att-checked="state.currentCFType === 'CellIsRule'"
                   type="radio"
                   id="cellIsRule"
                   name="ruleType"
@@ -3169,7 +3167,7 @@
                 t-on-click="() => this.changeRuleType('ColorScaleRule')">
                 <input
                   class="form-check-input o_radio_input"
-                  t-attf-checked="{{state.currentCFType === 'ColorScaleRule'}}"
+                  t-att-checked="state.currentCFType === 'ColorScaleRule'"
                   type="radio"
                   id="colorScaleRule"
                   name="ruleType"
@@ -3185,7 +3183,7 @@
                 t-on-click="() => this.changeRuleType('IconSetRule')">
                 <input
                   class="form-check-input o_radio_input"
-                  t-attf-checked="{{state.currentCFType === 'IconSetRule'}}"
+                  t-att-checked="state.currentCFType === 'IconSetRule'"
                   type="radio"
                   id="iconSetRule"
                   name="ruleType"
@@ -3862,7 +3860,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.4.0-alpha.2';
-  __info__.date = '2023-05-26T13:42:01.130Z';
-  __info__.hash = '82328ad';
+  __info__.version = '16.4.0-alpha.3';
+  __info__.date = '2023-06-02T10:56:27.729Z';
+  __info__.hash = '059d66a';
 -->
