@@ -149,7 +149,7 @@ class AccountMove(models.Model):
     @api.depends('line_ids.sale_line_ids.order_id', 'currency_id', 'tax_totals', 'date')
     def _compute_partner_credit(self):
         super()._compute_partner_credit()
-        for move in self:
+        for move in self.filtered(lambda m: m.is_invoice(include_receipts=True)):
             sale_orders = move.line_ids.sale_line_ids.order_id
             amount_total_currency = move.currency_id._convert(
                 move.tax_totals['amount_total'],
