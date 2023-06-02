@@ -2578,6 +2578,6 @@ export function isMacOS() {
  */
 export function cleanZWS(node) {
     [node, ...descendants(node)]
-        .filter(node => node.nodeType === Node.TEXT_NODE)
+        .filter(node => node.nodeType === Node.TEXT_NODE && node.nodeValue.includes('\u200B'))
         .forEach(node => node.nodeValue = node.nodeValue.replace(/\u200B/g, ''));
 }
