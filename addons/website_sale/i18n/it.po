@@ -727,7 +727,7 @@ msgstr "Aggiungi al carrello"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__add_to_cart_action
 #: model:ir.model.fields,field_description:website_sale.field_website__add_to_cart_action
 msgid "Add To Cart Action"
-msgstr ""
+msgstr "Azione aggiungi al carrello"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
@@ -1511,6 +1511,19 @@ msgid ""
 "\n"
 "- If all the products in the checkout are free, and the customer does not visit the shipping page to add a shipping fee or the shipping fee is also free, then the email won't be sent."
 msgstr ""
+"Il cliente deve effettuare l'accesso altrimenti l'indirizzo e-mail non sarà disponibile.     \n"
+"\n"
+"-Se un cliente potenziale abbandona uno o più pagamenti per poi completare la vendita prima che l'e-mail di recupero venga inviata, a quel punto l'e-mail non sarà più recapitata.     \n"
+"\n"
+"-Se l'utente ha inviato manualmente un'e-mail di recupero, l'e-mail non verrà inviata una seconda volta     \n"
+"\n"
+"-Se si verifica un errore di pagamento quando il cliente cerca di completare l'acquisto, l'e-mail non verrà inviata.     \n"
+"\n"
+"-Se il tuo negozio non supporta la spedizione all'indirizzo fornito dall'utente, l'e-mail non verrà inviata.     \n"
+"\n"
+"-Se nessuno dei prodotti scelti per l'acquisto è disponibile (inventario vuoto, ad esempio), l'e-mail non verrà inviata.     \n"
+"\n"
+"-Se tutti i prodotti scelti per l'acquisto sono gratuiti e il cliente non visita la pagina relativa alla spedizione per aggiungere un metodo o se la spedizione è gratuita, l'e-mal non verrà inviata."
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
@@ -1780,7 +1793,7 @@ msgstr "Easypost"
 #. module: website_sale
 #: model:mail.template,name:website_sale.mail_template_sale_cart_recovery
 msgid "Ecommerce: Cart Recovery"
-msgstr ""
+msgstr "E-commerce: recupero carta"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -4297,7 +4310,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order__website_id
 msgid "Website through which this order was placed for eCommerce orders."
-msgstr ""
+msgstr "Sito web dell'eCommerce dal quale è stato ricevuto l'ordine."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__website_ids

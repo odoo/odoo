@@ -2535,6 +2535,8 @@ msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"Hinterlegen Sie den festen Betrag, den Sie zum errechneten reduzierten "
+"Betrag addieren /subtrahieren (wenn negativer Wert) möchten."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2745,6 +2747,13 @@ msgstr ""
 "zu profitieren, ausgedrückt in der Produktmengeneinheit des Lieferanten, "
 "falls keine vorhanden ist, ansonsten in der Standardmengeneinheit des "
 "Produkts."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -3302,6 +3311,9 @@ msgid ""
 "%s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"Sie können den Wert %s nicht löschen, da er für folgende Produkte verwendet wird:\n"
+"%s\n"
+" Wenn der Wert in der Vergangenheit mit einem Produkt verknüpft wurde, können Sie ihn nicht löschen."
 
 #. module: product
 #. odoo-python
@@ -3334,6 +3346,8 @@ msgstr ""
 #, python-format
 msgid "You cannot delete value %s because it was used in some products."
 msgstr ""
+"Sie können den Wert %s nicht löschen, da er in einigen Produkten verwendet "
+"wird."
 
 #. module: product
 #. odoo-python
