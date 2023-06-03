@@ -60,32 +60,32 @@ msgstr "# 미배정 영업제안"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "%(assigned)s leads allocated among %(team_count)s teams."
-msgstr ""
+msgstr "%(assigned)s 영업제안이 %(team_count)s개 팀으로 배정되었습니다. "
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "%(assigned)s leads allocated to %(team_name)s team."
-msgstr ""
+msgstr "%(assigned)s 영업제안이 %(team_name)s 팀에 배정되었습니다."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "%(attach_name)s (from %(lead_name)s)"
-msgstr ""
+msgstr "%(attach_name)s (%(lead_name)s에서)"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "%(duplicates)s duplicates leads have been merged."
-msgstr ""
+msgstr "%(duplicates)s 중복된 영업제안이 통합되었습니다."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid ""
 "%(members_assigned)s leads assigned among %(member_count)s salespersons."
-msgstr ""
+msgstr "%(members_assigned)s 영업제안이 %(member_count)s명 영업직원들에게 배정되었습니다."
 
 #. module: crm
 #: code:addons/crm/models/res_config_settings.py:0
@@ -209,6 +209,8 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&lt;', 2)]}\"> Meetings</span>\n"
 "                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&gt;', 1)]}\"> Meeting</span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&lt;', 2)]}\"> 미팅</span>\n"
+"                                    <span class=\"o_stat_text\" attrs=\"{'invisible': [('calendar_event_count', '&gt;', 1)]}\"> 미팅</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -239,6 +241,8 @@ msgid ""
 "<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
 "                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> at </span>"
 msgstr ""
+"<span class=\"oe_grey p-2\" groups=\"crm.group_use_recurring_revenues\"> + </span>\n"
+"                                        <span class=\"oe_grey p-2\" groups=\"!crm.group_use_recurring_revenues\"> 다음에서 </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -540,14 +544,14 @@ msgstr "기회를 만들기 전에 자격 단계 추가"
 #: code:addons/crm/static/src/js/forecast/forecast_kanban_column_quick_create.js:0
 #, python-format
 msgid "Add next %s"
-msgstr ""
+msgstr "다음 %s추가"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_domain
 msgid ""
 "Additional filter domain when fetching unassigned leads to allocate to the "
 "team."
-msgstr ""
+msgstr "할당되지 않은 영업제안을 팀에 배정하기 위해 가져오는 경우 사용하는 추가 필터 도메인입니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -668,7 +672,7 @@ msgstr "배정 규칙"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Assignment domain for team %(team)s is incorrectly formatted"
-msgstr ""
+msgstr "%(team)s 팀 배정 도메인 형식이 잘못되었습니다."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_id
@@ -689,17 +693,17 @@ msgstr "자동 할당"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_auto_assignment_action
 msgid "Auto Assignment Action"
-msgstr ""
+msgstr "자동 배정 작업"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_auto_assignment_interval_type
 msgid "Auto Assignment Interval Unit"
-msgstr ""
+msgstr "자동 배정 간격 단위"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__crm_auto_assignment_run_datetime
 msgid "Auto Assignment Next Execution Date"
-msgstr ""
+msgstr "자동 배정 다음 실행일"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__automated_probability
@@ -899,12 +903,12 @@ msgstr "승인"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Congrats, best of luck catching such big fish! :)"
-msgstr ""
+msgstr "축하합니다. 앞으로 더욱 큰 행운이 있기를 바랍니다!"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Consider leads created as of the:"
-msgstr ""
+msgstr "다음 일자로 생성된 영업제안 고려:"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -1196,7 +1200,7 @@ msgstr ""
 msgid ""
 "Did you know emails sent to a Sales Team alias generate opportunities in "
 "your pipeline?"
-msgstr ""
+msgstr "영업팀 별칭으로 전송된 이메일을 통해 파이프라인에 영업기회가 생성된다는 사실을 알고 있으신가요?"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_4
@@ -1205,6 +1209,8 @@ msgid ""
 "fill in all its data? Odoo autocompletes everything for you: logo, address, "
 "company size, business information, social media accounts, etc."
 msgstr ""
+"회사를 이름이나 VAT 번호로 검색하여 전체 내용이 바로 입력할 수 있다는 것을 알고 있으셨나요? Odoo에는 로고나 주소, 회사 규모,"
+" 사업 정보와 소셜미디어 계정 등 모든 것을 자동완성할 수 있는 기능이 있습니다."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_5
@@ -1213,6 +1219,8 @@ msgid ""
 " top-right map icon? A lot of screens in Odoo can be turned into a map: "
 "tasks, contacts, delivery orders, etc."
 msgstr ""
+"오른쪽 상단의 지도 아이콘으로 영업기회 목록을 지도 화면으로 전환할 수 있다는 것을 알고 있으셨나요? 작업, 연락처, 배송요청서 등 "
+"Odoo의 수많은 화면을 지도로 바꾸어 볼 수 있습니다."
 
 #. module: crm
 #: model:ir.model,name:crm.model_digest_digest
@@ -1279,7 +1287,7 @@ msgstr "예. 월간"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
 msgid "Easily set expected closing dates and overview your revenue streams."
-msgstr ""
+msgstr "간단하게 예상되는 마감일을 설정하고 수익 흐름을 살펴보세요."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1457,12 +1465,14 @@ msgid ""
 "targeted to your needs: company size, industry, etc. To help you test the "
 "feature, we offer you 200 credits for free."
 msgstr ""
+"영업팀에서 영업제안이 고갈되는 것만큼 큰 일도 없습니다. 다행히 클릭 몇 번 만으로 회사 규모나 업계 등 귀하의 조건에 맞는 영업제안을 "
+"발굴해낼 수 있습니다. 이 기능을 테스트하실 수 있도록 200 크레딧을 무료로 드립니다."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__force_assignment
 msgid "Force assignment"
-msgstr ""
+msgstr "강제 할당"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_forecast
@@ -1479,13 +1489,13 @@ msgstr "Forcast 분석"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "From %(source_name)s"
-msgstr ""
+msgstr "%(source_name)s에서"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "From %(source_name)s : %(source_subject)s"
-msgstr ""
+msgstr "%(source_name)s에서: %(source_subject)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -1582,7 +1592,7 @@ msgstr "예외 활동을 표시하기 위한 아이콘"
 msgid ""
 "If checked, forces salesman to be updated on updated opportunities even if "
 "already set."
-msgstr ""
+msgstr "선택하면, 이미 설정이 완료되었더라도 영업제안 업데이트 내용에 대해서 영업직원에게 강제 업데이트가 적용됩니다. "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_needaction
@@ -1602,14 +1612,14 @@ msgstr "이 옵션을 선택하면 일부 정보가 전달 오류를 생성합�
 msgid ""
 "If set, this Sales Team will be used for sales and assignments related to "
 "this partner"
-msgstr ""
+msgstr "설정하면, 이 영업팀을 협력사와 관련한 영업 및 배정 작업에 투입합니다."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_bounced_content
 msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
-msgstr ""
+msgstr "설정하면, 권한이 없는 사용자에게 기본 메시지 대신 이 내용을 전송합니다. "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__is_blacklisted
@@ -1625,6 +1635,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
+"블랙리스트에 있는 전화번호가 없는 번호인 경우, 어느 목록에서도 해당 연락처에 대해서는 더 이상 대량 발송 SMS를 보내지 않게 됩니다."
+" "
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.menu_import_crm
@@ -1655,6 +1667,8 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"해당 핸드폰 번호가 블랙리스트에 오른 번호인지 여부를 나타냅니다. 모델에 핸드폰과 유선전화 필드 양쪽이 있는 경우 블랙리스트에 올라 있는"
+" 번호를 구분하는데 사용합니다."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__phone_blacklisted
@@ -1663,6 +1677,8 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"해당 전화번호가 블랙리스트에 오른 번호인지 여부를 나타냅니다. 모델에 핸드폰과 유선전화 필드 양쪽이 있는 경우 블랙리스트에 올라 있는 "
+"번호를 구분하는데 사용합니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1672,7 +1688,7 @@ msgstr "내부 메모"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_res_config_settings__crm_auto_assignment_interval_type
 msgid "Interval type between each cron run (e.g. each 2 days or each 2 hours)"
-msgstr ""
+msgstr "크론을 실행하는 간격 유형 (예: 2일마다 또는 2시간마다)"
 
 #. module: crm
 #: code:addons/crm/models/res_config_settings.py:0
@@ -1680,7 +1696,7 @@ msgstr ""
 msgid ""
 "Invalid repeat frequency. Consider changing frequency type instead of using "
 "large numbers."
-msgstr ""
+msgstr "반복 빈도수가 잘못되었습니다. 큰 숫자를 사용하는 것보다는 빈도 유형을 변경하는 것이 좋습니다."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_is_follower
@@ -1806,12 +1822,12 @@ msgstr "리드 할당"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Lead Assignment requested by %(user_name)s"
-msgstr ""
+msgstr "%(user_name)s에서 요청한 영업제안 배정 "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_max
 msgid "Lead Average Capacity"
-msgstr ""
+msgstr "평균 영업제안 수용 능력"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -1856,7 +1872,7 @@ msgstr "문자열에 있는 영업제안 점수 매기기 시작 날짜"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team_member__lead_month_count
 msgid "Lead assigned to this member those last 30 days"
-msgstr ""
+msgstr "지난 30일 동안 해당 직원에게 할당된 영업제안"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -1870,7 +1886,7 @@ msgstr "영업제안 또는 영업기회"
 msgid ""
 "Lead/Opportunities automatic assignment is limited to managers or "
 "administrators"
-msgstr ""
+msgstr "영업제안/영업기회 자동 배정 기능은 매니저나 관리자 권한입니다."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
@@ -1941,7 +1957,7 @@ msgstr "영업제안 생성"
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_all_leads
 msgid ""
 "Leads are the qualification step before the creation of an opportunity."
-msgstr ""
+msgstr "영업제안은 영업기회 생성 전 검증 단계입니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_activity
@@ -1955,7 +1971,7 @@ msgstr "영업제안 또는 기회"
 msgid ""
 "Leads team allocation should be done for at least 0.2 or maximum 30 work "
 "days, not %.2f."
-msgstr ""
+msgstr "영업제안은 영업일 기준 최소 0.2일에서 최대 30일 동안 배정되어야 합니다. %.2f은 잘못된 값입니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2097,6 +2113,8 @@ msgid ""
 "action button. Automatic configures a cron running repeatedly assignment in "
 "all teams."
 msgstr ""
+"수동 배정은 팀 양식 화면에서 작업 버튼을 통해 배정 실행을 할 수 있습니다. 모든 팀에서 반복적으로 배정을 실행하도록 크론을 자동 "
+"구성합니다."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__manual
@@ -2145,7 +2163,7 @@ msgstr "회의"
 msgid ""
 "Member assignment domain for user %(user)s and team %(team)s is incorrectly "
 "formatted"
-msgstr ""
+msgstr "사용자 %(user)s 및 팀 %(team)s의 구성원 배정 도메인의 형식이 잘못되었습니다. "
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_merge_opportunities
@@ -2232,7 +2250,7 @@ msgstr "월간"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__assignment_max
 msgid "Monthly average leads capacity for all salesmen belonging to the team"
-msgstr ""
+msgstr "해당 팀의 전체 영업직원의 월 평균 영업제안 수용량"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__is_membership_multi
@@ -2345,7 +2363,7 @@ msgstr "주제 없음"
 msgid ""
 "No allocated leads to %(team_name)s team and its salespersons because no "
 "unassigned lead matches its domain."
-msgstr ""
+msgstr "해당 도메인에 맞는 미배정 영업제안이 없으므로 %(team_name)s팀 및 관련 영업직원에게 배정된 영업제안이 없습니다."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2353,7 +2371,7 @@ msgstr ""
 msgid ""
 "No allocated leads to %(team_name)s team because it has no capacity. Add "
 "capacity to its salespersons."
-msgstr ""
+msgstr "수용량이 부족하기 때문에 %(team_name)s 팀에 배정된 영업제안이 없습니다. 영업직원 수용량을 추가하십시오."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2361,7 +2379,7 @@ msgstr ""
 msgid ""
 "No allocated leads to any team or salesperson. Check your Sales Teams and "
 "Salespersons configuration as well as unassigned leads."
-msgstr ""
+msgstr "팀이나 영업직원에게 배정된 영업제안이 없습니다. 미배정 영업제안과 함께 영업팀 및 영업직원 구성 항목을 확인하십시오."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
@@ -2381,7 +2399,7 @@ msgstr "아직 정보가 없습니다!"
 msgid ""
 "No lead assigned to salespersons because no unassigned lead matches their "
 "domains."
-msgstr ""
+msgstr "해당 도메인에 맞는 미배정 영업제안이 없으므로 영업직원에게 배정된 영업제안이 없습니다."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2389,14 +2407,14 @@ msgstr ""
 msgid ""
 "No new lead allocated to %(team_name)s team because no unassigned lead "
 "matches its domain."
-msgstr ""
+msgstr "해당 도메인에 맞는 미배정 영업제안이 없으므로 %(team_name)s 팀에 새로운 영업제안이 배정되지 않았습니다."
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid ""
 "No new lead allocated to the teams because no lead match their domains."
-msgstr ""
+msgstr "해당 도메인에 맞는 영업제안이 없으므로 영업제안이 팀에 배정되지 않았습니다."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__grey
@@ -2450,7 +2468,7 @@ msgstr "오류 횟수"
 msgid ""
 "Number of interval type between each cron run (e.g. each 2 days or each 4 "
 "days)"
-msgstr ""
+msgstr "크론을 실행하는 간격 유형 수 (예: 2일 또는 4일 간격)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_count
@@ -2489,6 +2507,8 @@ msgid ""
 "manually, but if you let Odoo do the job the score is updated while the "
 "opportunity moves forward in your sales cycle."
 msgstr ""
+"Odoo의 인공지능 엔진은 귀하의 예전 기록을 바탕으로 영업기회별 성공률을 예측합니다. 수기로만 성공률을 업데이트할 수도 있지만, "
+"Odoo를 사용하시면 영업 주기에서 영업기회가 진행되는 동안 계속하여 수치를 업데이트합니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_view_kanban_dashboard
@@ -2690,12 +2710,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_email_update
 msgid "Partner Email will Update"
-msgstr ""
+msgstr "협력사 이메일 업데이트 예정"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_phone_update
 msgid "Partner Phone will Update"
-msgstr ""
+msgstr "협력사 전화번호 업데이트 예정"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_is_blacklisted
@@ -2764,12 +2784,12 @@ msgstr "목록보기에서 두 개 이상의 요소(영업제안 또는 영업 �
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_fields
 msgid "Pls Fields"
-msgstr ""
+msgstr "PLS 필드"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_start_date
 msgid "Pls Start Date"
-msgstr ""
+msgstr "PLS 시작일"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_contact
@@ -2787,7 +2807,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_ids
 msgid "Potential Duplicate Lead"
-msgstr ""
+msgstr "잠재적 중복 영업제안"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__duplicate_lead_count
@@ -2797,14 +2817,14 @@ msgstr "잠재적 중복 리드 수"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_field_labels
 msgid "Predictive Lead Scoring Field Labels"
-msgstr ""
+msgstr "영업제안 예측 점수 필드 라벨"
 
 #. module: crm
 #: model:ir.actions.server,name:crm.website_crm_score_cron_ir_actions_server
 #: model:ir.cron,cron_name:crm.website_crm_score_cron
 #: model:ir.cron,name:crm.website_crm_score_cron
 msgid "Predictive Lead Scoring: Recompute Automated Probabilities"
-msgstr ""
+msgstr "영업제안 예측 점수: 자동으로 확률 재계산"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__priority
@@ -2830,7 +2850,7 @@ msgstr "제안"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly_prorated
 msgid "Prorated MRR"
-msgstr ""
+msgstr "MRR 비례값"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__prorated_revenue
@@ -2840,7 +2860,7 @@ msgstr "비례 배분된 수익"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_tree_forecast
 msgid "Prorated Revenues"
-msgstr ""
+msgstr "수익 안분값"
 
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead2
@@ -2853,7 +2873,7 @@ msgstr "자격 요건 확인"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Ready to boost your sales? Let's have a look at your <b>Pipeline</b>."
-msgstr ""
+msgstr "판매량을 늘릴 준비가 되셨나요? 이제 <b>파이프라인</b>을 살펴보겠습니다."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_force_thread_id
@@ -2903,7 +2923,7 @@ msgstr "계속 반복"
 #: code:addons/crm/models/res_config_settings.py:0
 #, python-format
 msgid "Repeat frequency should be positive."
-msgstr ""
+msgstr "반복 빈도수는 양수여야 합니다."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__crm_auto_assignment_action__auto
@@ -2924,7 +2944,7 @@ msgstr "요구 사항"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Reschedule"
-msgstr ""
+msgstr "일정 변경"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_user_id
@@ -3072,7 +3092,7 @@ msgstr "영업제안 메뉴 표시"
 #. module: crm
 #: model:res.groups,name:crm.group_use_recurring_revenues
 msgid "Show Recurring Revenues Menu"
-msgstr ""
+msgstr "반복 수익 메뉴 표시"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3319,7 +3339,7 @@ msgstr "성공률은 단계를 기반으로 계산되지만 통계 분석에서 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action_lead
 msgid "This analysis shows you how many leads have been created per month."
-msgstr ""
+msgstr "이 분석 결과에서 월별로 생성된 영업제안 수를 확인할 수 있습니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -3339,7 +3359,7 @@ msgstr "이 막대는 단계를 변경하도록 허용합니다."
 msgid ""
 "This can be used to automatically assign leads to sales persons based on "
 "rules"
-msgstr ""
+msgstr "규칙에 따라 영업 담당자에게 영업제안을 자동으로 배정하는데 사용할 수 있습니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3382,7 +3402,7 @@ msgstr "이것은 링크의 소스입니다. 예시 : 검색엔진, 다른 도�
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
-msgstr ""
+msgstr "이 전화번호는 SMS 마케팅에서 블랙리스트에 올라있습니다. 블랙리스트를 해제하려면 클릭하세요."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__fold
@@ -3394,43 +3414,43 @@ msgstr "이 단계에 표시할 레코드가 없으면 칸반 화면은 접혀 �
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "This will assign leads to all members. Do you want to proceed?"
-msgstr ""
+msgstr "이렇게 하면 모든 구성원에게 영업제안이 배정됩니다. 진행하시겠습니까?"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_0
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "Tip: Convert incoming emails into opportunities"
-msgstr ""
+msgstr "팁: 받은 메일을 영업기회로 전환시킵니다"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_1
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_1
 msgid "Tip: Did you know Odoo has built-in lead mining?"
-msgstr ""
+msgstr "팁: Odoo에 영업제안 발굴 기능이 있다는 사실을 알고 있으셨나요?"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_4
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_4
 msgid "Tip: Do not waste time recording customers' data"
-msgstr ""
+msgstr "도움말: 고객 정보 입력에 시간을 낭비하지 마십시오"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_3
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_3
 msgid "Tip: Manage your pipeline"
-msgstr ""
+msgstr "도움말: 파이프라인 관리"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_2
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_2
 msgid "Tip: Opportunity win rate is predicted with AI"
-msgstr ""
+msgstr "도움말: AI를 활용한 영업기회 성공률 예측"
 
 #. module: crm
 #: model:digest.tip,name:crm.digest_tip_crm_5
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_5
 msgid "Tip: Turn a selection of opportunities into a map"
-msgstr ""
+msgstr "도움말: 다양한 영업기회를 지도 화면으로 변환"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__title
@@ -3444,7 +3464,7 @@ msgstr "제목"
 msgid ""
 "To prevent data loss, Leads and Opportunities can only be merged by groups "
 "of %(max_length)s."
-msgstr ""
+msgstr "데이터 손실을 막기 위해 영업제안이나 영업기회는 %(max_length)s 그룹으로만 통합할 수 있습니다."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3466,7 +3486,7 @@ msgstr "추적"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Trailing 12 months"
-msgstr ""
+msgstr "향후 12개월"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -3498,7 +3518,7 @@ msgstr "UTM 캠페인"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__user_company_ids
 msgid "UX: Limit to lead company or all if no company"
-msgstr ""
+msgstr "UX: 영업제안 대상 회사 또는 회사가 없는 경우 전체로 제한"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -3553,7 +3573,7 @@ msgstr "영업제안 사용"
 msgid ""
 "Use Lost Reasons to report on why opportunities are lost (e.g.\"Undercut by "
 "competitors\")."
-msgstr ""
+msgstr "보고서에 영업기회 실패에 대한 실패 사유 기재 (예: 경쟁사의 가격 덤핑)"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__action__each_exist_or_create
@@ -3589,7 +3609,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "Use the top left <i>Create</i> button, or send an email to"
-msgstr ""
+msgstr "왼쪽 상단의 <i>만들기</i> 버튼을 누르거나, 다음 주소로 이메일을 보내십시오."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -3604,12 +3624,12 @@ msgstr ""
 msgid ""
 "Use the top left Create button, or configure an email alias to test the "
 "email gateway."
-msgstr ""
+msgstr "왼쪽 상단의 만들기 버튼을 누르거나 이메일 별칭을 설정하여 이메일 게이트웨이를 테스트할 수 있습니다."
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_opportunity_report_action
 msgid "Use this menu to have an overview of your Pipeline."
-msgstr ""
+msgstr "이 메뉴에서 파이프라인 전체보기를 할 수 있습니다."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__user_login
@@ -3801,12 +3821,12 @@ msgstr "team_count"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_action_helper
 msgid "to test the email gateway."
-msgstr ""
+msgstr "이메일 게이트웨이를 테스트합니다."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
 msgid "to your CRM. This email address is configurable by sales team members."
-msgstr ""
+msgstr "CRM에 해당합니다. 영업팀에서 이 이메일을 설정할 수 있습니다."
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0

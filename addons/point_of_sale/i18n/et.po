@@ -18,12 +18,12 @@
 # Marek Pontus, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
 # Algo Kärp <algokarp@gmail.com>, 2022
-# Piia Paurson <piia@avalah.ee>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Anna, 2023
 # Leaanika Randmets, 2023
 # JanaAvalah, 2023
 # Patrick-Jordan Kiudorv, 2023
+# Piia Paurson <piia@avalah.ee>, 2023
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Patrick-Jordan Kiudorv, 2023\n"
+"Last-Translator: Piia Paurson <piia@avalah.ee>, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5016,6 +5016,12 @@ msgid "Returned"
 msgstr "Tagastatud"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "Tühistamine: %s"
+
+#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
@@ -6943,12 +6949,6 @@ msgid ""
 msgstr ""
 "Üritate müüa seeria-/partiinumbritega tooteid, kuid mõned neist on seadistamata.\n"
 "Kas soovite ikkagi jätkata?"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr "Sul saab olla ainult üks sularahamakseviis."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0

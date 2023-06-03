@@ -3753,6 +3753,16 @@ msgid "Is quantity done editable"
 msgstr "Is de hoeveelheid gereed te bewerken"
 
 #. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
+"Het is niet mogelijk een gereserveerde hoeveelheid te importeren, je moet "
+"het aantal onmiddellijk gebruiken."
+
+#. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -9724,13 +9734,3 @@ msgstr "{{ object.company_id.name }} Pakbon (Ref {{ object.name or 'n/b' }})"
 #, python-format
 msgid "Global Visibility Days"
 msgstr "Globale zichtbaarheidsdagen"
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allow to import reserved quantity, you have to use the quantity "
-"directly."
-msgstr ""
-"Het is niet mogelijk een gereserveerde hoeveelheid te importeren, je moet "
-"het aantal onmiddellijk gebruiken."

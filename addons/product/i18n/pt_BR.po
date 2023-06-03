@@ -6,7 +6,6 @@
 # Martin Trigaux, 2021
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2021
 # Luiz Carareto Alonso <Luiz.cararetoalonso@gmail.com>, 2021
-# douglas custodio <douglascstd@yahoo.com>, 2023
 # Kevilyn Rosa, 2023
 # Layna Nascimento, 2023
 # 
@@ -226,9 +225,9 @@ msgid ""
 " This description will be copied to every Sales Order, Delivery Order and "
 "Customer Invoice/Credit Note"
 msgstr ""
-"Uma descrição do produto que você deseja que apareça aos seus clientes. Esta"
-" descrição será copiada para todas os pedidos de vendas, ordens de entrega e"
-" faturas/nota de crédito."
+"Uma descrição do produto que você deseja exibir para os seus clientes. Esta "
+"descrição será copiada para todos os pedidos de venda, pedidos de entrega e "
+"faturas de cliente/notas de crédito."
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -2698,6 +2697,12 @@ msgstr ""
 "A quantidade a comprar desse fornecedor para se beneficiar do preço, "
 "expresso na Unidade de Medida do Produto do fornecedor, se não houver, na "
 "unidade de medida padrão do produto."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
