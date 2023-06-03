@@ -94,10 +94,10 @@ function odooAccountItem(env) {
             env.services
                 .rpc("/web/session/account")
                 .then((url) => {
-                    browser.location.href = url;
+                    browser.open(url, "_blank");
                 })
                 .catch(() => {
-                    browser.location.href = "https://accounts.odoo.com/account";
+                    browser.open("https://accounts.odoo.com/account", "_blank");
                 });
         },
         sequence: 60,
