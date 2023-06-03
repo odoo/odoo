@@ -515,6 +515,7 @@ class AccountReconcileModel(models.Model):
 
         lines_vals_list = []
         for line in self.line_ids:
+            balance = 0.0
             if line.amount_type == 'percentage':
                 balance = currency.round(residual_balance * (line.amount / 100.0))
             elif line.amount_type == 'fixed':
