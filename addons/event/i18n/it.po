@@ -222,6 +222,18 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Gentile <t t-out=\"object.name or ''\">Oscar Morgan</t>,<br>\n"
+"    grazie per la tua richiesta.<br>\n"
+"    Di seguito il tuo badge per l'evento <t t-out=\"object.event_id.name or ''\">Presentazione online della collezione OpenWood</t>.<br>\n"
+"    Non esitare a contattarci se hai domande.\n"
+"    <br><br>\n"
+"    Grazie,\n"
+"    <t t-if=\"object.event_id.user_id.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"object.event_id.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1794,6 +1806,7 @@ msgstr ""
 msgid ""
 "Foldable Badge - {{ (object.event_id.name or 'Event').replace('/','_') }}"
 msgstr ""
+"Foldable Badge - {{ (object.event_id.name or 'Event').replace('/','_') }}"
 
 #. module: event
 #: model:ir.actions.report,name:event.action_report_event_event_foldable_badge
@@ -2524,7 +2537,7 @@ msgstr "Numero di azioni"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_used
 msgid "Number of Attendees"
-msgstr ""
+msgstr "Numero di partecipanti"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_expected
@@ -2534,7 +2547,7 @@ msgstr "Numero di partecipanti atteso"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_reserved
 msgid "Number of Registrations"
-msgstr ""
+msgstr "Numero di registrazioni"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error_counter
@@ -2957,6 +2970,7 @@ msgstr ""
 #: model:mail.template,description:event.event_registration_mail_template_badge
 msgid "Sent automatically to someone after they registered to an event"
 msgstr ""
+"E-mail inviata automaticamente a seguito della registrazione ad un evento"
 
 #. module: event
 #: model:mail.template,description:event.event_subscription
