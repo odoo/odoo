@@ -3,18 +3,17 @@
 # 	* base_iban
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Chris Egal <sodaswed@web.de>, 2019
-# Leon Grill <leg@odoo.com>, 2019
+# Larissa Manderfeld, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
+"PO-Revision-Date: 2023-05-30 09:25+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,11 +21,11 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_iban
-#. openerp-web
-#: code:addons/base_iban/static/src/js/iban_widget.js:0
+#. odoo-javascript
+#: code:addons/base_iban/static/src/components/iban_widget/iban_widget.xml:0
 #, python-format
-msgid "Account isn't IBAN compliant."
-msgstr "Das Konto ist nicht IBAN-konform."
+msgid "Account isn't a valid IBAN"
+msgstr "Konto ist keine gültige IBAN"
 
 #. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
@@ -34,18 +33,21 @@ msgid "Bank Accounts"
 msgstr "Bankkonten"
 
 #. module: base_iban
+#. odoo-python
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "Cannot compute the BBAN because the account number is not an IBAN."
 msgstr "Konnte keine BBAN errechnen, da die Kontonummer keine IBAN ist."
 
 #. module: base_iban
+#. odoo-python
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "IBAN"
 msgstr "IBAN"
 
 #. module: base_iban
+#. odoo-python
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid ""
@@ -56,18 +58,21 @@ msgstr ""
 "Wobei B = Landesspezifischer Bankschlüssel, S = Branchenschlüssel, C = Kontonummer, k = Prüfziffer"
 
 #. module: base_iban
+#. odoo-python
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
 msgstr "Die IBAN ist ungültig. Sie muss mit der Länderkennzeichnung beginnen"
 
 #. module: base_iban
+#. odoo-python
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "There is no IBAN code."
 msgstr "Dort ist kein IBAN code."
 
 #. module: base_iban
+#. odoo-python
 #: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it."
