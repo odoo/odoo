@@ -12,7 +12,7 @@
 # Paolo Valier, 2020
 # David Minneci <david@numeko.it>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
-# Friederike Fasterling-Nesselbosch, 2022
+# Friederike Fasterling-Nesselbosch, 2021
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
@@ -81,8 +81,8 @@ msgid ""
 " verified by our system.\" role=\"img\" aria-label=\"Not verified\"/>"
 msgstr ""
 "<i class=\"fa fa-check text-muted\" title=\"Questo metodo di pagamento non è"
-" stato verificato dai nostri sistemi.\" role=\"img\" aria-label=\"Not "
-"verified\"/>"
+" stato verificato dai nostri sistemi.\" role=\"img\" aria-label=\"Non "
+"verificato\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -96,7 +96,9 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_methods
 msgid "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Home\"/>"
-msgstr "<i class=\"fa fa-home\" role=\"img\" aria-label=\"Home\" title=\"Pagina iniziale\"/>"
+msgstr ""
+"<i class=\"fa fa-home\" role=\"img\" aria-label=\"Pagina iniziale\" "
+"title=\"Pagina iniziale\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -152,9 +154,8 @@ msgid ""
 "<span>Start selling directly without an account; an email will be sent by "
 "Paypal to create your new account and collect your payments.</span>"
 msgstr ""
-"<span>Comincia a vendere direttamente senza un conto; un'email sarà inviata "
-"da Paypal per creare il tuo nuovo conto e raccogliere i tuoi "
-"pagamenti.</span>"
+"<span>Inizia a vendere direttamente; verrà inviata una e-mail da Paypal per "
+"creare il nuovo conto e incassare i pagamenti.</span>"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
@@ -476,7 +477,7 @@ msgstr "Quando viene completata la consegna, registra l'importo da Odoo."
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Check here"
-msgstr "Fai clic qui"
+msgstr "Fai clic"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_open_payment_onboarding_payment_acquirer_wizard
@@ -1910,6 +1911,18 @@ msgid ""
 "tx_values: transaction values\n"
 "context: the current context dictionary"
 msgstr ""
+"Il pulsante del sistema viene rappresentato dal modello con tutti i valori necessari.\n"
+"Viene utilizzato QWeb con il seguente contesto di valutazione:\n"
+"tx_url: URL della transazione per inviare il modulo\n"
+"acquirer: record browse di payment.acquirer\n"
+"user: record browse dell'utente corrente\n"
+"reference: numero di riferimento della transazione \n"
+"currency: record browse della valuta di transazione\n"
+"amount: importo di transazione, virgola mobile\n"
+"partner: record browse del partner acquirente, non necessariamente impostato\n"
+"partner_values: valori specifici dell'acquirente, provenienti per esempio da un modulo di spedizione\n"
+"tx_values: valori di transazione\n"
+"context: dizionario corrente del contesto"
 
 #. module: payment
 #. openerp-web

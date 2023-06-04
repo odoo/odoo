@@ -1880,8 +1880,8 @@ msgid ""
 "Define a minimum stock rule so that Odoo creates automatically requests for "
 "quotations or confirmed manufacturing orders to resupply your stock."
 msgstr ""
-"Définissez un règle de stock minimum afin qu' Odoo crée automatiquement des "
-"achats ou des ordres de fabrications pour réapprovisionner  votre stock"
+"Définissez un règle de stock minimum pour qu'Odoo crée automatiquement des "
+"achats ou des ordres de fabrication pour réapprovisionner votre stock."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
@@ -3403,6 +3403,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
 msgid "Is quantity done editable"
 msgstr "La quantité traitée est-elle modifiable ?"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
+"il n'est pas autorisé d'importer une quantité réservée, vous devez utiliser "
+"la quantité directement."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7579,7 +7589,8 @@ msgstr "Annuler la réservation"
 #: code:addons/stock/models/stock_inventory.py:0
 #, python-format
 msgid "Unsupported search on %s outside of an Inventory Adjustment"
-msgstr "Recherche non supportée sur %s en dehors d'un ajustement d'inventaire"
+msgstr ""
+"Recherche non prise en charge sur %s en dehors d'un ajustement d'inventaire"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
@@ -8221,8 +8232,8 @@ msgid ""
 "You cannot change the ratio of this unit of measure as some products with "
 "this UoM have already been moved or are currently reserved."
 msgstr ""
-"Vous ne pouvez pas changer le ratio de cette unité de mesure car certains "
-"articles dans cette Udm ont déjà été transférés ou sont actuellement "
+"Vous ne pouvez pas changer le ratio de cette unité de mesure, car certains "
+"produits avec cette UdM ont déjà été transférés ou sont actuellement "
 "réservés."
 
 #. module: stock
@@ -8584,13 +8595,3 @@ msgstr "report_stock_quantity_graph"
 #, python-format
 msgid "should be replenished to reach the maximum of"
 msgstr "devrait être réapprovisionné pour atteindre le maximum de"
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allow to import reserved quantity, you have to use the quantity "
-"directly."
-msgstr ""
-"Il n'est pas autorisé d'importer une quantité réservée, vous devez utiliser "
-"la quantité directement."

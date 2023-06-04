@@ -326,7 +326,7 @@ msgstr "<span>승인 요청</span>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong class=\"d-block mb-1\">From:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">보낸사람:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -336,7 +336,7 @@ msgstr "<strong class=\"mr16\">소계</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong class=\"text-muted\">Purchase Representative</strong>"
-msgstr ""
+msgstr "<strong class=\"text-muted\">구매 담당자</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -614,7 +614,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_report__delay
 msgid "Amount of time between purchase approval and order by date."
-msgstr ""
+msgstr "구매 승인일과 발주일 사이의 기간입니다"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__account_analytic_id
@@ -697,7 +697,7 @@ msgstr "평균 비용"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__avg_days_to_purchase
 msgid "Average Days to Purchase"
-msgstr ""
+msgstr "평균 구매 소요일수"
 
 #. module: purchase
 #. openerp-web
@@ -884,7 +884,7 @@ msgstr "발주서 일괄승인"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Confirm your purchase."
-msgstr ""
+msgstr "구매를 확정합니다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_approve
@@ -897,7 +897,7 @@ msgstr "확정일"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
 msgid "Confirmation Date Last Year"
-msgstr ""
+msgstr "작년 기준 확정일"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__lock
@@ -932,7 +932,7 @@ msgstr "청구서 만들기"
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_kpis_tree
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_tree
 msgid "Create Bills"
-msgstr ""
+msgstr "청구서 생성"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_batch_bills
@@ -982,14 +982,14 @@ msgstr "날짜"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_calendar_start
 msgid "Date Calendar Start"
-msgstr ""
+msgstr "일자 달력 시작"
 
 #. module: purchase
 #: code:addons/purchase/models/purchase.py:0
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Date Updated"
-msgstr ""
+msgstr "날짜 갱신"
 
 #. module: purchase
 #. openerp-web
@@ -1030,7 +1030,7 @@ msgstr "배송일"
 msgid ""
 "Delivery date expected from vendor. This date respectively defaults to "
 "vendor pricelist lead time then today's date."
-msgstr ""
+msgstr "업체의 예상 배송일입니다. "
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__date_planned
@@ -1052,7 +1052,7 @@ msgstr ""
 msgid ""
 "Depicts the date within which the Quotation should be confirmed and "
 "converted into a purchase order."
-msgstr ""
+msgstr "견적서를 확정하여 발주서로 전환해야 하는 날짜를 나타냅니다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__name
@@ -1110,7 +1110,7 @@ msgstr "초안 견적요청서"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Draft RFQs"
-msgstr ""
+msgstr "미결 견적요청서"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
@@ -1289,7 +1289,7 @@ msgstr "국제 상업 약관"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Indicate the product quantity you want to order."
-msgstr ""
+msgstr "주문하시려는 품목 수량을 기재하십시오."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__incoterm_id
@@ -1369,7 +1369,7 @@ msgstr "지연된 활동"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Late RFQs"
-msgstr ""
+msgstr "기한 만료된 견적요청서"
 
 #. module: purchase
 #. openerp-web
@@ -1383,7 +1383,7 @@ msgstr "구매 리드 타임"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Let's create your first request for quotation."
-msgstr ""
+msgstr "첫 번째 견적요청서를 만들어 보겠습니다."
 
 #. module: purchase
 #. openerp-web
@@ -1517,14 +1517,14 @@ msgstr "회계처리를 위한  발주서 내역에 필수 필드가 없습니�
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "My Draft RFQs"
-msgstr ""
+msgstr "나의 미결 견적요청서"
 
 #. module: purchase
 #. openerp-web
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "My Late RFQs"
-msgstr ""
+msgstr "나의 기한 초과된 견적요청서"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -1541,14 +1541,14 @@ msgstr "나의 구매"
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "My RFQs"
-msgstr ""
+msgstr "나의 견적요청서"
 
 #. module: purchase
 #. openerp-web
 #: code:addons/purchase/static/src/xml/purchase_dashboard.xml:0
 #, python-format
 msgid "My Waiting RFQs"
-msgstr ""
+msgstr "나의 대기 중인 견적요청서"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:0
@@ -1607,7 +1607,7 @@ msgstr "발주서가 없습니다. 하나 생성합시다."
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
 msgid "No request for quotation found. Let's create one!"
-msgstr ""
+msgstr "견적 요청 내용이 없습니다! 견적요청서를 생성해야 합니다!"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -1622,7 +1622,7 @@ msgstr "일반"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
 msgid "Not Acknowledged"
-msgstr ""
+msgstr "확인되지 않음"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_note
@@ -1797,7 +1797,7 @@ msgstr "포털 접근 URL"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Preview the reminder email by sending it to yourself."
-msgstr ""
+msgstr "본인 이메일로 알림 이메일을 전송하여 미리 확인합니다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -2069,7 +2069,7 @@ msgstr "청구서 처리되지 않은 내역를 포함한 발주서"
 #: model:ir.cron,cron_name:purchase.purchase_send_reminder_mail
 #: model:ir.cron,name:purchase.purchase_send_reminder_mail
 msgid "Purchase reminder"
-msgstr ""
+msgstr "구매 알림"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2258,7 +2258,7 @@ msgstr "입고 수량"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reception_confirmed
 msgid "Reception Confirmed"
-msgstr ""
+msgstr "입고 확인"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_supplier_invoices
@@ -2304,7 +2304,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__mail_reminder_confirmed
 msgid "Reminder Confirmed"
-msgstr ""
+msgstr "알림 확인"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.purchase_report
@@ -2381,7 +2381,7 @@ msgstr "참조 문서 검색"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Search a vendor name, or create one on the fly."
-msgstr ""
+msgstr "공급업체 이름을 검색하거나 새로 생성합니다."
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__display_type__line_section
@@ -2436,12 +2436,12 @@ msgstr "구매 주문서를 이메일로 발송"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.action_purchase_send_reminder
 msgid "Send Reminder"
-msgstr ""
+msgstr "알림 전송"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_send_reminder
 msgid "Send an automatic reminder email to confirm delivery"
-msgstr ""
+msgstr "배송 확인을 위해 자동 알림 전송"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2454,7 +2454,7 @@ msgstr "이메일로 전송"
 #: code:addons/purchase/static/src/js/tours/purchase.js:0
 #, python-format
 msgid "Send the request for quotation to your vendor."
-msgstr ""
+msgstr "업체에 견적요청서를 전송합니다."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
@@ -2644,7 +2644,7 @@ msgstr "이 공급업체는 발주서가 없습니다. 신규 견적요청서를
 #: model:digest.tip,name:purchase.digest_tip_purchase_0
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_0
 msgid "Tip: How to keep late receipts under control?"
-msgstr ""
+msgstr "팁: 입고가 늦어지는 경우에는 어떻게 관리하나요?"
 
 #. module: purchase
 #: model:digest.tip,name:purchase.digest_tip_purchase_1
@@ -2709,12 +2709,12 @@ msgstr "총계"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reception_confirmed
 msgid "True if PO reception is confirmed by the vendor."
-msgstr ""
+msgstr "공급업체에서 발주서를 확인하는 경우 해당합니다."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__mail_reminder_confirmed
 msgid "True if the reminder email is confirmed by the vendor."
-msgstr ""
+msgstr "공급업체에서 알림 이메일을 확인하는 경우 해당합니다."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_exception_decoration
@@ -2895,7 +2895,7 @@ msgstr "청구서 기다리는 중"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "Waiting RFQs"
-msgstr ""
+msgstr "견적요청서 대기 중"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__product_template__purchase_line_warn__warning
@@ -3004,8 +3004,10 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
+"귀하의 견적서에 %(product_company)s 회사의 품목이 포함되어 있으나 견적서는 %(quote_company)s 회사에 대한 견적입니다.\n"
+"견적서 업체명을 변경하거나 다른 업체의 품목을 삭제해주시기 바랍니다 (%(bad_products)s)."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "day(s) before"
-msgstr ""
+msgstr "다음의 기간 전"
