@@ -281,7 +281,7 @@ msgstr "Додати кількість"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
 msgid "Additional Product Tag"
-msgstr ""
+msgstr "Додатковий тег товару"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -297,12 +297,12 @@ msgstr "Правила розширених цін (знижки, формули
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
 msgid "All Product Tag"
-msgstr ""
+msgstr "Усі теги товару"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_ids
 msgid "All Product Variants using this Tag"
-msgstr ""
+msgstr "Усі варіанти товару використовують цей тег"
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -785,7 +785,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Define a new tag"
-msgstr ""
+msgstr "Визначіть новий тег"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__seller_ids
@@ -1897,7 +1897,7 @@ msgstr "Пакування товару"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_product_ids
 msgid "Product Product"
-msgstr ""
+msgstr "Product Product"
 
 #. module: product
 #: model:ir.model,name:product.model_product_tag
@@ -1943,7 +1943,7 @@ msgstr "Значення атрибуту шаблону товару"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Template Tags"
-msgstr ""
+msgstr "Теги шаблону товару"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
@@ -2336,7 +2336,7 @@ msgstr "Теги"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Tags are used to search product for a given theme."
-msgstr ""
+msgstr "Теги використовуються для пошуку товару за певною темою."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__valid_product_template_attribute_line_ids
@@ -2449,6 +2449,12 @@ msgstr ""
 "Кількість для купівлі від цього постачальника, щоб скористатися ціною, "
 "вираженою в одиниці вимірювання постачальника товару, якщо такої немає, в "
 "одиниці вимірювання товару за замовчуванням."
+
+#. module: product
+#: code:addons/product/models/product_pricelist.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -2952,6 +2958,9 @@ msgid ""
 "%s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"Ви не можете видалити значення %s, тому що воно використовується на наступних товарах:\n"
+"%s\n"
+"Якщо значення було пов’язано з товаром у минулому, ви не зможете його видалити."
 
 #. module: product
 #: code:addons/product/models/product.py:0

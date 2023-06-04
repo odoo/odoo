@@ -455,7 +455,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
 msgid "<i class=\"fa fa-lock\"/> Private"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\"/> Приватно"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -585,7 +585,7 @@ msgstr "<span class=\"o_stat_text\">Оцінювання</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Під-завдання</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -985,6 +985,8 @@ msgstr "Заархівовано"
 #, python-format
 msgid "Archived tasks cannot be recurring. Please unarchive the task first."
 msgstr ""
+"Архівовані завдання не можуть бути повторюваними. Спочатку розархівуйте "
+"завдання."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
@@ -2265,12 +2267,6 @@ msgid "How’s this project going?"
 msgstr "Як просувається цей проект?"
 
 #. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "I take it"
-msgstr "Беру собі"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__id
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__id
 #: model:ir.model.fields,field_description:project.field_project_milestone__id
@@ -2488,7 +2484,7 @@ msgstr "Стежить"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_milestone_exceeded
 msgid "Is Milestone Exceeded"
-msgstr ""
+msgstr "Віха перевищена"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_private
@@ -2520,6 +2516,8 @@ msgid ""
 "It seems that some tasks are part of a recurrence. At least one of them must"
 " be kept as a model to create the next occurences."
 msgstr ""
+"Здається, що деякі завдання є частиною повторення. Принаймні один із них має"
+" бути збережений як модель для створення наступних випадків."
 
 #. module: project
 #. openerp-web
@@ -2696,7 +2694,7 @@ msgstr "Останні дії"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 msgid "Late Milestones"
-msgstr ""
+msgstr "Пізні віхи"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
@@ -4126,7 +4124,7 @@ msgstr "Сб"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Satisfaction"
-msgstr ""
+msgstr "Задоволення"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
@@ -4259,7 +4257,7 @@ msgstr "Встановіть обкладинку"
 #: model:ir.model.fields.selection,name:project.selection__project_project__last_update_status__to_define
 #, python-format
 msgid "Set Status"
-msgstr ""
+msgstr "Встановити статус"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4444,7 +4442,7 @@ msgstr "Статус"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Status Update - "
-msgstr ""
+msgstr "Оновлення статусу - "
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_state
@@ -4493,7 +4491,7 @@ msgstr "Заплановані години підзавдань"
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_form_project
 #: model_terms:ir.ui.view,arch_db:project.rating_rating_view_search_project
 msgid "Submitted On"
-msgstr ""
+msgstr "Надіслано"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_planned_hours
@@ -4663,7 +4661,7 @@ msgstr "Завдання заблоковано"
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_progress
 msgid "Task in Progress"
-msgstr ""
+msgstr "Завдання у процесі"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -4881,7 +4879,7 @@ msgstr "Немає жодних завдань."
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "There is nothing to report."
-msgstr ""
+msgstr "Нічого немає для звіту."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_from
@@ -5175,7 +5173,7 @@ msgstr "Оновити"
 #: model:mail.message.subtype,name:project.mt_project_update_create
 #: model:mail.message.subtype,name:project.mt_update_create
 msgid "Update Created"
-msgstr ""
+msgstr "Оновлення створене"
 
 #. module: project
 #. openerp-web
@@ -5468,14 +5466,14 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot read %s fields in task."
-msgstr ""
+msgstr "Ви не можете читати %s поля на завданні."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot write on %s fields in task."
-msgstr ""
+msgstr "Ви не можете писати на %s полях на завданні."
 
 #. module: project
 #: code:addons/project/models/project.py:0
