@@ -3,9 +3,9 @@
 # 	* crm
 # 
 # Translators:
-# Larissa Manderfeld, 2023
 # Martin Trigaux, 2023
 # Friederike Fasterling-Nesselbosch, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-25 11:22+0000\n"
 "PO-Revision-Date: 2023-01-17 11:02+0000\n"
-"Last-Translator: Friederike Fasterling-Nesselbosch, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -86,7 +86,7 @@ msgstr "%(duplicates)s doppelte Leads wurden zusammengeführt."
 msgid ""
 "%(members_assigned)s leads assigned among %(member_count)s salespersons."
 msgstr ""
-"%(members_assigned)s Leads unter %(member_count)s Vertriebsmitarbeitern "
+"%(members_assigned)s Leads an %(member_count)s Vertriebsmitarbeitern "
 "zugewiesen."
 
 #. module: crm
@@ -101,7 +101,7 @@ msgstr "%s und %s"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "%s's opportunity"
-msgstr "%ss Verkaufschance"
+msgstr "Verkaufschance von %s"
 
 #. module: crm
 #. odoo-javascript
@@ -349,6 +349,76 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 24px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- KOPFZEILE -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"background-color: white; padding: 0; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Lead/Verkaufschance</span><br>\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\" t-out=\"object.name or ''\">Interesse an Ihren Produkten</span>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ object.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: 48px;\" t-att-alt=\"object.company_id.name\">\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                    <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:4px 0px 32px 0px;\">\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- INHALT -->\n"
+"    <tr>\n"
+"        <td style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                        <div>\n"
+"                            Hi <t t-out=\"object.partner_id and object.partner_id.name or ''\">Deco Addict</t>,<br><br>\n"
+"                            Willkommen bei <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>.\n"
+"                            Schön, Sie kennenzulernen! Jetzt, wo Sie an Board sind, können Sie entdecken, was <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t> alles zu bieten hat. Meine Name ist <t t-out=\"object.user_id.name or ''\">Marc Demo</t> und ich helfe Ihnen dabei, sich in Odoo zurechtzufinden. Könnten wir eine kurze Demo planen?<br>\n"
+"                            Sie können sich gerne jederzeit melden!<br><br>\n"
+"                            Viele Grüße<br>\n"
+"                            <t t-if=\"object.user_id\">\n"
+"                                <b><t t-out=\"object.user_id.name or ''\">Marc Demo</t></b>\n"
+"                                <br>E-Mail: <t t-out=\"object.user_id.email or ''\">mark.brown23@example.com</t>\n"
+"                                <br>Telefon: <t t-out=\"object.user_id.phone or ''\">+1 650-123-4567</t>\n"
+"                            </t>\n"
+"                            <t t-else=\"\">\n"
+"                                <t t-out=\"object.company_id.name or ''\">My Company (San Francisco)</t>\n"
+"                            </t>\n"
+"                        </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FUßZEILE -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px; padding: 0 8px 0 8px; font-size:11px;\">\n"
+"            <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 4px 0px;\">\n"
+"            <b t-out=\"object.company_id.name or ''\">My Company (San Francisco)</b><br>\n"
+"            <div style=\"color: #999999;\">\n"
+"                <t t-out=\"object.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                <t t-if=\"object.company_id.email\">\n"
+"                    | <a t-attf-href=\"'mailto:%s' % {{ object.company_id.email }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                </t>\n"
+"                <t t-if=\"object.company_id.website\">\n"
+"                    | <a t-attf-href=\"'%s' % {{ object.company_id.website }}\" style=\"text-decoration:none; color: #999999;\" t-out=\"object.company_id.website or ''\">http://www.example.com</a>\n"
+"                </t>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=email\" style=\"color: #875A7B;\">Odoo</a>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_defaults
@@ -413,12 +483,12 @@ msgstr "Aktivitäten"
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_pivot
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Activities Analysis"
-msgstr "Aktivitäten-Auswertung"
+msgstr "Aktivitätenanalyse"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users__target_sales_done
 msgid "Activities Done Target"
-msgstr "Zielvorgabe \"Erledigte Vorgänge\""
+msgstr "Zielvorgabe für erledigte Aktivitäten"
 
 #. module: crm
 #: model:ir.model,name:crm.model_mail_activity
@@ -471,8 +541,8 @@ msgstr "Beschreibung hinzufügen …"
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Add a qualification step before the creation of an opportunity"
 msgstr ""
-"Führen Sie einen Qualitätscheck durch, bevor Sie eine Verkaufschance "
-"erstellen"
+"Fügen Sie einen Qualifizierungsschritts vor der Erstellung einer "
+"Verkaufschance hinzu"
 
 #. module: crm
 #. odoo-javascript
@@ -542,7 +612,7 @@ msgstr "Alias-Modell"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "All set. Let’s <b>Schedule</b> it."
-msgstr "Alles bereit. <b>Planen</b> wir es ein."
+msgstr "Alles bereit. <b>Planen</b> wir sie."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -552,7 +622,7 @@ msgstr "Analyse"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__deduplicate
 msgid "Apply deduplication"
-msgstr "Doubletten entfernen"
+msgstr "Deduplizierung anwenden"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
@@ -632,7 +702,7 @@ msgstr "Zuweisungsdatum"
 #: model:ir.model.fields,field_description:crm.field_crm_team__assignment_domain
 #: model:ir.model.fields,field_description:crm.field_crm_team_member__assignment_domain
 msgid "Assignment Domain"
-msgstr "Zuweisungs-Domain"
+msgstr "Zuweisungsbereich"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -744,7 +814,7 @@ msgstr "CRM: Leadzuweisung"
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
 msgid "Calendar Event"
-msgstr "Kalenderveranstaltung"
+msgstr "Kalender-Ereignis"
 
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
@@ -841,8 +911,8 @@ msgstr "Abschlussdatum"
 #, python-format
 msgid "Closed/Dead leads cannot be converted into opportunities."
 msgstr ""
-"Als \"nicht erfolgreich\" beendete Interessenten können nicht mehr in eine "
-"Verkaufschance umgewandelt werden."
+"Abgeschlossene/Tote Leads können nicht mehr in eine Verkaufschance "
+"umgewandelt werden."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__lost_feedback
@@ -915,7 +985,7 @@ msgstr "Herzlichen Glückwunsch, viel Glück beim Fangen solch großer Fische :)
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
 msgid "Consider leads created as of the:"
-msgstr "Für Leads mit einem Erstellungsdatum ab dem"
+msgstr "Für Leads mit einem Erstellungsdatum ab dem:"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -1043,7 +1113,8 @@ msgstr "Land"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_website_crm_iap_reveal
 msgid "Create Leads/Opportunities from your website's traffic"
-msgstr "Generieren Sie Leads/Verkaufschancen aus dem Traffic Ihrer Website"
+msgstr ""
+"Generieren Sie Leads/Verkaufschancen aus dem Besucheraufkommen Ihrer Website"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner
@@ -1305,8 +1376,8 @@ msgstr "Anzeigename"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Keine Zugriffsberechtigung, überspringen dieser Daten für die Digest E-Mail "
-"der Benutzer."
+"Keine Zugriffsberechtigung, überspringen dieser Daten für die E-Mail-"
+"Zusammenfassung des Benutzers."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__nothing
@@ -1339,8 +1410,8 @@ msgstr "Z. B. monatlich"
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
 msgid "Easily set expected closing dates and overview your revenue streams."
 msgstr ""
-"Legen Sie auf einfache Weise die voraussichtlichen Abschlusstermine fest und"
-" verschaffen Sie sich einen Überblick über Ihre Einnahmequellen."
+"Legen Sie auf einfache Weise die voraussichtlichen Abschlussdaten fest und "
+"verschaffen Sie sich einen Überblick über Ihre Einnahmequellen."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1383,7 +1454,7 @@ msgstr "E-Mail:"
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_type_demo_email_with_template
 msgid "Email: Welcome Demo"
-msgstr "E-Mail: Willkommen Demo"
+msgstr "E-Mail: Willkommensdemo"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__res_config_settings__lead_enrich_auto__auto
@@ -1506,7 +1577,7 @@ msgstr ""
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency_field
 msgid "Fields that can be used for predictive lead scoring computation"
 msgstr ""
-"Felder, die für die Berechnung der prädiktiven Lead-Bewertung-Berechnung "
+"Felder, die für die Berechnung der voraussichtlichen Lead-Bewertung "
 "verwendet werden können"
 
 #. module: crm
@@ -1522,12 +1593,12 @@ msgstr "Folgeaktionsquote"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_follower_ids
 msgid "Followers"
-msgstr "Abonnenten"
+msgstr "Follower"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Abonnenten (Partner)"
+msgstr "Follower (Partner)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__activity_type_icon
@@ -1684,8 +1755,8 @@ msgid ""
 "If checked, forces salesman to be updated on updated opportunities even if "
 "already set."
 msgstr ""
-"Wenn diese Option aktiviert ist, wird der Verkäufer gezwungen, bei "
-"aktualisierten Verkaufschancen aktualisiert zu werden, auch wenn diese "
+"Wenn diese Option aktiviert ist, wird der Vertriebsmitarbeiter gezwungen, "
+"bei aktualisierten Verkaufschancen aktualisiert zu werden, auch wenn diese "
 "bereits eingestellt sind."
 
 #. module: crm
@@ -1816,7 +1887,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_is_follower
 msgid "Is Follower"
-msgstr "Ist ein Abonnent"
+msgstr "Ist Follower"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_partner_visible
@@ -1841,7 +1912,7 @@ msgstr "Stelle"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Job Position:"
-msgstr "Berufsposition:"
+msgstr "Stelle:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__kanban_state
@@ -2756,7 +2827,7 @@ msgstr ""
 "Verkaufschancen mit Informationen, wie der erwartete Umsatz, die "
 "eingeplanten Kosten, verpasste Fristen oder die Anzahl der Interaktionen pro"
 " Verkaufschance. Diese Berichte werden vorrangig von Vertriebsmanagern "
-"verwendet, um regelmäßige Berichte mit den Kanälen der Vertriebspipeline zu "
+"verwendet, um regelmäßige Berichte mit den Kanälen der Verkaufspipeline zu "
 "erstellen."
 
 #. module: crm
@@ -3008,8 +3079,8 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"Richtlinie zum Posten einer Dokument-Mitteilung über das E-Mail-Gateway.\n"
-"- Jeder: jeder kann posten\n"
+"Richtlinie zum Hinterlassen einer Mitteilung im Dokument über das E-Mail-Gateway.\n"
+"- Jeder: jeder kann eine Nachricht hinterlassen\n"
 "- Partner: nur bestätigte Partner\n"
 "- Follower: nur die Personen, die dem betreffenden Dokument folgen oder Mitglieder von Kanälen sind, die dem Dokument folgen\n"
 
@@ -3275,7 +3346,7 @@ msgstr "Vertriebsmitarbeiter"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
 msgid "Salesperson:"
-msgstr "Vertriebsmitarbeiter"
+msgstr "Vertriebsmitarbeiter:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__user_ids

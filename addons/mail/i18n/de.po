@@ -817,7 +817,7 @@ msgid ""
 "document and</span>"
 msgstr ""
 "<span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', "
-"'=', False), ('composition_mode', '=', 'mass_mail')]}\">Abonnenten des "
+"'=', False), ('composition_mode', '=', 'mass_mail')]}\">Follower des "
 "Dokuments und</span>"
 
 #. module: mail
@@ -832,7 +832,7 @@ msgid ""
 "note. Followers won't receive any email notification."
 msgstr ""
 "<strong>Interne Kommunikation</strong>: Antworten erzeugt eine interne "
-"Notiz. Followers werden keine E-Mail-Benachrichtigung erhalten."
+"Notiz. Follower werden keine E-Mail-Benachrichtigung erhalten."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
@@ -1193,7 +1193,7 @@ msgstr "Schwarze Liste für E-Mails hinzufügen"
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 #, python-format
 msgid "Add Followers"
-msgstr "Abonnenten hinzufügen"
+msgstr "Follower hinzufügen"
 
 #. module: mail
 #. odoo-python
@@ -3190,7 +3190,7 @@ msgstr "Dokument"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
 msgid "Document Followers"
-msgstr "Dokument Abonnenten"
+msgstr "Dokument-Follower"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_model_id
@@ -3922,7 +3922,7 @@ msgstr "Abonnieren"
 #: model:ir.ui.menu,name:mail.menu_email_followers
 #: model_terms:ir.ui.view,arch_db:mail.view_followers_tree
 msgid "Followers"
-msgstr "Abonnenten"
+msgstr "Follower"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_partner_ids
@@ -3933,12 +3933,12 @@ msgstr "Abonnenten"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Abonnenten (Partner)"
+msgstr "Follower (Partner)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_subscription_form
 msgid "Followers Form"
-msgstr "Abonnenten-Formular"
+msgstr "Follower-Formular"
 
 #. module: mail
 #. odoo-javascript
@@ -3950,7 +3950,7 @@ msgstr "Follower von"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_alias__alias_contact__followers
 msgid "Followers only"
-msgstr "Nur Abonnenten"
+msgstr "Nur Follower"
 
 #. module: mail
 #. odoo-javascript
@@ -4296,7 +4296,7 @@ msgstr "Seitenleiste verbergen"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__hidden
 msgid "Hide the subtype in the follower options"
-msgstr "Verberge den Untertyp in den Abonnenten Optionen"
+msgstr "Subtyp in den Follower-Optionen ausblenden"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__is_internal
@@ -4806,7 +4806,7 @@ msgstr "Einladung, um %(document_model)s zu folgen: %(document_name)s"
 #: code:addons/mail/static/src/models/chatter.js:0
 #, python-format
 msgid "Invite Follower"
-msgstr "Abonnenten einladen"
+msgstr "Follower einladen"
 
 #. module: mail
 #. odoo-javascript
@@ -4860,7 +4860,7 @@ msgstr "Ist Editor"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_is_follower
 #: model:ir.model.fields,field_description:mail.field_res_users__message_is_follower
 msgid "Is Follower"
-msgstr "Ist ein Abonnent"
+msgstr "Ist Follower"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__is_member
@@ -5789,7 +5789,7 @@ msgstr "Als erledigt markieren"
 #: code:addons/mail/static/src/models/call_settings_menu.js:0
 #, python-format
 msgid "Media devices unobtainable"
-msgstr ""
+msgstr "Mediengeräte nicht verfügbar"
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
@@ -5813,7 +5813,7 @@ msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
 msgstr ""
-"Mitglieder dieser Gruppe werden automatisch als Abonnenten hinzugefügt. "
+"Mitglieder dieser Gruppe werden automatisch als Follower hinzugefügt. "
 "Beachten Sie, dass diese Ihre Nachrichteneinstellungen auch selbständig "
 "bearbeiten können."
 
@@ -6591,13 +6591,13 @@ msgstr "Benachrichtigungen"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notify
 msgid "Notify followers"
-msgstr "Abonnenten benachrichtigen"
+msgstr "Follower benachrichtigen"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__notify
 msgid "Notify followers of the document (mass post only)"
 msgstr ""
-"Benachrichtigen Sie die Abonnenten dieses Dokuments (nur bei Massenmail)"
+"Benachrichtigen Sie die Follower dieses Dokuments (nur bei Massenmail)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_needaction_counter
@@ -7318,8 +7318,8 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
-"Richtlinie zum Posten einer Dokument-Nachricht über das E-Mail-Gateway.\n"
-"- Jeder: jeder kann posten\n"
+"Richtlinie zum Hinterlassen einer Mitteilung im Dokument über das E-Mail-Gateway.\n"
+"- Jeder: jeder kann eine Nachricht hinterlassen\n"
 "- Partner: nur bestätigte Partner\n"
 "- Follower: nur die Personen, die dem betreffenden Dokument folgen oder Mitglieder von Kanälen sind, die dem Dokument folgen\n"
 
@@ -7821,7 +7821,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/follower/follower.xml:0
 #, python-format
 msgid "Remove this follower"
-msgstr "Abonnent löschen"
+msgstr "Diesen Follower löschen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__render_model
@@ -8043,7 +8043,7 @@ msgstr "SSL"
 #: code:addons/mail/static/src/models/call_settings_menu.js:0
 #, python-format
 msgid "SSL might not be set up properly"
-msgstr ""
+msgstr "SSL ist möglicherweise nicht richtig eingerichtet"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
@@ -8351,7 +8351,7 @@ msgstr "Jetzt senden"
 #: code:addons/mail/static/src/models/composer.js:0
 #, python-format
 msgid "Send a message to followers..."
-msgstr "Schicken Sie eine Nachricht an Follower..."
+msgstr "Schicken Sie eine Nachricht an Follower ..."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -9084,7 +9084,7 @@ msgstr "Testen & Bestätigen"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
 msgid "Text Contents"
-msgstr ""
+msgstr "Textinhalte"
 
 #. module: mail
 #. odoo-javascript
@@ -9825,7 +9825,7 @@ msgstr "Stummschaltung aufheben"
 #: code:addons/mail/static/src/models/chatter.js:0
 #, python-format
 msgid "Unfollow"
-msgstr "Nicht mehr abonnieren"
+msgstr "Nicht mehr folgen"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_alias_alias_unique
@@ -21402,7 +21402,7 @@ msgstr "Nicht richtig konfigurierter alias "
 #: code:addons/mail/models/models.py:0
 #, python-format
 msgid "incorrectly configured alias (unknown reference record)"
-msgstr "Nicht richtig konfigurierter Alias (unbekannter Referenzdatensatz)"
+msgstr "nicht richtig konfigurierter Alias (unbekannter Referenzdatensatz)"
 
 #. module: mail
 #. odoo-javascript
@@ -33804,7 +33804,7 @@ msgstr "unbekannter Fehler"
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "unknown target model %s"
-msgstr "unbekanntes Zielmodel %s"
+msgstr "unbekanntes Zielmodell %s"
 
 #. module: mail
 #. odoo-javascript

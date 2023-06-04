@@ -1597,7 +1597,7 @@ msgstr "Status"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_provider_onboarding_state
 msgid "State of the onboarding payment provider step"
-msgstr "Status des Zahlungsanbieter-Einarbeitungsschritts"
+msgstr "Status des Einarbeitungsschritts für Zahlungsanbieter"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
@@ -1717,15 +1717,15 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__auth_msg
 msgid "The message displayed if payment is authorized"
-msgstr "Die Meldung, die angezeigt wird, wenn die Zahlung autorisiert ist"
+msgstr "Die Meldung, die angezeigt wird, wenn die Zahlung autorisiert wird"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__cancel_msg
 msgid ""
 "The message displayed if the order is canceled during the payment process"
 msgstr ""
-"Die Meldung, die angezeigt wird, wenn der Auftrag während des "
-"Zahlungsvorgangs storniert wird"
+"Die Meldung, die angezeigt wird, wenn der Auftrag während des Zahlvorgangs "
+"storniert wird"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__done_msg
@@ -1733,21 +1733,21 @@ msgid ""
 "The message displayed if the order is successfully done after the payment "
 "process"
 msgstr ""
-"Die Meldung, die angezeigt wird, wenn die Bestellung nach dem "
-"Zahlungsvorgang erfolgreich abgeschlossen wurde"
+"Die Meldung, die angezeigt wird, wenn die Bestellung nach dem Zahlvorgang "
+"erfolgreich abgeschlossen wurde"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__pending_msg
 msgid "The message displayed if the order pending after the payment process"
 msgstr ""
-"Die Meldung, die angezeigt wird, wenn die Bestellung nach dem "
-"Zahlungsvorgang noch aussteht"
+"Die Meldung, die angezeigt wird, wenn die Bestellung nach dem Zahlvorgang "
+"noch aussteht"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__pre_msg
 msgid "The message displayed to explain and help the payment process"
 msgstr ""
-"Die Meldung, die angezeigt wird, um den Zahlungsvorgang zu erklären und zu "
+"Die Meldung, die angezeigt wird, um den Zahlvorgang zu erklären und zu "
 "unterstützen"
 
 #. module: payment
@@ -1800,7 +1800,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__express_checkout_form_view_id
 msgid "The template rendering the express payment methods' form."
-msgstr "Die Vorlage, die as Formular der Express-Zahlungsmethode rendert."
+msgstr "Die Vorlage, die as Formular der Express-Zahlungsmethode wiedergibt"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__inline_form_view_id
@@ -1816,8 +1816,8 @@ msgid ""
 "The template rendering the inline payment form when making a payment by "
 "token."
 msgstr ""
-"Die Vorlage, die das Inline-Zahlungsformular rendert, wenn eine Zahlung mit "
-"einem Token getätigt wird."
+"Die Vorlage, die das Inline-Zahlungsformular wiedergibt, wenn eine Zahlung "
+"mit einem Token getätigt wird."
 
 #. module: payment
 #. odoo-python
@@ -2118,6 +2118,8 @@ msgstr "Banküberweisung"
 #, python-format
 msgid "You cannot delete the payment provider %s; archive it instead."
 msgstr ""
+"Sie können den Zahlungsanbieter %s nicht löschen; archivieren Sie ihn "
+"stattdessen."
 
 #. module: payment
 #. odoo-python
