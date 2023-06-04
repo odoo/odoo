@@ -5,11 +5,11 @@
 # Translators:
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Lucia Pacheco, 2023
 # Martin Trigaux, 2023
 # Iran Villalobos López, 2023
 # Fernanda Alvarez, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-23 09:14+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Fernanda Alvarez, 2023\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -159,7 +159,7 @@ msgid ""
 "<strong>Warning</strong> Make sure your are logged in as the right partner "
 "before making this payment."
 msgstr ""
-"<strong>Advertencia</strong> Asegúrese de que inició sesión como el partner "
+"<strong>Advertencia</strong> Asegúrese de que inició sesión con el usuario "
 "adecuado antes de realizar el pago."
 
 #. module: payment
@@ -400,27 +400,27 @@ msgstr "Buckaroo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_model_id
 msgid "Callback Document Model"
-msgstr "Modelo de documento para la devolución de llamadas"
+msgstr "Modelo de documento para la retrollamada"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_is_done
 msgid "Callback Done"
-msgstr "Se devolvió la llamada"
+msgstr "Retrollamada hecha"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr "Hash de devolver llamada"
+msgstr "Hash de retrollamada"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
 msgid "Callback Method"
-msgstr "Método para devolver llamada"
+msgstr "Método para retrollamada"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
 msgid "Callback Record ID"
-msgstr "ID de registro de llamadas"
+msgstr "Registro del ID de la retrollamada"
 
 #. module: payment
 #. odoo-javascript
@@ -458,7 +458,7 @@ msgstr "Capturar "
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
 msgid "Capture Amount Manually"
-msgstr "Capturar el importe manualmente"
+msgstr "Capturar el importe de manera manual"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -683,7 +683,7 @@ msgstr "Divisas"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__main_currency_id
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__currency_id
 msgid "Currency"
-msgstr "Moneda"
+msgstr "Divisa"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider_onboarding_wizard__payment_method__manual
@@ -837,7 +837,7 @@ msgstr "Desde"
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_manual_capture__full_only
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__full_only
 msgid "Full Only"
-msgstr "Completos solamente"
+msgstr "Solo total"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -1001,7 +1001,7 @@ msgstr "Actualmente está vinculado a los siguientes documentos:"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__just_done
 msgid "Just done"
-msgstr "Recientemente realizado"
+msgstr "Se acaba de realizar"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__landing_route
@@ -1079,7 +1079,7 @@ msgstr "Monto máximo"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__available_amount
 msgid "Maximum Capture Allowed"
-msgstr "Máxima captura permitida "
+msgstr "Captura máxima permitida"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mercado_pago
@@ -1112,7 +1112,7 @@ msgstr "Mollie"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Multiple payment options selected"
-msgstr "Múltiples opciones de pago seleccionados"
+msgstr "Múltiples opciones de pago seleccionadas"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_method__name
@@ -1747,7 +1747,7 @@ msgstr "La cantidad a capturar debe ser positiva y no debe ser superior a %s."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
 msgid "The child transactions of the transaction."
-msgstr "Las transacciones hija de la transacción."
+msgstr "Las transacciones hijas de la transacción."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__payment_details
@@ -2270,7 +2270,8 @@ msgstr "No tiene acceso a este token de pago."
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
 msgstr ""
-"Debería recibir un correo electrónico confirmando su pago en unos minutos."
+"En unos minutos recibirá un correo electrónico con la confirmación de su "
+"pago"
 
 #. module: payment
 #. odoo-javascript

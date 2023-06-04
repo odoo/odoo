@@ -6,12 +6,12 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Martin Trigaux, 2023
 # Kevin Harrings <kha@odoo.com>, 2023
-# Lucia Pacheco, 2023
 # Iran Villalobos López, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Fernanda Alvarez, 2023
 # Aimée Mendoza Sánchez, 2023
+# Lucia Pacheco, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:29+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
+"Last-Translator: Lucia Pacheco, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3608,9 +3608,10 @@ msgid ""
 "accordance with their internal legislation. Any withholding at source will "
 "be paid by the client to the tax authorities. Under no circumstances can"
 msgstr ""
-"Algunos países aplican retenciones en origen sobre el importe de las "
+"Algunos países aplican retenciones en la fuente sobre el importe de las "
 "facturas de acuerdo con su legislación interna. Cualquier retención en "
-"origen será pagada por el cliente a las autoridades fiscales. En ningún caso"
+"origen deberá ser pagada por el cliente a las autoridades fiscales. En "
+"ningún caso"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__action__change_account
@@ -3833,8 +3834,8 @@ msgstr "Inicio de prefijo de código"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Collect customer payments in one-click using Euro SEPA Service"
 msgstr ""
-"Recolecte los pagos de los clientes con un solo clic utilizando el Servicio "
-"Euro SEPA."
+"Recolecte los pagos de los clientes con un solo clic utilizando el servicio "
+"SEPA."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3953,7 +3954,7 @@ msgstr "País de la empresa"
 #: model:ir.model.fields,field_description:account.field_account_payment__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_payment_register__company_currency_id
 msgid "Company Currency"
-msgstr "Moneda de la empresa"
+msgstr " Divisa de la empresa"
 
 #. module: account
 #: model:ir.model,name:account.model_base_document_layout
@@ -3995,7 +3996,7 @@ msgstr "Calcular todos los impuestos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__compute_all_tax_dirty
 msgid "Compute All Tax Dirty"
-msgstr "Calcular todos los impuestos sucios"
+msgstr "Calcular todos los impuestos con descuento"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4203,7 +4204,7 @@ msgstr "Nombre del país"
 #: model:ir.model.fields,help:account.field_account_account_tag__country_id
 msgid "Country for which this tag is available, when applied on taxes."
 msgstr ""
-"País para el que está disponible esta etiqueta, cuando se aplica en los "
+"País para el que está disponible esta etiqueta cuando se aplica en los "
 "impuestos."
 
 #. module: account
@@ -4313,7 +4314,7 @@ msgstr "Crear un nuevo incoterm"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_purchasable
 msgid "Create a new purchasable product"
-msgstr "Crear un nuevo producto comprable"
+msgstr "Crear un nuevo producto que se pueda comprar"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_reconcile_model
@@ -4328,7 +4329,7 @@ msgstr "Crear un nuevo recibo de venta"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_sellable
 msgid "Create a new sellable product"
-msgstr "Crear un nuevo producto vendible"
+msgstr "Crear un nuevo producto que se pueda vender"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_supplier
@@ -4393,7 +4394,7 @@ msgstr "Crear el primer redondeo de efectivo"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "Create your first invoice."
-msgstr "Cree su primera factura."
+msgstr "Crear primera factura"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_search_inherit
@@ -4939,7 +4940,7 @@ msgid ""
 "Journal Entries up to the end of the period are resequenced."
 msgstr ""
 "Fecha (inclusiva) a la que se vuelven a secuenciar los números. Si no se "
-"establece, se vuelven a secuenciar todos los asientos contables hasta el "
+"establece, se volverán a secuenciar todos los asientos contables hasta el "
 "final del periodo."
 
 #. module: account
@@ -5140,7 +5141,7 @@ msgstr "Términos y condiciones predeterminados"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_terms_html
 msgid "Default Terms and Conditions as a Web page"
-msgstr "Términos y condiciones predeterminados como una página web"
+msgstr "Términos y condiciones predeterminados para una página web"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__incoterm_id
@@ -5172,14 +5173,14 @@ msgid ""
 "Define in which journals this account can be used. If empty, can be used in "
 "all journals."
 msgstr ""
-"Defina en qué diarios se puede utilizar esta cuenta. Si está vacío, se puede"
+"Defina en qué diarios se puede utilizar esta cuenta. Si está vacío, se podrá"
 " utilizar en todos los diarios."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Define the smallest coinage of the currency used to pay by cash"
 msgstr ""
-"Defina la acuñación más pequeña de la divisa que se utiliza para pagar en "
+"Defina la moneda más pequeña de la divisa que se utiliza para pagar en "
 "efectivo"
 
 #. module: account
@@ -5207,8 +5208,8 @@ msgid ""
 "Defines the smallest coinage of the currency that can be used to pay by "
 "cash."
 msgstr ""
-"Defina la acuñación más pequeña de la divisa que se puede usar para pagar en"
-" efectivo."
+"Defina la moneda más pequeña de la divisa que se puede usar para pagar en "
+"efectivo"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -5307,9 +5308,9 @@ msgid ""
 "used by itself, however it can still be used in a group. 'adjustment' is "
 "used to perform tax adjustment."
 msgstr ""
-"Determina dónde se puede seleccionar un impuesto. Nota: \"Ninguno\" "
-"significa que un impuesto no se puede usar por sí mismo. Sin embargo, aún se"
-" puede usar en un grupo. \"Ajuste\" se usa para realizar un ajuste de "
+"Determina en dónde se puede seleccionar un impuesto. Nota: \"Ninguno\" "
+"significa que un impuesto no se puede usar por sí mismo. Sin embargo, se "
+"puede usar en un grupo. \"Ajuste\" se usa para realizar un ajuste de "
 "impuesto. "
 
 #. module: account
@@ -5940,7 +5941,7 @@ msgstr "Los asientos no son de la misma cuenta: %s"
 #: code:addons/account/wizard/accrued_orders.py:0
 #, python-format
 msgid "Entries can only be created for a single company at a time."
-msgstr "Los asientos solo pueden ser creados para una sola empresa a la vez."
+msgstr "Solo se pueden crear los asientos para una sola empresa a la vez."
 
 #. module: account
 #. odoo-python
@@ -5974,7 +5975,7 @@ msgstr "Asientos: %(account)s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_dirty
 msgid "Epd Dirty"
-msgstr "Descuento por pago anticipado sucio"
+msgstr "Descuento por pago anticipado con descuento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_key
@@ -6257,7 +6258,7 @@ msgstr "Primera secuencia nueva"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_create_invoice_step
 msgid "First invoice sent!"
-msgstr "¡Primera factura enviada!"
+msgstr "Primera factura enviada"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__auto_post_origin_id
@@ -6478,8 +6479,8 @@ msgid ""
 "bank journals). If no currency is set, entries can use any currency."
 msgstr ""
 "Obliga a todos los apuntes contables en esta cuenta a tener una divisa en "
-"específico (por ejemplo, diarios bancarios). Si no se establece una divisa, "
-"los asientos pueden tener cualquier divisa."
+"específico (por ejemplo, diarios bancarios). Si no se establece, los "
+"asientos podrán utilizar cualquier divisa."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__foreign_currency_id

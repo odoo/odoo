@@ -1748,7 +1748,7 @@ msgstr "Procedura guidata composizione e-mail"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
-msgstr ""
+msgstr "E-mail inviata ai clienti una volta che la fattura è disponibile."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2185,7 +2185,7 @@ msgstr "Obiettivo di fatturazione"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoicing and Payments"
-msgstr ""
+msgstr "Fatturazione e pagamenti"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -2653,7 +2653,7 @@ msgstr "Firma online"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Online confirmation"
-msgstr ""
+msgstr "Conferma online"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__amount_invoiced
@@ -3275,6 +3275,8 @@ msgstr "Riferimento"
 #: model:ir.model.fields,help:sale.field_sale_order__origin
 msgid "Reference of the document that generated this sales order request"
 msgstr ""
+"Riferimento del documento che ha generato la richiesta dell'ordine di "
+"vendita"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_payment_register
@@ -3571,17 +3573,17 @@ msgstr "Prezzo di vendita"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_cancellation
 msgid "Sales: Order Cancellation"
-msgstr ""
+msgstr "Vendite: annullamento ordine"
 
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_confirmation
 msgid "Sales: Order Confirmation"
-msgstr ""
+msgstr "Vendite: conferma ordine"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
 msgid "Sales: Send Quotation"
-msgstr ""
+msgstr "Vendite: invio preventivo"
 
 #. module: sale
 #. odoo-python
@@ -3725,11 +3727,13 @@ msgstr ""
 #: model:mail.template,description:sale.mail_template_sale_cancellation
 msgid "Sent automatically to customers when you cancel an order"
 msgstr ""
+"E-mail inviata automaticamente ai clienti in seguito all'annullamento di un "
+"ordine"
 
 #. module: sale
 #: model:mail.template,description:sale.mail_template_sale_confirmation
 msgid "Sent to customers on order confirmation"
-msgstr ""
+msgstr "E-mail inviata ai clienti in seguito alla conferma dell'ordine"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -4562,6 +4566,8 @@ msgstr "Opportunità di incremento vendite"
 #: model:mail.template,description:sale.email_template_edi_sale
 msgid "Used by salespeople when they send quotations or proforma to prospects"
 msgstr ""
+"Modello utilizzato dagli addetti alle vendite quando inviano preventivi o "
+"fatture proforma a potenziali clienti"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -4825,6 +4831,9 @@ msgid ""
 "== 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a'"
 " }})"
 msgstr ""
+"{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
+"== 'pending') e 'Ordine in attesa' o 'Ordine' }} (Ref {{ object.name or "
+"'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -4833,6 +4842,9 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') e "
+"(ctx.get('proforma') e 'Proforma' o 'Preventivo') o 'Ordine' }} (Ref {{ "
+"object.name or 'n/a' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation
@@ -4840,3 +4852,5 @@ msgid ""
 "{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} {{ object.type_name }} Annullato (Ref {{ "
+"object.name or 'n/a' }})"

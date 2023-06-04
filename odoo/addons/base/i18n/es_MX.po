@@ -7,10 +7,10 @@
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Martin Trigaux, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
+# Iran Villalobos López, 2023
 # Aimée Mendoza Sánchez, 2023
 # Lucia Pacheco, 2023
-# Iran Villalobos López, 2023
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Fernanda Alvarez, 2023
 # 
 msgid ""
@@ -1025,7 +1025,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Puente entre el Servicio de asistencia e industria de venta FSM \n"
+"        Enlace entre el Servicio de asistencia e industria de venta FSM \n"
 "    "
 
 #. module: base
@@ -1160,6 +1160,17 @@ msgid ""
 "        co-author is Chick.Farm (visit for more information https://www.myacc.cloud)\n"
 "    "
 msgstr ""
+"\n"
+"        Plantilla del plan de cuentas (COA) para la contabilidad de Letonia.\n"
+"        Este módulo también incluye:\n"
+"        * Grupos tributarios,\n"
+"        * Impuestos más comunes en Letonia,\n"
+"        * Posiciones fiscales,\n"
+"        * Lista de bancos letones.\n"
+"\n"
+"        El autor es Allegro IT (visitar para obtener más información https://www.allegro.lv)\n"
+"        el coautor es Chick.Farm (visitar para obtener más información https://www.myacc.cloud)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_lt
@@ -1830,6 +1841,9 @@ msgid ""
 "        This module implements Cloudflare Turnstile so that you can prevent bot spam on your forms.\n"
 "    "
 msgstr ""
+"\n"
+"        Este módulo implementa Cloudflare Turnstile para que pueda prevenir el spam de bots en sus formularios.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_recaptcha
@@ -3069,6 +3083,9 @@ msgid ""
 "Accounting Reports for Estonia\n"
 "    "
 msgstr ""
+"\n"
+"Reportes contables para Estonia\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co_reports
@@ -3106,6 +3123,12 @@ msgid ""
 "* Adds Profit and Loss report adapted for Ecuador\n"
 "    "
 msgstr ""
+"\n"
+"Reportes contables para Ecuador\n"
+"==============================\n"
+"* Agrega informe de balance adaptado para Ecuador\n"
+"* Agrega reporte de resultados adaptado para Ecuador\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fi_reports
@@ -3268,6 +3291,11 @@ msgid ""
 "\n"
 "     "
 msgstr ""
+"\n"
+"Reportes contables para Tunesia\n"
+"================================\n"
+"\n"
+"     "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_subcontracting_account_enterprise
@@ -5320,6 +5348,14 @@ msgid ""
 "\n"
 "Includes automations to easily predict the withholding tax to be applied to each purchase invoice\n"
 msgstr ""
+"\n"
+"Localización EDI ecuatoriana\n"
+"===========================\n"
+"Agrega documentos electrónicos con su XML, RIDE, con firma electrónica y conexión directa a la autoridad tributaria SRI,\n"
+"\n"
+"Los documentos admitidos son Facturas, Notas de Crédito, Notas de Débito, Liquidaciones de compra y retenciones\n"
+"\n"
+"Incluye automatizaciones para predecir fácilmente el impuesto de retención a aplicar a cada factura de compra\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -5582,9 +5618,9 @@ msgid ""
 "complex logic.\n"
 msgstr ""
 "\n"
-"Incluso cuando la cantidad de paquetes es aparentemente inherente solo a la aplicación de existencias, necesitamos un campo para esto \n"
+"Incluso cuando la cantidad de paquetes parece ser inherente solo a la manera en que se distribuyen las existencias, necesitamos un campo para esto \n"
 "en la factura ya que esa información también podría depender de la declaración DUS.\n"
-"También debemos considerar que puede haber usuarios sin la aplicación Inventario instalada y mantener una lógica \n"
+"También debemos considerar que puede haber usuarios que no tengan la aplicación Inventario instalada y mantienen una lógica \n"
 "menos compleja.\n"
 
 #. module: base
@@ -6053,6 +6089,35 @@ msgid ""
 "* Ecuador banks\n"
 "* Partners: Consumidor Final, SRI, IESS, and also basic VAT validation\n"
 msgstr ""
+"\n"
+"Funcional\n"
+"----------\n"
+"\n"
+"Este módulo agrega características para la localización ecuatoriana, que\n"
+"representa los requerimientos mínimos para operar un negocio en Ecuador en conformidad\n"
+"con los organismos reguladores como la autoridad fiscal de Ecuador (SRI) y la \n"
+"Super Intendencia de Compañías\n"
+"\n"
+"Siga los siguientes pasos de configuración:\n"
+"1. Vaya a su empresa y configura su país como Ecuador\n"
+"2. Instale el módulo de facturación o el de contabilidad, todo se hará automáticamente\n"
+"\n"
+"Detalles importantes:\n"
+"* El plan de cuentas ecuatoriano se instalará automáticamente, todo se basa en el ejemplo proporcionado por la Super Intendencia de Compañías\n"
+"* También se instalará la lista de impuestos (incluyendo las retenciones), puede desactivar los impuestos que su empresa no usa\n"
+"* También se instalarán los tipos de documentos, listas de bancos locales, listas de estados locales, etc.\n"
+"\n"
+"Técnico\n"
+"---------\n"
+"Información importante:\n"
+"* Plan de cuentas basado en la recomendación de Super Cías\n"
+"* Impuestos, comprobantes de impuestos y grupos de impuestos de Ecuador\n"
+"* Posiciones fiscales ecuatorianas\n"
+"* Tipos de documento (hay alrededor de 41 tipos de documentos de compra en Ecuador)\n"
+"* Tipos de identificación\n"
+"* Bancos de Ecuador\n"
+"* Contactos: Consumidor Final, SRI, IESS y también validación de IVA básico\n"
+" \n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_pos
@@ -9256,6 +9321,9 @@ msgid ""
 "This is the base module to manage the accounting chart for Estonia in Odoo.\n"
 "    "
 msgstr ""
+"\n"
+"        Este es el módulo para manejar el plan de cuentas de Odoo en Estonia.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -9657,6 +9725,9 @@ msgid ""
 "This is the module to manage the accounting chart for Tunisia in Odoo.\n"
 "=======================================================================\n"
 msgstr ""
+"\n"
+"Este es un módulo base para la gestión del plan de cuentas de Odoo en Tunesia.\n"
+"==============================================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
@@ -13879,8 +13950,8 @@ msgid ""
 "Add Subcontracting information in Cost Analysis Reports and Production "
 "Analysis"
 msgstr ""
-"Añadir información sobre la subcontratación en el informe de análisis de "
-"costes y en el análisis de producción"
+"Añadir información sobre la subcontratación en el reporte de análisis de "
+"costos y de producción"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_loyalty_delivery
@@ -13896,7 +13967,7 @@ msgstr "Agregar un idioma"
 #. module: base
 #: model:ir.module.module,summary:base.module_transifex
 msgid "Add a link to edit a translation in Transifex"
-msgstr "Añada un enlace para editar una traducción en Transifex"
+msgstr "Agregar un enlace para editar una traducción en Transifex"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports_tax_reminder
@@ -13922,7 +13993,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports_cash_basis
 msgid "Add cash basis functionality for reports"
-msgstr "Agregar base contable funcional de efectivo para los informes"
+msgstr "Agregar base contable funcional de efectivo para los reportes"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides_survey
@@ -13980,7 +14051,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_crm
 msgid "Add lead / opportunities UTM info on mass mailing"
-msgstr "Agregar información UTM de leads / oportunidades en correo masivo."
+msgstr "Agregar información UTM de leads/oportunidades en correo masivo."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_crm_sms
@@ -14131,7 +14202,7 @@ msgstr "Agrega un mecanismo de envío gratis a las órdenes de ventas"
 #. module: base
 #: model:ir.module.module,description:base.module_contacts_enterprise
 msgid "Adds notably the map view of contact"
-msgstr "Agrega notablemente la vista de mapa del contacto"
+msgstr "Agrega la vista de mapa del contacto"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_mx_hr
@@ -14208,34 +14279,33 @@ msgid ""
 "         user with the same login (and a blank password), then rename this new\n"
 "         user to a username that does not exist in LDAP, and setup its groups\n"
 msgstr ""
-"Agregar soporte para la autenticación por un servidor LDAP.\n"
+"Agrega soporte para la autenticación por un servidor LDAP.\n"
 "=========================================================\n"
 "\n"
-"Este módulo permite a los usuarios acceder al sistema con su usuario y contraseña \n"
+"Este módulo permite que los usuarios accedan al sistema con su usuario y contraseña de \n"
 "LDAP, y creará automáticamente usuarios Odoo para ellos.\n"
 "\n"
-"**Nota:** Este módulo sólo funcionará en servidores que tengan el módulo Python\n"
+"**Nota:** Este módulo solo funcionará en servidores que tengan el módulo Python\n"
 "``ldap`` instalado.\n"
 "\n"
 "Configuración:\n"
 "--------------\n"
 "Después de instalar este modulo, necesitará configurar los parámetros LDAP en el\n"
-"menú de configuración general. Diferentes empresas pueden tener diferentes\n"
-"servidores LDAP, siempre y cuando tengan nombres de usuario únicos (los nombres de usuario deben de ser únicos\n"
-"en Odoo, incluso entre múltiples empresas).\n"
+"menú de configuración general. Los servidores de LDAP dependen de la empresa, ya que pueden tener varios,\n"
+"lo importante es que los nombres de usuario sean únicos (incluso entre múltiples empresas).\n"
 "\n"
-"También se soporta el enlace LDAP anónimo (para servidores LDAP que lo permitan), simplemente\n"
-"se debe mantener el usuario y contraseña LDAP vacíos en la configuración LDAP.\n"
+"También se admite el enlace LDAP anónimo (para servidores LDAP que lo permitan), simplemente\n"
+"debe mantener los campos de usuario y contraseña LDAP vacíos en la configuración.\n"
 "Esto no permite una autenticación anónima para los usuarios, solo para la cuenta maestra LDAP que se usa para verificar si un usuario existe antes de intentar\n"
 "autenticarlo.\n"
 "\n"
-"Se puede asegurar la conexión con STARTTLS para servidores LDAP siempre y cuando lo\n"
-"soporten. Para esto se tiene que activar la opción TLS en la configuración LDAP.\n"
+"Se puede asegurar la conexión con STARTTLS para servidores LDAP siempre y cuando se\n"
+"admita. Para esto se tiene que activar la opción TLS en la configuración LDAP.\n"
 "\n"
 "Para más opciones en la configuración LDAP, consulta ldap.conf\n"
 "manpage: manpage:'ldap.conf(5)'.\n"
 "\n"
-"Consideraciones de Seguridad:\n"
+"Consideraciones de seguridad:\n"
 "-----------------------------\n"
 "Las contraseñas de los usuarios de LDAP nunca se guardan en la base de datos de Odoo, se necesita\n"
 "el servidor LDAP cada vez que se necesita autenticar un usuario. No se duplican\n"
@@ -14254,7 +14324,7 @@ msgstr ""
 "    * si la autenticación falla (por ejemplo porque el usuario no tiene contraseña\n"
 "local), el sistema entonces intenta autenticarlo con LDAP;\n"
 "\n"
-"Como los usuarios LDAP tienen contraseñas vacías por defecto en la base de datos local de Odoo\n"
+"Como los usuarios LDAP tienen contraseñas vacías de manera predeterminada en la base de datos local de Odoo\n"
 "(significa que no tiene acceso), el primer paso siempre falla y el servidor LDAP se pone en la cola para hacer la autenticación.\n"
 "\n"
 "Activando STARTTL garantiza que la consulta de autenticación del servidor LDAP esté\n"
@@ -14264,9 +14334,9 @@ msgstr ""
 "---------------------\n"
 "En la configuración LDAP de la configuración general, es posible seleccionar una\n"
 " *Plantilla de usuario*. Si se establece, este usuario se usará como plantilla para crear los usuarios locales\n"
-"siempre que alguien se autentique por primera vez usando la autenticación LDAP. Esto permite preconfigurar los grupos y menús por defecto de los usuarios iniciales.\n"
+"siempre que alguien se autentique por primera vez usando la autenticación LDAP. Esto permite preconfigurar los grupos y menús predeterminados de los usuarios iniciales.\n"
 "\n"
-"**Atención:** si estableces una contraseña para la plantilla de usuario, esta se le\n"
+"**Atención:** si establece una contraseña para la plantilla de usuario, esta se le\n"
 "asignará como contraseña local a cada nuevo usuario LDAP. Esto asignará\n"
 "una *contraseña maestra* para estos usuarios (hasta que se cambie manualmente). Normalmente\n"
 "no querrás que esto pase. Una forma fácil de configurar una plantilla de usuario\n"
@@ -14425,12 +14495,12 @@ msgid ""
 "contacts with different emails."
 msgstr ""
 "Todos los contactos deben tener la misma dirección de correo electrónico. "
-"Sólo el administrador puede combinar contactos con diferentes direcciones."
+"Solo el administrador puede combinar contactos con diferentes direcciones."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_step
 msgid "All done!"
-msgstr "¡Todo listo!"
+msgstr "Listo"
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -14460,7 +14530,7 @@ msgstr "Todo lo que necesita para la consolidación financiera"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_holidays
 msgid "Allocate PTOs and follow leaves requests"
-msgstr "Asigne PTO y siga las peticiones de permisos"
+msgstr "Asigne tiempo personal y lleve un seguimiento de las solicitudes."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_fsm
@@ -14572,12 +14642,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon
 msgid "Amazon Connector"
-msgstr "Conector Amazon"
+msgstr "Conector con Amazon"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon_taxcloud
 msgid "Amazon/TaxCloud Bridge"
-msgstr "Puente entre Amazon y TaxCloud"
+msgstr "Enlace entre Amazon y TaxCloud"
 
 #. module: base
 #. odoo-python
@@ -14608,8 +14678,8 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_payment_aps
 msgid "An Amazon payment provider covering the MENA region."
 msgstr ""
-"Un proveedor de pagos de Amazon que cubre la región de Medio Oriente y norte"
-" de África."
+"Un proveedor de pagos de Amazon que cubre la región de Medio Oriente y "
+"África del Norte."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_paypal
@@ -14710,7 +14780,7 @@ msgstr "Contabilidad analítica empresarial"
 #: model:ir.module.module,summary:base.module_mrp_account
 #: model:ir.module.module,summary:base.module_mrp_account_enterprise
 msgid "Analytic accounting in Manufacturing"
-msgstr "Contabilidad analítica en fabricación"
+msgstr "Contabilidad analítica en Fabricación"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_hr_account
@@ -14737,7 +14807,7 @@ msgstr "Anguilla"
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Another user already has this barcode"
-msgstr "Otro usuario ya tiene este código de barras"
+msgstr "Otro usuario ya está usando este código de barras"
 
 #. module: base
 #: model:res.country,name:base.aq
@@ -14950,18 +15020,20 @@ msgstr "Archivado"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Are you sure to execute the automatic merge of your contacts?"
-msgstr "¿Está seguro de ejecutar la fusión automática de sus contactos?"
+msgstr ""
+"¿Está seguro que desea ejecutar la fusión automática de sus contactos?"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Are you sure to execute the list of automatic merges of your contacts?"
 msgstr ""
-"¿Está seguro de ejecutar la lista de fusiones automáticas de sus contactos?"
+"¿Está seguro que desea ejecutar la lista de fusiones automáticas de sus "
+"contactos?"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "Are you sure you want to hide these onboarding tips?"
-msgstr "¿Está seguro de que quiere ocultar estos consejos de capacitación?"
+msgstr "¿Está seguro que desea ocultar estos consejos de capacitación?"
 
 #. module: base
 #: model:res.country,name:base.ar
@@ -15040,7 +15112,7 @@ msgstr "Gestión de activos"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset_fleet
 msgid "Assets/Fleet bridge"
-msgstr "Puente entre activos/flota"
+msgstr "Enlace entre activos/flota"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_partner_category_form
@@ -15057,19 +15129,19 @@ msgid ""
 " address during checkout"
 msgstr ""
 "Ayude a sus usuarios a completar el campo de dirección durante el proceso de"
-" pago con llenado automático y sugerencias."
+" pago con el completado automático y sugerencias."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__report_ids
 msgid "Associated reports"
-msgstr "Reportes asociados"
+msgstr "Reportes relacionados"
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "At least one language must be active."
-msgstr "Al menos un idioma debe estar activo."
+msgstr "Debe activar al menos un idioma."
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_attachment
@@ -15116,8 +15188,7 @@ msgstr "Asistencias"
 #: model:ir.module.module,summary:base.module_website_mass_mailing
 #: model:ir.module.module,summary:base.module_website_mass_mailing_sms
 msgid "Attract visitors to subscribe to mailing lists"
-msgstr ""
-"Convence a los asistentes para que se inscriban a las listas de correo"
+msgstr "Convenza a los asistentes a que se inscriban a las listas de correo"
 
 #. module: base
 #. odoo-python
@@ -15348,8 +15419,8 @@ msgid ""
 "Azure Interior brings honesty and seriousness to wood industry while helping"
 " customers deal with trees, flowers and fungi."
 msgstr ""
-"Gracias a Azure Interior la industria de la madera es más honesta y seria. "
-"Al mismo tiempo, ayuda a sus clientes a lidiar con árboles, flores y hongos."
+"Azure Interior brinda honestidad y seriedad al sector de la madera mientras "
+"ayuda a sus clientes a lidiar con árboles, flores y hongos."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_B
@@ -15558,7 +15629,7 @@ msgstr "Simbología del código de barras"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Barcode type, eg: UPCA, EAN13, Code128"
-msgstr "Tipo de Código de Barras, por ejemplo: UPCA, EAN13, Code128"
+msgstr "Tipo de código de barras, por ejemplo: UPCA, EAN13, Code128"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_quality_control_picking_batch
@@ -15654,19 +15725,19 @@ msgstr "Vista cohorte básica para Odoo"
 #. module: base
 #: model:ir.module.module,summary:base.module_quality
 msgid "Basic Feature for Quality"
-msgstr "Característica básica para Calidad"
+msgstr "Función básica para calidad"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_iap
 msgid "Basic models and helpers to support In-App purchases."
 msgstr ""
-"Modelos básicos y asistentes para permitir las compras dentro de la "
+"Modelos y asistentes básicos que permiten realizar compras dentro de la "
 "aplicación."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_iot
 msgid "Basic models and helpers to support Internet of Things."
-msgstr "Modelos básicos y asistentes para apoyar IoT"
+msgstr "Modelos y asistentes básicos que ayudan al internet de las cosas."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_batch_payment
@@ -15764,7 +15835,7 @@ msgstr "Bélgica - Reportes contables"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports_post_wizard
 msgid "Belgium - Accounting Reports (post wizard)"
-msgstr "Bélgica - Reportes contables (asistente de publicación)"
+msgstr "Bélgica - Reportes contables (asistente de registro)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_reports_sms
@@ -15822,8 +15893,8 @@ msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
 msgstr ""
-"El texto a continuación sirve como sugerencia y no compromete la "
-"responsabilidad de Odoo S.A."
+"El texto a continuación sirve como sugerencia y no hace responsable a Odoo "
+"S.A."
 
 #. module: base
 #: model:res.country,name:base.bj
@@ -15924,12 +15995,12 @@ msgstr "Booleano"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_booth_sale_exhibitor
 msgid "Booths Sale/Exhibitors Bridge"
-msgstr "Puente entre venta de cabinas y ponentes"
+msgstr "Enlace entre venta de cabinas y ponentes"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_booth_exhibitor
 msgid "Booths/Exhibitors Bridge"
-msgstr "Puente entre venta de cabinas y ponentes"
+msgstr "Enlace entre cabinas y ponentes"
 
 #. module: base
 #: model:res.country,name:base.ba
@@ -15958,8 +16029,8 @@ msgid ""
 "                notably for selling mouse traps. With that trick he cut\n"
 "                IT budget by almost half within the last 2 years."
 msgstr ""
-"Brandon trabaja en el sector de IT <b>desde hace 10 años</b>. También es famoso\n"
-"por vender trampas para ratones. Con este truco logró reducir\n"
+"Brandon trabaja en el sector de IT <b>desde hace 10 años</b>. Es famoso\n"
+"por vender trampas para ratones, y gracias a ello logró reducir\n"
 "el presupuesto de IT a casi la mitad en los últimos 2 años."
 
 #. module: base
@@ -15980,8 +16051,7 @@ msgstr "Brasil - Contabilidad"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_renting_sign
 msgid "Bridge Sign functionalities with the Rental application"
-msgstr ""
-"Funcionalidades puente de Firma electrónica con la aplicación de Alquiler"
+msgstr "Funciones enlace de Firma electrónica con la aplicación de Alquiler"
 
 #. module: base
 #: model:ir.module.module,description:base.module_iap_crm
@@ -16010,7 +16080,7 @@ msgstr "Enlace entre Inventario y Contabilidad"
 msgid ""
 "Bridge created to add the number of assets linked to an AA to a project form"
 msgstr ""
-"Puente creado para agregar el número de activos que están vinculados a un AA"
+"Enlace creado para agregar el número de activos que están vinculados a un AA"
 " a un formulario de proyecto "
 
 #. module: base
@@ -16019,7 +16089,7 @@ msgid ""
 "Bridge created to add the number of contracts linked to an AA to a project "
 "form"
 msgstr ""
-"Puente creado para agregar el número de contratos que están vinculados un AA"
+"Enlace creado para agregar el número de contratos que están vinculados un AA"
 " a un formulario de proyecto"
 
 #. module: base
@@ -16028,7 +16098,7 @@ msgid ""
 "Bridge created to add the number of expenses linked to an AA to a project "
 "form"
 msgstr ""
-"Puente creado para agregar el número de gastos vinculados a un AA a un "
+"Enlace creado para agregar el número de gastos vinculados a un AA a un "
 "formulario de proyecto"
 
 #. module: base
@@ -16037,7 +16107,7 @@ msgid ""
 "Bridge created to add the number of subscriptions linked to an AA to a "
 "project form"
 msgstr ""
-"Puente creado para agregar el número de suscripciones vinculadas a un AA a "
+"Enlace creado para agregar el número de suscripciones vinculadas a un AA a "
 "un formulario de proyecto"
 
 #. module: base
@@ -16046,13 +16116,13 @@ msgid ""
 "Bridge created to compute the planned amount of the budget items linked to "
 "the AA of a project"
 msgstr ""
-"Puente creado para computar la cantidad planeada de artículos del "
+"Enlace creado para calcular la cantidad planeada de artículos del "
 "presupuesto vinculados al AA de un proyecto"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_helpdesk
 msgid "Bridge created to convert tickets to tasks and tasks to tickets"
-msgstr "Puente creado para convertir tickets en tareas y tareas en tickets"
+msgstr "Enlace creado para convertir tickets en tareas y tareas en tickets"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_amazon_taxcloud
@@ -16111,8 +16181,8 @@ msgid ""
 "Bridge module for Purchase requisition and Sales. Used to properly create "
 "purchase requisitions for subcontracted services"
 msgstr ""
-"Módulo puente para solicitud de compra y ventas. Utilizado para crear de "
-"forma adecuada solicitudes de compra para servicios subcontratados."
+"Módulo puente para las solicitudes de compra y venta. Utilizado para crear "
+"de forma adecuada solicitudes de compra para servicios subcontratados."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_comparison_wishlist
@@ -16354,14 +16424,14 @@ msgstr ""
 #: code:addons/base/models/ir_module.py:0
 #, python-format
 msgid "Can not upgrade module '%s'. It is not installed."
-msgstr "No puede actualizar el módulo \"%s\". No está instalado."
+msgstr "No puede actualizar el módulo \"%s\" porque no está instalado."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Can only rename one field at a time!"
-msgstr "¡Solo se puede renombrar un campo a la vez!"
+msgstr "Solo se puede renombrar un campo a la vez"
 
 #. module: base
 #. odoo-python
@@ -16449,7 +16519,7 @@ msgid ""
 "records manually and try importing again."
 msgstr ""
 "No es posible crear nuevos registros de '\"%s\" solamente desde su nombre. "
-"Cree esos registros manualmente e intente importar de nuevo."
+"Cree esos registros de forma manual e intente de nuevo."
 
 #. module: base
 #. odoo-python
@@ -16470,7 +16540,7 @@ msgstr "No se puede desactivar un idioma que actualmente usan los usuarios."
 #: code:addons/base/models/res_config.py:0
 #, python-format
 msgid "Cannot duplicate configuration!"
-msgstr "¡No se puede duplicar la configuración!"
+msgstr "No puede duplicar la configuración"
 
 #. module: base
 #. odoo-python
@@ -16478,7 +16548,8 @@ msgstr "¡No se puede duplicar la configuración!"
 #, python-format
 msgid "Cannot rename/delete fields that are still present in views:"
 msgstr ""
-"No pueden renombrar/eliminar campos que todavía están presente en vistas:"
+"No se pueden renombrar/eliminar campos que todavía están en uso en las "
+"vistas:"
 
 #. module: base
 #: model:res.country,name:base.cv
@@ -16493,7 +16564,7 @@ msgstr "En cascada"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_reports_cash_basis
 msgid "Cash Basis Accounting Reports"
-msgstr "Reportes de contabilidad basados en efectivo"
+msgstr "Reportes de contabilidad basados en el flujo de efectivo"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_module_filter
@@ -16544,8 +16615,8 @@ msgid ""
 "(San Francisco) in its entirety and does not include any costs relating to "
 "the legislation of the country in which the client is located."
 msgstr ""
-"Algunos países aplican la retención en el origen sobre la cantidad de "
-"facturas, depende su legislación interna. Cualquier retención en origen la "
+"Algunos países aplican la retención en origen sobre la cantidad de facturas;"
+" todo depende de su legislación interna. Cualquier retención en origen la "
 "pagará el cliente a las autoridades tributarias. Bajo ninguna circunstancia "
 "Mi Empresa (San Francisco) se podrá involucrar en los costos relacionados a "
 "la legislación de un país. Por lo tanto, el importe de la factura será "
@@ -16606,7 +16677,7 @@ msgid ""
 "a new contact should be created under that new company. You can use the "
 "\"Discard\" button to abandon this change."
 msgstr ""
-"Cambiar la empresa de un contacto sólo debe hacerse si nunca se había "
+"Cambiar la empresa de un contacto solo debe hacerse si nunca se había "
 "establecido correctamente. Si un contacto existente empieza a trabajar para "
 "una nueva empresa, entonces debería crear un nuevo contacto bajo esa "
 "empresa. Puede usar el botón \"Descartar\" para abandonar los cambios."
@@ -16616,7 +16687,7 @@ msgstr ""
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Changing the model of a field is forbidden!"
-msgstr "¡Está prohibido cambiar el modelo de un campo!"
+msgstr "Está prohibido cambiar el modelo de un campo"
 
 #. module: base
 #. odoo-python
@@ -16626,20 +16697,20 @@ msgid ""
 "Changing the type of a field is not yet supported. Please drop it and create"
 " it again!"
 msgstr ""
-"El cambio del tipo de un campo todavía no está soportado. ¡Elimine la "
-"columna y créela de nuevo!"
+"Todavía no se puede cambiar el tipo de campo . Elimine la columna y vuélvala"
+" a crear."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Changing to 12-hour clock format instead."
-msgstr "Cambiar a formato de reloj de 12 horas en su lugar."
+msgstr "Cambiar a formato de reloj de 12 horas."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__char
 msgid "Char"
-msgstr "Caracter"
+msgstr "Carácter"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_im_livechat
@@ -16667,8 +16738,8 @@ msgstr "Impresión de cheques"
 #: model:ir.model.fields,help:base.field_res_users__is_company
 msgid "Check if the contact is a company, otherwise it is a person"
 msgstr ""
-"Marque esta casilla si el contacto es una empresa. En caso contrario, es una"
-" persona."
+"Marque esta casilla si el contacto es una empresa. De lo contrario, es una "
+"persona."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_check_printing
@@ -16885,7 +16956,8 @@ msgstr "Vista cohorte"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_sepa_direct_debit
 msgid "Collect payments from your customers through SEPA direct debit."
-msgstr "Reciba los pagos de sus clientes a través del adeudo directo SEPA."
+msgstr ""
+"Reciba los pagos de sus clientes a través de la domiciliación bancaria SEPA."
 
 #. module: base
 #: model_terms:res.partner,website_description:base.res_partner_address_28
@@ -16895,7 +16967,7 @@ msgid ""
 "                IT budget by almost half within the last 2 years."
 msgstr ""
 "Colleen Diaz trabaja en el sector de IT <b>desde hace 10 años</b>. También es famosa\n"
-"por vender trampas para ratones. Con este truco logró reducir\n"
+"por vender trampas para ratones y gracias a ello logró reducir\n"
 "el presupuesto de IT a casi la mitad en los últimos 2 años."
 
 #. module: base
@@ -16917,7 +16989,7 @@ msgstr "Colombia - Reportes contables"
 #: model:ir.module.module,description:base.module_l10n_co_pos
 #: model:ir.module.module,shortdesc:base.module_l10n_co_pos
 msgid "Colombian - Point of Sale"
-msgstr "Colombia - Punto de Venta"
+msgstr "Colombia - Punto de venta"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co
@@ -16969,7 +17041,7 @@ msgstr "Columna referente al registro en el modelo de la tabla "
 #: model_terms:res.partner,website_description:base.res_partner_3
 #: model_terms:res.partner,website_description:base.res_partner_4
 msgid "Come see us live, we hope to meet you!"
-msgstr "Venga a vernos en persona. ¡Esperamos conocerle!"
+msgstr "Venga a vernos en vivo, ¡esperamos conocerle!"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__comm10e
@@ -17084,7 +17156,7 @@ msgstr "Detalles de la empresa"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__favicon
 msgid "Company Favicon"
-msgstr "Favicon de la empresa"
+msgstr "Favicono de la empresa"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__company_registry
@@ -17096,7 +17168,7 @@ msgstr "ID de la empresa"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__logo
 msgid "Company Logo"
-msgstr "Logotipo de la empresa"
+msgstr "Logo de la empresa"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_company__name
@@ -17200,13 +17272,13 @@ msgstr "Calcular"
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
 msgstr ""
-"Calcula los impuestos con TaxCloud después de la creación automática de "
+"Calcule los impuestos con TaxCloud después de la creación automática de "
 "facturas."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_account_taxcloud
 msgid "Compute taxes with TaxCloud in eCommerce"
-msgstr "Calcular impuestos con TaxCloud en comercio electrónico"
+msgstr "Calcule los impuestos con TaxCloud en comercio electrónico"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_form
@@ -17317,7 +17389,7 @@ msgstr "Conecte las impresoras de la cocina a su PdV"
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_drivers
 msgid "Connect the Web Client to Hardware Peripherals"
-msgstr "Conectar el cliente web a los hardwares periféricos"
+msgstr "Conecte el cliente web a los hardwares periféricos"
 
 #. module: base
 #. odoo-python
@@ -17348,7 +17420,7 @@ msgid ""
 "Connection Test Failed! Here is what we got instead:\n"
 " %s"
 msgstr ""
-"¡La prueba de conexión falló! Aquí esta lo que se recibió en su lugar:\n"
+"No se pudo completar la prueba de conexión, obtuvimos lo siguiente:\n"
 "%s"
 
 #. module: base
@@ -17356,7 +17428,7 @@ msgstr ""
 #: code:addons/base/models/ir_mail_server.py:0
 #, python-format
 msgid "Connection Test Successful!"
-msgstr "¡Prueba de conexión exitosa!"
+msgstr "Prueba de conexión exitosa"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_consolidation
@@ -17454,7 +17526,8 @@ msgstr "Imagen del contacto"
 #: code:addons/base/models/ir_model.py:0 code:addons/base/models/ir_rule.py:0
 #, python-format
 msgid "Contact your administrator to request access if necessary."
-msgstr "Contacte a su administrador para solicitar acceso si es necesario"
+msgstr ""
+"Póngase en contacto con su administrador para pedirle acceso si es necesario"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_partner_merge_automatic_wizard__partner_ids
@@ -17572,7 +17645,7 @@ msgid ""
 "Could not load your certificate / private key. \n"
 "%s"
 msgstr ""
-"No se pudo cargar su certificado / clave privada.\n"
+"No se pudo cargar su certificado/clave privada.\n"
 "%s"
 
 #. module: base
@@ -17580,7 +17653,7 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "Couldn't create contact without email address!"
-msgstr "¡No se puede crear un contacto sin dirección de correo electrónico!"
+msgstr "No se puede crear un contacto sin dirección de correo electrónico."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__count
@@ -17814,7 +17887,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_approvals
 msgid "Create and validate approvals requests"
-msgstr "Crea y valida solicitudes de aprobación"
+msgstr "Crear y validar solicitudes de aprobación"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -17829,7 +17902,7 @@ msgstr "Crear una hoja de trabajo personalizada para el control de calidad"
 #. module: base
 #: model:ir.module.module,summary:base.module_worksheet
 msgid "Create customizable worksheet"
-msgstr "Crear una hoja de trabajo personalizable"
+msgstr "Crear una hoja de trabajo personalizada"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_crm_livechat
@@ -18419,7 +18492,7 @@ msgstr "Formato de fecha"
 #, python-format
 msgid "Date to compare with the field value, by default use the current date."
 msgstr ""
-"Fecha para comparar con el valor del campo, la fecha actual se usa de forma "
+"Fecha a comparar con el valor del campo, la fecha actual se usa de forma "
 "predeterminada."
 
 #. module: base
@@ -18524,8 +18597,8 @@ msgid ""
 "Deco Addict brings honesty and seriousness to wood industry while helping "
 "customers deal with trees, flowers and fungi."
 msgstr ""
-"Gracias a Deco Addict la industria de la madera es más honesta y seria. Al "
-"mismo tiempo, ayuda a sus clientes a lidiar con árboles, flores y hongos."
+"Deco Addict brinda honestidad y seriedad a la industria maderera mientras "
+"ayuda a sus clientes a lidiar con árboles, flores y hongos."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_deduplicate
@@ -18666,7 +18739,7 @@ msgstr "Asistente para error de datos de demostración"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_demo_failure_wizard__failure_ids
 msgid "Demo Installation Failures"
-msgstr "Fallos de instalación de datos de demostración"
+msgstr "Fallos en la instalación de datos de demostración"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -18675,12 +18748,12 @@ msgid ""
 "                             Once they are loaded, they cannot be removed!"
 msgstr ""
 "Los datos de la demostración solo deben utilizarse en la bases de datos de prueba.\n"
-"                             ¡Una vez que se cargaron, no se pueden quitar!"
+"                             No se pueden eliminar una vez que se cargaron."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_demo_failure
 msgid "Demo failure"
-msgstr "Falla de demostración"
+msgstr "Error en la demostración"
 
 #. module: base
 #: model:res.country,name:base.cd
@@ -19003,7 +19076,7 @@ msgstr "Mostrar una opción en el menú superior \"Más\" para ejecutar esta acc
 #: model_terms:ir.ui.view,arch_db:base.act_report_xml_view
 msgid "Display an option on related documents to print this report"
 msgstr ""
-"Mostrar una opción en documentos relacionados para imprimir este informe"
+"Mostrar una opción en documentos relacionados para imprimir este reporte"
 
 #. module: base
 #. odoo-python
@@ -19274,8 +19347,8 @@ msgid ""
 "    notably for selling mouse traps. With that trick he cut\n"
 "    IT budget by almost half within the last 2 years."
 msgstr ""
-"Addison trabaja en el sector de TI <b>desde hace 10 años</b>. También se le conoce\n"
-"por vender trampas para ratones. Con este truco logró reducir\n"
+"Douglas Fletcher trabaja en el sector de TI <b>desde hace 10 años</b>. También se le conoce\n"
+"por vender trampas para ratones y gracias a ello logró reducir\n"
 "el presupuesto de IT a casi la mitad en los últimos 2 años."
 
 #. module: base
@@ -19292,7 +19365,7 @@ msgstr "Envío directo al cliente"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_dropshipping
 msgid "Dropship and Subcontracting Management"
-msgstr "Administración de envío directo y subcontratación"
+msgstr "Administración del envío directo y subcontratación"
 
 #. module: base
 #. odoo-python
@@ -19357,7 +19430,7 @@ msgid ""
 "E - WATER SUPPLY; SEWERAGE, WASTE MANAGEMENT AND REMEDIATION ACTIVITIES"
 msgstr ""
 "E - ABASTECIMIENTO DE AGUA, ALCANTARILLADO, GESTIÓN DE RESIDUOS Y "
-"ACTIVIDADES DE REMEDIACIÓN"
+"ACTIVIDADES DE REPARACIÓN"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_edi
@@ -19419,7 +19492,7 @@ msgstr "Facilitar la integración de SMS con capacidades de venta"
 #: model:ir.module.module,summary:base.module_l10n_us_1099
 msgid "Easily export 1099 data for e-filing with a 3rd party."
 msgstr ""
-"Exporte datos 1099 fácilmente para la declaración electrónica de impuestos "
+"Exporte 1099 datos fácilmente para la declaración electrónica de impuestos "
 "con un tercero."
 
 #. module: base
@@ -19485,7 +19558,7 @@ msgid ""
 "partner is a customer without access or with a limited access created for "
 "sharing data."
 msgstr ""
-"Ya sea cliente (no usuario), como usuario compartido. Indica si el partner "
+"Ya sea cliente (no usuario) o usuario compartido. Indique si el partner "
 "actual es un cliente sin acceso o con un acceso limitado creado para "
 "compartir datos."
 
@@ -19567,7 +19640,7 @@ msgstr ""
 "=============\n"
 "\n"
 "Para configurar este módulo, se recomienda encarecidamente que su plan de cuentas dependa de los datos y la estructura l10n_mx,\n"
-"puede establecer esto después si el CoA no depende de lo que hace l10n_mx, pero necesitará un trabajo manual adicional.\n"
+"puede establecer esto después si el plan de cuentas no depende de lo que hace l10n_mx, pero necesitará un trabajo manual adicional.\n"
 "\n"
 "Créditos\n"
 "=======\n"
@@ -19711,7 +19784,7 @@ msgstr "Empleados en Gantt"
 #: model:ir.module.module,shortdesc:base.module_hr_mobile
 #: model:ir.module.module,summary:base.module_hr_mobile
 msgid "Employees in Mobile"
-msgstr "Empleados en el móvil"
+msgstr "Empleados en celular"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_appointment_hr
@@ -19908,6 +19981,9 @@ msgid ""
 "\n"
 "%(error)s"
 msgstr ""
+"Ocurrió un error al analizar o validar la vista:\n"
+"\n"
+"%(error)s"
 
 #. module: base
 #. odoo-python
@@ -22214,7 +22290,7 @@ msgstr "Hong Kong - Nómina "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hk_hr_payroll_hsbc_autopay
 msgid "Hong Kong - Payroll HSBC AutoPay"
-msgstr ""
+msgstr "Hong Kong - Nómina HSBC AutoPay"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hk_hr_payroll_account
@@ -24410,7 +24486,7 @@ msgstr "Rastrear enlaces"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale_stock_renting
 msgid "Link between PoS and Stock Rental."
-msgstr ""
+msgstr "Enlace entre PdV y Alquiler de inventario "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_timesheet_grid_holidays
@@ -30228,7 +30304,7 @@ msgstr "Descuentos para el punto de venta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_sale_stock_renting
 msgid "Point of Sale Rental Stock"
-msgstr ""
+msgstr "Inventario de alquiler de punto de venta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_settle_due
@@ -37373,7 +37449,7 @@ msgstr "Contabilidad del SGA (WMS)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_stock_account
 msgid "WMS Accounting Merge"
-msgstr ""
+msgstr "Fusionar contabilidad de WMS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_landed_costs
@@ -37394,7 +37470,7 @@ msgstr "Gestión de inventarios: Transferencias por lotes"
 #: model:ir.module.module,description:base.module_data_merge_stock_account
 #: model:ir.module.module,summary:base.module_data_merge_stock_account
 msgid "Warn user in case of products merging"
-msgstr ""
+msgstr "Advertir al usuario en caso de fusionar productos."
 
 #. module: base
 #. odoo-python

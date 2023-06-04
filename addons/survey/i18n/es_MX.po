@@ -244,6 +244,32 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"    <table style=\"width:600px;margin:5px auto;\">\n"
+"        <tbody>\n"
+"            <tr><td>\n"
+"                <!-- Usamos el logo de la empresa que creó la encuesta (en el caso de multiempresas) -->\n"
+"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
+"            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                    Certificación: <t t-out=\"object.survey_id.display_name or ''\">Formulario de retroalimentación</t>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"        <tbody>\n"
+"            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                <p>Apreciable <span t-out=\"object.partner_id.name or 'participant'\">participante</span></p>\n"
+"                <p>\n"
+"                     A continuación encontrará como archivo adjunto su certificación en\n"
+"                        <strong t-out=\"object.survey_id.display_name or ''\">Creación de muebles</strong>\n"
+"                    \n"
+"                </p>\n"
+"                <p>¡Felicidades por aprobar el examen! Recibió un puntaje de <strong t-out=\"object.scoring_percentage\"></strong>%</p>\n"
+"            </td></tr>\n"
+"        </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model:mail.template,body_html:survey.mail_template_user_input_invite
@@ -934,7 +960,7 @@ msgstr ""
 #. module: survey
 #: model_terms:survey.question,description:survey.survey_demo_quiz_p3
 msgid "An apple a day keeps the doctor away."
-msgstr ""
+msgstr "Una manzana al día es salud y alegría."
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_leaderboard

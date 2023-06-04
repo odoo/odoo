@@ -12,8 +12,8 @@
 # Leon Grill <leg@odoo.com>, 2023
 # Felix Hoßfeld <felix.hossfeld@thoughtgang.de>, 2023
 # Friederike Fasterling-Nesselbosch, 2023
-# Martin Trigaux, 2023
 # Janik Vonrotz <login@janikvonrotz.ch>, 2023
+# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -1031,7 +1031,7 @@ msgstr "<span>Berichte</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Running Balance</span>"
-msgstr ""
+msgstr "<span>Laufender Saldo</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1150,7 +1150,7 @@ msgstr "<strong>Lieferadresse:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Source:</strong>"
-msgstr "<strong>Quelle:</strong>"
+msgstr "<strong>Referenz:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -1338,6 +1338,7 @@ msgstr "Eine zweite Zahlung wird automatisch im Journal erstellt."
 #, python-format
 msgid "A statement should only contain lines from the same journal."
 msgstr ""
+"Ein Kontoauszug sollte nur Buchungszeilen aus demselben Journal enthalten."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -1573,7 +1574,7 @@ msgstr "TaxCloud-Konto"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_ir_module_module__account_templates
 msgid "Account Templates"
-msgstr ""
+msgstr "Kontovorlagen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__account_type
@@ -4123,7 +4124,7 @@ msgstr "Gegenbuchungen"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Countries for which the company has a VAT number"
-msgstr ""
+msgstr "Länder, für die das Unternehmen eine MwSt.-Nummer hat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -4665,7 +4666,7 @@ msgstr "Kurzfristige Verbindlichkeiten"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__current_statement_balance
 msgid "Current Statement Balance"
-msgstr ""
+msgstr "Aktuelles Kontoauszugssaldo"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity_unaffected
@@ -5574,7 +5575,7 @@ msgstr "Herunterladen"
 #: code:addons/account/static/src/components/settings_form_view/res_config_dev_tool.xml:0
 #, python-format
 msgid "Download XSD files (XML validation)"
-msgstr ""
+msgstr "XSD-Dateien herunterladen (XML-Validierung)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__advance_tax_payment_account_id
@@ -6468,7 +6469,7 @@ msgstr "Ausländische Steuer-ID"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Foreign VAT countries"
-msgstr ""
+msgstr "Ausländische MwSt.-Länder"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -6771,7 +6772,7 @@ msgstr "Hat Sequenzlöcher"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_statement_lines
 msgid "Has Statement Lines"
-msgstr ""
+msgstr "Hat Auszugszeilen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
@@ -9149,7 +9150,7 @@ msgstr "Nein"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "No Bank Matching"
-msgstr ""
+msgstr "Keine Bankabstimmung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
@@ -9205,6 +9206,8 @@ msgid ""
 "No original purchase document could be found for any of the selected "
 "purchase documents."
 msgstr ""
+"Zu keiner der ausgewählten Einkaufsdokumente konnten "
+"Originaleinkaufsdokumente gefunden werden."
 
 #. module: account
 #. odoo-python
@@ -9599,6 +9602,8 @@ msgstr "Nur Rechnungen konnten gedruckt werden."
 msgid ""
 "Only one payment will be created by partner (bank), instead of one per bill."
 msgstr ""
+"Es wird nur eine Zahlung pro Partner (Bank) erstellt, statt einer pro "
+"Rechnung."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
@@ -10144,7 +10149,7 @@ msgstr "Zahlungsbetrag:"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Payment Communication:"
-msgstr ""
+msgstr "Zahlungsmitteilung:"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -10808,7 +10813,7 @@ msgstr "Vorsteuer"
 #. module: account
 #: model:account.tax,name:account.1_purchase_tax_template
 msgid "Purchase Tax 15%"
-msgstr ""
+msgstr "Vorsteuer 15 %"
 
 #. module: account
 #: model:account.account,name:account.1_expense_invest
@@ -12579,7 +12584,7 @@ msgstr "Steuer"
 #: model:account.tax,name:account.1_sale_tax_template
 #: model:account.tax.group,name:account.1_tax_group_15
 msgid "Tax 15%"
-msgstr ""
+msgstr "Steuer 15 %"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__advance_tax_payment_account_id
@@ -13881,6 +13886,7 @@ msgstr "Der Restbetrag einer Buchungszeile, in Hauswährung angegeben."
 #, python-format
 msgid "The running balance (%s) doesn't match the specified ending balance."
 msgstr ""
+"Der laufende Saldo (%s) stimmt nicht mit dem angegebenen Endsaldo überein,"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -13992,6 +13998,8 @@ msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
 msgstr ""
+"Der Anfangssaldo stimmt nicht mit dem Endsaldo des vorherigen Auszugs "
+"überein, oder es fehlt ein früherer Auszug."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -14818,6 +14826,9 @@ msgid ""
 "Unable to create a statement due to missing transactions. You may want to "
 "reorder the transactions before proceeding."
 msgstr ""
+"Die Erstellung eines Kontoauszugs ist aufgrund fehlender Transaktionen nicht"
+" möglich. Möglicherweise möchten Sie die Transaktionen neu anordnen, bevor "
+"Sie fortfahren."
 
 #. module: account
 #. odoo-python
@@ -15609,7 +15620,7 @@ msgstr ""
 #: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid "You can only print the original document for purchase documents."
-msgstr ""
+msgstr "Sie können das Originaldokument nur für Einkaufsdokumente drucken."
 
 #. module: account
 #. odoo-python
@@ -15970,6 +15981,9 @@ msgid ""
 "The following entries are already hashed:\n"
 "%s"
 msgstr ""
+"Sie können die folgenden Felder nicht bearbeiten: %s.\n"
+"Die folgenden Datensätze wurden bereits gehasht.\n"
+"%s"
 
 #. module: account
 #. odoo-python

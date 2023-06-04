@@ -13,7 +13,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:14+0000\n"
+"POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -2467,6 +2467,8 @@ msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"Hinterlegen Sie den festen Betrag, den Sie zum errechneten reduzierten "
+"Betrag addieren /subtrahieren (wenn negativer Wert) möchten."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -3243,7 +3245,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %(value)s because it is used on the following products:\n"
-"%(products)s"
+"%(products)s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
 
 #. module: product
@@ -3270,6 +3273,15 @@ msgstr ""
 "(%s)\n"
 ", sie werden hier verwendet:\n"
 "%s"
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute_value.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
+"Sie können den Wert %s nicht löschen, da er in einigen Produkten verwendet "
+"wird."
 
 #. module: product
 #. odoo-python

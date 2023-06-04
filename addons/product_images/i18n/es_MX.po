@@ -6,6 +6,7 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Martin Trigaux, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +42,7 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span attrs=\"{'invisible': [('nb_products_selected', '&lt;=', 10000)]}\">\n"
-"                            Como solo se pueden procesar 10,000 productos por día, los productos restantes\n"
+"                            Como solo se pueden procesar 10,000 productos al día, los productos restantes\n"
 "                            se procesarán mañana.\n"
 "                        </span>"
 
@@ -109,7 +110,7 @@ msgstr "Obtener imágenes de Google Imágenes"
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_custom_search_key
 msgid "Google Custom Search API Key"
-msgstr "Clave API de búsqueda de Google"
+msgstr "Clave API para búsqueda personalizada en Google"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__id
@@ -119,7 +120,7 @@ msgstr "ID"
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_product__image_fetch_pending
 msgid "Image Fetch Pending"
-msgstr "Imagen pendiente de obtener"
+msgstr "Esperando para obtener la imagen"
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_product_fetch_image_wizard__write_uid
@@ -199,8 +200,8 @@ msgstr "ID de motor de búsqueda"
 #, python-format
 msgid "The API Key and Search Engine ID must be set in the General Settings."
 msgstr ""
-"La clave API y el ID de motor de búsqueda se deben establecer en los ajustes"
-" generales."
+"La clave API y el ID del motor de búsqueda se deben establecer en los "
+"ajustes generales."
 
 #. module: product_images
 #. odoo-python
@@ -212,14 +213,14 @@ msgid ""
 "enabled this API recently, please wait a few minutes and retry."
 msgstr ""
 "No se habilitó la API de búsqueda personalizada en su proyecto de Google. "
-"Visite la página de su proyecto en plataforma de Google Cloud, habilítela y "
+"Visite la página de su proyecto en la plataforma Google Cloud, habilítela y "
 "vuelva a intentarlo. Si ya habilitó esta API, espere unos minutos y vuelva a"
 " intentarlo."
 
 #. module: product_images
 #: model:ir.model.fields,field_description:product_images.field_res_config_settings__google_pse_id
 msgid "The identifier of the Google Programmable Search Engine"
-msgstr "El identificador del Motor de Búsqueda Programable de Google"
+msgstr "El identificador del motor de búsqueda programable de Google"
 
 #. module: product_images
 #: model:ir.model.fields,help:product_images.field_product_fetch_image_wizard__products_to_process
@@ -240,16 +241,17 @@ msgid ""
 "been deleted. Please contact your administrator to have the action restored "
 "or to reinstall the module \"product_images\"."
 msgstr ""
-"La acción programada \"Imágenes de producto: obtener imágenes de productos "
-"de Google\" ha sido eliminada. Póngase en contacto con su administrador para"
-" restaurar la acción o para reinstalar el módulo \"product_images\"."
+"Se eliminó la acción programada llamada \"Imágenes de producto: obtener "
+"imágenes de productos de Google\". Póngase en contacto con su administrador "
+"para restaurar la acción o para volver a instalar el módulo "
+"\"product_images\"."
 
 #. module: product_images
 #. odoo-python
 #: code:addons/product_images/models/ir_cron_trigger.py:0
 #, python-format
 msgid "This action is already scheduled. Please try again later."
-msgstr "Ya se programó esta acción. Inténtelo más tarde."
+msgstr "Ya se programó esta acción. Inténtelo de nuevo más tarde."
 
 #. module: product_images
 #: model:ir.model,name:product_images.model_ir_cron_trigger
@@ -259,7 +261,9 @@ msgstr "Acciones activadas"
 #. module: product_images
 #: model:ir.model.fields,help:product_images.field_product_product__image_fetch_pending
 msgid "Whether an image must be fetched for this product. Handled by a cron."
-msgstr "Si se debe obtener una imagen para este producto. Lo maneja un cron."
+msgstr ""
+"Si se debe obtener una imagen para este producto. Esta acción la realiza un "
+"cron."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
@@ -276,7 +280,7 @@ msgstr "Su clave API o su ID de motor de búsqueda son incorrectos."
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form
 msgid "of which will be processed."
-msgstr "se procesarán."
+msgstr "que se procesarán."
 
 #. module: product_images
 #: model_terms:ir.ui.view,arch_db:product_images.product_fetch_image_wizard_view_form

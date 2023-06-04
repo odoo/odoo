@@ -7,14 +7,14 @@
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2023
 # Martin Trigaux, 2023
 # Duy BQ <duybq86@gmail.com>, 2023
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2023
+# Nancy Momoland <thanh.np2502@gmail.com>, 2023
 # Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:10+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -206,19 +206,6 @@ msgid "<br/>by"
 msgstr ""
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p4_q6
-msgid ""
-"<div class=\"text-center\">\n"
-"                <div class=\"media_iframe_video\" data-oe-expression=\"//www.youtube.com/embed/7y4T6yv5L1k?autoplay=0&amp;rel=0\" style=\"width: 50%;\">\n"
-"                    <div class=\"css_editable_mode_display\"/>\n"
-"                    <div class=\"media_iframe_video_size\" contenteditable=\"false\"/>\n"
-"                    <iframe src=\"//www.youtube.com/embed/7y4T6yv5L1k?autoplay=0&amp;rel=0\" frameborder=\"0\" contenteditable=\"false\"/>\n"
-"                </div><br/>\n"
-"            </div>\n"
-"        "
-msgstr ""
-
-#. module: survey
 #: model:mail.template,body_html:survey.mail_template_certification
 msgid ""
 "<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
@@ -226,7 +213,7 @@ msgid ""
 "        <tbody>\n"
 "            <tr><td>\n"
 "                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->\n"
-"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                <a href=\"/\"><img t-attf-src=\"/logo.png?company={{ object.survey_id.create_uid.company_id.id }}\" style=\"vertical-align:baseline;max-width:100px;\"></a>\n"
 "            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
 "                    Certification: <t t-out=\"object.survey_id.display_name or ''\">Feedback Form</t>\n"
 "            </td></tr>\n"
@@ -241,7 +228,7 @@ msgid ""
 "                        <strong t-out=\"object.survey_id.display_name or ''\">Furniture Creation</strong>\n"
 "                    certification\n"
 "                </p>\n"
-"                <p>Congratulations for passing the test with a score of <strong t-out=\"object.scoring_percentage\"/>%!</p>\n"
+"                <p>Congratulations for passing the test with a score of <strong t-out=\"object.scoring_percentage\"></strong>%!</p>\n"
 "            </td></tr>\n"
 "        </tbody>\n"
 "    </table>\n"
@@ -254,7 +241,7 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'participant'\">participant</t><br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'participant'\">participant</t><br><br>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            You have been invited to take a new certification.\n"
 "        </t>\n"
@@ -272,7 +259,7 @@ msgid ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the survey for <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br/><br/>\n"
+"            Please answer the survey for <t t-out=\"format_date(object.deadline) or ''\">05/05/2021</t>.<br><br>\n"
 "        </t>\n"
 "        <t t-if=\"object.survey_id.certification\">\n"
 "            We wish you good luck!\n"
@@ -380,87 +367,6 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_results_filters
 msgid "<i class=\"fa fa-trash me-1\"/>Remove all filters"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p4_q3
-msgid ""
-"<p>\n"
-"                <img class=\"img-fluid o_we_custom_image d-block mx-auto\" src=\"/survey/static/img/coniferous.jpg\"/><br/>\n"
-"            </p>\n"
-"        "
-msgstr ""
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p4_q4
-msgid ""
-"<p>\n"
-"                <img class=\"img-fluid o_we_custom_image d-block mx-auto\" src=\"/survey/static/img/pinus_sylvestris.jpg\" style=\"width: 100%;\"/><br/>\n"
-"            </p>\n"
-"        "
-msgstr ""
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p4
-msgid ""
-"<p>\n"
-"                We like to say that the apple doesn't fall far from the tree, so here are trees.\n"
-"            </p>\n"
-"        "
-msgstr ""
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p3
-msgid "<p>An apple a day keeps the doctor away.</p>"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p1_q4
-msgid "<p>Just to categorize your answers, don't worry.</p>"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p1
-msgid ""
-"<p>Some general information about you. It will be used internally for "
-"statistics only.</p>"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p2
-msgid "<p>Some questions about our company. Do you really know us?</p>"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,description:survey.vendor_certification_page_3
-msgid "<p>Test your knowledge of our policies.</p>"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,description:survey.vendor_certification_page_2
-msgid "<p>Test your knowledge of our prices.</p>"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,description:survey.vendor_certification_page_1
-msgid "<p>Test your knowledge of your products!</p>"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,description:survey.survey_feedback_p1
-msgid ""
-"<p>This section is about general information about you. Answering them helps"
-" qualifying your answers.</p>"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,description:survey.survey_feedback_p2
-msgid "<p>This section is about our eCommerce experience itself.</p>"
-msgstr ""
-
-#. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p5
-msgid "<p>We may be interested by your input.</p>"
 msgstr ""
 
 #. module: survey
@@ -589,7 +495,7 @@ msgid "<span class=\"text-muted\">Success</span>"
 msgstr "<span class=\"text-muted\">Success</span>"
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p3_q1
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q1
 msgid ""
 "<span>\"Red\" is not a category, I know what you are trying to do ;)</span>"
 msgstr ""
@@ -605,7 +511,7 @@ msgid "<span>All surveys</span>"
 msgstr ""
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p3_q6
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q6
 msgid "<span>Best time to do it, is the right time to do it.</span>"
 msgstr ""
 
@@ -641,7 +547,7 @@ msgid ""
 msgstr ""
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p5_q1
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p5_q1
 msgid ""
 "<span>If you don't like us, please try to be as objective as "
 "possible.</span>"
@@ -667,12 +573,12 @@ msgid "<span>Number of attempts left</span>:"
 msgstr ""
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p2_q1
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p2_q1
 msgid "<span>Our famous Leader!</span>"
 msgstr ""
 
 #. module: survey
-#: model:survey.question,description:survey.survey_demo_quiz_p3_q3
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p3_q3
 msgid "<span>Our sales people have an advantage, but you can do it!</span>"
 msgstr ""
 
@@ -938,6 +844,11 @@ msgstr ""
 "An answer score for a non-multiple choice question cannot be negative!"
 
 #. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p3
+msgid "An apple a day keeps the doctor away."
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.user_input_session_leaderboard
 msgid "Anonymous"
 msgstr "Nặc danh"
@@ -1153,7 +1064,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__body_has_template_value
 msgid "Body content is the same as tmeplate"
-msgstr ""
+msgstr "Nội dung chính giống với mẫu"
 
 #. module: survey
 #: model:survey.question.answer,value:survey.survey_demo_quiz_p3_q4_sug4
@@ -2542,6 +2453,11 @@ msgstr "Nhật Bản"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_session_code
 msgid "Join Session"
+msgstr ""
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p1_q4
+msgid "Just to categorize your answers, don't worry."
 msgstr ""
 
 #. module: survey
@@ -4024,6 +3940,18 @@ msgid "Some emails you just entered are incorrect: %s"
 msgstr "Some emails you just entered are incorrect: %s"
 
 #. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p1
+msgid ""
+"Some general information about you. It will be used internally for "
+"statistics only."
+msgstr ""
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p2
+msgid "Some questions about our company. Do you really know us?"
+msgstr ""
+
+#. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_header
 msgid "Sorry, no one answered this survey yet."
 msgstr "Sorry, no one answered this survey yet."
@@ -4303,6 +4231,21 @@ msgstr "Kiểm thử"
 #: model_terms:ir.ui.view,arch_db:survey.survey_user_input_view_form
 msgid "Test Entry"
 msgstr "Kiểm thử đầu vào"
+
+#. module: survey
+#: model_terms:survey.question,description:survey.vendor_certification_page_3
+msgid "Test your knowledge of our policies."
+msgstr ""
+
+#. module: survey
+#: model_terms:survey.question,description:survey.vendor_certification_page_2
+msgid "Test your knowledge of our prices."
+msgstr ""
+
+#. module: survey
+#: model_terms:survey.question,description:survey.vendor_certification_page_1
+msgid "Test your knowledge of your products!"
+msgstr ""
 
 #. module: survey
 #: model_terms:survey.survey,description:survey.vendor_certification
@@ -4626,6 +4569,18 @@ msgid "This question was skipped"
 msgstr ""
 
 #. module: survey
+#: model_terms:survey.question,description:survey.survey_feedback_p1
+msgid ""
+"This section is about general information about you. Answering them helps "
+"qualifying your answers."
+msgstr ""
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_feedback_p2
+msgid "This section is about our eCommerce experience itself."
+msgstr ""
+
+#. module: survey
 #: model_terms:survey.survey,description:survey.survey_demo_quiz
 msgid ""
 "This small quiz will test your knowledge about our Company. Be prepared!"
@@ -4929,6 +4884,18 @@ msgid ""
 msgstr ""
 "We have registered your answer! Please wait for the host to go to the next "
 "question."
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p4
+msgid ""
+"We like to say that the apple doesn't fall far from the tree, so here are "
+"trees."
+msgstr ""
+
+#. module: survey
+#: model_terms:survey.question,description:survey.survey_demo_quiz_p5
+msgid "We may be interested by your input."
+msgstr ""
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__website_message_ids

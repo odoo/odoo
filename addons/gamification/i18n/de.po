@@ -139,6 +139,16 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    <strong>Erinnerung</strong><br>\n"
+"    Sie haben Ihren Fortschritt für das Ziel <t t-out=\"object.definition_id.name or ''\"></t> bseit mindestens <t t-out=\"object.remind_update_delay or ''\"></t> Tagen nicht aktualisiert (Stand aktuell bei <t t-out=\"object.completeness or ''\"></t> %). Vergessen Sie die Aktualisierung nicht!\n"
+"    <br/><br/>\n"
+"    Vielen Dank!\n"
+"    <t t-if=\"object.challenge_id.manager_id.signature\">\n"
+"        <br>\n"
+"        <t t-out=\"object.challenge_id.manager_id.signature or ''\"></t>\n"
+"    </t>\n"
+"</div>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view

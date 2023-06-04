@@ -49,6 +49,15 @@ msgid ""
 "            </div>\n"
 "        "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                Hallo,<br><br>\n"
+"                Sie haben um die Anmeldung zur Mailingliste <strong t-out=\"object.name or ''\"></strong> gebeten.\n"
+"                <br><br>\n"
+"                Bitte bestätigen Sie dies über den folgenden Link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"></t></a></strong>\n"
+"                <br><br>\n"
+"                Falls Sie dies nicht beabsichtigt hatten, können Sie diese Nachricht einfach ignorieren.\n"
+"            </div>\n"
+"        "
 
 #. module: mail_group
 #: model:mail.template,body_html:mail_group.mail_template_list_unsubscribe
