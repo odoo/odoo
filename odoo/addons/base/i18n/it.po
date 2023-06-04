@@ -4537,25 +4537,25 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Gestisci la triplice corrispondenza delle fatture dei fornitori\n"
-"=====================================\n"
+"Gestione corrispondenza a 3 vie sulle fatture fornitore\n"
+"=================================================\n"
 "\n"
-"Nel settore manifatturiero, le persone ricevono spesso le fatture dei fornitori prima\n"
-"di ricevere i beni che hanno acquistato, ma non vogliono pagare queste fatture fino a quando i beni\n"
-"sono stati consegnati.\n"
+"Nel settore manufatturiero spesso le persone ricevono le fatture fornitore prima\n"
+"di ricevere i loro acquisti, ma non vogliono pagare la fattura fino a che non viene\n"
+"consegnata la merce.\n"
 "\n"
-"Per risolvere questa situazione, si deve creare la fattura del fornitore quando se la riceve\n"
-"(in base alle quantità ordinate) e si deve pagare la fattura solo quando le quantità \n"
-"ricevute (sulle righe degli ordini fornitori) corrispondono alla fattura del fornitore registrata.\n"
+"In questa situazione, la soluzione è di creare la fattura fornitore quando\n"
+"viene ricevuta (in base alle quantità ordinate) ma pagare solo quando c'è corrispondenza\n"
+"tra le quantità ricevute (nelle righe dell'OdA) e la fattura fornitore registrata.\n"
 "\n"
-"Questo modulo introduce un meccanismo di \"Consegna da pagare\"che indica se\n"
-"ogni fattura del fornitore può o non può essere pagata.\n"
+"Il modulo introduce un meccanismo di \"autorizzazione a pagare\" che segnala, per ciascuna fattura fornitore,\n"
+"se si può procedere al pagamento o meno.\n"
 "\n"
-"Ogni fattura del fornitore ha uno di questi tre stati:\n"
+"Ogni fattura fornitore riceve uno dei seguenti tre stati:\n"
 "\n"
-"    - Sì (La fattura può essere pagata)\n"
-"    - No (La fattura non può essere pagata. Non è stato ancora consegnato nulla)\n"
-"    - Eccezione (Le quantità ricevute sono diverse dalle quantità fatturate)\n"
+"    - Sì (la fattura può essere pagata)\n"
+"    - No (la fattura non può essere pagata, non è stato ancora consegnato nulla)\n"
+"    - Eccezione (le quantità ricevute e fatturate sono diverse)\n"
 "    "
 
 #. module: base
@@ -5602,14 +5602,13 @@ msgid ""
 "* Define your stages for the quality alerts\n"
 msgstr ""
 "\n"
-"Base della qualità\n"
+"Qualità base\n"
 "===============\n"
-"\n"
-"* Definire i livelli di qualità che genereranno controlli di qualità per i prelievi,\n"
-"  gli ordini di produzione o gli ordini di lavoro (quality_mrp)\n"
-"* Si possono creare avvisi di qualità distinti o collegati ai controlli di qualità\n"
-"* Si può aggiungere una misura di controllo di qualità con una tolleranza minima/massima\n"
-"* Definire le fasi da seguire per gli avvisi di qualità\n"
+"* Definisce punti qualità che generano controlli qualità su prelievi,\n"
+"  ordini di produzione oppure ordini di lavoro (quality_mrp)\n"
+"* Possono essere creati avvisi qualità indipendenti o correlati ai controlli qualità\n"
+"* Possibilità di aggiungere una misura al controllo qualità con tolleranza minima/massima\n"
+"* Definisce delle fasi per gli avvisi qualità\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_control
@@ -7834,7 +7833,7 @@ msgid ""
 "--------------------------------------------------------------\n"
 msgstr ""
 "\n"
-"Utilizzo di bilanci previsionali per confrontare i costi e i ricavi attesi con quelli effettivi\n"
+"Utilizzo dei bilanci di previsione per confrontare i costi e i ricavi attesi con quelli effettivi\n"
 "--------------------------------------------------------------\n"
 
 #. module: base
@@ -8606,7 +8605,9 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" title=\"Invalid\"/>"
-msgstr "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Invalid\" title=\"Non valido\"/>"
+msgstr ""
+"<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Non valido\" title=\"Non"
+" valido\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
@@ -8616,7 +8617,7 @@ msgstr "<i class=\"fa fa-circle\" role=\"img\" aria-label=\"Ok\" title=\"Ok\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_users_kanban
 msgid "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Login\"/>"
-msgstr "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Login\"/>"
+msgstr "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Nome utente\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
@@ -8634,7 +8635,7 @@ msgid ""
 "label=\"Info\" title=\"Info\"/>"
 msgstr ""
 "<i class=\"fa fa-info fa-3x text-info float-left\" role=\"img\" aria-"
-"label=\"Info\" title=\"Informazioni\"/>"
+"label=\"Informazioni\" title=\"Informazioni\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
@@ -8644,7 +8645,7 @@ msgstr "<i class=\"fa fa-times\" title=\"Chiudi il pannello di configurazione\"/
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "<span aria-label=\"Close\">×</span>"
-msgstr "<span aria-label=\"Close\">×</span>"
+msgstr "<span aria-label=\"Chiudi\">×</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -8712,7 +8713,7 @@ msgid ""
 "label=\"Search\" title=\"Search\"/></span>"
 msgstr ""
 "<span class=\"searchIcon\"><i class=\"fa fa-search\" role=\"img\" aria-"
-"label=\"Search\" title=\"Ricerca\"/></span>"
+"label=\"Ricerca\" title=\"Ricerca\"/></span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -10570,7 +10571,7 @@ msgstr "Applicazioni:"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "Arch Blob"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_fs
@@ -11546,7 +11547,7 @@ msgstr "Sistema di pagamento Buckaroo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_budget
 msgid "Budget Management"
-msgstr "Gestione Budget"
+msgstr "Gestione bilanci di previsione"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation
@@ -12420,6 +12421,12 @@ msgstr "Nome completo"
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__compute
 msgid "Compute"
 msgstr "Calcolo"
+
+#. module: base
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Compute method cannot depend on field 'id'"
+msgstr "Il metodo compute non può dipendere dal campo \"id\""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_score
@@ -15447,7 +15454,7 @@ msgstr "Resoconti per assistenza sul campo - Vendita"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_stock
 msgid "Field Service Stock"
-msgstr ""
+msgstr "Giacenza per assistenza sul campo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__ttype
@@ -15582,7 +15589,7 @@ msgstr "Contenuto del file (base64)"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__raw
 msgid "File Content (raw)"
-msgstr "Contenuto del file (raw)"
+msgstr "Contenuto del file (grezzo)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_language_export__format
@@ -15725,7 +15732,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_fix_register_token
 msgid "Fix register payment wizard with 'payment' module"
-msgstr ""
+msgstr "Correzione procedura registrazione pagamenti con modulo \"pagamento\""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_country__image_url
@@ -16227,7 +16234,7 @@ msgstr "Riporta una nuova vista bacheca nell'applicazione sito web"
 #. module: base
 #: model:ir.module.module,summary:base.module_social_demo
 msgid "Get demo data for the social module"
-msgstr "Ottiene dati dimostrativi dal modulo social"
+msgstr "Fornisce dati dimostrativi per il modulo social"
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_demo
@@ -16235,8 +16242,8 @@ msgid ""
 "Get demo data for the social module.\n"
 "    This module creates a social 'sandbox' where you can play around with the social app without publishing anything on actual social media."
 msgstr ""
-"Ottieni i dati demo per il modulo sociale.\n"
-"Questo modulo crea una \"sandbox\" sociale in cui è possibile giocare con l'applicazione sociale senza pubblicare nulla sui social media reali."
+"Fornisce dati dimostrativi per il modulo social.\n"
+"    Questo modulo crea un ambiente virtuale isolato nel quale è possibile divertirsi con l'applicazione social senza pubblicare nulla sui veri social network."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_fleet
@@ -19078,7 +19085,7 @@ msgstr "Lussemburgo - Rendiconti contabili elettronici"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu_saft
 msgid "Luxembourg Standard Audit File for Tax"
-msgstr ""
+msgstr "File di revisione standard lussemburghese per imposta"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_M
@@ -20759,7 +20766,7 @@ msgstr "Norvegia - Contabilità"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_no_saft
 msgid "Norwegian Standard Audit File for Tax"
-msgstr ""
+msgstr "File di revisione standard norvegese per imposta"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__state__uninstalled
@@ -21660,7 +21667,7 @@ msgstr "Rendiconti Odoo per localizzazione messicana per la chiusura"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_landing
 msgid "Odoo Mexico Localization for Stock/Landing"
-msgstr ""
+msgstr "Localizzazione messicana Odoo per giacenza/sbarco"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_web_mobile
@@ -22366,8 +22373,8 @@ msgid ""
 "Once the delivery is validated, update the cost on the SO to have an exact "
 "margin computation."
 msgstr ""
-"Dopo la convalida della consegna, per ottenere un calcolo esatto del margine"
-" aggiornare il costo nell'OdV."
+"Dopo la convalida della consegna, aggiorna il costo nell'OdV per ottenere un"
+" calcolo esatto del margine."
 
 #. module: base
 #: code:addons/models.py:0
@@ -24092,7 +24099,7 @@ msgstr "Qualità - Trasferimento raggruppato"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality
 msgid "Quality Base"
-msgstr "Base della qualità"
+msgstr "Qualità base"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_quality_mrp
@@ -24894,7 +24901,7 @@ msgstr "Marketing via SMS"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_marketing_automation_sms
 msgid "SMS Marketing in Marketing Automation"
-msgstr ""
+msgstr "Marketing via SMS in automazione marketing"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sms
@@ -25051,7 +25058,7 @@ msgstr "Vendita di acquisti"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_stock_margin
 msgid "Sale Stock Margin"
-msgstr ""
+msgstr "Margine di vendita per magazzino"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_dashboard
@@ -25904,7 +25911,7 @@ msgstr "Sollecito via posta ordinaria"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_demo
 msgid "Social Demo Module"
-msgstr ""
+msgstr "Modulo dimostrativo per social"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_facebook
@@ -26109,7 +26116,7 @@ msgstr "Normale"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_saft
 msgid "Standard Audit File for Tax Base module"
-msgstr ""
+msgstr "File di revisione standard per modulo base imposta"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -28978,7 +28985,7 @@ msgid ""
 " Management App"
 msgstr ""
 "Convalida dei movimenti di magazzino per prodotti aggiunti a ordini di "
-"vendita attraverso l'applicazione di assistenza sul campo"
+"vendita tramite l'applicazione di assistenza sul campo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_config_parameter__value
@@ -29068,7 +29075,7 @@ msgstr "Fornitore"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
 msgid "Vendor Bill: Release to Pay"
-msgstr "Fattura Fornitore: Consegna da Pagare"
+msgstr "Fattura fornitore: autorizzazione a pagare"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
@@ -29474,7 +29481,7 @@ msgstr "Test di installazione/disinstallazione moduli per il sito web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_enterprise_iap_lead_website
 msgid "Website Visits Lead Generation Enterprise"
-msgstr "Visite al sito web Generazione di lead aziendali"
+msgstr "Generazione contatti da visite sito web per Enterprise"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_profile

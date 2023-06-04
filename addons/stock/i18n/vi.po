@@ -10,7 +10,7 @@
 # fanha99 <fanha99@hotmail.com>, 2020
 # Dung Nguyen Thi <dungnt@trobz.com>, 2020
 # Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2020
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
+# Nancy Momoland <thanh.np2502@gmail.com>, 2021
 # Vo Thanh Thuy, 2021
 # Nguyễn Văn Sang, 2022
 # Duy BQ <duybq86@gmail.com>, 2022
@@ -3330,6 +3330,14 @@ msgstr "Đến trễ hoặc sẽ trễ tùy thuộc vào thời hạn và ngày 
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
 msgid "Is quantity done editable"
 msgstr "Số lượng có thể chỉnh sửa được không"
+
+#. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -8442,13 +8450,3 @@ msgstr "report_stock_quantity_graph"
 #, python-format
 msgid "should be replenished to reach the maximum of"
 msgstr "nên được bổ sung để đạt đến mức tối đa của"
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allow to import reserved quantity, you have to use the quantity "
-"directly."
-msgstr ""
-"Không được phép nhập số lượng đã dự trữ, bạn phải sử dụng số lượng trực "
-"tiếp."
