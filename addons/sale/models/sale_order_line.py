@@ -433,7 +433,7 @@ class SaleOrderLine(models.Model):
             else:
                 price = line.with_company(line.company_id)._get_display_price()
                 line.price_unit = line.product_id._get_tax_included_unit_price(
-                    line.company_id,
+                    line.company_id or line.env.company,
                     line.order_id.currency_id,
                     line.order_id.date_order,
                     'sale',
