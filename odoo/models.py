@@ -3173,7 +3173,7 @@ class BaseModel(metaclass=MetaModel):
         :meth:`_fetch_query` and :meth:`_read_format`.
         """
         fields = self.check_field_access_rights('read', fields)
-        self.fetch(fields)
+        self._origin.fetch(fields)
         return self._read_format(fnames=fields, load=load)
 
     def update_field_translations(self, field_name, translations):
