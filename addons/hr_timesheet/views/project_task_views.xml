@@ -125,15 +125,15 @@
                             </span>
                             <field name="total_hours_spent" widget="timesheet_uom" class="oe_subtotal_footer_separator" nolabel="1"
                                    invisible="subtask_effective_hours == 0.0" />
-                            <span class="o_td_label float-start my-1">
+                            <span class="o_td_label float-start my-1" invisible="allocated_hours == 0.0">
                                 <label class="fw-bold" for="remaining_hours" string="Remaining Hours"
-                                       invisible="allocated_hours == 0.0 or encode_uom_in_days or remaining_hours &lt; 0"/>
+                                       invisible="encode_uom_in_days or remaining_hours &lt; 0"/>
                                 <label class="fw-bold" for="remaining_hours" string="Remaining Days"
-                                       invisible="allocated_hours == 0.0 or not encode_uom_in_days or remaining_hours &lt; 0"/>
+                                       invisible="not encode_uom_in_days or remaining_hours &lt; 0"/>
                                 <label class="fw-bold text-danger" for="remaining_hours" string="Remaining Hours"
-                                       invisible="allocated_hours == 0.0 or encode_uom_in_days or remaining_hours &gt;= 0"/>
+                                       invisible="encode_uom_in_days or remaining_hours &gt;= 0"/>
                                 <label class="fw-bold text-danger" for="remaining_hours" string="Remaining Days"
-                                       invisible="allocated_hours == 0.0 or not encode_uom_in_days or remaining_hours &gt;= 0"/>
+                                       invisible="not encode_uom_in_days or remaining_hours &gt;= 0"/>
                             </span>
                             <field name="remaining_hours" widget="timesheet_uom" class="oe_subtotal_footer_separator"
                                    invisible="allocated_hours == 0.0" nolabel="1" decoration-danger="remaining_hours &lt; 0"/>
