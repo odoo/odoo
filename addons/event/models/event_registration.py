@@ -7,6 +7,15 @@ from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.tools import format_date
 from odoo.exceptions import AccessError, ValidationError
 
+# phone_validation is not officially in the depends of event, but we would like
+# to have the formatting available in event, not in event_sms -> do a conditional
+# import just to be sure
+try:
+    from odoo.addons.phone_validation.tools.phone_validation import phone_format
+except ImportError:
+    def phone_format(number, country_code, country_phone_code, force_format='INTERNATIONAL', raise_exception=True):
+        return number
+
 
 class EventRegistration(models.Model):
     _name = 'event.registration'
@@ -110,12 +119,43 @@ class EventRegistration(models.Model):
                 return dict((fname, contact[fname]) for fname in fnames if contact[fname])
         return {}
 
+    @api.onchange('phone', 'event_id', 'partner_id')
+    def _onchange_phone_validation(self):
+        if self.phone:
+            country = self.partner_id.country_id or self.event_id.country_id or self.env.company.country_id
+            self.phone = self._phone_format(self.phone, country)
+
+    @api.onchange('mobile', 'event_id', 'partner_id')
+    def _onchange_mobile_validation(self):
+        if self.mobile:
+            country = self.partner_id.country_id or self.event_id.country_id or self.env.company.country_id
+            self.mobile = self._phone_format(self.mobile, country)
+
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
 
     @api.model_create_multi
     def create(self, vals_list):
+        # format numbers: prefetch side records, then try to format according to country
+        all_partner_ids = set(values['partner_id'] for values in vals_list if values.get('partner_id'))
+        all_event_ids = set(values['event_id'] for values in vals_list if values.get('event_id'))
+        for values in vals_list:
+            if not values.get('phone') and not values.get('mobile'):
+                continue
+
+            related_country = self.env['res.country']
+            if values.get('partner_id'):
+                related_country = self.env['res.partner'].with_prefetch(all_partner_ids).browse(values['partner_id']).country_id
+            if not related_country and values.get('event_id'):
+                related_country = self.env['event.event'].with_prefetch(all_event_ids).browse(values['event_id']).country_id
+            if not related_country:
+                related_country = self.env.company.country_id
+
+            for fname in {'mobile', 'phone'}:
+                if values.get(fname):
+                    values[fname] = self._phone_format(values[fname], related_country)
+
         registrations = super(EventRegistration, self).create(vals_list)
 
         # auto_confirm if possible; if not automatically confirmed, call mail schedulers in case
@@ -168,6 +208,20 @@ class EventRegistration(models.Model):
     def _check_auto_confirmation(self):
         """ Checks that all registrations are for `auto-confirm` events. """
         return all(event.auto_confirm for event in self.event_id)
+
+    def _phone_format(self, number, country):
+        """ Call phone_validation formatting tool function. Returns original
+        number in case formatting cannot be done (no country, wrong info, ...) """
+        if not number or not country:
+            return number
+        new_number = phone_format(
+            number,
+            country.code,
+            country.phone_code,
+            force_format='E164',
+            raise_exception=False,
+        )
+        return new_number if new_number else number
 
     # ------------------------------------------------------------
     # ACTIONS / BUSINESS
