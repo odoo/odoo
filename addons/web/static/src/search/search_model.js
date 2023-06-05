@@ -1852,7 +1852,7 @@ export class SearchModel extends EventBus {
     _getIrFilterDescription(params = {}) {
         const { description, isDefault, isShared } = params;
         const fns = this.env.__getContext__.callbacks;
-        const localContext = Object.assign({}, ...fns.map((fn) => fn()));
+        const localContext = Object.assign({}, ...fns.map((fn) => fn(params))); // call with params only in saas-16.2
         const gs = this.env.__getOrderBy__.callbacks;
         let localOrderBy;
         if (gs.length) {
