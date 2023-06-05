@@ -10,7 +10,6 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_vn_template_data(self):
         return {
             'code_digits': '6',
-            'use_anglo_saxon': True,
             'property_account_receivable_id': 'chart131',
             'property_account_payable_id': 'chart331',
             'property_account_expense_categ_id': 'chart1561',
