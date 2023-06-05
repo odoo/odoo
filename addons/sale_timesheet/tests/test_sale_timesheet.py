@@ -755,6 +755,69 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         items = project._get_profitability_items(with_action=False)
         self.assertEqual(items['revenues']['data'][0]['to_invoice'], 2*product_price, "The quantity to_invoice should be equal to twice the price of the product")
 
+    def test_sale_order_with_multiple_project_templates(self):
+        """Test when creating multiple projects for one sale order every project has its own allocated hours"""
+        sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+        })
+
+        project_template_1, project_template_2 = self.env['project.project'].create([
+            {'name': 'Template 1'},
+            {'name': 'Template 1'},
+        ])
+
+        product_1, product_2 = self.env['product.product'].create([
+            {
+                'name': "Service with template 1",
+                'standard_price': 10,
+                'list_price': 20,
+                'type': 'service',
+                'invoice_policy': 'order',
+                'uom_id': self.uom_hour.id,
+                'uom_po_id': self.uom_hour.id,
+                'default_code': 'c1',
+                'service_tracking': 'task_in_project',
+                'project_id': False,  # will create a project,
+                'project_template_id': project_template_1.id,
+            }, {
+                'name': "Service with template 2",
+                'standard_price': 10,
+                'list_price': 20,
+                'type': 'service',
+                'invoice_policy': 'order',
+                'uom_id': self.uom_hour.id,
+                'uom_po_id': self.uom_hour.id,
+                'default_code': 'c2',
+                'service_tracking': 'task_in_project',
+                'project_id': False,  # will create a project,
+                'project_template_id': project_template_2.id,
+            },
+        ])
+
+        sale_order_line_template_1, sale_order_line_template_2 = self.env['sale.order.line'].create([
+            {
+                'order_id': sale_order.id,
+                'name': product_1.name,
+                'product_id': product_1.id,
+                'product_uom_qty': 10,
+                'product_uom': product_1.uom_id.id,
+                'price_unit': product_1.list_price,
+            }, {
+                'order_id': sale_order.id,
+                'name': product_2.name,
+                'product_id': product_2.id,
+                'product_uom_qty': 5,
+                'product_uom': product_2.uom_id.id,
+                'price_unit': product_2.list_price,
+            },
+        ])
+
+        sale_order.action_confirm()
+        self.assertEqual(10, sale_order_line_template_1.project_id.allocated_hours)
+        self.assertEqual(5, sale_order_line_template_2.project_id.allocated_hours)
+
 
 class TestSaleTimesheetView(TestCommonTimesheet):
     def test_get_view_timesheet_encode_uom(self):
