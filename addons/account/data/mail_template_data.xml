@@ -8,7 +8,7 @@
         <record id="email_template_edi_invoice" model="mail.template">
             <field name="name">Invoice: Sending</field>
             <field name="model_id" ref="account.model_account_move"/>
-            <field name="email_from">{{ (object.invoice_user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_from">{{ (object.invoice_user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
             <field name="subject">{{ object.company_id.name }} Invoice (Ref {{ object.name or 'n/a' }})</field>
             <field name="description">Sent to customers with their invoices in attachment</field>
@@ -91,7 +91,7 @@
         <record id="email_template_edi_credit_note" model="mail.template">
             <field name="name">Credit Note: Sending</field>
             <field name="model_id" ref="account.model_account_move"/>
-            <field name="email_from">{{ (object.invoice_user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_from">{{ (object.invoice_user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
             <field name="subject">{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})</field>
             <field name="description">Sent to customers with the credit note in attachment</field>

@@ -198,7 +198,7 @@
             <field name="name">Settings: Unregistered User Reminder</field>
             <field name="model_id" ref="base.model_res_users"/>
             <field name="subject">Reminder for unregistered users</field>
-            <field name="email_from">{{ object.company_id.partner_id.email_formatted }}</field>
+            <field name="email_from">{{ (object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="email_to">{{ object.email_formatted }}</field>
             <field name="description">Sent automatically to admin if new user haven't responded to the invitation</field>
             <field name="body_html" type="html">
