@@ -222,7 +222,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                         try:
                             imap_server.close()
                             imap_server.logout()
-                        except OSError:
+                        except Exception:
                             _logger.warning('Failed to properly finish imap connection: %s.', server.name, exc_info=True)
             elif connection_type == 'pop':
                 try:
@@ -255,7 +255,7 @@ odoo_mailgate: "|/path/to/odoo-mailgate.py --host=localhost -u %(uid)d -p PASSWO
                     if pop_server:
                         try:
                             pop_server.quit()
-                        except OSError:
+                        except Exception:
                             _logger.warning('Failed to properly finish pop connection: %s.', server.name, exc_info=True)
             server.write({'date': fields.Datetime.now()})
         return True
