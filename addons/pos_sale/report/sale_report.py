@@ -66,7 +66,7 @@ class SaleReport(models.Model):
             p.product_tmpl_id,
             partner.country_id AS country_id,
             partner.industry_id AS industry_id,
-            partner.zip AS zip,
+            partner.zip AS partner_zip,
             partner.commercial_partner_id AS commercial_partner_id,
             (SUM(p.weight) * l.qty / u.factor) AS weight,
             (SUM(p.volume) * l.qty / u.factor) AS volume,
