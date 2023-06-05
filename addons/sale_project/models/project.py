@@ -692,11 +692,13 @@ class ProjectTask(models.Model):
                 continue
             if not task.sale_line_id:
                 # if the project_id is set then it means the task is classic task or a subtask with another project than its parent.
+                # To determine the sale_line_id, we first need to look at the parent before the project to manage the case of subtasks.
+                # Two sub-tasks in the same project do not necessarily have the same sale_line_id (need to look at the parent task).
                 sale_line = False
-                if task.project_id.sale_line_id and task.project_id.partner_id.commercial_partner_id == task.partner_id.commercial_partner_id:
-                    sale_line = task.project_id.sale_line_id
-                elif task.parent_id.sale_line_id and task.parent_id.partner_id.commercial_partner_id == task.partner_id.commercial_partner_id:
+                if task.parent_id.sale_line_id and task.parent_id.partner_id.commercial_partner_id == task.partner_id.commercial_partner_id:
                     sale_line = task.parent_id.sale_line_id
+                elif task.project_id.sale_line_id and task.project_id.partner_id.commercial_partner_id == task.partner_id.commercial_partner_id:
+                    sale_line = task.project_id.sale_line_id
                 task.sale_line_id = sale_line or task.milestone_id.sale_line_id
             # check sale_line_id and customer are coherent
             if task.sale_line_id.order_partner_id.commercial_partner_id != task.partner_id.commercial_partner_id:
