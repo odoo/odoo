@@ -8,7 +8,12 @@
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='right_event_details']/field[@name='company_id']" position="after">
+                <field name="website_id" invisible="1"/>
                 <field name="website_id" options="{'no_create': True}" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" groups="website.group_multi_website"/>
+            </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="context">{'default_website_id': website_id}</attribute>
+                <attribute name="groups">website.group_multi_website</attribute>
             </xpath>
             <div name="button_box" position="inside">
                 <field name="website_url" invisible="1"/>
@@ -74,6 +79,16 @@
                     </field>
                 </page>
             </page>
+              
+            <field name="tag_ids" position="attributes">
+                <attribute name="domain">['|', ('category_id.website_id', '=', website_id), ('category_id.website_id', '=', False)]</attribute>
+                <attribute name="attrs">{'invisible': [('website_id', '=', False)]}</attribute>
+            </field>
+
+            <field name="tag_ids" position="after">
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_quick_create': True}" attrs="{'invisible': [('website_id', '!=', False)]}"></field>
+            </field>
+            
         </field>
     </record>
 
