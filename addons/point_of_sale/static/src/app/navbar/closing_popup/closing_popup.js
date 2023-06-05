@@ -25,6 +25,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         this.orm = useService("orm");
         this.report = useService("report");
         this.hardwareProxy = useService("hardware_proxy");
+        this.customerDisplay = useService("customer_display");
         this.manualInputCashCount = false;
         this.cashControl = this.pos.globalState.config.cash_control;
         this.closeSessionClicked = false;
@@ -132,6 +133,10 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
     async closeSession() {
         if (!this.closeSessionClicked) {
             this.closeSessionClicked = true;
+
+            if (this.customerDisplay) {
+                this.customerDisplay.update({ closeUI: true });
+            }
 
             if (this.cashControl) {
                 const response = await this.orm.call(

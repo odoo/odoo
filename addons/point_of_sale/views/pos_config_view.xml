@@ -79,6 +79,10 @@
                                     <div class="row">
                                         <label string="Customer Display" for="iface_customer_facing_display_via_proxy" class="col-lg-4 o_light_label"/>
                                         <field name="iface_customer_facing_display_via_proxy"/>
+                                        <div attrs="{'invisible' : [('iface_customer_facing_display_via_proxy', '=', False)]}">
+                                            <label for="iface_customer_facing_display_background_image_1920" />
+                                            <field name="iface_customer_facing_display_background_image_1920" widget="image" readonly="0" style="width: max(min(min(30vw, 30vh), 100%), 10rem); display: block; margin-top: .3rem;" />
+                                        </div>
                                     </div>
                                 </div>
                         </setting>
