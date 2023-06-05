@@ -117,7 +117,9 @@ class WebsiteEventController(http.Controller):
             'current_type': current_type,
             'event_ids': events,  # event_ids used in website_event_track so we keep name as it is
             'dates': dates,
-            'categories': request.env['event.tag.category'].search([('is_published', '=', True)]),
+            'categories': request.env['event.tag.category'].search([
+                ('is_published', '=', True), '|', ('website_id', '=', website.id), ('website_id', '=', False)
+            ]),
             'countries': countries,
             'pager': pager,
             'searches': searches,
@@ -125,6 +127,7 @@ class WebsiteEventController(http.Controller):
             'keep': keep,
             'search_count': event_count,
             'original_search': fuzzy_search_term and search,
+            'website': website
         }
 
         if searches['date'] == 'old':

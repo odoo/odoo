@@ -211,7 +211,7 @@
                             <!-- Location -->
                             <div class="o_not_editable" itemprop="location" t-out="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
                             <div class="mt8">
-                                <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.is_published)" t-as="tag">
+                                <t t-foreach="event.tag_ids.filtered(lambda tag: tag.category_id.website_id == website or not tag.category_id.website_id)" t-as="tag">
                                     <span t-if="tag.color"
                                           t-attf-class="badge mr4 #{'bg-primary' if tag in search_tags else ''} #{'o_tag_color_%s' % tag.color if tag.color else ''}">
                                         <span t-out="tag.name"/>
