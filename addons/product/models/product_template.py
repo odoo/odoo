@@ -594,6 +594,8 @@ class ProductTemplate(models.Model):
             price = template[price_type] or 0.0
             price_currency = template.currency_id
             if price_type == 'standard_price':
+                if not price and template.product_variant_ids:
+                    price = template.product_variant_ids[0].standard_price
                 price_currency = template.cost_currency_id
             elif price_type == 'list_price':
                 price += template._get_attributes_extra_price()
