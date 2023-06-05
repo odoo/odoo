@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
+import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
 import makeTestEnvironment from "web.test_env";
 import { click, getFixture, mount, nextTick, triggerEvent } from "@web/../tests/helpers/utils";
 import { clearRegistryWithCleanup, makeTestEnv } from "@web/../tests/helpers/mock_env";

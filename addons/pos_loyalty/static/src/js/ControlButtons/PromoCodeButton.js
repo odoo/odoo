@@ -1,10 +1,10 @@
 /** @odoo-module **/
 
-import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
+import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product_screen";
 import { useService } from "@web/core/utils/hooks";
-import { TextInputPopup } from "@point_of_sale/js/Popups/TextInputPopup";
+import { TextInputPopup } from "@point_of_sale/app/utils/input_popups/text_input_popup";
 import { Component } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class PromoCodeButton extends Component {
     static template = "PromoCodeButton";

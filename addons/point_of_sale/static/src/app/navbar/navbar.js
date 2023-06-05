@@ -1,18 +1,18 @@
 /** @odoo-module */
 
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 
-import { CashierName } from "@point_of_sale/js/ChromeWidgets/CashierName";
-import { CustomerFacingDisplayButton } from "@point_of_sale/js/ChromeWidgets/CustomerFacingDisplayButton";
-import { ProxyStatus } from "@point_of_sale/js/ChromeWidgets/ProxyStatus";
-import { SaleDetailsButton } from "@point_of_sale/js/ChromeWidgets/SaleDetailsButton";
-import { SyncNotification } from "@point_of_sale/js/ChromeWidgets/SyncNotification";
-import { CashMovePopup } from "./cash_move_popup/cash_move_popup";
-import { TicketScreen } from "@point_of_sale/js/Screens/TicketScreen/TicketScreen";
-import { BackButton } from "@point_of_sale/app/navbar/BackButton";
+import { CashierName } from "@point_of_sale/app/navbar/cashier_name/cashier_name";
+import { CustomerFacingDisplayButton } from "@point_of_sale/app/navbar/customer_facing_display_button/customer_facing_display_button";
+import { ProxyStatus } from "@point_of_sale/app/navbar/proxy_status/proxy_status";
+import { SaleDetailsButton } from "@point_of_sale/app/navbar/sale_details_button/sale_details_button";
+import { SyncNotification } from "@point_of_sale/app/navbar/sync_notification/sync_notification";
+import { CashMovePopup } from "@point_of_sale/app/navbar/cash_move_popup/cash_move_popup";
+import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
+import { BackButton } from "@point_of_sale/app/navbar/back_button/back_button";
 import { Component, useState, useExternalListener } from "@odoo/owl";
-import { ClosePosPopup } from "@point_of_sale/js/Popups/ClosePosPopup";
+import { ClosePosPopup } from "@point_of_sale/app/navbar/closing_popup/closing_popup";
 import { _t } from "@web/core/l10n/translation";
 
 export class Navbar extends Component {

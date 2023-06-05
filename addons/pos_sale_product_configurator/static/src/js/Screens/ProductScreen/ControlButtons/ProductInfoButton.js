@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { ProductInfoButton } from "@point_of_sale/js/Screens/ProductScreen/ControlButtons/ProductInfoButton";
+import { ProductInfoButton } from "@point_of_sale/app/screens/product_screen/control_buttons/product_info_button/product_info_button";
 import { patch } from "@web/core/utils/patch";
 
 patch(ProductInfoButton.prototype, "pos_sale_product_configurator.ProductInfoButton", {

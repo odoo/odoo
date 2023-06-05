@@ -3,7 +3,7 @@
 import testUtils from "web.test_utils";
 import { mount } from "@web/../tests/helpers/utils";
 import { useService } from "@web/core/utils/hooks";
-import { numberBufferService } from "@point_of_sale/app/number_buffer_service";
+import { numberBufferService } from "@point_of_sale/app/utils/number_buffer_service";
 import { registry } from "@web/core/registry";
 
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";

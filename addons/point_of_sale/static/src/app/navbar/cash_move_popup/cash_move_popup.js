@@ -6,10 +6,10 @@ import { renderToElement } from "@web/core/utils/render";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { parseFloat, InvalidNumberError } from "@web/views/fields/parsers";
 import { useState } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 
-import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaitable_popup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
 export class CashMovePopup extends AbstractAwaitablePopup {
     static template = "point_of_sale.CashMovePopup";

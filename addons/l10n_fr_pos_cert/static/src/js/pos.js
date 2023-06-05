@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import { PosGlobalState, Order, Orderline } from "@point_of_sale/js/models";
+import { PosGlobalState, Order, Orderline } from "@point_of_sale/app/store/models";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { sprintf } from "@web/core/utils/strings";
-import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
 patch(PosGlobalState.prototype, "l10n_fr_pos_cert.PosGlobalState", {
     is_french_country() {

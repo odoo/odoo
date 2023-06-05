@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { CashierName } from "@point_of_sale/js/ChromeWidgets/CashierName";
+import { CashierName } from "@point_of_sale/app/navbar/cashier_name/cashier_name";
 import { patch } from "@web/core/utils/patch";
 import { useCashierSelector } from "@pos_hr/js/SelectCashierMixin";
 
