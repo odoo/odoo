@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { TicketScreen } from "@point_of_sale/js/Screens/TicketScreen/TicketScreen";
+import { TicketScreen } from "@point_of_sale/app/screens/ticket_screen/ticket_screen";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 

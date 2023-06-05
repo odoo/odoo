@@ -1,7 +1,7 @@
 /** @odoo-module alias=pos_sale_loyalty.models **/
 
 
-import { Orderline } from '@point_of_sale/js/models';
+import { Orderline } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 
 patch(Orderline.prototype, "pos_sale_loyalty.Orderline", {

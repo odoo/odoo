@@ -2,7 +2,7 @@
 
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { Component, useState } from "@odoo/owl";
-import { usePos } from "@point_of_sale/app/pos_hook";
+import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 // NOTE: These are constants so that they are only instantiated once
 // and they can be used efficiently by the OrderManagementControlPanel.

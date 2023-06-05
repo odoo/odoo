@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { PaymentScreen } from "@point_of_sale/js/Screens/PaymentScreen/PaymentScreen";
+import { PaymentScreen } from "@point_of_sale/app/screens/payment_screen/payment_screen";
 import { patch } from "@web/core/utils/patch";
 import { onMounted } from "@odoo/owl";
 
@@ -16,9 +16,7 @@ patch(PaymentScreen.prototype, "pos_adyen.PaymentScreen", {
             );
             if (pendingPaymentLine) {
                 const paymentTerminal = pendingPaymentLine.payment_method.payment_terminal;
-                paymentTerminal.set_most_recent_service_id(
-                    pendingPaymentLine.terminalServiceId
-                );
+                paymentTerminal.set_most_recent_service_id(pendingPaymentLine.terminalServiceId);
                 pendingPaymentLine.set_payment_status("waiting");
                 paymentTerminal.start_get_status_polling().then((isPaymentSuccessful) => {
                     if (isPaymentSuccessful) {

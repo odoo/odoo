@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { PosGlobalState, Order, Orderline, Payment } from "@point_of_sale/js/models";
+import { PosGlobalState, Order, Orderline, Payment } from "@point_of_sale/app/store/models";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { patch } from "@web/core/utils/patch";
 

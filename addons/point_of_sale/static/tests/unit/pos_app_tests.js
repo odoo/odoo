@@ -1,11 +1,11 @@
 /** @odoo-module */
-import { Chrome } from "@point_of_sale/js/Chrome";
+import { Chrome } from "@point_of_sale/app/pos_app";
 import { getFixture, mount } from "@web/../tests/helpers/utils";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { registry } from "@web/core/registry";
-import { posService } from "@point_of_sale/app/pos_store";
-import { numberBufferService } from "@point_of_sale/app/number_buffer_service";
-import { barcodeReaderService } from "@point_of_sale/app/barcode_reader_service";
+import { posService } from "@point_of_sale/app/store/pos_store";
+import { numberBufferService } from "@point_of_sale/app/utils/number_buffer_service";
+import { barcodeReaderService } from "@point_of_sale/app/barcode/barcode_reader_service";
 import { EventBus } from "@odoo/owl";
 import { uiService } from "@web/core/ui/ui_service";
 
