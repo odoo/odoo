@@ -4,7 +4,7 @@
     'icon': '/account/static/description/l10n.png',
     'countries': ['gr'],
     'author': 'P. Christeas, Odoo S.A.',
-    'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations.html',
+    'website': 'https://www.odoo.com/documentation/saas-16.3/applications/finance/fiscal_localizations.html',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Greece.
