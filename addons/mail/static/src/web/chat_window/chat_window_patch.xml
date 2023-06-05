@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
+        <xpath expr="//*[hasclass('o-mail-ChatWindow')]" position="attributes">
+            <attribute name="class" add="border border-bottom-0" separator=" "/>
+        </xpath>
         <xpath expr="//t[@name='thread content']" position="after">
             <div t-if="!thread" class="d-flex align-items-center m-3">
                 <span class="flex-shrink-0 me-2">To :</span>
