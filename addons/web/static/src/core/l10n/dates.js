@@ -246,7 +246,7 @@ export const strftimeToLuxonFormat = memoize(function strftimeToLuxonFormat(form
             if (inToken && normalizeFormatTable[character] !== undefined) {
                 character = normalizeFormatTable[character];
             } else {
-                character = "'" + character + "'";  // luxon escape
+                character = `'${character}'`; // luxon escape
             }
         }
         output.push(character);
@@ -366,6 +366,12 @@ export function parseDateTime(value, options = {}) {
         setZone: true,
         zone: "default",
     };
+    const switchToLatin = Settings.defaultNumberingSystem !== "latn" && /[0-9]/.test(value);
+
+    // Force numbering system to latin if actual numbers are found in the value
+    if (switchToLatin) {
+        parseOpts.numberingSystem = "latn";
+    }
 
     // Base case: try parsing with the given format and options
     let result = DateTime.fromFormat(value, fmt, parseOpts);
@@ -429,6 +435,13 @@ export function parseDateTime(value, options = {}) {
     // No working parsing methods: throw an error
     if (!isValidDate(result)) {
         throw new ConversionError(sprintf(_t("'%s' is not a correct date or datetime"), value));
+    }
+
+    // Revert to original numbering system
+    if (switchToLatin) {
+        result = result.reconfigure({
+            numberingSystem: Settings.defaultNumberingSystem,
+        });
     }
 
     return result.setZone("default");
