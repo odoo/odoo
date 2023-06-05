@@ -144,7 +144,7 @@ class TestEventCrmFlow(TestEventCrmCommon):
             (False, False, self.event_customer, self.event_customer),  # should take partner info
             ('"Other Name" <constantin@test.example.com>', False, self.event_customer, self.event_customer),  # same email normalized
             ('other.email@test.example.com', False, self.event_customer, self.env['res.partner']),  # not same email -> no partner on lead
-            (False, '+32485112233', self.event_customer, self.env['res.partner']),  # same phone but differently formatted -> currently not supported
+            (False, '+32485112233', self.event_customer, self.event_customer),  # same phone but differently formatted
             (False, '0485112244', self.event_customer, self.env['res.partner']),  # other phone -> no partner on lead
             ('other.email@test.example.com', '0485112244', self.event_customer2, self.event_customer2),  # mail / phone update from registration as void on partner
         ]:
