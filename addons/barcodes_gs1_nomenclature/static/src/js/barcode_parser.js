@@ -2,7 +2,7 @@
 
 import { patch } from "@web/core/utils/patch";
 import { BarcodeParser } from "@barcodes/js/barcode_parser";
-import {_lt} from "web.core";
+import { _lt } from "@web/core/l10n/translation";
 
 export const FNC1_CHAR = String.fromCharCode(29);
 
