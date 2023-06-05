@@ -79,7 +79,8 @@ class CustomerPortal(portal.CustomerPortal):
             self._document_check_access('stock.picking', picking_id)
         except (AccessError, MissingError):
             raise werkzeug.exceptions.NotFound
-        return request.render("mrp_subcontracting.subcontracting_portal", {'picking_id': picking_id})
+        picking = request.env['stock.picking'].browse(picking_id)
+        return request.render("mrp_subcontracting.subcontracting_portal", {'picking': picking})
 
     @http.route("/my/productions/<int:picking_id>/subcontracting_portal", type="http", auth="user", methods=['GET'])
     def render_production_backend_view(self, picking_id):

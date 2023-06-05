@@ -36,6 +36,9 @@
         'web.assets_backend': [
             'mrp_subcontracting/static/src/components/**/*',
         ],
+        'web.assets_frontend': [
+            'mrp_subcontracting/static/src/scss/subcontracting_portal.scss',
+        ],
         'mrp_subcontracting.webclient': [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
