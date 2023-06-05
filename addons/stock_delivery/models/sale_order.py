@@ -6,6 +6,18 @@ from odoo import _, models
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
+    def set_delivery_line(self, carrier, amount):
+        res = super().set_delivery_line(carrier, amount)
+        for order in self:
+            if order.state not in ('sale', 'done'):
+                continue
+            pending_deliveries = order.picking_ids.filtered(
+                lambda p: p.state not in ('done', 'cancel')
+                          and not any(m.origin_returned_move_id for m in p.move_ids)
+            )
+            pending_deliveries.carrier_id = carrier.id
+        return res
+
     def _create_delivery_line(self, carrier, price_unit):
         sol = super()._create_delivery_line(carrier, price_unit)
         context = {}
