@@ -12,6 +12,12 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     trigger: '.o_list_button_add',
     extra_trigger: '.o_sale_order',
 }, {
+    trigger: '.o_required_modifier[name=partner_id] input',
+    run: 'text Tajine Saucisse',
+}, {
+    trigger: '.ui-menu-item > a:contains("Tajine Saucisse")',
+    auto: true,
+}, {
     trigger: 'a:contains("Add a product")',
 }, {
     trigger: 'div[name="product_template_id"] input',
@@ -83,8 +89,8 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     isCheck: true,
 }, {
     trigger: 'tr:has(.o_sale_product_configurator_name:contains("Customizable Desk"))>td:nth-child(3)>div>button:has(i.fa-plus)',
-}, {
-    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(2)>td>span:contains("1,500.00")',
+}, {  // Mr Tajine Saucisse uses the pricelist that has a rule when 2 or more products. Price is 600
+    trigger: 'main.modal-body>table:nth-child(1)>tbody>tr:nth-child(2)>td>span:contains("1,200.00")',
 }, {
     trigger: 'button:contains(Confirm)',
 }, {
@@ -103,5 +109,5 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     extra_trigger: 'div[name="order_line"]',
     isCheck: true,
 },
-    ...stepUtils.discardForm(),
+    ...stepUtils.saveForm(),
 ]});
