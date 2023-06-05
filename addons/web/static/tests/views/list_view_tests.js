@@ -8088,6 +8088,39 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(document.activeElement.selectionEnd, 10);
     });
 
+    QUnit.test("text field should keep it's selection when clicking on it", async (assert) => {
+        serverData.models.foo.records[0].text = "1234";
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom" limit="1">
+                    <field name="text"/>
+                </tree>`,
+        });
+
+        await click(target, "td[name=text]");
+        assert.strictEqual(
+            window.getSelection().toString(),
+            "1234",
+            "the entire content should be selected on initial click"
+        );
+
+        Object.assign(
+            target.querySelector("[name=text] textarea"),
+            { selectionStart: 0, selectionEnd: 1 }
+        );
+
+        await click(target, "[name=text] textarea");
+
+        assert.strictEqual(
+            window.getSelection().toString(),
+            "1",
+            "the selection shouldn't be changed"
+        );
+    });
+
     QUnit.test("click on a button in a list view", async function (assert) {
         assert.expect(10);
 
