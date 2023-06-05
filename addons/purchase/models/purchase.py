@@ -1128,9 +1128,9 @@ class PurchaseOrderLine(models.Model):
                 if default_analytic_account:
                     rec.analytic_tag_ids = default_analytic_account.analytic_tag_ids
 
-    @api.onchange('product_id')
+    @api.onchange('product_id', 'company_id')
     def onchange_product_id(self):
-        if not self.product_id:
+        if not self.product_id or not self.company_id:
             return
 
         # Reset date, price and quantity since _onchange_quantity will provide default values
@@ -1175,9 +1175,9 @@ class PurchaseOrderLine(models.Model):
             return {'warning': warning}
         return {}
 
-    @api.onchange('product_qty', 'product_uom')
+    @api.onchange('product_qty', 'product_uom', 'company_id')
     def _onchange_quantity(self):
-        if not self.product_id or self.invoice_lines:
+        if not self.product_id or self.invoice_lines or not self.company_id:
             return
         params = {'order_id': self.order_id}
         seller = self.product_id._select_seller(
