@@ -280,6 +280,7 @@
                 <t t-call="website_slides.slide_share_modal">
                     <t t-set="record" t-value="channel"/>
                     <t t-set="slide_share_modal_title">Share This Course</t>
+                    <t t-set="email_sharing" t-value="channel.share_channel_template_id"/>
                     <t t-set="website_share_url" t-value="channel.website_url"/>
                 </t>
             </div>

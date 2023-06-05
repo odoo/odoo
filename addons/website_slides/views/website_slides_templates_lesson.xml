@@ -463,6 +463,7 @@
     </div>
     <t t-call="website_slides.slide_share_modal">
         <t t-set="record" t-value="slide"/>
+        <t t-set="email_sharing" t-value="slide.channel_id.share_slide_template_id"/>
         <t t-set="include_embed" t-value="bool(slide.embed_code)"/>
         <t t-set="website_share_url" t-value="slide.website_share_url"/>
     </t>

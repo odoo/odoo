@@ -126,7 +126,8 @@
                     t-att-data-is-member="is_member"
                     t-att-data-is-member-or-invited="is_member_or_invited"
                     t-att-data-session-answers="session_answers"
-                    t-att-data-website-share-url="slide.website_share_url">
+                    t-att-data-website-share-url="slide.website_share_url"
+                    t-att-data-email-sharing="bool(slide.channel_id.share_slide_template_id)">
                     <t t-call="website_slides.slide_sidebar_done_button"/>
                     <div class="ms-2 o_wslides_sidebar_content">
                         <a t-if="can_access" class="d-block" href="#">

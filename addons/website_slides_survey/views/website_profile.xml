@@ -88,6 +88,7 @@
                     </div>
                     <t t-call="website_slides.slide_share_modal">
                         <t t-set="record" t-value="certificate.slide_id.channel_id"/>
+                        <t t-set="email_sharing" t-value="certificate.slide_id.channel_id.share_channel_template_id"/>
                     </t>
                 </div>
             </div>

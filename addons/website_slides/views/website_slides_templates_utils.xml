@@ -110,7 +110,7 @@
         <t t-call="website_slides.slide_share_link"/>
         <h5 class="mt-3">Share on Social Media</h5>
         <t t-call="website_slides.slide_share_social"/>
-        <t t-call="website_slides.slide_social_email"/>
+        <t t-if="email_sharing" t-call="website_slides.slide_social_email"/>
         <t t-if="include_embed" t-call="website_slides.slide_social_embed"/>
     </div>
 </template>
