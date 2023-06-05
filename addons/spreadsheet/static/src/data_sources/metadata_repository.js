@@ -70,7 +70,7 @@ export class MetadataRepository extends EventBus {
      * @returns {Promise<Record<string, Field>>} List of fields (result of fields_get)
      */
     async fieldsGet(model) {
-        return this.serverData.fetch(model, "fields_get");
+        return this.serverData.fetch(model, "fields_get", []);
     }
 
     /**

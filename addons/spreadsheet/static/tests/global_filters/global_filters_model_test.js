@@ -641,8 +641,8 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         const orm = {
             call: async (model, method, args) => {
                 const resId = args[0][0];
-                assert.step(`name_get_${resId}`);
-                return resId === 1 ? [[1, "Jean-Jacques"]] : [[2, "Raoul Grosbedon"]];
+                assert.step(`read_${resId}`);
+                return resId === 1 ? [{id: 1, display_name: "Jean-Jacques"}] : [{id: 2, display_name: "Raoul Grosbedon"}];
             },
         };
         const model = new Model(
@@ -692,7 +692,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         });
         await nextTick();
         assert.equal(getCellValue(model, "A10"), "Raoul Grosbedon");
-        assert.verifySteps(["name_get_1", "name_get_2"]);
+        assert.verifySteps(["read_1", "read_2"]);
     });
 
     QUnit.test(

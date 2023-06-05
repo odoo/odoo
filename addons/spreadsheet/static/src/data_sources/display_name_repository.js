@@ -127,7 +127,7 @@ export class DisplayNameRepository {
      */
     _getEndpoint(model) {
         if (!this._endpoints[model]) {
-            this._endpoints[model] = new BatchEndpoint(this._orm, model, "name_get", {
+            this._endpoints[model] = new BatchEndpoint(this._orm, model, "read", [["display_name"]], {
                 whenDataIsFetched: () => this.dataFetchedCallback(),
                 successCallback: this._assignResult.bind(this),
                 failureCallback: this._assignError.bind(this),
@@ -147,11 +147,11 @@ export class DisplayNameRepository {
      */
     _assignResult(request, result) {
         const deferred = this._displayNames[request.resModel][request.args[0]].deferred;
-        deferred.resolve(result && result[1]);
+        deferred.resolve(result && result["display_name"]);
         this._displayNames[request.resModel][request.args[0]] = {
             state: "COMPLETED",
             deferred,
-            value: result && result[1],
+            value: result && result["display_name"],
         };
     }
 
@@ -195,8 +195,33 @@ export class DisplayNameRepository {
             deferred,
         };
         const endpoint = this._getEndpoint(model);
-        const request = new Request(model, "name_get", [id]);
+        const request = new Request(model, "read", [id], [["display_name"]]);
         endpoint.call(request);
         return deferred;
     }
+
+}
+
+class ReadDisplayNameBatch {
+    /**
+     * @param {object} orm
+     * @param {string} resModel
+     * @param {string} method
+     * @param {object} callbacks
+     * @param {function} callbacks.successCallback
+     * @param {function} callbacks.failureCallback
+     * @param {function} callbacks.whenDataIsFetched
+     */
+    constructor(orm, resModel, { successCallback, failureCallback, whenDataIsFetched }) {
+        this.orm = orm;
+        this.resModel = resModel;
+        this.successCallback = successCallback;
+        this.failureCallback = failureCallback;
+        this.batchedFetchedCallback = whenDataIsFetched;
+
+        this._isScheduled = false;
+        this._pendingBatch = new ListRequestBatch(resModel, method, extraParams);
+    }
+
+
 }

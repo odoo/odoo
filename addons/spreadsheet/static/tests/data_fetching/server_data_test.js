@@ -289,7 +289,7 @@ QUnit.module("spreadsheet server data", {}, () => {
                 return args[0];
             },
         };
-        const batchEndpoint = new BatchEndpoint(orm, "partner", "get_something", {
+        const batchEndpoint = new BatchEndpoint(orm, "partner", "get_something", [], {
             whenDataIsFetched: () => {},
             successCallback: () => assert.step("success-callback"),
             failureCallback: () => assert.step("failure-callback"),
@@ -300,7 +300,6 @@ QUnit.module("spreadsheet server data", {}, () => {
         batchEndpoint.call(request2);
         assert.verifySteps([]);
         await nextTick();
-        console.log("Passe");
         assert.verifySteps(["success-callback", "failure-callback"]);
     });
 });

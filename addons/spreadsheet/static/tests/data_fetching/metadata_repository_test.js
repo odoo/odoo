@@ -69,7 +69,9 @@ QUnit.module("spreadsheet > Metadata Repository", {}, () => {
             call: async (model, method, args) => {
                 const ids = args[0];
                 assert.step(`${method}-${model}-[${ids.join(",")}]`);
-                return ids.map((id) => [id, id.toString()]);
+                return ids.map((id) => {
+                    return {id, display_name: id.toString()}
+                });
             },
         };
 
@@ -86,8 +88,8 @@ QUnit.module("spreadsheet > Metadata Repository", {}, () => {
 
         await nextTick();
         assert.verifySteps([
-            "name_get-A-[1,2]",
-            "name_get-B-[1]",
+            "read-A-[1,2]",
+            "read-B-[1]",
             "labels-fetched",
             "labels-fetched",
         ]);
@@ -102,7 +104,9 @@ QUnit.module("spreadsheet > Metadata Repository", {}, () => {
             call: async (model, method, args) => {
                 const ids = args[0];
                 assert.step(`${method}-${model}-[${ids.join(",")}]`);
-                return ids.map((id) => [id, id.toString()]);
+                return ids.map((id) => {
+                    return {id, display_name: id.toString()}
+                });
             },
         };
 
@@ -112,11 +116,11 @@ QUnit.module("spreadsheet > Metadata Repository", {}, () => {
         assert.verifySteps([]);
 
         await nextTick();
-        assert.verifySteps(["name_get-A-[1]"]);
+        assert.verifySteps(["read-A-[1]"]);
 
         assert.throws(() => metadataRepository.getRecordDisplayName("A", 2));
         await nextTick();
-        assert.verifySteps(["name_get-A-[2]"]);
+        assert.verifySteps(["read-A-[2]"]);
     });
 
     QUnit.test(
@@ -126,7 +130,9 @@ QUnit.module("spreadsheet > Metadata Repository", {}, () => {
                 call: async (model, method, args) => {
                     const ids = args[0];
                     assert.step(`${method}-${model}-[${ids.join(",")}]`);
-                    return ids.map((id) => [id, id.toString()]);
+                    return ids.map((id) => {
+                        return {id, display_name: id.toString()}
+                    });
                 },
             };
 
@@ -138,7 +144,7 @@ QUnit.module("spreadsheet > Metadata Repository", {}, () => {
             assert.strictEqual(metadataRepository.getRecordDisplayName("A", 1), "test");
 
             await nextTick();
-            assert.verifySteps(["name_get-A-[1]"]);
+            assert.verifySteps(["read-A-[1]"]);
             assert.strictEqual(metadataRepository.getRecordDisplayName("A", 1), "1");
         }
     );
@@ -153,7 +159,9 @@ QUnit.module("spreadsheet > Metadata Repository", {}, () => {
                     if (model === "B" && ids.includes(1)) {
                         throw new Error("Missing");
                     }
-                    return ids.map((id) => [id, id.toString()]);
+                    return ids.map((id) => {
+                        return {id, display_name: id.toString()}
+                    });
                 },
             };
 
@@ -166,10 +174,10 @@ QUnit.module("spreadsheet > Metadata Repository", {}, () => {
 
             await nextTick();
             assert.verifySteps([
-                "name_get-A-[1]",
-                "name_get-B-[1,2]",
-                "name_get-B-[1]",
-                "name_get-B-[2]",
+                "read-A-[1]",
+                "read-B-[1,2]",
+                "read-B-[1]",
+                "read-B-[2]",
             ]);
 
             assert.strictEqual(metadataRepository.getRecordDisplayName("A", 1), "1");
