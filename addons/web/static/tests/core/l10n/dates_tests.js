@@ -1052,5 +1052,43 @@ QUnit.module(
                         .toISOString(),
             });
         });
+
+        QUnit.test(
+            "parseDateTime: arab locale, latin numbering system as input",
+            async (assert) => {
+                const dateFormat = "dd MMM, yyyy";
+                const timeFormat = "hh:mm:ss";
+
+                patchWithCleanup(localization, {
+                    dateFormat,
+                    timeFormat,
+                    dateTimeFormat: `${dateFormat} ${timeFormat}`,
+                });
+                patchWithCleanup(Settings, {
+                    defaultLocale: "ar-001",
+                    defaultNumberingSystem: "arab",
+                });
+
+                // Check it works with arab
+                assert.strictEqual(
+                    parseDateTime("١٥ يوليو, ٢٠٢٠ ١٢:٣٠:٤٣").toISO().split(".")[0],
+                    "2020-07-15T12:30:43"
+                );
+
+                // Check it also works with latin numbers
+                assert.strictEqual(
+                    parseDateTime("15 07, 2020 12:30:43").toISO().split(".")[0],
+                    "2020-07-15T12:30:43"
+                );
+                assert.strictEqual(
+                    parseDateTime("22/01/2023").toISO().split(".")[0],
+                    "2023-01-22T00:00:00"
+                );
+                assert.strictEqual(
+                    parseDateTime("2023-01-22").toISO().split(".")[0],
+                    "2023-01-22T00:00:00"
+                );
+            }
+        );
     }
 );
