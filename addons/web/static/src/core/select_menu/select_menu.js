@@ -12,6 +12,7 @@ import { useAutofocus } from "@web/core/utils/hooks";
 
 export class SelectMenu extends Component {
     static template = "web.SelectMenu";
+    static choiceItemTemplate = "web.SelectMenu.ChoiceItem";
 
     static components = { Dropdown, DropdownItem, TagsList };
 
