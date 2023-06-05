@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates xml:space="preserve">
+    <!--
+    =============================================
+    Chatbot overrides to base livechat templates
+    =============================================
+     -->
+
+    <!-- Extend the base livechat window to include a div allowing to restart the script at the end -->
+    <t t-extend="im_livechat.legacy.PublicLivechatWindow">
+        <t t-jquery='div.o_chat_mini_composer' t-operation="after">
+            <div class="o_livechat_chatbot_end bg-200 fst-italic text-center border" style="display: none;">
+                <span>Conversation ended...</span>
+                <a href="#" class="o_livechat_chatbot_restart">Restart</a>
+            </div>
+        </t>
+    </t>
+
+    <!-- Extend the base livechat window header to include a button allowing to restart the script -->
+    <t t-extend="im_livechat.legacy.PublicLivechatWindow.HeaderContent">
+        <t t-jquery="span.o_thread_window_title" t-operation="after">
+            <a t-if="widget.isMobile() &amp;&amp; widget.messaging.publicLivechatGlobal.chatbot.data &amp;&amp; widget.messaging.publicLivechatGlobal.chatbot.hasRestartButton"
+                href="#" class="o_livechat_chatbot_main_restart fa fa-1x fa-refresh"
+                title="Restart Conversation"/>
+        </t>
+        <t t-jquery="span.o_thread_window_buttons a.o_thread_window_close" t-operation="before">
+            <a t-if="widget.messaging.publicLivechatGlobal.chatbot.data &amp;&amp; widget.messaging.publicLivechatGlobal.chatbot.hasRestartButton"
+                href="#" class="o_livechat_chatbot_main_restart fa fa-refresh"
+                title="Restart Conversation"/>
+        </t>
+    </t>
+
+    <!-- Extend the base livechat message to allow displaying options for the user to select -->
+    <t t-extend="im_livechat.legacy.mail.widget.Thread.Message">
+        <t t-jquery='div.o_thread_message_content' t-operation="append">
+            <ul t-if="message.getChatbotStepAnswers() &amp;&amp; message.getChatbotStepAnswers().length !== 0 &amp;&amp; !message.getChatbotStepAnswerId()"
+                class="o_livechat_chatbot_options"
+                t-att-data-message-id="message.getID()"
+                t-att-data-chatbot-step-id="message.getChatbotStepId()">
+                <t t-foreach="message.getChatbotStepAnswers()" t-as="stepAnswer">
+                    <li t-att-data-chatbot-step-answer-id="stepAnswer.id"
+                        t-att-data-chatbot-step-redirect-link="stepAnswer.redirect_link"
+                        class="o_livechat_chatbot_stepAnswer d-inline-block border border-primary rounded p-2 me-3 mb-1 fw-bold">
+                        <t t-out="stepAnswer.label"/>
+                    </li>
+                    <br/>
+                </t>
+            </ul>
+        </t>
+    </t>
+
+    <!--
+    =============================================
+    Tooling / Utils
+    =============================================
+     -->
+
+    <!--
+        This small template simulates a fake message from the bot.
+        The goal is to have something like:
+        [image] The bot
+                . . .
+
+        With a small animation on the dots to make them bounce.
+        This fake message is then removed when the chat window is refreshed with the real message.
+    -->
+    <t t-name="im_livechat.legacy.chatbot.is_typing_message">
+        <div class="o_thread_message">
+            <div class="o_thread_message_sidebar">
+                <img alt="chatbot_image" t-att-src="chatbotImageSrc"
+                    class="o_thread_message_avatar rounded-circle"/>
+            </div>
+            <div class="o_thread_message_core">
+                <p class="o_mail_info text-muted">
+                    <strong class="o_thread_author" t-out="chatbotName"/>
+                </p>
+                <div class="o_thread_message_content o_PublicLivechatMessage_content">
+                    <img class="o_livechat_chatbot_typing"
+                        t-att-src="chatbotIsTypingImageSrc"
+                        width="30" alt="is typing"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
