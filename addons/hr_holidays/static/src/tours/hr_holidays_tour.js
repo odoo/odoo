@@ -28,7 +28,7 @@ registry.category("web_tour.tours").add('hr_holidays_tour', {
     {
         trigger: 'div[name="holiday_status_id"] input',
         content: _t("Let's try to create a Sick Time Off, select it in the list"),
-        run: `text ${leaveType}`,
+        run: `text ${leaveType.slice(0, leaveType.length - 1)}`,
     },
     {
         trigger: `.ui-autocomplete .ui-menu-item a:contains("${leaveType}")`,
@@ -38,7 +38,7 @@ registry.category("web_tour.tours").add('hr_holidays_tour', {
     },
     {
         trigger: 'input[data-field=request_date_from]',
-        extra_trigger: ".o_field_widget[name='holiday_status_id'] input:propValue(NotLimitedHR)",
+        extra_trigger: `.o_field_widget[name='holiday_status_id'] input:propValue("${leaveType}")`,
         content: _t("You can select the period you need to take off, from start date to end date"),
         position: 'right',
         run: `text ${leaveDateFrom}`,
