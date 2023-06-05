@@ -28,7 +28,7 @@
                     </t>
                     <Transition t-if="props.thread.isChannel"  visible="props.thread.seen_message_id === (prevMsg?.id ?? false)" name="'o-fade'" t-slot-scope="transition">
                         <div class="o-mail-Thread-newMessage d-flex align-items-center fw-bolder" t-att-class="{ 'opacity-0': transition.className.includes('o-fade-leave') }">
-                            <hr class="ms-3 flex-grow-1 border opacity-50"/><span class="px-3 me-3">New messages</span>
+                            <hr class="ms-2 flex-grow-1 border opacity-50"/><span class="px-2">New messages</span><hr class="me-2 flex-grow-1 border opacity-50"/>
                         </div>
                     </Transition>
                     <t t-if="msg.isNotification">
