@@ -13,12 +13,20 @@
         <xpath expr="//div[@id='profile_about_badge']" position="before">
             <t t-if="channel">
                 <div class="mb32">
-                    <h5 class="border-bottom pb-1">Completed Courses</h5>
+                    <h5 class="border-bottom pb-1 d-flex align-items-center justify-content-between" style="height:43px;">
+                        Completed Courses
+                    </h5>
                     <t t-if="courses_completed" t-call="website_slides.display_course">
                         <t t-set="courses" t-value="courses_completed"></t>
                     </t>
+                    <div t-elif="request.env.user == user" class="text-muted d-inline-block">
+                        Go through all its content to see a Course in this section. <br />
+                        <a href="/slides/" class="btn-link">
+                            <i class="fa fa-arrow-right"></i> Start Learning
+                        </a>
+                    </div>
                     <div t-else="" class="text-muted d-inline-block">No completed courses yet!</div>
-                    <div class="text-end d-inline-block pull-right">
+                    <div t-if="request.env.user != user" class="text-end d-inline-block pull-right">
                         <a href="/slides/all" class="btn btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Courses</a>
                     </div>
                 </div>
@@ -27,6 +35,12 @@
                     <t t-if="courses_ongoing" t-call="website_slides.display_course">
                         <t t-set="courses" t-value="courses_ongoing"></t>
                     </t>
+                     <p t-elif="request.env.user == user" class="text-muted">
+                        All the courses you attend will appear here. <br />
+                        <a href="/slides/" class="btn-link">
+                            <i class="fa fa-arrow-right"></i> Start Learning
+                        </a>
+                    </p>
                     <p t-else="" class="text-muted">No ongoing courses yet!</p>
                 </div>
             </t>

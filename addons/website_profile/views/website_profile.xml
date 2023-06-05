@@ -99,7 +99,7 @@
                                 </a>
                             </div>
                             <div class="my-3 mb-0 pt-2 border-top">
-                                <label class="text-primary" for="user_website_published" t-if="user.id == uid"><span class="fw-bold">Public profile</span></label>
+                                <label class="text-primary" for="user_website_published" t-if="user.id == uid"><span class="fw-bold">Public Profile</span></label>
                                 <div class=" mb-0 float-end" t-if="user.id == uid">
                                     <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" t-if="not user.website_published"/>
                                     <input type="checkbox" class="mt8" name="website_published" id="user_website_published" value="True" checked="checked" t-if="user.website_published"/>
@@ -156,7 +156,9 @@
                                 <div class="mb-3 col-12">
                                     <label class="mb-1 text-primary" for="description"><span class="fw-bold">Biography</span></label>
                                     <textarea name="description" id="description" style="min-height: 120px"
-                                        class="form-control o_wysiwyg_loader"><t t-esc="user.partner_id.website_description"/></textarea>
+                                        class="form-control o_wysiwyg_loader" placeholder="Write a few words about yourself...">
+                                        <t t-esc="user.partner_id.website_description" />
+                                    </textarea>
                                 </div>
                                 <div class="col">
                                     <button type="submit" class="btn btn-primary o_wprofile_submit_btn">Update</button>
@@ -257,11 +259,12 @@
                                         <th><small class="fw-bold">Joined</small></th>
                                         <td><span t-field="user.create_date" t-options='{"format": "d MMM Y"}'/></td>
                                     </tr>
-                                    <tr>
-                                        <th><small class="fw-bold">Badges</small></th>
-                                        <td t-if="user.badge_ids" t-esc="len(user.badge_ids.filtered(lambda b: b.badge_id.website_published))"/>
-                                        <td t-else="">0</td>
-                                    </tr>
+                                    <t t-if="user.badge_ids">
+                                        <tr>
+                                            <th><small class="fw-bold">Badges</small></th>
+                                            <td t-esc="len(user.badge_ids.filtered(lambda b: b.badge_id.website_published))"/>
+                                        </tr>
+                                    </t>
                                 </tbody>
                             </table>
                         </div>
@@ -277,7 +280,7 @@
                     </ul>
                     <div class="tab-content py-4 o_wprofile_tabs_content mb-4" id="profile_extra_info_tabcontent">
                         <div role="tabpanel" t-attf-class="tab-pane #{ 'show active' if not active_tab or active_tab == 'about' else '' }" id="profile_tab_content_about">
-                            <div class="o_wprofile_email_validation_container mb16 mt16">
+                            <div class="o_wprofile_email_validation_container">
                                 <t t-call="website_profile.email_validation_banner">
                                     <t t-set="redirect_url" t-value="'/profile/user/%s' % user.id"/>
                                     <t t-set="additional_validation_email_message"/>
@@ -288,6 +291,12 @@
                                 <t t-call="website_profile.user_badges"></t>
                             </div>
                             <div t-if="user.partner_id.website_description" class="mb32">
+                                <a 
+                                    class="float-end" 
+                                    t-if="request.env.user == user and user.karma != 0 or request.env.user._is_admin()"
+                                    t-attf-href="/profile/edit?url_param=#{edit_button_url_param}&amp;user_id=#{user.id}">
+                                    <i class="fa fa-pencil me-1"/>Edit    
+                                </a>
                                 <h5 class="border-bottom pb-1">Biography</h5>
                                 <span t-field="user.partner_id.website_description"/>
                             </div>
@@ -375,14 +384,21 @@
                 </t>
             </t>
         </div>
-        <div class="mb-3 d-inline-block" t-if="not user.badge_ids">
+        <div class="mb-3" t-elif="request.env.user == user">
+            Badges are your collection of achievements. Wear them proudly! <br />
+            <a t-if="not user.badge_ids and badge_category" t-attf-href="/profile/ranks_badges?badge_category=#{badge_category}&amp;url_origin=#{request.httprequest.path}&amp;name_origin=#{user.name}"
+            class="btn-link"><i class="fa fa-arrow-right"/> Get Badges</a>
+            <a t-else="" t-attf-href="/profile/ranks_badges?url_origin=#{request.httprequest.path}&amp;name_origin=#{user.name}"
+            class="btn-link"><i class="fa fa-arrow-right"/> Get Badges</a>
+        </div>
+        <div t-else="" class="mb-3 d-inline-block">
             <p class="text-muted">No badges yet!</p>
         </div>
-        <div class="text-end d-inline-block pull-right">
+        <div t-if="request.env.user.id != user.id" class="text-end d-inline-block pull-right">
             <a t-if="not user.badge_ids and badge_category" t-attf-href="/profile/ranks_badges?badge_category=#{badge_category}&amp;url_origin=#{request.httprequest.path}&amp;name_origin=#{user.name}"
-            class="btn btn-link btn-sm"><i class="oi oi-arrow-right"/> All Badges</a>
+            class="btn-link btn-sm"><i class="oi oi-arrow-right"/> All Badges</a>
             <a t-else="" t-attf-href="/profile/ranks_badges?url_origin=#{request.httprequest.path}&amp;name_origin=#{user.name}"
-            class="btn btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Badges</a>
+            class="btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Badges</a>
         </div>
     </template>
 
