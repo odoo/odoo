@@ -46,23 +46,29 @@
                 <span class="text-muted fst-italic ms-3">No result found</span>
             </t>
             <t t-foreach="state.displayedOptions" t-as="choice" t-key="choice_index">
-                <div t-if="choice.isGroup" class="o_select_menu_group sticky-top bg-white px-3 mt-2 fst-italic fw-bolder">
-                    <span t-esc="choice.label" />
-                    <hr class="bg-primary mt-2 mb-1" />
-                </div>
-                <DropdownItem
-                    t-if="!choice.isGroup"
-                    onSelected="() => this.onItemSelected(choice.value)"
-                    class="getItemClass(choice) + ' d-flex align-items-center'"
-                >
-                    <t t-if="props.slots and props.slots.choice" t-slot="choice" data="choice"/>
-                    <t t-else="">
-                        <div class="o_select_menu_item_label text-wrap" t-esc="choice.label || choice.value" />
-                    </t>
-                </DropdownItem>
+                <t t-call="{{ this.constructor.choiceItemTemplate }}">
+                    <t t-set="choice" t-value="choice" />
+                </t>
             </t>
             <t t-if="props.slots and props.slots.bottomArea" t-slot="bottomArea" data="state"/>
         </Dropdown>
+    </t>
+
+    <t t-name="web.SelectMenu.ChoiceItem" owl="1">
+        <div t-if="choice.isGroup" class="o_select_menu_group sticky-top bg-white px-3 mt-2 fst-italic fw-bolder">
+            <span t-esc="choice.label" />
+            <hr class="bg-primary mt-2 mb-1" />
+        </div>
+        <DropdownItem
+            t-if="!choice.isGroup"
+            onSelected="() => this.onItemSelected(choice.value)"
+            class="getItemClass(choice) + ' d-flex align-items-center'"
+        >
+            <t t-if="props.slots and props.slots.choice" t-slot="choice" data="choice"/>
+            <t t-else="">
+                <div class="o_select_menu_item_label text-wrap" t-esc="choice.label || choice.value" />
+            </t>
+        </DropdownItem>
     </t>
 
 </templates>
