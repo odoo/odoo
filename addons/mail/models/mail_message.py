@@ -942,7 +942,7 @@ class Message(models.Model):
             domain = expression.AND([domain, [('id', '<', before)]])
         if after:
             domain = expression.AND([domain, [('id', '>', after)]])
-        return self.search(domain, limit=limit, order='id ASC' if after else 'id DESC')
+        return self.search(domain, limit=limit)
 
     def message_format(self, format_reply=True, msg_vals=None):
         """ Get the message values in the format for web client. Since message
