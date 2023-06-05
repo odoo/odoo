@@ -72,6 +72,7 @@ class ThemePreviewFormController extends FormController {
     }
 }
 ThemePreviewFormController.components = { ...FormController.components, ViewButton };
+ThemePreviewFormController.template = 'website.ThemePreviewFormController';
 
 class ThemePreviewFormControlPanel extends ControlPanel {
     /**
@@ -92,10 +93,6 @@ ThemePreviewFormControlPanel.template = 'website.ThemePreviewForm.ControlPanel';
 
 const ThemePreviewFormView = {
     ...formView,
-    display: {
-        controlPanel: {}
-    },
-    buttonTemplate: 'website.ThemePreview.Buttons',
     Controller: ThemePreviewFormController,
     ControlPanel: ThemePreviewFormControlPanel,
 };
