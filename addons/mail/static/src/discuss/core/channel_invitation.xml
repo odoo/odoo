@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="discuss.ChannelInvitation" owl="1">
-        <div class="o-discuss-ChannelInvitation bg-view d-flex flex-column" t-att-class="{ 'o-discuss-ChannelInvitation-has-size-constraints': props.hasSizeConstraints }">
+        <div class="o-discuss-ChannelInvitation bg-view d-flex flex-column" t-att-class="{ 'o-discuss-ChannelInvitation-has-size-constraints': props.hasSizeConstraints }" t-attf-class="{{ props.className }}">
             <t t-if="store.user">
                 <h3 class="mx-3 mt-3 mb-2">Invite people</h3>
                 <div class="mx-3 my-2">

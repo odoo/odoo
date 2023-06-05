@@ -1,0 +1,42 @@
+/* @odoo-module */
+
+import { threadActionsRegistry } from "@mail/core/thread_actions";
+import { CallSettings } from "@mail/discuss/core/call_settings";
+import { _t } from "@web/core/l10n/translation";
+
+threadActionsRegistry
+    .add("call", {
+        condition(component) {
+            return (
+                component.thread?.allowCalls &&
+                component.thread !== component.rtc.state.channel &&
+                !component.props.chatWindow?.hidden
+            );
+        },
+        icon: "fa fa-fw fa-phone",
+        iconLarge: "fa fa-fw fa-lg fa-phone",
+        name: _t("Start a Call"),
+        open(component) {
+            component.rtc.toggleCall(component.thread);
+        },
+        sequence: 10,
+    })
+    .add("settings", {
+        component: CallSettings,
+        condition(component) {
+            return (
+                component.thread?.allowCalls &&
+                (!component.props.chatWindow || component.props.chatWindow.isOpen)
+            );
+        },
+        icon: "fa fa-fw fa-gear",
+        iconLarge: "fa fa-fw fa-lg fa-gear",
+        name: _t("Show Call Settings"),
+        nameActive: _t("Hide Call Settings"),
+        sequence(component) {
+            return component.props.chatWindow && component.thread === component.rtc.state.channel
+                ? 6
+                : 60;
+        },
+        toggle: true,
+    });

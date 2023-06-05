@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<templates xml:space="preserve">
-    <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
-        <xpath expr="//t[@name='thread content']" position="inside">
-            <PinnedMessagesPanel t-if="state.activeMode === MODES.PINNED_MESSAGES" thread="thread"/>
-        </xpath>
-    </t>
-</templates>

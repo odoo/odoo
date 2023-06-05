@@ -7,7 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 
 export class ChannelMemberList extends Component {
     static components = { ImStatus };
-    static props = ["thread", "className"];
+    static props = ["thread", "className?"];
     static template = "discuss.ChannelMemberList";
 
     setup() {
