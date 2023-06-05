@@ -690,7 +690,6 @@ class AccountPaymentRegister(models.TransientModel):
             self.payment_date,
         )
 
-        # este es el que se llama de a uno
         if self.payment_difference_handling == 'reconcile':
             if self.early_payment_discount_mode:
                 epd_aml_values_list = []
@@ -737,7 +736,6 @@ class AccountPaymentRegister(models.TransientModel):
 
         payment_method_line = self.payment_method_line_id
 
-        # este es el que se llama sin group payments
         if batch_values['payment_type'] != payment_method_line.payment_type:
             payment_method_line = self.journal_id._get_available_payment_method_lines(batch_values['payment_type'])[:1]
 
