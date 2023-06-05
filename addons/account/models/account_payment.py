@@ -789,6 +789,7 @@ class AccountPayment(models.Model):
                     ))
 
                 if len(counterpart_lines) != 1:
+                    # import pdb; pdb.set_trace()
                     raise UserError(_(
                         "Journal Entry %s is not valid. In order to proceed, the journal items must "
                         "include one and only one receivable/payable account (with an exception of "
