@@ -36,8 +36,8 @@ class ResConfigSettings(models.TransientModel):
         'Twilio Account Auth Token',
         config_parameter='mail.twilio_account_token',
     )
-    primary_color = fields.Char(related='company_id.primary_color', string="Header Color", readonly=False)
-    secondary_color = fields.Char(related='company_id.secondary_color', string="Button Color", readonly=False)
+    email_primary_color = fields.Char(related='company_id.email_primary_color', readonly=False)
+    email_secondary_color = fields.Char(related='company_id.email_secondary_color', readonly=False)
 
     tenor_api_key = fields.Char(
         'Tenor API key',
