@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests.common import TransactionCase, users
 
 
@@ -235,3 +236,100 @@ class TestSaleProject(TransactionCase):
         self.project_global.sale_line_id = sale_order_line
         sale_order.with_context({'disable_cancel_warning': True}).action_cancel()
         self.assertFalse(self.project_global.sale_line_id, "The project should not be linked to the SOL anymore")
+
+    def test_links_with_sale_order_line(self):
+        """
+            Check that the subtasks are linked to the correct sale order line.
+        """
+        product_A, product_B, product_C = self.env['product.product'].create([
+            {
+                'name': 'product_A',
+                'lst_price': 100.0,
+                'detailed_type': 'service',
+                'service_tracking': 'task_in_project',
+            },
+            {
+                'name': 'product_B',
+                'lst_price': 100.0,
+                'detailed_type': 'service',
+                'service_tracking': 'task_in_project',
+            },
+            {
+                'name': 'product_C',
+                'lst_price': 100.0,
+                'detailed_type': 'service',
+                'service_tracking': 'task_in_project',
+            },
+        ])
+        sale_order_first, sale_order_second = self.env['sale.order'].create([
+            {
+                'partner_id': self.partner.id,
+                'order_line': [
+                    Command.create({'product_id': product_A.id}),
+                    Command.create({'product_id': product_B.id}),
+                ]
+            },
+            {
+                'partner_id': self.partner.id,
+                'order_line': [
+                    Command.create({'product_id': product_C.id}),
+                ]
+            }
+        ])
+        (sale_order_first + sale_order_second).action_confirm()
+
+        sale_order_line_A = sale_order_first.order_line.filtered(lambda sol: sol.product_id == product_A)
+        sale_order_line_B = sale_order_first.order_line - sale_order_line_A
+        sale_order_line_C = sale_order_second.order_line
+
+        project_first = sale_order_first.project_ids
+        project_second = sale_order_second.project_ids
+
+        task_A = sale_order_first.tasks_ids.filtered(lambda task: task.sale_line_id == sale_order_line_A)
+        task_B = sale_order_first.tasks_ids - task_A
+        task_C = sale_order_second.tasks_ids
+
+        # [CASE 1] Parent in the same project --> use parent's sale order line
+        task_A.write({
+            'child_ids': [
+                Command.create({'name': 'Sub A in first project', 'project_id': project_first.id}),
+            ]
+        })
+        task_B.write({
+            'child_ids': [
+                Command.create({'name': 'Sub B in first project', 'project_id': project_first.id}),
+            ]
+        })
+        task_C.write({
+            'child_ids': [
+                Command.create({'name': 'Sub C in second project', 'project_id': project_second.id}),
+            ]
+        })
+        self.assertEqual(task_A.child_ids.sale_line_id, sale_order_line_A)
+        self.assertEqual(task_B.child_ids.sale_line_id, sale_order_line_B)
+        self.assertEqual(task_C.child_ids.sale_line_id, sale_order_line_C)
+
+        # [CASE 2] Parent in an other project --> use parent's sale_order line
+        task_B.write({
+            'child_ids': [
+                Command.create({'name': 'Sub B in second project', 'project_id': project_second.id}),
+            ]
+        })
+        sub_B_second = task_B.child_ids.filtered(lambda sub: sub.name == 'Sub B in second project')
+        self.assertEqual(sub_B_second.sale_line_id, sale_order_line_B)
+
+        # [CASE 3] Without project --> no sale order line defined
+        task_B.write({
+            'child_ids': [
+                Command.create({'name': 'Sub B without project'}),
+            ]
+        })
+        sub_B_without = task_B.child_ids.filtered(lambda sub: sub.name == 'Sub B without project')
+        self.assertEqual(len(sub_B_without.sale_line_id), 0)
+
+        # [CASE 4] Without parent --> use sale order line of the project
+        task_D = self.env['project.task'].create({
+            'name': 'Task D',
+            'project_id': project_first.id,
+        })
+        self.assertEqual(task_D.sale_line_id, project_first.sale_line_id)
