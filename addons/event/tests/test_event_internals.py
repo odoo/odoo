@@ -8,7 +8,7 @@ from odoo import Command
 from odoo.addons.event.tests.common import EventCase
 from odoo import exceptions
 from odoo.fields import Datetime as FieldsDatetime
-from odoo.tests.common import users, Form
+from odoo.tests.common import users, Form, tagged
 from odoo.tools import mute_logger
 
 
@@ -55,6 +55,7 @@ class TestEventInternalsCommon(EventCase):
         })
 
 
+@tagged('event_event')
 class TestEventData(TestEventInternalsCommon):
 
     @users('user_eventmanager')
@@ -573,6 +574,7 @@ class TestEventData(TestEventInternalsCommon):
         self.env['event.registration'].create(new_draft_to_autoconfirm)
 
 
+@tagged('event_registration')
 class TestEventRegistrationData(TestEventInternalsCommon):
 
     @users('user_eventmanager')
@@ -580,6 +582,7 @@ class TestEventRegistrationData(TestEventInternalsCommon):
         """ Test registration computed fields about partner """
         test_email = '"Nibbler In Space" <nibbler@futurama.example.com>'
         test_phone = '0456001122'
+        test_phone_fmt = '+32456001122'
 
         event = self.env['event.event'].browse(self.event_0.ids)
         customer = self.env['res.partner'].browse(self.event_customer.id)
@@ -626,12 +629,12 @@ class TestEventRegistrationData(TestEventInternalsCommon):
         new_reg = event.registration_ids.sorted()[0]
         self.assertEqual(new_reg.name, 'Nibbler In Space')
         self.assertEqual(new_reg.email, False)
-        self.assertEqual(new_reg.phone, test_phone)
+        self.assertEqual(new_reg.phone, test_phone_fmt)
         new_reg.write({'partner_id': customer.id})
         self.assertEqual(new_reg.partner_id, customer)
         self.assertEqual(new_reg.name, 'Nibbler In Space')
         self.assertEqual(new_reg.email, customer.email)
-        self.assertEqual(new_reg.phone, test_phone)
+        self.assertEqual(new_reg.phone, test_phone_fmt)
 
     @users('user_eventmanager')
     def test_registration_partner_sync_company(self):
@@ -667,6 +670,123 @@ class TestEventRegistrationData(TestEventInternalsCommon):
         self.assertEqual(new_reg.phone, contact.phone)
 
 
+@tagged('event_registration', 'phone_number')
+class TestEventRegistrationPhone(EventCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.test_event_address = cls.env['res.partner'].create({
+            'city': 'Gandhinagar',
+            'country_id': cls.env.ref("base.in").id,
+            'name': 'Odoo In',
+            'zip': '382007',
+        })
+        cls.test_event = cls.env['event.event'].create({
+            'address_id': cls.test_event_address.id,
+            'company_id': cls.company_admin.id,
+            'date_begin': datetime(2023, 6, 5, 8, 0, 0),
+            'date_end': datetime(2023, 6, 8, 18, 0, 0),
+            'name': 'Test Phone Format',
+        })
+
+    @users('user_eventregistrationdesk')
+    def test_assert_initial_values(self):
+        customer = self.event_customer.with_env(self.env)
+        customer2 = self.event_customer2.with_env(self.env)
+        event = self.test_event.with_env(self.env)
+
+        self.assertFalse(customer.mobile)
+        self.assertEqual(customer.phone, '0485112233')
+        self.assertEqual(customer2.mobile, '0456654321')
+        self.assertEqual(customer2.phone, '0456987654')
+
+        self.assertEqual(event.company_id.country_id, self.env.ref("base.be"))
+        self.assertEqual(event.country_id, self.env.ref("base.in"))
+
+    @users('user_eventregistrationdesk')
+    def test_registration_form_phone(self):
+        """ Test onchange on phone / mobile, should try to format number """
+        event = self.test_event.with_user(self.env.user)
+
+        lead_form = Form(self.env['event.registration'])
+        lead_form.event_id = event
+        lead_form.mobile = '7200000011'
+        lead_form.phone = '7200000000'
+        self.assertEqual(lead_form.mobile, '+917200000011')
+        self.assertEqual(lead_form.phone, '+917200000000')
+
+    @users('user_eventregistrationdesk')
+    def test_registration_phone_format(self):
+        """ Test phone formatting: based on partner (BE numbers) or event
+        (IN numbers) or company (BE numbers). """
+        event = self.test_event.with_user(self.env.user)
+
+        # customer_id, mobile, phone -> based on partner or event country
+        sources = [
+            (self.event_customer.id, None, None),  # BE local on partner
+            (self.event_customer2.id, None, None),  # BE local on partner
+            (self.event_customer2.id, '0456001122', None),  # BE local + on partner
+            (False, '0456778899', '+32456778899'),  # BE local + BE global
+            (False, '7200000000', False),  # IN local
+            (False, False, '7200000011'),  # IN local
+            (False, '7200000000', '7200000011'),  # IN local
+            (False, '+917200000088', '+917200000099'),  # IN global
+        ]
+        # mobile, phone
+        expected = [
+            (False, '0485112233'),  # partner values, no format
+            ('0456654321', '0456987654'),  # partner values, no format
+            ('+32456001122', '0456987654'),  # BE on partner / partner value, no format
+            ('0456778899', '+32456778899'),  # IN on event -> cannot format BE
+            ('+917200000000', False),  # IN on event
+            (False, '+917200000011'),  # IN on event
+            ('+917200000000', '+917200000011'),  # IN on event
+            ('+917200000088', '+917200000099'),  # already formatted
+        ]
+        for (partner_id, mobile, phone), (exp_mobile, exp_phone) in zip(sources, expected):
+            with self.subTest(partner_id=partner_id, mobile=mobile, phone=phone):
+                create_vals = {
+                    'event_id': event.id,
+                    'partner_id': partner_id,
+                }
+                if mobile is not None:
+                    create_vals['mobile'] = mobile
+                if phone is not None:
+                    create_vals['phone'] = phone
+                reg = self.env['event.registration'].create(create_vals)
+                self.assertEqual(reg.mobile, exp_mobile)
+                self.assertEqual(reg.phone, exp_phone)
+
+        # no country on event -> based on partner or event company country
+        self.test_event.write({'address_id': False})
+        expected = [
+            (False, '0485112233'),  # partner values, no format
+            ('0456654321', '0456987654'),  # partner values, no format
+            ('+32456001122', '0456987654'),  # BE on partner / partner value, no format
+            ('+32456778899', '+32456778899'),  # BE on company
+            ('7200000000', False),  # BE on company -> cannot format IN
+            (False, '7200000011'),  # BE on company -> cannot format IN
+            ('7200000000', '7200000011'),  # BE on company -> cannot format IN
+            ('+917200000088', '+917200000099'),  # already formatted
+        ]
+        for (partner_id, mobile, phone), (exp_mobile, exp_phone) in zip(sources, expected):
+            with self.subTest(partner_id=partner_id, mobile=mobile, phone=phone):
+                create_vals = {
+                    'event_id': event.id,
+                    'partner_id': partner_id,
+                }
+                if mobile is not None:
+                    create_vals['mobile'] = mobile
+                if phone is not None:
+                    create_vals['phone'] = phone
+                reg = self.env['event.registration'].create(create_vals)
+                self.assertEqual(reg.mobile, exp_mobile)
+                self.assertEqual(reg.phone, exp_phone)
+
+
+@tagged('event_ticket')
 class TestEventTicketData(TestEventInternalsCommon):
 
     @freeze_time('2020-1-31 10:00:00')
@@ -829,6 +949,7 @@ class TestEventTicketData(TestEventInternalsCommon):
             reg_draft.write({'state': 'open'})
 
 
+@tagged('event_event')
 class TestEventTypeData(TestEventInternalsCommon):
 
     @users('user_eventmanager')
