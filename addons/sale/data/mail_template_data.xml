@@ -5,7 +5,7 @@
             <field name="name">Sales: Send Quotation</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="subject">{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and (ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ object.name or 'n/a' }})</field>
-            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
             <field name="description">Used by salespeople when they send quotations or proforma to prospects</field>
             <field name="body_html" type="html">
@@ -49,7 +49,7 @@
             <field name="name">Sales: Order Confirmation</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="subject">{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state == 'pending') and 'Pending Order' or 'Order' }} (Ref {{ object.name or 'n/a' }})</field>
-            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
             <field name="description">Sent to customers on order confirmation</field>
             <field name="body_html" type="html">
@@ -244,7 +244,7 @@
             <field name="name">Sales: Order Cancellation</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="subject">{{ object.company_id.name }} {{ object.type_name }} Cancelled (Ref {{ object.name or 'n/a' }})</field>
-            <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted) }}</field>
+            <field name="email_from">{{ (object.user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>
             <field name="description">Sent automatically to customers when you cancel an order</field>
             <field name="body_html" type="html">
