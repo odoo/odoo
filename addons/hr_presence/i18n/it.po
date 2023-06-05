@@ -6,14 +6,15 @@
 # Martin Trigaux, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
 # Luca Carlo, 2023
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:34+0000\n"
+"POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Luca Carlo, 2023\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,20 +26,20 @@ msgstr ""
 #: model:mail.template,body_html:hr_presence.mail_template_presence
 msgid ""
 "<div>\n"
-"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
-"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.<br/>\n"
-"                    Please, take appropriate measures in order to carry out this work absence.<br/>\n"
+"                    Dear <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"                    Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.<br>\n"
+"                    Please, take appropriate measures in order to carry out this work absence.<br>\n"
 "                    Do not hesitate to contact your manager or the human resource department.\n"
-"                    <br/>Best Regards,<br/><br/>\n"
+"                    <br>Best Regards,<br><br>\n"
 "                </div>\n"
 "            "
 msgstr ""
 "<div>\n"
-"                    Buongiorno <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br/><br/>\n"
-"                    A meno che non ci siamo sbagliati, sembra che tu non sia nel tuo ufficio e che non ci sia una richiesta di tempo libero da parte tua.<br/>\n"
-"                    Per favore, prendi le misure appropriate per svolgere questa assenza di lavoro.<br/>\n"
-"                    Non esitare a contattare il tuo manager o il dipartimento delle risorse umane.\n"
-"                    <br/>Distinti saluti<br/><br/>\n"
+"                    Gentile <t t-out=\"object.name or ''\">Abigail Peterson</t>,<br><br>\n"
+"                    a meno che non si tratti di un nostro errore, sembra che tu non sia in ufficio e che non ci siano richieste di ferie.<br>\n"
+"                    Per favore, adotta le misure necessarie per giustificare l'assenza.<br>\n"
+"                    Non esitare a contattare il tuo manager o il dipartimento risorse umane.\n"
+"                    <br>Cordiali saluti,<br><br>\n"
 "                </div>\n"
 "            "
 
@@ -128,7 +129,7 @@ msgstr "HR Presence: cron"
 #. module: hr_presence
 #: model:mail.template,name:hr_presence.mail_template_presence
 msgid "HR: Employee Absence email"
-msgstr ""
+msgstr "Risorse umane: e-mail assenza dipendente"
 
 #. module: hr_presence
 #: model:ir.model.fields,field_description:hr_presence.field_res_company__hr_presence_last_compute_date
@@ -191,6 +192,8 @@ msgid ""
 "Sent manually in presence module when an employee wasn't working despite not"
 " being off"
 msgstr ""
+"E-mail inviata manualmente al modulo presenze quando un dipendente non è a "
+"lavoro nonostante l'assenza di giorni di ferie"
 
 #. module: hr_presence
 #: model_terms:ir.ui.view,arch_db:hr_presence.hr_employee_view_kanban

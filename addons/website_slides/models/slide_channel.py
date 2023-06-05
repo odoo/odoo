@@ -10,7 +10,7 @@ import ast
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug, unslug
-from odoo.exceptions import AccessError
+from odoo.exceptions import AccessError, UserError
 from odoo.osv import expression
 from odoo.tools import is_html_empty
 
@@ -765,6 +765,10 @@ class Channel(models.Model):
 
     def _send_share_email(self, emails):
         """ Share channel through emails."""
+        courses_without_templates = self.filtered(lambda channel: not channel.share_channel_template_id)
+        if courses_without_templates:
+            raise UserError(_('Impossible to send emails. Select a "Channel Share Template" for courses %(course_names)s first',
+                                 course_names=', '.join(courses_without_templates.mapped('name'))))
         mail_ids = []
         for record in self:
             template = record.share_channel_template_id.with_context(

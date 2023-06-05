@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Abe Manyo, 2023\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
@@ -318,33 +318,33 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
 "        We are glad to inform you that your order has been shipped.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
 "            Your tracking reference is\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
+"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
 "                    </t>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
 "                </t>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
 "            </t>\n"
 "            </strong>\n"
 "        </t>\n"
-"        <br/><br/>\n"
-"        Please find your delivery order attached for more details.<br/><br/>\n"
+"        <br><br>\n"
+"        Please find your delivery order attached for more details.<br><br>\n"
 "        Thank you,\n"
 "        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -352,33 +352,33 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Halo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
-"        Dengan senang hati kami memberitahukan bahwa pesanan Anda telah dikirimkan.\n"
+"        Halo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br><br>\n"
+"        Dengan bangga kami memberitahu Anda bahwa pesanan Anda sedang dikirim.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
 "            Lacak pesanan Anda\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
-"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
+"                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"></t>\n"
 "                <t t-if=\"multiple_carrier_tracking\">\n"
 "                    <t t-foreach=\"multiple_carrier_tracking\" t-as=\"line\">\n"
-"                        <br/><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"/>\n"
+"                        <br><a t-att-href=\"line[1]\" target=\"_blank\" t-out=\"line[0] or ''\"></a>\n"
 "                    </t>\n"
 "                </t>\n"
 "                <t t-else=\"\">\n"
-"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                    <a t-attf-href=\"{{ object.carrier_tracking_url }}\" target=\"_blank\" t-out=\"object.carrier_tracking_ref or ''\"></a>.\n"
 "                </t>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
-"                <t t-out=\"object.carrier_tracking_ref or ''\"/>.\n"
+"                <t t-out=\"object.carrier_tracking_ref or ''\"></t>.\n"
 "            </t>\n"
 "            </strong>\n"
 "        </t>\n"
-"        <br/><br/>\n"
-"        Silakan cari pesanan pengiriman Anda yang terlampir untuk detail lebih lanjut.<br/><br/>\n"
+"        <br><br>\n"
+"        Silakan cari pesanan pengiriman Anda yang terlampir untuk melihat detail lebih lanjut.<br><br>\n"
 "        Terima kasih,\n"
 "        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1460,7 +1460,7 @@ msgstr "Periksa keberadaan kemasan tujuan pada baris pergerakan"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__move_line_exist
 msgid "Check the existence of pack operation on the picking"
-msgstr "Periksa keberadaan operasi pak pada pengambilan"
+msgstr "Periksa keberadaan operasi pak pada picking"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__return_location
@@ -1762,32 +1762,32 @@ msgstr "Hitung"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking
 msgid "Count Picking"
-msgstr "Hitung Pengambilan"
+msgstr "Count Picking"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_backorders
 msgid "Count Picking Backorders"
-msgstr "Hitung Backorder Pengambilan"
+msgstr "Backorder Count Picking"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_draft
 msgid "Count Picking Draft"
-msgstr "Hitung Rancangan Pengambilan"
+msgstr "Draft Count Picking"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_late
 msgid "Count Picking Late"
-msgstr "Hitung Pengambilan Terlambat"
+msgstr "Count Picking Terlambat"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_ready
 msgid "Count Picking Ready"
-msgstr "Hitung Pengambilan Siap"
+msgstr "Count Picking Siap"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__count_picking_waiting
 msgid "Count Picking Waiting"
-msgstr "Hitung Pengambilan yang Menunggu"
+msgstr "Count Picking yang Menunggu"
 
 #. module: stock
 #. odoo-javascript
@@ -2430,7 +2430,7 @@ msgstr "Deskripsi pada Order Pengiriman"
 #: model:ir.model.fields,field_description:stock.field_product_product__description_picking
 #: model:ir.model.fields,field_description:stock.field_product_template__description_picking
 msgid "Description on Picking"
-msgstr "Deskripsi pada Pengambilan"
+msgstr "Deskripsi pada Picking"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__description_pickingin
@@ -3412,9 +3412,8 @@ msgid ""
 "If the picking is unlocked you can edit initial demand (for a draft picking)"
 " or done quantities (for a done picking)."
 msgstr ""
-"Jika pengambilan dibuka, Anda dapat mengubah permintaan awal (untuk "
-"rancangan pengambilan) atau kuantitas sudah selesai (untuk pengambilan sudah"
-" selesai)."
+"Jika picking dibuka, Anda dapat mengubah permintaan awal (untuk draft "
+"picking) atau kuantitas sudah selesai (untuk picking yang selesai)."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__sn_duplicated
@@ -3450,9 +3449,9 @@ msgid ""
 " operations. If not, the picking lines will represent an aggregate of "
 "detailed stock operations."
 msgstr ""
-"Jika kotak ini dicentang, baris pengambilan akan menampilkan operasi stok "
-"detail. Jika tidak, baris pengambilan akan menampilkan kumpulan dari operasi"
-" stok detail."
+"Jika kotak ini dicentang, baris picking akan menampilkan operasi stok "
+"detail. Jika tidak, baris picking akan menampilkan kumpulan dari operasi "
+"stok detail."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move_line__picking_type_use_create_lots
@@ -3888,6 +3887,15 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_move__is_quantity_done_editable
 msgid "Is quantity done editable"
 msgstr "Apakah kuantitas sudah selesai dapat diubah"
+
+#. module: stock
+#. odoo-python
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
 
 #. module: stock
 #. odoo-python
@@ -4599,7 +4607,7 @@ msgstr "Kesalahan Pengiriman Pesan"
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn_msg
 #: model:ir.model.fields,field_description:stock.field_res_users__picking_warn_msg
 msgid "Message for Stock Picking"
-msgstr "Pesan untuk Pengambilan Stok"
+msgstr "Pesan untuk Stock Picking"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_ids
@@ -4629,7 +4637,6 @@ msgid "Minimum Stock Rules"
 msgstr "Aturan Stok Minimum"
 
 #. module: stock
-#: model:ir.model.fields,field_description:stock.field_report_stock_quantity__move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_assign_serial__move_id
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__move_ids
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking_line__move_id
@@ -5644,22 +5651,22 @@ msgstr "Tipe Pengambilan"
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__picking_id
 #: model_terms:ir.ui.view,arch_db:stock.view_move_search
 msgid "Picking"
-msgstr "Pengambilan"
+msgstr "Picking"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Picking Lists"
-msgstr "Daftar Pengambilan"
+msgstr "Daftar Pickingg"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_picking
 msgid "Picking Operations"
-msgstr "Operasi Pengambilan"
+msgstr "Operasi Picking"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_picking_type
 msgid "Picking Type"
-msgstr "Type Pengambilan"
+msgstr "Tipe Picking"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__picking_type_code_domain
@@ -5669,12 +5676,12 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "Picking list"
-msgstr "Daftar Pengambilan"
+msgstr "Daftar Picking"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Pickings already processed"
-msgstr "Pengambilan sudah diproses"
+msgstr "Picking sudah diproses"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -6589,7 +6596,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Remaining parts of picking partially processed"
-msgstr "Yang tersisa dari pengambilan diproses sebagian"
+msgstr "Yang tersisa dari picking yang diproses sebagian"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_removal
@@ -6842,7 +6849,7 @@ msgstr "Lokasi Retur"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Pengembalian Pengambilan"
+msgstr "Return Picking"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_line
@@ -6866,7 +6873,7 @@ msgstr "Retur dari %s"
 #: code:addons/stock/wizard/stock_picking_return.py:0
 #, python-format
 msgid "Returned Picking"
-msgstr "Pengembalian yang Di-retur"
+msgstr "Returned Picking"
 
 #. module: stock
 #. odoo-python
@@ -7250,7 +7257,7 @@ msgstr "Penomoran pengemasan"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Sequence picking"
-msgstr "Penomoran pengambilan"
+msgstr "Sequence picking"
 
 #. module: stock
 #. odoo-python
@@ -7391,7 +7398,7 @@ msgid ""
 "customer. Apply shipping connector from delivery methods."
 msgstr ""
 "Konektor pengiriman membolehkan Anda untuk menghitung ongkos kirim secara "
-"akurat, cetak label pengiriman dan meminta pengangkutan untuk mengambil di "
+"akurat, cetak label pengiriman dan meminta pengangkutan untuk picking di "
 "gudang dan mengirim ke pelanggan. Terapkan konektor pengiriman dari metode "
 "pengiriman."
 
@@ -7503,7 +7510,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Sign"
-msgstr ""
+msgstr "Sign"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_sign_delivery
@@ -7726,7 +7733,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn
 #: model:ir.model.fields,field_description:stock.field_res_users__picking_warn
 msgid "Stock Picking"
-msgstr "Pengambilan Stok"
+msgstr "Stock Picking"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__stock_quant_ids
@@ -8265,10 +8272,10 @@ msgid ""
 "routes put another location. If it is empty, it will check for the customer "
 "location on the partner. "
 msgstr ""
-"Ini adalah lokasi tujuan standar ketika Anda membuat sebuah pengambilan "
-"secara manual dengan tipe operasi ini. Tetapi tetap dapat diubah atau rute "
-"otomatis memasukkan lokasi lain. Jika kosong, lokasi pelanggan akan "
-"diperiksa pada rekanan."
+"Ini adalah lokasi tujuan standar ketika Anda membuat picking secara manual "
+"dengan tipe operasi ini. Tetapi tetap dapat diubah atau rute otomatis "
+"memasukkan lokasi lain. Jika kosong, lokasi pemasok akan diperiksa pada "
+"rekanan."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking_type__default_location_src_id
@@ -8278,10 +8285,10 @@ msgid ""
 "put another location. If it is empty, it will check for the supplier "
 "location on the partner. "
 msgstr ""
-"Ini adalah lokasi asal standar ketika Anda membuat sebuah pengambilan secara"
-" manual dengan tipe operasi ini. Tetapi tetap dapat diubah atau rute "
-"otomatis memasukkan lokasi lain. Jika kosong, lokasi pemasok akan diperiksa "
-"pada rekanan."
+"Ini adalah lokasi asal standar ketika Anda membuat picking secara manual "
+"dengan tipe operasi ini. Tetapi tetap dapat diubah atau rute otomatis "
+"memasukkan lokasi lain. Jika kosong, lokasi pemasok akan diperiksa pada "
+"rekanan."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -8380,9 +8387,9 @@ msgid ""
 "returned picking in order to avoid logistic rules to be applied again (which"
 " would create duplicated operations)"
 msgstr ""
-"Pengambilan ini tampaknya terangkai dengan operasi lain. Nantinya, jika Anda"
-" menerima barang yang Anda kembalikan sekarang, pastikan untuk "
-"<b>membalikkan</b> pengambilan retur untuk menghindari aturan logistik yang "
+"Picking ini tampaknya terkait dengan operasi lain. Nantinya, jika Anda "
+"menerima barang yang Anda kembalikan sekarang, pastikan untuk "
+"<b>membalikkan</b> returned picking untuk menghindari aturan logistik yang "
 "diterapkan ulang (yang akan membuat operasi menjadi berganda)"
 
 #. module: stock
@@ -8410,6 +8417,7 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#. odoo-python
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid ""
@@ -9237,7 +9245,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_warnings_form
 msgid "Warning on the Picking"
-msgstr "Peringatan pada Pengambilan"
+msgstr "Peringatan pada Picking"
 
 #. module: stock
 #. odoo-python
@@ -9365,9 +9373,9 @@ msgid ""
 "When the picking is not done this allows changing the initial demand. When "
 "the picking is done this allows changing the done quantities."
 msgstr ""
-"Ketika pengambilan belum selesai, ini memungkinkan Anda untuk mengubah "
-"permintaan awal. Ketika pengambilan sudah selesai, ini memungkinkan Anda "
-"untuk mengubah kuantitas yang sudah selesai."
+"Ketika picking belum selesai, ini memungkinkan Anda untuk mengubah "
+"permintaan awal. Ketika picking sudah selesai, ini memungkinkan Anda untuk "
+"mengubah kuantitas yang sudah selesai."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_warehouse_orderpoint__product_min_qty
@@ -9426,7 +9434,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__additional
 msgid "Whether the move was added after the picking's confirmation"
-msgstr "Apakah pergerakan ditambahkan setelah konfirmasi pengambilan"
+msgstr "Apakah pergerakan ditambahkan setelah konfirmasi picking"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__width
@@ -9536,8 +9544,8 @@ msgid ""
 "You can not delete product moves if the picking is done. You can only "
 "correct the done quantities."
 msgstr ""
-"Anda tidak dapat menghapus pergerakan produk jika pengambilan telah selesai."
-" Anda hanya dapat membetulkan kuantitas telah selesai."
+"Anda tidak dapat menghapus pergerakan produk jika picking telah selesai. "
+"Anda hanya dapat membetulkan kuantitas telah selesai."
 
 #. module: stock
 #. odoo-python
@@ -10076,12 +10084,4 @@ msgstr ""
 #: model:mail.template,subject:stock.mail_template_data_delivery_confirmation
 msgid ""
 "{{ object.company_id.name }} Delivery Order (Ref {{ object.name or 'n/a' }})"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allow to import reserved quantity, you have to use the quantity "
-"directly."
 msgstr ""

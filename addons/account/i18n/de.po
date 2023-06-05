@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Leon Grill <leg@odoo.com>, 2022
-# Jinjiu Liu, 2022
 # Johannes Croe <jcr@odoo.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # Felix Hoßfeld <felix.hossfeld@thoughtgang.de>, 2022
@@ -15,18 +14,18 @@
 # Thomas, 2023
 # Jordan D. (Joda), 2023
 # Chris Egal <sodaswed@web.de>, 2023
-# Larissa Manderfeld, 2023
 # Martin Trigaux, 2023
 # Stefan Reisich <nafex@gmx.net>, 2023
 # Janik Vonrotz <login@janikvonrotz.ch>, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Janik Vonrotz <login@janikvonrotz.ch>, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -80,13 +79,6 @@ msgstr ""
 #, python-format
 msgid " (<b>%(amount)s</b> if paid before <b>%(date)s</b>)"
 msgstr " (<b>%(amount)s</b> wenn Bezahlung vor <b>%(date)s</b>) erfolgt"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr "Das %(lock_type)s Sperrdatum ist festgelegt am %(lock_date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -146,7 +138,7 @@ msgstr "%d Buchungen"
 #: code:addons/account/models/account_account_tag.py:0
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #. module: account
 #. odoo-python
@@ -225,6 +217,14 @@ msgstr "\\: %s Ist kein gespeichertes Feld"
 #, python-format
 msgid "%s.copy"
 msgstr "%s.kopie"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "(Discount)"
+msgstr "(Rabatt)"
 
 #. module: account
 #. odoo-python
@@ -373,6 +373,8 @@ msgid ""
 "<b>%(count)s#</b> Installment of <b>%(amount)s</b> on <b style='color: "
 "#704A66;'>%(date)s</b>"
 msgstr ""
+"<b>%(count)s#</b> Teilzahlung in Höhe von <b>%(amount)s</b> am <b "
+"style='color: #704A66;'>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -391,7 +393,7 @@ msgid ""
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Here is your\n"
 "        <t t-if=\"object.name\">\n"
 "            credit note <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
@@ -404,11 +406,11 @@ msgid ""
 "        </t>\n"
 "        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -423,8 +425,8 @@ msgstr ""
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
-"        <br/><br/>\n"
-"        Hier ist Ihre\n"
+"        <br><br>\n"
+"        hier ist Ihre\n"
 "        <t t-if=\"object.name\">\n"
 "           Gutschrift <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
 "        </t>\n"
@@ -434,13 +436,13 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (mit der Referenz: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        über den Betrag von <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">EUR 143.750,00</span>\n"
+"        über den Betrag von <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">143.750,00 $</span>\n"
 "       von <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-"        <br/><br/>\n"
-"        Für Rückfragen stehen wir gerne zur Verfügung.\n"
+"        <br><br>\n"
+"        Bei Rückfragen stehen wir gerne zur Verfügung.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -458,7 +460,7 @@ msgid ""
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Here is your\n"
 "        <t t-if=\"object.name\">\n"
 "            invoice <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
@@ -477,15 +479,15 @@ msgid ""
 "        <t t-else=\"\">\n"
 "            Please remit payment at your earliest convenience.\n"
 "            <t t-if=\"object.payment_reference\">\n"
-"                <br/><br/>\n"
+"                <br><br>\n"
 "                Please use the following communication for your payment: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
 "            </t>\n"
 "        </t>\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -500,8 +502,8 @@ msgstr ""
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
-"        <br/><br/>\n"
-"       Hier ist Ihre\n"
+"        <br><br>\n"
+"       hier ist Ihre\n"
 "        <t t-if=\"object.name\">\n"
 "            Rechnung <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
 "        </t>\n"
@@ -511,23 +513,23 @@ msgstr ""
 "        <t t-if=\"object.invoice_origin\">\n"
 "            (Referenz: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
 "        </t>\n"
-"        über den Betrag von <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">EUR 143.750,00</span>\n"
+"        über den Betrag von <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">143.750,00 $</span>\n"
 "       von <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
 "        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
-"            Die Rechnung wurde bereits beglichen.\n"
+"            Diese Rechnung wurde bereits beglichen.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            Bitte überweisen Sie den Betrag so bald wie möglich.\n"
 "            <t t-if=\"object.payment_reference\">\n"
-"                <br/><br/>\n"
+"                <br><br>\n"
 "                Bitte verwenden Sie bei der Zahlung folgende Referenz: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
 "            </t>\n"
 "        </t>\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Kommen Sie gerne auf uns zu, falls Sie Fragen haben.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -538,34 +540,34 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
 "        Thank you for your payment.\n"
 "        Here is your payment receipt <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> amounting\n"
 "        to <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Best regards,\n"
 "        <t t-if=\"not is_html_empty(user.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br><br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hallo <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
-"        Vielen Dank für Ihre Zahlung.\n"
+"        Hallo <t t-out=\"object.partner_id.name or ''\">Azure Interior</t>,<br><br>\n"
+"        vielen Dank für Ihre Zahlung.\n"
 "        Hier ist Ihr Zahlungsbeleg <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> über die Zahlung\n"
-"        von <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">EUR 10.00</span> von <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-"        <br/><br/>\n"
-"        Zogern Sie nicht uns zu kontaktieren, sollten Sie hierzu Fragen haben.\n"
-"        <br/><br/>\n"
+"        von <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">10,00 $</span> von <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br><br>\n"
+"        Zögern Sie nicht uns zu kontaktieren, sollten Sie hierzu Fragen haben.\n"
+"        <br><br>\n"
 "        Viele Grüße\n"
 "        <t t-if=\"not is_html_empty(user.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br><br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
@@ -1031,11 +1033,6 @@ msgstr "<span role=\"separator\">Ansicht</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "<span title=\"Balance in General Ledger\">Balance in GL</span>"
-msgstr "<span title=\"Balance in General Ledger\">Saldo im Hauptbuch</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Latest Statement</span>"
 msgstr "<span title=\"Letzter Bankauszug\">Letzter Bankauszug</span>"
 
@@ -1162,6 +1159,11 @@ msgid "<span>Reporting</span>"
 msgstr "<span>Berichte</span>"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "<span>Running Balance</span>"
+msgstr "<span>Laufender Saldo</span>"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
 msgid "<span>Tax 0%</span>"
 msgstr "<span>Steuer 0%</span>"
@@ -1277,7 +1279,7 @@ msgstr "<strong>Lieferadresse:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Source:</strong>"
-msgstr "<strong>Quelle:</strong>"
+msgstr "<strong>Referenz:</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
@@ -1465,6 +1467,7 @@ msgstr "Eine zweite Zahlung wird automatisch im Journal erstellt."
 #, python-format
 msgid "A statement should only contain lines from the same journal."
 msgstr ""
+"Ein Kontoauszug sollte nur Buchungszeilen aus demselben Journal enthalten."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -2718,6 +2721,12 @@ msgstr "Kostenstellenmodel"
 #: model:ir.ui.menu,name:account.menu_analytic__distribution_model
 msgid "Analytic Distribution Models"
 msgstr "Kostenstellenmodelle"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution_search
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution_search
+msgid "Analytic Distribution Search"
+msgstr "Suche nach Kostenstellenverteilung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
@@ -4441,7 +4450,7 @@ msgstr "Gegenbuchungen"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Countries for which the company has a VAT number"
-msgstr ""
+msgstr "Länder, für die das Unternehmen eine MwSt.-Nummer hat"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -4988,7 +4997,7 @@ msgstr "Kurzfristige Verbindlichkeiten"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__current_statement_balance
 msgid "Current Statement Balance"
-msgstr ""
+msgstr "Aktuelles Kontoauszugssaldo"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity_unaffected
@@ -5930,7 +5939,7 @@ msgstr "Herunterladen"
 #: code:addons/account/static/src/components/settings_form_view/res_config_dev_tool.xml:0
 #, python-format
 msgid "Download XSD files (XML validation)"
-msgstr ""
+msgstr "XSD-Dateien herunterladen (XML-Validierung)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__property_advance_tax_payment_account_id
@@ -6847,7 +6856,7 @@ msgstr "Ausländische Steuer-ID"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Foreign VAT countries"
-msgstr ""
+msgstr "Ausländische MwSt.-Länder"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -7152,7 +7161,7 @@ msgstr "Hat Sequenzlöcher"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_statement_lines
 msgid "Has Statement Lines"
-msgstr ""
+msgstr "Hat Auszugszeilen"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
@@ -8996,7 +9005,7 @@ msgstr "Letzte Rechnungen & Zahlungen am Datum"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sale_activity_user_id
 msgid "Leave empty to assign the Salesperson of the invoice."
-msgstr "Leer lassen, um den Verkäufer der Rechnung zuzuordnen."
+msgstr "Leer lassen, um den Vertriebsmitarbeiter der Rechnung zuzuordnen."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -9740,7 +9749,7 @@ msgstr "Nein"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "No Bank Matching"
-msgstr ""
+msgstr "Keine Bankabstimmung"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
@@ -9789,6 +9798,8 @@ msgid ""
 "No original purchase document could be found for any of the selected "
 "purchase documents."
 msgstr ""
+"Zu keiner der ausgewählten Einkaufsdokumente konnten "
+"Originaleinkaufsdokumente gefunden werden."
 
 #. module: account
 #. odoo-python
@@ -10220,6 +10231,8 @@ msgstr "Nur Rechnungen konnten gedruckt werden."
 msgid ""
 "Only one payment will be created by partner (bank), instead of one per bill."
 msgstr ""
+"Es wird nur eine Zahlung pro Partner (Bank) erstellt, statt einer pro "
+"Rechnung."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
@@ -11116,8 +11129,12 @@ msgid ""
 "Fiscal Country)Taxes can only be updated if they are in the company's fiscal"
 " country (%s) or the localization's country (%s)."
 msgstr ""
+"Bitte prüfen Sie das Steuerland des Unternehmen %s. (Einstellungen > "
+"Buchhaltung > Steuerland) Steuern können nur aktualisiert werden, wenn sie "
+"im Steuerland des Unternehmen (%s) oder im Land der Lokalisierung (%s) sind."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -12282,7 +12299,7 @@ msgstr "Umsatzsteuer"
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 #: model_terms:ir.ui.view,arch_db:account.view_invoice_tree
 msgid "Salesperson"
-msgstr "Verkäufer"
+msgstr "Vertriebsmitarbeiter"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__match_same_currency
@@ -14744,6 +14761,7 @@ msgstr "Der Restbetrag einer Buchungszeile, in Hauswährung angegeben."
 #, python-format
 msgid "The running balance (%s) doesn't match the specified ending balance."
 msgstr ""
+"Der laufende Saldo (%s) stimmt nicht mit dem angegebenen Endsaldo überein,"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -14856,6 +14874,8 @@ msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
 msgstr ""
+"Der Anfangssaldo stimmt nicht mit dem Endsaldo des vorherigen Auszugs "
+"überein, oder es fehlt ein früherer Auszug."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -15720,6 +15740,9 @@ msgid ""
 "Unable to create a statement due to missing transactions. You may want to "
 "reorder the transactions before proceeding."
 msgstr ""
+"Die Erstellung eines Kontoauszugs ist aufgrund fehlender Transaktionen nicht"
+" möglich. Möglicherweise möchten Sie die Transaktionen neu anordnen, bevor "
+"Sie fortfahren."
 
 #. module: account
 #. odoo-python
@@ -16239,6 +16262,12 @@ msgid "Warning for %s"
 msgstr "Warnung für %s"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Warning for Cash Rounding Method: %s"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "Warning on the Invoice"
 msgstr "Warnung zu Rechnung"
@@ -16502,7 +16531,7 @@ msgstr ""
 #: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid "You can only print the original document for purchase documents."
-msgstr ""
+msgstr "Sie können das Originaldokument nur für Einkaufsdokumente drucken."
 
 #. module: account
 #. odoo-python
@@ -16872,6 +16901,9 @@ msgid ""
 "The following entries are already hashed:\n"
 "%s"
 msgstr ""
+"Sie können die folgenden Felder nicht bearbeiten: %s.\n"
+"Die folgenden Datensätze wurden bereits gehasht.\n"
+"%s"
 
 #. module: account
 #. odoo-python
@@ -17166,6 +17198,12 @@ msgstr "Sie haben folgende Dokumententypen gleichzeitig ausgewählt:"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You must specify the Profit Account (company dependent)"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."

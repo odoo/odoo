@@ -18,14 +18,15 @@
 # Emily Jia <eji@odoo.com>, 2023
 # 稀饭~~ <wangwhai@qq.com>, 2023
 # Ryan <ouyang.em@gmail.com>, 2023
+# Yazi Tian, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ryan <ouyang.em@gmail.com>, 2023\n"
+"Last-Translator: Yazi Tian, 2023\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -81,13 +82,6 @@ msgstr ""
 #, python-format
 msgid " (<b>%(amount)s</b> if paid before <b>%(date)s</b>)"
 msgstr " (<b>%(amount)s</b>预付款<b>%(date)s</b>)"
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr " %(lock_type)s 锁定日期设置为 %(lock_date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -226,6 +220,14 @@ msgstr "%s不是存储的字段"
 #, python-format
 msgid "%s.copy"
 msgstr "%s.复制"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "(Discount)"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -387,7 +389,7 @@ msgid ""
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Here is your\n"
 "        <t t-if=\"object.name\">\n"
 "            credit note <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
@@ -400,47 +402,16 @@ msgid ""
 "        </t>\n"
 "        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-" <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-" 亲爱的\n"
-" <t t-if=\"object.partner_id.parent_id\">\n"
-" <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object .partner_id.parent_id.name or ''\">Azure 内部</t>)，\n"
-" </t>\n"
-" <t t-else=\"\">\n"
-" <t t-out=\"object .partner_id.name or ''\">Brandon Freeman</t>，\n"
-" </t>\n"
-" <br/><br/>\n"
-" 这是您的\n"
-" <t t-if=\"object.name\">\n"
-" 贷方通知单<span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
-" </t>\n"
-" <t t-else=\"\">\n"
-" 贷方票据\n"
-" </t>\n"
-" <t t-if=\"object.invoice_origin\">\n"
-"（参考：<t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
-" </t>\n"
-" <span style=\"font-weight:bold;\" t-out= \"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
-" from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-" <br/><br/>\n"
-"如果您有任何问题，请随时与我们联系。\n"
-" <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-" <br/><br/>\n"
-" <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin </t>\n"
-" </t>\n"
-" </p>\n"
-"</div>\n"
-"             "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -454,7 +425,7 @@ msgid ""
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Here is your\n"
 "        <t t-if=\"object.name\">\n"
 "            invoice <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
@@ -473,98 +444,41 @@ msgid ""
 "        <t t-else=\"\">\n"
 "            Please remit payment at your earliest convenience.\n"
 "            <t t-if=\"object.payment_reference\">\n"
-"                <br/><br/>\n"
+"                <br><br>\n"
 "                Please use the following communication for your payment: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
 "            </t>\n"
 "        </t>\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 "            "
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-" <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-" 亲爱的\n"
-" <t t-if=\"object.partner_id.parent_id\">\n"
-" <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or '' \">Azure 内部</t>)，\n"
-" </t>\n"
-" <t t-else=\"\">\n"
-" <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>，\n"
-" </t>\n"
-" <br/><br/>\n"
-" 这是您的\n"
-" <t t-if=\"object.name\">\n"
-" 结算 <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
-" </t>\n"
-" <t t-else=\"\">\n"
-" invoice\n"
-" </t>\n"
-" <t t-if=\"object.invoice_origin\">\n"
-"（参考：<t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
-" </t>\n"
-" <span style=\"font-weight:bold;\" t-out=\" format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
-" 来自 <t t-out=\"object.company_id.name or ''\">YourCompany</t>。 \n"
-" <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
-" 此结算已付款。\n"
-" < /t>\n"
-" <t t-else=\"\">\n"
-" 请尽早汇款。\n"
-" <t t-if=\"object.payment_reference\">\n"
-" <br/><br />\n"
-" 请使用以下通讯方式进行付款：<span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005< /span>。\n"
-" </t>\n"
-" </t>\n"
-" <br/><br/>\n"
-"如果您有任何问题，请随时与我们联系。\n"
-" <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-" <br/><br/>\n"
-" <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>米切尔管理员</t>\n"
-" </t>\n"
-" </p>\n"
-"</div>\n"
-"           "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
 "        Thank you for your payment.\n"
 "        Here is your payment receipt <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> amounting\n"
 "        to <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Best regards,\n"
 "        <t t-if=\"not is_html_empty(user.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br><br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-" <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-" 亲爱的<t t-out =\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
-" 感谢您的支付。\n"
-" 这是您的支付收据 <span style=\"font -weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> \n"
-" 到 <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> from <t t- out=\"object.company_id.name or ''\">YourCompany</t>。\n"
-" <br/><br/>\n"
-" 如果您有任何问题，请随时与我们联系。\n"
-" <br/ ><br/>\n"
-" 最好的问候，\n"
-" <t t-if=\"not is_html_empty(user.signature)\">\n"
-" <br/><br/>\n"
-" <t t-out=\" user.signature or ''\">--<br/>Mitchell 管理员</t>\n"
-" </t>\n"
-" </p>\n"
-"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -1020,11 +934,6 @@ msgstr "<span role=\"separator\">查看</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "<span title=\"Balance in General Ledger\">Balance in GL</span>"
-msgstr "<span title=\"Balance in General Ledger\">总账中的余额</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Latest Statement</span>"
 msgstr "<span title=\"Latest Statement\">最新对账单</span>"
 
@@ -1147,6 +1056,11 @@ msgstr "<span>编号</span>"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
 msgstr "<span>报告</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "<span>Running Balance</span>"
+msgstr "目前余额"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -2642,6 +2556,12 @@ msgstr "分析分配模型"
 #: model:ir.ui.menu,name:account.menu_analytic__distribution_model
 msgid "Analytic Distribution Models"
 msgstr "分析分配模型"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution_search
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution_search
+msgid "Analytic Distribution Search"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
@@ -10753,6 +10673,7 @@ msgid ""
 msgstr "请检查公司 %s 的财务国家。(设置 > 会计 > 财务国家) 只有在公司的财务国家 (%s) 或本地化国家 (%s) 中的税收才能更新。"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -15551,6 +15472,12 @@ msgid "Warning for %s"
 msgstr "警告 %s"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Warning for Cash Rounding Method: %s"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "Warning on the Invoice"
 msgstr "结算单警告"
@@ -16335,6 +16262,12 @@ msgstr "您同时选择了以下文档类型："
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You must specify the Profit Account (company dependent)"
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."

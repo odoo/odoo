@@ -268,6 +268,11 @@ class AdyenController(http.Controller):
                 tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
                     'adyen', notification_data
                 )
+            except ValidationError:
+                # Warn rather than log the traceback to avoid noise when a POS payment notification
+                # is received and the corresponding `payment.transaction` record is not found.
+                _logger.warning("unable to find the transaction; skipping to acknowledge")
+            else:
                 self._verify_notification_signature(notification_data, tx_sudo)
 
                 # Check whether the event of the notification succeeded and reshape the notification
@@ -282,11 +287,13 @@ class AdyenController(http.Controller):
                     notification_data['resultCode'] = 'Authorised' if success else 'Error'
                 else:
                     continue  # Don't handle unsupported event codes and failed events
-
-                # Handle the notification data as if they were feedback of a S2S payment request
-                tx_sudo._handle_notification_data('adyen', notification_data)
-            except ValidationError:  # Acknowledge the notification to avoid getting spammed
-                _logger.exception("unable to handle the notification data; skipping to acknowledge")
+                try:
+                    # Handle the notification data as if they were feedback of a S2S payment request
+                    tx_sudo._handle_notification_data('adyen', notification_data)
+                except ValidationError:  # Acknowledge the notification to avoid getting spammed
+                    _logger.exception(
+                        "unable to handle the notification data;skipping to acknowledge"
+                    )
 
         return '[accepted]'  # Acknowledge the notification
 

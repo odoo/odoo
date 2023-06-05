@@ -61,4 +61,17 @@ odoo.define('pos_sale.tour', function (require) {
     ReceiptScreen.check.isShown();
 
     Tour.register('PosSettleOrder2', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.confirmOpeningPopup();
+    ProductScreen.do.clickQuotationButton();
+    ProductScreen.do.selectFirstOrder();
+    ProductScreen.check.totalAmountIs(40);
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.do.clickPaymentMethod('Bank');
+    PaymentScreen.do.clickValidate();
+    Chrome.do.clickTicketButton();
+
+    Tour.register('PosSettleOrderRealTime', { test: true, url: '/pos/ui' }, getSteps());
 });

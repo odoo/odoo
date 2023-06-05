@@ -3045,10 +3045,20 @@ class BaseModel(metaclass=MetaModel):
                 lang: translation if isinstance(translation, str) else None
                 for lang, translation in translations.items()
             }
+            if not translations:
+                return False
+
+            translation_fallback = translations['en_US'] if translations.get('en_US') is not None \
+                else translations[self.env.lang] if translations.get(self.env.lang) is not None \
+                else next((v for v in translations.values() if v is not None), None)
             self.invalidate_recordset([field_name])
             self._cr.execute(f'''
-                UPDATE {self._table} SET {field_name} = jsonb_strip_nulls({field_name} || %s) WHERE id = %s
-            ''', (Json(translations), self.id))
+                UPDATE {self._table}
+                SET {field_name} = NULLIF(
+                    jsonb_strip_nulls(%s || COALESCE("{field_name}", '{{}}'::jsonb) || %s),
+                    '{{}}'::jsonb)
+                WHERE id = %s
+            ''', (Json({'en_US': translation_fallback}), Json(translations), self.id))
             self.modified([field_name])
         else:
             # Note:

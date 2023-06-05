@@ -1,6 +1,16 @@
 /** @odoo-module **/
 
-import { dragAndDrop, getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
+import {
+    drag,
+    dragAndDrop,
+    getFixture,
+    makeDeferred,
+    mount,
+    nextTick,
+    patchWithCleanup,
+    triggerHotkey
+} from "@web/../tests/helpers/utils";
+import { browser } from "@web/core/browser/browser";
 import { useSortable } from "@web/core/utils/sortable";
 
 import { Component, reactive, useRef, useState, xml } from "@odoo/owl";
@@ -196,6 +206,119 @@ QUnit.module("UI", ({ beforeEach }) => {
         assert.containsN(target, ".list", 3);
         assert.containsN(target, ".item", 9);
         assert.verifySteps(["start", "groupenter", "stop", "drop"]);
+    });
+
+    QUnit.test("Sorting in groups with distinct per-axis scrolling", async (assert) => {
+        const nextAnimationFrame = async (timeDelta) => {
+            timeStamp += timeDelta;
+            animationFrameDef.resolve();
+            animationFrameDef = makeDeferred();
+            await Promise.resolve();
+        };
+
+        let animationFrameDef = makeDeferred();
+        let timeStamp = 0;
+        let handlers = new Set();
+
+        patchWithCleanup(browser, {
+            async requestAnimationFrame(handler) {
+                await animationFrameDef;
+                // Prevent setRecurringAnimationFrame from being recursive
+                // for better test control (only the first iteration/movement
+                // is needed to check that the scrolling works).
+                if (!handlers.has(handler)) {
+                    handler(timeStamp);
+                    handlers.add(handler);
+                }
+            },
+            performance: { now: () => timeStamp },
+        });
+
+        class List extends Component {
+            setup() {
+                useSortable({
+                    ref: useRef("root"),
+                    elements: ".item",
+                    groups: ".list",
+                    connectGroups: true,
+                    edgeScrolling: { speed: 16, threshold: 25 },
+                });
+            }
+        }
+
+        List.template = xml`
+            <div class="scroll_parent_y" style="max-width: 150px; max-height: 200px; overflow-y: scroll; overflow-x: hidden;">
+                <div class="spacer_before" style="min-height: 50px;"></div>
+                <div class="spacer_horizontal" style="min-height: 50px;"></div>
+                <div t-ref="root" class="root d-flex align-items-end" style="overflow-x: scroll;">
+                    <div class="d-flex">
+                        <div style="padding-left: 20px;"
+                            t-foreach="[1, 2, 3]" t-as="c" t-key="c" t-attf-class="list m-0 list{{ c }}">
+                            <div style="min-width: 50px; min-height: 50px; padding-top: 20px;"
+                                t-foreach="[1, 2, 3]" t-as="l" t-key="l" t-esc="'item' + l + '' + c" t-attf-class="item item{{ l + '' + c }}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="spacer_after" style="min-height: 150px;"></div>
+            </div>
+        `;
+        await mount(List, target);
+
+        assert.containsN(target, ".list", 3);
+        assert.containsN(target, ".item", 9);
+
+        const scrollParentX = target.querySelector(".root");
+        const scrollParentY = target.querySelector(".scroll_parent_y");
+        const assertScrolling = (top, left) => {
+            assert.strictEqual(scrollParentY.scrollTop, top);
+            assert.strictEqual(scrollParentX.scrollLeft, left);
+        }
+        const cancelDrag = async () => {
+            triggerHotkey("Escape");
+            await nextTick();
+            scrollParentY.scrollTop = 0;
+            scrollParentX.scrollLeft = 0;
+            await nextTick();
+            assert.containsNone(target, ".o_dragged");
+        }
+        assert.containsNone(target, ".o_dragged");
+
+        // Negative horizontal scrolling.
+        target.querySelector(".spacer_horizontal").scrollIntoView();
+        scrollParentX.scrollLeft = 16;
+        await nextTick();
+        assertScrolling(50, 16);
+        await drag(".item12", ".item11", "left");
+        await nextAnimationFrame(16);
+        assertScrolling(50, 0);
+        await cancelDrag();
+
+        // Positive horizontal scrolling.
+        target.querySelector(".spacer_horizontal").scrollIntoView();
+        await nextTick();
+        assertScrolling(50, 0);
+        await drag(".item11", ".item12", "right");
+        await nextAnimationFrame(16);
+        assertScrolling(50, 16);
+        await cancelDrag();
+
+        // Negative vertical scrolling.
+        target.querySelector(".root").scrollIntoView();
+        await nextTick();
+        assertScrolling(100, 0);
+        await drag(".item11", ".item11", "top");
+        await nextAnimationFrame(16);
+        assertScrolling(84, 0);
+        await cancelDrag();
+
+        // Positive vertical scrolling.
+        target.querySelector(".spacer_before").scrollIntoView();
+        await nextTick();
+        assertScrolling(0, 0);
+        await drag(".item21", ".item21", "bottom");
+        await nextAnimationFrame(16);
+        assertScrolling(16, 0);
+        await cancelDrag();
     });
 
     QUnit.test("Dynamically disable sortable feature", async (assert) => {

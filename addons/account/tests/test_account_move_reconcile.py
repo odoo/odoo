@@ -4292,3 +4292,42 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             }
         ]
         self.assertRecordValues(caba_move.line_ids, expected_values)
+
+    def test_cash_basis_full_refund(self):
+        """ Ensure the caba entry and the exchange difference journal entry for caba are not created in case of full
+        refund.
+        """
+        self.env.company.tax_exigibility = True
+
+        tax = self.env['account.tax'].create({
+            'name': 'cash basis 20%',
+            'type_tax_use': 'purchase',
+            'amount': 20,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': self.cash_basis_transfer_account.id,
+        })
+
+        invoice = self.init_invoice('out_invoice', post=True, amounts=[1000.0], taxes=tax)
+
+        # Reverse completely the invoice.
+        credit_note_wizard = self.env['account.move.reversal']\
+            .with_context({'active_ids': invoice.ids, 'active_model': 'account.move'})\
+            .create({
+                'refund_method': 'cancel',
+                'reason': 'test_cash_basis_full_refund',
+                'journal_id': invoice.journal_id.id,
+        })
+        action_values = credit_note_wizard.reverse_moves()
+        self.assertRecordValues(invoice, [{'payment_state': 'reversed'}])
+
+        # Check no CABA move has been created.
+        cash_basis_moves = self.env['account.move']\
+            .search([('tax_cash_basis_origin_move_id', 'in', (invoice.id, action_values['res_id']))])
+        self.assertFalse(cash_basis_moves)
+
+        # No exchange journal entry created for CABA.
+        caba_transfer_amls = self.env['account.move.line'].search([
+            ('account_id', '=', self.cash_basis_transfer_account.id),
+            ('move_id', 'not in', (invoice.id, action_values['res_id'])),
+        ])
+        self.assertFalse(caba_transfer_amls.move_id)

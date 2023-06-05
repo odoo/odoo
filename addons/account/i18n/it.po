@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
@@ -68,13 +68,6 @@ msgstr ""
 #, python-format
 msgid " (<b>%(amount)s</b> if paid before <b>%(date)s</b>)"
 msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_move.py:0
-#, python-format
-msgid " The %(lock_type)s lock date is set on %(lock_date)s."
-msgstr " La data di blocco %(lock_type)s è impostata su %(lock_date)s."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -134,7 +127,7 @@ msgstr "%d movimenti"
 #: code:addons/account/models/account_account_tag.py:0
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #. module: account
 #. odoo-python
@@ -213,6 +206,14 @@ msgstr "%s non è un campo memorizzato"
 #, python-format
 msgid "%s.copy"
 msgstr "%s.copia"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_move_line.py:0
+#: code:addons/account/models/account_move_line.py:0
+#, python-format
+msgid "(Discount)"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -378,7 +379,7 @@ msgid ""
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Here is your\n"
 "        <t t-if=\"object.name\">\n"
 "            credit note <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
@@ -391,16 +392,47 @@ msgid ""
 "        </t>\n"
 "        amounting in <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
 "        from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Gentile\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Di seguito\n"
+"        <t t-if=\"object.name\">\n"
+"            la nota di credito <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">RINV/2021/05/0001</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            nota di credito\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (con riferimento: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        pari a <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        da parte di <t t-out=\"object.company_id.name or ''\">NomeAzienda</t>.\n"
+"        <br><br>\n"
+"        Non esitare a contattarci se hai domande.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -414,7 +446,7 @@ msgid ""
 "        <t t-else=\"\">\n"
 "            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
 "        </t>\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Here is your\n"
 "        <t t-if=\"object.name\">\n"
 "            invoice <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">INV/2021/05/0005</span>\n"
@@ -433,41 +465,98 @@ msgid ""
 "        <t t-else=\"\">\n"
 "            Please remit payment at your earliest convenience.\n"
 "            <t t-if=\"object.payment_reference\">\n"
-"                <br/><br/>\n"
+"                <br><br>\n"
 "                Please use the following communication for your payment: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">INV/2021/05/0005</span>.\n"
 "            </t>\n"
 "        </t>\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
 "        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dear\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t> (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>),\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Di seguito\n"
+"        <t t-if=\"object.name\">\n"
+"            la tua fattura <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">FATT/2021/05/0005</span>\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            fattura\n"
+"        </t>\n"
+"        <t t-if=\"object.invoice_origin\">\n"
+"            (con riferimento: <t t-out=\"object.invoice_origin or ''\">SUB003</t>)\n"
+"        </t>\n"
+"        pari a <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 143,750.00</span>\n"
+"        da parte di <t t-out=\"object.company_id.name or ''\">NomeAzienda</t>.\n"
+"        <t t-if=\"object.payment_state in ('paid', 'in_payment')\">\n"
+"            La fattura è già stata pagata.\n"
+"        </t>\n"
+"        <t t-else=\"\">\n"
+"            Ti preghiamo di effettuare il pagamento al più presto.\n"
+"            <t t-if=\"object.payment_reference\">\n"
+"                <br><br>\n"
+"                Utilizza il seguente riferimento per il pagamento: <span style=\"font-weight:bold;\" t-out=\"object.payment_reference or ''\">FATT/2021/05/0005</span>.\n"
+"            </t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Non esitare a contattarci se hai ulteriori domande.\n"
+"        <t t-if=\"not is_html_empty(object.invoice_user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.invoice_user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model:mail.template,body_html:account.mail_template_data_payment_receipt
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
 "        Thank you for your payment.\n"
 "        Here is your payment receipt <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> amounting\n"
 "        to <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> from <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Do not hesitate to contact us if you have any questions.\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Best regards,\n"
 "        <t t-if=\"not is_html_empty(user.signature)\">\n"
-"            <br/><br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br><br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Gentile <t t-out=\"object.partner_id.name or ''\">Azure Interior</t><br><br>\n"
+"        grazie per aver effettuato il pagamento.\n"
+"        Di seguito la ricevuta del pagamento <span style=\"font-weight:bold;\" t-out=\"(object.name or '').replace('/','-') or ''\">BNK1-2021-05-0002</span> pari\n"
+"        a <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount, object.currency_id) or ''\">$ 10.00</span> da parte di <t t-out=\"object.company_id.name or ''\">NomeAzienda</t>.\n"
+"        <br><br>\n"
+"        Non esitare a contattarci se hai domande.\n"
+"        <br><br>\n"
+"        Cordiali saluti,\n"
+"        <t t-if=\"not is_html_empty(user.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -900,11 +989,6 @@ msgstr "<span role=\"separator\">Visualizza</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
-msgid "<span title=\"Balance in General Ledger\">Balance in GL</span>"
-msgstr "<span title=\"Saldo nel libro mastro\">Saldo nel LM</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Latest Statement\">Latest Statement</span>"
 msgstr "<span title=\"Ultimo estratto conto\">Ultimo estratto conto</span>"
 
@@ -1029,6 +1113,11 @@ msgstr "<span>Riferimento</span>"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Reporting</span>"
 msgstr "<span>Rendiconto</span>"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+msgid "<span>Running Balance</span>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -2569,6 +2658,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic__distribution_model
 msgid "Analytic Distribution Models"
+msgstr ""
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_move_line__analytic_distribution_search
+#: model:ir.model.fields,field_description:account.field_account_reconcile_model_line__analytic_distribution_search
+msgid "Analytic Distribution Search"
 msgstr ""
 
 #. module: account
@@ -4687,7 +4782,7 @@ msgstr ""
 #. module: account
 #: model:mail.template,name:account.email_template_edi_credit_note
 msgid "Credit Note: Sending"
-msgstr ""
+msgstr "Nota di credito: invio"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_move_out_refund_type
@@ -4714,6 +4809,8 @@ msgid ""
 "Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
 "'draft' and '_draft' or '' }}"
 msgstr ""
+"Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
+"'draft' and '_draft' or '' }}"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -7857,8 +7954,8 @@ msgstr ""
 msgid ""
 "Invoice and credit note distribution should have the same number of lines."
 msgstr ""
-"La distribuzione di fatture e note di credito deve avere lo stesso numero di"
-" righe."
+"La ripartizione di fatture e note di credito deve avere lo stesso numero di "
+"righe."
 
 #. module: account
 #. odoo-python
@@ -7868,7 +7965,7 @@ msgid ""
 "Invoice and credit note distribution should match (same percentages, in the "
 "same order)."
 msgstr ""
-"La distribuzione di fatture e note di credito deve corrispondere (stesse "
+"La ripartizione di fatture e note di credito deve corrispondere (stesse "
 "percentuali, nel medesimo ordine)."
 
 #. module: account
@@ -7914,7 +8011,7 @@ msgstr "Data fattura"
 #. module: account
 #: model:mail.template,name:account.email_template_edi_invoice
 msgid "Invoice: Sending"
-msgstr ""
+msgstr "Fattura: invio"
 
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_invoice
@@ -7993,7 +8090,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.report,name:account.account_invoices_without_payment
 msgid "Invoices without Payment"
-msgstr "Fatture senza pagamento"
+msgstr "Fatture senza pagamenti"
 
 #. module: account
 #. odoo-python
@@ -8388,7 +8485,7 @@ msgid ""
 "Journal where the opening entry of this company's accounting has been "
 "posted."
 msgstr ""
-"Registro dove è stata generata la registrazione di apertura della "
+"Registro nel quale è stata confermata la registrazione di apertura della "
 "contabilità aziendale."
 
 #. module: account
@@ -10763,7 +10860,7 @@ msgstr "Termini di pagamento: pagamento immediato"
 #. module: account
 #: model:mail.template,name:account.mail_template_data_payment_receipt
 msgid "Payment: Payment Receipt"
-msgstr ""
+msgstr "Pagamento: ricevuta"
 
 #. module: account
 #. odoo-python
@@ -10870,6 +10967,7 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -11489,7 +11587,7 @@ msgid ""
 "Reference of the document used to issue this payment. Eg. check number, file"
 " name, etc."
 msgstr ""
-"Riferimento al documento usato per emettere questo pagamento. Es. numero "
+"Riferimento al documento usato per emettere il pagamento. Es. numero "
 "assegno, nome file ecc."
 
 #. module: account
@@ -12198,7 +12296,7 @@ msgid ""
 msgstr ""
 "Selezionare \"Vendita\" per registri fatture clienti.\n"
 "Selezionare \"Acquisto\" per registri fatture fornitori.\n"
-"Selezionare \"Cassa\" o \"Banca\" per registri da usare per pagamenti clienti o fornitori.\n"
+"Selezionare \"Cassa\" o \"Banca\" per registri utilizzati nei pagamenti cliente o fornitore.\n"
 "Selezionare \"Generale\" per registri operazioni varie."
 
 #. module: account
@@ -12374,16 +12472,18 @@ msgid ""
 "Sent manually to customer when clicking on 'Send receipt by email' in "
 "payment action"
 msgstr ""
+"E-mail inviata automaticamente ai clienti quando fanno clic sull'azione "
+"\"Invia ricevuta via e-mail\" "
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_credit_note
 msgid "Sent to customers with the credit note in attachment"
-msgstr ""
+msgstr "E-mail inviata ai clienti con nota di credito in allegato"
 
 #. module: account
 #: model:mail.template,description:account.email_template_edi_invoice
 msgid "Sent to customers with their invoices in attachment"
-msgstr ""
+msgstr "E-mail con fatture in allegato"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__9
@@ -12597,7 +12697,7 @@ msgstr "Mostra avviso sul nome"
 #: model:ir.model.fields,field_description:account.field_account_payment__show_partner_bank_account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__show_partner_bank_account
 msgid "Show Partner Bank Account"
-msgstr "Mostrare conto bancario partner"
+msgstr "Mostra conto bancario partner"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__show_payment_term_details
@@ -12790,7 +12890,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_bank_data_state
 msgid "State of the onboarding bank data step"
-msgstr "Stato della fase di configurazione dei dati bancari"
+msgstr "Stato della fase di configurazione dati bancari"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_bill_state
@@ -13084,7 +13184,7 @@ msgstr "Registrazione per cassa di"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__tax_cash_basis_journal_id
 msgid "Tax Cash Basis Journal"
-msgstr "Registro imposte criterio di cassa"
+msgstr "Registro imposte per cassa"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__use_in_tax_closing
@@ -13289,12 +13389,12 @@ msgstr "Metodo di arrotondamento per il calcolo imposte"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_tax_payable_account_id
 msgid "Tax current account (payable)"
-msgstr "Conto imposta attuale (debito)"
+msgstr "Conto imposte correnti (debito)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_tax_receivable_account_id
 msgid "Tax current account (receivable)"
-msgstr "Conto imposta attuale (credito)"
+msgstr "Conto imposte correnti (credito)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__property_tax_payable_account_id
@@ -13734,7 +13834,7 @@ msgstr ""
 msgid ""
 "The bank account of a bank journal must belong to the same company (%s)."
 msgstr ""
-"Il conto bancario di un relativo registro deve appartenere alla stessa "
+"Il conto bancario e il relativo registro devono appartenere alla stessa "
 "azienda (%s)."
 
 #. module: account
@@ -13794,7 +13894,7 @@ msgid ""
 "The combination of reference model and reference type on the journal is not "
 "implemented"
 msgstr ""
-"La combinazione di modello di riferimento e tipo di riferimento sul giornale"
+"La combinazione di modello di riferimento e tipo di riferimento sul registro"
 " non è implementata"
 
 #. module: account
@@ -14662,7 +14762,7 @@ msgid ""
 "There is no tax cash basis journal defined for the '%s' company.\n"
 "Configure it in Accounting/Configuration/Settings"
 msgstr ""
-"Nessun registro criterio di cassa definito per l'azienda \"%s\".\n"
+"Nessun registro imposte per cassa definito per l'azienda \"%s\".\n"
 "Configurarlo in Contabilità/Configurazione/Impostazioni"
 
 #. module: account
@@ -15532,7 +15632,7 @@ msgstr "Usare contabilità anglosassone"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__tax_exigibility
 msgid "Use Cash Basis"
-msgstr "Usare criterio di cassa"
+msgstr "Utilizzare per cassa"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_report__filter_multi_company__selector
@@ -15547,7 +15647,7 @@ msgstr "Usare addebito diretto SEPA"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__journal_id
 msgid "Use Specific Journal"
-msgstr "Usare registro specifico"
+msgstr "Usa registro specifico"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__use_storno_accounting
@@ -15626,7 +15726,7 @@ msgstr ""
 "Usato nei rendiconti per valutare se prendere in considerazione tutti i "
 "movimenti o solo quelli dell'anno fiscale. Questa opzione non dovrebbe "
 "essere selezionata per i tipi conto da azzerare ad ogni nuovo esercizio "
-"(come costi, ricavi...)."
+"(come costi, ricavi ecc...)."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__sequence
@@ -15639,8 +15739,8 @@ msgid ""
 "Used to register a loss when the ending balance of a cash register differs "
 "from what the system computes"
 msgstr ""
-"Usato per registrare una perdita quando il saldo finale di un registratore "
-"di cassa è diverso da quanto calcolato dal sistema"
+"Usato per registrare una perdita quando il saldo finale di un registro di "
+"cassa è diverso da quanto calcolato dal sistema"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__profit_account_id
@@ -15648,8 +15748,8 @@ msgid ""
 "Used to register a profit when the ending balance of a cash register differs"
 " from what the system computes"
 msgstr ""
-"Usato per registrare un utile quando il saldo finale di un registratore di "
-"cassa è diverso da quanto calcolato dal sistema"
+"Usato per registrare un utile quando il saldo finale di un registro di cassa"
+" è diverso da quanto calcolato dal sistema"
 
 #. module: account
 #: model:ir.model,name:account.model_res_users
@@ -15863,7 +15963,13 @@ msgstr "Attenzione"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Warning for %s"
-msgstr "Avviso per  %s"
+msgstr "Avviso per %s"
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Warning for Cash Rounding Method: %s"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
@@ -16756,6 +16862,12 @@ msgstr "Hai selezionato contemporaneamente i seguenti tipi di documento:"
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
+msgid "You must specify the Profit Account (company dependent)"
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
 msgid "You need to add a line before posting."
 msgstr "È necessario aggiungere una riga prima di confermare."
 
@@ -16768,9 +16880,10 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
-"Per gestire automaticamente le registrazioni contabili relative alle "
-"differenze fra tassi di cambio è necessario, nelle impostazioni "
-"dell'azienda, configurare il \"Registro utili/perdite sui cambi\"."
+"Per gestire automaticamente la contabilizzazione delle registrazioni "
+"relative alle differenze fra tassi di cambio è necessario, nelle "
+"impostazioni dell'azienda, configurare il \"Registro utili/perdite sui "
+"cambi\"."
 
 #. module: account
 #. odoo-python
@@ -16781,9 +16894,9 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
-"Per gestire automaticamente le registrazioni contabili relative alle "
-"differenze fra tassi di cambio è necessario, nelle impostazioni "
-"dell'azienda, configurare il \"Conto utili tasso di cambio\"."
+"Per gestire automaticamente la contabilizzazione delle registrazioni "
+"relative alle differenze fra tassi di cambio è necessario, nelle "
+"impostazioni dell'azienda, configurare il \"Conto utili tasso di cambio\"."
 
 #. module: account
 #. odoo-python
@@ -16794,9 +16907,9 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
-"Per gestire automaticamente le registrazioni contabili relative alle "
-"differenze fra tassi di cambio è necessario, nelle impostazioni "
-"dell'azienda, configurare il \"Conto perdite tasso di cambio\"."
+"Per gestire automaticamente la contabilizzazione delle registrazioni "
+"relative alle differenze fra tassi di cambio è necessario, nelle "
+"impostazioni dell'azienda, configurare il \"Conto perdite tasso di cambio\"."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -17184,6 +17297,8 @@ msgstr "{{ (object.name or '').replace('/','-') }}"
 msgid ""
 "{{ object.company_id.name }} Credit Note (Ref {{ object.name or 'n/a' }})"
 msgstr ""
+"{{ object.company_id.name }} Nota di credito (Ref {{ object.name or 'n/a' "
+"}})"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -17196,3 +17311,5 @@ msgid ""
 "{{ object.company_id.name }} Payment Receipt (Ref {{ object.name or 'n/a' "
 "}})"
 msgstr ""
+"{{ object.company_id.name }} Ricevuta di pagamento (Ref {{ object.name or "
+"'n/a' }})"

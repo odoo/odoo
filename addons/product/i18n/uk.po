@@ -87,7 +87,7 @@ msgstr "'Пакування товарів- %s' % (object.name)"
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "- Barcode \"%s\" already assigned to product(s): %s"
-msgstr ""
+msgstr "- Штрих-код \"%s\" вже призначено товару: %s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_attribute__create_variant
@@ -216,13 +216,13 @@ msgid ""
 "                        to the loss of their possible customizations."
 msgstr ""
 "<strong>Увага</strong>: додавання або видалення атрибутів\n"
-"                        буде видаляти та відтворювати існуючі варіанти та ліди\n"
+"                        буде видаляти та відтворювати існуючі варіанти та призведе\n"
 "                     до втрати їх можливого налаштування."
 
 #. module: product
 #: model:ir.model.constraint,message:product.constraint_product_packaging_barcode_uniq
 msgid "A barcode can only be assigned to one packaging."
-msgstr ""
+msgstr "Штрих-код може бути призначений лише одній упаковці."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__description_sale
@@ -241,7 +241,7 @@ msgstr ""
 #: code:addons/product/models/product_product.py:0
 #, python-format
 msgid "A packaging already uses the barcode"
-msgstr ""
+msgstr "Упаковка вже викорстовує штрих-код"
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2
@@ -249,13 +249,15 @@ msgid ""
 "A price is a set of sales prices or rules to compute the price of sales order lines based on products, product categories, dates and ordered quantities.\n"
 "            This is the perfect tool to handle several pricings, seasonal discounts, etc."
 msgstr ""
+"Ціна – це набір продажних цін або правил для обчислення ціни рядків замовлення на продаж на основі товарів, категорій товарів, дат і замовлених кількостей.\n"
+"            Це ідеальний інструмент для обробки кількох цін, сезонних знижок тощо."
 
 #. module: product
 #. odoo-python
 #: code:addons/product/models/product_packaging.py:0
 #, python-format
 msgid "A product already uses the barcode"
-msgstr ""
+msgstr "Товар вже викорстовує штрих-код"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__detailed_type
@@ -265,8 +267,8 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Товар, що зберігається, - це товар, яким ви керуєте на складі. Необхідно встановити додаток Склад.\n"
-"Витратний товар - це товар, для якого склад не керується.\n"
+"Товар, що зберігається - це товар, яким ви керуєте на складі. Необхідно встановити додаток Склад.\n"
+"Витратний товар - це товар, по якому немає складських проводок.\n"
 "Послуга - це нематеріальний товар, який ви надаєте."
 
 #. module: product
@@ -295,7 +297,7 @@ msgstr "Активно"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_search_view
 msgid "Active Products"
-msgstr ""
+msgstr "Активні товари"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__activity_ids
@@ -331,7 +333,7 @@ msgstr "Додати кількість"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__additional_product_tag_ids
 msgid "Additional Product Tag"
-msgstr ""
+msgstr "Додатковий тег товару"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -347,12 +349,12 @@ msgstr "Правила розширених цін (знижки, формули
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__all_product_tag_ids
 msgid "All Product Tag"
-msgstr ""
+msgstr "Усі теги товару"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_ids
 msgid "All Product Variants using this Tag"
-msgstr ""
+msgstr "Усі варіанти товару використовують цей тег"
 
 #. module: product
 #. odoo-python
@@ -510,6 +512,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Штрих-код вже призначено:\n"
+"\n"
+"%s"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__base
@@ -749,13 +754,13 @@ msgstr "Кутовий стіл з правим сидінням"
 #: model:ir.model.fields,field_description:product.field_product_template__standard_price
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__base__standard_price
 msgid "Cost"
-msgstr "Вартість"
+msgstr "Собівартість"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__cost_currency_id
 #: model:ir.model.fields,field_description:product.field_product_template__cost_currency_id
 msgid "Cost Currency"
-msgstr "Валюта вартості"
+msgstr "Валюта собівартості"
 
 #. module: product
 #: model:ir.model,name:product.model_res_country_group
@@ -896,7 +901,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Define a new tag"
-msgstr ""
+msgstr "Визначіть новий тег"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
@@ -1139,7 +1144,7 @@ msgstr "Підписники (Партнери)"
 #: model:ir.model.fields,help:product.field_product_product__activity_type_icon
 #: model:ir.model.fields,help:product.field_product_template__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Іконка зі шрифтом Font awesome, напр. fa-tasks"
+msgstr "Іконка з чудовим шрифтом, напр. fa-tasks"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__min_quantity
@@ -2133,7 +2138,7 @@ msgstr "Пакування товару"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_tag__product_product_ids
 msgid "Product Product"
-msgstr ""
+msgstr "Тоари Товари"
 
 #. module: product
 #: model:ir.model,name:product.model_product_tag
@@ -2178,7 +2183,7 @@ msgstr "Значення атрибуту шаблону товару"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_variant_easy_edit_view
 msgid "Product Template Tags"
-msgstr ""
+msgstr "Теги шаблону товару"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_label_layout__product_tmpl_ids
@@ -2519,6 +2524,8 @@ msgid ""
 "Specify the fixed amount to add or subtract (if negative) to the amount "
 "calculated with the discount."
 msgstr ""
+"Укажіть фіксовану суму, яку потрібно додати або відняти (якщо від’ємна) до "
+"суми, розрахованої зі знижкою."
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_pricelist_item__price_max_margin
@@ -2597,7 +2604,7 @@ msgstr "Мітки"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_tag_action
 msgid "Tags are used to search product for a given theme."
-msgstr ""
+msgstr "Теги використовуються для пошуку товару за певною темою."
 
 #. module: product
 #. odoo-python
@@ -2719,6 +2726,13 @@ msgstr ""
 "Кількість для купівлі від цього постачальника, щоб скористатися ціною, "
 "вираженою в одиниці вимірювання постачальника товару, якщо такої немає, в "
 "одиниці вимірювання товару за замовчуванням."
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr ""
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
@@ -3265,6 +3279,9 @@ msgid ""
 "%s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"Ви не можете видалити значення %s, тому що воно використовується на наступних товарах:\n"
+"%s\n"
+"Якщо значення було пов’язано з товаром у минулому, ви не зможете його видалити."
 
 #. module: product
 #. odoo-python

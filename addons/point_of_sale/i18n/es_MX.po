@@ -3,9 +3,9 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Iran Villalobos López, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Iran Villalobos López, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5357,6 +5357,14 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "Reversión de: %s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "Solicitud de reversión enviada a la terminal"
@@ -6361,6 +6369,13 @@ msgstr ""
 "La diferencia maxima permitida es %s.\n"
 "\n"
 "                        Contacte a su gerente para aceptar la diferencia de cierre."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr "El nombre de las monedas/cuentas debe ser un número. "
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
@@ -7390,13 +7405,6 @@ msgid ""
 msgstr ""
 "Puede agregar algunos productos desde el menú de Productos, o vincular uno existente al marcarlo como \"Disponible en el PdV\".\n"
 "                    O puede agregar datos de demostración con propósitos de prueba. Tenga en cuenta que esta es una acción irreversible."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr "Solo puede tener un método de pago en efectivo."
 
 #. module: point_of_sale
 #. odoo-python

@@ -261,9 +261,10 @@ if parse_version(werkzeug.__version__) >= parse_version('2.0.2'):
     # let's add the websocket key only when appropriate.
     ROUTING_KEYS.add('websocket')
 
-# The duration of a user session before it is considered expired,
-# three months.
-SESSION_LIFETIME = 60 * 60 * 24 * 90
+# The default duration of a user session cookie. Inactive sessions are reaped
+# server-side as well with a threshold that can be set via an optional
+# config parameter `sessions.max_inactivity_seconds` (default: SESSION_LIFETIME)
+SESSION_LIFETIME = 60 * 60 * 24 * 7
 
 # The cache duration for static content from the filesystem, one week.
 STATIC_CACHE = 60 * 60 * 24 * 7
@@ -858,8 +859,8 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
         session.should_rotate = False
         self.save(session)
 
-    def vacuum(self):
-        threshold = time.time() - SESSION_LIFETIME
+    def vacuum(self, max_lifetime=SESSION_LIFETIME):
+        threshold = time.time() - max_lifetime
         for fname in glob.iglob(os.path.join(root.session_store.path, '*', '*')):
             path = os.path.join(root.session_store.path, fname)
             with contextlib.suppress(OSError):
@@ -1608,7 +1609,8 @@ class Request:
         ir_http._authenticate(rule.endpoint)
         ir_http._pre_dispatch(rule, args)
         response = self.dispatcher.dispatch(rule.endpoint, args)
-        ir_http._post_dispatch(response)
+        # the registry can have been reniewed by dispatch
+        self.registry['ir.http']._post_dispatch(response)
         return response
 
 

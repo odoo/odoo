@@ -1745,24 +1745,32 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'amount_currency': 1000.0,
                 'debit': 1000.0,
                 'credit': 0.0,
+                'tax_tag_invert': False,
+                'tax_base_amount': 0.0,
             },
             {
                 **self.product_line_vals_2,
                 'amount_currency': 200.0,
                 'debit': 200.0,
                 'credit': 0.0,
+                'tax_tag_invert': False,
+                'tax_base_amount': 0.0,
             },
             {
                 **self.tax_line_vals_1,
                 'amount_currency': 180.0,
                 'debit': 180.0,
                 'credit': 0.0,
+                'tax_tag_invert': False,
+                'tax_base_amount': 1200.0,
             },
             {
                 **self.tax_line_vals_2,
                 'amount_currency': 30.0,
                 'debit': 30.0,
                 'credit': 0.0,
+                'tax_tag_invert': False,
+                'tax_base_amount': 200.0,
             },
             {
                 **self.term_line_vals_1,
@@ -1771,6 +1779,8 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
                 'debit': 0.0,
                 'credit': 1410.0,
                 'date_maturity': move_reversal.date,
+                'tax_tag_invert': False,
+                'tax_base_amount': 0.0,
             },
         ], {
             **self.move_vals,
@@ -3423,3 +3433,79 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         self.assertEqual(move.currency_id, self.company_data['currency'])
         move.journal_id = second_journal
         self.assertEqual(move.currency_id, self.currency_data['currency'])
+
+    @freeze_time('2023-01-01')
+    def test_change_first_journal_move_sequence(self):
+        """Invoice name should not be reset when posting the invoice"""
+        new_sale_journal = self.company_data['default_journal_sale'].copy()
+        invoice = self.env['account.move'].with_context(default_move_type='out_invoice').create({
+            'journal_id': new_sale_journal.id,
+            'partner_id': self.partner_a.id,
+            'name': 'INV1/2023/00010',
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'My super product.',
+                    'quantity': 1.0,
+                    'price_unit': 750.0,
+                    'account_id': self.company_data['default_account_revenue'].id,
+                })
+            ]
+        })
+        invoice.action_post()
+        self.assertEqual(invoice.name, 'INV1/2023/00010')
+
+    @freeze_time('2019-01-01')
+    def test_date_reversal_exchange_move(self):
+        """
+        Test the date of the reversal of an exchange move created when unreconciling a payment made in the past, when no lock date is set.
+        It should be the last day of the month of the exchange move date if sequence is incremented by month,
+        and the last day of the year of the exchange move date if sequence is incremented by year.
+        """
+        for format_incrementor, expected_date in (('month', '2017-01-31'), ('year', '2017-12-31')):
+            with self.subTest(format_incrementor=format_incrementor, expected_date=expected_date):
+                invoice = self.init_invoice(move_type='out_invoice', partner=self.partner_a, invoice_date='2016-01-20', post=True, amounts=[750.0], currency=self.currency_data['currency'])
+
+                new_exchange_journal = self.env['account.journal'].create({
+                    'name': f'Exchange Journal for {invoice.name}',
+                    'code': f'EXCH{invoice.sequence_number}',
+                    'type': 'general',
+                    'company_id': self.env.company.id,
+                })
+
+                # Need a first move in the new journal to initiate the sequence with a right incrementor, depending on the wanted format
+                self.env['account.move'].create({
+                    'journal_id': new_exchange_journal.id,
+                    'name': 'EXCH/2019/00001' if format_incrementor == 'year' else 'EXCH/2019/01/0001',
+                    'line_ids': [
+                        (0, 0, {
+                            'account_id': self.company_data['default_account_receivable'].id,
+                            'debit': 125.0,
+                            'credit': 0.0,
+                        }),
+                        (0, 0, {
+                            'account_id': self.company_data['default_account_revenue'].id,
+                            'debit': 0.0,
+                            'credit': 125.0,
+                        })
+                    ]
+                })
+
+                self.env.company.currency_exchange_journal_id = new_exchange_journal
+
+                self.env['account.payment.register'].with_context(active_model='account.move', active_ids=invoice.ids).create({
+                    'payment_date': '2017-01-20',
+                })._create_payments()
+
+                line_receivable = invoice.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_receivable')
+
+                exchange_move = line_receivable.full_reconcile_id.partial_reconcile_ids.exchange_move_id
+
+                # Date of the exchange move should be the date of the payment
+                self.assertEqual(exchange_move.date, fields.Date.to_date('2017-01-20'))
+
+                line_receivable.remove_move_reconcile()
+
+                exchange_move_reversal = exchange_move.reversal_move_id
+
+                # Date of the reversal of the exchange move should be the last day of the month/year of the payment depending on the sequence format
+                self.assertEqual(exchange_move_reversal.date, fields.Date.to_date(expected_date))

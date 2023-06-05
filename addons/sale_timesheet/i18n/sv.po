@@ -14,6 +14,7 @@
 # Simon S, 2022
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
 # Martin Trigaux, 2022
+# Lasse Larsson, 2023
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
+"Last-Translator: Lasse Larsson, 2023\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -141,6 +142,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Enligt produktkonfigurationen kan den levererade mängden automatiskt beräknas av mekanismen :\n"
+" - Manuell: mängden ställs in manuellt på raden\n"
+" - Analytisk Från utgifter: mängden är summan av postade utgifter\n"
+" - Tidsrapport: mängden är summan av timmar registrerade på uppgifter kopplade till denna försäljningsrad\n"
+" - Lagerflyttningar: mängden kommer från bekräftade plockningar\n"
 
 #. module: sale_timesheet
 #: model:account.analytic.account,name:sale_timesheet.account_analytic_account_project_support
@@ -689,6 +695,9 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
+"Ställ in kvantiteter manuellt på order: Fakturera baserat på den manuellt inmatade kvantiteten, utan att skapa ett analytiskt konto.\n"
+"Tidrapporter på kontrakt: Fakturera baserat på de loggade timmarna på den relaterade tidrapporten.\n"
+"Skapa en uppgift och spåra timmar: Skapa en uppgift vid validering av försäljningsordern och spåra arbetstimmar."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_timesheets_analysis_report__margin
@@ -798,7 +807,7 @@ msgstr ""
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "Åtgärd stöds inte"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__order_id
@@ -1044,6 +1053,9 @@ msgid ""
 "invoiced to your customer. Remove the sales order item for the timesheet "
 "entry to be non-billable."
 msgstr ""
+"Försäljningsorderposten där den spenderade tiden läggs till för att "
+"faktureras till din kund. Ta bort försäljningsorderposten för att "
+"tidsrapportposten ska vara icke-fakturerbar."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id

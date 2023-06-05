@@ -5,7 +5,7 @@
 # Translators:
 # Robert Frykelius <robert.frykelius@linserv.se>, 2022
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2022
-# MikaelAtVertel, 2022
+# Mikael Carlsson <mikael.carlsson@vertel.se>, 2022
 # Patrik Lermon <patrik.lermon@gmail.com>, 2022
 # lynnliuying <lynn.liu1971@gmail.com>, 2022
 # Christelle Wehbe <libanon_cristelle@hotmail.com>, 2022
@@ -18,12 +18,13 @@
 # lasch a <bmail440@gmail.com>, 2022
 # Anto Nilsson <anton.nilsson@vertel.se>, 2022
 # Robin Chatfield <robin.chatfield@gmail.com>, 2022
-# Simon S, 2022
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Simon S, 2023
+# Lasse Larsson, 2023
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Lasse Larsson, 2023\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -928,6 +929,10 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"Förbättra dina försäljningar med olika typer av program: Kuponger, "
+"Kampanjer, Presentkort, Loyalty. Specifika villkor kan ställas in "
+"(produkter, kunder, minimiköpbelopp, period). Belöningar kan vara rabatter "
+"(% eller belopp) eller gratisprodukter."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -2622,6 +2627,9 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
+"Om du levererar alla produkter på en gång kommer leveransordern att "
+"schemaläggas baserat på den längsta ledtiden för produkten. I annat fall "
+"kommer den att baseras på den kortaste."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_customer_facing_display
@@ -5255,6 +5263,14 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "Omvändning av: %s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr ""
@@ -5286,7 +5302,7 @@ msgstr "Granska"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "Rounding"
-msgstr ""
+msgstr "Avrundning"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6214,6 +6230,13 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
 msgid "The name of this POS Session must be unique !"
 msgstr ""
@@ -6899,7 +6922,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductItem.js:0
 #, python-format
 msgid "Unknown error"
-msgstr ""
+msgstr "Okänt fel"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7148,13 +7171,6 @@ msgstr ""
 msgid ""
 "You can add some from the Products menu, or linked any existing by flagging them as \"Available in PoS\".\n"
 "                    Or you can add demo data for testing purpose. Please mind that this is an irreversible action."
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
 msgstr ""
 
 #. module: point_of_sale
@@ -7409,7 +7425,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
 msgid "for"
-msgstr ""
+msgstr "för"
 
 #. module: point_of_sale
 #. odoo-javascript

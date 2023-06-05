@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2023\n"
 "Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
@@ -54,6 +54,7 @@ msgid ""
 msgstr ""
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ": Insufficient Quantity To Repair"
@@ -64,20 +65,20 @@ msgstr ": Không đủ số lượng để sửa chữa"
 msgid ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
-"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/>\n"
+"        Hello <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br>\n"
 "        Here is your repair order <strong t-out=\"object.name or ''\">RO/00004</strong>\n"
 "        <t t-if=\"object.invoice_method != 'none'\">\n"
-"            amounting in <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br/>\n"
+"            amounting in <strong><t t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 100.00</t>.</strong><br>\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
-"            .<br/>\n"
+"            .<br>\n"
 "        </t>\n"
 "        You can reply to this email if you have any questions.\n"
-"        <br/><br/>\n"
+"        <br><br>\n"
 "        Thank you,\n"
 "        <t t-if=\"user.signature\">\n"
-"            <br/>\n"
-"            <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"            <br>\n"
+"            <t t-out=\"user.signature or ''\">--<br>Mitchell Admin</t>\n"
 "        </t>\n"
 "    </p>\n"
 "</div>"
@@ -286,6 +287,7 @@ msgstr ""
 " thuộc cùng một nhóm. Việc chuyển đổi sẽ dựa trên tỉ lệ."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -307,6 +309,7 @@ msgid "Create Mass Invoice (repair)"
 msgstr "Tạo Nhiều Hóa đơn (sửa)"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/stock_picking.py:0
 #, python-format
 msgid "Create Repair"
@@ -580,6 +583,7 @@ msgid "Invoice and shipping address:"
 msgstr "Địa chỉ xuất Hoá đơn và Bàn giao:"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Invoice created"
@@ -707,18 +711,21 @@ msgid "No Invoice"
 msgstr "Không xuất hoá đơn"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No account defined for product \"%s\"."
 msgstr "Không có tài khoản được xác định cho sản phẩm \"%s\"."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No pricelist found."
 msgstr "Không thấy có bảng giá hợp lệ."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No product defined on fees."
@@ -730,6 +737,7 @@ msgid "No repair order found. Let's create one!"
 msgstr ""
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No valid pricelist line found."
@@ -774,6 +782,7 @@ msgid "Number of repairs linked to this picking"
 msgstr ""
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Only draft repairs can be confirmed."
@@ -978,6 +987,7 @@ msgid "Repair Order Reference"
 msgstr "Tham chiếu lệnh sữa chữa"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/stock_picking.py:0
 #: model:ir.actions.act_window,name:repair.action_repair_order_graph
 #: model:ir.actions.act_window,name:repair.action_repair_order_tree
@@ -1006,7 +1016,6 @@ msgid "Repair Reference"
 msgstr "Tham chiếu sửa chữa"
 
 #. module: repair
-#: model:product.product,name:repair.product_service_order_repair
 #: model:product.template,name:repair.product_service_order_repair_product_template
 msgid "Repair Services"
 msgstr ""
@@ -1018,12 +1027,14 @@ msgid "Repair Tags"
 msgstr "Từ khóa sửa chữa"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
 msgstr "Sửa chữa phải được huỷ trước khi có thể thiết lập về dự thảo."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
@@ -1031,6 +1042,7 @@ msgstr ""
 "Lệnh Sửa chữa phải được xác nhận trước khi có thể khởi động việc sửa chữa."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
@@ -1039,6 +1051,7 @@ msgstr ""
 "chuyển kho"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
@@ -1052,6 +1065,7 @@ msgid "Repair order count"
 msgstr ""
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/stock_lot.py:0
 #, python-format
 msgid "Repair orders of %s"
@@ -1164,6 +1178,7 @@ msgid "Sent manually when clicking on \"Send Quotation\" on a repair order"
 msgstr ""
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for operation lines with products: %s"
@@ -1257,6 +1272,7 @@ msgid "The name of the Repair Order must be unique!"
 msgstr "Tên của lệnh sửa chữa phải là duy nhất!"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -1349,12 +1365,6 @@ msgid "Unit of Measure"
 msgstr "Đơn vị tính"
 
 #. module: repair
-#: model:product.product,uom_name:repair.product_service_order_repair
-#: model:product.template,uom_name:repair.product_service_order_repair_product_template
-msgid "Units"
-msgstr "Đơn vị"
-
-#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__amount_untaxed
 msgid "Untaxed Amount"
 msgstr "Tổng chưa thuế"
@@ -1380,7 +1390,8 @@ msgid "Warn Insufficient Repair Quantity"
 msgstr "Cảnh báo không đủ số lượng sửa chữa"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:0
+#. odoo-python
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Warning"
 msgstr "Cảnh báo"
@@ -1402,6 +1413,7 @@ msgid "Website communication history"
 msgstr "Lịch sử thông tin liên lạc website"
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -1412,6 +1424,7 @@ msgstr ""
 "hủy bỏ nó."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -1422,24 +1435,28 @@ msgstr ""
 "sổ."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You can not enter negative quantities."
 msgstr "Bạn không thể nhập số lượng âm."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot cancel a completed repair order."
 msgstr ""
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot delete a completed repair order."
 msgstr ""
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
@@ -1450,6 +1467,7 @@ msgstr ""
 "Vui lòng chọn một bảng giá trước khi chọn một sản phẩm."
 
 #. module: repair
+#. odoo-python
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You have to select an invoice address in the repair form."

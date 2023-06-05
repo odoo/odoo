@@ -51,10 +51,13 @@ export const barcodeService = {
         /**
          * check if we have a barcode, and trigger appropriate events
          */
-        function checkBarcode() {
+        function checkBarcode(ev) {
             let str = barcodeInput ? barcodeInput.value : bufferedBarcode;
             str = barcodeService.cleanBarcode(str);
             if (str.length >= 3) {
+                if (ev) {
+                    ev.preventDefault();
+                }
                 handleBarcode(str, currentTarget);
             }
             if (barcodeInput) {
@@ -97,7 +100,7 @@ export const barcodeService = {
 
             clearTimeout(timeout);
             if (isEndCharacter) {
-                checkBarcode();
+                checkBarcode(ev);
             } else {
                 bufferedBarcode += ev.key;
                 timeout = setTimeout(checkBarcode, barcodeService.maxTimeBetweenKeysInMs);

@@ -35,6 +35,9 @@ export class SignatureField extends Component {
         const { name, previewImage, record, value } = this.props;
         if (this.state.isValid && value) {
             if (isBinarySize(value)) {
+                if (!this.rawCacheKey) {
+                    this.rawCacheKey = this.props.record.data.__last_update;
+                }
                 return url("/web/image", {
                     model: record.resModel,
                     id: record.resId,
@@ -120,6 +123,7 @@ export class SignatureField extends Component {
      * @private
      */
     uploadSignature({ signatureImage }) {
+        this.rawCacheKey = null;
         return this.props.update(signatureImage[1] || false);
     }
 }
@@ -133,6 +137,11 @@ SignatureField.props = {
     previewImage: { type: String, optional: true },
     width: { type: Number, optional: true },
 };
+
+SignatureField.fieldDependencies = {
+    __last_update: { type: "datetime" },
+};
+
 SignatureField.extractProps = ({ attrs }) => {
     const { options, width, height } = attrs;
     return {
