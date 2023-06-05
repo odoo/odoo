@@ -41,7 +41,7 @@ export class AddToBoard extends Component {
             context,
             groupBys,
             orderBy,
-        } = this.env.searchModel.getPreFavoriteValues();
+        } = this.env.searchModel.getPreFavoriteValues({ forBoardApp: true }); // call with { forBoardApp: true } only in saas-16.2
         const contextToSave = {
             ...globalContext,
             ...context,
