@@ -748,6 +748,22 @@ export const editorCommands = {
         row.remove();
         siblingRow ? setSelection(...startPos(siblingRow)) : editorCommands.deleteTable(editor, table);
     },
+    resetSize: (editor,table) => {
+        if (!table) {
+            getDeepRange(editor.editable, { select: true });
+            table = getInSelection(editor.document,'table');
+        }
+        table.removeAttribute('style');
+        const cells = [...table.querySelectorAll('tr, td')];
+        cells.forEach( cell => {
+            const cStyle = cell.style;
+            if (cell.tagName === 'TR') {
+                cStyle.height = '';
+            } else {
+                cStyle.width = '';
+            }
+        })
+    },
     deleteTable: (editor, table) => {
         table = table || getInSelection(editor.document, 'table');
         if (!table) return;
