@@ -40,6 +40,9 @@
             'website_slides_survey/static/src/xml/website_slide_upload.xml',
             'website_slides_survey/static/src/xml/website_slides_fullscreen.xml',
         ],
+        'web.assets_tests': [
+            'website_slides_survey/static/tests/tours/*.js',
+        ],
         'survey.survey_assets': [
             'website_slides_survey/static/src/scss/website_slides_survey_result.scss',
         ],

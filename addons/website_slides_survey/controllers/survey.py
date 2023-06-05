@@ -5,6 +5,13 @@ from odoo.addons.survey.controllers import main
 
 
 class Survey(main.Survey):
+    def _prepare_survey_data(self, survey_sudo, answer_sudo, **post):
+        result = super()._prepare_survey_data(survey_sudo, answer_sudo, **post)
+        if answer_sudo.slide_id:
+            result['channel_id'] = answer_sudo.slide_id.channel_id
+
+        return result
+
     def _prepare_survey_finished_values(self, survey, answer, token=False):
         result = super(Survey, self)._prepare_survey_finished_values(survey, answer, token)
         if answer.slide_id:
