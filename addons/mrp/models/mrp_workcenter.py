@@ -407,8 +407,8 @@ class MrpWorkcenterProductivity(models.Model):
     loss_type = fields.Selection(
         string="Effectiveness", related='loss_id.loss_type', store=True, readonly=False)
     description = fields.Text('Description')
-    date_start = fields.Datetime('Start Date', default=fields.Datetime.now, required=True)
-    date_end = fields.Datetime('End Date')
+    date_start = fields.Datetime('Start Date', default=fields.Datetime.now, required=True, compute='_compute_date_start', store=True)
+    date_end = fields.Datetime('End Date', compute='_compute_date_end', store=True)
     duration = fields.Float('Duration', compute='_compute_duration', store=True)
 
     @api.depends('date_end', 'date_start')
@@ -419,24 +419,25 @@ class MrpWorkcenterProductivity(models.Model):
             else:
                 blocktime.duration = 0.0
 
-    @api.onchange('duration')
-    def _duration_changed(self):
-        self.date_end = self.date_start + timedelta(minutes=self.duration)
-        self._loss_type_change()
+    @api.depends('duration', 'date_start')
+    def _compute_date_end(self):
+        for productivity in self:
+            if productivity.workorder_id.state == "cancel":
+                continue
+            if not productivity.duration or not productivity.date_start:
+                productivity.date_end = False
+            else:
+                productivity.date_end = productivity.date_start + timedelta(minutes=productivity.duration)
+        self._loss_id_update()
 
-    @api.onchange('date_start')
-    def _date_start_changed(self):
-        if not self.date_start:
-            return
-        self.date_end = self.date_start + timedelta(minutes=self.duration)
-        self._loss_type_change()
-
-    @api.onchange('date_end')
-    def _date_end_changed(self):
-        if not self.date_end:
-            return
-        self.date_start = self.date_end - timedelta(minutes=self.duration)
-        self._loss_type_change()
+    @api.depends('date_end')
+    def _compute_date_start(self):
+        for productivity in self:
+            if productivity.duration and productivity.date_end:
+                productivity.date_start = productivity.date_end - timedelta(minutes=productivity.duration)
+            if not productivity.date_start:
+                productivity.date_start = datetime.now()
+        self._loss_id_update()
 
     @api.constrains('workorder_id')
     def _check_open_time_ids(self):
@@ -452,30 +453,35 @@ class MrpWorkcenterProductivity(models.Model):
         self.ensure_one()
         self.workcenter_id.order_ids.end_all()
 
-    def _loss_type_change(self):
-        self.ensure_one()
-        if self.workorder_id.duration > self.workorder_id.duration_expected:
-            self.loss_id = self.env.ref("mrp.block_reason4").id
-        else:
-            self.loss_id = self.env.ref("mrp.block_reason7").id
-
-    def _close(self):
+    def _loss_id_update(self):
         underperformance_timers = self.env['mrp.workcenter.productivity']
+        productive_timers = self.env['mrp.workcenter.productivity']
         for timer in self:
             wo = timer.workorder_id
-            timer.write({'date_end': datetime.now()})
-            if wo.duration > wo.duration_expected:
+            if wo.get_productive_duration() > wo.duration_expected:  # wrong as we should consider rather productive time
                 productive_date_end = timer.date_end - relativedelta.relativedelta(minutes=wo.duration - wo.duration_expected)
                 if productive_date_end <= timer.date_start:
                     underperformance_timers |= timer
                 else:
                     underperformance_timers |= timer.copy({'date_start': productive_date_end})
                     timer.write({'date_end': productive_date_end})
+            else:
+                productive_timers |= timer
         if underperformance_timers:
-            underperformance_type = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
+            underperformance_type = timer.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
             if not underperformance_type:
                 raise UserError(_("You need to define at least one unactive productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
             underperformance_timers.write({'loss_id': underperformance_type.id})
+        if productive_timers:
+            productive_type = timer.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'productive')], limit=1)
+            if not productive_type:
+                raise UserError(_("You need to define at least one productive productivity loss in the category 'Productive'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+            productive_timers.write({'loss_id': productive_type.id})
+
+    def _close(self):
+        for timer in self:
+            timer.write({'date_end': datetime.now()})
+        self._loss_id_update()
 
 
 class MrpWorkCenterCapacity(models.Model):

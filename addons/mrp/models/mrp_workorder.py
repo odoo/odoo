@@ -359,6 +359,7 @@ class MrpWorkorder(models.Model):
                     else:
                         new_time_line_duration = timeline.duration - duration_to_remove
                         timeline.date_start = timeline.date_end - timedelta(seconds=_float_duration_to_second(new_time_line_duration))
+                        timeline.duration = new_time_line_duration
                         break
                 timelines_to_unlink.unlink()
 
@@ -676,8 +677,8 @@ class MrpWorkorder(models.Model):
 
     def action_cancel(self):
         self.leave_id.unlink()
+        self.write({'state': 'cancel'})
         self.end_all()
-        return self.write({'state': 'cancel'})
 
     def action_replan(self):
         """Replan a work order.
@@ -864,6 +865,17 @@ class MrpWorkorder(models.Model):
     def get_duration(self):
         self.ensure_one()
         return sum(self.time_ids.mapped('duration')) + self.get_working_duration()
+
+    def get_productive_duration(self):
+        self.ensure_one()
+        now = datetime.now()
+        productive_times = []
+        for time in self.time_ids:
+            if time.loss_id.loss_type == "productive":
+                productive_times.append(time)
+        duration = 0
+        duration += self._intervals_duration([(t.date_start, t.date_end or now, t) for t in productive_times])
+        return duration
 
     def action_mark_as_done(self):
         for wo in self:
