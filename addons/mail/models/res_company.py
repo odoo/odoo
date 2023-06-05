@@ -10,7 +10,10 @@ class Company(models.Model):
 
     catchall_email = fields.Char(string="Catchall Email", compute="_compute_catchall")
     catchall_formatted = fields.Char(string="Catchall", compute="_compute_catchall")
-    email_formatted = fields.Char(string="Formatted Email", compute="_compute_email_formatted")
+    # the compute method is sudo'ed because it needs to access res.partner records
+    # portal users cannot access those (but they should be able to read the company email address)
+    email_formatted = fields.Char(string="Formatted Email",
+        compute="_compute_email_formatted", compute_sudo=True)
 
     @api.depends('name')
     def _compute_catchall(self):
