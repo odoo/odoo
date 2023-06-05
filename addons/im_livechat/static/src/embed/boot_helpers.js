@@ -4,7 +4,7 @@ import { serverUrl } from "@im_livechat/embed/livechat_data";
 
 async function loadFontAwesome() {
     await document.fonts.ready;
-    if ([...document.fonts.values()].some(({ family }) => family === "FontAwesome")) {
+    if ([...document.fonts].some(({ family }) => family === "FontAwesome")) {
         // FontAwesome already loaded.
         return;
     }
