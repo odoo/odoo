@@ -15,39 +15,24 @@ class SaleReport(models.Model):
     def _get_done_states(self):
         return ['sale', 'done']
 
-    name = fields.Char('Order Reference', readonly=True)
-    date = fields.Datetime('Order Date', readonly=True)
-    product_id = fields.Many2one('product.product', 'Product Variant', readonly=True)
-    product_uom = fields.Many2one('uom.uom', 'Unit of Measure', readonly=True)
-    product_uom_qty = fields.Float('Qty Ordered', readonly=True)
-    qty_to_deliver = fields.Float('Qty To Deliver', readonly=True)
-    qty_delivered = fields.Float('Qty Delivered', readonly=True)
-    qty_to_invoice = fields.Float('Qty To Invoice', readonly=True)
-    qty_invoiced = fields.Float('Qty Invoiced', readonly=True)
-    partner_id = fields.Many2one('res.partner', 'Customer', readonly=True)
-    company_id = fields.Many2one('res.company', 'Company', readonly=True)
-    user_id = fields.Many2one('res.users', 'Salesperson', readonly=True)
-    price_total = fields.Monetary('Total', readonly=True)
-    price_subtotal = fields.Monetary('Untaxed Total', readonly=True)
-    untaxed_amount_to_invoice = fields.Monetary('Untaxed Amount To Invoice', readonly=True)
-    untaxed_amount_invoiced = fields.Monetary('Untaxed Amount Invoiced', readonly=True)
-    product_tmpl_id = fields.Many2one('product.template', 'Product', readonly=True)
-    categ_id = fields.Many2one('product.category', 'Product Category', readonly=True)
-    nbr = fields.Integer('# of Lines', readonly=True)
-    pricelist_id = fields.Many2one('product.pricelist', 'Pricelist', readonly=True)
-    analytic_account_id = fields.Many2one('account.analytic.account', 'Analytic Account', readonly=True)
-    team_id = fields.Many2one('crm.team', 'Sales Team', readonly=True)
-    country_id = fields.Many2one('res.country', 'Customer Country', readonly=True)
-    industry_id = fields.Many2one('res.partner.industry', 'Customer Industry', readonly=True)
-    zip = fields.Char('Customer ZIP', readonly=True)
-    commercial_partner_id = fields.Many2one('res.partner', 'Customer Entity', readonly=True)
-    state = fields.Selection([
-        ('draft', 'Draft Quotation'),
-        ('sent', 'Quotation Sent'),
-        ('sale', 'Sales Order'),
-        ('done', 'Sales Done'),
-        ('cancel', 'Cancelled'),
+    # sale.order fields
+    name = fields.Char(string="Order Reference", readonly=True)
+    date = fields.Datetime(string="Order Date", readonly=True)
+    partner_id = fields.Many2one(comodel_name='res.partner', string="Customer", readonly=True)
+    company_id = fields.Many2one(comodel_name='res.company', readonly=True)
+    pricelist_id = fields.Many2one(comodel_name='product.pricelist', readonly=True)
+    team_id = fields.Many2one(comodel_name='crm.team', string="Sales Team", readonly=True)
+    user_id = fields.Many2one(comodel_name='res.users', string="Salesperson", readonly=True)
+    state = fields.Selection(
+        selection=[
+            ('draft', 'Draft Quotation'),
+            ('sent', 'Quotation Sent'),
+            ('sale', 'Sales Order'),
+            ('done', 'Sales Done'),
+            ('cancel', 'Cancelled'),
         ], string='Status', readonly=True)
+    analytic_account_id = fields.Many2one(
+        comodel_name='account.analytic.account', string="Analytic Account", readonly=True)
     invoice_status = fields.Selection(
         selection=[
             ('upselling', "Upselling Opportunity"),
@@ -55,17 +40,49 @@ class SaleReport(models.Model):
             ('to invoice', "To Invoice"),
             ('no', "Nothing to Invoice"),
         ], string="Invoice Status", readonly=True)
-    weight = fields.Float('Gross Weight', readonly=True)
-    volume = fields.Float('Volume', readonly=True)
 
-    discount = fields.Float('Discount %', readonly=True)
-    discount_amount = fields.Monetary('Discount Amount', readonly=True)
-    currency_id = fields.Many2one('res.currency', compute='_compute_currency_id')
-    campaign_id = fields.Many2one('utm.campaign', 'Campaign', readonly=True)
-    medium_id = fields.Many2one('utm.medium', 'Medium', readonly=True)
-    source_id = fields.Many2one('utm.source', 'Source', readonly=True)
+    campaign_id = fields.Many2one(comodel_name='utm.campaign', string="Campaign", readonly=True)
+    medium_id = fields.Many2one(comodel_name='utm.medium', string="Medium", readonly=True)
+    source_id = fields.Many2one(comodel_name='utm.source', string="Source", readonly=True)
 
-    order_id = fields.Many2one('sale.order', 'Order #', readonly=True)
+    # res.partner fields
+    commercial_partner_id = fields.Many2one(
+        comodel_name='res.partner', string="Customer Entity", readonly=True)
+    country_id = fields.Many2one(
+        comodel_name='res.country', string="Customer Country", readonly=True)
+    industry_id = fields.Many2one(
+        comodel_name='res.partner.industry', string="Customer Industry", readonly=True)
+    partner_zip = fields.Char(string="Customer ZIP", readonly=True)
+
+    # sale.order.line fields
+    order_id = fields.Many2one(comodel_name='sale.order', string="Order #", readonly=True)
+
+    categ_id = fields.Many2one(
+        comodel_name='product.category', string="Product Category", readonly=True)
+    product_id = fields.Many2one(
+        comodel_name='product.product', string="Product Variant", readonly=True)
+    product_tmpl_id = fields.Many2one(
+        comodel_name='product.template', string="Product", readonly=True)
+    product_uom = fields.Many2one(comodel_name='uom.uom', string="Unit of Measure", readonly=True)
+    product_uom_qty = fields.Float(string="Qty Ordered", readonly=True)
+    qty_to_deliver = fields.Float(string="Qty To Deliver", readonly=True)
+    qty_delivered = fields.Float(string="Qty Delivered", readonly=True)
+    qty_to_invoice = fields.Float(string="Qty To Invoice", readonly=True)
+    qty_invoiced = fields.Float(string="Qty Invoiced", readonly=True)
+    price_subtotal = fields.Monetary(string="Untaxed Total", readonly=True)
+    price_total = fields.Monetary(string="Total", readonly=True)
+    untaxed_amount_to_invoice = fields.Monetary(string="Untaxed Amount To Invoice", readonly=True)
+    untaxed_amount_invoiced = fields.Monetary(string="Untaxed Amount Invoiced", readonly=True)
+
+    weight = fields.Float(string="Gross Weight", readonly=True)
+    volume = fields.Float(string="Volume", readonly=True)
+
+    discount = fields.Float(string="Discount %", readonly=True)
+    discount_amount = fields.Monetary(string="Discount Amount", readonly=True)
+
+    # aggregates or computed fields
+    nbr = fields.Integer(string="# of Lines", readonly=True)
+    currency_id = fields.Many2one(comodel_name='res.currency', compute='_compute_currency_id')
 
     @api.depends_context('allowed_company_ids')
     def _compute_currency_id(self):
@@ -122,7 +139,7 @@ class SaleReport(models.Model):
             p.product_tmpl_id,
             partner.country_id AS country_id,
             partner.industry_id AS industry_id,
-            partner.zip AS zip,
+            partner.zip AS partner_zip,
             partner.commercial_partner_id AS commercial_partner_id,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(p.weight * l.product_uom_qty / u.factor * u2.factor) ELSE 0 END AS weight,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(p.volume * l.product_uom_qty / u.factor * u2.factor) ELSE 0 END AS volume,
