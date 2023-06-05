@@ -40,14 +40,15 @@ class AccountTaxPython(models.Model):
         return super(AccountTaxPython, self)._compute_amount(base_amount, price_unit, quantity, product, partner, fixed_multiplicator)
 
     def compute_all(self, price_unit, currency=None, quantity=1.0, product=None, partner=None, is_refund=False, handle_price_include=True, include_caba_tags=False, fixed_multiplicator=1):
-        taxes = self.filtered(lambda r: r.amount_type != 'code')
-        company = self.env.company
         if product and product._name == 'product.template':
             product = product.product_variant_id
-        for tax in self.filtered(lambda r: r.amount_type == 'code'):
-            localdict = self._context.get('tax_computation_context', {})
-            localdict.update({'price_unit': price_unit, 'quantity': quantity, 'product': product, 'partner': partner, 'company': company})
-            safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
-            if localdict.get('result', False):
-                taxes += tax
-        return super(AccountTaxPython, taxes).compute_all(price_unit, currency, quantity, product, partner, is_refund=is_refund, handle_price_include=handle_price_include, include_caba_tags=include_caba_tags, fixed_multiplicator=fixed_multiplicator)
+
+        def is_applicable_tax(tax, company=self.env.company):
+            if tax.amount_type == 'code':
+                localdict = {'price_unit': price_unit, 'quantity': quantity, 'product': product, 'partner': partner, 'company': company}
+                safe_eval(tax.python_applicable, localdict, mode="exec", nocopy=True)
+                return localdict.get('result', False)
+
+            return True
+
+        return super(AccountTaxPython, self.filtered(is_applicable_tax)).compute_all(price_unit, currency, quantity, product, partner, is_refund=is_refund, handle_price_include=handle_price_include, include_caba_tags=include_caba_tags, fixed_multiplicator=fixed_multiplicator)
