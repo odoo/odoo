@@ -58,8 +58,10 @@ export class StockForecasted extends Component {
                 }
             } else if (this.props.action._originalAction) {
                 const originalContextAction = JSON.parse(this.props.action._originalAction).context;
-                if (originalContextAction) {
-                    this.resModel = originalContextAction.active_model || JSON.parse(originalContextAction.replace(/'/g, '"')).active_model;
+                if (typeof originalContextAction === "string") {
+                    this.resModel = JSON.parse(originalContextAction.replace(/'/g, '"')).active_model;
+                } else if (originalContextAction) {
+                    this.resModel = originalContextAction.active_model;
                 }
             }
         }
