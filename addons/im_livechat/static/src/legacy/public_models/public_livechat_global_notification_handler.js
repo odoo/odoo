@@ -25,6 +25,10 @@ Model({
                 "discuss.channel/new_message",
                 this._handleNewMessage
             );
+            this.env.services["bus_service"].subscribe(
+                "mail.record/insert",
+                this._handleRecordInsert
+            );
         },
     },
     recordMethods: {
