@@ -195,8 +195,8 @@ class EventRegistration(models.Model):
         )  # CHECKME: broader than just public partner
 
         # mono registration mode: keep partner only if email and phone matches;
-        # otherwise registration > partner. Note that email format has to be
-        # taken into account in comparison
+        # otherwise registration > partner. Note that email format and phone
+        # formatting have to taken into account in comparison
         if len(self) == 1 and valid_partner:
             # compare emails: email_normalized or raw
             if self.email and valid_partner.email:
@@ -205,9 +205,7 @@ class EventRegistration(models.Model):
                 elif not valid_partner.email_normalized and valid_partner.email != self.email:
                     valid_partner = self.env['res.partner']
 
-            # compare phone
-            if valid_partner and valid_partner.phone and self.phone and valid_partner.phone != self.phone:
-                valid_partner = self.env['res.partner']
+            # compare phone, taking into account formatting
             if valid_partner and self.phone and valid_partner.phone:
                 phone_formatted = phone_validation.phone_format(
                     self.phone,
