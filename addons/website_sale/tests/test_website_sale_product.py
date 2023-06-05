@@ -35,3 +35,41 @@ class WebsiteSaleProductTests(TestSaleProductAttributeValueCommon):
             2000.0 * currency_ratio * discount_rate, contextual_price,
             "With a website pricelist context, the contextual price should be the one defined for the website's pricelist."
         )
+
+    def test_base_price_with_discount_on_pricelist_tax_included(self):
+        """
+        Tests that the base price of a product with tax included
+        and discount from a price list is correctly displayed in the shop
+
+        ex: A product with a price of $61.98 ($75 tax incl. of 21%) and a discount of 20%
+        should display the base price of $75
+        """
+        self.env['res.config.settings'].create({                  # Set Settings:
+            'show_line_subtotals_tax_selection': 'tax_included',  # Set "Tax Included" on the "Display Product Prices"
+            'product_pricelist_setting': 'advanced',              # advanced pricelist (discounts, etc.)
+            'group_product_price_comparison': True,               # price comparison
+        }).execute()
+
+        tax = self.env['account.tax'].create({
+            'name': '21%',
+            'type_tax_use': 'sale',
+            'amount': 21,
+        })
+        product_tmpl = self.env['product.template'].create({
+            'name': 'Test Product',
+            'type': 'consu',
+            'list_price': 61.98,  # 75 tax incl.
+            'taxes_id': [(6, 0, [tax.id])],
+            'is_published': True,
+        })
+        pricelist_item = self.env['product.pricelist.item'].create({
+            'price_discount': 20,
+            'compute_price': 'formula',
+            'product_tmpl_id': product_tmpl.id,
+        })
+        current_website = self.env['website'].get_current_website()
+        pricelist = current_website.get_current_pricelist()
+        pricelist.item_ids = [(6, 0, [pricelist_item.id])]
+        pricelist.discount_policy = 'without_discount'
+        res = product_tmpl._get_sales_prices(pricelist)
+        self.assertEqual(res[product_tmpl.id]['base_price'], 75)
