@@ -17,10 +17,6 @@ export class BoardController extends Component {
         this.board = useState(this.props.board);
         this.rpc = useService("rpc");
         this.dialogService = useService("dialog");
-        if (this.env.isSmall) {
-            this.board.layout = "1";
-            this.board.colNumber = 1;
-        }
         const mainRef = useRef("main");
         useSortable({
             ref: mainRef,
@@ -41,6 +37,9 @@ export class BoardController extends Component {
                 this.moveAction(fromColIdx, fromActionIdx, toColIdx, toActionIdx);
             },
         });
+        if (this.env.isSmall) {
+            this.selectLayout("1");
+        }
     }
 
     moveAction(fromColIdx, fromActionIdx, toColIdx, toActionIdx) {
@@ -80,7 +79,9 @@ export class BoardController extends Component {
         }
         this.board.layout = layout;
         this.board.colNumber = nextColNbr;
-        this.saveBoard();
+        if (!this.env.isSmall) {
+            this.saveBoard();
+        }
         if (document.querySelector("canvas")) {
             // horrible hack to force charts to be recreated so they pick up the
             // proper size. also, no idea why raf is needed :(
