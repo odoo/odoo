@@ -4,7 +4,7 @@ import copy
 import json
 from collections import defaultdict
 from odoo import _, api, fields, models
-from odoo.tools import float_compare, format_date, float_is_zero
+from odoo.tools import float_compare, format_date, float_is_zero, get_lang
 from datetime import datetime, timedelta
 from math import log10
 
@@ -342,7 +342,8 @@ class ReportMoOverview(models.AbstractModel):
 
         product = move_raw.product_id
         currency = (production.company_id or self.env.company).currency_id
-        receipt_date = datetime.strptime(in_transit['delivery_date'], '%m/%d/%Y')
+        lg = self.env['res.lang']._lang_get(self.env.user.lang) or get_lang(self.env)
+        receipt_date = datetime.strptime(in_transit['delivery_date'], lg.date_format)
         return {'summary': {
             'level': level + 1,
             'index': f"{current_index}IT",
