@@ -1404,6 +1404,309 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
 // Widgets handling both basic and relational fields (selection and Many2one)
 //------------------------------------------------------------------------------
 
+<<<<<<< HEAD
+||||||| parent of 8dd091b3b208 (temp)
+var FieldStatus = AbstractField.extend({
+    className: 'o_statusbar_status',
+    events: {
+        'click button:not(.dropdown-toggle)': '_onClickStage',
+    },
+    specialData: "_fetchSpecialStatus",
+    supportedFieldTypes: ['selection', 'many2one'],
+    /**
+     * @override init from AbstractField
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this._setState();
+        this._onClickStage = _.debounce(this._onClickStage, 300, true); // TODO maybe not useful anymore ?
+
+        // Retro-compatibility: clickable used to be defined in the field attrs
+        // instead of options.
+        // If not set, the statusbar is not clickable.
+        try {
+            this.isClickable = !!JSON.parse(this.attrs.clickable);
+        } catch (_) {
+            this.isClickable = !!this.nodeOptions.clickable;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns false to force the statusbar to be always visible (even the field
+     * it not set).
+     *
+     * @override
+     * @returns {boolean} always false
+     */
+    isEmpty: function () {
+        return false;
+    },
+    /**
+     * Set the legacy command for statusbar to CommandPalette.
+     *
+     * @override
+     */
+    on_attach_callback() {
+        if (this.isClickable && this.viewType === 'form') {
+            const provide = () => {
+                return this.status_information.map((value) => ({
+                    name: value['display_name'],
+                    action: () => {
+                        this._setValue(value['id']);
+                    }
+                }));
+            };
+            const statusLabel = sprintf(_t(`Move to %s...`), escape(this.string));
+            const getCommandDefinition = (env) => ({
+                name: statusLabel,
+                options: {
+                    activeElement: env.services.ui.getActiveElementOf(this.el),
+                    category: "smart_action",
+                    hotkey: "alt+shift+x",
+                },
+                action() {
+                    return env.services.command.openPalette({
+                        placeholder: statusLabel,
+                        providers: [{ provide }],
+                    });
+                },
+            });
+            core.bus.trigger("set_legacy_command", "web.FieldStatus.moveToStage", getCommandDefinition);
+        }
+    },
+    /**
+     * Remove the legacy command from CommandPalette.
+     *
+     * @override
+     */
+    on_detach_callback() {
+        core.bus.trigger("remove_legacy_command", "web.FieldStatus.moveToStage");
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override _reset from AbstractField
+     * @private
+     */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        this._setState();
+    },
+    /**
+     * Prepares the rendering data from the field and record data.
+     * @private
+     */
+    _setState: function () {
+        var self = this;
+        if (this.field.type === 'many2one') {
+            this.status_information = _.map(this.record.specialData[this.name], function (info) {
+                return _.extend({
+                    selected: info.id === self.value.res_id,
+                }, info);
+            });
+        } else {
+            var selection = this.field.selection;
+            if (this.attrs.statusbar_visible) {
+                var restriction = this.attrs.statusbar_visible.split(",");
+                selection = _.filter(selection, function (val) {
+                    return _.contains(restriction, val[0]) || val[0] === self.value;
+                });
+            }
+            this.status_information = _.map(selection, function (val) {
+                return { id: val[0], display_name: val[1], selected: val[0] === self.value, fold: false };
+            });
+        }
+    },
+    /**
+     * @override _render from AbstractField
+     * @private
+     */
+    _render: function () {
+        var selections = _.partition(this.status_information, function (info) {
+            return (info.selected || !info.fold);
+        });
+        this.$el.html(qweb.render("FieldStatus.content", {
+            selection_unfolded: selections[0],
+            selection_folded: selections[1],
+            clickable: this.isClickable,
+        }));
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when on status stage is clicked -> sets the field value.
+     *
+     * @private
+     * @param {MouseEvent} e
+     */
+    _onClickStage: function (e) {
+        this._setValue($(e.currentTarget).data("value"));
+    },
+});
+
+=======
+var FieldStatus = AbstractField.extend({
+    className: 'o_statusbar_status',
+    events: {
+        'click button:not(.dropdown-toggle)': '_onClickStage',
+    },
+    specialData: "_fetchSpecialStatus",
+    supportedFieldTypes: ['selection', 'many2one'],
+    /**
+     * @override init from AbstractField
+     */
+    init: function () {
+        this._super.apply(this, arguments);
+        this._setState();
+        this._onClickStage = _.debounce(this._onClickStage, 300, true); // TODO maybe not useful anymore ?
+
+        // Retro-compatibility: clickable used to be defined in the field attrs
+        // instead of options.
+        // If not set, the statusbar is not clickable.
+        try {
+            this.isClickable = !!JSON.parse(this.attrs.clickable);
+        } catch (_) {
+            this.isClickable = !!this.nodeOptions.clickable;
+        }
+
+        const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly;
+        this.isClickable = this.isClickable && !isReadonly;
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns false to force the statusbar to be always visible (even the field
+     * it not set).
+     *
+     * @override
+     * @returns {boolean} always false
+     */
+    isEmpty: function () {
+        return false;
+    },
+    /**
+     * Set the legacy command for statusbar to CommandPalette.
+     *
+     * @override
+     */
+    on_attach_callback() {
+        if (this.isClickable && this.viewType === 'form') {
+            const provide = () => {
+                return this.status_information.map((value) => ({
+                    name: value['display_name'],
+                    action: () => {
+                        this._setValue(value['id']);
+                    }
+                }));
+            };
+            const statusLabel = sprintf(_t(`Move to %s...`), escape(this.string));
+            const getCommandDefinition = (env) => ({
+                name: statusLabel,
+                options: {
+                    activeElement: env.services.ui.getActiveElementOf(this.el),
+                    category: "smart_action",
+                    hotkey: "alt+shift+x",
+                },
+                action() {
+                    return env.services.command.openPalette({
+                        placeholder: statusLabel,
+                        providers: [{ provide }],
+                    });
+                },
+            });
+            core.bus.trigger("set_legacy_command", "web.FieldStatus.moveToStage", getCommandDefinition);
+        }
+    },
+    /**
+     * Remove the legacy command from CommandPalette.
+     *
+     * @override
+     */
+    on_detach_callback() {
+        core.bus.trigger("remove_legacy_command", "web.FieldStatus.moveToStage");
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override _reset from AbstractField
+     * @private
+     */
+    _reset: function () {
+        this._super.apply(this, arguments);
+        this._setState();
+    },
+    /**
+     * Prepares the rendering data from the field and record data.
+     * @private
+     */
+    _setState: function () {
+        var self = this;
+        if (this.field.type === 'many2one') {
+            this.status_information = _.map(this.record.specialData[this.name], function (info) {
+                return _.extend({
+                    selected: info.id === self.value.res_id,
+                }, info);
+            });
+        } else {
+            var selection = this.field.selection;
+            if (this.attrs.statusbar_visible) {
+                var restriction = this.attrs.statusbar_visible.split(",");
+                selection = _.filter(selection, function (val) {
+                    return _.contains(restriction, val[0]) || val[0] === self.value;
+                });
+            }
+            this.status_information = _.map(selection, function (val) {
+                return { id: val[0], display_name: val[1], selected: val[0] === self.value, fold: false };
+            });
+        }
+    },
+    /**
+     * @override _render from AbstractField
+     * @private
+     */
+    _render: function () {
+        var selections = _.partition(this.status_information, function (info) {
+            return (info.selected || !info.fold);
+        });
+        this.$el.html(qweb.render("FieldStatus.content", {
+            selection_unfolded: selections[0],
+            selection_folded: selections[1],
+            clickable: this.isClickable,
+        }));
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when on status stage is clicked -> sets the field value.
+     *
+     * @private
+     * @param {MouseEvent} e
+     */
+    _onClickStage: function (e) {
+        this._setValue($(e.currentTarget).data("value"));
+    },
+});
+
+>>>>>>> 8dd091b3b208 (temp)
 /**
  * The FieldSelection widget is a simple select tag with a dropdown menu to
  * allow the selection of a range of values.  It is designed to work with fields
