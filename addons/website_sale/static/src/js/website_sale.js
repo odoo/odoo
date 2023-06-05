@@ -203,7 +203,6 @@ const cartHandlerMixin = wSaleUtils.cartHandlerMixin;
 require("web.zoomodoo");
 const {extraMenuUpdateCallbacks} = require('website.content.menu');
 const dom = require('web.dom');
-const { cartesian } = require('@web/core/utils/arrays');
 const { ComponentWrapper } = require('web.OwlCompatibility');
 const { ProductImageViewerWrapper } = require("@website_sale/js/components/website_sale_image_viewer");
 
@@ -892,58 +891,20 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     /**
      * @private
      */
-    _isValidCombination(combination, attributeExclusions) {
-        if (attributeExclusions.exclusions) {
-            for (const attribute of combination) {
-                if (!attributeExclusions.exclusions.hasOwnProperty(attribute)) {
-                    continue;
-                }
-                for (const excludedAttribute of attributeExclusions.exclusions[attribute]) {
-                    if (combination.includes(excludedAttribute)) {
-                        return false;
-                    }
-                }
-            }
-        }
-        if (attributeExclusions.archived_combination) {
-            for (const archivedCombination of attributeExclusions.archived_combination) {
-                if (archivedCombination.length !== combination.length) {
-                    continue;
-                }
-                if (archivedCombination.filter((attr) => combination.includes(attr)).length === combination.length) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    },
-    /**
-     * @private
-     */
     _applyHashFromSearch() {
         const params = $.deparam(window.location.search.slice(1));
         if (params.attrib) {
-            const attributeValuesPerAttribute = {};
-            for (const attrib of params.attrib) {
-                const [ptalId, ptavId] = attrib.split('-');
-                const attribValueSelector = `.js_variant_change[name="ptal-${ptalId}"][value="${ptavId}"]`;
+            const dataValueIds = [];
+            for (const attrib of [].concat(params.attrib)) {
+                const attribSplit = attrib.split('-');
+                const attribValueSelector = `.js_variant_change[name="ptal-${attribSplit[0]}"][value="${attribSplit[1]}"]`;
                 const attribValue = this.el.querySelector(attribValueSelector);
                 if (attribValue !== null) {
-                    if (!attributeValuesPerAttribute[ptalId]) {
-                        attributeValuesPerAttribute[ptalId] = [];
-                    }
-                    attributeValuesPerAttribute[ptalId].push(ptavId);
+                    dataValueIds.push(attribValue.dataset.value_id);
                 }
             }
-            const attributeSelection = this.el.querySelector('.js_add_cart_variants');
-            const attributeExclusions = attributeSelection && JSON.parse(attributeSelection.dataset.attribute_exclusions);
-            if (attributeExclusions && Object.values(attributeValuesPerAttribute).length > 1) {
-                const allCombinations = cartesian(...Object.values(attributeValuesPerAttribute));
-                const selectedCombination = allCombinations.find(c => this._isValidCombination(c, attributeExclusions));
-
-                if (selectedCombination && selectedCombination.length) {
-                    window.location.replace('#attr=' + selectedCombination.join(','));
-                }
+            if (dataValueIds.length) {
+                window.location.hash = `attr=${dataValueIds.join(',')}`;
             }
         }
         this._applyHash();
