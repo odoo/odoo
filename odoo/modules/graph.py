@@ -192,6 +192,7 @@ class PackageGraph:
         self._update_module = update_module
         self._sort_key = (lambda package: package.updating_sort_key) \
             if update_module else (lambda package: package.loading_sort_key)
+        self._sort_key = lambda package: package.loading_sort_key
 
     def __contains__(self, name: str) -> bool:
         return name in self._packages
