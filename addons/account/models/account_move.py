@@ -33,6 +33,15 @@ from odoo.tools import (
 
 MAX_HASH_VERSION = 3
 
+PAYMENT_STATE_SELECTION = [
+        ('not_paid', 'Not Paid'),
+        ('in_payment', 'In Payment'),
+        ('paid', 'Paid'),
+        ('partial', 'Partially Paid'),
+        ('reversed', 'Reversed'),
+        ('invoicing_legacy', 'Invoicing App Legacy'),
+]
+
 TYPE_REVERSE_MAP = {
     'entry': 'entry',
     'out_invoice': 'out_refund',
@@ -433,14 +442,7 @@ class AccountMove(models.Model):
         exportable=False,
     )
     payment_state = fields.Selection(
-        selection=[
-            ('not_paid', 'Not Paid'),
-            ('in_payment', 'In Payment'),
-            ('paid', 'Paid'),
-            ('partial', 'Partially Paid'),
-            ('reversed', 'Reversed'),
-            ('invoicing_legacy', 'Invoicing App Legacy'),
-        ],
+        selection=PAYMENT_STATE_SELECTION,
         string="Payment Status",
         compute='_compute_payment_state', store=True, readonly=True,
         copy=False,
