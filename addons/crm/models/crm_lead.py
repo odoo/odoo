@@ -624,12 +624,12 @@ class Lead(models.Model):
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):
         if self.phone:
-            self.phone = self.phone_get_sanitized_number(number_fname='phone', force_format='INTERNATIONAL') or self.phone
+            self.phone = self.phone_get_sanitized_number(number_fname='phone', force_format='E164') or self.phone
 
     @api.onchange('mobile', 'country_id', 'company_id')
     def _onchange_mobile_validation(self):
         if self.mobile:
-            self.mobile = self.phone_get_sanitized_number(number_fname='mobile', force_format='INTERNATIONAL') or self.mobile
+            self.mobile = self.phone_get_sanitized_number(number_fname='mobile', force_format='E164') or self.mobile
 
     def _prepare_values_from_partner(self, partner):
         """ Get a dictionary with values coming from partner information to
