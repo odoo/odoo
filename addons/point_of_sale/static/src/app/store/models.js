@@ -945,11 +945,25 @@ export class PosGlobalState extends PosModel {
      *
      * @returns {string}
      */
-    async customerDisplayHTML() {
-        const order = this.get_order();
-        if (!order) {
-            return;
+    async customerDisplayHTML(closeUI = false) {
+        const backgroundImageBase64 =
+            this.config.iface_customer_facing_display_background_image_1920;
+        let backgroundImageCSSValue;
+        if (backgroundImageBase64) {
+            backgroundImageCSSValue = "url('data:image/png;base64," + backgroundImageBase64 + "')";
+        } else {
+            backgroundImageCSSValue = "none";
         }
+
+        const order = this.get_order();
+        if (closeUI || !order) {
+            return renderToString("point_of_sale.CustomerFacingDisplayNoOrder", {
+                pos: this,
+                origin: window.location.origin,
+                backgroundImageCSSValue,
+            });
+        }
+
         const orderLines = order.get_orderlines();
         const productImages = Object.fromEntries(
             await Promise.all(
@@ -964,6 +978,7 @@ export class PosGlobalState extends PosModel {
             pos: this,
             formatCurrency: this.env.utils.formatCurrency,
             origin: window.location.origin,
+            backgroundImageCSSValue,
             order,
             productImages,
         });
@@ -3969,6 +3984,9 @@ export class Order extends PosModel {
     // store the screen status.
     set_screen_data(value) {
         this.screen_data["value"] = value;
+    }
+    get_current_screen_data() {
+        return this.screen_data["value"] ?? { name: "ProductScreen" };
     }
     //see set_screen_data
     get_screen_data() {

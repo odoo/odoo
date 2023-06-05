@@ -63,6 +63,7 @@ class ResConfigSettings(models.TransientModel):
     pos_iface_cashdrawer = fields.Boolean(string='Cashdrawer', compute='_compute_pos_iface_cashdrawer', readonly=False, store=True)
     pos_iface_customer_facing_display_local = fields.Boolean(related='pos_config_id.iface_customer_facing_display_local', readonly=False)
     pos_iface_customer_facing_display_via_proxy = fields.Boolean(string='Customer Facing Display', compute='_compute_pos_iface_customer_facing_display_via_proxy', readonly=False, store=True)
+    pos_iface_customer_facing_display_background_image_1920 = fields.Image(related='pos_config_id.iface_customer_facing_display_background_image_1920', readonly=False)
     pos_iface_electronic_scale = fields.Boolean(string='Electronic Scale', compute='_compute_pos_iface_electronic_scale', readonly=False, store=True)
     pos_iface_print_auto = fields.Boolean(related='pos_config_id.iface_print_auto', readonly=False)
     pos_iface_print_skip_screen = fields.Boolean(related='pos_config_id.iface_print_skip_screen', readonly=False)

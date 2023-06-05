@@ -10,13 +10,32 @@ export class CustomerFacingDisplayButton extends Component {
     setup() {
         this.pos = usePos();
         this.customerDisplay = useState(useService("customer_display"));
+        this.notification = useService("pos_notification");
     }
     get message() {
-        return {
+        const msg = {
             success: "",
             warning: _t("Connected, Not Owned"),
             failure: _t("Disconnected"),
             not_found: _t("Customer Screen Unsupported. Please upgrade the IoT Box"),
         }[this.customerDisplay.status];
+
+        if (
+            this.previousDisplayedStatus &&
+            this.previousDisplayedStatus != this.customerDisplay.status
+        ) {
+            this.displayMessage(msg);
+            this.previousDisplayedStatus = this.customerDisplay.status;
+        }
+
+        return msg;
+    }
+    displayMessage(message) {
+        if (this.notification) {
+            if (message.length == 0) {
+                message = "Connected";
+            }
+            this.notification.add("Customer Display : " + message, 3000);
+        }
     }
 }
