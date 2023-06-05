@@ -123,7 +123,6 @@ class ProductProduct(models.Model):
     def _get_product_accounts(self):
         return self.product_tmpl_id._get_product_accounts()
 
-    @api.model
     def _get_tax_included_unit_price(self, company, currency, document_date, document_type,
             is_refund_document=False, product_uom=None, product_currency=None,
             product_price_unit=None, product_taxes=None, fiscal_position=None
@@ -131,6 +130,8 @@ class ProductProduct(models.Model):
         """ Helper to get the price unit from different models.
             This is needed to compute the same unit price in different models (sale order, account move, etc.) with same parameters.
         """
+        self.ensure_one()
+        company.ensure_one()
 
         product = self
 
