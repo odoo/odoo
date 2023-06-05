@@ -4,7 +4,7 @@ from odoo.tests.common import tagged, HttpCase
 
 
 @tagged("-at_install", "post_install")
-class TestMailChatterReload(HttpCase):
+class TestMailActivityChatter(HttpCase):
 
     def test_chatter_activity_tour(self):
         testuser = self.env['res.users'].create({
