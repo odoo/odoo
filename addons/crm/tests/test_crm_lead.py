@@ -363,9 +363,9 @@ class TestCRMLead(TestCrmCommon):
             # as well as mobile (who does not trigger the reverse sync)
             lead_form.partner_id = partner
             self.assertEqual(lead_form.email_from, partner_email)
-            self.assertEqual(lead_form.phone, partner_phone_formatted,
+            self.assertEqual(lead_form.phone, partner_phone_sanitized,
                             'Lead: form automatically formats numbers')
-            self.assertEqual(lead_form.mobile, partner_mobile_formatted,
+            self.assertEqual(lead_form.mobile, partner_mobile_sanitized,
                             'Lead: form automatically formats numbers')
             self.assertFalse(lead_form.partner_email_update)
             self.assertFalse(lead_form.partner_phone_update)
@@ -377,9 +377,9 @@ class TestCRMLead(TestCrmCommon):
                             'Lead / Partner: partner values sent to lead')
             self.assertEqual(lead.email_normalized, partner_email_normalized,
                             'Lead / Partner: equal emails should lead to equal normalized emails')
-            self.assertEqual(lead.phone, partner_phone_formatted,
+            self.assertEqual(lead.phone, partner_phone_sanitized,
                             'Lead / Partner: partner values (formatted) sent to lead')
-            self.assertEqual(lead.mobile, partner_mobile_formatted,
+            self.assertEqual(lead.mobile, partner_mobile_sanitized,
                             'Lead / Partner: partner values (formatted) sent to lead')
             self.assertEqual(lead.phone_sanitized, partner_mobile_sanitized,
                             'Lead: phone_sanitized computed field on mobile')
@@ -404,7 +404,7 @@ class TestCRMLead(TestCrmCommon):
             lead_form.email_from = new_email
             self.assertTrue(lead_form.partner_email_update)
             new_phone = '+1 202 555 7799'
-            new_phone_formatted = phone_format(new_phone, 'US', '1')
+            new_phone_formatted = phone_format(new_phone, 'US', '1', force_format="E164")
             lead_form.phone = new_phone
             self.assertEqual(lead_form.phone, new_phone_formatted)
             self.assertTrue(lead_form.partner_email_update)
@@ -417,7 +417,7 @@ class TestCRMLead(TestCrmCommon):
 
             # LEAD/PARTNER SYNC: mobile does not update partner
             new_mobile = '+1 202 555 6543'
-            new_mobile_formatted = phone_format(new_mobile, 'US', '1')
+            new_mobile_formatted = phone_format(new_mobile, 'US', '1', force_format="E164")
             lead_form.mobile = new_mobile
             lead_form.save()
             self.assertEqual(lead.mobile, new_mobile_formatted)
