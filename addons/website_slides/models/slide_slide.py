@@ -785,7 +785,10 @@ class Slide(models.Model):
         return self._sign_token(partner_id)
 
     def _send_share_email(self, email, fullscreen):
-        # TDE FIXME: template to check
+        courses_without_templates = self.channel_id.filtered(lambda channel: not channel.share_slide_template_id)
+        if courses_without_templates:
+            raise UserError(_('Impossible to send emails. Select a "Share Template" for courses %(course_names)s first',
+                                 course_names=', '.join(courses_without_templates.mapped('name'))))
         mail_ids = []
         for record in self:
             template = record.channel_id.share_slide_template_id.with_context(
