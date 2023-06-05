@@ -4,6 +4,7 @@
 from collections import defaultdict
 
 from odoo import api, fields, models, _
+from odoo.addons.phone_validation.tools import phone_validation
 
 
 class EventRegistration(models.Model):
@@ -188,16 +189,30 @@ class EventRegistration(models.Model):
 
         :return dict: values used for create / write on a lead
         """
-        valid_partner = related_partner = next(
+        valid_partner = next(
             (reg.partner_id for reg in self if reg.partner_id != self.env.ref('base.public_partner')),
             self.env['res.partner']
         )  # CHECKME: broader than just public partner
 
-        # mono registration mode: keep partner only if email and phone matches, otherwise registration > partner
-        if len(self) == 1:
-            if (related_partner.phone and self.phone and related_partner.phone != self.phone) or \
-                (related_partner.email and self.email and related_partner.email != self.email):
+        # mono registration mode: keep partner only if email and phone matches;
+        # otherwise registration > partner. Note that _phone_format has to be
+        # taken into account as it may have side effects on phone formatting
+        if len(self) == 1 and valid_partner:
+            if self.email and valid_partner.email and valid_partner.email != self.email:
                 valid_partner = self.env['res.partner']
+            if valid_partner and self.phone and valid_partner.phone:
+                phone_formatted = phone_validation.phone_format(
+                    self.phone,
+                    valid_partner.country_id.code or None,
+                    valid_partner.country_id.phone_code or None,
+                    force_format='E164',
+                    raise_exception=False
+                )
+                partner_phone_formatted = valid_partner._phone_format(valid_partner.phone)
+                if phone_formatted and partner_phone_formatted and phone_formatted != partner_phone_formatted:
+                    valid_partner = self.env['res.partner']
+                if (not phone_formatted or not partner_phone_formatted) and self.phone != valid_partner.phone:
+                    valid_partner = self.env['res.partner']
 
         if valid_partner:
             contact_vals = self.env['crm.lead']._prepare_values_from_partner(valid_partner)
