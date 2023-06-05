@@ -53,6 +53,7 @@ class SaleReport(models.Model):
     industry_id = fields.Many2one(
         comodel_name='res.partner.industry', string="Customer Industry", readonly=True)
     partner_zip = fields.Char(string="Customer ZIP", readonly=True)
+    state_id = fields.Many2one(comodel_name='res.country.state', readonly=True)
 
     # sale.order.line fields
     order_id = fields.Many2one(comodel_name='sale.order', string="Order #", readonly=True)
@@ -137,10 +138,11 @@ class SaleReport(models.Model):
             s.analytic_account_id AS analytic_account_id,
             s.team_id AS team_id,
             p.product_tmpl_id,
+            partner.commercial_partner_id AS commercial_partner_id,
             partner.country_id AS country_id,
             partner.industry_id AS industry_id,
+            partner.state_id AS state_id,
             partner.zip AS partner_zip,
-            partner.commercial_partner_id AS commercial_partner_id,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(p.weight * l.product_uom_qty / u.factor * u2.factor) ELSE 0 END AS weight,
             CASE WHEN l.product_id IS NOT NULL THEN SUM(p.volume * l.product_uom_qty / u.factor * u2.factor) ELSE 0 END AS volume,
             l.discount AS discount,
@@ -212,10 +214,11 @@ class SaleReport(models.Model):
             s.analytic_account_id,
             s.team_id,
             p.product_tmpl_id,
+            partner.commercial_partner_id,
             partner.country_id,
             partner.industry_id,
+            partner.state_id,
             partner.zip,
-            partner.commercial_partner_id,
             l.discount,
             s.id,
             currency_table.rate"""
