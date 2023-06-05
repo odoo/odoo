@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
-        <xpath expr="//*[hasclass('o-mail-ChatWindow')]" position="attributes">
-            <attribute name="class" remove="border" separator=" "/>
-        </xpath>
         <xpath expr="//*[@name='thread content']" position="replace">
            <FeedbackPanel
                 t-if="livechatState.hasFeedbackPanel"
