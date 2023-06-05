@@ -362,7 +362,7 @@ var RedirectWarningHandler = Widget.extend(ExceptionHandler, {
                         });
                         self.destroy();
                 }, close: true},
-                {text: _t("Cancel"), click: function() { self.destroy(); }, close: true}
+                {text: _t("Discard"), click: function() { self.destroy(); }, close: true}
             ]
         }, {
             message: error.data.arguments[0],
