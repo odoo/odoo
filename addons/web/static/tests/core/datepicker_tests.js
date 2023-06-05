@@ -1,8 +1,10 @@
 /** @odoo-module **/
 
+import { Component, useState, xml } from "@odoo/owl";
 import { applyFilter, toggleMenu } from "@web/../tests/search/helpers";
 import { DatePicker, DateTimePicker } from "@web/core/datepicker/datepicker";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { localization } from "@web/core/l10n/localization";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
 import ActionModel from "web.ActionModel";
@@ -12,10 +14,16 @@ import { editSelect } from "web.test_utils_fields";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
-import { click, getFixture, mount, triggerEvent } from "../helpers/utils";
+import {
+    click,
+    editInput,
+    getFixture,
+    mount,
+    patchWithCleanup,
+    triggerEvent,
+} from "../helpers/utils";
 
-import { Component, useState, xml } from "@odoo/owl";
-const { DateTime } = luxon;
+const { DateTime, Settings } = luxon;
 
 const serviceRegistry = registry.category("services");
 
@@ -738,5 +746,31 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         assert.verifySteps(["datetime-changed"]);
         assert.strictEqual(input.value, "08/02/1997 15:45:05");
+    });
+
+    QUnit.test("arab locale, latin numbering system as input", async (assert) => {
+        const dateFormat = "dd MMM, yyyy";
+        const timeFormat = "hh:mm:ss";
+        const dateTimeFormat = `${dateFormat} ${timeFormat}`;
+
+        patchWithCleanup(localization, { dateFormat, timeFormat, dateTimeFormat });
+        patchWithCleanup(Settings, {
+            defaultLocale: "ar-001",
+            defaultNumberingSystem: "arab",
+        });
+
+        await mountPicker(DateTimePicker, {
+            format: dateTimeFormat,
+        });
+
+        const input = target.querySelector(".o_datepicker_input");
+
+        await editInput(input, null, "٠٤ يونيو, ٢٠٢٣ ١١:٣٣:٠٠");
+
+        assert.strictEqual(input.value, "٠٤ يونيو, ٢٠٢٣ ١١:٣٣:٠٠");
+
+        await editInput(input, null, "15 07, 2020 12:30:43");
+
+        assert.strictEqual(input.value, "١٥ يوليو, ٢٠٢٠ ١٢:٣٠:٤٣");
     });
 });
