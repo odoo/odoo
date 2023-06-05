@@ -53,10 +53,12 @@
          * @return {undefined}
          */
         _dropinOnError: function (error) {
-            this._displayError(
-                _t("Incorrect Payment Details"),
-                _t("Please verify your payment details.")
-            );
+            if (!this.$('div[name="o_payment_error"]')) { // Don't replace a specific server error.
+                this._displayError(
+                    _t("Incorrect Payment Details"),
+                    _t("Please verify your payment details.")
+                );
+            }
         },
 
         /**
