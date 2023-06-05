@@ -138,18 +138,32 @@ class TestSlidesManagement(slides_common.SlidesCase):
     @users('user_officer')
     def test_share_without_template(self):
         channel_without_template = self.env['slide.channel'].create({
-            'name': 'Course Without Template 2',
+            'name': 'Course Without Template',
             'slide_ids': [(0, 0, {
-                'name': 'Test Slide 2'
+                'name': 'Test Slide'
             })],
-            'share_channel_template_id': False
+            'share_channel_template_id': False,
+            'share_slide_template_id': False,
         })
         all_channels = self.channel | channel_without_template
-        with self.assertRaises(UserError) as cm:
+
+        # try sharing the course
+        with self.assertRaises(UserError) as user_error:
             all_channels._send_share_email("test@test.com")
-        self.assertEqual(cm.exception.args[0],
-                        f'Impossible to send emails. Select a "Channel Share Template" for courses {channel_without_template.name} first'
-                        )
+
+        self.assertEqual(
+            user_error.exception.args[0],
+            f'Impossible to send emails. Select a "Channel Share Template" for courses {channel_without_template.name} first'
+        )
+
+        # try sharing slides
+        with self.assertRaises(UserError) as user_error:
+            all_channels.slide_ids._send_share_email("test@test.com", False)
+
+        self.assertEqual(
+            user_error.exception.args[0],
+            f'Impossible to send emails. Select a "Share Template" for courses {channel_without_template.name} first'
+        )
 
     def test_unlink_slide_channel(self):
         self.assertTrue(self.channel.slide_content_ids.mapped('question_ids').exists(),
