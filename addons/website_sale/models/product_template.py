@@ -185,9 +185,6 @@ class ProductTemplate(models.Model):
             taxes = fiscal_position.map_tax(product_taxes)
             tax_display = self.user_has_groups('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
 
-            template_price_vals = {
-                'price_reduce': price_reduce
-            }
             base_price = None
             price_list_contains_template = pricelist.currency_id.compare_amounts(price_reduce, base_sales_prices[template.id]) != 0
 
@@ -196,36 +193,33 @@ class ProductTemplate(models.Model):
                 base_price = template.compare_list_price
                 if not price_list_contains_template:
                     price_reduce = base_sales_prices[template.id]
-                    template_price_vals.update(price_reduce=price_reduce)
-            elif show_discount and price_list_contains_template:
-                base_price = base_sales_prices[template.id]
 
-            if base_price and base_price != price_reduce:
-                if not template.compare_list_price:
-                    # Compare_list_price are never tax included
-                    base_price = self.env['account.tax']._fix_tax_included_price_company(
-                        base_price, product_taxes, taxes, self.env.company)
-                    base_price = taxes.compute_all(base_price, pricelist.currency_id, 1, template, partner_sudo)[
-                        tax_display]
-                template_price_vals['base_price'] = base_price
-                if base_price > price_reduce:
-                    base_price = self.env['account.tax']._fix_tax_included_price_company(
-                        base_price, product_taxes, taxes, self.env.company)
-                    base_price = taxes.compute_all(base_price, pricelist.currency_id, 1, template, partner_sudo)[tax_display]
-                    template_price_vals['base_price'] = base_price
-
-            if template.compare_list_price:
-                template_price_vals['base_price'] = template.compare_list_price
                 if template.currency_id != pricelist.currency_id:
-                    template_price_vals['base_price'] = template.currency_id._convert(
-                        template.compare_list_price,
+                    base_price = template.currency_id._convert(
+                        base_price,
                         pricelist.currency_id,
                         self.env.company,
                         fields.Datetime.now(),
                         round=False
                     )
-            template_price_vals['price_reduce'] = self.env['account.tax']._fix_tax_included_price_company(template_price_vals['price_reduce'], product_taxes, taxes, self.env.company)
-            template_price_vals['price_reduce'] = taxes.compute_all(template_price_vals['price_reduce'], pricelist.currency_id, 1, template, partner_sudo)[tax_display]
+
+            elif show_discount and price_list_contains_template:
+                base_price = base_sales_prices[template.id]
+
+                # Compare_list_price are never tax included
+                base_price = self.env['account.tax']._fix_tax_included_price_company(
+                    base_price, product_taxes, taxes, self.env.company)
+                base_price = taxes.compute_all(base_price, pricelist.currency_id, 1, template, partner_sudo)[tax_display]
+
+            price_reduce = self.env['account.tax']._fix_tax_included_price_company(
+                price_reduce, product_taxes, taxes, self.env.company)
+            price_reduce = taxes.compute_all(price_reduce, pricelist.currency_id, 1, template, partner_sudo)[tax_display]
+
+            template_price_vals = {
+                'price_reduce': price_reduce,
+            }
+            if base_price:
+                template_price_vals['base_price'] = base_price
 
             res[template.id] = template_price_vals
 
