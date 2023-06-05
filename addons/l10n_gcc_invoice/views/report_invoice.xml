@@ -487,20 +487,17 @@
 
                 <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication">
                     <div class="row">
-                        <div class="col-4">
-                            Payment Reference :
+                        <div class="col-2 offset-6 text-nowrap">
+                            <strong>Payment Reference:</strong>
                         </div>
-                        <div class="col-4 text-center">
-                            <b>
-                                <span t-field="o.payment_reference"/>
-                            </b>
+                        <div class="col-2 text-nowrap">
+                            <span class="fw-bold" t-field="o.payment_reference"/>
                         </div>
-                        <div class="col-4 text-end">
-                               : رقم إشارة الدفعة
+                        <div class="col-2 text-end">
+                            <strong>:رقم إشارة الدفعة</strong>
                         </div>
                     </div>
                 </p>
-
 
                 <p t-if="o.invoice_payment_term_id" name="payment_term">
                     <div class="row">
