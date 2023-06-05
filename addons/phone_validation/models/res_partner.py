@@ -20,13 +20,13 @@ class Partner(models.Model):
 
     def _phone_format(self, number, country=None, company=None):
         country = country or self.country_id or self.env.company.country_id
-        if not country:
+        if not country or not number:
             return number
         return phone_validation.phone_format(
             number,
             country.code if country else None,
             country.phone_code if country else None,
-            force_format='INTERNATIONAL',
+            force_format='E164',
             raise_exception=False
         )
 
