@@ -22,6 +22,7 @@ class ChannelUsersRelation(models.Model):
     _name = 'slide.channel.partner'
     _description = 'Channel / Partners (Members)'
     _table = 'slide_channel_partner'
+    _rec_name = 'partner_id'
 
     active = fields.Boolean(string='Active', default=True)
     channel_id = fields.Many2one('slide.channel', string='Course', index=True, required=True, ondelete='cascade')
