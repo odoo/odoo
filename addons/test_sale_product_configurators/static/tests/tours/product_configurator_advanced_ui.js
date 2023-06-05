@@ -92,5 +92,5 @@ registry.category("web_tour.tours").add('sale_product_configurator_advanced_tour
 }, {
     trigger: 'td.o_data_cell:contains("PA8: PAV1")',
     isCheck: true,
-}, ...stepUtils.discardForm()
+}, ...stepUtils.saveForm()
 ]});
