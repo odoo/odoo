@@ -10,7 +10,7 @@ import { useService } from "@web/core/utils/hooks";
 export class ChannelInvitation extends Component {
     static components = { ImStatus };
     static defaultProps = { hasSizeConstraints: false };
-    static props = ["hasSizeConstraints?", "thread", "close?", "chatState?"];
+    static props = ["hasSizeConstraints?", "thread", "close", "className?"];
     static template = "discuss.ChannelInvitation";
 
     setup() {
@@ -114,11 +114,7 @@ export class ChannelInvitation extends Component {
                 }
             );
         }
-        if (this.ui.isSmall) {
-            this.props.chatState.activeMode = "";
-        } else {
-            this.props.close();
-        }
+        this.props.close();
     }
 
     get invitationButtonText() {

@@ -3,8 +3,7 @@
     <t t-name="discuss.PinnedMessagesPanel" owl="1">
         <div class="o-discuss-PinnedMessagesPanel overflow-auto d-flex flex-column flex-shrink-0 bg-view position-relative" t-att-class="{
             'flex-grow-1': env.inChatWindow,
-            'border-start': !env.inChatWindow,
-        }">
+        }" t-attf-class="{{ props.className }}">
             <p class="o-discuss-PinnedMessagesPanel-title position-sticky top-0 py-3 mb-0 fw-bolder text-center text-uppercase text-700">
                 Pinned messages
             </p>

@@ -11,7 +11,7 @@ export class PinnedMessagesPanel extends Component {
     static components = {
         Message,
     };
-    static props = ["thread"];
+    static props = ["thread", "className?"];
     static template = "discuss.PinnedMessagesPanel";
 
     setup() {

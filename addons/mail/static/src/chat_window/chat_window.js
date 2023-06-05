@@ -4,6 +4,7 @@ import { Call } from "@mail/rtc/call";
 import { Thread } from "@mail/core_ui/thread";
 import { Composer } from "@mail/composer/composer";
 import { useStore } from "@mail/core/messaging_hook";
+import { useThreadActions } from "@mail/core/thread_actions";
 import { useRtc } from "@mail/rtc/rtc_hook";
 import { useMessageEdition, useMessageHighlight, useMessageToReplyTo } from "@mail/utils/hooks";
 import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
@@ -15,10 +16,6 @@ import { isEventHandled } from "@mail/utils/misc";
 import { _t } from "@web/core/l10n/translation";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
-
-export const MODES = {
-    NONE: "",
-};
 
 /**
  * @typedef {Object} Props
@@ -40,7 +37,6 @@ export class ChatWindow extends Component {
     static template = "mail.ChatWindow";
 
     setup() {
-        this.MODES = MODES;
         this.store = useStore();
         /** @type {import("@mail/chat_window/chat_window_service").ChatWindowService} */
         this.chatWindowService = useState(useService("mail.chat_window"));
@@ -50,19 +46,10 @@ export class ChatWindow extends Component {
         this.messageEdition = useMessageEdition();
         this.messageHighlight = useMessageHighlight();
         this.messageToReplyTo = useMessageToReplyTo();
-        this.state = useState({
-            moreActionsExpanded: false,
-            /**
-             * activeMode:
-             *   "member-list": channel member list is displayed
-             *   "in-settings": settings is displayed
-             *   "add-users": add users is displayed (small device)
-             *   "": no action pannel
-             */
-            activeMode: MODES.NONE,
-        });
+        this.state = useState({ moreActionsExpanded: false });
         this.ui = useState(useService("ui"));
         this.contentRef = useRef("content");
+        this.threadActions = useThreadActions();
         useChildSubEnv({
             inChatWindow: true,
             messageHighlight: this.messageHighlight,
@@ -123,35 +110,6 @@ export class ChatWindow extends Component {
     close(options) {
         this.chatWindowService.close(this.props.chatWindow, options);
         this.chatWindowService.notifyState(this.props.chatWindow);
-    }
-
-    get orderedActions() {
-        return this.actions.sort((act1, act2) => act1.sequence - act2.sequence);
-    }
-
-    get actions() {
-        const acts = [];
-        if (
-            this.thread?.allowCalls &&
-            this.thread !== this.rtc.state.channel &&
-            !this.props.chatWindow.hidden
-        ) {
-            acts.push({
-                id: "call",
-                name: _t("Start a Call"),
-                icon: "fa fa-fw fa-phone",
-                onSelect: () => this.rtc.toggleCall(this.props.chatWindow.thread),
-                sequence: 10,
-            });
-        }
-        acts.push({
-            id: "close",
-            name: _t("Close Chat Window"),
-            icon: "fa fa-fw fa-close",
-            onSelect: () => this.close(),
-            sequence: 100,
-        });
-        return acts;
     }
 
     get moreMenuText() {
