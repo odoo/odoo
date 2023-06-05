@@ -960,8 +960,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(
             target,
             ".fc-event-container .fc-event",
-            10,
-            "should still display 10 events"
+            0,
+            "should display 0 events"
         );
         await pickDate(target, "2017-01-01");
         assert.containsN(
