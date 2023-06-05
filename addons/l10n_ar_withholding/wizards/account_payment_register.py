@@ -36,13 +36,30 @@ class AccountPaymentRegisterWithholding(models.TransientModel):
             else:
                 rec.base_amount = factor * sum(tax_base_lines.mapped('price_total'))
 
+    def _tax_compute_all_helper(self):
+        self.ensure_one()
+        # Computes the withholding tax amount provided a base and a tax
+        # It is equivalent to: amount = self.base * self.tax_id.amount / 100
+        taxes_res = self.tax_id.compute_all(
+            self.base_amount,
+            currency=self.payment_register_id.currency_id,
+            quantity=1.0,
+            product=False,
+            partner=False,
+            is_refund=False,
+        )
+        tax_amount = taxes_res['taxes'][0]['amount']
+        tax_account_id = taxes_res['taxes'][0]['account_id']
+        tax_repartition_line_id = taxes_res['taxes'][0]['tax_repartition_line_id']
+        return tax_amount, tax_account_id, tax_repartition_line_id
+
     @api.depends('tax_id', 'base_amount')
     def _compute_amount(self):
         for line in self:
             if not line.tax_id:
                 line.amount = 0.0
             else:
-                line.amount = line.tax_id._compute_amount(line.base_amount, line.base_amount)
+                line.amount, dummy, dummy = self._tax_compute_all_helper()
 
 
 class AccountPaymentRegister(models.TransientModel):
@@ -68,29 +85,30 @@ class AccountPaymentRegister(models.TransientModel):
         for rec in self:
             rec.net_amount = rec.amount - sum(rec.withholding_ids.mapped('amount'))
 
-    # TODO implement on _create_payment_vals_from_wizard instead of here
-    def _create_payments(self):
-        payments = super()._create_payments()
-        if self.withholding_ids:
-            for payment in payments.with_context(check_move_validity=False):
-                # TODO remove this hack when creating withholdings properly
-                liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
-                counterpart_lines.parent_state = 'draft'
-                # TODO ver el caso de mas de una liquidity_lines
-                rate = liquidity_lines.amount_currency / liquidity_lines.balance if liquidity_lines.balance else 1
-                liquidity_lines.balance = self.net_amount / rate * (-1 if liquidity_lines.tax_tag_invert else 1)
-                liquidity_lines.amount_currency = self.net_amount * (-1 if liquidity_lines.tax_tag_invert else 1)
-                counterpart_lines.tax_ids = self.withholding_ids.mapped('tax_id')
-                for line in self.withholding_ids:
-                    if line.name == '/':
-                        raise UserError(_('Please enter withholding number for tax %s' % line.tax_id.name))
-                    tax_line = payment.line_ids.filtered(lambda x: x.tax_line_id == line.tax_id)
-                    rate = tax_line.amount_currency / tax_line.balance if tax_line.balance else 1
-                    tax_line.write({
-                        'amount_currency': line.amount,
-                        'tax_base_amount': line.base_amount / rate * (-1 if tax_line.tax_tag_invert else 1),
-                        'balance': line.amount / rate,
-                    })
-                counterpart_lines.parent_state = 'posted'
+    def _create_payment_vals_from_wizard(self, batch_result):
+        payment_vals = super()._create_payment_vals_from_wizard(batch_result)
+        payment_vals['amount'] = self.net_amount
+        conversion_rate = self.env['res.currency']._get_conversion_rate(
+            self.currency_id,
+            self.company_id.currency_id,
+            self.company_id,
+            self.payment_date,
+        )
+        for line in self.withholding_ids:
+            if line.name == '/':
+                raise UserError(_('Please enter withholding number for tax %s' % line.tax_id.name))
 
-        return payments
+            dummy, account_id, tax_repartition_line_id = line._tax_compute_all_helper()
+
+            balance = self.company_currency_id.round(line.amount * conversion_rate)
+            payment_vals['write_off_line_vals'].append({
+                'name': line.tax_id.name,
+                'account_id': account_id,
+                'partner_id': self.partner_id.id,
+                'currency_id': self.currency_id.id,
+                'amount_currency': line.amount,
+                'balance': balance,
+                'tax_base_amount': line.base_amount,
+                'tax_repartition_line_id': tax_repartition_line_id,
+            })
+        return payment_vals

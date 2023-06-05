@@ -10,7 +10,7 @@
                 <group name="group4" string="Withholdings" attrs="{'invisible': [('country_code', '!=', 'AR')]}">
                     <field name="withholding_ids" nolabel="1" colspan="2"
                         attrs="{'invisible': ['|', ('is_internal_transfer', '=', True), ('country_code', '!=', 'AR')]}"
-                        readonly="True">
+                        readonly="False">
                         <tree editable="bottom">
                             <field name="move_name" invisible="1"/>
                             <field name="tax_line_id" string="Tax"/>
