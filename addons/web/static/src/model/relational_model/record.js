@@ -331,6 +331,22 @@ export class Record extends DataPoint {
                     }
                     break;
                 }
+                case "properties": {
+                    const value = this.data[fieldName];
+                    if (value) {
+                        const ok = value.every(
+                            (propertyDefinition) =>
+                                propertyDefinition.name &&
+                                propertyDefinition.name.length &&
+                                propertyDefinition.string &&
+                                propertyDefinition.string.length
+                        );
+                        if (!ok) {
+                            unsetRequiredFields.push(fieldName);
+                        }
+                    }
+                    break;
+                }
                 default:
                     if (!this.data[fieldName] && this._isRequired(fieldName)) {
                         unsetRequiredFields.push(fieldName);
