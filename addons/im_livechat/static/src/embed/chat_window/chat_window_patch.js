@@ -2,7 +2,6 @@
 
 import { ChatWindow } from "@mail/chat_window/chat_window";
 import { FeedbackPanel } from "../feedback_panel/feedback_panel";
-import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { useService } from "@web/core/utils/hooks";
 import { SESSION_STATE } from "../core/livechat_service";
@@ -32,23 +31,5 @@ patch(ChatWindow.prototype, "im_livechat", {
         }
         this.livechatService.leaveSession();
         this.chatbotService.stop();
-    },
-
-    get actions() {
-        if (!this.chatbotService.canRestart) {
-            return this._super();
-        }
-        return this._super().concat([
-            {
-                id: "restart",
-                name: _t("Restart Conversation"),
-                icon: "fa fa-fw fa-refresh",
-                onSelect: () => {
-                    this.chatbotService.restart();
-                    this.chatWindowService.show(this.props.chatWindow);
-                },
-                sequence: 99,
-            },
-        ]);
     },
 });

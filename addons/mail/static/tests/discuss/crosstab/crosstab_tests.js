@@ -17,6 +17,7 @@ QUnit.test("Add member to channel", async (assert) => {
     await click("[title='Add Users']");
     await click(".o-discuss-ChannelInvitation-selectable:contains(Harry)");
     await click("[title='Invite to Channel']");
+    await click("[title='Show Member List']");
     assert.containsOnce($, ".o-discuss-ChannelMember:contains(Harry)");
 });
 

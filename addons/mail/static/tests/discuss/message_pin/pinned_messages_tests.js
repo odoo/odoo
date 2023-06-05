@@ -15,7 +15,7 @@ QUnit.test("Pin message", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Pinned messages']");
+    await click(".o-mail-Discuss-header button[title='Pinned Messages']");
     assert.containsOnce(
         $,
         ".o-discuss-PinnedMessagesPanel:contains(This channel doesn't have any pinned messages.)"
@@ -37,7 +37,7 @@ QUnit.test("Unpin message", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Pinned messages']");
+    await click(".o-mail-Discuss-header button[title='Pinned Messages']");
     assert.containsOnce($, ".o-discuss-PinnedMessagesPanel .o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".dropdown-item:contains(Unpin)");
@@ -57,7 +57,7 @@ QUnit.test("Deleted messages are not pinned", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Pinned messages']");
+    await click(".o-mail-Discuss-header button[title='Pinned Messages']");
     assert.containsOnce($, ".o-discuss-PinnedMessagesPanel .o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".dropdown-item:contains(Delete)");
@@ -108,7 +108,7 @@ QUnit.test("Jump to message", async (assert) => {
     }
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    await click(".o-mail-Discuss-header button[title='Pinned messages']");
+    await click(".o-mail-Discuss-header button[title='Pinned Messages']");
     await click(".o-discuss-PinnedMessagesPanel button:contains(Jump)");
     await nextTick();
     assert.isVisible($(".o-mail-Message:contains(Hello world!)"));
