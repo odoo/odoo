@@ -46,7 +46,9 @@ class ResUsers(models.Model):
         oauth_provider = self.env['auth.oauth.provider'].browse(provider)
         validation = self._auth_oauth_rpc(oauth_provider.validation_endpoint, access_token)
         if validation.get("error"):
-            raise Exception(validation['error'])
+            e = Exception(validation['error'])
+            e.sentry_ignored = True
+            raise e
         if oauth_provider.data_endpoint:
             data = self._auth_oauth_rpc(oauth_provider.data_endpoint, access_token)
             validation.update(data)
