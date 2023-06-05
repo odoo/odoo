@@ -12,6 +12,12 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     trigger: '.o_list_button_add',
     extra_trigger: '.o_sale_order',
 }, {
+    trigger: '.o_required_modifier[name=partner_id] input',
+    run: 'text Tajine Saucisse',
+}, {
+    trigger: '.ui-menu-item > a:contains("Tajine Saucisse")',
+    auto: true,
+}, {
     trigger: 'a:contains("Add a product")',
 }, {
     trigger: 'div[name="product_template_id"] input',
@@ -143,5 +149,5 @@ registry.category("web_tour.tours").add('sale_product_configurator_edition_tour'
     extra_trigger: 'div[name="order_line"]',
     run: function() {},
 },
-    ...stepUtils.discardForm(),
+    ...stepUtils.saveForm(),
 ]});

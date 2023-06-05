@@ -12,6 +12,12 @@ registry.category("web_tour.tours").add('sale_product_configurator_optional_prod
     trigger: '.o_list_button_add',
     extra_trigger: '.o_sale_order'
 }, {
+    trigger: '.o_required_modifier[name=partner_id] input',
+    run: 'text Tajine Saucisse',
+}, {
+    trigger: '.ui-menu-item > a:contains("Tajine Saucisse")',
+    auto: true,
+}, {
     trigger: 'a:contains("Add a product")',
 }, {
     trigger: 'div[name="product_template_id"] input',
@@ -59,5 +65,5 @@ registry.category("web_tour.tours").add('sale_product_configurator_optional_prod
     trigger: 'tr:has(td.o_data_cell:contains("Chair floor protection")):nth(1) td.o_data_cell:contains("1.0")',
     extra_trigger: 'div[name="order_line"]',
     run: function () {}, // check added product
-}, ...stepUtils.discardForm()
+}, ...stepUtils.saveForm()
 ]});
