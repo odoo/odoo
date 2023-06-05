@@ -334,7 +334,8 @@ class AccountChartTemplate(models.AbstractModel):
 
         # Set the currency to the fiscal country's currency
         vals = {key: val for key, val in template_data.items() if filter_properties(key)}
-        vals['currency_id'] = fiscal_country.currency_id.id
+        if not company._existing_accounting():
+            vals['currency_id'] = fiscal_country.currency_id.id
         if not company.country_id:
             vals['country_id'] = fiscal_country.id
 
