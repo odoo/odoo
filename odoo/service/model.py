@@ -135,7 +135,8 @@ def retrying(func, env):
                     env.cr.flush()  # submit the changes to the database
                 break
             except (IntegrityError, OperationalError) as exc:
-                if env.cr._closed:
+                if env.cr.closed:
+                    exc.sentry_ignored = True
                     raise
                 env.cr.rollback()
                 env.registry.reset_changes()
