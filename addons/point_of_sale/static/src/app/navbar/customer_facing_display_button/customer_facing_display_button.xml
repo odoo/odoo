@@ -2,19 +2,20 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="point_of_sale.CustomerFacingDisplayButton" owl="1">
-        <li class="menu-item navbar-button" t-on-click="() => customerDisplay.connect()">
-            <span class="message"><t t-esc="message" /></span>
+        <div class="menu-item navbar-button" t-on-click="() => {customerDisplay.connect(); this.displayMessage(message);}">
             <div t-if="customerDisplay.status === 'warning'" class="js_warning oe_icon oe_orange">
-                <i class="fa fa-fw fa-desktop" role="img" aria-label="Customer Screen Warning" title="Customer Screen Warning"></i>
+                <i class="fa fa-fw fa-desktop" role="img" t-attf-aria-label="Customer Screen Warning : {{message}}" t-attf-title="Customer Screen Warning : {{message}}"></i>
             </div>
-             <div t-if="customerDisplay.status === 'failure'" class="js_disconnected oe_icon oe_red">
-                <i class="fa fa-fw fa-desktop" role="img" aria-label="Customer Screen Disconnected" title="Customer Screen Disconnected"></i>
+            <div t-if="customerDisplay.status === 'failure'" class="js_disconnected oe_icon oe_red">
+                <i class="fa fa-fw fa-desktop" role="img" t-attf-aria-label="Customer Screen : {{message}}" t-attf-title="Customer Screen : {{message}}"></i>
+            </div>
+            <div t-if="customerDisplay.status === 'not_found'" class="js_disconnected oe_icon oe_red">
+                <i class="fa fa-fw fa-desktop" role="img" t-attf-aria-label="Customer Screen Not Found : {{message}}" t-attf-title="Customer Screen Not Found : {{message}}"></i>
             </div>
             <div t-if="customerDisplay.status === 'success'" class="js_connected oe_icon oe_green">
                 <i class="fa fa-fw fa-desktop" role="img" aria-label="Customer Screen Connected" title="Customer Screen Connected"></i>
-            </div> 
-            <span>Customer Screen</span>
-        </li>
+            </div>
+        </div>
     </t>
 
 </templates>

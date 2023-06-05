@@ -14,11 +14,42 @@ export class LocalDisplay extends Reactive {
         this.globalState = globalState;
     }
     async connect() {
+        if (this.popupWindow && !this.popupWindow.closed) {
+            return;
+        }
+
+        // Because there is no way to know if the popup is already opened, PopupWindowLastStatus
+        // localStorage boolean is used to know if the popup was opened.
+        // This allows to get the already opened popup, and prevents to open the customer display
+        // automatically by default (most web browsers forbid to open popup windows without an user
+        // interaction, like a button click).
+        // window.open will get the already opened popup or otherwise open one
         this.popupWindow = window.open("", "Customer Display", "height=600,width=900");
-        this.update({ refreshResources: true });
+        if (this.popupWindow && !this.popupWindow.closed) {
+            this.setPopupWindowLastStatus(true);
+            this.popupWindow.addEventListener("beforeunload", () => {
+                this.setPopupWindowLastStatus(false);
+            });
+            this.update({ refreshResources: true });
+        } else {
+            this.setPopupWindowLastStatus(false);
+        }
     }
-    async update({ refreshResources = false } = {}) {
+    setPopupWindowLastStatus(open) {
+        if (open) {
+            window.localStorage.setItem("pos-customerdisplay-local-open", "true");
+        } else {
+            window.localStorage.removeItem("pos-customerdisplay-local-open");
+        }
+    }
+    isPopupWindowLastStatusOpen() {
+        return window.localStorage.getItem("pos-customerdisplay-local-open") === "true";
+    }
+    async update({ refreshResources = false, closeUI = false } = {}) {
         if (!this.popupWindow || this.popupWindow.closed) {
+            if (this.isPopupWindowLastStatusOpen()) {
+                this.connect();
+            }
             return;
         }
         // TODO: this could probably be improved by loading owl in the popup window,
@@ -27,18 +58,32 @@ export class LocalDisplay extends Reactive {
         // animations.
         const { body: displayBody, head: displayHead } = this.popupWindow.document;
         const container = document.createElement("div");
-        container.innerHTML = await this.globalState.customerDisplayHTML();
+        container.innerHTML = await this.globalState.customerDisplayHTML(closeUI);
 
-        if (refreshResources) {
+        if (!container.innerHTML || container.innerHTML === "undefined") {
+            displayBody.textContent = "";
+            return;
+        }
+
+        if (displayHead.innerHTML.trim().length == 0 || refreshResources) {
             displayHead.textContent = "";
             displayHead.appendChild(container.querySelector(".resources"));
+            // The scripts must be evaluated because adding an element containing
+            // a script block doesn't make it evaluated.
+            const scriptContent = displayHead.querySelector(
+                "script#old_browser_fix_auto_scroll"
+            ).innerHTML;
+            this.popupWindow.eval(scriptContent);
         }
 
         displayBody.textContent = "";
         displayBody.appendChild(container.querySelector(".pos-customer_facing_display"));
 
-        const orderLines = displayBody.querySelector(".pos_orderlines_list");
-        orderLines.scrollTop = orderLines.scrollHeight;
+        // The fixScrollingIfNecessary method is called in setTimeout to be called after
+        // the old_browser_fix_auto_scroll script is evaluated and after the body is updated.
+        setTimeout(() => {
+            this.popupWindow.fixScrollingIfNecessary();
+        }, 0);
     }
 }
 
@@ -64,8 +109,8 @@ export class RemoteDisplay extends Reactive {
             this.status = error === undefined ? "failure" : "not_found";
         }
     }
-    async update() {
-        const html = await this.globalState.customerDisplayHTML();
+    async update({ closeUI = false } = {}) {
+        const html = await this.globalState.customerDisplayHTML(closeUI);
         if (this.isUpdatingStatus && this.hardwareProxy.connectionInfo.status === "connected") {
             return this.hardwareProxy.message("customer_facing_display", { html });
         }

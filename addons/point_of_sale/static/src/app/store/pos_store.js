@@ -127,6 +127,11 @@ export class PosStore extends Reactive {
     }
 
     async closePos() {
+        const customerDisplayService = this.globalState.env.services.customer_display;
+        if (customerDisplayService) {
+            customerDisplayService.update({ closeUI: true });
+        }
+
         // If pos is not properly loaded, we just go back to /web without
         // doing anything in the order data.
         if (!this.globalState || this.globalState.db.get_orders().length === 0) {

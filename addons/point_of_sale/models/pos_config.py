@@ -75,6 +75,7 @@ class PosConfig(models.Model):
     iface_customer_facing_display = fields.Boolean(compute='_compute_customer_facing_display')
     iface_customer_facing_display_via_proxy = fields.Boolean(string='Customer Facing Display', help="Show checkout to customers with a remotely-connected screen.")
     iface_customer_facing_display_local = fields.Boolean(string='Local Customer Facing Display', help="Show checkout to customers.")
+    iface_customer_facing_display_background_image_1920 = fields.Image(string='Background Image', max_width=1920, max_height=1920, compute='_compute_iface_customer_facing_display_background_image_1920', store=True)
     iface_print_via_proxy = fields.Boolean(string='Print via Proxy', help="Bypass browser printing and prints via the hardware proxy.")
     iface_scan_via_proxy = fields.Boolean(string='Scan via Proxy', help="Enable barcode scanning with a remotely connected barcode scanner and card swiping with a Vantiv card reader.")
     iface_big_scrollbars = fields.Boolean('Large Scrollbars', help='For imprecise industrial touchscreens.')
@@ -248,6 +249,12 @@ class PosConfig(models.Model):
             pos_config.tip_product_id = self.env.ref("point_of_sale.product_product_tip")
             if not pos_config.tip_product_id:
                 pos_config.tip_product_id = self.env['product.product'].search([('default_code', '=', 'TIPS')], limit=1)
+
+    @api.depends('iface_customer_facing_display')
+    def _compute_iface_customer_facing_display_background_image_1920(self):
+        for config in self:
+            if not config.iface_customer_facing_display:
+                config.iface_customer_facing_display_background_image_1920 = False
 
     @api.constrains('rounding_method')
     def _check_rounding_method_strategy(self):
