@@ -18,6 +18,15 @@
                 <field name="display_mail_composer" invisible="1"/>
                 <field name="mail_lang" invisible="1"/>
 
+                <!-- Warnings -->
+                <div name="warnings">
+                    <div class="alert alert-warning"
+                        role="alert"
+                        attrs="{'invisible': [('send_mail_warning_message', '=', False)]}">
+                        <field name="send_mail_warning_message"/>
+                    </div>
+                </div>
+
                 <!-- Options -->
                 <div name="options" class="row">
                     <div name="standard_options" class="col-3">
@@ -34,15 +43,6 @@
                         </div>
                     </div>
                     <div name="advanced_options" class="col-3"/>
-                </div>
-
-                <!-- Warnings -->
-                <div name="warnings">
-                    <div class="alert alert-warning"
-                        role="alert"
-                        attrs="{'invisible': [('send_mail_warning_message', '=', False)]}">
-                        <field name="send_mail_warning_message"/>
-                    </div>
                 </div>
 
                 <!-- Mail -->
