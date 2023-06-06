@@ -1,5 +1,6 @@
-/** @odoo-module **/
+/* @odoo-module */
 
+import { Command } from "@mail/../tests/helpers/command";
 import {
     afterNextRender,
     click,
@@ -7,9 +8,8 @@ import {
     startServer,
     mockGetMedia,
 } from "@mail/../tests/helpers/test_utils";
-import { editInput, nextTick, patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
-import { Command } from "../helpers/command";
+import { editInput, nextTick, patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 
 QUnit.module("call");
 
