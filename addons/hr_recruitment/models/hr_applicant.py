@@ -586,6 +586,7 @@ class Applicant(models.Model):
         address_sudo = self.env['res.partner'].sudo().browse(address_id)
         return {
             'name': self.partner_name or self.partner_id.display_name,
+            'work_contact_id': self.partner_id.id,
             'job_id': self.job_id.id,
             'job_title': self.job_id.name,
             'private_street': address_sudo.street,
