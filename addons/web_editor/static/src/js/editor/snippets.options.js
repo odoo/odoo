@@ -4927,7 +4927,9 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
                 this.$target[0].src = src;
             }
         } else {
-            parentEl.replaceWith(this.$target[0]);
+            const fragment = document.createDocumentFragment();
+            fragment.append(...parentEl.childNodes);
+            parentEl.replaceWith(fragment);
         }
     },
     /**
