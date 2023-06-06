@@ -475,9 +475,9 @@ class MailComposer(models.TransientModel):
             recipients_info[record_id] = {
                 'mail_to': mail_to,
                 'mail_to_normalized': [
-                    tools.email_normalize(mail)
+                    tools.email_normalize(mail, force_single=False)
                     for mail in mail_to
-                    if tools.email_normalize(mail)
+                    if tools.email_normalize(mail, force_single=False)
                 ]
             }
         return recipients_info
