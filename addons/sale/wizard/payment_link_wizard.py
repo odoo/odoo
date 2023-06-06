@@ -3,7 +3,8 @@
 
 from werkzeug import urls
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.tools import format_amount
 
 
 class PaymentLinkWizard(models.TransientModel):
@@ -11,19 +12,22 @@ class PaymentLinkWizard(models.TransientModel):
     _description = 'Generate Sales Payment Link'
 
     amount_paid = fields.Monetary(string="Already Paid", readonly=True)
-    show_confirmation_message = fields.Boolean(compute='_compute_show_confirmation_message')
+    confirmation_message = fields.Char(compute='_compute_confirmation_message')
 
     @api.depends('amount')
-    def _compute_show_confirmation_message(self):
-        for wizard in self:
-            is_quotation = False
-            if wizard.res_model == 'sale.order':
-                sale_order = self.env['sale.order'].sudo().browse(wizard.res_id)
-                is_quotation = sale_order and sale_order.state in ('draft', 'sent')
-
-            wizard.show_confirmation_message = (
-                wizard.amount_max and wizard.amount == wizard.amount_max and is_quotation
-            )
+    def _compute_confirmation_message(self):
+        self.confirmation_message = False
+        for wizard in self.filtered(lambda w: w.res_model == 'sale.order'):
+            sale_order = wizard.env['sale.order'].sudo().browse(wizard.res_id)
+            if sale_order.state in ('draft', 'sent') and sale_order.require_payment:
+                remaining_amount = sale_order._get_prepayment_required_amount() - sale_order.amount_paid
+                if wizard.currency_id.compare_amounts(wizard.amount, remaining_amount) >= 0:
+                    wizard.confirmation_message = _("This payment will confirm the quotation.")
+                else:
+                    wizard.confirmation_message = _(
+                        "Customer needs to pay at least %(amount)s to confirm the order.",
+                        amount=format_amount(wizard.env, remaining_amount, wizard.currency_id),
+                    )
 
     def _get_payment_provider_available(self, res_model, res_id, **kwargs):
         """ Select and return the providers matching the criteria.

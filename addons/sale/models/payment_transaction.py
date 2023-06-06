@@ -61,8 +61,9 @@ class PaymentTransaction(models.Model):
         """ Confirm the sales order based on the amount of a transaction.
 
         Confirm the sales orders only if the transaction amount (or the sum of the partial
-        transaction amounts) is equal to the total amount of the sales orders. Grouped payments
-        (paying multiple sales orders in one transaction) are not supported.
+        transaction amounts) is equal to or greater than the required amount for order confirmation
+
+        Grouped payments (paying multiple sales orders in one transaction) are not supported.
 
         :return: The confirmed sales orders.
         :rtype: a `sale.order` recordset
@@ -72,14 +73,9 @@ class PaymentTransaction(models.Model):
             # We only support the flow where exactly one quotation is linked to a transaction.
             if len(tx.sale_order_ids) == 1:
                 quotation = tx.sale_order_ids.filtered(lambda so: so.state in ('draft', 'sent'))
-                if quotation and len(quotation.transaction_ids.filtered(
-                    lambda tx: tx.state in ('authorized', 'done')  # Only consider confirmed tx
-                )) >= 1:
-                    if quotation.currency_id.compare_amounts(
-                        quotation.amount_total, quotation.amount_paid
-                    ) == 0:  # the SO is fully paid
-                        quotation.with_context(send_email=True).action_confirm()
-                        confirmed_orders |= quotation
+                if quotation and quotation._is_confirmation_amount_reached():
+                    quotation.with_context(send_email=True).action_confirm()
+                    confirmed_orders |= quotation
         return confirmed_orders
 
     def _set_authorized(self, state_message=None, **kwargs):
@@ -163,14 +159,25 @@ class PaymentTransaction(models.Model):
 
     def _invoice_sale_orders(self):
         for tx in self.filtered(lambda tx: tx.sale_order_ids):
-            # Create invoices
-            tx = tx.with_company(tx.company_id).with_context(company_id=tx.company_id.id)
+            tx = tx.with_company(tx.company_id)
+
             confirmed_orders = tx.sale_order_ids.filtered(lambda so: so.state == 'sale')
             if confirmed_orders:
-                confirmed_orders._force_lines_to_invoice_policy_order()
-                invoices = confirmed_orders.with_context(
+                # Filter orders between those fully paid and those partially paid.
+                fully_paid_orders = confirmed_orders.filtered(lambda so: so._is_paid())
+
+                # Create a down payment invoice for partially paid orders
+                downpayment_invoices = (
+                    confirmed_orders - fully_paid_orders
+                )._generate_downpayment_invoices()
+
+                # For fully paid orders create a final invoice.
+                fully_paid_orders._force_lines_to_invoice_policy_order()
+                final_invoices = fully_paid_orders.with_context(
                     raise_if_nothing_to_invoice=False
                 )._create_invoices(final=True)
+                invoices = downpayment_invoices + final_invoices
+
                 # Setup access token in advance to avoid serialization failure between
                 # edi postprocessing of invoice and displaying the sale order on the portal
                 for invoice in invoices:

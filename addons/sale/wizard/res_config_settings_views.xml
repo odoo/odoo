@@ -88,7 +88,11 @@
                                            target="_blank"/>
                                 </div>
                                 <div class="text-muted">
-                                    Request an online payment to confirm orders
+                                    Request an online prepayment from your customers to confirm orders. You can ask them to fully pay the order or partially with a downpayment
+                                </div>
+                                <div invisible="not portal_confirmation_pay" class="text-nowrap fw-bold">
+                                    Prepayment amount
+                                    <field name="prepayment_percent" widget="percentage" style="width: 3rem"/>
                                 </div>
                                 <div class="mt8" invisible="not portal_confirmation_pay">
                                     <button name='%(payment.action_payment_provider)d' icon="oi-arrow-right" type="action" string="Payment Providers" class="btn-link"/>

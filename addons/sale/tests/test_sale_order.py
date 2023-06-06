@@ -5,7 +5,7 @@ from freezegun import freeze_time
 
 from odoo import fields
 from odoo.fields import Command
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged, Form
 from odoo.tools import float_compare
 
@@ -577,3 +577,12 @@ class TestSalesTeam(SaleCommon):
 
         with self.assertRaises(UserError):
             sol.tax_id = tax_b
+
+    def test_downpayment_amount_constraints(self):
+        """Down payment amounts should be in the interval ]0, 1]."""
+
+        self.sale_order.require_payment = True
+        with self.assertRaises(ValidationError):
+            self.sale_order.prepayment_percent = -1
+        with self.assertRaises(ValidationError):
+            self.sale_order.prepayment_percent = 1.01

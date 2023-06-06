@@ -17,15 +17,14 @@
         <field name="inherit_id" ref="payment.payment_link_wizard_view_form"/>
         <field name="arch" type="xml">
             <field name="amount" position="after">
-                <field name="show_confirmation_message" invisible="1"/>
                 <field name="amount_paid" invisible="amount_paid &lt;= 0"/>
             </field>
             <div name="payment_link_warning_information" position="after">
-                <div class="alert alert-info text-center fw-bold"
-                     role="alert"
-                     invisible="not show_confirmation_message">
-                    <span>This payment will confirm the quotation.</span>
-                </div>
+                <span class="text-info text-center fw-bold"
+                      role="alert"
+                      invisible="not confirmation_message">
+                    <field name="confirmation_message"/>
+                </span>
             </div>
         </field>
     </record>

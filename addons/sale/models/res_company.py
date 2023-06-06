@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class ResCompany(models.Model):
@@ -16,6 +17,10 @@ class ResCompany(models.Model):
 
     portal_confirmation_sign = fields.Boolean(string="Online Signature", default=True)
     portal_confirmation_pay = fields.Boolean(string="Online Payment")
+    prepayment_percent = fields.Float(
+        string="Prepayment percentage",
+        default=1.0,
+        help="The percentage of the amount needed to be paid to confirm quotations.")
     quotation_validity_days = fields.Integer(
         string="Default Quotation Validity",
         default=30,
@@ -43,3 +48,9 @@ class ResCompany(models.Model):
             ('manual', "Manual Payment"),
         ],
         string="Sale onboarding selected payment method")
+
+    @api.constrains('prepayment_percent')
+    def _check_prepayment_percent(self):
+        for company in self:
+            if company.portal_confirmation_pay and not (0 < company.prepayment_percent <= 1.0):
+                raise ValidationError(_("Prepayment percentage must be a valid percentage."))
