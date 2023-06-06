@@ -17138,4 +17138,79 @@ QUnit.module("Views", (hooks) => {
             "order:amount ASC, foo ASC", // go back to the list view, it should still be ordered by amount
         ]);
     });
+
+    QUnit.test(
+        "list: open groups are closed when they become empty after aplying a filter",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
+                <tree expand="1">
+                    <field name="foo"/>
+                </tree>`,
+                mockRPC(route, args) { //----> TO DO: add group_expand to always have yop and blip when grouped by foo
+                    if (args.method === "web_read_group" && args.kwargs.groupby[0] === "m2o") {
+                        return Promise.resolve({
+                            groups: [
+                                {
+                                    id: 8,
+                                    m2o: [1, "Value 1"],
+                                    m2o_count: 0,// TO CHANGE
+                                },
+                                {
+                                    id: 2,
+                                    m2o: [2, "Value 2"],
+                                    m2o_count: 1,
+                                },
+                            ],
+                            length: 1,
+                        });
+                    }
+                },
+                irFilters: [
+                    {
+                        context: "{}",
+                        domain: "[('foo', '=', 'yop')]",
+                        id: 7,
+                        string: "Is Yop",
+                        name: "isYop",
+                    },
+                ],
+                groupBy: ["m2o", "m2m"],
+            });
+
+            await toggleFavoriteMenu(target);
+            await toggleMenuItem(target, "isYop");
+            // CHECK
+            assert.strictEqual(
+                target.querySelectorAll(".o_group_header").length,
+                4,
+                "open group should contain 4 groups (2 groups and 2 sub-groups)"
+            );
+            assert.strictEqual(
+                target.querySelector(".o_group_header:first-child").textContent.trim(),
+                "yop (1)",
+                "First parent group 'yop' should contain one record",
+            );
+            assert.strictEqual(
+                target.querySelector(".o_group_header:nth-child(2)").textContent.trim(),
+                "Value1 (1)",
+                "First child group 'Value1' should contain one record",
+            );
+            assert.strictEqual(
+                target.querySelector(".o_group_header:nth-child(3)").textContent.trim(),
+                "Value2 (1)",
+                "Second child group 'Value2' should contain one record",
+            );
+            assert.strictEqual(
+                target.querySelector(".o_group_header:nth-child(4)").textContent.trim(),
+                "blip (0)",
+                "Second parent group 'blip' should contain no record",
+            );
+
+            
+        }
+    );
 });
