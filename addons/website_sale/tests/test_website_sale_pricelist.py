@@ -195,7 +195,7 @@ class TestWebsitePriceList(TransactionCase):
             'taxes_id': False,
         })
         current_website = self.env['website'].get_current_website()
-        website_pricelist = current_website.get_current_pricelist()
+        website_pricelist = current_website.pricelist_id
         website_pricelist.write({
             'discount_policy': 'with_discount',
             'item_ids': [(5, 0, 0), (0, 0, {
@@ -246,7 +246,7 @@ class TestWebsitePriceList(TransactionCase):
             'taxes_id': False,
         })
         current_website = self.env['website'].get_current_website()
-        website_pricelist = current_website.get_current_pricelist()
+        website_pricelist = current_website.pricelist_id
         website_pricelist.write({
             'discount_policy': 'without_discount',
             'item_ids': [(5, 0, 0), (0, 0, {

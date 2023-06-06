@@ -424,9 +424,7 @@ class ProductTemplate(models.Model):
         }
 
         # Apply taxes
-        partner_sudo = self.env.user.partner_id
-        fpos_id = website.sudo()._get_current_fiscal_position_id(partner_sudo)
-        fiscal_position = self.env['account.fiscal.position'].sudo().browse(fpos_id)
+        fiscal_position = website.fiscal_position_id.sudo()
 
 
         product_taxes = product_or_template.sudo().taxes_id.filtered(
