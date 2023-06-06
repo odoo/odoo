@@ -707,4 +707,65 @@ QUnit.module("Fields", (hooks) => {
             assert.verifySteps(["search_read"]);
         }
     );
+
+    QUnit.test(
+        "clickable statusbar with readonly modifier set to false is editable",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 2,
+                serverData,
+                arch: `
+                <form>
+                    <header>
+                        <field name="product_id" widget="statusbar" options="{'clickable': true}" readonly="False"/>
+                    </header>
+                </form>`,
+            });
+            assert.containsN(target, ".o_statusbar_status button:visible", 2);
+            assert.containsNone(
+                target,
+                ".o_statusbar_status button[disabled][aria-checked='false']:visible"
+            );
+        }
+    );
+
+    QUnit.test(
+        "clickable statusbar with readonly modifier set to true is not editable",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 2,
+                serverData,
+                arch: `
+                <form>
+                    <header>
+                        <field name="product_id" widget="statusbar" options="{'clickable': true}" readonly="True"/>
+                    </header>
+                </form>`,
+            });
+            assert.containsN(target, ".o_statusbar_status button[disabled]:visible", 2);
+        }
+    );
+
+    QUnit.test(
+        "non-clickable statusbar with readonly modifier set to false is not editable",
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 2,
+                serverData,
+                arch: `
+                <form>
+                    <header>
+                        <field name="product_id" widget="statusbar" options="{'clickable': false}" readonly="False"/>
+                    </header>
+                </form>`,
+            });
+            assert.containsN(target, ".o_statusbar_status button[disabled]:visible", 2);
+        }
+    );
 });

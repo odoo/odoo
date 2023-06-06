@@ -131,7 +131,7 @@ export class StatusBarField extends Component {
                 {
                     category: "smart_action",
                     hotkey: "alt+shift+x",
-                    isAvailable: () => !this.props.readonly && !this.props.isDisabled,
+                    isAvailable: () => !this.props.isDisabled,
                 }
             );
             useCommand(
@@ -145,9 +145,7 @@ export class StatusBarField extends Component {
                     category: "smart_action",
                     hotkey: "alt+x",
                     isAvailable: () =>
-                        !this.props.readonly &&
-                        !this.props.isDisabled &&
-                        !this.getAllItems().at(-1).isSelected,
+                        !this.props.isDisabled && !this.getAllItems().at(-1).isSelected,
                 }
             );
         }
@@ -346,7 +344,7 @@ export const statusBarField = {
     supportedTypes: ["many2one", "selection"],
     isEmpty: (record, fieldName) => !record.data[fieldName],
     extractProps: ({ attrs, options, viewType }, dynamicInfo) => ({
-        isDisabled: !options.clickable,
+        isDisabled: !options.clickable || dynamicInfo.readonly,
         visibleSelection: attrs.statusbar_visible?.trim().split(/\s*,\s*/g),
         withCommand: viewType === "form",
         foldField: options.fold_field,
