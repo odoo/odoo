@@ -200,20 +200,27 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             last_orderline.set_discount(code.value);
         }
     }
+    async _parseElementsFromGS1(parsed_results) {
+        const productBarcode = parsed_results.find((element) => element.type === "product");
+        const lotBarcode = parsed_results.find((element) => element.type === "lot");
+        const product = await this._getProductByBarcode(productBarcode);
+        return { product, lotBarcode, customProductOptions: {} };
+    }
     /**
      * Add a product to the current order using the product identifier and lot number from parsed results.
      * This function retrieves the product identifier and lot number from the `parsed_results` parameter.
      * It then uses these values to retrieve the product and add it to the current order.
      */
     async _barcodeGS1Action(parsed_results) {
-        const productBarcode = parsed_results.find((element) => element.type === "product");
-        const lotBarcode = parsed_results.find((element) => element.type === "lot");
-        const product = await this._getProductByBarcode(productBarcode);
+        const { product, lotBarcode, customProductOptions } = await this._parseElementsFromGS1(
+            parsed_results
+        );
         if (!product) {
+            const productBarcode = parsed_results.find((element) => element.type === "product");
             return this.popup.add(ErrorBarcodePopup, { code: productBarcode.base_code });
         }
         const options = await product.getAddProductOptions(lotBarcode);
-        await this.currentOrder.add_product(product, options);
+        await this.currentOrder.add_product(product, { ...options, ...customProductOptions });
         this.numberBuffer.reset();
     }
     async displayAllControlPopup() {
