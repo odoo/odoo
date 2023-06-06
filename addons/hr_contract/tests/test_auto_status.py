@@ -44,15 +44,15 @@ class TestHrContracts(TestContractCommon):
         self.apply_cron()
         self.assertEqual(self.contract.state, 'close')
 
-    def test_contract_pending_visa_expire(self):
-        self.employee.visa_expire = date.today() + relativedelta(days=30)
+    def test_contract_pending_work_permit_expire(self):
+        self.employee.work_permit_expiration_date = date.today() + relativedelta(days=30)
         self.test_contract.update(dict(date_end=False))
         self.contract = self.contracts.create(self.test_contract)
         self.apply_cron()
         self.assertEqual(self.contract.state, 'open')
         self.assertEqual(self.contract.kanban_state, 'blocked')
 
-        self.employee.visa_expire = date.today() + relativedelta(days=-5)
+        self.employee.work_permit_expiration_date = date.today() + relativedelta(days=-5)
         self.test_contract.update({
             'date_start': datetime.now() + relativedelta(days=-50),
             'state': 'open',
