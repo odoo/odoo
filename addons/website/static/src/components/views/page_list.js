@@ -7,6 +7,7 @@ import {ConfirmationDialog} from "@web/core/confirmation_dialog/confirmation_dia
 import {useService} from "@web/core/utils/hooks";
 import {sprintf} from "@web/core/utils/strings";
 import {DeletePageDialog} from '@website/components/dialog/page_properties';
+import {SearchDropdownItem} from "@web/search/search_dropdown_item/search_dropdown_item";
 
 
 export class PageListController extends PageControllerMixin(listView.Controller) {
@@ -76,6 +77,10 @@ export class PageListController extends PageControllerMixin(listView.Controller)
     }
 }
 PageListController.template = `website.PageListView`;
+PageListController.components = {
+    ...listView.Controller.components,
+    SearchDropdownItem,
+};
 
 export class PageListRenderer extends PageRendererMixin(listView.Renderer) {}
 PageListRenderer.props = [
