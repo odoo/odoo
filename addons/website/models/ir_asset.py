@@ -10,10 +10,17 @@ class IrAsset(models.Model):
     key = fields.Char(copy=False) # used to resolve multiple assets in a multi-website environment
     website_id = fields.Many2one('website', ondelete='cascade')
 
-    def _get_assets_params(self):
-        params = super()._get_assets_params()
+    def _get_asset_params(self):
+        params = super()._get_asset_params()
         params['website_id'] = self.env['website'].get_current_website(fallback=False).id
         return params
+
+    def _get_asset_extra(self, extra, website_id=None, **params):
+        extra = super()._get_asset_extra(extra, **params)
+        if extra == '%':
+            return extra
+        website_id_path = website_id and ('%s/' % website_id) or ''
+        return website_id_path + extra
 
     def _get_related_assets(self, domain, website_id=None, **params):
         if website_id:

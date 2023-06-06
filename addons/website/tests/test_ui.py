@@ -243,15 +243,13 @@ class TestUi(odoo.tests.HttpCase):
             'website_id': new_website.id,
         })
 
-        files, _ = self.env['ir.qweb']._get_asset_content(asset_bundle_xmlid, assets_params={'website_id': website_default.id})
-        self.assertNotIn(custom_url, [f['url'] for f in files])
-        base_website_bundle = self.env['ir.qweb']._get_asset_bundle(asset_bundle_xmlid, files, env=self.env, assets_params={'website_id': website_default.id})
+        base_website_bundle = self.env['ir.qweb']._get_asset_bundle(asset_bundle_xmlid, assets_params={'website_id': website_default.id})
+        self.assertNotIn(custom_url, [f['url'] for f in base_website_bundle.files])
         base_website_css_version = base_website_bundle.get_version('css')
         base_website_js_version = base_website_bundle.get_version('js')
 
-        files, _ = self.env['ir.qweb']._get_asset_content('website.assets_wysiwyg', assets_params={'website_id': new_website.id})
-        self.assertIn(custom_url, [f['url'] for f in files])
-        new_website_bundle_modified = self.env['ir.qweb']._get_asset_bundle(asset_bundle_xmlid, files, env=self.env, assets_params={'website_id': new_website.id})
+        new_website_bundle_modified = self.env['ir.qweb']._get_asset_bundle('website.assets_wysiwyg', assets_params={'website_id': new_website.id})
+        self.assertIn(custom_url, [f['url'] for f in new_website_bundle_modified.files])
         self.assertEqual(new_website_bundle_modified.get_version('css'), base_website_css_version)
         self.assertNotEqual(new_website_bundle_modified.get_version('js'), base_website_js_version, "js version for new website should now have been changed")
 
