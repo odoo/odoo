@@ -1352,6 +1352,58 @@ QUnit.module("Fields", (hooks) => {
         assert.equal(items.length, 2);
     });
 
+    QUnit.test("properties: kanban view with date and datetime property fields", async function (assert) {
+        serverData.models.partner.records.push({
+            id: 40,
+            display_name: "fifth partner",
+            properties: [
+                {
+                    name: "property_1",
+                    string: "My Date",
+                    type: "date",
+                    value: "2019-01-01",
+                    view_in_kanban: true,
+                },
+                {
+                    name: "property_2",
+                    string: "My DateTime",
+                    type: "datetime",
+                    value: "2019-01-01 10:00:00",
+                    view_in_kanban: true,
+                },
+            ],
+            company_id: 37,
+        });
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+            <kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <field name="company_id"/> <hr/>
+                            <field name="display_name"/> <hr/>
+                            <field name="properties" widget="properties"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+        });
+
+        // check fifth card
+        const property1 = target.querySelector(
+            ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(1) span"
+        );
+        assert.equal(property1.innerText, "01/01/2019");
+        const property2 = target.querySelector(
+            ".o_kanban_record:nth-child(5) .o_kanban_property_field:nth-child(2) span"
+        );
+        assert.equal(property2.innerText, "01/01/2019 11:00:00");
+    });
+
     QUnit.test(
         "properties: kanban view with multiple sources of properties definitions",
         async function (assert) {
