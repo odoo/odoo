@@ -141,6 +141,7 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
 
         # Now with fiscal position, taxes should be mapped
         self.env.user.partner_id.country_id = us_country
+        website.invalidate_recordset(['fiscal_position_id'])
         combination_info = product._get_combination_info()
         self.assertEqual(combination_info['price'], 500, "500% + 0% tax (mapped from fp 15% -> 0%)")
         self.assertEqual(combination_info['list_price'], 500, "500% + 0% tax (mapped from fp 15% -> 0%)")
@@ -151,6 +152,7 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
 
         # Reset / Safety check
         self.env.user.partner_id.country_id = None
+        website.invalidate_recordset(['fiscal_position_id'])
         combination_info = product._get_combination_info()
         self.assertEqual(combination_info['price'], 500, "434.78$ + 15% tax")
         self.assertEqual(combination_info['list_price'], 500, "434.78$ + 15% tax (2)")
@@ -158,6 +160,7 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
 
         # Now with fiscal position, taxes should be mapped
         self.env.user.partner_id.country_id = us_country.id
+        website.invalidate_recordset(['fiscal_position_id'])
         combination_info = product._get_combination_info()
         self.assertEqual(round(combination_info['price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0%)")
         self.assertEqual(round(combination_info['list_price'], 2), 434.78, "434.78$ + 0% tax (mapped from fp 15% -> 0%)")

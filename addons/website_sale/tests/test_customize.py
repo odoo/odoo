@@ -57,7 +57,7 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
 
         # Update the pricelist currency regarding env.company_id currency_id in case company has changed currency with COA installation.
         website = self.env['website'].get_current_website()
-        pricelist = website.get_current_pricelist()
+        pricelist = website.pricelist_id
         pricelist.write({'currency_id': self.env.company.currency_id.id})
 
     def test_01_admin_shop_customize_tour(self):
