@@ -36,6 +36,11 @@ class SaleOrderTemplate(models.Model):
         compute='_compute_require_payment',
         store=True, readonly=False,
         help="Request an online payment to the customer in order to confirm orders automatically.")
+    prepayment_percent = fields.Float(
+        string="Prepayment percentage",
+        compute="_compute_prepayment_percent",
+        store=True, readonly=False,
+        help="The percentage of the amount needed to be paid to confirm quotations.")
 
     sale_order_template_line_ids = fields.One2many(
         comodel_name='sale.order.template.line', inverse_name='sale_order_template_id',
@@ -58,6 +63,21 @@ class SaleOrderTemplate(models.Model):
         for order in self:
             order.require_payment = (order.company_id or order.env.company).portal_confirmation_pay
 
+    @api.depends('company_id', 'require_payment')
+    def _compute_prepayment_percent(self):
+        for template in self:
+            template.prepayment_percent = (
+                template.company_id or template.env.company
+            ).prepayment_percent
+
+    #=== ONCHANGE METHODS ===#
+
+    @api.onchange('prepayment_percent')
+    def _onchange_prepayment_percent(self):
+        for template in self:
+            if not template.prepayment_percent:
+                template.require_payment = False
+
     #=== CONSTRAINT METHODS ===#
 
     @api.constrains('company_id', 'sale_order_template_line_ids', 'sale_order_template_option_ids')
@@ -72,6 +92,12 @@ class SaleOrderTemplate(models.Model):
                     product_company=', '.join(companies.mapped('display_name')),
                     template_company=template.company_id.display_name,
                 ))
+
+    @api.constrains('prepayment_percent')
+    def _check_prepayment_percent(self):
+        for template in self:
+            if template.require_payment and not (0 < template.prepayment_percent <= 1.0):
+                raise ValidationError(_("Prepayment percentage must be a valid percentage."))
 
     #=== CRUD METHODS ===#
 

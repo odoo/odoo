@@ -55,6 +55,13 @@ class SaleOrder(models.Model):
             order.require_payment = order.sale_order_template_id.require_payment
 
     @api.depends('sale_order_template_id')
+    def _compute_prepayment_percent(self):
+        super()._compute_prepayment_percent()
+        for order in self.filtered('sale_order_template_id'):
+            if order.require_payment:
+                order.prepayment_percent = order.sale_order_template_id.prepayment_percent
+
+    @api.depends('sale_order_template_id')
     def _compute_validity_date(self):
         super()._compute_validity_date()
         for order in self.filtered('sale_order_template_id'):

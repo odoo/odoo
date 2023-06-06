@@ -94,14 +94,20 @@ class SaleOrder(models.Model):
         copy=False)
 
     require_signature = fields.Boolean(
-        string="Online Signature",
+        string="Online signature",
         compute='_compute_require_signature',
         store=True, readonly=False, precompute=True,
-        help="Request a online signature and/or payment to the customer in order to confirm orders automatically.")
+        help="Request a online signature from the customer to confirm the order.")
     require_payment = fields.Boolean(
-        string="Online Payment",
+        string="Online payment",
         compute='_compute_require_payment',
-        store=True, readonly=False, precompute=True)
+        store=True, readonly=False, precompute=True,
+        help="Request a online payment from the customer to confirm the order.")
+    prepayment_percent = fields.Float(
+        string="Prepayment percentage",
+        compute='_compute_prepayment_percent',
+        store=True, readonly=False, precompute=True,
+        help="The percentage of the amount needed that must be paid by the customer to confirm the order.")
 
     signature = fields.Image(
         string="Signature",
@@ -301,6 +307,11 @@ class SaleOrder(models.Model):
     def _compute_require_payment(self):
         for order in self:
             order.require_payment = order.company_id.portal_confirmation_pay
+
+    @api.depends('require_payment')
+    def _compute_prepayment_percent(self):
+        for order in self:
+            order.prepayment_percent = order.company_id.prepayment_percent
 
     @api.depends('company_id')
     def _compute_validity_date(self):
@@ -669,6 +680,12 @@ class SaleOrder(models.Model):
                     bad_products=', '.join(bad_products.mapped('display_name')),
                 ))
 
+    @api.constrains('prepayment_percent')
+    def _check_prepayment_percent(self):
+        for order in self:
+            if order.require_payment and not (0 < order.prepayment_percent <= 1.0):
+                raise ValidationError(_("Prepayment percentage must be a valid percentage."))
+
     #=== ONCHANGE METHODS ===#
 
     @api.onchange('commitment_date', 'expected_date')
@@ -733,6 +750,11 @@ class SaleOrder(models.Model):
     @api.onchange('pricelist_id')
     def _onchange_pricelist_id_show_update_prices(self):
         self.show_update_pricelist = bool(self.order_line)
+
+    @api.onchange('prepayment_percent')
+    def _onchange_prepayment_percent(self):
+        if not self.prepayment_percent:
+            self.require_payment = False
 
     #=== CRUD METHODS ===#
 
@@ -1478,13 +1500,28 @@ class SaleOrder(models.Model):
 
     def _get_default_payment_link_values(self):
         self.ensure_one()
-        amount = self.amount_total - self.amount_paid
+        amount_max = self.amount_total - self.amount_paid
+
+        # Always default to the minimum value needed to confirm the order:
+        # - order is not confirmed yet
+        # - can be confirmed online
+        # - we have still not paid enough for confirmation.
+        prepayment_amount = self._get_prepayment_required_amount()
+        if (
+            self.state in ('draft', 'sent')
+            and self.require_payment
+            and self.currency_id.compare_amounts(prepayment_amount, self.amount_paid) > 0
+        ):
+            amount = prepayment_amount - self.amount_paid
+        else:
+            amount = amount_max
+
         return {
             'description': self.name,
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_invoice_id.id,
             'amount': amount,
-            'amount_max': amount,
+            'amount_max': amount_max,
             'amount_paid': self.amount_paid,
         }
 
@@ -1649,6 +1686,52 @@ class SaleOrder(models.Model):
         del context
         return down_payments_section_line
 
+    def _get_prepayment_required_amount(self):
+        """ Return the minimum amount needed to confirm automatically the quotation.
+
+        Note: self.ensure_one()
+
+        :return: The minimum amount needed to confirm automatically the quotation.
+        :rtype: float
+        """
+        self.ensure_one()
+        if self.prepayment_percent == 1.0 or not self.require_payment:
+            return self.amount_total
+        else:
+            return self.currency_id.round(self.amount_total * self.prepayment_percent)
+
+    def _is_confirmation_amount_reached(self):
+        """ Return whether `self.amount_paid` is higher than the prepayment required amount.
+
+        Note: self.ensure_one()
+
+        :return: Whether `self.amount_paid` is higher than the prepayment required amount.
+        :rtype: bool
+        """
+        self.ensure_one()
+        amount_comparison = self.currency_id.compare_amounts(
+            self._get_prepayment_required_amount(), self.amount_paid,
+        )
+        return amount_comparison <= 0
+
+    def _generate_downpayment_invoices(self):
+        """ Generate invoices as down payments for sale order.
+
+        :return: The generated down payment invoices.
+        :rtype: recordset of `account.move`
+        """
+        generated_invoices = self.env['account.move']
+
+        for order in self:
+            downpayment_wizard = order.env['sale.advance.payment.inv'].create({
+                'sale_order_ids': order,
+                'advance_payment_method': 'fixed',
+                'fixed_amount': order.amount_paid,
+            })
+            generated_invoices |= downpayment_wizard._create_invoices(order)
+
+        return generated_invoices
+
     def _get_product_documents(self):
         self.ensure_one()
 
@@ -1684,3 +1767,15 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
         return self.state == 'cancel' or self.locked
+
+    def _is_paid(self):
+        """ Return whether the sale order is paid or not based on the linked transactions.
+
+        A sale order is considered paid if the sum of all the linked transaction is equal to or
+        higher than `self.amount_total`.
+
+        :return: Whether the sale order is paid or not.
+        :rtype: bool
+        """
+        self.ensure_one()
+        return self.currency_id.compare_amounts(self.amount_paid, self.amount_total) >= 0

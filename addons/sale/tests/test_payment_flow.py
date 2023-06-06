@@ -281,11 +281,102 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         # Create the payment
         self.amount = self.sale_order.amount_total
         tx = self._create_transaction(
-            flow='redirect', sale_order_ids=[self.sale_order.id], state='done'
+            flow='redirect',
+            sale_order_ids=[self.sale_order.id],
+            state='done',
         )
         with mute_logger('odoo.addons.sale.models.payment_transaction'), patch(
-            'odoo.addons.sale.models.sale_order.SaleOrder._create_invoices'
+            'odoo.addons.sale.models.sale_order.SaleOrder._create_invoices',
+            return_value=self.env['account.move']
         ) as _create_invoices_mock:
             tx._reconcile_after_done()
 
         self.assertTrue(_create_invoices_mock.call_args.kwargs['final'])
+
+    def test_downpayment_confirm_sale_order_sufficient_amount(self):
+        """Paying down payments can confirm an order if amount is enough."""
+        self.sale_order.require_payment = True
+        self.sale_order.prepayment_percent = 0.1
+        order_amount = self.sale_order.amount_total
+
+        tx = self._create_transaction(
+            flow='direct',
+            amount=order_amount * self.sale_order.prepayment_percent,
+            sale_order_ids=[self.sale_order.id],
+            state='done',
+        )
+        with mute_logger('odoo.addons.sale.models.payment_transaction'):
+            tx._reconcile_after_done()
+
+        self.assertTrue(self.sale_order.state == 'sale')
+
+    def test_downpayment_confirm_sale_order_insufficient_amount(self):
+        """Confirmation cannot occur if amount is not enough."""
+
+        self.sale_order.require_payment = True
+        self.sale_order.prepayment_percent = 0.2
+        order_amount = self.sale_order.amount_total
+
+        tx = self._create_transaction(
+            flow='direct',
+            amount=order_amount * 0.10,
+            sale_order_ids=[self.sale_order.id],
+            state='done',
+        )
+        with mute_logger('odoo.addons.sale.models.payment_transaction'):
+            tx._reconcile_after_done()
+
+        self.assertTrue(self.sale_order.state == 'draft')
+
+    def test_downpayment_confirm_sale_order_several_payments(self):
+        """
+        Several payments also trigger the confirmation of the sale order if
+        down payment confirmation is allowed.
+        """
+        self.sale_order.require_payment = True
+        self.sale_order.prepayment_percent = 0.2
+        order_amount = self.sale_order.amount_total
+
+        # Make a first payment, order should not be confirmed.
+        tx = self._create_transaction(
+            flow='direct',
+            reference="Test down payment 1",
+            amount=order_amount * 0.1,
+            sale_order_ids=[self.sale_order.id],
+            state='done',
+        )
+        tx._reconcile_after_done()
+        self.assertTrue(self.sale_order.state == 'draft')
+
+        # Order should be confirmed after this payment.
+        tx = self._create_transaction(
+            flow='direct',
+            reference="Test down payment 2",
+            amount=order_amount * 0.15,
+            sale_order_ids=[self.sale_order.id],
+            state='done',
+        )
+        tx._reconcile_after_done()
+        self.assertTrue(self.sale_order.state == 'sale')
+
+    def test_downpayment_automatic_invoice(self):
+        """
+        Down payment invoices should be created when a down payment confirms
+        the order and automatic invoice is checked.
+        """
+        self.sale_order.require_payment = True
+        self.sale_order.prepayment_percent = 0.2
+        self.env['ir.config_parameter'].sudo().set_param('sale.automatic_invoice', 'True')
+
+        tx = self._create_transaction(
+            flow='direct',
+            amount=self.sale_order.amount_total * self.sale_order.prepayment_percent,
+            sale_order_ids=[self.sale_order.id],
+            state='done')
+
+        with mute_logger('odoo.addons.sale.models.payment_transaction'):
+            tx._reconcile_after_done()
+
+        invoice = self.sale_order.invoice_ids
+        self.assertTrue(len(invoice) == 1)
+        self.assertTrue(invoice.line_ids[0].is_downpayment)
