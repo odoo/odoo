@@ -1,15 +1,49 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import io
+import logging
+import zipfile
+
 from werkzeug.exceptions import NotFound
 
 from odoo import _, http
 from odoo.exceptions import AccessError
-from odoo.http import request
+from odoo.http import request, content_disposition
+
 from odoo.tools import consteq
 from ..models.discuss.mail_guest import add_guest_to_context
 
+logger = logging.getLogger(__name__)
 
 class AttachmentController(http.Controller):
+
+    def _make_zip(self, name, attachments):
+        streams = (request.env['ir.binary']._get_stream_from(record, 'raw') for record in attachments)
+        # TODO: zip on-the-fly while streaming instead of loading the
+        #       entire zip in memory and sending it all at once.
+        stream = io.BytesIO()
+        try:
+            with zipfile.ZipFile(stream, 'w') as attachment_zip:
+                for binary_stream in streams:
+                    if not binary_stream:
+                        continue
+                    attachment_zip.writestr(
+                        binary_stream.download_name,
+                        binary_stream.read(),
+                        compress_type=zipfile.ZIP_DEFLATED
+                    )
+        except zipfile.BadZipFile:
+            logger.exception("BadZipfile exception")
+
+        content = stream.getvalue()
+        headers = [
+            ('Content-Type', 'zip'),
+            ('X-Content-Type-Options', 'nosniff'),
+            ('Content-Length', len(content)),
+            ('Content-Disposition', content_disposition(name))
+        ]
+        return request.make_response(content, headers)
+
     @http.route("/mail/attachment/upload", methods=["POST"], type="http", auth="public")
     @add_guest_to_context
     def mail_attachment_upload(self, ufile, thread_id, thread_model, is_pending=False, **kwargs):
@@ -72,3 +106,13 @@ class AttachmentController(http.Controller):
             if attachment_sudo.res_model != "mail.compose.message" or attachment_sudo.res_id != 0:
                 raise NotFound()
         attachment_sudo._delete_and_notify(message_sudo)
+
+    @http.route(['/mail/attachment/zip'], methods=["POST"], type="http", auth="public")
+    def mail_attachment_get_zip(self, file_ids, zip_name, **kw):
+        """route to get the zip file of the attachments.
+        :param file_ids: ids of the files to zip.
+        :param zip_name: name of the zip file.
+        """
+        ids_list = list(map(int, file_ids.split(',')))
+        attachments = request.env['ir.attachment'].browse(ids_list)
+        return self._make_zip(zip_name, attachments)

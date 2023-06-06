@@ -1109,6 +1109,77 @@ QUnit.test("allow attachment image download on message", async () => {
     await contains(".o-mail-AttachmentImage .fa-download");
 });
 
+QUnit.test("Can download all files of a message", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    const [attachmentId_1, attachmentId_2, attachmentId_3] = pyEnv["ir.attachment"].create([
+        { name: "test.png", mimetype: "image/png" },
+        { name: "Blah.png", mimetype: "image/png" },
+        { name: "shut.png", mimetype: "image/png" },
+    ]);
+    pyEnv["mail.message"].create([
+        {
+            attachment_ids: [attachmentId_1, attachmentId_2],
+            body: "<p>Test</p>",
+            model: "discuss.channel",
+            res_id: channelId,
+            message_type: "comment",
+        },
+        {
+            attachment_ids: [attachmentId_3],
+            model: "discuss.channel",
+            res_id: channelId,
+            message_type: "comment",
+        },
+    ]);
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await click(":nth-child(1 of .o-mail-Message) [title='Expand']");
+    await contains("[title='Download Files']");
+    await click(":nth-child(2 of .o-mail-Message) [title='Expand']");
+    await contains("[title='Download Files']", { count: 0 });
+});
+
+QUnit.test("Can remove files of message individually", async () => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
+    const [attachmentId_1, attachmentId_2, attachmentId_3, attachmentId_4] = pyEnv[
+        "ir.attachment"
+    ].create([
+        { name: "attachment1.txt", mimetype: "text/plain" },
+        { name: "attachment2.txt", mimetype: "text/plain" },
+        { name: "attachment3.txt", mimetype: "text/plain" },
+        { name: "attachment4.txt", mimetype: "text/plain" },
+    ]);
+    pyEnv["mail.message"].create([
+        {
+            attachment_ids: [attachmentId_1, attachmentId_2],
+            model: "discuss.channel",
+            res_id: channelId,
+            message_type: "comment",
+        },
+        {
+            attachment_ids: [attachmentId_3],
+            model: "discuss.channel",
+            res_id: channelId,
+            message_type: "comment",
+        },
+        {
+            attachment_ids: [attachmentId_4],
+            body: "<p>Test</p>",
+            model: "discuss.channel",
+            res_id: channelId,
+            message_type: "comment",
+        },
+    ]);
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await contains("[title='Remove']", { target: $(".o-mail-AttachmentCard:eq(0)")[0] });
+    await contains("[title='Remove']", { target: $(".o-mail-AttachmentCard:eq(1)")[0] });
+    await contains("[title='Remove']", { count: 0, target: $(".o-mail-AttachmentCard:eq(2)")[0] });
+    await contains("[title='Remove']", { target: $(".o-mail-AttachmentCard:eq(3)")[0] });
+});
+
 QUnit.test(
     "avatar card from author should be opened after clicking on their avatar",
     async (assert) => {
@@ -1272,8 +1343,9 @@ QUnit.test(
         openDiscuss(channelId);
         await contains(".o-mail-Message");
 
-        await click(".o-mail-AttachmentCard button[title='Remove']");
-        await click(".modal button", { text: "Ok" });
+        await click("[title='Expand']");
+        await click("[title='Delete']");
+        await click("button", { text: "Confirm" });
         await contains(".o-mail-Message", { count: 0 });
     }
 );

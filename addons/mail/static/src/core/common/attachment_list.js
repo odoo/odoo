@@ -102,4 +102,13 @@ export class AttachmentList extends Component {
     get isInChatWindowAndIsAlignedLeft() {
         return this.env.inChatWindow && !this.env.alignedRight;
     }
+
+    get showDelete() {
+        return (
+            (this.attachment.isDeletable &&
+                (!this.env.message || this.env.message?.hasTextContent)) ||
+            this.env.inComposer ||
+            this.props.attachments.length > 1
+        );
+    }
 }
