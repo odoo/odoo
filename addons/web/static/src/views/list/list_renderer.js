@@ -315,6 +315,7 @@ export class ListRenderer extends Component {
         const sortedThs = [...table.querySelectorAll("thead th:not(.o_list_button)")].sort(
             (a, b) => getWidth(b) - getWidth(a)
         );
+
         const allowedWidth = table.parentNode.getBoundingClientRect().width;
 
         let totalWidth = getTotalWidth();
