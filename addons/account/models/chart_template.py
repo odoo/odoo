@@ -127,22 +127,23 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
             - amount
             - repartition lines percentages in the same order
         """
-        tax_rep_lines = tax.invoice_repartition_line_ids + tax.refund_repartition_line_ids
-        template_rep_lines = template.invoice_repartition_line_ids + template.refund_repartition_line_ids
-        return (
-                tax.amount_type == template.amount_type
-                and tax.amount == template.amount
-                and (
-                     tax.amount_type == 'group'  # if the amount_type is group we don't do checks on rep. lines
-                     or (
+        if tax.amount_type == 'group':
+            # if the amount_type is group we don't do checks on rep. lines nor amount
+            return tax.amount_type == template.amount_type
+        else:
+            tax_rep_lines = tax.invoice_repartition_line_ids + tax.refund_repartition_line_ids
+            template_rep_lines = template.invoice_repartition_line_ids + template.refund_repartition_line_ids
+            return (
+                    tax.amount_type == template.amount_type
+                    and tax.amount == template.amount
+                    and (
                          len(tax_rep_lines) == len(template_rep_lines)
                          and all(
                              rep_line_tax.factor_percent == rep_line_template.factor_percent
                              for rep_line_tax, rep_line_template in zip(tax_rep_lines, template_rep_lines)
                          )
-                     )
-                )
-        )
+                    )
+            )
 
     def _cleanup_tags(tags):
         """ Checks if the tags are still used in taxes or move lines. If not we delete it. """
