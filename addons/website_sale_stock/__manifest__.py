@@ -14,6 +14,7 @@ Then it can be made specific at the product level.
     'depends': [
         'website_sale',
         'sale_stock',
+        'stock_delivery',
     ],
     'data': [
         'views/product_template_views.xml',
