@@ -196,24 +196,17 @@ class TestMassMailing(TestMassMailCommon):
                 with self.mock_mail_gateway(mail_unlink_sent=False):
                     mailing.action_send_mail()
 
-                # difference in email_to management when inheriting from blacklist mixin
-                # as it uses email_normalized if possible
-                if dst_model == 'mailing.test.customer':
-                    formatted_mailmail_email = '"Formatted Record" <record.format@example.com>'
-                    multi_trace_email = 'record.multi.1@example.com, "Record Multi 2" <record.multi.2@example.com>'
-                    multi_state = 'ignored'
-                    unicode_mailmail_email = '"Unicode Record" <record.😊@example.com>'
-                else:
-                    formatted_mailmail_email = 'record.format@example.com'
-                    multi_trace_email = 'record.multi.1@example.com'
-                    multi_state = 'sent'
-                    unicode_mailmail_email = 'record.😊@example.com'
+                # Difference in email, email_to_recipients and email_to_mail
+                # -> email: trace email: normalized, to ease its management, mainly technical
+                # -> email_to_mail: mail.mail email: email_to stored in outgoing mail.mail (can be multi)
+                # -> email_to_recipients: email_to for outgoing emails, list means several recipients
                 self.assertMailTraces(
                     [
-                        {'email': False,
+                        {'email': 'customer.multi.1@example.com',
+                         'email_to_recipients': [[f'"{customer_mult.name}" <customer.multi.1@example.com>', f'"{customer_mult.name}" <customer.multi.2@example.com>']],
                          'failure_type': False,
                          'partner': customer_mult,
-                         'state': 'ignored'},
+                         'state': 'sent'},
                         {'email': 'test.customer.format@example.com',
                          # mail to avoids double encapsulation
                          'email_to_recipients': [[f'"{customer_fmt.name}" <test.customer.format@example.com>']],
@@ -239,15 +232,15 @@ class TestMassMailing(TestMassMailCommon):
                          'failure_type': False,
                          'partner': customer_weird_2,
                          'state': 'sent'},
-                        {'email': multi_trace_email,
+                        {'email': 'record.multi.1@example.com',
+                         'email_to_mail': 'record.multi.1@example.com,record.multi.2@example.com',
+                         'email_to_recipients': [['record.multi.1@example.com', 'record.multi.2@example.com']],
                          'failure_type': False,
-                         'state': multi_state},
+                         'state': 'sent'},
                         {'email': 'record.format@example.com',
-                         'email_to_mail': formatted_mailmail_email,
                          'failure_type': False,
                          'state': 'sent'},
                         {'email': 'record.😊@example.com',
-                         'email_to_mail': unicode_mailmail_email,
                          'failure_type': False,
                          'state': 'ignored'},  # email_re usage forbids mailing to unicode
                     ],
