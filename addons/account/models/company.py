@@ -189,6 +189,10 @@ class ResCompany(models.Model):
             ('out_and_in_invoices', 'Customer Invoices and Vendor Bills')],
         string="Quick encoding")
 
+    # Separate account for allocation of discounts
+    account_separate_discount_income_id = fields.Many2one(comodel_name='account.account', string='Separate account for income discount')
+    account_separate_discount_expense_id = fields.Many2one(comodel_name='account.account', string='Separate account for expense discount')
+
     @api.constrains('account_opening_move_id', 'fiscalyear_last_day', 'fiscalyear_last_month')
     def _check_fiscalyear_last_day(self):
         # if the user explicitly chooses the 29th of February we allow it:

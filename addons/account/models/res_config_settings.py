@@ -165,6 +165,22 @@ class ResConfigSettings(models.TransientModel):
         domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'in', ('income', 'income_other', 'expense'))]",
     )
 
+    # Separate account for allocation of discounts
+    account_separate_discount_income_id = fields.Many2one(
+        comodel_name='account.account',
+        string='Customer Invoices',
+        readonly=False,
+        related='company_id.account_separate_discount_income_id',
+        domain="[('account_type', 'in', ('income', 'expense'))]",
+    )
+    account_separate_discount_expense_id = fields.Many2one(
+        comodel_name='account.account',
+        string='Vendor Bills',
+        readonly=False,
+        related='company_id.account_separate_discount_expense_id',
+        domain="[('account_type', 'in', ('income', 'expense'))]",
+    )
+
     def set_values(self):
         super().set_values()
         # install a chart of accounts for the given company (if required)

@@ -23,6 +23,7 @@
                     <app data-string="Invoicing" string="Invoicing" name="account" groups="account.group_account_manager">
                         <field name="has_chart_of_accounts" invisible="1"/>
                         <field name="has_accounting_entries" invisible="1"/>
+                        <field name="group_discount_per_so_line" invisible="1"/>
                         <block title="Fiscal Localization" name="fiscal_localization_setting_container">
                             <setting string="Fiscal Localization" company_dependent="1" help="Taxes, fiscal positions, chart of accounts &amp; legal statements for your country"
                                 documentation="/applications/finance/fiscal_localizations.html">
@@ -266,6 +267,20 @@
                                         <div class="row mt8">
                                             <label for="transfer_account_id" class="col-lg-5 o_light_label"/>
                                             <field name="transfer_account_id"/>
+                                        </div>
+                                    </div>
+                                </setting>
+                                <setting string="Separate discount accounts on invoices"
+                                         title="If empty, the discount will be discounted directly on the invoice account. If set, discount on invoices will be realized in separate accounts."
+                                         attrs="{'invisible': [('group_discount_per_so_line', '=', False)]}">
+                                    <div class="content-group">
+                                        <div class="row mt8">
+                                            <label for="account_separate_discount_income_id" class="col-lg-5 o_light_label"/>
+                                            <field name="account_separate_discount_income_id"/>
+                                        </div>
+                                        <div class="row mt8">
+                                            <label for="account_separate_discount_expense_id" class="col-lg-5 o_light_label"/>
+                                            <field name="account_separate_discount_expense_id"/>
                                         </div>
                                     </div>
                                 </setting>
