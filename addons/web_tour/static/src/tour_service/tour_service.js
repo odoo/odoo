@@ -130,7 +130,9 @@ export const tourService = {
             const isDefined = (key, obj) => key in obj && obj[key] !== undefined;
             const getEdition = () =>
                 session.server_version_info.slice(-1)[0] === "e" ? "enterprise" : "community";
-            const correctEdition = isDefined("edition", step) ? step.edition === getEdition() : true;
+            const correctEdition = isDefined("edition", step)
+                ? step.edition === getEdition()
+                : true;
             const correctDevice = isDefined("mobile", step) ? step.mobile === ui.isSmall : true;
             return (
                 !correctEdition ||
@@ -248,6 +250,7 @@ export const tourService = {
                 mode: "auto",
                 startUrl: "",
                 showPointerDuration: 0,
+                redirect: true,
             };
             options = Object.assign(defaultOptions, options);
             const tour = tours[tourName];
@@ -265,7 +268,7 @@ export const tourService = {
             });
             const macro = convertToMacro(tour, pointer, options);
             const willUnload = callWithUnloadCheck(() => {
-                if (tour.url && tour.url !== options.startUrl) {
+                if (tour.url && tour.url !== options.startUrl && options.redirect) {
                     window.location.href = window.location.origin + tour.url;
                 }
             });
@@ -303,6 +306,12 @@ export const tourService = {
             activateMacro(macro, mode);
         }
 
+        function getSortedTours() {
+            return Object.values(tours).sort((t1, t2) => {
+                return t1.sequence - t2.sequence || (t1.name < t2.name ? -1 : 1);
+            });
+        }
+
         if (!window.frameElement) {
             // Resume running tours.
             for (const tourName of tourState.getActiveTourNames()) {
@@ -319,14 +328,21 @@ export const tourService = {
         odoo.startTour = startTour;
         odoo.isTourReady = (tourName) => tours[tourName].wait_for.then(() => true);
 
+        // Auto start unconsumed tours if tour is not disabled and if the user is not on mobile.
+        const isTourEnabled = "tour_disable" in session && !session.tour_disable;
+        if (isTourEnabled && !ui.isSmall) {
+            const sortedTours = getSortedTours().filter((tour) => !consumedTours.has(tour.name));
+            for (const tour of sortedTours) {
+                odoo.isTourReady(tour.name).then(() => {
+                    startTour(tour.name, { mode: "manual", redirect: false });
+                });
+            }
+        }
+
         return {
             bus,
             startTour,
-            getSortedTours() {
-                return Object.values(tours).sort((t1, t2) => {
-                    return t1.sequence - t2.sequence || (t1.name < t2.name ? -1 : 1);
-                });
-            },
+            getSortedTours,
         };
     },
 };
