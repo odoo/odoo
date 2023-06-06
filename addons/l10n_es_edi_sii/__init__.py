@@ -32,4 +32,5 @@ def _l10n_es_edi_post_init(cr, registry):
                         'l10n_es_exempt_reason': tax_template.l10n_es_exempt_reason,
                         'tax_scope': tax_template.tax_scope,
                         'l10n_es_type': tax_template.l10n_es_type,
+                        'l10n_es_bien_inversion': tax_template.l10n_es_bien_inversion,
                     })
