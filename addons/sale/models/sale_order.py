@@ -1272,11 +1272,18 @@ class SaleOrder(models.Model):
         lang_code = render_context.get('lang')
         subtitles = [
             render_context['record'].name,
-            format_amount(self.env, self.amount_total, self.currency_id, lang_code=lang_code),
         ]
+
+        if self.amount_total:
+            # Do not show the price in subtitles if zero (e.g. e-commerce orders are created empty)
+            subtitles.append(
+                format_amount(self.env, self.amount_total, self.currency_id, lang_code=lang_code),
+            )
+
         if self.validity_date and self.state in ['draft', 'sent']:
             formatted_date = format_date(self.env, self.validity_date, lang_code=lang_code)
             subtitles.append(_("Expires on %(date)s", date=formatted_date))
+
         render_context['subtitles'] = subtitles
         return render_context
 
