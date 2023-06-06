@@ -4524,7 +4524,7 @@ class One2many(_RelationalMulti):
                     elif command[0] in (Command.CLEAR, Command.SET):
                         # assign the given lines to the last record only
                         cache.update(recs, self, itertools.repeat(()))
-                        lines = comodel.browse(command[2] if command[0] == Command.SET else [])
+                        lines = browse(command[2] if command[0] == Command.SET else [])
                         cache.set(recs[-1], self, lines._ids)
 
 
