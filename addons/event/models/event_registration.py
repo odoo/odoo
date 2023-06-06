@@ -4,7 +4,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import _, api, fields, models, SUPERUSER_ID
-from odoo.tools import format_date, email_normalize
+from odoo.tools import format_date, email_normalize, email_normalize_all
 from odoo.exceptions import AccessError, ValidationError
 
 # phone_validation is not officially in the depends of event, but we would like
@@ -326,11 +326,13 @@ class EventRegistration(models.Model):
     def _message_get_default_recipients(self):
         # Prioritize registration email over partner_id, which may be shared when a single
         # partner booked multiple seats
-        return {r.id: {
-            'partner_ids': [],
-            'email_to': r.email,
-            'email_cc': False}
-            for r in self}
+        return {r.id:
+            {
+                'partner_ids': [],
+                'email_to': ','.join(email_normalize_all(r.email)) or r.email,
+                'email_cc': False,
+            } for r in self
+        }
 
     def _message_post_after_hook(self, message, msg_vals):
         if self.email and not self.partner_id:
