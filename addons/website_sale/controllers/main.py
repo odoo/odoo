@@ -328,9 +328,17 @@ class WebsiteSale(http.Controller):
         keep = QueryURL('/shop', **self._shop_get_query_url_kwargs(category and int(category), search, min_price, max_price, **post))
 
         now = datetime.timestamp(datetime.now())
-        pricelist = website.get_current_pricelist()
-        if request.session.get('website_sale_pricelist_time', 0) < now - 60*60: # test: 1 hour in session
-            pricelist = website.pricelist_id
+        pricelist = website.pricelist_id
+        if 'website_sale_pricelist_time' in request.session:
+            # Check if we need to refresh the cached pricelist
+            pricelist_save_time = request.session['website_sale_pricelist_time']
+            if pricelist_save_time < now - 60*60:
+                request.session.pop('website_sale_current_pl', None)
+                website.invalidate_recordset(['pricelist_id'])
+                pricelist = website.pricelist_id
+                request.session['website_sale_pricelist_time'] = now
+                request.session['website_sale_current_pl'] = pricelist.id
+        else:
             request.session['website_sale_pricelist_time'] = now
             request.session['website_sale_current_pl'] = pricelist.id
 
@@ -342,9 +350,9 @@ class WebsiteSale(http.Controller):
         else:
             conversion_rate = 1
 
-        url = "/shop"
+        url = '/shop'
         if search:
-            post["search"] = search
+            post['search'] = search
         if attrib_list:
             post['attrib'] = attrib_list
 
@@ -439,8 +447,7 @@ class WebsiteSale(http.Controller):
             request.session['website_sale_shop_layout_mode'] = layout_mode
 
         # Try to fetch geoip based fpos or fallback on partner one
-        fiscal_position_id = website._get_current_fiscal_position_id(request.env.user.partner_id)
-        fiscal_position_sudo = website.env['account.fiscal.position'].sudo().browse(fiscal_position_id)
+        fiscal_position_sudo = website.fiscal_position_id.sudo()
         products_prices = lazy(lambda: products._get_sales_prices(pricelist, fiscal_position_sudo))
 
         values = {
@@ -675,7 +682,7 @@ class WebsiteSale(http.Controller):
         return {
             'search': search,
             'category': category,
-            'pricelist': request.website.get_current_pricelist(),
+            'pricelist': request.website.pricelist_id,
             'attrib_values': attrib_values,
             'attrib_set': attrib_set,
             'keep': keep,
@@ -698,7 +705,7 @@ class WebsiteSale(http.Controller):
                 min_price = args.get('min_price')
                 max_price = args.get('max_price')
                 if min_price or max_price:
-                    previous_price_list = request.website.get_current_pricelist()
+                    previous_price_list = request.website.pricelist_id
                     try:
                         min_price = float(min_price)
                         args['min_price'] = min_price and str(
