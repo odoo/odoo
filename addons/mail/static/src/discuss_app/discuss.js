@@ -45,6 +45,7 @@ export class Discuss extends Component {
         this.messageService = useState(useService("mail.message"));
         this.personaService = useService("mail.persona");
         this.rtc = useRtc();
+        this.router = useService("router");
         this.messageHighlight = useMessageHighlight();
         this.messageEdition = useMessageEdition();
         this.messageToReplyTo = useMessageToReplyTo();
@@ -78,7 +79,18 @@ export class Discuss extends Component {
             () => [this.store.discuss.inbox.counter]
         );
         onWillStart(() => this.messaging.isReady);
-        onMounted(() => (this.store.discuss.isActive = true));
+        onMounted(() => {
+            this.store.discuss.isActive = true;
+            // The action service removes the active_id after loading
+            // the page, so we need to set it again.
+            if (this.thread) {
+                const activeId =
+                    typeof this.thread.id === "string"
+                        ? `mail.box_${this.thread.id}`
+                        : `discuss.channel_${this.thread.id}`;
+                this.router.pushState({ active_id: activeId });
+            }
+        });
         onWillUnmount(() => (this.store.discuss.isActive = false));
     }
 
