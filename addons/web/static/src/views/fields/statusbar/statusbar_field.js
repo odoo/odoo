@@ -54,7 +54,7 @@ export class StatusBarField extends Component {
                 {
                     category: "smart_action",
                     hotkey: "alt+shift+x",
-                    isAvailable: () => !this.props.readonly && !this.props.isDisabled,
+                    isAvailable: () => !this.props.isDisabled,
                 }
             );
             useCommand(
@@ -79,7 +79,6 @@ export class StatusBarField extends Component {
                     isAvailable: () => {
                         const options = this.computeItems(false);
                         return (
-                            !this.props.readonly &&
                             !this.props.isDisabled &&
                             options[options.length - 1].id !==
                                 (this.type === "many2one"
@@ -235,10 +234,10 @@ export const statusBarField = {
     supportedTypes: ["many2one", "selection"],
     isEmpty: (record, fieldName) => record.model.env.isSmall && !record.data[fieldName],
     legacySpecialData: "_fetchSpecialStatus",
-    extractProps: ({ attrs, options, viewType }) => ({
+    extractProps: ({ attrs, options, viewType }, dynamicInfo) => ({
         canCreate: Boolean(attrs.can_create),
         canWrite: Boolean(attrs.can_write),
-        isDisabled: !options.clickable,
+        isDisabled: !options.clickable || dynamicInfo.readonly,
         visibleSelection:
             attrs.statusbar_visible && attrs.statusbar_visible.trim().split(/\s*,\s*/g),
         withCommand: viewType === "form",
