@@ -575,6 +575,14 @@ SearchBar.components = {
 };
 SearchBar.props = {
     autofocus: { type: Boolean, optional: true },
+    slots: {
+        type: Object,
+        optional: true,
+        shape: {
+            default: { optional: true },
+            "search-bar-additional-menu": { optional: true },
+        },
+    },
 };
 SearchBar.defaultProps = {
     autofocus: true,

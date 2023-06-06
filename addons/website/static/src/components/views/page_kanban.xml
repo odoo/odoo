@@ -14,8 +14,8 @@
     <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
         <attribute name="activeWebsite">state.activeWebsite</attribute>
     </xpath>
-    <xpath expr="//Layout" position="inside">
-        <t t-set-slot="control-panel-website-extra-actions">
+    <xpath expr="//SearchBar" position="inside">
+        <t t-set-slot="search-bar-additional-menu">
             <t t-call="website.RecordFilter"/>
         </t>
     </xpath>
