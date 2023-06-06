@@ -20,7 +20,7 @@ class HrWorkEntry(models.Model):
 
     def _init_column(self, column_name):
         if column_name != 'contract_id':
-            super()._init_column(column_name)
+            return super()._init_column(column_name)
         else:
             self.env.cr.execute("""
                 UPDATE hr_work_entry AS _hwe
@@ -45,6 +45,7 @@ class HrWorkEntry(models.Model):
                 ) AS result
                 WHERE _hwe.id = ANY(result.entry_ids)
             """)
+            return True
 
     def _get_duration_is_valid(self):
         return self.work_entry_type_id and self.work_entry_type_id.is_leave

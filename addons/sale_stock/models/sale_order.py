@@ -64,6 +64,7 @@ class SaleOrder(models.Model):
                 self._table, column_name, value)
             query = f'UPDATE "{self._table}" SET "{column_name}" = %s WHERE "{column_name}" IS NULL'
             self._cr.execute(query, (value,))
+        return True
 
     @api.depends('picking_ids.date_done')
     def _compute_effective_date(self):

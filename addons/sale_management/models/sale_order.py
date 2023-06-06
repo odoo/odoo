@@ -26,6 +26,12 @@ class SaleOrder(models.Model):
         states=READONLY_FIELD_STATES,
         copy=True)
 
+    def _init_column(self, column_name):
+        # Do not compute the sale_order_template_id field on existing SOs
+        if column_name == "sale_order_template_id":
+            return True
+        return super()._init_column(column_name)
+
     #=== COMPUTE METHODS ===#
 
     # Do not make it depend on `company_id` field

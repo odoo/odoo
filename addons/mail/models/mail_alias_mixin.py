@@ -89,11 +89,13 @@ class AliasMixin(models.AbstractModel):
 
     def _init_column(self, name):
         """ Create aliases for existing rows. """
-        super(AliasMixin, self)._init_column(name)
         if name == 'alias_id':
             # as 'mail.alias' records refer to 'ir.model' records, create
             # aliases after the reflection of models
             self.pool.post_init(self._init_column_alias_id)
+            return True
+        else:
+            return super(AliasMixin, self)._init_column(name)
 
     def _init_column_alias_id(self):
         # both self and the alias model must be present in 'ir.model'

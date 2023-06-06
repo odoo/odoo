@@ -5,7 +5,6 @@ from itertools import groupby
 
 from odoo import api, fields, models
 from odoo.tools import format_amount
-from odoo.tools.sql import column_exists, create_column
 
 
 class SaleOrderLine(models.Model):
@@ -19,12 +18,8 @@ class SaleOrderLine(models.Model):
         for so_line in self:
             so_line.is_service = so_line.product_id.type == 'service'
 
-    def _auto_init(self):
-        """
-        Create column to stop ORM from computing it himself (too slow)
-        """
-        if not column_exists(self.env.cr, 'sale_order_line', 'is_service'):
-            create_column(self.env.cr, 'sale_order_line', 'is_service', 'bool')
+    def _init_column(self, column_name):
+        if column_name == "is_service":
             self.env.cr.execute("""
                 UPDATE sale_order_line line
                 SET is_service = (pt.type = 'service')
@@ -32,7 +27,8 @@ class SaleOrderLine(models.Model):
                 LEFT JOIN product_template pt ON pt.id = pp.product_tmpl_id
                 WHERE pp.id = line.product_id
             """)
-        return super()._auto_init()
+            return True
+        return super()._init_column(column_name)
 
     def _additional_name_per_id(self):
         name_per_id = super()._additional_name_per_id() if not self.env.context.get('hide_partner_ref') else {}

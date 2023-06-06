@@ -3,7 +3,6 @@
 
 
 from odoo import models, fields, api
-from odoo.tools.sql import column_exists, create_column
 
 
 class AccountMove(models.Model):
@@ -16,14 +15,14 @@ class AccountMove(models.Model):
         store=True,
     )
 
-    def _auto_init(self):
-        """ Create column for `preferred_payment_method_id` to avoid having it
+    def _init_column(self, column_name):
+        """ Mark column `preferred_payment_method_id` as initialized to avoid having it
         computed by the ORM on installation. Since `property_payment_method_id` is
         introduced in this module, there is no need for UPDATE
         """
-        if not column_exists(self.env.cr, "account_move", "preferred_payment_method_id"):
-            create_column(self.env.cr, "account_move", "preferred_payment_method_id", "int4")
-        return super()._auto_init()
+        if column_name == "preferred_payment_method_id":
+            return True
+        return super()._init_column(column_name)
 
     @api.depends('partner_id')
     def _compute_preferred_payment_method_idd(self):
