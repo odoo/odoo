@@ -267,7 +267,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         }
         with mute_logger('odoo.sql_db'):
             with self.assertRaises(IntegrityError):
-                with self.cr.savepoint():
+                with self.env.savepoint():
                     self.env['hr.leave'].create(leave_vals)
 
         leave_vals = {
@@ -281,7 +281,7 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
         leave = self.env['hr.leave'].create(leave_vals)
         with mute_logger('odoo.sql_db'):
             with self.assertRaises(IntegrityError):  # No ValidationError
-                with self.cr.savepoint():
+                with self.env.savepoint():
                     leave.write({
                         'date_from': datetime.today().strftime('%Y-%m-11 19:00:00'),
                         'date_to': datetime.today().strftime('%Y-%m-10 10:00:00'),

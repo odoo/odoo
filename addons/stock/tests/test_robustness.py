@@ -55,7 +55,7 @@ class TestRobustness(TransactionCase):
 
         # change the factor
         with self.assertRaises(UserError):
-            with self.cr.savepoint():
+            with self.env.savepoint():
                 move1.product_uom.factor = 0.05
 
         # assert the reservation
@@ -108,7 +108,7 @@ class TestRobustness(TransactionCase):
 
         # change the stock usage
         with self.assertRaises(UserError):
-            with self.cr.savepoint():
+            with self.env.savepoint():
                 test_stock_location.scrap_location = False
 
         # unreserve

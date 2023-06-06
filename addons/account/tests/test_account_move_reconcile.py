@@ -2543,7 +2543,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     def test_reconcile_plan(self):
         @contextmanager
         def rollback():
-            savepoint = self.cr.savepoint()
+            savepoint = self.env.savepoint()
             yield
             savepoint.rollback()
 

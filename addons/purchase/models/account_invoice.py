@@ -276,7 +276,7 @@ class AccountMove(models.Model):
         :param purchase_orders: a list of purchase orders to be linked to this vendor bill
         :param force_write: whether to delete all existing invoice lines before adding the vendor bill lines
         """
-        with self.env.cr.savepoint():
+        with self.env.savepoint():
             with self._get_edi_creation() as invoice:
                 if force_write and invoice.line_ids:
                     invoice.invoice_line_ids = [Command.clear()]

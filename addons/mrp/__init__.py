@@ -36,7 +36,7 @@ def uninstall_hook(env):
     # Fail unlink means that the route is used somewhere (e.g. route_id on stock.rule). In this case
     # we don't try to do anything.
     try:
-        with env.cr.savepoint():
+        with env.savepoint():
             pbm_routes.unlink()
     except:
         pass

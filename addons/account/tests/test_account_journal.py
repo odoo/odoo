@@ -18,7 +18,7 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         journal_bank.currency_id = self.currency_data['currency']
 
         # Try to set a different currency on the 'debit' account.
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError), self.env.savepoint():
             journal_bank.default_account_id.currency_id = self.company_data['currency']
 
     def test_changing_journal_company(self):
@@ -30,7 +30,7 @@ class TestAccountJournal(AccountTestInvoicingCommon):
             'journal_id': self.company_data['default_journal_sale'].id,
         })
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.company_data['default_journal_sale'].company_id = self.company_data_2['company']
 
     def test_account_control_create_journal_entry(self):
@@ -53,7 +53,7 @@ class TestAccountJournal(AccountTestInvoicingCommon):
 
         # Should fail because 'default_account_expense' is not allowed.
         self.company_data['default_journal_misc'].account_control_ids |= self.company_data['default_account_revenue']
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.env['account.move'].create(move_vals)
 
         # Should be allowed because both accounts are accepted.
@@ -79,7 +79,7 @@ class TestAccountJournal(AccountTestInvoicingCommon):
         })
 
         # There is already an other line using the 'default_account_expense' account.
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(ValidationError), self.env.savepoint():
             self.company_data['default_journal_misc'].account_control_ids |= self.company_data['default_account_revenue']
 
         # Assigning both should be allowed

@@ -200,9 +200,9 @@ class TestMailAlias(MailCommon):
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param('mail.bounce.alias')
 
         # test you cannot create aliases matching bounce / catchall
-        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+        with self.assertRaises(exceptions.UserError), self.env.savepoint():
             self.env['mail.alias'].create({'alias_model_id': alias_model_id, 'alias_name': catchall_alias})
-        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+        with self.assertRaises(exceptions.UserError), self.env.savepoint():
             self.env['mail.alias'].create({'alias_model_id': alias_model_id, 'alias_name': bounce_alias})
 
         new_mail_alias = self.env['mail.alias'].create({
@@ -211,11 +211,11 @@ class TestMailAlias(MailCommon):
         })
 
         # test that re-using catchall and bounce alias raises UserError
-        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+        with self.assertRaises(exceptions.UserError), self.env.savepoint():
             new_mail_alias.write({
                 'alias_name': catchall_alias
             })
-        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+        with self.assertRaises(exceptions.UserError), self.env.savepoint():
             new_mail_alias.write({
                 'alias_name': bounce_alias
             })
@@ -227,9 +227,9 @@ class TestMailAlias(MailCommon):
         self.assertFalse(copy_new_mail_alias.alias_name)
 
         # cannot set catchall / bounce to used alias
-        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+        with self.assertRaises(exceptions.UserError), self.env.savepoint():
             self.env['ir.config_parameter'].sudo().set_param('mail.catchall.alias', new_mail_alias.alias_name)
-        with self.assertRaises(exceptions.UserError), self.cr.savepoint():
+        with self.assertRaises(exceptions.UserError), self.env.savepoint():
             self.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', new_mail_alias.alias_name)
 
 

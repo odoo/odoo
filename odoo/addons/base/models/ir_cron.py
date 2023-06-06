@@ -426,7 +426,7 @@ class ir_cron(models.Model):
 
     def try_write(self, values):
         try:
-            with self._cr.savepoint():
+            with self.env.savepoint():
                 self._cr.execute(f"""
                     SELECT id
                     FROM "{self._table}"

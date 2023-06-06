@@ -38,7 +38,7 @@ class WebsiteForm(http.Controller):
             # here be committed. It should not either roll back everything in
             # this controller method. Instead, we use a savepoint to roll back
             # what has been done inside the try clause.
-            with request.env.cr.savepoint():
+            with request.env.savepoint():
                 if request.env['ir.http']._verify_request_recaptcha_token('website_form'):
                     # request.params was modified, update kwargs to reflect the changes
                     kwargs = dict(request.params)

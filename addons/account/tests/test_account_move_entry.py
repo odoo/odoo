@@ -125,7 +125,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # It should raise an error.
         custom_account.currency_id = self.currency_data['currency']
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.line_ids[0].account_id = custom_account
 
         # The currency set on the account is the same as the one set on the company.
@@ -150,7 +150,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.test_move.ref = 'whatever'
 
         # Try to edit a line into a locked fiscal year.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.write({
                 'line_ids': [
                     (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
@@ -159,11 +159,11 @@ class TestAccountMove(AccountTestInvoicingCommon):
             })
 
         # Try to edit the account of a line.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.line_ids[0].write({'account_id': self.test_move.line_ids[0].account_id.copy().id})
 
         # Try to edit a line.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.write({
                 'line_ids': [
                     (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
@@ -172,7 +172,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             })
 
         # Try to add a new tax on a line.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.write({
                 'line_ids': [
                     (1, lines[2].id, {'tax_ids': [(6, 0, self.company_data['default_tax_purchase'].ids)]}),
@@ -180,7 +180,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             })
 
         # Try to create a new line.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.write({
                 'line_ids': [
                     (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
@@ -194,16 +194,16 @@ class TestAccountMove(AccountTestInvoicingCommon):
             })
 
         # You can't remove the journal entry from a locked period.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.date = fields.Date.from_string('2018-01-01')
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.name = "Othername"
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.unlink()
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.button_draft()
 
         # Try to add a new journal entry prior to the lock date.
@@ -223,7 +223,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         })
 
         # You can't lock the fiscal year if there is some unreconciled statement.
-        with self.assertRaises(RedirectWarning), self.cr.savepoint():
+        with self.assertRaises(RedirectWarning), self.env.savepoint():
             self.test_move.company_id.fiscalyear_lock_date = fields.Date.from_string('2017-01-01')
 
     def test_misc_tax_lock_date_1(self):
@@ -250,7 +250,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.test_move.line_ids[0].write({'account_id': self.test_move.line_ids[0].account_id.copy().id})
 
         # Try to edit a line having some taxes.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.write({
                 'line_ids': [
                     (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
@@ -259,7 +259,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             })
 
         # Try to add a new tax on a line.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.write({
                 'line_ids': [
                     (1, lines[2].id, {'tax_ids': [(6, 0, self.company_data['default_tax_purchase'].ids)]}),
@@ -267,7 +267,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
             })
 
         # Try to edit a tax line.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.write({
                 'line_ids': [
                     (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
@@ -289,7 +289,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         })
 
         # Try to create a line affecting the taxes.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.write({
                 'line_ids': [
                     (1, lines[0].id, {'credit': lines[0].credit + 100.0}),
@@ -304,16 +304,16 @@ class TestAccountMove(AccountTestInvoicingCommon):
             })
 
         # You can't remove the journal entry from a locked period.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.date = fields.Date.from_string('2018-01-01')
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.name = "Othername"
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.unlink()
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             self.test_move.button_draft()
 
         copy_move = self.test_move.copy({'date': self.test_move.date})
@@ -322,7 +322,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         copy_move.action_post()
 
         # You can't change the date to one being in a locked period.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             copy_move.date = fields.Date.from_string('2017-01-01')
 
     def test_misc_draft_reconciled_entries_1(self):
@@ -373,7 +373,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         (lines[0] + lines[2]).reconcile()
 
         # You can't write something impacting the reconciliation on an already reconciled line.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             draft_moves[0].write({
                 'line_ids': [
                     (1, lines[1].id, {'credit': lines[1].credit + 100.0}),
@@ -390,7 +390,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         })
 
         # You can't unlink an already reconciled line.
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             draft_moves.unlink()
 
     def test_add_followers_on_post(self):
@@ -558,7 +558,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         # You cannot remove journal items if the related journal entry is posted.
         self.test_move.action_post()
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             unlink_posted_items()
 
         # You can remove journal items if the related journal entry is draft.
@@ -580,7 +580,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         move.currency_id.active = False
 
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             move.action_post()
 
         # Make sure that the invoice can still be posted when the currency is active
@@ -815,11 +815,11 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         self.test_move.action_post()
         with self.assertRaisesRegex(UserError, "You cannot modify the taxes related to a posted journal item"),\
-             self.cr.savepoint():
+             self.env.savepoint():
             edit_tax_on_posted_moves()
 
         with self.assertRaisesRegex(UserError, "You cannot modify the taxes related to a posted journal item"),\
-             self.cr.savepoint():
+             self.env.savepoint():
             self.test_move.line_ids.filtered(lambda l: l.tax_line_id).tax_line_id = False
 
         # You can remove journal items if the related journal entry is draft.
@@ -903,7 +903,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         exchange_diff = moves.line_ids.matched_debit_ids.exchange_move_id
         self.assertTrue(exchange_diff)
-        with self.assertRaises(UserError), self.cr.savepoint():
+        with self.assertRaises(UserError), self.env.savepoint():
             exchange_diff.button_draft()
 
     def test_always_exigible_caba_account(self):

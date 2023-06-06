@@ -389,7 +389,7 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
         """ Context manager that clears the environment upon failure. """
         with ExitStack() as init:
             if hasattr(self, 'env'):
-                init.enter_context(self.env.cr.savepoint())
+                init.enter_context(self.env.savepoint())
                 if issubclass(exception, AccessError):
                     # The savepoint() above calls flush(), which leaves the
                     # record cache with lots of data.  This can prevent
