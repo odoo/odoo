@@ -156,7 +156,7 @@ class AccountTestInvoicingCommon(TransactionCase):
             'company_id': False,
         })
         cls.partner_agrolait = cls.env['res.partner'].create({
-            'name': 'Deco Addict',
+            'name': 'Agrolait',
             'is_company': True,
             'country_id': cls.env.ref('base.us').id,
         })
@@ -426,7 +426,7 @@ class AccountTestInvoicingCommon(TransactionCase):
 
         invoice_vals = {
             'move_type': move_type,
-            'partner_id': partner_id or self.partner_agrolait_id,
+            'partner_id': partner_id or self.partner_agrolait.id,
             'invoice_date': date_invoice,
             'date': date_invoice,
             'invoice_line_ids': [(0, 0, {
@@ -444,7 +444,10 @@ class AccountTestInvoicingCommon(TransactionCase):
             invoice_vals['currency_id'] = currency_id
 
         invoice = self.env['account.move'].with_context(default_move_type=move_type).create(invoice_vals)
-        if auto_validate:
+
+        if state == 'cancel':
+            invoice.write({'state': 'cancel'})
+        elif auto_validate or state == 'posted':
             invoice.action_post()
         return invoice
 
@@ -456,11 +459,11 @@ class AccountTestInvoicingCommon(TransactionCase):
         return cls.env['account.account.tag'].create({
             'name': name,
             'applicability': 'taxes',
-            'country_id': country_id if country_id else cls.company.country_id.id,
+            'country_id': country_id if country_id else cls.company_data['company'].country_id.id,
         })
 
     @classmethod
-    def _create_tax(cls, name, amount=15, amount_type='percent', type_tax_use='sale', tag_names=None, children_taxes=None, tax_exigibility='on_invoice'):
+    def _create_tax(cls, name, amount, amount_type='percent', type_tax_use='sale', tag_names=None, children_taxes=None, tax_exigibility='on_invoice', **kwargs):
         if not tag_names:
             tag_names = {}
         tag_commands = {
@@ -498,6 +501,7 @@ class AccountTestInvoicingCommon(TransactionCase):
                     'tag_ids': tag_commands.get('refund_tax'),
                 }),
             ] if not children_taxes else None,
+            **kwargs,
         }
         return cls.env['account.tax'].create(vals)
 
@@ -745,7 +749,7 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
             'name': 'payment' + invoice_record.name,
             'line_ids': [(0, 0, {
                 'payment_ref': 'payment',
-                'partner_id': self.partner_agrolait_id,
+                'partner_id': self.partner_agrolait.id,
                 'amount': amount,
                 'amount_currency': amount_currency,
                 'foreign_currency_id': currency_id,
