@@ -1,4 +1,4 @@
-/** @odoo-module */
+/* @odoo-module */
 
 import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
 
@@ -8,10 +8,7 @@ import { autoPopupService } from "@im_livechat/embed/core/autopopup_service";
 import { LivechatButton } from "@im_livechat/embed/core_ui/livechat_button";
 
 import { ChatWindowContainer } from "@mail/chat_window/chat_window_container";
-import {
-    setupManager,
-    setupMessagingServiceRegistries,
-} from "@mail/../tests/helpers/webclient_setup";
+import { setupManager } from "@mail/../tests/helpers/webclient_setup";
 
 import { App, onMounted } from "@odoo/owl";
 
@@ -115,7 +112,7 @@ patch(setupManager, "im_livechat", {
  * @returns {Promise<any>}
  */
 export async function start({ mockRPC } = {}) {
-    await setupMessagingServiceRegistries();
+    await setupManager.setupMessagingServiceRegistries();
     const mainComponentRegistry = registry.category("main_components");
     mainComponentRegistry.add("LivechatButton", { Component: LivechatButton });
     mainComponentRegistry.add("ChatWindowContainer", { Component: ChatWindowContainer });
