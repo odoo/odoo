@@ -2432,6 +2432,7 @@ class Order extends PosModel {
         this.is_tipped = json.is_tipped || false;
         this.tip_amount = json.tip_amount || 0;
         this.access_token = json.access_token || '';
+        this.cashier_name = json.cashier_name;
     }
     export_as_JSON() {
         var orderLines, paymentLines;
@@ -2465,6 +2466,7 @@ class Order extends PosModel {
             is_tipped: this.is_tipped || false,
             tip_amount: this.tip_amount || 0,
             access_token: this.access_token || '',
+            cashier_name: this.cashier_name
         };
         if (!this.is_paid && this.user_id) {
             json.user_id = this.user_id;

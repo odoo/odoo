@@ -1043,6 +1043,7 @@ class PosOrder(models.Model):
             'is_tipped': order.is_tipped,
             'tip_amount': order.tip_amount,
             'access_token': order.access_token,
+            'cashier_name': order.employee_id.name or order.user_id.name
         }
 
     def _get_fields_for_order_line(self):
