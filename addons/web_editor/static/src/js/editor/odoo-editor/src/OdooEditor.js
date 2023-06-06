@@ -3692,7 +3692,7 @@ export class OdooEditor extends EventTarget {
             ev.preventDefault();
             this._handleAutomaticLinkInsertion();
             this._applyCommand('oShiftEnter');
-        } else if (ev.key === ' ' && !this.powerbox.isOpen) {
+        } else if (ev.key === ' ') {
             this._handleAutomaticLinkInsertion();
         } else if (IS_KEYBOARD_EVENT_UNDO(ev)) {
             // Ctrl-Z
