@@ -76,3 +76,7 @@ class MrpWorkorder(models.Model):
             wo.mo_analytic_account_line_id = analytic_line
         for wo, analytic_line in zip(wo_to_link_wc_analytic_line, wc_analytic_lines):
             wo.wc_analytic_account_line_id = analytic_line
+
+    def unlink(self):
+        (self.mo_analytic_account_line_id | self.wc_analytic_account_line_id).unlink()
+        return super().unlink()
