@@ -9,6 +9,7 @@ class TestResConfigSettings(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
+        cls.env['account.analytic.plan'].search([]).unlink()
         cls.analytic_plan_1, cls.analytic_plan_2 = cls.env['account.analytic.plan'].create([
             {
                 'name': 'Plan 1',
