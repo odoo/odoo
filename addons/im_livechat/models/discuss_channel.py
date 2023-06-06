@@ -110,7 +110,6 @@ class DiscussChannel(models.Model):
                     'body': message.body,
                 }
             })
-        return super()._message_update_content_after_hook(message=message)
 
     def _get_visitor_leave_message(self, operator=False, cancel=False):
         return _('Visitor has left the conversation.')
