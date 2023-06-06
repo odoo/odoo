@@ -5,9 +5,9 @@
             <Layout className="'o_import_action d-flex h-100 overflow-auto bg-white'" display="display">
                 <t t-set-slot="control-panel-create-button">
                     <t t-if="isPreviewing">
-                        <button t-if="!state.isPaused" type="button" class="btn btn-primary m-1" t-on-click="() => this.handleImport(false)">Import</button>
-                        <button t-else="" type="button" class="btn btn-primary m-1" t-on-click="() => this.handleImport(false)">Resume</button>
-                        <button type="button" class="btn btn-secondary m-1" t-on-click="() => this.handleImport(true)">Test</button>
+                        <button t-if="!state.isPaused" type="button" class="btn btn-primary" t-on-click="() => this.handleImport(false)">Import</button>
+                        <button t-else="" type="button" class="btn btn-primary" t-on-click="() => this.handleImport(false)">Resume</button>
+                        <button type="button" class="btn btn-secondary" t-on-click="() => this.handleImport(true)">Test</button>
                     </t>
                     <FileInput
                         acceptedFileExtensions="'.csv, .xls, .xlsx, .xlsm, .ods'"
@@ -16,10 +16,10 @@
                         resModel="this.resModel"
                         route="'/base_import/set_file'"
                     >
-                        <button t-if="isPreviewing" type="button" class="btn btn-secondary m-1">Load File</button>
-                        <button t-else="" type="button" class="btn btn-primary m-1 o_import_file">Upload File</button>
+                        <button t-if="isPreviewing" type="button" class="btn btn-secondary">Load File</button>
+                        <button t-else="" type="button" class="btn btn-primary o_import_file">Upload File</button>
                     </FileInput>
-                    <button t-on-click="exit" type="button" class="btn btn-secondary m-1">Cancel</button>
+                    <button t-on-click="exit" type="button" class="btn btn-secondary">Cancel</button>
                 </t>
                 <t t-if="isPreviewing">
                     <ImportDataSidepanel
