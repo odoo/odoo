@@ -375,10 +375,9 @@ class MailTemplate(models.Model):
 
         # update 'partner_to' rendered value to 'partner_ids'
         all_partner_to = {
-            int(pid)
+            pid
             for record_values in render_results.values()
-            for pid in record_values.get('partner_to', '').split(',')
-            if pid and pid.strip()
+            for pid in self._parse_partner_to(record_values.get('partner_to', ''))
         }
         existing_pids = set()
         if all_partner_to:
@@ -386,7 +385,7 @@ class MailTemplate(models.Model):
         for res_id, record_values in render_results.items():
             partner_to = record_values.pop('partner_to', '')
             if partner_to:
-                tpl_partner_ids = set(int(pid) for pid in partner_to.split(',') if pid) & existing_pids
+                tpl_partner_ids = set(self._parse_partner_to(partner_to)) & existing_pids
                 record_values.setdefault('partner_ids', []).extend(tpl_partner_ids)
 
         return render_results
@@ -525,6 +524,13 @@ class MailTemplate(models.Model):
                 )
 
         return render_results
+
+    @classmethod
+    def _parse_partner_to(cls, partner_to):
+        return [
+            int(pid.strip()) for pid in partner_to.split(',')
+            if (pid and pid.strip().isdigit())
+        ]
 
     # ------------------------------------------------------------
     # EMAIL

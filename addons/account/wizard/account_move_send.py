@@ -233,7 +233,7 @@ class AccountMoveSend(models.Model):
                 if mail_template.partner_to:
                     partner_to = wizard._get_mail_default_field_value_from_template(mail_template, wizard.mail_lang, move,
                                                                                   'partner_to')
-                    partner_ids = [int(pid) for pid in partner_to.split(',') if pid]
+                    partner_ids = mail_template._parse_partner_to(partner_to)
                     partners |= self.env['res.partner'].sudo().browse(partner_ids).exists()
                 wizard.mail_partner_ids = partners
             else:
