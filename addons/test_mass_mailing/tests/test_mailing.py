@@ -203,37 +203,17 @@ class TestMassMailing(TestMassMailCommon):
                 with self.mock_mail_gateway(mail_unlink_sent=False):
                     mailing.action_send_mail()
 
-                # difference in email_to management when inheriting from blacklist mixin
-                # as it uses email_normalized if possible
-                if dst_model == 'mailing.test.customer':
-                    formatted_mailmail_email = '"Formatted Record" <record.format@example.com>'
-                    multi_mail_mail_email = 'record.multi.1@example.com, "Record Multi 2" <record.multi.2@example.com>'
-                    multi_outgoing_emails = ['record.multi.1@example.com', '"Record Multi 2" <record.multi.2@example.com>']
-                    unicode_email = '"Unicode Record" <record.😊@example.com>'
-                    unicode_mailmail_email = '"Unicode Record" <record.😊@example.com>'
-                    record_case_email = 'TEST.RECORD.CASE@EXAMPLE.COM'
-                    record_weird_email = 'test.record.weird@example.com'
-                    record_weird_mailmail_email = 'test.record.weird@example.com Weird Format'
-                    record_weird_email_email = 'test.record.weird@example.comWeirdFormat'
-                    record_weird_2_mailmail_email = 'Weird Format2 test.record.weird.2@example.com'
-                else:
-                    formatted_mailmail_email = 'record.format@example.com'
-                    unicode_email = 'record.😊@example.com'
-                    multi_mail_mail_email = 'record.multi.1@example.com'
-                    multi_outgoing_emails = ['record.multi.1@example.com']
-                    unicode_mailmail_email = 'record.😊@example.com'
-                    record_case_email = 'test.record.case@example.com'
-                    record_weird_email = 'test.record.weird@example.comweirdformat'
-                    record_weird_mailmail_email = 'test.record.weird@example.comweirdformat'
-                    record_weird_email_email = 'test.record.weird@example.comweirdformat'
-                    record_weird_2_mailmail_email = 'weird format2 test.record.weird.2@example.com'
+                # Difference in email, email_to_recipients and email_to_mail
+                # -> email: trace email: normalized, to ease its management, mainly technical
+                # -> email_to_mail: mail.mail email: email_to stored in outgoing mail.mail (can be multi)
+                # -> email_to_recipients: email_to for outgoing emails, list means several recipients
                 self.assertMailTraces(
                     [
                         {'email': 'customer.multi.1@example.com, "Test Multi 2" <customer.multi.2@example.com>',
-                         'email_to_recipients': ['customer.multi.1@example.com, "Test Multi 2" <customer.multi.2@example.com>'],
-                         'failure_type': 'mail_email_invalid',
+                         'email_to_recipients': [[f'"{customer_mult.name}" <customer.multi.1@example.com>', f'"{customer_mult.name}" <customer.multi.2@example.com>']],
+                         'failure_type': False,
                          'partner': customer_mult,
-                         'trace_status': 'cancel'},
+                         'trace_status': 'sent'},
                         {'email': '"Formatted Customer" <test.customer.format@example.com>',
                          # mail to avoids double encapsulation
                          'email_to_recipients': [[f'"{customer_fmt.name}" <test.customer.format@example.com>']],
@@ -262,33 +242,33 @@ class TestMassMailing(TestMassMailCommon):
                          'partner': customer_weird_2,
                          'trace_status': 'sent'},
                         {'email': 'record.multi.1@example.com',
-                         'email_to_mail': multi_mail_mail_email,
-                         'email_to_recipients': [multi_outgoing_emails],
+                         'email_to_mail': 'record.multi.1@example.com,record.multi.2@example.com',
+                         'email_to_recipients': [['record.multi.1@example.com', 'record.multi.2@example.com']],
                          'failure_type': False,
                          'trace_status': 'sent'},
                         {'email': 'record.format@example.com',
-                         'email_to_mail': formatted_mailmail_email,
-                         'email_to_recipients': [[formatted_mailmail_email]],
+                         'email_to_mail': 'record.format@example.com',
+                         'email_to_recipients': [['record.format@example.com']],
                          'failure_type': False,
                          'trace_status': 'sent'},
-                        {'email': unicode_email,
-                         'email_to_mail': unicode_mailmail_email,
-                         'email_to_recipients': [[unicode_mailmail_email]],
+                        {'email': 'record.😊@example.com',
+                         'email_to_mail': 'record.😊@example.com',
+                         'email_to_recipients': [['record.😊@example.com']],
                          'failure_type': 'mail_email_invalid',
                          'trace_status': 'cancel'},  # email_re usage forbids mailing to unicode
-                        {'email': record_case_email,
-                         'email_to_mail': record_case_email,
-                         'email_to_recipients': [[record_case_email]],
+                        {'email': 'test.record.case@example.com',
+                         'email_to_mail': 'test.record.case@example.com',
+                         'email_to_recipients': [['test.record.case@example.com']],
                          'failure_type': False,
                          'trace_status': 'sent'},
-                        {'email': record_weird_email,
-                         'email_to_mail': record_weird_mailmail_email,
-                         'email_to_recipients': [[record_weird_email_email]],
+                        {'email': 'test.record.weird@example.comweirdformat',
+                         'email_to_mail': 'test.record.weird@example.comweirdformat',
+                         'email_to_recipients': [['test.record.weird@example.comweirdformat']],
                          'failure_type': False,
                          'trace_status': 'sent'},
                         {'email': 'test.record.weird.2@example.com',
-                         'email_to_mail': record_weird_2_mailmail_email,
-                         'email_to_recipients': [[record_weird_2_mailmail_email]],
+                         'email_to_mail': 'weird format2 test.record.weird.2@example.com',
+                         'email_to_recipients': [['weird format2 test.record.weird.2@example.com']],
                          'failure_type': False,
                          'trace_status': 'sent'},
                     ],
