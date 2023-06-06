@@ -54,6 +54,7 @@ export class TourPointer extends Component {
         let dimensions = null;
         let lastMeasuredContent = null;
         let lastOpenState = this.isOpen;
+        let [anchorX, anchorY] = [0, 0];
 
         useEffect(
             () => {
@@ -90,7 +91,16 @@ export class TourPointer extends Component {
                     if (!this.isOpen) {
                         const { anchor } = this.props.pointerState;
                         if (anchor) {
-                            const { x, width } = anchor.getBoundingClientRect();
+                            const { x, y, width } = anchor.getBoundingClientRect();
+                            const [lastAnchorX, lastAnchorY] = [anchorX, anchorY];
+                            [anchorX, anchorY] = [x, y];
+                            // Let's just say that the anchor is static if it moved less than 1px.
+                            const delta = Math.sqrt(
+                                Math.pow(x - lastAnchorX, 2) + Math.pow(y - lastAnchorY, 2)
+                            );
+                            if (delta < 1) {
+                                return;
+                            }
                             const wouldOverflow =
                                 window.innerWidth - x - width / 2 < dimensions?.width;
                             el.classList.toggle("o_expand_left", wouldOverflow);
