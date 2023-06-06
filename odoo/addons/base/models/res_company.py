@@ -10,6 +10,7 @@ import warnings
 from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import ValidationError, UserError
 from odoo.modules.module import get_resource_path
+from odoo.tools import html2plaintext
 from odoo.tools import file_open
 from random import randrange
 from PIL import Image
@@ -41,6 +42,7 @@ class Company(models.Model):
     report_header = fields.Html(string='Company Tagline', translate=True, help="Appears by default on the top right corner of your printed documents (report header).")
     report_footer = fields.Html(string='Report Footer', translate=True, help="Footer text displayed at the bottom of all reports.")
     company_details = fields.Html(string='Company Details', translate=True, help="Header text displayed at the top of all reports.")
+    is_company_details_empty = fields.Boolean(compute='_compute_empty_company_details')
     logo = fields.Binary(related='partner_id.image_1920', default=_get_logo, string="Company Logo", readonly=False)
     # logo_web: do not store in attachments, since the image is retrieved in SQL for
     # performance reasons (see addons/web/controllers/main.py, Binary.company_logo)
@@ -173,6 +175,13 @@ class Company(models.Model):
         """
         _logger.warning("The method '_company_default_get' on res.company is deprecated and shouldn't be used anymore")
         return self.env.company
+
+    @api.depends('company_details')
+    def _compute_empty_company_details(self):
+        # In recent change when an html field is empty a <p> balise remains with a <br> in it,
+        # but when company details is empty we want to put the info of the company
+        for record in self:
+            record.is_company_details_empty = not html2plaintext(record.company_details or '')
 
     def cache_restart(self):
         warnings.warn("Since 17.0, deprecated method, use `clear_caches` instead", DeprecationWarning, 2)
