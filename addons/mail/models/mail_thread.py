@@ -959,7 +959,7 @@ class MailThread(models.AbstractModel):
                 is_a_reply = False
                 rcpt_tos_valid_localparts = [to for to in rcpt_tos_valid_localparts if to in other_model_aliases.mapped('alias_name')]
 
-        if is_a_reply:
+        if reply_model and is_a_reply:
             dest_aliases = self.env['mail.alias'].search([
                 ('alias_name', 'in', rcpt_tos_localparts),
                 ('alias_model_id.model', '=', reply_model)
