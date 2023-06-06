@@ -13,6 +13,7 @@ class TestSaleStockMargin(TestStockValuationCommon):
     def setUpClass(cls):
         super(TestSaleStockMargin, cls).setUpClass()
         cls.pricelist = cls.env['product.pricelist'].create({'name': 'Simple Pricelist'})
+        cls.env['res.currency.rate'].search([]).unlink()
 
     #########
     # UTILS #
