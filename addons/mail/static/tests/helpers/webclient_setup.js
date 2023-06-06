@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { busService } from "@bus/services/bus_service";
 import { busParametersService } from "@bus/bus_parameters_service";
@@ -96,23 +96,94 @@ function getCreateXHR() {
     };
 }
 
-/**
- * Add required components to the main component registry.
- */
-function setupMainComponentRegistry() {
-    const mainComponentRegistry = registry.category("main_components");
-    mainComponentRegistry.add("mail.ChatWindowContainer", {
-        Component: ChatWindowContainer,
-    });
-    mainComponentRegistry.add("mail.CallInvitations", {
-        Component: CallInvitations,
-    });
-    if (!registry.category("actions").contains("mail.action_discuss")) {
-        registry.category("actions").add("mail.action_discuss", DiscussClientAction);
-    }
-}
-
 export const setupManager = {
+    /**
+     * Add required components to the main component registry.
+     */
+    setupMainComponentRegistry() {
+        const mainComponentRegistry = registry.category("main_components");
+        mainComponentRegistry.add("mail.ChatWindowContainer", {
+            Component: ChatWindowContainer,
+        });
+        mainComponentRegistry.add("mail.CallInvitations", {
+            Component: CallInvitations,
+        });
+        if (!registry.category("actions").contains("mail.action_discuss")) {
+            registry.category("actions").add("mail.action_discuss", DiscussClientAction);
+        }
+    },
+    /**
+     * Setup both legacy and new service registries.
+     *
+     * @param {Object} param0
+     * @param {Object} [param0.services]
+     * @param {number} [param0.loadingBaseDelayDuration=0]
+     * @param {EventBus} [param0.messagingBus]
+     * @param {Function} [param0.mockRPC]
+     * @returns {LegacyRegistry} The registry containing all the legacy services that will be passed
+     * to the webClient as a legacy parameter.
+     */
+    async setupMessagingServiceRegistries({
+        loadingBaseDelayDuration = 0,
+        messagingBus,
+        services,
+    } = {}) {
+        const serviceRegistry = registry.category("services");
+
+        const OriginalAudio = window.Audio;
+        patchWithCleanup(
+            window,
+            {
+                Audio: function () {
+                    const audio = new OriginalAudio();
+                    audio.preload = "none";
+                    audio.play = () => {};
+                    return audio;
+                },
+            },
+            { pure: true }
+        );
+
+        const messagingValues = {
+            start() {
+                return {
+                    isInQUnitTest: true,
+                    disableAnimation: true,
+                    loadingBaseDelayDuration,
+                    messagingBus,
+                    userNotificationManager: { canPlayAudio: false },
+                };
+            },
+        };
+
+        services = setupManager.setupServices(services, messagingValues);
+        if (!serviceRegistry.contains("file_upload")) {
+            serviceRegistry.add("file_upload", {
+                ...fileUploadService,
+                start(env, ...args) {
+                    this.env = env;
+                    return fileUploadService.start.call(this, env, ...args);
+                },
+                createXhr: getCreateXHR(),
+            });
+        }
+        patchWithCleanup(session, { show_effect: true });
+        Object.entries(services).forEach(([serviceName, service]) => {
+            if (!serviceRegistry.contains(serviceName)) {
+                serviceRegistry.add(serviceName, service);
+            }
+        });
+
+        registry
+            .category("systray")
+            .add("mail.CallMenu", { Component: CallMenu }, { sequence: 15 });
+        registry
+            .category("systray")
+            .add("mail.activity_menu", { Component: ActivityMenu }, { sequence: 20 });
+        registry
+            .category("systray")
+            .add("mail.messaging_menu", { Component: MessagingMenu }, { sequence: 25 });
+    },
     setupServices(services, messagingValues) {
         return {
             bus_service: busService,
@@ -146,77 +217,6 @@ export const setupManager = {
 };
 
 /**
- * Setup both legacy and new service registries.
- *
- * @param {Object} param0
- * @param {Object} [param0.services]
- * @param {number} [param0.loadingBaseDelayDuration=0]
- * @param {EventBus} [param0.messagingBus]
- * @param {Function} [param0.mockRPC]
- * @returns {LegacyRegistry} The registry containing all the legacy services that will be passed
- * to the webClient as a legacy parameter.
- */
-export async function setupMessagingServiceRegistries({
-    loadingBaseDelayDuration = 0,
-    messagingBus,
-    services,
-} = {}) {
-    const serviceRegistry = registry.category("services");
-
-    const OriginalAudio = window.Audio;
-    patchWithCleanup(
-        window,
-        {
-            Audio: function () {
-                const audio = new OriginalAudio();
-                audio.preload = "none";
-                audio.play = () => {};
-                return audio;
-            },
-        },
-        { pure: true }
-    );
-
-    const messagingValues = {
-        start() {
-            return {
-                isInQUnitTest: true,
-                disableAnimation: true,
-                loadingBaseDelayDuration,
-                messagingBus,
-                userNotificationManager: { canPlayAudio: false },
-            };
-        },
-    };
-
-    services = setupManager.setupServices(services, messagingValues);
-    if (!serviceRegistry.contains("file_upload")) {
-        serviceRegistry.add("file_upload", {
-            ...fileUploadService,
-            start(env, ...args) {
-                this.env = env;
-                return fileUploadService.start.call(this, env, ...args);
-            },
-            createXhr: getCreateXHR(),
-        });
-    }
-    patchWithCleanup(session, { show_effect: true });
-    Object.entries(services).forEach(([serviceName, service]) => {
-        if (!serviceRegistry.contains(serviceName)) {
-            serviceRegistry.add(serviceName, service);
-        }
-    });
-
-    registry.category("systray").add("mail.CallMenu", { Component: CallMenu }, { sequence: 15 });
-    registry
-        .category("systray")
-        .add("mail.activity_menu", { Component: ActivityMenu }, { sequence: 20 });
-    registry
-        .category("systray")
-        .add("mail.messaging_menu", { Component: MessagingMenu }, { sequence: 25 });
-}
-
-/**
  * Creates a properly configured instance of WebClient, with the messaging service and all it's
  * dependencies initialized.
  *
@@ -228,7 +228,7 @@ export async function setupMessagingServiceRegistries({
  * @returns {WebClient}
  */
 async function getWebClientReady(param0) {
-    setupMainComponentRegistry();
+    setupManager.setupMainComponentRegistry();
 
     const servicesParameters = {};
     const param0Entries = Object.entries(param0);
@@ -237,7 +237,7 @@ async function getWebClientReady(param0) {
             servicesParameters[parameterName] = value;
         }
     }
-    await setupMessagingServiceRegistries(servicesParameters);
+    await setupManager.setupMessagingServiceRegistries(servicesParameters);
 
     const webClientParameters = {};
     for (const [parameterName, value] of param0Entries) {
