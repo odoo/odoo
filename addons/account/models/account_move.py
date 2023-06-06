@@ -2340,8 +2340,9 @@ class AccountMove(models.Model):
         copied_am = super().copy(default)
         message_origin = '' if not copied_am.auto_post_origin_id else \
             (Markup('<br/>') + _('This recurring entry originated from %s')) % copied_am.auto_post_origin_id._get_html_link()
+        message_content = _('This entry has been reversed from %s') if default.get('reversed_entry_id') else _('This entry has been duplicated from %s')
         copied_am._message_log(body=
-            (escape(_('This entry has been duplicated from %s')) % self._get_html_link()) + message_origin,
+            (escape(message_content) % self._get_html_link()) + message_origin,
         )
 
         return copied_am

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
+from markupsafe import escape
 from odoo.tools.translate import _
 from odoo.exceptions import UserError
 
@@ -121,6 +122,9 @@ class AccountMoveReversal(models.TransientModel):
         moves_to_redirect = self.env['account.move']
         for moves, default_values_list, is_cancel_needed in batches:
             new_moves = moves._reverse_moves(default_values_list, cancel=is_cancel_needed)
+            moves._message_log_batch(
+                bodies=dict((move.id, escape(_('This entry has been %s')) % reverse._get_html_link(title=_("reversed"))) for move, reverse in zip(moves, new_moves))
+            )
 
             if is_modify:
                 moves_vals_list = []
