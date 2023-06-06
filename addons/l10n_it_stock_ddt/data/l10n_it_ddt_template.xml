@@ -4,7 +4,7 @@
         <xpath expr='//DatiDDT' position="after">
             <t t-if="ddt_dict and not record.l10n_it_ddt_id" t-foreach="ddt_dict" t-as="picking">
             <DatiDDT>
-                <NumeroDDT t-esc="picking.l10n_it_ddt_number"/>
+                <NumeroDDT t-esc="format_alphanumeric(picking.l10n_it_ddt_number[-20:])"/>
                 <DataDDT t-esc="format_date(picking.date)"/>
                 <t t-if="len(ddt_dict) > 1" t-foreach="ddt_dict[picking]" t-as="line_ref">
                 <RiferimentoNumeroLinea t-esc="line_ref"/>
