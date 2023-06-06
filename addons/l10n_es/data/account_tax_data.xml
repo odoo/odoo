@@ -1482,7 +1482,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_122')],
+                'tag_ids': [ref('mod_303_120')], <!-- check -->
             }),
 
             (0,0, {
@@ -1495,7 +1495,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_122')],
+                'tag_ids': [ref('mod_303_120')],
             }),
 
             (0,0, {
@@ -2240,9 +2240,41 @@
         ]"/>
     </record>
     <record id="account_tax_template_s_iva0_ns" model="account.tax.template">
-        <field name="description">IVA Exento No Sujeto</field>
+        <field name="description">IVA Exento No Deducible</field>
         <field name="type_tax_use">sale</field>
-        <field name="name">IVA Exento Repercutido No Sujeto</field>
+        <field name="name">IVA Exento No Deducible</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="0"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_iva_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_s_iva0_no_aplicable" model="account.tax.template">
+        <field name="description">IVA No Aplicable</field>
+        <field name="type_tax_use">sale</field>
+        <field name="name">IVA No Aplicable</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="0"/>
         <field name="amount_type">percent</field>
@@ -3583,7 +3615,7 @@
     <record id="account_tax_template_s_iva0_e" model="account.tax.template">
         <field name="description">Exportación (Bienes)</field>
         <field name="type_tax_use">sale</field>
-        <field name="name">IVA 0% Exportaciones</field>
+        <field name="name">IVA 0% Exportaciones (Art. 21)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="0"/>
         <field name="amount_type">percent</field>
@@ -3617,7 +3649,7 @@
     <record id="account_tax_template_s_iva0_ic" model="account.tax.template">
         <field name="description">Intracomunitario exento (Bienes)</field>
         <field name="type_tax_use">sale</field>
-        <field name="name">IVA 0% Entregas Intracomunitarias exentas</field>
+        <field name="name">IVA 0% Entregas Intracomunitarias exentas (Art. 25)</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
         <field name="amount" eval="0"/>
         <field name="amount_type">percent</field>
