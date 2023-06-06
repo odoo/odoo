@@ -11,7 +11,7 @@ Allows you to add delivery methods in pickings.
 
 When creating invoices from picking, the system is able to add and compute the shipping line.
 """,
-    'depends': ['sale_management', 'sale_stock', 'delivery'],
+    'depends': ['sale_stock', 'delivery'],
     'data': [
         'security/ir.model.access.csv',
         'views/product_template_view.xml',
@@ -31,4 +31,5 @@ When creating invoices from picking, the system is able to add and compute the s
     'installable': True,
     'auto_install': True,
     'license': 'LGPL-3',
+    'post_init_hook': '_auto_install_sale_app',
 }
