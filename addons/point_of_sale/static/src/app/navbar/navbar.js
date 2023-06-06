@@ -26,9 +26,7 @@ export class Navbar extends Component {
         SyncNotification,
         BackButton,
     };
-    static props = {
-        showCashMoveButton: Boolean,
-    };
+    static props = {};
     setup() {
         this.pos = usePos();
         this.ui = useState(useService("ui"));
@@ -49,7 +47,9 @@ export class Navbar extends Component {
     get customerFacingDisplayButtonIsShown() {
         return this.pos.globalState.config.iface_customer_facing_display;
     }
-
+    get showCashMoveButton() {
+        return Boolean(this.pos.globalState?.config?.cash_control);
+    }
     onCashMoveButtonClick() {
         this.hardwareProxy.openCashbox(_t("Cash in / out"));
         this.popup.add(CashMovePopup);

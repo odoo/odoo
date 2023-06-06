@@ -4,18 +4,22 @@
     <t t-name="pos_hr.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension" owl="1">
         <xpath expr="//li[hasclass('backend-button')]" position="attributes">
             <attribute name="t-if">
-                !pos.globalState.config.module_pos_hr or pos.globalState.get_cashier().role === 'manager' or pos.globalState.get_cashier_user_id() === pos.globalState.user.id
+                showBackendButton
             </attribute>
         </xpath>
 
         <xpath expr="//li[hasclass('close-button')]" position="attributes">
             <attribute name="t-if">
-                !pos.globalState.config.module_pos_hr or pos.globalState.get_cashier().role === 'manager' or pos.globalState.get_cashier_user_id() === pos.globalState.user.id
+                showCloseSessionButton
             </attribute>
         </xpath>
 
         <xpath expr="//li[hasclass('backend-button')]" position="after">
-            <HeaderLockButton t-if="pos.globalState.config.module_pos_hr" />
+            <li t-if="pos.globalState.config.module_pos_hr" class="menu-item navbar-button lock-button" t-on-click="showLoginScreen">
+                <span>
+                    Lock
+                </span>
+            </li>
         </xpath>
     </t>
 

@@ -33,11 +33,6 @@ export class Chrome extends Component {
         onMounted(this.props.disableLoader);
     }
 
-    // GETTERS //
-
-    get showCashMoveButton() {
-        return Boolean(this.pos.globalState?.config?.cash_control);
-    }
     /**
      * Unmounts the tempScreen on error and dispatches the error in a separate
      * stack so that it can be handled by the error service and display an error

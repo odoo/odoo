@@ -65,6 +65,11 @@ export class CashMovePopup extends AbstractAwaitablePopup {
             reason,
             extras,
         ]);
+        await this.pos.globalState.logEmployeeMessage(
+            `${_t("Cash")} ${translatedType} - ${_t("Amount")}: ${formattedAmount}`,
+            "CASH_DRAWER_ACTION"
+        );
+
         if (this.hardwareProxy.printer) {
             const renderedReceipt = renderToElement("point_of_sale.CashMoveReceipt", {
                 _receipt: {

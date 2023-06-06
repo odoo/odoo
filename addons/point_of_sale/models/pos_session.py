@@ -1561,11 +1561,6 @@ class PosSession(models.Model):
             for session in sessions
         ])
 
-        message_content = [f"Cash {extras['translatedType']}", f'- Amount: {extras["formattedAmount"]}']
-        if reason:
-            message_content.append(f'- Reason: {reason}')
-        self.message_post(body=Markup('<br/>\n').join(message_content))
-
     def get_onboarding_data(self):
         return {
             "categories": self._load_model('pos.category'),
@@ -2132,6 +2127,7 @@ class PosSession(models.Model):
             body = 'Action cancelled ({ACTION})'.format(ACTION=action)
         elif message_type == 'CASH_DRAWER_ACTION':
             body = 'Cash drawer opened ({ACTION})'.format(ACTION=action)
+
         self.message_post(body=body, author_id=partner_id)
 
     def load_product_frontend(self):

@@ -44,7 +44,7 @@ class TestPosHrHttpCommon(TestPointOfSaleHttpCommon):
         (admin + emp1 + emp2).company_id = cls.env.company
 
         cls.main_pos_config.write({
-            'employee_ids': [Command.link(emp1.id), Command.link(emp2.id)]
+            'basic_employee_ids': [Command.link(emp1.id), Command.link(emp2.id)]
         })
 
 
