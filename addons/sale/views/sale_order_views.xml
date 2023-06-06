@@ -669,13 +669,16 @@
                                 <field name="user_id" widget="many2one_avatar_user"/>
                                 <field name="team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}" options="{'no_create': True}"/>
                                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                <label for="require_signature" string="Online confirmation"/>
-                                <div>
-                                    <field name="require_signature" class="oe_inline" readonly="state in ['cancel', 'sale']"/>
-                                    <span>Signature</span>
-                                    <field name="require_payment" class="oe_inline ms-3" readonly="state in ['cancel', 'sale']"/>
-                                    <span>Payment</span>
-                                </div>
+                                <field name="require_signature"
+                                       readonly="state in ['cancel', 'sale']"/>
+                                <field name="require_payment"
+                                       readonly="state in ['cancel', 'sale']"/>
+                                <field name="prepayment_percent"
+                                       readonly="state in ['cancel', 'sale']"
+                                       invisible="not require_payment"
+                                       widget="percentage"
+                                       string="Prepayment amount"
+                                       style="width: 3rem"/>
                                 <field name="reference" readonly="1" invisible="not reference"/>
                                 <field name="client_order_ref"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>

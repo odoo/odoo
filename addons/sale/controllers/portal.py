@@ -110,7 +110,16 @@ class CustomerPortal(portal.CustomerPortal):
         return request.render("sale.portal_my_orders", values)
 
     @http.route(['/my/orders/<int:order_id>'], type='http', auth="public", website=True)
-    def portal_order_page(self, order_id, report_type=None, access_token=None, message=False, download=False, **kw):
+    def portal_order_page(
+        self,
+        order_id,
+        report_type=None,
+        access_token=None,
+        message=False,
+        download=False,
+        downpayment=None,
+        **kw
+    ):
         try:
             order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
         except (AccessError, MissingError):
@@ -157,7 +166,12 @@ class CustomerPortal(portal.CustomerPortal):
 
         # Payment values
         if order_sudo._has_to_be_paid():
-            values.update(self._get_payment_values(order_sudo))
+            values.update(
+                self._get_payment_values(
+                    order_sudo,
+                    downpayment=downpayment == 'true' if downpayment is not None else order_sudo.prepayment_percent < 1.0
+                )
+            )
 
         if order_sudo.state in ('draft', 'sent', 'cancel'):
             history_session_key = 'my_quotations_history'
@@ -169,10 +183,11 @@ class CustomerPortal(portal.CustomerPortal):
 
         return request.render('sale.sale_order_portal_template', values)
 
-    def _get_payment_values(self, order_sudo, **kwargs):
+    def _get_payment_values(self, order_sudo, downpayment=False, **kwargs):
         """ Return the payment-specific QWeb context values.
 
         :param sale.order order_sudo: The sales order being paid.
+        :param bool downpayment: Whether the current payment is a downpayment.
         :param dict kwargs: Locally unused data passed to `_get_compatible_providers` and
                             `_get_available_tokens`.
         :return: The payment-specific values.
@@ -180,7 +195,10 @@ class CustomerPortal(portal.CustomerPortal):
         """
         partner = order_sudo.partner_id
         company = order_sudo.company_id
-        amount = order_sudo.amount_total
+        if downpayment:
+            amount = order_sudo._get_prepayment_required_amount()
+        else:
+            amount = order_sudo.amount_total - order_sudo.amount_paid
         currency = order_sudo.currency_id
         providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
             company.id,

@@ -57,6 +57,9 @@ class ResConfigSettings(models.TransientModel):
     portal_confirmation_pay = fields.Boolean(
         related='company_id.portal_confirmation_pay',
         readonly=False)
+    prepayment_percent = fields.Float(
+        related='company_id.prepayment_percent',
+        readonly=False)
 
     # Modules
     module_delivery = fields.Boolean("Delivery Methods")
@@ -75,6 +78,15 @@ class ResConfigSettings(models.TransientModel):
     module_sale_margin = fields.Boolean("Margins")
 
     #=== ONCHANGE METHODS ===#
+
+    @api.onchange('portal_confirmation_pay')
+    def _onchange_portal_confirmation_pay(self):
+        self.prepayment_percent = self.prepayment_percent or 1.0
+
+    @api.onchange('prepayment_percent')
+    def _onchange_prepayment_percent(self):
+        if not self.prepayment_percent:
+            self.portal_confirmation_pay = False
 
     @api.onchange('quotation_validity_days')
     def _onchange_quotation_validity_days(self):

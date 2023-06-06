@@ -238,8 +238,37 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </header>
                                 <main class="modal-body" id="sign-dialog">
+                                    <t t-set="prepayment_amount" t-value="sale_order._get_prepayment_required_amount()"/>
+                                    <t t-set="prepayment_available" t-value="sale_order.prepayment_percent and sale_order.prepayment_percent != 1.0"/>
+                                    <!-- Display choices only if a pre payment can confirm the order. -->
+                                    <div t-if="prepayment_available"
+                                         id="o_sale_portal_prepayment_buttons"
+                                         class="d-flex justify-content-center d-grid gap-2 btn-group"
+                                    >
+                                        <button name="o_sale_portal_amount_prepayment_button" class="btn btn-primary rounded">
+                                            Down payment <br/>
+                                            <span t-esc="prepayment_amount" class="fw-bold"
+                                                  t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
+                                        </button>
+                                        <button name="o_sale_portal_amount_total_button" class="btn btn-primary rounded">
+                                            Full amount <br/>
+                                            <span t-field="sale_order.amount_total"/>
+                                        </button>
+                                    </div>
                                     <p>
-                                        <span>By paying this proposal, I agree to the following terms:</span>
+                                        <!-- The widget associated with this modal will hide and show divs in function of the amount selected. -->
+                                        <div id="o_sale_portal_use_amount_total">
+                                            By paying this proposal, I agree to the following terms:
+                                        </div>
+                                        <div t-if="prepayment_available"
+                                             id="o_sale_portal_use_amount_prepayment"
+                                        >
+                                            By paying this <u>down payment</u> of
+                                            <span t-esc="prepayment_amount" class="fw-bold"
+                                                  t-options="{'widget': 'monetary', 'display_currency': sale_order.currency_id}"/>
+                                            (<b t-esc="sale_order.prepayment_percent * 100"/> %)
+                                            for this proposal, I agree to the following terms:
+                                        </div>
                                         <ul>
                                             <li>
                                                 <span>Accepted on the behalf of:</span> <b t-field="sale_order.partner_id.commercial_partner_id"/>
