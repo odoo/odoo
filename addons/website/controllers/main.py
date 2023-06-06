@@ -274,8 +274,9 @@ class Website(Home):
         website_id = request.env['website'].get_current_website()
         if website_id.configurator_done:
             return request.redirect('/')
-        if request.env.lang != website_id.default_lang_id.code:
-            return request.redirect('/%s%s' % (website_id.default_lang_id.url_code, request.httprequest.path))
+        if request.env.lang != request.env.user.lang:
+            url_code = request.env['res.lang']._lang_get(request.env.user.lang).url_code
+            return request.redirect('/%s%s' % (url_code, request.httprequest.path))
         return request.render('website.website_configurator')
 
     @http.route(['/website/social/<string:social>'], type='http', auth="public", website=True, sitemap=False)
