@@ -524,5 +524,28 @@ describe('Tabs', () => {
                               `<blockquote>f${oeTab(34.6719)}]g</blockquote>`,
             });
         });
+        it('should remove a tab character from formatted text', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><strong>${oeTab()}a[]b</strong></p>`,
+                stepFunction: editor => triggerEvent(editor.editable, 'keydown', { key: 'Tab', shiftKey: true }),
+                contentAfter: `<p><strong>a[]b</strong></p>`,
+            });
+        });
+        it('should remove tab characters from the beginning of two separate formatted paragraphs', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>${oeTab()}<strong>a[b</strong></p>` +
+                               `<p>${oeTab()}<strong>c]d</strong></p>`,
+                stepFunction: editor => triggerEvent(editor.editable, 'keydown', { key: 'Tab', shiftKey: true }),
+                contentAfter: `<p><strong>a[b</strong></p>` +
+                              `<p><strong>c]d</strong></p>`,
+            });
+        });
+        it('should remove a tab character from styled text', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: `<p><font style="background-color: rgb(255,255,0);">${oeTab()}a[]b</font></p>`,
+                stepFunction: editor => triggerEvent(editor.editable, 'keydown', { key: 'Tab', shiftKey: true }),
+                contentAfter: `<p><font style="background-color: rgb(255,255,0);">a[]b</font></p>`,
+            });
+        });
     });
 });
