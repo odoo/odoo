@@ -338,7 +338,8 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         }
     }
     /**
-     * Adds automatic editor messages on drag&drop zone elements.
+     * Adds automatic editor messages on drag&drop zone elements and
+     * placeholders on HTML fields.
      *
      * @private
      */
@@ -350,6 +351,18 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 .attr('data-editor-message-default', true)
                 .attr('data-editor-message', this.env._t('DRAG BUILDING BLOCKS HERE'));
         $wrap.filter(':empty').attr('contenteditable', false);
+        for (let htmlEl of $wrap.not("[placeholder]").filter('[data-oe-sanitize="no_block"]')) {
+            const placeholderText = this.env._t("Type in text here...");
+            // Put the placeholder in the same location as the powerbox hint.
+            htmlEl = htmlEl.querySelector("p, div") || htmlEl;
+            htmlEl.setAttribute("placeHolder", placeholderText);
+            htmlEl.dataset.oeEditPlaceholder = placeholderText;
+            if (htmlEl.innerText.trim().length === 0) {
+                // "oe-hint" forces the display of the placeholder.
+                // It is removed by OdooEditor when text is entered.
+                htmlEl.classList.add("oe-hint");
+            }
+        }
     }
     /**
      * Get the areas on the page that should be editable.
