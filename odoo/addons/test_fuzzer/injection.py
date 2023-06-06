@@ -15,9 +15,9 @@ def construct_where_clause_injections(payload: Any, expect_error=True) -> list[I
             for payload in create_quoted_payloads(payload)]
 
 
-def construct_field_reference_injections(payload: Any, expect_error=True,
-                                         with_closing_parenthesis=False) -> list[Injection]:
-    return [construct_field_reference_injection(payload, expect_error, with_closing_parenthesis)
+def construct_value_injections(payload: Any, expect_error=True,
+                               with_closing_parenthesis=False) -> list[Injection]:
+    return [construct_value_injection(payload, expect_error, with_closing_parenthesis)
             for payload in create_quoted_payloads(payload)]
 
 
@@ -34,8 +34,8 @@ def construct_where_clause_injection(payload: Any, expect_error: bool) -> Inject
     return Injection(payload, expect_error)
 
 
-def construct_field_reference_injection(payload: Any, expect_error: bool,
-                                        with_closing_parenthesis: bool) -> Injection:
+def construct_value_injection(payload: Any, expect_error: bool,
+                              with_closing_parenthesis: bool) -> Injection:
     payload = f"""{payload}{")" if with_closing_parenthesis else ""}; {delete_from_table} -- -"""
     return Injection(payload, expect_error)
 
@@ -56,14 +56,6 @@ def create_id_payloads() -> list[int]:
         2 ** 64,
         inf,
         -inf,
-        nan,
-    ]
-
-
-def create_positive_number_payloads() -> list[Any]:
-    return [
-        2 ** 64,
-        inf,
         nan,
     ]
 
