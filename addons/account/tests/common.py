@@ -429,7 +429,10 @@ class AccountTestInvoicingCommon(SavepointCase):
             invoice_vals['currency_id'] = currency_id
 
         invoice = self.env['account.move'].with_context(default_move_type=move_type).create(invoice_vals)
-        if auto_validate:
+
+        if state == 'cancel':
+            invoice.write({'state': 'cancel'})
+        elif auto_validate or state == 'posted':
             invoice.action_post()
         return invoice
 
