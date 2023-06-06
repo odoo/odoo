@@ -7,8 +7,12 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@id='warning_text_employees']" position='replace'>
                 <div class="row">
-                    <label for="pos_employee_ids" string="Allowed Employees" class="col-lg-3 o_light_label" />
-                    <field name="pos_employee_ids" widget="many2many_tags" domain="[('company_id', '=', company_id)]" />
+                    <label for="pos_basic_employee_ids" string="Basic rights" class="col-lg-4 o_light_label" />
+                    <field name="pos_basic_employee_ids" widget="many2many_tags" placeholder="All employees" domain="[('company_id', '=', company_id)]" />
+                </div>
+                <div class="row">
+                    <label for="pos_advanced_employee_ids" string="Advanced rights" class="col-lg-4 o_light_label" />
+                    <field name="pos_advanced_employee_ids" widget="many2many_tags" placeholder="No employee" domain="[('company_id', '=', company_id)]" />
                 </div>
             </xpath>
         </field>
