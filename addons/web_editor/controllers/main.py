@@ -629,7 +629,7 @@ class Web_Editor(http.Controller):
                     if re.match('^o-color-([1-5])$', css_color_value):
                         if not bundle_css:
                             bundle = 'web.assets_frontend'
-                            asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
+                            asset = request.env["ir.asset"]._get_asset_bundle(bundle)
                             bundle_css = asset.css().index_content
                         color_search = re.search(r'(?i)--%s:\s+(%s|%s)' % (css_color_value, regex_hex, regex_rgba), bundle_css)
                         if not color_search:
