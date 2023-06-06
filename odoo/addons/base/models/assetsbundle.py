@@ -32,13 +32,13 @@ from odoo.modules.module import get_resource_path
 from odoo.tools import (func, misc, transpile_javascript,
     is_odoo_module, SourceMapGenerator, profiler,
     apply_inheritance_specs)
+from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS
 from odoo.tools.misc import file_open, html_escape as escape
 from odoo.tools.pycompat import to_text
 
 _logger = logging.getLogger(__name__)
 
 EXTENSIONS = (".js", ".css", ".scss", ".sass", ".less", ".xml")
-
 
 class CompileError(RuntimeError): pass
 
@@ -57,7 +57,7 @@ class AssetsBundle(object):
 
     TRACKED_BUNDLES = ['web.assets_common', 'web.assets_backend']
 
-    def __init__(self, name, files, env=None, css=True, js=True, debug_assets=False, rtl=False, assets_params=None):
+    def __init__(self, name, files, external_assets=(), env=None, css=True, js=True, debug_assets=False, rtl=False, assets_params=None):
         """
         :param name: bundle name
         :param files: files to be added to the bundle
@@ -77,6 +77,11 @@ class AssetsBundle(object):
         self.has_js = js
         self._checksum_cache = {}
         self.is_debug_assets = debug_assets
+        self.external_assets = [
+            node
+            for node in external_assets
+            if (css and node[0].rpartition('.')[2] in STYLE_EXTENSIONS) or (js and node[0].rpartition('.')[2] in SCRIPT_EXTENSIONS)
+        ]
 
         # asset-wide html "media" attribute
         for f in files:
@@ -139,7 +144,7 @@ class AssetsBundle(object):
             src = self.get_debug_asset_url(name=js_attachment.name, extension='') if self.is_debug_assets else js_attachment[0].url
             response.append((src, None))
 
-        return response
+        return self.external_assets + response
 
     def get_version(self, asset_type):
         return self.get_checksum(asset_type)[0:7]
@@ -162,26 +167,12 @@ class AssetsBundle(object):
             self._checksum_cache[asset_type] = hashlib.sha512(unique_descriptor.encode()).hexdigest()[:64]
         return self._checksum_cache[asset_type]
 
-    def _get_asset_template_url(self):
-        return "/web/assets/{id}-{unique}/{extra}{name}{sep}{extension}"
-
-    def _get_asset_url_values(self, id, unique, extra, name, sep, extension):  # extra can contain direction or/and website
-        return {
-            'id': id,
-            'unique': unique,
-            'extra': extra,
-            'name': name,
-            'sep': sep,
-            'extension': extension,
-            'params': self.assets_params,
-        }
-
-    def get_asset_url(self, id='%', unique='%', extra='', name='%', sep="%", extension='%'):
-        return self._get_asset_template_url().format(
-            **self._get_asset_url_values(id=id, unique=unique, extra=extra, name=name, sep=sep, extension=extension)
-        )
+    def get_asset_url(self, attachment_id='%', unique='%', extra='', name='%', sep=".", extension='%'):
+        extra = self.env['ir.asset']._get_asset_extra(extra, **self.assets_params)
+        return f"/web/assets/{attachment_id}-{unique}/{extra}{name}{sep}{extension}"
 
     def get_debug_asset_url(self, extra='', name='%', extension='%'):
+        extra = self.env['ir.asset']._get_asset_extra(extra, **self.assets_params)
         return f"/web/assets/debug/{extra}{name}{extension}"
 
     def _unlink_attachments(self, attachments):
@@ -213,13 +204,12 @@ class AssetsBundle(object):
         url = self.get_asset_url(
             extra='%s' % ('rtl/' if is_css and self.rtl else ''),
             name=self.name,
-            sep='.',
             extension=extension,
         )
 
         domain = [
             ('url', '=like', url),
-            '!', ('url', '=like', self.get_asset_url(unique=self.get_version('css' if is_css else 'js')))
+            '!', ('url', '=like', self.get_asset_url(unique=self.get_version('css' if is_css else 'js'), sep='%'))
         ]
         attachments = ira.sudo().search(domain)
         # avoid to invalidate cache if it's already empty (mainly useful for test)
@@ -251,7 +241,6 @@ class AssetsBundle(object):
             unique=unique,
             extra=extra,  # not sure about css.map
             name=self.name,
-            sep='.',
             extension=extension,
         )
         query = """
@@ -273,8 +262,7 @@ class AssetsBundle(object):
                 unique=unique,
                 extra='%', #ignore website_id and rtl
                 name=self.name,
-                sep='.',
-                extension='%s' % extension,
+                extension=extension,
             )
 
             self.env.cr.execute(query, [SUPERUSER_ID, fallback_url_pattern])
@@ -295,11 +283,10 @@ class AssetsBundle(object):
                 self.add_post_rollback()
                 attachment = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(values)
                 url = self.get_asset_url(
-                    id=attachment.id,
+                    attachment_id=attachment.id,
                     unique=unique,
                     extra=extra,
                     name=self.name,
-                    sep='.',
                     extension=extension,
                 )
                 attachment.url = url
@@ -353,11 +340,10 @@ class AssetsBundle(object):
         self.add_post_rollback()
         attachment = ira.with_user(SUPERUSER_ID).create(values)
         url = self.get_asset_url(
-            id=attachment.id,
+            attachment_id=attachment.id,
             unique=self.get_version('css' if is_css else 'js'),
             extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.rtl else ''),
             name=self.name,
-            sep='.',
             extension=extension,
         )
         attachment.url = url

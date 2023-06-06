@@ -36,8 +36,7 @@ class TestQweb(TransactionCaseWithUserDemo):
         html = demo_env['ir.qweb']._render('test_website.test_template', {"user": demo}, website_id=website.id)
         asset_bundle_xmlid = 'test_website.test_bundle'
         qweb = self.env['ir.qweb']
-        files, _ = qweb._get_asset_content(asset_bundle_xmlid)
-        bundle = qweb._get_asset_bundle(asset_bundle_xmlid, files, env=self.env, css=True, js=True)
+        bundle = qweb._get_asset_bundle(asset_bundle_xmlid, css=True, js=True)
 
         asset_version_js = bundle.get_version('js')
         asset_version_css = bundle.get_version('css')

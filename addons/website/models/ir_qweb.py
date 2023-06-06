@@ -18,22 +18,6 @@ _logger = logging.getLogger(__name__)
 re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^)'\"]+)")
 
 
-class AssetsBundleMultiWebsite(AssetsBundle):
-    def _get_asset_url_values(self, id, unique, extra, name, sep, extension):
-        if extra != '%':
-            website_id = self.assets_params.get('website_id')
-            website_id_path = website_id and ('%s/' % website_id) or ''
-            extra = website_id_path + extra
-        res = super(AssetsBundleMultiWebsite, self)._get_asset_url_values(id, unique, extra, name, sep, extension)
-        return res
-
-    def get_debug_asset_url(self, extra='', name='%', extension='%'):
-        if extra != '%':
-            website_id = self.assets_params.get('website_id')
-            website_id_path = website_id and ('%s/' % website_id) or ''
-            extra = website_id_path + extra
-        return super(AssetsBundleMultiWebsite, self).get_debug_asset_url(extra, name, extension)
-
 class IrQWeb(models.AbstractModel):
     """ IrQWeb object for rendering stuff in the website context """
 
@@ -107,9 +91,6 @@ class IrQWeb(models.AbstractModel):
                 irQweb = irQweb.with_context(inherit_branding_auto=True)
 
         return irQweb
-
-    def _get_asset_bundle(self, xmlid, files=None, env=None, css=True, js=True, debug_assets=False, rtl=False, assets_params=None):
-        return AssetsBundleMultiWebsite(xmlid, files, env=env, css=css, js=js, debug_assets=debug_assets, rtl=rtl, assets_params=assets_params)
 
     def _post_processing_att(self, tagName, atts):
         if atts.get('data-no-post-process'):

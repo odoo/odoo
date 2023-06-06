@@ -742,8 +742,7 @@ class TestAssetsBundleWithIRAMock(FileTouchable):
 
     def _get_asset(self):
         with patch.object(type(self.env['ir.asset']), '_get_installed_addons_list', Mock(return_value=self.installed_modules)):
-            files, _ = self.env['ir.qweb']._get_asset_content(self.stylebundle_name)
-        return AssetsBundle(self.stylebundle_name, files, env=self.env, debug_assets=True)
+            return self.env['ir.qweb']._get_asset_bundle(self.stylebundle_name, debug_assets=True)
 
     def _bundle(self, asset, should_create, should_unlink, reason=''):
         self.counter.clear()

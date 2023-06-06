@@ -20,8 +20,7 @@ class LivechatController(http.Controller):
         DOM of the livechat to avoid conflicts.
         """
         bundle = 'im_livechat.assets_embed'
-        files, _ = request.env["ir.qweb"]._get_asset_content(bundle)
-        asset = AssetsBundle(bundle, files)
+        asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
         if ext == 'css':
             raise request.not_found()
         stream = request.env['ir.binary']._get_stream_from(asset.js())
@@ -30,8 +29,7 @@ class LivechatController(http.Controller):
     @http.route('/im_livechat/assets_embed.<any(css, js):ext>', type='http', auth='public', cors='*')
     def assets_embed(self, ext, **kwargs):
         bundle = 'im_livechat.assets_embed'
-        files, _ = request.env["ir.qweb"]._get_asset_content(bundle)
-        asset = AssetsBundle(bundle, files)
+        asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
         if ext not in ('css', 'js'):
             raise request.not_found()
         stream = request.env['ir.binary']._get_stream_from(getattr(asset, ext)())
@@ -44,8 +42,7 @@ class LivechatController(http.Controller):
     @http.route('/im_livechat/emoji_bundle', type='http', auth='public', cors='*')
     def get_emoji_bundle(self):
         bundle = 'mail.assets_emoji'
-        files, _ = request.env["ir.qweb"]._get_asset_content(bundle)
-        asset = AssetsBundle(bundle, files)
+        asset = request.env["ir.qweb"]._get_asset_bundle(bundle)
         stream = request.env['ir.binary']._get_stream_from(asset.js())
         return stream.get_response()
 
