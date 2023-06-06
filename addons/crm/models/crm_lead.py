@@ -1912,11 +1912,13 @@ class Lead(models.Model):
         return res
 
     def _message_get_default_recipients(self):
-        return {r.id: {
-            'partner_ids': [],
-            'email_to': r.email_normalized,
-            'email_cc': False}
-            for r in self}
+        return {
+            r.id: {
+                'partner_ids': [],
+                'email_to': ','.join(tools.email_normalize_all(r.email_from)) or r.email_from,
+                'email_cc': False,
+            } for r in self
+        }
 
     def _message_get_suggested_recipients(self):
         recipients = super(Lead, self)._message_get_suggested_recipients()

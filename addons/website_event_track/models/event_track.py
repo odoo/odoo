@@ -450,7 +450,7 @@ class Track(models.Model):
         return {
             track.id: {
                 'partner_ids': [],
-                'email_to': track.contact_email or track.partner_email,
+                'email_to': ','.join(tools.email_normalize_all(track.contact_email or track.partner_email)) or track.contact_email or track.partner_email,
                 'email_cc': False
             } for track in self
         }
