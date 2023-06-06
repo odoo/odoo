@@ -193,6 +193,7 @@ class HrEmployeePrivate(models.Model):
                 'default_phone': self.work_phone,
                 'default_mobile': self.mobile_phone,
                 'default_login': self.work_email,
+                'default_partner_id': self.work_contact_id.id,
             })
         }
 
