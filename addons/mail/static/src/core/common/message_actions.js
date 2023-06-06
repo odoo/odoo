@@ -3,8 +3,11 @@
 import { useComponent, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
+import { download } from "@web/core/network/download";
 import { registry } from "@web/core/registry";
 import { MessageReactionButton } from "./message_reaction_button";
+
+const { DateTime } = luxon;
 
 export const messageActionsRegistry = registry.category("mail.message/actions");
 
@@ -73,6 +76,20 @@ messageActionsRegistry
         title: _t("Delete"),
         onClick: (component) => component.onClickDelete(),
         sequence: 90,
+    })
+    .add("download_files", {
+        condition: (component) => component.message.attachments.length > 1,
+        icon: "fa-download",
+        title: _t("Download Files"),
+        onClick: (component) =>
+            download({
+                data: {
+                    file_ids: component.message.attachments.map((rec) => rec.id),
+                    zip_name: `attachments_${DateTime.local().toFormat("HHmmddMMyyyy")}.zip`,
+                },
+                url: "mail/attachment/zip",
+            }),
+        sequence: 55,
     });
 
 function transformAction(component, id, action) {
