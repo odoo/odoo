@@ -54,7 +54,7 @@ export class StatusBarField extends Component {
                 {
                     category: "smart_action",
                     hotkey: "alt+shift+x",
-                    isAvailable: () => !this.props.readonly && !this.props.isDisabled,
+                    isAvailable: () => !this.isDisabled,
                 }
             );
             useCommand(
@@ -79,8 +79,7 @@ export class StatusBarField extends Component {
                     isAvailable: () => {
                         const options = this.computeItems(false);
                         return (
-                            !this.props.readonly &&
-                            !this.props.isDisabled &&
+                            !this.isDisabled &&
                             options[options.length - 1].id !==
                                 (this.type === "many2one"
                                     ? this.props.record.data[this.props.name][0]
@@ -129,13 +128,17 @@ export class StatusBarField extends Component {
         return this.props.record.fields[this.props.name].type;
     }
 
+    get isDisabled() {
+        return this.props.isDisabled || this.props.record.isReadonly(this.props.name);
+    }
+
     getDropdownItemClassNames(item) {
         const classNames = [
             "btn",
             item.isSelected ? "btn-primary" : "btn-secondary",
             "o_arrow_button",
         ];
-        if (item.isSelected || this.props.isDisabled) {
+        if (item.isSelected || this.isDisabled) {
             classNames.push("disabled");
         }
         return classNames.join(" ");
