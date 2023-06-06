@@ -254,8 +254,13 @@ class PackageGraph:
         for name, id_, state, demo, installed_version in self._cr.fetchall():
             if state == 'uninstallable':
                 self._remove(name, 'not_installable')
-            if not self._update_module and state == ['to install', 'uninstalled']:
+                continue
+            if not self._update_module and state in ['to install', 'uninstalled']:
                 self._remove(name, 'not_installed')
+                continue
+            if name not in self._packages:
+                # has been recursively removed for sake of not_installable or not_installed
+                continue
             package = self._packages[name]
             package.id = id_
             package.state = state
