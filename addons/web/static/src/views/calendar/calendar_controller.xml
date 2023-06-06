@@ -26,6 +26,22 @@
                             >
                                 Today
                             </button>
+                            <button
+                                class="btn btn-text pe-2 o_calendar_button_prev"
+                                title="Previous"
+                                aria-label="Previous"
+                                t-on-click.stop="() => this.setDate('previous')"
+                            >
+                                <i class="fa oi-larger fa-angle-left" />
+                            </button>
+                            <button
+                                class="btn btn-text ps-1 o_calendar_button_next"
+                                title="Next"
+                                aria-label="Next"
+                                t-on-click.stop="() => this.setDate('next')"
+                            >
+                                <i class="fa oi-larger fa-angle-right" />
+                            </button>
                             <ViewScaleSelector scales="scales" currentScale="model.scale" setScale.bind="setScale" />
                         </div>
                         <div class="o_calendar_sidebar">
