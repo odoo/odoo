@@ -16,36 +16,28 @@
     <xpath expr="//t[@t-component='props.Renderer']" position="attributes">
         <attribute name="activeWebsite">state.activeWebsite</attribute>
     </xpath>
-    <xpath expr="//Layout" position="inside">
-        <t t-set-slot="control-panel-website-extra-actions">
+    <xpath expr="//SearchBar" position="inside">
+        <t t-set-slot="search-bar-additional-menu">
             <t t-call="website.RecordFilter"/>
         </t>
     </xpath>
 </t>
 
-<!-- <t t-name="website.ControlPanel.Regular" t-inherit="web.ControlPanel.Regular" t-inherit-mode="extension" owl="1">
-    <xpath expr="//div[hasclass('o_search_options')]/*[last()]" position="after">
-        <t t-slot="control-panel-website-extra-actions"/>
-    </xpath>
-</t> -->
-
-<t t-name="website.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary" owl="1">
-    <!-- <xpath expr="//t[@t-call='web.ControlPanel.Regular']" position="replace">
-        <t t-call="website.ControlPanel.Regular"/>
-    </xpath> -->
-</t>
-
 <t t-name="website.RecordFilter" owl="1">
-    <div class="btn-group" role="toolbar" aria-label="Main actions" t-if="websiteSelection.length > 1">
-        <button class="btn btn-light dropdown-toggle o-no-caret" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="me-1 fa fa-globe"/><span t-esc="state.activeWebsite.name"/>
-        </button>
-        <div class="dropdown-menu">
-            <t t-foreach="websiteSelection" t-as="website" t-key="website.id">
-                <a role="menuitem" href="#" class="dropdown-item" t-on-click="() => this.onSelectWebsite(website)"><t t-esc="website.name"/></a>
-                <div t-if="!website.id" class="dropdown-divider"/>
-            </t>
+    <div t-if="websiteSelection.length > 1" class="o_dropdown_container o_website_menu w-100 w-lg-auto px-3 border-start">
+        <div class="px-3 fs-5 mb-2">
+            <i class="me-2 fa fa-globe"/>
+            <h5 class="o_dropdown_title d-inline">Website</h5>
         </div>
+        <t t-foreach="websiteSelection" t-as="website" t-key="website.id">
+            <SearchDropdownItem class="{ o_menu_item: true, selected: state.activeWebsite.id === website.id }"
+                checked="state.activeWebsite.id === website.id"
+                parentClosingMode="'none'"
+                t-esc="website.name"
+                onSelected="() => this.onSelectWebsite(website)"
+            />
+            <div t-if="!website.id" class="dropdown-divider"/>
+        </t>
     </div>
 </t>
 
