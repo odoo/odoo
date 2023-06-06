@@ -4050,10 +4050,17 @@ export class OdooEditor extends EventTarget {
             ) {
                 this.observerUnactive();
                 hint.classList.remove('oe-hint', 'oe-command-temporary-hint');
+                if (hint.dataset.oeEditPlaceholder) {
+                    hint.setAttribute("placeholder", hint.dataset.oeEditPlaceholder);
+                    if (hint.innerText.trim().length === 0) {
+                        hint.classList.add("oe-hint");
+                    }
+                } else {
+                    hint.removeAttribute("placeholder");
+                }
                 if (hint.classList.length === 0) {
                     hint.removeAttribute('class');
                 }
-                hint.removeAttribute('placeholder');
                 this.observerActive();
             }
         }
