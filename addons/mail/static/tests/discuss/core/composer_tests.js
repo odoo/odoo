@@ -1,9 +1,8 @@
 /* @odoo-module */
 
-import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
-
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { Composer } from "@mail/composer/composer";
+import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("composer", {
     async beforeEach() {

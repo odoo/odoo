@@ -1,9 +1,8 @@
 /* @odoo-module */
 
-import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
-import { Command } from "@mail/../tests/helpers/command";
-
 import { createLocalId } from "@mail/utils/misc";
+import { Command } from "@mail/../tests/helpers/command";
+import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { nextTick } from "@web/../tests/helpers/utils";
 
 QUnit.module("channel member list");
