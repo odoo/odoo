@@ -166,7 +166,6 @@ class TestAccountComposerPerformance(AccountMoveSendBase):
         composer_form = Form(
             self.env['account.move.send'].with_context(default_ctx)
         )
-        composer_form.checkbox_ubl_cii_xml = False
         composer = composer_form.save()
 
         with self.mock_mail_gateway(mail_unlink_sent=False):
@@ -242,7 +241,6 @@ class TestAccountComposerPerformance(AccountMoveSendBase):
         composer_form = Form(
             self.env['account.move.send'].with_context(default_ctx)
         )
-        composer_form.checkbox_ubl_cii_xml = False
         composer = composer_form.save()
 
         with self.mock_mail_gateway(mail_unlink_sent=False), \
@@ -334,7 +332,6 @@ class TestAccountComposerPerformance(AccountMoveSendBase):
         composer_form = Form(
             self.env['account.move.send'].with_context(default_ctx)
         )
-        composer_form.checkbox_ubl_cii_xml = False
         composer = composer_form.save()
 
         with self.mock_mail_gateway(mail_unlink_sent=False), \
@@ -432,7 +429,6 @@ class TestAccountComposerPerformance(AccountMoveSendBase):
             self.env['account.move.send'].with_context(default_ctx)
         )
         composer_form.mail_partner_ids.add(additional_partner)
-        composer_form.checkbox_ubl_cii_xml = False
         composer = composer_form.save()
 
         with self.mock_mail_gateway(mail_unlink_sent=False):
