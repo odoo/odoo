@@ -29,7 +29,7 @@
                                         <span>Orders</span>
                                     </div>
                                 </li>
-                                <li t-if="props.showCashMoveButton" class="menu-item navbar-button" t-on-click="onCashMoveButtonClick">
+                                <li t-if="showCashMoveButton" class="menu-item navbar-button" t-on-click="onCashMoveButtonClick">
                                     <span>Cash In/Out</span>
                                 </li>
                                 <CustomerFacingDisplayButton t-if="CustomerFacingDisplayButtonIsShown"/>
