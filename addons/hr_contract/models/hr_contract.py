@@ -69,7 +69,6 @@ class Contract(models.Model):
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     permit_no = fields.Char('Work Permit No', related="employee_id.permit_no", readonly=False)
     visa_no = fields.Char('Visa No', related="employee_id.visa_no", readonly=False)
-    visa_expire = fields.Date('Visa Expire Date', related="employee_id.visa_expire", readonly=False)
 
     def _get_hr_responsible_domain(self):
         return "[('share', '=', False), ('company_ids', 'in', company_id), ('groups_id', 'in', %s)]" % self.env.ref('hr.group_hr_user').id
@@ -152,16 +151,23 @@ class Contract(models.Model):
     @api.model
     def update_state(self):
         from_cron = 'from_cron' in self.env.context
-        contracts = self.search([
-            ('state', '=', 'open'), ('kanban_state', '!=', 'blocked'),
-            '|',
-            '&',
-            ('date_end', '<=', fields.Date.to_string(date.today() + relativedelta(days=7))),
-            ('date_end', '>=', fields.Date.to_string(date.today() + relativedelta(days=1))),
-            '&',
-            ('visa_expire', '<=', fields.Date.to_string(date.today() + relativedelta(days=60))),
-            ('visa_expire', '>=', fields.Date.to_string(date.today() + relativedelta(days=1))),
-        ])
+        companies = self.env['res.company'].search([])
+        contracts = self.env['hr.contract']
+        work_permit_contracts = self.env['hr.contract']
+        for company in companies:
+            contracts += self.search([
+                ('state', '=', 'open'), ('kanban_state', '!=', 'blocked'), ('company_id', '=', company.id),
+                '&',
+                ('date_end', '<=', fields.date.today() + relativedelta(days=company.contract_expiration_notice_period)),
+                ('date_end', '>=', fields.date.today() + relativedelta(days=1)),
+            ])
+
+            work_permit_contracts += self.search([
+                ('state', '=', 'open'), ('kanban_state', '!=', 'blocked'), ('company_id', '=', company.id),
+                '&',
+                ('employee_id.work_permit_expiration_date', '<=', fields.date.today() + relativedelta(days=company.work_permit_expiration_notice_period)),
+                ('employee_id.work_permit_expiration_date', '>=', fields.date.today() + relativedelta(days=1)),
+            ])
 
         for contract in contracts:
             contract.with_context(mail_activity_quick_update=True).activity_schedule(
@@ -175,14 +181,28 @@ class Contract(models.Model):
                 )
             )
 
+        for contract in work_permit_contracts:
+            contract.with_context(mail_activity_quick_update=True).activity_schedule(
+                'mail.mail_activity_data_todo', contract.date_end,
+                _("The work permit of %s is about to expire.", contract.employee_id.name),
+                user_id=contract.hr_responsible_id.id or self.env.uid)
+            contract.message_post(
+                body=_(
+                    "According to Employee's Working Permit Expiration Date, this contract has been put in red on the %s. Please advise and correct.",
+                    fields.Date.today()
+                )
+            )
+
         if contracts:
             contracts._safe_write_for_cron({'kanban_state': 'blocked'}, from_cron)
+        if work_permit_contracts:
+            work_permit_contracts._safe_write_for_cron({'kanban_state': 'blocked'}, from_cron)
 
         contracts_to_close = self.search([
             ('state', '=', 'open'),
             '|',
             ('date_end', '<=', fields.Date.to_string(date.today())),
-            ('visa_expire', '<=', fields.Date.to_string(date.today())),
+            ('employee_id.work_permit_expiration_date', '<=', fields.Date.to_string(date.today())),
         ])
 
         if contracts_to_close:
