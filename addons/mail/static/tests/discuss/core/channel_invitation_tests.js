@@ -1,7 +1,7 @@
 /* @odoo-module */
 
-import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { Command } from "@mail/../tests/helpers/command";
+import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("channel invitation form");
 
