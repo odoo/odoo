@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import MissingError
+from odoo.exceptions import MissingError, UserError
 from odoo import Command
 from odoo.tools import mute_logger
 
@@ -188,6 +188,28 @@ class One2manyCase(TransactionCase):
         self.assertFalse(p1.exists())
         self.assertTrue(p2.exists())
         self.assertFalse(p3.exists())
+
+    def test_partner_merge_wizard_more_than_one_user_error(self):
+        """ Test that partners cannot be merged if linked to more than one user even if only one is active. """
+        Users = self.env['res.users']
+        Partner = self.env['res.partner']
+        MergeWizard = self.env['base.partner.merge.automatic.wizard']
+        u1, u2 = Users.create([{'name': 'test1', 'login': 'test1', 'partner_id': Partner.create({'name': 'test1'}).id},
+                               {'name': 'test2', 'login': 'test2', 'partner_id': Partner.create({'name': 'test2'}).id}])
+        dst_partner = Partner.create({'name': 'test3'})
+        partners = u1.partner_id + u2.partner_id + dst_partner
+
+        with self.assertRaises(UserError):
+            MergeWizard.with_context(active_ids=partners.ids, active_model='res.partner').create({}).action_merge()
+
+        u2.action_archive()
+        with self.assertRaises(UserError):
+            MergeWizard.with_context(active_ids=partners.ids, active_model='res.partner').create({}).action_merge()
+
+        u2.unlink()
+        MergeWizard.with_context(active_ids=partners.ids, active_model='res.partner').create({}).action_merge()
+        self.assertTrue(dst_partner.exists())
+        self.assertEqual(u1.partner_id.id, dst_partner.id)
 
     def test_cache_invalidation(self):
         """ Cache invalidation for one2many with integer inverse. """
