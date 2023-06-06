@@ -90,12 +90,19 @@ class IrAsset(models.Model):
     active = fields.Boolean(string='active', default=True)
     sequence = fields.Integer(string="Sequence", default=DEFAULT_SEQUENCE, required=True)
 
-    def _get_assets_params(self):
+    def _get_asset_params(self):
         """
         This method can be overriden to add param _get_asset_paths call.
         Those params will be part of the orm cache key
         """
         return {}
+
+    def _get_asset_extra(self, extra):
+        """
+        This method can be overriden to use param as keyword arguments
+        Return the extra based on additionnal assets_params
+        """
+        return extra
 
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
@@ -120,7 +127,7 @@ class IrAsset(models.Model):
 
         :param bundle: name of the bundle from which to fetch the file paths
         :param assets_params: parameters needed by overrides, mainly website_id
-            see _get_assets_params
+            see _get_asset_params
         :returns: the list of tuples (path, addon, bundle)
         """
         installed = self._get_installed_addons_list()
@@ -242,7 +249,7 @@ class IrAsset(models.Model):
         """
         installed = self._get_installed_addons_list()
         target_path, _full_path, _modified = self._get_paths(target_path_def, installed)[0]
-        assets_params = self._get_assets_params()
+        assets_params = self._get_asset_params()
         asset_paths = self._get_asset_paths(root_bundle, assets_params)
 
         for path, _full_path, bundle, _modified in asset_paths:
