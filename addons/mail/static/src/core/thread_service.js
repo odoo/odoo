@@ -28,7 +28,14 @@ export class ThreadService {
     }
 
     setup(env, services) {
+        /**
+         * Amount of subscriptions to a thread.
+         *
+         * @type {Map<Thread.localId, number>}
+         */
+        this.threadSubscriptions = new Map();
         this.env = env;
+        this.bus_service = services.bus_service;
         /** @type {import("@mail/core/channel_member_service").ChannelMemberService} */
         this.channelMemberService = services["discuss.channel.member"];
         /** @type {import("@mail/attachments/attachment_service").AttachmentService} */
@@ -51,6 +58,23 @@ export class ThreadService {
             const type = detail.type;
             this.insert({ model, id, type });
         });
+        this.busService.subscribe(
+            "discuss/new_message",
+            ({ message: messageData, thread_id, thread_model }) => {
+                const thread = this.store.threads[createLocalId(thread_model, thread_id)];
+                if (!thread || !this.threadSubscriptions.has(thread.localId)) {
+                    return;
+                }
+                const data = Object.assign(messageData, {
+                    body: markup(messageData.body),
+                });
+                this.messageService.insert({
+                    ...data,
+                    res_id: thread.id,
+                    model: thread.model,
+                });
+            }
+        );
     }
 
     /**
@@ -1105,10 +1129,33 @@ export class ThreadService {
             data,
         });
     }
+
+    /**
+     * @param {Thread} thread
+     */
+    subscribe(thread) {
+        const count = this.threadSubscriptions.get(thread.localId) + 1;
+        this.threadSubscriptions.set(thread.localId, count);
+        if (count === 1) {
+            return this.bus_service.addChannel(`/discuss/thread/${thread.model}/${thread.id}`);
+        }
+    }
+
+    /**
+     * @param {Thread} thread
+     */
+    unsubscribe(thread) {
+        const count = this.threadSubscriptions.get(thread.localId) - 1;
+        this.threadSubscriptions.set(thread.localId, count);
+        if (count < 1) {
+            return this.bus_service.deleteChannel(`/discuss/thread/${thread.model}/${thread.id}`);
+        }
+    }
 }
 
 export const threadService = {
     dependencies: [
+        "bus_service",
         "discuss.channel.member",
         "mail.attachment",
         "mail.store",
