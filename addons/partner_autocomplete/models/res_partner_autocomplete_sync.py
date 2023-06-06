@@ -27,7 +27,7 @@ class ResPartnerAutocompleteSync(models.Model):
                 params['vat'] = partner.vat
                 result, error = partner._rpc_remote_api('update', params)
                 if error:
-                    _logger.error('Send Partner to sync failed: %s' % str(error))
+                    _logger.warning('Send Partner to sync failed: %s', str(error))
 
             to_sync_item.write({'synched': True})
 
