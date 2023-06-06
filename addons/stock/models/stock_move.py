@@ -249,7 +249,7 @@ class StockMove(models.Model):
             else:
                 move.show_details_visible = (((consignment_enabled and move.picking_code != 'incoming') or
                                              show_details_visible or move.has_tracking != 'none') and
-                                             move.state != 'draft' and
+                                             (move.state != 'draft' or move.picking_id) and
                                              move.show_operations is False)
 
     def _compute_show_reserved_availability(self):
