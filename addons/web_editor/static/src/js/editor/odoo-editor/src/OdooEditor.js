@@ -3574,9 +3574,7 @@ export class OdooEditor extends EventTarget {
                     const editorTabs = new Set(
                         [...nonListItems].map(node => {
                             const block = closestBlock(node);
-                            if (block && isEditorTab(block.firstElementChild)) {
-                                return block.firstElementChild;
-                            }
+                            return descendants(block).find(child => isEditorTab(child));
                         }).filter(node => (
                             // Filter out tabs preceded by visible text.
                             node && !getAdjacentPreviousSiblings(node).some(sibling => (
