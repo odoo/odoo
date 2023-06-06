@@ -113,6 +113,7 @@ export class Message extends Component {
         this.ui = useState(useService("ui"));
         this.openReactionMenu = this.openReactionMenu.bind(this);
         useChildSubEnv({
+            message: this.props.message,
             alignedRight: this.isAlignedRight,
         });
         useEffect(
