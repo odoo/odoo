@@ -697,6 +697,7 @@ export function waitUntil(selector, count = 1) {
         });
 
         observer.observe(document.body, {
+            attributes: true,
             childList: true,
             subtree: true,
         });

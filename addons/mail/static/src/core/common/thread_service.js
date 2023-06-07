@@ -322,7 +322,7 @@ export class ThreadService {
                     body: message.body ? markup(message.body) : message.body,
                 })
             );
-            thread.loadNewer = true;
+            thread.loadNewer = messageId ? true : false;
             thread.loadOlder = true;
             if (messages.length < FETCH_LIMIT) {
                 const olderMessagesCount = messages.filter(({ id }) => id < messageId).length;
@@ -332,6 +332,7 @@ export class ThreadService {
                     thread.loadNewer = false;
                 }
             }
+            this._enrichMessagesWithTransient(thread);
             // Give some time to the UI to update.
             await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
         }
@@ -417,6 +418,7 @@ export class ThreadService {
                     }
                 }
             }
+            this._enrichMessagesWithTransient(thread);
         } catch {
             // handled in fetchMessages
         }
@@ -1075,6 +1077,28 @@ export class ThreadService {
             channel_id: threadId,
             data,
         });
+    }
+
+    /**
+     * Following a load more or load around, listing of messages contains persistent messages.
+     * Transient messages are missing, so this function puts known transient messages at the
+     * right place in message list of thread.
+     *
+     * @param {Thread} thread
+     */
+    _enrichMessagesWithTransient(thread) {
+        for (const message of thread.transientMessages) {
+            if (message.id < thread.oldestPersistentMessage && !thread.loadOlder) {
+                thread.messages.unshift(message);
+            } else if (message.id > thread.newestPersistentMessage && !thread.loadNewer) {
+                thread.messages.push(message);
+            } else {
+                const afterIndex = thread.messages.findIndex(
+                    (msg) => msg.id > message.id && !msg.isTransient
+                );
+                thread.messages.splice(afterIndex - 1, 0, message);
+            }
+        }
     }
 }
 

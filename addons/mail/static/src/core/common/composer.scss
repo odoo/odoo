@@ -46,8 +46,12 @@
     max-height: 100px;
     resize: none;
 
-    .o-extended & {
+    .o-extended:not(.o-isUiSmall) & {
         max-height: 400px;
+    }
+
+    .o-extended.o-isUiSmall & {
+        max-height: Min(400px, 30vh);
     }
 
     &::placeholder {

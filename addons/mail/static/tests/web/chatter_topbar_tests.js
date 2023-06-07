@@ -76,18 +76,18 @@ QUnit.test("log note toggling", async (assert) => {
         views: [[false, "form"]],
     });
     assert.containsOnce($, "button:contains(Log note)");
-    assert.doesNotHaveClass($("button:contains(Log note)"), "o-active");
+    assert.doesNotHaveClass($("button:contains(Log note)"), "active");
     assert.containsNone($, ".o-mail-Composer");
 
     await click("button:contains(Log note)");
-    assert.hasClass($("button:contains(Log note)"), "o-active");
+    assert.hasClass($("button:contains(Log note)"), "active");
     assert.containsOnce(
         $,
         ".o-mail-Composer .o-mail-Composer-input[placeholder='Log an internal note...']"
     );
 
     await click("button:contains(Log note)");
-    assert.doesNotHaveClass($("button:contains(Log note)"), "o-active");
+    assert.doesNotHaveClass($("button:contains(Log note)"), "active");
     assert.containsNone($, ".o-mail-Composer");
 });
 
@@ -101,15 +101,15 @@ QUnit.test("send message toggling", async (assert) => {
         views: [[false, "form"]],
     });
     assert.containsOnce($, "button:contains(Send message)");
-    assert.doesNotHaveClass($("button:contains(Send message)"), "o-active");
+    assert.doesNotHaveClass($("button:contains(Send message)"), "active");
     assert.containsNone($, ".o-mail-Composer");
 
     await click("button:contains(Send message)");
-    assert.hasClass($("button:contains(Send message)"), "o-active");
+    assert.hasClass($("button:contains(Send message)"), "active");
     assert.containsOnce($, ".o-mail-Composer-input[placeholder='Send a message to followers...']");
 
     await click("button:contains(Send message)");
-    assert.doesNotHaveClass($("button:contains(Send message)"), "o-active");
+    assert.doesNotHaveClass($("button:contains(Send message)"), "active");
     assert.containsNone($, ".o-mail-Composer");
 });
 
@@ -123,19 +123,19 @@ QUnit.test("log note/send message switching", async (assert) => {
         views: [[false, "form"]],
     });
     assert.containsOnce($, "button:contains(Send message)");
-    assert.doesNotHaveClass($("button:contains(Send message)"), "o-active");
+    assert.doesNotHaveClass($("button:contains(Send message)"), "active");
     assert.containsOnce($, "button:contains(Log note)");
-    assert.doesNotHaveClass($("button:contains(Log note)"), "o-active");
+    assert.doesNotHaveClass($("button:contains(Log note)"), "active");
     assert.containsNone($, ".o-mail-Composer");
 
     await click("button:contains(Send message)");
-    assert.hasClass($("button:contains(Send message)"), "o-active");
-    assert.doesNotHaveClass($("button:contains(Log note)"), "o-active");
+    assert.hasClass($("button:contains(Send message)"), "active");
+    assert.doesNotHaveClass($("button:contains(Log note)"), "active");
     assert.containsOnce($, ".o-mail-Composer-input[placeholder='Send a message to followers...']");
 
     await click("button:contains(Log note)");
-    assert.doesNotHaveClass($("button:contains(Send message)"), "o-active");
-    assert.hasClass($("button:contains(Log note)"), "o-active");
+    assert.doesNotHaveClass($("button:contains(Send message)"), "active");
+    assert.hasClass($("button:contains(Log note)"), "active");
     assert.containsOnce($, ".o-mail-Composer-input[placeholder='Log an internal note...']");
 });
 
@@ -271,11 +271,11 @@ QUnit.test("composer state conserved when clicking on another topbar button", as
     assert.containsOnce($, "button[aria-label='Attach files']");
 
     await click("button:contains(Log note)");
-    assert.containsOnce($, "button:contains(Log note).o-active");
-    assert.containsNone($, "button:contains(Send message).o-active");
+    assert.containsOnce($, "button:contains(Log note).active");
+    assert.containsNone($, "button:contains(Send message).active");
 
     $(`button[aria-label='Attach files']`)[0].click();
     await nextAnimationFrame();
-    assert.containsOnce($, "button:contains(Log note).o-active");
-    assert.containsNone($, "button:contains(Send message).o-active");
+    assert.containsOnce($, "button:contains(Log note).active");
+    assert.containsNone($, "button:contains(Send message).active");
 });

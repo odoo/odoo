@@ -8,11 +8,15 @@
     <div t-ref="composer">
         <div class="o-mail-Composer d-grid flex-shrink-0"
                 t-att-class="{
-                    'px-3 py-4 o-extended': extended,
+                    'pt-0': props.composer.type === 'message',
+                    'pt-4': props.composer.type !== 'message',
+                    'px-3 pb-2': extended and !props.composer.message,
+                    'o-extended': extended,
+                    'o-isUiSmall': ui.isSmall,
                     'p-3': normal,
                     'o-hasSelfAvatar px-3': !env.inChatWindow and thread,
                 }" t-attf-class="{{ props.className }}">
-            <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="!compact">
+            <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="!compact and props.sidebar">
                 <img class="o-mail-Composer-avatar o_avatar rounded" t-att-src="threadService.avatarUrl(store.self, props.composer.thread)" alt="Avatar of user"/>
             </div>
             <div class="o-mail-Composer-coreHeader text-truncate small p-2" t-if="props.composer.thread and props.messageToReplyTo?.thread === props.composer.thread">
@@ -81,7 +85,10 @@
                     </div>
                     <t t-if="!extended" t-call="mail.Composer.sendButton"/>
                 </div>
-                <t t-if="extended" t-call="mail.Composer.sendButton"/>
+                <div t-if="extended and !props.composer.message" class="d-flex align-items-center mt-2 gap-2">
+                    <t t-call="mail.Composer.sendButton"/>
+                    <span t-if="!isSendButtonDisabled and !props.composer.message" t-out="SEND_KEYBIND_TO_SEND"/>
+                </div>
             </div>
             <div class="o-mail-Composer-footer overflow-auto">
                 <AttachmentList
@@ -91,20 +98,20 @@
                     imagesHeight="50"/>
             </div>
         </div>
-        <span t-if="props.composer.message" class="text-muted">escape to <a href="#" t-on-click="props.onDiscardCallback">cancel</a>, enter to <a href="#" t-on-click="editMessage">save</a></span>
+        <span t-if="props.composer.message" class="text-muted" t-out="CANCEL_OR_SAVE_EDIT_TEXT" t-on-click="onClickCancelOrSaveEditText"/>
     </div>
     <NavigableList t-if="suggestion" class="'o-mail-Composer-suggestionList'" t-props="navigableListProps"/>
 </t>
 
 <t t-name="mail.Composer.sendButton" owl="1">
     <button t-if="!compact or ui.isSmall" class="o-mail-Composer-send btn btn-link o-last border-start-0"
-        t-att-class="{'mt-2': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'align-self-stretch': !extended, 'border-start-0': env.inDiscussApp}"
+        t-att-class="{'btn-primary': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'align-self-stretch': !extended, 'border-start-0': env.inDiscussApp}"
         t-on-click="sendMessage"
-        type="button"
         t-att-disabled="isSendButtonDisabled"
-        aria-label="Send"
+        t-att-aria-label="SEND_TEXT"
     >
-        <t t-if="ui.isSmall"><i class="fa fa-paper-plane-o"/></t>
+        <t t-if="thread and thread.type === 'chatter'" t-out="SEND_TEXT"/>
+        <t t-elif="ui.isSmall"><i class="fa fa-paper-plane-o"/></t>
         <t t-else="">Send</t>
     </button>
 </t>
