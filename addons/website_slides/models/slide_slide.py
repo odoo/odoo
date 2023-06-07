@@ -410,7 +410,7 @@ class Slide(models.Model):
 
         return result
 
-    @api.depends('slide_ids.sequence', 'slide_ids.active', 'slide_ids.completion_time', 'slide_ids.is_published', 'slide_ids.is_category')
+    @api.depends('is_category', 'slide_ids.is_published')
     def _compute_category_completion_time(self):
         # We don't use read_group() function, otherwise we will have issue with flushing the
         # data as completion_time is recursive and when it'll try to flush data before it is calculated
