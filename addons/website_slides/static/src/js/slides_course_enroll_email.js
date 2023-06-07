@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _t } from 'web.core';
+import { _t } from "@web/core/l10n/translation";
 import Dialog from 'web.Dialog';
 import publicWidget from 'web.public.widget';
 

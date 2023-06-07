@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import core from "web.core";
 import {ColorpickerWidget} from "web.Colorpicker";
+import { _t } from "@web/core/l10n/translation";
 import options from "web_editor.snippets.options";
 import weUtils from "web_editor.utils";
-
-var _t = core._t;
 
 options.registry.InnerChart = options.Class.extend({
     custom_events: Object.assign({}, options.Class.prototype.custom_events, {

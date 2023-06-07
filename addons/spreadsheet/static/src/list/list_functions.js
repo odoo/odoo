@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { _t } from "web.core";
 import * as spreadsheet from "@odoo/o-spreadsheet";
+import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 
 const { arg, toString, toNumber } = spreadsheet.helpers;

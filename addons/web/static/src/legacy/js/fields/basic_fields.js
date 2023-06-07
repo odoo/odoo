@@ -15,12 +15,10 @@ import py_utils from "web.py_utils";
 import session from "web.session";
 import field_utils from "web.field_utils";
 import utils from "web.utils";
+import { _lt, _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { debounce } from "@web/core/utils/timing";
 import { uniqueId } from "@web/core/utils/functions";
-
-var _t = core._t;
-var _lt = core._lt;
 
 var TranslatableFieldMixin = {
     //--------------------------------------------------------------------------
@@ -32,8 +30,8 @@ var TranslatableFieldMixin = {
      * @returns {jQuery}
      */
     _renderTranslateButton: function () {
-        if (_t.database.multi_lang && this.field.translate) {
-            var lang = _t.database.parameters.code.split('_')[0].toUpperCase();
+        if (core._t.database.multi_lang && this.field.translate) {
+            var lang = core._t.database.parameters.code.split('_')[0].toUpperCase();
             return $(`<span class="o_field_translate btn btn-link">${lang}</span>`)
                 .on('click', this._onTranslate.bind(this));
         }
@@ -686,7 +684,7 @@ var NumericField = InputField.extend({
             const curVal = inputField.value;
             const from = inputField.selectionStart;
             const to = inputField.selectionEnd;
-            const point = _t.database.parameters.decimal_point;
+            const point = core._t.database.parameters.decimal_point;
 
             // Make sure the correct decimal separator
             // from the user's settings is inserted

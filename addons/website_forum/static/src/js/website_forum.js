@@ -8,10 +8,9 @@ import wysiwygLoader from "web_editor.loader";
 import publicWidget from "web.public.widget";
 import { Markup } from "web.utils";
 import session from "web.session";
+import { _t } from "@web/core/l10n/translation";
 import { escape } from "@web/core/utils/strings";
 var qweb = core.qweb;
-
-var _t = core._t;
 
 publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     selector: '.website_forum',

@@ -1,12 +1,12 @@
 /** @odoo-module alias=web.Dialog **/
 
 import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import dom from "web.dom";
 import Widget from "web.Widget";
 import OwlDialog from "web.OwlDialog";
 
 var QWeb = core.qweb;
-var _t = core._t;
 
 /**
  * A useful class to handle dialogs.

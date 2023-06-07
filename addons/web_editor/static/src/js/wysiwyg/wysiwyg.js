@@ -23,13 +23,13 @@ import Link from "wysiwyg.widgets.Link";
 import * as wysiwygUtils from "@web_editor/js/common/wysiwyg_utils";
 import weUtils from "web_editor.utils";
 import { PeerToPeer } from "@web_editor/js/wysiwyg/PeerToPeer";
+import { _t } from "@web/core/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { groupBy } from "@web/core/utils/arrays";
 import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 import { FileViewer } from "@web/core/file_viewer/file_viewer";
 
-var _t = core._t;
 const QWeb = core.qweb;
 
 const OdooEditor = OdooEditorLib.OdooEditor;

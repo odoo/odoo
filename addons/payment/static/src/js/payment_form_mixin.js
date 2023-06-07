@@ -2,9 +2,8 @@
 
     import { escape, sprintf } from "@web/core/utils/strings";
     import core from "web.core";
+    import { _t } from "@web/core/l10n/translation";
     import Dialog from "web.Dialog";
-
-    const _t = core._t;
 
     export default {
 

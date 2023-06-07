@@ -1,11 +1,9 @@
 /** @odoo-module alias=web.datepicker **/
 
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import field_utils from "web.field_utils";
 import time from "web.time";
 import Widget from "web.Widget";
-
-var _t = core._t;
 
 var DateWidget = Widget.extend({
     template: "web.datepicker",

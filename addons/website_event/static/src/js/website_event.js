@@ -1,11 +1,9 @@
 /** @odoo-module alias=website_event.website_event **/
 
 import ajax from "web.ajax";
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import Widget from "web.Widget";
 import publicWidget from "web.public.widget";
-
-var _t = core._t;
 
 // Catch registration form event, because of JS for attendee details
 var EventRegistrationForm = Widget.extend({

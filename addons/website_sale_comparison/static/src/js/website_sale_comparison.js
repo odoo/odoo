@@ -1,15 +1,13 @@
 /** @odoo-module alias=website_sale_comparison.comparison **/
 
 import concurrency from "web.concurrency";
-import core from "web.core";
+import { qweb } from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from "web.public.widget";
 import {getCookie, setCookie} from "web.utils.cookies";
 import VariantMixin from "website_sale.SaleVariantMixin";
 import website_sale_utils from "website_sale.utils";
 const cartHandlerMixin = website_sale_utils.cartHandlerMixin;
-
-var qweb = core.qweb;
-var _t = core._t;
 
 // VariantMixin events are overridden on purpose here
 // to avoid registering them more than once since they are already registered

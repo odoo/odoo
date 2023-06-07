@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import publicWidget from 'web.public.widget';
-import { _t } from 'web.core';
+import { _t } from "@web/core/l10n/translation";
 import 'website_sale_delivery.checkout';
 
 publicWidget.registry.websiteSaleDelivery.include({

@@ -1,9 +1,7 @@
 /** @odoo-module **/
 
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from "web.public.widget";
-
-var _t = core._t;
 
 publicWidget.registry.websiteLinksCodeEditor = publicWidget.Widget.extend({
     selector: '#wrapwrap:has(.o_website_links_edit_code)',

@@ -2,10 +2,9 @@
 
 import core from "web.core";
 import Widget from "web.Widget";
+import { _t } from "@web/core/l10n/translation";
 import { fuzzyLookup } from "@web/core/utils/search";
 import { sortBy } from "@web/core/utils/arrays";
-
-var _t = core._t;
 
 /**
  * Field Selector Cache - TODO Should be improved to use external cache ?

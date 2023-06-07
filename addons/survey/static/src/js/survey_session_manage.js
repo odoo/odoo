@@ -5,7 +5,7 @@ import SurveyPreloadImageMixin from "survey.preload_image_mixin";
 import SurveySessionChart from "survey.session_chart";
 import SurveySessionTextAnswers from "survey.session_text_answers";
 import SurveySessionLeaderBoard from "survey.session_leaderboard";
-import {_lt} from "web.core";
+import { _lt } from "@web/core/l10n/translation";
 
 const nextPageTooltips = {
     closingWords: _lt('End of Survey'),

@@ -3,7 +3,7 @@
 import fonts from 'wysiwyg.fonts';
 import {generateHTMLId} from 'web_editor.utils';
 import options from 'web_editor.snippets.options';
-import {_t} from 'web.core';
+import { _t } from "@web/core/l10n/translation";
 
 let dbSocialValues;
 let dbSocialValuesProm;

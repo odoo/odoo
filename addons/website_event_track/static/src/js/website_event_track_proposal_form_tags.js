@@ -1,9 +1,7 @@
 /** @odoo-module alias=website_event_track.website_event_track_proposal_form_tags **/
 
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from "web.public.widget";
-
-var _t = core._t;
 
 publicWidget.registry.websiteEventTrackProposalFormTags = publicWidget.Widget.extend({
     selector: '.o_website_event_track_proposal_form_tags',

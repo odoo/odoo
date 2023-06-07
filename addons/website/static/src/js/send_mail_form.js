@@ -1,9 +1,7 @@
 /** @odoo-module **/
 
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import FormEditorRegistry from "website.form_editor_registry";
-
-var _t = core._t;
 
 FormEditorRegistry.add('send_mail', {
     formFields: [{

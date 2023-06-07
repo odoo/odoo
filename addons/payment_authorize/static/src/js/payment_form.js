@@ -1,13 +1,11 @@
 /** @odoo-module **/
 /* global Accept */
-    
-    import core from "web.core";
+
     import { loadJS } from "@web/core/assets";
+    import { _t } from "@web/core/l10n/translation";
 
     import checkoutForm from "payment.checkout_form";
     import manageForm from "payment.manage_form";
-
-    const _t = core._t;
 
     const authorizeMixin = {
 

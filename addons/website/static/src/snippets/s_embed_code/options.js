@@ -2,10 +2,9 @@
 
 import Dialog from 'web.Dialog';
 import core from 'web.core';
+import { _t } from "@web/core/l10n/translation";
 import options from 'web_editor.snippets.options';
 import { loadBundle } from "@web/core/assets";
-
-const _t = core._t;
 
 options.registry.EmbedCode = options.Class.extend({
     //--------------------------------------------------------------------------

@@ -3,7 +3,8 @@
 /* global YT, Vimeo */
 
     import publicWidget from 'web.public.widget';
-    import  { qweb as QWeb, _t } from 'web.core';
+    import { qweb as QWeb } from 'web.core';
+    import { _t } from "@web/core/l10n/translation";
     import { Markup } from 'web.utils';
     import config from 'web.config';
 

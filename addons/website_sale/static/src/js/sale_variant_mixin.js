@@ -1,14 +1,13 @@
 /** @odoo-module alias=website_sale.SaleVariantMixin **/
 
 import concurrency from "web.concurrency";
-import core from "web.core";
 import utils from "web.utils";
 import ajax from "web.ajax";
+import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { memoize, uniqueId } from "@web/core/utils/functions";
 import { throttleForAnimation } from "@web/core/utils/timing";
-
-var _t = core._t;
 
 var VariantMixin = {
     events: {
@@ -607,7 +606,7 @@ var VariantMixin = {
      * @param {float} price
      */
     _priceToStr: function (price) {
-        var l10n = _t.database.parameters;
+        var l10n = core._t.database.parameters;
         var precision = 2;
 
         if ($('.decimal_precision').length) {

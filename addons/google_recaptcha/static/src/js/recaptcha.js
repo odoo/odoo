@@ -1,11 +1,10 @@
 /** @odoo-module alias=google_recaptcha.ReCaptchaV3 **/
 
 import Class from "web.Class";
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import { session } from "@web/session";
 import { loadJS } from "@web/core/assets";
 
-const _t = core._t;
 
 const ReCaptcha = Class.extend({
     /**

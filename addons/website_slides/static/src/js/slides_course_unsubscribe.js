@@ -1,11 +1,9 @@
 /** @odoo-module **/
 
-import core from 'web.core';
+import { qweb as QWeb } from 'web.core';
+import { _t } from "@web/core/l10n/translation";
 import Dialog from 'web.Dialog';
 import publicWidget from 'web.public.widget';
-
-var QWeb = core.qweb;
-var _t = core._t;
 
 var SlideUnsubscribeDialog = Dialog.extend({
     template: 'slides.course.unsubscribe.modal',

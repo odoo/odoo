@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { _t } from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import { FORMATS } from "../helpers/constants";
 import { getOdooFunctions } from "../helpers/odoo_functions_helpers";
 

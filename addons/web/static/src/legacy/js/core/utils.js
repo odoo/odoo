@@ -6,12 +6,13 @@
  * Various generic utility functions
  */
 
-import translation from "web.translation";
 
 import { Component } from "@odoo/owl";
+
+import translation from "web.translation";
+import { _t } from "@web/core/l10n/translation";
 import { escape, escapeHTML, escapeMethod, sprintf } from "@web/core/utils/strings";
 
-var _t = translation._t;
 var id = -1;
 
 var diacriticsMap = {
@@ -548,7 +549,7 @@ const utils = {
         var negative = num[0] === '-';
         num = (negative ? num.slice(1) : num);
         return (negative ? '-' : '') + utils.intersperse(
-            num, _t.database.parameters.grouping, _t.database.parameters.thousands_sep);
+            num, translation._t.database.parameters.grouping, translation._t.database.parameters.thousands_sep);
     },
     /**
      * Intersperses ``separator`` in ``str`` at the positions indicated by

@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from 'web.public.widget';
-import { _t } from 'web.core';
+import { _t } from "@web/core/l10n/translation";
 import { SlideCoursePage } from '@website_slides/js/slides_course_page';
 
 publicWidget.registry.websiteSlidesCourseSlidesList = SlideCoursePage.extend({

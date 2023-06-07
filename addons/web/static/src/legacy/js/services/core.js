@@ -6,6 +6,7 @@ import Class from "web.Class";
 import QWeb from "web.QWeb";
 import Registry from "web.Registry";
 import translation from "web.translation";
+import { _lt } from "@web/core/l10n/translation";
 
 /**
  * Whether the client is currently in "debug" mode
@@ -33,7 +34,12 @@ export default {
     bus: bus,
     main_bus: new Bus(),
     _t: translation._t,
-    _lt: translation._lt,
+    _lt(str) {
+        console.warn(
+            "_lt from web.core is deprecated. Use the one from @web/core/l10n/translation instead."
+        );
+        return _lt(str);
+    },
 
     // registries
     action_registry: new Registry(),

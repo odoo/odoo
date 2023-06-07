@@ -1,7 +1,7 @@
 /** @odoo-module alias=website.root */
 
 import { loadJS } from "@web/core/assets";
-import { _t } from 'web.core';
+import { _t } from "@web/core/l10n/translation";
 import KeyboardNavigationMixin from 'web.KeyboardNavigationMixin';
 import {Markup} from 'web.utils';
 import session from 'web.session';

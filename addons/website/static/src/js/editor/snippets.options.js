@@ -11,9 +11,9 @@ import wLinkPopoverWidget from "@website/js/widgets/link_popover_widget";
 import wUtils from "website.utils";
 import {isImageSupportedForStyle} from "web_editor.image_processing";
 import "website.s_popup_options";
+import { _t } from "@web/core/l10n/translation";
 import { range } from "@web/core/utils/numbers";
 
-var _t = core._t;
 var qweb = core.qweb;
 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];

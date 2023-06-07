@@ -1,10 +1,8 @@
 /** @odoo-module **/
 
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import dom from "web.dom";
 import sOptions from "web_editor.snippets.options";
-
-var _t = core._t;
 
 sOptions.registry.twitter = sOptions.Class.extend({
     /**

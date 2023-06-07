@@ -2,11 +2,11 @@
 
 import {ColorpickerWidget} from "web.Colorpicker";
 import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from "web.public.widget";
 import weUtils from "web_editor.utils";
 
 const qweb = core.qweb;
-const _t = core._t;
 
 const CountdownWidget = publicWidget.Widget.extend({
     selector: '.s_countdown',

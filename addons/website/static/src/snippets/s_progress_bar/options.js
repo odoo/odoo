@@ -1,10 +1,8 @@
 /** @odoo-module **/
 
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import utils from "web.utils";
 import options from "web_editor.snippets.options";
-
-const _t = core._t;
 
 options.registry.progress = options.Class.extend({
 

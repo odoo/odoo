@@ -3,9 +3,9 @@
 import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog";
 import { ComponentWrapper } from "web.OwlCompatibility";
 import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import options from "web_editor.snippets.options";
 
-var _t = core._t;
 var qweb = core.qweb;
 
 options.registry.gallery = options.Class.extend({

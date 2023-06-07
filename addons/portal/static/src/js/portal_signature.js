@@ -1,11 +1,10 @@
 /** @odoo-module alias=portal.signature_form **/
 
 import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from "web.public.widget";
 import { NameAndSignature } from "web.name_and_signature";
 var qweb = core.qweb;
-
-var _t = core._t;
 
 /**
  * This widget is a signature request form. It uses

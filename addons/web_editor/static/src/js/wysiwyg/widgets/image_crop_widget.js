@@ -1,10 +1,8 @@
 /** @odoo-module alias=wysiwyg.widgets.ImageCropWidget **/
 
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import Widget from "web.Widget";
 import {applyModifications, cropperDataFields, activateCropper, loadImage, loadImageInfo} from "web_editor.image_processing";
-
-const _t = core._t;
 
 const ImageCropWidget = Widget.extend({
     template: ['wysiwyg.widgets.crop'],

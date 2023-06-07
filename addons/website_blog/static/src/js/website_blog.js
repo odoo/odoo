@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
-import core from "web.core";
 import dom from "web.dom";
 import publicWidget from "web.public.widget";
 
@@ -74,7 +74,7 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         var blogPostTitle = $('#o_wblog_post_name').html() || '';
         var articleURL = window.location.href;
         if ($element.hasClass('o_twitter')) {
-            var twitterText = core._t("Amazing blog article: %s! Check it live: %s");
+            var twitterText = _t("Amazing blog article: %s! Check it live: %s");
             var tweetText = sprintf(twitterText, blogPostTitle, articleURL);
             url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=' + encodeURIComponent(tweetText);
         } else if ($element.hasClass('o_facebook')) {

@@ -1,10 +1,8 @@
 /** @odoo-module alias=website_sale_delivery.checkout **/
 
-import core from "web.core";
+import core, { qweb } from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from "web.public.widget";
-
-const _t = core._t;
-const qweb = core.qweb;
 import concurrency from "web.concurrency";
 
 publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({

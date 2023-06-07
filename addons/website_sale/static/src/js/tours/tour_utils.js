@@ -1,7 +1,6 @@
 /** @odoo-module alias=website_sale.tour_utils **/
-    
-    import core from "web.core";
-    const _t = core._t;
+
+    import { _t } from "@web/core/l10n/translation";
     import wTourUtils from "website.tour_utils";
 
     function addToCart({productName, search = true, productHasVariants = false}) {

@@ -1,10 +1,9 @@
 /** @odoo-module alias=payment.post_processing **/
-    
+
     import publicWidget from "web.public.widget";
     import core from "web.core";
+    import { _t } from "@web/core/l10n/translation";
     import {Markup} from "web.utils";
-
-    var _t = core._t;
 
     $.blockUI.defaults.css.border = '0';
     $.blockUI.defaults.css["background-color"] = '';

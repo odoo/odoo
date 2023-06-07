@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { uniqueId } from '@web/core/utils/functions';
 import { sprintf } from '@web/core/utils/strings';
-import { _t } from 'web.core';
 import Dialog from 'web.Dialog';
 import publicWidget from 'web.public.widget';
 

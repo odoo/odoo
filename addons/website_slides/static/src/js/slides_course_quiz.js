@@ -2,7 +2,8 @@
 
     import publicWidget from 'web.public.widget';
     import Dialog from 'web.Dialog';
-    import  { qweb as QWeb, _t } from 'web.core';
+    import { qweb as QWeb } from 'web.core';
+    import { _t } from "@web/core/l10n/translation";
     import session from 'web.session';
     import { Markup } from 'web.utils';
     import CourseJoin from '@website_slides/js/slides_course_join';

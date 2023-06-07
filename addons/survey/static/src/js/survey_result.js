@@ -1,7 +1,7 @@
 /** @odoo-module alias=survey.result **/
 
-import { _t } from "web.core";
 import { loadJS } from "@web/core/assets";
+import { _t } from "@web/core/l10n/translation";
 import { SurveyImageZoomer } from "@survey/js/survey_image_zoomer";
 import publicWidget from "web.public.widget";
 

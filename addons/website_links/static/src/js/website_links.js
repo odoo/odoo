@@ -1,9 +1,7 @@
 /** @odoo-module alias=website_links.website_links **/
 
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from "web.public.widget";
-
-var _t = core._t;
 
 var SelectBox = publicWidget.Widget.extend({
     events: {

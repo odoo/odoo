@@ -1,11 +1,9 @@
 /** @odoo-module alias=web.DomainSelectorDialog **/
 
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import Dialog from "web.Dialog";
 import Domain from "web.Domain";
 import DomainSelector from "web.DomainSelector";
-
-var _t = core._t;
 
 /**
  * @class DomainSelectorDialog

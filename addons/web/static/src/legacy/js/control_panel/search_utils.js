@@ -1,6 +1,7 @@
 /** @odoo-module alias=web.searchUtils **/
-    
-    import { _lt, _t } from "web.core";
+
+    import { _lt } from "@web/core/l10n/translation";
+    import { _t } from "web.core";
     import Domain from "web.Domain";
     import pyUtils from "web.py_utils";
 

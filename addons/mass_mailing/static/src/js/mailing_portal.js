@@ -2,11 +2,9 @@
 
 import session from "web.session";
 import ajax from "web.ajax";
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import { sprintf, escape } from "@web/core/utils/strings";
 import { whenReady } from "@odoo/owl";
-
-var _t = core._t;
 
 whenReady(() => {
     var email = $("input[name='email']").val();

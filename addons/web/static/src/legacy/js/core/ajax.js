@@ -2,13 +2,12 @@
 
 import config from "web.config";
 import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import {Markup} from "web.utils";
 import time from "web.time";
 import download from "web.download";
 import contentdisposition from "web.contentdisposition";
 import { session } from "@web/session";
-
-var _t = core._t;
 
 // Create the final object containing all the functions first to allow monkey
 // patching them correctly if ever needed.

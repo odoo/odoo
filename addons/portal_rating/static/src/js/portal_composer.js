@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import core from "web.core";
 import portalComposer from "portal.composer";
 
-var _t = core._t;
+import { _t } from "@web/core/l10n/translation";
 
 var PortalComposer = portalComposer.PortalComposer;
 

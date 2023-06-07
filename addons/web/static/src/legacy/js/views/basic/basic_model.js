@@ -82,6 +82,7 @@
  *   element, so it can be edited later.
  */
 
+import { _t } from "@web/core/l10n/translation";
 import { intersection, sortBy, unique } from "@web/core/utils/arrays";
 import { uniqueId } from "@web/core/utils/functions";
 import { omit, pick } from "@web/core/utils/objects";
@@ -89,13 +90,11 @@ import { sprintf } from "@web/core/utils/strings";
 import AbstractModel from "web.AbstractModel";
 import concurrency from "web.concurrency";
 import Context from "web.Context";
-import core from "web.core";
 import Domain from "web.Domain";
 import session from "web.session";
 import utils from "web.utils";
 import viewUtils from "web.viewUtils";
 
-var _t = core._t;
 
 const SENTINEL = null;
 

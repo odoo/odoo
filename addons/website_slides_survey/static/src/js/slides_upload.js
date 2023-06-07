@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
-import core from "web.core";
-var _t = core._t;
+import { _t } from "@web/core/l10n/translation";
 import SlidesUpload from "@website_slides/js/slides_upload";
 
 /**

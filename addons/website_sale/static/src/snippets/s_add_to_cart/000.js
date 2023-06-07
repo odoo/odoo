@@ -3,7 +3,7 @@
 import publicWidget from 'web.public.widget';
 import { cartHandlerMixin } from 'website_sale.utils';
 import { WebsiteSale } from 'website_sale.website_sale';
-import { _t } from 'web.core';
+import { _t } from "@web/core/l10n/translation";
 
 publicWidget.registry.AddToCartSnippet = WebsiteSale.extend(cartHandlerMixin, {
     selector: '.s_add_to_cart_btn',

@@ -21,7 +21,7 @@
     import { bus } from "web.core";
     import rpc from "web.rpc";
     import session from "web.session";
-    import { _t } from "web.translation";
+    import { _t } from "@web/core/l10n/translation";
     import {getCookie, setCookie} from "web.utils.cookies";
 
     const browser = {

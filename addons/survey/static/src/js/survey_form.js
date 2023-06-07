@@ -4,7 +4,7 @@ import field_utils from "web.field_utils";
 import publicWidget from "web.public.widget";
 import time from "web.time";
 import config from "web.config";
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import Dialog from "web.Dialog";
 import dom from "web.dom";
 import {getCookie, setCookie, deleteCookie} from "web.utils.cookies";
@@ -12,7 +12,6 @@ import {getCookie, setCookie, deleteCookie} from "web.utils.cookies";
 import SurveyPreloadImageMixin from "survey.preload_image_mixin";
 import { SurveyImageZoomer } from "@survey/js/survey_image_zoomer";
 
-var _t = core._t;
 var isMac = navigator.platform.toUpperCase().includes('MAC');
 
 publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloadImageMixin, {

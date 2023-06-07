@@ -1,13 +1,13 @@
 /** @odoo-module alias=wysiwyg.widgets.Link **/
 
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
+
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import Widget from "web.Widget";
 import {isColorGradient} from "web_editor.utils";
 
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getInSelection = OdooEditorLib.getInSelection;
-const _t = core._t;
 
 /**
  * Allows to customize link content and style.

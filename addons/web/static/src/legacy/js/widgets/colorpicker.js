@@ -1,13 +1,11 @@
 /** @odoo-module alias=web.Colorpicker **/
 
-import core from "web.core";
 import utils from "web.utils";
 import Dialog from "web.Dialog";
 import Widget from "web.Widget";
+import { _t } from "@web/core/l10n/translation";
 import { uniqueId } from "@web/core/utils/functions";
 import { debounce, throttleForAnimation } from "@web/core/utils/timing";
-
-var _t = core._t;
 
 var ColorpickerWidget = Widget.extend({
     template: 'Colorpicker',

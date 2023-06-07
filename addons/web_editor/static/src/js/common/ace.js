@@ -2,17 +2,15 @@
 
 import config from "web.config";
 import concurrency from "web.concurrency";
-import core from "web.core";
 import dom from "web.dom";
 import Dialog from "web.Dialog";
 import Widget from "web.Widget";
 import localStorage from "web.local_storage";
+import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { debounce } from "@web/core/utils/timing";
 import { sortBy } from "@web/core/utils/arrays";
 import { pick } from "@web/core/utils/objects";
-
-var _t = core._t;
 
 /**
  * Formats a content-check result (@see checkXML, checkSCSS).

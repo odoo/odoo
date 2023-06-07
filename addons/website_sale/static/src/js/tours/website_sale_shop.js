@@ -1,6 +1,6 @@
 /** @odoo-module **/
-    
-    import {_t} from "web.core";
+
+    import { _t } from "@web/core/l10n/translation";
     import {Markup} from "web.utils";
     import wTourUtils from "website.tour_utils";
 

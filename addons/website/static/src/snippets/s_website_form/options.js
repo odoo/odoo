@@ -7,11 +7,11 @@ import Dialog from "web.Dialog";
 import dom from "web.dom";
 import {generateHTMLId} from "web_editor.utils";
 import "website.editor.snippets.options";
+import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { unique } from "@web/core/utils/arrays";
 
 const qweb = core.qweb;
-const _t = core._t;
 
 const FormEditor = options.Class.extend({
     //----------------------------------------------------------------------

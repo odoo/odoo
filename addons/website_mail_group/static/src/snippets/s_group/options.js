@@ -1,9 +1,8 @@
 /** @odoo-module **/
 
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import options from "web_editor.snippets.options";
 import wUtils from "website.utils";
-const _t = core._t;
 
 options.registry.Group = options.Class.extend({
     /**

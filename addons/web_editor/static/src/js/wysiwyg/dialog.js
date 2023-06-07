@@ -1,10 +1,8 @@
 /** @odoo-module alias=wysiwyg.widgets.Dialog **/
 
 import config from "web.config";
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import Dialog from "web.Dialog";
-
-var _t = core._t;
 
 /**
  * Extend Dialog class to handle save/cancel of edition components.

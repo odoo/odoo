@@ -1,8 +1,7 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from "web.public.widget";
-import core from "web.core";
-var _t = core._t;
 
 publicWidget.registry.websiteSaleValidate = publicWidget.Widget.extend({
     selector: 'div.oe_website_sale_tx_status[data-order-id]',

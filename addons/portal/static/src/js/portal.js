@@ -2,7 +2,8 @@
 
 import publicWidget from "web.public.widget";
 import Dialog from "web.Dialog";
-import {_t, qweb} from "web.core";
+import { qweb } from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import session from "web.session";
 
 publicWidget.registry.portalDetails = publicWidget.Widget.extend({

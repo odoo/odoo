@@ -1,5 +1,5 @@
 /** @odoo-module alias=web.test_utils_modal **/
-    
+
     /**
      * Modal Test Utils
      *
@@ -9,7 +9,7 @@
      * testUtils file.
      */
 
-    import { _t } from "web.core";
+    import { _t } from "@web/core/l10n/translation";
     import testUtilsDom from "web.test_utils_dom";
 
     /**

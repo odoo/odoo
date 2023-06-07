@@ -1,9 +1,8 @@
 /** @odoo-module alias=website_event_booth.booth_registration **/
 
-import core from "web.core";
+import { qweb as QWeb } from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from "web.public.widget";
-var QWeb = core.qweb;
-var _t = core._t;
 
 publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
     selector: '.o_wbooth_registration',

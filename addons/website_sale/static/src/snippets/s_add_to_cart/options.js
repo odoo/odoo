@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import options from 'web_editor.snippets.options';
-import { _t } from 'web.core';
+import { _t } from "@web/core/l10n/translation";
 
 const Many2oneUserValueWidget = options.userValueWidgetsRegistry['we-many2one'];
 

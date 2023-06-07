@@ -1,8 +1,8 @@
 /** @odoo-module */
 
-import { _t } from "web.core";
 import Widget from "web.Widget";
 import { computeScore } from "@auth_password_policy/password_policy";
+import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 
 export default Widget.extend({

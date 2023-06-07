@@ -1,10 +1,8 @@
 /** @odoo-module alias=web.framework **/
 
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import ajax from "web.ajax";
 import Widget from "web.Widget";
-
-var _t = core._t;
 
 var messages_by_seconds = function() {
     return [

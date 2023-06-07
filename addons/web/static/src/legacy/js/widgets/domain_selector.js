@@ -1,16 +1,13 @@
 /** @odoo-module alias=web.DomainSelector **/
 
+import { _lt, _t } from "@web/core/l10n/translation";
 import { pick } from "@web/core/utils/objects";
-import core from "web.core";
 import datepicker from "web.datepicker";
 import dom from "web.dom";
 import Domain from "web.Domain";
 import field_utils from "web.field_utils";
 import ModelFieldSelector from "web.ModelFieldSelector";
 import Widget from "web.Widget";
-
-var _t = core._t;
-var _lt = core._lt;
 
 // "child_of", "parent_of", "like", "not like", "=like", "=ilike"
 // are only used if user entered them manually or if got from demo data

@@ -2,9 +2,9 @@
 
 import core from "web.core";
 import portalChatter from "portal.chatter";
+import { _t } from "@web/core/l10n/translation";
 import { roundPrecision } from "@web/core/utils/numbers";
 
-var _t = core._t;
 var PortalChatter = portalChatter.PortalChatter;
 var qweb = core.qweb;
 

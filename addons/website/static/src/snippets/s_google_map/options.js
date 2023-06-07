@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import {_t} from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import options from "web_editor.snippets.options";
 
 options.registry.GoogleMap = options.Class.extend({

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
-import {_t, qweb} from 'web.core';
+import { _t } from "@web/core/l10n/translation";
+import { qweb } from 'web.core';
 import options from 'web_editor.snippets.options';
 
 options.registry.Donation = options.Class.extend({

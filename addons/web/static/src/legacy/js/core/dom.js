@@ -11,8 +11,7 @@
 
 import { uniqueId } from "@web/core/utils/functions";
 import concurrency from "web.concurrency";
-import core from "web.core";
-var _t = core._t;
+import core, { _t } from "web.core";
 
 /**
  * Private function to notify that something has been attached in the DOM

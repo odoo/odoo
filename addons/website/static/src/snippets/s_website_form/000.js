@@ -1,5 +1,5 @@
 /** @odoo-module alias=website.s_website_form **/
-    
+
     import core from "web.core";
     import time from "web.time";
     import {ReCaptcha} from "google_recaptcha.ReCaptchaV3";
@@ -8,10 +8,10 @@
     import publicWidget from "web.public.widget";
     import dom from "web.dom";
     import concurrency from "web.concurrency";
+    import { _t } from "@web/core/l10n/translation";
     import { sprintf } from "@web/core/utils/strings";
     import { debounce } from "@web/core/utils/timing";
 
-    var _t = core._t;
     var qweb = core.qweb;
 
     publicWidget.registry.EditModeWebsiteForm = publicWidget.Widget.extend({

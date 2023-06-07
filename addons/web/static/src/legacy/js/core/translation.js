@@ -2,11 +2,11 @@
 /** @odoo-module alias=web.translation **/
 
 import Class from "web.Class";
-import { _lt } from "@web/core/l10n/translation";
+import { _lt, _t as gettext, translatedTerms } from "@web/core/l10n/translation";
 
 var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# */{
     init: function() {
-        this.db = {};
+        this.db = translatedTerms;
         this.multi_lang = false
         this.parameters = {"direction": 'ltr',
                         "date_format": '%m/%d/%Y',
@@ -39,10 +39,9 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
         });
     },
     build_translation_function: function() {
-        var self = this;
         var fcnt = function(str) {
-            var tmp = self.get(str);
-            return tmp === undefined ? str : tmp;
+            console.warn("_t from web.translation is deprecated. Use the one from @web/core/l10n/translation instead.");
+            return gettext(str);
         };
         fcnt.database = this;
         return fcnt;
@@ -93,28 +92,6 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
  * @returns {String} source translated into the current locale
  */
 var _t = new TranslationDataBase().build_translation_function();
-
-/** Setup jQuery timeago */
-/*
- * Strings in timeago are "composed" with prefixes, words and suffixes. This
- * makes their detection by our translating system impossible. Use all literal
- * strings we're using with a translation mark here so the extractor can do its
- * job.
- */
-{
-    _t('less than a minute ago');
-    _t('about a minute ago');
-    _t('%d minutes ago');
-    _t('about an hour ago');
-    _t('%d hours ago');
-    _t('a day ago');
-    _t('%d days ago');
-    _t('about a month ago');
-    _t('%d months ago');
-    _t('about a year ago');
-    _t('%d years ago');
-}
-
 
 export default {
     _t: _t,

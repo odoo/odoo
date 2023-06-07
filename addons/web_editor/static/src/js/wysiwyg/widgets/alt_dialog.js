@@ -1,9 +1,7 @@
 /** @odoo-module alias=wysiwyg.widgets.AltDialog **/
 
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import Dialog from "wysiwyg.widgets.Dialog";
-
-var _t = core._t;
 
 /**
  * Let users change the alt & title of a media.

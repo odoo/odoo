@@ -1,7 +1,7 @@
 /** @odoo-module alias=website.tour_utils **/
 
-import {_t} from "web.core";
 import {Markup} from "web.utils";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { sprintf } from "@web/core/utils/strings";
 

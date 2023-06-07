@@ -20,12 +20,11 @@ import dom from "web.dom";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import Domain from "web.Domain";
+import { _lt, _t } from "@web/core/l10n/translation";
 import { escape, sprintf } from "@web/core/utils/strings";
 import { uniqueId } from "@web/core/utils/functions";
 import { sortBy } from "@web/core/utils/arrays";
 
-var _t = core._t;
-var _lt = core._lt;
 var qweb = core.qweb;
 
 //------------------------------------------------------------------------------

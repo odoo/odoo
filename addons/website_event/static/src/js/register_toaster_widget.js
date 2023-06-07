@@ -1,8 +1,7 @@
 /** @odoo-module alias=website_event.register_toaster_widget **/
 
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import {Markup} from "web.utils";
-let _t = core._t;
 import publicWidget from "web.public.widget";
 
 publicWidget.registry.RegisterToasterWidget = publicWidget.Widget.extend({

@@ -2,7 +2,7 @@
 
 import publicWidget from 'web.public.widget';
 import '@website_slides/js/slides';
-import { _t } from 'web.core';
+import { _t } from "@web/core/l10n/translation";
 
 var ShareMail = publicWidget.Widget.extend({
     events: {

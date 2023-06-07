@@ -1,12 +1,10 @@
 /** @odoo-module alias=portal.PortalSidebar **/
 
-import core from "web.core";
 import publicWidget from "web.public.widget";
 import time from "web.time";
 import session from "web.session";
+import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
-
-var _t = core._t;
 
 var PortalSidebar = publicWidget.Widget.extend({
     /**

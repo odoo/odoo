@@ -1,12 +1,9 @@
 /** @odoo-module **/
 
-import core from "web.core";
+import { qweb } from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import Dialog from "web.Dialog";
 import options from "web_editor.snippets.options";
-
-const qweb = core.qweb;
-var _t = core._t;
-
 
 options.registry.mailing_list_subscribe = options.Class.extend({
     /**

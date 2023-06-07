@@ -1,11 +1,10 @@
 /** @odoo-module **/
 
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import {Markup} from "web.utils";
-import core from "web.core";
 
 import "@crm/js/tours/crm";
-var _t = core._t;
 
 var DragOppToWonStepIndex = registry.category("web_tour.tours").get("crm_tour").steps.findIndex(step => {
     return (step.id === 'drag_opportunity_to_won_step');

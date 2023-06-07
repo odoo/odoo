@@ -2,7 +2,7 @@
 
 import publicWidget from 'web.public.widget';
 import Dialog from 'web.Dialog';
-import { _t } from 'web.core';
+import { _t } from "@web/core/l10n/translation";
 
 var SlideArchiveDialog = Dialog.extend({
     template: 'slides.slide.archive',

@@ -5,7 +5,8 @@ import Wysiwyg from "website.wysiwyg";
 import { ComponentWrapper } from "web.OwlCompatibility";
 import { MediaDialog, MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog";
 import { useWowlService } from "@web/legacy/utils";
-import {qweb, _t} from "web.core";
+import { qweb } from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import {Markup} from "web.utils";
 import Dialog from "web.Dialog";
 

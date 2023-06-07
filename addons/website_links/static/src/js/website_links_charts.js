@@ -1,9 +1,7 @@
 /** @odoo-module alias=website_links.charts **/
 
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from "web.public.widget";
-
-var _t = core._t;
 
 var BarChart = publicWidget.Widget.extend({
     jsLibs: [

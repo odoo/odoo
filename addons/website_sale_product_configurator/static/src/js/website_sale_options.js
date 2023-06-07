@@ -1,13 +1,11 @@
 /** @odoo-module alias=website_sale_options.website_sale **/
 
 import ajax from "web.ajax";
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import publicWidget from "web.public.widget";
 import { OptionalProductsModal } from "@website_sale_product_configurator/js/sale_product_configurator_modal";
 import "website_sale.website_sale";
 import wsUtils from "website_sale.utils";
-
-var _t = core._t;
 
 publicWidget.registry.WebsiteSale.include({
 

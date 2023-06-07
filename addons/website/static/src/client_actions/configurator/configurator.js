@@ -4,8 +4,8 @@ import concurrency from 'web.concurrency';
 import utils from 'web.utils';
 import weUtils from 'web_editor.utils';
 import {ColorpickerWidget} from 'web.Colorpicker';
-import {_lt} from 'web.core';
 import {svgToPNG} from 'website.utils';
+import { _lt } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 
