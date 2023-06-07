@@ -245,9 +245,18 @@ class PosConfig(models.Model):
     @api.depends('iface_tipproduct')
     def _compute_tip_product_id(self):
         for pos_config in self:
-            pos_config.tip_product_id = self.env.ref("point_of_sale.product_product_tip")
+            pos_config.tip_product_id = self.env.ref("point_of_sale.product_product_tip", raise_if_not_found=False)
             if not pos_config.tip_product_id:
-                pos_config.tip_product_id = self.env['product.product'].search([('default_code', '=', 'TIPS')], limit=1)
+                pos_config.tip_product_id = self.env['product.product']._load_records([
+                                                dict(xml_id='point_of_sale.product_product_tip',
+                                                     values={
+                                                         'name': 'Tips',
+                                                         'categ_id': self.env.ref('point_of_sale.product_category_pos').id,
+                                                         'default_code': 'TIPS',
+                                                         'weight': 0.01,
+                                                         'taxes_id': [(5,)]
+                                                     }, noupdate=True)
+                                            ])
 
     @api.constrains('rounding_method')
     def _check_rounding_method_strategy(self):
