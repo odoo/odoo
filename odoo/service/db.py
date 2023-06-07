@@ -142,7 +142,7 @@ def exp_create_database(db_name, demo, lang, user_password='admin', login='admin
     return True
 
 @check_db_management_enabled
-def exp_duplicate_database(db_original_name, db_name):
+def exp_duplicate_database(db_original_name, db_name, neutralize_database=False):
     _logger.info('Duplicate database `%s` to `%s`.', db_original_name, db_name)
     odoo.sql_db.close_db(db_original_name)
     db = odoo.sql_db.db_connect('postgres')
@@ -160,6 +160,8 @@ def exp_duplicate_database(db_original_name, db_name):
         # if it's a copy of a database, force generation of a new dbuuid
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
         env['ir.config_parameter'].init(force=True)
+        if neutralize_database:
+            odoo.modules.neutralize.neutralize_database(cr)
 
     from_fs = odoo.tools.config.filestore(db_original_name)
     to_fs = odoo.tools.config.filestore(db_name)
@@ -284,7 +286,7 @@ def exp_restore(db_name, data, copy=False):
     return True
 
 @check_db_management_enabled
-def restore_db(db, dump_file, copy=False):
+def restore_db(db, dump_file, copy=False, neutralize_database=False):
     assert isinstance(db, str)
     if exp_db_exist(db):
         _logger.warning('RESTORE DB: %s already exists', db)
@@ -328,6 +330,9 @@ def restore_db(db, dump_file, copy=False):
             if copy:
                 # if it's a copy of a database, force generation of a new dbuuid
                 env['ir.config_parameter'].init(force=True)
+            if neutralize_database:
+                odoo.modules.neutralize.neutralize_database(cr)
+
             if filestore_path:
                 filestore_dest = env['ir.attachment']._filestore()
                 shutil.move(filestore_path, filestore_dest)

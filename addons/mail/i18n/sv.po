@@ -9,7 +9,6 @@
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2022
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2022
 # Victor Ekström, 2022
-# MikaelAtVertel, 2022
 # 3eec91a23d05c632ffac786ac42b81b8_b6fff7b <8985b7bc57db860af29969457dbb51b3_1018915>, 2022
 # Lisa <lisa.oskoma@vertel.se>, 2022
 # Robert Frykelius <robert.frykelius@linserv.se>, 2022
@@ -29,15 +28,18 @@
 # Bengt Evertsson <zyberfart@gmail.com>, 2022
 # Mikael Åkerberg <mikael.akerberg@mariaakerberg.com>, 2023
 # Robin Calvin, 2023
+# Simon Nilsson, 2023
+# Mikael Carlsson <mikael.carlsson@vertel.se>, 2023
+# Lasse Larsson, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Robin Calvin, 2023\n"
-"Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
+"Last-Translator: Lasse Larsson, 2023\n"
+"Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -66,7 +68,7 @@ msgstr ""
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "\"%(activity_name)s: %(summary)s\" assigned to you"
-msgstr ""
+msgstr "\"%(activity_name)s: %(summary)s\" tilldelas dig"
 
 #. module: mail
 #. odoo-javascript
@@ -97,13 +99,15 @@ msgid ""
 "%(email)s is not recognized as a valid email. This is required to create a "
 "new customer."
 msgstr ""
+"%(email)s känns inte igen som en giltig e-post. Detta krävs för att skapa en"
+" ny kund."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/notification_request_view.js:0
 #, python-format
 msgid "%(odoobotName)s has a request"
-msgstr ""
+msgstr "%(odoobotName)s har en förfrågan"
 
 #. module: mail
 #. odoo-python
@@ -124,7 +128,7 @@ msgstr "%(user_name)s bjöd in dig att följa ett nytt dokument."
 #: code:addons/mail/models/ir_mail_server.py:0
 #, python-format
 msgid "%s (Email Template)"
-msgstr ""
+msgstr "%s (E-postmall)"
 
 #. module: mail
 #. odoo-python
@@ -138,14 +142,14 @@ msgstr "%s (kopia)"
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "%s Message"
-msgstr ""
+msgstr "%s Meddelande"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "%s Messages"
-msgstr ""
+msgstr "%s Meddelanden"
 
 #. module: mail
 #. odoo-javascript
@@ -181,14 +185,14 @@ msgstr "%s skapades"
 #: code:addons/mail/static/src/models/activity_list_view_item.js:0
 #, python-format
 msgid "%s days overdue"
-msgstr ""
+msgstr "%s dagar försenat:"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/activity_view.js:0
 #, python-format
 msgid "%s days overdue:"
-msgstr ""
+msgstr "%s dagar försenat:"
 
 #. module: mail
 #. odoo-javascript
@@ -275,7 +279,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid ", enter to"
-msgstr ""
+msgstr "gå in på"
 
 #. module: mail
 #. odoo-javascript
@@ -694,7 +698,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "<div class=\"o_mail_notification\">invited %s to the channel</div>"
-msgstr ""
+msgstr "<div class=\"o_mail_notification\">bjöd in %s till kanalen</div>"
 
 #. module: mail
 #. odoo-python
@@ -862,6 +866,8 @@ msgstr "<strong>Ursprunglig anteckning:</strong>"
 msgid ""
 "<strong>Save</strong> this page and come back here to set up the feature."
 msgstr ""
+"<strong>Spara</strong> sidan och kom tillbaka hit för att konfigurera "
+"funktionen."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_defaults
@@ -1059,7 +1065,7 @@ msgstr "Åtgärder att utföra på inkommande e-post"
 #: code:addons/mail/static/src/components/call_action_list/call_action_list.xml:0
 #, python-format
 msgid "Activate Full Screen"
-msgstr ""
+msgstr "Aktivera helskärm"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
@@ -1440,8 +1446,8 @@ msgid "Animals & Nature"
 msgstr ""
 
 #. module: mail
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/mail/models/mail_channel.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models/message.js:0
@@ -1787,7 +1793,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Background blur intensity"
-msgstr ""
+msgstr "Bakgrundsoskärpa intensitet"
 
 #. module: mail
 #. odoo-javascript
@@ -1859,7 +1865,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Blur video background"
-msgstr ""
+msgstr "Bakgrundsoskärpa för video"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__body_html
@@ -1897,7 +1903,7 @@ msgstr "Studsade"
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Browser default"
-msgstr ""
+msgstr "Standard för webbläsaren"
 
 #. module: mail
 #. odoo-javascript
@@ -1965,7 +1971,7 @@ msgstr "Samtal"
 #: code:addons/mail/static/src/components/call_demo_view/call_demo_view.xml:0
 #, python-format
 msgid "Camera is off"
-msgstr ""
+msgstr "Kameran är avstängd"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__can_cancel
@@ -2161,7 +2167,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__channel_member_id
 msgid "Channel Member"
-msgstr ""
+msgstr "Kanal Medlem"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_type
@@ -2390,8 +2396,8 @@ msgstr "Bolag"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/js/activity.js:0
-#: code:addons/mail/static/src/models/mail_template.js:0
 #: code:addons/mail/static/src/models/composer_view.js:0
+#: code:addons/mail/static/src/models/mail_template.js:0
 #: model:ir.actions.act_window,name:mail.action_email_compose_message_wizard
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
@@ -2494,7 +2500,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_force_new
 msgid "Considers answers as new thread"
-msgstr ""
+msgstr "Anser att svaren är nya trådar"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -2798,7 +2804,7 @@ msgstr "Dagar"
 #: code:addons/mail/static/src/components/call_action_list/call_action_list.xml:0
 #, python-format
 msgid "Deactivate Full Screen"
-msgstr ""
+msgstr "Inaktivera helskärm"
 
 #. module: mail
 #. odoo-javascript
@@ -2828,7 +2834,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/call_action_list_view.js:0
 #, python-format
 msgid "Deafen"
-msgstr ""
+msgstr "Slå av ljud"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
@@ -2981,6 +2987,8 @@ msgid ""
 "Determines how the channel will be displayed by default when opening it from"
 " its invitation link. No value means display text (no voice/video)."
 msgstr ""
+"Bestämmer hur kanalen ska visas som standard när den öppnas från dess "
+"inbjudningslänk. Inget värde betyder visa text (ingen röst/video)."
 
 #. module: mail
 #. odoo-javascript
@@ -3015,18 +3023,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_rtc_session_view_tree
 #, python-format
 msgid "Disconnect"
-msgstr ""
+msgstr "Koppla ifrån"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "Disconnected from the RTC call by the server"
-msgstr ""
+msgstr "Bortkopplad från RTC samtal av servern"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -3279,7 +3288,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Edge blur intensity"
-msgstr ""
+msgstr "Kantoskärpa intensitet"
 
 #. module: mail
 #. odoo-javascript
@@ -3518,7 +3527,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Enable Push-to-talk"
-msgstr ""
+msgstr "Aktivera Push-to-talk"
 
 #. module: mail
 #. odoo-javascript
@@ -3665,7 +3674,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Failure Reason"
-msgstr ""
+msgstr "Felorsak"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_notification__failure_reason
@@ -3809,7 +3818,7 @@ msgstr "Hitta eller skapa en kanal..."
 #: code:addons/mail/static/src/models/discuss_sidebar_category.js:0
 #, python-format
 msgid "Find or start a conversation..."
-msgstr ""
+msgstr "Sök eller starta en konversation"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel_member__fold_state__folded
@@ -3971,7 +3980,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__default_display_mode__video_full_screen
 msgid "Full screen video"
-msgstr ""
+msgstr "Helskärmsvideo"
 
 #. module: mail
 #. odoo-javascript
@@ -4021,13 +4030,6 @@ msgid "Gmail Credentials"
 msgstr ""
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid "Go to the configuration panel"
-msgstr "Gå till konfigurationspanelen"
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__group
 msgid "Group"
 msgstr "Objektkontogrupp"
@@ -4061,7 +4063,7 @@ msgstr "Gruppera efter ..."
 #: code:addons/mail/static/src/components/thread_icon/thread_icon.xml:0
 #, python-format
 msgid "Grouped Chat"
-msgstr ""
+msgstr "Gruppsamtal"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_tree
@@ -4080,21 +4082,21 @@ msgstr "Grupper"
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__guest_id
 #, python-format
 msgid "Guest"
-msgstr ""
+msgstr "Gäst"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_guest.py:0
 #, python-format
 msgid "Guest's name cannot be empty."
-msgstr ""
+msgstr "Gästens namn kan ej vara tomt."
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/models/mail_guest.py:0
 #, python-format
 msgid "Guest's name is too long."
-msgstr ""
+msgstr "Gästens namn är för långt"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_guest_action
@@ -4205,7 +4207,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Hide Call Settings"
-msgstr ""
+msgstr "Dölj Samtalsinställningar"
 
 #. module: mail
 #. odoo-javascript
@@ -4613,7 +4615,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Input device"
-msgstr ""
+msgstr "Ingång"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_channel_integrations_menu
@@ -4695,7 +4697,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/channel_invitation_form/channel_invitation_form.xml:0
 #, python-format
 msgid "Invitation Link"
-msgstr ""
+msgstr "Inbjudningslänk"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__invitation_url
@@ -4721,21 +4723,21 @@ msgstr "Bjud in följare"
 #: code:addons/mail/static/src/components/channel_invitation_form/channel_invitation_form.xml:0
 #, python-format
 msgid "Invite people"
-msgstr ""
+msgstr "Bjud in personer"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/channel_invitation_form.js:0
 #, python-format
 msgid "Invite to Channel"
-msgstr ""
+msgstr "Bjud in till kanal"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/channel_invitation_form.js:0
 #, python-format
 msgid "Invite to group chat"
-msgstr ""
+msgstr "Bjud in till gruppsamtal"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_wizard_invite
@@ -4798,7 +4800,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_muted
 msgid "Is microphone muted"
-msgstr ""
+msgstr "Är mikrofonen avstängd"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_member__is_pinned
@@ -4813,7 +4815,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_rtc_session__is_screen_sharing_on
 msgid "Is sharing the screen"
-msgstr ""
+msgstr "Delar skärmen"
 
 #. module: mail
 #. odoo-javascript
@@ -5071,7 +5073,7 @@ msgstr "Gå med"
 #: code:addons/mail/static/src/models/call_action_list_view.js:0
 #, python-format
 msgid "Join Call"
-msgstr ""
+msgstr "Gå med i samtalet"
 
 #. module: mail
 #. odoo-javascript
@@ -5086,7 +5088,7 @@ msgstr "Gå med i Kanalen"
 #: code:addons/mail/static/src/components/call_action_list/call_action_list.xml:0
 #, python-format
 msgid "Join Video Call"
-msgstr ""
+msgstr "Delta i videosamtal"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_action_view
@@ -5727,6 +5729,13 @@ msgid "Mark as done"
 msgstr "Klarmarkera"
 
 #. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "Media devices unobtainable"
+msgstr ""
+
+#. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
 msgid "Meeting"
 msgstr "Möte"
@@ -5785,7 +5794,7 @@ msgstr "Meddelande"
 #: code:addons/mail/static/src/models/composer.js:0
 #, python-format
 msgid "Message #%s..."
-msgstr ""
+msgstr "Meddelande #%s..."
 
 #. module: mail
 #. odoo-javascript
@@ -6124,7 +6133,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/call_action_list_view.js:0
 #, python-format
 msgid "Mute"
-msgstr ""
+msgstr "Stäng av mikrofon"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__my_activity_date_deadline
@@ -6669,7 +6678,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/channel_member_list_category_view.js:0
 #, python-format
 msgid "Offline"
-msgstr "Offline"
+msgstr "Frånvarande"
 
 #. module: mail
 #. odoo-javascript
@@ -6828,7 +6837,7 @@ msgstr "Starta konversation"
 #: code:addons/mail/static/src/models/call_systray_menu.js:0
 #, python-format
 msgid "Open conference: %s"
-msgstr ""
+msgstr "Öppet möte: %s"
 
 #. module: mail
 #. odoo-javascript
@@ -6849,7 +6858,7 @@ msgstr ""
 #: code:addons/mail/models/mail_template.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "Åtgärd stöds inte"
 
 #. module: mail
 #. odoo-javascript
@@ -7489,7 +7498,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/message/message.js:0
 #, python-format
 msgid "Read More"
-msgstr ""
+msgstr "Läs mer"
 
 #. module: mail
 #. odoo-javascript
@@ -7725,7 +7734,7 @@ msgstr "Renderingsmodell"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__reply_to_mode
 msgid "Replies"
-msgstr ""
+msgstr "Svar"
 
 #. module: mail
 #. odoo-javascript
@@ -7851,7 +7860,7 @@ msgid "Review All Templates"
 msgstr ""
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
+#: model:ir.model.fields,field_description:mail.field_mail_mail__body_content
 msgid "Rich-text Contents"
 msgstr "Utsmyckat innehåll"
 
@@ -7915,6 +7924,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mail.view_email_server_search
 msgid "SSL"
 msgstr "SSL"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "SSL might not be set up properly"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
@@ -8175,7 +8191,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/channel_invitation_form/channel_invitation_form.xml:0
 #, python-format
 msgid "Selected users:"
-msgstr ""
+msgstr "Valda användare:"
 
 #. module: mail
 #. odoo-javascript
@@ -8364,7 +8380,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/call_action_list_view.js:0
 #, python-format
 msgid "Share screen"
-msgstr ""
+msgstr "Dela skärm"
 
 #. module: mail
 #. odoo-javascript
@@ -8411,7 +8427,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Show Call Settings"
-msgstr ""
+msgstr "Visa Samtalsinställningar"
 
 #. module: mail
 #. odoo-javascript
@@ -8427,7 +8443,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Show Member List"
-msgstr ""
+msgstr "Visa Deltagarlista"
 
 #. module: mail
 #. odoo-javascript
@@ -8471,7 +8487,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Show video participants only"
-msgstr ""
+msgstr "Visa endast videodeltagare"
 
 #. module: mail
 #. odoo-javascript
@@ -8540,7 +8556,7 @@ msgstr "Stärnmärkt"
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Start a Call"
-msgstr ""
+msgstr "Starta ett samtal"
 
 #. module: mail
 #. odoo-javascript
@@ -8548,7 +8564,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
 #, python-format
 msgid "Start a Video Call"
-msgstr ""
+msgstr "Starta ett videosamtal"
 
 #. module: mail
 #. odoo-javascript
@@ -8556,7 +8572,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/discuss_sidebar_category.js:0
 #, python-format
 msgid "Start a conversation"
-msgstr ""
+msgstr "Starta en konversation"
 
 #. module: mail
 #. odoo-javascript
@@ -8624,7 +8640,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/call_action_list_view.js:0
 #, python-format
 msgid "Stop camera"
-msgstr ""
+msgstr "Stäng av kamera"
 
 #. module: mail
 #. odoo-javascript
@@ -8638,7 +8654,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/call_action_list_view.js:0
 #, python-format
 msgid "Stop screen sharing"
-msgstr ""
+msgstr "Stoppa skärmdelning"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
@@ -8934,6 +8950,11 @@ msgid "Test & Confirm"
 msgstr "Testa och bekräfta"
 
 #. module: mail
+#: model:ir.model.fields,field_description:mail.field_mail_mail__body_html
+msgid "Text Contents"
+msgstr ""
+
+#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/attachment_viewer/attachment_viewer.xml:0
 #, python-format
@@ -8957,7 +8978,7 @@ msgstr "Förfallodatum kan inte vara negativt"
 #: code:addons/mail/static/src/models/call_view.js:0
 #, python-format
 msgid "The FullScreen mode was denied by the browser"
-msgstr ""
+msgstr "Helskärmsläget nekades av webbläsaren"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_partner__vat
@@ -8967,13 +8988,16 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"Skatteidentifikationsnummer. Värden här kommer att valideras baserat på "
+"landsformatet. Du kan använda '/' för att ange att partnern inte är "
+"skattepliktig."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/blur_manager.js:0
 #, python-format
 msgid "The blur manager was removed before the beginning of the blur process"
-msgstr ""
+msgstr "Oskärphanteraren togs bort innan oskärpeprocessen började"
 
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_uuid_unique
@@ -9107,14 +9131,14 @@ msgstr ""
 #: code:addons/mail/models/fetchmail.py:0
 #, python-format
 msgid "The server \"%s\" cannot be used because it is archived."
-msgstr ""
+msgstr "Servern \"%s\" kan inte användas eftersom den är arkiverad."
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/blur_manager.js:0
 #, python-format
 msgid "The source stream was removed before the beginning of the blur process"
-msgstr ""
+msgstr "Strömningen togs bort innan oskärpeprocessen"
 
 #. module: mail
 #. odoo-javascript
@@ -9338,7 +9362,7 @@ msgstr "Dagens aktiviteter"
 #: code:addons/mail/static/src/models/activity_view.js:0
 #, python-format
 msgid "Today:"
-msgstr ""
+msgstr "Idag:"
 
 #. module: mail
 #. odoo-javascript
@@ -9456,7 +9480,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/call_action_list_view.js:0
 #, python-format
 msgid "Turn camera on"
-msgstr ""
+msgstr "Slå på kameran"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__twilio_account_token
@@ -9497,6 +9521,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"Typ av serveråtgärd. Följande värden är tillgängliga:\n"
+"- \"Execute Python Code\": ett block med Python-kod som kommer att exekveras\n"
+"- 'Skapa en ny post': skapa en ny post med nya värden\n"
+"- 'Uppdatera en post': uppdatera värdena för en post\n"
+"- \"Utför flera åtgärder\": definiera en åtgärd som utlöser flera andra serveråtgärder\n"
+"- 'Skicka e-post': posta ett meddelande, en anteckning eller skicka ett e-postmeddelande (Discuss)\n"
+"- \"Lägg till följare\": lägg till följare till en post (Diskutera)\n"
+"- 'Skapa nästa aktivitet': skapa en aktivitet (Diskutera)\n"
+"- \"Skicka SMS\": skicka SMS, logga dem på dokument (SMS)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -9602,7 +9635,7 @@ msgstr ""
 #: code:addons/mail/static/src/models/call_action_list_view.js:0
 #, python-format
 msgid "Undeafen"
-msgstr ""
+msgstr "Slå på ljud"
 
 #. module: mail
 #. odoo-javascript
@@ -9630,14 +9663,14 @@ msgstr ""
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__unknown
 #, python-format
 msgid "Unknown error"
-msgstr ""
+msgstr "Okänt fel"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/call_action_list_view.js:0
 #, python-format
 msgid "Unmute"
-msgstr ""
+msgstr "Aktivera mikrofon"
 
 #. module: mail
 #. odoo-javascript
@@ -9694,7 +9727,7 @@ msgstr "Ladda upp dokument"
 #: code:addons/mail/static/src/backend_components/activity_list_view_item/activity_list_view_item.xml:0
 #, python-format
 msgid "Upload File"
-msgstr ""
+msgstr "Ladda upp fil"
 
 #. module: mail
 #. odoo-javascript
@@ -9828,7 +9861,7 @@ msgstr "Användaren är inaktiv"
 #: code:addons/mail/static/src/components/persona_im_status_icon/persona_im_status_icon.xml:0
 #, python-format
 msgid "User is offline"
-msgstr "Användaren är offline"
+msgstr "Användaren är frånvarande"
 
 #. module: mail
 #. odoo-javascript
@@ -9907,7 +9940,7 @@ msgstr "Video"
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Video Settings"
-msgstr ""
+msgstr "Videoinställningar"
 
 #. module: mail
 #. odoo-python
@@ -9942,7 +9975,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/discuss_sidebar_category/discuss_sidebar_category.xml:0
 #, python-format
 msgid "View or join channels"
-msgstr ""
+msgstr "Visa eller anslut till kanaler"
 
 #. module: mail
 #. odoo-javascript
@@ -9970,7 +10003,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Voice Settings"
-msgstr ""
+msgstr "Röstinställningar"
 
 #. module: mail
 #. odoo-javascript
@@ -9979,7 +10012,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/call_settings_menu/call_settings_menu.xml:0
 #, python-format
 msgid "Voice detection threshold"
-msgstr ""
+msgstr "Röstdetekteringströskel"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings_volumes__volume
@@ -10128,6 +10161,9 @@ msgid ""
 "access to it unless you are invited again. Are you sure you want to "
 "continue?"
 msgstr ""
+"Du är på väg att lämna den här gruppkonversationen och kommer inte längre "
+"att ha tillgång till den om du inte blir inbjuden igen. Är du säker på att "
+"du vill fortsätta?"
 
 #. module: mail
 #. odoo-python
@@ -10212,15 +10248,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid ""
-"You cannot create a new user from here.\n"
-" To create new user please go to configuration panel."
-msgstr ""
-
-#. module: mail
-#. odoo-python
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid ""
@@ -10268,7 +10295,7 @@ msgstr "Du har blivit tilldelad "
 #: code:addons/mail/static/src/models/messaging_notification_handler.js:0
 #, python-format
 msgid "You have been invited to #%s"
-msgstr ""
+msgstr "Du har blivit inbjuden till #%s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__attachment_ids
@@ -10298,14 +10325,14 @@ msgstr ""
 #: code:addons/mail/static/src/components/welcome_view/welcome_view.xml:0
 #, python-format
 msgid "You've been invited to a chat!"
-msgstr ""
+msgstr "Du har blivit inbjuden till en chatt!"
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/welcome_view/welcome_view.xml:0
 #, python-format
 msgid "You've been invited to a meeting!"
-msgstr ""
+msgstr "Du har blivit inbjuden till ett möte!"
 
 #. module: mail
 #. odoo-javascript
@@ -10466,7 +10493,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "add"
-msgstr ""
+msgstr "lägg till"
 
 #. module: mail
 #. odoo-javascript
@@ -13047,7 +13074,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "business"
-msgstr ""
+msgstr "företag"
 
 #. module: mail
 #. odoo-javascript
@@ -13236,7 +13263,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "camera"
-msgstr ""
+msgstr "Kamera"
 
 #. module: mail
 #. odoo-javascript
@@ -13244,7 +13271,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "camera with flash"
-msgstr ""
+msgstr "Kamera med blixt"
 
 #. module: mail
 #. odoo-javascript
@@ -16187,8 +16214,8 @@ msgid "doctor"
 msgstr ""
 
 #. module: mail
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/mail/models/mail_thread.py:0
 #: code:addons/mail/static/src/components/message/message.xml:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
@@ -18225,7 +18252,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "first"
-msgstr ""
+msgstr "första"
 
 #. module: mail
 #. odoo-javascript
@@ -24679,7 +24706,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "movie camera"
-msgstr ""
+msgstr "Filmkamera"
 
 #. module: mail
 #. odoo-javascript
@@ -24727,7 +24754,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "multiply"
-msgstr ""
+msgstr "multiplicera"
 
 #. module: mail
 #. odoo-javascript
@@ -24825,7 +24852,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "mute"
-msgstr ""
+msgstr "stäng av mikrofon"
 
 #. module: mail
 #. odoo-javascript
@@ -24833,7 +24860,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/call_participant_card/call_participant_card.xml:0
 #, python-format
 msgid "muted"
-msgstr ""
+msgstr "mikrofonen avstängd"
 
 #. module: mail
 #. odoo-javascript
@@ -24841,7 +24868,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "muted speaker"
-msgstr ""
+msgstr "tystad talare"
 
 #. module: mail
 #. odoo-javascript
@@ -25909,7 +25936,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "package"
-msgstr ""
+msgstr "paket"
 
 #. module: mail
 #. odoo-javascript
@@ -33833,7 +33860,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "video camera"
-msgstr ""
+msgstr "Videokamera"
 
 #. module: mail
 #. odoo-javascript
@@ -34234,7 +34261,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_ir_websocket
 msgid "websocket message handling"
-msgstr ""
+msgstr "websocket meddelandehantering"
 
 #. module: mail
 #. odoo-javascript

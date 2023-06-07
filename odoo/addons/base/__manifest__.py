@@ -84,6 +84,11 @@ The kernel of Odoo, needed for all installation.
         'data/res_partner_demo.xml',
         'data/res_partner_image_demo.xml',
     ],
+    'assets': {
+        'web.assets_tests': [
+            'base/static/tests/**/*',
+        ],
+    },
     'installable': True,
     'auto_install': True,
     'post_init_hook': 'post_init',

@@ -59,18 +59,19 @@ class AccountPaymentTerm(models.Model):
                     discount_date = info_by_dates['discount_date']
                     amount = info_by_dates['amount']
                     discount_amount = info_by_dates['discounted_amount'] or 0.0
-                    example_preview += f"""
-                        <div style='margin-left: 20px;'>
-                            <b>{i+1}#</b>
-                            Installment of
-                            <b>{formatLang(self.env, amount, monetary=True, currency_obj=currency)}</b>
-                            on 
-                            <b style='color: #704A66;'>{date}</b>
-                    """
+                    example_preview += "<div style='margin-left: 20px;'>"
+                    example_preview += _(
+                        "<b>%(count)s#</b> Installment of <b>%(amount)s</b> on <b style='color: #704A66;'>%(date)s</b>",
+                        count=i+1,
+                        amount=formatLang(self.env, amount, monetary=True, currency_obj=currency),
+                        date=date,
+                    )
                     if discount_date:
-                        example_preview += f"""
-                         (<b>{formatLang(self.env, discount_amount, monetary=True, currency_obj=currency)}</b> if paid before <b>{format_date(self.env, terms[i].get('discount_date'))}</b>)
-                    """
+                        example_preview += _(
+                            " (<b>%(amount)s</b> if paid before <b>%(date)s</b>)",
+                            amount=formatLang(self.env, discount_amount, monetary=True, currency_obj=currency),
+                            date=format_date(self.env, terms[i].get('discount_date')),
+                        )
                     example_preview += "</div>"
 
             record.example_preview = example_preview
@@ -220,7 +221,7 @@ class AccountPaymentTermLine(models.Model):
 
     def _get_due_date(self, date_ref):
         self.ensure_one()
-        due_date = fields.Date.from_string(date_ref)
+        due_date = fields.Date.from_string(date_ref) or fields.Date.today()
         due_date += relativedelta(months=self.months)
         due_date += relativedelta(days=self.days)
         if self.end_month:

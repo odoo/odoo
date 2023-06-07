@@ -50,6 +50,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
 
+        if not partner.vat:
+            return []
+
         for vals in vals_list:
             vals.pop('registration_name', None)
             vals.pop('registration_address_vals', None)
@@ -233,9 +236,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
 
         return vals_list
 
-    def _get_invoice_line_allowance_vals_list(self, line):
+    def _get_invoice_line_allowance_vals_list(self, line, tax_values_list=None):
         # EXTENDS account.edi.xml.ubl_21
-        vals_list = super()._get_invoice_line_allowance_vals_list(line)
+        vals_list = super()._get_invoice_line_allowance_vals_list(line, tax_values_list=tax_values_list)
 
         for vals in vals_list:
             vals['currency_dp'] = 2
@@ -261,6 +264,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'customization_id': 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0',
             'profile_id': 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
             'currency_dp': 2,
+            'ubl_version_id': None,
         })
         vals['vals']['legal_monetary_total_vals']['currency_dp'] = 2
 
@@ -347,9 +351,10 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             ) if intracom_delivery else None,
         }
 
-        for line in invoice.line_ids:
-            if len(line.tax_ids) > 1:
+        for line in invoice.invoice_line_ids:
+            if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')) != 1:
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
+                # /!\ exception: possible to have any number of ecotaxes (fixed tax) with a regular percentage tax
                 constraints.update({'cen_en16931_tax_line': _("Each invoice line shall have one and only one tax.")})
 
         return constraints

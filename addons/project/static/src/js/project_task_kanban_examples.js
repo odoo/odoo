@@ -14,6 +14,7 @@ const clock = markup(`<a class="fa fa-clock-o"></a>`);
 const exampleData = {
     ghostColumns: [_lt('New'), _lt('Assigned'), _lt('In Progress'), _lt('Done')],
     applyExamplesText: _lt("Use This For My Project"),
+    allowedGroupBys: ['stage_id'],
     examples:[{
         name: _lt('Software Development'),
         columns: [_lt('Backlog'), _lt('Specifications'), _lt('Development'), _lt('Tests'), _lt('Delivered')],

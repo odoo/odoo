@@ -129,7 +129,9 @@ class ResConfigSettings(models.TransientModel):
 
     def action_open_extra_info(self):
         self.ensure_one()
-        return self.env["website"].get_client_action('/shop/extra_info', True)
+        # Add the "edit" parameter in the url to tell the controller
+        # that we want to edit even if we are not in a payment flow
+        return self.env["website"].get_client_action('/shop/extra_info?open_editor=true', True, self.website_id.id)
 
     def action_open_sale_mail_templates(self):
         return {

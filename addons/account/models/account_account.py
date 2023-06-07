@@ -2,6 +2,7 @@
 from odoo import api, fields, models, _, tools
 from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.float_utils import float_is_zero
 from bisect import bisect_left
 from collections import defaultdict
 import re
@@ -459,6 +460,11 @@ class AccountAccount(models.Model):
         either 'debit' or 'credit', depending on which one of these two fields
         got assigned.
         """
+        # only set the opening debit/credit if the amount is not zero,
+        # otherwise return early
+        if float_is_zero(amount, precision_digits=2):
+            return
+
         self.company_id.create_op_move_if_non_existant()
         opening_move = self.company_id.account_opening_move_id
 
@@ -695,7 +701,7 @@ class AccountAccount(models.Model):
         if 'import_file' in self.env.context:
             code, name = self._split_code_name(name)
             return self.create({'code': code, 'name': name}).name_get()[0]
-        raise UserError(_("Please create new accounts from the Chart of Accounts menu."))
+        raise ValidationError(_("Please create new accounts from the Chart of Accounts menu."))
 
     def write(self, vals):
         # Do not allow changing the company_id when account_move_line already exist

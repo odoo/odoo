@@ -5,6 +5,16 @@
             <field name="sequence">0</field>
             <field name="country_id" ref="base.pe"/>
         </record>
+        <record id="tax_group_igv_g_ng" model="account.tax.group">
+            <field name="name">IGV GyNG</field>
+            <field name="sequence">0</field>
+            <field name="country_id" ref="base.pe"/>
+        </record>
+        <record id="tax_group_igv_ng" model="account.tax.group">
+            <field name="name">IGV NG</field>
+            <field name="sequence">0</field>
+            <field name="country_id" ref="base.pe"/>
+        </record>
         <record id="tax_group_ivap" model="account.tax.group">
             <field name="name">IVAP</field>
             <field name="sequence">0</field>
@@ -49,6 +59,10 @@
             <field name="name">ICBPER</field>
             <field name="sequence">0</field>
             <field name="country_id" ref="base.pe"/>
+        </record>
+        <record id="tax_group_ret" model="account.tax.group">
+            <field name="name">RET</field>
+            <field name="sequence">100</field>
         </record>
     </data>
 </odoo>

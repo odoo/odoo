@@ -10,7 +10,7 @@ from odoo.tools import mute_logger, convert_file
 from odoo.modules.module import get_module_resource
 
 
-@tagged('post_install')
+@tagged('post_install', '-at_install')
 class TestSmsTemplateAccessRights(TransactionCase):
 
     @classmethod
@@ -110,7 +110,7 @@ class TestSmsTemplateAccessRights(TransactionCase):
         self.assertIn(self.partner.name, body, 'Template Editor should be able to write new Jinja code')
 
 
-@tagged('post_install')
+@tagged('post_install', '-at_install')
 class TestSMSTemplateReset(TransactionCase):
 
     def _load(self, module, *args):

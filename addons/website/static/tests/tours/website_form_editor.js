@@ -28,6 +28,14 @@ odoo.define('website.tour.form_editor', function (require) {
         });
     }
 
+    // Replace all `"` character by `&quot;`, all `'` character by `&apos;` and
+    // all "`" character by `&lsquo;`.
+    const getQuotesEncodedName = function (name) {
+            return name.replaceAll(/"/g, character => `&quot;`)
+                       .replaceAll(/'/g, character => `&apos;`)
+                       .replaceAll(/`/g, character => `&lsquo;`);
+    };
+
     const selectButtonByText = function (text) {
         return [{
             content: "Open the select",
@@ -47,7 +55,9 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: `we-select we-button[${data}]`,
         }];
     };
-    const addField = function (data, name, type, label, required, display = {visibility: VISIBLE, condition: ''}) {
+    const addField = function (name, type, label, required, isCustom,
+                               display = {visibility: VISIBLE, condition: ""}) {
+        const data = isCustom ? `data-custom-field="${name}"` : `data-existing-field="${name}"`;
         const ret = [{
             content: "Select form",
             extra_trigger: 'iframe .s_website_form_field',
@@ -80,7 +90,7 @@ odoo.define('website.tour.form_editor', function (require) {
             });
         }
         if (label) {
-            testText += `:has(label:contains("${label}"))`;
+            testText += `:has(label:contains(${label}))`;
             ret.push({
                 content: "Change the label text",
                 trigger: 'we-input[data-set-label-text] input',
@@ -89,7 +99,8 @@ odoo.define('website.tour.form_editor', function (require) {
         }
         if (type !== 'checkbox' && type !== 'radio' && type !== 'select') {
             let inputType = type === 'textarea' ? type : `input[type="${type}"]`;
-            testText += `:has(${inputType}[name="${name}"]${required ? '[required]' : ''})`;
+            const nameAttribute = isCustom && label ? getQuotesEncodedName(label) : name;
+            testText += `:has(${inputType}[name="${nameAttribute}"]${required ? "[required]" : ""})`;
         }
         ret.push({
             content: "Check the resulting field",
@@ -99,10 +110,10 @@ odoo.define('website.tour.form_editor', function (require) {
         return ret;
     };
     const addCustomField = function (name, type, label, required, display) {
-        return addField(`data-custom-field="${name}"`, name, type, label, required, display);
+        return addField(name, type, label, required, true, display);
     };
     const addExistingField = function (name, type, label, required, display) {
-        return addField(`data-existing-field="${name}"`, name, type, label, required, display);
+        return addField(name, type, label, required, false, display);
     };
 
     wTourUtils.registerWebsitePreviewTour("website_form_editor_tour", {
@@ -360,15 +371,10 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: 'iframe .s_website_form_field input[data-fill-with="phone"]:propValue("+1 555-555-5555")',
         },
         // Check that if we edit again and save again the default value is not deleted.
-        {
-            content: 'Enter in edit mode again',
-            trigger: '.o_edit_website_container > a',
-            run: 'click',
-        },
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
             content: 'Edit the form',
             trigger: 'iframe .s_website_form_field:eq(0) input',
-            extra_trigger: 'button[data-action="save"]',
             run: 'click',
         },
         ...addCustomField('many2one', 'select', 'Select Field', true),
@@ -382,11 +388,10 @@ odoo.define('website.tour.form_editor', function (require) {
             extra_trigger: 'iframe body:not(.editor_enable)',
             trigger: 'iframe .s_website_form_field:eq(0) input[value="John Smith"]',
         },
-        wTourUtils.clickOnEdit(),
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
             content: 'Click on the submit button',
             trigger: 'iframe .s_website_form_send',
-            extra_trigger: '.o_website_preview.editor_enable',
             run: 'click',
         },
         {
@@ -394,6 +399,9 @@ odoo.define('website.tour.form_editor', function (require) {
             trigger: '[data-field-name="email_to"] input',
             run: 'text test@test.test',
         },
+        ...addCustomField("char", "text", "''", false),
+        ...addCustomField("char", "text", '""', false),
+        ...addCustomField("char", "text", "``", false),
         {
             content: 'Save the page',
             trigger: 'button[data-action=save]',
@@ -453,15 +461,13 @@ odoo.define('website.tour.form_editor', function (require) {
     wTourUtils.registerWebsitePreviewTour('website_form_conditional_required_checkboxes', {
         test: true,
         url: '/',
+        edition: true,
     }, [
         // Create a form with two checkboxes: the second one required but
         // invisible when the first one is checked. Basically this should allow
         // to have: both checkboxes are visible by default but the form can
         // only be sent if one of the checkbox is checked.
         {
-            content: "Enter edit mode",
-            trigger: '.o_edit_website_container > a',
-        }, {
             content: "Add the form snippet",
             trigger: '#oe_snippets .oe_snippet:has(.s_website_form) .oe_snippet_thumbnail',
             run: 'drag_and_drop iframe #wrap',

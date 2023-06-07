@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Marianna Ciofani, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2022\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Marianna Ciofani, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -26,11 +27,13 @@ msgid ""
 "<i>Your order has been saved.</i> Please come to the store to pay for your "
 "products"
 msgstr ""
+"<i>Il tuo ordine è stato salvato.</i> Vieni in negozio per pagare i tuoi "
+"prodotti"
 
 #. module: website_sale_picking
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.payment_confirmation_status
 msgid "<span class=\"text-muted\"> (On site picking)</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\"> (Ritiro in negozio)</span>"
 
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_res_config_settings
@@ -45,7 +48,7 @@ msgstr "Modalità personalizzata"
 #. module: website_sale_picking
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
 msgid "Customize Pickup Sites"
-msgstr ""
+msgstr "Personalizza sedi ritiro"
 
 #. module: website_sale_picking
 #. openerp-web
@@ -62,7 +65,7 @@ msgstr ""
 #: code:addons/website_sale_picking/static/src/js/checkout_form.js:0
 #, python-format
 msgid "No suitable payment option could be found."
-msgstr ""
+msgstr "Non è stato possibile trovare un'opzione di pagamento adatta."
 
 #. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__payment_provider__custom_mode__onsite
@@ -73,14 +76,14 @@ msgstr "Sul campo"
 #: model:product.product,name:website_sale_picking.onsite_delivery_product
 #: model:product.template,name:website_sale_picking.onsite_delivery_product_product_template
 msgid "On site picking"
-msgstr ""
+msgstr "Ritiro in sede"
 
 #. module: website_sale_picking
 #: model:payment.provider,name:website_sale_picking.payment_provider_onsite
 #: model_terms:product.product,description:website_sale_picking.onsite_delivery_product
 #: model_terms:product.template,description:website_sale_picking.onsite_delivery_product_product_template
 msgid "Pay in store when picking the product"
-msgstr ""
+msgstr "Paga in negozio quando ritiri il prodotto"
 
 #. module: website_sale_picking
 #: model:ir.model,name:website_sale_picking.model_payment_provider
@@ -92,12 +95,12 @@ msgstr "Fornitore di pagamenti"
 #: model:ir.model.fields,field_description:website_sale_picking.field_website__picking_site_ids
 #: model_terms:ir.ui.view,arch_db:website_sale_picking.res_config_settings_view_form
 msgid "Picking sites"
-msgstr ""
+msgstr "Sedi ritiro"
 
 #. module: website_sale_picking
 #: model:ir.model.fields.selection,name:website_sale_picking.selection__delivery_carrier__delivery_type__onsite
 msgid "Pickup in store"
-msgstr ""
+msgstr "Ritira in negozio"
 
 #. module: website_sale_picking
 #: model:ir.model.fields,field_description:website_sale_picking.field_delivery_carrier__delivery_type
@@ -114,6 +117,7 @@ msgstr "Metodi di spedizione"
 #, python-format
 msgid "The picking site and warehouse must share the same company"
 msgstr ""
+"La sede di ritiro e il magazzino devono appartenere alla stessa azienda"
 
 #. module: website_sale_picking
 #: model:product.product,uom_name:website_sale_picking.onsite_delivery_product
@@ -135,7 +139,7 @@ msgstr "Sito web"
 #: code:addons/website_sale_picking/controllers/main.py:0
 #, python-format
 msgid "You cannot pay onsite if the delivery is not onsite"
-msgstr ""
+msgstr "Non puoi pagare in loco se la spedizione non è sul posto"
 
 #. module: website_sale_picking
 #: model_terms:payment.provider,auth_msg:website_sale_picking.payment_provider_onsite
@@ -155,4 +159,4 @@ msgstr "Il pagamento è stato elaborato con successo. Grazie!"
 #. module: website_sale_picking
 #: model:delivery.carrier,name:website_sale_picking.default_onsite_carrier
 msgid "[On Site Pick] My Shop 1"
-msgstr ""
+msgstr "[Ritiro in sede] Il mio negozio 1"

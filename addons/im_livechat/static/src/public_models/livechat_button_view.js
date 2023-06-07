@@ -148,7 +148,7 @@ registerModel({
             await this._sendMessage(message);
             this._sendMessageChatbotAfter();
         },
-        start() {
+        async start() {
             if (!this.messaging.publicLivechatGlobal.hasWebsiteLivechatFeature) {
                 this.widget.$el.text(this.buttonText);
             }
@@ -157,7 +157,7 @@ registerModel({
                 for (const m of this.messaging.publicLivechatGlobal.history) {
                     this.addMessage(m);
                 }
-                this.openChat();
+                await this.openChat();
             } else if (!this.messaging.device.isSmall && this.messaging.publicLivechatGlobal.rule.action === 'auto_popup') {
                 const autoPopupCookie = getCookie('im_livechat_auto_popup');
                 if (!autoPopupCookie || JSON.parse(autoPopupCookie)) {
@@ -184,7 +184,7 @@ registerModel({
         /**
          * @private
          */
-        _openChat() {
+        async _openChat() {
             if (this.isOpeningChat) {
                 return;
             }

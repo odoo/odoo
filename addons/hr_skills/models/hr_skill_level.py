@@ -24,6 +24,7 @@ class SkillLevel(models.Model):
             return super().name_get()
         return [(record.id, f"{record.name} ({record.level_progress}%)") for record in self]
 
+    @api.model_create_multi
     def create(self, vals_list):
         levels = super().create(vals_list)
         levels.skill_type_id._set_default_level()

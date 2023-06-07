@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api,fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare
 
@@ -43,6 +43,7 @@ class StockPicking(models.Model):
             )
 
             positive_picking._create_move_from_pos_order_lines(positive_lines)
+            self.env.flush_all()
             try:
                 with self.env.cr.savepoint():
                     positive_picking._action_done()
@@ -62,6 +63,7 @@ class StockPicking(models.Model):
                 self._prepare_picking_vals(partner, return_picking_type, location_dest_id, return_location_id)
             )
             negative_picking._create_move_from_pos_order_lines(negative_lines)
+            self.env.flush_all()
             try:
                 with self.env.cr.savepoint():
                     negative_picking._action_done()
@@ -152,6 +154,13 @@ class StockPickingType(models.Model):
         for picking_type in self:
             if picking_type == picking_type.warehouse_id.pos_type_id:
                 picking_type.hide_reservation_method = True
+
+    @api.constrains('active')
+    def _check_active(self):
+        for picking_type in self:
+            pos_config = self.env['pos.config'].search([('picking_type_id', '=', picking_type.id)], limit=1)
+            if pos_config:
+                raise ValidationError(_("You cannot archive '%s' as it is used by a POS configuration '%s'.", picking_type.name, pos_config.name))
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
@@ -261,7 +270,8 @@ class StockMove(models.Model):
                                 )
                             ml_vals.update({
                                 'lot_id': existing_lot.id,
-                                'location_id': quant.location_id.id or move.location_id.id
+                                'location_id': quant.location_id.id or move.location_id.id,
+                                'owner_id': quant.owner_id.id or False,
                             })
                         else:
                             ml_vals.update({'lot_name': lot.lot_name})

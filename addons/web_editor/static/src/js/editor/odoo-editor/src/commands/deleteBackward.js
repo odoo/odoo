@@ -25,6 +25,7 @@ import {
     isVisibleEmpty,
     isNotEditableNode,
     createDOMPathGenerator,
+    closestElement,
 } from '../utils/utils.js';
 
 Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
@@ -91,8 +92,8 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
             throw UNBREAKABLE_ROLLBACK_CODE;
         }
         const parentEl = this.parentNode;
-
-        if (!isBlock(this) || isVisibleEmpty(this)) {
+        const closestLi = closestElement(this, 'li');
+        if ((closestLi && !closestLi.previousElementSibling) || !isBlock(this) || isVisibleEmpty(this)) {
             /**
              * Backspace at the beginning of an inline node, nothing has to be
              * done: propagate the backspace. If the node was empty, we remove
@@ -141,7 +142,8 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
          */
         if (
             !this.previousElementSibling &&
-            ['BLOCKQUOTE', 'H1', 'H2', 'H3', 'PRE'].includes(this.nodeName)
+            ['BLOCKQUOTE', 'H1', 'H2', 'H3', 'PRE'].includes(this.nodeName) &&
+            !closestLi
         ) {
             const p = document.createElement('p');
             p.replaceChildren(...this.childNodes);
@@ -231,6 +233,12 @@ HTMLBRElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false
     if (rightState & CTYPES.BLOCK_INSIDE) {
         this.parentElement.oDeleteBackward(parentOffset, alreadyMoved);
     } else {
+        HTMLElement.prototype.oDeleteBackward.call(this, offset, alreadyMoved);
+    }
+};
+
+HTMLTableCellElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
+    if (offset) {
         HTMLElement.prototype.oDeleteBackward.call(this, offset, alreadyMoved);
     }
 };

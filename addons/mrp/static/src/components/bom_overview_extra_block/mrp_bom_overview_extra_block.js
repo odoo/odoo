@@ -62,6 +62,7 @@ BomOverviewExtraBlock.props = {
     },
     showOptions: Object,
     data: Object,
+    precision: Number,
     changeFolded: Function,
 };
 BomOverviewExtraBlock.defaultProps = {

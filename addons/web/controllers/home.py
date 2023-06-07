@@ -29,7 +29,7 @@ class Home(http.Controller):
 
     @http.route('/', type='http', auth="none")
     def index(self, s_action=None, db=None, **kw):
-        if request.session.uid and not is_user_internal(request.session.uid):
+        if request.db and request.session.uid and not is_user_internal(request.session.uid):
             return request.redirect_query('/web/login_successful', query=request.params)
         return request.redirect_query('/web', query=request.params)
 

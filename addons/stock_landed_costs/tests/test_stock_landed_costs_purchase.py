@@ -70,6 +70,8 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         #         3.transportation    250       By Weight
         #         4.packaging         20        By Volume
 
+        self.landed_cost.categ_id.property_valuation = 'real_time'
+
         # Process incoming shipment
         income_ship = self._process_incoming_shipment()
         # Create landed costs
@@ -195,6 +197,8 @@ class TestLandedCosts(TestStockLandedCostsCommon):
         #         2.brokerage         -50       By Quantity
         #         3.transportation    -50       By Weight
         #         4.packaging         -5        By Volume
+
+        self.landed_cost.categ_id.property_valuation = 'real_time'
 
         # Process incoming shipment
         income_ship = self._process_incoming_shipment()

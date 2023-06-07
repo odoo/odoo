@@ -9,9 +9,13 @@ export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
     get tags() {
         return super.tags.map((tag) => ({
             ...tag,
-            img: `/web/image/${this.props.relation}/${tag.resId}/avatar_128`,
+            img: `/web/image/${this.relation}/${tag.resId}/avatar_128`,
             onDelete: !this.props.readonly ? () => this.deleteTag(tag.id) : undefined,
         }));
+    }
+
+    get relation() {
+        return this.props.relation;
     }
 }
 

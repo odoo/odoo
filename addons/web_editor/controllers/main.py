@@ -11,6 +11,7 @@ import werkzeug.urls
 from PIL import Image, ImageFont, ImageDraw
 from lxml import etree
 from base64 import b64decode, b64encode
+from math import floor
 
 from odoo.http import request, Response
 from odoo import http, tools, _, SUPERUSER_ID
@@ -110,6 +111,13 @@ class Web_Editor(http.Controller):
             bg = bg.replace('rgba', 'rgb')
             bg = ','.join(bg.split(',')[:-1])+')'
 
+        # Convert the opacity value compatible with PIL Image color (0 to 255)
+        # when color specifier is 'rgba'
+        if color is not None and color.startswith('rgba'):
+            *rgb, a = color.strip(')').split(',')
+            opacity = str(floor(float(a) * 255))
+            color = ','.join([*rgb, opacity]) + ')'
+
         # Determine the dimensions of the icon
         image = Image.new("RGBA", (width, height), color)
         draw = ImageDraw.Draw(image)
@@ -155,7 +163,7 @@ class Web_Editor(http.Controller):
     @http.route('/web_editor/checklist', type='json', auth='user')
     def update_checklist(self, res_model, res_id, filename, checklistId, checked, **kwargs):
         record = request.env[res_model].browse(res_id)
-        value = getattr(record, filename, False)
+        value = filename in record._fields and record[filename]
         htmlelem = etree.fromstring("<div>%s</div>" % value, etree.HTMLParser())
         checked = bool(checked)
 
@@ -641,11 +649,11 @@ class Web_Editor(http.Controller):
         svg, options = self._update_svg_colors(kwargs, svg)
         flip_value = options.get('flip', False)
         if flip_value == 'x':
-            svg = svg.replace('<svg ', '<svg style="transform: scaleX(-1);" ')
+            svg = svg.replace('<svg ', '<svg style="transform: scaleX(-1);" ', 1)
         elif flip_value == 'y':
-            svg = svg.replace('<svg ', '<svg style="transform: scaleY(-1)" ')
+            svg = svg.replace('<svg ', '<svg style="transform: scaleY(-1)" ', 1)
         elif flip_value == 'xy':
-            svg = svg.replace('<svg ', '<svg style="transform: scale(-1)" ')
+            svg = svg.replace('<svg ', '<svg style="transform: scale(-1)" ', 1)
 
         return request.make_response(svg, [
             ('Content-type', 'image/svg+xml'),

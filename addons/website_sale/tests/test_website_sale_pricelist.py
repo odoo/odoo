@@ -602,3 +602,25 @@ class TestWebsitePriceListMultiCompany(TransactionCaseWithUserDemo):
         # The test is here: while having access only to self.company2 records,
         # archive should not raise an error
         self.c2_pl.with_user(self.demo_user).with_context(allowed_company_ids=self.company2.ids).write({'active': False})
+
+@tagged('post_install', '-at_install')
+class TestWebsiteSaleSession(HttpCaseWithUserPortal):
+
+    def test_update_pricelist_user_session(self):
+        """
+            The objective is to verify that the pricelist
+            changes correctly according to the user.
+        """
+        website = self.env.ref('website.default_website')
+        test_user = self.env['res.users'].create({
+            'name': 'Toto',
+            'login': 'toto',
+            'password': 'long_enough_password',
+        })
+        user_pricelist = self.env['product.pricelist'].create({
+            'name': 'User Pricelist',
+            'website_id': website.id,
+            'code': 'User_pricelist',
+        })
+        test_user.partner_id.property_product_pricelist = user_pricelist
+        self.start_tour("/shop", 'website_sale_shop_pricelist_tour', login="")

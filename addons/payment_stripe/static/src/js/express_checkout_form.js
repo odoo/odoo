@@ -105,6 +105,7 @@ paymentExpressCheckoutForm.include({
             if (this.txContext.shippingInfoRequired) {
                 addresses.shipping_address = {
                     name: ev.shippingAddress.recipient,
+                    email: ev.payerEmail,
                     phone: ev.shippingAddress.phone,
                     street: ev.shippingAddress.addressLine[0],
                     street2: ev.shippingAddress.addressLine[1],

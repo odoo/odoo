@@ -43,13 +43,14 @@ class ShortcutsFooterComponent extends Component {
 ShortcutsFooterComponent.template = "web.UserMenu.ShortcutsFooterComponent";
 
 function shortCutsItem(env) {
+    const shortcut = env._t("Shortcuts");
     return {
         type: "item",
         id: "shortcuts",
         hide: env.isSmall,
         description: markup(
             `<div class="d-flex align-items-center justify-content-between">
-                <span>${escape(env._t("Shortcuts"))}</span>
+                <span>${escape(shortcut)}</span>
                 <span class="fw-bold">${isMacOS() ? "CMD" : "CTRL"}+K</span>
             </div>`
         ),

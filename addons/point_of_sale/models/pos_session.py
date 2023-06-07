@@ -283,8 +283,8 @@ class PosSession(models.Model):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         self.ensure_one()
         sudo = self.user_has_groups('point_of_sale.group_pos_user')
-        if self.order_ids or self.statement_line_ids:
-            self.cash_real_transaction = sum(self.statement_line_ids.mapped('amount'))
+        if self.order_ids or self.sudo().statement_line_ids:
+            self.cash_real_transaction = sum(self.sudo().statement_line_ids.mapped('amount'))
             if self.state == 'closed':
                 raise UserError(_('This session is already closed.'))
             self._check_if_no_draft_orders()
@@ -515,6 +515,8 @@ class PosSession(models.Model):
                 return {'successful': False, 'message': message, 'redirect': False}
 
     def get_closing_control_data(self):
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            raise AccessError(_("You don't have the access rights to get the point of sale closing control data."))
         self.ensure_one()
         orders = self.order_ids.filtered(lambda o: o.state == 'paid' or o.state == 'invoiced')
         payments = orders.payment_ids.filtered(lambda p: p.payment_method_id.type != "pay_later")
@@ -527,7 +529,7 @@ class PosSession(models.Model):
         cash_out_count = 0
         cash_in_out_list = []
         last_session = self.search([('config_id', '=', self.config_id.id), ('id', '!=', self.id)], limit=1)
-        for cash_move in self.statement_line_ids.sorted('create_date'):
+        for cash_move in self.sudo().statement_line_ids.sorted('create_date'):
             if cash_move.amount > 0:
                 cash_in_count += 1
                 name = f'Cash in {cash_in_count}'
@@ -551,7 +553,7 @@ class PosSession(models.Model):
                 'name': default_cash_payment_method_id.name,
                 'amount': last_session.cash_register_balance_end_real
                           + total_default_cash_payment_amount
-                          + sum(self.statement_line_ids.mapped('amount')),
+                          + sum(self.sudo().statement_line_ids.mapped('amount')),
                 'opening': last_session.cash_register_balance_end_real,
                 'payment_amount': total_default_cash_payment_amount,
                 'moves': cash_in_out_list,
@@ -1137,7 +1139,7 @@ class PosSession(models.Model):
         """
         def get_income_account(order_line):
             product = order_line.product_id
-            income_account = product.with_company(order_line.company_id)._get_product_accounts()['income']
+            income_account = product.with_company(order_line.company_id)._get_product_accounts()['income'] or self.config_id.journal_id.default_account_id
             if not income_account:
                 raise UserError(_('Please define income account for this product: "%s" (id:%d).')
                                 % (product.name, product.id))
@@ -1404,7 +1406,7 @@ class PosSession(models.Model):
             'name': _('Cash register'),
             'type': 'ir.actions.act_window',
             'res_model': 'account.bank.statement.line',
-            'view_mode': 'tree',
+            'view_mode': 'tree,kanban',
             'domain': [('id', 'in', self.statement_line_ids.ids)],
         }
 
@@ -1751,10 +1753,13 @@ class PosSession(models.Model):
     def _get_pos_ui_pos_bill(self, params):
         return self.env['pos.bill'].search_read(**params['search_params'])
 
+    def _get_partners_domain(self):
+        return []
+
     def _loader_params_res_partner(self):
         return {
             'search_params': {
-                'domain': [],
+                'domain': self._get_partners_domain(),
                 'fields': [
                     'name', 'street', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'mobile', 'email',
                     'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name'
@@ -1886,7 +1891,7 @@ class PosSession(models.Model):
                 'fields': [
                     'display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_id', 'taxes_id', 'barcode',
                     'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'product_tmpl_id', 'tracking',
-                    'available_in_pos', 'attribute_line_ids', 'active', '__last_update'
+                    'available_in_pos', 'attribute_line_ids', 'active', '__last_update', 'image_128'
                 ],
                 'order': 'sequence,default_code,name',
             },
@@ -1906,6 +1911,7 @@ class PosSession(models.Model):
         product_category_by_id = {category['id']: category for category in categories}
         for product in products:
             product['categ'] = product_category_by_id[product['categ_id'][0]]
+            product['image_128'] = bool(product['image_128'])
 
     def _get_pos_ui_product_product(self, params):
         self = self.with_context(**params['context'])

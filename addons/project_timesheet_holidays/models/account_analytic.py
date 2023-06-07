@@ -27,7 +27,10 @@ class AccountAnalyticLine(models.Model):
                 raise UserError(_('You cannot create timesheets for a task that is linked to a time off type. Please use the Time Off application to request new time off instead.'))
         return super().create(vals_list)
 
+    def _check_can_update_timesheet(self):
+        return self.env.su or not self.filtered('holiday_id')
+
     def write(self, vals):
-        if not self.env.su and self.filtered('holiday_id'):
+        if not self._check_can_update_timesheet():
             raise UserError(_('You cannot modify timesheets that are linked to time off requests. Please use the Time Off application to modify your time off requests instead.'))
         return super().write(vals)

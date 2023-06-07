@@ -439,11 +439,30 @@ function _download(data, filename, mimetype) {
 }
 
 // -----------------------------------------------------------------------------
-// Exported download function
+// Exported download functions
 // -----------------------------------------------------------------------------
 
 /**
- * Download a file
+ * Download data as a file
+ *
+ * @param {Object} data
+ * @param {String} filename
+ * @param {String} mimetype
+ * @returns {Boolean}
+ * 
+ * Note: the actual implementation is certainly unconventional, but sadly
+ * necessary to be able to test code using the download function
+ */
+export function downloadFile(data, filename, mimetype) {
+    return downloadFile._download(data, filename, mimetype)
+}
+downloadFile._download = _download;
+
+/**
+ * Download a file from form or server url
+ * 
+ * This function is meant to call a controller with some data
+ * and download the response.
  *
  * Note: the actual implementation is certainly unconventional, but sadly
  * necessary to be able to test code using the download function
@@ -478,15 +497,15 @@ download._download = (options) => {
         xhr.responseType = "blob";
         xhr.onload = () => {
             const mimetype = xhr.response.type;
+            const header = (xhr.getResponseHeader("Content-Disposition") || "").replace(
+                /;$/,
+                ""
+            );
+            // replace because apparently we send some C-D headers with a trailing ";"
+            const filename = header ? parse(header).parameters.filename : null;
             // In Odoo, the default mimetype, including for JSON errors is text/html (ref: http.py:Root.get_response )
-            // in that case, we have to assume the file is not valid, hence that there was an error
-            if (xhr.status === 200 && mimetype !== "text/html") {
-                // replace because apparently we send some C-D headers with a trailing ";"
-                const header = (xhr.getResponseHeader("Content-Disposition") || "").replace(
-                    /;$/,
-                    ""
-                );
-                const filename = header ? parse(header).parameters.filename : null;
+            // in that case, in order to also be able to download html files, we check if we get a proper filename to be able to download
+            if (xhr.status === 200 && (mimetype !== "text/html" || filename)) {
                 _download(xhr.response, filename, mimetype);
                 return resolve(filename);
             } else if (xhr.status === 502) {

@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, models, fields, _, _lt
+from odoo import Command, api, models, fields, _, _lt
 from odoo.exceptions import UserError
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
 from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
@@ -310,8 +310,16 @@ class AccountEdiFormat(models.Model):
             res = {}
             _logger.error('Error while receiving file from SdiCoop: %s', e)
 
+        retrigger = False
         proxy_acks = []
         for id_transaction, fattura in res.items():
+
+            # The server has a maximum number of documents it can send at a time
+            # If that maximum is reached, then we search for more
+            # by re-triggering the download cron, avoiding the timeout.
+            current_num, max_num = fattura.get('current_num', 0), fattura.get('max_num', 0)
+            retrigger = retrigger or current_num == max_num > 0
+
             if self._save_incoming_attachment_fattura_pa(proxy_user, id_transaction, fattura['filename'], fattura['file'], fattura['key']):
                 proxy_acks.append(id_transaction)
 
@@ -322,6 +330,10 @@ class AccountEdiFormat(models.Model):
                     params={'transaction_ids': proxy_acks})
             except AccountEdiProxyError as e:
                 _logger.error('Error while receiving file from SdiCoop: %s', e)
+
+        if retrigger:
+            _logger.info('Retriggering "Receive invoices from the exchange system"...')
+            self.env.ref('l10n_it_edi.ir_cron_receive_fattura_pa_invoice')._trigger()
 
     def _save_incoming_attachment_fattura_pa(self, proxy_user, id_transaction, filename, content, key):
         ''' Save an incoming file from the SdI as an attachment.
@@ -710,11 +722,11 @@ class AccountEdiFormat(models.Model):
                     general_discount = discounted_amount - taxable_amount
                     sequence = len(elements) + 1
 
-                    with invoice_form.invoice_line_ids.new() as invoice_line_global_discount:
-                        invoice_line_global_discount.tax_ids.clear()
-                        invoice_line_global_discount.sequence = sequence
-                        invoice_line_global_discount.name = 'SCONTO' if general_discount < 0 else 'MAGGIORAZIONE'
-                        invoice_line_global_discount.price_unit = general_discount
+                    invoice_form.invoice_line_ids = [Command.create({
+                        'sequence': sequence,
+                        'name': 'SCONTO' if general_discount < 0 else 'MAGGIORAZIONE',
+                        'price_unit': general_discount,
+                    })]
 
             new_invoice = invoice_form
 

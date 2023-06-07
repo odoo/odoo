@@ -148,11 +148,11 @@ class TestWebsocketCaryall(WebsocketCase):
                 'event_name': 'subscribe',
                 'data': {'channels': ['channel1'], 'last': 0}
             }))
+            subscribe_done_event.wait(timeout=5)
             self.url_open('/web/session/logout')
             # Simulate postgres notify. The session with whom the websocket
             # connected has been deleted. WebSocket should be closed without
             # receiving the message.
-            subscribe_done_event.wait(timeout=5)
             self.env['bus.bus']._sendone('channel1', 'notif type', 'message')
             odoo_ws.trigger_notification_dispatching()
             self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)

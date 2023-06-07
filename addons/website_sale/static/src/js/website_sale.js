@@ -8,7 +8,8 @@ var _t = core._t;
 var timeout;
 
 publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
-    selector: '#top_menu a[href$="/shop/cart"]',
+    // TODO in master: remove the second selector.
+    selector: '#top a[href$="/shop/cart"]:not(.js_change_lang), #top_menu a[href$="/shop/cart"]:not(.js_change_lang)',
     events: {
         'mouseenter': '_onMouseEnter',
         'mouseleave': '_onMouseLeave',
@@ -140,7 +141,7 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
         if ('website_sale_cart_quantity' in sessionStorage) {
             this.cartQty = sessionStorage.getItem('website_sale_cart_quantity');
         }
-        if (this.el.querySelector('.my_cart_quantity').innerText != this.cartQty) {
+        if (this.el.querySelector('.my_cart_quantity') && this.el.querySelector('.my_cart_quantity').innerText != this.cartQty) {
             return this._rpc({route: "/shop/cart/quantity"}).then((cartQty) => {
                 this.cartQty = cartQty;
                 sessionStorage.setItem('website_sale_cart_quantity', this.cartQty);
@@ -151,7 +152,7 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
      * @private
      */
     _updateCartQuantityText() {
-        if (this.cartQty !== undefined) {
+        if (this.cartQty !== undefined && this.el.querySelector('.my_cart_quantity')) {
             this.el.querySelector('.my_cart_quantity').innerText = this.cartQty;
         }
     }
@@ -229,6 +230,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
         'change .js_main_product [data-attribute_exclusions]': 'onChangeVariant',
         'change oe_advanced_configurator_modal [data-attribute_exclusions]': 'onChangeVariant',
         'click .o_product_page_reviews_link': '_onClickReviewsLink',
+        'submit': '_onClickConfirmOrder',
     }),
 
     /**
@@ -908,6 +910,16 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     _onClickReviewsLink: function () {
         $('#o_product_page_reviews_content').collapse('show');
     },
+    /**
+     * Prevent multiclicks on confirm button when the form is submitted
+     *
+     * @private
+     */
+    _onClickConfirmOrder: function () {
+        const submitFormButton = $('form[name="o_wsale_confirm_order"]').find('button[type="submit"]');
+        submitFormButton.attr('disabled', true);
+        setTimeout(() => submitFormButton.attr('disabled', false), 5000);
+    },
 
     // -------------------------------------
     // Utils
@@ -1188,20 +1200,20 @@ publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
      */
     _onPriceRangeSelected(ev) {
         const range = ev.currentTarget;
-        const search = $.deparam(window.location.search.substring(1));
-        delete search.min_price;
-        delete search.max_price;
+        const searchParams = new URLSearchParams(window.location.search);
+        searchParams.delete("min_price");
+        searchParams.delete("max_price");
         if (parseFloat(range.min) !== range.valueLow) {
-            search['min_price'] = range.valueLow;
+            searchParams.set("min_price", range.valueLow);
         }
         if (parseFloat(range.max) !== range.valueHigh) {
-            search['max_price'] = range.valueHigh;
+            searchParams.set("max_price", range.valueHigh);
         }
         let product_list_div = this.el.querySelector('.o_wsale_products_grid_table_wrapper');
         if (product_list_div) {
             product_list_div.classList.add('opacity-50');
         }
-        window.location.search = $.param(search);
+        window.location.search = searchParams.toString();
     },
 });
 });

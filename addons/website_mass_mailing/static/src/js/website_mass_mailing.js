@@ -70,7 +70,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         const isSubscriber = data.is_subscriber;
         const subscribeBtnEl = this.$target[0].querySelector('.js_subscribe_btn');
         const thanksBtnEl = this.$target[0].querySelector('.js_subscribed_btn');
-        const valueInputEl = this.$target[0].querySelector('input.js_subscribe_value');
+        const valueInputEl = this.$target[0].querySelector('input.js_subscribe_value, input.js_subscribe_email'); // js_subscribe_email is kept by compatibility (it was the old name of js_subscribe_value)
 
         subscribeBtnEl.disabled = isSubscriber;
         valueInputEl.value = data.value || '';
@@ -96,7 +96,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
     _onSubscribeClick: async function () {
         var self = this;
         const inputName = this.$('input').attr('name');
-        const $input = this.$(".js_subscribe_value:visible");
+        const $input = this.$(".js_subscribe_value:visible, .js_subscribe_email:visible"); // js_subscribe_email is kept by compatibility (it was the old name of js_subscribe_value)
         if (inputName === 'email' && $input.length && !$input.val().match(/.+@.+/)) {
             this.$target.addClass('o_has_error').find('.form-control').addClass('is-invalid');
             return false;
@@ -125,7 +125,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             if (toastType === 'success') {
                 self.$(".js_subscribe_btn").addClass('d-none');
                 self.$(".js_subscribed_btn").removeClass('d-none');
-                self.$('input.js_subscribe_value').prop('disabled', !!result);
+                self.$('input.js_subscribe_value, input.js_subscribe_email').prop('disabled', !!result); // js_subscribe_email is kept by compatibility (it was the old name of js_subscribe_value)
                 const $popup = self.$target.closest('.o_newsletter_modal');
                 if ($popup.length) {
                     $popup.modal('hide');
@@ -140,4 +140,25 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
         });
     },
 });
+
+/**
+ * This widget tries to fix snippets that were malformed because of a missing
+ * upgrade script. Without this, some newsletter snippets coming from users
+ * upgraded from a version lower than 16.0 may not be able to update their
+ * newsletter block.
+ *
+ * TODO an upgrade script should be made to fix databases and get rid of this.
+ */
+publicWidget.registry.fixNewsletterListClass = publicWidget.Widget.extend({
+    selector: '.s_newsletter_subscribe_form:not(.s_subscription_list), .s_newsletter_block',
+
+    /**
+     * @override
+     */
+    start() {
+        this.$target[0].classList.add('s_newsletter_list');
+        return this._super(...arguments);
+    },
+});
+
 });

@@ -91,8 +91,9 @@ HTMLElement.prototype.oEnter = function (offset, firstSplit = true) {
  */
 HTMLHeadingElement.prototype.oEnter = function () {
     const newEl = HTMLElement.prototype.oEnter.call(this, ...arguments);
-    if (!newEl.textContent) {
+    if ([...newEl.textContent].every(char => char === '\u200B')) { // empty or all invisible
         const node = setTagName(newEl, 'P');
+        node.replaceChildren(document.createElement('br'));
         setCursorStart(node);
     }
 };

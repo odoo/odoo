@@ -3,18 +3,18 @@
 # 	* event_sale
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Niyas Raphy, 2023
+# Martin Trigaux, 2023
 # Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-04-14 05:52+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -249,21 +249,18 @@ msgstr "الفعالية "
 #. module: event_sale
 #: model:ir.model,name:event_sale.model_event_registration
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__event_registration_id
-#: model:product.product,name:event_sale.product_product_event
 msgid "Event Registration"
 msgstr "التسجيل للفعالية "
 
 #. module: event_sale
-#: model:product.product,name:event_sale.product_product_event_standard
 #: model:product.template,name:event_sale.product_product_event_standard_product_template
 msgid "Event Registration - Standard"
-msgstr ""
+msgstr "التسجيل للفعالية - القياسي "
 
 #. module: event_sale
-#: model:product.product,name:event_sale.product_product_event_vip
 #: model:product.template,name:event_sale.product_product_event_vip_product_template
 msgid "Event Registration - VIP"
-msgstr ""
+msgstr "التسجيل للفعالية - الشخصيات المهمة "
 
 #. module: event_sale
 #: model:ir.actions.act_window,name:event_sale.action_sale_order_event_registration
@@ -343,6 +340,7 @@ msgid "ID"
 msgstr "المُعرف"
 
 #. module: event_sale
+#. odoo-python
 #: code:addons/event_sale/wizard/event_configurator.py:0
 #, python-format
 msgid "Invalid ticket choice \"%(ticket_name)s\" for event \"%(event_name)s\"."
@@ -425,7 +423,7 @@ msgstr "التذاكر المدفوعة "
 #: model:ir.model.fields.selection,name:event_sale.selection__event_registration__payment_status__to_pay
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__payment_status__to_pay
 msgid "Not Paid"
-msgstr "غير مسدد "
+msgstr "غير مدفوع "
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_registration_editor__seats_available_insufficient
@@ -512,6 +510,7 @@ msgstr "الخصم شامل ضريبة القيمة المضافة "
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__product_id
 #: model:ir.model.fields,field_description:event_sale.field_event_type_ticket__product_id
 #: model:ir.model.fields,field_description:event_sale.field_sale_order_template_line__product_id
+#: model:ir.model.fields,field_description:event_sale.field_sale_order_template_option__product_id
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_search
 msgid "Product"
 msgstr "المنتج"
@@ -541,6 +540,11 @@ msgstr "تم إرسال عرض السعر"
 #: model:ir.model,name:event_sale.model_sale_order_template_line
 msgid "Quotation Template Line"
 msgstr "بند قالب عرض السعر"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_sale_order_template_option
+msgid "Quotation Template Option"
+msgstr "خيار قالب عرض السعر"
 
 #. module: event_sale
 #: model_terms:ir.ui.view,arch_db:event_sale.event_sale_report_view_form
@@ -678,15 +682,6 @@ msgstr "معاملة"
 #: model:ir.model.fields.selection,name:event_sale.selection__event_sale_report__event_registration_state__draft
 msgid "Unconfirmed"
 msgstr "غير مؤكد"
-
-#. module: event_sale
-#: model:product.product,uom_name:event_sale.product_product_event
-#: model:product.product,uom_name:event_sale.product_product_event_standard
-#: model:product.product,uom_name:event_sale.product_product_event_vip
-#: model:product.template,uom_name:event_sale.product_product_event_standard_product_template
-#: model:product.template,uom_name:event_sale.product_product_event_vip_product_template
-msgid "Units"
-msgstr "الوحدات"
 
 #. module: event_sale
 #: model:ir.model.fields,field_description:event_sale.field_event_sale_report__sale_price_untaxed

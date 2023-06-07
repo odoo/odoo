@@ -3,21 +3,22 @@
 # 	* account_edi_proxy_client
 # 
 # Translators:
-# Josep Anton Belchi, 2022
 # Martin Trigaux, 2022
 # Arnau Ros, 2022
 # marcescu, 2022
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2022
-# Farouk Jabiri, 2022
+# jabiri7, 2022
+# jabelchi, 2023
+# martioodo hola, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Farouk Jabiri, 2022\n"
-"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
+"Last-Translator: martioodo hola, 2023\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -33,6 +34,11 @@ msgstr "Usuari del servidor intermediari EDI"
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_res_company__account_edi_proxy_client_ids
 msgid "Account Edi Proxy Client"
 msgstr "Compte Edi Proxy Client"
+
+#. module: account_edi_proxy_client
+#: model_terms:ir.ui.view,arch_db:account_edi_proxy_client.view_form_account_edi_proxy_client_user
+msgid "Account Journal"
+msgstr "Diari comptable"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__active
@@ -68,6 +74,16 @@ msgstr "Creat el"
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__display_name
 msgid "Display Name"
 msgstr "Nom a mostrar"
+
+#. module: account_edi_proxy_client
+#: model:ir.actions.act_window,name:account_edi_proxy_client.action_tree_account_edi_proxy_client_user
+msgid "EDI Proxy User"
+msgstr "Usuari intermediari EDI"
+
+#. module: account_edi_proxy_client
+#: model:ir.ui.menu,name:account_edi_proxy_client.menu_account_proxy_client_user
+msgid "EDI Proxy Users"
+msgstr "Usuaris intermediaris EDI"
 
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_account_edi_format
@@ -115,6 +131,11 @@ msgid "Private Key"
 msgstr "Clau privada"
 
 #. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__private_key_filename
+msgid "Private Key Filename"
+msgstr "Nom del fitxer de clau privada"
+
+#. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__refresh_token
 msgid "Refresh Token"
 msgstr "Actualitza Token"
@@ -133,6 +154,7 @@ msgstr ""
 "L'ID únic que identifica aquest usuari en el format edi, típicament el vat"
 
 #. module: account_edi_proxy_client
+#. odoo-python
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
 #, python-format
 msgid ""
@@ -143,6 +165,7 @@ msgstr ""
 "intentat contactar era %s"
 
 #. module: account_edi_proxy_client
+#. odoo-python
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
 #, python-format
 msgid ""
@@ -153,6 +176,7 @@ msgstr ""
 "intentat contactar era %s. %s"
 
 #. module: account_edi_proxy_client
+#. odoo-python
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
 #, python-format
 msgid ""

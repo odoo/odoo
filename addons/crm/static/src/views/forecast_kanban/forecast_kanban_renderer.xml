@@ -8,7 +8,7 @@
                     onFoldChange="() => {}"
                     onValidate.bind="addForecastColumn"
                     exampleData="exampleData"
-                    groupByFieldString="getForecastQuickCreateTitle()"
+                    groupByField="props.list.groupByField"
                 />
             </t>
             <t t-else="">$0</t>

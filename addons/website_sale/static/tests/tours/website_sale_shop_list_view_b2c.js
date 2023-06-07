@@ -23,13 +23,9 @@ wTourUtils.registerWebsitePreviewTour('shop_list_view_b2c', {
             extra_trigger: 'iframe #product_details',
             run: () => {}, // It's a check.
         },
-        {
-            content: "go to edit mode",
-            trigger: '.o_edit_website_container > a',
-        },
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
             content: "open customize tab",
-            extra_trigger: '#oe_snippets.o_loaded',
             trigger: '.o_we_customize_snippet_btn',
         },
         {

@@ -24,8 +24,8 @@ wTourUtils.registerWebsitePreviewTour('snippet_image_gallery', {
 wTourUtils.registerWebsitePreviewTour("snippet_image_gallery_remove", {
     test: true,
     url: "/",
+    edition: true,
 }, [
-    wTourUtils.clickOnEdit(),
     wTourUtils.dragNDrop({
         id: "s_image_gallery",
         name: "Image Gallery",

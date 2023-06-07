@@ -55,7 +55,7 @@ class TestAccountJournalDashboard(AccountTestInvoicingCommon):
 
         dashboard_data = journal.get_journal_dashboard_datas()
         self.assertEqual(dashboard_data['number_draft'], 1)
-        self.assertIn('-13.30', dashboard_data['sum_draft'])
+        self.assertIn('-\N{ZERO WIDTH NO-BREAK SPACE}13.30', dashboard_data['sum_draft'])
 
         self.assertEqual(dashboard_data['number_waiting'], 1)
         self.assertIn('81.72', dashboard_data['sum_waiting'])

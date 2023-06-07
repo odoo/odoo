@@ -112,12 +112,22 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
     start: async function () {
         const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
         const nbFonts = parseInt(weUtils.getCSSVariableValue('number-of-fonts', style));
+        // User fonts served by google server.
         const googleFontsProperty = weUtils.getCSSVariableValue('google-fonts', style);
         this.googleFonts = googleFontsProperty ? googleFontsProperty.split(/\s*,\s*/g) : [];
         this.googleFonts = this.googleFonts.map(font => font.substring(1, font.length - 1)); // Unquote
+        // Local user fonts.
         const googleLocalFontsProperty = weUtils.getCSSVariableValue('google-local-fonts', style);
         this.googleLocalFonts = googleLocalFontsProperty ?
             googleLocalFontsProperty.slice(1, -1).split(/\s*,\s*/g) : [];
+        // If a same font exists both remotely and locally, we remove the remote
+        // font to prioritize the local font. The remote one will never be
+        // displayed or loaded as long as the local one exists.
+        this.googleFonts = this.googleFonts.filter(font => {
+            const localFonts = this.googleLocalFonts.map(localFont => localFont.split(":")[0]);
+            return localFonts.indexOf(`'${font}'`) === -1;
+        });
+        this.allFonts = [];
 
         await this._super(...arguments);
 
@@ -128,7 +138,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         }
         for (const font of this.googleLocalFonts) {
             const attachmentId = font.split(/\s*:\s*/)[1];
-            const fontURL = `/web/content/${attachmentId}`;
+            const fontURL = `/web/content/${encodeURIComponent(attachmentId)}`;
             fontsToLoad.push(fontURL);
         }
         // TODO ideally, remove the <link> elements created once this widget
@@ -140,12 +150,15 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         const fontEls = [];
         const methodName = this.el.dataset.methodName || 'customizeWebsiteVariable';
         const variable = this.el.dataset.variable;
+        const themeFontsNb = nbFonts - (this.googleLocalFonts.length + this.googleFonts.length);
         _.times(nbFonts, fontNb => {
             const realFontNb = fontNb + 1;
             const fontKey = weUtils.getCSSVariableValue(`font-number-${realFontNb}`, style);
+            this.allFonts.push(fontKey);
             let fontName = fontKey.slice(1, -1); // Unquote
             let fontFamily = fontName;
-            if (fontName === "SYSTEM_FONTS") {
+            const isSystemFonts = fontName === "SYSTEM_FONTS";
+            if (isSystemFonts) {
                 fontName = _t("System Fonts");
                 fontFamily = 'var(--o-system-fonts)';
             }
@@ -157,6 +170,15 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             fontEl.dataset[methodName] = fontKey;
             fontEl.dataset.font = realFontNb;
             fontEl.dataset.fontFamily = fontFamily;
+            if ((realFontNb <= themeFontsNb) && !isSystemFonts) {
+                // Add the "cloud" icon next to the theme's default fonts
+                // because they are served by Google.
+                fontEl.appendChild(Object.assign(document.createElement('i'), {
+                    role: 'button',
+                    className: 'text-info me-2 fa fa-cloud',
+                    title: _t("This font is hosted and served to your visitors by Google servers"),
+                }));
+            }
             fontEls.push(fontEl);
             this.menuEl.appendChild(fontEl);
         });
@@ -243,7 +265,9 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                         let isValidFamily = false;
 
                         try {
-                            const result = await fetch("https://fonts.googleapis.com/css?family=" + m[1]+':300,300i,400,400i,700,700i', {method: 'HEAD'});
+                            // Font family is an encoded query parameter:
+                            // "Open+Sans" needs to remain "Open+Sans".
+                            const result = await fetch("https://fonts.googleapis.com/css?family=" + m[1] + ':300,300i,400,400i,700,700i', {method: 'HEAD'});
                             // Google fonts server returns a 400 status code if family is not valid.
                             if (result.ok) {
                                 isValidFamily = true;
@@ -259,6 +283,20 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
 
                         const font = m[1].replace(/\+/g, ' ');
                         const googleFontServe = dialog.el.querySelector('#google_font_serve').checked;
+                        const fontName = `'${font}'`;
+                        // If the font already exists, it will only be added if
+                        // the user chooses to add it locally when it is already
+                        // imported from the Google Fonts server.
+                        const fontExistsLocally = this.googleLocalFonts.some(localFont => localFont.split(':')[0] === fontName);
+                        const fontExistsOnServer = this.allFonts.includes(fontName);
+                        const preventFontAddition = fontExistsLocally || (fontExistsOnServer && googleFontServe);
+                        if (preventFontAddition) {
+                            inputEl.classList.add('is-invalid');
+                            // Show custom validity error message.
+                            inputEl.setCustomValidity(_t("This font already exists, you can only add it as a local font to replace the server version."));
+                            inputEl.reportValidity();
+                            return;
+                        }
                         if (googleFontServe) {
                             this.googleFonts.push(font);
                         } else {
@@ -303,7 +341,8 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         let googleFontName;
         if (isLocalFont) {
             const googleFont = this.googleLocalFonts[googleFontIndex].split(':');
-            googleFontName = googleFont[0];
+            // Remove double quotes
+            googleFontName = googleFont[0].substring(1, googleFont[0].length - 1);
             values['delete-font-attachment-id'] = googleFont[1];
             this.googleLocalFonts.splice(googleFontIndex, 1);
         } else {
@@ -1646,7 +1685,7 @@ options.registry.company_data = options.Class.extend({
                     args: [session.uid, ['company_id']],
                 });
             }).then(function (res) {
-                proto.__link = '/web#action=base.action_res_company_form&view_type=form&id=' + (res && res[0] && res[0].company_id[0] || 1);
+                proto.__link = '/web#action=base.action_res_company_form&view_type=form&id=' + encodeURIComponent(res && res[0] && res[0].company_id[0] || 1);
             });
         }
         return Promise.all([this._super.apply(this, arguments), prom]);
@@ -2246,6 +2285,33 @@ options.registry.HeaderNavbar = options.Class.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        // TODO Remove in master.
+        const signInOptionEl = this.el.querySelector('[data-customize-website-views="portal.user_sign_in"]');
+        signInOptionEl.dataset.noPreview = 'true';
+    },
+    /**
+     * @private
+     */
+    async updateUI() {
+        await this._super(...arguments);
+        // For all header templates except those in the following array, change
+        // the label of the option to "Mobile Alignment" (instead of
+        // "Alignment") because it only impacts the mobile view.
+        if (!["'default'", "'hamburger'", "'sidebar'"].includes(weUtils.getCSSVariableValue('header-template'))) {
+            const alignmentOptionTitleEl = this.el.querySelector('[data-name="header_alignment_opt"] we-title');
+            alignmentOptionTitleEl.textContent = _t("Mobile Alignment");
+        }
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -2264,6 +2330,14 @@ options.registry.HeaderNavbar = options.Class.extend({
             case 'no_hamburger_opt': {
                 return !weUtils.getCSSVariableValue('header-template').includes('hamburger');
             }
+        }
+        if (widgetName === 'header_alignment_opt') {
+            if (!this.$target[0].querySelector('.o_offcanvas_menu_toggler')) {
+                // If mobile menu is "Default", hides the alignment option for
+                // "hamburger full" and "magazine" header templates.
+                return !["'hamburger-full'", "'magazine'"].includes(weUtils.getCSSVariableValue('header-template'));
+            }
+            return true;
         }
         return this._super(...arguments);
     },
@@ -2591,8 +2665,7 @@ options.registry.anchor = options.Class.extend({
         this.$button = this.$el.find('we-button');
         const clipboard = new ClipboardJS(this.$button[0], {text: () => this._getAnchorLink()});
         clipboard.on('success', () => {
-            const anchor = decodeURIComponent(this._getAnchorLink());
-            const message = sprintf(Markup(_t("Anchor copied to clipboard<br>Link: %s")), anchor);
+            const message = sprintf(Markup(_t("Anchor copied to clipboard<br>Link: %s")), this._getAnchorLink());
             this.displayNotification({
               type: 'success',
               message: message,
@@ -2769,13 +2842,20 @@ options.registry.CookiesBar = options.registry.SnippetPopup.extend({
         }));
 
         const $content = this.$target.find('.modal-content');
+        
+        // The order of selectors is significant since certain selectors may be 
+        // nested within others, and we want to preserve the nested ones.
+        // For instance, in the case of '.o_cookies_bar_text_policy' nested
+        // inside '.o_cookies_bar_text_secondary', the parent selector should be
+        // copied first, followed by the child selector to ensure that the
+        // content of the nested selector is not overwritten.
         const selectorsToKeep = [
             '.o_cookies_bar_text_button',
             '.o_cookies_bar_text_button_essential',
-            '.o_cookies_bar_text_policy',
             '.o_cookies_bar_text_title',
             '.o_cookies_bar_text_primary',
             '.o_cookies_bar_text_secondary',
+            '.o_cookies_bar_text_policy'
         ];
 
         if (this.$savedSelectors === undefined) {
@@ -3024,6 +3104,28 @@ options.registry.ScrollButton = options.Class.extend({
             this.$button.detach();
         }
     },
+    /**
+     * @override
+     */
+    async selectClass(previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        // If a "d-lg-block" class exists on the section (e.g., for mobile
+        // visibility option), it should be replaced with a "d-lg-flex" class.
+        // This ensures that the section has the "display: flex" property
+        // applied, which is the default rule for both "height" option classes.
+        if (params.possibleValues.includes("o_half_screen_height")) {
+            if (widgetValue) {
+                this.$target[0].classList.replace("d-lg-block", "d-lg-flex");
+            } else if (this.$target[0].classList.contains("d-lg-flex")) {
+                // There are no known cases, but we still make sure that the
+                // <section> element doesn't have a "display: flex" originally.
+                this.$target[0].classList.remove("d-lg-flex");
+                const sectionStyle = window.getComputedStyle(this.$target[0]);
+                const hasDisplayFlex = sectionStyle.getPropertyValue("display") === "flex";
+                this.$target[0].classList.add(hasDisplayFlex ? "d-lg-flex" : "d-lg-block");
+            }
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -3124,20 +3226,11 @@ options.registry.ConditionalVisibility = options.registry.DeviceVisibility.exten
         await this._super(...arguments);
         this.$target[0].classList.remove('o_conditional_hidden');
     },
+    // Todo: remove me in master.
     /**
      * @override
      */
-    async cleanForSave() {
-        await this._super(...arguments);
-        // Kinda hacky: the snippet is forced hidden via onTargetHide on save
-        // but should be marked as visible as when entering edit mode later, the
-        // snippet will be shown naturally (as the CSS rules won't apply).
-        // Without this, the "eye" icon of the visibility panel would be shut
-        // when entering edit mode.
-        if (this.$target[0].classList.contains('o_snippet_invisible')) {
-            this.trigger_up('snippet_option_visibility_update', { show: true });
-        }
-    },
+    cleanForSave() {},
 
     //--------------------------------------------------------------------------
     // Options
@@ -3741,6 +3834,23 @@ options.registry.GridImage = options.Class.extend({
                 : 'cover';
         }
         return this._super(...arguments);
+    },
+});
+
+options.registry.layout_column.include({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * TODO adapt in master: used to hide the "Layout" options on "Images Wall"
+     * (which has its own options to handle the layout).
+     *
+     * @override
+     */
+    _computeVisibility() {
+        return !this.$target[0].closest('[data-snippet="s_images_wall"]');
     },
 });
 

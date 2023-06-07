@@ -1,10 +1,12 @@
 """Test case implementation"""
 
-import sys
+import contextlib
 import inspect
 import logging
-import contextlib
-from unittest import SkipTest, TestCase as _TestCase
+import sys
+from pathlib import PurePath
+from unittest import SkipTest
+from unittest import TestCase as _TestCase
 
 _logger = logging.getLogger(__name__)
 
@@ -82,7 +84,7 @@ class _Outcome(object):
         # method since the error does not comme especially from the test method.
         while tb:
             code = tb.tb_frame.f_code
-            if code.co_filename.endswith('/case.py') and code.co_name in ('_callTestMethod', '_callSetUp', '_callTearDown', '_callCleanup'):
+            if PurePath(code.co_filename).name == 'case.py' and code.co_name in ('_callTestMethod', '_callSetUp', '_callTearDown', '_callCleanup'):
                 return tb.tb_next
             tb = tb.tb_next
 

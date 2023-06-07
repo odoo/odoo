@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from hashlib import sha256
 import unittest
 from itertools import zip_longest
 from lxml import etree as ET, html
@@ -1129,6 +1130,25 @@ class TestCowViewSaving(TestViewSavingCommon):
         self.assertEqual(len(base_view_2.inherit_children_ids), 2, "D and D' should be under B")
         self.assertTrue(self.inherit_view in base_view_2.inherit_children_ids, "D should be under B")
         self.assertTrue(specific_child_view in base_view_2.inherit_children_ids, "D' should be under B")
+
+    def test_no_cow_on_translate(self):
+        french = self.env['res.lang']._activate_lang('fr_FR')
+        self.env['ir.module.module']._load_module_terms(['website'], [french.code])
+        # Make sure res.lang.get_installed is recomputed
+        self.env.registry.clear_caches()
+
+        View = self.env['ir.ui.view'].with_context(lang=french.code, website_id=1)
+        old_specific_views = View.search([('website_id', '!=', None)])
+        view = self.base_view.with_context(lang=french.code, website_id=1)
+
+        root = html.fromstring(self.base_view.arch, parser=html.HTMLParser(encoding="utf-8"))
+        to_translate = root.text_content()
+        sha = sha256(to_translate.encode()).hexdigest()
+        view.update_field_translations_sha('arch_db', {french.code: {sha: 'contenu de base'}})
+
+        new_specific_views = View.search([('website_id', '!=', None)])
+        self.assertEqual(len(old_specific_views), len(new_specific_views), "No additional specific view must have been created")
+        self.assertTrue(view.arch.index('contenu de base') > 0, "New translation must appear in view")
 
 
 @tagged('-at_install', 'post_install')

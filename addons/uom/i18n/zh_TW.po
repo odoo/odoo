@@ -3,8 +3,8 @@
 # 	* uom
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Benson <Benson.Dr@Gmail.com>, 2023
+# Martin Trigaux, 2023
 # Tony Ng, 2023
 # 
 msgid ""
@@ -14,7 +14,7 @@ msgstr ""
 "POT-Creation-Date: 2022-09-23 08:03+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Tony Ng, 2023\n"
-"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -29,7 +29,7 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    例如：1*（參考單位）=比率*（本單位）\n"
+"                                    例： 1 × 參考單位 = 比例 × 本單位\n"
 "                                </span>"
 
 #. module: uom
@@ -40,7 +40,7 @@ msgid ""
 "                                </span>"
 msgstr ""
 "<span class=\"oe_grey oe_inline\">\n"
-"                                    例如：1*(這個單位)=ratio*(參考單位)\n"
+"                                    例： 1 × 本單位 = 比例 × 參考單位\n"
 "                                </span>"
 
 #. module: uom
@@ -51,12 +51,12 @@ msgstr "啟用"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr "增加一個新的計量單位"
+msgstr "新增量度單位"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr "增加一個新的度量單位"
+msgstr "新增量度單位類別"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
@@ -111,7 +111,7 @@ msgstr "建立於"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_day
 msgid "Days"
-msgstr "天數"
+msgstr "天"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__display_name
@@ -324,7 +324,7 @@ msgstr "計量單位類別"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
 msgid "Units"
-msgstr "個"
+msgstr "件"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
@@ -332,18 +332,18 @@ msgstr "個"
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
 msgid "Units of Measure"
-msgstr "計量單位"
+msgstr "量度單位"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr "度量類別的單位"
+msgstr "量度單位類型"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_tree_view
 msgid "Units of Measure categories"
-msgstr "計量單位類別"
+msgstr "量度單位類型"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
@@ -407,18 +407,18 @@ msgid ""
 "You must define a conversion rate between several Units of\n"
 "            Measure within the same category."
 msgstr ""
-"您必須在幾個單位之間定義轉換率\n"
-"在同一類別內測量。"
+"若同一類別內有多種量度單位，\n"
+"            你必須設定單位之間的換算比例。"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cm
 msgid "cm"
-msgstr "公分"
+msgstr "厘米"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_floz
 msgid "fl oz (US)"
-msgstr "液量盎司（美）"
+msgstr "液安士（美制）"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_foot
@@ -438,17 +438,17 @@ msgstr "立方英尺"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
 msgid "gal (US)"
-msgstr "加侖（美）"
+msgstr "加侖（美制）"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
 msgid "in"
-msgstr "英吋"
+msgstr "英寸"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_inch
 msgid "in³"
-msgstr "立方英吋³"
+msgstr "立方英寸"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
@@ -468,32 +468,32 @@ msgstr "磅"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
 msgid "mi"
-msgstr "英哩"
+msgstr "英里"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_millimeter
 msgid "mm"
-msgstr "mm"
+msgstr "毫米"
 
 #. module: uom
 #: model:uom.uom,name:uom.uom_square_meter
 msgid "m²"
-msgstr "平方公尺²"
+msgstr "平方米"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_cubic_meter
 msgid "m³"
-msgstr "立方公尺³"
+msgstr "立方米"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
 msgid "oz"
-msgstr "盎司"
+msgstr "安士"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
 msgid "qt (US)"
-msgstr "夸脱（美）"
+msgstr "夸脫（美制）"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_yard

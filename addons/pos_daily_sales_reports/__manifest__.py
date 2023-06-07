@@ -21,6 +21,11 @@ and configs.
         'wizard/pos_daily_sales_reports_wizard.xml',
         'views/point_of_sale_view.xml',
     ],
+    'assets': {
+        'point_of_sale.assets': [
+            'pos_daily_sales_reports/static/src/xml/SaleDetailsReport.xml',
+        ],
+    },
     'installable': True,
     'license': 'LGPL-3',
 }

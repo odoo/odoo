@@ -36,7 +36,7 @@ class StockMove(models.Model):
         order = line.order_id
         received_qty = line.qty_received
         if self.state == 'done':
-            received_qty -= self.product_uom._compute_quantity(self.quantity_done, line.product_uom)
+            received_qty -= self.product_uom._compute_quantity(self.quantity_done, line.product_uom, rounding_method='HALF-UP')
         if float_compare(line.qty_invoiced, received_qty, precision_rounding=line.product_uom.rounding) > 0:
             move_layer = line.move_ids.stock_valuation_layer_ids
             invoiced_layer = line.invoice_lines.stock_valuation_layer_ids
@@ -145,13 +145,6 @@ class StockMove(models.Model):
         vals = super(StockMove, self)._prepare_move_split_vals(uom_qty)
         vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
-
-    def _prepare_procurement_values(self):
-        proc_values = super()._prepare_procurement_values()
-        if self.restrict_partner_id:
-            proc_values['supplierinfo_name'] = self.restrict_partner_id
-            self.restrict_partner_id = False
-        return proc_values
 
     def _clean_merged(self):
         super(StockMove, self)._clean_merged()

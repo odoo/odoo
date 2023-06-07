@@ -147,7 +147,7 @@ TRANSLATED_ELEMENTS = {
     'abbr', 'b', 'bdi', 'bdo', 'br', 'cite', 'code', 'data', 'del', 'dfn', 'em',
     'font', 'i', 'ins', 'kbd', 'keygen', 'mark', 'math', 'meter', 'output',
     'progress', 'q', 'ruby', 's', 'samp', 'small', 'span', 'strong', 'sub',
-    'sup', 'time', 'u', 'var', 'wbr', 'text',
+    'sup', 'time', 'u', 'var', 'wbr', 'text', 'select', 'option',
 }
 
 # Which attributes must be translated. This is a dict, where the value indicates
@@ -472,7 +472,7 @@ class GettextAlias(object):
                 if not module:
                     path = inspect.getfile(frame)
                     path_info = odoo.modules.get_resource_from_path(path)
-                    module = path_info[0] if path_info else None
+                    module = path_info[0] if path_info else 'base'
                 return code_translations.get_python_translations(module, lang).get(source, source)
             else:
                 _logger.debug('no translation language detected, skipping translation for "%r" ', source)
@@ -510,7 +510,7 @@ class _lt:
         frame = inspect.currentframe().f_back
         path = inspect.getfile(frame)
         path_info = odoo.modules.get_resource_from_path(path)
-        self._module = path_info[0] if path_info else None
+        self._module = path_info[0] if path_info else 'base'
 
     def __str__(self):
         # Call _._get_translation() like _() does, so that we have the same number

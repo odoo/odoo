@@ -75,6 +75,7 @@ class Mozzarella(models.Model):
 
     value = fields.Integer(default=0, required=True)
     value_plus_one = fields.Integer(compute="_value_plus_one", required=True, store=True)
+    value_null_by_default = fields.Integer()
 
     @api.depends('value')
     def _value_plus_one(self):

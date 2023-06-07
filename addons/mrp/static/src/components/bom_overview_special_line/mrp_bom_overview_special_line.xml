@@ -12,7 +12,7 @@
         </td>
         <td name="quantity" class="text-end">
             <span t-if="props.type == 'operations'" t-esc="formatFloatTime(data.operations_time)"/>
-            <span t-elif="props.type == 'byproducts'" t-esc="formatFloat(data.byproducts_total)"/>
+            <span t-elif="props.type == 'byproducts'" t-esc="formatFloat(data.byproducts_total, {'digits': [false, precision]})"/>
         </td>
         <td name="uom" t-if="showUom" class="text-start">
             <span t-if="props.type == 'operations'">Minutes</span>

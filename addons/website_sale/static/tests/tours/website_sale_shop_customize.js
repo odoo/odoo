@@ -31,13 +31,9 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             trigger: 'iframe body:not(:has(.js_product_change))',
             run: function () {},
         },
-        {
-            content: "enter edit mode",
-            trigger: '.o_edit_website_container > a',
-        },
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
             content: "open customize tab",
-            extra_trigger: '#oe_snippets.o_loaded',
             trigger: '.o_we_customize_snippet_btn',
         },
         {
@@ -70,13 +66,9 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             trigger: "iframe .product_price .oe_price .oe_currency_value:containsExact(800.40)",
             run: function () {},
         },
-        {
-            content: "enter edit mode",
-            trigger: '.o_edit_website_container > a',
-        },
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
             content: "open customize tab",
-            extra_trigger: '#oe_snippets.o_loaded',
             trigger: '.o_we_customize_snippet_btn',
         },
         {
@@ -133,13 +125,9 @@ wTourUtils.registerWebsitePreviewTour('shop_customize', {
             trigger: "iframe a:contains(Continue Shopping)",
             extra_trigger: 'iframe body:not(:has(#products_grid_before .js_attributes))',
         },
-        {
-            content: "enter edit mode",
-            trigger: '.o_edit_website_container > a',
-        },
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
             content: "open customize tab",
-            extra_trigger: '#oe_snippets.o_loaded',
             trigger: '.o_we_customize_snippet_btn',
         },
         {

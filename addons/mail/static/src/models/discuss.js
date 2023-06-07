@@ -148,6 +148,7 @@ registerModel({
                 this.env.services.action.doAction(
                     'mail.action_discuss',
                     {
+                        name: this.env._t("Discuss"),
                         active_id: this.threadToActiveId(this),
                         clearBreadcrumbs: false,
                         on_reverse_breadcrumb: () => this.close(), // this is useless, close is called by destroy anyway

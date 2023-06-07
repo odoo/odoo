@@ -381,7 +381,10 @@ class StockMove(models.Model):
         return self.location_id.valuation_out_account_id.id or accounts_data['stock_input'].id
 
     def _get_dest_account(self, accounts_data):
-        return self.location_dest_id.valuation_in_account_id.id or accounts_data['stock_output'].id
+        if not self.location_dest_id.usage in ('production', 'inventory'):
+            return accounts_data['stock_output'].id
+        else:
+            return self.location_dest_id.valuation_in_account_id.id or accounts_data['stock_output'].id
 
     def _prepare_account_move_line(self, qty, cost, credit_account_id, debit_account_id, svl_id, description):
         """

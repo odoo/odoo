@@ -58,9 +58,9 @@ export class PriorityField extends Component {
     onStarClicked(value) {
         if (this.props.value === value) {
             this.state.index = -1;
-            this.props.update(this.options[0][0], { save: true });
+            this.props.update(this.options[0][0], { save: this.props.autosave });
         } else {
-            this.props.update(value, { save: true });
+            this.props.update(value, { save: this.props.autosave });
         }
     }
 }
@@ -69,14 +69,16 @@ PriorityField.template = "web.PriorityField";
 PriorityField.props = {
     ...standardFieldProps,
     tooltipLabel: { type: String, optional: true },
+    autosave: { type: Boolean, optional: true },
 };
 
 PriorityField.displayName = _lt("Priority");
 PriorityField.supportedTypes = ["selection"];
 
-PriorityField.extractProps = ({ field }) => {
+PriorityField.extractProps = ({ field, attrs }) => {
     return {
         tooltipLabel: field.string,
+        autosave: "autosave" in attrs.options ? !!attrs.options.autosave : true,
     };
 };
 

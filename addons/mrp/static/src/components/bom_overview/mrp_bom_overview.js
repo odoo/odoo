@@ -31,6 +31,7 @@ export class BomOverviewComponent extends Component {
             currentWarehouse: null,
             currentVariantId: null,
             bomData: {},
+            precision: 2,
             bomQuantity: null,
         });
 
@@ -56,6 +57,7 @@ export class BomOverviewComponent extends Component {
         if (this.showVariants) {
             this.state.currentVariantId = Object.keys(this.variants)[0];
         }
+        this.state.precision = bomData["precision"];
     }
 
     async getBomData() {

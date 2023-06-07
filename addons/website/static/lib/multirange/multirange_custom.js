@@ -97,8 +97,7 @@ class Multirange {
         this.leftCounter = document.createElement("span");
         this.leftCounter.classList.add("multirange-min", "position-absolute", "opacity-75", "opacity-100-hover", "mt-1");
         this.rightCounter = document.createElement("span");
-        this.rightCounter.classList.add("multirange-max", "position-absolute", "opacity-75", "opacity-100-hover", "mt-1");
-        this.rightCounter.style.right = 0;
+        this.rightCounter.classList.add("multirange-max", "position-absolute", "opacity-75", "opacity-100-hover", "mt-1", "end-0");
         this.countersWrapper.append(this.leftCounter, this.rightCounter);
 
         /* Add the counterInput */

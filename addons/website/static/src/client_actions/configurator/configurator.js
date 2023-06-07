@@ -406,7 +406,7 @@ class ApplyConfiguratorScreen extends Component {
             // Here the website service goToWebsite method is not used because
             // the web client needs to be reloaded after the new modules have
             // been installed.
-            window.location.replace(`/web#action=website.website_preview&website_id=${resp.website_id}&enable_editor=1&with_loader=1`);
+            window.location.replace(`/web#action=website.website_preview&website_id=${encodeURIComponent(resp.website_id)}&enable_editor=1&with_loader=1`);
         }
     }
 }
@@ -646,7 +646,7 @@ export class Configurator extends Component {
     }
 
     get pathname() {
-        return `/website/configurator${this.state.currentStep ? `/${this.state.currentStep}` : ''}`;
+        return `/website/configurator${this.state.currentStep ? `/${encodeURIComponent(this.state.currentStep)}` : ''}`;
     }
 
     get storageItemName() {

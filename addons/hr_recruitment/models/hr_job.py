@@ -13,14 +13,23 @@ class Job(models.Model):
 
     @api.model
     def _default_address_id(self):
-        return self.env.company.partner_id
+        last_used_address = self.env['hr.job'].search([('company_id', 'in', self.env.companies.ids)], order='id desc', limit=1)
+        if last_used_address:
+            return last_used_address.address_id
+        else:
+            return self.env.company.partner_id
+
+    def _address_id_domain(self):
+        return ['|', '&', '&', ('type', '!=', 'contact'), ('type', '!=', 'private'),
+                ('id', 'in', self.sudo().env.companies.partner_id.child_ids.ids),
+                ('id', 'in', self.sudo().env.companies.partner_id.ids)]
 
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
 
     address_id = fields.Many2one(
         'res.partner', "Job Location", default=_default_address_id,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain=lambda self: self._address_id_domain(),
         help="Address where employees are working")
     application_ids = fields.One2many('hr.applicant', 'job_id', "Job Applications")
     application_count = fields.Integer(compute='_compute_application_count', string="Application Count")
@@ -34,11 +43,11 @@ class Job(models.Model):
     manager_id = fields.Many2one(
         'hr.employee', related='department_id.manager_id', string="Department Manager",
         readonly=True, store=True)
-    user_id = fields.Many2one('res.users', "Recruiter", domain="[('share', '=', False), ('company_ids', 'in', company_id)]", tracking=True)
+    user_id = fields.Many2one('res.users', "Recruiter", domain="[('share', '=', False), ('company_ids', 'in', company_id)]", tracking=True, help="The Recruiter will be the default value for all Applicants Recruiter's field in this job position. The Recruiter is automatically added to all meetings with the Applicant.")
     hr_responsible_id = fields.Many2one(
         'res.users', "HR Responsible", tracking=True,
         help="Person responsible of validating the employee's contracts.")
-    document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Documents")
+    document_ids = fields.One2many('ir.attachment', compute='_compute_document_ids', string="Documents", readonly=True)
     documents_count = fields.Integer(compute='_compute_document_ids', string="Document Count")
     alias_id = fields.Many2one(
         'mail.alias', "Alias", ondelete="restrict", required=True,
@@ -46,7 +55,7 @@ class Job(models.Model):
     color = fields.Integer("Color Index")
     is_favorite = fields.Boolean(compute='_compute_is_favorite', inverse='_inverse_is_favorite')
     favorite_user_ids = fields.Many2many('res.users', 'job_favorite_user_rel', 'job_id', 'user_id', default=_get_default_favorite_user_ids)
-    interviewer_ids = fields.Many2many('res.users', string='Interviewers', domain="[('share', '=', False), ('company_ids', 'in', company_id)]")
+    interviewer_ids = fields.Many2many('res.users', string='Interviewers', domain="[('share', '=', False), ('company_ids', 'in', company_id)]", help="The Interviewers set on the job position can see all Applicants in it. They have access to the information, the attachments, the meeting management and they can refuse him. You don't need to have Recruitment rights to be set as an interviewer.")
     extended_interviewer_ids = fields.Many2many('res.users', 'hr_job_extended_interviewer_res_users', compute='_compute_extended_interviewer_ids', store=True)
 
     activities_overdue = fields.Integer(compute='_compute_activities')
@@ -260,10 +269,9 @@ class Job(models.Model):
                 'default_res_id': self.ids[0],
                 'show_partner_name': 1,
             },
-            'view_mode': 'tree,form',
+            'view_mode': 'tree',
             'views': [
-                (self.env.ref('hr_recruitment.ir_attachment_hr_recruitment_list_view').id, 'tree'),
-                (False, 'form'),
+                (self.env.ref('hr_recruitment.ir_attachment_hr_recruitment_list_view').id, 'tree')
             ],
             'search_view_id': self.env.ref('hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment').ids,
             'domain': ['|',

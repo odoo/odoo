@@ -571,7 +571,9 @@
                 <span class="badge text-bg-danger fw-normal px-2" t-if="not user['website_published']">Unpublished</span>
                 <strong class="text-muted" t-esc="user['rank']"/>
                 <div class="h3 my-2" t-if="user['karma_gain']">
-                    <span class="badge rounded-pill text-bg-success px-3 py-2" >+ <t t-esc="user['karma_gain']"/> XP</span>
+                    <span class="badge rounded-pill text-bg-success px-3 py-2" >
+                        <t t-if="user['karma_gain'] > 0">+ </t><t t-esc="user['karma_gain']"/> XP
+                    </span>
                 </div>
             </div>
             <div class="row mx-0 o_wprofile_top3_card_footer text-nowrap">
@@ -594,7 +596,9 @@
         </td>
         <td class="align-middle text-nowrap">
             <t t-if="user['karma_gain']">
-                <span class="badge rounded-pill text-bg-success d-inline">+ <t t-esc="user['karma_gain']"/> XP</span>
+                <span class="badge rounded-pill text-bg-success d-inline">
+                    <t t-if="user['karma_gain'] > 0">+ </t><t t-esc="user['karma_gain']"/> XP
+                </span>
                 <span class="text-muted ps-2 pe-3">
                     <t t-if="group_by == 'week'">this week</t>
                     <t t-elif="group_by == 'month'">this month</t>

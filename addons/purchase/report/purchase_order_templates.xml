@@ -45,7 +45,7 @@
                 </div>
             </div>
 
-            <table class="table table-sm o_main_table mt-4">
+            <table class="table table-sm o_main_table table-borderless mt-4">
                 <thead style="display: table-row-group">
                     <tr>
                         <th name="th_description"><strong>Description</strong></th>
@@ -115,7 +115,7 @@
 
             <div id="total" class="row justify-content-end">
                 <div class="col-4">
-                    <table class="table table-sm">
+                    <table class="table table-sm table-borderless">
                         <t t-set="tax_totals" t-value="o.tax_totals"/>
                         <t t-call="account.document_tax_totals"/>
                     </table>

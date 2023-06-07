@@ -96,4 +96,33 @@ QUnit.module("Fields", (hooks) => {
 
         assert.ok(target.querySelector(".o_field_ace").textContent.includes("blip"));
     });
+
+    QUnit.test(
+        "leaving an untouched record with an unset ace field should not write",
+        async (assert) => {
+            serverData.models.partner.records.forEach((rec) => {
+                rec.foo = false;
+            });
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                resIds: [1, 2],
+                serverData,
+                arch: /* xml */ `
+                <form>
+                    <field name="foo" widget="ace" />
+                </form>`,
+                mockRPC(route, args) {
+                    if (args.method) {
+                        assert.step(`${args.method}: ${JSON.stringify(args.args)}`);
+                    }
+                },
+            });
+
+            assert.verifySteps(["get_views: []", 'read: [[1],["foo","display_name"]]']);
+            await pagerNext(target);
+            assert.verifySteps(['read: [[2],["foo","display_name"]]']);
+        }
+    );
 });

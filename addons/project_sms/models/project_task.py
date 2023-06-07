@@ -10,7 +10,10 @@ class ProjectTask(models.Model):
     def _send_sms(self):
         for task in self:
             if task.partner_id and task.stage_id and task.stage_id.sms_template_id:
-                task._message_sms_with_template(template=task.stage_id.sms_template_id, partner_ids=task.partner_id.ids)
+                task._message_sms_with_template(
+                    template=task.stage_id.sms_template_id,
+                    partner_ids=task.partner_id.ids,
+                )
 
     @api.model_create_multi
     def create(self, vals_list):

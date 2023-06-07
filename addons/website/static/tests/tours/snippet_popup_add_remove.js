@@ -8,7 +8,7 @@ wTourUtils.registerWebsitePreviewTour('snippet_popup_add_remove', {
     edition: true,
 }, [{
     content: 'Drop s_popup snippet',
-    trigger: '#oe_snippets.o_loaded .oe_snippet:has( > [data-snippet="s_popup"]) .oe_snippet_thumbnail',
+    trigger: '.oe_snippet:has( > [data-snippet="s_popup"]) .oe_snippet_thumbnail',
     run: "drag_and_drop iframe #wrap",
 }, {
     content: 'Edit s_popup snippet',

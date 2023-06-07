@@ -44,6 +44,8 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
                 editModeProps: {
                     partner: null,
                 },
+                previousQuery: "",
+                currentOffset: 0,
             };
             this.updatePartnerList = debounce(this.updatePartnerList, 70);
             onWillUnmount(this.updatePartnerList.cancel);
@@ -104,14 +106,25 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
         async _onPressEnterKey() {
             if (!this.state.query) return;
             const result = await this.searchPartner();
-            this.showNotification(
-                _.str.sprintf(
-                    this.env._t('%s customer(s) found for "%s".'),
-                    result.length,
-                    this.state.query
-                ),
-                3000
-            );
+            if (result.length > 0) {
+                this.showNotification(
+                    _.str.sprintf(
+                        this.env._t('%s customer(s) found for "%s".'),
+                        result.length,
+                        this.state.query
+                    ),
+                    3000
+                );
+            } else {
+                this.showNotification(
+                    _.str.sprintf(
+                        this.env._t('No more customer found for "%s".'),
+                        this.state.query
+                    ),
+                    3000
+                );
+            }
+            
         }
         _clearSearch() {
             this.searchWordInputRef.el.value = '';
@@ -122,11 +135,7 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
         // order to lower its trigger rate.
         async updatePartnerList(event) {
             this.state.query = event.target.value;
-            if (event.code === 'Enter') {
-                this._onPressEnterKey();
-            } else {
-                this.render(true);
-            }
+            this.render(true);
         }
         clickPartner(partner) {
             if (this.state.selectedPartner && this.state.selectedPartner.id === partner.id) {
@@ -170,13 +179,23 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
             }
         }
         async searchPartner() {
+            if (this.state.previousQuery != this.state.query) {
+                this.state.currentOffset = 0;
+            }
             let result = await this.getNewPartners();
             this.env.pos.addPartners(result);
             this.render(true);
+            if (this.state.previousQuery == this.state.query) {
+                this.state.currentOffset += result.length;
+            } else {
+                this.state.previousQuery = this.state.query;
+                this.state.currentOffset = result.length;
+            }
             return result;
         }
         async getNewPartners() {
             let domain = [];
+            const limit = 30;
             if(this.state.query) {
                 domain = ['|', ["name", "ilike", this.state.query + "%"],
                                ["parent_name", "ilike", this.state.query + "%"]];
@@ -189,7 +208,8 @@ odoo.define('point_of_sale.PartnerListScreen', function(require) {
                         [odoo.pos_session_id],
                         {
                             domain,
-                            limit: 10,
+                            limit: limit,
+                            offset: this.state.currentOffset,
                         },
                     ],
                     context: this.env.session.user_context,

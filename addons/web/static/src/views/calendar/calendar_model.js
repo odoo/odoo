@@ -728,7 +728,7 @@ export class CalendarModel extends Model {
             type: "dynamic",
             recordId: null,
             value,
-            label: formatter(rawValue) || _t("Undefined"),
+            label: formatter(rawValue, { field }) || _t("Undefined"),
             active: previousFilter ? previousFilter.active : true,
             canRemove: false,
             colorIndex,

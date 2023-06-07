@@ -7,10 +7,24 @@ import { registry } from "@web/core/registry";
 import { debounce } from "@web/core/utils/timing";
 import { ErrorHandler } from "@web/core/utils/components";
 
-import { Component, onWillDestroy, onWillUnmount, useExternalListener, useEffect, useRef } from "@odoo/owl";
+import {
+    Component,
+    onWillDestroy,
+    onWillUnmount,
+    useExternalListener,
+    useEffect,
+    useRef,
+} from "@odoo/owl";
 const systrayRegistry = registry.category("systray");
 
 const getBoundingClientRect = Element.prototype.getBoundingClientRect;
+
+class NavBarDropdownItem extends DropdownItem {}
+NavBarDropdownItem.template = "web.NavBar.DropdownItem";
+NavBarDropdownItem.props = {
+    ...DropdownItem.props,
+    style: { type: String, optional: true },
+};
 
 export class MenuDropdown extends Dropdown {
     setup() {
@@ -201,4 +215,4 @@ export class NavBar extends Component {
     }
 }
 NavBar.template = "web.NavBar";
-NavBar.components = { Dropdown, DropdownItem, MenuDropdown, ErrorHandler };
+NavBar.components = { Dropdown, DropdownItem: NavBarDropdownItem, MenuDropdown, ErrorHandler };

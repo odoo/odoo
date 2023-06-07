@@ -287,7 +287,12 @@ class IrActionsReport(models.Model):
                 command_args.extend(['--header-spacing', str(paperformat_id.header_spacing)])
 
             command_args.extend(['--margin-left', str(paperformat_id.margin_left)])
-            command_args.extend(['--margin-bottom', str(paperformat_id.margin_bottom)])
+
+            if specific_paperformat_args and specific_paperformat_args.get('data-report-margin-bottom'):
+                command_args.extend(['--margin-bottom', str(specific_paperformat_args['data-report-margin-bottom'])])
+            else:
+                command_args.extend(['--margin-bottom', str(paperformat_id.margin_bottom)])
+
             command_args.extend(['--margin-right', str(paperformat_id.margin_right)])
             if not landscape and paperformat_id.orientation:
                 command_args.extend(['--orientation', str(paperformat_id.orientation)])
@@ -297,7 +302,8 @@ class IrActionsReport(models.Model):
                 command_args.extend(['--disable-smart-shrinking'])
 
         # Add extra time to allow the page to render
-        command_args.extend(['--javascript-delay', '1000'])
+        delay = self.env['ir.config_parameter'].sudo().get_param('report.print_delay', '1000')
+        command_args.extend(['--javascript-delay', delay])
 
         if landscape:
             command_args.extend(['--orientation', 'landscape'])
@@ -623,7 +629,7 @@ class IrActionsReport(models.Model):
             try:
                 reader = PdfFileReader(stream)
                 writer.appendPagesFromReader(reader)
-            except PdfReadError:
+            except (PdfReadError, TypeError):
                 raise UserError(_("Odoo is unable to merge the generated PDFs."))
         result_stream = io.BytesIO()
         streams.append(result_stream)
@@ -696,7 +702,7 @@ class IrActionsReport(models.Model):
             # This scenario happens when you want to print a PDF report for the first time, as the
             # assets are not in cache and must be generated. To workaround this issue, we manually
             # commit the writes in the `ir.attachment` table. It is done thanks to a key in the context.
-            if not config['test_enable']:
+            if not config['test_enable'] and 'commit_assetsbundle' not in self.env.context:
                 additional_context['commit_assetsbundle'] = True
 
             html = self.with_context(**additional_context)._render_qweb_html(report_ref, res_ids_wo_stream, data=data)[0]

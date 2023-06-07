@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, Command
 from odoo.exceptions import ValidationError
 from odoo.http import request
 
@@ -48,9 +48,12 @@ class ResUsers(models.Model):
     @api.model
     def _signup_create_user(self, values):
         current_website = self.env['website'].get_current_website()
+        # Note that for the moment, portal users can connect to all websites of
+        # all companies as long as the specific_user_account setting is not
+        # activated.
+        values['company_id'] = current_website.company_id.id
+        values['company_ids'] = [Command.link(current_website.company_id.id)]
         if request and current_website.specific_user_account:
-            values['company_id'] = current_website.company_id.id
-            values['company_ids'] = [(4, current_website.company_id.id)]
             values['website_id'] = current_website.id
         new_user = super(ResUsers, self)._signup_create_user(values)
         return new_user

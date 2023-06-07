@@ -69,7 +69,14 @@ export function getDataURLFromFile(file) {
     }
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.addEventListener("load", () => resolve(reader.result));
+        reader.addEventListener("load", () => {
+            // Handle Chrome bug that creates invalid data URLs for empty files
+            if (reader.result === "data:") {
+                resolve(`data:${file.type};base64,`);
+            } else {
+                resolve(reader.result);
+            }
+        });
         reader.addEventListener("abort", reject);
         reader.addEventListener("error", reject);
         reader.readAsDataURL(file);

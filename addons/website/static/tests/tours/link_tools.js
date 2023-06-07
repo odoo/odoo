@@ -47,10 +47,9 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
     clickOnImgStep,
     ...wTourUtils.clickOnSave(),
     // 3. Edit a link after saving the page.
-    wTourUtils.clickOnEdit(),
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "The new link content should be odoo website and url odoo.be",
-        extra_trigger: "#oe_snippets.o_loaded",
         trigger: 'iframe .s_text_image a[href="http://odoo.be"]:contains("odoo website")',
     },
     {
@@ -78,11 +77,10 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         run: () => {}, // It's a check.
     },
     // 4. Add link on image.
-    wTourUtils.clickOnEdit(),
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "Click on image.",
         trigger: 'iframe .s_text_image img',
-        extra_trigger: '#oe_snippets.o_loaded',
     },
     {
         content: "Activate link.",

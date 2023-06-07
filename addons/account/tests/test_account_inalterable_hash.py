@@ -1,6 +1,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.models import Model
 from odoo.tests import tagged
+from odoo.tests.common import Form
 from odoo import fields
 from odoo.exceptions import UserError
 from odoo.tools import format_date
@@ -243,3 +244,26 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         Model.write(moves[1], {'date': fields.Date.from_string('2023-01-07')})
         integrity_check = moves.company_id._check_hash_integrity()['results'][0]
         self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on journal entry with id {moves[1].id}.')
+
+    def test_account_move_hash_with_cash_rounding(self):
+        # Enable inalterable hash
+        self.company_data['default_journal_sale'].restrict_mode_hash_table = True
+        # Required for `invoice_cash_rounding_id` to be visible in the view
+        self.env.user.groups_id += self.env.ref('account.group_cash_rounding')
+        # Test 'add_invoice_line' rounding
+        invoice = self.init_invoice('out_invoice', products=self.product_a+self.product_b)
+        move_form = Form(invoice)
+        # Add a cash rounding having 'add_invoice_line'.
+        move_form.invoice_cash_rounding_id = self.cash_rounding_a
+        with move_form.invoice_line_ids.edit(0) as line_form:
+            line_form.price_unit = 999.99
+        move_form.save()
+
+        # Should not raise
+        invoice.action_post()
+
+        self.assertEqual(invoice.amount_total, 1410.0)
+        self.assertEqual(invoice.amount_untaxed, 1200.0)
+        self.assertEqual(invoice.amount_tax, 210)
+        self.assertEqual(len(invoice.invoice_line_ids), 2)
+        self.assertEqual(len(invoice.line_ids), 6)

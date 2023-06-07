@@ -143,6 +143,7 @@ ul.o_checklist {
         list-style: none;
         position: relative;
         margin-left: $o-checklist-margin-left;
+        margin-right: $o-checklist-margin-left;
 
         &:not(.oe-nested)::before {
             content: '';
@@ -168,6 +169,11 @@ ul.o_checklist {
             }
         }
     }
+}
+ul.o_checklist[dir="rtl"] > li:not(.oe-nested)::before {
+    left: auto;
+    right: - $o-checklist-margin-left;
+    text-align: right;
 }
 ol > li.o_indent, ul > li.o_indent {
     margin-left: 0;
@@ -226,6 +232,9 @@ img.ms-auto, img.mx-auto {
 .fa.mx-auto {
     display: block;
     text-align: center;
+}
+.fa.card-img, .fa.card-img-top, .fa.card-img-bottom {
+    width: auto;
 }
 
 div.media_iframe_video {
@@ -474,6 +483,10 @@ a.o_underline {
             cursor: ew-resize;
         }
     }
+}
+
+.o_ace_view_editor_resizing iframe {
+    pointer-events: none;
 }
 
 .o_ace_error_popover {
@@ -966,8 +979,7 @@ section, .oe_img_bg, [data-oe-shape-data] {
     $url-params: '';
     @each $i in $colors {
         $mapped-color: map-get($color-to-cc-bg-map, $i);
-        // %23 is the url-encoded form of '#'
-        $color: str-replace("#{o-color($mapped-color)}", '#', '%23');
+        $color: encode-color(#{o-color($mapped-color)});
         $url-params: '#{$url-params}&c#{$i}=#{$color}';
     }
     @return $url-params;

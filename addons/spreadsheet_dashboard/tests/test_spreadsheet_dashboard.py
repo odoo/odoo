@@ -1,4 +1,7 @@
-from odoo.tests.common import TransactionCase
+import base64
+import json
+from odoo.tests.common import TransactionCase, Form
+from odoo.exceptions import UserError, ValidationError
 
 
 class TestSpreadsheetDashboard(TransactionCase):
@@ -17,3 +20,27 @@ class TestSpreadsheetDashboard(TransactionCase):
             dashboard.raw,
             b'{"version": 1, "sheets": [{"id": "sheet1", "name": "Sheet1"}]}',
         )
+
+    def test_unlink_prevent_spreadsheet_group(self):
+        group = self.env["spreadsheet.dashboard.group"].create(
+            {"name": "a_group"}
+        )
+        self.env['ir.model.data'].create({
+            'name': group.name,
+            'module': 'spreadsheet_dashboard',
+            'model': group._name,
+            'res_id': group.id,
+        })
+        with self.assertRaises(UserError, msg="You cannot delete a_group as it is used in another module"):
+            group.unlink()
+
+    def test_onchange_json_data(self):
+        group = self.env["spreadsheet.dashboard.group"].create(
+            {"name": "a group"}
+        )
+        spreadsheet_form = Form(self.env['spreadsheet.dashboard'])
+        spreadsheet_form.name = 'Test spreadsheet'
+        spreadsheet_form.dashboard_group_id = group
+        spreadsheet_form.data = base64.b64encode(json.dumps({'key': 'value'}).encode('utf-8'))
+        with self.assertRaises(ValidationError, msg='Invalid JSON Data'):
+            spreadsheet_form.data = base64.b64encode('invalid json'.encode('utf-8'))

@@ -96,6 +96,7 @@ class TestWorkEntry(TestWorkEntryBase):
             'date_start': self.start,
             'date_stop': self.end,
         })
+        work_entry1.work_entry_type_id = False
         self.assertFalse(work_entry1.action_validate(), "It should not validate work_entries without a type")
         self.assertEqual(work_entry1.state, 'conflict', "It should change to conflict state")
         work_entry1.work_entry_type_id = self.work_entry_type

@@ -202,7 +202,7 @@ class PaypalController(http.Controller):
         else:
             response_content = response.text
             if response_content != 'VERIFIED':
-                _logger.error(
+                _logger.warning(
                     "PayPal did not confirm the origin of the notification with data:\n%s",
                     pprint.pformat(notification_data),
                 )

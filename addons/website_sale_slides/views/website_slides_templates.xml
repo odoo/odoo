@@ -150,13 +150,13 @@
 <template name="Display 'Buy Now'" id="course_option_buy_course_now" inherit_id="website_sale_slides.course_buy_course_button" active="False">
     <xpath expr="//div[hasclass('add_to_cart_button')]" position="before">
         <div class="mb-1">
-            <a role="button" class="post_link btn btn-primary btn-block" t-attf-href="/shop/cart/update?product_id={{channel.product_id.id}}&amp;express=1">
+            <a role="button" class="post_link btn btn-primary d-block" t-attf-href="/shop/cart/update?product_id={{channel.product_id.id}}&amp;express=1">
                 <i class="fa fa-bolt"></i> Buy Now
             </a>
         </div>
     </xpath>
     <xpath expr="//div[hasclass('add_to_cart_button')]//a[@id='add_to_cart']" position="attributes">
-        <attribute name="class">btn btn-outline-primary btn-block js_check_product o_js_add_to_cart a-submit</attribute>
+        <attribute name="class">btn btn-outline-primary d-block js_check_product o_js_add_to_cart a-submit</attribute>
     </xpath>
 </template>
 

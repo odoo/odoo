@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from markupsafe import Markup
+from unittest.mock import patch
 
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, UserError
@@ -188,6 +189,50 @@ class TestMailTemplateReset(MailCommon):
 
         # subject is not there in the data file template, so it should be set to False
         self.assertFalse(mail_template.subject, "Subject should be set to False")
+
+    def test_mail_template_reset_translation(self):
+        """ Test if a translated value can be reset correctly when its translation exists/doesn't exist in the po file of the directory """
+        self._load('mail', 'tests', 'test_mail_template.xml')
+
+        self.env['res.lang']._activate_lang('en_UK')
+        self.env['res.lang']._activate_lang('fr_FR')
+        mail_template = self.env.ref('mail.mail_template_test').with_context(lang='en_US')
+        mail_template.write({
+            'body_html': '<div>Hello</div>',
+            'name': 'Mail: Mail Template',
+        })
+
+        mail_template.with_context(lang='en_UK').write({
+            'body_html': '<div>Hello UK</div>',
+            'name': 'Mail: Mail Template UK',
+        })
+
+        context = {'default_template_ids': mail_template.ids, 'lang': 'fr_FR'}
+
+        def fake_load_file(translation_importer, filepath, lang, xmlids=None):
+            """ a fake load file to mimic the use case when
+            translations for fr_FR exist in the fr.po of the directory and
+            no en.po in the directory
+            """
+            if lang == 'fr_FR':  # fr_FR has translations
+                translation_importer.model_translations['mail.template'] = {
+                    'body_html': {'mail.mail_template_test': {'fr_FR': '<div>Hello Odoo FR</div>'}},
+                    'name':  {'mail.mail_template_test': {'fr_FR': "Mail: Test Mail Template FR"}},
+                }
+
+        with patch('odoo.tools.translate.TranslationImporter.load_file', fake_load_file):
+            mail_template_reset = self.env['mail.template.reset'].with_context(context).create({})
+            reset_action = mail_template_reset.reset_template()
+        self.assertTrue(reset_action)
+
+        self.assertEqual(mail_template.body_html.strip(), Markup('<div>Hello Odoo</div>'))
+        self.assertEqual(mail_template.with_context(lang='en_UK').body_html.strip(), Markup('<div>Hello Odoo</div>'))
+        self.assertEqual(mail_template.with_context(lang='fr_FR').body_html.strip(), Markup('<div>Hello Odoo FR</div>'))
+
+        self.assertEqual(mail_template.name, 'Mail: Test Mail Template')
+        self.assertEqual(mail_template.with_context(lang='en_UK').name, 'Mail: Test Mail Template')
+        self.assertEqual(mail_template.with_context(lang='fr_FR').name, 'Mail: Test Mail Template FR')
+
 
 @tagged('-at_install', 'post_install')
 class TestConfigRestrictEditor(MailCommon):

@@ -8,6 +8,7 @@
                     isFolded="state[getIdentifier(line)]"
                     showOptions="props.showOptions"
                     data="line"
+                    precision="props.precision"
                     toggleFolded.bind="onToggleFolded"/>
 
                 <t t-if="!state[getIdentifier(line)] &amp;&amp; hasComponents">
@@ -16,6 +17,7 @@
                         showOptions="props.showOptions"
                         currentWarehouseId="props.currentWarehouseId"
                         data="line"
+                        precision="props.precision"
                         changeFolded.bind="props.changeFolded"/>
                 </t>
             </t>
@@ -26,6 +28,7 @@
                 type="'operations'"
                 showOptions="props.showOptions"
                 data="data"
+                precision="props.precision"
                 changeFolded.bind="props.changeFolded"/>
         </t>
         <t name="byproducts" t-if="!!data.byproducts &amp;&amp; data.byproducts.length > 0">
@@ -34,6 +37,7 @@
                 type="'byproducts'"
                 showOptions="props.showOptions"
                 data="data"
+                precision="props.precision"
                 changeFolded.bind="props.changeFolded"/>
         </t>
     </t>

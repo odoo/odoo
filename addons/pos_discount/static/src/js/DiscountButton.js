@@ -48,7 +48,7 @@ odoo.define('pos_discount.DiscountButton', function(require) {
                 // That is, the use case of products with more than one tax is supported.
                 let tax_ids_array = tax_ids.split(',').filter(id => id !== '').map(id => Number(id));
 
-                let baseToDiscount = order.calculate_base_amount(tax_ids_array, lines.filter(ll => !ll.reward_id));
+                let baseToDiscount = order.calculate_base_amount(tax_ids_array, lines.filter(ll => !ll.reward_id && (!this.env.pos.config.tip_product_id || ll.product.id !== this.env.pos.config.tip_product_id[0])));
 
                 // We add the price as manually set to avoid recomputation when changing customer.
                 let discount = - pc / 100.0 * baseToDiscount;
@@ -67,7 +67,7 @@ odoo.define('pos_discount.DiscountButton', function(require) {
                                 ) :
                             this.env._t('No tax')),
                         extras: {
-                            price_manually_set: true,
+                            price_automatically_set: true,
                         },
                     });
                 }

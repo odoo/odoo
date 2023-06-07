@@ -629,3 +629,23 @@ class TestWarehouse(TestStockCommon):
         wh.save()
         self.assertEqual(warehouse.int_type_id.barcode, 'CH-INTERNAL')
         self.assertEqual(warehouse.int_type_id.sequence_id.prefix, 'CH/INT/')
+
+    def test_location_warehouse(self):
+        """ Check that the closest warehouse is selected
+        in a warehouse within warehouse situation
+        """
+        wh = self.env.ref("stock.warehouse0")
+        test_warehouse = self.warehouse_1
+        location = test_warehouse.lot_stock_id
+        self.assertEqual(location.warehouse_id, test_warehouse)
+
+        test_warehouse.view_location_id.location_id = wh.lot_stock_id.id
+        wh.sequence = 100
+        test_warehouse.sequence = 1
+        location._compute_warehouse_id()
+        self.assertEqual(location.warehouse_id, test_warehouse)
+
+        wh.sequence = 1
+        test_warehouse.sequence = 100
+        location._compute_warehouse_id()
+        self.assertEqual(location.warehouse_id, test_warehouse)

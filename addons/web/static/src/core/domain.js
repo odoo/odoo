@@ -11,7 +11,7 @@ import { toPyValue } from "./py_js/py_utils";
  * @typedef {DomainListRepr | string | Domain} DomainRepr
  */
 
-class InvalidDomainError extends Error {}
+export class InvalidDomainError extends Error {}
 
 /**
  * Javascript representation of an Odoo domain
@@ -209,6 +209,11 @@ function matchCondition(record, condition) {
 
     const fieldValue = typeof field === "number" ? field : record[field];
     switch (operator) {
+        case "=?":
+            if ([false, null].includes(value)) {
+                return true;
+            }
+        // eslint-disable-next-line no-fallthrough
         case "=":
         case "==":
             if (Array.isArray(fieldValue) && Array.isArray(value)) {

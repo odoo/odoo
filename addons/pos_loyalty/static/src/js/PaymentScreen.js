@@ -132,6 +132,8 @@ export const PosLoyaltyPaymentScreen = (PaymentScreen) =>
                         } else {
                             dbCoupon = new PosLoyaltyCard(
                                 couponUpdate.code, couponUpdate.id, couponUpdate.program_id, couponUpdate.partner_id, couponUpdate.points);
+                            this.env.pos.partnerId2CouponIds[partner.id] = this.env.pos.partnerId2CouponIds[partner.id] || new Set();
+                            this.env.pos.partnerId2CouponIds[partner.id].add(couponUpdate.id);
                         }
                         delete this.env.pos.couponCache[couponUpdate.old_id];
                         this.env.pos.couponCache[couponUpdate.id] = dbCoupon;

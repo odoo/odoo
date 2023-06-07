@@ -175,6 +175,12 @@ const timesheetUomService = {
             const parser = fieldUtils.parse[FieldTimesheetUom.prototype.formatType];
             return parser(value, field, options);
         };
+        if (!registry.category("formatters").contains("timesheet_uom")) {
+            registry.category("formatters").add("timesheet_uom", fieldUtils.format.timesheet_uom);
+        }
+        if (!registry.category("formatters").contains("timesheet_uom_no_toggle")) {
+            registry.category("formatters").add("timesheet_uom_no_toggle", fieldUtils.format.timesheet_uom_no_toggle);
+        }
         return timesheetUomInfo;
     },
 };

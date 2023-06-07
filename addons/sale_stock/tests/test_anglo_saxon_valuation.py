@@ -1690,3 +1690,31 @@ class TestAngloSaxonValuation(ValuationReconciliationTestCommon):
         cogs_aml = amls.filtered(lambda aml: aml.account_id == self.company_data['default_account_expense'])
         self.assertEqual(cogs_aml.debit, 10)
         self.assertEqual(cogs_aml.credit, 0)
+
+    def test_fifo_edit_svl_without_reinvoice(self):
+        """Edit SVL move line after delivering. Check no reinvoicing occurs."""
+        self.product.categ_id.property_cost_method = 'fifo'
+        self.product.invoice_policy = 'delivery'
+        self.product.standard_price = 10
+        self.product.expense_policy = 'cost'
+
+        self._fifo_in_one_eight_one_ten()
+
+        # Create and confirm a sale order for 2@12
+        sale_order = self._so_and_confirm_two_units()
+        self.assertEqual(len(sale_order.order_line), 1)
+        self.assertEqual(sale_order.order_line.product_uom_qty, 2.0)
+
+        # Deliver one.
+        sale_order.picking_ids.move_ids.quantity_done = 2
+        sale_order.picking_ids.button_validate()
+        svl_am = sale_order.order_line.move_ids.stock_valuation_layer_ids.account_move_id
+        svl_am.button_draft()
+        svl_line = svl_am.line_ids.filtered(lambda aml: aml.account_id == self.company_data['default_account_stock_out'])
+
+        svl_line.write({'analytic_distribution': {sale_order.analytic_account_id.id: 100}})
+        svl_am.action_post()
+
+        # Check no reinvoice line addded to the sale order
+        self.assertEqual(len(sale_order.order_line), 1)
+        self.assertEqual(sale_order.order_line.product_uom_qty, 2.0)

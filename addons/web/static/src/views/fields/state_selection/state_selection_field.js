@@ -25,7 +25,7 @@ export class StateSelectionField extends Component {
                                     this.options.map((value) => ({
                                         name: value[1],
                                         action: () => {
-                                            this.props.update(value[0], { save: true });
+                                            this.props.update(value[0], { save: this.props.autosave });
                                         },
                                     })),
                             },
@@ -81,6 +81,7 @@ StateSelectionField.components = {
 StateSelectionField.props = {
     ...standardFieldProps,
     hideLabel: { type: Boolean, optional: true },
+    autosave: { type: Boolean, optional: true },
 };
 StateSelectionField.defaultProps = {
     hideLabel: false,
@@ -92,6 +93,7 @@ StateSelectionField.supportedTypes = ["selection"];
 StateSelectionField.extractProps = ({ attrs }) => {
     return {
         hideLabel: !!attrs.options.hide_label,
+        autosave: "autosave" in attrs.options ? !!attrs.options.autosave : true,
     };
 };
 

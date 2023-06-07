@@ -83,16 +83,16 @@ export function _gridCleanUp(rowEl, columnEl) {
  * @param {Element} containerEl element with the class "container"
  */
 export function _toggleGridMode(containerEl) {
-    let rowEl = containerEl.querySelector('.row');
-    // For the snippets having text outside of the row (and therefore not in a
-    // column), create a column and put the text in it so it can also be placed
-    // in the grid.
-    const textEls = [...containerEl.children].filter(el => el.nodeName !== 'DIV');
-    if (rowEl && textEls.length > 0) {
+    let rowEl = containerEl.querySelector(':scope > .row');
+    // For the snippets having elements outside of the row (and therefore not in
+    // a column), create a column and put these elements in it so they can also
+    // be placed in the grid.
+    const outOfRowEls = [...containerEl.children].filter(el => !el.classList.contains('row'));
+    if (rowEl && outOfRowEls.length > 0) {
         const columnEl = document.createElement('div');
         columnEl.classList.add('col-lg-12');
-        for (let i = textEls.length - 1; i >= 0; i--) {
-            columnEl.prepend(textEls[i]);
+        for (let i = outOfRowEls.length - 1; i >= 0; i--) {
+            columnEl.prepend(outOfRowEls[i]);
         }
         rowEl.prepend(columnEl);
     }
@@ -190,13 +190,7 @@ function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
         columnEl.style.gridArea = `${rowStart} / ${columnStart} / ${rowEnd} / ${columnEnd}`;
         columnEl.classList.add('o_grid_item');
 
-        // Removing the grid classes (since they end with 0) and adding the
-        // correct ones.
-        const regex = /^(g-)/;
-        const toRemove = [...columnEl.classList].filter(c => {
-            return regex.test(c);
-        });
-        columnEl.classList.remove(...toRemove);
+        // Adding the grid classes.
         columnEl.classList.add('g-col-lg-' + columnSpan, 'g-height-' + rowSpan);
 
         // Setting the initial z-index.
@@ -276,8 +270,13 @@ export function _convertColumnToGrid(rowEl, columnEl, columnWidth, columnHeight)
     const columnColCount = Math.round((columnWidth + gridProp.columnGap) / (gridProp.columnSize + gridProp.columnGap));
     const columnRowCount = Math.ceil((columnHeight + gridProp.rowGap) / (gridProp.rowSize + gridProp.rowGap));
 
+    // Removing the padding and offset classes.
+    const regex = /^(pt|pb|col-|offset-)/;
+    const toRemove = [...columnEl.classList].filter(c => regex.test(c));
+    columnEl.classList.remove(...toRemove);
+
     // Adding the grid classes.
-    columnEl.classList.add('g-col-lg-' + columnColCount, 'g-height-' + columnRowCount);
+    columnEl.classList.add('g-col-lg-' + columnColCount, 'g-height-' + columnRowCount, 'col-lg-' + columnColCount);
     columnEl.classList.add('o_grid_item');
 
     return {columnColCount: columnColCount, columnRowCount: columnRowCount};

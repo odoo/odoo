@@ -311,7 +311,6 @@
                     <field name="ref"/>
                     <field name="date"/>
                     <field name="account_id"/>
-                    <field name="account_root_id"/>
                     <field name="account_type"/>
                     <field name="partner_id"/>
                     <field name="journal_id"/>
@@ -810,7 +809,8 @@
                                 <field name="partner_bank_id"
                                        context="{'default_partner_id': bank_partner_id}"
                                        domain="[('partner_id', '=', bank_partner_id)]"
-                                       attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
+                                       attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))],
+                                            'readonly': [('state', '!=', 'draft')]}"/>
 
                                 <!-- Invoice payment terms (only invoices) + due date (only invoices / receipts) -->
                                 <div class="o_td_label" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
@@ -1025,7 +1025,7 @@
                                                                        ('payment_state' ,'=', 'invoicing_legacy')]}">
 
                                             <field name="tax_totals" widget="account-tax-totals-field" nolabel="1" colspan="2"
-                                                   attrs="{'readonly': ['|', ('state', '!=', 'draft'), '&amp;', ('move_type', 'not in', ('in_invoice', 'in_refund')), ('quick_edit_mode', '=', False)]}"/>
+                                                   attrs="{'readonly': ['|', ('state', '!=', 'draft'), '&amp;', ('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt')), ('quick_edit_mode', '=', False)]}"/>
 
                                             <field name="invoice_payments_widget" colspan="2" nolabel="1" widget="payment"/>
                                             <field name="amount_residual" class="oe_subtotal_footer_separator" attrs="{'invisible': [('state', '=', 'draft')]}"/>

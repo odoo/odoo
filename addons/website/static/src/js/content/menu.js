@@ -5,6 +5,7 @@ const config = require('web.config');
 var publicWidget = require('web.public.widget');
 var animations = require('website.content.snippets.animation');
 const extraMenuUpdateCallbacks = [];
+const weUtils = require('web_editor.utils');
 
 const BaseAnimatedHeader = animations.Animation.extend({
     disabledInEditableMode: false,
@@ -231,8 +232,12 @@ const BaseAnimatedHeader = animations.Animation.extend({
         }
 
         if (this.closeOpenedMenus) {
-            this.$dropdowns.removeClass('show');
-            this.$navbarCollapses.removeClass('show').attr('aria-expanded', false);
+            // TODO master: make this.$dropdowns the .dropdown-toggle directly.
+            for (const dropdownMenuEl of this.$dropdowns) {
+                Dropdown.getOrCreateInstance(
+                    dropdownMenuEl.closest('.dropdown').querySelector('.dropdown-toggle')
+                ).hide();
+            }
         }
     },
     /**
@@ -500,6 +505,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      */
     start: function () {
         this.defaultAlignment = this.$el.is('.ms-auto, .ms-auto ~ *') ? 'end' : 'start';
+        this.isRtl = !!this.el.closest('#wrapwrap.o_rtl');
         return this._super.apply(this, arguments);
     },
 
@@ -517,7 +523,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @returns {boolean}
      */
     _checkOpening: function (alignment, liOffset, liWidth, menuWidth, pageWidth) {
-        if (alignment === 'start') {
+        if (alignment === 'start' && !this.isRtl || alignment === 'end' && this.isRtl) {
             // Check if ok to open the dropdown to the right (no window overflow)
             return (liOffset + menuWidth <= pageWidth);
         } else {
@@ -534,7 +540,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @private
      */
     _onDropdownShow: function (ev) {
-        const $dropdown = $(ev.target).closest('.nav-item.dropdown');
+        const $dropdown = $(ev.target).closest('.dropdown');
         var $menu = $dropdown.children('.dropdown-menu');
         var liOffset = $dropdown.offset().left;
         var liWidth = $dropdown.outerWidth();
@@ -545,7 +551,8 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
 
         var alignment = this.defaultAlignment;
         if ($dropdown.nextAll(':visible').length === 0) {
-            // The dropdown is the last menu item, open to the left
+            // The dropdown is the last menu item, open to the left side
+            // (right side with rtl languages).
             alignment = 'end';
         }
 
@@ -578,9 +585,22 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      * @override
      */
     start: function () {
+        if (this.editableMode) {
+            this._onPageClick = this._onPageClick.bind(this);
+            this.el.closest('#wrapwrap').addEventListener('click', this._onPageClick, {capture: true});
+        }
         this.$dropdownMenus = this.$el.find('.dropdown-menu');
         this.$dropdownToggles = this.$el.find('.dropdown-toggle');
         this._dropdownHover();
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        if (this.editableMode) {
+            this.el.closest('#wrapwrap').removeEventListener('click', this._onPageClick, {capture: true});
+        }
         return this._super.apply(this, arguments);
     },
 
@@ -601,6 +621,16 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
             this.$dropdownMenus.css('top', '');
         }
     },
+    /**
+     * Hides all opened dropdowns.
+     *
+     * @private
+     */
+    _hideDropdowns() {
+        for (const toggleEl of this.el.querySelectorAll('.dropdown-toggle.show')) {
+            Dropdown.getOrCreateInstance(toggleEl).hide();
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -611,28 +641,47 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      * @param {Event} ev
      */
     _onMouseEnter: function (ev) {
-        if (config.device.size_class <= config.device.SIZES.SM) {
+        if (this.editableMode) {
+            // Do not handle hover if another dropdown is opened.
+            if (this.el.querySelector('.dropdown-toggle.show')) {
+                return;
+            }
+        }
+        // The user must click on the dropdown if he is on mobile (no way to
+        // hover) or if the dropdown is the extra menu ('+').
+        if (config.device.size_class <= config.device.SIZES.SM ||
+            ev.currentTarget.classList.contains('o_extra_menu_items')) {
             return;
         }
-
-        const $dropdown = $(ev.currentTarget);
-        $dropdown.addClass('show');
-        $dropdown.find(this.$dropdownToggles).attr('aria-expanded', 'true');
-        $dropdown.find(this.$dropdownMenus).addClass('show');
+        Dropdown.getOrCreateInstance(ev.currentTarget.querySelector('.dropdown-toggle')).show();
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onMouseLeave: function (ev) {
-        if (config.device.size_class <= config.device.SIZES.SM) {
+        if (this.editableMode) {
+            // Cancel handling from view mode.
             return;
         }
-
-        const $dropdown = $(ev.currentTarget);
-        $dropdown.removeClass('show');
-        $dropdown.find(this.$dropdownToggles).attr('aria-expanded', 'false');
-        $dropdown.find(this.$dropdownMenus).removeClass('show');
+        if (config.device.size_class <= config.device.SIZES.SM ||
+            ev.currentTarget.classList.contains('o_extra_menu_items')) {
+            return;
+        }
+        Dropdown.getOrCreateInstance(ev.currentTarget.querySelector('.dropdown-toggle')).hide();
+    },
+    /**
+     * Called when the page is clicked anywhere.
+     * Closes the shown dropdown if the click is outside of it.
+     *
+     * @private
+     * @param {Event} ev
+     */
+    _onPageClick(ev) {
+        if (ev.target.closest('.dropdown-menu.show')) {
+            return;
+        }
+        this._hideDropdowns();
     },
 });
 
@@ -675,6 +724,13 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
                     this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
                 }
             }
+            // Specific case with the "boxed" header template where the "call to
+            // action" button is inaccessible in the "off-canvas" mobile menu.
+            this.offcanvasAndBoxedHeader = false;
+            if (weUtils.getCSSVariableValue('header-template').includes('boxed')) {
+                this.boxedHeaderCallToActionEl = this.$target[0].querySelector('#top_menu_collapse .oe_structure_solo');
+                this.offcanvasAndBoxedHeader = !!this.boxedHeaderCallToActionEl;
+            }
         }
         return this._super(...arguments);
     },
@@ -694,6 +750,10 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
             this.navbarEl.append(this.languageSelectorEl);
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
         }
+        if (this.offcanvasAndBoxedHeader) {
+            this.boxedHeaderCallToActionEl.classList.add('nav-item');
+            this.navbarEl.append(this.boxedHeaderCallToActionEl);
+        }
     },
     /**
      * @private
@@ -705,6 +765,10 @@ publicWidget.registry.HeaderMainCollapse = publicWidget.Widget.extend({
             this.languageSelectorEl.classList.remove('nav-item');
             this.navbarEl.after(this.languageSelectorEl);
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive();
+        }
+        if (this.offcanvasAndBoxedHeader) {
+            this.boxedHeaderCallToActionEl.classList.remove('nav-item');
+            this.navbarEl.after(this.boxedHeaderCallToActionEl);
         }
     },
 });

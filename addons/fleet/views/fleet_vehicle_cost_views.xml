@@ -20,19 +20,31 @@
                     <div class="oe_title">
                         <h1><field name="name"/></h1>
                     </div>
-                    <group col="2">
-                        <group string="Contract Information">
-                            <field name="user_id"/>
+                    <group string="Information" col="2">
+                        <group>
+                            <field name="ins_ref"/>
                             <field name="cost_subtype_id"/>
                             <field name="insurer_id"/>
-                            <field name="ins_ref"/>
+                            <field name="service_ids" widget="many2many_tags"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                        <group string="Vehicle Information">
-                            <field name="vehicle_id"/>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="expiration_date" attrs="{'required': [('cost_frequency', '!=', 'no')]}"/>
+                            <field name="user_id"/>
+                            <field name="purchaser_id" invisible="1"/>
+                        </group>
+                    </group>
+                    <separator string="Vehicle"/>
+                    <group col="2">
+                        <group col="1">
+                            <field name="vehicle_id" readonly="1"/>
+                        </group>
+                        <group col="2">
                             <field name="purchaser_id"/>
                         </group>
                     </group>
+                    <separator string="Cost"/>
                     <group col="2">
                         <group>
                             <field name="amount" string="Activation Cost" help="Cost that is paid only once at the creation of the contract" widget="monetary" class="w-25"/>
@@ -45,13 +57,9 @@
                             </div>
                         </group>
                         <group>
-                            <field name="date" string="Invoice Date"/>
-                            <field name="start_date"/>
-                            <field name="expiration_date" attrs="{'required': [('cost_frequency', '!=', 'no')]}"/>
+                            <field name="date"/>
                         </group>
                     </group>
-                    <separator string="Included Services"/>
-                    <field name="service_ids" widget="many2many_tags" nolabel="1"/>
                     <separator string="Terms and Conditions"/>
                     <field name="notes" nolabel="1" placeholder="Write here all other information relative to this contract" />
                 </sheet>
@@ -263,7 +271,7 @@
                 <field name="date" readonly="1" />
                 <field name="description" />
                 <field name="service_type_id" />
-                <field name="vehicle_id" readonly="1" widget="many2one_avatar" />
+                <field name="vehicle_id" readonly="1"/>
                 <field name="purchaser_id" readonly="1" widget="many2one_avatar"/>
                 <field name="vendor_id" optional="show" />
                 <field name="inv_ref" invisible="1" />

@@ -22,6 +22,7 @@ class TestStockValuationLCCommon(TestStockLandedCostsCommon):
             'name': 'product1',
             'type': 'service',
             'categ_id': cls.stock_account_product_categ.id,
+            'landed_cost_ok': True,
         })
 
     def setUp(self):
@@ -434,6 +435,7 @@ class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
         vb = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         vb.partner_id = self.vendor1
         vb.invoice_date = vb.date
+        self.productlc1.landed_cost_ok = True
         with vb.invoice_line_ids.new() as inv_line:
             inv_line.product_id = self.productlc1
             inv_line.price_unit = 50

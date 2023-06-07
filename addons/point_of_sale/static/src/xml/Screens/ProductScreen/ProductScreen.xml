@@ -18,8 +18,7 @@
                             </t>
                         </div>
                         <div class="subpads">
-                            <t t-set="_actionName">Payment</t>
-                            <ActionpadWidget partner="partner" actionName="_actionName" onSwitchPane.bind="switchPane" />
+                            <ActionpadWidget partner="partner" actionName="constructor.numpadActionName" onSwitchPane.bind="switchPane" />
                             <NumpadWidget activeMode="env.pos.numpadMode" />
                         </div>
                     </div>

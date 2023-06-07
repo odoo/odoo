@@ -205,7 +205,7 @@ publicWidget.registry.boothRegistration = publicWidget.Widget.extend({
         if (this._isConfirmationFormValid($form)) {
             const formData = new FormData($form[0]);
             const response = await $.ajax({
-                url: `/event/${this.$el.data('eventId')}/booth/confirm`,
+                url: `/event/${encodeURIComponent(this.$el.data('eventId'))}/booth/confirm`,
                 data: formData,
                 processData: false,
                 contentType: false,

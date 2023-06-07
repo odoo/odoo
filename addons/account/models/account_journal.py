@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from odoo import api, Command, fields, models, _
-from odoo.osv import expression
 from odoo.exceptions import UserError, ValidationError
 from odoo.addons.base.models.res_bank import sanitize_account_number
 from odoo.tools import remove_accents
@@ -770,6 +769,7 @@ class AccountJournal(models.Model):
     # REPORTING METHODS
     # -------------------------------------------------------------------------
 
+    # TODO move to `account_reports` in master (simple read_group)
     def _get_journal_bank_account_balance(self, domain=None):
         ''' Get the bank balance of the current journal by filtering the journal items using the journal's accounts.
 
@@ -830,6 +830,7 @@ class AccountJournal(models.Model):
             account_ids.add(line.payment_account_id.id or self.company_id.account_journal_payment_credit_account_id.id)
         return self.env['account.account'].browse(account_ids)
 
+    # TODO remove in master
     def _get_journal_outstanding_payments_account_balance(self, domain=None, date=None):
         ''' Get the outstanding payments balance of the current journal by filtering the journal items using the
         journal's accounts.
@@ -896,6 +897,7 @@ class AccountJournal(models.Model):
                 total_balance += balance
         return total_balance, nb_lines
 
+    # TODO move to `account_reports` in master
     def _get_last_bank_statement(self, domain=None):
         ''' Retrieve the last bank statement created using this journal.
         :param domain:  An additional domain to be applied on the account.bank.statement model.

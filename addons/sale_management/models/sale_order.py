@@ -34,6 +34,9 @@ class SaleOrder(models.Model):
         for order in self:
             company_template = order.company_id.sale_order_template_id
             if company_template and order.sale_order_template_id != company_template:
+                if 'website_id' in self._fields and order.website_id:
+                    # don't apply quotation template for order created via eCommerce
+                    continue
                 order.sale_order_template_id = order.company_id.sale_order_template_id.id
 
     @api.depends('partner_id', 'sale_order_template_id')
@@ -96,6 +99,11 @@ class SaleOrder(models.Model):
             fields.Command.create(line._prepare_order_line_values())
             for line in sale_order_template.sale_order_template_line_ids
         ]
+
+        # set first line to sequence -99, so a resequence on first page doesn't cause following page
+        # lines (that all have sequence 10 by default) to get mixed in the first page
+        if len(order_lines_data) >= 2:
+            order_lines_data[1][2]['sequence'] = -99
 
         self.order_line = order_lines_data
 

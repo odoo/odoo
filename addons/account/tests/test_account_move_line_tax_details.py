@@ -654,6 +654,47 @@ class TestAccountTaxDetailsReport(AccountTestInvoicingCommon):
         )
         self.assertTotalAmounts(invoice, tax_details)
 
+    def test_round_per_line_update(self):
+        self.env.company.tax_calculation_rounding_method = 'round_per_line'
+
+        tax_8 = self.env['account.tax'].create({
+            'name': "tax_8",
+            'amount_type': 'percent',
+            'amount': 8.0,
+        })
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'invoice_cash_rounding_id': self.cash_rounding_b.id,
+            'invoice_line_ids': [
+                Command.create({
+                    'name': 'line1',
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'price_unit': 45.45,
+                    'tax_ids': [Command.set(tax_8.ids)],
+                })
+            ]
+        })
+        invoice.invoice_line_ids.write({"price_unit": 4545})
+
+        base_lines, tax_lines = self._dispatch_move_lines(invoice)
+
+        tax_details = self._get_tax_details()
+        self.assertTaxDetailsValues(
+            tax_details,
+            [
+                {
+                    'base_line_id': base_lines[0].id,
+                    'tax_line_id': tax_lines[0].id,
+                    'base_amount': -4545.0,
+                    'tax_amount': -363.6,
+                },
+            ],
+        )
+        self.assertTotalAmounts(invoice, tax_details)
+
     def test_partitioning_lines_by_moves(self):
         tax_20_affect = self.env['account.tax'].create({
             'name': "tax_20_affect",

@@ -94,7 +94,7 @@ class AlipayController(http.Controller):
         else:
             response_content = response.text
             if response_content != 'true':
-                _logger.error(
+                _logger.warning(
                     "Alipay did not confirm the origin of the notification with data:\n%s", payload
                 )
                 raise Forbidden()

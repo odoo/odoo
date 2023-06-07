@@ -359,11 +359,14 @@ class MrpWorkcenterProductivityLoss(models.Model):
         and the workcenter has a calendar, convert the dates into a duration based on
         working hours.
         """
-        if (self.loss_type not in ('productive', 'performance')) and workcenter and workcenter.resource_calendar_id:
-            r = workcenter._get_work_days_data_batch(date_start, date_stop)[workcenter.id]['hours']
-            return round(r * 60, 2)
-        else:
-            return round((date_stop - date_start).total_seconds() / 60.0, 2)
+        duration = 0
+        for productivity_loss in self:
+            if (productivity_loss.loss_type not in ('productive', 'performance')) and workcenter and workcenter.resource_calendar_id:
+                r = workcenter._get_work_days_data_batch(date_start, date_stop)[workcenter.id]['hours']
+                duration = max(duration, r * 60)
+            else:
+                duration = max(duration, (date_stop - date_start).total_seconds() / 60.0)
+        return round(duration, 2)
 
 class MrpWorkcenterProductivity(models.Model):
     _name = "mrp.workcenter.productivity"

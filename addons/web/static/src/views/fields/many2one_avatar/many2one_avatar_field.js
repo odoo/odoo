@@ -5,7 +5,11 @@ import { Many2OneField } from "../many2one/many2one_field";
 
 import { Component } from "@odoo/owl";
 
-export class Many2OneAvatarField extends Component {}
+export class Many2OneAvatarField extends Component {
+    get relation() {
+        return this.props.relation;
+    }
+}
 
 Many2OneAvatarField.template = "web.Many2OneAvatarField";
 Many2OneAvatarField.components = {

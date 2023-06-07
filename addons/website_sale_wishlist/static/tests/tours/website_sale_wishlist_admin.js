@@ -17,10 +17,9 @@ wTourUtils.registerWebsitePreviewTour('shop_wishlist_admin', {
             trigger: 'iframe body:not(:has(.js_product_change))',
             extra_trigger: 'iframe #product_details',
         },
-        wTourUtils.clickOnEdit(),
+        ...wTourUtils.clickOnEditAndWaitEditMode(),
         {
             content: "open customize tab",
-            extra_trigger: '#oe_snippets.o_loaded',
             trigger: '.o_we_customize_snippet_btn',
         },
         {

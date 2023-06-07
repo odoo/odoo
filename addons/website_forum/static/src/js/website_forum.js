@@ -48,13 +48,13 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         // welcome message action button
         var forumLogin = _.string.sprintf('%s/web?redirect=%s',
             window.location.origin,
-            escape(window.location.href)
+            encodeURIComponent(window.location.href)
         );
         $('.forum_register_url').attr('href', forumLogin);
 
         // Initialize forum's tooltips
         this.$('[data-bs-toggle="tooltip"]').tooltip({delay: 0});
-        this.$('[data-bs-toggle="popover"]').popover({offset: 8});
+        this.$('[data-bs-toggle="popover"]').popover({offset: '8'});
 
         $('input.js_select2').select2({
             tags: true,
@@ -255,7 +255,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 const linkLabel = _t("Read the guidelines to know how to gain karma.");
                 notifOptions.message = Markup`
                     ${notifOptions.message}<br/>
-                    <a class="alert-link" href="/forum/${forumID}/faq">${linkLabel}</a>
+                    <a class="alert-link" href="/forum/${encodeURIComponent(forumID)}/faq">${linkLabel}</a>
                 `;
             }
         }

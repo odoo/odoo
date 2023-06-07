@@ -21,6 +21,32 @@ class StockPicking(models.Model):
     l10n_it_transport_method_details = fields.Char('Transport Note')
     l10n_it_parcels = fields.Integer(string="Parcels", default=1)
     l10n_it_ddt_number = fields.Char('DDT Number', readonly=True)
+    l10n_it_show_print_ddt_button = fields.Boolean(compute="_compute_l10n_it_show_print_ddt_button")
+
+    @api.depends('country_code',
+                 'picking_type_code',
+                 'state',
+                 'is_locked',
+                 'move_ids',
+                 'location_id',
+                 'location_dest_id')
+    def _compute_l10n_it_show_print_ddt_button(self):
+        # Enable printing the DDT for done outgoing shipments
+        # or dropshipping (picking going from supplier to customer)
+        for picking in self:
+            picking.l10n_it_show_print_ddt_button = (
+                picking.country_code == 'IT'
+                and picking.state == 'done'
+                and picking.is_locked
+                and (picking.picking_type_code == 'outgoing'
+                     or (
+                         picking.move_ids_without_package
+                         and picking.move_ids_without_package[0].partner_id
+                         and picking.location_id.usage == 'supplier'
+                         and picking.location_dest_id.usage == 'customer'
+                         )
+                     )
+                )
 
     def _action_done(self):
         super(StockPicking, self)._action_done()

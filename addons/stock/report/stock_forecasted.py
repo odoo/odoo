@@ -224,7 +224,6 @@ class ReplenishmentReport(models.AbstractModel):
         )
         outs = self.env['stock.move'].search(out_domain, order='reservation_date, priority desc, date, id')
         outs_per_product = defaultdict(list)
-        reserved_outs = self.env['stock.move']
         reserved_outs_quantitites = defaultdict(float)
         reserved_outs_per_product = defaultdict(list)
         outs_reservation = {}
@@ -247,11 +246,8 @@ class ReplenishmentReport(models.AbstractModel):
                 if float_compare(out_qty_reserved, out.product_qty, precision_rounding=rounding) >= 0:
                     break
             if not float_is_zero(out_qty_reserved, out.product_id.uom_id.rounding):
-                reserved_outs |= out
                 reserved_outs_per_product[out.product_id.id].append(out)
                 outs_reservation[out.id] = out_qty_reserved
-        # Different sort than unreserved outs
-        reserved_outs = self.env['stock.move'].search([('id', 'in', reserved_outs.ids)], order="priority desc, date, id")
         ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
         ins_per_product = defaultdict(list)
         for in_ in ins:
@@ -278,7 +274,7 @@ class ReplenishmentReport(models.AbstractModel):
                 # Reconcile with the current stock.
                 reserved = 0.0
                 if not float_is_zero(reserved_availability, precision_rounding=product_rounding):
-                    reserved = out.product_uom._compute_quantity(reserved_availability, product.uom_id)
+                    reserved = reserved_availability
                 demand = out.product_qty - reserved
 
                 if float_is_zero(demand, precision_rounding=product_rounding):

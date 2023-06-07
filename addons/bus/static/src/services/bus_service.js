@@ -29,6 +29,7 @@ export const busService = {
         let isActive = false;
         let isInitialized = false;
         let isUsingSharedWorker = browser.SharedWorker && !isIosApp();
+        const startTs = new Date().getTime();
         const connectionInitializedDeferred = new Deferred();
 
         /**
@@ -40,6 +41,9 @@ export const busService = {
         * executed.
         */
         function send(action, data) {
+            if (!worker) {
+                return;
+            }
             const message = { action, data };
             if (isUsingSharedWorker) {
                 worker.port.postMessage(message);
@@ -92,6 +96,7 @@ export const busService = {
                 debug: odoo.debug,
                 lastNotificationId: multiTab.getSharedValue('last_notification_id', 0),
                 uid,
+                startTs,
             });
         }
 
@@ -148,12 +153,14 @@ export const busService = {
             }
         });
         browser.addEventListener('offline', () => send('stop'));
-        startWorker();
-        await connectionInitializedDeferred;
 
         return {
             addEventListener: bus.addEventListener.bind(bus),
-            addChannel: channel => {
+            addChannel: async channel => {
+                if (!worker) {
+                    startWorker();
+                    await connectionInitializedDeferred;
+                }
                 send('add_channel', channel);
                 send('start');
                 isActive = true;
@@ -163,7 +170,11 @@ export const busService = {
             trigger: bus.trigger.bind(bus),
             removeEventListener: bus.removeEventListener.bind(bus),
             send: (eventName, data) => send('send', { event_name: eventName, data }),
-            start: () => {
+            start: async () => {
+                if (!worker) {
+                    startWorker();
+                    await connectionInitializedDeferred;
+                }
                 send('start');
                 isActive = true;
             },
