@@ -275,6 +275,7 @@ class PaymentTransaction(models.Model):
             'currency': self.currency_id.name.lower(),
             'description': self.reference,
             'capture_method': 'manual' if self.provider_id.capture_manually else 'automatic',
+            'payment_method_types[]': ['card', 'us_bank_account'],
         }
         if payment_by_token:
             payment_intent_payload.update(
@@ -493,16 +494,16 @@ class PaymentTransaction(models.Model):
             )
             return
 
-        if payment_method.get('type') != 'card':
-            # Only 'card' payment methods can be tokenized. This case should normally not happen as
-            # non-recurring payment methods are not shown to the customer if the "Save my payment
-            # details checkbox" is shown. Still, better be on the safe side..
-            _logger.warning("requested tokenization of non-recurring payment method")
+        if payment_method.get('type') not in ('card', 'us_bank_account'):
+            # Only 'card' and 'us_bank_account' payment methods can be tokenized. This case should
+            # normally not happen as non-recurring payment methods are not shown to the customer
+            # if the "Save my payment details checkbox" is shown. Still, better be on the safe side..
+            _logger.warning("requested tokenization of non-recurring payment method %s", payment_method.get('type'))
             return
 
         token = self.env['payment.token'].create({
             'provider_id': self.provider_id.id,
-            'payment_details': payment_method['card'].get('last4'),
+            'payment_details': payment_method[payment_method['type']].get('last4'),
             'partner_id': self.partner_id.id,
             'provider_ref': customer_id,
             'verified': True,
