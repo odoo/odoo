@@ -824,11 +824,92 @@ describe('Utils', () => {
         });
     });
     describe('getNormalizedCursorPosition', () => {
-        // TODO: test more.
         it('should move the cursor from after a <b> to within it', () => {
             const [p] = insertTestHtml('<p><b>abc</b>def</p>');
             const result = getNormalizedCursorPosition(p.lastChild, 0);
             window.chai.expect(result).to.eql([p.firstChild.firstChild, 3]);
+        });
+        it('should move the cursor before a non-editable element with offset === 0', () => {
+            const [p] = insertTestHtml('<p><span contenteditable="false">leavemealone</span></p>');
+            const result = getNormalizedCursorPosition(p.lastChild, 0);
+            window.chai.expect(result).to.eql([p, 0]);
+        });
+        it('should move the cursor after a non-editable element with offset > 0', () => {
+            const [p] = insertTestHtml('<p><span contenteditable="false">leavemealone</span></p>');
+            const result = getNormalizedCursorPosition(p.lastChild, 1);
+            window.chai.expect(result).to.eql([p, 1]);
+        });
+        it('should move the cursor after a "visibleEmpty" element', () => {
+            const [p] = insertTestHtml('<p>ab<br>cd</p>');
+            const result = getNormalizedCursorPosition(p.lastElementChild, 0);
+            window.chai.expect(result).to.eql([p.lastChild, 0]);
+        });
+        it('should move the cursor before a "fake line break element"', () => {
+            const [p] = insertTestHtml('<p><br></p>');
+            const result = getNormalizedCursorPosition(p.lastElementChild, 0);
+            window.chai.expect(result).to.eql([p, 0]);
+        });
+        it('should loop outside (left) a non-editable context and then find the deepest editable leaf position', () => {
+            const [p] = insertTestHtml(unformat(`
+                <p>
+                    <a class="end">text</a>
+                    <span contenteditable="false">
+                        <b class="start">
+                            text
+                        </b>
+                    </span>
+                </p>
+            `));
+            const start = p.querySelector(".start");
+            const end = p.querySelector(".end");
+            const result = getNormalizedCursorPosition(start.lastChild, 0);
+            window.chai.expect(result).to.eql([end.firstChild, 4]);
+        });
+        it('should loop outside (right) a non-editable context and then find the deepest editable leaf position', () => {
+            const [p] = insertTestHtml(unformat(`
+                <p>
+                    <span contenteditable="false">
+                        <b class="start">
+                            text
+                        </b>
+                    </span>
+                    <a class="end">text</a>
+                </p>
+            `));
+            const start = p.querySelector(".start");
+            const end = p.querySelector(".end");
+            const result = getNormalizedCursorPosition(start.lastChild, 1);
+            window.chai.expect(result).to.eql([end.lastChild, 0]);
+        });
+        it('should loop outside (left) a non-editable context and not traverse a non-editable leaf position', () => {
+            const [p] = insertTestHtml(unformat(`
+                <p>
+                    <a contenteditable="false">leavemealone</a>
+                    <span contenteditable="false">
+                        <b class="start">
+                            text
+                        </b>
+                    </span>
+                </p>
+            `));
+            const start = p.querySelector(".start");
+            const result = getNormalizedCursorPosition(start.lastChild, 0);
+            window.chai.expect(result).to.eql([p, 1]);
+        });
+        it('should loop outside (right) a non-editable context and not traverse a non-editable leaf position', () => {
+            const [p] = insertTestHtml(unformat(`
+                <p>
+                    <span contenteditable="false">
+                        <b class="start">
+                            text
+                        </b>
+                    </span>
+                    <a contenteditable="false">leavemealone</a>
+                </p>
+            `));
+            const start = p.querySelector(".start");
+            const result = getNormalizedCursorPosition(start.lastChild, 1);
+            window.chai.expect(result).to.eql([p, 1]);
         });
     });
     describe('setCursor', () => {
