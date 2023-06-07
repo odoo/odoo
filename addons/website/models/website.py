@@ -510,7 +510,15 @@ class Website(models.Model):
             page_view_id.save(value=''.join(rendered_snippets), xpath="(//div[hasclass('oe_structure')])[last()]")
 
         def set_images(images):
+            names = self.env['ir.model.data'].search([
+                ('name', '=ilike', f'configurator\\_{website.id}\\_%'),
+                ('module', '=', 'website'),
+                ('model', '=', 'ir.attachment')
+            ]).mapped('name')
             for name, url in images.items():
+                extn_identifier = 'configurator_%s_%s' % (website.id, name.split('.')[1])
+                if extn_identifier in names:
+                    continue
                 try:
                     response = requests.get(url, timeout=3)
                     response.raise_for_status()
@@ -526,7 +534,7 @@ class Website(models.Model):
                         'public': True,
                     })
                     self.env['ir.model.data'].create({
-                        'name': 'configurator_%s_%s' % (website.id, name.split('.')[1]),
+                        'name': extn_identifier,
                         'module': 'website',
                         'model': 'ir.attachment',
                         'res_id': attachment.id,
