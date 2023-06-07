@@ -21,6 +21,7 @@ class StockLandedCost(models.Model):
     _name = 'stock.landed.cost'
     _description = 'Stock Landed Cost'
     _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'date desc, id desc'
 
     def _default_account_journal_id(self):
         """Take the journal configured in the company, else fallback on the stock journal."""
