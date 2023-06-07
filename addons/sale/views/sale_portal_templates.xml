@@ -432,7 +432,12 @@
                             t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
                     </div>
                 </div>
-
+                <div class="row" t-if="sale_order.client_order_ref">
+                    <div class="col-lg-6">
+                        <strong class="d-block mb-1">Your Reference:</strong>
+                        <t t-out="sale_order.client_order_ref"/>
+                    </div>
+                </div>
                 <t t-set="invoices" t-value="sale_order.invoice_ids.filtered(lambda i: i.state not in ['draft', 'cancel'])"/>
                 <div t-if="invoices" class="row">
                     <div class="col">
