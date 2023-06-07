@@ -242,7 +242,7 @@ QUnit.module('web_editor', {}, function () {
         });
 
         QUnit.test('colorpicker', async function (assert) {
-            assert.expect(6);
+            assert.expect(7);
 
             var form = await testUtils.createView({
                 View: FormView,
@@ -312,6 +312,16 @@ QUnit.module('web_editor', {}, function () {
             assert.strictEqual($field.find('.note-editable').html(),
                 '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font><font style="" class="bg-o-color-3">oto to</font>to</p><p>tata</p>',
                 "should have rendered the field correctly in edit");
+
+            // Make sure the reset button works too
+            await openColorpicker('#toolbar .note-back-color-preview');
+            await testUtils.dom.click($('#toolbar .note-back-color-preview .o_colorpicker_reset'));
+
+            // TODO right now the behavior is to force "inherit" as background
+            // but it should remove the useless font element when possible.
+            assert.strictEqual($field.find('.note-editable').html(),
+                '<p>t<font style="background-color: rgb(0, 255, 255);">oto t</font><font style="background-color: inherit;" class="">oto to</font>to</p><p>tata</p>',
+                "should have properly reset the background color");
 
             form.destroy();
         });
