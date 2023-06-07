@@ -245,7 +245,7 @@ class PosConfig(models.Model):
     @api.depends('iface_tipproduct')
     def _compute_tip_product_id(self):
         for pos_config in self:
-            pos_config.tip_product_id = self.env.ref("point_of_sale.product_product_tip")
+            pos_config.tip_product_id = self.env.ref("point_of_sale.product_product_tip", raise_if_not_found=False)
             if not pos_config.tip_product_id:
                 pos_config.tip_product_id = self.env['product.product'].search([('default_code', '=', 'TIPS')], limit=1)
 
