@@ -747,7 +747,7 @@ export class OdooEditor extends EventTarget {
         // sanitize and mark current position as sanitized
         sanitize(target);
         this._pluginCall('sanitizeElement',
-                         [target.parentElement]);
+                         [target.parentElement || target]);
         this.options.onPostSanitize(target);
     }
 
