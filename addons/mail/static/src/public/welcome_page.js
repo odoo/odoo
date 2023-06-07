@@ -107,7 +107,7 @@ export class WelcomePage extends Component {
             this.disableMicrophone();
         }
         browser.localStorage.setItem(
-            "mail_call_preview_join_mute",
+            "discuss_call_preview_join_mute",
             Boolean(!this.state.audioStream)
         );
     }
@@ -119,7 +119,7 @@ export class WelcomePage extends Component {
             this.disableVideo();
         }
         browser.localStorage.setItem(
-            "mail_call_preview_join_video",
+            "discuss_call_preview_join_video",
             Boolean(this.state.videoStream)
         );
     }

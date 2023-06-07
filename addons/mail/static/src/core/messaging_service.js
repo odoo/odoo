@@ -30,8 +30,6 @@ export class Messaging {
         /** @type {import("@mail/attachments/attachment_service").AttachmentService} */
         this.attachmentService = services["mail.attachment"];
         this.notificationService = services.notification;
-        /** @type {import("@mail/core/sound_effects_service").SoundEffects} */
-        this.soundEffectsService = services["mail.sound_effects"];
         /** @type {import("@mail/core/user_settings_service").UserSettings} */
         this.userSettingsService = services["mail.user_settings"];
         /** @type {import("@mail/core/thread_service").ThreadService} */
@@ -42,8 +40,6 @@ export class Messaging {
         this.personaService = services["mail.persona"];
         /** @type {import("@mail/core/out_of_focus_service").OutOfFocusService} */
         this.outOfFocusService = services["mail.out_of_focus"];
-        /** @type {import("@mail/rtc/rtc_service").Rtc} */
-        this.rtc = services["mail.rtc"];
         this.router = services.router;
         this.bus = services.bus_service;
         this.presence = services.presence;
@@ -204,14 +200,6 @@ export class Messaging {
                         );
                     }
                     break;
-                case "discuss.channel/rtc_sessions_update":
-                    {
-                        const { id, rtcSessions } = notif.payload;
-                        const sessionsData = rtcSessions[0][1];
-                        const command = rtcSessions[0][0];
-                        this._updateRtcSessions(id, sessionsData, command);
-                    }
-                    break;
                 case "mail.record/insert":
                     this._handleNotificationRecordInsert(notif);
                     break;
@@ -220,15 +208,9 @@ export class Messaging {
                     const thread = this.threadService.insert({
                         ...channel,
                         model: "discuss.channel",
-                        rtcSessions: undefined,
                         channel: channel.channel,
                         type: channel.channel.channel_type,
                     });
-                    const rtcSessions = channel.rtcSessions;
-                    const sessionsData = rtcSessions[0][1];
-                    const command = rtcSessions[0][0];
-                    this._updateRtcSessions(thread.id, sessionsData, command);
-
                     if (invitedByUserId && invitedByUserId !== this.store.user?.user?.id) {
                         this.notificationService.add(
                             sprintf(_t("You have been invited to #%s"), thread.displayName),
@@ -547,9 +529,6 @@ export class Messaging {
                 channel: notif.payload.Channel,
             });
         }
-        if (notif.payload.RtcSession) {
-            this.rtc.insertSession(notif.payload.RtcSession);
-        }
         if (notif.payload.Partner) {
             const partners = Array.isArray(notif.payload.Partner)
                 ? notif.payload.Partner
@@ -599,32 +578,6 @@ export class Messaging {
         const { "res.users.settings.volumes": volumeSettings } = notif.payload;
         if (volumeSettings) {
             this.userSettingsService.setVolumes(volumeSettings);
-        }
-    }
-
-    _updateRtcSessions(channelId, sessionsData, command) {
-        const channel = this.store.threads[createLocalId("discuss.channel", channelId)];
-        if (!channel) {
-            return;
-        }
-        const oldCount = Object.keys(channel.rtcSessions).length;
-        switch (command) {
-            case "insert-and-unlink":
-                for (const sessionData of sessionsData) {
-                    this.rtc.deleteSession(sessionData.id);
-                }
-                break;
-            case "insert":
-                for (const sessionData of sessionsData) {
-                    const session = this.rtc.insertSession(sessionData);
-                    channel.rtcSessions[session.id] = session;
-                }
-                break;
-        }
-        if (Object.keys(channel.rtcSessions).length > oldCount) {
-            this.soundEffectsService.play("channel-join");
-        } else if (Object.keys(channel.rtcSessions).length < oldCount) {
-            this.soundEffectsService.play("member-leave");
         }
     }
 
@@ -699,12 +652,10 @@ export const messagingService = {
         "notification",
         "presence",
         "mail.attachment",
-        "mail.sound_effects",
         "mail.user_settings",
         "mail.thread",
         "mail.message",
         "mail.persona",
-        "mail.rtc",
         "mail.out_of_focus",
     ],
     start(env, services) {

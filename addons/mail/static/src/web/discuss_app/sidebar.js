@@ -11,7 +11,6 @@ import { Component, useState } from "@odoo/owl";
 import { markEventHandled } from "@mail/utils/misc";
 
 import { _t } from "@web/core/l10n/translation";
-import { useRtc } from "@mail/rtc/rtc_hook";
 
 /**
  * @typedef {Object} Props
@@ -30,7 +29,6 @@ export class Sidebar extends Component {
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
         this.userSettings = useService("mail.user_settings");
-        this.rtc = useRtc();
         this.orm = useService("orm");
         this.state = useState({
             editing: false,
@@ -137,13 +135,5 @@ export class Sidebar extends Component {
                 (!this.state.quickSearchVal || thread.name.includes(this.state.quickSearchVal))
             );
         });
-    }
-
-    async onClickStartMeeting() {
-        const thread = await this.threadService.createGroupChat({
-            default_display_mode: "video_full_screen",
-            partners_to: [this.store.self.id],
-        });
-        await this.rtc.toggleCall(thread, { video: true });
     }
 }

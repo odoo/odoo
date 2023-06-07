@@ -10,8 +10,6 @@ import { ActivityMenu } from "@mail/web/activity/activity_menu";
 import { ChatWindowContainer } from "@mail/chat_window/chat_window_container";
 import { MessagingMenu } from "@mail/web/messaging_menu/messaging_menu";
 import { messagingService } from "@mail/core/messaging_service";
-import { CallInvitations } from "@mail/rtc/call_invitations";
-import { CallMenu } from "@mail/rtc/call_menu";
 
 import { patch } from "@web/core/utils/patch";
 import { fileUploadService } from "@web/core/file_upload/file_upload_service";
@@ -22,7 +20,6 @@ import { createWebClient } from "@web/../tests/webclient/helpers";
 import { effectService } from "@web/core/effects/effect_service";
 import { soundEffects } from "@mail/core/sound_effects_service";
 import { userSettingsService } from "@mail/core/user_settings_service";
-import { rtcService } from "@mail/rtc/rtc_service";
 import { suggestionService } from "@mail/composer/suggestion_service";
 import { storeService } from "@mail/core/store_service";
 import { chatWindowService } from "@mail/chat_window/chat_window_service";
@@ -105,9 +102,6 @@ export const setupManager = {
         mainComponentRegistry.add("mail.ChatWindowContainer", {
             Component: ChatWindowContainer,
         });
-        mainComponentRegistry.add("mail.CallInvitations", {
-            Component: CallInvitations,
-        });
         if (!registry.category("actions").contains("mail.action_discuss")) {
             registry.category("actions").add("mail.action_discuss", DiscussClientAction);
         }
@@ -173,10 +167,6 @@ export const setupManager = {
                 serviceRegistry.add(serviceName, service);
             }
         });
-
-        registry
-            .category("systray")
-            .add("mail.CallMenu", { Component: CallMenu }, { sequence: 15 });
         registry
             .category("systray")
             .add("mail.activity_menu", { Component: ActivityMenu }, { sequence: 20 });
@@ -201,7 +191,6 @@ export const setupManager = {
             "mail.message": messageService,
             "mail.chat_window": chatWindowService,
             "mail.messaging": messagingService,
-            "mail.rtc": rtcService,
             "mail.sound_effects": soundEffects,
             "mail.user_settings": userSettingsService,
             "mail.persona": personaService,

@@ -4,9 +4,10 @@ import { Command } from "@mail/../tests/helpers/command";
 import {
     afterNextRender,
     click,
+    mockGetMedia,
     start,
     startServer,
-    mockGetMedia,
+    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 import { browser } from "@web/core/browser/browser";
 import { editInput, nextTick, patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
@@ -22,18 +23,18 @@ QUnit.test("basic rendering", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Start a Call']");
-    assert.containsOnce($, ".o-mail-Call");
-    assert.containsOnce($, ".o-mail-CallParticipantCard[aria-label='Mitchell Admin']");
-    assert.containsOnce($, ".o-mail-CallActionList");
-    assert.containsOnce($, ".o-mail-CallMenu-buttonContent");
-    assert.containsN($, ".o-mail-CallActionList button", 7);
+    assert.containsOnce($, ".o-discuss-Call");
+    assert.containsOnce($, ".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']");
+    assert.containsOnce($, ".o-discuss-CallActionList");
+    assert.containsOnce($, ".o-discuss-CallMenu-buttonContent");
+    assert.containsN($, ".o-discuss-CallActionList button", 7);
     assert.containsOnce($, "button[aria-label='Unmute'], button[aria-label='Mute']"); // FIXME depends on current browser permission
-    assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Deafen']");
-    assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Raise hand']");
-    assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Turn camera on']");
-    assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Share screen']");
-    assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Enter Full Screen']");
-    assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Disconnect']");
+    assert.containsOnce($, ".o-discuss-CallActionList button[aria-label='Deafen']");
+    assert.containsOnce($, ".o-discuss-CallActionList button[aria-label='Raise hand']");
+    assert.containsOnce($, ".o-discuss-CallActionList button[aria-label='Turn camera on']");
+    assert.containsOnce($, ".o-discuss-CallActionList button[aria-label='Share screen']");
+    assert.containsOnce($, ".o-discuss-CallActionList button[aria-label='Enter Full Screen']");
+    assert.containsOnce($, ".o-discuss-CallActionList button[aria-label='Disconnect']");
 });
 
 QUnit.test("no call with odoobot", async (assert) => {
@@ -56,10 +57,10 @@ QUnit.test("should not display call UI when no more members (self disconnect)", 
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Start a Call']");
-    assert.containsOnce($, ".o-mail-Call");
+    assert.containsOnce($, ".o-discuss-Call");
 
-    await click(".o-mail-CallActionList button[aria-label='Disconnect']");
-    assert.containsNone($, ".o-mail-Call");
+    click(".o-discuss-CallActionList button[aria-label='Disconnect']");
+    await waitUntil(".o-discuss-Call", 0);
 });
 
 QUnit.test("show call UI in chat window when in call", async (assert) => {
@@ -70,14 +71,14 @@ QUnit.test("show call UI in chat window when in call", async (assert) => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:contains(General)");
     assert.containsOnce($, ".o-mail-ChatWindow");
-    assert.containsNone($, ".o-mail-Call");
+    assert.containsNone($, ".o-discuss-Call");
     assert.containsOnce(
         $,
         ".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Start a Call']"
     );
 
     await click(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Start a Call']");
-    assert.containsOnce($, ".o-mail-Call");
+    assert.containsOnce($, ".o-discuss-Call");
     assert.containsNone(
         $,
         ".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Start a Call']"
@@ -105,7 +106,7 @@ QUnit.test("should disconnect when closing page while in call", async (assert) =
     });
 
     await click(".o-mail-Discuss-header button[title='Start a Call']");
-    assert.containsOnce($, ".o-mail-Call");
+    assert.containsOnce($, ".o-discuss-Call");
     // simulate page close
     await afterNextRender(() => window.dispatchEvent(new Event("pagehide"), { bubble: true }));
     await nextTick();
@@ -128,7 +129,7 @@ QUnit.test("no default rtc after joining a chat conversation", async (assert) =>
     });
     assert.containsOnce($, ".o-mail-DiscussCategoryItem");
     assert.containsNone($, ".o-mail-Discuss-content .o-mail-Message");
-    assert.containsNone($, ".o-mail-Call");
+    assert.containsNone($, ".o-discuss-Call");
 });
 
 QUnit.test("no default rtc after joining a group conversation", async (assert) => {
@@ -151,7 +152,7 @@ QUnit.test("no default rtc after joining a group conversation", async (assert) =
     });
     assert.containsOnce($, ".o-mail-DiscussCategoryItem");
     assert.containsNone($, ".o-mail-Discuss-content .o-mail-Message");
-    assert.containsNone($, ".o-mail-Call");
+    assert.containsNone($, ".o-discuss-Call");
 });
 
 QUnit.test("should display invitations", async (assert) => {
@@ -191,7 +192,7 @@ QUnit.test("should display invitations", async (assert) => {
             },
         });
     });
-    assert.containsOnce($, ".o-mail-CallInvitation");
+    assert.containsOnce($, ".o-discuss-CallInvitation");
     assert.verifySteps(["play_sound_effect"]);
     // Simulate stop receiving call invitation
     await afterNextRender(() => {
@@ -203,7 +204,7 @@ QUnit.test("should display invitations", async (assert) => {
             },
         });
     });
-    assert.containsNone($, ".o-mail-CallInvitation");
+    assert.containsNone($, ".o-discuss-CallInvitation");
     assert.verifySteps(["pause_sound_effect"]);
 });
 
@@ -216,10 +217,10 @@ QUnit.test("can share screen", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Start a Call']");
-    await click(".o-mail-CallActionList button[title='Share screen']");
-    assert.containsOnce($, ".o-mail-CallParticipantCard video");
-    await click(".o-mail-CallActionList button[title='Stop screen sharing']");
-    assert.containsNone($, ".o-mail-CallParticipantCard video");
+    await click(".o-discuss-CallActionList button[title='Share screen']");
+    assert.containsOnce($, ".o-discuss-CallParticipantCard video");
+    await click(".o-discuss-CallActionList button[title='Stop screen sharing']");
+    assert.containsNone($, ".o-discuss-CallParticipantCard video");
 });
 
 QUnit.test("can share user camera", async (assert) => {
@@ -231,8 +232,16 @@ QUnit.test("can share user camera", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Start a Call']");
-    await click(".o-mail-CallActionList button[title='Turn camera on']");
-    assert.containsOnce($, ".o-mail-CallParticipantCard video");
-    await click(".o-mail-CallActionList button[title='Stop camera']");
-    assert.containsNone($, ".o-mail-CallParticipantCard video");
+    await click(".o-discuss-CallActionList button[title='Turn camera on']");
+    assert.containsOnce($, ".o-discuss-CallParticipantCard video");
+    await click(".o-discuss-CallActionList button[title='Stop camera']");
+    assert.containsNone($, ".o-discuss-CallParticipantCard video");
+});
+
+QUnit.test("Create a direct message channel when clicking on start a meeting", async (assert) => {
+    const { openDiscuss } = await start();
+    await openDiscuss();
+    await click("button:contains(Start a meeting)");
+    assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(Mitchell Admin)");
+    assert.containsOnce($, ".o-discuss-Call");
 });

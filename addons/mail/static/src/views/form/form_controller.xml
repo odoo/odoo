@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-inherit="web.FormView" t-inherit-mode="extension">
+    <t t-inherit="web.FormView" t-inherit-mode="extension" owl="1">
         <xpath expr="//Layout/t[@t-component='props.Renderer']" position="attributes">
             <attribute name="saveButtonClicked">() => this.saveButtonClicked()</attribute>
         </xpath>

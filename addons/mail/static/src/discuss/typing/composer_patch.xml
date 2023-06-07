@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-inherit="mail.Composer" t-inherit-mode="extension">
+    <t t-inherit="mail.Composer" t-inherit-mode="extension" owl="1">
         <xpath expr="//AttachmentList" position="after">
             <div t-if="thread and thread.type !== 'chatter' and !compact">
                 <Typing channel="thread" size="'medium'"/>
