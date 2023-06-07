@@ -10,8 +10,6 @@ class CrmLeadLost(models.TransientModel):
     _name = 'crm.lead.lost'
     _description = 'Get Lost Reason'
 
-    set_reason = fields.Boolean(string='Set a Loss Reason', default=True,
-                                readonly=True, store=True)
     lead_ids = fields.Many2many('crm.lead', string='Leads')
     lost_reason_id = fields.Many2one('crm.lost.reason', 'Lost Reason')
     lost_feedback = fields.Html(
