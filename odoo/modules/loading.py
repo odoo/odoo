@@ -131,6 +131,7 @@ def _load_module(env, package) -> OrderedSet:
 
     load_openerp_module(package.name)
     model_names = registry.load(env.cr, package)
+    registry.all_models_set_up = False
 
     registry._init_modules.add(package.name)
 
@@ -146,11 +147,13 @@ def _install_module(env, package) -> OrderedSet:
     py_module = sys.modules['odoo.addons.%s' % (module_name,)]
     pre_init = package.manifest.get('pre_init_hook')
     if pre_init:
-        registry.setup_models(env.cr)
+        if not registry.all_models_set_up:
+            registry.setup_models(env.cr)
         getattr(py_module, pre_init)(env)
 
     model_names = registry.load(env.cr, package)
     registry.setup_models(env.cr)
+    registry.all_models_set_up = True
     registry.init_models(env.cr, model_names, {'module': package.name}, install=True)
 
     module = env['ir.module.module'].browse(module_id)
@@ -188,7 +191,7 @@ def _upgrade_module(env, package, migrations) -> OrderedSet:
     module_name = package.name
     module_id = package.id
 
-    if package.name != 'base':
+    if not registry.all_models_set_up:
         registry.setup_models(env.cr)
     migrations.migrate_module(package, 'pre')
 
@@ -196,6 +199,7 @@ def _upgrade_module(env, package, migrations) -> OrderedSet:
 
     model_names = registry.load(env.cr, package)
     registry.setup_models(env.cr)
+    registry.all_models_set_up = True
     registry.init_models(env.cr, model_names, {'module': package.name}, install=False)
 
     module = env['ir.module.module'].browse(module_id)
@@ -252,13 +256,13 @@ def _check_access_rules(env, module_name, model_names):
                     f"{module_name}.access_{xmlid},access_{xmlid},{module_name}.model_{xmlid},base.group_user,1,0,0,0")
             _logger.warning('\n'.join(lines))
 
-def _test_module(env, module_name, setup_models = True):
+def _test_module(env, module_name):
     test_queries = test_time = 0
     test_results = None
     loader = odoo.tests.loader
     suite = loader.make_suite([module_name], 'at_install')
     if suite.countTestCases():
-        if setup_models:
+        if not env.registry.all_models_set_up:
             env.registry.setup_models(env.cr)
         # need to commit any modification the module's installation or
         # update made to the schema or data so the tests can run
@@ -397,7 +401,7 @@ def load_module_graph(env, graph: PackageGraph, force_test: bool = False) -> Ord
         extras = []
         test_time = 0
         if need_test:
-            test_results, test_query_count, test_time = _test_module(env, module_name, setup_models=not need_update)
+            test_results, test_query_count, test_time = _test_module(env, module_name)
             module_extra_query_count += test_query_count
             if test_results:
                 registry._assertion_report.update(test_results)
@@ -574,11 +578,10 @@ def load_modules(
 
         load_lang = tools.config['load_language']
         tools.config['load_language'] = None
-        if load_lang or update_module:
-            # some base models are used below, so make sure they are set up
-            registry.setup_models(cr)
-
         if load_lang:
+            if not registry.all_models_set_up:
+                # some base models are used below, so make sure they are set up
+                registry.setup_models(cr)
             for lang in load_lang.split(','):
                 tools.load_language(cr, lang)
 
@@ -586,6 +589,8 @@ def load_modules(
         if update_module:
             upgrade_module_names = [k for k, v in tools.config['update'].items() if v and k != 'base']
             install_module_names = [k for k, v in tools.config['init'].items() if v and k != 'base']
+            if (upgrade_module_names or install_module_names) and not registry.all_models_set_up:
+                registry.setup_models(cr)
             if not upgrade_module_names and install_module_names:
                 env['ir.module.module'].update_list()
             _update_ir_module_module(env, upgrade_module_names, install_module_names)
@@ -603,7 +608,8 @@ def load_modules(
         registry.updated_modules |= updated_modules
 
         registry.loaded = True
-        registry.setup_models(cr)
+        if not registry.all_models_set_up:
+            registry.setup_models(cr)
 
         tools.config['init'] = {}
         tools.config['update'] = {}

@@ -144,6 +144,7 @@ class Registry(Mapping):
         # 3. are removed in while uninstalling
         # 4. has fields to untranslate
         self.models_to_fixup = OrderedSet()
+        self.all_models_set_up = True
         self.has_modules_removed = False
         self.has_modules_to_update = False
         self.loaded_xmlids = set()
