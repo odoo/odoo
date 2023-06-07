@@ -932,17 +932,20 @@ class Message(models.Model):
             :param around: fetch messages around this message id
                 i.e. limit//2 before and limit//2 after.
             :param limit: the maximum amount of messages to get;
-            :returns: record set of mail.message
+            :returns: record set of mail.message sorted in descending order.
         """
         if around:
             messages_before = self.search(domain=[*domain, ('id', '<=', around)], limit=limit // 2, order="id DESC")
             messages_after = self.search(domain=[*domain, ('id', '>', around)], limit=limit // 2, order='id ASC')
-            return messages_after + messages_before
+            return (messages_after + messages_before).sorted('id', reverse=True)
         if before:
             domain = expression.AND([domain, [('id', '<', before)]])
         if after:
             domain = expression.AND([domain, [('id', '>', after)]])
-        return self.search(domain, limit=limit)
+        message_ids = self.search(domain, limit=limit, order='id ASC' if after else 'id DESC')
+        if after:
+            message_ids = message_ids.sorted('id', reverse=True)
+        return message_ids
 
     def message_format(self, format_reply=True, msg_vals=None):
         """ Get the message values in the format for web client. Since message

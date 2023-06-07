@@ -58,7 +58,7 @@ class ChannelController(http.Controller):
         messages = channel_member_sudo.env["mail.message"]._message_fetch(domain, before, after, around, limit)
         if not request.env.user._is_public() and not around:
             messages.set_message_done()
-        return messages.sorted("id", reverse=True).message_format()
+        return messages.message_format()
 
     @http.route("/discuss/channel/pinned_messages", methods=["POST"], type="json", auth="public")
     def discuss_channel_pins(self, channel_id):
