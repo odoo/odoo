@@ -27,6 +27,7 @@ from psycopg2.extras import Json
 
 import odoo
 from odoo.modules.module import get_resource_path
+from odoo.exceptions import ValidationError
 from . import config, pycompat
 from .misc import file_open, get_iso_codes, SKIPPED_ELEMENT_TYPES
 
@@ -316,6 +317,8 @@ def xml_translate(callback, value):
         result = translate_xml_node(root, callback, parse_xml, serialize_xml)
         # remove tags <div> and </div> from result
         return serialize_xml(result)[5:-6]
+    except ValueError:
+        raise ValidationError(_("The provided input contains Unicode strings with encoding declarations, which are not supported. Please use bytes or XML fragments without any encoding declaration."))
 
 def xml_term_converter(value):
     """ Convert the HTML fragment ``value`` to XML if necessary
