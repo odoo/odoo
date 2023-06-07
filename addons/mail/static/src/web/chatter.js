@@ -14,6 +14,7 @@ import {
     onWillStart,
     onWillUpdateProps,
     useChildSubEnv,
+    useEffect,
     useRef,
     useState,
 } from "@odoo/owl";
@@ -27,6 +28,7 @@ import { FollowerSubtypeDialog } from "./follower_subtype_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { escape, sprintf } from "@web/core/utils/strings";
 import { SuggestedRecipientsList } from "./suggested_recipient_list";
+import { useThrottleForAnimation } from "@web/core/utils/timing";
 
 /**
  * @typedef {Object} Props
@@ -78,6 +80,7 @@ export class Chatter extends Component {
 
     setup() {
         this.action = useService("action");
+        this.attachmentBox = useRef("attachment-box");
         this.messaging = useMessaging();
         /** @type {import("@mail/activity/activity_service").ActivityService} */
         this.activityService = useState(useService("mail.activity"));
@@ -88,6 +91,7 @@ export class Chatter extends Component {
         this.rpc = useService("rpc");
         this.state = useState({
             isAttachmentBoxOpened: this.props.isAttachmentBoxVisibleInitially,
+            jumpThreadPresent: 0,
             showActivities: true,
             /** @type {import("@mail/core/thread_model").Thread} */
             thread: undefined,
@@ -96,8 +100,9 @@ export class Chatter extends Component {
         this.attachmentUploader = useAttachmentUploader(
             this.threadService.getThread(this.props.threadModel, this.props.threadId)
         );
-        this.scrollPosition = useScrollPosition("scrollable", undefined, "top");
+        this.scrollPosition = useScrollPosition("root", undefined, "top");
         this.rootRef = useRef("root");
+        this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
         useChildSubEnv({ inChatter: true });
         useDropzone(
             this.rootRef,
@@ -151,6 +156,14 @@ export class Chatter extends Component {
                 }
             }
         });
+        useEffect(
+            (opened) => {
+                if (opened) {
+                    this.attachmentBox.el.scrollIntoView({ block: "center" });
+                }
+            },
+            () => [this.state.isAttachmentBoxOpened]
+        );
     }
 
     /**
@@ -290,6 +303,7 @@ export class Chatter extends Component {
             this.reloadParentView();
         }
         this.toggleComposer();
+        this.state.jumpThreadPresent++;
         // Load new messages to fetch potential new messages from other users (useful due to lack of auto-sync in chatter).
         this.load(this.props.threadId, ["followers", "messages", "suggestedRecipients"]);
     }
@@ -378,7 +392,6 @@ export class Chatter extends Component {
             return;
         }
         this.state.isAttachmentBoxOpened = !this.state.isAttachmentBoxOpened;
-        this.scrollPosition.ref.el.scrollTop = 0;
     }
 
     async onClickAttachFile(ev) {
@@ -389,5 +402,9 @@ export class Chatter extends Component {
         if (!saved) {
             return false;
         }
+    }
+
+    onScroll() {
+        this.state.isTopStickyPinned = this.rootRef.el.scrollTop !== 0;
     }
 }

@@ -217,8 +217,10 @@ export class Message extends Component {
         return Boolean(!this.message.isTransient && this.message.resId);
     }
 
-    get canUnfollow() {
-        return Boolean(this.message.originThread?.followerOfSelf);
+    get showUnfollow() {
+        return Boolean(
+            this.message.originThread?.followerOfSelf && this.props.thread?.model === "mail.box"
+        );
     }
 
     /**

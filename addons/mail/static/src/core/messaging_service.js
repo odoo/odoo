@@ -253,6 +253,7 @@ export class Messaging {
                         Object.assign(notif.payload, { body: markup(notif.payload.body) })
                     );
                     channel.messages.push(message);
+                    channel.transientMessages.push(message);
                     break;
                 }
                 case "mail.link.preview/delete":

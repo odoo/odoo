@@ -110,6 +110,7 @@ export class Thread {
     /** @type {ScrollPosition} */
     scrollPosition = new ScrollPosition();
     showOnlyVideo = false;
+    transientMessages = [];
     /** @type {import("@mail/core/store_service").Store} */
     _store;
     /** @type {string} */

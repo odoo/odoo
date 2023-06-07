@@ -56,7 +56,10 @@ export class Discuss extends Component {
         this.messageEdition = useMessageEdition();
         this.messageToReplyTo = useMessageToReplyTo();
         this.contentRef = useRef("content");
-        this.state = useState({ activeMode: this.MODES.NONE });
+        this.state = useState({
+            activeMode: this.MODES.NONE,
+            jumpThreadPresent: 0,
+        });
         this.orm = useService("orm");
         this.effect = useService("effect");
         this.prevInboxCounter = this.store.discuss.inbox.counter;

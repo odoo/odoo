@@ -61,6 +61,7 @@ export class ChatWindow extends Component {
              *   "": no action pannel
              */
             activeMode: "",
+            jumpThreadPresent: 0,
         });
         this.actionService = useService("action");
         this.contentRef = useRef("content");

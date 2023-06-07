@@ -3,7 +3,7 @@
 
 <t t-name="mail.Thread" owl="1">
     <t t-if="env.inChatter" t-call="mail.Thread.jumpPresent"/> <!-- chatter has its own scrollable, this ensures proper sticky showing -->
-    <div class="o-mail-Thread flex-grow-1" t-att-class="{ 'overflow-auto': props.hasScrollAdjust, 'pb-4': !state.showJumpPresent }" t-ref="messages">
+    <div class="o-mail-Thread position-relative flex-grow-1" t-att-class="{ 'overflow-auto': props.hasScrollAdjust, 'pb-4': !state.showJumpPresent }" t-ref="messages">
         <t t-if="!props.thread.isEmpty or props.thread.loadOlder or props.thread.hasLoadingFailed" name="content">
             <div class="d-flex flex-column position-relative" t-att-class="{'justify-content-end': !env.inChatter and props.thread.type !== 'mailbox'}" style="min-height:100%">
                 <span class="position-absolute w-100 invisible" t-att-class="props.order === 'asc' ? 'bottom-0' : 'top-0'" t-ref="present-treshold" t-att-style="`height: Min(${PRESENT_THRESHOLD}px, 100%)`"/>
@@ -90,7 +90,7 @@
 </t>
 
 <t t-name="mail.Thread.jumpPresent" owl="1">
-    <span t-if="state.showJumpPresent" class="o-mail-Thread-jumpPresent position-sticky btn btn-link alert alert-info d-flex cursor-pointer align-items-center py-2 m-0" t-att-class="{ 'px-4': !env.inChatWindow, 'px-2': env.inChatWindow, 'top-0': props.order !== 'asc', 'bottom-0': props.order === 'asc' }" role="button" t-on-click="onClickJumpPresent">
+    <span t-if="state.showJumpPresent" class="o-mail-Thread-jumpPresent position-sticky btn btn-link alert alert-info d-flex cursor-pointer align-items-center py-2 m-0" t-att-class="{ 'px-4': !env.inChatWindow, 'px-2': env.inChatWindow, 'top-0': props.order !== 'asc', 'bottom-0': props.order === 'asc' }" role="button" t-on-click="jumpToPresent">
         <span class="small">You're viewing older messages</span>
         <span class="flex-grow-1"/>
         <span class="fw-bolder small pe-2">Jump to Present</span>

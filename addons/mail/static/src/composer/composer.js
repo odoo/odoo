@@ -4,7 +4,15 @@ import { AttachmentList } from "@mail/attachments/attachment_list";
 import { useAttachmentUploader } from "@mail/attachments/attachment_uploader_hook";
 import { useSelection } from "@mail/utils/hooks";
 import { isDragSourceExternalFile, isEventHandled, markEventHandled } from "@mail/utils/misc";
-import { Component, onMounted, useChildSubEnv, useEffect, useRef, useState } from "@odoo/owl";
+import {
+    Component,
+    markup,
+    onMounted,
+    useChildSubEnv,
+    useEffect,
+    useRef,
+    useState,
+} from "@odoo/owl";
 import { useDropzone } from "../dropzone/dropzone_hook";
 import { useMessaging, useStore } from "../core/messaging_hook";
 import { useEmojiPicker } from "../emoji_picker/emoji_picker";
@@ -18,6 +26,11 @@ import { useSuggestion } from "@mail/composer/suggestion_hook";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { MessageConfirmDialog } from "../core_ui/message_confirm_dialog";
+
+const EDIT_CLICK_TYPE = {
+    CANCEL: "cancel",
+    SAVE: "save",
+};
 
 /**
  * @typedef {Object} Props
@@ -43,6 +56,7 @@ export class Composer extends Component {
     static defaultProps = {
         mode: "normal",
         className: "",
+        sidebar: true,
     };
     static props = [
         "composer",
@@ -56,10 +70,16 @@ export class Composer extends Component {
         "messageEdition?",
         "messageComponent?",
         "className?",
+        "sidebar?",
     ];
     static template = "mail.Composer";
 
     setup() {
+        this.SEND_KEYBIND_TO_SEND = markup(
+            sprintf(_t("<samp>%(send_keybind)s</samp><i> to send</i>"), {
+                send_keybind: this.sendKeybind,
+            })
+        );
         this.messaging = useMessaging();
         this.store = useStore();
         if (this.allowUpload) {
@@ -71,6 +91,7 @@ export class Composer extends Component {
             );
         }
         this.messageService = useState(useService("mail.message"));
+        this.ui = useState(useService("ui"));
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
         this.ref = useRef("textarea");
@@ -173,6 +194,39 @@ export class Composer extends Component {
             });
         }
         return "";
+    }
+
+    onClickCancelOrSaveEditText(ev) {
+        if (this.props.composer.message && ev.target.dataset?.type === EDIT_CLICK_TYPE.CANCEL) {
+            this.props.onDiscardCallback(ev);
+        }
+        if (this.props.composer.message && ev.target.dataset?.type === EDIT_CLICK_TYPE.SAVE) {
+            this.editMessage(ev);
+        }
+    }
+
+    get CANCEL_OR_SAVE_EDIT_TEXT() {
+        return markup(
+            sprintf(
+                _t(
+                    "<samp>%(cancel_keybind)s</samp><i> to <a href='#' data-type='%(cancel_type)s'>cancel</a></i>, <samp>%(save_keybind)s</samp><i> to <a href='#' data-type='%(save_type)s'>save</a></i>"
+                ),
+                {
+                    cancel_keybind: _t("Escape"),
+                    cancel_type: EDIT_CLICK_TYPE.CANCEL,
+                    save_keybind: this.sendKeybind,
+                    save_type: EDIT_CLICK_TYPE.SAVE,
+                }
+            )
+        );
+    }
+
+    get SEND_TEXT() {
+        return this.props.composer.type === "note" ? _t("Log") : _t("Send");
+    }
+
+    get sendKeybind() {
+        return this.props.mode === "extended" ? _t("CTRL-Enter") : _t("Enter");
     }
 
     get thread() {
