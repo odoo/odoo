@@ -38,6 +38,7 @@ class MailTracking(models.Model):
 
     tracking_sequence = fields.Integer('Tracking field sequence', readonly=1, default=100)
 
+    @api.depends('mail_message_id', 'field')
     def _compute_field_groups(self):
         for tracking in self:
             model = self.env[tracking.mail_message_id.model]
