@@ -648,8 +648,9 @@ class PosConfig(models.Model):
             WITH pm AS (
                   SELECT product_id,
                          Max(write_date) date
-                    FROM stock_quant
+                    FROM stock_move_line
                 GROUP BY product_id
+                ORDER BY date DESC
             )
                SELECT p.id
                  FROM product_product p
@@ -661,10 +662,11 @@ class PosConfig(models.Model):
                     AND (t.company_id=%(company_id)s OR t.company_id IS NULL)
                     AND %(available_categ_ids)s IS NULL OR t.pos_categ_id=ANY(%(available_categ_ids)s)
                 )    OR p.id=%(tip_product_id)s
-             ORDER BY t.priority DESC,
-                      t.detailed_type DESC,
-                      COALESCE(pm.date,p.write_date) DESC 
-                LIMIT %(limit)s
+            ORDER BY t.priority DESC,
+                    case when t.detailed_type = 'service' then 1 else 0 end DESC,
+                    pm.date DESC NULLS LAST,
+                    p.write_date
+            LIMIT %(limit)s
         """
         params = {
             'company_id': self.company_id.id,
