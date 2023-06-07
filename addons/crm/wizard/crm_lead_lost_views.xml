@@ -6,12 +6,10 @@
             <field name="arch" type="xml">
                 <form string="Lost Lead">
                     <field name="lead_ids" invisible="1"></field>
-                    <label for="set_reason">Set a Loss Reason</label>
-                    <field name="set_reason" widget="boolean_toggle"></field>
-                    <group attrs="{'invisible': [('set_reason', '=', False)]}">
+                    <group>
                         <field name="lost_reason_id" options="{'no_create_edit': True}" />
+                        <field name="lost_feedback" placeholder="What went wrong?"/>
                     </group>
-                    <field name="lost_feedback" placeholder="What went wrong?" attrs="{'invisible': [('set_reason', '=', False)]}"/>
                     <footer>
                         <button name="action_lost_reason_apply" string="Mark as Lost" type="object" class="btn-primary" data-hotkey="q"/>
                         <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
