@@ -1,10 +1,18 @@
 /** @odoo-module **/
 
 import { attr, many, one, Model } from "@mail/model";
+import { usePosition } from "@web/core/position_hook";
+import { useRef } from "@odoo/owl";
 
 Model({
     name: "FollowerListMenuView",
     template: "mail.FollowerListMenuView",
+    componentSetup() {
+        this.togglerRef = useRef("toggler");
+        usePosition(() => this.togglerRef.el, {
+            position: "bottom-end",
+        });
+    },
     lifecycleHooks: {
         _created() {
             document.addEventListener("click", this._onClickCaptureGlobal, true);
