@@ -5,7 +5,6 @@ import CommandResult from "@spreadsheet/o_spreadsheet/cancelled_reason";
 import { Model, DispatchResult } from "@odoo/o-spreadsheet";
 import {
     createModelWithDataSource,
-    setupDataSourceEvaluation,
     waitForDataSourcesLoaded,
 } from "@spreadsheet/../tests/utils/model";
 import { createSpreadsheetWithPivotAndList } from "@spreadsheet/../tests/utils/pivot_list";
@@ -24,7 +23,6 @@ import {
     insertChartInSpreadsheet,
 } from "@spreadsheet/../tests/utils/chart";
 import { createSpreadsheetWithList } from "@spreadsheet/../tests/utils/list";
-import { DataSources } from "@spreadsheet/data_sources/data_sources";
 import { FILTER_DATE_OPTION } from "@spreadsheet/assets_backend/constants";
 import { RELATIVE_DATE_RANGE_TYPES } from "@spreadsheet/helpers/constants";
 import {
@@ -637,24 +635,19 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
 
     QUnit.test("ODOO.FILTER.VALUE relation filter", async function (assert) {
         assert.expect(6);
-
-        const orm = {
-            call: async (model, method, args) => {
-                const resId = args[0][0];
-                assert.step(`name_get_${resId}`);
-                return resId === 1 ? [[1, "Jean-Jacques"]] : [[2, "Raoul Grosbedon"]];
+        const model = await createModelWithDataSource({
+            mockRPC: function (route, { method, args }) {
+                if (method === "name_get") {
+                    const [resId] = args[0];
+                    const names = {
+                        1: "Jean-Jacques",
+                        2: "Raoul Grosbedon",
+                    };
+                    assert.step(`name_get_${resId}`);
+                    return [[resId, names[resId]]];
+                }
             },
-        };
-        const model = new Model(
-            {},
-            {
-                custom: {
-                    dataSources: new DataSources({ ...orm, silent: orm }),
-                    env: { services: { orm } },
-                },
-            }
-        );
-        setupDataSourceEvaluation(model);
+        });
         setCellContent(model, "A10", `=ODOO.FILTER.VALUE("Relation Filter")`);
         await nextTick();
         await addGlobalFilter(model, {
