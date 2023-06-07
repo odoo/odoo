@@ -977,11 +977,12 @@ export class ListRenderer extends Component {
 
     getOptionalActiveFields() {
         this.optionalActiveFields = {};
-        const optionalActiveFields = browser.localStorage.getItem(this.keyOptionalFields);
+        let optionalActiveFields = browser.localStorage.getItem(this.keyOptionalFields);
         const optionalColumn = this.allColumns.filter(
             (col) => col.type === "field" && col.optional
         );
         if (optionalActiveFields) {
+            optionalActiveFields = optionalActiveFields.split(",");
             optionalColumn.forEach((col) => {
                 this.optionalActiveFields[col.name] = optionalActiveFields.includes(col.name);
             });
