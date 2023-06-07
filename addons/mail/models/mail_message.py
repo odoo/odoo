@@ -596,7 +596,7 @@ class Message(models.Model):
                 values['message_id'] = self._get_message_id(values)
             if 'reply_to' not in values:
                 values['reply_to'] = self._get_reply_to(values)
-            if 'record_name' not in values and 'default_record_name' not in self.env.context:
+            if not values.get('record_name') and 'default_record_name' not in self.env.context:
                 values['record_name'] = self._get_record_name(values)
 
             if 'attachment_ids' not in values:
