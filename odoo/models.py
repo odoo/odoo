@@ -1666,12 +1666,12 @@ class BaseModel(metaclass=MetaModel):
             return False
 
     @api.model
-    def name_search(self, name='', args=None, operator='ilike', limit=100):
-        """ name_search(name='', args=None, operator='ilike', limit=100) -> records
+    def name_search(self, name='', domain=None, operator='ilike', limit=100):
+        """ name_search(name='', domain=None, operator='ilike', limit=100) -> records
 
         Search for records that have a display name matching the given
         ``name`` pattern when compared with the given ``operator``, while also
-        matching the optional search domain (``args``).
+        matching the optional search domain (``domain``).
 
         This is used for example to provide suggestions based on a partial
         value for a relational field. Should usually behave as the reverse of
@@ -1682,7 +1682,7 @@ class BaseModel(metaclass=MetaModel):
         result of the search.
 
         :param str name: the name pattern to match
-        :param list args: optional search domain (see :meth:`~.search` for
+        :param list domain: optional search domain (see :meth:`~.search` for
                           syntax), specifying further restrictions
         :param str operator: domain operator for matching ``name``, such as
                              ``'like'`` or ``'='``.
@@ -1690,8 +1690,21 @@ class BaseModel(metaclass=MetaModel):
         :rtype: list
         :return: list of pairs ``(id, text_repr)`` for all matching records.
         """
-        ids = self._name_search(name, args, operator, limit=limit, order=self._order)
+        ids = self._name_search(name, domain, operator, limit=limit, order=self._order)
         return self.browse(ids).sudo().name_get()
+
+    def _search_display_name(self, operator, value):
+        search_fnames = self._rec_names_search or ([self._rec_name] if self._rec_name else [])
+        if not search_fnames:
+            _logger.warning("Cannot execute name_search, no _rec_name or _rec_names_search defined on %s", self._name)
+            return []
+
+        # optimize out the default criterion of ``like ''`` that matches everything
+        if (value == '' and operator in ('like', 'ilike')):
+            return []
+
+        aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
+        return aggregator([[(field_name, operator, value)] for field_name in search_fnames])
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
@@ -1702,14 +1715,8 @@ class BaseModel(metaclass=MetaModel):
         No default is applied for parameters ``limit`` and ``order``.
         """
         domain = list(domain or ())
-        search_fnames = self._rec_names_search or ([self._rec_name] if self._rec_name else [])
-        if not search_fnames:
-            _logger.warning("Cannot execute name_search, no _rec_name or _rec_names_search defined on %s", self._name)
-        # optimize out the default criterion of ``like ''`` that matches everything
-        elif not (name == '' and operator in ('like', 'ilike')):
-            aggregator = expression.AND if operator in expression.NEGATIVE_TERM_OPERATORS else expression.OR
-            domain += aggregator([[(field_name, operator, name)] for field_name in search_fnames])
-        return self._search(domain, limit=limit, order=order)
+        display_name_domain = self._search_display_name(operator, name)
+        return self._search(domain + display_name_domain, limit=limit, order=order)
 
     @api.model
     def _add_missing_default_values(self, values):
