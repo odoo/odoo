@@ -100,7 +100,7 @@ class AccountEdiProxyClientUser(models.Model):
 
                 enc_key = content["enc_key"]
                 document_content = content["document"]
-                filename = content["filename"]
+                filename = content["filename"] or 'attachment' # default to attachment, which should not usually happen
                 partner_endpoint = content["accounting_supplier_party"]
                 decoded_document = edi_user._decrypt_data(document_content, enc_key)
 
@@ -180,13 +180,22 @@ class AccountEdiProxyClientUser(models.Model):
             )
 
             for uuid, content in messages_to_process.items():
+                if uuid == 'error':
+                    # this rare edge case can happen if the participant is not active on the proxy side
+                    # in this case we can't get information about the invoices
+                    edi_user_moves.peppol_move_state = 'error'
+                    log_message = _("Peppol error: %s", content['message'])
+                    edi_user_moves._message_log_batch(bodies=dict((move.id, log_message) for move in edi_user_moves))
+                    continue
+
                 move = message_uuids[uuid]
                 if content.get('error'):
                     move.peppol_move_state = 'error'
-                    move._message_log(body=_('Peppol error: %s', content['error']['message']))
+                    move._message_log(body=_("Peppol error: %s", content['error']['message']))
                     continue
+
                 move.peppol_move_state = content['state']
-                move._message_log(body=_('Peppol update: %s', content['state']))
+                move._message_log(body=_('Peppol status update: %s', content['state']))
 
             if message_uuids:
                 edi_user._make_request(
@@ -196,7 +205,7 @@ class AccountEdiProxyClientUser(models.Model):
 
     def _cron_peppol_get_participant_status(self):
         edi_users = self.env['account_edi_proxy_client.user'].search(
-            [('company_id.account_peppol_proxy_state', '=', 'pending')])
+            [('company_id.account_peppol_proxy_state', 'in', ('pending', 'manually_approved'))])
 
         for edi_user in edi_users:
             try:
