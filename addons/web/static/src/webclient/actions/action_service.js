@@ -46,6 +46,7 @@ const viewRegistry = registry.category("views");
  * @typedef {Object} ActionOptions
  * @property {Context} [additionalContext]
  * @property {boolean} [clearBreadcrumbs]
+ * @property {boolean} [resetScreen]
  * @property {CallableFunction} [onClose]
  * @property {Object} [props]
  * @property {ViewType} [viewType]
@@ -977,6 +978,9 @@ function makeActionManager(env) {
                     action.target = clientAction.target;
                 }
             }
+            if (options.onActionReady) {
+                options.onActionReady(action);
+            }
             const controller = {
                 jsId: `controller_${++id}`,
                 Component: clientAction,
@@ -1142,6 +1146,9 @@ function makeActionManager(env) {
                     const canProceed = await clearUncommittedChanges(env);
                     if (!canProceed) {
                         return new Promise(() => {});
+                    }
+                    if (options.onActionReady) {
+                        options.onActionReady(action);
                     }
                 }
                 return _executeActWindowAction(action, options);

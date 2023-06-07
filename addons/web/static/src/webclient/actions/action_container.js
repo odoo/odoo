@@ -1,30 +1,60 @@
 /** @odoo-module **/
 
-import { ActionDialog } from "./action_dialog";
-
-import { Component, xml, onWillDestroy } from "@odoo/owl";
+import { Component, xml, useEffect, useSubEnv } from "@odoo/owl";
+import { useBus } from "@web/core/utils/hooks";
+import { ControlPanel } from "@web/search/control_panel/control_panel";
 
 // -----------------------------------------------------------------------------
 // ActionContainer (Component)
 // -----------------------------------------------------------------------------
 export class ActionContainer extends Component {
+    static components = { ControlPanel };
+    static template = xml`
+    <t t-name="web.ActionContainer">
+      <div class="o_action_manager">
+        <t t-if="state.value.Component" t-component="state.value.Component" className="'o_action'" t-props="state.value.componentProps" t-key="state.value.id"/>
+        <t t-else="">
+            <t t-if="state.value.displayEmptyPanel and !env.isSmall">
+                <ControlPanel display="{disableDropdown: true}">
+                    <t t-set-slot="layout-buttons">
+                        <button class="btn btn-primary invisible"> empty </button>
+                    </t>
+                </ControlPanel>
+            </t>
+        </t>
+      </div>
+    </t>`;
+    static props = {};
+
     setup() {
-        this.info = {};
-        this.onActionManagerUpdate = ({ detail: info }) => {
-            this.info = info;
-            this.render();
+        const self = this;
+        let isRendered = false;
+        let next = null;
+        let value = {};
+        this.state = {
+            get value() {
+                return value;
+            },
+            set value(newValue) {
+                if (!isRendered && !value.Component && newValue.Component) {
+                    next = newValue;
+                } else {
+                    value = newValue;
+                    next = null;
+                    isRendered = false;
+                    self.render();
+                }
+            },
         };
-        this.env.bus.addEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
-        onWillDestroy(() => {
-            this.env.bus.removeEventListener("ACTION_MANAGER:UPDATE", this.onActionManagerUpdate);
+        useEffect(() => {
+            isRendered = true;
+            if (next) {
+                this.state.value = next;
+            }
+        });
+        useSubEnv({ config: { breadcrumbs: [], noBreadcrumbs: true } });
+        useBus(this.env.bus, "ACTION_MANAGER:UPDATE", ({ detail: info }) => {
+            this.state.value = info;
         });
     }
 }
-ActionContainer.components = { ActionDialog };
-ActionContainer.template = xml`
-    <t t-name="web.ActionContainer">
-      <div class="o_action_manager">
-        <t t-if="info.Component" t-component="info.Component" className="'o_action'" t-props="info.componentProps" t-key="info.id"/>
-      </div>
-    </t>`;
-ActionContainer.props = {};

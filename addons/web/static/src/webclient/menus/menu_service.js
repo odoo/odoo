@@ -53,8 +53,17 @@ function makeMenus(env, menusData, fetchLoadMenus) {
             if (!menu.actionID) {
                 return;
             }
-            await env.services.action.doAction(menu.actionID, { clearBreadcrumbs: true });
-            this.setCurrentMenu(menu);
+            await env.services.action.doAction(menu.actionID, {
+                clearBreadcrumbs: true,
+                onActionReady: (action) => {
+                    if (action.target !== "new") {
+                        this.setCurrentMenu(menu);
+                        env.bus.trigger("ACTION_MANAGER:UPDATE", {
+                            displayEmptyPanel: action.type === "ir.actions.act_window",
+                        });
+                    }
+                },
+            });
         },
         setCurrentMenu(menu) {
             menu = typeof menu === "number" ? this.getMenu(menu) : menu;

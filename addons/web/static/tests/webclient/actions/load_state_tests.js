@@ -687,6 +687,7 @@ QUnit.module("ActionManager", (hooks) => {
             1: { id: 1, children: [], name: "App1", appID: 1, actionID: 1 },
         };
         const webClient = await createWebClient({ serverData });
+        await nextTick();
         assert.containsOnce(target, ".o_kanban_view"); // action 1 (default app)
         assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 1"]);
         await loadState(webClient, { action: 3 });
