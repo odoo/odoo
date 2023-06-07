@@ -9,6 +9,7 @@ import { nextTick } from "@web/../tests/helpers/utils";
 import { Model } from "@odoo/o-spreadsheet";
 import { DataSources } from "@spreadsheet/data_sources/data_sources";
 import { getBasicServerData } from "./data";
+import { nameService } from "@web/core/name_service";
 
 /**
  * @typedef {import("@spreadsheet/../tests/utils/data").ServerData} ServerData
@@ -32,7 +33,10 @@ export function setupDataSourceEvaluation(model) {
  */
 export async function createModelWithDataSource(params = {}) {
     registry.category("services").add("orm", ormService, { force: true });
-    registry.category("services").add("localization", makeFakeLocalizationService(), { force: true });
+    registry.category("services").add("name", nameService, { force: true });
+    registry
+        .category("services")
+        .add("localization", makeFakeLocalizationService(), { force: true });
     const env = await makeTestEnv({
         serverData: params.serverData || getBasicServerData(),
         mockRPC: params.mockRPC,
@@ -40,7 +44,7 @@ export async function createModelWithDataSource(params = {}) {
     const model = new Model(params.spreadsheetData, {
         custom: {
             env,
-            dataSources: new DataSources(env.services.orm),
+            dataSources: new DataSources(env),
         },
     });
     setupDataSourceEvaluation(model);

@@ -205,7 +205,7 @@ export class DashboardLoader {
      * @returns {Model}
      */
     _createSpreadsheetModel(data, revisions = []) {
-        const dataSources = new DataSources(this.orm);
+        const dataSources = new DataSources(this.env);
         const model = new Model(
             migrate(data),
             {

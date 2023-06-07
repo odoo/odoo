@@ -15,10 +15,13 @@ import { EventBus } from "@odoo/owl";
  */
 
 export class DataSources extends EventBus {
-    constructor(orm) {
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     */
+    constructor(env) {
         super();
-        this._orm = orm.silent;
-        this._metadataRepository = new MetadataRepository(orm);
+        this._orm = env.services.orm.silent;
+        this._metadataRepository = new MetadataRepository(env);
         this._metadataRepository.addEventListener("labels-fetched", () => this.notify());
         /** @type {Object.<string, any>} */
         this._dataSources = {};

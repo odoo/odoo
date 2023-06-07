@@ -37,9 +37,13 @@ import { EventBus } from "@odoo/owl";
  * At the end of this process, an event is triggered (labels-fetched)
  */
 export class MetadataRepository extends EventBus {
-    constructor(orm) {
+    /**
+     * @param {import("@web/env").OdooEnv} env
+     */
+    constructor(env) {
         super();
-        this.orm = orm;
+        this.orm = env.services.orm.silent;
+        this.nameService = env.services.name;
 
         this.serverData = new ServerData(this.orm, {
             whenDataIsFetched: () => this.trigger("labels-fetched"),
@@ -47,7 +51,7 @@ export class MetadataRepository extends EventBus {
 
         this.labelsRepository = new LabelsRepository();
 
-        this.displayNameRepository = new DisplayNameRepository(this.orm, {
+        this.displayNameRepository = new DisplayNameRepository(env, {
             whenDataIsFetched: () => this.trigger("labels-fetched"),
         });
     }
