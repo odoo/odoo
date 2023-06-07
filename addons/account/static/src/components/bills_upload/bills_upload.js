@@ -113,6 +113,10 @@ export class AccountDropZone extends Component {
         this.props.hideZone();
     }
 }
+AccountDropZone.props = {
+    visible: { type: Boolean, optional: true },
+    hideZone: { type: Function, optional: true },
+}
 AccountDropZone.defaultProps = {
     hideZone: () => {},
 };
