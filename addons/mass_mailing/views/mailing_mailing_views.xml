@@ -130,20 +130,19 @@
                     </div>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_view_delivered"
-                                id="button_view_delivered"
-                                type="object"
-                                context="{'search_default_filter_delivered': True}"
-                                invisible="state in ('draft', 'test')"
-                                class="oe_stat_button">
-                                <field name="received_ratio" string="Received" widget="percentpie"/>
-                            </button>
                             <button name="action_view_opened"
                                 type="object"
                                 context="{'search_default_filter_opened': True}"
                                 invisible="state in ('draft', 'test')"
                                 class="oe_stat_button">
                                 <field name="opened_ratio" string="Opened" widget="percentpie"/>
+                            </button>
+                            <button name="action_view_replied"
+                                type="object"
+                                context="{'search_default_filter_replied': True}"
+                                invisible="state in ('draft', 'test')"
+                                class="oe_stat_button">
+                                <field name="replied_ratio" string="Replied" widget="percentpie"/>
                             </button>
                             <button name="action_view_clicked"
                                 type="object"
@@ -152,12 +151,13 @@
                                 class="oe_stat_button">
                                 <field name="clicks_ratio" string="Clicked" widget="percentpie"/>
                             </button>
-                            <button name="action_view_replied"
+                            <button name="action_view_delivered"
+                                id="button_view_delivered"
                                 type="object"
-                                context="{'search_default_filter_replied': True}"
+                                context="{'search_default_filter_delivered': True}"
                                 invisible="state in ('draft', 'test')"
                                 class="oe_stat_button">
-                                <field name="replied_ratio" string="Replied" widget="percentpie"/>
+                                <field name="received_ratio" string="Received" widget="percentpie"/>
                             </button>
                             <button name="action_view_bounced"
                                 type="object"
@@ -413,12 +413,14 @@
                     <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_in_queue')]/strong" position="move"/>
                 </xpath>
                 <xpath expr="//div[hasclass('alert-info')]/div[hasclass('o_mails_in_queue')]" position="replace"/>
-                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <xpath expr="//button[@name='action_view_opened']" position="before">
                     <button name="action_view_traces_sent"
                         invisible="state in ('draft', 'test')"
                         type="object" class="oe_stat_button" icon="fa-paper-plane">
                         <field name="sent" widget="statinfo" string="Sent"/>
                     </button>
+                </xpath>
+                <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                     <button name="action_view_traces_canceled"
                         invisible="state in ('draft', 'test')"
                         type="object" class="oe_stat_button" icon="fa-paper-plane-o">

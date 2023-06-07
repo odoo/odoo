@@ -50,7 +50,7 @@ class TestMailingABTesting(MassMailCommon):
         self.ab_testing_mailing_2.mailing_trace_ids[:15].set_opened()
         self.ab_testing_mailing_ids.invalidate_recordset()
 
-        self.assertEqual(self.ab_testing_mailing_1.opened_ratio, 66)
+        self.assertEqual(self.ab_testing_mailing_1.opened_ratio, 66.67)
         self.assertEqual(self.ab_testing_mailing_2.opened_ratio, 50)
 
         with self.mock_mail_gateway():
@@ -82,7 +82,7 @@ class TestMailingABTesting(MassMailCommon):
         self.ab_testing_mailing_2.mailing_trace_ids[:15].set_opened()
         self.ab_testing_mailing_ids.invalidate_recordset()
 
-        self.assertEqual(self.ab_testing_mailing_1.opened_ratio, 66)
+        self.assertEqual(self.ab_testing_mailing_1.opened_ratio, 66.67)
         self.assertEqual(self.ab_testing_mailing_2.opened_ratio, 50)
 
         with self.mock_mail_gateway():
@@ -165,7 +165,7 @@ class TestMailingABTesting(MassMailCommon):
         self.ab_testing_mailing_2.mailing_trace_ids[:15].set_opened()
         self.ab_testing_mailing_ids.invalidate_recordset()
 
-        self.assertEqual(self.ab_testing_mailing_1.opened_ratio, 66)
+        self.assertEqual(self.ab_testing_mailing_1.opened_ratio, 66.67)
         self.assertEqual(self.ab_testing_mailing_2.opened_ratio, 50)
 
         with self.mock_mail_gateway():
