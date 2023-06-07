@@ -52,6 +52,7 @@ class MailController(mail.MailController):
                             url_params = url.decode_query()
                             url_params.update([("pid", pid), ("hash", hash)])
                             url = url.replace(query=urls.url_encode(url_params, sort=True)).to_url()
+                            url = request.env['ir.http']._frontend_localize_url_for_partner(url, pid)
                         return request.redirect(url)
         return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)
 
