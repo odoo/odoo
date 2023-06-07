@@ -7,6 +7,7 @@ import {isColorGradient} from "web_editor.utils";
 
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getInSelection = OdooEditorLib.getInSelection;
+const EMAIL_REGEX = OdooEditorLib.EMAIL_REGEX;
 const _t = core._t;
 
 /**
@@ -568,7 +569,7 @@ const Link = Widget.extend({
         this._savedURLInputOnDestroy = true;
         var $linkUrlInput = this.$('#o_link_dialog_url_input');
         let value = $linkUrlInput.val();
-        let isLink = value.indexOf('@') < 0;
+        let isLink = !EMAIL_REGEX.test(value);
         this._getIsNewWindowFormRow().toggleClass('d-none', !isLink);
         this.$('.o_strip_domain').toggleClass('d-none', value.indexOf(window.location.origin) !== 0);
     },
