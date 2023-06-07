@@ -5,6 +5,7 @@ from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools import consteq
 from odoo.addons.mail.controllers import mail
+from odoo.addons.portal.utils import validate_thread_with_hash_pid
 
 
 class MailController(mail.MailController):
@@ -52,6 +53,9 @@ class MailController(mail.MailController):
                             url_params = url.decode_query()
                             url_params.update([("pid", pid), ("hash", hash)])
                             url = url.replace(query=urls.url_encode(url_params, sort=True)).to_url()
+                            if (isinstance(record_sudo, request.env.registry['mail.thread'])
+                                    and validate_thread_with_hash_pid(record_sudo, hash, pid)):
+                                url = request.env['ir.http']._portal_localize_url_for_partner(url, pid)
                         return request.redirect(url)
         return super(MailController, cls)._redirect_to_record(model, res_id, access_token=access_token, **kwargs)
 
