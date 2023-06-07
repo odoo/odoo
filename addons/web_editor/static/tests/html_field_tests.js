@@ -256,4 +256,33 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         assert.containsOnce(target, '.o_field_html[name="txt"] iframe[sandbox="allow-same-origin allow-popups allow-popups-to-escape-sandbox"]');
     });
 
+    QUnit.module('Readonly mode');
+
+    QUnit.test("Links should open on a new tab", async (assert) => {
+        assert.expect(6);
+        serverData.models.partner.records = [{
+            id: 1,
+            txt: `
+                <body>
+                    <a href="/contactus">Relative link</a>
+                    <a href="${location.origin}/contactus">Internal link</a>
+                    <a href="https://google.com">External link</a>
+                </body>`,
+        }];
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="txt" widget="html" readonly="1"/>
+                </form>`,
+        });
+
+        for (const link of target.querySelectorAll('a')) {
+            assert.strictEqual(link.getAttribute('target'), '_blank');
+            assert.strictEqual(link.getAttribute('rel'), 'noreferrer');
+        }
+    });
 });
