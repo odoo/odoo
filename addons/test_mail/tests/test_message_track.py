@@ -546,14 +546,14 @@ class TestTrackingInternals(MailCommon):
         formattedTrackingValues = [{
             'changedField': 'Email From',
             'id': tracking_values[0]['id'],
+            'fieldName': 'email_from',
+            'fieldType': 'char',
             'newValue': {
                 'currencyId': False,
-                'fieldType': 'char',
                 'value': 'X',
             },
             'oldValue': {
                 'currencyId': False,
-                'fieldType': 'char',
                 'value': False,
             },
         }]

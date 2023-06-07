@@ -54,14 +54,8 @@ patch(Message.prototype, {
     /**
      * @returns {string}
      */
-    formatTracking(trackingValue) {
-        /**
-         * Maps tracked field type to a JS formatter. Tracking values are
-         * not always stored in the same field type as their origin type.
-         * Field types that are not listed here are not supported by
-         * tracking in Python. Also see `create_tracking_values` in Python.
-         */
-        switch (trackingValue.fieldType) {
+    formatTracking(trackingType, trackingValue) {
+        switch (trackingType) {
             case "boolean":
                 return trackingValue.value ? _t("Yes") : _t("No");
             /**
@@ -106,8 +100,8 @@ patch(Message.prototype, {
     /**
      * @returns {string}
      */
-    formatTrackingOrNone(trackingValue) {
-        const formattedValue = this.formatTracking(trackingValue);
+    formatTrackingOrNone(trackingType, trackingValue) {
+        const formattedValue = this.formatTracking(trackingType, trackingValue);
         return formattedValue || _t("None");
     },
 });

@@ -71,13 +71,14 @@ class BaseModel(models.AbstractModel):
     # GENERIC MAIL FEATURES
     # ------------------------------------------------------------
 
-    def _mail_track(self, tracked_fields, initial):
+    def _mail_track(self, tracked_fields, initial_values):
         """ For a given record, fields to check (tuple column name, column info)
         and initial values, return a valid command to create tracking values.
 
-        :param tracked_fields: fields_get of updated fields on which tracking
-          is checked and performed;
-        :param initial: dict of initial values for each updated fields;
+        :param dict tracked_fields: fields_get of updated fields on which
+          tracking is checked and performed;
+        :param dict initial_values: dict of initial values for each updated
+          fields;
 
         :return: a tuple (changes, tracking_value_ids) where
           changes: set of updated column names;
@@ -92,9 +93,9 @@ class BaseModel(models.AbstractModel):
 
         # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
         for col_name, col_info in tracked_fields.items():
-            if col_name not in initial:
+            if col_name not in initial_values:
                 continue
-            initial_value = initial[col_name]
+            initial_value = initial_values[col_name]
             new_value = self[col_name]
 
             if new_value != initial_value and (new_value or initial_value):  # because browse null != False
@@ -102,10 +103,13 @@ class BaseModel(models.AbstractModel):
                                             getattr(self._fields[col_name], 'track_sequence', 100))  # backward compatibility with old parameter name
                 if tracking_sequence is True:
                     tracking_sequence = 100
-                tracking = self.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, tracking_sequence, self._name)
+                tracking = self.env['mail.tracking.value']._create_tracking_values(
+                    initial_value, new_value,
+                    col_name, col_info,
+                    tracking_sequence,
+                    self
+                )
                 if tracking:
-                    if tracking['field_type'] == 'monetary':
-                        tracking['currency_id'] = self[col_info['currency_field']].id
                     tracking_value_ids.append([0, 0, tracking])
                 changes.add(col_name)
 

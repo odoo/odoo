@@ -71,7 +71,7 @@ For more specific needs, you may also assign custom-defined actions
         'wizard/mail_template_reset_views.xml',
         'views/fetchmail_views.xml',
         'views/mail_message_subtype_views.xml',
-        'views/mail_tracking_views.xml',
+        'views/mail_tracking_value_views.xml',
         'views/mail_notification_views.xml',
         'views/mail_message_views.xml',
         'views/mail_message_schedule_views.xml',
