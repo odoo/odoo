@@ -1703,6 +1703,10 @@ const Wysiwyg = Widget.extend({
                     this.odooEditor.historyStash();
                     colorpicker = new ColorPaletteWidget(this, {
                         excluded: ['transparent_grayscale'],
+                        // TODO remove me in master: editable is just a
+                        // duplicate of $editable, should be reviewed with OWL
+                        // later anyway.
+                        editable: this.odooEditor.editable,
                         $editable: $(this.odooEditor.editable), // Our parent is the root widget, we can't retrieve the editable section from it...
                         selectedColor: selectedColor,
                         selectedTab: weUtils.isColorGradient(selectedColor) ? 'gradients' : 'theme-colors',
