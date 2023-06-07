@@ -8318,6 +8318,11 @@ registry.GalleryHandler = SnippetOptionWidget.extend({
         if (name === "reoder_items") {
             const itemsEls = this._getItemsGallery();
             const oldPosition = itemsEls.indexOf(data.itemEl);
+            if (oldPosition === 0 && data.position === "prev") {
+                data.position = "last";
+            } else if (oldPosition === itemsEls.length - 1 && data.position === "next") {
+                data.position = "first";
+            }
             itemsEls.splice(oldPosition, 1);
             switch (data.position) {
                 case "first":
