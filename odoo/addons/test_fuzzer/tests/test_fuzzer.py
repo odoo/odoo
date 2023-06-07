@@ -1,5 +1,6 @@
 import inspect
 import logging
+from typing import Type
 
 import psycopg2
 
@@ -21,19 +22,8 @@ class TestFuzzer(common.TransactionCase):
         self.fuzzer_env = self.env(cr=self.cr)
 
         self.fuzzer_model = self.fuzzer_env['test.fuzzer.model']
-        self.fuzzer_model_methods = patch_function_list(get_public_methods(self.fuzzer_model))
+        self.fuzzer_model_methods = patch_function_list(get_public_functions(self.fuzzer_model.__class__))
         self.fuzzer_record = self.create_canary_record()
-
-        # Functions are fuzzed one parameter at a time. If a function has multiple positional arguments, the non-fuzzed
-        # ones are assigned a value from this dictionary.
-        self.default_args = {
-            "domain": [],
-            "fields": ["n"],
-            "groupby": "n",
-            "field_names": ["n"],
-            "data": [[]],
-            "operation": "read",
-        }
 
         self.injections: dict[str, [Injection]] = {
             "ids": wrap_payload(construct_value_injections("1337", with_closing_parenthesis=True),
@@ -47,6 +37,10 @@ class TestFuzzer(common.TransactionCase):
             "fields": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
             "fnames": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
             "field_names": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
+            "fields_list": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
+            "fields_to_export": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
+            "allfields": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
+            "attributes": wrap_payload(construct_value_injections("type"), lambda payload: [payload]),
             "groupby": construct_value_injections("n"),
             "orderby": construct_value_injections("n"),
             "values": wrap_payload(construct_value_injections("n"), lambda payload: {payload: "1337"}),
@@ -75,19 +69,13 @@ class TestFuzzer(common.TransactionCase):
 
     def fuzz_function(self, function: Callable, signature: inspect.Signature):
         """Iterates over all parameters of a function and fuzzes them."""
-
-        # If a function has multiple positional arguments, all of them must be assigned to be able to call the function.
-        # We assign a default value to all of them.
-        args = {name: value for name, value in self.default_args.items() if
-                name in signature.parameters and signature.parameters[name].default == signature.empty}
-
         for parameter in signature.parameters:
             if parameter == "self":
                 continue
 
-            self.fuzz_function_parameter(parameter, function, args)
+            self.fuzz_function_parameter(parameter, function, signature)
 
-    def fuzz_function_parameter(self, parameter: str, function: Callable, args: dict[str, Any]):
+    def fuzz_function_parameter(self, parameter: str, function: Callable, signature: inspect.Signature):
         """Repeatedly calls a method by trying various SQL injections on the same parameter."""
         if parameter not in self.injections:
             _logger.debug("Unfuzzed parameter `%s` on method `%s`", parameter, function.__name__)
@@ -96,15 +84,19 @@ class TestFuzzer(common.TransactionCase):
         for injection in self.injections[parameter]:
             _logger.debug("Fuzzing `%s` with %s=%s", function.__name__, parameter, injection.payload)
 
+            # If the function has multiple positional arguments, all of them must be assigned to be able to call it.
+            # We assign a default value to all of them.
+            args = {name: value for name, value in self.get_default_args().items() if
+                    name in signature.parameters and signature.parameters[name].default == signature.empty}
+
             # Replace the argument's default value with an injection.
-            fuzzed_args = dict(args)
-            fuzzed_args[parameter] = injection.payload
+            args[parameter] = injection.payload
 
             savepoint = self.cr.savepoint()
 
             try:
                 with tools.mute_logger('odoo.sql_db'):
-                    function(self.fuzzer_record, **fuzzed_args)
+                    function(**args)
                 self.cr.commit()
 
                 self.assertFalse(self.did_injection_succeed(),
@@ -121,6 +113,21 @@ class TestFuzzer(common.TransactionCase):
                 self.assertTrue(was_execute_method_called_correctly(),
                                 f"Method `{function.__name__}` is susceptible to SQL injection "
                                 f"with {parameter}={injection.payload}")
+
+    def get_default_args(self):
+        """
+        Functions are fuzzed one parameter at a time.
+        If a function has multiple positional arguments, the non-fuzzed ones are assigned a value from this dictionary.
+        """
+        return {
+            "self": self.fuzzer_record,
+            "domain": [],
+            "fields": ["n"],
+            "groupby": "n",
+            "field_names": ["n"],
+            "data": [[]],
+            "operation": "read",
+        }
 
     def did_injection_succeed(self) -> bool:
         """
@@ -144,21 +151,20 @@ class TestFuzzer(common.TransactionCase):
                         f"with payload {injection}: {e}")
 
 
-def get_public_methods(obj: object) -> list[tuple[Callable, inspect.Signature]]:
+def get_public_functions(cls: Type) -> list[tuple[Callable, inspect.Signature]]:
     functions = []
 
-    for attribute_name in dir(obj):
+    for attribute_name in dir(cls):
         attribute_name: str
         if attribute_name.startswith("_"):
             continue
 
-        attribute = getattr(obj, attribute_name)
-
-        if not inspect.ismethod(attribute):
+        function = getattr(cls, attribute_name)
+        if not inspect.isfunction(function):
             continue
 
-        function = attribute.__func__
         signature: inspect.Signature = inspect.signature(function)
+
         functions.append((function, signature))
 
     return functions
@@ -170,12 +176,19 @@ def was_execute_method_called_correctly() -> bool:
     No SQL injection should be possible if this is the case.
     This function must be called only inside an except block.
     """
-    for frame in inspect.trace()[::-1]:
-        if frame.function == "execute":
-            arg_values = inspect.getargvalues(frame[0])
-            method_locals = arg_values.locals
-            if "query" in method_locals and "params" in method_locals:
-                return method_locals["params"] is not None
+
+    def is_execute_method(frame: inspect.FrameInfo):
+        module_name = inspect.getmodule(frame[0]).__name__
+        return module_name == "odoo.sql_db" and frame.function == "execute"
+
+    execute_method_frame = next(filter(is_execute_method, inspect.trace()), None)
+    if execute_method_frame is None:
+        return False
+
+    method_locals = inspect.getargvalues(execute_method_frame[0]).locals
+    if "query" in method_locals and "params" in method_locals:
+        return method_locals["params"] is not None
+
     return False
 
 
@@ -187,8 +200,8 @@ def patch_function_list(functions: list[tuple[Callable, inspect.Signature]]) \
     What's interesting, however, is to combine them with other methods that execute queries.
     """
 
-    def browse_and_read(model, ids):
-        m = model.browse(ids)
+    def browse_and_read(self: BaseModel, ids):
+        m = self.browse(ids)
         return m.read()
 
     exclude_functions = [
@@ -199,6 +212,6 @@ def patch_function_list(functions: list[tuple[Callable, inspect.Signature]]) \
         browse_and_read,
     ]
 
-    filtered_functions = [f for f in functions if f[0] not in exclude_functions]
+    filtered_functions = list(filter(lambda f: f[0] not in exclude_functions, functions))
     filtered_functions.extend([(f, inspect.signature(f)) for f in include_functions])
     return filtered_functions
