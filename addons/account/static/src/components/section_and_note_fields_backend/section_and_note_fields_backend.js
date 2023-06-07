@@ -5,6 +5,7 @@ import { ListRenderer } from "@web/views/list/list_renderer";
 import { X2ManyField } from "@web/views/fields/x2many/x2many_field";
 import { TextField, ListTextField } from "@web/views/fields/text/text_field";
 import { CharField } from "@web/views/fields/char/char_field";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 const { Component, useEffect } = owl;
 
@@ -78,6 +79,8 @@ SectionAndNoteFieldOne2Many.components = {
 };
 
 export class SectionAndNoteText extends Component {
+    static props = { ...standardFieldProps };
+
     get componentToUse() {
         return this.props.record.data.display_type === 'line_section' ? CharField : TextField;
     }

@@ -7,13 +7,19 @@ import { localization } from "@web/core/l10n/localization";
 import { parseDate, formatDate } from "@web/core/l10n/dates";
 
 import { formatMonetary } from "@web/views/fields/formatters";
+import { standardFieldProps } from "@web/views/fields/standard_field_props";
 
 const { Component, onWillUpdateProps } = owl;
 
 class AccountPaymentPopOver extends Component {}
+AccountPaymentPopOver.props = {
+    "*": { optional: true },
+}
 AccountPaymentPopOver.template = "account.AccountPaymentPopOver";
 
 export class AccountPaymentField extends Component {
+    static props = { ...standardFieldProps };
+
     setup() {
         this.popover = usePopover();
         this.orm = useService("orm");
