@@ -47,8 +47,7 @@ const ColorPaletteWidget = Widget.extend({
      */
     init: function (parent, options) {
         this._super.apply(this, arguments);
-        const editableDocument = options.editable ? options.editable.ownerDocument : document;
-        this.style = editableDocument.defaultView.getComputedStyle(editableDocument.documentElement);
+
         this.options = Object.assign({
             selectedColor: false,
             resetButton: true,
@@ -60,12 +59,27 @@ const ColorPaletteWidget = Widget.extend({
             opacity: 1,
             selectedTab: 'theme-colors',
             withGradients: false,
+
+            // TODO adapt in master: notice that `options` may contain `editable`
+            // and `ownerDocument` values. Those are duplicates of `$editable` which
+            // can be received or is even computed from the instance here itself.
+            // Ideally those should not be used, they will be removed in master and
+            // the way $editable is received/computed will be reviewed.
+            editable: null,
+            ownerDocument: null,
         }, options || {});
         this.selectedColor = '';
         this.resetButton = this.options.resetButton;
         this.withCombinations = this.options.withCombinations;
 
+        // TODO review in master: do we really need a colorpalette in the editor
+        // working relying on the fact the editable is received from the caller
+        // and other ones that rely on the fact it is asked to the snippet menu?
         this.trigger_up('request_editable', {callback: val => this.options.$editable = val});
+        this.options.editable = this.options.$editable[0];
+        this.options.ownerDocument = this.options.editable && this.options.editable.ownerDocument;
+        const editableDocument = this.options.editable ? this.options.ownerDocument : document;
+        this.style = editableDocument.defaultView.getComputedStyle(editableDocument.documentElement);
 
         this.tabs = [{
             id: 'theme-colors',
