@@ -52,7 +52,7 @@
                                     on <a t-att-href="message.url"><t t-esc="message.originThread?.displayName"/></a>
                                 </t>
                                 <t t-if="message.resModel === 'discuss.channel'">
-                                    (from <a t-att-href="message.url">#<t t-esc="message.originThread?.displayName"/></a>)
+                                    (from <a t-att-href="message.url"><t t-esc="message.originThread?.prefix"/><t t-esc="message.originThread?.displayName"/></a>)
                                 </t>
                             </small>
                             <div t-if="props.message.scheduledDate" t-att-class="{ 'ms-2': props.isInChatWindow and isAlignedRight }" t-att-title="messageService.scheduledDateSimple(props.message)">
