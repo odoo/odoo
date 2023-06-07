@@ -345,6 +345,9 @@ const LinkTools = Link.extend({
         const prefix = this.PREFIXES[cssProperty];
         const colorpicker = new ColorPaletteWidget(this, {
             excluded: ['transparent_grayscale'],
+            // TODO remove me in master: editable is just a duplicate of
+            // $editable, should be reviewed with OWL later anyway.
+            editable: this.options.wysiwyg.odooEditor.editable,
             $editable: $(this.options.wysiwyg.odooEditor.editable),
             withGradients: cssProperty === 'background-color',
         });
