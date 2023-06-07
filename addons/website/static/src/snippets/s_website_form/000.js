@@ -665,7 +665,8 @@ odoo.define('website.s_website_form', function (require) {
                 }
 
                 const formData = new FormData(this.$target[0]);
-                const currentValueOfDependency = formData.get(dependencyName);
+                const formValid = formData.getAll(dependencyName);
+                const currentValueOfDependency = formValid[formValid.indexOf(visibilityCondition)];
                 return this._compareTo(comparator, currentValueOfDependency, visibilityCondition, between);
             };
         },
