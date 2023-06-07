@@ -175,7 +175,7 @@ class Integer(models.AbstractModel):
     def from_html(self, model, field, element):
         lang = self.user_lang()
         value = element.text_content().strip()
-        return int(value.replace(lang.thousands_sep, ''))
+        return int(value.replace(lang.thousands_sep or '', ''))
 
 
 class Float(models.AbstractModel):
@@ -187,7 +187,7 @@ class Float(models.AbstractModel):
     def from_html(self, model, field, element):
         lang = self.user_lang()
         value = element.text_content().strip()
-        return float(value.replace(lang.thousands_sep, '')
+        return float(value.replace(lang.thousands_sep or '', '')
                           .replace(lang.decimal_point, '.'))
 
 
@@ -494,7 +494,7 @@ class Monetary(models.AbstractModel):
 
         value = element.find('span').text.strip()
 
-        return float(value.replace(lang.thousands_sep, '')
+        return float(value.replace(lang.thousands_sep or '', '')
                           .replace(lang.decimal_point, '.'))
 
 
