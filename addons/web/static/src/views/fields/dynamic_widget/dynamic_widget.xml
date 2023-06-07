@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.DynamicDomainWithChar" t-inherit="web.CharField" t-inherit-mode="primary" owl="1">
+        <xpath expr="//input" position="replace">
+            <DynamicModelFieldSelector t-props="getSelectorProps" />
+        </xpath>
+        <xpath expr="//span" position="replace">
+            <DynamicModelFieldSelector t-props="getSelectorProps" />
+        </xpath>
+    </t>
+</templates>
