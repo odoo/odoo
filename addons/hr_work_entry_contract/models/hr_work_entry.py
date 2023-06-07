@@ -18,6 +18,14 @@ class HrWorkEntry(models.Model):
     employee_id = fields.Many2one(domain=[('contract_ids.state', 'in', ('open', 'pending'))])
     work_entry_source = fields.Selection(related='contract_id.work_entry_source')
 
+    def init(self):
+        # FROM 7s by query to 2ms (with 2.6 millions entries)
+        self.env.cr.execute("""
+            CREATE INDEX IF NOT EXISTS hr_work_entry_contract_date_start_stop_idx
+            ON hr_work_entry(contract_id, date_start, date_stop)
+            WHERE state in ('draft', 'validated');
+        """)
+
     def _init_column(self, column_name):
         if column_name != 'contract_id':
             super()._init_column(column_name)
