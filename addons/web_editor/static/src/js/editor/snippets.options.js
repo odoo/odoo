@@ -1606,11 +1606,25 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         if (this.options.dataAttributes.selectedTab) {
             options.selectedTab = this.options.dataAttributes.selectedTab;
         }
-        const wysiwyg = this.getParent().options.wysiwyg;
+
+        // TODO see comment below: retrieving wysiwyg here is not needed
+        // anymore so this can be removed in master. Meanwhile, this is patched
+        // in an ugly way so that custo work consistently if they use
+        // `ownerDocument` or `editable` from `options`.
+        let optionWidget = this;
+        do {
+            optionWidget = optionWidget.getParent();
+        } while (optionWidget && !optionWidget.options.wysiwyg);
+        const wysiwyg = optionWidget && optionWidget.options.wysiwyg;
         if (wysiwyg) {
+            // TODO remove both of these in master: options.ownerDocument has
+            // just never been used and options.editable is a duplicate of
+            // options.$editable which is retrieved by the ColorPaletteWidget
+            // instance itself in case it is not received anyway.
             options.ownerDocument = wysiwyg.el.ownerDocument;
             options.editable = wysiwyg.$editable[0];
         }
+
         const oldColorPalette = this.colorPalette;
         this.colorPalette = new ColorPaletteWidget(this, options);
         if (oldColorPalette) {
