@@ -48,7 +48,7 @@ class TestOnchange2(SavepointCaseWithUserDemo):
 
         fields_spec = {'tags': {}}
         result = model.onchange2({}, [], fields_spec)
-        self.assertEqual(result['value'], {'tags': [(Command.LINK, tag.id, {})]})
+        self.assertEqual(result['value'], {'tags': [(Command.LINK, tag.id, {'id': tag.id})]})
 
     def test_get_field(self):
         """ checking that accessing an unknown attribute does nothing special """
@@ -399,7 +399,7 @@ class TestOnchange2(SavepointCaseWithUserDemo):
         self.assertIn('participants', result['value'])
         self.assertItemsEqual(
             result['value']['participants'],
-            [(Command.LINK, demo.id, {'display_name': demo.display_name})],
+            [(Command.LINK, demo.id, {'id': demo.id, 'display_name': demo.display_name})],
         )
 
     def test_onchange_default(self):
@@ -856,7 +856,7 @@ class TestOnchange2(SavepointCaseWithUserDemo):
         self.assertEqual(result['value'], {
             'lines': [
                 Command.update(line.id, {
-                    'tags': [(Command.LINK, tag.id, {'display_name': 'tag!'})],
+                    'tags': [(Command.LINK, tag.id, {'id': tag.id, 'display_name': 'tag!'})],
                 }),
             ],
         })
@@ -891,10 +891,10 @@ class TestOnchange2(SavepointCaseWithUserDemo):
         self.assertEqual(result['value'], {
             'lines': [
                 Command.update(line.id, {
-                    'tags': [(Command.LINK, tag2.id, {})],
+                    'tags': [(Command.LINK, tag2.id, {'id': tag2.id})],
                 }),
                 Command.update('virtual1', {
-                    'tags': [(Command.LINK, tag2.id, {})],
+                    'tags': [(Command.LINK, tag2.id, {'id': tag2.id})],
                 }),
             ],
         })
