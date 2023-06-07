@@ -473,8 +473,6 @@ class TestSaleMRPAngloSaxonValuation(ValuationReconciliationTestCommon):
             # pylint: disable=bad-whitespace
             {'account_id': self.company_data['default_account_revenue'].id,     'debit': 0,     'credit': 5},
             {'account_id': self.company_data['default_account_receivable'].id,  'debit': 5,     'credit': 0},
-            {'account_id': self.company_data['default_account_stock_out'].id,   'debit': 0,     'credit': 0},
-            {'account_id': self.company_data['default_account_expense'].id,     'debit': 0,     'credit': 0},
         ])
 
     def test_kit_avco_partially_owned_and_delivered_invoice_post_delivery(self):
