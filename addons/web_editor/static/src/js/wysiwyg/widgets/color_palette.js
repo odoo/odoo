@@ -47,8 +47,7 @@ const ColorPaletteWidget = Widget.extend({
      */
     init: function (parent, options) {
         this._super.apply(this, arguments);
-        const editableDocument = options.editable ? options.editable.ownerDocument : document;
-        this.style = editableDocument.defaultView.getComputedStyle(editableDocument.documentElement);
+
         this.options = Object.assign({
             selectedColor: false,
             resetButton: true,
@@ -65,7 +64,13 @@ const ColorPaletteWidget = Widget.extend({
         this.resetButton = this.options.resetButton;
         this.withCombinations = this.options.withCombinations;
 
+        // TODO do we really need a colorpalette in the editor working relying
+        // on the fact the editable is received from the caller and other ones
+        // that rely on the fact it is asked to the snippet menu?
         this.trigger_up('request_editable', {callback: val => this.options.$editable = val});
+        const ownerDocument = this.options.$editable[0] && this.options.$editable[0].ownerDocument;
+        const editableDocument = ownerDocument ? ownerDocument : document;
+        this.style = editableDocument.defaultView.getComputedStyle(editableDocument.documentElement);
 
         this.tabs = [{
             id: 'theme-colors',

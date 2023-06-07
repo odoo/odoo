@@ -432,3 +432,6 @@ class TestUi(odoo.tests.HttpCase):
             'channel_member_ids': [odoo.Command.create({'partner_id': partner_id.id, 'is_minimized': True})],
         })
         self.start_tour(f'/web#id={partner_id.id}&model=res.partner&view_type=form', 'test_hide_chat_window_on_preview', login='admin')
+
+    def test_29_website_text_edition(self):
+        self.start_tour('/@/', 'website_text_edition', login='admin')
