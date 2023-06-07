@@ -1195,32 +1195,47 @@ class RecordSnapshot(dict):
 
         # for x2many fields: serialize value as commands
         for field_name, field_spec in x2many_fields_spec.items():
-            result[field_name] = commands = []
+            commands = []
+
+            self_value = self[field_name]
+            other_value = other.get(field_name) or {}
+            if any(other_value):
+                # other may be a snapshot for a real record, adapt its x2many ids
+                other_value = {NewId(id_): snap for id_, snap in other_value.items()}
+
             # commands for removed lines
             field = self.record._fields[field_name]
             remove = Command.delete if field.type == 'one2many' else Command.unlink
-            for id_, line_snapshot in (other.get(field_name) or {}).items():
-                if id_ not in self[field_name]:
+            for id_ in other_value:
+                if id_ not in self_value:
                     commands.append(remove(id_.origin or id_.ref or 0))
+
             # commands for modified or extra lines
-            for id_, line_snapshot in self[field_name].items():
-                if not force and id_ in other.get(field_name, ()):
-                    # existing line: check diff
-                    line_diff = line_snapshot.diff(other[field_name][id_])
+            for id_, line_snapshot in self_value.items():
+                if not force and id_ in other_value:
+                    # existing line: check diff and send update
+                    line_diff = line_snapshot.diff(other_value[id_])
                     if line_diff:
                         commands.append(Command.update(id_.origin or id_.ref or 0, line_diff))
+
                 elif not id_.origin:
                     # new line: send diff from scratch
                     line_diff = line_snapshot.diff({})
                     commands.append((Command.CREATE, id_.origin or id_.ref or 0, line_diff))
+
                 else:
-                    # link line: send data to client and possible update
-                    line = line_snapshot.record._origin
-                    base_snapshot = RecordSnapshot(line, field_spec.get('fields') or {})
-                    line_data = base_snapshot.diff({})
-                    commands.append((Command.LINK, line.id, line_data))
+                    # link line: send data to client
+                    base_line = line_snapshot.record._origin
+                    [base_data] = base_line.web_read(field_spec.get('fields') or {})
+                    commands.append((Command.LINK, base_line.id, base_data))
+
+                    # check diff and send update
+                    base_snapshot = RecordSnapshot(base_line, field_spec.get('fields') or {})
                     line_diff = line_snapshot.diff(base_snapshot)
                     if line_diff:
                         commands.append(Command.update(id_.origin, line_diff))
+
+            if commands:
+                result[field_name] = commands
 
         return result
