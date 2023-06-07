@@ -2174,7 +2174,7 @@ export class Wysiwyg extends Component {
     }
     _getBannerCommand(title, alertClass, iconClass, description, priority) {
         return {
-            category: _t('Banner'),
+            category: _t('Banners'),
             name: title,
             priority: priority,
             description: description,
@@ -2241,10 +2241,10 @@ export class Wysiwyg extends Component {
         const editorOptions = this.options;
         const categories = [{ name: _t('Banners'), priority: 65 },];
         const commands = [
-            this._getBannerCommand(_t('Banner Info'), 'info', 'fa-info-circle', _t('Insert an info banner section'), 24),
-            this._getBannerCommand(_t('Banner Success'), 'success', 'fa-check-circle', _t('Insert a success banner section'), 23),
-            this._getBannerCommand(_t('Banner Warning'), 'warning', 'fa-exclamation-triangle', _t('Insert a warning banner section'), 22),
-            this._getBannerCommand(_t('Banner Danger'), 'danger', 'fa-exclamation-circle', _t('Insert a danger banner section'), 21),
+            this._getBannerCommand(_t('Banner Info'), 'info', 'fa-info-circle', _t('Insert an info banner'), 24),
+            this._getBannerCommand(_t('Banner Success'), 'success', 'fa-check-circle', _t('Insert a success banner'), 23),
+            this._getBannerCommand(_t('Banner Warning'), 'warning', 'fa-exclamation-triangle', _t('Insert a warning banner'), 22),
+            this._getBannerCommand(_t('Banner Danger'), 'danger', 'fa-exclamation-circle', _t('Insert a danger banner'), 21),
             {
                 category: _t('Structure'),
                 name: _t('Quote'),

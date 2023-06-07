@@ -17,7 +17,8 @@
 
     <!-- Link Dialog (allows to choose a style and content for a link on the page) -->
     <div t-name="web_editor.LinkDialog">
-        <Dialog size="'xl'">
+        <t t-set="title">Insert a Link / Button</t>
+        <Dialog size="'xl'" title="title">
             <div  class="o_link_dialog">
                 <div class="row" t-ref="linkComponentWrapper">
                     <form class="col-lg-8">
@@ -100,7 +101,7 @@
                     </div>
                 </div>
                 <t t-set-slot="footer">
-                    <button class="btn btn-primary" t-on-click="this.onSave">Save</button>
+                    <button class="btn btn-primary" t-on-click="this.onSave">Insert</button>
                     <button class="btn btn-secondary" t-on-click="this.props.close">Discard</button>
                 </t>
             </div>
