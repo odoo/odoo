@@ -28,7 +28,19 @@ const COLOR_PICKER_TEMPLATE = `
             <button data-color="white-50"/>
             <button data-color="white-75"/>
         </div>
-        <div class="o_colorpicker_section" data-name="common" data-display="Common Colors" data-icon-class="fa fa-paint-brush"/>
+        <div class="o_colorpicker_section" data-name="common" data-display="Common Colors" data-icon-class="fa fa-paint-brush">
+            <button data-color="black"></button>
+            <button data-color="900"></button>
+            <button data-color="800"></button>
+            <button data-color="700" class="d-none"></button>
+            <button data-color="600"></button>
+            <button data-color="500" class="d-none"></button>
+            <button data-color="400"></button>
+            <button data-color="300" class="d-none"></button>
+            <button data-color="200"></button>
+            <button data-color="100"></button>
+            <button data-color="white"></button>
+        </div>
     </colorpicker>
 `;
 const SNIPPETS_TEMPLATE = `
