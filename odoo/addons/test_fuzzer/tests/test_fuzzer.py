@@ -37,8 +37,10 @@ class TestFuzzer(common.TransactionCase):
             "fields": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
             "fnames": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
             "field_names": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
+            "field_name": construct_value_injections("n"),
             "fields_list": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
             "fields_to_export": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
+            "name": construct_value_injections("n"),
             "allfields": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
             "attributes": wrap_payload(construct_value_injections("type"), lambda payload: [payload]),
             "groupby": construct_value_injections("n"),
@@ -86,17 +88,30 @@ class TestFuzzer(common.TransactionCase):
 
             # If the function has multiple positional arguments, all of them must be assigned to be able to call it.
             # We assign a default value to all of them.
-            args = {name: value for name, value in self.get_default_args().items() if
-                    name in signature.parameters and signature.parameters[name].default == signature.empty}
+            args: dict[str, Any] = {
+                name: value for name, value in self.get_default_args().items()
+                if name in signature.parameters and signature.parameters[name].default == signature.empty}
 
             # Replace the argument's default value with an injection.
             args[parameter] = injection.payload
+
+            # The reason we're not just calling the function blindly is that TypeError can actually be thrown in some
+            # cases during injections, and we wouldn't have a way to differentiate between a failed injection and a
+            # function call whose arguments are missing. Therefore, we explicitly test if the function can be called
+            # without errors before actually calling it.
+            try:
+                bound_arguments: inspect.BoundArguments = signature.bind(**args)
+            except TypeError:
+                _logger.debug("Function `%s` couldn't be called because "
+                              "some required parameters don't have a default value."
+                              "You should populate the default args dictionary.", function.__name__)
+                return
 
             savepoint = self.cr.savepoint()
 
             try:
                 with tools.mute_logger('odoo.sql_db'):
-                    function(**args)
+                    function(*bound_arguments.args, **bound_arguments.kwargs)
                 self.cr.commit()
 
                 self.assertFalse(self.did_injection_succeed(),
@@ -127,6 +142,10 @@ class TestFuzzer(common.TransactionCase):
             "field_names": ["n"],
             "data": [[]],
             "operation": "read",
+            "values": {"n": "1337"},
+            "field_name": "n",
+            "field_onchange": {"n"},
+            "translations": {},
         }
 
     def did_injection_succeed(self) -> bool:
@@ -172,7 +191,7 @@ def get_public_functions(cls: Type) -> list[tuple[Callable, inspect.Signature]]:
 
 def was_execute_method_called_correctly() -> bool:
     """
-    Returns True if the execute method of the cursor was called with 2 arguments: query and params.
+    Returns True if the `execute` method of the cursor was called with 2 arguments: query and params.
     No SQL injection should be possible if this is the case.
     This function must be called only inside an except block.
     """
