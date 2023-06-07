@@ -4,7 +4,7 @@ import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaita
 import { _lt } from "@web/core/l10n/translation";
 
 export class AlertPopup extends AbstractAwaitablePopup {
-    static template = "AlertPopup";
+    static template = "point_of_sale.AlertPopup";
     static defaultProps = {
         confirmText: _lt("Ok"),
         title: "",

@@ -4,10 +4,9 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component } from "@odoo/owl";
 
 export class ReprintReceiptButton extends Component {
-    static template = "ReprintReceiptButton";
+    static template = "point_of_sale.ReprintReceiptButton";
 
     setup() {
-        super.setup();
         this.pos = usePos();
     }
     async click() {

@@ -6,10 +6,9 @@ import { useService } from "@web/core/utils/hooks";
 
 export class PaymentScreenNumpad extends Component {
     static components = { PSNumpadInputButton };
-    static template = "PaymentScreenNumpad";
+    static template = "point_of_sale.PaymentScreenNumpad";
 
     setup() {
-        super.setup();
         this.decimalPoint = useService("localization").decimalPoint;
     }
 }

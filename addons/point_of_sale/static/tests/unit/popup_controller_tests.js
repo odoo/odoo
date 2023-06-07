@@ -39,7 +39,6 @@ CustomPopup2.template = xml/* html */ `
 class Root extends Component {
     static components = { MainComponentsContainer };
     setup() {
-        super.setup();
         this.popup = useService("popup");
     }
 }

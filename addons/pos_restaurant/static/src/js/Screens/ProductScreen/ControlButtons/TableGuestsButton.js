@@ -9,7 +9,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class TableGuestsButton extends Component {
-    static template = "TableGuestsButton";
+    static template = "pos_restaurant.TableGuestsButton";
 
     setup() {
         this.pos = usePos();

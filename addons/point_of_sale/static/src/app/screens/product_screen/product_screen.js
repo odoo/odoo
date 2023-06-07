@@ -22,7 +22,7 @@ import { ProductsWidget } from "@point_of_sale/app/screens/product_screen/produc
 import { ActionpadWidget } from "@point_of_sale/app/screens/product_screen/action_pad/action_pad";
 
 export class ProductScreen extends ControlButtonsMixin(Component) {
-    static template = "ProductScreen";
+    static template = "point_of_sale.ProductScreen";
     static components = {
         ActionpadWidget,
         NumpadWidget,

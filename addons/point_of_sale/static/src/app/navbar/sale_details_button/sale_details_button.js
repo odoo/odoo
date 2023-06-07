@@ -7,7 +7,7 @@ import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class SaleDetailsButton extends Component {
-    static template = "SaleDetailsButton";
+    static template = "point_of_sale.SaleDetailsButton";
 
     setup() {
         super.setup(...arguments);
@@ -28,7 +28,7 @@ export class SaleDetailsButton extends Component {
             [false, false, false, [globalState.pos_session.id]]
         );
         const report = renderToElement(
-            "SaleDetailsReport",
+            "point_of_sale.SaleDetailsReport",
             Object.assign({}, saleDetails, {
                 date: new Date().toLocaleString(),
                 pos: globalState,

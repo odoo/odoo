@@ -7,10 +7,9 @@ import { _t } from "@web/core/l10n/translation";
 
 // Previously ProxyStatusWidget
 export class ProxyStatus extends Component {
-    static template = "ProxyStatus";
+    static template = "point_of_sale.ProxyStatus";
 
     setup() {
-        super.setup();
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         const hardwareProxy = useService("hardware_proxy");

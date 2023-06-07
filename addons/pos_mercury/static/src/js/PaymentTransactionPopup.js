@@ -5,7 +5,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { useState } from "@odoo/owl";
 
 export class PaymentTransactionPopup extends AbstractAwaitablePopup {
-    static template = "PaymentTransactionPopup";
+    static template = "pos_mercury.PaymentTransactionPopup";
     static defaultProps = {
         confirmText: _lt("Ok"),
         title: _lt("Online Payment"),

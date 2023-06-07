@@ -4,7 +4,7 @@ import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class ProductItem extends Component {
-    static template = "ProductItem";
+    static template = "point_of_sale.ProductItem";
 
     setup() {
         this.pos = usePos();

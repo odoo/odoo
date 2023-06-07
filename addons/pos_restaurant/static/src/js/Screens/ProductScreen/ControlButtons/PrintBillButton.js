@@ -5,10 +5,9 @@ import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product
 import { Component } from "@odoo/owl";
 
 export class PrintBillButton extends Component {
-    static template = "PrintBillButton";
+    static template = "pos_restaurant.PrintBillButton";
 
     setup() {
-        super.setup();
         this.pos = usePos();
     }
     _isDisabled() {

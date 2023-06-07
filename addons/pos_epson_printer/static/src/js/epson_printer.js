@@ -7,7 +7,7 @@ import { templates } from "@web/core/assets";
 import { createElement, append, createTextNode } from "@web/core/utils/xml";
 
 function ePOSPrint(children) {
-    let ePOSLayout = templates.querySelector("[t-name='ePOSLayout'");
+    let ePOSLayout = templates.querySelector("[t-name='pos_epson_printer.ePOSLayout'");
     if (!ePOSLayout) {
         throw new Error("'ePOSLayout' not loaded");
     }

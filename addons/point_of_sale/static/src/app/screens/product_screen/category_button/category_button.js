@@ -3,7 +3,7 @@
 import { Component } from "@odoo/owl";
 
 export class CategoryButton extends Component {
-    static template = "CategoryButton";
+    static template = "point_of_sale.CategoryButton";
 
     get imageUrl() {
         const category = this.props.category;

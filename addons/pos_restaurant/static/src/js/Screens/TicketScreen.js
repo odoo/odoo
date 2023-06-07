@@ -149,10 +149,9 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
 });
 
 export class TipCell extends Component {
-    static template = "TipCell";
+    static template = "pos_restaurant.TipCell";
 
     setup() {
-        super.setup();
         this.state = useState({ isEditing: false });
         this.orderUiState = this.props.order.uiState.TipScreen;
         useAutofocus();

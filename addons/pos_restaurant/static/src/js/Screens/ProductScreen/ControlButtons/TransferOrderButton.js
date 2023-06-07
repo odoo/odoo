@@ -5,7 +5,7 @@ import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product
 import { Component } from "@odoo/owl";
 
 export class TransferOrderButton extends Component {
-    static template = "TransferOrderButton";
+    static template = "pos_restaurant.TransferOrderButton";
 
     setup() {
         this.pos = usePos();

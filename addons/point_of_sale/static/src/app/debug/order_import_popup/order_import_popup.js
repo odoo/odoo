@@ -4,7 +4,7 @@ import { AbstractAwaitablePopup } from "@point_of_sale/app/popup/abstract_awaita
 import { _lt } from "@web/core/l10n/translation";
 
 export class OrderImportPopup extends AbstractAwaitablePopup {
-    static template = "OrderImportPopup";
+    static template = "point_of_sale.OrderImportPopup";
     static defaultProps = {
         confirmText: _lt("Ok"),
         cancelKey: false,

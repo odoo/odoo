@@ -6,7 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { useState, useRef, onMounted } from "@odoo/owl";
 
 export class NumberPopup extends AbstractAwaitablePopup {
-    static template = "NumberPopup";
+    static template = "point_of_sale.NumberPopup";
     static defaultProps = {
         confirmText: _t("Confirm"),
         cancelText: _t("Discard"),

@@ -7,7 +7,7 @@ import { Component, onMounted, onWillUnmount, useExternalListener, useState } fr
 import { useService } from "@web/core/utils/hooks";
 
 export class ScaleScreen extends Component {
-    static template = "ScaleScreen";
+    static template = "point_of_sale.ScaleScreen";
 
     /**
      * @param {Object} props

@@ -7,10 +7,9 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component, useRef } from "@odoo/owl";
 
 export class InvoiceButton extends Component {
-    static template = "InvoiceButton";
+    static template = "point_of_sale.InvoiceButton";
 
     setup() {
-        super.setup();
         this.pos = usePos();
         this.invoiceButton = useRef("invoice-button");
         this.popup = useService("popup");

@@ -3,5 +3,5 @@
 import { Component } from "@odoo/owl";
 
 export class WrappedProductNameLines extends Component {
-    static template = "WrappedProductNameLines";
+    static template = "point_of_sale.WrappedProductNameLines";
 }

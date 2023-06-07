@@ -12,7 +12,6 @@ import { Component, useRef, onMounted } from "@odoo/owl";
 export class TipScreen extends Component {
     static template = "pos_restaurant.TipScreen";
     setup() {
-        super.setup();
         this.pos = usePos();
         this.posReceiptContainer = useRef("pos-receipt-container");
         this.popup = useService("popup");
@@ -118,7 +117,7 @@ export class TipScreen extends Component {
 
         for (let i = 0; i < receipts.length; i++) {
             const data = receipts[i];
-            var receipt = renderToElement("TipReceipt", {
+            var receipt = renderToElement("pos_restaurant.TipReceipt", {
                 receipt: this.currentOrder.getOrderReceiptEnv().receipt,
                 data: data,
                 total: this.env.utils.formatCurrency(this.totalAmount),

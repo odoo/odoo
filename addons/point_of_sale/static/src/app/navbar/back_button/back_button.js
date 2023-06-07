@@ -5,10 +5,9 @@ import { useService } from "@web/core/utils/hooks";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class BackButton extends Component {
-    static template = "BackButton";
+    static template = "point_of_sale.BackButton";
 
     setup() {
-        super.setup();
         this.pos = usePos();
         this.ui = useState(useService("ui"));
     }

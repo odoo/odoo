@@ -13,14 +13,13 @@ import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_erro
 
 export class ProductsWidget extends Component {
     static components = { ProductItem, ProductsWidgetControlPanel };
-    static template = "ProductsWidget";
+    static template = "point_of_sale.ProductsWidget";
 
     /**
      * @param {Object} props
      * @param {number?} props.startCategoryId
      */
     setup() {
-        super.setup();
         this.state = useState({
             previousSearchWord: "",
             currentOffset: 0,

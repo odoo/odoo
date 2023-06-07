@@ -6,7 +6,7 @@ import { onMounted, useRef, useState } from "@odoo/owl";
 
 // formerly TextInputPopupWidget
 export class TextInputPopup extends AbstractAwaitablePopup {
-    static template = "TextInputPopup";
+    static template = "point_of_sale.TextInputPopup";
     static defaultProps = {
         confirmText: _lt("Confirm"),
         cancelText: _lt("Discard"),

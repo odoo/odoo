@@ -8,7 +8,7 @@ import { Component } from "@odoo/owl";
  */
 export class OrderDetails extends Component {
     static components = { OrderlineDetails };
-    static template = "OrderDetails";
+    static template = "point_of_sale.OrderDetails";
 
     get order() {
         return this.props.order;
