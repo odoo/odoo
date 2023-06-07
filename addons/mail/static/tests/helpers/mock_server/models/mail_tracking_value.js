@@ -31,7 +31,7 @@ patch(MockServer.prototype, {
         return mockWriteResult;
     },
     /**
-     * Simulates `create_tracking_values` on `mail.tracking.value`
+     * Simulates `_create_tracking_values` on `mail.tracking.value`
      */
     _mockMailTrackingValue_CreateTrackingValues(
         initialValue,
@@ -100,24 +100,29 @@ patch(MockServer.prototype, {
      * Simulates `_tracking_value_format` on `mail.tracking.value`
      */
     _mockMailTrackingValue_TrackingValueFormat(tracking_value_ids) {
-        const trackingValues = tracking_value_ids.map((tracking) => ({
-            changedField: tracking.field_desc,
-            id: tracking.id,
-            newValue: {
+        const trackingValues = tracking_value_ids.map((tracking) => {
+            const irField = this.models["ir.model.fields"].records.find(
+                (field) => field.id === tracking.field
+            );
+            return {
+                changedField: tracking.field_desc,
+                id: tracking.id,
+                fieldName: irField.name,
                 fieldType: tracking.field_type,
-                value: this._mockMailTrackingValue_GetDisplayValue(tracking, "new"),
-            },
-            oldValue: {
-                fieldType: tracking.field_type,
-                value: this._mockMailTrackingValue_GetDisplayValue(tracking, "old"),
-            },
-        }));
+                newValue: {
+                    value: this._mockMailTrackingValue_FormatDisplayValue(tracking, "new"),
+                },
+                oldValue: {
+                    value: this._mockMailTrackingValue_FormatDisplayValue(tracking, "old"),
+                },
+            };
+        });
         return trackingValues;
     },
     /**
-     * Simulates `_get_display_value` on `mail.tracking.value`
+     * Simulates `_format_display_value` on `mail.tracking.value`
      */
-    _mockMailTrackingValue_GetDisplayValue(record, type) {
+    _mockMailTrackingValue_FormatDisplayValue(record, type) {
         switch (record.field_type) {
             case "float":
             case "integer":

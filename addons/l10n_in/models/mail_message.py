@@ -23,14 +23,21 @@ class Message(models.Model):
             elif not title and message.subtype_id and not message.subtype_id.internal:
                 title = message.subtype_id.display_name
             audit_log_preview = Markup("<div>%s</div>") % (title)
-            for value in tracking_value_ids:
+            trackings = [
+                (
+                    fmt_vals['changedField'],
+                    fmt_vals['oldValue']['value'],
+                    fmt_vals['newValue']['value'],
+                ) for fmt_vals in tracking_value_ids._tracking_value_format()
+            ]
+            for field_desc, old_value, new_value in trackings:
                 audit_log_preview += Markup(
                     "<li>%(old_value)s <i class='o_TrackingValue_separator fa fa-long-arrow-right mx-1 text-600' title='%(title)s' role='img' aria-label='%(title)s'></i>%(new_value)s (%(field)s)</li>"
                 ) % {
-                    'old_value': value._get_old_display_value()[0] or _("None"),
-                    'new_value': value._get_new_display_value()[0] or _("None"),
+                    'old_value': old_value,
+                    'new_value': new_value,
                     'title': _("Changed"),
-                    'field': value.field.field_description,
+                    'field': field_desc,
                 }
             message.l10n_in_audit_log_preview = audit_log_preview
 
