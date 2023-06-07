@@ -1642,7 +1642,7 @@ class AccountMove(models.Model):
     @api.onchange('invoice_cash_rounding_id')
     def _onchange_invoice_cash_rounding_id(self):
         for move in self:
-            if move.invoice_cash_rounding_id and not move.invoice_cash_rounding_id.profit_account_id:
+            if move.invoice_cash_rounding_id.strategy == 'add_invoice_line' and not move.invoice_cash_rounding_id.profit_account_id:
                 return {'warning': {
                     'title': _("Warning for Cash Rounding Method: %s", move.invoice_cash_rounding_id.name),
                     'message': _("You must specifiy the Profit Account (company dependent)")
