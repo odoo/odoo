@@ -57,12 +57,3 @@ class ResPartner(models.Model):
         else:
             partner_id = self.create(partner).id
         return partner_id
-
-    @api.ondelete(at_uninstall=False)
-    def _unlink_except_active_pos_session(self):
-        running_sessions = self.env['pos.session'].sudo().search([('state', '!=', 'closed')])
-        if running_sessions:
-            raise UserError(
-                _("You cannot delete contacts while there are active PoS sessions. Close the session(s) %s first.")
-                % ", ".join(session.name for session in running_sessions)
-            )

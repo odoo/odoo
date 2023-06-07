@@ -129,6 +129,13 @@ class PosOrder(models.Model):
         if pos_session.state == 'closing_control' or pos_session.state == 'closed':
             order['pos_session_id'] = self._get_valid_session(order).id
 
+        if order.get('partner_id'):
+            partner_id = self.env['res.partner'].browse(order['partner_id'])
+            if not partner_id.exists():
+                order.update({
+                    "partner_id": False,
+                    "to_invoice": False,
+                })
         pos_order = False
         if not existing_order:
             pos_order = self.create(self._order_fields(order))
