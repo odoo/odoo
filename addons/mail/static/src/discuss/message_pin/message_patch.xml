@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-    <t t-inherit="mail.Message" t-inherit-mode="extension">
+    <t t-inherit="mail.Message" t-inherit-mode="extension" owl="1">
         <xpath expr="//DropdownItem[@t-if='canUnfollow']" position="after">
             <DropdownItem
                 t-if="store.user and props.thread.model === 'discuss.channel'"

@@ -689,31 +689,6 @@ export class ThreadService {
             }
 
             thread.memberCount = serverData.channel?.memberCount ?? thread.memberCount;
-            if ("rtc_inviting_session" in serverData) {
-                this.env.bus.trigger("THREAD-SERVICE:UPDATE_RTC_SESSIONS", {
-                    thread,
-                    record: serverData.rtc_inviting_session,
-                });
-                thread.invitingRtcSessionId = serverData.rtc_inviting_session.id;
-                if (!this.store.ringingThreads.includes(thread.localId)) {
-                    this.store.ringingThreads.push(thread.localId);
-                }
-            }
-            if ("rtcInvitingSession" in serverData) {
-                if (Array.isArray(serverData.rtcInvitingSession)) {
-                    if (serverData.rtcInvitingSession[0][0] === "unlink") {
-                        thread.invitingRtcSessionId = undefined;
-                        removeFromArray(this.store.ringingThreads, thread.localId);
-                    }
-                    return;
-                }
-                this.env.bus.trigger("THREAD-SERVICE:UPDATE_RTC_SESSIONS", {
-                    thread,
-                    record: serverData.rtcInvitingSession,
-                });
-                thread.invitingRtcSessionId = serverData.rtcInvitingSession.id;
-                this.store.ringingThreads.push(thread.localId);
-            }
             if (thread.type === "chat" && serverData.channel) {
                 thread.customName = serverData.channel.custom_channel_name;
             }
@@ -734,13 +709,6 @@ export class ThreadService {
                         }
                     }
                 }
-            }
-            if ("rtcSessions" in serverData) {
-                // FIXME this prevents cyclic dependencies between mail.thread and mail.rtc
-                this.env.bus.trigger("THREAD-SERVICE:UPDATE_RTC_SESSIONS", {
-                    thread,
-                    commands: serverData.rtcSessions,
-                });
             }
             if ("invitedMembers" in serverData) {
                 if (!serverData.invitedMembers) {
@@ -800,6 +768,7 @@ export class ThreadService {
         if (!thread.type && !["mail.box", "discuss.channel"].includes(thread.model)) {
             thread.type = "chatter";
         }
+        this.env.bus.trigger("mail.thread/onUpdate", { thread, data });
     }
 
     /**

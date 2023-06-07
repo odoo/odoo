@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussSidebar" t-inherit-mode="extension" owl="1">
+        <xpath expr="//*[@t-ref='mailboxes']" position="before">
+            <div class="d-flex justify-content-center">
+                <button t-on-click="onClickStartMeeting" class="btn btn-primary rounded" title="Start a meeting">
+                    Start a meeting
+                </button>
+            </div>
+            <hr class="w-100 opacity-0"/>
+        </xpath>
+    </t>
+</templates>

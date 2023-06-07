@@ -1,11 +1,9 @@
 /* @odoo-module */
 
-import { Call } from "@mail/rtc/call";
 import { Thread } from "@mail/core_ui/thread";
 import { Composer } from "@mail/composer/composer";
 import { useStore } from "@mail/core/messaging_hook";
 import { useThreadActions } from "@mail/core/thread_actions";
-import { useRtc } from "@mail/rtc/rtc_hook";
 import { useMessageEdition, useMessageHighlight, useMessageToReplyTo } from "@mail/utils/hooks";
 import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
@@ -25,7 +23,6 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
  */
 export class ChatWindow extends Component {
     static components = {
-        Call,
         Dropdown,
         DropdownItem,
         Thread,
@@ -42,7 +39,6 @@ export class ChatWindow extends Component {
         this.chatWindowService = useState(useService("mail.chat_window"));
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
-        this.rtc = useRtc();
         this.messageEdition = useMessageEdition();
         this.messageHighlight = useMessageHighlight();
         this.messageToReplyTo = useMessageToReplyTo();
