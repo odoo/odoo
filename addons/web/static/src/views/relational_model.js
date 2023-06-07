@@ -2707,7 +2707,11 @@ export class Group extends DataPoint {
         }
         if (!this.isFolded && this.count) {
             await this.list.load();
-        }
+        } else if (!this.isFolded) {
+            // close/clean up empty groups
+            //this.isFolded = true;
+            this.list.groups = [];
+        }        
     }
 
     makeRecord(params) {
