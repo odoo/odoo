@@ -9,7 +9,7 @@ import { sprintf } from "@web/core/utils/strings";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class DiscountButton extends Component {
-    static template = "DiscountButton";
+    static template = "pos_discount.DiscountButton";
 
     setup() {
         this.pos = usePos();

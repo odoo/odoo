@@ -7,7 +7,7 @@ import { onMounted } from "@odoo/owl";
 
 // formerly ErrorPopupWidget
 export class ErrorPopup extends AbstractAwaitablePopup {
-    static template = "ErrorPopup";
+    static template = "point_of_sale.ErrorPopup";
     static defaultProps = {
         confirmText: _lt("Ok"),
         title: _lt("Error"),

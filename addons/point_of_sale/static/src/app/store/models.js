@@ -960,7 +960,7 @@ export class PosGlobalState extends PosModel {
             )
         );
 
-        return renderToString("CustomerFacingDisplayOrder", {
+        return renderToString("point_of_sale.CustomerFacingDisplayOrder", {
             pos: this,
             formatCurrency: this.env.utils.formatCurrency,
             origin: window.location.origin,
@@ -2397,10 +2397,8 @@ export class Orderline extends PosModel {
         const productTaxes = this._getProductTaxesAfterFiscalPosition();
         const taxDetails = this.get_tax_details();
         return productTaxes
-            .filter(tax => tax.price_include)
-            .reduce((sum, tax) => sum + taxDetails[tax.id],
-            0
-        );
+            .filter((tax) => tax.price_include)
+            .reduce((sum, tax) => sum + taxDetails[tax.id], 0);
     }
     _map_tax_fiscal_position(tax, order = false) {
         return this.pos._map_tax_fiscal_position(tax, order);
@@ -2435,7 +2433,7 @@ export class Orderline extends PosModel {
     _getProductTaxesAfterFiscalPosition() {
         const product = this.get_product();
         let taxesIds = this.tax_ids || product.taxes_id;
-        taxesIds = _.filter(taxesIds, t => t in this.pos.taxes_by_id);
+        taxesIds = _.filter(taxesIds, (t) => t in this.pos.taxes_by_id);
         return this.pos.get_taxes_after_fp(taxesIds, this.order.fiscal_position);
     }
     get_all_prices(qty = this.get_quantity()) {
@@ -3043,7 +3041,9 @@ export class Order extends PosModel {
                         minutes,
                     },
                 };
-                const receipt = renderToElement("OrderChangeReceipt", { changes: printingChanges });
+                const receipt = renderToElement("point_of_sale.OrderChangeReceipt", {
+                    changes: printingChanges,
+                });
                 const result = await printer.printReceipt(receipt);
                 if (!result.successful) {
                     isPrintSuccessful = false;

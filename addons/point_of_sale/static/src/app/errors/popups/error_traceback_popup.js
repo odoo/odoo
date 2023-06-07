@@ -6,7 +6,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 // formerly ErrorTracebackPopupWidget
 export class ErrorTracebackPopup extends ErrorPopup {
-    static template = "ErrorTracebackPopup";
+    static template = "point_of_sale.ErrorTracebackPopup";
     static defaultProps = {
         confirmText: _lt("Ok"),
         cancelText: _lt("Cancel"),

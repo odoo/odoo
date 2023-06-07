@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="OrderReceiptVAT" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+    <t t-name="l10n_ae_pos.OrderReceiptVAT" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
         <xpath expr="//div[@id='post_receipt_taxes_container']" position="replace">
             <div id='post_receipt_taxes_container'>
                 <t t-if="pos.globalState.company.country.code == 'AE'">VAT</t>

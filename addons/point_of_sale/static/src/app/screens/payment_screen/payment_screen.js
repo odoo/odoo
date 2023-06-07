@@ -19,7 +19,7 @@ import { Component, useState } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
 
 export class PaymentScreen extends Component {
-    static template = "PaymentScreen";
+    static template = "point_of_sale.PaymentScreen";
     static components = {
         PaymentScreenNumpad,
         PaymentScreenPaymentLines,
@@ -27,7 +27,6 @@ export class PaymentScreen extends Component {
     };
 
     setup() {
-        super.setup();
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.orm = useService("orm");

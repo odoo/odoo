@@ -5,7 +5,6 @@ import { useService } from "@web/core/utils/hooks";
 
 export class BaseProductAttribute extends Component {
     setup() {
-        super.setup();
         this.env.attribute_components.push(this);
         this.attribute = this.props.attribute;
         this.values = this.attribute.values;
@@ -32,7 +31,7 @@ export class BaseProductAttribute extends Component {
 }
 
 export class RadioProductAttribute extends BaseProductAttribute {
-    static template = "RadioProductAttribute";
+    static template = "point_of_sale.RadioProductAttribute";
 
     setup() {
         super.setup();
@@ -49,15 +48,15 @@ export class RadioProductAttribute extends BaseProductAttribute {
 }
 
 export class SelectProductAttribute extends BaseProductAttribute {
-    static template = "SelectProductAttribute";
+    static template = "point_of_sale.SelectProductAttribute";
 }
 
 export class ColorProductAttribute extends BaseProductAttribute {
-    static template = "ColorProductAttribute";
+    static template = "point_of_sale.ColorProductAttribute";
 }
 
 export class ProductConfiguratorPopup extends AbstractAwaitablePopup {
-    static template = "ProductConfiguratorPopup";
+    static template = "point_of_sale.ProductConfiguratorPopup";
     static components = {
         RadioProductAttribute,
         SelectProductAttribute,

@@ -3,7 +3,7 @@
 import { Component } from "@odoo/owl";
 
 export class PartnerLine extends Component {
-    static template = "PartnerLine";
+    static template = "point_of_sale.PartnerLine";
 
     get highlight() {
         return this._isPartnerSelected ? "highlight" : "";

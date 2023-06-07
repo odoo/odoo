@@ -6,10 +6,9 @@ import { Component, onWillUpdateProps } from "@odoo/owl";
 
 export class OrderReceipt extends Component {
     static components = { WrappedProductNameLines };
-    static template = "OrderReceipt";
+    static template = "point_of_sale.OrderReceipt";
 
     setup() {
-        super.setup();
         this.pos = usePos();
         this._receiptEnv = this.props.order.getOrderReceiptEnv();
 

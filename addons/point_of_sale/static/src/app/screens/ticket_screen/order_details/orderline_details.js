@@ -10,7 +10,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
  * @props {pos.order.line} line
  */
 export class OrderlineDetails extends Component {
-    static template = "OrderlineDetails";
+    static template = "point_of_sale.OrderlineDetails";
 
     setup() {
         this.pos = usePos();

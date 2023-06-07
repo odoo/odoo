@@ -27,10 +27,9 @@ import { sprintf } from "@web/core/utils/strings";
  */
 export class PartnerListScreen extends Component {
     static components = { PartnerDetailsEdit, PartnerLine };
-    static template = "PartnerListScreen";
+    static template = "point_of_sale.PartnerListScreen";
 
     setup() {
-        super.setup();
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.orm = useService("orm");

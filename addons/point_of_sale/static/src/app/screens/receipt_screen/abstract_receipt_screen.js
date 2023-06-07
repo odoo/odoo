@@ -13,7 +13,6 @@ import { Component, useRef } from "@odoo/owl";
  */
 export class AbstractReceiptScreen extends Component {
     setup() {
-        super.setup();
         this.orderReceipt = useRef("order-receipt");
         this.popup = useService("popup");
         this.hardwareProxy = useService("hardware_proxy");

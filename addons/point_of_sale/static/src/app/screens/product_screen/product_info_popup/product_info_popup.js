@@ -10,7 +10,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
  *  }
  */
 export class ProductInfoPopup extends AbstractAwaitablePopup {
-    static template = "ProductInfoPopup";
+    static template = "point_of_sale.ProductInfoPopup";
     static defaultProps = { confirmKey: false };
 
     setup() {

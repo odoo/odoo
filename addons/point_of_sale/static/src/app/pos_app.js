@@ -12,7 +12,7 @@ import { reactive, Component, onMounted } from "@odoo/owl";
  * Chrome is the root component of the PoS App.
  */
 export class Chrome extends Component {
-    static template = "Chrome"; // FIXME POSREF namespace templates
+    static template = "point_of_sale.Chrome";
     static components = { Transition, MainComponentsContainer, ErrorHandler, Navbar };
     static props = { disableLoader: Function };
     setup() {

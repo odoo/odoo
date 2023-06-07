@@ -5,7 +5,7 @@ import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class ResetProgramsButton extends Component {
-    static template = "ResetProgramsButton";
+    static template = "pos_loyalty.ResetProgramsButton";
 
     setup() {
         this.pos = usePos();

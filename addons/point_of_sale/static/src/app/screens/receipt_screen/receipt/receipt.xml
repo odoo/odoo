@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="OrderReceipt" owl="1">
+    <t t-name="point_of_sale.OrderReceipt" owl="1">
         <div class="pos-receipt">
             <t t-if="receipt.company.logo">
                 <img class="pos-receipt-logo" t-att-src="receipt.company.logo" alt="Logo"/>
@@ -44,7 +44,7 @@
             <!-- Orderlines -->
 
             <div class="orderlines">
-                <t t-call="OrderLinesReceipt"/>
+                <t t-call="point_of_sale.OrderLinesReceipt"/>
             </div>
 
             <!-- Subtotal -->
@@ -176,7 +176,7 @@
             </div>
         </div>
     </t>
-    <t t-name="OrderLinesReceipt" owl="1">
+    <t t-name="point_of_sale.OrderLinesReceipt" owl="1">
         <t t-foreach="receipt.orderlines" t-as="line" t-key="line.id">
             <t t-if="isSimple(line)">
                 <div class="responsive-price">

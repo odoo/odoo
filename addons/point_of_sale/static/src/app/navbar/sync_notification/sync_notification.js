@@ -4,7 +4,7 @@ import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class SyncNotification extends Component {
-    static template = "SyncNotification";
+    static template = "point_of_sale.SyncNotification";
 
     setup() {
         this.pos = usePos();

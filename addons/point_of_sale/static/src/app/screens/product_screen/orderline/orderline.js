@@ -4,7 +4,7 @@ import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class Orderline extends Component {
-    static template = "Orderline";
+    static template = "point_of_sale.Orderline";
 
     /**
      * if doubleclick, change hasChange to skipChange

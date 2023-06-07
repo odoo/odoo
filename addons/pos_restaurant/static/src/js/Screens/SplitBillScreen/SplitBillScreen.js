@@ -9,7 +9,7 @@ import { Component, useState } from "@odoo/owl";
 import { groupBy } from "@web/core/utils/arrays";
 
 export class SplitBillScreen extends Component {
-    static template = "SplitBillScreen";
+    static template = "pos_restaurant.SplitBillScreen";
     static components = { SplitOrderline };
 
     setup() {

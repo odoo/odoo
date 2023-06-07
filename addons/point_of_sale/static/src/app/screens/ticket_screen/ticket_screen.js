@@ -24,7 +24,7 @@ const { DateTime } = luxon;
 
 export class TicketScreen extends Component {
     static storeOnOrder = false;
-    static template = "TicketScreen";
+    static template = "point_of_sale.TicketScreen";
     static components = {
         ActionpadWidget,
         InvoiceButton,
@@ -46,7 +46,6 @@ export class TicketScreen extends Component {
     static searchPlaceholder = _lt("Search Orders...");
 
     setup() {
-        super.setup();
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.popup = useService("popup");

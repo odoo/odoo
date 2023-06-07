@@ -40,7 +40,7 @@ import { EditListInput } from "@point_of_sale/app/store/select_lot_popup/edit_li
  */
 export class EditListPopup extends AbstractAwaitablePopup {
     static components = { EditListInput };
-    static template = "EditListPopup";
+    static template = "point_of_sale.EditListPopup";
     static defaultProps = {
         confirmText: _lt("Add"),
         cancelText: _lt("Discard"),

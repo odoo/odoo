@@ -5,7 +5,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { useState } from "@odoo/owl";
 
 export class SelectionPopup extends AbstractAwaitablePopup {
-    static template = "SelectionPopup";
+    static template = "point_of_sale.SelectionPopup";
     static defaultProps = {
         cancelText: _lt("Cancel"),
         title: _lt("Select"),

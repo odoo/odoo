@@ -10,10 +10,9 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class OrderWidget extends Component {
     static components = { Orderline, OrderSummary };
-    static template = "OrderWidget";
+    static template = "point_of_sale.OrderWidget";
 
     setup() {
-        super.setup();
         this.pos = usePos();
         this.popup = useService("popup");
         this.numberBuffer = useService("number_buffer");

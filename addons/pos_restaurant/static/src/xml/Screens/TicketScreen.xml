@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension" owl="1">
+    <t t-name="pos_restaurant.TicketScreen" t-inherit="point_of_sale.TicketScreen" t-inherit-mode="extension" owl="1">
         <xpath expr="//div[hasclass('header-row')]//div[@name='delete']" position="before">
             <div t-if="pos.globalState.config.module_pos_restaurant" class="col" name="table">Table</div>
             <div t-if="_state.ui.filter == 'TIPPING'" class="col end narrow" name="tip">Tip</div>
@@ -23,7 +23,7 @@
         </xpath>
     </t>
 
-    <t t-name="TipCell" owl="1">
+    <t t-name="pos_restaurant.TipCell" owl="1">
         <div class="tip-cell" t-on-click.stop="editTip">
             <t t-if="state.isEditing">
                 <input type="text" name="tip-amount" t-ref="autofocus" t-model="orderUiState.inputTipAmount" t-on-blur="onBlur" t-on-keydown="onKeydown" />

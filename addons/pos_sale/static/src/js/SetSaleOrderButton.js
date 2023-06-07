@@ -5,7 +5,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component } from "@odoo/owl";
 
 export class SetSaleOrderButton extends Component {
-    static template = "SetSaleOrderButton";
+    static template = "pos_sale.SetSaleOrderButton";
     setup() {
         this.pos = usePos();
     }

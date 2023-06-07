@@ -10,7 +10,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
  * @prop {boolean} disableSign
  */
 export class NumpadWidget extends Component {
-    static template = "NumpadWidget";
+    static template = "point_of_sale.NumpadWidget";
     static defaultProps = {
         disabledModes: [],
         disableSign: false,

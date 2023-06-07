@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="ProductItem" owl="1">
+    <t t-name="point_of_sale.ProductItem" owl="1">
         <article class="product" tabindex="0" t-on-keypress="spaceClickProduct"
                  t-on-click="() => this.pos.addProductToCurrentOrder(props.product)"
                  t-att-data-product-id="props.product.id"

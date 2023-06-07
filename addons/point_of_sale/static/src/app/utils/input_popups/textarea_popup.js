@@ -7,7 +7,7 @@ import { onMounted, useRef, useState } from "@odoo/owl";
 // IMPROVEMENT: This code is very similar to TextInputPopup.
 //      Combining them would reduce the code.
 export class TextAreaPopup extends AbstractAwaitablePopup {
-    static template = "TextAreaPopup";
+    static template = "point_of_sale.TextAreaPopup";
     static defaultProps = {
         confirmText: _lt("Add"),
         cancelText: _lt("Discard"),

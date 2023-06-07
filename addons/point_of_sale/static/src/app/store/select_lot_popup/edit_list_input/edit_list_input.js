@@ -10,7 +10,7 @@ import { Component } from "@odoo/owl";
  * }
  */
 export class EditListInput extends Component {
-    static template = "EditListInput";
+    static template = "point_of_sale.EditListInput";
 
     onKeyup(event) {
         if (event.key === "Enter" && event.target.value.trim() !== "") {

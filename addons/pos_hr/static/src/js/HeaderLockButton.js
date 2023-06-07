@@ -4,10 +4,9 @@ import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class HeaderLockButton extends Component {
-    static template = "HeaderLockButton";
+    static template = "pos_hr.HeaderLockButton";
 
     setup() {
-        super.setup();
         this.pos = usePos();
     }
     async showLoginScreen() {

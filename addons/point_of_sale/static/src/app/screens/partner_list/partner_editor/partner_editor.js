@@ -8,10 +8,9 @@ import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class PartnerDetailsEdit extends Component {
-    static template = "PartnerDetailsEdit";
+    static template = "point_of_sale.PartnerDetailsEdit";
 
     setup() {
-        super.setup();
         this.popup = useService("popup");
         this.pos = usePos();
         this.intFields = ["country_id", "state_id", "property_product_pricelist"];

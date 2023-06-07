@@ -6,7 +6,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { _t } from "@web/core/l10n/translation";
 
 export class CustomerFacingDisplayButton extends Component {
-    static template = "CustomerFacingDisplayButton";
+    static template = "point_of_sale.CustomerFacingDisplayButton";
     setup() {
         this.pos = usePos();
         this.customerDisplay = useState(useService("customer_display"));

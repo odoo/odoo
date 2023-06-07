@@ -5,7 +5,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { floatIsZero } from "@web/core/utils/numbers";
 
 export class OrderSummary extends Component {
-    static template = "OrderSummary";
+    static template = "point_of_sale.OrderSummary";
 
     setup() {
         this.pos = usePos();

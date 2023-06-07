@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="RadioProductAttribute" owl="1">
+    <t t-name="point_of_sale.RadioProductAttribute" owl="1">
         <div class="configurator_radio" t-ref="root">
             <div class="table">
                 <t t-foreach="values" t-as="value" t-key="value.id">
@@ -24,7 +24,7 @@
         </div>
     </t>
 
-    <t t-name="SelectProductAttribute" owl="1">
+    <t t-name="point_of_sale.SelectProductAttribute" owl="1">
         <div>
             <t t-set="is_custom" t-value="false"/>
 
@@ -42,7 +42,7 @@
         </div>
     </t>
 
-    <t t-name="ColorProductAttribute" owl="1">
+    <t t-name="point_of_sale.ColorProductAttribute" owl="1">
         <div>
             <t t-set="is_custom" t-value="false"/>
 
@@ -60,7 +60,7 @@
         </div>
     </t>
 
-    <t t-name="ProductConfiguratorPopup" owl="1">
+    <t t-name="point_of_sale.ProductConfiguratorPopup" owl="1">
         <t t-if="!ui.isSmall">
             <div class="popup popup-text popup-med product-configurator-popup">
                 <header class="title">

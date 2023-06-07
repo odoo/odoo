@@ -32,7 +32,6 @@ export class FloorScreen extends Component {
     static storeOnOrder = false;
 
     setup() {
-        super.setup();
         this.pos = usePos();
         this.popup = useService("popup");
         this.orm = useService("orm");

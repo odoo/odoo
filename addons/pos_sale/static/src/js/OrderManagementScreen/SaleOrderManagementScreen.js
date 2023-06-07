@@ -29,7 +29,7 @@ function getId(fieldVal) {
 export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
     static storeOnOrder = false;
     static components = { SaleOrderList, SaleOrderManagementControlPanel };
-    static template = "SaleOrderManagementScreen";
+    static template = "pos_sale.SaleOrderManagementScreen";
 
     setup() {
         super.setup();

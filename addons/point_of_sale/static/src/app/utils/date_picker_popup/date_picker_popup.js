@@ -5,7 +5,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { onMounted, useRef, useState } from "@odoo/owl";
 
 export class DatePickerPopup extends AbstractAwaitablePopup {
-    static template = "DatePickerPopup";
+    static template = "point_of_sale.DatePickerPopup";
     static defaultProps = {
         confirmText: _lt("Confirm"),
         cancelText: _lt("Discard"),

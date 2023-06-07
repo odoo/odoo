@@ -6,7 +6,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component } from "@odoo/owl";
 
 export class LoginScreen extends Component {
-    static template = "LoginScreen";
+    static template = "pos_hr.LoginScreen";
     setup() {
         super.setup(...arguments);
         this.selectCashier = useCashierSelector({
