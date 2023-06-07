@@ -48,7 +48,7 @@ export class ChatWindow extends Component {
         this.messageEdition = useMessageEdition();
         this.messageHighlight = useMessageHighlight();
         this.messageToReplyTo = useMessageToReplyTo();
-        this.state = useState({ moreActionsExpanded: false });
+        this.state = useState({ moreActionsExpanded: false, jumpThreadPresent: 0 });
         this.ui = useState(useService("ui"));
         this.contentRef = useRef("content");
         this.threadActions = useThreadActions();

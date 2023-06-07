@@ -41,6 +41,9 @@ patch(ThreadService.prototype, "im_livechat/disabled", {
     async fetchNewMessages(thread) {
         return;
     },
+    async loadAround() {
+        return;
+    },
 });
 
 patch(Store.prototype, "im_livechat/disabled", {

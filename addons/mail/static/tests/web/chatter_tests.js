@@ -10,7 +10,6 @@ import {
     isScrolledTo,
     start,
     startServer,
-    waitFormViewLoaded,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
@@ -118,7 +117,7 @@ QUnit.test("can post a note on a record thread", async (assert) => {
     await editInput(document.body, ".o-mail-Composer-input", "hey");
     assert.containsNone($, ".o-mail-Message");
 
-    await click(".o-mail-Composer button:contains(Send)");
+    await click(".o-mail-Composer button:contains(Log)");
     assert.containsOnce($, ".o-mail-Message");
     assert.verifySteps(["/mail/message/post"]);
 });
@@ -155,10 +154,8 @@ QUnit.test("Composer toggle state is kept when switching from aside to bottom", 
     await openFormView("res.partner", partnerId);
     await click("button:contains(Send message)");
     patchUiSize({ size: SIZES.LG });
-    await waitFormViewLoaded(() => window.dispatchEvent(new Event("resize")), {
-        resId: partnerId,
-        resModel: "res.partner",
-    });
+    window.dispatchEvent(new Event("resize"));
+    await waitUntil(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
     assert.containsOnce($, ".o-mail-Composer-input");
 });
 
@@ -170,10 +167,8 @@ QUnit.test("Textarea content is kept when switching from aside to bottom", async
     await click("button:contains(Send message)");
     await editInput(document.body, ".o-mail-Composer-input", "Hello world !");
     patchUiSize({ size: SIZES.LG });
-    await waitFormViewLoaded(() => window.dispatchEvent(new Event("resize")), {
-        resId: partnerId,
-        resModel: "res.partner",
-    });
+    window.dispatchEvent(new Event("resize"));
+    await waitUntil(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
     assert.strictEqual($(".o-mail-Composer-input").val(), "Hello world !");
 });
 
@@ -184,10 +179,8 @@ QUnit.test("Composer type is kept when switching from aside to bottom", async (a
     await openFormView("res.partner", partnerId);
     await click("button:contains(Log note)");
     patchUiSize({ size: SIZES.LG });
-    await waitFormViewLoaded(() => window.dispatchEvent(new Event("resize")), {
-        resId: partnerId,
-        resModel: "res.partner",
-    });
+    window.dispatchEvent(new Event("resize"));
+    await waitUntil(".o-mail-Form-chatter:not(.o-aside) .o-mail-Composer-input");
     assert.hasClass(
         $("button:contains(Log note)"),
         "btn-primary",
@@ -478,16 +471,16 @@ QUnit.test("scroll position is kept when navigating from one record to another",
     );
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId_1);
-    const scrolltop_1 = $(".o-mail-Chatter-scrollable")[0].scrollHeight / 2;
-    $(".o-mail-Chatter-scrollable")[0].scrollTo({ top: scrolltop_1 });
+    const scrolltop_1 = $(".o-mail-Chatter")[0].scrollHeight / 2;
+    $(".o-mail-Chatter")[0].scrollTo({ top: scrolltop_1 });
     await openFormView("res.partner", partnerId_2);
-    const scrolltop_2 = $(".o-mail-Chatter-scrollable")[0].scrollHeight / 3;
-    $(".o-mail-Chatter-scrollable")[0].scrollTo({ top: scrolltop_2 });
+    const scrolltop_2 = $(".o-mail-Chatter")[0].scrollHeight / 3;
+    $(".o-mail-Chatter")[0].scrollTo({ top: scrolltop_2 });
     await openFormView("res.partner", partnerId_1);
-    assert.ok(isScrolledTo($(".o-mail-Chatter-scrollable")[0], scrolltop_1));
+    assert.ok(isScrolledTo($(".o-mail-Chatter")[0], scrolltop_1));
 
     await openFormView("res.partner", partnerId_2);
-    assert.ok(isScrolledTo($(".o-mail-Chatter-scrollable")[0], scrolltop_2));
+    assert.ok(isScrolledTo($(".o-mail-Chatter")[0], scrolltop_2));
 });
 
 QUnit.test("basic chatter rendering", async (assert) => {
