@@ -11,9 +11,10 @@
                         <field name="name"/>
                     </h1>
                     <group>
-                        <group>
+                        <group class="w-100">
                             <field name="type"/>
-                            <field name="datas" filename="name" attrs="{'invisible':[('type','=','url')]}"/>
+                            <label for="datas" class="mt-1"/>
+                            <field name="datas" nolabel="1" class="w-100" filename="name" attrs="{'invisible':[('type','=','url')]}"/>
                             <field name="url" widget="url" attrs="{'invisible':[('type','=','binary')]}"/>
                             <field name="mimetype" groups="base.group_no_one"/>
                         </group>
