@@ -307,7 +307,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
 
         this.$el.empty();
         var resolver;
-        var def = new Promise(function (resolve) {
+        this.iframeReadOnlyPromise = new Promise(function (resolve) {
             resolver = resolve;
         });
         const externalLinkSelector = `a:not([href^="${location.origin}"]):not([href^="/"])`;
@@ -319,7 +319,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
 
             // inject content in iframe
 
-            this.$iframe.data('loadDef', def); // for unit test
+            this.$iframe.data('loadDef', this.iframeReadOnlyPromise); // for unit test
             window.top[this._onUpdateIframeId] = function (_avoidDoubleLoad) {
                 if (_avoidDoubleLoad !== avoidDoubleLoad) {
                     console.warn('Wysiwyg iframe double load detected');
@@ -397,7 +397,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             resolver();
         }
 
-        def.then(function () {
+        this.iframeReadOnlyPromise.then(function () {
             if (!self.hasReadonlyModifier) {
                 self.$content.on('click', 'ul.o_checklist > li', self._onReadonlyClickChecklist.bind(self));
             }

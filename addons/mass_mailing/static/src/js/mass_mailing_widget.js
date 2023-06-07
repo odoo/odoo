@@ -168,7 +168,19 @@ var MassMailingFieldHtml = FieldHtml.extend({
         if (!this.value) {
             this.value = this.recordData[this.nodeOptions['inline-field']];
         }
-        return this._super.apply(this, arguments);
+        const res =  this._super.apply(this, arguments);
+        this.iframeReadOnlyPromise.then(() => {
+            if (!this.$iframe) {
+                return;
+            }
+            // Ensure all links are opened in a new tab.
+            // The base element sets the behaviour for all links in the document.
+            const head = this.$iframe[0].contentDocument.head;
+            const base = document.createElement('base');
+            base.setAttribute('target', '_blank');
+            head.appendChild(base);
+        });
+        return res;
     },
     /**
      * @override
