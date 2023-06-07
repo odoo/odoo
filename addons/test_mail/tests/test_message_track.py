@@ -647,7 +647,6 @@ class TestTrackingInternals(MailCommon):
             self.env['mail.tracking.value']._create_tracking_values(
                 '', 'Test',
                 'not_existing_field', {'string': 'Test', 'type': 'char'},
-                0,
                 test_record,
             )
 
@@ -656,30 +655,70 @@ class TestTrackingInternals(MailCommon):
             self.env['mail.tracking.value']._create_tracking_values(
                 '', '<p>Html</p>',
                 'html_field', {'string': 'HTML', 'type': 'html'},
-                0,
                 test_record,
             )
 
     @users('employee')
     def test_track_sequence(self):
-        """ Update some tracked fields and check that the mail.tracking.value are ordered according to their tracking_sequence"""
+        """ Update some tracked fields and check that the mail.tracking.value
+        are ordered according to their tracking_sequence """
         record = self.record.with_env(self.env)
         self.assertEqual(len(record.message_ids), 1)
+        # order: user_id -> 1, customer_id -> 2, container_id -> True -> 100, email_from -> True -> 100
+        ordered_fnames = ['user_id', 'customer_id', 'container_id', 'email_from']
+
+        # Update tracked fields, should generate tracking values correctly ordered
         record.write({
-            'name': 'Zboub',
+            'container_id': self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({'name': 'Container'}).id,
             'customer_id': self.user_admin.partner_id.id,
+            'email_from': 'new.from@test.example.com',
+            'name': 'Zboub',
             'user_id': self.user_admin.id,
-            'container_id': self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({'name': 'Container'}).id
         })
         self.flush_tracking()
         self.assertEqual(len(record.message_ids), 2, 'should have 1 new tracking message')
-
         tracking_values = self.env['mail.tracking.value'].sudo().search(
             [('mail_message_id', '=', record.message_ids[0].id)]
         )
-        self.assertEqual(tracking_values[0].tracking_sequence, 1)
-        self.assertEqual(tracking_values[1].tracking_sequence, 2)
-        self.assertEqual(tracking_values[2].tracking_sequence, 100)
+        self.assertEqual(
+            tracking_values.field.mapped('name'),
+            ordered_fnames,
+            'Track: order, based on ID DESC, should follow tracking sequence (or name) on field'
+        )
+
+        # Manually create trackings, format should be the fallback to reorder them
+        new_msg = record.message_post(
+            body='Manual Hack of tracking',
+            subtype_xmlid='mail.mt_note',
+        )
+        custom_order_fnames = ['container_id', 'customer_id', 'email_from', 'user_id']
+        field_ids = [
+            self.env['ir.model.fields']._get(record._name, fname).id
+            for fname in custom_order_fnames
+        ]
+        self.env['mail.tracking.value'].sudo().create([
+            {
+                'field': field_id,
+                'mail_message_id': new_msg.id,
+                'old_value_char': 'unimportant',
+                'new_value_char': 'unimportant',
+            }
+            for field_id in field_ids
+        ])
+        tracking_values = self.env['mail.tracking.value'].sudo().search(
+            [('mail_message_id', '=', record.message_ids[0].id)]
+        )
+        self.assertEqual(
+            tracking_values.field.mapped('name'),
+            list(reversed(custom_order_fnames)),
+            'Tracking model: order, based on ID DESC, following reverted insertion'
+        )
+        tracking_formatted = tracking_values._tracking_value_format()
+        self.assertEqual(
+            [t['fieldName'] for t in tracking_formatted],
+            ordered_fnames,
+            'Track: formatted order is correctly based on field sequence definition'
+        )
 
     @users('employee')
     def test_unlinked_field(self):
