@@ -323,6 +323,11 @@ options.registry.gallery = options.Class.extend({
         } else if (name === 'image_index_request') {
             var imgs = this._getImages();
             var position = imgs.indexOf(data.$image[0]);
+            if (position === 0 && data.position === "prev") {
+                data.position = "last";
+            } else if (position === imgs.length - 1 && data.position === "next") {
+                data.position = "first";
+            }
             imgs.splice(position, 1);
             switch (data.position) {
                 case 'first':
