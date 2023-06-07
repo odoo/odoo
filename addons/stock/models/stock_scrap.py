@@ -52,7 +52,7 @@ class StockScrap(models.Model):
         ('done', 'Done')],
         string='Status', default="draft", readonly=True, tracking=True)
     date_done = fields.Datetime('Date', readonly=True)
-    should_replenish = fields.Boolean(string='Replenish Scrapped Quantities')
+    should_replenish = fields.Boolean(string='Replenish Quantities')
 
     @api.depends('product_id')
     def _compute_product_uom_id(self):

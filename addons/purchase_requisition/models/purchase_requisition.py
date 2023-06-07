@@ -143,7 +143,8 @@ class PurchaseRequisition(models.Model):
         Generate all purchase order based on selected lines, should only be called on one agreement at a time
         """
         if any(purchase_order.state in ['draft', 'sent', 'to approve'] for purchase_order in self.mapped('purchase_ids')):
-            raise UserError(_('You have to cancel or validate every RfQ before closing the purchase requisition.'))
+            raise UserError(_("To close this purchase requisition, cancel related Requests for Quotation.\n\n"
+                "Imagine the mess if someone confirms these duplicates: double the order, double the trouble :)"))
         for requisition in self:
             for requisition_line in requisition.line_ids:
                 requisition_line.supplier_info_ids.sudo().unlink()

@@ -1478,9 +1478,11 @@ class MrpProduction(models.Model):
 
     def button_unplan(self):
         if any(wo.state == 'done' for wo in self.workorder_ids):
-            raise UserError(_("Some work orders are already done, you cannot unplan this manufacturing order."))
+            raise UserError(_("Some work orders have already been done, so you cannot unplan this manufacturing order.\n\n"
+                "It’d be a shame to waste all that progress, right?"))
         elif any(wo.state == 'progress' for wo in self.workorder_ids):
-            raise UserError(_("Some work orders have already started, you cannot unplan this manufacturing order."))
+            raise UserError(_("Some work orders have already been started, so you cannot unplan this manufacturing order.\n\n"
+                "It’d be a shame to waste all that progress, right?"))
 
         self.workorder_ids.leave_id.unlink()
         self.workorder_ids.write({
@@ -2038,7 +2040,7 @@ class MrpProduction(models.Model):
     def button_scrap(self):
         self.ensure_one()
         return {
-            'name': _('Scrap'),
+            'name': _('Scrap Products'),
             'view_mode': 'form',
             'res_model': 'stock.scrap',
             'views': [[self.env.ref('stock.stock_scrap_form_view2').id, 'form']],

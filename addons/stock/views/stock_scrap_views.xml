@@ -171,6 +171,7 @@
                                 <field name="product_uom_category_id" invisible="1"/>
                                 <field name="product_uom_id" readonly="tracking == 'serial'" groups="uom.group_uom"/>
                             </div>
+                            <field name="should_replenish"/>
                             <field name="lot_id" groups="stock.group_production_lot"
                                 context="{'default_company_id': company_id, 'default_product_id': product_id}"
                                 invisible="not product_id or tracking == 'none'"
@@ -188,7 +189,7 @@
                         </group>
                     </group>
                     <footer>
-                        <button name="action_validate" string="Validate" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button name="action_validate" string="Scrap Products" type="object" class="btn-primary" data-hotkey="q"/>
                         <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="x" />
                     </footer>
                 </form>

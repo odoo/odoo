@@ -61,8 +61,9 @@
                     <header>
                         <button name="action_launch" type="object" class="oe_highlight" string="Send"
                             invisible="state in ('in_queue', 'sending', 'done')" data-hotkey="q"
-                            confirm="This will send the email to all recipients. Are you sure you want to proceed?"
-                            confirm-title="Send Confirmation" confirm-label="Send to all"/>
+                            confirm="Once you send these emails, they'll be barking in all the inboxes like there's no tomorrow!"
+                            confirm-title="Ready to unleash emails?" confirm-label="Send to all"
+                            />
                         <button name="action_schedule" type="object" class="btn-secondary" string="Schedule"
                             invisible="state in ('in_queue', 'sending', 'done')" data-hotkey="v"/>
                         <button name="action_duplicate" type="object" class="btn-secondary" string="Duplicate"
@@ -492,7 +493,7 @@
                                                     <field name="subject"/>
                                                 </h3>
                                                 <div class="progress border col-3 px-0 mt-2" style="background-color: inherit; height:12px;">
-                                                    <div class="progress-bar" role="progressbar" 
+                                                    <div class="progress-bar" role="progressbar"
                                                         aria-valuemin="0"
                                                         t-att-aria-valuenow="record.delivered.raw_value"
                                                         t-att-aria-valuemax="record.expected.raw_value"
@@ -519,13 +520,13 @@
                                         </div>
                                         <div invisible="not sent_date" class="d-flex justify-content-between">
                                             <div name="stat_opened">
-                                                <b><field name="opened_ratio" />%</b> Opened 
+                                                <b><field name="opened_ratio" />%</b> Opened
                                             </div>
                                             <div name="stat_replied">
-                                                <b><field name="replied_ratio" />%</b> Replied 
+                                                <b><field name="replied_ratio" />%</b> Replied
                                             </div>
                                             <div name="stat_clicks">
-                                                <b><field name="clicks_ratio" />%</b> Clicks 
+                                                <b><field name="clicks_ratio" />%</b> Clicks
                                             </div>
                                         </div>
                                     </div>

@@ -756,7 +756,9 @@ class AccountAccount(models.Model):
         if partner_prop_acc:
             account_name = partner_prop_acc.get_by_record().display_name
             raise UserError(
-                _('You cannot remove/deactivate the account %s which is set on a customer or vendor.', account_name)
+                _("You can't delete the account %s, as it is used on a contact.\n\n"
+                    "Imagine that a customer’s receivables evaporate; your CFO might not like it :)"
+                    , account_name)
             )
 
     @api.ondelete(at_uninstall=False)

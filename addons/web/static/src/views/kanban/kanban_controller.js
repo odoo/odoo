@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { deleteConfirmationMessage, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
@@ -201,10 +201,12 @@ export class KanbanController extends Component {
 
     async deleteRecord(record) {
         this.dialog.add(ConfirmationDialog, {
-            body: _t("Are you sure you want to delete this record?"),
+            title: _t("Bye-bye, record!"),
+            body: deleteConfirmationMessage,
             confirm: () => this.model.root.deleteRecords([record]),
             confirmLabel: _t("Delete"),
             cancel: () => {},
+            cancelLabel: _t("No, keep it"),
         });
     }
 

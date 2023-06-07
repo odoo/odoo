@@ -938,7 +938,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         await click(target, ".o_cw_popover_delete");
         assert.strictEqual(
             target.querySelector(".modal-title").textContent,
-            "Confirmation",
+            "Bye-bye, record!",
             "should display the confirm message"
         );
 

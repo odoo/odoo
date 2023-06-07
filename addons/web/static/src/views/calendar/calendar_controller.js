@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
+import { deleteConfirmationMessage, ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
@@ -271,8 +271,8 @@ export class CalendarController extends Component {
     }
     deleteRecord(record) {
         this.displayDialog(ConfirmationDialog, {
-            title: _t("Confirmation"),
-            body: _t("Are you sure you want to delete this record?"),
+            title: _t("Bye-bye, record!"),
+            body: deleteConfirmationMessage,
             confirm: () => {
                 this.model.unlinkRecord(record.id);
             },
@@ -281,6 +281,7 @@ export class CalendarController extends Component {
                 // `ConfirmationDialog` needs this prop to display the cancel
                 // button but we do nothing on cancel.
             },
+            cancelLabel: _t("No, keep it"),
         });
     }
 

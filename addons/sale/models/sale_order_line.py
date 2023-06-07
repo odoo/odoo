@@ -1062,7 +1062,8 @@ class SaleOrderLine(models.Model):
     @api.ondelete(at_uninstall=False)
     def _unlink_except_confirmed(self):
         if self._check_line_unlink():
-            raise UserError(_("You can not remove an order line once the sales order is confirmed.\nYou should rather set the quantity to 0."))
+            raise UserError(_("Once a sales order is confirmed, you can't remove one of its lines (we need to track if something gets invoiced or delivered).\n\
+                Set the quantity to 0 instead."))
 
     #=== ACTION METHODS ===#
 

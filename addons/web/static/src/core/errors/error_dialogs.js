@@ -27,7 +27,7 @@ export const odooExceptionTitleMap = new Map(
         "odoo.addons.base.models.ir_mail_server.MailDeliveryException": _t("MailDeliveryException"),
         "odoo.exceptions.AccessDenied": _t("Access Denied"),
         "odoo.exceptions.MissingError": _t("Missing Record"),
-        "odoo.exceptions.UserError": _t("User Error"),
+        "odoo.exceptions.UserError": _t("Invalid Operation"),
         "odoo.exceptions.ValidationError": _t("Validation Error"),
         "odoo.exceptions.AccessError": _t("Access Error"),
         "odoo.exceptions.Warning": _t("Warning"),

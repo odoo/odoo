@@ -193,19 +193,22 @@ class IrRule(models.Model):
 
         model = records._name
         description = self.env['ir.model']._get(model).name or model
-        msg_heads = {
-            # Messages are declared in extenso so they are properly exported in translation terms
-            'read':   _("Due to security restrictions, you are not allowed to access '%(document_kind)s' (%(document_model)s) records.", document_kind=description, document_model=model),
-            'write':  _("Due to security restrictions, you are not allowed to modify '%(document_kind)s' (%(document_model)s) records.", document_kind=description, document_model=model),
-            'create': _("Due to security restrictions, you are not allowed to create '%(document_kind)s' (%(document_model)s) records.", document_kind=description, document_model=model),
-            'unlink': _("Due to security restrictions, you are not allowed to delete '%(document_kind)s' (%(document_model)s) records.", document_kind=description, document_model=model)
+        operations = {
+            'read':  _("read"),
+            'write': _("write"),
+            'create': _("create"),
+            'unlink': _("unlink"),
         }
-        operation_error = msg_heads[operation]
-        resolution_info = _("Contact your administrator to request access if necessary.")
+        user_description = f"{self.env.user.name} (id={self.env.user.id})"
+        operation_error = _("Uh-oh! Looks like you have stumbled upon some top-secret records.\n\n" \
+            "Sorry, %s doesn't have '%s' access to:", user_description, operations[operation])
+        failing_model = _("- %s (%s)", description, model)
+
+        resolution_info = _("If you really, really need access, go bribe your friendly administrator.")
 
         if not self.user_has_groups('base.group_no_one') or not self.env.user.has_group('base.group_user'):
             records.invalidate_recordset()
-            return AccessError(f"{operation_error}\n\n{resolution_info}")
+            return AccessError(f"{operation_error}\n{failing_model}\n\n{resolution_info}")
 
         # This extended AccessError is only displayed in debug mode.
         # Note that by default, public and portal users do not have
@@ -220,24 +223,21 @@ class IrRule(models.Model):
             # If the user has access to the company of the record, add this
             # information in the description to help them to change company
             if company_related and 'company_id' in rec and rec.company_id in self.env.user.company_ids:
-                return f'{rec.display_name} (id={rec.id}, company={rec.company_id.display_name})'
-            return f'{rec.display_name} (id={rec.id})'
+                return f'{description}, {rec.display_name} ({model}: {rec.id}, company={rec.company_id.display_name})'
+            return f'{description}, {rec.display_name} ({model}: {rec.id})'
 
-        records_description = ', '.join(get_record_description(rec) for rec in records_sudo)
-        failing_records = _("Records: %s", records_description)
-
-        user_description = f'{self.env.user.name} (id={self.env.user.id})'
-        failing_user = _("User: %s", user_description)
+        failing_records = '\n '.join(f'- {get_record_description(rec)}' for rec in records_sudo)
 
         rules_description = '\n'.join(f'- {rule.name}' for rule in rules)
-        failing_rules = _("This restriction is due to the following rules:\n%s", rules_description)
+        failing_rules = _("Blame the following rules:\n%s", rules_description)
+
         if company_related:
             failing_rules += "\n\n" + _('Note: this might be a multi-company issue.')
 
         # clean up the cache of records prefetched with display_name above
         records_sudo.invalidate_recordset()
 
-        msg = f"{operation_error}\n\n{failing_records}\n{failing_user}\n\n{failing_rules}\n\n{resolution_info}"
+        msg = f"{operation_error}\n{failing_records}\n\n{failing_rules}\n\n{resolution_info}"
         return AccessError(msg)
 
 
