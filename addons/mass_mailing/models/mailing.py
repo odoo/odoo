@@ -22,6 +22,7 @@ from odoo import api, fields, models, tools, _
 from odoo.addons.base_import.models.base_import import ImportValidationError
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
+from odoo.tools.float_utils import float_round
 
 _logger = logging.getLogger(__name__)
 
@@ -216,11 +217,11 @@ class MassMailing(models.Model):
     replied = fields.Integer(compute="_compute_statistics")
     bounced = fields.Integer(compute="_compute_statistics")
     failed = fields.Integer(compute="_compute_statistics")
-    received_ratio = fields.Integer(compute="_compute_statistics", string='Received Ratio')
-    opened_ratio = fields.Integer(compute="_compute_statistics", string='Opened Ratio')
-    replied_ratio = fields.Integer(compute="_compute_statistics", string='Replied Ratio')
-    bounced_ratio = fields.Integer(compute="_compute_statistics", string='Bounced Ratio')
-    clicks_ratio = fields.Integer(compute="_compute_clicks_ratio", string="Number of Clicks")
+    received_ratio = fields.Float(compute="_compute_statistics", string='Received Ratio')
+    opened_ratio = fields.Float(compute="_compute_statistics", string='Opened Ratio')
+    replied_ratio = fields.Float(compute="_compute_statistics", string='Replied Ratio')
+    bounced_ratio = fields.Float(compute="_compute_statistics", string='Bounced Ratio')
+    clicks_ratio = fields.Float(compute="_compute_clicks_ratio", string="Number of Clicks")
     next_departure = fields.Datetime(compute="_compute_next_departure", string='Scheduled date')
     # UX
     warning_message = fields.Char(
@@ -287,7 +288,7 @@ class MassMailing(models.Model):
             GROUP BY stats.mass_mailing_id
         """, [tuple(self.ids) or (None,)])
         mass_mailing_data = self.env.cr.dictfetchall()
-        mapped_data = dict([(m['id'], 100 * m['nb_clicks'] / m['nb_mails']) for m in mass_mailing_data])
+        mapped_data = dict([(m['id'], float_round(100 * m['nb_clicks'] / m['nb_mails'], precision_digits=2)) for m in mass_mailing_data])
         for mass_mailing in self:
             mass_mailing.clicks_ratio = mapped_data.get(mass_mailing.id, 0)
 
@@ -329,10 +330,10 @@ class MassMailing(models.Model):
         """, (tuple(self.ids), ))
         for row in self.env.cr.dictfetchall():
             total = (row['expected'] - row['canceled']) or 1
-            row['received_ratio'] = 100.0 * row['delivered'] / total
-            row['opened_ratio'] = 100.0 * row['opened'] / total
-            row['replied_ratio'] = 100.0 * row['replied'] / total
-            row['bounced_ratio'] = 100.0 * row['bounced'] / total
+            row['received_ratio'] = float_round(100.0 * row['delivered'] / total, precision_digits=2)
+            row['opened_ratio'] = float_round(100.0 * row['opened'] / total, precision_digits=2)
+            row['replied_ratio'] = float_round(100.0 * row['replied'] / total, precision_digits=2)
+            row['bounced_ratio'] = float_round(100.0 * row['bounced'] / total, precision_digits=2)
             self.browse(row.pop('mailing_id')).update(row)
 
     def _compute_next_departure(self):

@@ -53,7 +53,7 @@ class MassMailing(models.Model):
             'name': _("Sales Analysis"),
             'res_model': 'sale.report',
             'type': 'ir.actions.act_window',
-            'view_mode': 'graph,pivot,tree,form',
+            'view_mode': 'tree,pivot,graph,form',
         }
 
     def action_redirect_to_invoiced(self):
@@ -79,7 +79,7 @@ class MassMailing(models.Model):
             'name': _("Invoices Analysis"),
             'res_model': 'account.invoice.report',
             'type': 'ir.actions.act_window',
-            'view_mode': 'graph,pivot,tree,form',
+            'view_mode': 'tree,pivot,graph,form',
         }
 
     def _prepare_statistics_email_values(self):

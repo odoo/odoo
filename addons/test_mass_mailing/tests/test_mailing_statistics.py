@@ -69,7 +69,7 @@ class TestMailingStatistics(TestMassMailCommon):
         kpi_values = body_html.xpath('//table[@data-field="mail"]//*[hasclass("kpi_value")]/text()')
         self.assertEqual(
             [t.strip().strip('%') for t in kpi_values],
-            ['100', str(mailing.opened_ratio), str(mailing.replied_ratio)]
+            ['100.0', str(mailing.opened_ratio), str(mailing.replied_ratio)]
         )
         # test body content: clicks (a bit hackish but hey we are in stable)
         kpi_click_values = body_html.xpath('//table//tr[contains(@style,"color: #888888")]/td[contains(@style,"width: 30%")]/text()')

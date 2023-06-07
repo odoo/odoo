@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
+from odoo.tools.float_utils import float_round
 
 
 class UtmCampaign(models.Model):
@@ -37,10 +38,10 @@ class UtmCampaign(models.Model):
         help="Selection to determine the winner mailing that will be sent.")
 
     # stat fields
-    received_ratio = fields.Integer(compute="_compute_statistics", string='Received Ratio')
-    opened_ratio = fields.Integer(compute="_compute_statistics", string='Opened Ratio')
-    replied_ratio = fields.Integer(compute="_compute_statistics", string='Replied Ratio')
-    bounced_ratio = fields.Integer(compute="_compute_statistics", string='Bounced Ratio')
+    received_ratio = fields.Float(compute="_compute_statistics", string='Received Ratio')
+    opened_ratio = fields.Float(compute="_compute_statistics", string='Opened Ratio')
+    replied_ratio = fields.Float(compute="_compute_statistics", string='Replied Ratio')
+    bounced_ratio = fields.Float(compute="_compute_statistics", string='Bounced Ratio')
 
     @api.depends('ab_testing_winner_mailing_id')
     def _compute_ab_testing_completed(self):
@@ -110,10 +111,10 @@ class UtmCampaign(models.Model):
                 total = (stats['expected'] - stats['cancel']) or 1
                 delivered = stats['sent'] - stats['bounce']
                 vals = {
-                    'received_ratio': 100.0 * delivered / total,
-                    'opened_ratio': 100.0 * stats['open'] / total,
-                    'replied_ratio': 100.0 * stats['reply'] / total,
-                    'bounced_ratio': 100.0 * stats['bounce'] / total
+                    'received_ratio': float_round(100.0 * delivered / total, precision_digits=2),
+                    'opened_ratio': float_round(100.0 * stats['open'] / total, precision_digits=2),
+                    'replied_ratio': float_round(100.0 * stats['reply'] / total, precision_digits=2),
+                    'bounced_ratio': float_round(100.0 * stats['bounce'] / total, precision_digits=2)
                 }
 
             campaign.update(vals)
