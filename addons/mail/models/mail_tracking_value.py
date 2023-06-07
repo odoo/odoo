@@ -10,7 +10,7 @@ class MailTracking(models.Model):
     _name = 'mail.tracking.value'
     _description = 'Mail Tracking Value'
     _rec_name = 'field'
-    _order = 'tracking_sequence asc'
+    _order = 'id DESC'
 
     field = fields.Many2one('ir.model.fields', required=True, readonly=True, index=True, ondelete='cascade')
     field_desc = fields.Char('Field Description', required=True, readonly=True)
@@ -36,8 +36,6 @@ class MailTracking(models.Model):
 
     mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, index=True, ondelete='cascade')
 
-    tracking_sequence = fields.Integer('Tracking field sequence', readonly=True, default=100)
-
     @api.depends('mail_message_id', 'field')
     def _compute_field_groups(self):
         for tracking in self:
@@ -46,7 +44,7 @@ class MailTracking(models.Model):
             tracking.field_groups = field.groups if field else 'base.group_system'
 
     @api.model
-    def _create_tracking_values(self, initial_value, new_value, col_name, col_info, tracking_sequence, record):
+    def _create_tracking_values(self, initial_value, new_value, col_name, col_info, record):
         """ Prepare values to create a mail.tracking.value. It prepares old and
         new value according to the field type.
 
@@ -56,8 +54,6 @@ class MailTracking(models.Model):
           date, datetime, ...;
         :param str col_name: technical field name, column name (e.g. 'user_id);
         :param dict col_info: result of fields_get(col_name);
-        :param int tracking_sequence: sequence used for ordering tracking
-          value display;
         :param <record> record: record on which tracking is performed, used for
           related computation e.g. finding currency of monetary fields;
 
@@ -67,7 +63,7 @@ class MailTracking(models.Model):
         if not field:
             raise ValueError(f'Unknown field {col_name} on model {record._name}')
 
-        values = {'field': field.id, 'field_desc': col_info['string'], 'field_type': col_info['type'], 'tracking_sequence': tracking_sequence}
+        values = {'field': field.id, 'field_desc': col_info['string'], 'field_type': col_info['type']}
 
         if col_info['type'] in {'integer', 'float', 'char', 'text', 'datetime', 'monetary'}:
             values.update({
@@ -110,11 +106,21 @@ class MailTracking(models.Model):
 
     def _tracking_value_format(self):
         """ Return structure and formatted data structure to be used by chatter
-        to display tracking values.
+        to display tracking values. Order it according to asked display, aka
+        ascending sequence (and field name).
 
         :return list: for each tracking value in self, their formatted display
           values given as a dict;
         """
+        if not self:
+            return []
+        field_models = self.field.mapped('model')
+        if len(set(field_models)) != 1:
+            raise ValueError('All tracking value should belong to the same model.')
+        TrackedModel = self.env[field_models[0]]
+        tracked_fields = TrackedModel.fields_get(self.field.mapped('name'), attributes={'string', 'type'})
+        fields_sequence_map = dict(TrackedModel._mail_track_order_fields(tracked_fields))
+
         formatted = []
         for tracking in self:
             formatted.append({
@@ -131,6 +137,10 @@ class MailTracking(models.Model):
                     'value': tracking._format_display_value(new=False)[0],
                 },
             })
+        formatted.sort(
+            key=lambda info: (fields_sequence_map[info['fieldName']], info['fieldName']),
+            reverse=False,
+        )
         return formatted
 
     def _format_display_value(self, new=True):
