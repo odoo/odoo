@@ -1,7 +1,9 @@
 /* @odoo-module */
 
 import { threadActionsRegistry } from "@mail/core/thread_actions";
-import { CallSettings } from "@mail/discuss/core/call_settings";
+import { CallSettings } from "@mail/discuss/call/call_settings";
+import { useRtc } from "@mail/discuss/call/rtc_hook";
+import { useComponent } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
 
 threadActionsRegistry
@@ -20,6 +22,10 @@ threadActionsRegistry
             component.rtc.toggleCall(component.thread);
         },
         sequence: 10,
+        setup() {
+            const component = useComponent();
+            component.rtc = useRtc();
+        },
     })
     .add("settings", {
         component: CallSettings,
@@ -37,6 +43,10 @@ threadActionsRegistry
             return component.props.chatWindow && component.thread === component.rtc.state.channel
                 ? 6
                 : 60;
+        },
+        setup() {
+            const component = useComponent();
+            component.rtc = useRtc();
         },
         toggle: true,
     });

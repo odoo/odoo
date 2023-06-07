@@ -75,7 +75,7 @@ export class Store {
     /** @type {Object.<number, import("@mail/core/persona_model").Persona>} */
     personas = {};
 
-    /** @type {import("@mail/rtc/rtc_session_model").rtcSession{}} */
+    /** @type {Object.<number, import("@mail/discuss/call/rtc_session_model").RtcSession>} */
     rtcSessions = {};
     users = {};
     internalUserGroupId = null;

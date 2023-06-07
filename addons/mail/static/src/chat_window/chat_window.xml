@@ -60,7 +60,6 @@
             <t t-if="thread" name="thread content">
                 <t t-if="threadActions.activeAction?.componentCondition" t-component="threadActions.activeAction.component" thread="thread" t-props="threadActions.activeAction.componentProps"/>
                 <t t-else="">
-                    <Call t-if="Object.keys(thread.rtcSessions).length > 0" thread="thread" compact="true"/>
                     <Thread isInChatWindow="true" thread="thread" t-key="thread.localId" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
                     <Composer composer="thread.composer" autofocus="props.chatWindow.autofocus" mode="'compact'" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" dropzoneRef="contentRef"/>
                 </t>

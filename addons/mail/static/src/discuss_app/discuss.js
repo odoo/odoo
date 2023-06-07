@@ -1,15 +1,13 @@
 /* @odoo-module */
 
-import { ImStatus } from "./im_status";
-import { AutoresizeInput } from "./autoresize_input";
+import { Composer } from "@mail/composer/composer";
+import { useMessaging, useStore } from "@mail/core/messaging_hook";
 import { useThreadActions } from "@mail/core/thread_actions";
-import { Thread } from "../core_ui/thread";
-import { ThreadIcon } from "./thread_icon";
-import { useMessaging, useStore } from "../core/messaging_hook";
-import { useRtc } from "../rtc/rtc_hook";
+import { Thread } from "@mail/core_ui/thread";
+import { AutoresizeInput } from "@mail/discuss_app/autoresize_input";
+import { ImStatus } from "@mail/discuss_app/im_status";
+import { ThreadIcon } from "@mail/discuss_app/thread_icon";
 import { useMessageEdition, useMessageHighlight, useMessageToReplyTo } from "@mail/utils/hooks";
-import { Composer } from "../composer/composer";
-import { Call } from "../rtc/call";
 import { FileUploader } from "@web/views/fields/file_handler";
 import {
     Component,
@@ -31,7 +29,6 @@ export class Discuss extends Component {
         Thread,
         ThreadIcon,
         Composer,
-        Call,
         FileUploader,
         ImStatus,
     };
@@ -44,7 +41,6 @@ export class Discuss extends Component {
         this.threadService = useState(useService("mail.thread"));
         this.messageService = useState(useService("mail.message"));
         this.personaService = useService("mail.persona");
-        this.rtc = useRtc();
         this.messageHighlight = useMessageHighlight();
         this.messageEdition = useMessageEdition();
         this.messageToReplyTo = useMessageToReplyTo();

@@ -90,7 +90,6 @@ Help your customers with this chat, and analyse their feedback.
             'mail/static/src/attachments/**/*',
             'mail/static/src/composer/**/*',
             'mail/static/src/dropzone/**/*',
-            'mail/static/src/rtc/**/*',
             'mail/static/src/chat_window/**/*',
             'mail/static/src/web/discuss_app/context_service.js',
             'mail/static/src/discuss_app/im_status.*',
