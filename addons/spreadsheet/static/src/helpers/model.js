@@ -8,13 +8,15 @@ import { loadJS } from "@web/core/assets";
 const { Model, tokenize } = spreadsheet;
 const { toCartesian } = spreadsheet.helpers;
 
-export async function fetchSpreadsheetModel(orm, resModel, resId) {
-    const { data, revisions } = await orm.call(resModel, "join_spreadsheet_session", [resId]);
-    return createSpreadsheetModel({ orm, data, revisions });
+export async function fetchSpreadsheetModel(env, resModel, resId) {
+    const { data, revisions } = await env.services.orm.call(resModel, "join_spreadsheet_session", [
+        resId,
+    ]);
+    return createSpreadsheetModel({ env, data, revisions });
 }
 
-export function createSpreadsheetModel({ orm, data, revisions }) {
-    const dataSources = new DataSources(orm);
+export function createSpreadsheetModel({ env, data, revisions }) {
+    const dataSources = new DataSources(env);
     const model = new Model(migrate(data), { custom: { dataSources } }, revisions);
     return model;
 }
