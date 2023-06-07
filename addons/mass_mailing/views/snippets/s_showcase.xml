@@ -6,36 +6,45 @@
         <!-- TODO: (below) issue with height: `fit-content` is not supported, can we calculate it in px in translation ?
         empty div height is 0 unless table has defined height (div.col-1 > div.w-50.h100.border-end)-->
         <div class="container" style="height: fit-content;">
-            <div class="row g-0 s_col_no_resize s_col_no_bgcolor s_nb_column_fixed">
-                <div class="col-lg-6 pb24" style="text-align: right; padding-right: 70px;" align="right">
-                    <div class="mb-2">
-                        <h3 class="d-inline-block">First feature</h3>
-                        <i class="fa fa-2x fa-desktop text-secondary ms-3"/>
+            <div class="row s_col_no_resize s_col_no_bgcolor s_nb_column_fixed">
+                <div class="col-sm text-sm-end">
+                    <div class="row">
+                        <div class="col-lg-12 pt24 pb24" data-name="Block">
+                            <div class="d-flex flex-sm-row-reverse mb-2 align-items-center">
+                                <i class="fa fa-2x fa-desktop text-secondary me-3 me-sm-0 ms-sm-3"/>
+                                <h3>First feature</h3>
+                            </div>
+                            <p>A short description of this great feature.</p>
+                        </div>
+                        <div class="col-lg-12 pt24 pb24" data-name="Block">
+                            <div class="d-flex flex-sm-row-reverse mb-2 align-items-center">
+                                <i class="fa fa-2x fa-paint-brush text-secondary me-3 me-sm-0 ms-sm-3"/>
+                                <h3>Second feature</h3>
+                            </div>
+                            <p>A short description of this great feature.</p>
+                        </div>
                     </div>
-                    <p>A short description of this great feature.</p>
                 </div>
-                <div class="col-lg-6 pb24 border-start" style="padding-left: 70px;" align="left">
-                    <div class="mb-2">
-                        <i class="fa fa-2x fa-heart text-secondary me-3"/>
-                        <h3 class="d-inline-block">Another feature</h3>
-                    </div>
-                    <p>A short description of this great feature.</p>
+                <div class="col-1">
+                    <div class="w-50 h-100 border-end"/>
                 </div>
-            </div>
-            <div class="row g-0 s_col_no_resize s_col_no_bgcolor s_nb_column_fixed">
-                <div class="col-lg-6" style="text-align: right; padding-right: 70px;" align="right">
-                    <div class="mb-2">
-                        <h3 class="d-inline-block">Second feature</h3>
-                        <i class="fa fa-2x fa-paint-brush text-secondary ms-3"/>
+                <div class="col-sm">
+                    <div class="row">
+                        <div class="col-lg-12 pt24 pb24" data-name="Block">
+                            <div class="d-flex mb-2 align-items-center">
+                                <i class="fa fa-2x fa-heart text-secondary me-3"/>
+                                <h3>Another feature</h3>
+                            </div>
+                            <p>A short description of this great feature.</p>
+                        </div>
+                        <div class="col-lg-12 pt24 pb24" data-name="Block">
+                            <div class="d-flex mb-2 align-items-center">
+                                <i class="fa fa-2x fa-gift text-secondary me-3"/>
+                                <h3>Last Feature</h3>
+                            </div>
+                            <p>A short description of this great feature.</p>
+                        </div>
                     </div>
-                    <p>A short description of this great feature.</p>
-                </div>
-                <div class="col-lg-6 border-start" style="padding-left: 70px;" align="left">
-                    <div class="mb-2">
-                        <i class="fa fa-2x fa-gift text-secondary me-3"/>
-                        <h3 class="d-inline-block">Last Feature</h3>
-                    </div>
-                    <p>A short description of this great feature.</p>
                 </div>
             </div>
         </div>
