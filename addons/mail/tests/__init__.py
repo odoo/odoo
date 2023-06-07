@@ -15,4 +15,4 @@ from . import test_res_users_settings
 from . import test_uninstall
 from . import test_update_notification
 from . import test_user_modify_own_profile
-from . import discuss
+from .discuss import *
