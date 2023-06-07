@@ -13,7 +13,7 @@ class BinaryController(http.Controller):
         type="http",
         auth="public",
     )
-    def discuss_channel_partner_avatar_128(self, channel_id, partner_id):
+    def discuss_channel_partner_avatar_128(self, channel_id, partner_id, **kwargs):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request(
             request=request, channel_id=channel_id
         )
@@ -37,7 +37,7 @@ class BinaryController(http.Controller):
     @http.route(
         "/discuss/channel/<int:channel_id>/guest/<int:guest_id>/avatar_128", methods=["GET"], type="http", auth="public"
     )
-    def discuss_channel_guest_avatar_128(self, channel_id, guest_id):
+    def discuss_channel_guest_avatar_128(self, channel_id, guest_id, **kwargs):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request(
             request=request, channel_id=channel_id
         )
@@ -61,7 +61,7 @@ class BinaryController(http.Controller):
     @http.route(
         "/discuss/channel/<int:channel_id>/attachment/<int:attachment_id>", methods=["GET"], type="http", auth="public"
     )
-    def discuss_channel_attachment(self, channel_id, attachment_id, download=None):
+    def discuss_channel_attachment(self, channel_id, attachment_id, download=None, **kwargs):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
             request=request, channel_id=int(channel_id)
         )
@@ -81,7 +81,7 @@ class BinaryController(http.Controller):
         type="http",
         auth="public",
     )
-    def discuss_channel_avatar_128(self, channel_id):
+    def discuss_channel_avatar_128(self, channel_id, **kwargs):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
             request=request, channel_id=channel_id
         )
