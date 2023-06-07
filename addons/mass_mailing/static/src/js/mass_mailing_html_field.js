@@ -614,6 +614,11 @@ export class MassMailingHtmlField extends HtmlField {
             this.props.value = this.props.record.data.body_html;
         }
         await super._setupReadonlyIframe();
+        // Ensure that all links are opened in a new tab.
+        // The base element sets the target for all links in the document.
+        const head = this.iframeRef.el.contentDocument.head;
+        const base = head.querySelector('base') || head.appendChild(document.createElement('base'));
+        base.setAttribute('target', '_blank');
     }
 }
 
