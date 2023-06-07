@@ -22,6 +22,7 @@ export const PRESENT_THRESHOLD = 2500;
 /**
  * @typedef {Object} Props
  * @property {boolean} [isInChatWindow=false]
+ * @property {number} [jumpPresent=0]
  * @property {import("@mail/utils/hooks").MessageEdition} [messageEdition]
  * @property {import("@mail/utils/hooks").MessageToReplyTo} [messageToReplyTo]
  * @property {"asc"|"desc"} [order="asc"]
@@ -33,6 +34,7 @@ export class Thread extends Component {
     static props = [
         "isInChatWindow?",
         "hasScrollAdjust?",
+        "jumpPresent?",
         "thread",
         "messageEdition?",
         "messageToReplyTo?",
@@ -41,6 +43,7 @@ export class Thread extends Component {
     static defaultProps = {
         isInChatWindow: false,
         hasScrollAdjust: true,
+        jumpPresent: 0,
         order: "asc", // 'asc' or 'desc'
     };
     static template = "mail.Thread";
@@ -121,6 +124,15 @@ export class Thread extends Component {
             () => this.updateShowJumpPresent(),
             () => [this.props.thread.loadNewer]
         );
+        useEffect(
+            () => {
+                if (this.props.jumpPresent !== this.lastJumpPresent) {
+                    this.jumpToPresent("instant");
+                    this.lastJumpPresent = this.props.jumpPresent;
+                }
+            },
+            () => [this.props.jumpPresent]
+        );
         onMounted(() => {
             this.oldestPersistentMessage = this.props.thread.oldestPersistentMessage?.id;
             if (!this.env.inChatter || !this.props.hasScrollAdjust) {
@@ -129,9 +141,13 @@ export class Thread extends Component {
             }
         });
         onWillStart(() => {
+            this.lastJumpPresent = this.props.jumpPresent;
             this.threadService.fetchNewMessages(this.props.thread);
         });
         onWillUpdateProps((nextProps) => {
+            if (nextProps.thread !== this.props.thread) {
+                this.lastJumpPresent = nextProps.jumpPresent;
+            }
             this.threadService.fetchNewMessages(nextProps.thread);
         });
     }
@@ -149,12 +165,12 @@ export class Thread extends Component {
         this.threadService.fetchMoreMessages(this.props.thread);
     }
 
-    async onClickJumpPresent() {
+    async jumpToPresent(behavior) {
         this.isJumpingRecent = true;
         await this.threadService.loadAround(this.props.thread);
         this.props.thread.loadNewer = false;
-        this.present.el.scrollIntoView({
-            behavior: this.props.order === "asc" ? "smooth" : "instant", // FIXME somehow smooth not working in desc mode
+        this.present.el?.scrollIntoView({
+            behavior: behavior ?? (this.props.order === "asc" ? "smooth" : "instant"), // FIXME somehow smooth not working in desc mode
             block: "center",
         });
         // Let smooth scroll a bit so load more is not visible

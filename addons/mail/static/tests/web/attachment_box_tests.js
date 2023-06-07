@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
-import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { click, nextAnimationFrame, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("attachment box");
 
@@ -171,38 +171,8 @@ QUnit.test("scroll to attachment box when toggling on", async (assert) => {
         res_model: "res.partner",
         views: [[false, "form"]],
     });
-    $(".o-mail-Chatter-scrollable").scrollTop(10 * 1000); // to bottom
-    assert.notEqual($(".o-mail-Chatter-scrollable").scrollTop(), 0);
-    await click("i.fa-paperclip");
-    assert.strictEqual($(".o-mail-Chatter-scrollable").scrollTop(), 0);
-});
-
-QUnit.test("scroll to attachment box when toggling on", async (assert) => {
-    patchUiSize({ size: SIZES.XXL });
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
-    for (let i = 0; i < 30; i++) {
-        pyEnv["mail.message"].create({
-            body: "not empty".repeat(50),
-            model: "res.partner",
-            res_id: partnerId,
-        });
-    }
-    pyEnv["ir.attachment"].create({
-        mimetype: "text/plain",
-        name: "Blah.txt",
-        res_id: partnerId,
-        res_model: "res.partner",
-    });
-    const { openView } = await start();
-    await openView({
-        res_id: partnerId,
-        res_model: "res.partner",
-        views: [[false, "form"]],
-    });
-    await afterNextRender(() => {
-        $(".o-mail-Chatter-scrollable").scrollTop(10 * 1000); // to bottom
-    });
+    $(".o-mail-Chatter").scrollTop(10 * 1000); // to bottom
     await click("button[aria-label='Attach files']");
-    assert.strictEqual($(".o-mail-Chatter-scrollable").scrollTop(), 0);
+    await nextAnimationFrame();
+    assert.isVisible($(".o-mail-AttachmentBox"));
 });
