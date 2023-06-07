@@ -34,7 +34,7 @@
                 </t>
                 <p t-if="store.user" class="fs-4">Logged as <span t-esc="store.user.name"/></p>
                 <button class="btn btn-success fa-stack align-self-end p-0 rounded-circle fs-1 shadow" title="Join Channel" t-att-disabled="store.guest and state.userName.trim() === ''" t-on-click="joinChannel">
-                    <i class="oi oi-arrow-right fa-stack"/>
+                    <i class="oi oi-arrow-right"/>
                 </button>
             </div>
         </div>
