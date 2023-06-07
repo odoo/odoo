@@ -22,7 +22,7 @@ QUnit.test("Pin message", async (assert) => {
     );
     await click(".o-mail-Message [title='Expand']");
     await click(".dropdown-item:contains(Pin)");
-    await click(".modal-footer button:contains(Confirm)");
+    await click(".modal-footer button:contains(pin it)");
     assert.containsOnce($, ".o-discuss-PinnedMessagesPanel .o-mail-Message:contains(Hello world)");
 });
 
@@ -41,7 +41,7 @@ QUnit.test("Unpin message", async (assert) => {
     assert.containsOnce($, ".o-discuss-PinnedMessagesPanel .o-mail-Message");
     await click(".o-mail-Message [title='Expand']");
     await click(".dropdown-item:contains(Unpin)");
-    await click(".modal-footer button:contains(Confirm)");
+    await click(".modal-footer button:contains(Yes)");
     assert.containsNone($, ".o-discuss-PinnedMessagesPanel .o-mail-Message");
 });
 
@@ -77,7 +77,7 @@ QUnit.test("Open pinned panel from notification", async (assert) => {
     await openDiscuss(channelId);
     await click(".o-mail-Message:eq(0) [title='Expand']");
     await click(".dropdown-item:contains(Pin)");
-    await click(".modal-footer button:contains(Confirm)");
+    await click(".modal-footer button:contains(pin it)");
     assert.containsNone($, ".o-discuss-PinnedMessagesPanel");
     await click(".o_mail_notification a:contains(See all pinned messages)");
     assert.containsOnce($, ".o-discuss-PinnedMessagesPanel");
@@ -140,7 +140,7 @@ QUnit.test("Jump to message from notification", async (assert) => {
     await openDiscuss(channelId);
     await click(".o-mail-Message:eq(0) [title='Expand']");
     await click(".dropdown-item:contains(Pin)");
-    await click(".modal-footer button:contains(Confirm)");
+    await click(".modal-footer button:contains(pin it)");
     await click(".o_mail_notification a:contains(message)");
     await nextTick();
     assert.isVisible($(".o-mail-Message:contains(Hello world!)"));
