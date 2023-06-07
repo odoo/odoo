@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { patch } from "@web/core/utils/patch";
+import { capitalize } from "@web/core/utils/strings";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
 patch(MockServer.prototype, {
@@ -12,9 +13,13 @@ patch(MockServer.prototype, {
         // creation of the ir.model.fields records, required for tracked fields
         for (const modelName in this.models) {
             const fieldNamesToFields = this.models[modelName].fields;
-            for (const fname in fieldNamesToFields) {
+            for (const [fname, field] of Object.entries(fieldNamesToFields)) {
                 if (fieldNamesToFields[fname].tracking) {
-                    this.mockCreate("ir.model.fields", { model: modelName, name: fname });
+                    this.mockCreate("ir.model.fields", {
+                        model: modelName,
+                        name: fname,
+                        ttype: field.type,
+                    });
                 }
             }
         }
@@ -44,25 +49,20 @@ patch(MockServer.prototype, {
         const irField = this.models["ir.model.fields"].records.find(
             (field) => field.model === modelName && field.name === fieldName
         );
-
         if (!irField) {
             return;
         }
 
-        const values = {
-            field: irField["id"],
-            field_desc: field["string"],
-            field_type: field["type"],
-        };
-        switch (values.field_type) {
+        const values = {field: irField.id};
+        switch (irField.ttype) {
             case "char":
             case "datetime":
             case "float":
             case "integer":
             case "monetary":
             case "text":
-                values[`old_value_${values.field_type}`] = initialValue;
-                values[`new_value_${values.field_type}`] = newValue;
+                values[`old_value_${irField.ttype}`] = initialValue;
+                values[`new_value_${irField.ttype}`] = newValue;
                 break;
             case "date":
                 values["old_value_datetime"] = initialValue;
@@ -105,10 +105,10 @@ patch(MockServer.prototype, {
                 (field) => field.id === tracking.field
             );
             return {
-                changedField: tracking.field_desc,
+                changedField: capitalize(irField.ttype),
                 id: tracking.id,
                 fieldName: irField.name,
-                fieldType: tracking.field_type,
+                fieldType: irField.ttype,
                 newValue: {
                     value: this._mockMailTrackingValue_FormatDisplayValue(tracking, "new"),
                 },
@@ -123,12 +123,15 @@ patch(MockServer.prototype, {
      * Simulates `_format_display_value` on `mail.tracking.value`
      */
     _mockMailTrackingValue_FormatDisplayValue(record, type) {
-        switch (record.field_type) {
+        const irField = this.models["ir.model.fields"].records.find(
+            (field) => field.id === record.field
+        );
+        switch (irField.ttype) {
             case "float":
             case "integer":
             case "monetary":
             case "text":
-                return record[`${type}_value_${record.field_type}`];
+                return record[`${type}_value_${irField.ttype}`];
             case "datetime":
                 if (record[`${type}_value_datetime`]) {
                     const datetime = record[`${type}_value_datetime`];

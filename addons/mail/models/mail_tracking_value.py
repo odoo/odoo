@@ -13,8 +13,6 @@ class MailTracking(models.Model):
     _order = 'id DESC'
 
     field = fields.Many2one('ir.model.fields', required=True, readonly=True, index=True, ondelete='cascade')
-    field_desc = fields.Char('Field Description', required=True, readonly=True)
-    field_type = fields.Char('Field Type')
     field_groups = fields.Char(compute='_compute_field_groups')
 
     old_value_integer = fields.Integer('Old Value Integer', readonly=True)
@@ -63,7 +61,7 @@ class MailTracking(models.Model):
         if not field:
             raise ValueError(f'Unknown field {col_name} on model {record._name}')
 
-        values = {'field': field.id, 'field_desc': col_info['string'], 'field_type': col_info['type']}
+        values = {'field': field.id}
 
         if col_info['type'] in {'integer', 'float', 'char', 'text', 'datetime', 'monetary'}:
             values.update({
@@ -119,33 +117,36 @@ class MailTracking(models.Model):
             raise ValueError('All tracking value should belong to the same model.')
         TrackedModel = self.env[field_models[0]]
         tracked_fields = TrackedModel.fields_get(self.field.mapped('name'), attributes={'string', 'type'})
+        fields_col_info = (tracked_fields.get(tracking.field.name) for tracking in self)
         fields_sequence_map = dict(TrackedModel._mail_track_order_fields(tracked_fields))
 
-        formatted = []
-        for tracking in self:
-            formatted.append({
-                'changedField': tracking.field_desc,
+        formatted = [
+            {
+                'changedField': col_info['string'],
                 'id': tracking.id,
                 'fieldName': tracking.field.name,
-                'fieldType': tracking.field_type,
+                'fieldType': col_info['type'],
                 'newValue': {
                     'currencyId': tracking.currency_id.id,
-                    'value': tracking._format_display_value(new=True)[0],
+                    'value': tracking._format_display_value(col_info['type'], new=True)[0],
                 },
                 'oldValue': {
                     'currencyId': tracking.currency_id.id,
-                    'value': tracking._format_display_value(new=False)[0],
+                    'value': tracking._format_display_value(col_info['type'], new=False)[0],
                 },
-            })
+            }
+            for tracking, col_info in zip(self, fields_col_info)
+        ]
         formatted.sort(
             key=lambda info: (fields_sequence_map[info['fieldName']], info['fieldName']),
             reverse=False,
         )
         return formatted
 
-    def _format_display_value(self, new=True):
+    def _format_display_value(self, field_type, new=True):
         """ Format value of 'mail.tracking.value', according to the field type.
 
+        :param str field_type: Odoo field type;
         :param bool new: if True, display the 'new' value. Otherwise display
           the 'old' one.
         """
@@ -162,22 +163,21 @@ class MailTracking(models.Model):
 
         result = []
         for record in self:
-            ftype = record.field_type
             value_fname = field_mapping.get(
-                ftype, ('old_value_char', 'new_value_char')
+                field_type, ('old_value_char', 'new_value_char')
             )[bool(new)]
             value = record[value_fname]
 
-            if ftype in {'integer', 'float', 'char', 'text', 'monetary'}:
+            if field_type in {'integer', 'float', 'char', 'text', 'monetary'}:
                 result.append(value)
-            elif ftype in {'date', 'datetime'}:
+            elif field_type in {'date', 'datetime'}:
                 if not record[value_fname]:
                     result.append(value)
-                elif ftype == 'date':
+                elif field_type == 'date':
                     result.append(fields.Date.to_string(value))
                 else:
                     result.append(f'{value}Z')
-            elif ftype == 'boolean':
+            elif field_type == 'boolean':
                 result.append(bool(value))
             else:
                 result.append(value)
