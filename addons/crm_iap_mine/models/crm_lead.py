@@ -14,7 +14,7 @@ class Lead(models.Model):
 
     def action_generate_leads(self):
         return {
-            "name": _("Generate Leads"),
+            "name": _("Need help reaching your target?"),
             "type": "ir.actions.act_window",
             "res_model": "crm.iap.lead.mining.request",
             "target": "new",

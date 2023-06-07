@@ -16,7 +16,7 @@ class StockInventoryAdjustmentName(models.TransientModel):
         return res
 
     quant_ids = fields.Many2many('stock.quant')
-    inventory_adjustment_name = fields.Char(default="Quantity Updated")
+    inventory_adjustment_name = fields.Char(default="Quantity Updated", string="Inventory Reason")
     show_info = fields.Boolean('Show warning')
 
     def action_apply(self):

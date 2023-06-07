@@ -6,9 +6,14 @@
         <field name="arch" type="xml">
             <form string="Replenish wizard">
                 <p>
-                Use this assistant to replenish your stock.
-                Depending on your product configuration, launching a replenishment may trigger a request for quotation,
-                a manufacturing order or a transfer.
+                    The forecasted quantity of
+                    <field name="product_id"
+                        domain="[('product_tmpl_id', '=', product_tmpl_id)]"
+                        readonly="not product_has_variants"
+                        options="{'no_open': 1, 'no_create': 1}" class="fw-bold"/> is
+                    <field name="forecasted_quantity"/>
+                    <field class="ps-1" name="forecast_uom_id" domain="[('category_id', '=', product_uom_category_id)]" groups="uom.group_uom" readonly="1"/>
+                    <field name="forecast_uom_id" groups="!uom.group_uom" invisible="1"/>
                 </p>
                 <group>
                     <group>
@@ -17,10 +22,6 @@
                         <field name="product_uom_category_id" invisible="1"/>
                         <field name="allowed_route_ids" invisible="1"/>
                         <field name="company_id" invisible="1"/>
-                        <field name="product_id"
-                            domain="[('product_tmpl_id', '=', product_tmpl_id)]"
-                            readonly="not product_has_variants"
-                            options="{'no_open': 1, 'no_create': 1}"/>
                         <label for="quantity"/>
                         <div class="o_row">
                             <field name="quantity" />
@@ -29,12 +30,6 @@
                                 domain="[('category_id', '=', product_uom_category_id)]"
                                 groups="uom.group_uom"
                                 options="{'no_open': 1, 'no_create': 1}"/>
-                        </div>
-                        <label for="forecasted_quantity"/>
-                        <div class="o_row">
-                            <field name="forecasted_quantity" readonly="1"/>
-                            <field name="forecast_uom_id" groups="!uom.group_uom" invisible="1"/>
-                            <field name="forecast_uom_id" domain="[('category_id', '=', product_uom_category_id)]" groups="uom.group_uom" readonly="1"/>
                         </div>
                         <field name="date_planned" widget="date"/>
                         <field name="warehouse_id"
@@ -57,7 +52,7 @@
     </record>
 
     <record id="action_product_replenish" model="ir.actions.act_window">
-        <field name="name">Replenish</field>
+        <field name="name">Low on stock? Let's replenish.</field>
         <field name="res_model">product.replenish</field>
         <!-- binding_model_id evaluated to False
         to remove it in existing db's as it was bug-prone -->

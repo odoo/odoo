@@ -182,7 +182,7 @@ QUnit.test("WarningDialog", async (assert) => {
         },
     });
     assert.containsOnce(target, ".o_dialog");
-    assert.strictEqual(target.querySelector("header .modal-title").textContent, "User Error");
+    assert.strictEqual(target.querySelector("header .modal-title").textContent, "Invalid Operation");
     assert.containsOnce(target, ".o_error_dialog");
     assert.strictEqual(target.querySelector("main").textContent, "Some strange unreadable message");
     assert.strictEqual(target.querySelector(".o_dialog footer button").textContent, "Close");
