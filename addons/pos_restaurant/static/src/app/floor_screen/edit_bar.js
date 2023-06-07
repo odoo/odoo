@@ -24,7 +24,6 @@ export class EditBar extends Component {
     };
 
     setup() {
-        super.setup();
         this.ui = useState(useService("ui"));
         useExternalListener(window, "click", this.onOutsideClick);
     }

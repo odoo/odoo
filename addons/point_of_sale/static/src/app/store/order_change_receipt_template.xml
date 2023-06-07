@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="OrderChangeReceipt" owl="">
+    <t t-name="point_of_sale.OrderChangeReceipt" owl="1">
         <div class="pos-receipt">
             <div class="pos-receipt-order-data"><t t-esc="changes.name" /></div>
             <t t-if="changes.floor_name || changes.table_name">

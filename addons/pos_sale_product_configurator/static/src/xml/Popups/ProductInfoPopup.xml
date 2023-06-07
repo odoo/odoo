@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-    <t t-name="ProductInfoPopup" t-inherit="point_of_sale.ProductInfoPopup" t-inherit-mode="extension" owl="1">
+    <t t-name="pos_sale_product_configurator.ProductInfoPopup" t-inherit="point_of_sale.ProductInfoPopup" t-inherit-mode="extension" owl="1">
         <xpath expr="//div[hasclass('extra')]" position="inside">
             <div class="section-optional-product" t-if="productInfo.optional_products.length > 0">
                 <div class="section-title">

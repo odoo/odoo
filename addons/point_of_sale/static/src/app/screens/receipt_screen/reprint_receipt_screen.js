@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 import { OrderReceipt } from "@point_of_sale/app/screens/receipt_screen/receipt/receipt";
 
 export class ReprintReceiptScreen extends AbstractReceiptScreen {
-    static template = "ReprintReceiptScreen";
+    static template = "point_of_sale.ReprintReceiptScreen";
     static components = { OrderReceipt };
     static storeOnOrder = false;
     setup() {

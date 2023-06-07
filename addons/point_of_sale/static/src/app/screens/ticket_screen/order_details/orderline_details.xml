@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="OrderlineDetails" owl="1">
+    <t t-name="point_of_sale.OrderlineDetails" owl="1">
         <li class="orderline" t-on-click="() => this.props.onClickOrderline(props.line)" t-att-class="{ selected: props.isSelected }">
             <span class="product-name">
                 <t t-esc="productName" />

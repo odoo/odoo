@@ -7,7 +7,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { Component } from "@odoo/owl";
 
 export class RewardButton extends Component {
-    static template = "RewardButton";
+    static template = "pos_loyalty.RewardButton";
 
     setup() {
         this.popup = useService("popup");

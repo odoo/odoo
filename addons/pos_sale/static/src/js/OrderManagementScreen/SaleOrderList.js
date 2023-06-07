@@ -10,7 +10,7 @@ import { useService } from "@web/core/utils/hooks";
  */
 export class SaleOrderList extends Component {
     static components = { SaleOrderRow };
-    static template = "SaleOrderList";
+    static template = "pos_sale.SaleOrderList";
 
     setup() {
         this.ui = useState(useService("ui"));

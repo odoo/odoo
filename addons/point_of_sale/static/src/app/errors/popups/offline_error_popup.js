@@ -9,7 +9,7 @@ import { _lt } from "@web/core/l10n/translation";
  * an option to not show it again.
  */
 export class OfflineErrorPopup extends ErrorPopup {
-    static template = "OfflineErrorPopup";
+    static template = "point_of_sale.OfflineErrorPopup";
     static dontShow = false;
     static defaultProps = {
         confirmText: _lt("Continue with limited functionalities"),

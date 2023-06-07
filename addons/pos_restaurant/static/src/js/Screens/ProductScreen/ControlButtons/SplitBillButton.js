@@ -5,7 +5,7 @@ import { ProductScreen } from "@point_of_sale/app/screens/product_screen/product
 import { Component } from "@odoo/owl";
 
 export class SplitBillButton extends Component {
-    static template = "SplitBillButton";
+    static template = "pos_restaurant.SplitBillButton";
 
     setup() {
         this.pos = usePos();

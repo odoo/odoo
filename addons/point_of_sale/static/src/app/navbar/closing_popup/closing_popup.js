@@ -16,7 +16,7 @@ import { sprintf } from "@web/core/utils/strings";
 
 export class ClosePosPopup extends AbstractAwaitablePopup {
     static components = { SaleDetailsButton };
-    static template = "ClosePosPopup";
+    static template = "point_of_sale.ClosePosPopup";
 
     setup() {
         super.setup();

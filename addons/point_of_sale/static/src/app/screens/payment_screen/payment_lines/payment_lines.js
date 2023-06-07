@@ -6,10 +6,9 @@ import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class PaymentScreenPaymentLines extends Component {
-    static template = "PaymentScreenPaymentLines";
+    static template = "point_of_sale.PaymentScreenPaymentLines";
 
     setup() {
-        super.setup();
         this.ui = useState(useService("ui"));
         this.popup = useService("popup");
         this.pos = usePos();

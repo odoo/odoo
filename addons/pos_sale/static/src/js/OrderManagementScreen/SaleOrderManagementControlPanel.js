@@ -20,7 +20,7 @@ const SEARCH_FIELDS = ["name", "partner_id.display_name", "date_order"];
  * @emits search
  */
 export class SaleOrderManagementControlPanel extends Component {
-    static template = "SaleOrderManagementControlPanel";
+    static template = "pos_sale.SaleOrderManagementControlPanel";
 
     setup() {
         this.pos = usePos();

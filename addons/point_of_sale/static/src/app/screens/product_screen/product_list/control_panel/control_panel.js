@@ -10,10 +10,9 @@ import { useService } from "@web/core/utils/hooks";
 
 export class ProductsWidgetControlPanel extends Component {
     static components = { CategoryButton };
-    static template = "ProductsWidgetControlPanel";
+    static template = "point_of_sale.ProductsWidgetControlPanel";
 
     setup() {
-        super.setup();
         this.pos = usePos();
         this.ui = useState(useService("ui"));
         this.notification = useService("pos_notification");

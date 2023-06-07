@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-<t t-name="PaymentScreenStatus" owl="1">
+<t t-name="point_of_sale.PaymentScreenStatus" owl="1">
     <div t-if="props.order.get_paymentlines().length === 0" class="paymentlines-empty">
         <div class="total">
             <t t-esc="totalDueText" />

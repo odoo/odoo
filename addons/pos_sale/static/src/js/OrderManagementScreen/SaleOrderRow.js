@@ -8,7 +8,7 @@ import { useService } from "@web/core/utils/hooks";
  * @emits click-order
  */
 export class SaleOrderRow extends Component {
-    static template = "SaleOrderRow";
+    static template = "pos_sale.SaleOrderRow";
 
     setup() {
         this.ui = useState(useService("ui"));

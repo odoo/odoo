@@ -4,7 +4,7 @@ import { Component } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class BalanceButton extends Component {
-    static template = "BalanceButton";
+    static template = "pos_six.BalanceButton";
 
     setup() {
         this.pos = usePos();

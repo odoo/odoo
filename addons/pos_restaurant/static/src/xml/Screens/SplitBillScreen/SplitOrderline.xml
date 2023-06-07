@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="SplitOrderline" owl="1">
+    <t t-name="pos_restaurant.SplitOrderline" owl="1">
         <li class="orderline" t-att-class="{ selected: isSelected, partially: props.split.quantity !== props.line.get_quantity() }" t-on-click="() => this.click()">
             <span class="product-name">
                 <t t-esc="props.line.get_product().display_name" />

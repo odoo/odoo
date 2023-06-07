@@ -3,11 +3,9 @@
 import { Component } from "@odoo/owl";
 
 export class SplitOrderline extends Component {
-    static template = "SplitOrderline";
+    static template = "pos_restaurant.SplitOrderline";
 
-    setup() {
-        super.setup();
-    }
+    setup() {}
     get isSelected() {
         return this.props.split.quantity !== 0;
     }

@@ -6,7 +6,7 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { floatIsZero } from "@web/core/utils/numbers";
 
 export class MoneyDetailsPopup extends AbstractAwaitablePopup {
-    static template = "MoneyDetailsPopup";
+    static template = "point_of_sale.MoneyDetailsPopup";
 
     setup() {
         super.setup();

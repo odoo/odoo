@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="CustomerFacingDisplayHead" owl="1">
+    <t t-name="point_of_sale.CustomerFacingDisplayHead" owl="1">
         <div class="resources">
             <base t-att-href="origin"/>
             <meta http-equiv="cache-control" content="no-cache" />
@@ -12,14 +12,14 @@
         </div>
     </t>
 
-    <t t-name="CustomerFacingDisplayOrder" owl="1">
+    <t t-name="point_of_sale.CustomerFacingDisplayOrder" owl="1">
         <!-- Header -->
-        <t t-call="CustomerFacingDisplayHead"/>
+        <t t-call="point_of_sale.CustomerFacingDisplayHead"/>
 
         <div class="pos-customer_facing_display pos-palette_01">
             <!-- Orderlines -->
             <div class="pos-customer_products" name="Products list">
-                <t t-call="CustomerFacingDisplayOrderLines"/>
+                <t t-call="point_of_sale.CustomerFacingDisplayOrderLines"/>
             </div>
 
             <div class="pos-payment_info">
@@ -38,7 +38,7 @@
                     </div>
 
                     <!-- Paymentlines -->
-                    <t t-call="CustomerFacingDisplayPaymentLines"/>
+                    <t t-call="point_of_sale.CustomerFacingDisplayPaymentLines"/>
 
                     <!-- Odoo Logo -->
                     <div class="pos-odoo_logo_container">
@@ -49,7 +49,7 @@
         </div>
     </t>
 
-    <t t-name="CustomerFacingDisplayOrderLines" owl="1">
+    <t t-name="point_of_sale.CustomerFacingDisplayOrderLines" owl="1">
         <div class="pos_orderlines">
             <div class="pos_orderlines_item pos_orderlines_header">
                 <div/>
@@ -70,7 +70,7 @@
         </div>
     </t>
 
-    <t t-name="CustomerFacingDisplayPaymentLines" owl="1">
+    <t t-name="point_of_sale.CustomerFacingDisplayPaymentLines" owl="1">
         <div class="pos-paymentlines">
             <t t-if="order">
                 <t t-foreach="order.get_paymentlines()" t-as="paymentline"  t-key="paymentline_index">

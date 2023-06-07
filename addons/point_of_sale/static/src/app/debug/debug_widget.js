@@ -15,7 +15,6 @@ export class DebugWidget extends Component {
     static template = "point_of_sale.DebugWidget";
     static props = { state: { type: Object, shape: { showWidget: Boolean } } };
     setup() {
-        super.setup();
         this.pos = usePos();
         this.debug = useService("debug");
         this.popup = useService("popup");
