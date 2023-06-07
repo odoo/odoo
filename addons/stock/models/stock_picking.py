@@ -1091,7 +1091,7 @@ class Picking(models.Model):
 
         if not self._should_show_transfers():
             if pickings_without_moves:
-                raise UserError(_('Please add some items to move.'))
+                raise UserError(_("You can’t validate an empty transfer. Please add some products to move before proceeding."))
             if pickings_without_quantities:
                 raise UserError(self._get_without_quantities_error_message())
             if pickings_without_lots:
@@ -1588,7 +1588,7 @@ class Picking(models.Model):
             if move.state not in ('draft', 'cancel') and move.product_id.type in ('product', 'consu'):
                 products |= move.product_id
         return {
-            'name': _('Scrap'),
+            'name': _('Scrap Products'),
             'view_mode': 'form',
             'res_model': 'stock.scrap',
             'view_id': view.id,

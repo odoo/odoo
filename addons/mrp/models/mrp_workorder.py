@@ -697,7 +697,7 @@ class MrpWorkorder(models.Model):
     def button_scrap(self):
         self.ensure_one()
         return {
-            'name': _('Scrap'),
+            'name': _('Scrap Products'),
             'view_mode': 'form',
             'res_model': 'stock.scrap',
             'views': [(self.env.ref('stock.stock_scrap_form_view2').id, 'form')],
