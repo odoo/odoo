@@ -296,63 +296,6 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
             {'debit': 0.0,      'credit': 80.0,     'amount_currency': -80.0,       'currency_id': self.currency_1.id},
         )
 
-    def test_zero_amount_journal_curr_1_statement_curr_2(self):
-        self.bank_journal_2.currency_id = self.currency_1
-
-        statement_line = self.env['account.bank.statement.line'].create({
-            'journal_id': self.bank_journal_2.id,
-            'date': '2019-01-01',
-            'payment_ref': 'line_1',
-            'partner_id': self.partner_a.id,
-            'foreign_currency_id': self.currency_2.id,
-            'amount': 0.0,
-            'amount_currency': 10.0,
-        })
-
-        self.assertRecordValues(statement_line.move_id.line_ids, [
-            # pylint: disable=bad-whitespace
-            {'debit': 0.0,      'credit': 0.0,      'amount_currency': 0.0,         'currency_id': self.currency_1.id},
-            {'debit': 0.0,      'credit': 0.0,      'amount_currency': -10.0,       'currency_id': self.currency_2.id},
-        ])
-
-    def test_zero_amount_journal_curr_2_statement_curr_1(self):
-        self.bank_journal_2.currency_id = self.currency_2
-
-        statement_line = self.env['account.bank.statement.line'].create({
-            'journal_id': self.bank_journal_2.id,
-            'date': '2019-01-01',
-            'payment_ref': 'line_1',
-            'partner_id': self.partner_a.id,
-            'foreign_currency_id': self.currency_1.id,
-            'amount': 0.0,
-            'amount_currency': 10.0,
-        })
-
-        self.assertRecordValues(statement_line.move_id.line_ids, [
-            # pylint: disable=bad-whitespace
-            {'debit': 10.0,     'credit': 0.0,      'amount_currency': 0.0,         'currency_id': self.currency_2.id},
-            {'debit': 0.0,      'credit': 10.0,     'amount_currency': -10.0,       'currency_id': self.currency_1.id},
-        ])
-
-    def test_zero_amount_journal_curr_2_statement_curr_3(self):
-        self.bank_journal_2.currency_id = self.currency_2
-
-        statement_line = self.env['account.bank.statement.line'].create({
-            'journal_id': self.bank_journal_2.id,
-            'date': '2019-01-01',
-            'payment_ref': 'line_1',
-            'partner_id': self.partner_a.id,
-            'foreign_currency_id': self.currency_3.id,
-            'amount': 0.0,
-            'amount_currency': 10.0,
-        })
-
-        self.assertRecordValues(statement_line.move_id.line_ids, [
-            # pylint: disable=bad-whitespace
-            {'debit': 0.0,      'credit': 0.0,      'amount_currency': 0.0,         'currency_id': self.currency_2.id},
-            {'debit': 0.0,      'credit': 0.0,      'amount_currency': -10.0,       'currency_id': self.currency_3.id},
-        ])
-
     def test_constraints(self):
         def assertStatementLineConstraint(statement_line_vals):
             with self.assertRaises(Exception), self.cr.savepoint():
@@ -523,25 +466,6 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
         ):
             with self.subTest(params=params):
                 assertAppliedRate(*params)
-
-    def test_zero_amount_statement_line(self):
-        ''' Ensure the statement line is directly marked as reconciled when having an amount of zero. '''
-        self.company_data['company'].account_journal_suspense_account_id.reconcile = False
-
-        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
-            'name': 'test_statement',
-            'line_ids': [
-                (0, 0, {
-                    'date': '2019-01-01',
-                    'payment_ref': "Happy new year",
-                    'amount': 0.0,
-                    'journal_id': self.bank_journal_2.id,
-                }),
-            ],
-        })
-        statement_line = statement.line_ids
-
-        self.assertRecordValues(statement_line, [{'is_reconciled': True, 'amount_residual': 0.0}])
 
     def test_statement_valid_complete_1(self):
         self.env.user.company_id = self.company_data_2['company']

@@ -310,6 +310,8 @@ class AccountBankStatementLine(models.Model):
             if not st_line.amount_currency and st_line.foreign_currency_id:
                 raise ValidationError(_("You can't provide a foreign currency without specifying an amount in "
                                         "'Amount in Currency' field."))
+            if not st_line.amount:
+                raise ValidationError(_("The value of 'Amount' cannot be Zero"))
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
