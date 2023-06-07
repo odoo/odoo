@@ -11,6 +11,7 @@ import { getNextTabableElement } from "@web/core/utils/ui";
 import { session } from "@web/session";
 import { FloatField } from "@web/views/fields/float/float_field";
 import { TextField } from "@web/views/fields/text/text_field";
+import { listView } from "@web/views/list/list_view";
 import { ListController } from "@web/views/list/list_controller";
 import { DynamicRecordList, DynamicGroupList } from "@web/views/relational_model";
 import { actionService } from "@web/webclient/actions/action_service";
@@ -64,7 +65,7 @@ import {
 import { createWebClient, doAction, loadState } from "../webclient/helpers";
 import { makeView, setupViewRegistries } from "./helpers";
 
-import { Component, onWillStart, xml } from "@odoo/owl";
+import { Component, onWillStart, xml, markup } from "@odoo/owl";
 
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
@@ -4940,6 +4941,48 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["unlink"]);
 
         assert.containsN(target, "tbody td.o_list_record_selector", 3, "should have 3 records");
+    });
+
+    QUnit.test("custom delete confirmation dialog", async (assert) => {
+
+        class CautiousController extends ListController {
+            get deleteConfirmationDialogProps() {
+                const props = super.deleteConfirmationDialogProps;
+                props.body = markup(`<span class="text-danger">These are the consequences</span><br/>${props.body}`);
+                return props;
+            }
+        }
+        const cautiousView = {
+            ...listView,
+            Controller: CautiousController,
+        };
+        registry.category("views").add("caution", cautiousView);
+
+        await makeView({
+            resModel: "foo",
+            type: "list",
+            arch: `
+                <tree js_class="caution">
+                    <field name="foo"/>
+                </tree>
+            `,
+            serverData,
+            actionMenus: {},
+        });
+
+        await click(target.querySelector("tbody td.o_list_record_selector:first-child input"));
+        assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
+
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Delete");
+        assert.containsOnce(
+            document.body,
+            ".modal:contains('you sure') .text-danger:contains('consequences')",
+            "confirmation dialog should have markup and more"
+        );
+
+        await click(document, "body .modal footer button.btn-secondary");
+        assert.containsN(target, "tbody td.o_list_record_selector", 4, "nothing deleted, 4 records remain");
     });
 
     QUnit.test(
