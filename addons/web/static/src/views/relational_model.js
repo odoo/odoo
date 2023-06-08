@@ -3614,7 +3614,7 @@ export class RelationalModel extends Model {
         if (
             this.defaultGroupBy &&
             !this.env.inDialog &&
-            !(params.groupBy && params.groupBy.length)
+            !(rootParams.groupBy && rootParams.groupBy.length)
         ) {
             rootParams.groupBy = [this.defaultGroupBy];
         }
