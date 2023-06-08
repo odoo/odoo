@@ -53,7 +53,7 @@ patch(MockServer.prototype, {
             return;
         }
 
-        const values = {field: irField.id};
+        const values = {field_id: irField.id};
         switch (irField.ttype) {
             case "char":
             case "datetime":
@@ -105,7 +105,7 @@ patch(MockServer.prototype, {
     _mockMailTrackingValue_TrackingValueFormat(tracking_value_ids) {
         const trackingValues = tracking_value_ids.map((tracking) => {
             const irField = this.models["ir.model.fields"].records.find(
-                (field) => field.id === tracking.field
+                (field) => field.id === tracking.field_id
             );
             return {
                 changedField: capitalize(irField.ttype),
@@ -127,7 +127,7 @@ patch(MockServer.prototype, {
      */
     _mockMailTrackingValue_FormatDisplayValue(record, type) {
         const irField = this.models["ir.model.fields"].records.find(
-            (field) => field.id === record.field
+            (field) => field.id === record.field_id
         );
         switch (irField.ttype) {
             case "float":

@@ -3,16 +3,18 @@
 
 from datetime import datetime
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models
 
 
 class MailTracking(models.Model):
     _name = 'mail.tracking.value'
     _description = 'Mail Tracking Value'
-    _rec_name = 'field'
+    _rec_name = 'field_id'
     _order = 'id DESC'
 
-    field = fields.Many2one('ir.model.fields', required=True, readonly=True, index=True, ondelete='cascade')
+    field_id = fields.Many2one(
+        'ir.model.fields', required=True, readonly=True,
+        index=True, ondelete='cascade')
     field_groups = fields.Char(compute='_compute_field_groups')
 
     old_value_integer = fields.Integer('Old Value Integer', readonly=True)
@@ -32,11 +34,11 @@ class MailTracking(models.Model):
 
     mail_message_id = fields.Many2one('mail.message', 'Message ID', required=True, index=True, ondelete='cascade')
 
-    @api.depends('mail_message_id', 'field')
+    @api.depends('mail_message_id', 'field_id')
     def _compute_field_groups(self):
         for tracking in self:
             model = self.env[tracking.mail_message_id.model]
-            field = model._fields.get(tracking.field.name)
+            field = model._fields.get(tracking.field_id.name)
             tracking.field_groups = field.groups if field else 'base.group_system'
 
     @api.model
@@ -59,7 +61,7 @@ class MailTracking(models.Model):
         if not field:
             raise ValueError(f'Unknown field {col_name} on model {record._name}')
 
-        values = {'field': field.id}
+        values = {'field_id': field.id}
 
         if col_info['type'] in {'integer', 'float', 'char', 'text', 'datetime'}:
             values.update({
@@ -114,19 +116,19 @@ class MailTracking(models.Model):
         """
         if not self:
             return []
-        field_models = self.field.mapped('model')
+        field_models = self.field_id.mapped('model')
         if len(set(field_models)) != 1:
             raise ValueError('All tracking value should belong to the same model.')
         TrackedModel = self.env[field_models[0]]
-        tracked_fields = TrackedModel.fields_get(self.field.mapped('name'), attributes={'string', 'type'})
-        fields_col_info = (tracked_fields.get(tracking.field.name) for tracking in self)
+        tracked_fields = TrackedModel.fields_get(self.field_id.mapped('name'), attributes={'string', 'type'})
+        fields_col_info = (tracked_fields.get(tracking.field_id.name) for tracking in self)
         fields_sequence_map = dict(TrackedModel._mail_track_order_fields(tracked_fields))
 
         formatted = [
             {
                 'changedField': col_info['string'],
                 'id': tracking.id,
-                'fieldName': tracking.field.name,
+                'fieldName': tracking.field_id.name,
                 'fieldType': col_info['type'],
                 'newValue': {
                     'currencyId': tracking.currency_id.id,

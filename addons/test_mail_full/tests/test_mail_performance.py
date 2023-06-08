@@ -198,8 +198,7 @@ class TestPortalFormatPerformance(FullBaseMailPerformance):
                 ],
                 'tracking_value_ids': [
                     (0, 0, {
-                        'field': user_id_field.id,
-                        'field_desc': 'Responsible',
+                        'field_id': user_id_field.id,
                         'new_value_char': 'new 1',
                         'new_value_integer': record.user_id.id,
                         'old_value_char': 'old 1',
