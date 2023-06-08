@@ -54,7 +54,7 @@
                                     t-att-class="option.classList"
                                     t-on-mouseenter="() => this.onOptionMouseEnter([source_index, option_index])"
                                     t-on-mouseleave="() => this.onOptionMouseLeave([source_index, option_index])"
-                                    t-on-click="() => this.onOptionClick([source_index, option_index])"
+                                    t-on-click="() => this.onOptionClick(option)"
                                     t-on-pointerdown="() => this.ignoreBlur = true"
                                 >
                                     <a
