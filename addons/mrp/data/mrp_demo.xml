@@ -119,6 +119,7 @@
             <field name="default_code">FURN_8522</field>
             <field name="tracking">serial</field>
             <field name="image_1920" type="base64" file="mrp/static/img/table_top.png"/>
+            <field name="route_ids" eval="[Command.link(ref('mrp.route_warehouse0_manufacture'))]"/>
         </record>
         <record id="product_product_computer_desk_leg" model="product.product">
             <field name="name">Table Leg</field>
@@ -211,6 +212,7 @@
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
             <field name="default_code">FURN_7023</field>
             <field name="image_1920" type="base64" file="mrp/static/img/product_product_wood_panel.png"/>
+            <field name="route_ids" eval="[Command.link(ref('mrp.route_warehouse0_manufacture'))]"/>
         </record>
         <record id="product_product_plastic_laminate" model="product.product">
             <field name="name">Plastic Laminate</field>
