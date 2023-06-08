@@ -355,71 +355,75 @@ def load_module_graph(env, graph: PackageGraph, force_test: bool = False) -> Ord
     loading_extra_query_count = odoo.sql_db.sql_counter
     loading_cursor_query_count = env.cr.sql_log_count
 
+    try:
+        for index, package in enumerate(graph, 1):
+            module_name = package.name
 
-    for index, package in enumerate(graph, 1):
-        module_name = package.name
+            if module_name in env.registry._init_modules:
+                continue
 
-        if module_name in env.registry._init_modules:
-            continue
+            module_t0 = time.time()
+            module_cursor_query_count = env.cr.sql_log_count
+            module_extra_query_count = odoo.sql_db.sql_counter
 
-        module_t0 = time.time()
-        module_cursor_query_count = env.cr.sql_log_count
-        module_extra_query_count = odoo.sql_db.sql_counter
+            need_update = update_module and package.state in ("to install", "to upgrade")
+            need_test = tools.config.options['test_enable'] and (need_update or force_test)  # CWG: TBD
 
-        need_update = update_module and package.state in ("to install", "to upgrade")
-        need_test = tools.config.options['test_enable'] and (need_update or force_test)  # CWG: TBD
+            module_log_level = logging.INFO if need_update else logging.DEBUG
+            _logger.log(module_log_level, 'Loading module %s (%d/%d)', module_name, index, module_count)
 
-        module_log_level = logging.INFO if need_update else logging.DEBUG
-        _logger.log(module_log_level, 'Loading module %s (%d/%d)', module_name, index, module_count)
+            if need_update:
+                if package.state == 'to install':
+                    model_names = _install_module(env, package)
+                else:  # 'to upgrade'
+                    model_names = _upgrade_module(env, package, migrations)
+                updated_models |= model_names
+                updated_loaded_models -= model_names
+                updated_modules.add(package.name)
+                if largest_loading_sort_key > package.loading_sort_key:  # shortcut to avoid the set operation below
+                    # scenario 2 for models_to_fixup
+                    registry.models_to_fixup |= model_names & OrderedSet.union(*(
+                        _model_names
+                        for loading_sort_key, _model_names in loaded_models.items()
+                        if loading_sort_key > package.loading_sort_key
+                    ))
+            else:
+                model_names = _load_module(env, package)  # returns an OrderedSet
+                updated_loaded_models |= updated_models & model_names
+                if update_module and package.state == 'to remove':
+                    # scenario 3 for models_to_fixup
+                    registry.models_to_fixup |= model_names
 
-        if need_update:
-            if package.state == 'to install':
-                model_names = _install_module(env, package)
-            else:  # 'to upgrade'
-                model_names = _upgrade_module(env, package, migrations)
-            updated_models |= model_names
-            updated_loaded_models -= model_names
-            updated_modules.add(package.name)
-            if largest_loading_sort_key > package.loading_sort_key:  # shortcut to avoid the set operation below
-                # scenario 2 for models_to_fixup
-                registry.models_to_fixup |= model_names & OrderedSet.union(*(
-                    _model_names
-                    for loading_sort_key, _model_names in loaded_models.items()
-                    if loading_sort_key > package.loading_sort_key
-                ))
-        else:
-            model_names = _load_module(env, package)  # returns an OrderedSet
-            updated_loaded_models |= updated_models & model_names
-            if update_module and package.state == 'to remove':
-                # scenario 3 for models_to_fixup
-                registry.models_to_fixup |= model_names
+            if update_module:
+                loaded_models[(package.depth, package.name)] = model_names
+                largest_loading_sort_key = max(largest_loading_sort_key, package.loading_sort_key)
 
-        if update_module:
-            loaded_models[(package.depth, package.name)] = model_names
-            largest_loading_sort_key = max(largest_loading_sort_key, package.loading_sort_key)
+            extras = []
+            test_time = 0
+            if need_test:
+                test_results, test_query_count, test_time = _test_module(env, module_name)
+                module_extra_query_count += test_query_count
+                if test_results:
+                    registry._assertion_report.update(test_results)
+                if test_query_count:
+                    extras.append(f'+{test_query_count} test')
+            other_query_count = odoo.sql_db.sql_counter - module_extra_query_count
+            if other_query_count:
+                extras.append(f'+{other_query_count} other')
 
-        extras = []
-        test_time = 0
-        if need_test:
-            test_results, test_query_count, test_time = _test_module(env, module_name)
-            module_extra_query_count += test_query_count
-            if test_results:
-                registry._assertion_report.update(test_results)
-            if test_query_count:
-                extras.append(f'+{test_query_count} test')
-        other_query_count = odoo.sql_db.sql_counter - module_extra_query_count
-        if other_query_count:
-            extras.append(f'+{other_query_count} other')
-
-        _logger.log(
-            module_log_level, "Module %s loaded in %.2fs%s, %s queries%s",
-            module_name, time.time() - module_t0,
-            f' (incl. {test_time:.2f}s test)' if test_time else '',
-                         env.cr.sql_log_count - module_cursor_query_count,
-            f' ({", ".join(extras)})' if extras else ''
-        )
-
-    registry.models_to_fixup |= updated_loaded_models  # scenario 1 for models_to_fixup
+            _logger.log(
+                module_log_level, "Module %s loaded in %.2fs%s, %s queries%s",
+                module_name, time.time() - module_t0,
+                f' (incl. {test_time:.2f}s test)' if test_time else '',
+                             env.cr.sql_log_count - module_cursor_query_count,
+                f' ({", ".join(extras)})' if extras else ''
+            )
+    except Exception as e:
+        updated_loaded_models = updated_models
+        raise e
+    finally:
+        registry.models_to_fixup |= updated_loaded_models  # scenario 1 for models_to_fixup
+        registry.updated_modules |= updated_modules
 
     _logger.runbot("%s modules loaded in %.2fs, %s queries (+%s extra)",
                    len(graph),
@@ -574,7 +578,6 @@ def load_modules(
 
         env = api.Environment(cr, SUPERUSER_ID, {})
         updated_modules |= load_module_graph(env, graph, force_test=force_test)
-        registry.updated_modules |= updated_modules
 
         load_lang = tools.config['load_language']
         tools.config['load_language'] = None
@@ -605,7 +608,6 @@ def load_modules(
         _logger.debug('Updating graph with %d more modules', len(module_list))
 
         updated_modules |= load_module_graph(env, graph, force_test=force_test)
-        registry.updated_modules |= updated_modules
 
         registry.loaded = True
         if not registry.all_models_set_up:
