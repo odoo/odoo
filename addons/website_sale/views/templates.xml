@@ -275,6 +275,7 @@
             <t t-set="opt_wsale_categories" t-value="is_view_active('website_sale.products_categories')"/>
             <t t-set="opt_wsale_attributes" t-value="is_view_active('website_sale.products_attributes')"/>
             <t t-set="opt_wsale_filter_price" t-value="is_view_active('website_sale.filter_products_price')"/>
+            <t t-set="opt_wsale_filter_tags" t-value="is_view_active('website_sale.filter_products_tags')"/>
 
             <t t-set="opt_wsale_categories_top" t-value="is_view_active('website_sale.products_categories_top')"/>
             <t t-set="opt_wsale_attributes_top" t-value="is_view_active('website_sale.products_attributes_top')"/>
@@ -340,7 +341,7 @@
                                         data-bs-toggle="offcanvas"
                                         data-bs-target="#o_wsale_offcanvas">
                                     <i class="fa fa-sliders"/>
-                                    <span t-if="isFilteringByPrice or attrib_set" t-attf-class="position-absolute top-0 start-100 translate-middle badge border border-{{navClass}} rounded-circle bg-danger p-1"><span class="visually-hidden">filters active</span></span>
+                                    <span t-if="isFilteringByPrice or attrib_set or tags" t-attf-class="position-absolute top-0 start-100 translate-middle badge border border-{{navClass}} rounded-circle bg-danger p-1"><span class="visually-hidden">filters active</span></span>
                                 </button>
                             </div>
 
@@ -649,6 +650,37 @@
                             </div>
                         </div>
                     </t>
+                    <t t-if="opt_wsale_filter_tags and (opt_wsale_attributes or opt_wsale_attributes_top)">
+                        <t t-set="_status" t-value="'inactive'"/>
+                        <t t-foreach="all_tags" t-as="v" t-if="v.id in tags" t-set="_status" t-value="'active'"/>
+                        <div t-if="all_tags">
+                            <h2 class="accordion-header mb-0" t-attf-id="o_wsale_offcanvas_tags_header">
+                                <button t-attf-class="o_wsale_offcanvas_title accordion-button border-top rounded-0 {{ not tags and 'collapsed'}}"
+                                        type="button"
+                                        t-att-data-status="_status"
+                                        data-bs-toggle="collapse"
+                                        t-attf-data-bs-target="#o_wsale_offcanvas_tags"
+                                        t-att-aria-expanded="_status == 'active' and 'True' or 'False'"
+                                        t-attf-aria-controls="o_wsale_offcanvas_tags"
+                                >
+                                    <b>Tags</b>
+                                </button>
+                            </h2>
+                            <div t-attf-id="o_wsale_offcanvas_tags"
+                                 t-attf-class="accordion-collapse collapse {{ (_status == 'active') and 'show'}}"
+                                 t-att-aria-expanded="(_status == 'active') and 'True' or 'False'"
+                                 t-attf-aria-labelledby="o_wsale_offcanvas_tags_header"
+                            >
+                                <div class="accordion-body pt-0">
+                                    <div class="list-group list-group-flush">
+                                        <t t-call="website_sale.filter_products_tags_list">
+                                            <t t-set="all_tags" t-value="all_tags"/>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
                 </form>
 
                 <t t-if="opt_wsale_filter_price and (opt_wsale_attributes or opt_wsale_attributes_top)"
@@ -658,8 +690,8 @@
                 </t>
             </div>
             <div class="offcanvas-body d-flex justify-content-between flex-grow-0 border-top overflow-hidden">
-                <a t-attf-class="btn btn-{{navClass}} d-flex py-1 mb-2 {{(not attrib_values and not isFilteringByPrice) and 'disabled' }}"
-                   t-att-aria-disabled="(not attrib_values and not isFilteringByPrice) and 'true' or 'false'"
+                <a t-attf-class="btn btn-{{navClass}} d-flex py-1 mb-2 {{(not attrib_values and not isFilteringByPrice and not tags) and 'disabled' }}"
+                   t-att-aria-disabled="(not attrib_values and not isFilteringByPrice and not tags) and 'true' or 'false'"
                    href="/shop"
                    title="Clear Filters">
                     Clear Filters
@@ -800,11 +832,11 @@
         <xpath expr="//div[hasclass('products_attributes_filters')]" position="inside">
             <div id="wsale_products_attributes_collapse"
                  class=" position-relative">
-                <form t-if="attributes" class="js_attributes position-relative mb-2" method="get">
+                <form t-if="attributes or all_tags" class="js_attributes position-relative mb-2" method="get">
                     <input t-if="category" type="hidden" name="category" t-att-value="category.id" />
                     <input type="hidden" name="search" t-att-value="search" />
                     <input type="hidden" name="order" t-att-value="order"/>
-                    <a t-if="attrib_values" t-att-href="keep('/shop'+ ('/category/'+slug(category)) if category else None, attrib=0)" t-attf-class="btn btn-{{navClass}} d-flex py-1 mb-2">
+                    <a t-if="attrib_values or tags" t-att-href="keep('/shop'+ ('/category/'+slug(category)) if category else None, attrib=0, tags=0)" t-attf-class="btn btn-{{navClass}} d-flex py-1 mb-2">
                         <small class="mx-auto"><b>Clear Filters</b></small>
                         <i class="oi oi-close"/>
                     </a>
@@ -842,6 +874,11 @@
                             </div>
                         </div>
                     </t>
+                    <t t-if="opt_wsale_filter_tags and opt_wsale_attributes"
+                       t-call="website_sale.filter_products_tags"
+                    >
+                        <t t-set="all_tags" t-value="all_tags"/>
+                    </t>
                 </form>
             </div>
         </xpath>
@@ -861,6 +898,34 @@
                    t-att-step="website.currency_id.rounding" t-att-min="'%f' % (available_min_price)"
                    t-att-max="'%f' % (available_max_price)" t-att-value="'%f,%f' % (min_price, max_price)"/>
         </div>
+    </template>
+
+    <template id="filter_products_tags" name="Filter by Tags" active="True">
+        <div t-if="all_tags">
+            <h6 class="mb-3">
+                <b>Tags</b>
+            </h6>
+            <div class="flex-column mb-3">
+                <t t-call="website_sale.filter_products_tags_list">
+                    <t t-set="all_tags" t-value="all_tags"/>
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <template id="filter_products_tags_list">
+        <t t-foreach="all_tags" t-as="tag" class="list-group-item border-0 ps-0 pb-0">
+            <div class="form-check mb-1">
+                <input type="checkbox"
+                       name="tags"
+                       class="form-check-input"
+                       t-att-id="tag.id"
+                       t-att-value="tag.id"
+                       t-att-checked="'checked' if tag.id in tags else None"
+                />
+                <label class="form-check-label fw-normal" t-att-for="tag.id" t-field="tag.name"/>
+            </div>
+        </t>
     </template>
 
     <template id="products_list_view" inherit_id="website_sale.products" active="False" name="List View (by default)">
@@ -959,7 +1024,6 @@
                                         <input type="hidden" class="product_id" name="product_id" t-att-value="product_variant.id" />
                                         <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id" />
                                         <input t-if="product.public_categ_ids.ids" type="hidden" class="product_category_id" name="product_category_id" t-att-value="product.public_categ_ids.ids[0]" />
-                                        <input t-if="product.product_tag_ids.ids" type="hidden" class="product_tag_id" name="product_tag_id" t-att-value="product.product_tag_ids.ids[0]" />
                                         <t t-if="combination" t-call="website_sale.variants">
                                             <t t-set="ul_class" t-valuef="flex-column" />
                                             <t t-set="parent_combination" t-value="None" />
@@ -992,6 +1056,9 @@
                                             </div>
                                         </section>
                                     </div>
+                                    <t t-if="is_view_active('website_sale.product_tags')" t-call="website_sale.product_tags">
+                                        <t t-set="all_product_tags" t-value="product_variant.all_product_tag_ids"/>
+                                    </t>
                                 </div>
                             </form>
                             <p t-elif="not product.active" class="alert alert-warning">This product is no longer available.</p>
@@ -1021,6 +1088,29 @@
             </div>
         </t>
     </t>
+    </template>
+
+    <template id="product_tags" name="Product Tags" active="True">
+        <div class="o_product_tags o_field_tags d-flex flex-wrap align-items-center gap-2 mb16 mt-2">
+            <t t-foreach="all_product_tags" t-as="tag">
+                <t t-if="tag.visible_on_ecommerce">
+                    <span t-if="tag.image"
+                          class="order-0"
+                          t-field="tag.image"
+                          t-options="{'widget': 'image', 'class': 'o_product_tag_img rounded'}"
+                    />
+                    <span t-else="" class="position-relative order-1 py-1 px-2">
+                        <span class="position-absolute top-0 start-0 w-100 h-100 rounded"
+                              t-attf-style="background-color: #{tag.color}; opacity: .2;"
+                        />
+                        <span class="text-nowrap small"
+                              t-attf-style="color: #{tag.color}"
+                              t-field="tag.name"
+                        />
+                    </span>
+                </t>
+            </t>
+        </div>
     </template>
 
     <template id="alternative_products" name="Alternative Products" inherit_id="website_sale.product" active="True">
@@ -2357,12 +2447,28 @@
     <!-- Product page images -->
     <template id="website_sale.shop_product_images" name="Shop Product Images">
         <t t-set="product_images" t-value="product_variant._get_images() if product_variant else product._get_images()"/>
+        <t t-set="ribbon" t-value="product_variant.sudo().ribbon_id or product.sudo().website_ribbon_id"/>
+        <t t-set="bg_color" t-value="ribbon['bg_color'] or ''"/>
+        <t t-set="text_color" t-value="ribbon['text_color']"/>
+        <t t-set="bg_class" t-value="ribbon['html_class']"/>
         <t t-call="website_sale.shop_product_#{website.product_page_image_layout}"/>
     </template>
 
     <template id="website_sale.shop_product_image">
         <div t-if="product_image._name == 'product.image' and product_image.embed_code" t-att-class="image_classes + ' ratio ratio-16x9'">
             <t t-out="product_image.embed_code"/>
+        </div>
+        <div t-elif="len(product_images) == 1 and website.product_page_image_layout != 'grid'"
+             class="position-relative d-inline-flex overflow-hidden m-auto h-100"
+        >
+            <span t-attf-class="o_ribbon #{ribbon['html_class']} z-index-1"
+                  t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
+                  t-out="ribbon['html'] or ''"
+            />
+            <div t-field="product_image.image_1920"
+                 class="d-flex align-items-start justify-content-center h-100 oe_unmovable"
+                 t-options='{"widget": "image", "preview_image": "image_1024", "class": "oe_unmovable product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920"}'
+            />
         </div>
         <div t-else="" t-field="product_image.image_1920" t-att-class="image_classes + ' oe_unmovable'" t-options='{"widget": "image", "preview_image": "image_1024", "class": "oe_unmovable product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920"}'/>
     </template>
@@ -2371,11 +2477,16 @@
     <template id="website_sale.shop_product_carousel" name="Shop Product Carousel">
         <t t-set="product_carousel_block_name">Product Carousel</t>
         <div id="o-carousel-product" class="carousel slide position-sticky mb-3 overflow-hidden" data-bs-ride="carousel" data-bs-interval="0" t-att-data-name="product_carousel_block_name">
-            <div class="o_carousel_product_outer carousel-outer position-relative flex-grow-1">
+            <div class="o_carousel_product_outer carousel-outer position-relative flex-grow-1 overflow-hidden">
+                <span t-if="len(product_images) > 1"
+                      t-attf-class="o_ribbon #{ribbon['html_class']} z-index-1"
+                      t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
+                      t-out="ribbon['html'] or ''"
+                />
                 <div class="carousel-inner h-100">
                     <t t-set="image_classes" t-value="'d-flex align-items-center justify-content-center h-100'"/>
                     <t t-foreach="product_images" t-as="product_image">
-                        <div t-attf-class="carousel-item h-100#{' active' if product_image_first else ''}">
+                        <div t-attf-class="carousel-item h-100 text-center#{' active' if product_image_first else ''}">
                             <t t-call="website_sale.shop_product_image"/>
                         </div>
                     </t>
@@ -2428,7 +2539,11 @@
     <!-- Product page images: Grid -->
     <template id="website_sale.shop_product_grid" name="Shop Product Grid">
         <div id="o-grid-product" class="o_wsale_product_page_grid mb-3" data-name="Product Grid" t-att-data-image_spacing="website.product_page_image_spacing" t-att-data-grid_columns="website.product_page_grid_columns">
-            <div class="container">
+            <div class="container position-relative overflow-hidden">
+                <span t-attf-class="o_ribbon #{ribbon['html_class']}"
+                      t-attf-style="#{text_color and ('color: %s; ' % text_color)}#{bg_color and 'background-color:' + bg_color}"
+                      t-out="ribbon['html'] or ''"
+                />
                 <!-- One row for every two images -->
                 <t t-set="image_classes" t-value="'w-100'"/>
                 <t t-set="col_classes" t-value="website._get_product_page_grid_image_classes()"/>

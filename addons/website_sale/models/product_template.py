@@ -241,10 +241,9 @@ class ProductTemplate(models.Model):
         """
         self.ensure_one()
 
-        current_website = False
+        current_website = self.env['website'].get_current_website()
 
         if self.env.context.get('website_id'):
-            current_website = self.env['website'].get_current_website()
             if not pricelist:
                 pricelist = current_website.get_current_pricelist()
 
@@ -252,8 +251,17 @@ class ProductTemplate(models.Model):
             combination=combination, product_id=product_id, add_qty=add_qty, pricelist=pricelist,
             parent_combination=parent_combination, only_template=only_template)
 
+        product = self.env['product.product'].browse(combination_info['product_id'])
+
+        if current_website.is_view_active('website_sale.product_tags'):
+            combination_info['product_tags'] = self.env['ir.ui.view']._render_template(
+                'website_sale.product_tags', values={
+                    'all_product_tags': product.all_product_tag_ids.filtered('visible_on_ecommerce')
+                }
+            )
+
         if self.env.context.get('website_id'):
-            product = self.env['product.product'].browse(combination_info['product_id']) or self
+            product = product or self
             partner = self.env.user.partner_id
             company_id = current_website.company_id
             currency = current_website.currency_id
@@ -402,12 +410,6 @@ class ProductTemplate(models.Model):
             if product.id:
                 product.website_url = "/shop/%s" % slug(product)
 
-
-    def _get_website_ribbon(self):
-        if self.website_ribbon_id:
-            return self.website_ribbon_id
-        return self.product_tag_ids.ribbon_id[:1] or self.product_variant_ids.additional_product_tag_ids.ribbon_id[:1]
-
     @api.model
     def _get_alternative_product_filter(self):
         return self.env.ref('website_sale.dynamic_filter_cross_selling_alternative_products').id
@@ -442,11 +444,14 @@ class ProductTemplate(models.Model):
         with_price = options['displayDetail']
         domains = [website.sale_product_domain()]
         category = options.get('category')
+        tags = options.get('tags')
         min_price = options.get('min_price')
         max_price = options.get('max_price')
         attrib_values = options.get('attrib_values')
         if category:
             domains.append([('public_categ_ids', 'child_of', unslug(category)[1])])
+        if tags:
+            domains.append([('product_variant_ids.all_product_tag_ids', 'in', tags)])
         if min_price:
             domains.append([('list_price', '>=', min_price)])
         if max_price:

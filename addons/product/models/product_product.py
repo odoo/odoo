@@ -64,7 +64,12 @@ class ProductProduct(models.Model):
         'product.packaging', 'product_id', 'Product Packages',
         help="Gives the different ways to package the same product.")
 
-    additional_product_tag_ids = fields.Many2many('product.tag', 'product_tag_product_product_rel')
+    additional_product_tag_ids = fields.Many2many(
+        string="Additional Product Tags",
+        comodel_name='product.tag',
+        relation='product_tag_product_product_rel',
+        domain="[('id', 'not in', product_tag_ids)]",
+    )
     all_product_tag_ids = fields.Many2many('product.tag', compute='_compute_all_product_tag_ids', search='_search_all_product_tag_ids')
 
     # all image fields are base64 encoded and PIL-supported

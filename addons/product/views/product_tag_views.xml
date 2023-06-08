@@ -10,12 +10,16 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="color" widget="color_picker"/>
+                            <field name="color" widget="color"/>
                         </group>
                     </group>
                     <group>
-                        <field name="product_ids" widget="many2many_tags"
-                               attrs="{'invisible':[('product_ids','=',[])]}"/>
+                        <field name="product_template_ids" widget="many2many_tags"/>
+                        <field name="product_product_ids" widget="many2many_tags"/>
+                        <field name="product_ids"
+                               widget="many2many_tags"
+                               attrs="{'invisible': [('product_ids', '=', [])]}"
+                        />
                     </group>
                 </sheet>
             </form>
@@ -25,9 +29,11 @@
         <field name="name">product.tag.tree</field>
         <field name="model">product.tag</field>
         <field name="arch" type="xml">
-            <tree string="Product Tags">
+            <tree string="Product Tags" multi_edit="1">
                 <field name="name"/>
-                <field name="color" widget="color_picker"/>
+                <field name="product_template_ids" widget="many2many_tags" optional="show"/>
+                <field name="product_product_ids" widget="many2many_tags" string="Product Variant" optional="show"/>
+                <field name="color" widget="color" readonly="1" optional="hide"/>
             </tree>
         </field>
     </record>
@@ -36,6 +42,7 @@
         <field name="res_model">product.tag</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" eval="False"/>
+        <field name="context">{'create': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
             Define a new tag

@@ -56,6 +56,27 @@
                                         </table>
                                     </div>
                                 </t>
+                                <t t-if="is_view_active('website_sale.product_tags')">
+                                    <div class="col-lg-6">
+                                        <table class="table">
+                                            <t t-if="product.product_variant_ids.all_product_tag_ids">
+                                                <tr>
+                                                    <th class="text-start" t-att-colspan="2">
+                                                        <span>Tags</span>
+                                                    </th>
+                                                </tr>
+                                                <tr>
+                                                    <td class="w-25"><span>Tags</span></td>
+                                                    <td class="w-75 text-muted">
+                                                        <t t-call="website_sale.product_tags">
+                                                            <t t-set="all_product_tags" t-value="product.product_variant_ids.all_product_tag_ids"/>
+                                                        </t>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </table>
+                                    </div>
+                                </t>
                             </div>
                         </div>
                     </div>
@@ -137,6 +158,24 @@
                                             <t t-foreach="categories[category][attribute][product]" t-as="ptav">
                                                 <span t-field="ptav.name"/><t t-if="not ptav_last">, </t>
                                             </t>
+                                        </td>
+                                    </tr>
+                                </t>
+                                <t t-if="is_view_active('website_sale.product_tags') and any([product.all_product_tag_ids for product in products])">
+                                    <tr class="clickable" data-bs-toggle="collapse" data-bs-target=".o_ws_tags">
+                                        <th class="text-start" t-att-colspan="len(products) + 1">
+                                            <i class="fa fa-chevron-circle-down o_product_comparison_collpase" role="img" aria-label="Collapse" title="Collapse"></i><span>Tags</span>
+                                        </th>
+                                    </tr>
+                                    <tr class="collapse show o_ws_tags">
+                                        <td><span>Tags</span></td>
+                                        <td t-foreach="products" t-as="product">
+                                            <div class="d-flex justify-content-center">
+                                                <t t-call="website_sale.product_tags">
+                                                    <t t-set="all_product_tags" t-value="product.all_product_tag_ids"/>
+                                                </t>
+                                            </div>
+
                                         </td>
                                     </tr>
                                 </t>

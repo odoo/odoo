@@ -600,6 +600,11 @@ var VariantMixin = {
             .text(combination.price)
             .trigger('change');
 
+        $parent
+            .find('.o_product_tags')
+            .first()
+            .html(combination.product_tags);
+
         this.handleCustomValues($(ev.target));
     },
 
