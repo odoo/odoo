@@ -66,6 +66,7 @@ export class SelectMenu extends Component {
         searchPlaceholder: { type: String, optional: true },
         value: { optional: true },
         multiSelect: { type: Boolean, optional: true },
+        onInput: { type: Function, optional: true },
         onSelect: { type: Function, optional: true },
         slots: { type: Object, optional: true },
     };
@@ -92,6 +93,13 @@ export class SelectMenu extends Component {
         onWillUpdateProps((nextProps) => {
             if (this.props.value !== nextProps.value) {
                 this.selectedChoice = this.getSelectedChoice(nextProps);
+            }
+            if (
+                this.props.choices.length !== nextProps.choices.length ||
+                this.props.groups.length !== nextProps.groups.length
+            ) {
+                const groups = [{ choices: nextProps.choices }, ...nextProps.groups];
+                this.filterOptions(this.state.searchValue, groups);
             }
         });
     }
@@ -156,6 +164,10 @@ export class SelectMenu extends Component {
         }
     }
 
+    async executeOnInput(searchString) {
+        await this.props.onInput(searchString);
+    }
+
     onInput(searchString) {
         this.filterOptions(searchString);
         this.state.searchValue = searchString;
@@ -164,6 +176,9 @@ export class SelectMenu extends Component {
         const inputEl = this.inputRef.el;
         if (inputEl && inputEl.parentNode) {
             inputEl.parentNode.scrollTo(0, 0);
+        }
+        if (this.props.onInput) {
+            this.executeOnInput(searchString);
         }
     }
 
@@ -218,12 +233,12 @@ export class SelectMenu extends Component {
      *
      * @param {String} searchString
      */
-    filterOptions(searchString = "") {
-        const groups = [{ choices: this.props.choices }, ...this.props.groups];
+    filterOptions(searchString = "", groups) {
+        const groupsList = groups || [{ choices: this.props.choices }, ...this.props.groups];
 
         this.state.choices = [];
 
-        for (const group of groups) {
+        for (const group of groupsList) {
             let filteredOptions = [];
 
             if (searchString) {
