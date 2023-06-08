@@ -631,7 +631,8 @@ class IrHttp(models.AbstractModel):
         if not request.uid:
             cls._auth_method_public()
         cls._handle_debug()
-        cls._frontend_pre_dispatch()
+        if hasattr(request, 'lang'):
+            cls._frontend_pre_dispatch()
         request.params = request.get_http_params()
 
         code, values = cls._get_exception_code_values(exception)
