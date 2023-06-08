@@ -239,7 +239,7 @@ patch(PosStore.prototype, "pos_loyalty.PosStore", {
             }
             const index = this.rewards.indexOf(reward);
             if (index != -1) {
-                this.pos.env.services.popup.add(ErrorPopup, {
+                this.env.services.popup.add(ErrorPopup, {
                     title: _t("A reward could not be loaded"),
                     body: sprintf(
                         _t(

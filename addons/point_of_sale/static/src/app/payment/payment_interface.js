@@ -24,6 +24,7 @@ export class PaymentInterface {
     }
 
     setup(pos, payment_method) {
+        this.env = pos.env;
         this.pos = pos;
         this.payment_method = payment_method;
         this.supports_reversals = false;

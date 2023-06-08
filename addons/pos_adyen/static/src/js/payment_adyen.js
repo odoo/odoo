@@ -54,7 +54,7 @@ export class PaymentAdyen extends PaymentInterface {
 
     _call_adyen(data, operation) {
         // FIXME POSREF TIMEOUT 10000
-        return this.pos.env.services.orm.silent
+        return this.env.services.orm.silent
             .call("pos.payment.method", "proxy_adyen_request", [
                 [this.payment_method.id],
                 data,
@@ -196,7 +196,7 @@ export class PaymentAdyen extends PaymentInterface {
         }
 
         // FIXME POSREF TIMEOUT 5000
-        return this.pos.env.services.orm.silent
+        return this.env.services.orm.silent
             .call("pos.payment.method", "get_latest_adyen_status", [
                 [this.payment_method.id],
                 this._adyen_get_sale_id(),
@@ -345,7 +345,7 @@ export class PaymentAdyen extends PaymentInterface {
         if (!title) {
             title = _t("Adyen Error");
         }
-        this.pos.env.services.popup.add(ErrorPopup, {
+        this.env.services.popup.add(ErrorPopup, {
             title: title,
             body: msg,
         });
