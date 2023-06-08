@@ -1485,6 +1485,7 @@
 
     <template id="cart" name="Shopping Cart">
         <t t-call="website.layout">
+            <t t-call="website_sale.cart_popover"/>
             <div id="wrap">
                 <div class="container oe_website_sale py-2">
                     <div class="row">
@@ -1535,33 +1536,53 @@
 
     <!-- this template is the one when we mouse over "My Cart" on the top right -->
     <template id="cart_popover" name="Cart Popover">
-        <!-- let's not open the cart on hover if it's empty -->
-        <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
-          Your cart is empty!
-        </div>
-        <t t-if="website_sale_order and website_sale_order.website_order_line">
-            <t t-call="website_sale.cart_lines">
-                <t t-set="hide_suggested" t-value="true"/>
-                <t t-set="hide_remove_wishlist" t-value="true"/>
-                <t t-set="hide_description" t-value="true"/>
-                <t t-set="hide_qty" t-value="true"/>
-            </t>
-            <div class="text-center">
-                <span class="h6">
-                    <t t-call="website_sale.total">
-                        <t t-set="hide_promotions" t-value="True"/>
-                        <t t-set="only_subtotal" t-value="True"/>
-                    </t>
-                </span>
-                <a role="button" class="w-100 btn btn-outline-primary mb-2" href="/shop/cart">
-                    View Cart
-                </a>
-                <!-- /shop/payments because fallsback automatically to /checkout if there is no address yet -->
-                <a role="button" class="w-100 btn btn-primary" href="/shop/payment">
-                    Check out
-                </a>
+        <div class="container">
+            <div class="toast-container sticky-top end-0 mt-2 ms-auto">
+                <div class="toast o_cc1" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header justify-content-between">
+                        <strong>Item added to cart!</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        <t t-set="line" t-value="website_sale_order and website_sale_order.website_order_line[-1]"/>
+
+                        <div class="cart_line row g-2 mb-2">
+                            <div class="col-3">
+                                <span t-if="line._is_not_sellable_line() and line.product_id.image_128">
+                                    <img t-att-src="image_data_uri(line.product_id.image_128)" class="img o_image_64_max rounded mb-2 img-fluid" t-att-alt="line.name_short"/>
+                                </span>
+                                <span t-else=""
+                                      t-field="line.product_id.image_128"
+                                      t-options="{'widget': 'image', 'qweb_img_responsive': True, 'class': 'rounded o_image_64_max mb-2'}"
+                                />
+                            </div>
+                            <div class="col-6 d-flex flex-column align-items-start">
+                                <t t-out="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty"/>
+                                x
+                                <t t-out="line.name_short"/>
+                            </div>
+                            <div class="col-3 d-flex flex-column align-items-end gap-1">
+                                <span t-if="website.show_line_subtotals_tax_selection == 'tax_excluded'"
+                                      t-field="line.price_reduce_taxexcl" style="white-space: nowrap;"
+                                      t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
+                                      class="fw-bold"/>
+                                <span t-else=""
+                                      t-field="line.price_reduce_taxinc" style="white-space: nowrap;"
+                                      t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"
+                                      class="fw-bold"/>
+                                <button type="button"
+                                        role="button"
+                                        class="js_delete_product btn btn-light"
+                                        title="remove"><i class="fa fa-trash-o"/></button>
+                            </div>
+                            <button role="button" class="w-100 btn btn-primary" href="/shop/payment">
+                                View cart (<t t-out="'TODO'"/> items)
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </t>
+        </div>
     </template>
 
     <template id="suggested_products_list" inherit_id="website_sale.cart_lines" name="Accessory Products in my cart">
