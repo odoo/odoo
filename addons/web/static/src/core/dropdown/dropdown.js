@@ -106,16 +106,8 @@ export class Dropdown extends Component {
         const positioningOptions = {
             popper: "menuRef",
             position,
-            onPositioned: (el, { direction, variant }) => {
+            onPositioned: (el, { direction }) => {
                 this.state.directionCaretClass = DIRECTION_CARET_CLASS[direction];
-                if (this.parentDropdown && ["right", "left"].includes(direction)) {
-                    // Correctly align sub dropdowns items with its parent's
-                    if (variant === "start") {
-                        el.style.marginTop = "calc(-.5rem - 1px)";
-                    } else if (variant === "end") {
-                        el.style.marginTop = "calc(.5rem - 2px)";
-                    }
-                }
             },
         };
         if (this.props.container) {
