@@ -443,7 +443,7 @@ class AccountTestInvoicingCommon(TransactionCase):
                     'debit': -balance if balance < 0.0 else 0.0,
                     'credit': balance if balance > 0.0 else 0.0,
                     'amount_currency': -amount_currency,
-                    'account_id': self.revenue_account.id,
+                    'account_id': self.company_data['default_account_revenue'].id,
                     'currency_id': currency.id,
                     'partner_id': partner.id if partner else None,
                 }),
