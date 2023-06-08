@@ -592,10 +592,7 @@ actual arch.
         return super(View, self).unlink()
 
     def _update_field_translations(self, fname, translations, digest=None):
-        res = super()._update_field_translations(fname, translations, digest)
-        if fname == 'arch_db' and 'install_filename' not in self._context:
-            self.write({'arch_updated': True})
-        return res
+        return super(View, self.with_context(no_save_prev=True))._update_field_translations(fname, translations, digest)
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
