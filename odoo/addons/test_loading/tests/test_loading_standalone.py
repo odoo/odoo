@@ -19,14 +19,14 @@ from odoo.tests import standalone
 #   |
 #   |
 # +----------------+
-# | test_loading_1 | <-----+
-# +----------------+       |
-#   ^                      |
-#   |                      |
-#   |                      |
-# +----------------+     +----------------+
-# | test_loading_2 |     | test_loading_3 |
-# +----------------+     +----------------+
+# | test_loading_1 | <-----+----------------------+
+# +----------------+       |                      |
+#   ^                      |                      |
+#   |                      |                      |
+#   |                      |                      |
+# +----------------+     +----------------+     +----------------+
+# | test_loading_2 |     | test_loading_3 |     | test_loading_4 |
+# +----------------+     +----------------+     +----------------+
 #
 
 def _check_database_registry_consistency(env, model_name):
@@ -233,6 +233,37 @@ def test_05_install_hook(env):
     env.reset()
     env = env()
     assert env['test_loading_1.model']._description == 'Testing Loading Model 3'
+    _check_database_registry_consistency(env, 'test_loading_1.model')
+
+    get_manifest.cache_clear()
+
+@standalone('loading_standalone')
+def test_06_install_with_error(env):
+    test_00_cleanup(env)
+    env.reset()
+    env = env()
+    get_manifest.cache_clear()
+    manifest_test_loading_3 = get_manifest('test_loading_3')
+    manifest_test_loading_3['post_init_hook'] = 'post_init_hook_error'
+    env.ref('base.module_test_loading_4').button_immediate_install()
+
+    try:
+        (env.ref('base.module_test_loading_2') + env.ref('base.module_test_loading_3')).button_immediate_install()
+    except Exception as e:
+        pass
+
+    env.reset()
+    env = env()
+    assert env.ref('base.module_test_loading_2').state == 'installed'
+    assert env.ref('base.module_test_loading_3').state == 'uninstalled'
+    assert env['test_loading_1.model']._description == 'Testing Loading Model 4'
+    _check_database_registry_consistency(env, 'test_loading_1.model')
+
+    # reload the registry to check that the database is still consistent
+    Registry.new(env.registry.db_name)
+    env.reset()
+    env = env()
+    assert env['test_loading_1.model']._description == 'Testing Loading Model 4'
     _check_database_registry_consistency(env, 'test_loading_1.model')
 
     get_manifest.cache_clear()

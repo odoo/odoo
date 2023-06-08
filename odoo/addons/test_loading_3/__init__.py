@@ -12,3 +12,6 @@ def post_init_hook(env):
     module = env.ref('base.module_test_loading_2')
     if module:
         module.sudo().button_install()
+
+def post_init_hook_error(env):
+    raise Exception("Some error happen while installing test_loading_3")
