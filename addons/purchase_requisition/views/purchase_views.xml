@@ -18,7 +18,7 @@
                 <page string="Alternatives" name="alternative_pos">
                     <group>
                         <group>
-                            <p colspan="2">Create a call for tender by adding alternative request for quotations to different vendors.
+                            <p colspan="2">Create a call for tender by adding alternative requests for quotation to different vendors.
                             Make your choice by selecting the best combination of lead time, OTD and/or total amount.
                             By comparing product lines you can also decide to order some products from one vendor and others from another vendor.</p>
                         </group>
@@ -34,6 +34,7 @@
                             <control>
                                 <create string="Link to Existing RfQ"/>
                             </control>
+                            <field name="currency_id" column_invisible="1"/>
                             <field name="partner_id" readonly="state in ['cancel', 'done', 'purchase']"/>
                             <field name="name" string="Reference"/>
                             <field name="date_planned"/>
