@@ -1144,6 +1144,8 @@ class MailCase(MockEmail):
             'datetime': 'datetime',
             'integer': 'integer',
             'float': 'float',
+            'many2many': 'char',
+            'one2many': 'char',
             'selection': 'char',
             'text': 'text',
         }
