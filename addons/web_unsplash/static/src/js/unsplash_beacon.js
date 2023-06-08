@@ -10,7 +10,7 @@ publicWidget.registry.UnsplashBeacon = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        var unsplashImages = this.$('img[src*="/unsplash/"]').map((img) => {
+        var unsplashImages = Array.from(this.$('img[src*="/unsplash/"]')).map((img) => {
             // get image id from URL (`http://www.domain.com:1234/unsplash/xYdf5feoI/lion.jpg` -> `xYdf5feoI`)
             return img.src.split('/unsplash/')[1].split('/')[0];
         });
