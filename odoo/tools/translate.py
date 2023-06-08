@@ -1397,6 +1397,7 @@ class TranslationImporter:
         self.model_translations.clear()
 
         env.invalidate_all()
+        env.registry.clear_caches()
         if self.verbose:
             _logger.info("translations are loaded successfully")
 
