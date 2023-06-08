@@ -30,15 +30,19 @@ class AccountMove(models.Model):
         self.ensure_one()
         if self.partner_bank_id.l10n_ch_qr_iban and self.l10n_ch_is_qr_valid and self.name:
             invoice_ref = re.sub(r'[^\d]', '', self.name)
-            # keep only the last digits if it exceed boundaries
-            ref_payload_len = L10N_CH_QRR_NUMBER_LENGTH - 1
-            extra = len(invoice_ref) - ref_payload_len
-            if extra > 0:
-                invoice_ref = invoice_ref[extra:]
-            internal_ref = invoice_ref.zfill(ref_payload_len)
-            return mod10r(internal_ref)
+            return self._compute_qrr_number(invoice_ref)
         else:
             return False
+
+    @api.model
+    def _compute_qrr_number(self, invoice_ref):
+        # keep only the last digits if it exceed boundaries
+        ref_payload_len = L10N_CH_QRR_NUMBER_LENGTH - 1
+        extra = len(invoice_ref) - ref_payload_len
+        if extra > 0:
+            invoice_ref = invoice_ref[extra:]
+        internal_ref = invoice_ref.zfill(ref_payload_len)
+        return mod10r(internal_ref)
 
     def _get_invoice_reference_ch_invoice(self):
         """ This sets QRR reference number which is generated based on customer's `Bank Account` and set it as
