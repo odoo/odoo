@@ -1342,7 +1342,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_data_cell"));
         assert.containsOnce(target, ".o_selected_row");
 
-        await click(target, ".o_datepicker input");
+        await click(target, ".o_datepicker .o_datepicker_input");
         assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
         triggerHotkey("Escape");
         await nextTick();
@@ -1370,7 +1370,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_list_button_add"));
         assert.containsOnce(target, ".o_selected_row");
 
-        await click(target, ".o_datepicker input");
+        await click(target, ".o_datepicker .o_datepicker_input");
         assert.containsOnce(
             document.body,
             ".bootstrap-datetimepicker-widget",
@@ -7488,7 +7488,7 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o_field_widget[name=foo] input")
         );
 
-        await click(target, ".o_field_widget[name=date] input");
+        await click(target, ".o_field_widget[name=date] .o_datepicker_input");
         assert.strictEqual(
             document.activeElement,
             target.querySelector(".o_field_widget[name=date] input")
@@ -7510,6 +7510,39 @@ QUnit.module("Views", (hooks) => {
         );
         assert.strictEqual(document.activeElement.selectionStart, 0);
         assert.strictEqual(document.activeElement.selectionEnd, 10);
+    });
+
+    QUnit.test("text field should keep it's selection when clicking on it", async (assert) => {
+        serverData.models.foo.records[0].text = "1234";
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom" limit="1">
+                    <field name="text"/>
+                </tree>`,
+        });
+
+        await click(target, "td[name=text]");
+        assert.strictEqual(
+            window.getSelection().toString(),
+            "1234",
+            "the entire content should be selected on initial click"
+        );
+
+        Object.assign(
+            target.querySelector("[name=text] textarea"),
+            { selectionStart: 0, selectionEnd: 1 }
+        );
+
+        await click(target, "[name=text] textarea");
+
+        assert.strictEqual(
+            window.getSelection().toString(),
+            "1",
+            "the selection shouldn't be changed"
+        );
     });
 
     QUnit.test("click on a button in a list view", async function (assert) {
@@ -16576,19 +16609,22 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(td2.textContent, "61%");
     });
 
-    QUnit.test("Formatted group operator with digit precision on the field definition", async function (assert) {
-        serverData.models.foo.fields.qux.digits = [16, 3];
-        await makeView({
-            type: "list",
-            resModel: "foo",
-            serverData,
-            arch: '<tree><field name="qux"/></tree>',
-            groupBy: ["bar"],
-        });
-        const [td1, td2] = target.querySelectorAll("td.o_list_number");
-        assert.strictEqual(td1.textContent, "9.000");
-        assert.strictEqual(td2.textContent, "10.400");
-    });
+    QUnit.test(
+        "Formatted group operator with digit precision on the field definition",
+        async function (assert) {
+            serverData.models.foo.fields.qux.digits = [16, 3];
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: '<tree><field name="qux"/></tree>',
+                groupBy: ["bar"],
+            });
+            const [td1, td2] = target.querySelectorAll("td.o_list_number");
+            assert.strictEqual(td1.textContent, "9.000");
+            assert.strictEqual(td2.textContent, "10.400");
+        }
+    );
 
     QUnit.test("list view does not crash when clicked button cell", async function (assert) {
         await makeView({
