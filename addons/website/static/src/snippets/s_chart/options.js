@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import core from "web.core";
-import {ColorpickerWidget} from "web.Colorpicker";
 import options from "web_editor.snippets.options";
 import weUtils from "web_editor.utils";
+import { isCSSColor } from '@web/core/utils/colors';
 
 var _t = core._t;
 
@@ -78,7 +78,7 @@ options.registry.InnerChart = options.Class.extend({
             const color = el.dataset.backgroundColor || el.dataset.borderColor;
             if (color) {
                 el.style.border = '2px solid';
-                el.style.borderColor = ColorpickerWidget.isCSSColor(color) ? color : weUtils.getCSSVariableValue(color, this.style);
+                el.style.borderColor = isCSSColor(color) ? color : weUtils.getCSSVariableValue(color, this.style);
             }
         });
     },

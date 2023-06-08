@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<template id="iframe_css_assets_edit" name="CSS assets for wysiwyg iframe content for popup" groups="base.group_user">
-    <t t-call-assets="web.assets_frontend" t-js="false"/>
-    <t t-call-assets="web_editor.assets_wysiwyg" t-js="false"/>
-    <t t-call-assets="website.assets_editor" t-js="false"/>
-</template>
-
 <template id="remove_external_snippets" inherit_id="website.external_snippets">
     <xpath expr="//t[@id='newsletter_snippet']" position="replace"/>
     <xpath expr="//t[@id='newsletter_popup_snippet']" position="replace"/>

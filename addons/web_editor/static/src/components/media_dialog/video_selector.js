@@ -2,7 +2,6 @@
 
 import { useService } from '@web/core/utils/hooks';
 import { debounce } from '@web/core/utils/timing';
-import { qweb } from 'web.core';
 
 import { Component, useState, useRef, onMounted, onWillStart } from "@odoo/owl";
 
@@ -195,9 +194,15 @@ export class VideoSelector extends Component {
      */
     static createElements(selectedMedia) {
         return selectedMedia.map(video => {
-            const template = document.createElement('template');
-            template.innerHTML = qweb.render('web_editor.videoWrapper', { src: video.src });
-            return template.content.firstChild;
+            const div = document.createElement('div');
+            div.dataset.oeExpression = video.src;
+            div.innerHTML = `
+                <div class="css_editable_mode_display"></div>
+                <div class="media_iframe_video_size" contenteditable="false"></div>
+                <iframe frameborder="0" contenteditable="false" allowfullscreen="allowfullscreen"></iframe>
+            `;
+            div.querySelector('iframe').src = video.src;
+            return div;
         });
     }
 }

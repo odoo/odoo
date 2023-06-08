@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import options from "web_editor.snippets.options";
-import Wysiwyg from "website.wysiwyg";
+import { WysiwygAdapterComponent } from '@website/components/wysiwyg_adapter/wysiwyg_adapter';
 import { ComponentWrapper } from "web.OwlCompatibility";
 import { MediaDialog } from "@web_editor/components/media_dialog/media_dialog";
 import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog_wrapper";
@@ -9,30 +9,24 @@ import { useWowlService } from "@web/legacy/utils";
 import {qweb, _t} from "web.core";
 import {Markup} from "web.utils";
 import Dialog from "web.Dialog";
+import "website.editor.snippets.options";
+import { patch } from "@web/core/utils/patch";
 
 const { onRendered } = owl;
-
-Wysiwyg.include({
-    custom_events: Object.assign(Wysiwyg.prototype.custom_events, {
-        get_ribbons: '_onGetRibbons',
-        get_ribbon_classes: '_onGetRibbonClasses',
-        delete_ribbon: '_onDeleteRibbon',
-        set_ribbon: '_onSetRibbon',
-        set_product_ribbon: '_onSetProductRibbon',
-    }),
-
+patch(WysiwygAdapterComponent.prototype, 'website_sale/static/src/js/website_sale.editor.js', {
     /**
      * @override
      */
-    async willStart() {
-        const _super = this._super.bind(this);
+    async init() {
+        await this._super(...arguments);
+
         let ribbons = [];
         if (this._isProductListPage()) {
-            ribbons = await this._rpc({
-                model: 'product.ribbon',
-                method: 'search_read',
-                fields: ['id', 'html', 'bg_color', 'text_color', 'html_class'],
-            });
+            ribbons = await this.orm.searchRead(
+                'product.ribbon',
+                [],
+                ['id', 'html', 'bg_color', 'text_color', 'html_class'],
+            );
         }
         this.ribbons = Object.fromEntries(ribbons.map(ribbon => {
             ribbon.html = Markup(ribbon.html);
@@ -41,7 +35,6 @@ Wysiwyg.include({
         this.originalRibbons = Object.assign({}, this.ribbons);
         this.productTemplatesRibbons = [];
         this.deletedRibbonClasses = '';
-        return _super(...arguments);
     },
     /**
      * @override
@@ -82,31 +75,28 @@ Wysiwyg.include({
         const proms = [];
         let createdRibbonIds;
         if (created.length > 0) {
-            proms.push(this._rpc({
-                method: 'create',
-                model: 'product.ribbon',
-                args: [created.map(ribbon => {
+            proms.push(this.orm.create(
+                'product.ribbon',
+                created.map(ribbon => {
                     ribbon = Object.assign({}, ribbon);
                     delete ribbon.id;
                     return ribbon;
-                })],
-            }).then(ids => createdRibbonIds = ids));
+                }),
+            ).then(ids => createdRibbonIds = ids));
         }
 
-        modified.forEach(ribbon => proms.push(this._rpc({
-            method: 'write',
-            model: 'product.ribbon',
-            args: [[ribbon.id], ribbon],
-        })));
+        modified.forEach(ribbon => proms.push(this.orm.write(
+            'product.ribbon',
+            [ribbon.id],
+            ribbon,
+        )));
 
         if (deletedIds.length > 0) {
-            proms.push(this._rpc({
-                method: 'unlink',
-                model: 'product.ribbon',
-                args: [deletedIds],
-            }));
+            proms.push(this.orm.unlink(
+                'product.ribbon',
+                deletedIds,
+            ));
         }
-
         await Promise.all(proms);
         const localToServer = Object.assign(
             this.ribbons,
@@ -132,11 +122,11 @@ Wysiwyg.include({
             .map(([ribbonId, templateIds]) => {
                 const id = currentIds.includes(parseInt(ribbonId)) ? ribbonId : false;
                 return [id, templateIds];
-            }).map(([ribbonId, templateIds]) => this._rpc({
-                method: 'write',
-                model: 'product.template',
-                args: [templateIds, {'website_ribbon_id': localToServer[ribbonId].id}],
-            }));
+            }).map(([ribbonId, templateIds]) => this.orm.write(
+                'product.template',
+                templateIds,
+                {'website_ribbon_id': localToServer[ribbonId].id},
+            ));
         return Promise.all(setProductTemplateRibbons);
     },
     /**
@@ -202,6 +192,23 @@ Wysiwyg.include({
         const {templateId, ribbonId} = ev.data;
         this.productTemplatesRibbons.push({templateId, ribbonId});
     },
+    /**
+     * @override
+     */
+    _trigger_up(ev) {
+        const methods = {
+            get_ribbons: this._onGetRibbons.bind(this),
+            get_ribbon_classes: this._onGetRibbonClasses.bind(this),
+            delete_ribbon: this._onDeleteRibbon.bind(this),
+            set_ribbon: this._onSetRibbon.bind(this),
+            set_product_ribbon: this._onSetProductRibbon.bind(this),
+        }
+        if (methods[ev.name]) {
+            return methods[ev.name](ev);
+        } else {
+            return this._super(...arguments);
+        }
+    }
 });
 
 options.registry.WebsiteSaleGridLayout = options.Class.extend({

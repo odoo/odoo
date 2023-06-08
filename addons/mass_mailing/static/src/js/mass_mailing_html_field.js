@@ -10,10 +10,10 @@ import { qweb } from 'web.core';
 import { useService } from "@web/core/utils/hooks";
 import { buildQuery } from "web.rpc";
 import { HtmlField, htmlField } from "@web_editor/js/backend/html_field";
-import { getWysiwygClass } from 'web_editor.loader';
 import { device } from 'web.config';
 import { MassMailingMobilePreviewDialog } from "./mass_mailing_mobile_preview";
 import { getRangePosition } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
+import { MassMailingWysiwyg } from '@mass_mailing/js/mass_mailing_wysiwyg';
 
 const {
     onWillStart,
@@ -23,6 +23,18 @@ const {
 } = owl;
 
 export class MassMailingHtmlField extends HtmlField {
+    static props = {
+        ...standardFieldProps,
+        ...HtmlField.props,
+        filterTemplates: { type: Boolean, optional: true },
+        inlineField: { type: String, optional: true },
+        iframeHtmlClass: { type: String, optional: true },
+    }
+    static components = {
+        ...HtmlField.components,
+        Wysiwyg: MassMailingWysiwyg,
+    }
+
     setup() {
         super.setup();
 
@@ -49,8 +61,14 @@ export class MassMailingHtmlField extends HtmlField {
             onIframeUpdated: () => this.onIframeUpdated(),
             snippets: 'mass_mailing.email_designer_snippets',
             resizable: false,
-            defaultDataForLinkTools: { isNewWindow: true },
-            toolbarTemplate: 'mass_mailing.web_editor_toolbar',
+            linkOptions: {
+                ...super.wysiwygOptions.linkOptions,
+                initialIsNewWindow: true,
+            },
+            toolbarOptions: {
+                ...super.wysiwygOptions.toolbarOptions,
+                dropDirection: 'dropup',
+            },
             onWysiwygBlur: () => {
                 this.commitChanges();
                 this.wysiwyg.odooEditor.toolbarHide();
@@ -139,7 +157,7 @@ export class MassMailingHtmlField extends HtmlField {
             this.wysiwyg.odooEditor.historyRevertCurrentStep();
 
             const fieldName = this.props.inlineField;
-            await this.props.record.update({[fieldName]: this._unWrap(inlineHtml)});
+            await this.props.record.update({[fieldName]: inlineHtml});
         })();
         return this._pendingCommitChanges;
     }
@@ -180,6 +198,7 @@ export class MassMailingHtmlField extends HtmlField {
     }
 
     async _onSnippetsLoaded() {
+        if (status(this) === 'destroyed') return;
         if (this.wysiwyg.snippetsMenu && $(window.top.document).find('.o_mass_mailing_form_full_width')[0]) {
             // In full width form mode, ensure the snippets menu's scrollable is
             // in the form view, not in the iframe.
@@ -206,6 +225,7 @@ export class MassMailingHtmlField extends HtmlField {
         })
         // Templates taken from old mailings
         const result = await this.rpc(rpcQuery.route, rpcQuery.params);
+        if (status(this) === 'destroyed') return;
         const templatesParams = result.map(values => {
             return {
                 id: values.id,
@@ -589,7 +609,7 @@ export class MassMailingHtmlField extends HtmlField {
             this.wysiwyg.$editable[0].focus();
         }
         initializeDesignTabCss(this.wysiwyg.$editable);
-        this.wysiwyg.trigger('reload_snippet_dropzones');
+        this.wysiwyg.snippetsMenu.reload_snippet_dropzones();
         this.onIframeUpdated();
         this.wysiwyg.odooEditor.historyStep(true);
         // The value of the field gets updated upon editor blur. If for any
@@ -598,9 +618,6 @@ export class MassMailingHtmlField extends HtmlField {
         this._switchingTheme = true;
         await this.commitChanges();
         this._switchingTheme = false;
-    }
-    async _getWysiwygClass() {
-        return getWysiwygClass({moduleName: 'mass_mailing.wysiwyg'});
     }
     /**
      * @override
@@ -612,14 +629,6 @@ export class MassMailingHtmlField extends HtmlField {
         await super._setupReadonlyIframe();
     }
 }
-
-MassMailingHtmlField.props = {
-    ...standardFieldProps,
-    ...HtmlField.props,
-    filterTemplates: { type: Boolean, optional: true },
-    inlineField: { type: String, optional: true },
-    iframeHtmlClass: { type: String, optional: true },
-};
 
 export const massMailingHtmlField = {
     ...htmlField,

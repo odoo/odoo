@@ -338,7 +338,7 @@
             trigger: 'iframe .o_edit_menu_popover .o_we_edit_link',
         }, {
             content: "Check that no URL field is suggested",
-            trigger: '#toolbar:has(#url_row:hidden)',
+            trigger: '.oe-toolbar:not(.oe-floating):has(#url_row:hidden)',
             run: () => null,
         }, {
             content: "Change button's style",

@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { useService } from '@web/core/utils/hooks';
-import { useWowlService } from '@web/legacy/utils';
 import { Dialog } from '@web/core/dialog/dialog';
 import { Notebook } from '@web/core/notebook/notebook';
 import { ImageSelector } from './image_selector';
@@ -9,7 +8,7 @@ import { DocumentSelector } from './document_selector';
 import { IconSelector } from './icon_selector';
 import { VideoSelector } from './video_selector';
 
-import { Component, useState, onRendered, xml } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 export const TABS = {
     IMAGES: {

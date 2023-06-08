@@ -1,9 +1,9 @@
 /** @odoo-module alias=website.s_countdown **/
 
-import {ColorpickerWidget} from "web.Colorpicker";
 import core from "web.core";
 import publicWidget from "web.public.widget";
 import weUtils from "web_editor.utils";
+import { isCSSColor } from '@web/core/utils/colors';
 
 const qweb = core.qweb;
 const _t = core._t;
@@ -83,7 +83,7 @@ const CountdownWidget = publicWidget.Widget.extend({
      * @returns {string}
      */
     _ensureCssColor: function (color) {
-        if (ColorpickerWidget.isCSSColor(color)) {
+        if (isCSSColor(color)) {
             return color;
         }
         return weUtils.getCSSVariableValue(color) || this.defaultColor;

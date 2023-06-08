@@ -22,6 +22,23 @@ Odoo Web Editor widget.
         # MAIN BUNDLES
         #----------------------------------------------------------------------
 
+        'web_editor.assets_legacy_wysiwyg': [
+            'web_editor/static/src/js/editor/snippets.editor.js',
+            'web_editor/static/src/js/editor/snippets.options.js',
+        ],
+        'web_editor.wysiwyg_iframe_editor_assets': [
+            ('include', 'web.assets_common'),
+            ('include', 'web_editor.assets_wysiwyg'),
+            ('include', 'web_editor.assets_legacy_wysiwyg'),
+        ],
+        'web_editor.assets_media_dialog': [
+            'web_editor/static/src/components/**/*',
+        ],
+        'web_editor.assets_tests_styles': [
+            ('include', 'web._assets_helpers'),
+            'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
+            'web_editor/static/src/js/editor/odoo-editor/src/checklist.scss',
+        ],
         'web_editor.assets_wysiwyg': [
             # lib
             'web_editor/static/lib/cropperjs/cropper.css',
@@ -53,6 +70,8 @@ Odoo Web Editor widget.
             # utils
             'web_editor/static/src/js/wysiwyg/linkDialogCommand.js',
             'web_editor/static/src/js/wysiwyg/PeerToPeer.js',
+            'web_editor/static/src/js/wysiwyg/conflict_dialog.js',
+            'web_editor/static/src/js/wysiwyg/conflict_dialog.xml',
 
             # odoo utils
             ('include', 'web._assets_helpers'),
@@ -73,13 +92,11 @@ Odoo Web Editor widget.
 
             # widgets & plugins
             'web_editor/static/src/js/wysiwyg/widgets/**/*',
-            'web_editor/static/src/js/editor/snippets.editor.js',
             'web_editor/static/src/js/editor/toolbar.js',
-            'web_editor/static/src/js/editor/snippets.options.js',
 
             # Launcher
+            'web_editor/static/src/js/wysiwyg/wysiwyg_jquery_extention.js',
             'web_editor/static/src/js/wysiwyg/wysiwyg.js',
-            'web_editor/static/src/js/wysiwyg/widget.js',
             'web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js',
 
             'web_editor/static/src/xml/editor.xml',
@@ -88,14 +105,6 @@ Odoo Web Editor widget.
             'web_editor/static/src/xml/snippets.xml',
             'web_editor/static/src/xml/wysiwyg.xml',
             'web_editor/static/src/xml/wysiwyg_colorpicker.xml',
-        ],
-        'web_editor.assets_media_dialog': [
-            'web_editor/static/src/components/**/*',
-        ],
-        'web_editor.assets_tests_styles': [
-            ('include', 'web._assets_helpers'),
-            'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
-            'web_editor/static/src/js/editor/odoo-editor/src/checklist.scss',
         ],
         'web.assets_common': [
             'web_editor/static/src/js/editor/odoo-editor/src/base_style.scss',
@@ -116,10 +125,11 @@ Odoo Web Editor widget.
             'web_editor/static/src/scss/web_editor.common.scss',
             'web_editor/static/src/scss/web_editor.backend.scss',
 
-            'web_editor/static/src/js/wysiwyg/dialog.js',
             'web_editor/static/src/js/frontend/loader.js',
             'web_editor/static/src/js/backend/**/*',
             'web_editor/static/src/xml/backend.xml',
+
+            ('include', 'web_editor.assets_wysiwyg'),
         ],
         "web.dark_mode_assets_backend": [
             'web_editor/static/src/scss/odoo-editor/powerbox.dark.scss',
@@ -144,8 +154,8 @@ Odoo Web Editor widget.
             'web_editor/static/src/scss/web_editor.common.scss',
             'web_editor/static/src/scss/web_editor.frontend.scss',
 
-            'web_editor/static/src/js/wysiwyg/dialog.js',
             'web_editor/static/src/js/frontend/loader.js',
+            'web_editor/static/src/js/frontend/loadWysiwygFromTextarea.js',
         ],
 
         #----------------------------------------------------------------------
@@ -172,7 +182,7 @@ Odoo Web Editor widget.
         # ----------------------------------------------------------------------
 
         'web.qunit_suite_tests': [
-            ('include', 'web_editor.assets_wysiwyg'),
+            ('include', 'web_editor.assets_legacy_wysiwyg'),
 
             'web_editor/static/tests/**/*',
             'web_editor/static/src/js/editor/odoo-editor/test/utils.js'

@@ -57,43 +57,70 @@
     </t>
 
     <!-- options -->
-    <div t-name="web_editor.snippet.option.colorpicker" class="colorpicker">
+    <div t-name="web_editor.ColorPalette" class="colorpicker" owl="1" t-ref="el">
         <div class="o_we_colorpicker_switch_panel d-flex justify-content-end px-2">
-            <t t-set="first_button_name"><t t-if="widget.withCombinations">Theme</t><t t-else="">Solid</t></t>
-            <button type="button" tabindex="1" class="o_we_colorpicker_switch_pane_btn" t-attf-data-target="#{widget.withCombinations? 'color-combinations' : 'theme-colors'}"
-                    t-att-title="first_button_name">
+            <t t-set="first_button_name"><t t-if="props.withCombinations">Theme</t><t t-else="">Solid</t></t>
+            <button type="button" tabindex="1" class="o_we_colorpicker_switch_pane_btn" t-attf-data-target="#{props.withCombinations ? 'color-combinations' : 'theme-colors'}"
+                    t-att-title="first_button_name"
+                    t-on-click="this._onSwitchPaneButtonClick">
                 <span t-out="first_button_name"/>
             </button>
-            <button type="button" tabindex="2" class="o_we_colorpicker_switch_pane_btn" data-target="custom-colors" title="Custom">
+            <button type="button" tabindex="2" class="o_we_colorpicker_switch_pane_btn" data-target="custom-colors" title="Custom"
+                    t-on-click="this._onSwitchPaneButtonClick">
                 <span>Custom</span>
             </button>
-            <button type="button" tabindex="3" class="o_we_colorpicker_switch_pane_btn" data-target="gradients" title="Gradient">
+            <button type="button" tabindex="3" class="o_we_colorpicker_switch_pane_btn" data-target="gradients" title="Gradient"
+                    t-on-click="this._onSwitchPaneButtonClick">
                 <span>Gradient</span>
             </button>
-            <t t-if="widget.resetButton">
-                <t t-set="trash_title"><t t-if="widget.withCombinations">None</t><t t-else="">Reset</t></t>
-                <button type="button" class="fa fa-trash my-1 ms-5 py-0 o_we_color_btn o_colorpicker_reset o_we_hover_danger" t-att-title="trash_title"/>
+            <t t-if="props.resetButton">
+                <t t-set="trash_title"><t t-if="props.withCombinations">None</t><t t-else="">Reset</t></t>
+                <button type="button" class="fa fa-trash my-1 ms-5 py-0 o_we_color_btn o_colorpicker_reset o_we_hover_danger" t-att-title="trash_title" />
             </t>
         </div>
         <div class="o_colorpicker_sections pt-2 px-2 pb-3" data-color-tab="color-combinations">
             <!-- List all Presets -->
-            <t t-foreach="5" t-as="i">
-                <t t-call="web_editor.colorpalette.combination.btn">
-                    <t t-set="number" t-value="i + 1"/>
-                </t>
+            <t t-foreach="[1, 2, 3, 4, 5]" t-as="number" t-key="number">
+                <button type="button" class="o_we_color_btn o_we_color_combination_btn"
+                        t-att-data-color="number" t-attf-title="Preset #{number}">
+                    <t t-call="web_editor.color.combination.preview"/>
+                </button>
             </t>
         </div>
         <div class="o_colorpicker_sections py-3 px-2" data-color-tab="theme-colors"/>
-        <div class="o_colorpicker_sections py-3 px-2" data-color-tab="custom-colors"/>
-        <div class="o_colorpicker_sections py-3 px-2" data-color-tab="gradients"/>
+        <div class="o_colorpicker_sections py-3 px-2" data-color-tab="custom-colors">
+            <div class="o_colorpicker_section_container"/>
+            <Colorpicker
+                document="this.props.document"
+                defaultColor="this.state.customDefaultColor"
+                noTransparency="!!this.props.noTransparency"
+                selectedColor="this.state.customSelectedColor"
+                onColorSelect.bind="_onColorPickerSelect"
+                onColorPreview.bind="_onColorPickerPreview"
+                onInputEnter="props.onInputEnter"/>
+        </div>
+        <div class="o_colorpicker_sections py-3 px-2" data-color-tab="gradients">
+            <div class="o_colorpicker_section_container"/>
+            <t t-if="state.showGradientPicker">
+                <Colorpicker
+                    document="this.props.document"
+                    stopClickPropagation="true"
+                    selectedColor="this.state.gradientSelectedColor"
+                    onColorSelect.bind="_onColorPickerSelectGradient"
+                    onColorPreview.bind="_onColorPickerPreviewGradient"
+                    onInputEnter="props.onInputEnter"/>
+            </t>
+        </div>
     </div>
-    <t t-name="web_editor.colorpalette.combination.btn">
-        <button type="button" class="o_we_color_btn o_we_color_combination_btn"
-                t-att-data-color="number" t-attf-title="Preset #{number}">
-            <t t-call="web_editor.color.combination.preview"/>
-        </button>
+    <t t-name="web_editor.color.combination.preview" owl="1">
+        <div class="o_we_cc_preview_wrapper d-flex justify-content-between">
+            <h1 class="o_we_color_combination_btn_title">Title</h1>
+            <p class="o_we_color_combination_btn_text flex-grow-1">Text</p>
+            <span class="o_we_color_combination_btn_btn btn btn-sm btn-primary o_btn_preview me-1"><small>Button</small></span>
+            <span class="o_we_color_combination_btn_btn btn btn-sm btn-secondary o_btn_preview"><small>Button</small></span>
+        </div>
     </t>
-    <t t-name="web_editor.color.combination.preview">
+    <t t-name="web_editor.color.combination.preview.legacy">
         <div class="o_we_cc_preview_wrapper d-flex justify-content-between">
             <h1 class="o_we_color_combination_btn_title">Title</h1>
             <p class="o_we_color_combination_btn_text flex-grow-1">Text</p>

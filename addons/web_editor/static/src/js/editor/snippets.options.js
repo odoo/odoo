@@ -3,7 +3,6 @@
 import { ComponentWrapper } from "web.OwlCompatibility";
 import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_dialog_wrapper";
 import core from "web.core";
-import {ColorpickerWidget} from "web.Colorpicker";
 import Dialog from "web.Dialog";
 import {scrollTo} from "web.dom";
 import rpc from "web.rpc";
@@ -11,7 +10,7 @@ import time from "web.time";
 import { throttleForAnimation, debounce } from "@web/core/utils/timing";
 import utils from "web.utils";
 import Widget from "web.Widget";
-import { ColorPaletteWidget } from "web_editor.ColorPalette";
+import { ColorPalette } from '@web_editor/js/wysiwyg/widgets/color_palette';
 import weUtils from "web_editor.utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
 const {
@@ -22,7 +21,7 @@ const {
     DEFAULT_PALETTE,
     isBackgroundImageAttribute,
 } = weUtils;
-import weWidgets from "wysiwyg.widgets";
+import { ImageCrop } from '@web_editor/js/wysiwyg/widgets/image_crop';
 import {
     loadImage,
     loadImageInfo,
@@ -38,6 +37,11 @@ import {SIZES, MEDIAS_BREAKPOINTS} from "@web/core/ui/ui_service";
 import { sprintf } from "@web/core/utils/strings";
 import { uniqueId } from "@web/core/utils/functions";
 import { pick } from "@web/core/utils/objects";
+import {
+    isCSSColor,
+    convertCSSColorToRgba,
+    normalizeCSSColor,
+ } from '@web/core/utils/colors';
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -1404,13 +1408,6 @@ const MultiUserValueWidget = UserValueWidget.extend({
 
 const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     className: (SelectUserValueWidget.prototype.className || '') + ' o_we_so_color_palette',
-    custom_events: Object.assign({}, SelectUserValueWidget.prototype.custom_events, {
-        'custom_color_picked': '_onCustomColorPicked',
-        'color_picked': '_onColorPicked',
-        'color_hover': '_onColorHovered',
-        'color_leave': '_onColorLeft',
-        'enter_key_color_colorpicker': '_onEnterKey'
-    }),
 
     /**
      * @override
@@ -1419,21 +1416,20 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         const _super = this._super.bind(this);
         const args = arguments;
 
-        if (this.options.dataAttributes.lazyPalette === 'true') {
-            // TODO review in master, this was done in stable to keep the speed
-            // fix as stable as possible (to have a reference to a widget even
-            // if not a colorPalette widget).
-            this.colorPalette = new Widget(this);
-            this.colorPalette.getColorNames = () => [];
-            await this.colorPalette.appendTo(document.createDocumentFragment());
-        } else {
+        if (!this.options.dataAttributes.lazyPalette === 'true') {
             await this._renderColorPalette();
         }
 
         // Build the select element with a custom span to hold the color preview
         this.colorPreviewEl = document.createElement('span');
         this.colorPreviewEl.classList.add('o_we_color_preview');
-        this.options.childNodes = [this.colorPalette.el];
+        // todo: This div should be removed whenever possible (like when
+        // converting the uservaluewidget to owl).
+        this.colorPaletteEl = document.createElement('div');
+        this.colorPaletteEl.classList.add('o_we_color_palette_wrapper');
+        this.colorPaletteEl.style.display = 'contents';
+        this.colorPaletteColorNames = [];
+        this.options.childNodes = [this.colorPaletteEl];
         this.options.valueEl = this.colorPreviewEl;
 
         return _super(...args);
@@ -1447,8 +1443,12 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @override
      */
     open: function () {
-        if (this.colorPalette.setSelectedColor) {
-            this.colorPalette.setSelectedColor(this._ccValue, this._value);
+        if (this.colorPaletteWrapper) {
+            this.colorPaletteWrapper?.update({
+                selectedCC: this._ccValue,
+                selectedColor: this._value,
+                resetTabCount: this.colorPaletteWrapper.node.component.props.props.resetTabCount + 1,
+            });
         } else {
             // TODO review in master, this does async stuff. Maybe the open
             // method should now be async. This is not really robust as the
@@ -1475,7 +1475,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     getMethodsParams: function () {
         return Object.assign(this._super(...arguments), {
-            colorNames: this.colorPalette.getColorNames(),
+            colorNames: this.colorPaletteColorNames,
         });
     },
     /**
@@ -1501,7 +1501,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             // in this code.
             const useCssColor = this.options.dataAttributes.hasOwnProperty('useCssColor');
             const cssCompatible = this.options.dataAttributes.hasOwnProperty('cssCompatible');
-            if ((useCssColor || cssCompatible) && !ColorpickerWidget.isCSSColor(value)) {
+            if ((useCssColor || cssCompatible) && !isCSSColor(value)) {
                 if (useCssColor) {
                     value = weUtils.getCSSVariableValue(value);
                 } else {
@@ -1543,7 +1543,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
 
         await this._colorPaletteRenderPromise;
 
-        const classes = weUtils.computeColorClasses(this.colorPalette.getColorNames());
+        const classes = weUtils.computeColorClasses(this.colorPaletteColorNames);
         this.colorPreviewEl.classList.remove(...classes);
         this.colorPreviewEl.style.removeProperty('background-color');
         this.colorPreviewEl.style.removeProperty('background-image');
@@ -1552,7 +1552,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             this.colorPreviewEl.style.backgroundColor = `var(--we-cp-o-cc${this._ccValue}-${prefix.replace(/-/, '')})`;
         }
         if (this._value) {
-            if (ColorpickerWidget.isCSSColor(this._value)) {
+            if (isCSSColor(this._value)) {
                 this.colorPreviewEl.style.backgroundColor = this._value;
             } else if (weUtils.isColorGradient(this._value)) {
                 this.colorPreviewEl.style.backgroundImage = this._value;
@@ -1580,9 +1580,10 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         }
         // If the palette was already opened (e.g. modifying a gradient), the new DOM state must be
         // reflected in the palette, but the tab selection must not be impacted.
-        if (this.colorPalette.setSelectedColor) {
-            this.colorPalette.setSelectedColor(this._ccValue, this._value, false);
-        }
+        this.colorPaletteWrapper?.update({
+            selectedCC: this._ccValue,
+            selectedColor: this._value,
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -1595,8 +1596,24 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      */
     _renderColorPalette: function () {
         const options = {
+            resetTabCount: 0,
             selectedCC: this._ccValue,
             selectedColor: this._value,
+            onSetColorNames: (colorNames) => {
+                this.colorPaletteColorNames = colorNames
+            },
+            getCustomColors: () => {
+                let result = [];
+                this.trigger_up('get_custom_colors', {
+                    onSuccess: (colors) => result = colors,
+                });
+                return result;
+            },
+            onCustomColorPicked: this._onCustomColorPicked.bind(this),
+            onColorPicked: this._onColorPicked.bind(this),
+            onColorHover: this._onColorHovered.bind(this),
+            onColorLeave: this._onColorLeft.bind(this),
+            onInputEnter: this._onEnterKey.bind(this),
         };
         if (this.options.dataAttributes.excluded) {
             options.excluded = this.options.dataAttributes.excluded.replace(/ /g, '').split(',');
@@ -1617,15 +1634,16 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
         if (this.options.dataAttributes.selectedTab) {
             options.selectedTab = this.options.dataAttributes.selectedTab;
         }
-
-        const oldColorPalette = this.colorPalette;
-        this.colorPalette = new ColorPaletteWidget(this, options);
-        if (oldColorPalette) {
-            return this.colorPalette.insertAfter(oldColorPalette.el).then(() => {
-                oldColorPalette.destroy();
-            });
+        const wysiwyg = this.getParent().options.wysiwyg;
+        if (wysiwyg) {
+            options.document = this.$target[0].ownerDocument;
         }
-        return this.colorPalette.appendTo(document.createDocumentFragment());
+        if (this.colorPaletteWrapper) {
+            this.colorPaletteWrapper.destroy();
+        }
+        this.colorPaletteWrapper = new ComponentWrapper(this, ColorPalette, options);
+
+        return this.colorPaletteWrapper.mount(this.colorPaletteEl);
     },
     /**
      * @override
@@ -1643,48 +1661,47 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * and set the current value. Update of this value on close
      *
      * @private
-     * @param {Event} ev
+     * @param {Object} params
      */
-    _onCustomColorPicked: function (ev) {
-        this._customColorValue = ev.data.color;
+    _onCustomColorPicked: function (params) {
+        this._customColorValue = params.color;
     },
     /**
      * Called when a color button is clicked -> confirms the preview.
      *
      * @private
-     * @param {Event} ev
+     * @param {Object} params
      */
-    _onColorPicked: function (ev) {
+    _onColorPicked: function (params) {
         this._previewCC = false;
         this._previewColor = false;
         this._customColorValue = false;
 
-        this._ccValue = ev.data.ccValue;
-        this._value = ev.data.color;
+        this._ccValue = params.ccValue;
+        this._value = params.color;
 
-        this._onUserValueChange(ev);
+        this._onUserValueChange();
     },
     /**
      * Called when a color button is entered -> previews the background color.
      *
      * @private
-     * @param {Event} ev
+     * @param {Object} params
      */
-    _onColorHovered: function (ev) {
-        this._previewCC = ev.data.ccValue;
-        this._previewColor = ev.data.color;
-        this._onUserValuePreview(ev);
+    _onColorHovered: function (params) {
+        this._previewCC = params.ccValue;
+        this._previewColor = params.color;
+        this._onUserValuePreview();
     },
     /**
      * Called when a color button is left -> cancels the preview.
      *
      * @private
-     * @param {Event} ev
      */
-    _onColorLeft: function (ev) {
+    _onColorLeft: function () {
         this._previewCC = false;
         this._previewColor = false;
-        this._onUserValueReset(ev);
+        this._onUserValueReset();
     },
     /**
      * @private
@@ -3904,7 +3921,7 @@ const SnippetOptionWidget = Widget.extend({
                             return '';
                         }
                     } else {
-                        const rgba = ColorpickerWidget.convertCSSColorToRgba(value);
+                        const rgba = convertCSSColorToRgba(value);
                         if (rgba && rgba.opacity < 0.001) {
                             // Prevent to consider a transparent color is
                             // applied as background unless it is to override a
@@ -3980,7 +3997,7 @@ const SnippetOptionWidget = Widget.extend({
      */
     _normalizeWidgetValue: function (value) {
         value = `${value}`.trim(); // Force to a trimmed string
-        value = ColorpickerWidget.normalizeCSSColor(value); // If is a css color, normalize it
+        value = normalizeCSSColor(value); // If is a css color, normalize it
         return value;
     },
     /**
@@ -5464,13 +5481,18 @@ registry.SnippetMove = SnippetOptionWidget.extend({
  * Allows for media to be replaced.
  */
 registry.ReplaceMedia = SnippetOptionWidget.extend({
+    init: function () {
+        this._super(...arguments);
+        this._activateLinkTool = this._activateLinkTool.bind(this);
+        this._deactivateLinkTool = this._deactivateLinkTool.bind(this);
+    },
 
     /**
      * @override
      */
     onFocus() {
-        core.bus.on('activate_image_link_tool', this, this._activateLinkTool);
-        core.bus.on('deactivate_image_link_tool', this, this._deactivateLinkTool);
+        this.options.wysiwyg.odooEditor.addEventListener('activate_image_link_tool', this._activateLinkTool);
+        this.options.wysiwyg.odooEditor.addEventListener('deactivate_image_link_tool', this._deactivateLinkTool);
         // When we start editing an image, rerender the UI to ensure the
         // we-select that suggests the anchors is in a consistent state.
         this.rerender = true;
@@ -5479,8 +5501,8 @@ registry.ReplaceMedia = SnippetOptionWidget.extend({
      * @override
      */
     onBlur() {
-        core.bus.off('activate_image_link_tool', this, this._activateLinkTool);
-        core.bus.off('deactivate_image_link_tool', this, this._deactivateLinkTool);
+        this.options.wysiwyg.odooEditor.removeEventListener('activate_image_link_tool', this._activateLinkTool);
+        this.options.wysiwyg.odooEditor.removeEventListener('deactivate_image_link_tool', this._deactivateLinkTool);
     },
 
     //--------------------------------------------------------------------------
@@ -6038,7 +6060,16 @@ registry.ImageTools = ImageHandlerOption.extend({
         this.trigger_up('hide_overlay');
         this.trigger_up('disable_loading_effect');
         const img = this._getImg();
-        new weWidgets.ImageCropWidget(this, img, {mimetype: this._getImageMimetype(img)}).appendTo(this.$el[0].ownerDocument.body);
+        const document = this.$el[0].ownerDocument;
+        const imageCropWrapper = new ComponentWrapper(this, ImageCrop, {
+            rpc: this._rpc.bind(this),
+            activeOnStart: true,
+            media: img,
+            mimetype: this._getImageMimetype(img),
+        });
+        const imageCropWrapperElement = document.createElement('div');
+        document.body.append(imageCropWrapperElement);
+        await imageCropWrapper.mount(imageCropWrapperElement);
 
         await new Promise(resolve => {
             this.$target.one('image_cropper_destroyed', async () => {
@@ -6047,6 +6078,7 @@ registry.ImageTools = ImageHandlerOption.extend({
                 }
                 await this._reapplyCurrentShape();
                 resolve();
+                imageCropWrapperElement.remove();
             });
         });
         this.trigger_up('enable_loading_effect');
@@ -6088,9 +6120,24 @@ registry.ImageTools = ImageHandlerOption.extend({
      */
     async resetCrop() {
         const img = this._getImg();
-        const cropper = new weWidgets.ImageCropWidget(this, img, {mimetype: this._getImageMimetype(img)});
-        await cropper.appendTo(this.$el[0].ownerDocument.body);
-        await cropper.reset();
+
+        // Mount the ImageCrop to call the reset method. As we need the state of
+        // the component to be mounted before calling reset, mount it
+        // temporarily into the body.
+        const imageCropWrapper = new ComponentWrapper(this, ImageCrop, {
+            rpc: this._rpc.bind(this),
+            activeOnStart: true,
+            media: img,
+            mimetype: this._getImageMimetype(img),
+        });
+        const imageCropWrapperElement = document.createElement('div');
+        document.body.append(imageCropWrapperElement);
+        await imageCropWrapper.mount(imageCropWrapperElement);
+        await imageCropWrapper.componentRef.comp.mountedPromise;
+        await imageCropWrapper.componentRef.comp.reset();
+        imageCropWrapper.unmount();
+        imageCropWrapperElement.remove();
+
         await this._reapplyCurrentShape();
     },
     /**
@@ -6425,7 +6472,7 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @returns {string}
      */
     _getCSSColorValue(color) {
-        if (!color || ColorpickerWidget.isCSSColor(color)) {
+        if (!color || isCSSColor(color)) {
             return color;
         }
         return weUtils.getCSSVariableValue(color);
@@ -6710,7 +6757,7 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
         let filterEl = this.$target[0].querySelector(':scope > .o_we_bg_filter');
 
         // If the filter would be transparent, remove it / don't create it.
-        const rgba = widgetValue && ColorpickerWidget.convertCSSColorToRgba(widgetValue);
+        const rgba = widgetValue && convertCSSColorToRgba(widgetValue);
         if (!widgetValue || rgba && rgba.opacity < 0.001) {
             if (filterEl) {
                 filterEl.remove();

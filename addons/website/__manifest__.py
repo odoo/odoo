@@ -205,6 +205,11 @@
         'web._assets_frontend_helpers': [
             ('prepend', 'website/static/src/scss/bootstrap_overridden.scss'),
         ],
+        'web_editor.assets_wysiwyg': [
+            'website/static/src/js/editor/editor.js',
+            '/website/static/src/components/wysiwyg_adapter/toolbar_patch.js',
+            'website/static/src/xml/web_editor.xml',
+        ],
         'website.assets_wysiwyg': [
             ('include', 'web._assets_helpers'),
             'web_editor/static/src/scss/bootstrap_overridden.scss',
@@ -212,7 +217,6 @@
             'web/static/lib/bootstrap/scss/_variables.scss',
             'website/static/src/scss/website.wysiwyg.scss',
             'website/static/src/scss/website.edit_mode.scss',
-            'website/static/src/js/editor/editor.js',
             'website/static/src/js/editor/snippets.editor.js',
             'website/static/src/js/editor/snippets.options.js',
             'website/static/src/snippets/s_facebook_page/options.js',
@@ -246,7 +250,6 @@
             'website/static/src/snippets/s_searchbar/options.js',
             'website/static/src/snippets/s_social_media/options.js',
             'website/static/src/snippets/s_process_steps/options.js',
-            'website/static/src/js/editor/wysiwyg.js',
             'website/static/src/js/editor/widget_link.js',
             'website/static/src/js/widgets/link_popover_widget.js',
             'website/static/src/xml/website.cookies_bar.xml',
