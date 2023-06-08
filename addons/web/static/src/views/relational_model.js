@@ -3556,6 +3556,9 @@ export class RelationalModel extends Model {
     }
 
     hasData() {
+        if (this.root.groups) {
+            return this.root.groups.some((group) => group.count > 0 || group.quickCreateRecord);
+        }
         return this.root.count > 0;
     }
 

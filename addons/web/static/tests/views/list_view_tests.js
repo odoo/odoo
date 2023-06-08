@@ -17646,4 +17646,29 @@ QUnit.module("Views", (hooks) => {
         await toggleMenuItem(target, "filter");
         assert.containsN(target, ".o_group_header", 2, "outer groups are closed");
     });
+
+    QUnit.test("show no content helper when groups are empty", async (assert) => {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/></tree>',
+            groupBy: ["bar"],
+            noContentHelp: '<p class="hello">click to add a foo</p>',
+            mockRPC(route, { method }) {
+                if (method === "web_read_group") {
+                    return {
+                        groups: [
+                            { bar: true, bar_count: 0, __domain: [["bar", "=", true]] },
+                            { bar: false, bar_count: 0, __domain: [["bar", "=", false]] },
+                        ],
+                        length: 2,
+                    };
+                }
+            },
+        });
+
+        assert.containsOnce(target, ".o_nocontent_help");
+        assert.containsN(target, ".o_group_header", 2);
+    });
 });
