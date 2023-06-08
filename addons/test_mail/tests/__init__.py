@@ -17,7 +17,6 @@ from . import test_mail_thread_internals
 from . import test_mail_thread_mixins
 from . import test_mail_template
 from . import test_mail_template_preview
-from . import test_mail_tracking_duration_mixin
 from . import test_message_management
 from . import test_message_post
 from . import test_message_track
