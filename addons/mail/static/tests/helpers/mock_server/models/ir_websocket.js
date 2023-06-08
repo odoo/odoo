@@ -1,10 +1,10 @@
-/** @odoo-module **/
-
-import { patch } from "@web/core/utils/patch";
-import { MockServer } from "@web/../tests/helpers/mock_server";
+/* @odoo-module */
 
 // ensure bus override is applied first.
 import "@bus/../tests/helpers/mock_server";
+
+import { patch } from "@web/core/utils/patch";
+import { MockServer } from "@web/../tests/helpers/mock_server";
 
 patch(MockServer.prototype, "mail/models/ir_websocket", {
     /**

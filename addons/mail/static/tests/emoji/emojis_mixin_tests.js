@@ -1,4 +1,5 @@
-/** @odoo-module **/
+/* @odoo-module */
+
 import EmojiMixin from "@mail/js/emojis_mixin";
 
 QUnit.module("emojis mixin");

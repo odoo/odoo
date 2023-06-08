@@ -1,12 +1,14 @@
-/** @odoo-module */
+/* @odoo-module */
+
+import { isValidEmail } from "@im_livechat/embed/core/misc";
 
 import { Component, useState } from "@odoo/owl";
+
 import { useService } from "@web/core/utils/hooks";
-import { isValidEmail } from "../core/misc";
 
 /**
  * @typedef {Object} Props
- * @property {import("@mail/core/thread_model").Thread}
+ * @property {import("@mail/core/common/thread_model").Thread}
  * @extends {Component<Props, Env>}
  */
 export class TranscriptSender extends Component {

@@ -3,7 +3,7 @@
 import {
     EmojisTextField,
     emojisTextField,
-} from "@mail/views/fields/emojis_text_field/emojis_text_field";
+} from "@mail/views/web/fields/emojis_text_field/emojis_text_field";
 import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 

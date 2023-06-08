@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
@@ -56,9 +56,10 @@ patch(MockServer.prototype, "mail/models/res_users_settings", {
             res.user_id = { id: settings.user_id };
         }
         if (Object.prototype.hasOwnProperty.call(res, "volume_settings_ids")) {
-            const volumeSettings = this._mockResUsersSettingsVolumes_DiscussUsersSettingsVolumeFormat(
-                settings.volume_settings_ids
-            );
+            const volumeSettings =
+                this._mockResUsersSettingsVolumes_DiscussUsersSettingsVolumeFormat(
+                    settings.volume_settings_ids
+                );
             res.volume_settings_ids = [["insert", volumeSettings]];
         }
         return res;

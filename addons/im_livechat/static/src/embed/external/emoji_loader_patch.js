@@ -1,10 +1,10 @@
-/** @odoo-module */
+/* @odoo-module */
 
-import { loader } from "@mail/emoji_picker/emoji_picker";
+import { loader } from "@mail/core/common/emoji_picker";
 
 import { loadBundle } from "@web/core/assets";
-import { patch } from "@web/core/utils/patch";
 import { memoize } from "@web/core/utils/functions";
+import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 
 patch(loader, "im_livechat/emoji_loader", {

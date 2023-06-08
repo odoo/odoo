@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
+
 import { browser } from "@web/core/browser/browser";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 

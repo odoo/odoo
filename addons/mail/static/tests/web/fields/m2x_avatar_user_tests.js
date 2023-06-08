@@ -1,12 +1,13 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
-import { click, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
-import { registry } from "@web/core/registry";
-import { session } from "@web/session";
-import { nextTick } from "web.test_utils";
+
 import { popoverService } from "@web/core/popover/popover_service";
+import { registry } from "@web/core/registry";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
+import { session } from "@web/session";
+import { click, patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
+import { nextTick } from "web.test_utils";
 
 QUnit.module("M2XAvatarUser");
 

@@ -1,5 +1,6 @@
-/** @odoo-module **/
+/* @odoo-module */
 
+import { Command } from "@mail/../tests/helpers/command";
 import {
     afterNextRender,
     click,
@@ -7,7 +8,6 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
-import { Command } from "@mail/../tests/helpers/command";
 
 QUnit.module("messaging");
 

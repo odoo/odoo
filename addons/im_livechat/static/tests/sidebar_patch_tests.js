@@ -1,9 +1,9 @@
-/** @odoo-module */
-
-import { nextTick } from "@web/../tests/helpers/utils";
-import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+/* @odoo-module */
 
 import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
+
+import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+import { nextTick } from "@web/../tests/helpers/utils";
 
 QUnit.module("discuss sidebar (patch)");
 

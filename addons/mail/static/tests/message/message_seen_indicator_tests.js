@@ -1,7 +1,7 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { startServer, start, afterNextRender } from "@mail/../tests/helpers/test_utils";
 import { Command } from "@mail/../tests/helpers/command";
+import { startServer, start, afterNextRender } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("message_seen_indicator");
 

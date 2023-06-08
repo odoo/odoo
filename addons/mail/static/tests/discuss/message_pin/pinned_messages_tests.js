@@ -1,6 +1,7 @@
-/** @odoo-module */
+/* @odoo-module */
 
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
+
 import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("pinned messages");

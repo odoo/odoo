@@ -1,7 +1,9 @@
 /* @odoo-module */
 
-import { Thread } from "@mail/core_ui/thread";
+import { Thread } from "@mail/core/common/thread";
+
 import { useState } from "@odoo/owl";
+
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";

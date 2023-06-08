@@ -1,9 +1,9 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
-import { nextTick } from "web.test_utils";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { nextTick } from "web.test_utils";
 
 QUnit.module("follower list menu");
 

@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { escape } from "@web/core/utils/strings";
 
@@ -27,7 +27,10 @@ export default {
      */
     _formatText(message) {
         message = escape(message);
-        message = message.replaceAll(/(\p{Emoji_Presentation}+)/ug, "<span class='o_mail_emoji'>$1</span>");
+        message = message.replaceAll(
+            /(\p{Emoji_Presentation}+)/gu,
+            "<span class='o_mail_emoji'>$1</span>"
+        );
         message = message.replace(/(?:\r\n|\r|\n)/g, "<br>");
 
         return message;

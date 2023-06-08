@@ -9,6 +9,7 @@ import {
     startServer,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
+
 import { browser } from "@web/core/browser/browser";
 import { editInput, nextTick, patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 

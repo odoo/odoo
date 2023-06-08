@@ -1,12 +1,13 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import {
     afterNextRender,
     click,
+    nextAnimationFrame,
     start,
     startServer,
-    nextAnimationFrame,
 } from "@mail/../tests/helpers/test_utils";
+
 import { makeDeferred } from "@web/../tests/helpers/utils";
 
 QUnit.module("chatter topbar");

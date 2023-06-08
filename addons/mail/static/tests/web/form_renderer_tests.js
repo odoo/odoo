@@ -1,7 +1,7 @@
 /* @odoo-module */
 
-import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
+import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("Form renderer");
 

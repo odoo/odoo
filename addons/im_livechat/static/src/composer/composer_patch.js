@@ -1,6 +1,7 @@
-/** @odoo-module */
+/* @odoo-module */
 
-import { Composer } from "@mail/composer/composer";
+import { Composer } from "@mail/core/common/composer";
+
 import { patch } from "@web/core/utils/patch";
 
 patch(Composer.prototype, "im_livechat", {

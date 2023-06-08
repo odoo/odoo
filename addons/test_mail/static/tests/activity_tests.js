@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { ActivityModel } from "@mail/views/activity/activity_model";
-import { ActivityRenderer } from "@mail/views/activity/activity_renderer";
+import { ActivityModel } from "@mail/views/web/activity/activity_model";
+import { ActivityRenderer } from "@mail/views/web/activity/activity_renderer";
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import testUtils from "web.test_utils";

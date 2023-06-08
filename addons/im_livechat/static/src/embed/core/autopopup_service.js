@@ -1,4 +1,4 @@
-/** @odoo-module */
+/* @odoo-module */
 
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
@@ -11,8 +11,8 @@ export class AutopopupService {
      * @param {{
      * "im_livechat.chatbot": import("@im_livechat/embed/chatbot/chatbot_service").ChatBotService,
      * "im_livechat.livechat": import("@im_livechat/embed/core/livechat_service").LivechatService,
-     * "mail.thread": import("@mail/core/thread_service").ThreadService,
-     * "mail.store": import("@mail/core/store_service").Store,
+     * "mail.thread": import("@mail/core/common/thread_service").ThreadService,
+     * "mail.store": import("@mail/core/common/store_service").Store,
      * cookie: typeof import("@web/core/browser/cookie_service").cookieService.start,
      * ui: typeof import("@web/core/ui/ui_service").uiService.start,
      * }} services
