@@ -33,7 +33,7 @@ wTourUtils.registerWebsitePreviewTour('website_text_edition', {
     },
     {
         content: "Open the foreground colorpicker",
-        trigger: '#oe-text-color',
+        trigger: '#toolbar:not(.oe-floating) #oe-text-color',
     },
     {
         content: "Go to the 'solid' tab",

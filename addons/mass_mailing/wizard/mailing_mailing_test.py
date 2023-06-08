@@ -4,6 +4,7 @@
 from markupsafe import Markup
 
 from odoo import _, fields, models, tools
+from odoo.tools.misc import file_open
 
 
 class TestMassMailing(models.TransientModel):
@@ -49,13 +50,18 @@ class TestMassMailing(models.TransientModel):
         # Convert links in absolute URLs before the application of the shortener
         full_body = self.env['mail.render.mixin']._replace_local_links(full_body)
 
+        with file_open("mass_mailing/static/src/scss/mass_mailing_mail.scss", "r") as fd:
+            styles = fd.read()
         for valid_email in valid_emails:
             mail_values = {
                 'email_from': mailing.email_from,
                 'reply_to': mailing.reply_to,
                 'email_to': valid_email,
                 'subject': subject,
-                'body_html': self.env['ir.qweb']._render('mass_mailing.mass_mailing_mail_layout', {'body': full_body}, minimal_qcontext=True),
+                'body_html': self.env['ir.qweb']._render('mass_mailing.mass_mailing_mail_layout', {
+                    'body': full_body,
+                    'mailing_style': Markup(f'<style>{styles}</style>'),
+                }, minimal_qcontext=True),
                 'is_notification': True,
                 'mailing_id': mailing.id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],

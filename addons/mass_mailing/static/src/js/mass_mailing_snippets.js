@@ -1,7 +1,6 @@
 /** @odoo-module alias=mass_mailing.snippets.options **/
 
 import options from "web_editor.snippets.options";
-import {ColorpickerWidget} from "web.Colorpicker";
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
 import weUtils from "web_editor.utils";
 import {
@@ -10,6 +9,7 @@ import {
     getFontName, normalizeFontFamily, initializeDesignTabCss,
     transformFontFamilySelector,
 } from "mass_mailing.design_constants";
+import { isCSSColor, normalizeCSSColor } from "@web/core/utils/colors";
 
 
 //--------------------------------------------------------------------------
@@ -38,7 +38,7 @@ options.registry.MassMailingImageTools = options.registry.ImageTools.extend({
      * @override
      */
     _getCSSColorValue(color) {
-        if (!color || ColorpickerWidget.isCSSColor(color)) {
+        if (!color || isCSSColor(color)) {
             return color;
         }
         const doc = this.options.document;
@@ -46,7 +46,7 @@ options.registry.MassMailingImageTools = options.registry.ImageTools.extend({
         tempEl.className = `bg-${color}`;
         const colorValue = window.getComputedStyle(tempEl).getPropertyValue("background-color").trim();
         tempEl.parentNode.removeChild(tempEl);
-        return ColorpickerWidget.normalizeCSSColor(colorValue).replace(/"/g, "'");
+        return normalizeCSSColor(colorValue).replace(/"/g, "'");
     },
 });
 

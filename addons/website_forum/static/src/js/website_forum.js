@@ -4,7 +4,7 @@ import dom from "web.dom";
 import core from "web.core";
 import {setCookie} from "web.utils.cookies";
 import Dialog from "web.Dialog";
-import wysiwygLoader from "web_editor.loader";
+import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
 import publicWidget from "web.public.widget";
 import { Markup } from "web.utils";
 import session from "web.session";
@@ -122,6 +122,16 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
 
             var options = {
                 toolbarTemplate: 'website_forum.web_editor_toolbar',
+                toolbarOptions: {
+                    showColors: false,
+                    showFontSize: false,
+                    showHistory: true,
+                    showHeading1: false,
+                    showHeading2: false,
+                    showHeading3: false,
+                    showLink: hasFullEdit,
+                    showImageEdit: hasFullEdit,
+                },
                 recordInfo: {
                     context: self._getContext(),
                     res_model: 'forum.post',
@@ -137,10 +147,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             };
             options.allowCommandLink = hasFullEdit;
             options.allowCommandImage = hasFullEdit;
-            wysiwygLoader.loadFromTextarea(self, $textarea[0], options).then(wysiwyg => {
-                if (!hasFullEdit) {
-                    wysiwyg.toolbar.$el.find('#link, #media').remove();
-                }
+            loadWysiwygFromTextarea(self, $textarea[0], options).then(wysiwyg => {
                 // float-start class messes up the post layout OPW 769721
                 $form.find('.note-editable').find('img.float-start').removeClass('float-start');
             });
