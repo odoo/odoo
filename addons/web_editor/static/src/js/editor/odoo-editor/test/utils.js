@@ -307,6 +307,12 @@ export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     // the editor as otherwise those would genererate mutations the editor would
     // consider and the tests would make no sense.
     testNode.innerHTML = spec.contentBefore;
+    // Setting a selection in the DOM before initializing the editor to ensure
+    // every test is run with the same preconditions.
+    setTestSelection({
+        anchorNode: testNode.parentElement, anchorOffset: 0,
+        focusNode: testNode.parentElement, focusOffset: 0,
+    });
     const selection = parseTextualSelection(testNode);
 
     const editor = new Editor(testNode, Object.assign({ toSanitize: false }, options));
