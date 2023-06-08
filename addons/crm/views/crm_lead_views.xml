@@ -15,7 +15,7 @@
                             class="oe_highlight" attrs="{'invisible': ['|', ('type', '=', 'opportunity'), ('active', '=', False)]}" data-hotkey="v"/>
                         <button name="toggle_active" string="Restore" type="object" data-hotkey="z"
                             attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
-                        <button name="action_set_lost" string="Lost" type="object" data-hotkey="l" title="Mark as lost"
+                        <button name="%(crm.crm_lead_lost_action)d" string="Lost" type="action"  data-hotkey="l" title="Mark as lost"
                             attrs="{'invisible': ['|', ('type', '=', 'opportunity'), '&amp;', ('probability', '=', 0), ('active', '=', False)]}"/>
                         <field name="stage_id" widget="statusbar" class="o_field_statusbar"
                             options="{'clickable': '1', 'fold_field': 'fold'}"
