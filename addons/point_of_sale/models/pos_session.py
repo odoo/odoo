@@ -759,9 +759,11 @@ class PosSession(models.Model):
                         line['base_tags'],
                     )
                     sales[sale_key] = self._update_amounts(sales[sale_key], {'amount': line['amount']}, line['date_order'])
+                    sales[sale_key].setdefault('tax_amount', 0.0)
                     # Combine tax lines
                     for tax in line['taxes']:
                         tax_key = (tax['account_id'] or line['income_account_id'], tax['tax_repartition_line_id'], tax['id'], tuple(tax['tag_ids']))
+                        sales[sale_key]['tax_amount'] += tax['amount']
                         order_taxes[tax_key] = self._update_amounts(
                             order_taxes[tax_key],
                             {'amount': tax['amount'], 'base_amount': tax['base']},
@@ -874,7 +876,7 @@ class PosSession(models.Model):
 
         MoveLine.create(
             tax_vals
-            + [self._get_sale_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in sales.items()]
+            + [self._get_sale_vals(key, amounts['amount'], amounts['amount_converted'], amounts['tax_amount']) for key, amounts in sales.items()]
             + [self._get_stock_expense_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in stock_expense.items()]
             + rounding_vals
         )
@@ -1228,7 +1230,7 @@ class PosSession(models.Model):
         }
         return self._credit_amounts(partial_vals, amount, amount_converted)
 
-    def _get_sale_vals(self, key, amount, amount_converted):
+    def _get_sale_vals(self, key, amount, amount_converted, tax_amount):
         account_id, sign, tax_keys, base_tag_ids = key
         tax_ids = set(tax[0] for tax in tax_keys)
         applied_taxes = self.env['account.tax'].browse(tax_ids)
@@ -1242,6 +1244,8 @@ class PosSession(models.Model):
             'move_id': self.move_id.id,
             'tax_ids': [(6, 0, tax_ids)],
             'tax_tag_ids': [(6, 0, base_tag_ids)],
+            'price_subtotal': abs(amount_converted),
+            'price_total': abs(amount_converted) + abs(tax_amount),
         }
         return self._credit_amounts(partial_vals, amount, amount_converted)
 
