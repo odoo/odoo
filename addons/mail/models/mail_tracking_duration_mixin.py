@@ -53,7 +53,7 @@ class MailTrackingDurationMixin(models.AbstractModel):
                  FROM mail_tracking_value v
             LEFT JOIN mail_message m
                    ON m.id = v.mail_message_id
-                  AND v.field = %(field_id)s
+                  AND v.field_id = %(field_id)s
                 WHERE m.model = %(model_name)s
                   AND m.res_id IN %(record_ids)s
              ORDER BY v.id
