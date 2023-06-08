@@ -133,10 +133,12 @@ Model({
             const cookie = getCookie("im_livechat_session");
             if (cookie) {
                 const channel = JSON.parse(cookie);
-                this.messaging.rpc({
-                    route: "/im_livechat/visitor_leave_session",
-                    params: { uuid: channel.uuid },
-                });
+                if (channel.uuid) {
+                    this.messaging.rpc({
+                        route: "/im_livechat/visitor_leave_session",
+                        params: { uuid: channel.uuid },
+                    });
+                }
                 deleteCookie("im_livechat_session");
             }
         },
