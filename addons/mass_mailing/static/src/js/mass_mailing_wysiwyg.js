@@ -1,29 +1,31 @@
-/** @odoo-module alias=mass_mailing.wysiwyg **/
+/** @odoo-module **/
 
-import Wysiwyg from "web_editor.wysiwyg";
-import MassMailingSnippetsMenu from "mass_mailing.snippets.editor";
-import {closestElement} from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
-import Toolbar from "web_editor.toolbar";
+import { ComponentWrapper } from "web.OwlCompatibility";
+import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
+import { closestElement } from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
+import { Toolbar } from "@web_editor/js/editor/toolbar";
+import { requireWysiwygLegacyModule } from "@web_editor/js/frontend/loader";
+import "@web_editor/js/wysiwyg/wysiwyg_iframe";
 
-const MassMailingWysiwyg = Wysiwyg.extend({
+export class MassMailingWysiwyg extends Wysiwyg {
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
-    startEdition: async function () {
-        const res = await this._super(...arguments);
+    async startEdition() {
+        const res = await super.startEdition(...arguments);
         // Prevent selection change outside of snippets.
         this.$editable.on('mousedown', e => {
             if ($(e.target).is('.o_editable:empty') || e.target.querySelector('.o_editable')) {
                 e.preventDefault();
             }
         });
-        this.snippetsMenuToolbar = this.toolbar;
+        this.snippetsMenuToolbarEl = this.toolbarEl;
         return res;
-    },
+    }
 
     toggleLinkTools(options = {}) {
-        this._super({
+        super.toggleLinkTools({
             ...options,
             // Always open the dialog when the sidebar is folded.
             forceDialog: options.forceDialog || this.snippetsMenu.folded
@@ -32,7 +34,7 @@ const MassMailingWysiwyg = Wysiwyg.extend({
             // Hide toolbar and avoid it being re-displayed after getDeepRange.
             this.odooEditor.document.getSelection().collapseToEnd();
         }
-    },
+    }
 
     /**
      * Sets SnippetsMenu fold state and switches toolbar.
@@ -40,51 +42,59 @@ const MassMailingWysiwyg = Wysiwyg.extend({
      *
      * @param {Boolean} fold
      */
-    setSnippetsMenuFolded: async function (fold = true) {
+    async setSnippetsMenuFolded(fold = true) {
         if (fold) {
             this.snippetsMenu.setFolded(true);
             if (!this.floatingToolbar) {
                 // Instantiate and configure new toolbar.
-                this.floatingToolbar = new Toolbar(this, 'web_editor.toolbar');
-                this.toolbar = this.floatingToolbar;
-                await this.toolbar.appendTo(document.createElement('void'));
+                const toolbarWrapper = new ComponentWrapper({}, Toolbar, this.state.toolbarProps);
+
+                // The wysiwyg can be instanciated inside an iframe. The dialog
+                // component is mounted on the global document.
+                const toolbarWrapperElement = document.createElement('div');
+                toolbarWrapperElement.style.display = 'contents';
+                document.body.append(toolbarWrapperElement);
+                await toolbarWrapper.mount(toolbarWrapperElement);
+                this.toolbarEl = toolbarWrapperElement.firstChild;
+                this.floatingToolbarEl = this.toolbarEl;
+
                 this._configureToolbar({ snippets: false });
                 this._updateEditorUI();
-                this.setCSSVariables(this.toolbar.el);
-                this.odooEditor.setupToolbar(this.toolbar.el);
+                this.setCSSVariables(this.toolbarEl);
+                this.odooEditor.setupToolbar(this.toolbarEl);
                 if (this.odooEditor.isMobile) {
-                    document.body.querySelector('.o_mail_body').prepend(this.toolbar.el);
+                    document.body.querySelector('.o_mail_body').prepend(this.toolbarEl);
                 } else {
-                    document.body.append(this.toolbar.el);
+                    document.body.append(this.toolbarEl);
                 }
             } else {
-                this.toolbar = this.floatingToolbar;
+                this.toolbarEl = this.floatingToolbarEl;
             }
-            this.toolbar.el.classList.remove('d-none');
+            this.toolbarEl.classList.remove('d-none');
             this.odooEditor.autohideToolbar = true;
             this.odooEditor.toolbarHide();
         } else {
             this.snippetsMenu.setFolded(false);
-            this.toolbar = this.snippetsMenuToolbar;
+            this.toolbarEl = this.snippetsMenuToolbarEl;
+
             this.odooEditor.autohideToolbar = false;
-            if (this.floatingToolbar) {
-                this.floatingToolbar.el.classList.add('d-none');
+            if (this.floatingToolbarEl) {
+                this.floatingToolbarEl.classList.add('d-none');
             }
         }
-        this.odooEditor.toolbar = this.toolbar.el;
-    },
+    }
 
     /**
      * @override
      */
-    openMediaDialog: function() {
-        this._super(...arguments);
+    openMediaDialog() {
+        super.openMediaDialog(...arguments);
         // Opening the dialog in the outer document does not trigger the selectionChange
         // (that would normally hide the toolbar) in the iframe.
         if (this.snippetsMenu.folded) {
             this.odooEditor.toolbarHide();
         }
-    },
+    }
 
     //--------------------------------------------------------------------------
     // Private
@@ -93,17 +103,18 @@ const MassMailingWysiwyg = Wysiwyg.extend({
     /**
      * @override
      */
-    _createSnippetsMenuInstance: function (options={}) {
+    async _createSnippetsMenuInstance(options={}) {
+        const { MassMailingSnippetsMenu }  = await requireWysiwygLegacyModule('@mass_mailing/js/snippets.editor');
         return new MassMailingSnippetsMenu(this, Object.assign({
             wysiwyg: this,
             selectorEditableArea: '.o_editable',
         }, options));
-    },
+    }
     /**
      * @override
      */
-    _getPowerboxOptions: function () {
-        const options = this._super();
+    _getPowerboxOptions() {
+        const options = super._getPowerboxOptions();
         const {commands} = options;
         const linkCommands = commands.filter(command => command.name === 'Link' || command.name === 'Button');
         for (const linkCommand of linkCommands) {
@@ -120,21 +131,21 @@ const MassMailingWysiwyg = Wysiwyg.extend({
             }
         }
         return {...options, commands};
-    },
+    }
     /**
      * @override
      */
-     _updateEditorUI: function (e) {
-        this._super(...arguments);
+     _updateEditorUI(e) {
+        super._updateEditorUI(...arguments);
         // Hide the create-link button if the selection is within a
         // background-image.
         const selection = this.odooEditor.document.getSelection();
+        if (!selection) return;
         const range = selection.rangeCount && selection.getRangeAt(0);
         const isWithinBackgroundImage = !!range && !!closestElement(range.startContainer, '[style*=background-image]');
         if (isWithinBackgroundImage) {
-            this.toolbar.$el.find('#create-link').toggleClass('d-none', true);
+            this.toolbarEl.querySelector('#create-link').classList.toggle('d-none', true);
         }
-    },
-});
+    }
+}
 
-export default MassMailingWysiwyg;

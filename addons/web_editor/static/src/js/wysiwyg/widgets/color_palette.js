@@ -1,76 +1,167 @@
-/** @odoo-module alias=web_editor.ColorPalette **/
+/** @odoo-module **/
 
 import session from "web.session";
-import {ColorpickerWidget} from "web.Colorpicker";
-import Widget from "web.Widget";
-import customColors from "web_editor.custom_colors";
+import { Colorpicker } from "@web/core/colorpicker/colorpicker";
+import customColors from "@web_editor/js/editor/custom_colors";
 import weUtils from "web_editor.utils";
+import {
+    isCSSColor,
+    normalizeCSSColor,
+    convertCSSColorToRgba,
+} from '@web/core/utils/colors';
+
+
+import {
+    Component,
+    useRef,
+    useState,
+    onWillStart,
+    onMounted,
+    onWillUpdateProps,
+} from "@odoo/owl";
+
+
 
 let colorpickerArch;
+let colorpickerTemplateProm;
 
-const ColorPaletteWidget = Widget.extend({
-    template: 'web_editor.snippet.option.colorpicker',
-    events: {
-        'click .o_we_color_btn': '_onColorButtonClick',
-        'mouseenter .o_we_color_btn': '_onColorButtonEnter',
-        'mouseleave .o_we_color_btn': '_onColorButtonLeave',
-        'click .o_we_colorpicker_switch_pane_btn': '_onSwitchPaneButtonClick',
-        'click .o_custom_gradient_editor .o_custom_gradient_btn': '_onGradientCustomButtonClick',
-        'click .o_custom_gradient_editor': '_onPanelClick',
-        'change .o_custom_gradient_editor input[type="text"]': '_onGradientInputChange',
-        'keypress .o_custom_gradient_editor input[type="text"]': '_onGradientInputKeyPress',
-        'click .o_custom_gradient_editor we-button:not(.o_remove_color)': '_onGradientButtonClick',
-        'mouseenter .o_custom_gradient_editor we-button:not(.o_remove_color)': '_onGradientButtonEnter',
-        'mouseleave .o_custom_gradient_editor we-button:not(.o_remove_color)': '_onGradientButtonLeave',
-        'click .o_custom_gradient_scale': '_onGradientPreviewClick',
-        // Note: _onGradientSliderClick on slider is attached at slider creation.
-        'click .o_custom_gradient_editor .o_remove_color': '_onGradientDeleteClick',
-    },
-    custom_events: {
-        'colorpicker_select': '_onColorPickerSelect',
-        'colorpicker_preview': '_onColorPickerPreview',
-    },
-    /**
-     * @override
-     *
-     * @param {Object} [options]
-     * @param {string} [options.selectedColor] The class or css attribute color selected by default.
-     * @param {boolean} [options.resetButton=true] Whether to display or not the reset button.
-     * @param {string[]} [options.excluded=[]] Sections not to display.
-     * @param {string[]} [options.excludeSectionOf] Extra section to exclude: the one containing the named color.
-     * @param {boolean} [options.withCombinations=false] Enable color combinations selection.
-     * @param {float} [options.noTransparency=false] Specify a default opacity (predefined gradients & color).
-     * @param {float} [options.opacity=1] Specify a default opacity (predefined gradients & color).
-     * @param {string} [options.selectedTab='theme-colors'] Tab initially selected.
-     * @param {boolean} [options.withGradients=false] Enable gradient selection.
-     * @param {JQuery} [options.$editable=$()] Editable content from which the custom colors are retrieved.
-     */
-    init: function (parent, options) {
-        this._super.apply(this, arguments);
+export class ColorPalette extends Component {
+     /**
+      * Load ColorPalette dependencies. This allows to load them without
+      * instantiating the widget itself.
+      *
+      * @static
+      */
+    static async loadDependencies(getTemplate) {
+        // Public user using the editor may have a colorpalette but with
+        // the default wysiwyg ones.
+        if (!session.is_website_user) {
+            // We can call the colorPalette multiple times but only need 1 rpc
+            if (!colorpickerTemplateProm && !colorpickerArch) {
+                colorpickerTemplateProm = getTemplate().then(arch => colorpickerArch = arch);
 
-        this.options = Object.assign({
-            selectedColor: false,
-            resetButton: true,
-            excluded: [],
-            excludeSectionOf: null,
-            $editable: $(),
-            withCombinations: false,
-            noTransparency: false,
-            opacity: 1,
-            selectedTab: 'theme-colors',
-            withGradients: false,
-        }, options || {});
-        this.selectedColor = '';
-        this.resetButton = this.options.resetButton;
-        this.withCombinations = this.options.withCombinations;
+            }
+            return colorpickerTemplateProm;
+        }
+    }
+    static template = 'web_editor.ColorPalette';
+    static props = {
+        document: { type: true, optional: true },
+        resetTabCount: { type: Number, optional: true },
+        selectedCC: { type: String, optional: true },
+        selectedColor: { type: String, optional: true },
+        resetButton: { type: Boolean, optional: true },
+        excluded: { type: Array, optional: true },
+        excludeSectionOf: { type: Array, optional: true },
+        withCombinations: { type: Boolean, optional: true },
+        noTransparency: { type: Boolean, optional: true },
+        opacity: { type: Number, optional: true },
+        selectedTab: { type: String, optional: true },
+        withGradients: { type: Boolean, optional: true },
+        getTemplate: { type: Function,  optional: true },
+        onSetColorNames: { type: Function, optional: true },
+        onColorHover: { type: Function, optional: true },
+        onColorPicked: { type: Function, optional: true },
+        onCustomColorPicked: { type: Function, optional: true },
+        onColorLeave: { type: Function, optional: true },
+        onInputEnter: { type: Function, optional: true },
+        getCustomColors: { type: Function, optional: true },
+        getEditableCustomColors: { type: Function, optional: true },
+    };
+    static defaultProps = {
+        document: window.document,
+        resetTabCount: 0,
+        resetButton: true,
+        excluded: [],
+        excludeSectionOf: null,
+        withCombinations: false,
+        noTransparency: false,
+        opacity: 1,
+        selectedTab: 'theme-colors',
+        withGradients: false,
+        onSetColorNames: () => {},
+        onColorHover: () => {},
+        onColorPicked: () => {},
+        onCustomColorPicked: () => {},
+        onColorLeave: () => {},
+        onInputEnter: () => {},
+        getCustomColors: () => [],
+        getEditableCustomColors: () => [],
+    }
+    static components = { Colorpicker };
+    elRef = useRef('el');
+    state = useState({
+        showGradientPicker: false,
+    });
+    setup() {
+        this.init();
+        onWillStart(async () => {
+            if (this.props.getTemplate) {
+                await ColorPalette.loadDependencies(this.props.getTemplate);
+            }
+        });
+        onMounted(async () => {
+            if (!this.elRef.el) {
+                // There is legacy code that can trigger the instantiation of the
+                // link tool when one of it's parent component is not in the dom. If
+                // that parent element is not in the dom, owl will not return
+                // `this.linkComponentWrapperRef.el` because of a check (see
+                // `inOwnerDocument`).
+                // Todo: this workaround should be removed when the snippet menu is
+                // converted to owl.
+                await new Promise(resolve => {
+                    const observer = new MutationObserver(() => {
+                        if (this.elRef.el) {
+                            observer.disconnect();
+                            resolve();
+                        }
+                    });
+                    observer.observe(document.body, { childList: true, subtree: true });
+                });
+            }
+            this.el = this.elRef.el;
+            const $el = $(this.el);
+            this.$ = $el.find.bind($el);
 
-        // TODO do we really need a colorpalette in the editor working relying
-        // on the fact the editable is received from the caller and other ones
-        // that rely on the fact it is asked to the snippet menu?
-        this.trigger_up('request_editable', {callback: val => this.options.$editable = val});
-        const ownerDocument = this.options.$editable[0] && this.options.$editable[0].ownerDocument;
-        const editableDocument = ownerDocument ? ownerDocument : document;
+            $el.on('click', '.o_we_color_btn', this._onColorButtonClick.bind(this));
+            $el.on('mouseenter', '.o_we_color_btn', this._onColorButtonEnter.bind(this));
+            $el.on('mouseleave', '.o_we_color_btn', this._onColorButtonLeave.bind(this));
+
+            $el.on('click', '.o_custom_gradient_editor .o_custom_gradient_btn', this._onGradientCustomButtonClick.bind(this));
+            $el.on('click', '.o_custom_gradient_editor', this._onPanelClick.bind(this));
+            $el.on('change', '.o_custom_gradient_editor input[type="text"]', this._onGradientInputChange.bind(this));
+            $el.on('keypress', '.o_custom_gradient_editor input[type="text"]', this._onGradientInputKeyPress.bind(this));
+            $el.on('click', '.o_custom_gradient_editor we-button:not(.o_remove_color)', this._onGradientButtonClick.bind(this));
+            $el.on('mouseenter', '.o_custom_gradient_editor we-button:not(.o_remove_color)', this._onGradientButtonEnter.bind(this));
+            $el.on('mouseleave', '.o_custom_gradient_editor we-button:not(.o_remove_color)', this._onGradientButtonLeave.bind(this));
+
+            $el.on('click', '.o_custom_gradient_scale', this._onGradientPreviewClick.bind(this));
+            // Note: _onGradientSliderClick on slider is attached at slider creation.
+            $el.on('click', '.o_custom_gradient_editor .o_remove_color', this._onGradientDeleteClick.bind(this));
+
+            await this.start();
+        });
+        onWillUpdateProps((newProps) => {
+            this._updateColorToColornames();
+            if (this.props.resetTabCount !== newProps.resetTabCount) {
+                this._selectDefaultTab();
+            }
+            if (this.props.selectedCC !== newProps.selectedCC || this.props.selectedColor !== newProps.selectedColor) {
+                this._selectColor({
+                    ccValue: newProps.selectedCC,
+                    color: newProps.selectedColor,
+                });
+            }
+            this._buildCustomColors();
+            this._markSelectedColor();
+        });
+    }
+    init() {
+        const editableDocument = this.props.document;
         this.style = editableDocument.defaultView.getComputedStyle(editableDocument.documentElement);
+        this.selectedColor = '';
+        this.resetButton = this.props.resetButton;
+        this.withCombinations = this.props.withCombinations;
 
         this.tabs = [{
             id: 'theme-colors',
@@ -89,7 +180,7 @@ const ColorPaletteWidget = Widget.extend({
         },
         {
             id: 'gradients',
-            pickers: this.options.withGradients ? [
+            pickers: this.props.withGradients ? [
                 'predefined_gradients',
                 'custom_gradient',
             ] : [],
@@ -97,20 +188,11 @@ const ColorPaletteWidget = Widget.extend({
 
         this.sections = {};
         this.pickers = {};
-    },
+    }
     /**
      * @override
      */
-    willStart: async function () {
-        await this._super(...arguments);
-        await ColorPaletteWidget.loadDependencies(this);
-    },
-    /**
-     * @override
-     */
-    start: async function () {
-        const res = this._super.apply(this, arguments);
-
+    async start() {
         const switchPaneButtons = this.el.querySelectorAll('.o_we_colorpicker_switch_pane_btn');
 
         let colorpickerEl;
@@ -128,7 +210,11 @@ const ColorPaletteWidget = Widget.extend({
         // Populate tabs based on the tabs configuration indicated in this.tabs
         this.tabs.forEach((tab, index) => {
             // Append pickers to section
-            const sectionEl = this.el.querySelector(`.o_colorpicker_sections[data-color-tab="${tab.id}"]`);
+            let sectionEl = this.el.querySelector(`.o_colorpicker_sections[data-color-tab="${tab.id}"]`);
+            const container = sectionEl.querySelector('.o_colorpicker_section_container');
+            if (container) {
+                sectionEl = container;
+            }
             let sectionIsEmpty = true;
             tab.pickers.forEach((pickerId) => {
                 let pickerEl;
@@ -148,7 +234,7 @@ const ColorPaletteWidget = Widget.extend({
                 if (pickerEl) {
                     sectionEl.appendChild(pickerEl);
 
-                    if (!this.options.excluded.includes(pickerId)) {
+                    if (!this.props.excluded.includes(pickerId)) {
                         sectionIsEmpty = false;
                     }
 
@@ -161,29 +247,25 @@ const ColorPaletteWidget = Widget.extend({
             if (sectionIsEmpty) {
                 sectionEl.classList.add('d-none');
                 switchPaneButtons[index].classList.add('d-none');
-                if (this.options.selectedTab === tab.id) {
-                    this.options.selectedTab = this.tabs[(index + 1) % this.tabs.length].id;
+                if (this.props.selectedTab === tab.id) {
+                    this.props.selectedTab = this.tabs[(index + 1) % this.tabs.length].id;
                 }
             }
             this.sections[tab.id] = sectionEl;
         });
 
         // Predefined gradient opacity
-        if (this.options.withGradients && this.options.opacity !== 1) {
+        if (this.props.withGradients && this.props.opacity !== 1) {
             this.pickers['predefined_gradients'].querySelectorAll('button').forEach(elem => {
                 let gradient = elem.dataset.color;
                 gradient = gradient.replaceAll(/rgba?(\(\s*\d+\s*,\s*\d+\s*,\s*\d+)(?:\s*,.+?)?\)/g,
-                    `rgba$1, ${this.options.opacity})`);
+                    `rgba$1, ${this.props.opacity})`);
                 elem.dataset.color = gradient.replaceAll(/\s+/g, '');
             });
         }
 
         // Palette for gradient
         if (this.pickers['custom_gradient']) {
-            this.gradientColorPicker = new ColorpickerWidget(this, {
-                stopClickPropagation: true,
-            });
-            await this.gradientColorPicker.appendTo(this.sections['gradients']);
             const editor = this.pickers['custom_gradient'];
             this.gradientEditorParts = {
                 'customButton': editor.querySelector('.o_custom_gradient_btn'),
@@ -200,7 +282,7 @@ const ColorPaletteWidget = Widget.extend({
                 'sliders': editor.querySelector('.o_slider_multi'),
                 'deleteButton': editor.querySelector('.o_remove_color'),
             };
-            const gradient = weUtils.isColorGradient(this.options.selectedColor) && this.options.selectedColor;
+            const gradient = weUtils.isColorGradient(this.props.selectedColor) && this.props.selectedColor;
             this._selectGradient(gradient);
             const resizeObserver = new window.ResizeObserver(() => {
                 this._adjustActiveSliderDelete();
@@ -209,7 +291,7 @@ const ColorPaletteWidget = Widget.extend({
         }
 
         // Switch to the correct tab
-        const selectedButtonIndex = this.tabs.map(tab => tab.id).indexOf(this.options.selectedTab);
+        const selectedButtonIndex = this.tabs.map(tab => tab.id).indexOf(this.props.selectedTab);
         this._selectTabFromButton(this.el.querySelectorAll('button')[selectedButtonIndex]);
 
         // Remove the buttons display if there is only one
@@ -220,11 +302,11 @@ const ColorPaletteWidget = Widget.extend({
 
         // Remove excluded palettes (note: only hide them to still be able
         // to remove their related colors on the DOM target)
-        this.options.excluded.forEach((exc) => {
+        this.props.excluded.forEach((exc) => {
             this.$('[data-name="' + exc + '"]').addClass('d-none');
         });
-        if (this.options.excludeSectionOf) {
-            this.$('[data-name]:has([data-color="' + this.options.excludeSectionOf + '"])').addClass('d-none');
+        if (this.props.excludeSectionOf) {
+            this.$('[data-name]:has([data-color="' + this.props.excludeSectionOf + '"])').addClass('d-none');
         }
 
         this.el.querySelectorAll('.o_colorpicker_section').forEach(elem => {
@@ -232,7 +314,7 @@ const ColorPaletteWidget = Widget.extend({
         });
 
         // Render common colors
-        if (!this.options.excluded.includes('common')) {
+        if (!this.props.excluded.includes('common')) {
             customColors.forEach((colorRow, i) => {
                 if (i === 0) {
                     return; // Ignore the wysiwyg gray palette and use ours
@@ -247,159 +329,108 @@ const ColorPaletteWidget = Widget.extend({
         // Compute class colors
 
         this.colorNames = [...weUtils.COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES];
-        this.colorToColorNames = {};
-        this.el.querySelectorAll('button[data-color]:not(.o_custom_gradient_btn)').forEach(elem => {
-            const colorName = elem.dataset.color;
-            if (weUtils.isColorGradient(colorName)) {
-                return;
-            }
-            const $color = $(elem);
-            const isCCName = weUtils.isColorCombinationName(colorName);
-            if (isCCName) {
-                $color.find('.o_we_cc_preview_wrapper').addClass(`o_cc o_cc${colorName}`);
-            } else if (weUtils.EDITOR_COLOR_CSS_VARIABLES.includes(colorName)) {
-                elem.style.backgroundColor = `var(--we-cp-${colorName})`;
-            } else {
-                elem.classList.add(`bg-${colorName}`);
-            }
-            this.colorNames.push(colorName);
-            if (!isCCName && !elem.classList.contains('d-none')) {
-                const color = weUtils.getCSSVariableValue(colorName, this.style);
-                this.colorToColorNames[color] = colorName;
-            }
-        });
+        this._updateColorToColornames();
+        this.props.onSetColorNames([...this.colorNames]);
 
         // Select selected Color and build customColors.
         // If no color is selected selectedColor is an empty string (transparent is interpreted as no color)
-        if (this.options.selectedCC) {
-            this.selectedCC = this.options.selectedCC;
+        if (this.props.selectedCC) {
+            this.selectedCC = this.props.selectedCC;
         }
-        if (this.options.selectedColor) {
-            let selectedColor = this.options.selectedColor;
-            if (weUtils.COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES.includes(selectedColor)) {
-                selectedColor = weUtils.getCSSVariableValue(selectedColor, this.style) || selectedColor;
-            }
-            selectedColor = ColorpickerWidget.normalizeCSSColor(selectedColor);
-            if (selectedColor !== 'rgba(0, 0, 0, 0)') {
-                this.selectedColor = this.colorToColorNames[selectedColor] || selectedColor;
-            }
-        }
+        this._setSelectedColor(this.props.selectedColor);
         this._buildCustomColors();
         this._markSelectedColor();
 
         // Colorpicker
-        if (!this.options.excluded.includes('custom')) {
+        if (!this.props.excluded.includes('custom')) {
             let defaultColor = this.selectedColor;
-            if (defaultColor && !ColorpickerWidget.isCSSColor(defaultColor)) {
+            if (defaultColor && !isCSSColor(defaultColor)) {
                 defaultColor = weUtils.getCSSVariableValue(defaultColor, this.style);
             }
-            if (!defaultColor && this.options.opacity !== 1) {
-                defaultColor = 'rgba(0, 0, 0, ' + this.options.opacity + ')';
+            if (!defaultColor && this.props.opacity !== 1) {
+                defaultColor = 'rgba(0, 0, 0, ' + this.props.opacity + ')';
             }
-            this.colorPicker = new ColorpickerWidget(this, {
-                defaultColor: defaultColor,
-                noTransparency: !!this.options.noTransparency,
-            });
-            await this.colorPicker.appendTo(this.sections['custom-colors']);
+            this.state.customDefaultColor = defaultColor;
         }
-        return res;
-    },
-    /**
-     * Return a list of the color names used in the color palette
-     */
-    getColorNames: function () {
-        return this.colorNames;
-    },
-    /**
-     * Gets the currently selected colors.
-     *
-     * @returns {Object} ccValue and color (plain color or gradient).
-     */
-    getSelectedColors() {
-        return {
-            ccValue: this.selectedCC,
-            color: this.selectedColor,
-        };
-    },
-    /**
-     * Sets the currently selected colors.
-     *
-     * Note: the tab selection is done here because of an optimization to avoid creating the whole
-     * palette hundreds of times when opening the THEME tab.
-     *
-     * @param {string|number} ccValue
-     * @param {string} color rgb[a]
-     * @param {boolean} [selectTab=true]
-     */
-    setSelectedColor: function (ccValue, color, selectTab = true) {
-        if (color === 'rgba(0, 0, 0, 0)' && this.options.opacity !== 1) {
-            color = 'rgba(0, 0, 0, ' + this.options.opacity + ')';
-        }
-        this._selectColor({
-            ccValue: ccValue,
-            color: color,
-        });
-        if (selectTab) {
-            // This is called on open, restore default tab selection
-            const selectedButtonIndex = this.tabs.map(tab => tab.id).indexOf(this.options.selectedTab);
-            this._selectTabFromButton(this.el.querySelectorAll('button')[selectedButtonIndex]);
-        }
-    },
-
+    }
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
     /**
+     * Gets the currently selected colors.
+     *
+     * @private
+     * @returns {Object} ccValue and color (plain color or gradient).
+     */
+    _getSelectedColors() {
+        return {
+            ccValue: this.selectedCC,
+            color: this.selectedColor,
+        };
+    }
+    /**
      * @private
      */
-    _buildCustomColors: function () {
-        if (this.options.excluded.includes('custom')) {
+    _setSelectedColor(color) {
+        if (color) {
+            if (color === 'rgba(0, 0, 0, 0)' && this.props.opacity !== 1) {
+                color = 'rgba(0, 0, 0, ' + this.props.opacity + ')';
+            }
+            let selectedColor = color;
+            if (weUtils.COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES.includes(selectedColor)) {
+                selectedColor = weUtils.getCSSVariableValue(selectedColor, this.style) || selectedColor;
+            }
+            selectedColor = normalizeCSSColor(selectedColor);
+            if (selectedColor !== 'rgba(0, 0, 0, 0)') {
+                this.selectedColor = this.colorToColorNames[selectedColor] || selectedColor;
+            }
+        }
+    }
+    /**
+     * @private
+     */
+    _buildCustomColors() {
+        if (this.props.excluded.includes('custom')) {
             return;
         }
         this.el.querySelectorAll('.o_custom_color').forEach(el => el.remove());
         const existingColors = new Set(Object.keys(this.colorToColorNames));
-        this.trigger_up('get_custom_colors', {
-            onSuccess: (colors) => {
-                colors.forEach(color => {
-                    this._addCustomColor(existingColors, color);
-                });
-            },
-        });
+        for (const color of this.props.getCustomColors()) {
+            this._addCustomColor(existingColors, color);
+        }
         weUtils.getCSSVariableValue('custom-colors', this.style).split(' ').forEach(v => {
             const color = weUtils.getCSSVariableValue(v.substring(1, v.length - 1), this.style);
-            if (ColorpickerWidget.isCSSColor(color)) {
+            if (isCSSColor(color)) {
                 this._addCustomColor(existingColors, color);
             }
         });
-        this.options.$editable.find('[style*="color"]').toArray().forEach((el) => {
-            for (const colorProp of ['color', 'backgroundColor']) {
-                this._addCustomColor(existingColors, el.style[colorProp]);
-            }
-        });
+        for (const color of this.props.getEditableCustomColors()) {
+            this._addCustomColor(existingColors, color);
+        }
         if (this.selectedColor) {
             this._addCustomColor(existingColors, this.selectedColor);
         }
-    },
+    }
     /**
      * Add the color to the custom color section if it is not in the existingColors.
      *
      * @param {string[]} existingColors Colors currently in the colorpicker
      * @param {string} color Color to add to the cuustom colors
      */
-    _addCustomColor: function (existingColors, color) {
+    _addCustomColor(existingColors, color) {
         if (!color) {
             return;
         }
-        if (!ColorpickerWidget.isCSSColor(color)) {
+        if (!isCSSColor(color)) {
             color = weUtils.getCSSVariableValue(color, this.style);
         }
-        const normColor = ColorpickerWidget.normalizeCSSColor(color);
+        const normColor = normalizeCSSColor(color);
         if (!existingColors.has(normColor)) {
             this._addCustomColorButton(normColor);
             existingColors.add(normColor);
         }
-    },
+    }
     /**
      * Add a custom button in the coresponding section.
      *
@@ -408,11 +439,11 @@ const ColorPaletteWidget = Widget.extend({
      * @param {string[]} classes - classes added to the button
      * @returns {jQuery}
      */
-    _addCustomColorButton: function (color, classes = []) {
+    _addCustomColorButton(color, classes = []) {
         classes.push('o_custom_color');
         const $button = this._createColorButton(color, classes);
         return $button.appendTo(this.pickers['custom']);
-    },
+    }
     /**
      * Return a color button.
      *
@@ -420,12 +451,12 @@ const ColorPaletteWidget = Widget.extend({
      * @param {string[]} classes - classes added to the button
      * @returns {jQuery}
      */
-    _createColorButton: function (color, classes) {
+    _createColorButton(color, classes) {
         return $('<button/>', {
             class: 'o_we_color_btn ' + classes.join(' '),
             style: 'background-color:' + color + ';',
         });
-    },
+    }
     /**
      * Gets normalized information about a color button.
      *
@@ -433,9 +464,9 @@ const ColorPaletteWidget = Widget.extend({
      * @param {HTMLElement} buttonEl
      * @returns {Object}
      */
-    _getButtonInfo: function (buttonEl) {
+    _getButtonInfo(buttonEl) {
         const bgColor = buttonEl.style.backgroundColor;
-        const value = buttonEl.dataset.color || (bgColor && bgColor !== 'initial' ? ColorpickerWidget.normalizeCSSColor(bgColor) : '') || '';
+        const value = buttonEl.dataset.color || (bgColor && bgColor !== 'initial' ? normalizeCSSColor(bgColor) : '') || '';
         const info = {
             target: buttonEl,
         };
@@ -448,42 +479,38 @@ const ColorPaletteWidget = Widget.extend({
             info.color = value;
         }
         return info;
-    },
+    }
     /**
      * Set the selectedColor and trigger an event
      *
      * @param {Object} colorInfo
      * @param {string} [colorInfo.ccValue]
      * @param {string} [colorInfo.color]
-     * @param {string} [eventName]
+     * @param {Function} [eventCallback]
      */
-    _selectColor: function (colorInfo, eventName) {
+    _selectColor(colorInfo, eventCallback) {
         this.selectedCC = colorInfo.ccValue;
         this.selectedColor = colorInfo.color = this.colorToColorNames[colorInfo.color] || colorInfo.color;
-        if (eventName) {
-            this.trigger_up(eventName, colorInfo);
+        if (eventCallback) {
+            eventCallback(colorInfo);
         }
         this._buildCustomColors();
-        if (this.colorPicker) {
-            this.colorPicker.setSelectedColor(colorInfo.color);
-        }
-        if (this.gradientColorPicker) {
-            const customGradient = weUtils.isColorGradient(colorInfo.color) ? colorInfo.color : false;
+        this.state.customSelectedColor = colorInfo.color;
+        const customGradient = weUtils.isColorGradient(colorInfo.color) ? colorInfo.color : false;
+        if (this.pickers['custom_gradient']) {
             this._selectGradient(customGradient);
         }
         this._markSelectedColor();
-    },
+    }
     /**
      * Populates the gradient editor.
      *
      * @private
      * @param {string} gradient CSS string
      */
-    _selectGradient: function (gradient) {
+    _selectGradient(gradient) {
         const editor = this.gradientEditorParts;
-        if (this.gradientColorPicker.$el) {
-            this.gradientColorPicker.do_hide();
-        }
+        this.state.showGradientPicker = false;
         const colorSplits = [];
         if (gradient) {
             gradient = gradient.toLowerCase();
@@ -554,14 +581,14 @@ const ColorPaletteWidget = Widget.extend({
         }
         this._updateGradientVisibility(isLinear);
         this._activateGradientSlider($lastSlider || $(this.pickers['custom_gradient'].querySelector('.o_slider_multi input')));
-    },
+    }
     /**
      * Adjusts the visibility of the gradient editor elements.
      *
      * @private
      * @param {boolean} isLinear
      */
-    _updateGradientVisibility: function (isLinear) {
+    _updateGradientVisibility(isLinear) {
         const editor = this.gradientEditorParts;
         if (isLinear) {
             editor.angleRow.classList.remove('d-none');
@@ -578,7 +605,7 @@ const ColorPaletteWidget = Widget.extend({
             editor.sizeRow.classList.remove('d-none');
             editor.sizeRow.classList.add('d-flex');
         }
-    },
+    }
     /**
      * Removes the transparency from an rgba color.
      *
@@ -586,12 +613,12 @@ const ColorPaletteWidget = Widget.extend({
      * @param {string} color rgba CSS color string
      * @returns {string} rgb CSS color string
      */
-    _opacifyColor: function (color) {
+    _opacifyColor(color) {
         if (color.startsWith('rgba')) {
             return color.replace('rgba', 'rgb').replace(/,\s*[0-9.]+\s*\)/, ')');
         }
         return color;
-    },
+    }
     /**
      * Creates and adds a slider for the gradient color definition.
      *
@@ -600,7 +627,7 @@ const ColorPaletteWidget = Widget.extend({
      * @param {string} color
      * @returns {jQuery} created slider
      */
-    _createGradientSlider: function (position, color) {
+    _createGradientSlider(position, color) {
         const $slider = $('<input class="w-100" type="range" min="0" max="100"/>');
         $slider.attr('value', position);
         $slider.attr('data-color', color);
@@ -609,33 +636,30 @@ const ColorPaletteWidget = Widget.extend({
         $slider.appendTo(this.gradientEditorParts.sliders);
         this._sortGradientSliders();
         return $slider;
-    },
+    }
     /**
      * Activates a slider of the gradient color definition.
      *
      * @private
      * @param {jQuery} $slider
      */
-    _activateGradientSlider: function ($slider) {
+    _activateGradientSlider($slider) {
         const $sliders = $(this.gradientEditorParts.sliders).find('input');
         $sliders.removeClass('active');
         $slider.addClass('active');
 
         const color = $slider.data('color');
-        // Note: show before marking the selected color as, unfortunately,
-        // setting the color and updating the UI accordinly relies on the widget
-        // already being rendered in the DOM.
-        this.gradientColorPicker.do_show();
-        this.gradientColorPicker.setSelectedColor(color);
+        this.state.showGradientPicker = true;
+        this.state.gradientSelectedColor = color;
         this._sortGradientSliders();
         this._adjustActiveSliderDelete();
-    },
+    }
     /**
      * Adjusts the position of the slider delete button.
      *
      * @private
      */
-    _adjustActiveSliderDelete: function () {
+    _adjustActiveSliderDelete() {
         const $sliders = $(this.gradientEditorParts.sliders).find('input');
         const $activeSlider = $(this.gradientEditorParts.sliders).find('input.active');
         if ($sliders.length > 2 && $activeSlider.length) {
@@ -649,32 +673,32 @@ const ColorPaletteWidget = Widget.extend({
         } else {
             this.gradientEditorParts.deleteButton.classList.add('d-none');
         }
-    },
+    }
     /**
      * Reorders the sliders of the gradient color definition by their position.
      *
      * @private
      */
-    _sortGradientSliders: function () {
+    _sortGradientSliders() {
         const $sliderInputs = $(this.gradientEditorParts.sliders).find('input');
         for (const slider of $sliderInputs.sort((a, b) => parseInt(a.value, 10) - parseInt(b.value, 10))) {
             this.gradientEditorParts.sliders.appendChild(slider);
         }
-    },
+    }
     /**
      * Computes the customized gradient from the custom gradient editor.
      *
      * @private
      * @returns {string} gradient string corresponding to the currently selected options.
      */
-    _computeGradient: function () {
+    _computeGradient() {
         const editor = this.gradientEditorParts;
 
         const $picker = $(this.pickers['custom_gradient']);
 
         const colors = [];
         for (const slider of $(editor.sliders).find('input')) {
-            const color = ColorpickerWidget.convertCSSColorToRgba($(slider).data('color'));
+            const color = convertCSSColorToRgba($(slider).data('color'));
             const colorText = color.opacity !== 100 ? `rgba(${color.red}, ${color.green}, ${color.blue}, ${color.opacity / 100})`
                 : `rgb(${color.red}, ${color.green}, ${color.blue})`;
             const position = slider.value;
@@ -695,30 +719,35 @@ const ColorPaletteWidget = Widget.extend({
         }
 
         return `${type}(${typeParam}, ${colors.join(', ')})`;
-    },
+    }
     /**
      * Computes the customized gradient from the custom gradient editor and displays it.
      *
      * @private
      * @param {boolean} isPreview
      */
-    _updateGradient: function (isPreview) {
+    _updateGradient(isPreview) {
         const gradient = this._computeGradient();
         // Avoid updating an unchanged gradient.
         if (weUtils.areCssValuesEqual(gradient, this.selectedColor) && !isPreview) {
             return;
         }
-        this.trigger_up(isPreview ? 'color_hover' : 'color_picked', Object.assign(this.getSelectedColors(), {
+        const params = {
+            ...this._getSelectedColors(),
             color: gradient,
-            target: this.colorPicker.el,
-        }));
-    },
+        };
+        if (isPreview) {
+            this.props.onColorHover(params);
+        } else {
+            this.props.onColorPicked(params);
+        }
+    }
     /**
      * Marks the selected colors.
      *
      * @private
      */
-    _markSelectedColor: function () {
+    _markSelectedColor() {
         for (const buttonEl of this.el.querySelectorAll('button')) {
             // TODO buttons should only be search by data-color value
             // instead of style but seems necessary for custom colors right
@@ -727,7 +756,17 @@ const ColorPaletteWidget = Widget.extend({
             buttonEl.classList.toggle('selected', value
                 && (this.selectedCC === value || weUtils.areCssValuesEqual(this.selectedColor, value)));
         }
-    },
+    }
+
+    /**
+     * Select the default tab.
+     *
+     * @private
+     */
+    _selectDefaultTab() {
+        const selectedButtonIndex = this.tabs.map(tab => tab.id).indexOf(this.props.selectedTab);
+        this._selectTabFromButton(this.el.querySelectorAll('button')[selectedButtonIndex]);
+    }
     /**
      * Display button element as selected
      *
@@ -742,27 +781,51 @@ const ColorPaletteWidget = Widget.extend({
         this.el.querySelectorAll('.o_colorpicker_sections').forEach(el => {
             el.classList.toggle('d-none', el.dataset.colorTab !== buttonEl.dataset.target);
         });
-    },
+    }
     /**
      * Updates a gradient color from a selection in the color picker.
      *
      * @private
-     * @param {Event} ev from gradient's colorpicker
-     * @param {boolean} isPreview
+     * @param {String} colorInfo.cssColor
+     * @param {Boolean} isPreview
      */
-    _updateGradientColor(ev, isPreview) {
-        ev.stopPropagation();
+    _updateGradientColor(colorInfo, isPreview) {
         const $slider = $(this.gradientEditorParts.sliders).find('input.active');
-        const color = ev.data.cssColor;
-        if (!weUtils.areCssValuesEqual(color, $slider.data('color'))) {
+        if (!weUtils.areCssValuesEqual(colorInfo.cssColor, $slider.data('color'))) {
             const previousColor = $slider.data('color');
-            $slider.data('color', color);
+            $slider.data('color', colorInfo.cssColor);
             this._updateGradient(isPreview);
             if (isPreview) {
                 $slider.data('color', previousColor);
             }
         }
-    },
+    }
+    /**
+     * @private
+     */
+    _updateColorToColornames() {
+        this.colorToColorNames = {};
+        this.el.querySelectorAll('button[data-color]:not(.o_custom_gradient_btn)').forEach(elem => {
+            const colorName = elem.dataset.color;
+            if (weUtils.isColorGradient(colorName)) {
+                return;
+            }
+            const $color = $(elem);
+            const isCCName = weUtils.isColorCombinationName(colorName);
+            if (isCCName) {
+                $color.find('.o_we_cc_preview_wrapper').addClass(`o_cc o_cc${colorName}`);
+            } else if (weUtils.EDITOR_COLOR_CSS_VARIABLES.includes(colorName)) {
+                elem.style.backgroundColor = `var(--we-cp-${colorName})`;
+            } else {
+                elem.classList.add(`bg-${colorName}`);
+            }
+            this.colorNames.push(colorName);
+            if (!isCCName && !elem.classList.contains('d-none')) {
+                const color = weUtils.getCSSVariableValue(colorName, this.style);
+                this.colorToColorNames[color] = colorName;
+            }
+        });
+    }
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -774,63 +837,80 @@ const ColorPaletteWidget = Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onColorButtonClick: function (ev) {
+    _onColorButtonClick(ev) {
         const buttonEl = ev.currentTarget;
-        const colorInfo = Object.assign(this.getSelectedColors(), this._getButtonInfo(buttonEl));
-        this._selectColor(colorInfo, 'color_picked');
-    },
+        const colorInfo = {
+            ...this._getSelectedColors(),
+            ...this._getButtonInfo(buttonEl)
+        };
+        this._selectColor(colorInfo, this.props.onColorPicked);
+    }
     /**
      * Called when a color button is entered.
      *
      * @private
      * @param {Event} ev
      */
-    _onColorButtonEnter: function (ev) {
-        this.trigger_up('color_hover', Object.assign(this.getSelectedColors(), this._getButtonInfo(ev.currentTarget)));
-    },
+    _onColorButtonEnter(ev) {
+        this.props.onColorHover({
+            ...this._getSelectedColors(),
+            ...this._getButtonInfo(ev.currentTarget)
+        });
+    }
     /**
      * Called when a color button is left the data color is the color currently selected.
      *
      * @private
      * @param {Event} ev
      */
-    _onColorButtonLeave: function (ev) {
-        this.trigger_up('color_leave', Object.assign(this.getSelectedColors(), {
+    _onColorButtonLeave(ev) {
+        this.props.onColorLeave({
+            ...this._getSelectedColors(),
             target: ev.target,
-        }));
-    },
+        });
+    }
     /**
      * Called when an update is made on the colorpicker.
      *
      * @private
-     * @param {Event} ev
+     * @param {Object} colorInfo
      */
-    _onColorPickerPreview: function (ev) {
-        if (ev.target === this.gradientColorPicker) {
-            this._updateGradientColor(ev, true);
-        } else {
-            this.trigger_up('color_hover', Object.assign(this.getSelectedColors(), {
-                color: ev.data.cssColor,
-                target: this.colorPicker.el,
-            }));
-        }
-    },
+    _onColorPickerPreview(colorInfo) {
+        this.props.onColorHover({
+            ...this._getSelectedColors(),
+            color: colorInfo.cssColor,
+        });
+    }
+    /**
+     * Called when an update is made on the gradient colorpicker.
+     *
+     * @private
+     * @param {Object} colorInfo
+     */
+    _onColorPickerPreviewGradient(colorInfo) {
+        this._updateGradientColor(colorInfo, true);
+    }
     /**
      * Called when a color is selected on the colorpicker (mouseup).
      *
      * @private
-     * @param {Event} ev
+     * @param {Object} colorInfo
      */
-    _onColorPickerSelect: function (ev) {
-        if (ev.target === this.gradientColorPicker) {
-            this._updateGradientColor(ev);
-        } else {
-            this._selectColor(Object.assign(this.getSelectedColors(), {
-                color: ev.data.cssColor,
-                target: this.colorPicker.el,
-            }), 'custom_color_picked');
-        }
-    },
+    _onColorPickerSelect(colorInfo) {
+        this._selectColor({
+            ...this._getSelectedColors(),
+            color: colorInfo.cssColor,
+        }, this.props.onCustomColorPicked);
+    }
+    /**
+     * Called when a color is selected on the gradient colorpicker (mouseup).
+     *
+     * @private
+     * @param {Object} colorInfo
+     */
+    _onColorPickerSelectGradient(colorInfo) {
+        this._updateGradientColor(colorInfo);
+    }
     /**
      * @private
      * @param {Event} ev
@@ -838,7 +918,7 @@ const ColorPaletteWidget = Widget.extend({
     _onSwitchPaneButtonClick(ev) {
         ev.stopPropagation();
         this._selectTabFromButton(ev.currentTarget);
-    },
+    }
     /**
      * @private
      * @param {Event} ev
@@ -847,7 +927,7 @@ const ColorPaletteWidget = Widget.extend({
         ev.stopPropagation();
         this._activateGradientSlider($(ev.target));
         this._updateGradient();
-    },
+    }
     /**
      * Adds a color inside the gradient based on the position clicked within the preview.
      *
@@ -876,8 +956,8 @@ const ColorPaletteWidget = Widget.extend({
         }
         let color;
         if (previousColor && nextColor) {
-            previousColor = ColorpickerWidget.convertCSSColorToRgba(previousColor);
-            nextColor = ColorpickerWidget.convertCSSColorToRgba(nextColor);
+            previousColor = convertCSSColorToRgba(previousColor);
+            nextColor = convertCSSColorToRgba(nextColor);
             const previousRatio = (nextPosition - position) / (nextPosition - previousPosition);
             const nextRatio = 1 - previousRatio;
             const red = Math.round(previousRatio * previousColor.red + nextRatio * nextColor.red);
@@ -892,7 +972,7 @@ const ColorPaletteWidget = Widget.extend({
         const $slider = this._createGradientSlider(position, color);
         this._activateGradientSlider($slider);
         this._updateGradient();
-    },
+    }
     /**
      * @private
      * @param {Event} ev
@@ -900,24 +980,24 @@ const ColorPaletteWidget = Widget.extend({
     _onPanelClick(ev) {
         // Ignore to avoid closing popup.
         ev.stopPropagation();
-    },
+    }
     /**
      * @private
      * @param {Event} ev
      */
     _onGradientInputChange(ev) {
         this._updateGradient();
-    },
+    }
     /**
      * @private
      * @param {Event} ev
      */
-    _onGradientInputKeyPress: function (ev) {
+    _onGradientInputKeyPress(ev) {
         if (ev.charCode === $.ui.keyCode.ENTER) {
             ev.preventDefault();
             this._onGradientInputChange();
         }
-    },
+    }
     /**
      * @private
      * @param {Event} ev
@@ -927,7 +1007,7 @@ const ColorPaletteWidget = Widget.extend({
         $buttons.removeClass('active');
         $(ev.target).closest('we-button').addClass('active');
         this._updateGradient();
-    },
+    }
     /**
      * @private
      * @param {Event} ev
@@ -941,17 +1021,18 @@ const ColorPaletteWidget = Widget.extend({
         this._updateGradient(true);
         $buttons.removeClass('active');
         $activeButton.addClass('active');
-    },
+    }
     /**
      * @private
      * @param {Event} ev
      */
     _onGradientButtonLeave(ev) {
         ev.stopPropagation();
-        this.trigger_up('color_leave', Object.assign(this.getSelectedColors(), {
+        this.props.onColorLeave({
+            ...this._getSelectedColors(),
             target: ev.target,
-        }));
-    },
+        });
+    }
     /**
      * @private
      * @param {Event} ev
@@ -962,12 +1043,13 @@ const ColorPaletteWidget = Widget.extend({
             // default to first predefined
             gradient = this.pickers['predefined_gradients'].querySelector('button').dataset.color;
         }
-        this._selectColor(Object.assign(this.getSelectedColors(), {
+        this._selectColor({
+            ...this._getSelectedColors(),
             color: gradient,
             target: this.gradientEditorParts.customButton,
-        }), 'custom_color_picked');
+        }, this.props.onCustomColorPicked);
         this._updateGradient();
-    },
+    }
     /**
      * @private
      * @param {Event} ev
@@ -981,36 +1063,5 @@ const ColorPaletteWidget = Widget.extend({
         this.gradientEditorParts.deleteButton.classList.remove('active');
         this._updateGradient();
         this._activateGradientSlider($(this.pickers['custom_gradient'].querySelector('.o_slider_multi input')));
-    },
-});
-
-//------------------------------------------------------------------------------
-// Static
-//------------------------------------------------------------------------------
-
-/**
- * Load ColorPaletteWidget dependencies. This allows to load them without
- * instantiating the widget itself.
- *
- * @static
- */
-let colorpickerTemplateProm;
-ColorPaletteWidget.loadDependencies = async function (rpcCapableObj) {
-    // Public user using the editor may have a colorpalette but with
-    // the default wysiwyg ones.
-    if (!session.is_website_user) {
-        // We can call the colorPalette multiple times but only need 1 rpc
-        if (!colorpickerTemplateProm && !colorpickerArch) {
-            colorpickerTemplateProm = rpcCapableObj._rpc({
-                model: 'ir.ui.view',
-                method: 'render_public_asset',
-                args: ['web_editor.colorpicker', {}],
-            }).then(arch => colorpickerArch = arch);
-        }
-        return colorpickerTemplateProm;
     }
-};
-
-export default {
-    ColorPaletteWidget: ColorPaletteWidget,
-};
+}

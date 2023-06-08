@@ -9,7 +9,7 @@ import { uploadService } from '@web_editor/components/upload_progress_toast/uplo
 import { unsplashService } from '@web_unsplash/services/unsplash_service';
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import weTestUtils from 'web_editor.test_utils';
-import Wysiwyg from 'web_editor.wysiwyg';
+import { Wysiwyg } from '@web_editor/js/wysiwyg/wysiwyg';
 
 const { useEffect } = owl;
 
@@ -65,6 +65,12 @@ QUnit.module('field html file upload', {
                 onChangeTriggered.resolve(true);
             }
         });
+        patchWithCleanup(Wysiwyg.prototype, {
+            async _getColorpickerTemplate() {
+                return weTestUtils.COLOR_PICKER_TEMPLATE;
+            }
+        });
+
         // create and load form view
         const serviceRegistry = registry.category("services");
         serviceRegistry.add("upload", uploadService);

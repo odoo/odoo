@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
+import { ComponentWrapper } from "web.OwlCompatibility";
+
 import Dialog from "web.Dialog";
+import { Colorpicker } from '@web/core/colorpicker/colorpicker';
 
-var _t = core._t;
-
-const ColorpickerDialog = Dialog.extend({
+export const ColorpickerDialog = Dialog.extend({
     /**
      * @override
      */
@@ -25,10 +26,11 @@ const ColorpickerDialog = Dialog.extend({
      */
     start: function () {
         const proms = [this._super(...arguments)];
-        this.colorPicker = new ColorpickerWidget(this, Object.assign({
+        this.colorpicker = new ComponentWrapper(this, Colorpicker, {
             colorPreview: true,
-        }, this.options));
-        proms.push(this.colorPicker.appendTo(this.$el));
+        });
+        this._colorpickerComponent = this.colorpicker.node.component;
+        proms.push(this.colorpicker.mount(this.$el[0]));
         return Promise.all(proms);
     },
 
@@ -40,10 +42,6 @@ const ColorpickerDialog = Dialog.extend({
      * @private
      */
     _onFinalPick: function () {
-        this.trigger_up('colorpicker:saved', this.colorPicker.colorComponents);
+        this.trigger_up('colorpicker:saved', this._colorpickerComponent.colorComponents);
     },
 });
-
-export default {
-    ColorpickerDialog: ColorpickerDialog,
-};

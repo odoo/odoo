@@ -1,9 +1,9 @@
-/** @odoo-module alias=mass_mailing.snippets.editor **/
+/** @odoo-module **/
 
 import {_lt} from "web.core";
 import snippetsEditor from "web_editor.snippet.editor";
 
-const MassMailingSnippetsMenu = snippetsEditor.SnippetsMenu.extend({
+export const MassMailingSnippetsMenu = snippetsEditor.SnippetsMenu.extend({
     events: Object.assign({}, snippetsEditor.SnippetsMenu.prototype.events, {
         'click .o_we_customize_design_btn': '_onDesignTabClick',
     }),
@@ -162,4 +162,3 @@ const MassMailingSnippetsMenu = snippetsEditor.SnippetsMenu.extend({
     },
 });
 
-export default MassMailingSnippetsMenu;

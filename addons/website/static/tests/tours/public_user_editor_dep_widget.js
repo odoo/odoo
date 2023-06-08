@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import publicWidget from "web.public.widget";
-import wysiwygLoader from "web_editor.loader";
+import { loadWysiwygFromTextarea } from "@web_editor/js/frontend/loadWysiwygFromTextarea";
 
 publicWidget.registry['public_user_editor_test'] = publicWidget.Widget.extend({
     selector: 'textarea.o_public_user_editor_test_textarea',
@@ -11,6 +11,6 @@ publicWidget.registry['public_user_editor_test'] = publicWidget.Widget.extend({
      */
     start: async function () {
         await this._super(...arguments);
-        await wysiwygLoader.loadFromTextarea(this, this.el, {});
+        await loadWysiwygFromTextarea(this, this.el, {});
     },
 });
