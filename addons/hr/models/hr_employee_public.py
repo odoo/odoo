@@ -32,6 +32,9 @@ class HrEmployeePublic(models.Model):
     tz = fields.Selection(readonly=True)
     color = fields.Integer(readonly=True)
 
+    # Manager-only fields
+    is_manager = fields.Boolean(compute='_compute_is_manager')
+
     employee_id = fields.Many2one('hr.employee', 'Employee', compute="_compute_employee_id", search="_search_employee_id", compute_sudo=True)
     # hr.employee.public specific fields
     child_ids = fields.One2many('hr.employee.public', 'parent_id', string='Direct subordinates', readonly=True)
@@ -48,6 +51,28 @@ class HrEmployeePublic(models.Model):
     parent_id = fields.Many2one('hr.employee.public', 'Manager', readonly=True)
     coach_id = fields.Many2one('hr.employee.public', 'Coach', readonly=True)
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
+
+    @api.depends_context('uid')
+    @api.depends('parent_id')
+    def _compute_is_manager(self):
+        all_reports = self.env['hr.employee.public'].search([('id', 'child_of', self.env.user.employee_id.id)]).ids
+        for employee in self:
+            employee.is_manager = employee.id in all_reports
+
+    def _get_manager_only_fields(self):
+        return []
+
+    @api.depends_context('uid')
+    def _compute_manager_only_fields(self):
+        manager_fields = self._get_manager_only_fields()
+        for employee in self:
+            if employee.is_manager:
+                employee_sudo = employee.employee_id.sudo()
+                for f in manager_fields:
+                    employee[f] = employee_sudo[f]
+            else:
+                for f in manager_fields:
+                    employee[f] = False
 
     def _search_employee_id(self, operator, value):
         return [('id', operator, value)]

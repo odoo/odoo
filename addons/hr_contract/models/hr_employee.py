@@ -7,6 +7,18 @@ from datetime import date, datetime, time
 from odoo import api, fields, models
 from odoo.osv import expression
 
+class EmployeePublic(models.Model):
+    _inherit = 'hr.employee.public'
+
+    first_contract_date = fields.Date(compute='_compute_manager_only_fields', search='_search_first_contract_date')
+
+    def _get_manager_only_fields(self):
+        return super()._get_manager_only_fields() + ['first_contract_date']
+
+    def _search_first_contract_date(self, operator, value):
+        employees = self.env['hr.employee'].sudo().search([('id', 'child_of', self.env.user.employee_id.ids), ('first_contract_date', operator, value)])
+        return [('id', 'in', employees.ids)]
+
 
 class Employee(models.Model):
     _inherit = "hr.employee"
