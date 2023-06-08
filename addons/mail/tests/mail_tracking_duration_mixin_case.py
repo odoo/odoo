@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from collections import defaultdict
 from datetime import datetime, timedelta
 from unittest.mock import patch
@@ -5,7 +8,7 @@ from unittest.mock import patch
 from odoo.addons.mail.tests.common import MailCommon
 
 
-class TestMailTrackingDurationMixin(MailCommon):
+class MailTrackingDurationMixinCase(MailCommon):
 
     @classmethod
     def setUpClass(cls, tested_model, model_fields=None):
