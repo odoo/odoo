@@ -2597,7 +2597,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
     <t t-set="_titles" t-value="o_wizard_titles if o_wizard_titles else ['none']"/>
     <t t-set="_urls" t-value="o_wizard_urls if o_wizard_urls else ['#']"/>
     <t t-set="_step_first_back_url" t-value="o_wizard_step_first_back_url if o_wizard_step_first_back_url else '#'"/>
-    <t t-set="_step_active" t-value="o_wizard_step_active if o_wizard_step_active else 0"/>
+    <t t-set="_step_active" t-value="o_wizard_titles.index(o_wizard_step_active) if o_wizard_step_active else 0"/>
 
     <div class="o_wizard d-flex flex-wrap justify-content-end justify-content-sm-start my-3 my-sm-4">
         <t t-set="_steps_in_deg" t-value="(_step_active + 1) / len(_titles) * 360"/>

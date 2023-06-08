@@ -1279,7 +1279,7 @@
                     <div class="row">
                         <div class="col-12">
                             <t t-call="website.step_wizard">
-                                <t t-set="o_wizard_step_active" t-value="2"/>
+                                <t t-set="o_wizard_step_active" t-value="'Extra Info'"/>
                             </t>
                         </div>
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
@@ -1461,7 +1461,7 @@
                     <div class="row">
                         <div class="col-12">
                             <t t-call="website.step_wizard">
-                                <t t-set="o_wizard_step_active" t-value="0"/>
+                                <t t-set="o_wizard_step_active" t-value="'Review Order'"/>
                             </t>
                         </div>
                         <div class="col-12 col-lg-7 oe_cart">
@@ -1609,7 +1609,7 @@
                     <div class="row">
                         <div class="col-12">
                             <t t-call="website.step_wizard">
-                                <t t-set="o_wizard_step_active" t-value="1"/>
+                                <t t-set="o_wizard_step_active" t-value="'Shipping'"/>
                             </t>
                         </div>
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
@@ -1718,7 +1718,8 @@
                     <div class="row">
                         <div class="col-12">
                             <t t-call="website.step_wizard">
-                                <t t-set="o_wizard_step_active" t-value="1"/>
+                                <t t-set="o_wizard_step_active" t-value="'Shipping'"/>
+                                <t t-set="o_wizard_back_custom" t-value="'/shop/checkout' if not mode == ('new', 'billing') else '/shop/cart'"/>
                             </t>
                         </div>
                     </div>
@@ -1908,7 +1909,7 @@
                     <div class="row">
                         <div class='col-12'>
                             <t t-call="website.step_wizard">
-                                <t t-set="o_wizard_step_active" t-value="2"/>
+                                <t t-set="o_wizard_step_active" t-value="'Payment'"/>
                             </t>
                         </div>
                         <div class="col-12" t-if="errors">
