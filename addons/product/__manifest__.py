@@ -32,8 +32,8 @@ Print product labels with barcode.
         'security/ir.model.access.csv',
 
         'wizard/product_label_layout_views.xml',
-
-        'views/product_views.xml',
+        'views/product_tag_views.xml',
+        'views/product_views.xml',  # To keep after product_tag_views.xml because it depends on it.
 
         'views/res_config_settings_views.xml',
         'views/product_attribute_views.xml',
@@ -43,7 +43,6 @@ Print product labels with barcode.
         'views/product_pricelist_views.xml',
         'views/product_supplierinfo_views.xml',
         'views/product_template_views.xml',
-        'views/product_tag_views.xml',
         'views/res_country_group_views.xml',
         'views/res_partner_views.xml',
 

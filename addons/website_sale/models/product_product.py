@@ -13,6 +13,7 @@ class Product(models.Model):
     product_variant_image_ids = fields.One2many('product.image', 'product_variant_id', string="Extra Variant Images")
 
     website_url = fields.Char('Website URL', compute='_compute_product_website_url', help='The full URL to access the document through the website.')
+    ribbon_id = fields.Many2one(string="Variant Ribbon", comodel_name='product.ribbon')
 
     base_unit_count = fields.Float('Base Unit Count', required=True, default=1, help="Display base unit price on your eCommerce pages. Set to 0 to hide it for this product.")
     base_unit_id = fields.Many2one('website.base.unit', string='Custom Unit of Measure', help="Define a custom unit to display in the price per unit of measure field.")

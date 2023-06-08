@@ -7,8 +7,13 @@
         <field name="model">product.tag</field>
         <field name="inherit_id" ref="product.product_tag_form_view"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='color']/.." position="after">
+                <group>
+                    <field name="visible_on_ecommerce"/>
+                </group>
+            </xpath>
             <field name="color" position="after">
-                <field name="ribbon_id"/>
+                <field name="image" widget="image" options="{'size': [0, 55]}"/>
             </field>
         </field>
     </record>
@@ -19,16 +24,12 @@
         <field name="inherit_id" ref="product.product_tag_tree_view"/>
         <field name="arch" type="xml">
             <field name="name" position="after">
-                <field name="ribbon_id"/>
+                <field name="visible_on_ecommerce" optional="show"/>
+            </field>
+            <field name="color" position="after">
+                <field name="image" widget="image" options="{'size': [0, 30]}" optional="hide"/>
             </field>
         </field>
-    </record>
-
-    <record id="product_public_tags_action" model="ir.actions.act_window">
-        <field name="name">Product Tags</field>
-        <field name="res_model">product.tag</field>
-        <field name="view_mode">tree,form</field>
-        <field name="view_id" eval="False"/>
     </record>
 
 </odoo>

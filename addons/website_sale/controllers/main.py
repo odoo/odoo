@@ -81,7 +81,7 @@ class TableCompute(object):
                     self.table[(pos // ppr) + y2][(pos % ppr) + x2] = False
             self.table[pos // ppr][pos % ppr] = {
                 'product': p, 'x': x, 'y': y,
-                'ribbon': p.sudo()._get_website_ribbon(),
+                'ribbon': p.sudo().website_ribbon_id,
             }
             if index <= ppg:
                 maxy = max(maxy, y + (pos // ppr))
@@ -225,7 +225,8 @@ class WebsiteSale(http.Controller):
                 yield {'loc': loc}
 
     def _get_search_options(
-        self, category=None, attrib_values=None, min_price=0.0, max_price=0.0, conversion_rate=1, **post
+        self, category=None, attrib_values=None, tags=None, min_price=0.0, max_price=0.0,
+        conversion_rate=1, **post
     ):
         return {
             'displayDescription': True,
@@ -235,6 +236,7 @@ class WebsiteSale(http.Controller):
             'displayImage': True,
             'allowFuzzy': not post.get('noFuzzy'),
             'category': str(category.id) if category else None,
+            'tags': tags,
             'min_price': min_price / conversion_rate,
             'max_price': max_price / conversion_rate,
             'attrib_values': attrib_values,
@@ -251,11 +253,14 @@ class WebsiteSale(http.Controller):
 
         return fuzzy_search_term, product_count, search_result
 
-    def _shop_get_query_url_kwargs(self, category, search, min_price, max_price, attrib=None, order=None, **post):
+    def _shop_get_query_url_kwargs(
+        self, category, search, min_price, max_price, attrib=None, order=None, tags=None, **post
+    ):
         return {
             'category': category,
             'search': search,
             'attrib': attrib,
+            'tags': tags,
             'min_price': min_price,
             'max_price': max_price,
             'order': order,
@@ -291,6 +296,7 @@ class WebsiteSale(http.Controller):
             category = Category
 
         website = request.env['website'].get_current_website()
+        website_domain = website.website_domain()
         if ppg:
             try:
                 ppg = int(ppg)
@@ -302,10 +308,27 @@ class WebsiteSale(http.Controller):
 
         ppr = website.shop_ppr or 4
 
-        attrib_list = request.httprequest.args.getlist('attrib')
+        request_args = request.httprequest.args
+        attrib_list = request_args.getlist('attrib')
         attrib_values = [[int(x) for x in v.split("-")] for v in attrib_list if v]
         attributes_ids = {v[0] for v in attrib_values}
         attrib_set = {v[1] for v in attrib_values}
+
+        filter_by_tags_enabled = website.is_view_active('website_sale.filter_products_tags')
+        if filter_by_tags_enabled:
+            tags = request_args.getlist('tags')
+            # Allow only numeric tag values to avoid internal error.
+            if tags and all(tag.isnumeric() for tag in tags):
+                post['tags'] = tags
+                tags = {int(tag) for tag in tags}
+            else:
+                post['tags'] = None
+                tags = {}
+            ProductTag = request.env['product.tag']
+            all_tags = ProductTag.search(
+                [('product_ids.is_published', '=', True), ('visible_on_ecommerce', '=', True)]
+                + website_domain
+            )
 
         keep = QueryURL('/shop', **self._shop_get_query_url_kwargs(category and int(category), search, min_price, max_price, **post))
 
@@ -375,7 +398,6 @@ class WebsiteSale(http.Controller):
                     max_price = max_price if max_price >= available_min_price else available_max_price
                     post['max_price'] = max_price
 
-        website_domain = website.website_domain()
         categs_domain = [('parent_id', '=', False)] + website_domain
         if search:
             search_categories = Category.search(
@@ -443,6 +465,8 @@ class WebsiteSale(http.Controller):
             values['max_price'] = max_price or available_max_price
             values['available_min_price'] = tools.float_round(available_min_price, 2)
             values['available_max_price'] = tools.float_round(available_max_price, 2)
+        if filter_by_tags_enabled:
+            values.update({'all_tags': all_tags, 'tags': tags})
         if category:
             values['main_object'] = category
         values.update(self._get_additional_shop_values(values))
@@ -606,6 +630,7 @@ class WebsiteSale(http.Controller):
             'category': category,
             'search': search,
             'attrib': attrib,
+            'tags': kwargs.get('tags'),
             'min_price': kwargs.get('min_price'),
             'max_price': kwargs.get('max_price'),
         }
