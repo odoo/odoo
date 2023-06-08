@@ -1150,7 +1150,7 @@ class MailCase(MockEmail):
             'text': 'text',
         }
         for field_name, value_type, old_value, new_value in data:
-            tracking = tracking_values.filtered(lambda track: track.field.name == field_name)
+            tracking = tracking_values.filtered(lambda track: track.field_id.name == field_name)
             self.assertEqual(len(tracking), 1, f'Tracking: not found for {field_name}')
             msg_base = f'Tracking: {field_name} ({value_type}: '
             if value_type in suffix_mapping:

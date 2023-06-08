@@ -681,7 +681,7 @@ class TestTrackingInternals(MailCommon):
             [('mail_message_id', '=', record.message_ids[0].id)]
         )
         self.assertEqual(
-            tracking_values.field.mapped('name'),
+            tracking_values.field_id.mapped('name'),
             ordered_fnames,
             'Track: order, based on ID DESC, should follow tracking sequence (or name) on field'
         )
@@ -698,7 +698,7 @@ class TestTrackingInternals(MailCommon):
         ]
         self.env['mail.tracking.value'].sudo().create([
             {
-                'field': field_id,
+                'field_id': field_id,
                 'mail_message_id': new_msg.id,
                 'old_value_char': 'unimportant',
                 'new_value_char': 'unimportant',
@@ -709,7 +709,7 @@ class TestTrackingInternals(MailCommon):
             [('mail_message_id', '=', record.message_ids[0].id)]
         )
         self.assertEqual(
-            tracking_values.field.mapped('name'),
+            tracking_values.field_id.mapped('name'),
             list(reversed(custom_order_fnames)),
             'Tracking model: order, based on ID DESC, following reverted insertion'
         )

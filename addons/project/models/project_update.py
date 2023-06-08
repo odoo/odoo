@@ -159,7 +159,7 @@ class ProjectUpdate(models.Model):
                  INNER JOIN mail_tracking_value mtv
                          ON mm.id = mtv.mail_message_id
                  INNER JOIN ir_model_fields imf
-                         ON mtv.field = imf.id
+                         ON mtv.field_id = imf.id
                         AND imf.model = 'project.milestone'
                         AND imf.name = 'deadline'
                  INNER JOIN project_milestone pm

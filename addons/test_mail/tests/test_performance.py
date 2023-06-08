@@ -853,12 +853,12 @@ class TestMailComplexPerformance(BaseMailPerformance):
                 'subtype_id': comment_subtype_id,
                 'tracking_value_ids': [
                     (0, 0, {
-                        'field': name_field.id,
+                        'field_id': name_field.id,
                         'new_value_char': 'new 0',
                         'old_value_char': 'old 0',
                     }),
                     (0, 0, {
-                        'field': customer_id_field.id,
+                        'field_id': customer_id_field.id,
                         'new_value_char': 'new 1',
                         'new_value_integer': cls.partners[(record_idx * 5)].id,
                         'old_value_char': 'old 1',
