@@ -1,8 +1,9 @@
-/** @odoo-module */
+/* @odoo-module */
 
-import { ThreadService } from "@mail/core/thread_service";
-import { removeFromArray } from "@mail/utils/arrays";
-import { assignDefined, createLocalId } from "@mail/utils/misc";
+import { ThreadService } from "@mail/core/common/thread_service";
+import { removeFromArray } from "@mail/utils/common/arrays";
+import { assignDefined, createLocalId } from "@mail/utils/common/misc";
+
 import { patch } from "@web/core/utils/patch";
 
 patch(ThreadService.prototype, "im_livechat", {
@@ -22,7 +23,7 @@ patch(ThreadService.prototype, "im_livechat", {
     },
     /**
      * @override
-     * @param {import("@mail/core/thread_model").Thread} thread
+     * @param {import("@mail/core/common/thread_model").Thread} thread
      * @param {boolean} pushState
      */
     setDiscussThread(thread, pushState) {

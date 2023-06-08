@@ -1,15 +1,17 @@
-/** @odoo-module */
+/* @odoo-module */
+
+import { RATING } from "@im_livechat/embed/core/livechat_service";
+import { TranscriptSender } from "@im_livechat/embed/feedback_panel/transcript_sender";
 
 import { Component, useState } from "@odoo/owl";
+
 import { session } from "@web/session";
-import { TranscriptSender } from "./transcript_sender";
-import { RATING } from "../core/livechat_service";
 
 /**
  * @typedef {Object} Props
  * @property {Function} [onClickClose]
  * @property {Function} [sendFeedback]
- * @property {import("@mail/core/thread_model").Thread}
+ * @property {import("@mail/core/common/thread_model").Thread}
  * @extends {Component<Props, Env>}
  */
 export class FeedbackPanel extends Component {

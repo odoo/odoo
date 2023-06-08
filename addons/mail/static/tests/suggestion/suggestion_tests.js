@@ -1,8 +1,8 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { Composer } from "@mail/composer/composer";
-import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { Composer } from "@mail/core/common/composer";
 import { Command } from "@mail/../tests/helpers/command";
+import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import {
     makeDeferred,

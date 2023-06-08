@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { ChatWindowService } from "@mail/chat_window/chat_window_service";
+import { ChatWindowService } from "@mail/core/common/chat_window_service";
 
 import { patch } from "@web/core/utils/patch";
 

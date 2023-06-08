@@ -1,7 +1,8 @@
-/** @odoo-module **/
+/* @odoo-module */
+
+import { Message } from "@mail/core/common/message";
 
 import { patch } from "@web/core/utils/patch";
-import { Message } from "@mail/core_ui/message";
 
 patch(Message.prototype, "im_livechat/web", {
     get hasAuthorClickable() {

@@ -1,7 +1,6 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import * as utils from "@mail/js/utils";
-
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("Mail utils");

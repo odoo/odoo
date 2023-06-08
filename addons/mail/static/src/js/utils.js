@@ -1,9 +1,7 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import core from "web.core";
+import { _t } from "@web/core/l10n/translation";
 import { escape } from "@web/core/utils/strings";
-
-var _t = core._t;
 
 /**
  * WARNING: this is not enough to unescape potential XSS contained in htmlString, transformFunction

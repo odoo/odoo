@@ -1,5 +1,11 @@
-/** @odoo-module **/
+/* @odoo-module */
 
+import {
+    CHAT_WINDOW_END_GAP_WIDTH,
+    CHAT_WINDOW_INBETWEEN_WIDTH,
+    CHAT_WINDOW_WIDTH,
+} from "@mail/core/common/chat_window_service";
+import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
 import {
     afterNextRender,
@@ -8,14 +14,8 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
-import { Command } from "@mail/../tests/helpers/command";
 
 import { makeDeferred } from "@web/../tests/helpers/utils";
-import {
-    CHAT_WINDOW_END_GAP_WIDTH,
-    CHAT_WINDOW_INBETWEEN_WIDTH,
-    CHAT_WINDOW_WIDTH,
-} from "@mail/chat_window/chat_window_service";
 
 QUnit.module("chat window: new message");
 

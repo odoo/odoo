@@ -1,6 +1,7 @@
-/** @odoo-module */
+/* @odoo-module */
 
-import { Sidebar } from "@mail/web/discuss_app/sidebar";
+import { Sidebar } from "@mail/core/web/sidebar";
+
 import { patch } from "@web/core/utils/patch";
 
 patch(Sidebar.prototype, "im_livechat", {

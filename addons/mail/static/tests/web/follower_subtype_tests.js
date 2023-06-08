@@ -1,6 +1,7 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
+
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 
 QUnit.module("follower subtype");

@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 

@@ -1,4 +1,4 @@
-/** @odoo-module */
+/* @odoo-module */
 
 import { busParametersService } from "@bus/bus_parameters_service";
 

@@ -1,10 +1,11 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { UPDATE_BUS_PRESENCE_DELAY } from "@bus/im_status_service";
-import { start, startServer, afterNextRender, click } from "@mail/../tests/helpers/test_utils";
-import { Command } from "@mail/../tests/helpers/command";
 
-import { createLocalId } from "@mail/utils/misc";
+import { createLocalId } from "@mail/utils/common/misc";
+import { Command } from "@mail/../tests/helpers/command";
+import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
+
 import { nextTick } from "@web/../tests/helpers/utils";
 
 QUnit.module("im status");

@@ -1,10 +1,11 @@
 /* @odoo-module */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
-import { loadDefaultConfig, start, setCookie } from "@im_livechat/../tests/embed/helper/test_utils";
 
-import { afterNextRender, insertText } from "@mail/../tests/helpers/test_utils";
+import { loadDefaultConfig, setCookie, start } from "@im_livechat/../tests/embed/helper/test_utils";
+
 import { Command } from "@mail/../tests/helpers/command";
+import { afterNextRender, insertText } from "@mail/../tests/helpers/test_utils";
 
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 

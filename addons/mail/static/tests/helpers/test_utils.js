@@ -1,25 +1,26 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { getPyEnv, startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { loadEmoji } from "@mail/emoji_picker/emoji_picker";
-import { getAdvanceTime } from "@mail/../tests/helpers/time_control";
+import { loadEmoji } from "@mail/core/common/emoji_picker";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
+import { getAdvanceTime } from "@mail/../tests/helpers/time_control";
 import { getWebClientReady } from "@mail/../tests/helpers/webclient_setup";
 
+import { App, EventBus } from "@odoo/owl";
+
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { session as sessionInfo } from "@web/session";
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import {
+    clearRegistryWithCleanup,
+    registryNamesToCloneWithCleanup,
+    utils,
+} from "@web/../tests/helpers/mock_env";
 import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
 
-import { App, EventBus } from "@odoo/owl";
-import {
-    registryNamesToCloneWithCleanup,
-    utils,
-    clearRegistryWithCleanup,
-} from "@web/../tests/helpers/mock_env";
-import { browser } from "@web/core/browser/browser";
 const { prepareRegistriesWithCleanup } = utils;
 const { afterNextRender } = App;
 

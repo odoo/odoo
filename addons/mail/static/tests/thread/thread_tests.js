@@ -1,6 +1,6 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { config as transitionConfig } from "@web/core/transition";
+import { Command } from "@mail/../tests/helpers/command";
 import {
     afterNextRender,
     click,
@@ -13,8 +13,8 @@ import {
     startServer,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
-import { Command } from "@mail/../tests/helpers/command";
 
+import { config as transitionConfig } from "@web/core/transition";
 import {
     makeDeferred,
     nextTick,

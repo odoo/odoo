@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";

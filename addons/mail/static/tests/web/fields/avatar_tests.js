@@ -1,7 +1,8 @@
-/** @odoo-module **/
+/* @odoo-module */
 
+import { Avatar } from "@mail/views/web/fields/avatar/avatar";
 import { click, start } from "@mail/../tests/helpers/test_utils";
-import { Avatar } from "@mail/web/fields/avatar/avatar";
+
 import { getFixture, mount } from "@web/../tests/helpers/utils";
 
 QUnit.module("avatar field");

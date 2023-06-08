@@ -1,15 +1,15 @@
 /* @odoo-module */
 
-import { ChatbotStep } from "@im_livechat/embed/chatbot/chatbot_step_model";
 import { Chatbot } from "@im_livechat/embed/chatbot/chatbot_model";
+import { ChatbotStep } from "@im_livechat/embed/chatbot/chatbot_step_model";
 import { SESSION_STATE } from "@im_livechat/embed/core/livechat_service";
 
 import { EventBus, markup, reactive } from "@odoo/owl";
 
-import { _t } from "@web/core/l10n/translation";
 import { browser } from "@web/core/browser/browser";
-import { debounce } from "@web/core/utils/timing";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { debounce } from "@web/core/utils/timing";
 
 const MESSAGE_DELAY = 1500;
 // Time between two messages coming from the bot.
@@ -38,8 +38,8 @@ export class ChatBotService {
      * @param {import("@web/env").OdooEnv} env
      * @param {{
      * "im_livechat.livechat": import("@im_livechat/embed/core/livechat_service").LivechatService,
-     * "mail.message": import("@mail/core/message_service").MessageService,
-     * "mail.store": import("@mail/core/store_service").Store,
+     * "mail.message": import("@mail/core/common/message_service").MessageService,
+     * "mail.store": import("@mail/core/common/store_service").Store,
      * rpc: typeof import("@web/core/network/rpc_service").rpcService.start,
      * }} services
      */
@@ -219,7 +219,7 @@ export class ChatBotService {
     /**
      * Process the user answer and trigger the next step.
      *
-     * @param {import("@mail/core/message_model").Message} message
+     * @param {import("@mail/core/common/message_model").Message} message
      */
     async _processUserAnswer(message) {
         if (
@@ -269,7 +269,7 @@ export class ChatBotService {
     }
 
     /**
-     * @param {import("@mail/core/thread_model").Thread} thread
+     * @param {import("@mail/core/common/thread_model").Thread} thread
      */
     isChatbotThread(thread) {
         return thread?.operator.id === this.chatbot?.partnerId;

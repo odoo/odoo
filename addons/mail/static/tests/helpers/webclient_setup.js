@@ -1,39 +1,39 @@
 /* @odoo-module */
 
-import { busService } from "@bus/services/bus_service";
 import { busParametersService } from "@bus/bus_parameters_service";
 import { imStatusService } from "@bus/im_status_service";
 import { multiTabService } from "@bus/multi_tab_service";
+import { busService } from "@bus/services/bus_service";
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 
-import { ActivityMenu } from "@mail/web/activity/activity_menu";
-import { ChatWindowContainer } from "@mail/chat_window/chat_window_container";
-import { MessagingMenu } from "@mail/web/messaging_menu/messaging_menu";
-import { messagingService } from "@mail/core/messaging_service";
+import { attachmentService } from "@mail/core/common/attachment_service";
+import { channelMemberService } from "@mail/core/common/channel_member_service";
+import { ChatWindowContainer } from "@mail/core/common/chat_window_container";
+import { chatWindowService } from "@mail/core/common/chat_window_service";
+import { messageService } from "@mail/core/common/message_service";
+import { messagingService } from "@mail/core/common/messaging_service";
+import { notificationPermissionService } from "@mail/core/common/notification_permission_service";
+import { outOfFocusService } from "@mail/core/common/out_of_focus_service";
+import { personaService } from "@mail/core/common/persona_service";
+import { soundEffects } from "@mail/core/common/sound_effects_service";
+import { storeService } from "@mail/core/common/store_service";
+import { suggestionService } from "@mail/core/common/suggestion_service";
+import { threadService } from "@mail/core/common/thread_service";
+import { userSettingsService } from "@mail/core/common/user_settings_service";
+import { ActivityMenu } from "@mail/core/web/activity_menu";
+import { activityService } from "@mail/core/web/activity_service";
+import { contextService } from "@mail/core/web/context_service";
+import { DiscussClientAction } from "@mail/core/web/discuss_client_action";
+import { MessagingMenu } from "@mail/core/web/messaging_menu";
 
-import { patch } from "@web/core/utils/patch";
+import { effectService } from "@web/core/effects/effect_service";
 import { fileUploadService } from "@web/core/file_upload/file_upload_service";
 import { registry } from "@web/core/registry";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
-import { makeMockXHR } from "@web/../tests/helpers/mock_services";
-import { createWebClient } from "@web/../tests/webclient/helpers";
-import { effectService } from "@web/core/effects/effect_service";
-import { soundEffects } from "@mail/core/sound_effects_service";
-import { userSettingsService } from "@mail/core/user_settings_service";
-import { suggestionService } from "@mail/composer/suggestion_service";
-import { storeService } from "@mail/core/store_service";
-import { chatWindowService } from "@mail/chat_window/chat_window_service";
-import { threadService } from "@mail/core/thread_service";
-import { messageService } from "@mail/core/message_service";
-import { activityService } from "@mail/web/activity/activity_service";
-import { outOfFocusService } from "@mail/core/out_of_focus_service";
-import { DiscussClientAction } from "@mail/discuss_app/discuss_client_action";
-import { personaService } from "@mail/core/persona_service";
-import { attachmentService } from "@mail/attachments/attachment_service";
-import { notificationPermissionService } from "@mail/core/notification_permission_service";
+import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
-import { channelMemberService } from "@mail/core/channel_member_service";
-import { contextService } from "@mail/web/discuss_app/context_service";
+import { makeMockXHR } from "@web/../tests/helpers/mock_services";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
+import { createWebClient } from "@web/../tests/webclient/helpers";
 
 const ROUTES_TO_IGNORE = [
     "/web/webclient/load_menus",

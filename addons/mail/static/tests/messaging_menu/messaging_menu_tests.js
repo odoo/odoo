@@ -1,5 +1,6 @@
-/** @odoo-module **/
+/* @odoo-module */
 
+import { Command } from "@mail/../tests/helpers/command";
 import {
     afterNextRender,
     click,
@@ -8,14 +9,12 @@ import {
     startServer,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
-import { Command } from "@mail/../tests/helpers/command";
-
-import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
-import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
-import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
-import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 
 import { browser } from "@web/core/browser/browser";
+import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
+import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
+import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 
 QUnit.module("messaging menu");
 

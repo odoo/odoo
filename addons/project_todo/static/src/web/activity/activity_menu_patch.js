@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import { onExternalClick } from "@mail/utils/hooks";
-import { ActivityMenu } from "@mail/web/activity/activity_menu";
+import { onExternalClick } from "@mail/utils/common/hooks";
+import { ActivityMenu } from "@mail/core/web/activity_menu";
 import { useEffect, useRef, useState } from "@odoo/owl";
 import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { useService } from "@web/core/utils/hooks";

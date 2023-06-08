@@ -7,7 +7,7 @@ import {
     many2ManyTagsAvatarUserField,
     kanbanMany2ManyTagsAvatarUserField,
     listMany2ManyTagsAvatarUserField,
-} from "@mail/web/fields/many2many_avatar_user_field/many2many_avatar_user_field";
+} from "@mail/views/web/fields/many2many_avatar_user_field/many2many_avatar_user_field";
 
 export class Many2ManyTagsAvatarEmployeeField extends Many2ManyTagsAvatarUserField {
     get relation() {

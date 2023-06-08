@@ -1,9 +1,11 @@
 /** @odoo-module */
 
-import { Message } from "@mail/core_ui/message";
-import { patch } from "@web/core/utils/patch";
+import { Message } from "@mail/core/common/message";
+
 import { SnailmailError } from "./snailmail_error";
 import { SnailmailNotificationPopover } from "./snailmail_notification_popover";
+
+import { patch } from "@web/core/utils/patch";
 
 patch(Message.prototype, "snailmail", {
     onClickFailure() {

@@ -1,5 +1,11 @@
-/** @odoo-module **/
+/* @odoo-module */
 
+import {
+    CHAT_WINDOW_END_GAP_WIDTH,
+    CHAT_WINDOW_INBETWEEN_WIDTH,
+    CHAT_WINDOW_WIDTH,
+} from "@mail/core/common/chat_window_service";
+import { Command } from "@mail/../tests/helpers/command";
 import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import {
     afterNextRender,
@@ -12,15 +18,10 @@ import {
     startServer,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
-import { Command } from "@mail/../tests/helpers/command";
 
-import {
-    CHAT_WINDOW_END_GAP_WIDTH,
-    CHAT_WINDOW_INBETWEEN_WIDTH,
-    CHAT_WINDOW_WIDTH,
-} from "@mail/chat_window/chat_window_service";
 import { nextTick, triggerEvent, triggerHotkey } from "@web/../tests/helpers/utils";
 import { file } from "web.test_utils";
+
 const { inputFiles } = file;
 
 QUnit.module("chat window");

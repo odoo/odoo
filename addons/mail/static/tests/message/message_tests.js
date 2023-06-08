@@ -1,18 +1,18 @@
-/** @odoo-module **/
+/* @odoo-module */
 
+import { Command } from "@mail/../tests/helpers/command";
 import {
-    startServer,
-    start,
+    afterNextRender,
     click,
     insertText,
-    afterNextRender,
     nextAnimationFrame,
+    start,
+    startServer,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
-import { Command } from "@mail/../tests/helpers/command";
 
 import { deserializeDateTime } from "@web/core/l10n/dates";
-const { DateTime } = luxon;
+import { url } from "@web/core/utils/urls";
 import {
     editInput,
     makeDeferred,
@@ -20,7 +20,8 @@ import {
     triggerEvent,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
-import { url } from "@web/core/utils/urls";
+
+const { DateTime } = luxon;
 
 QUnit.module("message");
 

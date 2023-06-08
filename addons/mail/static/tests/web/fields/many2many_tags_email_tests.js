@@ -1,9 +1,9 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
 
-import testUtils from "web.test_utils";
 import { selectDropdownItem } from "@web/../tests/helpers/utils";
+import testUtils from "web.test_utils";
 
 QUnit.module("FieldMany2ManyTagsEmail");
 

@@ -1,6 +1,8 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { manageMessages } from "@mail/js/tools/debug_manager";
+
+import { registry } from "@web/core/registry";
 import {
     click,
     getFixture,
@@ -12,7 +14,6 @@ import {
     doAction,
     getActionManagerServerData,
 } from "@web/../tests/webclient/helpers";
-import { registry } from "@web/core/registry";
 
 QUnit.module("debug menu");
 

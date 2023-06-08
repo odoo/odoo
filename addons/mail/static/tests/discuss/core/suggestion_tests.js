@@ -1,8 +1,9 @@
 /* @odoo-module */
 
-import { Composer } from "@mail/composer/composer";
+import { Composer } from "@mail/core/common/composer";
 import { Command } from "@mail/../tests/helpers/command";
 import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("suggestion", {

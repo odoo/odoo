@@ -1,9 +1,12 @@
-/** @odoo-module **/
+/* @odoo-module */
+
+import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
 import { RATING, RATING_TO_EMOJI } from "@im_livechat/embed/core/livechat_service";
-import { start, loadDefaultConfig } from "@im_livechat/../tests/embed/helper/test_utils";
+import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
+
 import { afterNextRender, click, insertText } from "@mail/../tests/helpers/test_utils";
-import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 
 QUnit.module("feedback panel");

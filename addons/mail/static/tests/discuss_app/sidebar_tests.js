@@ -1,5 +1,6 @@
-/** @odoo-module **/
+/* @odoo-module */
 
+import { Command } from "@mail/../tests/helpers/command";
 import {
     afterNextRender,
     click,
@@ -9,10 +10,9 @@ import {
     startServer,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
-import { Command } from "@mail/../tests/helpers/command";
 
-import { editInput, makeDeferred, nextTick } from "@web/../tests/helpers/utils";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+import { editInput, makeDeferred, nextTick } from "@web/../tests/helpers/utils";
 
 QUnit.module("discuss sidebar");
 

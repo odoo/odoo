@@ -1,7 +1,9 @@
-/**@odoo-module **/
+/* @odoo-module */
+
+import { addFakeModel } from "@bus/../tests/helpers/model_definitions_helpers";
 
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
-import { addFakeModel } from "@bus/../tests/helpers/model_definitions_helpers";
+
 import { click } from "@web/../tests/helpers/utils";
 
 /**

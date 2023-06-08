@@ -1,8 +1,8 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { browser } from "@web/core/browser/browser";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { uniqueId } from "@web/core/utils/functions";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 /**
  * Wait a task tick, so that anything in micro-task queue that can be processed

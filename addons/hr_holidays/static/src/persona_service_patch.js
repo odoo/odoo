@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { personaService, PersonaService } from "@mail/core/persona_service";
+import { personaService, PersonaService } from "@mail/core/common/persona_service";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";

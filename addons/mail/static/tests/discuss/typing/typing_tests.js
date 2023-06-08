@@ -1,7 +1,8 @@
 /* @odoo-module */
 
-import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/composer_patch";
-import { OTHER_LONG_TYPING } from "@mail/discuss/typing/typing_service";
+import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/common/composer_patch";
+import { OTHER_LONG_TYPING } from "@mail/discuss/typing/common/typing_service";
+import { Command } from "@mail/../tests/helpers/command";
 import {
     afterNextRender,
     insertText,
@@ -9,7 +10,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
-import { Command } from "@mail/../tests/helpers/command";
+
 import { nextTick } from "@web/../tests/helpers/utils";
 
 QUnit.module("typing");
