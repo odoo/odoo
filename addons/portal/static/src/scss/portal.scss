@@ -337,11 +337,28 @@ img, .media_iframe_video, .o_image {
             padding-bottom: $o-portal-table-td-pb * 1.5;
         }
 
-        td, th {
+        .o_table-cell {
             vertical-align: middle;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        th {
+            @extend .o_table-cell;
+        }
+
+        td {
+            &:not(:is(a)) {
+                @extend .o_table-cell;
+            }
+
+            @if any-parent(&, a) {
+                a {
+                    @extend .o_table-cell;
+                    display: block;
+                }
+            }
         }
     }
 
