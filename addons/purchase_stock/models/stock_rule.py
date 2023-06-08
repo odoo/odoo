@@ -153,7 +153,7 @@ class StockRule(models.Model):
                     order_date_planned = procurement.values['date_planned'] - relativedelta(
                         days=procurement.values['supplier'].delay)
                     if fields.Date.to_date(order_date_planned) < fields.Date.to_date(po.date_order):
-                        po.date_order = order_date_planned
+                        po.date_order = max(order_date_planned, fields.Datetime.now())
             self.env['purchase.order.line'].sudo().create(po_line_values)
 
     def _get_lead_days(self, product, **values):
@@ -290,7 +290,7 @@ class StockRule(models.Model):
             'dest_address_id': values.get('partner_id', False),
             'origin': ', '.join(origins),
             'payment_term_id': partner.with_company(company_id).property_supplier_payment_term_id.id,
-            'date_order': purchase_date,
+            'date_order': max(purchase_date, fields.Datetime.now()),
             'fiscal_position_id': fpos.id,
             'group_id': group
         }
