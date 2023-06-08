@@ -9,23 +9,23 @@
         align-self: stretch;
         align-items: stretch;
 
-        > .o_arrow_button {
+        > .o_arrow_button:not(.d-none) {
             position: relative;
             padding-left: $o-statusbar-arrow-width * 1.5;
             border-radius: 0;
 
-            &:first-child {
+            &.o_first {
                 @include border-end-radius($border-radius);
                 padding-right: $o-horizontal-padding; // Compensate container padding
                 overflow-x: hidden; // to prevent horizontal scroll due to last arrow
             }
 
-            &:last-child {
+            &.o_last {
                 @include border-start-radius($border-radius);
                 padding-left: $o-horizontal-padding;
             }
 
-            &:not(:first-child) {
+            &:not(.o_first) {
                 &:before, &:after {
                     @include o-position-absolute(-$border-width, -$o-statusbar-arrow-width);
                     display: block;
@@ -49,7 +49,7 @@
                 }
             }
 
-            &.disabled {
+            &:disabled {
                 opacity: 1;
                 pointer-events: auto;
                 cursor: default;
@@ -61,7 +61,7 @@
                 }
             }
 
-            &.o_arrow_button_current.disabled, &:active:not(:first-child) {
+            &.o_arrow_button_current:disabled, &:active:not(.o_first) {
                 background-color: map-get($-btn-secondary-design, active-background);
                 border-color: map-get($-btn-secondary-design, active-border);
                 color: map-get($-btn-secondary-design, active-color);

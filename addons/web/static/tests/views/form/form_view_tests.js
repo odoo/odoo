@@ -5446,23 +5446,24 @@ QUnit.module("Views", (hooks) => {
         });
         assert.containsOnce(
             target,
-            ".o_statusbar_status button",
+            ".o_statusbar_status button:not(.d-none)",
             "Must have only one statusbar button"
         );
         await editInput(target, "input#name_0.o_input", "xpad");
         assert.containsN(
             target,
-            ".o_statusbar_status button",
+            ".o_statusbar_status button:not(.d-none)",
             2,
             "Must have only two statusbar buttons"
         );
         await clickDiscard(target);
         assert.containsOnce(
             target,
-            ".o_statusbar_status button",
+            ".o_statusbar_status button:not(.d-none)",
             "Must have only one statusbar button"
         );
-        const buttonText = target.querySelectorAll(".o_statusbar_status button")[0].textContent;
+        const buttonText = target.querySelectorAll(".o_statusbar_status button:not(.d-none)")[0]
+            .textContent;
         assert.strictEqual(buttonText, "xphone", "The statusbar button should be xphone");
     });
 
@@ -10040,7 +10041,7 @@ QUnit.module("Views", (hooks) => {
                 target.querySelector('button[data-value="4"]'),
                 "o_arrow_button_current"
             );
-            assert.hasClass(target.querySelector('button[data-value="4"]'), "disabled");
+            assert.ok(target.querySelector('button[data-value="4"]').disabled);
 
             failFlag = true;
             await click(target.querySelector('button[data-value="1"]'));
