@@ -124,8 +124,8 @@ class Task(models.Model):
             'planned_hours': r'\s(\d+(?:\.\d+)?)[hH]',
         }
 
-    def _get_groups_patterns(self):
-        return ['(?:%s)*' % self._get_group_pattern()['planned_hours']] + super()._get_groups_patterns()
+    def _prepare_pattern_groups(self):
+        return [self._get_group_pattern()['planned_hours']] + super()._prepare_pattern_groups()
 
     def _get_cannot_start_with_patterns(self):
         return super()._get_cannot_start_with_patterns() + [r'(?!\d+(?:\.\d+)?(?:h|H))']

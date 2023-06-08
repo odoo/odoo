@@ -663,14 +663,19 @@ class Task(models.Model):
     def _get_group_pattern(self):
         return {
             'tags_and_users': r'\s([#@]%s[^\s]+)',
-            'priority': r'\s(!)$',
+            'priority': r'\s(!)',
         }
 
-    def _get_groups_patterns(self):
-        group_pattern = self._get_group_pattern()
+    def _prepare_pattern_groups(self):
+        group = self._get_group_pattern()
         return [
-            r'(?:%s)*' % (group_pattern['tags_and_users'] % ''),
-            r'(?:%s)?' % group_pattern['priority'],
+            group['tags_and_users'] % '',
+            group['priority'],
+        ]
+
+    def _get_groups_patterns(self):
+        return [
+            r'(?:%s)*' % ('|').join(self._prepare_pattern_groups()),
         ]
 
     def _get_cannot_start_with_patterns(self):

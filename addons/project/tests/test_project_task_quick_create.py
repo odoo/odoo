@@ -24,8 +24,11 @@ class TestProjectTaskQuickCreate(TestProjectCommon):
     def test_create_task_with_valid_expressions(self):
         # dict format = {display name: (expected name, expected tags count, expected users count, expected priority, expected planned hours)}
         valid_expressions = {
-            'task A 30H 2.5h #Tag1 #tag2 #tag3 @Armande @Bast @raouf1 @raouf2 !': ('task A 30H 2.5h', 3, 4, "1", 0),
+            'task A 30H 2.5h #Tag1 #tag2 @Armande @Bast @raouf1 @raouf2 !': ('task A 30H 2.5h', 2, 4, "1", 0),
+            'task A 30H 2.5h #Tag1 #tag2 #tag3 @Armande @Bast @raouf1 ! @raouf2': ('task A 30H 2.5h', 3, 4, "1", 0),
+            'task A ! 30H 2.5h #Tag1 #tag2 #tag3 @Armande @Bast ! @raouf1 #tag4': ('task A 30H 2.5h', 4, 3, "1", 0),
             'task A': ('task A', 0, 0, "0", 0),
+            'task A !': ('task A', 0, 0, "1", 0),
             'task A 30H   2.5h #Tag1 #tag2     #tag3    @Armande      @Bast @raouf1 @raouf2': ('task A 30H   2.5h', 3, 4, "0", 0),
             'task A 30H 2.5h #Tag1 @Armande #tag3 @Bast @raouf1 #tag2 @raouf2 #tag4': ('task A 30H 2.5h', 4, 4, "0", 0),
             'task A 30H #tag1 @raouf1 Nothing !': ('task A 30H #tag1 @raouf1 Nothing', 0, 0, '1', 0),
@@ -43,11 +46,10 @@ class TestProjectTaskQuickCreate(TestProjectCommon):
 
     def test_create_task_with_invalid_expressions(self):
         invalid_expressions = (
-            'task A 30H #tag1 @raouf1 @raouf2 !!',
-            'task A 30H #tag1 @raouf2 user',
-            '#tag1 #tag2 #tag3 @Armande @Bast @raouf1 @raouf2 !',
-            '@Armande @Bast @raouf1 @raouf2 !',
+            '#tag1 #tag2 #tag3 @Armande @Bast @raouf1 @raouf2',
+            '@Armande @Bast @raouf1 @raouf2',
             '!',
+            'task A!'
         )
 
         for expression in invalid_expressions:
