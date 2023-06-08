@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <!-- Product Screen section -->
+    <t t-name="ReceiptScreen" t-inherit="point_of_sale.ReceiptScreen" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[@class='default-view']" position="replace">
+           <div class="actions">
+               <div class="message-container">
+                      <span class="center-text">Order is succesfully created</span>
+                    </div>
+               <div class="buttons hidden">
+                            <div class="button print" t-on-click="printReceipt">
+                                <i class="fa fa-print"></i>
+                                Print Receipt
+                            </div>
+                        </div>
+               <div class="notice hidden">
+                            <div t-if="orderUiState.emailSuccessful !== null"
+                                 t-attf-class="{{ orderUiState.emailSuccessful ? 'successful' : 'failed' }}">
+                                <t t-esc="orderUiState.emailNotice"></t>
+                            </div>
+                   <div class="send-mail-info" t-if="currentOrder.is_to_invoice()">
+                                (Both will be sent by email)
+                            </div>
+                        </div>
+                    </div>
+            <div class="pos-receipt-container hidden" t-ref="order-receipt">
+                        <OrderReceipt order="currentOrder"/>
+                    </div>
+        </xpath>
+    </t>
+</templates>
