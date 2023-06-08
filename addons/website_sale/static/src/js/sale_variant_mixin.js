@@ -408,7 +408,11 @@ var VariantMixin = {
         if (combinationData.archived_combinations) {
             combinationData.archived_combinations.forEach((excludedCombination) => {
                 const ptavCommon = excludedCombination.filter((ptav) => combination.includes(ptav));
-                if (ptavCommon.length === combination.length) {
+                if (
+                    !!ptavCommon
+                    && (combination.length === excludedCombination.length)
+                    && (ptavCommon.length === combination.length)
+                ) {
                     // Selected combination is archived, all attributes must be disabled from each other
                     combination.forEach((ptav) => {
                         combination.forEach((ptavOther) => {
@@ -423,7 +427,11 @@ var VariantMixin = {
                             );
                         })
                     })
-                } else if (ptavCommon.length === (combination.length - 1)) {
+                } else if (
+                    !!ptavCommon
+                    && (combination.length === excludedCombination.length)
+                    && (ptavCommon.length === (combination.length - 1))
+                ) {
                     // In this case we only need to disable the remaining ptav
                     const disabledPtav = excludedCombination.find((ptav) => !combination.includes(ptav));
                     excludedCombination.forEach((ptav) => {
