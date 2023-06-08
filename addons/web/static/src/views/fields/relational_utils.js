@@ -35,6 +35,8 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
  * @property {boolean} [unlink]
  * @property {boolean} [write]
  * @property {Function | null} onDelete
+ *
+ * @typedef {import("services").Services} Services
  */
 
 import {
@@ -141,6 +143,10 @@ export function useActiveActions({
     return activeActions;
 }
 
+/**
+ * @template T, [Props=any], [Env=any]
+ * @param {(orm: Services["orm"], props: Component<Props, Env>["props"]) => Promise<T>} loadFn
+ */
 export function useSpecialData(loadFn) {
     const component = useComponent();
     const record = component.props.record;
@@ -156,7 +162,8 @@ export function useSpecialData(loadFn) {
     }
     ormWithCache.call = (...args) => specialDataCaches[key].read(...args);
 
-    const result = useState({});
+    /** @type {{ data: Record<string, T> }} */
+    const result = useState({ data: {} });
     useRecordObserver(async (record, props) => {
         result.data = await loadFn(ormWithCache, { ...props, record });
     });

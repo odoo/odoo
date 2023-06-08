@@ -248,10 +248,7 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_statusbar_status button[data-value='4']"),
             "o_arrow_button_current"
         );
-        assert.hasClass(
-            target.querySelector(".o_statusbar_status button[data-value='4']"),
-            "disabled"
-        );
+        assert.ok(target.querySelector(".o_statusbar_status button[data-value='4']").disabled);
 
         const clickableButtons = target.querySelectorAll(
             ".o_statusbar_status button.btn:not(.dropdown-toggle):not(:disabled):not(.o_arrow_button_current)"
@@ -264,10 +261,7 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_statusbar_status button[data-value='1']"),
             "o_arrow_button_current"
         );
-        assert.hasClass(
-            target.querySelector(".o_statusbar_status button[data-value='1']"),
-            "disabled"
-        );
+        assert.ok(target.querySelector(".o_statusbar_status button[data-value='1']").disabled);
     });
 
     QUnit.test("statusbar with no status", async function (assert) {
@@ -286,9 +280,9 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.doesNotHaveClass(target.querySelector(".o_statusbar_status"), "o_field_empty");
-        assert.strictEqual(
-            target.querySelector(".o_statusbar_status").children.length,
-            0,
+        assert.containsNone(
+            target,
+            ".o_statusbar_status > :not(.d-none)",
             "statusbar widget should be empty"
         );
     });
@@ -435,15 +429,15 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            await click(target, ".o_statusbar_status .dropdown-toggle");
+            await click(target, ".o_statusbar_status .dropdown-toggle:not(.d-none)");
 
             const status = target.querySelectorAll(".o_statusbar_status");
             assert.containsOnce(status[0], ".dropdown-item.disabled");
-            assert.containsOnce(status[status.length - 1], "button.disabled");
+            assert.containsOnce(status[status.length - 1], "button:disabled");
         }
     );
 
-    QUnit.test("statusbar: choose an item from the 'More' menu", async function (assert) {
+    QUnit.test("statusbar: choose an item from the folded menu", async function (assert) {
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
         });
@@ -472,11 +466,11 @@ QUnit.module("Fields", (hooks) => {
             document
                 .querySelector(".o_statusbar_status .dropdown-toggle.o_arrow_button")
                 .textContent.trim(),
-            "More",
+            "...",
             "button has the correct text"
         );
 
-        await click(target, ".o_statusbar_status .dropdown-toggle");
+        await click(target, ".o_statusbar_status .dropdown-toggle:not(.d-none)");
         await click(target, ".o-dropdown .dropdown-item");
         assert.strictEqual(
             target.querySelector("[aria-label='Current state']").textContent,
@@ -510,10 +504,10 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        assert.containsN(target, ".o_statusbar_status button.disabled", 3);
+        assert.containsN(target, ".o_statusbar_status button:disabled", 3);
         assert.strictEqual(rpcCount, 1, "should have done 1 search_read rpc");
         await editInput(target, ".o_field_widget[name='qux'] input", 9.5);
-        assert.containsN(target, ".o_statusbar_status button.disabled", 2);
+        assert.containsN(target, ".o_statusbar_status button:disabled", 2);
         assert.strictEqual(rpcCount, 2, "should have done 1 more search_read rpc");
         await editInput(target, ".o_field_widget[name='qux'] input", "hey");
         assert.strictEqual(rpcCount, 2, "should not have done 1 more search_read rpc");
