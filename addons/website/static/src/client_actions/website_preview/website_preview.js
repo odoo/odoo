@@ -477,7 +477,7 @@ export class WebsitePreview extends Component {
         }
     }
     _onPageHide() {
-        this.lastHiddenPageURL = this.iframe.el.contentWindow.location.href;
+        this.lastHiddenPageURL = this.iframe.el && this.iframe.el.contentWindow.location.href;
         // Normally, at this point, the websiteRootInstance is already set to
         // `undefined`, as we want to do that as early as possible to prevent
         // the editor to be in an unstable state. But some events not managed
