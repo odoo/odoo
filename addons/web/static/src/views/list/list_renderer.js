@@ -937,6 +937,7 @@ export class ListRenderer extends Component {
                     `.o_selected_row td[name='${column.name}']`
                 );
                 if (containsActiveElement(cell)) {
+                    this.lastEditedCell = { column, record };
                     // Cell is already focused.
                     return;
                 }
