@@ -3,26 +3,30 @@
 
 from unittest.mock import patch
 
+from odoo import fields
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
-from odoo.tests.common import tagged
-from odoo.tests import Form
+from odoo.tests import Form, tagged, users
+from odoo.tools import mute_logger
 
 
 @tagged('mail_track')
 class TestTracking(MailCommon):
 
-    def setUp(self):
-        super(TestTracking, self).setUp()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
-        record = self.env['mail.test.ticket'].with_user(self.user_employee).with_context(self._test_context).create({
+        record = cls.env['mail.test.ticket'].with_user(
+            cls.user_employee
+        ).with_context(cls._test_context).create({
             'name': 'Test',
         })
-        self.flush_tracking()
-        self.record = record.with_context(mail_notrack=False)
+        cls.record = record.with_context(mail_notrack=False)
 
     def test_message_track_author(self):
-        """ Checks that the author of the log note matches the user at the time of writing"""
+        """ Check that the author of the log note matches the user at the time
+        of writing. """
         with self.mock_mail_gateway():
             self.record._track_set_author(self.partner_admin)
             self.record.write({
@@ -80,14 +84,23 @@ class TestTracking(MailCommon):
         self.assertEqual(len(self.record.message_ids), 4, 'Should have added one change message and one automated template')
         self.assertEqual(second_message.message_type, 'notification')
 
-    def test_message_track_no_tracking(self):
-        """ Update a set of non tracked fields -> no message, no tracking """
-        self.record.write({
-            'name': 'Tracking or not',
-            'count': 32,
-        })
+    def test_message_track_multiple(self):
+        """ check that multiple updates generate a single tracking message """
+        container = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({'name': 'Container'})
+        self.record.name = 'Zboub'
+        self.record.customer_id = self.user_admin.partner_id
+        self.record.user_id = self.user_admin
+        self.record.container_id = container
         self.flush_tracking()
-        self.assertEqual(self.record.message_ids, self.env['mail.message'])
+
+        # should have a single message with all tracked fields
+        self.assertEqual(len(self.record.message_ids), 1, 'should have 1 tracking message')
+        self.assertEqual(self.record.message_ids.author_id, self.partner_employee)
+        self.assertTracking(self.record.message_ids[0], [
+            ('customer_id', 'many2one', False, self.user_admin.partner_id),
+            ('user_id', 'many2one', False, self.user_admin),
+            ('container_id', 'many2one', False, container),
+        ])
 
     def test_message_track_no_subtype(self):
         """ Update some tracked fields not linked to some subtype -> message with onchange """
@@ -114,6 +127,23 @@ class TestTracking(MailCommon):
             self.record.message_ids,
             [('customer_id', 'many2one', False, customer)  # onchange tracked field
              ])
+
+    @users('employee')
+    def test_message_track_no_tracking(self):
+        """ Update a set of non tracked fields -> no message, no tracking, or
+        use dedicated context key """
+        record = self.record.with_env(self.env)
+        record.write({
+            'name': 'Tracking or not',
+            'count': 32,
+        })
+        self.flush_tracking()
+        self.assertFalse(record.message_ids)
+
+        # check context key allowing to skip tracking
+        record.with_context(mail_notrack=True).write({'email_from': 'new.from@test.example.com'})
+        self.flush_tracking()
+        self.assertFalse(record.message_ids)
 
     def test_message_track_subtype(self):
         """ Update some tracked fields linked to some subtype -> message with onchange """
@@ -144,6 +174,7 @@ class TestTracking(MailCommon):
             [('container_id', 'many2one', False, container)  # onchange tracked field
              ])
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_track_template(self):
         """ Update some tracked fields linked to some template -> message with onchange """
         self.record.write({'mail_template': self.env.ref('test_mail.mail_test_ticket_tracking_tpl').id})
@@ -173,6 +204,7 @@ class TestTracking(MailCommon):
             [('customer_id', 'many2one', False, self.user_admin.partner_id)  # onchange tracked field
              ])
 
+    @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_message_track_template_at_create(self):
         """ Create a record with tracking template on create, template should be sent."""
 
@@ -194,6 +226,7 @@ class TestTracking(MailCommon):
         # one email send due to template
         self.assertSentEmail(self.record.env.user.partner_id, [self.partner_admin], body='<p>Hello Test</p>')
 
+    @mute_logger('odoo.addons.mail.models.mail_mail', 'odoo.addons.mail.models.mail_thread')
     def test_message_track_template_at_create_from_message(self):
         """Make sure records created through aliasing show the original message before the template"""
         # setup
@@ -231,7 +264,10 @@ class TestTracking(MailCommon):
             }
         )
 
-    def test_create_partner_from_tracking_multicompany(self):
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_message_track_template_create_partner_multicompany(self):
+        """ Test partner created due to usage of a mail.template, triggered by
+        a tracking, in a multi company environment. """
         company1 = self.env['res.company'].create({'name': 'company1'})
         self.env.user.write({'company_ids': [(4, company1.id, False)]})
         self.assertNotEqual(self.env.company, company1)
@@ -266,39 +302,9 @@ class TestTracking(MailCommon):
         self.assertTrue(new_partner)
         self.assertEqual(new_partner.company_id, company1)
 
-    def test_track_invalid_selection(self):
-        # Test: Check that initial invalid selection values are allowed when tracking
-        # Create a record with an initially invalid selection value
-        invalid_value = 'I love writing tests!'
-        record = self.env['mail.test.track.selection'].create({
-            'name': 'Test Invalid Selection Values',
-            'selection_type': 'first',
-        })
-
-        self.flush_tracking()
-        self.env.cr.execute(
-            """
-            UPDATE mail_test_track_selection
-               SET selection_type = %s
-             WHERE id = %s
-            """,
-            [invalid_value, record.id]
-        )
-
-        record.invalidate_recordset()
-
-        self.assertEqual(record.selection_type, invalid_value)
-
-        # Write a valid selection value
-        record.selection_type = "second"
-
-        self.flush_tracking()
-        self.assertTracking(record.message_ids, [
-            ('selection_type', 'char', invalid_value, 'Second'),
-        ])
-
-    def test_track_template(self):
-        # Test: Check that default_* keys are not taken into account in _message_track_post_template
+    def test_message_track_template_defaults(self):
+        """ Check that default_* keys are not taken into account in
+        _message_track_post_template """
         magic_code = 'Up-Up-Down-Down-Left-Right-Left-Right-Square-Triangle'
 
         mt_name_changed = self.env['mail.message.subtype'].create({
@@ -346,128 +352,185 @@ class TestTracking(MailCommon):
         })
         test_mail_record.with_context(default_parent_id=2147483647).write({'name': magic_code})
 
-    def test_message_track_multiple(self):
-        """ check that multiple updates generate a single tracking message """
-        container = self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({'name': 'Container'})
-        self.record.name = 'Zboub'
-        self.record.customer_id = self.user_admin.partner_id
-        self.record.user_id = self.user_admin
-        self.record.container_id = container
+
+@tagged('mail_track')
+class TestTrackingInternals(MailCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.record = cls.env['mail.test.ticket'].with_user(cls.user_employee).create({
+            'name': 'Test',
+        })
+        cls.test_partner = cls.env['res.partner'].create({
+            'country_id': cls.env.ref('base.be').id,
+            'email': 'test.partner@test.example.com',
+            'name': 'Test Partner',
+            'phone': '0456001122',
+        })
+
+    @users('employee')
+    def test_mail_track_all_no2many(self):
+        test_record = self.env['mail.test.track.all'].create({
+            'company_id': self.env.company.id,
+        })
         self.flush_tracking()
+        self.assertEqual(test_record.currency_id, self.env.ref('base.USD'))
+        messages = test_record.message_ids
+        today = fields.Date.today()
+        today_dt = fields.Datetime.to_datetime(today)
+        now = fields.Datetime.now()
 
-        # should have a single message with all tracked fields
-        self.assertEqual(len(self.record.message_ids), 1, 'should have 1 tracking message')
-        self.assertEqual(self.record.message_ids.author_id, self.partner_employee)
-        self.assertTracking(self.record.message_ids[0], [
-            ('customer_id', 'many2one', False, self.user_admin.partner_id),
-            ('user_id', 'many2one', False, self.user_admin),
-            ('container_id', 'many2one', False, container),
-        ])
+        test_record.write({
+            'boolean_field': True,
+            'char_field': 'char_value',
+            'date_field': today,
+            'datetime_field': now,
+            'float_field': 3.22,
+            'html_field': '<p>Html Value</p>',
+            'integer_field': 42,
+            'many2one_field_id': self.test_partner.id,
+            'monetary_field': 42.42,
+            'selection_field': 'first',
+            'text_field': 'text_value',
+        })
+        self.flush_tracking()
+        new_message = test_record.message_ids - messages
+        self.assertEqual(len(new_message), 1,
+                         'Should have generated a tracking value')
+        self.assertTracking(
+            new_message,
+            [
+                ('boolean_field', 'boolean', 0, 1),
+                ('char_field', 'char', False, 'char_value'),
+                ('date_field', 'date', False, today_dt),
+                ('datetime_field', 'datetime', False, now),
+                ('float_field', 'float', 0, 3.22),
+                ('integer_field', 'integer', 0, 42),
+                ('many2one_field_id', 'many2one', self.env['res.partner'], self.test_partner),
+                ('monetary_field', 'monetary', False, (42.42, self.env.ref('base.USD'))),
+                ('selection_field', 'selection', '', 'FIRST'),
+                ('text_field', 'text', False, 'text_value'),
+            ],
+            strict=True
+        )
 
-    def test_tracked_compute(self):
+    @users('employee')
+    def test_mail_track_compute(self):
+        """ Test tracking of computed fields """
         # no tracking at creation
-        record = self.env['mail.test.track.compute'].create({})
+        compute_record = self.env['mail.test.track.compute'].create({})
         self.flush_tracking()
-        self.assertEqual(len(record.message_ids), 1)
-        self.assertEqual(len(record.message_ids[0].tracking_value_ids), 0)
+        self.assertEqual(len(compute_record.message_ids), 1)
+        self.assertEqual(len(compute_record.message_ids[0].tracking_value_ids), 0)
 
         # assign partner_id: one tracking message for the modified field and all
         # the stored and non-stored computed fields on the record
-        partner = self.env['res.partner'].create({
+        partner_su = self.env['res.partner'].sudo().create({
             'name': 'Foo',
             'email': 'foo@example.com',
             'phone': '1234567890',
         })
-        record.partner_id = partner
+        compute_record.partner_id = partner_su
         self.flush_tracking()
-        self.assertEqual(len(record.message_ids), 2)
-        self.assertEqual(len(record.message_ids[0].tracking_value_ids), 4)
-        self.assertEqual(record.message_ids.author_id, self.partner_root)
-        self.assertTracking(record.message_ids[0], [
-            ('partner_id', 'many2one', False, partner),
+        self.assertEqual(len(compute_record.message_ids), 2)
+        self.assertEqual(len(compute_record.message_ids[0].tracking_value_ids), 4)
+        self.assertEqual(compute_record.message_ids.author_id, self.partner_employee)
+        self.assertTracking(compute_record.message_ids[0], [
+            ('partner_id', 'many2one', False, partner_su),
             ('partner_name', 'char', False, 'Foo'),
             ('partner_email', 'char', False, 'foo@example.com'),
             ('partner_phone', 'char', False, '1234567890'),
         ])
 
         # modify partner: one tracking message for the only recomputed field
-        partner.write({'name': 'Fool'})
+        partner_su.write({'name': 'Fool'})
         self.flush_tracking()
-        self.assertEqual(len(record.message_ids), 3)
-        self.assertEqual(len(record.message_ids[0].tracking_value_ids), 1)
-        self.assertTracking(record.message_ids[0], [
+        self.assertEqual(len(compute_record.message_ids), 3)
+        self.assertEqual(len(compute_record.message_ids[0].tracking_value_ids), 1)
+        self.assertTracking(compute_record.message_ids[0], [
             ('partner_name', 'char', 'Foo', 'Fool'),
         ])
 
         # modify partner: one tracking message for both stored computed fields;
         # the non-stored computed fields have no tracking
-        partner.write({
+        partner_su.write({
             'name': 'Bar',
             'email': 'bar@example.com',
             'phone': '0987654321',
         })
         # force recomputation of 'partner_phone' to make sure it does not
         # generate tracking values
-        self.assertEqual(record.partner_phone, '0987654321')
+        self.assertEqual(compute_record.partner_phone, '0987654321')
         self.flush_tracking()
-        self.assertEqual(len(record.message_ids), 4)
-        self.assertEqual(len(record.message_ids[0].tracking_value_ids), 2)
-        self.assertTracking(record.message_ids[0], [
+        self.assertEqual(len(compute_record.message_ids), 4)
+        self.assertEqual(len(compute_record.message_ids[0].tracking_value_ids), 2)
+        self.assertTracking(compute_record.message_ids[0], [
             ('partner_name', 'char', 'Fool', 'Bar'),
             ('partner_email', 'char', 'foo@example.com', 'bar@example.com'),
         ])
 
-@tagged('mail_track')
-class TestTrackingMonetary(MailCommon):
-
-    def setUp(self):
-        super(TestTrackingMonetary, self).setUp()
-
-        record = self.env['mail.test.track.monetary'].with_user(self.user_employee).with_context(self._test_context).create({
+    @users('employee')
+    def test_mail_track_monetary(self):
+        """ Update a record with a tracked monetary field """
+        monetary_record = self.env['mail.test.track.monetary'].with_user(self.user_employee).create({
             'company_id': self.user_employee.company_id.id,
         })
         self.flush_tracking()
-        self.record = record.with_context(mail_notrack=False)
-
-    def test_message_track_monetary(self):
-        """ Update a record with a tracked monetary field """
+        self.assertEqual(len(monetary_record.message_ids), 1)
 
         # Check if the tracking value have the correct currency and values
-        self.record.write({
+        monetary_record.write({
             'revenue': 100,
         })
         self.flush_tracking()
-        self.assertEqual(len(self.record.message_ids), 1)
-
-        self.assertTracking(self.record.message_ids[0], [
-            ('revenue', 'monetary', 0, 100),
+        self.assertEqual(len(monetary_record.message_ids), 2)
+        self.assertTracking(monetary_record.message_ids[0], [
+            ('revenue', 'monetary', 0, (100, self.env.company.currency_id)),
         ])
 
         # Check if the tracking value have the correct currency and values after changing the value and the company
-        self.record.write({
+        monetary_record.write({
             'revenue': 200,
             'company_id': self.company_2.id,
         })
         self.flush_tracking()
-        self.assertEqual(len(self.record.message_ids), 2)
-
-        self.assertTracking(self.record.message_ids[0], [
-            ('revenue', 'monetary', 100, 200),
+        self.assertEqual(len(monetary_record.message_ids), 3)
+        self.assertTracking(monetary_record.message_ids[0], [
+            ('revenue', 'monetary', 100, (200, self.company_2.currency_id)),
             ('company_currency', 'many2one', self.user_employee.company_id.currency_id, self.company_2.currency_id)
         ])
 
-
-@tagged('mail_track')
-class TestTrackingInternals(MailCommon):
-
-    def setUp(self):
-        super(TestTrackingInternals, self).setUp()
-
-        record = self.env['mail.test.ticket'].with_user(self.user_employee).with_context(self._test_context).create({
-            'name': 'Test',
+    @users('employee')
+    def test_mail_track_selection_invalid(self):
+        """ Check that initial invalid selection values are allowed when tracking """
+        # Create a record with an initially invalid selection value
+        invalid_value = 'I love writing tests!'
+        record = self.env['mail.test.track.selection'].create({
+            'name': 'Test Invalid Selection Values',
+            'selection_type': 'first',
         })
+
         self.flush_tracking()
-        self.record = record.with_context(mail_notrack=False)
+        self.env.cr.execute(
+            """
+            UPDATE mail_test_track_selection
+               SET selection_type = %s
+             WHERE id = %s
+            """,
+            [invalid_value, record.id]
+        )
+        record.invalidate_recordset()
+        self.assertEqual(record.selection_type, invalid_value)
+
+        # Write a valid selection value
+        record.selection_type = "second"
+
+        self.flush_tracking()
+        self.assertTracking(record.message_ids, [
+            ('selection_type', 'char', invalid_value, 'Second'),
+        ])
 
     def test_track_groups(self):
         field = self.record._fields['email_from']
@@ -479,7 +542,7 @@ class TestTrackingInternals(MailCommon):
 
         msg_emp = self.record.message_ids.message_format()
         msg_sudo = self.record.sudo().message_ids.message_format()
-        tracking_values = self.env['mail.tracking.value'].search([('mail_message_id', '=', self.record.message_ids.id)])
+        tracking_values = self.env['mail.tracking.value'].search([('mail_message_id', '=', self.record.message_ids[0].id)])
         formattedTrackingValues = [{
             'changedField': 'Email From',
             'id': tracking_values[0]['id'],
@@ -497,8 +560,8 @@ class TestTrackingInternals(MailCommon):
         self.assertEqual(msg_emp[0].get('trackingValues'), [], "should not have protected tracking values")
         self.assertEqual(msg_sudo[0].get('trackingValues'), formattedTrackingValues, "should have protected tracking values")
 
-        msg_emp = self.record._notify_by_email_prepare_rendering_context(self.record.message_ids, {})
-        msg_sudo = self.record.sudo()._notify_by_email_prepare_rendering_context(self.record.message_ids, {})
+        msg_emp = self.record._notify_by_email_prepare_rendering_context(self.record.message_ids[0], {})
+        msg_sudo = self.record.sudo()._notify_by_email_prepare_rendering_context(self.record.message_ids[0], {})
         self.assertFalse(msg_emp.get('tracking_values'), "should not have protected tracking values")
         self.assertTrue(msg_sudo.get('tracking_values'), "should have protected tracking values")
 
@@ -513,29 +576,36 @@ class TestTrackingInternals(MailCommon):
         record = record_form.save()
         self.assertEqual(record.name, 'TestDoNoCrash')
 
+    @users('employee')
     def test_track_sequence(self):
         """ Update some tracked fields and check that the mail.tracking.value are ordered according to their tracking_sequence"""
-        self.record.write({
+        record = self.record.with_env(self.env)
+        self.assertEqual(len(record.message_ids), 1)
+        record.write({
             'name': 'Zboub',
             'customer_id': self.user_admin.partner_id.id,
             'user_id': self.user_admin.id,
             'container_id': self.env['mail.test.container'].with_context(mail_create_nosubscribe=True).create({'name': 'Container'}).id
         })
         self.flush_tracking()
-        self.assertEqual(len(self.record.message_ids), 1, 'should have 1 tracking message')
+        self.assertEqual(len(record.message_ids), 2, 'should have 1 new tracking message')
 
-        tracking_values = self.env['mail.tracking.value'].search([('mail_message_id', '=', self.record.message_ids.id)])
+        tracking_values = self.env['mail.tracking.value'].sudo().search(
+            [('mail_message_id', '=', record.message_ids[0].id)]
+        )
         self.assertEqual(tracking_values[0].tracking_sequence, 1)
         self.assertEqual(tracking_values[1].tracking_sequence, 2)
         self.assertEqual(tracking_values[2].tracking_sequence, 100)
 
+    @users('employee')
     def test_unlinked_field(self):
-        record_sudo = self.record.sudo()
-        record_sudo.write({'email_from': 'new_value'})  # create a tracking value
+        """ Check that removing a field removes its tracking values. """
+        record = self.record.with_env(self.env)
+        record.write({'email_from': 'new_value'})  # create a tracking value
         self.flush_tracking()
-        self.assertEqual(len(record_sudo.message_ids.tracking_value_ids), 1)
-        ir_model_field = self.env['ir.model.fields'].search([
+        self.assertEqual(len(record.message_ids.sudo().tracking_value_ids), 1)
+        ir_model_field = self.env['ir.model.fields'].sudo().search([
             ('model', '=', 'mail.test.ticket'),
             ('name', '=', 'email_from')])
         ir_model_field.with_context(_force_unlink=True).unlink()
-        self.assertEqual(len(record_sudo.message_ids.tracking_value_ids), 0)
+        self.assertEqual(len(record.message_ids.sudo().tracking_value_ids), 0)
