@@ -23,17 +23,14 @@
     .o_website_loader_tip {
         font-size: 0.5em;
         color: var(--website-loader-color);
-        
+
         @include media-breakpoint-down(md) {
             width: 50% !important;
         }
 
-        .o_tooltip {
-            top: auto !important;
-            bottom: 11px !important;
-            left: 0 !important;
-            margin-right: 7px !important;
-            padding-left: 33px !important;
+        .o_tour_pointer {
+            --TourPointer__height: 1em;
+            --TourPointer__width: 1em;
         }
     }
 }
