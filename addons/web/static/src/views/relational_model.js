@@ -2504,7 +2504,7 @@ export class DynamicGroupList extends DynamicList {
                     ? g.__rawValue[0] === groupValue[0]
                     : g.__rawValue === groupValue;
             });
-            const state = previousGroup ? previousGroup.exportState() : {};
+            const state = previousGroup && groupParams.count ? previousGroup.exportState() : {};
             return [groupParams, state];
         });
 

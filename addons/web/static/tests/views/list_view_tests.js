@@ -17589,4 +17589,61 @@ QUnit.module("Views", (hooks) => {
             "Monetary cells should have ltr direction"
         );
     })
+
+    QUnit.test("remove group when they become empty after aplying a filter", async (assert) => {
+        let filtered = false;
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/></tree>',
+            groupBy: ["m2o", "bar"],
+            mockRPC(route, { method, kwargs }) {
+                if (filtered && method === "web_read_group" && kwargs.groupby[0] === "m2o") {
+                    return {
+                        groups: [
+                            { m2o: [1, "Value 1"], __domain: [["m2o", "=", 1]], m2o_count: 0 },
+                            { m2o: [2, "Value 2"], __domain: [["m2o", "=", 2]], m2o_count: 0 },
+                        ],
+                        length: 2,
+                    };
+                }
+            },
+            irFilters: [
+                {
+                    context: "{}",
+                    domain: "[('foo', '=', '$')]",
+                    id: 7,
+                    string: "filter",
+                    name: "filter",
+                },
+            ],
+        });
+
+        assert.containsN(target, ".o_group_header", 2, "start with 2 groups");
+        await click(target.querySelectorAll(".o_group_header")[0], null, "open 1st group");
+        await click(
+            target.querySelectorAll(".o_group_header")[1],
+            null,
+            "open 1st inner group in 1st group"
+        );
+        await click(
+            target.querySelectorAll(".o_group_header")[2],
+            null,
+            "open 2nd inner group in 1st group"
+        );
+        await click(target.querySelectorAll(".o_group_header")[3], null, "open 2nd group");
+        await click(
+            target.querySelectorAll(".o_group_header")[4],
+            null,
+            "open 1st inner group in 2nd group"
+        );
+        assert.containsN(target, ".o_group_header", 5);
+
+        filtered = true;
+        await toggleFavoriteMenu(target);
+        await toggleMenuItem(target, "filter");
+        assert.containsN(target, ".o_group_header", 2, "outer groups are closed");
+    });
 });
