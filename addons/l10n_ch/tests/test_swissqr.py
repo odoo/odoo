@@ -5,6 +5,7 @@ import time
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged
+from odoo.tools.misc import mod10r
 
 CH_IBAN = 'CH15 3881 5158 3845 3843 7'
 QR_IBAN = 'CH21 3080 8001 2345 6782 7'
@@ -183,3 +184,40 @@ class TestSwissQR(AccountTestInvoicingCommon):
         self.invoice1.partner_bank_id = qriban_account
         self.invoice1.action_post()
         self.swissqr_generated(self.invoice1, ref_type="QRR")
+
+    def test_swiss_order_reference_isr_for_qr_code(self):
+        """
+        Test that the order reference is correctly generated for QR-Code
+        We summon the skipTest if Sale is not installed (instead of creating a whole module for one test)
+        """
+        if 'sale.order' not in self.env:
+            self.skipTest('`sale` is not installed')
+
+        payment_custom = self.env['ir.module.module']._get('payment_custom')
+        if payment_custom.state != 'installed':
+            self.skipTest("payment_custom module is not installed")
+
+        provider = self.env['payment.provider'].create({
+            'name': 'Test',
+            'code': 'custom',
+        })
+        invoice_journal = self.env['account.journal'].search(
+            [('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
+        invoice_journal.write({'invoice_reference_model': 'ch'})
+        order = self.env['sale.order'].create({
+            'name': "S00001",
+            'partner_id': self.env['res.partner'].search([("name", '=', 'Partner')])[0].id,
+            'order_line': [
+                (0, 0, {'product_id': self.product_a.id, 'price_unit': 100}),
+            ],
+        })
+        payment_transaction = self.env['payment.transaction'].create({
+            'provider_id': provider.id,
+            'sale_order_ids': [order.id],
+            'partner_id': self.env['res.partner'].search([("name", '=', 'Partner')])[0].id,
+            'amount': 100,
+            'currency_id': self.env.company.currency_id.id,
+        })
+        payment_transaction._set_pending()
+
+        self.assertEqual(order.reference, mod10r(order.reference[:-1]))

@@ -20,11 +20,16 @@ class PaymentTransaction(models.Model):
     def _compute_sale_order_reference(self, order):
         self.ensure_one()
         if self.provider_id.so_reference_type == 'so_name':
-            return order.name
+            order_reference = order.name
         else:
             # self.provider_id.so_reference_type == 'partner'
             identification_number = order.partner_id.id
-            return '%s/%s' % ('CUST', str(identification_number % 97).rjust(2, '0'))
+            order_reference = '%s/%s' % ('CUST', str(identification_number % 97).rjust(2, '0'))
+
+        invoice_journal = self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
+        order_reference = invoice_journal._process_reference_for_sale_order(order_reference)
+
+        return order_reference
 
     @api.depends('sale_order_ids')
     def _compute_sale_order_ids_nbr(self):
