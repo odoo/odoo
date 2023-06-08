@@ -438,6 +438,7 @@ export class HtmlField extends Component {
         if (this.iframePromise && iframeTarget) {
             if (iframeTarget.innerHTML !== this.props.record.data[this.props.name]) {
                 iframeTarget.innerHTML = this.props.record.data[this.props.name];
+                retargetLinks(iframeTarget);
             }
             return this.iframePromise;
         }
