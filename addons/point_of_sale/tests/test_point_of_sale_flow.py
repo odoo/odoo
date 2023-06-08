@@ -1530,3 +1530,78 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         credit_notes = self.env['account.move'].search([('move_type', '=', 'out_refund')], order='id desc', limit=1)
         self.assertEqual(credit_notes.ref, "Reversal of: "+invoices.name)
         self.assertEqual(credit_notes.reversed_entry_id.id, invoices.id)
+
+    def test_order_total_subtotal_account_line_values(self):
+        self.tax1 = self.env['account.tax'].create({
+            'name': 'Tax 1',
+            'amount': 10,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+        #create an account to be used as income account
+        self.account1 = self.env['account.account'].create({
+            'name': 'Account 1',
+            'code': 'AC1',
+            'user_type_id': self.env.ref('account.data_account_type_revenue').id,
+            'reconcile': True,
+        })
+
+        self.product1 = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+            'taxes_id': [(6, 0, self.tax1.ids)],
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'property_account_income_id': self.account1.id,
+        })
+        self.product2 = self.env['product.product'].create({
+            'name': 'Product B',
+            'type': 'product',
+            'taxes_id': [(6, 0, self.tax1.ids)],
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'property_account_income_id': self.account1.id,
+        })
+        self.pos_config.open_session_cb(check_coa=False)
+        #create an order with product1
+        order = self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': self.pos_config.current_session_id.id,
+            'partner_id': self.partner1.id,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product1.id,
+                'price_unit': 100,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [[6, False, [self.tax1.id]]],
+                'price_subtotal': 100,
+                'price_subtotal_incl': 110,
+            }), (0, 0, {
+                'name': "OL/0002",
+                'product_id': self.product2.id,
+                'price_unit': 100,
+                'discount': 0,
+                'qty': 1,
+                'tax_ids': [[6, False, [self.tax1.id]]],
+                'price_subtotal': 100,
+                'price_subtotal_incl': 110,
+            })],
+            'pricelist_id': self.pos_config.pricelist_id.id,
+            'amount_paid': 220.0,
+            'amount_total': 220.0,
+            'amount_tax': 20.0,
+            'amount_return': 0.0,
+            'to_invoice': False,
+            })
+        #make payment
+        payment_context = {"active_ids": order.ids, "active_id": order.id}
+        order_payment = self.PosMakePayment.with_context(**payment_context).create({
+            'amount': order.amount_total,
+            'payment_method_id': self.cash_payment_method.id
+        })
+        order_payment.with_context(**payment_context).check()
+        session_id = self.pos_config.current_session_id
+        self.pos_config.current_session_id.action_pos_session_closing_control()
+        #get journal entries created
+        aml = self.env['pos.session'].browse(session_id.id).move_id.line_ids.filtered(lambda x: x.account_id == self.account1 and x.tax_ids == self.tax1)
+        self.assertEqual(aml.price_total, 220)
+        self.assertEqual(aml.price_subtotal, 200)
