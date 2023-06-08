@@ -143,7 +143,11 @@ class ProductTemplate(models.Model):
         ('1', 'Favorite'),
     ], default='0', string="Favorite")
 
-    product_tag_ids = fields.Many2many('product.tag', 'product_tag_product_template_rel', string='Product Tags')
+    product_tag_ids = fields.Many2many(
+        string="Product Template Tags",
+        comodel_name='product.tag',
+        relation='product_tag_product_template_rel',
+    )
 
     def _compute_item_count(self):
         for template in self:
