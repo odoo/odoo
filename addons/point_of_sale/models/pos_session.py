@@ -287,6 +287,7 @@ class PosSession(models.Model):
     def _validate_session(self, balancing_account=False, amount_to_balance=0, bank_payment_method_diffs=None):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         self.ensure_one()
+        data = {}
         sudo = self.user_has_groups('point_of_sale.group_pos_user')
         if self.order_ids or self.sudo().statement_line_ids:
             self.cash_real_transaction = sum(self.sudo().statement_line_ids.mapped('amount'))
@@ -325,6 +326,12 @@ class PosSession(models.Model):
             self.sudo()._post_statement_difference(cash_difference_before_statements, False)
             if self.move_id.line_ids:
                 self.move_id.sudo().with_company(self.company_id)._post()
+                #We need to write the price_subtotal and price_total here because if we do it earlier the compute functions will overwrite it here /account/models/account_move_line.py _compute_totals
+                for dummy, amount_data in data['sales'].items():
+                    self.env['account.move.line'].browse(amount_data['move_line_id']).write({
+                        'price_subtotal': abs(amount_data['amount_converted']),
+                        'price_total': abs(amount_data['amount_converted']) + abs(amount_data['tax_amount']),
+                    })
                 # Set the uninvoiced orders' state to 'done'
                 self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
             else:
@@ -740,9 +747,11 @@ class PosSession(models.Model):
                         line['base_tags'],
                     )
                     sales[sale_key] = self._update_amounts(sales[sale_key], {'amount': line['amount']}, line['date_order'], round=False)
+                    sales[sale_key].setdefault('tax_amount', 0.0)
                     # Combine tax lines
                     for tax in line['taxes']:
                         tax_key = (tax['account_id'] or line['income_account_id'], tax['tax_repartition_line_id'], tax['id'], tuple(tax['tag_ids']))
+                        sales[sale_key]['tax_amount'] += tax['amount']
                         order_taxes[tax_key] = self._update_amounts(
                             order_taxes[tax_key],
                             {'amount': tax['amount'], 'base_amount': tax['base']},
@@ -853,12 +862,15 @@ class PosSession(models.Model):
         if not float_is_zero(rounding_difference['amount'], precision_rounding=self.currency_id.rounding) or not float_is_zero(rounding_difference['amount_converted'], precision_rounding=self.currency_id.rounding):
             rounding_vals = [self._get_rounding_difference_vals(rounding_difference['amount'], rounding_difference['amount_converted'])]
 
+        MoveLine.create(tax_vals)
+        move_line_ids = MoveLine.create([self._get_sale_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in sales.items()])
+        for key, ml_id in zip(sales.keys(), move_line_ids.ids):
+            sales[key]['move_line_id'] = ml_id
         MoveLine.create(
-            tax_vals
-            + [self._get_sale_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in sales.items()]
-            + [self._get_stock_expense_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in stock_expense.items()]
+            [self._get_stock_expense_vals(key, amounts['amount'], amounts['amount_converted']) for key, amounts in stock_expense.items()]
             + rounding_vals
         )
+
         return data
 
     def _create_bank_payment_moves(self, data):
