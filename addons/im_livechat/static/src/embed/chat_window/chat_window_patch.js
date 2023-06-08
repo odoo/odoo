@@ -1,11 +1,14 @@
-/** @odoo-module */
+/* @odoo-module */
 
-import { ChatWindow } from "@mail/chat_window/chat_window";
-import { FeedbackPanel } from "../feedback_panel/feedback_panel";
-import { patch } from "@web/core/utils/patch";
-import { useService } from "@web/core/utils/hooks";
-import { SESSION_STATE } from "../core/livechat_service";
+import { SESSION_STATE } from "@im_livechat/embed/core/livechat_service";
+import { FeedbackPanel } from "@im_livechat/embed/feedback_panel/feedback_panel";
+
+import { ChatWindow } from "@mail/core/common/chat_window";
+
 import { useState } from "@odoo/owl";
+
+import { useService } from "@web/core/utils/hooks";
+import { patch } from "@web/core/utils/patch";
 
 Object.assign(ChatWindow.components, { FeedbackPanel });
 

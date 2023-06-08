@@ -1,12 +1,13 @@
-/** @odoo-module */
+/* @odoo-module */
 
-import { ChatWindowService } from "@mail/chat_window/chat_window_service";
-import { Composer } from "@mail/composer/composer";
-import { Message as MessageModel } from "@mail/core/message_model";
-import { Thread } from "@mail/core/thread_model";
+import { ChatWindowService } from "@mail/core/common/chat_window_service";
+import { Composer } from "@mail/core/common/composer";
+import { Message as MessageModel } from "@mail/core/common/message_model";
+import { Store } from "@mail/core/common/store_service";
+import { Thread } from "@mail/core/common/thread_model";
+import { ThreadService } from "@mail/core/common/thread_service";
+
 import { patch } from "@web/core/utils/patch";
-import { ThreadService } from "@mail/core/thread_service";
-import { Store } from "@mail/core/store_service";
 
 patch(ChatWindowService.prototype, "im_livechat/disabled", {
     notifyState() {

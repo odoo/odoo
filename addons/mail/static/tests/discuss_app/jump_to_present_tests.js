@@ -1,5 +1,6 @@
-/** @odoo-module */
+/* @odoo-module */
 
+import { PRESENT_THRESHOLD } from "@mail/core/common/thread";
 import {
     afterNextRender,
     click,
@@ -7,7 +8,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
-import { PRESENT_THRESHOLD } from "@mail/core_ui/thread";
+
 import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("jump to present");

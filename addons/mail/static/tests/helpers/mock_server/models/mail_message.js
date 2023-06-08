@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
@@ -311,7 +311,7 @@ patch(MockServer.prototype, "mail/models/mail_message", {
      */
     _mockMailMessageFormatPersonalize(ids) {
         const messages = this._mockMailMessageMessageFormat(ids);
-        messages.forEach(message => {
+        messages.forEach((message) => {
             let user_follower_id = false;
             if (message.model && message.res_id) {
                 const follower = this.getRecords("mail.followers", [

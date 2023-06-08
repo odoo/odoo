@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import {
     afterNextRender,

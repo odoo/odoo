@@ -1,8 +1,10 @@
-/** @odoo-module */
+/* @odoo-module */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
+
 import { start } from "@mail/../tests/helpers/test_utils";
+
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { nextTick } from "@web/../tests/helpers/utils";
 

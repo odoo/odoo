@@ -1,6 +1,7 @@
-/** @odoo-module */
+/* @odoo-module */
 
-import { Thread } from "@mail/core/thread_model";
+import { Thread } from "@mail/core/common/thread_model";
+
 import { patch } from "@web/core/utils/patch";
 
 patch(Thread.prototype, "im_livechat", {
@@ -50,7 +51,7 @@ patch(Thread.prototype, "im_livechat", {
 
     /**
      *
-     * @param {import("@mail/core/persona_model").Persona} persona
+     * @param {import("@mail/core/common/persona_model").Persona} persona
      */
     getMemberName(persona) {
         if (this.type !== "livechat") {

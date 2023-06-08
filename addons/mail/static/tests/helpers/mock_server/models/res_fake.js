@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
@@ -39,8 +39,8 @@ patch(MockServer.prototype, "mail/models/res_fake", {
      * @override
      */
     mockMailThread_MessageComputeSubject(model, ids) {
-        if (model === 'res.fake') {
-            return new Map(ids.map(id => [id, "Custom Default Subject"]));
+        if (model === "res.fake") {
+            return new Map(ids.map((id) => [id, "Custom Default Subject"]));
         }
         return this._super(model, ids);
     },

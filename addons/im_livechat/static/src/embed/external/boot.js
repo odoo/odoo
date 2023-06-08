@@ -1,16 +1,19 @@
 /* @odoo-module */
 
-import { serverUrl } from "@im_livechat/embed/livechat_data";
-import { makeShadow, makeRoot } from "@im_livechat/embed/boot_helpers";
 import { LivechatButton } from "@im_livechat/embed/core_ui/livechat_button";
-import { ChatWindowContainer } from "@mail/chat_window/chat_window_container";
+import { makeShadow, makeRoot } from "@im_livechat/embed/boot_helpers";
+import { serverUrl } from "@im_livechat/embed/livechat_data";
+
+import { ChatWindowContainer } from "@mail/core/common/chat_window_container";
+
 import { mount, whenReady } from "@odoo/owl";
+
+import { templates } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { jsonrpc } from "@web/core/network/rpc_service";
 import { registry } from "@web/core/registry";
 import { makeEnv, startServices } from "@web/env";
-import { templates } from "@web/core/assets";
 import { session } from "@web/session";
 
 (async function boot() {

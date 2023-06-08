@@ -1,8 +1,8 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 
-import { setCookie, start, loadDefaultConfig } from "@im_livechat/../tests/embed/helper/test_utils";
+import { loadDefaultConfig, setCookie, start } from "@im_livechat/../tests/embed/helper/test_utils";
 
 import { Command } from "@mail/../tests/helpers/command";
 import { afterNextRender, waitUntil } from "@mail/../tests/helpers/test_utils";

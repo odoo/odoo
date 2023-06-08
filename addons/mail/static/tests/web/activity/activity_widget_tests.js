@@ -1,10 +1,10 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { ROUTES_TO_IGNORE } from "@mail/../tests/helpers/webclient_setup";
 
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { ListController } from "@web/views/list/list_controller";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("activity widget");
 

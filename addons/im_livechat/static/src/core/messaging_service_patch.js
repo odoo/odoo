@@ -1,8 +1,9 @@
-/** @odoo-module */
+/* @odoo-module */
+
+import { Messaging } from "@mail/core/common/messaging_service";
+import { createLocalId } from "@mail/utils/common/misc";
 
 import { patch } from "@web/core/utils/patch";
-import { Messaging } from "@mail/core/messaging_service";
-import { createLocalId } from "@mail/utils/misc";
 
 patch(Messaging.prototype, "im_livechat", {
     initMessagingCallback(data) {

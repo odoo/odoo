@@ -1,4 +1,4 @@
-/** @odoo-module */
+/* @odoo-module */
 
 import { serverUrl } from "@im_livechat/embed/livechat_data";
 

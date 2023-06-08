@@ -1,10 +1,13 @@
-/** @odoo-module */
+/* @odoo-module */
 
-import { useStore } from "@mail/core/messaging_hook";
+import { SESSION_STATE } from "@im_livechat/embed/core/livechat_service";
+
+import { useStore } from "@mail/core/common/messaging_hook";
+
 import { Component, useState } from "@odoo/owl";
+
 import { useService } from "@web/core/utils/hooks";
 import { debounce } from "@web/core/utils/timing";
-import { SESSION_STATE } from "@im_livechat/embed/core/livechat_service";
 
 export class LivechatButton extends Component {
     static template = "im_livechat.LivechatButton";

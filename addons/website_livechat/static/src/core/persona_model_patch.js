@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Persona } from "@mail/core/persona_model";
+import { Persona } from "@mail/core/common/persona_model";
 import { patch } from "@web/core/utils/patch";
 
 patch(Persona.prototype, "website_livechat", {

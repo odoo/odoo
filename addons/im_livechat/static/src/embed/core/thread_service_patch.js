@@ -1,10 +1,13 @@
 /* @odoo-module */
 
 import { SESSION_STATE } from "@im_livechat/embed/core/livechat_service";
-import { ThreadService, threadService } from "@mail/core/thread_service";
-import { prettifyMessageContent } from "@mail/utils/format";
-import { createLocalId, onChange } from "@mail/utils/misc";
+
+import { ThreadService, threadService } from "@mail/core/common/thread_service";
+import { prettifyMessageContent } from "@mail/utils/common/format";
+import { createLocalId, onChange } from "@mail/utils/common/misc";
+
 import { markup } from "@odoo/owl";
+
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
@@ -24,7 +27,7 @@ patch(ThreadService.prototype, "im_livechat", {
      * @param {{
      * "im_livechat.chatbot": import("@im_livechat/embed/chatbot/chatbot_service").ChatBotService,
      * "im_livechat.livechat": import("@im_livechat/embed/core/livechat_service").LivechatService,
-     * "mail.chat_window": import("@mail/chat_window/chat_window_service").ChatWindowService,
+     * "mail.chat_window": import("@mail/core/common/chat_window_service").ChatWindowService,
      * notification: typeof import("@web/core/notifications/notification_service").notificationService.start,
      * }} services
      */
@@ -54,7 +57,7 @@ patch(ThreadService.prototype, "im_livechat", {
     },
 
     /**
-     * @returns {Promise<import("@mail/core/message_model").Message}
+     * @returns {Promise<import("@mail/core/common/message_model").Message}
      */
     async post(thread, body, params) {
         const _super = this._super;
@@ -181,7 +184,7 @@ patch(ThreadService.prototype, "im_livechat", {
     /**
      * @param {Object} param0
      * @param {boolean} param0.persisted
-     * @returns {Promise<import("@mail/core/thread_model").Thread?>}
+     * @returns {Promise<import("@mail/core/common/thread_model").Thread?>}
      */
     async getLivechatThread({ persisted = false } = {}) {
         const session = await this.livechatService.getSession({ persisted });

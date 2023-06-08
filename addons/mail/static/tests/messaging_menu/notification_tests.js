@@ -1,8 +1,9 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
-import { patchWithCleanup } from "@web/../tests/helpers/utils";
+
 import { browser } from "@web/core/browser/browser";
+import { patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("notification");
 

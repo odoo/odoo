@@ -1,8 +1,10 @@
-/** @odoo-module */
+/* @odoo-module */
 
-import { MessageService } from "@mail/core/message_service";
-import { patch } from "@web/core/utils/patch";
 import { ChatbotStep } from "@im_livechat/embed/chatbot/chatbot_step_model";
+
+import { MessageService } from "@mail/core/common/message_service";
+
+import { patch } from "@web/core/utils/patch";
 
 patch(MessageService.prototype, "im_livechat", {
     insert(data) {

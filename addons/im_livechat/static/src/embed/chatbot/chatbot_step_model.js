@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { assignDefined } from "@mail/utils/misc";
+import { assignDefined } from "@mail/utils/common/misc";
 
 /**
  * @typedef StepAnswer

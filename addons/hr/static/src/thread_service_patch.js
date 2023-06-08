@@ -1,10 +1,10 @@
 /** @odoo-module */
 
 import { _t } from "@web/core/l10n/translation";
-import { ThreadService } from "@mail/core/thread_service";
+import { ThreadService } from "@mail/core/common/thread_service";
 import { patch } from "web.utils";
 
-/** @type {import("@mail/core/thread_service").ThreadService} */
+/** @type {import("@mail/core/common/thread_service").ThreadService} */
 const threadServicePatch = {
     async getChat(person) {
         const { employeeId } = person;

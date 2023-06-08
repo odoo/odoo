@@ -6,7 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 
 import { Record } from "@web/views/record";
-import { KanbanMany2ManyTagsAvatarUserField } from "@mail/web/fields/many2many_avatar_user_field/many2many_avatar_user_field";
+import { KanbanMany2ManyTagsAvatarUserField } from "@mail/views/web/fields/many2many_avatar_user_field/many2many_avatar_user_field";
 import { Field, getFieldFromRegistry } from "@web/views/fields/field";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 

@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import "@mail/../tests/helpers/mock_server/models/discuss_channel"; // ensure mail overrides are applied first
 

@@ -1,8 +1,9 @@
-/** @odoo-module */
+/* @odoo-module */
 
-import { session } from "@web/session";
-import { Thread } from "@mail/core/thread_model";
+import { Thread } from "@mail/core/common/thread_model";
+
 import { patch } from "@web/core/utils/patch";
+import { session } from "@web/session";
 
 patch(Thread.prototype, "im_livechat", {
     chatbotScriptId: null,

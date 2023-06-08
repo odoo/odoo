@@ -1,6 +1,8 @@
-/** @odoo-module */
+/* @odoo-module */
+
+import { Message } from "@mail/core/common/message_model";
+
 import { patch } from "@web/core/utils/patch";
-import { Message } from "@mail/core/message_model";
 import { session } from "@web/session";
 
 patch(Message.prototype, "im_livechat", {

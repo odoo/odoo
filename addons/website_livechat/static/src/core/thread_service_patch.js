@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import { DEFAULT_AVATAR } from "@mail/core/persona_service";
-import { ThreadService } from "@mail/core/thread_service";
+import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
+import { ThreadService } from "@mail/core/common/thread_service";
 import { patch } from "@web/core/utils/patch";
 
 patch(ThreadService.prototype, "website_livechat", {
@@ -15,8 +15,8 @@ patch(ThreadService.prototype, "website_livechat", {
         }
     },
     /**
-     * @param {import('@mail/core/persona_model').Persona} persona
-     * @param {import("@mail/core/thread_model").Thread} [thread]
+     * @param {import('@mail/core/common/persona_model').Persona} persona
+     * @param {import("@mail/core/common/thread_model").Thread} [thread]
      */
     avatarUrl(persona, thread) {
         if (persona?.type === "visitor" && thread?.id) {

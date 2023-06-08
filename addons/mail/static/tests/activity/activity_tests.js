@@ -1,21 +1,22 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { file } from "web.test_utils";
 import {
     afterNextRender,
     click,
+    createFile,
     start,
     startServer,
-    createFile,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
+
+import { date_to_str } from "web.time";
 import {
+    mockTimeout,
     patchDate,
     patchWithCleanup,
     triggerHotkey,
-    mockTimeout,
 } from "@web/../tests/helpers/utils";
-import { date_to_str } from "web.time";
+import { file } from "web.test_utils";
 
 const { inputFiles } = file;
 

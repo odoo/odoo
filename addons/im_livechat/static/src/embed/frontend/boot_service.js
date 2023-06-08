@@ -1,9 +1,11 @@
-/** @odoo-module */
+/* @odoo-module */
 
 import { makeRoot, makeShadow } from "@im_livechat/embed/boot_helpers";
 import { LivechatRoot } from "@im_livechat/embed/frontend/livechat_root";
 import { serverUrl, isAvailable } from "@im_livechat/embed/livechat_data";
+
 import { App } from "@odoo/owl";
+
 import { templates } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 import { session } from "@web/session";

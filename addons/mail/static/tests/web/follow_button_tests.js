@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
 

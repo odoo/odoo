@@ -1,8 +1,8 @@
-/** @odoo-module **/
+/* @odoo-module */
 
+import { sortBy } from "@web/core/utils/arrays";
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
-import { sortBy } from "@web/core/utils/arrays";
 
 patch(MockServer.prototype, "mail/models/mail_activity", {
     async _performRPC(route, args) {

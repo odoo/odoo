@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { EMOJI_PER_ROW } from "@mail/core/common/emoji_picker";
 import {
     afterNextRender,
     click,
@@ -7,7 +8,6 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
-import { EMOJI_PER_ROW } from "@mail/emoji_picker/emoji_picker";
 
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 

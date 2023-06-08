@@ -1,22 +1,23 @@
-/** @odoo-module **/
+/* @odoo-module */
 
+import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
 import { TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
-import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
-import { Command } from "@mail/../tests/helpers/command";
 
+import { Command } from "@mail/../tests/helpers/command";
+import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
 import {
-    isScrolledToBottom,
     afterNextRender,
     click,
     createFile,
     insertText,
+    isScrolledToBottom,
     start,
     startServer,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
-import { editInput, nextTick, triggerEvent, triggerHotkey } from "@web/../tests/helpers/utils";
+
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
-import { makeFakePresenceService } from "@bus/../tests/helpers/mock_services";
+import { editInput, nextTick, triggerEvent, triggerHotkey } from "@web/../tests/helpers/utils";
 
 QUnit.module("discuss");
 

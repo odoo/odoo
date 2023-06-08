@@ -1,10 +1,11 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { editSearchBar } from "@web/../tests/core/commands/command_service_tests";
 import { afterNextRender, click, start, startServer } from "@mail/../tests/helpers/test_utils";
-import { nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
-import { registry } from "@web/core/registry";
+
 import { commandService } from "@web/core/commands/command_service";
+import { registry } from "@web/core/registry";
+import { editSearchBar } from "@web/../tests/core/commands/command_service_tests";
+import { nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 
 const serviceRegistry = registry.category("services");
 const commandSetupRegistry = registry.category("command_setup");

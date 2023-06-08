@@ -1,9 +1,10 @@
 /* @odoo-module */
 
-import { patch } from "@web/core/utils/patch";
-import { SuggestionService } from "@mail/composer/suggestion_service";
-import { cleanTerm } from "@mail/utils/format";
+import { SuggestionService } from "@mail/core/common/suggestion_service";
+import { cleanTerm } from "@mail/utils/common/format";
+
 import { _t } from "@web/core/l10n/translation";
+import { patch } from "@web/core/utils/patch";
 
 patch(SuggestionService.prototype, "im_livechat", {
     getSupportedDelimiters(thread) {

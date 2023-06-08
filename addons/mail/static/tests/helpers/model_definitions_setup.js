@@ -1,13 +1,15 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { TEST_GROUP_IDS, TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
 import {
     addFakeModel,
     addModelNamesToFetch,
     insertModelFields,
     insertRecords,
 } from "@bus/../tests/helpers/model_definitions_helpers";
+import { TEST_GROUP_IDS, TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
+
 import { Command } from "@mail/../tests/helpers/command";
+
 import { uniqueId } from "@web/core/utils/functions";
 
 //--------------------------------------------------------------------------

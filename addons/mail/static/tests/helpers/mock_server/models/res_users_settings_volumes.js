@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 // ensure bus mock server is loaded first.
 import "@bus/../tests/helpers/mock_server";

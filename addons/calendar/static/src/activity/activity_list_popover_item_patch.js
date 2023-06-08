@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { ActivityListPopoverItem } from "@mail/web/activity/activity_list_popover_item";
+import { ActivityListPopoverItem } from "@mail/core/web/activity_list_popover_item";
 import { patch } from "@web/core/utils/patch";
 
 patch(ActivityListPopoverItem.prototype, "calendar", {

@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { Thread } from "@mail/core_ui/thread";
-import { ImStatus } from "@mail/discuss_app/im_status";
+import { Thread } from "@mail/core/common/thread";
+import { ImStatus } from "@mail/core/common/im_status";
 
 Object.assign(Thread.components, { ImStatus });

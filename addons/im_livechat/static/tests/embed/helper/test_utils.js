@@ -3,11 +3,11 @@
 import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
 
 import { chatBotService } from "@im_livechat/embed/chatbot/chatbot_service";
-import { livechatService } from "@im_livechat/embed/core/livechat_service";
 import { autoPopupService } from "@im_livechat/embed/core/autopopup_service";
+import { livechatService } from "@im_livechat/embed/core/livechat_service";
 import { LivechatButton } from "@im_livechat/embed/core_ui/livechat_button";
 
-import { ChatWindowContainer } from "@mail/chat_window/chat_window_container";
+import { ChatWindowContainer } from "@mail/core/common/chat_window_container";
 import { setupManager } from "@mail/../tests/helpers/webclient_setup";
 
 import { App, onMounted } from "@odoo/owl";
@@ -15,10 +15,10 @@ import { App, onMounted } from "@odoo/owl";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
-import { fakeCookieService } from "@web/../tests/helpers/mock_services";
-import { createWebClient } from "@web/../tests/webclient/helpers";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import { fakeCookieService } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup, makeDeferred } from "@web/../tests/helpers/utils";
+import { createWebClient } from "@web/../tests/webclient/helpers";
 
 // =============================================================================
 // HELPERS

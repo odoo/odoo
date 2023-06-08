@@ -8,7 +8,7 @@ import {
     KanbanMany2ManyAvatarUser,
     ListMany2ManyAvatarUser,
     Many2ManyAvatarUser,
-} from "@mail/web/fields/m2x_avatar_user";
+} from "@mail/views/web/fields/m2x_avatar_user";
 
 // This module defines variants of the Many2OneAvatarUser and Many2ManyAvatarUser
 // field widgets, to support fields pointing to 'hr.employee'. It also defines the

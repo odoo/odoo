@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
 

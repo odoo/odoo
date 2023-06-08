@@ -197,7 +197,7 @@
             'web_editor/static/src/xml/backend.xml',
 
             'mail/static/src/scss/variables/*.scss',
-            'mail/static/src/views/form/form_renderer.scss',
+            'mail/static/src/views/web/form/form_renderer.scss',
 
             'project/static/src/components/project_task_name_with_subtask_count_char_field/*',
             'project/static/src/components/project_task_state_selection/*',

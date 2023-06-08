@@ -1,6 +1,5 @@
-/** @odoo-module */
+/* @odoo-module */
 
-import { ListRenderer } from "@web/views/list/list_renderer";
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 import {
@@ -9,6 +8,7 @@ import {
     X2ManyFieldDialog,
 } from "@web/views/fields/relational_utils";
 import { X2ManyField, x2ManyField } from "@web/views/fields/x2many/x2many_field";
+import { ListRenderer } from "@web/views/list/list_renderer";
 
 const fieldRegistry = registry.category("fields");
 

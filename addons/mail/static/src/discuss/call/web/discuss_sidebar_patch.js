@@ -1,7 +1,8 @@
 /* @odoo-module */
 
-import { useRtc } from "@mail/discuss/call/rtc_hook";
-import { Sidebar } from "@mail/web/discuss_app/sidebar";
+import { Sidebar } from "@mail/core/web/sidebar";
+import { useRtc } from "@mail/discuss/call/common/rtc_hook";
+
 import { patch } from "@web/core/utils/patch";
 
 patch(Sidebar.prototype, "discuss/call/web", {

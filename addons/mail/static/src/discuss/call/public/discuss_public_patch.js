@@ -1,11 +1,12 @@
 /* @odoo-module */
 
-import { useRtc } from "@mail/discuss/call/rtc_hook";
-import { DiscussPublic } from "@mail/public/discuss_public";
+import { DiscussPublic } from "@mail/core/public/discuss_public";
+import { useRtc } from "@mail/discuss/call/common/rtc_hook";
+
 import { browser } from "@web/core/browser/browser";
 import { patch } from "@web/core/utils/patch";
 
-patch(DiscussPublic.prototype, "discuss/call/web", {
+patch(DiscussPublic.prototype, "discuss/call/public", {
     setup() {
         this._super(...arguments);
         this.rtc = useRtc();

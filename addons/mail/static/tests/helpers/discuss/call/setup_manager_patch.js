@@ -1,13 +1,14 @@
 /* @odoo-module */
 
-import { CallInvitations } from "@mail/discuss/call/call_invitations";
-import { CallMenu } from "@mail/discuss/call/call_menu";
-import { rtcService } from "@mail/discuss/call/rtc_service";
+import { CallInvitations } from "@mail/discuss/call/common/call_invitations";
+import { CallMenu } from "@mail/discuss/call/common/call_menu";
+import { rtcService } from "@mail/discuss/call/common/rtc_service";
 import { setupManager } from "@mail/../tests/helpers/webclient_setup";
+
 import { registry } from "@web/core/registry";
 import { patch } from "@web/core/utils/patch";
 
-patch(setupManager, "discuss", {
+patch(setupManager, "discuss/call", {
     setupServices(...args) {
         return {
             ...this._super(...args),

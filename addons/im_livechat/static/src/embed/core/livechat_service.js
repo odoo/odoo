@@ -2,11 +2,11 @@
 
 import { reactive } from "@odoo/owl";
 
-import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
-import { session } from "@web/session";
-import { sprintf } from "@web/core/utils/strings";
+import { registry } from "@web/core/registry";
 import { Deferred } from "@web/core/utils/concurrency";
+import { sprintf } from "@web/core/utils/strings";
+import { session } from "@web/session";
 
 /**
  * @typedef LivechatRule
@@ -57,8 +57,8 @@ export class LivechatService {
      * cookie: typeof import("@web/core/browser/cookie_service").cookieService.start,
      * bus_service: typeof import("@bus/services/bus_service").busService.start,
      * rpc: typeof import("@web/core/network/rpc_service").rpcService.start,
-     * "mail.message": import("@mail/core/message_service").MessageService,
-     * "mail.store": import("@mail/core/store_service").Store
+     * "mail.message": import("@mail/core/common/message_service").MessageService,
+     * "mail.store": import("@mail/core/common/store_service").Store
      * }} services
      */
     setup(env, services) {
@@ -213,7 +213,7 @@ export class LivechatService {
     }
 
     /**
-     * @returns {import("@mail/core/thread_model").Thread|undefined}
+     * @returns {import("@mail/core/common/thread_model").Thread|undefined}
      */
     get thread() {
         return Object.values(this.store.threads).find(({ type }) => type === "livechat");

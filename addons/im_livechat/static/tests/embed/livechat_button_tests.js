@@ -1,8 +1,11 @@
-/** @odoo-module */
+/* @odoo-module */
 
-import { start, loadDefaultConfig } from "@im_livechat/../tests/embed/helper/test_utils";
-import { afterNextRender, click, insertText } from "@mail/../tests/helpers/test_utils";
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
+import { loadDefaultConfig, start } from "@im_livechat/../tests/embed/helper/test_utils";
+
+import { afterNextRender, click, insertText } from "@mail/../tests/helpers/test_utils";
+
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 
 QUnit.test("open/close temporary channel", async (assert) => {

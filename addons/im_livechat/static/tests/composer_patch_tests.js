@@ -1,13 +1,15 @@
-/** @odoo-module */
+/* @odoo-module */
 
 import { startServer } from "@bus/../tests/helpers/mock_python_environment";
+
 import {
     afterNextRender,
-    insertText,
     click,
     dragenterFiles,
+    insertText,
     start,
 } from "@mail/../tests/helpers/test_utils";
+
 import { editInput, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 
 QUnit.module("composer (patch)");

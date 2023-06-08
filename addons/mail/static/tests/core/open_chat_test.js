@@ -1,7 +1,7 @@
 /* @odoo-module */
 
-import { afterNextRender, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { Command } from "@mail/../tests/helpers/command";
+import { afterNextRender, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 

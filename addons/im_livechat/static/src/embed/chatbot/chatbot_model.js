@@ -1,13 +1,13 @@
 /* @odoo-module */
 
-import { assignDefined } from "@mail/utils/misc";
+import { assignDefined } from "@mail/utils/common/misc";
 
 /**
  * @typedef IChatbot
  * @property {string} chatbot_name
  * @property {number} chatbot_operator_partner_id
  * @property {number} chatbot_script_id
- * @property {import("./chatbot_step_model").IChatbotStep[]} chatbot_welcome_steps
+ * @property {import("@im_livechat/embed/chatbot/chatbot_step_model").IChatbotStep[]} chatbot_welcome_steps
  * @property {number} [welcome_step_index]
  */
 
@@ -20,7 +20,7 @@ export class Chatbot {
     welcomeStepIndex = 0;
     /** @type {number} */
     scriptId;
-    /** @type {import("./chatbot_step_model").IChatbotStep[]} */
+    /** @type {import("@im_livechat/embed/chatbot/chatbot_step_model").IChatbotStep[]} */
     welcomeSteps = [];
 
     /**

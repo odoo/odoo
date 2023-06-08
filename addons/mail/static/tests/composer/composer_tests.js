@@ -1,6 +1,8 @@
-/** @odoo-module **/
+/* @odoo-module */
 
-import { file } from "web.test_utils";
+import { Composer } from "@mail/core/common/composer";
+import { Command } from "@mail/../tests/helpers/command";
+import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import {
     afterNextRender,
     click,
@@ -8,16 +10,13 @@ import {
     dragenterFiles,
     dropFiles,
     insertText,
+    pasteFiles,
     start,
     startServer,
-    pasteFiles,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
-import { Command } from "@mail/../tests/helpers/command";
 
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
-const { inputFiles } = file;
-
 import {
     getFixture,
     makeDeferred,
@@ -26,8 +25,9 @@ import {
     triggerEvent,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
-import { Composer } from "@mail/composer/composer";
-import { patchUiSize, SIZES } from "../helpers/patch_ui_size";
+import { file } from "web.test_utils";
+
+const { inputFiles } = file;
 
 QUnit.module("composer", {
     async beforeEach() {
