@@ -8146,7 +8146,9 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsOnce(target, ".o_datetime_picker");
 
-        await click(getPickerCell("15"));
+        const clickPromise = click(getPickerCell("15"));
+        getPickerCell("15").focus();
+        await clickPromise;
 
         assert.containsNone(target, ".o_datetime_picker");
         assert.strictEqual(
@@ -8156,6 +8158,39 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(
             document.activeElement,
             target.querySelector(".o_field_widget[name=date] input")
+        );
+    });
+
+    QUnit.test("text field should keep it's selection when clicking on it", async (assert) => {
+        serverData.models.foo.records[0].text = "1234";
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom" limit="1">
+                    <field name="text"/>
+                </tree>`,
+        });
+
+        await click(target, "td[name=text]");
+        assert.strictEqual(
+            window.getSelection().toString(),
+            "1234",
+            "the entire content should be selected on initial click"
+        );
+
+        Object.assign(
+            target.querySelector("[name=text] textarea"),
+            { selectionStart: 0, selectionEnd: 1 }
+        );
+
+        await click(target, "[name=text] textarea");
+
+        assert.strictEqual(
+            window.getSelection().toString(),
+            "1",
+            "the selection shouldn't be changed"
         );
     });
 
