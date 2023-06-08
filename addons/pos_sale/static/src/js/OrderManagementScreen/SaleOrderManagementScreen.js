@@ -207,7 +207,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     }
 
                     const new_line = new Orderline(
-                        {},
+                        { env: this.env },
                         {
                             pos: this.pos,
                             order: this.pos.get_order(),
@@ -353,7 +353,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     }
 
                     const new_line = new Orderline(
-                        {},
+                        { env: this.env },
                         {
                             pos: this.pos,
                             order: this.pos.get_order(),

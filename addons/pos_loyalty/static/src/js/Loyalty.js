@@ -195,13 +195,13 @@ patch(Order.prototype, "pos_loyalty.Order", {
             (line) => line.getEWalletGiftCardProgramType() === "ewallet"
         );
         if (eWalletLine && !this.get_partner()) {
-            const { confirmed } = await this.pos.env.services.popup.add(ConfirmPopup, {
+            const { confirmed } = await this.env.services.popup.add(ConfirmPopup, {
                 title: _t("Customer needed"),
                 body: _t("eWallet requires a customer to be selected"),
             });
             if (confirmed) {
                 const { confirmed, payload: newPartner } =
-                    await this.pos.env.services.pos.showTempScreen("PartnerListScreen", {
+                    await this.env.services.pos.showTempScreen("PartnerListScreen", {
                         partner: null,
                     });
                 if (confirmed) {
@@ -1026,7 +1026,10 @@ patch(Order.prototype, "pos_loyalty.Order", {
     },
     _createLineFromVals(vals) {
         vals["lst_price"] = vals["price"];
-        const line = new Orderline({}, { pos: this.pos, order: this, product: vals["product"] });
+        const line = new Orderline(
+            { env: this.env },
+            { pos: this.pos, order: this, product: vals["product"] }
+        );
         this.fix_tax_included_price(line);
         this.set_orderline_options(line, vals);
         return line;
@@ -1476,7 +1479,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
                 return _t("That coupon code has already been scanned and activated.");
             }
             const customer = this.get_partner();
-            const { successful, payload } = await this.pos.env.services.orm.call(
+            const { successful, payload } = await this.env.services.orm.call(
                 "pos.config",
                 "use_coupon_code",
                 [[this.pos.config.id], code, this.creation_date, customer ? customer.id : false]
@@ -1485,7 +1488,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
                 // Allow rejecting a gift card that is not yet paid.
                 const program = this.pos.program_by_id[payload.program_id];
                 if (program && program.program_type === "gift_card" && !payload.has_source_order) {
-                    const { confirmed } = await this.pos.env.services.popup.add(ConfirmPopup, {
+                    const { confirmed } = await this.env.services.popup.add(ConfirmPopup, {
                         title: _t("Unpaid gift card"),
                         body: _t(
                             "This gift card is not linked to any order. Do you really want to apply its reward?"
@@ -1523,7 +1526,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
             return sprintf(
                 _t("Gift Card: %s\nBalance: %s"),
                 code,
-                this.pos.env.utils.formatCurrency(coupon.balance)
+                this.env.utils.formatCurrency(coupon.balance)
             );
         }
         return true;
@@ -1531,7 +1534,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
     async activateCode(code) {
         const res = await this._activateCode(code);
         if (res !== true) {
-            this.pos.env.services.pos_notification.add(res, 5000);
+            this.env.services.pos_notification.add(res, 5000);
         }
     },
     isProgramsResettable() {

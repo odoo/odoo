@@ -20,7 +20,7 @@ export class PaymentStripe extends PaymentInterface {
     async stripeFetchConnectionToken() {
         // Do not cache or hardcode the ConnectionToken.
         try {
-            const data = await this.pos.env.services.orm.silent.call(
+            const data = await this.env.services.orm.silent.call(
                 "pos.payment.method",
                 "stripe_connection_token",
                 []
@@ -173,7 +173,7 @@ export class PaymentStripe extends PaymentInterface {
 
     async capturePayment(paymentIntentId) {
         try {
-            const data = await this.pos.env.services.orm.silent.call(
+            const data = await this.env.services.orm.silent.call(
                 "pos.payment.method",
                 "stripe_capture_payment",
                 [paymentIntentId]
@@ -190,7 +190,7 @@ export class PaymentStripe extends PaymentInterface {
 
     async fetchPaymentIntentClientSecret(payment_method, amount) {
         try {
-            const data = await this.pos.env.services.orm.silent.call(
+            const data = await this.env.services.orm.silent.call(
                 "pos.payment.method",
                 "stripe_payment_intent",
                 [[payment_method.id], amount]
@@ -259,7 +259,7 @@ export class PaymentStripe extends PaymentInterface {
         if (!title) {
             title = _t("Stripe Error");
         }
-        this.pos.env.services.popup.add(ErrorPopup, {
+        this.env.services.popup.add(ErrorPopup, {
             title: title,
             body: msg,
         });
