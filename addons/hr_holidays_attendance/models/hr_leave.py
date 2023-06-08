@@ -36,6 +36,9 @@ class HRLeave(models.Model):
             self._check_overtime_deductible(self)
         #User may not have access to overtime_id field
         for leave in self.sudo().filtered('overtime_id'):
+            # It must always be possible to refuse leave based on overtime
+            if vals.get('state') in ['refuse']:
+                continue
             employee = leave.employee_id
             duration = leave.number_of_hours_display
             overtime_duration = leave.overtime_id.sudo().duration
