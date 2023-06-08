@@ -690,7 +690,7 @@ export class TicketScreen extends Component {
             // them again, unless invalidated. See `_onInvoiceOrder`.
             fetchedOrders.forEach((order) => {
                 this._state.syncedOrders.cache[order.id] = new Order(
-                    {},
+                    { env: this.env },
                     { pos: this.pos, json: order }
                 );
             });

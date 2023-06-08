@@ -121,7 +121,7 @@ export class Product extends PosModel {
             const attributes = this.attribute_line_ids
                 .map((id) => this.pos.attributes_by_ptal_id[id])
                 .filter((attr) => attr !== undefined);
-            const { confirmed, payload } = await this.pos.env.services.popup.add(
+            const { confirmed, payload } = await this.env.services.popup.add(
                 ProductConfiguratorPopup,
                 {
                     product: this,
@@ -200,7 +200,7 @@ export class Product extends PosModel {
             // Show the ScaleScreen to weigh the product.
             if (this.isScaleAvailable) {
                 const product = this;
-                const { confirmed, payload } = await this.pos.env.services.pos.showTempScreen(
+                const { confirmed, payload } = await this.env.services.pos.showTempScreen(
                     "ScaleScreen",
                     {
                         product,
@@ -392,7 +392,10 @@ export class Orderline extends PosModel {
         var pack_lot_lines = json.pack_lot_ids;
         for (var i = 0; i < pack_lot_lines.length; i++) {
             var packlotline = pack_lot_lines[i][2];
-            var pack_lot_line = new Packlotline({}, { json: { ...packlotline, order_line: this } });
+            var pack_lot_line = new Packlotline(
+                { env: this.env },
+                { json: { ...packlotline, order_line: this } }
+            );
             this.pack_lot_lines.add(pack_lot_line);
         }
         this.tax_ids = json.tax_ids && json.tax_ids.length !== 0 ? json.tax_ids[0][2] : undefined;
@@ -405,7 +408,7 @@ export class Orderline extends PosModel {
     }
     clone() {
         var orderline = new Orderline(
-            {},
+            { env: this.env },
             {
                 pos: this.pos,
                 order: this.order,
@@ -467,7 +470,7 @@ export class Orderline extends PosModel {
         // Create new pack lot lines.
         let newPackLotLine;
         for (const newLotLine of newPackLotLines) {
-            newPackLotLine = new Packlotline({}, { order_line: this });
+            newPackLotLine = new Packlotline({ env: this.env }, { order_line: this });
             newPackLotLine.lot_name = newLotLine.lot_name;
             this.pack_lot_lines.add(newPackLotLine);
         }
@@ -551,7 +554,7 @@ export class Orderline extends PosModel {
                 const maxQtyToRefund =
                     toRefundDetail.orderline.qty - toRefundDetail.orderline.refundedQty;
                 if (quant > 0) {
-                    this.pos.env.services.popup.add(ErrorPopup, {
+                    this.env.services.popup.add(ErrorPopup, {
                         title: _t("Positive quantity not allowed"),
                         body: _t(
                             "Only a negative quantity is allowed for this refund line. Click on +/- to modify the quantity to be refunded."
@@ -563,13 +566,13 @@ export class Orderline extends PosModel {
                 } else if (-quant <= maxQtyToRefund) {
                     toRefundDetail.qty = -quant;
                 } else {
-                    this.pos.env.services.popup.add(ErrorPopup, {
+                    this.env.services.popup.add(ErrorPopup, {
                         title: _t("Greater than allowed"),
                         body: sprintf(
                             _t(
                                 "The requested quantity to be refunded is higher than the refundable quantity of %s."
                             ),
-                            this.pos.env.utils.formatProductQty(maxQtyToRefund)
+                            this.env.utils.formatProductQty(maxQtyToRefund)
                         ),
                     });
                     return false;
@@ -1385,7 +1388,10 @@ export class Order extends PosModel {
             var orderline = orderlines[i][2];
             if (orderline.product_id && this.pos.db.get_product_by_id(orderline.product_id)) {
                 this.add_orderline(
-                    new Orderline({}, { pos: this.pos, order: this, json: orderline })
+                    new Orderline(
+                        { env: this.env },
+                        { pos: this.pos, order: this, json: orderline }
+                    )
                 );
             }
         }
@@ -1393,7 +1399,10 @@ export class Order extends PosModel {
         var paymentlines = json.statement_ids;
         for (i = 0; i < paymentlines.length; i++) {
             var paymentline = paymentlines[i][2];
-            var newpaymentline = new Payment({}, { pos: this.pos, order: this, json: paymentline });
+            var newpaymentline = new Payment(
+                { env: this.env },
+                { pos: this.pos, order: this, json: paymentline }
+            );
             this.paymentlines.add(newpaymentline);
 
             if (i === paymentlines.length - 1) {
@@ -1748,7 +1757,7 @@ export class Order extends PosModel {
             ) &&
             (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
         ) {
-            const { confirmed } = await this.pos.env.services.popup.add(ConfirmPopup, {
+            const { confirmed } = await this.env.services.popup.add(ConfirmPopup, {
                 title: _t("Some Serial/Lot Numbers are missing"),
                 body: _t(
                     "You are trying to sell products with serial/lot numbers, but some of them are not set.\nWould you like to proceed anyway?"
@@ -1758,11 +1767,11 @@ export class Order extends PosModel {
             });
             if (confirmed) {
                 this.pos.mobile_pane = "right";
-                this.pos.env.services.pos.showScreen("PaymentScreen");
+                this.env.services.pos.showScreen("PaymentScreen");
             }
         } else {
             this.pos.mobile_pane = "right";
-            this.pos.env.services.pos.showScreen("PaymentScreen");
+            this.env.services.pos.showScreen("PaymentScreen");
         }
     }
     is_empty() {
@@ -1979,7 +1988,7 @@ export class Order extends PosModel {
         options = options || {};
         const quantity = options.quantity ? options.quantity : 1;
         const line = new Orderline(
-            {},
+            { env: this.env },
             { pos: this.pos, order: this, product: product, quantity: quantity }
         );
         this.fix_tax_included_price(line);
@@ -2089,7 +2098,7 @@ export class Order extends PosModel {
             return false;
         } else {
             var newPaymentline = new Payment(
-                {},
+                { env: this.env },
                 { order: this, payment_method: payment_method, pos: this.pos }
             );
             this.paymentlines.add(newPaymentline);

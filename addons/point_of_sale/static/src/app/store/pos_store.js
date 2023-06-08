@@ -291,6 +291,7 @@ export class PosStore extends Reactive {
 
         const modelProducts = products.map((product) => {
             product.pos = this;
+            product.env = this.env;
             product.applicablePricelistItems = {};
             productMap[product.id] = product;
             productTemplateMap[product.product_tmpl_id[0]] = (
@@ -501,7 +502,7 @@ export class PosStore extends Reactive {
         if (json) {
             options.json = json;
         }
-        return this.makeOrderReactive(new Order({}, options));
+        return this.makeOrderReactive(new Order({ env: this.env }, options));
     }
     makeOrderReactive(order) {
         const batchedCallback = batched(() => {

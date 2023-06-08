@@ -117,7 +117,7 @@ export class PaymentSix extends PaymentInterface {
 
         if (event.exception) {
             if (event.exception.resultCode !== timapi.constants.ResultCode.apiCancelEcr) {
-                this.pos.env.services.popup.add(ErrorPopup, {
+                this.env.services.popup.add(ErrorPopup, {
                     title: _t("Transaction was not processed correctly"),
                     body: event.exception.errorText,
                 });
@@ -140,7 +140,7 @@ export class PaymentSix extends PaymentInterface {
 
     _onBalanceComplete(event, data) {
         if (event.exception) {
-            this.pos.env.services.popup.add(ErrorPopup, {
+            this.env.services.popup.add(ErrorPopup, {
                 title: _t("Balance Failed"),
                 body: _t("The balance operation failed."),
             });
