@@ -49,6 +49,7 @@ const DEFAULT_PALETTE = {
  */
 const BACKGROUND_IMAGE_ATTRIBUTES = new Set([
     "originalId", "originalSrc", "mimetype", "resizeWidth", "glFilter", "quality", "bgSrc",
+    "filterOptions",
 ]);
 
 /**
