@@ -29,7 +29,7 @@ registry.category("web_tour.tours").add('shop_sale_gift_card', {
         },
         {
             content: 'check gift card line',
-            trigger: '.td-product_name:contains("PAY WITH GIFT CARD")',
+            trigger: '.o_cart_product_name:contains("PAY WITH GIFT CARD")',
         },
         {
             content: 'insert gift card code',
