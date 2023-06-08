@@ -937,3 +937,11 @@ class AccountJournal(models.Model):
         """ Check if the payment method is available on this journal. """
         self.ensure_one()
         return self.filtered_domain(self.env['account.payment.method']._get_payment_method_domain(payment_method_code))
+
+    def _process_reference_for_sale_order(self, order_reference):
+        '''
+        returns the order reference to be used for the payment.
+        Hook to be overriden: see l10n_ch for an example.
+        '''
+        self.ensure_one()
+        return order_reference
