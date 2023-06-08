@@ -12549,6 +12549,74 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test("grouped list with expand attribute set to false but with opened group", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree expand="0"><field name="foo"/></tree>',
+            groupBy: ["bar"],
+            async mockRPC(route, { method }, rpc) {
+                assert.step(method || route);
+                if (method === "web_read_group") {
+                    const response = await rpc(...arguments);
+                    response.groups = response.groups.map((group, index) => ({
+                        ...group,
+                        __fold: index,
+                    }));
+                    return response;
+                }
+            },
+        });
+
+        assert.containsN(target, ".o_group_header", 2);
+        assert.containsN(target, ".o_data_row", 1);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
+            ["blip"]
+        );
+
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "web_search_read",
+        ]);
+    });
+
+    QUnit.test("grouped list without expand attribute but with opened group", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/></tree>',
+            groupBy: ["bar"],
+            async mockRPC(route, { method }, rpc) {
+                assert.step(method || route);
+                if (method === "web_read_group") {
+                    const response = await rpc(...arguments);
+                    response.groups = response.groups.map((group, index) => ({
+                        ...group,
+                        __fold: index,
+                    }));
+                    return response;
+                }
+            },
+        });
+
+        assert.containsN(target, ".o_group_header", 2);
+        assert.containsN(target, ".o_data_row", 1);
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_data_cell")].map((el) => el.textContent),
+            ["blip"]
+        );
+
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "web_search_read",
+        ]);
+    });
+
     QUnit.test("grouped list with dynamic expand attribute (eval true)", async function (assert) {
         await makeView({
             type: "list",
