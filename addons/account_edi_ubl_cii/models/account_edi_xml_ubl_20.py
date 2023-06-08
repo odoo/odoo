@@ -342,6 +342,18 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             'price_vals': self._get_invoice_line_price_vals(line),
         }
 
+    def _apply_invoice_tax_filter(self, tax_values):
+        """
+            To be overridden to apply a specific tax filter
+        """
+        return True
+
+    def _apply_invoice_line_filter(self, invoice_line):
+        """
+            To be overridden to apply a specific invoice line filter
+        """
+        return True
+
     def _export_invoice_vals(self, invoice):
         def grouping_key_generator(tax_values):
             tax = tax_values['tax_id']
@@ -362,7 +374,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         self._validate_taxes(invoice)
 
         # Compute the tax details for the whole invoice and each invoice line separately.
-        taxes_vals = invoice._prepare_edi_tax_details(grouping_key_generator=grouping_key_generator)
+        taxes_vals = invoice._prepare_edi_tax_details(grouping_key_generator=grouping_key_generator,
+                                                      filter_to_apply=self._apply_invoice_tax_filter,
+                                                      filter_invl_to_apply=self._apply_invoice_line_filter)
 
         # Fixed Taxes: filter them on the document level, and adapt the totals
         # Fixed taxes are not supposed to be taxes in real live. However, this is the way in Odoo to manage recupel
