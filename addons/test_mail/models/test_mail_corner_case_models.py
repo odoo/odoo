@@ -92,6 +92,23 @@ class MailTestLang(models.Model):
 # TRACKING MODELS
 # ------------------------------------------------------------
 
+class MailTestTrackAllM2M(models.Model):
+    _name = 'mail.test.track.all.m2m'
+    _description = 'Sub-model: pseudo tags for tracking'
+    _inherit = ['mail.thread']
+
+    name = fields.Char('Name')
+
+
+class MailTestTrackAllO2M(models.Model):
+    _name = 'mail.test.track.all.o2m'
+    _description = 'Sub-model: pseudo tags for tracking'
+    _inherit = ['mail.thread']
+
+    name = fields.Char('Name')
+    mail_track_all_id = fields.Many2one('mail.test.track.all')
+
+
 class MailTestTrackAll(models.Model):
     _name = 'mail.test.track.all'
     _description = 'Test tracking on all field types'
@@ -106,13 +123,22 @@ class MailTestTrackAll(models.Model):
     float_field = fields.Float('Float', tracking=5)
     html_field = fields.Html('Html', tracking=6)
     integer_field = fields.Integer('Integer', tracking=7)
-    many2one_field_id = fields.Many2one('res.partner', string='Many2one', tracking=8)
-    monetary_field = fields.Monetary('Monetary', tracking=9)
+    many2many_field = fields.Many2many(
+        'mail.test.track.all.m2m', string='Many2Many',
+        tracking=8)
+    many2one_field_id = fields.Many2one('res.partner', string='Many2one', tracking=9)
+    monetary_field = fields.Monetary('Monetary', tracking=10)
+    one2many_field = fields.One2many(
+        'mail.test.track.all.o2m', 'mail_track_all_id',
+        string='One2Many',
+        tracking=11)
     selection_field = fields.Selection(
         string='Selection',
         selection=[('first', 'FIRST'), ('second', 'SECOND')],
-        tracking=10)
-    text_field = fields.Text('Text', tracking=11)
+        tracking=12)
+    text_field = fields.Text('Text', tracking=13)
+
+    name = fields.Char('Name')
 
 
 class MailTestTrackCompute(models.Model):

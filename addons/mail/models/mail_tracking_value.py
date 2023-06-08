@@ -71,7 +71,7 @@ class MailTracking(models.Model):
 
         values = {'field': field.id, 'field_desc': col_info['string'], 'field_type': col_info['type'], 'tracking_sequence': tracking_sequence}
 
-        if col_info['type'] in ['integer', 'float', 'char', 'text', 'datetime', 'monetary']:
+        if col_info['type'] in {'integer', 'float', 'char', 'text', 'datetime', 'monetary'}:
             values.update({
                 f'old_value_{col_info["type"]}': initial_value,
                 f'new_value_{col_info["type"]}': new_value
@@ -95,15 +95,15 @@ class MailTracking(models.Model):
             })
         elif col_info['type'] == 'many2one':
             values.update({
-                'old_value_integer': initial_value and initial_value.id or 0,
-                'new_value_integer': new_value and new_value.id or 0,
-                'old_value_char': initial_value and initial_value.sudo().display_name or '',
-                'new_value_char': new_value and new_value.sudo().display_name or ''
+                'old_value_integer': initial_value.id if initial_value else 0,
+                'new_value_integer': new_value.id if new_value else 0,
+                'old_value_char': initial_value.display_name if initial_value else '',
+                'new_value_char': new_value.display_name if new_value else ''
             })
-        elif col_info['type'] in ['many2many', 'one2many']:
+        elif col_info['type'] in {'one2many', 'many2many'}:
             values.update({
-                'old_value_char': initial_value and ', '.join(initial_value.mapped('display_name')) or '',
-                'new_value_char': new_value and ', '.join(new_value.mapped('display_name')) or ''
+                'old_value_char': ', '.join(initial_value.mapped('display_name')) if initial_value else '',
+                'new_value_char': ', '.join(new_value.mapped('display_name')) if new_value else '',
             })
         else:
             tracked = False

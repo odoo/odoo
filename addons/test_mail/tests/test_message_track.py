@@ -371,6 +371,64 @@ class TestTrackingInternals(MailCommon):
         })
 
     @users('employee')
+    def test_mail_track_2many(self):
+        """ Check result of tracking one2many and many2many fields. Current
+        usage is to aggregate names into value_char fields. """
+        # Create a record with an initially invalid selection value
+        test_tags = self.env['mail.test.track.all.m2m'].create([
+            {'name': 'Tag1',},
+            {'name': 'Tag2',},
+            {'name': 'Tag3',},
+        ])
+        test_record = self.env['mail.test.track.all'].create({
+            'name': 'Test 2Many fields tracking',
+        })
+        self.flush_tracking()
+
+        # no tracked field, no tracking at create
+        last_message = test_record.message_ids[0]
+        self.assertFalse(last_message.tracking_value_ids)
+
+        # update m2m
+        test_record.write({
+            'many2many_field': [(4, test_tags[0].id), (4, test_tags[1].id)],
+        })
+        self.flush_tracking()
+        last_message = test_record.message_ids[0]
+        self.assertTracking(
+            last_message,
+            [('many2many_field', 'many2many', '', ', '.join(test_tags[:2].mapped('name')))]
+        )
+
+        # update m2m + o2m
+        test_record.write({
+            'many2many_field': [(3, test_tags[0].id), (4, test_tags[2].id)],
+            'one2many_field': [
+                (0, 0, {'name': 'Child1'}),
+                (0, 0, {'name': 'Child2'}),
+                (0, 0, {'name': 'Child3'}),
+            ],
+        })
+        self.flush_tracking()
+        last_message = test_record.message_ids[0]
+        self.assertTracking(
+            last_message,
+            [
+                ('many2many_field', 'many2many', ', '.join(test_tags[:2].mapped('name')), ', '.join((test_tags[1] + test_tags[2]).mapped('name'))),
+                ('one2many_field', 'one2many', '', ', '.join(('Child1', 'Child2', 'Child3'))),
+            ]
+        )
+
+        # remove from o2m
+        test_record.write({'one2many_field': [(3, test_record.one2many_field[0].id)]})
+        self.flush_tracking()
+        last_message = test_record.message_ids[0]
+        self.assertTracking(
+            last_message,
+            [('one2many_field', 'one2many', ', '.join(('Child1', 'Child2', 'Child3')), ', '.join(('Child2', 'Child3')))]
+        )
+
+    @users('employee')
     def test_mail_track_all_no2many(self):
         test_record = self.env['mail.test.track.all'].create({
             'company_id': self.env.company.id,
