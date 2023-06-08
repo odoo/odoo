@@ -3490,6 +3490,10 @@ class BaseModel(metaclass=MetaModel):
         """
         self.ensure_one()
 
+        self.check_access_rights('write')
+        self.check_field_access_rights('write', [field_name])
+        self.check_access_rule('write')
+
         valid_langs = set(code for code, _ in self.env['res.lang'].get_installed()) | {'en_US'}
         missing_langs = set(translations) - valid_langs
         if missing_langs:
@@ -3516,9 +3520,6 @@ class BaseModel(metaclass=MetaModel):
         if field.related and not field.store:
             related_path, field_name = field.related.rsplit(".", 1)
             return self.mapped(related_path)._update_field_translations(field_name, translations, digest)
-        self.check_access_rights('write')
-        self.check_field_access_rights('write', [field_name])
-        self.check_access_rule('write')
 
         if field.translate is True:
             # falsy values (except emtpy str) are used to void the corresponding translation
@@ -3545,7 +3546,6 @@ class BaseModel(metaclass=MetaModel):
                     '{{}}'::jsonb)
                 WHERE id = %s
             ''', (Json({'en_US': translation_fallback}), Json(translations), self.id))
-            self.modified([field_name])
         else:
             # Note:
             # update terms in 'en_US' will not change its value other translated values
@@ -3573,7 +3573,13 @@ class BaseModel(metaclass=MetaModel):
                     }
                 new_translations[lang] = field.translate(translation.get, old_value)
             self.env.cache.update_raw(self, field, [new_translations], dirty=True)
-            self.modified([field_name])
+
+        # the following write is incharge of
+        # 1. mark field as modified
+        # 2. execute logics in the override `write` method
+        # 3. update write_date of the record if exists to support 't-cache'
+        # even if the value in cache is the same as the value written
+        self[field_name] = self[field_name]
         return True
 
     def get_field_translations(self, field_name, langs=None):

@@ -986,8 +986,9 @@ class IrModelFields(models.Model):
         # names of the models to patch
         patched_models = set()
         if vals and self:
+            translate_only = all(self._fields[field_name].translate for field_name in vals)
             for item in self:
-                if item.state != 'manual':
+                if item.state != 'manual' and not translate_only:
                     raise UserError(_('Properties of base fields cannot be altered in this manner! '
                                       'Please modify them through Python code, '
                                       'preferably through a custom addon!'))
@@ -1054,12 +1055,6 @@ class IrModelFields(models.Model):
             models = self.pool.descendants(patched_models, '_inherits')
             self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
 
-        return res
-
-    def update_field_translations(self, field_name, translations):
-        res = super().update_field_translations(field_name, translations)
-        if res:
-            self.env.registry.clear_cache()
         return res
 
     @api.depends('field_description', 'model')
