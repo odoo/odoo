@@ -119,29 +119,47 @@ QUnit.test("can use a t-ref as popper", async (assert) => {
 
 QUnit.test("has no effect when component is destroyed", async (assert) => {
     const execRegisteredCallbacks = mockAnimationFrame();
-    const originalReference = reference;
-    reference = () => {
-        assert.step("reference called");
-        return originalReference;
-    };
-
+    const observer = new MutationObserver(() => assert.step("mutation observer called"));
     const popper = await mount(TestComp, { target: container });
-    assert.verifySteps(["reference called"], "reference called when component mounted");
+    observer.observe(popper.el, { attributes: true });
 
     triggerEvent(document, null, "scroll");
     await nextTick();
     assert.verifySteps([]);
+
     execRegisteredCallbacks();
-    assert.verifySteps(["reference called"], "reference called when document scrolled");
+    await nextTick();
+    assert.verifySteps(["mutation observer called"], "mutation observer when document scrolled");
 
     triggerEvent(document, null, "scroll");
     await nextTick();
+    assert.verifySteps([]);
+
     popper.destroy();
+    await nextTick();
+    assert.verifySteps([]);
+
     execRegisteredCallbacks();
+    await nextTick();
     assert.verifySteps(
         [],
-        "reference not called even if scroll happened right before the component destroys"
+        "mutation observer not called even if scroll happened right before the component destroys"
     );
+});
+
+QUnit.test("reposition popper when its reference moves", async (assert) => {
+    const popper = await mount(TestComp, { target: container });
+    const popBox1 = popper.el.getBoundingClientRect();
+    const spacer = document.createElement("div");
+    spacer.id = "foo";
+    spacer.style.height = "1px";
+    spacer.style.width = "100px";
+    container.prepend(spacer);
+    await nextTick();
+    const popBox2 = popper.el.getBoundingClientRect();
+    assert.strictEqual(popBox1.top, popBox2.top);
+    // spacer width * 0.5 because of flexbox style (justifyContent: center)
+    assert.strictEqual(popBox1.left, popBox2.left - spacer.offsetWidth * 0.5);
 });
 
 const getPositionTest = (position, positionToCheck) => {
