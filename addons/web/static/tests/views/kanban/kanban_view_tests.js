@@ -13234,4 +13234,76 @@ QUnit.module("Views", (hooks) => {
         );
         assert.notEqual(previousScrollTop, 0, "Should not have the scrollTop value at 0");
     });
+
+    QUnit.test("Kanban: no reset of the groupby when a non-empty column is deleted", async (assert) => {
+        let dialogProps;
+
+        patchDialog((_cls, props) => {
+            dialogProps = props;
+        });
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban default_group_by="product_id">
+                    <field name="foo"/>
+                    <field name="product_id"/>
+                    <field name="category_ids"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            searchViewArch: `
+            <search>
+                <filter name="groupby_category" string="Category" context="{'group_by': 'category_ids'}"/>
+            </search>
+            `,
+        });
+        await toggleFilterMenu(target);
+        // select the groupby:category_ids filter
+        await click(target.querySelector('.o_group_by_menu .dropdown-toggle'));
+        await click(target.querySelector('.o_group_by_menu .o_menu_item'));
+        // check the initial rendering
+        assert.containsN(target, ".o_kanban_group", 3, "should have three columns");
+        // check availability of delete action in kanban header's config dropdown
+        await toggleColumnActions(2);
+        assert.containsOnce(
+            getColumn(2),
+            ".o_column_delete",
+            "should be able to delete the column"
+        );
+        // delete second column (first cancel the confirm request, then confirm)
+        let clickColumnAction = await toggleColumnActions(1);
+        await clickColumnAction("Delete");
+        dialogProps.cancel();
+        await nextTick();
+
+        assert.strictEqual(
+            getColumn(1).querySelector(".o_column_title").innerText,
+            "gold",
+            'column [6, "gold"] should still be there'
+        );
+
+        dialogProps.confirm();
+        await nextTick();
+
+        clickColumnAction = await toggleColumnActions(1);
+        await clickColumnAction("Delete");
+
+        assert.strictEqual(
+            getColumn(1).querySelector(".o_column_title").innerText,
+            "silver",
+            'last column should now be [7, "silver"]'
+        );
+        assert.containsN(target, ".o_kanban_group", 2, "should now have two columns");
+        assert.strictEqual(
+            getColumn(0).querySelector(".o_column_title").innerText,
+            "None (3)",
+            "first column should have no id (Undefined column)"
+        );
+    });
 });
