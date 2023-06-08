@@ -123,7 +123,7 @@ function autocompleteWithPages(self, $input, options) {
  * @param {jQuery} [$excluded]
  */
 function onceAllImagesLoaded($element, $excluded) {
-    var defs = $element.find('img').addBack('img').map(img => {
+    var defs = Array.from($element.find("img").addBack("img")).map((img) => {
         if (img.complete || $excluded && ($excluded.is(img) || $excluded.has(img).length)) {
             return; // Already loaded
         }

@@ -614,7 +614,7 @@ publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
     _onMarkSpamClick: function (ev) {
         var key = this.$('.modal .tab-pane.active').data('key');
         var $inputs = this.$('.modal .tab-pane.active input.form-check-input:checked');
-        var values = $inputs.map((o) => parseInt(o.value));
+        var values = Array.from($inputs).map((o) => parseInt(o.value));
         return this._rpc({model: 'forum.post',
             method: 'mark_as_offensive_batch',
             args: [this.spamIDs, key, values],
