@@ -103,11 +103,6 @@ insertModelFields("mail.message.subtype", {
     default: { default: true },
     subtype_xmlid: { type: "char" },
 });
-insertModelFields("mail.tracking.value", {
-    changed_field: { string: "Changed field", type: "char" },
-    new_value: { string: "New value", type: "char" },
-    old_value: { string: "Old value", type: "char" },
-});
 insertModelFields("res.users.settings", {
     is_discuss_sidebar_category_channel_open: { default: true },
     is_discuss_sidebar_category_chat_open: { default: true },
