@@ -96,7 +96,7 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
         var reader = new window.FileReader();
         reader.readAsDataURL(ev.currentTarget.files[0]);
         reader.onload = function (ev) {
-            $form.find('.o_forum_avatar_img').attr('src', ev.target.result);
+            $form.find('.o_wforum_avatar_img').attr('src', ev.target.result);
         };
         $form.find('#forum_clear_image').remove();
     },
@@ -106,7 +106,7 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
      */
     _onProfilePicClearClick: function (ev) {
         var $form = $(ev.currentTarget).closest('form');
-        $form.find('.o_forum_avatar_img').attr('src', '/web/static/img/placeholder.png');
+        $form.find('.o_wforum_avatar_img').attr('src', '/web/static/img/placeholder.png');
         $form.append($('<input/>', {
             name: 'clear_image',
             id: 'forum_clear_image',

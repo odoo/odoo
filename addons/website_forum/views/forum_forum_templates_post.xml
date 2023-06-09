@@ -5,35 +5,49 @@
 <!-- Display a post -->
 <template id="display_post_question_block">
     <div class="o_wforum_index_entry_title">
-        <div class="d-inline-block mb-0 h5">
-            <span t-if="question.has_validated_answer and filters != 'solved'"
-                title="Solved"
-                aria-label="Solved"
-                data-bs-toggle="tooltip"
-                class="fa fa-check-circle text-success"/>
-            <span t-if="question.user_favourite and not (my == 'favourites' or hide_fav_icon)"
+        <div class="d-flex align-items-baseline gap-1">
+            <small t-if="question.user_favourite and not (my == 'favourites' or hide_fav_icon)"
                 title="Your favourite"
                 aria-label="Your favourite"
                 data-bs-toggle="tooltip"
                 class="fa fa-star o_wforum_gold"/>
-
+            <small t-if="question.message_is_follower and not (my == 'followed' or hide_fav_icon)"
+                title="You're following this post"
+                aria-label="You're following this post"
+                data-bs-toggle="tooltip"
+                class="fa fa-bell"/>
+            <!-- [TODO] 'close' doesn't work because the closed posts aren't listed -->
+            <small t-if="question.state == 'close'"
+                  title="Your favourite"
+                  area-label="Your favourite"
+                  data-bs-toggle="tooltip"
+                  class="fa fa-lock"/>
             <a t-attf-href="/forum/#{slug(question.forum_id)}/#{slug(question)}#{answer and ('/#answer-%s' % answer.id)}"
                 t-attf-title="Read: #{question.name}"
-                class="text-reset"
-                t-esc="question.name"/>
+                t-attf-class="stretched-link text-body #{_link_classes}">
+                <span t-out="question.name"/>
+            </a>
+            <span t-if="question.has_validated_answer and question.forum_id.mode == 'questions'"
+                  title="Solved"
+                  aria-label="Solved"
+                  class="badge bg-success">
+                    <i class="fa fa-check me-1"/>Solved
+            </span>
         </div>
+        <!-- [TODO] Note: after closing and reopening a post, the closed_reason_id remains on post  -->
+        <!-- <t t-out="question.closed_reason_id.name"></t> -->
+        <!-- [TODO] non active posts aren't listed -->
         <span t-if="not question.active" class="text-muted">
             <t t-if="question.state!='offensive'"> [Deleted]</t>
             <t t-if="question.state=='offensive'"> [Offensive]</t>
             <t t-if="question.state=='offensive' and question.closed_reason_id">
-                [<t t-esc="question.closed_reason_id.name[0].upper() + question.closed_reason_id.name[1:]"/>]
+                [<t t-out="question.closed_reason_id.name[0].upper() + question.closed_reason_id.name[1:]"/>]
             </t>
         </span>
-        <span t-if="question.state == 'close'" class="text-muted"> [Closed]</span>
     </div>
 
-    <div t-attf-class="o_wforum_index_entry_tags mb-1" t-if="len(question.tag_ids) > 0">
-        <t t-foreach="question.tag_ids" t-as="question_tag">
+    <div t-if="not is_profile" t-attf-class="o_wforum_index_entry_tags mb-lg-1">
+        <t if="tag.posts_count > 0 and not hide_tags" t-foreach="question.tag_ids" t-as="question_tag">
 
             <!-- Toggle Tags on click -->
             <t t-if="tag and tag.name == question_tag.name" t-set="click_action"
@@ -42,57 +56,99 @@
                 t-value="'/forum/' + slug(question_tag.forum_id) + '/tag/' + slug(question_tag) + '/questions?' + keep_query( 'search', 'sorting', 'my', filters='tag')"/>
 
             <a t-att-href="click_action"
-                t-attf-class="badge #{tag and tag.name == question_tag.name and 'text-bg-secondary' or 'border text-600 text-bg-light'} #{ not question_tag_first and 'ms-lg-1 mt-lg-1'}"
+                t-attf-class="badge position-relative z-index-1 #{tag and tag.name == question_tag.name and 'text-bg-secondary' or 'text-bg-light'} fw-normal"
                 t-field="question_tag.name"/>
         </t>
     </div>
 
-    <div class="d-flex align-items-center justify-content-between justify-content-sm-start small text-muted">
-        <div>
-            <t t-call="website_forum.vote">
-                <t t-set="post" t-value="question"/>
-            </t>
-            <span t-field="question.write_date" t-options='{"format": "d MMMM y"}'/>, by <a t-attf-href="/forum/#{slug(question.forum_id)}/user/#{question.create_uid.id}?forum_origin=#{request.httprequest.path}" t-field="question.create_uid" class="d-inline-block fw-bold" t-options='{"widget": "contact", "fields": ["name"]}'/>
-        </div>
-        <div>
-            <span class="mx-1 d-none d-sm-inline">&amp;nbsp;|</span>
-            <a t-if="question.child_count" class="fw-bold" t-attf-href="/forum/#{ slug(question.forum_id) }/#{ slug(question) }">
-                <t t-esc="question.child_count"/>
-                <t t-if="question.child_count == 1">Answer</t>
-                <t t-else="">Answers</t>
-            </a>
-            <span t-else="">
-                0 Answers
-            </span>
-            <span class="d-none d-sm-inline">
-                <span class="mx-1">|</span>
-                <span t-field="question.views" /> <t t-if="question.views&lt;=1">View</t><t t-else="">Views</t>
-                <span t-if="question.favourite_count &gt; 0">
-                    <span class="mx-1">|</span>
-                    <i class="fa fa-star"/>
-                    <t t-esc="question.favourite_count"/>
-                </span></span>
-            <span t-if="question.state == 'flagged'" class="text-black"> | Flagged</span>
-        </div>
-    </div>
     <!--  Display post's content in moderation mode-->
     <div><t t-out="post_content"/></div>
 </template>
 
 <template id="display_post">
-    <div t-attf-class="#{show_author_avatar and 'mt-2 mb-4' or 'card py-2 px-3'}">
-        <div class="d-flex">
-            <div t-if="show_author_avatar">
+    <div t-if="is_profile" class="card">
+        <div class="card-body">
+            <t t-call="website_forum.display_post_question_block"/>
+            <div class="d-inline-flex gap-2 position-relative z-index-1 me-1">
+                <t t-if="answer" t-call="website_forum.author_box">
+                    <t t-set="object" t-value="question"/>
+                    <t t-set="_image_classes" t-value="'rounded-circle'"/>
+                    <t t-set="allow_biography" t-value="True"/>
+                    <t t-set="show_image" t-value="True"/>
+                    <t t-set="show_name" t-value="True"/>
+                    <t t-set="compact" t-value="True"/>
+                </t>
+                <small class="text-muted">
+                    <i class="fa fa-calendar me-1"/><span t-field="question.write_date" t-options='{"format":"short"}'/>
+                </small>
+            </div>
+            <div t-if="not answer" t-attf-class="d-inline-flex align-items-center">
+                <t t-call="website_forum.post_stats"/>
+            </div>
+            <div t-if="answer" class="d-inline-flex gap-1 small">Answered on<span t-field="answer.write_date" t-options='{"format": "d MMM yy "}'></span></div>
+        </div>
+    </div>
+    <tr t-else="" class="position-relative d-flex d-lg-table-row">
+        <td class="o_wforum_post_title flex-grow-1 order-2 order-lg-1">
+            <t t-call="website_forum.display_post_question_block">
+                <t t-set="_link_classes" t-value="'text-decoration-none'"></t>
+            </t>
+        </td>
+        <td class="o_wforum_posters order-1 order-lg-2">
+            <div class="position-relative z-index-1 d-flex flex-row-reverse">
+                <!-- [TODO] limit to 4 last posters -->
+                <div class="d-none d-lg-flex flex-row-reverse">
+                    <t t-foreach="question.child_ids" t-as="post_answer">
+                        <t t-if="post_answer.create_uid.id != question.create_uid.id">
+                            <t t-if="not post_answer.is_correct">
+                                <t t-call="website_forum.author_box">
+                                    <t t-set="object" t-value="post_answer"/>
+                                    <t t-set="_image_classes" t-value="'me-n2'"/>
+                                    <t t-set="show_image" t-value="True"/>
+                                    <t t-set="allow_biography" t-value="True"/>
+                                </t>
+                            </t>
+                            <t t-if="post_answer.is_correct">
+                                <t t-call="website_forum.author_box">
+                                    <t t-set="object" t-value="post_answer"/>
+                                    <t t-set="_box_classes" t-value="'z-index-1 order-1'"/>
+                                    <t t-set="_image_classes" t-value="'me-n2'"/>
+                                    <t t-set="show_image" t-value="True"/>
+                                    <t t-set="allow_biography" t-value="True"/>
+                                </t>
+                            </t>
+                        </t>
+                    </t>
+                </div>
                 <t t-call="website_forum.author_box">
                     <t t-set="object" t-value="question"/>
+                    <t t-set="_box_classes" t-value="'z-index-1'"/>
+                    <t t-set="_image_classes" t-value="'me-lg-n2'"/>
+                    <t t-set="show_image" t-value="True"/>
                     <t t-set="allow_biography" t-value="True"/>
                 </t>
             </div>
-            <div t-attf-class="flex-grow-1 #{show_author_avatar and 'ps-2'}">
-                <t t-call="website_forum.display_post_question_block"/>
-            </div>
-        </div>
-    </div>
+        </td>
+        <td class="o_wforum_reply_count order-3 d-flex d-lg-table-cell flex-column text-end text-lg-center">
+            <a t-if="question.child_count" class="text-reset" t-attf-href="/forum/#{ slug(question.forum_id) }/#{ slug(question) }">
+                <i class="fa fa-reply me-1 d-lg-none" />
+                <t t-out="question.child_count"/>
+            </a>
+            <span t-else="" class="opacity-50">
+                <i class="fa fa-reply me-1 d-lg-none" />
+                0
+            </span>
+            <div class="d-lg-none flex-grow-1"/>
+            <div t-field="question.write_date" t-options='{"format": "MMM yy "}' class="d-lg-none small text-muted text-nowrap"/>
+        </td>
+        <td class="o_wforum_view_count d-none d-lg-table-cell text-center">
+            <span t-out="question.views" t-attf-class="#{question.views == 0 and 'opacity-50'}" />
+        </td>
+        <td class="o_wforum_last_activity d-none d-lg-table-cell order-4 text-center">
+            <!-- [TODO] write_date gives last date of ANY update including favouriting. Need a "last answer" date field. -->
+            <span t-field="question.write_date" t-options='{"format": "d MMM yy "}'/>
+        </td>
+    </tr>
 </template>
 
 <!-- Display a post as an answer -->
@@ -103,188 +159,159 @@
 
 <!-- Edition: post an answer -->
 <template id="post_answer">
-    <div class="d-flex align-items-center mt-5 mb-2">
-        <img t-if="uid" t-attf-class="o_forum_avatar rounded-circle me-2" t-att-src="website.image_url(user, 'avatar_128', '24x24')" alt="Avatar"/>
-        <h4 class="my-0">Your Answer</h4>
+    <div class="d-flex align-items-center mb-3">
+        <div class="d-flex align-items-center">
+            <img t-if="uid" t-attf-class="o_wforum_avatar me-2 rounded-circle" t-att-src="request.website.image_url(user, 'avatar_128', '24x24')" alt="Avatar"/>
+            <h4 class="my-0">Your Answer</h4>
+        </div>
+        <button class="o_wforum_expand_toggle btn fa fa-expand ms-auto" data-bs-toggle="collapse"/>
     </div>
     <t t-if="request.params.get('nocontent')">
         <p class="alert alert-danger" role="alert">You cannot post an empty answer</p>
     </t>
-    <form t-attf-action="/forum/#{ slug(forum) }/#{slug(question)}/reply" method="post" class="js_website_submit_form js_wforum_submit_form" role="form">
+    <form t-attf-action="/forum/#{ slug(forum) }/#{slug(question)}/reply" method="post" class="js_website_submit_form js_wforum_submit_form d-flex flex-column" role="form">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
         <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
         <textarea name="content" t-attf-id="content-#{str(question.id)}" class="form-control o_wysiwyg_loader" required="required" minlength="50" t-att-data-karma="forum.karma_editor"/>
-        <p class="small mt-2 mb-1">
+        <p class="mt-2 mb-1 small">
             <b>Please try to give a substantial answer.</b> If you wanted to comment on the question or answer, just
             <b>use the commenting tool.</b> Please remember that you can always <b>revise your answers</b>
             - no need to answer the same question twice. Also, please <b>don't forget to vote</b>
             - it really helps to select the best questions and answers!
         </p>
-        <button type="submit" t-attf-class="btn btn-primary o_wforum_submit_post #{forum.allow_share and 'oe_social_share_call'} my-3 #{not question.can_answer and 'karma_required'}"
-                t-att-data-karma="question.forum_id.karma_answer"
-                data-social-target-type="answer" data-hashtags="#answer">Post Answer</button>
-        <a href="#"
-        class="btn btn-secondary"
-        data-bs-toggle="collapse"
-        data-bs-target=".answer_collapse"
-        aria-expanded="false">Discard</a>
+        <div>
+            <button type="submit" t-attf-class="o_wforum_submit_post #{forum.allow_share and 'oe_social_share_call '}btn btn-primary my-3 #{not question.can_answer and 'karma_required'}"
+                    t-att-data-karma="question.forum_id.karma_answer"
+                    data-social-target-type="answer" data-hashtags="#answer">Post Answer</button>
+            <a href="#"
+            class="o_wforum_discard_btn btn btn-link"
+            data-bs-toggle="collapse"
+            data-bs-target=".answer_collapse"
+            aria-expanded="false">Discard</a>
+        </div>
     </form>
+</template>
+
+<template id="post_stats">
+    <div class="d-flex">
+        <div>
+            <!-- [TODO] Don't count flagged answers (but count them for moderators?)-->
+            <span t-if="question.child_count" class="small">
+                <t t-out="question.child_count"/>
+                <span class="text-muted">
+                    <t t-if="question.child_count == 1">Reply</t>
+                    <t t-else="">Replies</t>
+                </span>
+            </span>
+            <span t-else="" class="small">
+                0 <span class="text-muted">Replies</span>
+            </span>
+        </div>
+        <div class="ms-3">
+            <span t-if="question.views" class="small">
+                <t t-out="question.views"/>
+                <span class="text-muted">
+                    <t t-if="question.views > 1 or 0">Views</t>
+                    <t t-else="">View</t>
+                </span>
+            </span>
+            <span t-else="" class="small">
+                0 <span class="text-muted">Views</span>
+            </span>
+        </div>
+    </div>
+    <div t-if="len(question.tag_ids) > 0" class="o_wforum_index_entry_tags ms-3">
+        <a t-foreach="question.tag_ids" t-as="question_tag"
+            t-attf-href="/forum/#{slug(question_tag.forum_id)}/tag/#{slug(question_tag)}/questions?#{keep_query(filters='tag')}"
+            t-attf-class="badge text-bg-light #{not question_tag_first and 'ms-1'} fw-normal"
+            t-field="question_tag.name"/>
+    </div>
 </template>
 
 <!-- Specific Post Layout -->
 <template id="post_description_full" name="Question Navigation">
+    <t t-set="_page_name" t-valuef="single_question"/>
+    <t t-set="_question_author" t-value="question.create_uid.id"/>
+
     <t t-call="website_forum.header">
-        <div class="alert alert-info shadow-sm pb-3" role="status" t-if="forum and question.state == 'pending' and user.karma>=forum.karma_moderate and question.active">
-            <p>This post is currently awaiting moderation and it's not published yet.<br/>
-                Do you want <b>Accept</b> or <b>Reject</b> this post?</p>
-            <div>
-                <a role="button" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" type="button" class="btn btn-success">
-                    <i class="fa fa-check fa-fw me-1"/>Accept</a>
-                <a role="button" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" type="button" class="btn btn-danger">
-                    <i class="fa fa-times fa-fw me-1"/>Reject</a>
+        <div class="mw-xl-75 mw-xxl-100">
+            <!-- Post Status Messages -->
+            <div t-if="forum and question.state == 'pending' and user.karma>=forum.karma_moderate and question.active" class="alert alert-info text-center" role="status" >
+                <p>This post is currently awaiting moderation and is not published yet.<br/>
+                    As a moderator you can either <b>Accept</b> or <b>Reject</b> this post.</p>
+                <div>
+                    <a role="button" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/validate" type="button" class="btn btn-success">
+                        <i class="fa fa-check fa-fw me-1"/>Accept</a>
+                    <a role="button" t-attf-href="/forum/#{slug(forum)}/post/#{slug(question)}/refuse" type="button" class="btn btn-danger">
+                        <i class="fa fa-times fa-fw me-1"/>Reject</a>
+                </div>
             </div>
-        </div>
-
-        <div class="alert alert-warning text-center" role="status"
-            t-if="question.state == 'pending' and user.karma &lt; forum.karma_moderate">
-            Waiting for validation
-        </div>
-
-        <article t-attf-class="question o_wforum_post row g-0 #{can_bump and 'oe_js_bump'}"
-            data-type="question"
-            t-att-data-last-update="question.write_date"
-            t-att-data-id="question.id"
-            t-att-data-state="question.state">
-
-            <div t-if="question.state == 'active'" class="col-6 mb-3 col-md-auto pe-2 pe-md-3 pe-lg-4">
-                <t t-call="website_forum.vote">
-                    <t t-set="post" t-value="question"/>
-                    <t t-set="vertical" t-value="True"/>
-                </t>
+            <div t-if="question.state == 'pending' and user.karma &lt; forum.karma_moderate" class="alert alert-warning mb-0 text-center" role="status" >
+                This post is awaiting validation
             </div>
-            <div t-attf-class="text-end d-md-none #{question.state == 'active' and 'col-6' or 'col-12'}">
-                <t t-call="website_forum.question_dropdown"/>
+            <div t-if="question.state == 'active' and question.can_answer and request.env.user.forum_waiting_posts_count" class="alert o_cc2 text-center">
+                <h5 >You have a pending post</h5>
+                <span>Please wait for a moderator to validate your previous post to be allowed to reply to questions.</span>
             </div>
-            <section class="col">
-                <div class="row no-gutter">
-                    <header class="o_wforum_post_header col mb-0 h2">
-                        <i t-if="uid" aria-label="Toggle favorite status"
-                            title="Toggle favorite status"
-                            t-attf-data-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}/toggle_favourite"
-                            t-attf-class="o_wforum_favourite_toggle no-decoration small me-1 fa #{question.user_favourite and 'fa-star o_wforum_gold' or 'fa-star-o text-muted'}"/>
-
-                        <h1 class="d-inline mb-0 h2" t-esc="question.name"/>
-
-                        <span t-if="not question.active" class="border rounded-pill h6 text-muted my-0 ms-2 px-2">
-                            <t t-if="question.state!='offensive'">Deleted</t>
-                            <t t-if="question.state=='offensive'">Offensive</t>
-                            <t t-if="question.state=='offensive' and question.closed_reason_id">
-                                <t t-esc="question.closed_reason_id.name[0].upper() + question.closed_reason_id.name[1:]"/>
-                            </t>
-                        </span>
-                        <small t-if="question.state == 'close'">
-                            <span class="badge text-bg-info">Closed</span>
-                        </small>
-                    </header>
-                    <div class="d-none d-md-block col-md-auto">
-                        <t t-call="website_forum.question_dropdown"/>
-                    </div>
-                </div>
-
-                <div class="mt-3 row">
-                    <div t-call="website_forum.author_box" t-attf-class="col mb-2 #{question.tag_ids and 'col-sm-auto'}">
-                        <t t-set="object" t-value="question"/>
-                        <t t-set="allow_biography" t-value="True"/>
-                        <t t-set="show_name" t-value="True"/>
-                        <t t-set="show_date" t-value="True"/>
-                    </div>
-                    <div class="col-auto mb-2 order-sm-3">
-                        <div t-call="website_mail.follow">
-                            <t t-set="object" t-value="question"/>
-                            <t t-set="icons_design" t-value="True"/>
-                        </div>
-                    </div>
-                    <div t-if="len(question.tag_ids) > 0" class="col-12 col-sm order-sm-2 o_wforum_index_entry_tags mb-1">
-                        <i class="fa fa-tag text-muted"/>
-                        <a t-foreach="question.tag_ids" t-as="question_tag"
-                            t-attf-href="/forum/#{slug(question_tag.forum_id)}/tag/#{slug(question_tag)}/questions?#{keep_query(filters='tag')}"
-                            t-attf-class="badge border text-600 text-bg-light #{not question_tag_first and 'ms-1'}"
-                            t-field="question_tag.name"/>
-                    </div>
-                </div>
-
-                <div class="alert alert-info text-center" t-if="question.state == 'close'" role="status">
-                    <p class="mt-3">
-                        <b>The question has been closed<t t-if="question.closed_reason_id"> for reason: <i t-esc="question.closed_reason_id.name"/></t></b>
-                    </p>
-                    <t t-if="question.closed_uid">
-                        <b> by <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.closed_uid.id }"
-                            t-field="question.closed_uid"
-                            t-options='{"widget": "contact", "fields": ["name"]}'
-                            style="display: inline-block;"/></b>
-                    </t>
-                    <b> on <span t-field="question.closed_date"/></b>
-                    <div class="mt-3 mb24 text-center">
-                        <t t-call="website_forum.link_button">
-                            <t t-set="url" t-value="'/forum/' + slug(forum) + '/question/' + slug(question) + '/reopen'"/>
-                            <t t-set="label">Reopen</t>
-                            <t t-set="inDropdown" t-value="False"/>
-                            <t t-set="icon" t-value="'oi oi-arrow-right'"/>
-                            <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
-                        </t>
-                    </div>
-                </div>
-
-                <div t-field="question.content" class="o_wforum_post_content o_wforum_readable oe_no_empty o_not_editable"/>
-
-                <t t-set="_question_comment_collapse_uid" t-value="'comment_%s_%s' % (question._name.replace('.', '_'), question.id)"/>
-                <div t-if="question.state == 'active' and question.active != False"
-                    class="btn-toolbar mb-3" role="toolbar">
-                    <div t-if="not question.uid_has_answered and question.can_answer" class="btn-group btn-group-sm me-2">
-                        <a t-attf-class="btn btn-primary collapsed #{not question.can_answer and 'karma_required text-muted'}"
-                            t-att-data-karma="question.forum_id.karma_answer"
-                            data-bs-toggle="collapse"
-                            data-bs-target=".answer_collapse"
-                            href="#">
-                            <i class="fa fa-reply me-1"/>Answer
-                        </a>
-                    </div>
-                    <div class="btn-group btn-group-sm">
-                        <a t-attf-class="btn px-2 border #{not question.can_comment and 'karma_required text-muted'}" t-att-data-karma="question.karma_comment" t-att-data-bs-toggle="question.can_comment and 'collapse' or None"
-                            t-attf-href="##{_question_comment_collapse_uid}">
-                            <i class=" fa fa-comment text-muted me-1"/>Comment
-                        </a>
-                        <a href="javascript:void(0)" class="oe_social_share btn px-2 border"
-                            t-attf-data-hashtags="#question">
-                            <i class="fa fa-share-alt text-muted me-1"/>Share
-                        </a>
-                    </div>
-                </div>
-
-                <t t-call="website_forum.post_comment">
+            <div t-attf-class="alert alert-danger #{question.state != 'flagged' and 'd-none '}text-center" >
+                <h5>This question has been flagged</h5>
+                <span t-if="question.can_moderate">As a moderator, you can either validate or reject this answer.</span>
+                <t t-call="website_forum.link_button">
+                    <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(question) + '/flag'"/>
+                    <t t-set="form_method" t-value="'GET'"/>
+                    <t t-set="karma" t-value="not question.can_flag and question.forum_id.karma_flag or 0"/>
+                    <t t-set="classes" t-valuef="o_wforum_flag"/>
+                    <t t-set="flag_validator" t-value="question.can_moderate"/>
                     <t t-set="object" t-value="question"/>
-                    <t t-set="_collapse_uid" t-value="_question_comment_collapse_uid"/>
                 </t>
-
-                <section t-if="question.child_count" t-attf-class="#{question.website_message_ids and 'mt-5' or 'mt-4'}">
-                    <h5>
-                        <t t-esc="question.child_count"/>
-                        <t t-if="question.child_count == 1">Answer</t>
-                        <t t-else="">Answers</t>
-                    </h5>
-
-                    <t t-foreach="question.child_ids" t-as="post_answer">
-                        <div t-if="post_answer.state != 'flagged' or (post_answer.state == 'flagged' and post_answer.can_moderate)"
-                            class="mb-4">
-                            <t t-call="website_forum.post_answers">
-                                <t t-set="answer" t-value="post_answer"/>
+            </div>
+            <div t-if="question.state == 'close'" role="status" class="alert alert-info text-center" >
+                    The question has been closed<t t-if="question.closed_reason_id"> for reason: <b><i t-out="question.closed_reason_id.name"/></b></t>
+                    <t t-if="question.closed_uid">
+                        <br/>by
+                        <a t-attf-href="/forum/#{ slug(forum) }/user/#{ question.closed_uid.id }"
+                           t-out="question.closed_uid.name"/>
+                    </t>
+                    on <span t-field="question.closed_date"/>
+                <div t-if="user.karma > question.karma_close" class="mt-3 text-center">
+                    <t t-call="website_forum.link_button">
+                        <t t-set="url" t-value="'/forum/' + slug(forum) + '/question/' + slug(question) + '/reopen'"/>
+                        <t t-set="label">Reopen</t>
+                        <t t-set="icon" t-value="'fa-folder-open'"/>
+                        <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
+                        <t t-set="classes" t-value="'btn-info'"/>
+                    </t>
+                </div>
+            </div>
+            <div t-attf-class="d-flex align-items-center #{not is_profile and 'mb-3'}">
+                <t t-call="website_forum.post_stats"/>
+            </div>
+            <div class="d-grid">
+                <!-- Question Post -->
+                <t t-call="website_forum.post">
+                    <t t-set="post_id" t-value="question"/>
+                </t>
+                <!-- Answers -->
+                <section t-if="question.child_count">
+                    <t t-foreach="question.child_ids" t-as="answer">
+                        <t t-if="answer.state != 'flagged' or (answer.state == 'flagged' and answer.can_moderate)">
+                            <t t-call="website_forum.post">
+                                <t t-set="post_id" t-value="answer"/>
                             </t>
-                        </div>
+                        </t>
                     </t>
                 </section>
-
-                <div t-if="not question.uid_has_answered and question.can_answer and question.child_ids" class="btn-group btn-group-sm me-2">
-                    <a t-attf-class="btn btn-primary answer_collapse show collapsed collapse #{not question.can_answer and 'karma_required text-muted'}"
+                <t t-else="">
+                    <section t-if="uid and question.state == 'active' and not request.env.user.forum_waiting_posts_count" class="alert alert-info mt-3 mb-0">
+                        <t t-if="question.can_answer">
+                            <h5>There are no answers yet</h5>
+                            <span>Be the first to answer this question</span>
+                        </t>
+                    </section>
+                </t>
+                <!-- Write Answer -->
+                <div t-if="uid and not question.uid_has_answered and question.can_answer and question.state == 'active' and question.active != False" class="d-flex mt-3">
+                    <a t-attf-class="btn btn-link collapsed #{not question.can_answer and 'karma_required text-muted'}#{request.env.user.forum_waiting_posts_count and ' disabled'} text-decoration-none"
                         t-att-data-karma="question.forum_id.karma_answer"
                         data-bs-toggle="collapse"
                         data-bs-target=".answer_collapse"
@@ -292,283 +319,322 @@
                         <i class="fa fa-reply me-1"/>Answer
                     </a>
                 </div>
-
-                <t t-if="question.state != 'close' and question.active != False and question.can_answer and not request.env.user.forum_waiting_posts_count">
-                    <div id="post_reply" class="collapse answer_collapse" t-if="(not question.uid_has_answered or question.forum_id.mode == 'discussions')">
-                        <t t-call="website_forum.post_answer"/>
-                    </div>
-                    <div t-elif="uid and request.env.user.forum_waiting_posts_count" class="alert alert-info text-center">
-                        <b class="d-block">You have a pending post</b>
-                        Please wait for a moderator to validate your previous post to be allowed replying questions.
-                    </div>
-                    <div t-elif="not uid" class="alert alert-info text-center">
-                        <a class="btn btn-primary forum_register_url" href="/web/login">Sign in</a> to partecipate
+                <t t-if="question.state != 'close' and question.active != False and question.can_answer">
+                    <div id="post_reply" class="answer_collapse position-fixed d-flex flex-column start-0 end-0 bottom-0 w-100 w-lg-50 shadow mx-auto px-3 bg-body" t-if="(not question.uid_has_answered or question.forum_id.mode == 'discussions')">
+                        <div t-call="website_forum.post_answer" class="container my-3"/>
                     </div>
                 </t>
-            </section>
-        </article>
+            </div>
+        </div>
     </t>
 </template>
 
-<template id="website_forum.question_dropdown">
-    <div class="dropdown">
-        <a class="btn py-0" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-ellipsis-v"/>
-        </a>
-        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
-            <t t-if="question.state == 'close'" t-call="website_forum.link_button">
-                <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/reopen'"/>
+<template id="website_forum.post">
+    <t t-if="post_id == answer">
+        <a t-if="answer" t-attf-id="answer-#{str(answer.id)}"/>
+        <t t-set="_answer_author" t-value="post_id.create_uid.id"/>
+        <t t-set="post_type" t-value="'answer'" />
+    </t>
+    <t t-else="post_id == question">
+        <t t-set="_question_author" t-value="post_id.create_uid.id"/>
+        <t t-set="post_type" t-value="'question'" />
+    </t>
+
+    <div t-attf-class="o_wforum_#{post_type} row g-0 mb-2 rounded #{can_bump and 'oe_js_bump'} #{post_id == answer and post_id.is_correct and 'o_wforum_answer_correct my-2 mx-n3 mx-lg-n2 mx-xl-n3 py-3 px-3 px-lg-2 px-xl-3'}"
+            t-att-data-type="post_type"
+            t-att-data-last-update="post_id.write_date"
+            t-attf-data-id="#{post_type}-#{post_id.id}"
+            t-attf-id="#{post_type}-#{post_id.id}"
+            t-att-data-state="post_id.state">
+            <div class="d-flex flex-column col-auto pe-2 pe-lg-3">
+                <t t-call="website_forum.author_box">
+                    <t t-set="object" t-value="post_id"/>
+                    <t t-set="show_image" t-value="True"/>
+                </t>
+                <div t-attf-class="align-self-center flex-grow-1 mt-2 border-start opacity-50 #{post_id.is_correct and 'border-success'}"/>
+            </div>
+            <div class="post_content_wrapper col">
+                <header class="o_wforum_post_header d-flex align-items-center mb-1">
+                    <t t-call="website_forum.author_box">
+                        <t t-set="object" t-value="post_id"/>
+                        <t t-set="allow_biography" t-value="True"/>
+                        <t t-set="show_name" t-value="True"/>
+                    </t>
+                    <!-- [TODO] To be replaced with relative date/time (ex: "2 days ago") -->
+                    <span class="ms-2 opacity-75 small text-muted">
+                        <!-- <time  t-field="post_id.create_date" t-options='{"format": "d MMMM y "}'/>
+                        at
+                        <time t-field="post_id.create_date" t-options='{"format": "HH:mm "}'/> -->
+                        2d ago
+                    </span>
+                    <t t-if="answer">
+                        <span t-if="_question_author == _answer_author" class="badge ms-2 border border-dark rounded-pill px-2 py-1 text-reset">
+                            Author
+                        </span>
+                        <span t-if="question.forum_id.mode == 'questions'" t-attf-class="o_wforum_answer_correct_badge badge #{answer.is_correct and 'd-inline' or 'd-none'} ms-auto border border-success rounded-pill px-2 py-1 text-success">
+                            Best Answer
+                        </span>
+                    </t>
+                </header>
+                <t t-if="answer and post_id.state == 'flagged' and post_id.can_flag">
+                    <div class="alert alert-danger text-center">
+                        <p><b class="d-block">This answer has been flagged</b>
+                            As a moderator, you can either validate or reject this answer.</p>
+                        <t t-call="website_forum.link_button">
+                            <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(post_id) + '/flag'"/>
+                            <t t-set="form_method" t-value="'GET'"/>
+                            <t t-set="karma" t-value="not post_id.can_flag and post_id.forum_id.karma_flag or 0"/>
+                            <t t-set="classes" t-valuef="o_wforum_flag"/>
+                            <t t-set="flag_validator" t-value="post_id.can_moderate"/>
+                            <t t-set="object" t-value="post_id"/>
+                        </t>
+                    </div>
+                </t>
+
+                <div t-field="post_id.content" class="o_wforum_post_content o_wforum_readable oe_no_empty o_not_editable"/>
+
+                <t t-if="post_id == answer">
+                    <t t-set="_answer_comment_collapse_uid" t-value="'comment_%s_%s' % (post_id._name.replace('.', '_'), post_id.id)"/>
+                </t>
+                <t t-elif="post_id == question">
+                    <t t-set="_question_comment_collapse_uid" t-value="'comment_%s_%s' % (post_id._name.replace('.', '_'), post_id.id)"/>
+                </t>
+
+                <div class="btn-toolbar align-items-center mt-3" role="toolbar">
+                    <t t-if="post_id.state == 'active' and post_id.active != False" t-call="website_forum.vote">
+                        <t t-set="post" t-value="post_id"/>
+                        <t t-if="post_id == answer">
+                            <t t-set="helper_accept">Mark as Best Answer</t>
+                            <t t-set="helper_own_post">You can't vote for your own post</t>
+                            <t t-set="helper_no_karma">You don't have enough karma</t>
+                            <t t-set="helper_decline">Unmark as Best Answer</t>
+                            <a t-if="question.can_answer and question.forum_id.mode == 'questions'"
+                               t-attf-class="o_wforum_validate_toggler btn #{not answer.is_correct and answer.create_uid.id != uid and post_id.can_accept and 'opacity-50 opacity-100-hover'} #{not post_id.can_accept and 'karma_required opacity-25 '}#{answer.create_uid.id == uid and 'opacity-25'}"
+                               href="#"
+                               t-attf-data-karma="#{post_id.karma_accept}"
+                               t-att-data-helper-accept="helper_accept"
+                               t-att-data-helper-own-post="helper_own_post"
+                               t-att-data-helper-no-karma="helper_no_karma"
+                               t-att-data-helper-decline="helper_decline"
+                               t-att-title="not post_id.can_accept and helper_no_karma or answer.is_correct and helper_decline or not answer.is_correct and helper_accept or answer.is_correct and answer.create_uid.id == uid and helper_own_post"
+                               data-bs-toggle="tooltip"
+                               t-attf-data-target="#answer-#{post_id.id}"
+                               t-attf-data-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct">
+                                <i t-attf-class="fa #{answer.is_correct and 'fa-check-circle text-success' or 'fa-check-circle-o'} fs-5"/>
+                            </a>
+                        </t>
+                    </t>
+                    <div class="d-flex align-items-center ms-auto">
+                        <t t-if="post_id == question">
+                            <t t-if="not question.uid_has_answered">
+                                <div t-if="uid and question.can_answer and question.state == 'active' and question.active != False" class="d-flex ms-auto me-2">
+                                    <a t-attf-class="btn btn-link collapsed #{not question.can_answer and 'karma_required text-muted'}#{request.env.user.forum_waiting_posts_count and 'disabled'} text-decoration-none"
+                                        t-att-data-karma="question.forum_id.karma_answer"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target=".answer_collapse"
+                                        href="#">
+                                        <i class="fa fa-reply me-1"/>Answer
+                                    </a>
+                                </div>
+                            </t>
+                            <t t-foreach="post_id.child_ids" t-as="post_answer">
+                                <t t-if="post_answer.create_uid.id == uid">
+                                    <a class="btn btn-sm btn-primary"
+                                       t-att-title="question.forum_id.mode == 'questions' and edit_answer_title"
+                                       data-bs-toggle="tooltip"
+                                       data-bs-placement="top"
+                                       t-attf-href="#answer-#{post_answer.id}">
+                                       View my answer <i class="oi oi-arrow-right ms-1"/></a>
+                                </t>
+                            </t>
+                        </t>
+                        <t t-if="post_id == answer and post_id.create_uid.id == uid">
+                            <div class="d-flex ms-auto me-2">
+                                <t t-set="edit_answer_title">You are only allowed one answer</t>
+
+                                <a class="btn btn-sm btn-outline-primary"
+                                    t-att-title="question.forum_id.mode == 'questions' and edit_answer_title"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}/edit_answer">
+                                    <i class="fa fa-pencil"/>
+                                    Edit<span class="d-none d-lg-inline"> your answer</span>
+                                </a>
+                            </div>
+                        </t>
+                        <t t-if="post_id.state == 'active' and post_id.active != False">
+                            <a t-if="post_id.state == 'active' and post_id.active != False"
+                            t-attf-class="btn #{not uid and 'd-none '}#{not post_id.can_comment and 'karma_required opacity-25' or 'opacity-50 opacity-100-hover'}"
+                            t-att-data-karma="{not post_id.can_comment and post_id.karma_comment or 0}"
+                            t-att-data-bs-toggle="post_id.can_comment and 'collapse' or None"
+                            t-attf-href="##{post_id == answer and _answer_comment_collapse_uid or _question_comment_collapse_uid}">
+                            <i t-attf-class="fa fa-comment #{not post_id.can_comment and 'karma_required'}" title="Comment" data-bs-toggle="tooltip" data-bs-placement="top" />
+                            </a>
+                            <a t-if="question.state == 'active' and question.active != False" href="javascript:void(0)" class="oe_social_share btn opacity-50 opacity-100-hover"
+                                t-attf-data-urlshare="#{request.httprequest.url}#{post_id == answer and '#' + ''}"
+                                t-attf-data-hashtags="##{post_type}">
+                                <i class="fa fa-share-alt" data-bs-toggle="tooltip" data-bs-placement="top" title="Share"/>
+                            </a>
+                        </t>
+                        <t t-if="(post_id.can_close or
+                           post_id.can_edit or
+                           post_id.can_unlink or
+                           post_id.can_moderate or
+                           post_id.can_flag) and
+                           (not request.env.user._is_public())"
+                            t-call="website_forum.post_dropdown"/>
+                    </div>
+                </div>
+                <t t-call="website_forum.post_comment">
+                    <t t-set="object" t-value="post_id"/>
+                    <t t-if="post_id == answer">
+                        <t t-set="_collapse_uid" t-value="_answer_comment_collapse_uid"/>
+                    </t>
+                    <t t-if="post_id == question">
+                        <t t-set="_collapse_uid" t-value="_question_comment_collapse_uid"/>
+                   </t>
+                </t>
+            </div>
+        </div>
+</template>
+
+<template id="website_forum.post_dropdown">
+    <a class="btn opacity-50 opacity-100-hover" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fa fa-ellipsis-h"  data-bs-toggle="tooltip" data-bs-placement="top" title="More"/>
+    </a>
+    <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuLink">
+        <t t-if="post_id == question">
+            <t t-if="post_id.state == 'close'" t-call="website_forum.link_button">
+                <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(post_id) + '/reopen'"/>
                 <t t-set="label">Reopen</t>
                 <t t-set="inDropdown" t-value="True"/>
                 <t t-set="icon" t-value="'fa-undo fa-fw'"/>
-                <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
+                <t t-set="karma" t-value="not post_id.can_close and post_id.karma_close or 0"/>
             </t>
-            <t t-call="website_forum.link_button">
-                <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/edit'"/>
-                <t t-set="label">Edit</t>
-                <t t-set="inDropdown" t-value="True"/>
-                <t t-set="icon" t-value="'fa-pencil fa-fw'"/>
-                <t t-set="karma" t-value="not question.can_edit and question.karma_edit or 0"/>
-            </t>
-            <t t-if="question.state != 'close'" t-call="website_forum.link_button">
-                <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/ask_for_close'"/>
+        </t>
+        <t t-call="website_forum.link_button">
+            <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(post_id) + '/edit'"/>
+            <t t-set="label">Edit</t>
+            <t t-set="inDropdown" t-value="True"/>
+            <t t-set="icon" t-value="'fa-pencil fa-fw'"/>
+            <t t-set="karma" t-value="not post_id.can_edit and post_id.karma_edit or 0"/>
+        </t>
+        <t t-if="post_id == question">
+            <t t-if="post_id.state != 'close'" t-call="website_forum.link_button">
+                <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(post_id) + '/ask_for_close'"/>
                 <t t-set="label">Close</t>
                 <t t-set="inDropdown" t-value="True"/>
                 <t t-set="icon" t-value="'fa-times fa-fw'"/>
-                <t t-set="karma" t-value="not question.can_close and question.karma_close or 0"/>
+                <t t-set="karma" t-value="not post_id.can_close and post_id.karma_close or 0"/>
             </t>
-            <t t-if="question.active" t-call="website_forum.link_button">
-                <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/delete'"/>
-                <t t-set="label">Delete</t>
-                <t t-set="inDropdown" t-value="True"/>
-                <t t-set="icon" t-value="'fa-trash-o fa-fw'"/>
-                <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
-            </t>
-            <t t-if="not question.active and question.state != 'offensive'" t-call="website_forum.link_button">
-                <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(question) + '/undelete'"/>
+            <t t-if="not post_id.active and post_id.state != 'offensive'" t-call="website_forum.link_button">
+                <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(post_id) + '/undelete'"/>
                 <t t-set="label">Undelete</t>
                 <t t-set="inDropdown" t-value="True"/>
                 <t t-set="icon" t-value="'fa-upload fa-fw'"/>
-                <t t-set="karma" t-value="not question.can_unlink and question.karma_unlink or 0"/>
+                <t t-set="karma" t-value="not post_id.can_unlink and post_id.karma_unlink or 0"/>
             </t>
-            <t t-if="not question.active and question.state == 'offensive'" t-call="website_forum.link_button">
-                <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/validate'"/>
+            <t t-if="not post_id.active and post_id.state == 'offensive'" t-call="website_forum.link_button">
+                <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(post_id) + '/validate'"/>
                 <t t-set="label">Validate</t>
                 <t t-set="inDropdown" t-value="True"/>
                 <t t-set="icon" t-value="'fa-check fa-fw'"/>
-                <t t-set="karma" t-value="not question.can_moderate and question.forum_id.karma_moderate or 0"/>
+                <t t-set="karma" t-value="not post_id.can_moderate and post_id.forum_id.karma_moderate or 0"/>
             </t>
-            <t t-if="question.active" href="#" t-call="website_forum.link_button">
-                <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(question) + '/flag'"/>
-                <t t-if="question.state == 'flagged'" t-set="label">Flagged</t>
-                <t t-else="" t-set="label">Flag</t>
-                <t t-set="inDropdown" t-value="True"/>
-                <t t-set="icon" t-value="not question.can_flag and 'fa-flag-o' or 'fa-flag'"/>
-                <t t-set="karma" t-value="not question.can_flag and question.forum_id.karma_flag or 0"/>
-                <t t-set="classes" t-valuef="o_wforum_flag"/>
-                <t t-set="flag_validator" t-value="question.can_moderate"/>
-                <t t-set="object" t-value="question"/>
-            </t>
-        </div>
-    </div>
-</template>
-
-<template id="post_answers">
-    <a t-attf-id="answer-#{str(answer.id)}"/>
-    <div t-attf-class="forum_answer pt-4 border-top border-light #{answer.is_correct and 'o_wforum_answer_correct'}" t-attf-id="answer_#{answer.id}" >
-        <div class="">
-            <div class="row g-0">
-                <div class="col-12 col-md-auto pe-2 pe-md-2 pe-lg-3">
-                    <t t-call="website_forum.vote">
-                        <t t-set="vertical" t-value="True"/>
-                        <t t-set="post" t-value="answer"/>
-
-                        <t t-set="helper_accept">Mark as Best Answer</t>
-                        <t t-set="helper_decline">Unmark as Best Answer</t>
-                        <a t-if="question.can_answer and question.forum_id.mode == 'questions'" t-attf-class="o_wforum_validate_toggler fa-stack mt-2 #{not answer.can_accept and 'karma_required'}"
-                           href="#"
-                           t-attf-data-karma="#{answer.karma_accept}"
-                           t-att-data-helper-accept="helper_accept"
-                           t-att-data-helper-decline="helper_decline"
-                           t-att-title="answer.is_correct and helper_decline or helper_accept"
-                           data-bs-toggle="tooltip"
-                           t-attf-data-target="#answer_#{answer.id}"
-                           t-attf-data-href="/forum/#{slug(question.forum_id)}/post/#{slug(answer)}/toggle_correct">
-                            <i class="fa fa-circle-o fa-stack-2x"/>
-                            <i class="fa fa-check fa-stack-1x"/>
-                        </a>
-                    </t>
-                </div>
-                <div class="col">
-                    <div class="o_wforum_answer_header d-flex align-items-start mb-2">
-                        <t t-call="website_forum.author_box">
-                            <t t-set="object" t-value="answer"/>
-                            <t t-set="show_name" t-value="True"/>
-                            <t t-set="show_date" t-value="True"/>
-                            <t t-set="allow_biography" t-value="True"/>
-                            <t t-set="object_validable" t-value="True"/>
-                        </t>
-                        <span class="o_wforum_answer_correct_badge border small border-success rounded-pill fw-bold text-success ms-2 px-2">
-                            Best Answer
-                        </span>
-                    </div>
-
-                    <div t-field="answer.content" class="mb-2 o_wforum_readable oe_no_empty o_not_editable"/>
-
-                    <t t-set="_answer_comment_collapse_uid" t-value="'comment_%s_%s' % (answer._name.replace('.', '_'), answer.id)"/>
-                    <div class="btn-toolbar mb-3">
-                        <div t-if="question.uid_has_answered and answer.create_uid.id == uid"
-                            class="btn-group btn-group-sm me-1 me-md-2">
-                            <t t-set="edit_answer_title">Only one answer per question is allowed</t>
-                            <a class="btn btn-sm px-2 btn-primary"
-                                t-att-title="question.forum_id.mode == 'questions' and edit_answer_title"
-                                data-bs-toggle="tooltip"
-                                t-attf-href="/forum/#{slug(forum)}/question/#{slug(question)}/edit_answer">
-                                <i class="fa fa-pencil"/>
-                                Edit<span class="d-none d-lg-inline"> your answer</span>
-                            </a>
-                        </div>
-                        <div class="btn-group btn-group-sm">
-                            <a t-attf-class="btn border px-2 #{not answer.can_comment and 'karma_required text-muted'}"
-                                t-attf-data-karma="#{not answer.can_comment and answer.karma_comment or 0}"
-                                t-att-data-bs-toggle="answer.can_comment and 'collapse' or None"
-                                t-attf-data-bs-target="##{_answer_comment_collapse_uid}">
-                                <i t-attf-class="fa fa-comment text-muted #{not answer.can_comment and 'karma_required'}"/>
-                                Comment
-                            </a>
-                            <a href="javascript:void(0)" class="oe_social_share btn border px-2"
-                                t-attf-data-urlshare="#{request.httprequest.url}##{_answer_comment_collapse_uid}"
-                                t-attf-data-hashtags="question">
-                                <i class="fa fa-share-alt text-muted"/>
-                                Share
-                            </a>
-                        </div>
-                        <div t-if="answer.can_comment" class="btn-group btn-group-sm ms-1 ms-md-2">
-                            <a class="btn border dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                More
-                            </a>
-                            <div class="dropdown-menu shadow">
-                                <t t-if="not answer.create_uid.id == uid" t-call="website_forum.link_button">
-                                    <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/edit'"/>
-                                    <t t-set="label">Edit</t>
-                                    <t t-set="inDropdown" t-value="True"/>
-                                    <t t-set="icon" t-value="'fa-pencil-square-o text-muted me-2'"/>
-                                    <t t-set="karma" t-value="not answer.can_edit and answer.karma_edit or 0"/>
-                                </t>
-                                <t t-call="website_forum.link_button">
-                                    <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/delete'"/>
-                                    <t t-set="label">Delete</t>
-                                    <t t-set="inDropdown" t-value="True"/>
-                                    <t t-set="icon" t-value="'fa-trash-o text-muted me-2'"/>
-                                    <t t-set="karma" t-value="not answer.can_unlink and answer.karma_unlink or 0"/>
-                                </t>
-                                <t t-if="answer.can_flag" t-call="website_forum.link_button">
-                                    <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/flag'"/>
-                                    <t t-set="label" t-value="answer.state == 'flagged' and 'Flagged' or 'Flag'"/>
-                                    <t t-set="form_method" t-value="'GET'"/>
-                                    <t t-set="inDropdown" t-value="True"/>
-                                    <t t-set="karma" t-value="not answer.can_flag and answer.forum_id.karma_flag or 0"/>
-                                    <t t-set="icon" t-value="'fa-flag-o text-muted me-2'"/>
-                                    <t t-set="classes" t-valuef="o_wforum_flag"/>
-                                    <t t-set="flag_validator" t-value="answer.can_moderate"/>
-                                    <t t-set="object" t-value="answer"/>
-                                </t>
-                                <t t-call="website_forum.link_button">
-                                    <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(answer) + '/convert_to_comment'"/>
-                                    <t t-set="label">Convert as a comment</t>
-                                    <t t-set="inDropdown" t-value="True"/>
-                                    <t t-set="icon" t-value="'fa-magic text-muted me-2'"/>
-                                    <t t-set="karma" t-value="not answer.can_comment_convert and answer.karma_comment_convert or 0"/>
-                                </t>
-                            </div>
-                        </div>
-                    </div>
-                    <t t-call="website_forum.post_comment">
-                        <t t-set="object" t-value="answer"/>
-                        <t t-set="_collapse_uid" t-value="_answer_comment_collapse_uid"/>
-                    </t>
-                    <div t-foreach="answer.child_ids" t-as="child_answer" class="mt4 mb4">
-                       <t t-call="website_forum.post_answers">
-                           <t t-set="answer" t-value="child_answer"/>
-                       </t>
-                   </div>
-                </div>
-            </div>
-        </div>
+        </t>
+        <t t-if="post_id.active" t-call="website_forum.link_button">
+            <t t-set="url" t-value="'/forum/' + slug(forum) +'/question/' + slug(post_id) + '/delete'"/>
+            <t t-set="label">Delete</t>
+            <t t-set="inDropdown" t-value="True"/>
+            <t t-set="icon" t-value="'fa-trash-o fa-fw'"/>
+            <t t-set="karma" t-value="not post_id.can_unlink and post_id.karma_unlink or 0"/>
+        </t>
+        <t t-if="post_id.active and post_id.state != 'flagged'" t-call="website_forum.link_button">
+            <t t-set="url" t-value="'/forum/' + slug(forum) +'/post/' + slug(post_id) + '/flag'"/>
+            <t t-set="label">Flag</t>
+            <t t-set="inDropdown" t-value="True"/>
+            <t t-set="icon" t-value="not post_id.can_flag and 'fa-flag-o' or 'fa-flag'"/>
+            <t t-set="karma" t-value="not post_id.can_flag and post_id.forum_id.karma_flag or 0"/>
+            <t t-set="classes" t-valuef="o_wforum_flag "/>
+            <t t-set="object" t-value="post_id"/>
+        </t>
     </div>
 </template>
 
 <!-- Utility template: Post a Comment -->
 <template id="post_comment">
-    <div class="o_wforum_post_comments_container ms-2 ms-md-5">
-        <div t-if="len(object.website_message_ids)" class="o_wforum_comments_count_header mb-2">
-            <div class="text-muted fw-bold small">
-                <span class="o_wforum_comments_count" t-esc="len(object.website_message_ids)"/>
-                <t t-if="len(object.website_message_ids) == 1">Comment</t>
-                <t t-else="">Comments</t>
-            </div>
-        </div>
+    <div class="o_wforum_post_comments_container rounded">
         <div class="css_editable_mode_hidden o_wforum_readable">
-            <form t-att-id="_collapse_uid" class="collapse p-1 oe_comment_grey js_website_submit_form js_wforum_submit_form"
+            <form t-att-id="_collapse_uid" class="oe_comment_grey js_website_submit_form js_wforum_submit_form collapse rounded o_cc2 p-2"
                 t-attf-action="/forum/#{slug(forum)}/post/#{slug(object)}/comment" method="POST">
-                <div class="shadow bg-white rounded px-3 pt-3 pb-4 mb-4">
                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                    <input name="post_id" t-att-value="object.id" type="hidden" class="mt8"/>
-                    <div class="d-flex w-100">
-                        <img class="d-none d-md-inline-block rounded-circle o_forum_avatar me-3" t-att-src="website.image_url(user, 'avatar_128', '40x40')" alt="Avatar"/>
+                    <input name="post_id" t-att-value="object.id" type="hidden"/>
+                    <div class="d-flex gap-1 w-100">
+                        <img class="o_wforum_avatar d-none d-md-inline-block align-self-baseline rounded-circle me-1" t-att-src="request.website.image_url(user, 'avatar_128', '36x36')" alt="Avatar"/>
                         <div class="w-100">
-                            <textarea name="comment" class="form-control mb-2" placeholder="Comment this post..."/>
-                            <div>
-                                <button type="submit" class="btn btn-primary o_wforum_submit_post">Post Comment</button>
-                                <a t-attf-href="##{_collapse_uid}" data-bs-toggle="collapse" class="btn border">Discard</a>
+                            <textarea name="comment" class="form-control" rows="3" placeholder="Comment this post"/>
+                            <div class="d-flex gap-1 mt-1">
+                                <button type="submit" class="o_wforum_submit_post btn btn-primary align-self-baseline text-nowrap">Add a comment</button>
+                                <a class="btn btn-link align-self-baseline text-nowrap" data-bs-toggle="collapse" t-attf-href="##{_collapse_uid}">Discard</a>
                             </div>
                         </div>
                     </div>
-               </div>
             </form>
         </div>
 
-        <div class="o_wforum_post_comments ps-3 ps-md-4 border-start">
+        <div t-if="object.website_message_ids" class="o_wforum_post_comments d-flex flex-column gap-2">
             <t t-foreach="reversed(object.website_message_ids)" t-as="message">
-                <div t-attf-class="o_wforum_post_comment #{not message_first and 'mt-3'}">
-                    <div>
-                        <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_unlink_own or object.forum_id.karma_comment_unlink_all"/>
-                        <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_convert_own or object.forum_id.karma_comment_convert_all"/>
-                        <t t-if="(object.parent_id and object.parent_id.state != 'close' and object.parent_id.active != False) or (not object.parent_id and object.state != 'close' and object.active != False)">
-                            <t t-set="allow_post_comment" t-value="True" />
-                        </t>
-                        <div class="d-flex">
-                            <div class="mb-1" t-call="website_forum.author_box">
+                <t t-set="_comment_author" t-value="message.create_uid.id"/>
+                <div t-attf-class="o_wforum_post_comment d-flex rounded o_cc2 ps-3">
+                    <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_unlink_own or object.forum_id.karma_comment_unlink_all"/>
+                    <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_convert_own or object.forum_id.karma_comment_convert_all"/>
+                    <t t-if="(object.parent_id and object.parent_id.state != 'close' and object.parent_id.active != False) or (not object.parent_id and object.state != 'close' and object.active != False)">
+                        <t t-set="allow_post_comment" t-value="True" />
+                    </t>
+                    <div class="flex-grow-1 py-2 opacity-75">
+                        <header>
+                            <span t-call="website_forum.author_box">
                                 <t t-set="object" t-value="message"/>
                                 <t t-set="compact" t-value="True"/>
                                 <t t-set="show_name" t-value="True"/>
-                                <t t-set="show_date" t-value="True"/>
-                            </div>
-                            <div class="dropdown ms-2">
-                                <a class="btn btn-sm" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-ellipsis-v"/>
-                                </a>
-                                <div class="dropdown-menu shadow">
-                                    <t t-call="website_forum.link_button">
-                                        <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) + '/delete'"/>
-                                        <t t-set="label">Delete</t>
-                                        <t t-set="title">Delete</t>
-                                        <t t-set="inDropdown" t-value="True"/>
-                                        <t t-set="icon" t-value="'fa-trash-o text-muted'"/>
-                                        <t t-set="classes" t-value="'comment_delete'"/>
-                                        <t t-set="karma" t-value="not object.can_unlink and object.karma_unlink or 0"/>
-                                    </t>
-                                    <t t-call="website_forum.link_button">
-                                        <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) +  '/convert_to_answer'"/>
-                                        <t t-set="label">Convert as a answer</t>
-                                        <t t-set="inDropdown" t-value="True"/>
-                                        <t t-set="icon" t-value="'fa-magic text-muted'"/>
-                                        <t t-set="karma" t-value="not object.can_comment_convert and object.karma_comment_convert or 0"/>
-                                    </t>
-                                </div>
-                            </div>
+                            </span>
+                            <span class="ms-2 mb-2 small text-muted"><small>Just now</small></span>
+                            <span t-if="_question_author == _comment_author" class="badge ms-2 border border-dark rounded-pill px-2 py-1 text-reset">
+                                Author
+                            </span>
+                        </header>
+                        <div t-field="message.body" class="o_wforum_readable oe_no_empty small"/>
+                    </div>
+                    <div t-if="(object.can_close or
+                                object.can_edit or
+                                object.can_unlink or
+                                object.can_moderate or
+                                object.can_flag) and
+                                (not request.env.user._is_public())"
+                         class="dropdown ms-auto">
+                        <a class="btn text-muted" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-ellipsis-h"/>
+                        </a>
+                        <div class="dropdown-menu">
+                            <t t-call="website_forum.link_button">
+                                <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) + '/delete'"/>
+                                <t t-set="label">Delete</t>
+                                <t t-set="title">Delete</t>
+                                <t t-set="inDropdown" t-value="True"/>
+                                <t t-set="icon" t-value="'fa-trash-o text-muted'"/>
+                                <t t-set="classes" t-value="'comment_delete'"/>
+                                <t t-set="karma" t-value="not object.can_unlink and object.karma_unlink or 0"/>
+                            </t>
+                            <t t-if="object.create_uid.id not in question.child_ids.create_uid.ids">
+                                <t t-call="website_forum.link_button">
+                                    <t t-set="url" t-value="'/forum/' + slug(forum) + '/post/' + slug(object) + '/comment/' + slug(message) +  '/convert_to_answer'"/>
+                                    <t t-set="label">Convert to answer</t>
+                                    <t t-set="inDropdown" t-value="True"/>
+                                    <t t-set="icon" t-value="'fa-magic text-muted'"/>
+                                    <t t-set="karma" t-value="not object.can_comment_convert and object.karma_comment_convert or 0"/>
+                                </t>
+                            </t>
                         </div>
-                        <div t-field="message.body" class="o_wforum_readable oe_no_empty"/>
                     </div>
                 </div>
             </t>
