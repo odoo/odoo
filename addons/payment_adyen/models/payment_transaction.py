@@ -96,10 +96,7 @@ class PaymentTransaction(models.Model):
         # Make the payment request to Adyen
         try:
             response_content = self.provider_id._adyen_make_request(
-                url_field_name='adyen_checkout_api_url',
-                endpoint='/payments',
-                payload=data,
-                method='POST',
+                endpoint='/payments', payload=data, method='POST'
             )
         except ValidationError as e:
             if self.operation == 'offline':
@@ -143,7 +140,6 @@ class PaymentTransaction(models.Model):
             'reference': refund_tx.reference,
         }
         response_content = refund_tx.provider_id._adyen_make_request(
-            url_field_name='adyen_checkout_api_url',
             endpoint='/payments/{}/refunds',
             endpoint_param=self.provider_reference,
             payload=data,
@@ -183,7 +179,6 @@ class PaymentTransaction(models.Model):
             'reference': self.reference,
         }
         response_content = self.provider_id._adyen_make_request(
-            url_field_name='adyen_checkout_api_url',
             endpoint='/payments/{}/captures',
             endpoint_param=self.provider_reference,
             payload=data,
@@ -219,7 +214,6 @@ class PaymentTransaction(models.Model):
             'reference': self.reference,
         }
         response_content = self.provider_id._adyen_make_request(
-            url_field_name='adyen_checkout_api_url',
             endpoint='/payments/{}/cancels',
             endpoint_param=self.provider_reference,
             payload=data,
