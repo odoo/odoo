@@ -120,7 +120,7 @@ class AccountAnalyticPlan(models.Model):
         result = {
             "type": "ir.actions.act_window",
             "res_model": "account.analytic.plan",
-            "domain": [('id', 'in', self.children_ids.ids)],
+            "domain": [('parent_id', '=', self.id)],
             "context": {'default_parent_id': self.id,
                         'default_color': self.color},
             "name": _("Analytical Plans"),
