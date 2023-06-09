@@ -72,6 +72,7 @@ const PopupWidget = publicWidget.Widget.extend({
     selector: '.s_popup',
     events: {
         'click .js_close_popup': '_onCloseClick',
+        'click .btn-primary': '_onBtnPrimaryClick',
         'hide.bs.modal': '_onHideModal',
         'show.bs.modal': '_onShowModal',
     },
@@ -174,6 +175,19 @@ const PopupWidget = publicWidget.Widget.extend({
             this._showPopup();
         }
     },
+    /**
+     * Checks if the given primary button should allow or not to close the
+     * modal.
+     *
+     * @private
+     * @param {HTMLElement} primaryBtnEl
+     */
+    _canBtnPrimaryClosePopup(primaryBtnEl) {
+        return !(
+            primaryBtnEl.classList.contains("s_website_form_send")
+            || primaryBtnEl.classList.contains("o_website_form_send")
+        );
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -184,6 +198,14 @@ const PopupWidget = publicWidget.Widget.extend({
      */
     _onCloseClick: function () {
         this._hidePopup();
+    },
+    /**
+     * @private
+     */
+    _onBtnPrimaryClick(ev) {
+        if (this._canBtnPrimaryClosePopup(ev.target)) {
+            this._hidePopup();
+        }
     },
     /**
      * @private
