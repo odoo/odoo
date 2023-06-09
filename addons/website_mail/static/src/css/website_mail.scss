@@ -1,10 +1,14 @@
-.js_follow[data-follow='on'] .js_follow_btn ,
+.js_follow[data-follow='on'] .js_follow_btn, .js_follow[data-follow='on'] .follow_btn,
 .js_follow[data-follow='off'] .js_unfollow_btn {
     display: none;
 }
 
+.js_follow[data-follow='on'] .js_unfollow_btn {
+    opacity: 1 !important;
+}
+
 .js_follow_icons_container {
-    .js_follow_btn, .js_unfollow_btn {
+    .js_follow_btn, .js_unfollow_btn, .follow_btn {
         animation: js_follow_fade 1s ease forwards;
         opacity: 0;
 
@@ -18,12 +22,11 @@
                 transition-duration: 1s;
                 opacity: 1;
             }
-        };
+        }
     }
 
     .fa:before {
         content: "\f0f3";
-        color: $text-muted;
     }
 
     .js_follow_btn:hover .fa:before {
@@ -31,12 +34,12 @@
     }
 
     .js_unfollow_btn .fa:before {
-        color: map-get($theme-colors, 'primary');
+        color: $primary;
     }
 
     .js_unfollow_btn:hover .fa:before {
         content: "\f1f6";
-        color: map-get($theme-colors, 'danger');
+        color: $danger;
     }
 }
 

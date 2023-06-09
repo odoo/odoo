@@ -1,13 +1,14 @@
 /** @odoo-module **/
-    
-    import { registry } from "@web/core/registry";
 
-    registry.category("web_tour.tours").add('forum_question', {
-        test: true,
-        url: '/forum/help-1',
-        steps: [{
+import { registry } from "@web/core/registry";
+
+registry.category("web_tour.tours").add('forum_question', {
+    test: true,
+    url: '/forum/help-1',
+    steps: [
+    {
         content: "Ask the question in this forum by clicking on the button.",
-        trigger: '.o_forum_ask_btn',
+        trigger: '.o_wforum_ask_btn',
     }, {
         content: "Give your question content.",
         trigger: 'input[name=post_name]',
@@ -53,10 +54,8 @@
         extra_trigger: 'div.modal.modal_shown',
         trigger: ".modal-header button.btn-close",
     }, {
-        content: "Click here to accept this answer.",
-        extra_trigger: '#wrap:has(".o_wforum_validate_toggler")',
-        trigger: '.o_wforum_validate_toggler[data-karma]:first',
-    }, {
         content: "Congratulations! You just created and post your first question and answer.",
-        trigger: '#wrap:has(".o_wforum_answer_correct")',
-    }]});
+        trigger: '.o_wforum_validate_toggler',
+        isCheck: true,
+    }]
+});

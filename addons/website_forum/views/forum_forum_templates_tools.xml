@@ -6,24 +6,22 @@
 <!-- ============================================================ -->
 
 <template id="show_flag_validator">
-    <a href="#" t-att-data-post-id="object.id" t-attf-data-action="validate" t-attf-class="#{'' if object.state == 'flagged' else 'd-none'} flag_validator badge text-bg-light my-2 me-2 o_wforum_flag_validator" title="Validate" data-bs-toggle="tooltip">
-        <i class="fa fa-check text-success"/>
+    <a href="#" t-att-data-post-id="object.id" t-attf-data-action="validate" t-attf-class="o_wforum_flag_validator flag_validator btn btn-success #{'' if object.state == 'flagged' else 'd-none'} my-2 me-2" title="Validate" data-bs-toggle="tooltip" data-bs-placement="top">
+        <i class="fa fa-check"/> Accept
     </a>
-    <a href="#" t-attf-data-action="/forum/#{object.id}/ask_for_mark_as_offensive" t-attf-class="#{'' if object.state == 'flagged' else 'd-none'} flag_validator badge text-bg-light my-2 me-2 o_wforum_flag_mark_as_offensive" title="Mark as Offensive"  data-bs-toggle="tooltip">
-        <i class="fa fa-times text-danger"/>
+    <a href="#" t-attf-data-action="/forum/#{object.id}/ask_for_mark_as_offensive" t-attf-class="o_wforum_flag_mark_as_offensive flag_validator #{'' if object.state == 'flagged' else 'd-none'} btn btn-danger my-2 me-2" title="Mark as Offensive"  data-bs-toggle="tooltip" data-bs-placement="top">
+        <i class="fa fa-times"/> Reject
     </a>
 </template>
 
 <template id="link_button">
-    <form  t-attf-method="#{form_method or 'POST'}" t-att-action="url" t-attf-class="#{form_classes} #{not inDropdown and 'btn btn-sm border'}">
+    <form t-attf-method="#{form_method or 'POST'}" t-att-action="url" t-attf-class="#{form_classes} #{not inDropdown and ''}">
         <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-        <div class="input-group">
-            <button t-attf-class="#{icon and not label and ('fa ' + icon)} #{inDropdown and 'dropdown-item ps-3' or 'btn btn-sm p-0'} #{classes} #{karma and 'karma_required text-muted'}" t-attf-data-karma="#{karma}" t-att-title="title">
-                <i t-if="icon and label" t-attf-class="fa fa-fw text-muted #{icon} #{inDropdown and 'me-1'}"/>
-                <t t-esc="label"/>
-            </button>
-            <t t-if="flag_validator" t-call="website_forum.show_flag_validator"/>
-        </div>
+        <button t-if="label" t-attf-class="#{icon and not label and ('fa ' + icon)} #{inDropdown and 'dropdown-item ps-3' or 'btn'} #{classes}#{karma > 0 and ' karma_required text-muted'}" t-attf-data-karma="#{karma}" t-att-title="title">
+            <i t-if="icon and label" t-attf-class="fa fa-fw #{icon} #{inDropdown and 'me-1'}"/>
+            <t t-out="label"/>
+        </button>
+        <t t-if="flag_validator" t-call="website_forum.show_flag_validator"/>
     </form>
 </template>
 
@@ -100,23 +98,28 @@
 <template id="vote">
     <t t-set="own_vote" t-value="post.user_vote"/>
     <t t-set="forum" t-value="post.forum_id"/>
+    <!-- can_upvote returns "true" for unregistered users -->
     <t t-set="can_upvote" t-value="post.can_upvote"/>
     <t t-set="can_downvote" t-value="post.can_downvote"/>
-    <div t-attf-class="vote text-center d-inline-flex align-items-center #{vertical and 'o_wforum_vote_vertical flex-md-column'} #{classes}">
+    <div t-attf-class="vote d-inline-flex align-items-center ms-n2 #{classes} text-muted text-center">
         <button type="button" t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/upvote"
-            t-attf-class="btn btn-link vote_up fa fa-caret-up ps-0 #{vertical and 'px-md-0 pt-md-0' or 'pe-2'} #{own_vote == 1 and 'text-success' or 'text-muted'} #{not can_upvote and 'karma_required'}"
+            t-attf-class="btn vote_up #{own_vote == 1 and 'text-success'} #{not can_upvote and 'karma_required text-reset opacity-25'}#{post_id.create_uid.id == uid and ' text-300'}"
             t-att-disabled="own_vote == 1 and 'disabled'"
             t-att-data-karma="forum.karma_upvote"
             t-att-data-can-upvote="can_upvote"
-            aria-label="Positive vote" title="Positive vote"/>
-        <b t-attf-class="vote_count #{own_vote == 1 and 'text-success' or (own_vote == -1 and 'text-danger' or 'text-muted')}"
-           t-esc="post.vote_count"/>
+            aria-label="Positive vote" title="Positive vote">
+            <i class="fa fa-caret-up" data-bs-toggle="tooltip" data-bs-placement="top" title="Upvote"/>
+        </button>
+        <small t-attf-class="vote_count #{own_vote == 1 and 'text-success' or (own_vote == -1 and 'text-danger') or post.vote_count == 0 and not own_vote and 'text-muted opacity-75'}"
+           t-out="post.vote_count"/>
         <button type="button" t-attf-data-href="/forum/#{slug(forum)}/post/#{slug(post)}/downvote"
-            t-attf-class="btn btn-link vote_down fa fa-caret-down #{vertical and 'px-md-0' or 'px-2'} #{own_vote == -1 and 'text-danger' or 'text-muted'} #{not can_downvote and 'karma_required'}"
+            t-attf-class="btn vote_down #{own_vote == -1 and 'text-danger'} #{not can_downvote and 'karma_required text-reset opacity-25'}#{post_id.create_uid.id == uid and ' text-300'}"
             t-att-disabled="own_vote == -1 and 'disabled'"
             t-att-data-karma="forum.karma_downvote"
             t-att-data-can-downvote="can_downvote"
-            aria-label="Negative vote" title="Negative vote"/>
+            aria-label="Negative vote" title="Negative vote">
+            <i class="fa fa-caret-down" data-bs-toggle="tooltip" data-bs-placement="top" title="Downvote"/>
+        </button>
         <t t-out="0"/>
     </div>
 </template>
@@ -124,43 +127,41 @@
 <template id="website_forum.author_box">
     <t t-set="display_info" t-value="show_name or show_date or show_karma"/>
     <t t-if="allow_biography and object.can_display_biography" t-set="bio_popover_data">
-        <div class="d-flex o_wforum_bio_popover_wrap">
-            <img class="o_forum_avatar_big flex-shrink-0 me-3" t-att-src="website.image_url(object.create_uid, 'avatar_128', '75x75')" alt="Avatar"/>
+        <div class="o_wforum_bio_popover_wrap d-flex transition-fade">
+            <div class="d-flex flex-column">
+                <img class="o_wforum_avatar flex-shrink-0 rounded me-3" t-att-src="request.website.image_url(object.create_uid, 'avatar_128', '60x60')" alt="Avatar"/>
+            </div>
             <div>
-                <h5 class="o_wforum_bio_popover_name mb-0" t-field="object.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name", "country_id"]}'/>
-
+                <h5 class="o_wforum_bio_popover_name mb-0" t-field="object.create_uid" t-options='{"widget": "contact", "country_image": True, "fields": ["name"]}'/>
                 <span class="o_wforum_bio_popover_info" t-field="object.create_uid" t-options='{"widget": "contact", "UserBio": True, "badges": True, "fields": ["karma"]}'/>
-                <div class="o_wforum_bio_popover_bio" t-field="object.create_uid" t-options='{"widget": "contact", "website_description": True, "fields": ["partner_id"]}'/>
+                <div class="o_wforum_bio_popover_bio mt-1 mb-0" t-field="object.create_uid" t-options='{"widget": "contact", "website_description": True, "fields": ["partner_id"]}'/>
             </div>
         </div>
     </t>
-
-    <div t-attf-class="o_wforum_author_box d-inline-flex #{display_info and 'o_show_info'} #{compact and 'o_compact align-items-center'} #{bio_popover_data and 'o_wforum_bio_popover'}"
-         t-att-data-bs-content="bio_popover_data">
-        <t t-set="user_profile_url" t-valuef="#"/>
-        <t t-if="object.create_uid.id == request.session.uid or object.create_uid.sudo().website_published">
-            <t t-set="user_profile_url" t-value="'/forum/%s/user/%s' % (slug(forum), object.create_uid.id) + '?forum_origin=' + request.httprequest.path"/>
+    <div t-attf-class="o_wforum_author_box d-inline-flex #{display_info and 'o_show_info '}#{compact and 'o_compact align-items-center '}#{bio_popover_data and 'o_wforum_bio_popover '}#{_box_classes}"
+         t-att-data-bs-content="bio_popover_data"
+         data-bs-placement="top">
+        <t t-set="user_profile_url" t-value="False"/>
+        <t t-if="'forum_id' in object.fields_get() and (object.create_uid.id == request.session.uid or object.create_uid.sudo().website_published)">
+            <t t-set="user_profile_url" t-value="'/forum/%s/user/%s' % (slug(object.forum_id), object.create_uid.id) + '?forum_origin=' + request.httprequest.path"/>
         </t>
-
-        <a t-att-href="user_profile_url" class="o_wforum_author_pic position-relative rounded-circle">
-            <span t-if="object_validable" class="o_wforum_author_box_check rounded-circle bg-success position-absolute">
-                <i class="fa fa-check fa-fw small text-white"/>
-            </span>
-            <img t-attf-class="rounded-circle o_forum_avatar #{not display_info and 'shadow'}" t-att-src="website.image_url(object.create_uid, 'avatar_128', '40x40')" alt="Avatar"/>
+        <a t-if="show_image" t-att-href="user_profile_url or '#'" t-attf-class="o_wforum_author_pic position-relative #{not user_profile_url and 'pe-none'}">
+            <img t-attf-class="o_wforum_avatar rounded-circle #{show_name or show_date or show_karma and 'me-2'} #{_image_classes}" t-att-src="website.image_url(object.create_uid, 'avatar_128', '40x40')" alt="Avatar"/>
         </a>
+        <div t-if="show_name or show_date or show_karma" t-attf-class="d-flex #{compact and 'align-items-baseline' or 'flex-column justify-content-around'} #{show_image and 'ms-2'}">
+            <a t-att-href="user_profile_url" t-attf-class="my-0 text-reset h6 #{compact and 'small'}" t-field="object.create_uid" t-options='{"widget": "contact", "fields": ["name"]}'/>
+            <small t-if="show_karma and show_date" class="text-muted fw-bold"> - <t t-out="object.create_uid.karma"/>xp</small>
 
-        <div t-if="show_name or show_date or show_karma" t-attf-class="d-flex #{compact and 'align-items-baseline ms-1' or 'flex-column justify-content-around ms-2'}">
-            <a t-att-href="user_profile_url" class="h6 my-0 text-reset" t-field="object.create_uid" t-options='{"widget": "contact", "fields": ["name"]}'/>
-            <small t-if="show_karma and show_date" class="text-muted fw-bold"> - <t t-esc="object.create_uid.karma"/>xp</small>
-
-            <div t-attf-class="text-muted small fw-bold #{compact and 'd-flex align-items-baseline'}">
-                <span t-if="compact" class="mx-1"> - </span>
-                <time t-if="show_date" class="d-block text-muted fw-bold" t-field="object.create_date" t-options='{"format": "d MMMM y"}'/>
-                <span t-if="show_karma and not show_date" class="text-muted fw-bold"><t t-esc="object.create_uid.karma"/>xp</span>
+            <div t-if="show_date or show_karma" t-attf-class="text-muted small #{compact and 'd-flex align-items-baseline'}">
+                <div t-if="show_date">
+                    <time  class="text-muted" t-field="object.create_date" t-options='{"format": "d MMMM y "}'/>
+                    at
+                    <time class="text-muted" t-field="object.create_date" t-options='{"format": "HH:mm "}'/>
+                </div>
+                <span t-if="show_karma and not show_date" class="text-muted"><t t-out="object.create_uid.karma"/>xp</span>
             </div>
         </div>
     </div>
 </template>
-
     </data>
 </odoo>
