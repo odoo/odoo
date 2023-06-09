@@ -33,6 +33,14 @@
             extra_trigger: ".o_reward_rainbow",
             run: function () {} // check rainbowman is properly displayed
         }, {
+            // This step and the following simulates the fact that after drag and drop,
+            // from the previous steps, a click event is triggered on the window element,
+            // which closes the currently shown .o_kanban_quick_create.
+            trigger: ".o_kanban_renderer",
+        }, {
+            trigger: ".o_kanban_renderer:not(:has(.o_kanban_quick_create))",
+            run() {},
+        }, {
             trigger: ".o-kanban-button-new",
             content: "create second lead",
         }, {
