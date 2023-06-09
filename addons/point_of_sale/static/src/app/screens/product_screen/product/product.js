@@ -25,11 +25,11 @@ export class ProductItem extends Component {
         return `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.write_date}`;
     }
     get pricelist() {
-        const current_order = this.pos.globalState.get_order();
+        const current_order = this.pos.get_order();
         if (current_order) {
             return current_order.pricelist;
         }
-        return this.pos.globalState.default_pricelist;
+        return this.pos.default_pricelist;
     }
     get price() {
         const formattedUnitPrice = this.env.utils.formatCurrency(
@@ -37,7 +37,7 @@ export class ProductItem extends Component {
         );
         if (this.props.product.to_weight) {
             return `${formattedUnitPrice}/${
-                this.pos.globalState.units_by_id[this.props.product.uom_id[0]].name
+                this.pos.units_by_id[this.props.product.uom_id[0]].name
             }`;
         } else {
             return formattedUnitPrice;

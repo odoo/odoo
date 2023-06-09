@@ -91,7 +91,6 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
         this.saleOrderFetcher.fetch();
     }
     async onClickSaleOrder(clickedOrder) {
-        const { globalState } = this.pos;
         const { confirmed, payload: selectedOption } = await this.popup.add(SelectionPopup, {
             title: this.env._t("What do you want to do?"),
             list: [
@@ -110,7 +109,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
         });
 
         if (confirmed) {
-            let currentPOSOrder = globalState.get_order();
+            let currentPOSOrder = this.pos.get_order();
             const sale_order = await this._getSaleOrder(clickedOrder.id);
             clickedOrder.shipping_date = sale_order.shipping_date;
 
@@ -124,22 +123,22 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     getId(linkedSO.partner_invoice_id) !== getId(sale_order.partner_invoice_id) ||
                     getId(linkedSO.partner_shipping_id) !== getId(sale_order.partner_shipping_id)
                 ) {
-                    currentPOSOrder = globalState.add_new_order();
+                    currentPOSOrder = this.pos.add_new_order();
                     this.notification.add(this.env._t("A new order has been created."), 4000);
                 }
             }
 
             try {
-                await globalState.load_new_partners();
+                await this.pos.load_new_partners();
             } catch {
                 // FIXME Universal catch seems ill advised
             }
-            const order_partner = globalState.db.get_partner_by_id(sale_order.partner_id[0]);
+            const order_partner = this.pos.db.get_partner_by_id(sale_order.partner_id[0]);
             if (order_partner) {
                 currentPOSOrder.set_partner(order_partner);
             } else {
                 try {
-                    await globalState._loadPartners([sale_order.partner_id[0]]);
+                    await this.pos._loadPartners([sale_order.partner_id[0]]);
                 } catch {
                     const title = this.env._t("Customer loading error");
                     const body = sprintf(
@@ -149,11 +148,11 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     await this.popup.add(ErrorPopup, { title, body });
                 }
                 currentPOSOrder.set_partner(
-                    globalState.db.get_partner_by_id(sale_order.partner_id[0])
+                    this.pos.db.get_partner_by_id(sale_order.partner_id[0])
                 );
             }
             const orderFiscalPos = sale_order.fiscal_position_id
-                ? globalState.fiscal_positions.find(
+                ? this.pos.fiscal_positions.find(
                       (position) => position.id === sale_order.fiscal_position_id[0]
                   )
                 : false;
@@ -161,7 +160,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                 currentPOSOrder.fiscal_position = orderFiscalPos;
             }
             const orderPricelist = sale_order.pricelist_id
-                ? globalState.pricelists.find(
+                ? this.pos.pricelists.find(
                       (pricelist) => pricelist.id === sale_order.pricelist_id[0]
                   )
                 : false;
@@ -173,7 +172,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                 // settle the order
                 const lines = sale_order.order_line;
                 const product_to_add_in_pos = lines
-                    .filter((line) => !globalState.db.get_product_by_id(line.product_id[0]))
+                    .filter((line) => !this.pos.db.get_product_by_id(line.product_id[0]))
                     .map((line) => line.product_id[0]);
                 if (product_to_add_in_pos.length) {
                     const { confirmed } = await this.popup.add(ConfirmPopup, {
@@ -185,7 +184,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         cancelText: this.env._t("No"),
                     });
                     if (confirmed) {
-                        await globalState._addProducts(product_to_add_in_pos);
+                        await this.pos._addProducts(product_to_add_in_pos);
                     }
                 }
 
@@ -203,16 +202,16 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
 
                 for (var i = 0; i < lines.length; i++) {
                     const line = lines[i];
-                    if (!globalState.db.get_product_by_id(line.product_id[0])) {
+                    if (!this.pos.db.get_product_by_id(line.product_id[0])) {
                         continue;
                     }
 
                     const new_line = new Orderline(
                         {},
                         {
-                            pos: globalState,
-                            order: globalState.get_order(),
-                            product: globalState.db.get_product_by_id(line.product_id[0]),
+                            pos: this.pos,
+                            order: this.pos.get_order(),
+                            product: this.pos.db.get_product_by_id(line.product_id[0]),
                             description: line.name,
                             price: line.price_unit,
                             tax_ids: orderFiscalPos ? undefined : line.tax_id,
@@ -225,8 +224,8 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
 
                     if (
                         new_line.get_product().tracking !== "none" &&
-                        (globalState.picking_type.use_create_lots ||
-                            globalState.picking_type.use_existing_lots) &&
+                        (this.pos.picking_type.use_create_lots ||
+                            this.pos.picking_type.use_existing_lots) &&
                         line.lot_names.length > 0
                     ) {
                         // Ask once when `useLoadedLots` is undefined, then reuse it's value on the succeeding lines.
@@ -254,13 +253,13 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     new_line.setQuantityFromSOL(line);
                     new_line.set_unit_price(line.price_unit);
                     new_line.set_discount(line.discount);
-                    globalState.get_order().add_orderline(new_line);
+                    this.pos.get_order().add_orderline(new_line);
                 }
             } else {
                 // apply a downpayment
-                if (globalState.config.down_payment_product_id) {
+                if (this.pos.config.down_payment_product_id) {
                     const lines = sale_order.order_line.filter((line) => {
-                        return line.product_id[0] !== globalState.config.down_payment_product_id[0];
+                        return line.product_id[0] !== this.pos.config.down_payment_product_id[0];
                     });
                     const tab = lines.map((line) => ({
                         product_name: line.product_id[1],
@@ -268,19 +267,19 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         price_unit: line.price_unit,
                         total: line.price_total,
                     }));
-                    let down_payment_product = globalState.db.get_product_by_id(
-                        globalState.config.down_payment_product_id[0]
+                    let down_payment_product = this.pos.db.get_product_by_id(
+                        this.pos.config.down_payment_product_id[0]
                     );
                     if (!down_payment_product) {
-                        await globalState._addProducts([
-                            globalState.config.down_payment_product_id[0],
+                        await this.pos._addProducts([
+                            this.pos.config.down_payment_product_id[0],
                         ]);
-                        down_payment_product = globalState.db.get_product_by_id(
-                            globalState.config.down_payment_product_id[0]
+                        down_payment_product = this.pos.db.get_product_by_id(
+                            this.pos.config.down_payment_product_id[0]
                         );
                     }
                     const down_payment_tax =
-                        globalState.taxes_by_id[down_payment_product.taxes_id] || false;
+                        this.pos.taxes_by_id[down_payment_product.taxes_id] || false;
                     let down_payment;
                     if (down_payment_tax) {
                         down_payment = down_payment_tax.price_include
@@ -297,7 +296,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     const popupSubtitle = this.env._t("Due balance: %s");
                     if (selectedOption == "dpAmount") {
                         popupTitle = this.env._t("Down Payment");
-                        popupInputSuffix = globalState.currency.symbol;
+                        popupInputSuffix = this.pos.currency.symbol;
                     } else {
                         popupTitle = this.env._t("Down Payment");
                         popupInputSuffix = "%";
@@ -356,8 +355,8 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                     const new_line = new Orderline(
                         {},
                         {
-                            pos: globalState,
-                            order: globalState.get_order(),
+                            pos: this.pos,
+                            order: this.pos.get_order(),
                             product: down_payment_product,
                             price: down_payment,
                             price_type: "automatic",
@@ -366,7 +365,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                         }
                     );
                     new_line.set_unit_price(down_payment);
-                    globalState.get_order().add_orderline(new_line);
+                    this.pos.get_order().add_orderline(new_line);
                 } else {
                     const title = this.env._t("No down payment product");
                     const body = this.env._t(

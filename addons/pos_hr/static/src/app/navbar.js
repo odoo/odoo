@@ -5,27 +5,25 @@ import { patch } from "@web/core/utils/patch";
 
 patch(Navbar.prototype, "pos_hr.Navbar", {
     get showCashMoveButton() {
-        const { cashier } = this.pos.globalState;
+        const { cashier } = this.pos;
         return this._super(...arguments) && (!cashier || cashier.role == "manager");
     },
     get showCloseSessionButton() {
         return (
-            !this.pos.globalState.config.module_pos_hr ||
-            (this.pos.globalState.get_cashier().role === "manager" &&
-                this.pos.globalState.get_cashier().user_id) ||
-            this.pos.globalState.get_cashier_user_id() === this.pos.globalState.user.id
+            !this.pos.config.module_pos_hr ||
+            (this.pos.get_cashier().role === "manager" && this.pos.get_cashier().user_id) ||
+            this.pos.get_cashier_user_id() === this.pos.user.id
         );
     },
     get showBackendButton() {
         return (
-            !this.pos.globalState.config.module_pos_hr ||
-            (this.pos.globalState.get_cashier().role === "manager" &&
-                this.pos.globalState.get_cashier().user_id) ||
-            this.pos.globalState.get_cashier_user_id() === this.pos.globalState.user.id
+            !this.pos.config.module_pos_hr ||
+            (this.pos.get_cashier().role === "manager" && this.pos.get_cashier().user_id) ||
+            this.pos.get_cashier_user_id() === this.pos.user.id
         );
     },
     async showLoginScreen() {
-        this.pos.globalState.reset_cashier();
+        this.pos.reset_cashier();
         await this.pos.showTempScreen("LoginScreen");
     },
 });

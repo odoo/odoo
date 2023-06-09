@@ -3,7 +3,7 @@
 
     <t t-name="pos_six.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension" owl="1">
         <xpath expr="//li[hasclass('backend-button')]" position="before">
-            <BalanceButton t-if="pos.globalState.payment_methods.some((pm) => pm.use_payment_terminal === 'six')" />
+            <BalanceButton t-if="pos.payment_methods.some((pm) => pm.use_payment_terminal === 'six')" />
         </xpath>
     </t>
 

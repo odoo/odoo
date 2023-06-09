@@ -44,7 +44,7 @@ export class EditableTable extends Component {
     }
 
     onMoveStart() {
-        if (this.pos.globalState.floorPlanStyle == "kanban") {
+        if (this.pos.floorPlanStyle == "kanban") {
             return;
         }
         this.startTable = { ...this.props.table };
@@ -60,7 +60,7 @@ export class EditableTable extends Component {
     }
 
     onMove({ dx, dy }) {
-        if (this.pos.globalState.floorPlanStyle == "kanban") {
+        if (this.pos.floorPlanStyle == "kanban") {
             return;
         }
         const { minX, minY, maxX, maxY } = getLimits(this.root.el, this.props.limit.el);
@@ -76,7 +76,7 @@ export class EditableTable extends Component {
     }
 
     onResizeHandleMove([moveX, moveY], { dx, dy }) {
-        if (this.pos.globalState.floorPlanStyle == "kanban") {
+        if (this.pos.floorPlanStyle == "kanban") {
             return;
         }
         // Working with min/max x and y makes constraints much easier to apply uniformly
@@ -128,7 +128,7 @@ export class EditableTable extends Component {
 
     _setElementStyle() {
         const table = this.props.table;
-        if (this.pos.globalState.floorPlanStyle == "kanban") {
+        if (this.pos.floorPlanStyle == "kanban") {
             const floor = table.floor;
             const index = floor.tables.indexOf(table);
             const minWidth = 100 + 20;

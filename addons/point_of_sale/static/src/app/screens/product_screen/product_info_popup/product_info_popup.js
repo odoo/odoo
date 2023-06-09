@@ -19,14 +19,14 @@ export class ProductInfoPopup extends AbstractAwaitablePopup {
         Object.assign(this, this.props.info);
     }
     searchProduct(productName) {
-        this.pos.globalState.setSelectedCategoryId(0);
-        this.pos.globalState.searchProductWord = productName;
+        this.pos.setSelectedCategoryId(0);
+        this.pos.searchProductWord = productName;
         this.cancel();
     }
     _hasMarginsCostsAccessRights() {
         const isAccessibleToEveryUser =
-            this.pos.globalState.config.is_margins_costs_accessible_to_every_user;
-        const isCashierManager = this.pos.globalState.get_cashier().role === "manager";
+            this.pos.config.is_margins_costs_accessible_to_every_user;
+        const isCashierManager = this.pos.get_cashier().role === "manager";
         return isAccessibleToEveryUser || isCashierManager;
     }
 }

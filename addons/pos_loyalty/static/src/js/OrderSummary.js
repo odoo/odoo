@@ -5,7 +5,7 @@ import { patch } from "@web/core/utils/patch";
 
 patch(OrderSummary.prototype, "pos_loyalty.OrderSummary", {
     getLoyaltyPoints() {
-        const order = this.pos.globalState.get_order();
+        const order = this.pos.get_order();
         return order.getLoyaltyPoints();
     },
 });

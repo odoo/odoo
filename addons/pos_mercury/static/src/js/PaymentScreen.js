@@ -96,7 +96,7 @@ const lookUpCodeTransaction = {
 patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
     setup() {
         this._super(...arguments);
-        if (this.pos.globalState.getOnlinePaymentMethods().length !== 0) {
+        if (this.pos.getOnlinePaymentMethods().length !== 0) {
             useBarcodeReader({
                 credit: this.credit_code_action,
             });
@@ -123,7 +123,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
     },
     _get_swipe_pending_line() {
         var i = 0;
-        var lines = this.pos.globalState.get_order().get_paymentlines();
+        var lines = this.pos.get_order().get_paymentlines();
 
         for (i = 0; i < lines.length; i++) {
             if (lines[i].mercury_swipe_pending) {
@@ -135,7 +135,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
     },
     _does_credit_payment_line_exist(amount, card_number, card_brand, card_owner_name) {
         var i = 0;
-        var lines = this.pos.globalState.get_order().get_paymentlines();
+        var lines = this.pos.get_order().get_paymentlines();
 
         for (i = 0; i < lines.length; i++) {
             if (
@@ -191,8 +191,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
     },
     // Handler to manage the card reader string
     credit_code_transaction(parsed_result, old_deferred, retry_nr) {
-        const { globalState } = this.pos.globalState;
-        const order = globalState.get_order();
+        const order = this.pos.get_order();
         if (order.get_due(order.selected_paymentline) < 0) {
             this.popup.add(ErrorPopup, {
                 title: this.env._t("Refunds not supported"),
@@ -203,11 +202,11 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
             return;
         }
 
-        if (globalState.getOnlinePaymentMethods().length === 0) {
+        if (this.pos.getOnlinePaymentMethods().length === 0) {
             return;
         }
 
-        var decodedMagtek = globalState.decodeMagtek(parsed_result.code);
+        var decodedMagtek = this.pos.decodeMagtek(parsed_result.code);
 
         if (!decodedMagtek) {
             this.popup.add(ErrorPopup, {
@@ -225,7 +224,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
         if (swipe_pending_line) {
             purchase_amount = swipe_pending_line.get_amount();
         } else {
-            purchase_amount = globalState.get_order().get_due();
+            purchase_amount = this.pos.get_order().get_due();
         }
 
         var transaction = {
@@ -233,7 +232,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
             encrypted_block: decodedMagtek["encrypted_block"],
             transaction_type: "Credit",
             transaction_code: "Sale",
-            invoice_no: globalState.get_order().uid.replace(/-/g, ""),
+            invoice_no: this.pos.get_order().uid.replace(/-/g, ""),
             purchase: purchase_amount,
             payment_method_id: parsed_result.payment_method_id,
         };
@@ -283,7 +282,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
                     return;
                 }
 
-                var response = globalState.decodeMercuryResponse(data);
+                var response = this.pos.decodeMercuryResponse(data);
                 response.payment_method_id = parsed_result.payment_method_id;
 
                 if (response.status === "Approved") {
@@ -303,7 +302,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
                         });
                     } else {
                         // If the payment is approved, add a payment line
-                        var order = globalState.get_order();
+                        var order = this.pos.get_order();
 
                         if (swipe_pending_line) {
                             order.select_paymentline(swipe_pending_line);
@@ -379,7 +378,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
         return;
     },
     credit_code_action(parsed_result) {
-        var online_payment_methods = this.pos.globalState.getOnlinePaymentMethods();
+        var online_payment_methods = this.pos.getOnlinePaymentMethods();
 
         if (online_payment_methods.length === 1) {
             parsed_result.payment_method_id = online_payment_methods[0].item;
@@ -408,7 +407,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
         }
     },
     remove_paymentline_by_ref(line) {
-        this.pos.globalState.get_order().remove_paymentline(line);
+        this.pos.get_order().remove_paymentline(line);
         this.numberBuffer.reset();
     },
     do_reversal(line, is_voidsale, old_deferred, retry_nr) {
@@ -467,7 +466,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
                     return;
                 }
 
-                var response = self.pos.globalState.decodeMercuryResponse(data);
+                var response = self.pos.decodeMercuryResponse(data);
 
                 if (!is_voidsale) {
                     if (response.status != "Approved" || response.message != "REVERSED") {
@@ -520,7 +519,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
      * @override
      */
     addNewPaymentLine(paymentMethod) {
-        const order = this.pos.globalState.get_order();
+        const order = this.pos.get_order();
         const res = this._super(...arguments);
         if (res && paymentMethod.pos_mercury_config_id) {
             order.selected_paymentline.mercury_swipe_pending = true;

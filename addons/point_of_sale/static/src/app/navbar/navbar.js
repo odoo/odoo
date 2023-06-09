@@ -45,10 +45,10 @@ export class Navbar extends Component {
     }
 
     get customerFacingDisplayButtonIsShown() {
-        return this.pos.globalState.config.iface_customer_facing_display;
+        return this.pos.config.iface_customer_facing_display;
     }
     get showCashMoveButton() {
-        return Boolean(this.pos.globalState?.config?.cash_control);
+        return Boolean(this.pos?.config?.cash_control);
     }
     onCashMoveButtonClick() {
         this.hardwareProxy.openCashbox(_t("Cash in / out"));
@@ -59,15 +59,14 @@ export class Navbar extends Component {
             this.pos.closeScreen();
         } else {
             if (this._shouldLoadOrders()) {
-                const { globalState } = this.pos;
                 try {
-                    globalState.setLoadingOrderState(true);
-                    const message = await globalState._syncAllOrdersFromServer();
+                    this.pos.setLoadingOrderState(true);
+                    const message = await this.pos._syncAllOrdersFromServer();
                     if (message) {
                         this.notification.add(message, 5000);
                     }
                 } finally {
-                    globalState.setLoadingOrderState(false);
+                    this.pos.setLoadingOrderState(false);
                     this.pos.showScreen("TicketScreen");
                 }
             } else {
@@ -77,7 +76,7 @@ export class Navbar extends Component {
     }
 
     _shouldLoadOrders() {
-        return this.pos.globalState.config.trusted_config_ids.length > 0;
+        return this.pos.config.trusted_config_ids.length > 0;
     }
 
     get isTicketScreenShown() {
@@ -85,7 +84,7 @@ export class Navbar extends Component {
     }
 
     get orderCount() {
-        return this.pos.globalState.get_order_list().length;
+        return this.pos.get_order_list().length;
     }
 
     isBurgerMenuClosed() {
@@ -101,7 +100,7 @@ export class Navbar extends Component {
     }
 
     async closeSession() {
-        const info = await this.pos.globalState.getClosePosInfo();
+        const info = await this.pos.getClosePosInfo();
         this.popup.add(ClosePosPopup, { info, keepBehind: true });
     }
 

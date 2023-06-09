@@ -12,7 +12,7 @@
                 <div class="status-buttons">
                     <CashierName />
                     <SaleDetailsButton t-if="hardwareProxy.printer" isHeaderButton="true"/>
-                    <ProxyStatus t-if="pos.globalState.config.use_proxy" />
+                    <ProxyStatus t-if="pos.config.use_proxy" />
                     <CustomerFacingDisplayButton t-if="customerFacingDisplayButtonIsShown" />
                     <SyncNotification />
                 </div>

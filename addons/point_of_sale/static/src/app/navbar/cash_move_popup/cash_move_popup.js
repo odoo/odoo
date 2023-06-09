@@ -59,13 +59,13 @@ export class CashMovePopup extends AbstractAwaitablePopup {
         const extras = { formattedAmount, translatedType };
         const reason = this.state.reason.trim();
         await this.orm.call("pos.session", "try_cash_in_out", [
-            [this.pos.globalState.pos_session.id],
+            [this.pos.pos_session.id],
             type,
             amount,
             reason,
             extras,
         ]);
-        await this.pos.globalState.logEmployeeMessage(
+        await this.pos.logEmployeeMessage(
             `${_t("Cash")} ${translatedType} - ${_t("Amount")}: ${formattedAmount}`,
             "CASH_DRAWER_ACTION"
         );
@@ -78,8 +78,8 @@ export class CashMovePopup extends AbstractAwaitablePopup {
                     amount,
                     translatedType,
                     formattedAmount,
-                    cashier: this.pos.globalState.get_cashier(),
-                    company: this.pos.globalState.company,
+                    cashier: this.pos.get_cashier(),
+                    company: this.pos.company,
                 },
             });
             const printResult = await this.hardwareProxy.printer.printReceipt(renderedReceipt);
@@ -116,10 +116,10 @@ export class CashMovePopup extends AbstractAwaitablePopup {
     async cancel() {
         super.cancel();
         if (
-            this.pos.globalState.config.iface_cashdrawer &&
-            this.pos.globalState.hardwareProxy.connectionInfo.status === "connected"
+            this.pos.config.iface_cashdrawer &&
+            this.pos.hardwareProxy.connectionInfo.status === "connected"
         ) {
-            this.pos.globalState.logEmployeeMessage(_t("Cash in / out"), "ACTION_CANCELLED");
+            this.pos.logEmployeeMessage(_t("Cash in / out"), "ACTION_CANCELLED");
         }
     }
 }
