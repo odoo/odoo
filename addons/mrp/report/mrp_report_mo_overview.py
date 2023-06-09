@@ -4,7 +4,7 @@ import copy
 import json
 from collections import defaultdict
 from odoo import _, api, fields, models
-from odoo.tools import float_compare, format_date, float_is_zero, get_lang
+from odoo.tools import float_compare, float_repr, float_round, float_is_zero, format_date, get_lang
 from datetime import datetime, timedelta
 from math import log10
 
@@ -100,7 +100,32 @@ class ReportMoOverview(models.AbstractModel):
         }
 
     def _format_state(self, record):
-        return dict(record._fields['state']._description_selection(self.env)).get(record.state)
+        if record._name != 'mrp.production' or record.state not in ('draft', 'confirmed') or not record.move_raw_ids:
+            return dict(record._fields['state']._description_selection(self.env)).get(record.state)
+        components_qty_to_produce = defaultdict(float)
+        components_qty_reserved = defaultdict(float)
+        for move in record.move_raw_ids:
+            if move.product_id.detailed_type != 'product':
+                continue
+            components_qty_to_produce[move.product_id] += move.product_uom._compute_quantity(move.product_uom_qty, move.product_id.uom_id)
+            components_qty_reserved[move.product_id] += move.product_uom._compute_quantity(move.reserved_availability, move.product_id.uom_id)
+        producible_qty = record.product_qty
+        for product_id, comp_qty_to_produce in components_qty_to_produce.items():
+            if float_is_zero(comp_qty_to_produce, precision_rounding=product_id.uom_id.rounding):
+                continue
+            comp_producible_qty = float_round(
+                record.product_qty * (components_qty_reserved[product_id] + product_id.free_qty) / comp_qty_to_produce,
+                precision_rounding=record.product_uom_id.rounding, rounding_method='DOWN'
+            )
+            if float_is_zero(comp_producible_qty, precision_rounding=record.product_uom_id.rounding):
+                return _("Not Ready")
+            producible_qty = min(comp_producible_qty, producible_qty)
+        if float_is_zero(producible_qty, precision_rounding=record.product_uom_id.rounding):
+            return _("Not Ready")
+        elif float_compare(producible_qty, record.product_qty, precision_rounding=record.product_uom_id.rounding) == -1:
+            producible_qty = float_repr(producible_qty, self.env['decimal.precision'].precision_get('Product Unit of Measure'))
+            return _("%(producible_qty)s Ready", producible_qty=producible_qty)
+        return _("Ready")
 
     def _get_uom_precision(self, uom_rounding):
         return max(0, int(-(log10(uom_rounding))))
