@@ -22,6 +22,15 @@ PopupWidget.include({
         }
         return this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    _canBtnPrimaryClosePopup(primaryBtnEl) {
+        if (primaryBtnEl.classList.contains('js_subscribe_btn')) {
+            return false;
+        }
+        return this._super(...arguments);
+    },
 });
 
 export default PopupWidget;
