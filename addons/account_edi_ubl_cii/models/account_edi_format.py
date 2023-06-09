@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models, fields, _
+from odoo import models, fields, SUPERUSER_ID
 from odoo.tools import str2bool
 from odoo.addons.account_edi_ubl_cii.models.account_edi_common import COUNTRY_EAS
 
@@ -132,7 +132,7 @@ class AccountEdiFormat(models.Model):
             if self.code not in ['facturx_1_0_05', 'efff_1', 'nlcius_1']:
                 attachment_create_vals.update({'res_id': invoice.id, 'res_model': 'account.move'})
 
-            attachment = self.env['ir.attachment'].create(attachment_create_vals)
+            attachment = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(attachment_create_vals)
             res[invoice] = {
                 'success': True,
                 'attachment': attachment,
