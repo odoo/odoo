@@ -1621,9 +1621,7 @@ const Wysiwyg = Widget.extend({
         }
     },
     _processAndApplyColor: function (eventName, color) {
-        if (!color) {
-            color = 'inherit';
-        } else if (!ColorpickerWidget.isCSSColor(color) && !weUtils.isColorGradient(color)) {
+        if (color && (!ColorpickerWidget.isCSSColor(color) && !weUtils.isColorGradient(color))) {
             color = (eventName === "foreColor" ? 'text-' : 'bg-') + color;
         }
         const fonts = this.odooEditor.execCommand('applyColor', color, eventName === 'foreColor' ? 'color' : 'backgroundColor', this.lastMediaClicked);
