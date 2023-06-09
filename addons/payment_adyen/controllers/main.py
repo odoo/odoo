@@ -59,10 +59,7 @@ class AdyenController(http.Controller):
             'channel': 'Web',
         }
         response_content = provider_sudo._adyen_make_request(
-            url_field_name='adyen_checkout_api_url',
-            endpoint='/paymentMethods',
-            payload=data,
-            method='POST'
+            endpoint='/paymentMethods', payload=data, method='POST'
         )
         _logger.info("paymentMethods request response:\n%s", pprint.pformat(response_content))
         return response_content
@@ -139,10 +136,7 @@ class AdyenController(http.Controller):
 
         # Make the payment request to Adyen
         response_content = provider_sudo._adyen_make_request(
-            url_field_name='adyen_checkout_api_url',
-            endpoint='/payments',
-            payload=data,
-            method='POST'
+            endpoint='/payments', payload=data, method='POST'
         )
 
         # Handle the payment request response
@@ -171,10 +165,7 @@ class AdyenController(http.Controller):
         # Make the payment details request to Adyen
         provider_sudo = request.env['payment.provider'].browse(provider_id).sudo()
         response_content = provider_sudo._adyen_make_request(
-            url_field_name='adyen_checkout_api_url',
-            endpoint='/payments/details',
-            payload=payment_details,
-            method='POST'
+            endpoint='/payments/details', payload=payment_details, method='POST'
         )
 
         # Handle the payment details request response

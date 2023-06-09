@@ -12,8 +12,7 @@
                     <field name="adyen_api_key" required="code == 'adyen' and state != 'disabled'" password="True"/>
                     <field name="adyen_client_key" required="code == 'adyen' and state != 'disabled'"/>
                     <field name="adyen_hmac_key" required="code == 'adyen' and state != 'disabled'" password="True"/>
-                    <field name="adyen_checkout_api_url" required="code == 'adyen' and state != 'disabled'"/>
-                    <field name="adyen_recurring_api_url" required="code == 'adyen' and state != 'disabled'"/>
+                    <field name="adyen_api_url_prefix" required="code == 'adyen' and state != 'disabled'"/>
                 </group>
             </group>
             <group name="provider_config" position='before'>
