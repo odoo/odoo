@@ -404,7 +404,7 @@ class AccountMoveSend(models.Model):
         partner_ids = kwargs.get('partner_ids', [])
         mail_template = self.mail_template_id
 
-        move\
+        new_message = move\
             .with_context(
                 no_new_invoice=True,
                 mail_notify_author=self.env.user.partner_id.id in partner_ids,
@@ -421,6 +421,12 @@ class AccountMoveSend(models.Model):
                 },
             )
 
+        # Prevent duplicated attachments linked to the invoice.
+        new_message.attachment_ids.write({
+            'res_model': new_message._name,
+            'res_id': new_message.id,
+        })
+
     def _get_mail_params(self, move):
         self.ensure_one()
 
@@ -429,17 +435,25 @@ class AccountMoveSend(models.Model):
 
         # We must ensure the newly created PDF are added. At this point, the PDF has been generated but not added
         # to 'mail_attachments_widget'.
-        attachment_ids = list(set([
-            x['id']
-            for x in self.mail_attachments_widget + self._get_invoice_extra_attachments_data(self.move_ids)
-            if not x.get('placeholder')
-        ]))
+        seen_attachment_ids = set()
+        for attachment_data in self._get_invoice_extra_attachments_data(self.move_ids) + self.mail_attachments_widget:
+            try:
+                attachment_id = int(attachment_data['id'])
+            except ValueError:
+                continue
+
+            seen_attachment_ids.add(attachment_id)
+
+        mail_attachments = [
+            (attachment.name, attachment.raw)
+            for attachment in self.env['ir.attachment'].browse(list(seen_attachment_ids))
+        ]
 
         return {
             'body': self.mail_body,
             'subject': self.mail_subject,
             'partner_ids': self.mail_partner_ids.ids,
-            'attachment_ids': attachment_ids,
+            'attachments': mail_attachments,
         }
 
     def _send_mails(self, moves_data):
@@ -454,7 +468,8 @@ class AccountMoveSend(models.Model):
                 continue
 
             if move_data.get('proforma_pdf_attachment'):
-                mail_params['attachment_ids'].append(move_data['proforma_pdf_attachment'].id)
+                attachment = move_data['proforma_pdf_attachment']
+                mail_params['attachments'].append((attachment.name, attachment.raw))
 
             mail_lang = form.mail_lang
             email_from = form._get_mail_default_field_value_from_template(mail_template, mail_lang, move, 'email_from')
