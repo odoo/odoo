@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { DiscussPublic } from "@mail/core/public/discuss_public";
+import { DiscussPublic } from "@mail/discuss/core/public/discuss_public";
 import { useRtc } from "@mail/discuss/call/common/rtc_hook";
 
 import { browser } from "@web/core/browser/browser";

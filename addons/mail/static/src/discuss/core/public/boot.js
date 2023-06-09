@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { DiscussPublic } from "@mail/core/public/discuss_public";
+import { DiscussPublic } from "@mail/discuss/core/public/discuss_public";
 import { data } from "mail.discuss_public_template";
 
 import { Component, mount, whenReady } from "@odoo/owl";
