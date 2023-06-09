@@ -5,6 +5,8 @@ import { useRtc } from "@mail/discuss/call/common/rtc_hook";
 
 import { patch } from "@web/core/utils/patch";
 
+Sidebar.props = [...Sidebar.props, "onStartMeeting?"];
+
 patch(Sidebar.prototype, "discuss/call/web", {
     setup() {
         this._super(...arguments);
@@ -16,5 +18,6 @@ patch(Sidebar.prototype, "discuss/call/web", {
             partners_to: [this.store.self.id],
         });
         await this.rtc.toggleCall(thread, { video: true });
+        await this.props.onStartMeeting?.();
     },
 });
