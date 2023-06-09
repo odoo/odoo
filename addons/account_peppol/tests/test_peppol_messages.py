@@ -159,13 +159,9 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
         filename = builder._export_invoice_filename(move)
         wizard = self.create_send_and_print(
             move,
-            checkbox_ubl_cii_xml=False,
+            checkbox_ubl_cii_xml=True,
+            checkbox_send_peppol=False,
         )
-
-        self.assertRecordValues(wizard, [{'checkbox_send_peppol': False}])
-
-        wizard.checkbox_ubl_cii_xml = True
-        wizard.checkbox_send_peppol = False
 
         # the ubl xml placeholder should be generated
         self._assert_mail_attachments_widget(wizard, [
@@ -270,7 +266,7 @@ class TestPeppolMessage(TestAccountMoveSendCommon):
             move,
             checkbox_ubl_cii_xml=True,
         )
-        self.assertRecordValues(wizard, [{'peppol_proxy_state': 'rejected'}])
+        self.assertRecordValues(wizard, [{'enable_peppol': False}])
 
     def test_receive_error_peppol(self):
         # an error peppol message should be created

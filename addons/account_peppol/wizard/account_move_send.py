@@ -5,7 +5,6 @@ from base64 import b64encode
 
 from odoo import api, fields, models, _
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
-from odoo.exceptions import UserError
 
 
 class AccountMoveSend(models.Model):
@@ -16,6 +15,8 @@ class AccountMoveSend(models.Model):
         compute='_compute_checkbox_send_peppol', store=True, readonly=False,
         help='Send the invoice via PEPPOL',
     )
+    enable_peppol = fields.Boolean(compute='_compute_send_mail_extra_fields')
+    # to be removed once the module is fully available
     peppol_proxy_state = fields.Selection(related='company_id.account_peppol_proxy_state')
     # technical field needed for computing a warning text about the peppol configuration
     peppol_warning = fields.Char(
@@ -27,12 +28,19 @@ class AccountMoveSend(models.Model):
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
 
-    @api.depends('checkbox_ubl_cii_xml', 'enable_ubl_cii_xml')
+    @api.depends('enable_peppol')
     def _compute_checkbox_send_peppol(self):
-        # we can't send via peppol if checkbox_ubl_cii_xml is unchecked
         for wizard in self:
-            if not (wizard.checkbox_ubl_cii_xml and wizard.enable_ubl_cii_xml):
-                wizard.checkbox_send_peppol = False
+            wizard.checkbox_send_peppol = wizard.enable_peppol
+
+    @api.depends('checkbox_send_peppol')
+    def _compute_checkbox_ubl_cii_xml(self):
+        # extends 'account_edi_ubl_cii'
+        super()._compute_checkbox_ubl_cii_xml()
+
+        for wizard in self:
+            if wizard.checkbox_send_peppol and wizard.enable_ubl_cii_xml and not wizard.checkbox_ubl_cii_xml:
+                wizard.checkbox_ubl_cii_xml = True
 
     @api.depends('checkbox_send_peppol')
     def _compute_mail_attachments_widget(self):
@@ -52,6 +60,21 @@ class AccountMoveSend(models.Model):
                                         "Please check and verify their Peppol endpoint and the Electronic Invoicing format: "
                                         "%s", names)
 
+    def _compute_send_mail_extra_fields(self):
+        # Extends 'account'
+        super()._compute_send_mail_extra_fields()
+
+        for wizard in self:
+            # show peppol option if either the ubl option is available or any move already has a ubl file generated
+            # and moves are not processing/done
+            wizard.enable_peppol = (
+                wizard.company_id.account_peppol_proxy_state == 'active' \
+                and (
+                    wizard.enable_ubl_cii_xml
+                    or any(m.ubl_cii_xml_id and m.peppol_move_state not in ('processing', 'done') for m in wizard.move_ids)
+                )
+            )
+
     # -------------------------------------------------------------------------
     # ATTACHMENTS
     # -------------------------------------------------------------------------
@@ -64,15 +87,22 @@ class AccountMoveSend(models.Model):
     # -------------------------------------------------------------------------
 
     def action_send_and_print(self, from_cron=False, allow_fallback_pdf=False):
-        # Extends the wizard to mark the move to be sent via PEPPOL first
+        # Extends 'account' to force ubl xml checkbox if sending via peppol
         self.ensure_one()
 
-        if self.checkbox_send_peppol and self.peppol_proxy_state == 'active':
-            for move in self.move_ids:
-                if not move.peppol_move_state:
-                    move.peppol_move_state = 'to_send'
+        if all([self.checkbox_send_peppol, self.enable_peppol, self.enable_ubl_cii_xml, not self.checkbox_ubl_cii_xml]):
+            self.checkbox_ubl_cii_xml = True
 
-        return super().action_send_and_print(from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
+        return super().action_send_and_print(from_cron, allow_fallback_pdf)
+
+    def _get_available_field_values_in_multi(self, move):
+        # Extends 'account' to force ubl xml checkbox if sending via peppol
+        # if there are many invoices to be sent
+        values = super()._get_available_field_values_in_multi(move)
+        if self.enable_peppol and self.checkbox_send_peppol:
+            values['checkbox_ubl_cii_xml'] = True
+
+        return values
 
     def _call_web_service(self, invoices_data):
         # Overrides 'account'
@@ -85,13 +115,10 @@ class AccountMoveSend(models.Model):
 
         invoices_data_peppol = {}
         for invoice, invoice_data in invoices_data.items():
-            if invoice.peppol_move_state not in ('to_send', 'error'):
-                continue
-
             if invoice_data.get('ubl_cii_xml_attachment_values'):
                 xml_file = invoice_data['ubl_cii_xml_attachment_values']['raw']
                 filename = invoice_data['ubl_cii_xml_attachment_values']['name']
-            elif invoice.ubl_cii_xml_id:
+            elif invoice.ubl_cii_xml_id and invoice.peppol_move_state not in ('processing', 'canceled', 'done'):
                 xml_file = invoice.ubl_cii_xml_id.raw
                 filename = invoice.ubl_cii_xml_id.name
             else:

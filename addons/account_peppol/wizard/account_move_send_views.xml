@@ -7,10 +7,9 @@
             <field name="inherit_id" ref="account.account_move_send_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='standard_options']" position="before">
-                    <field name="peppol_proxy_state" invisible="1"/>
+                    <field name="enable_peppol" invisible="1"/>
                     <div class="alert alert-warning text-center" role="alert" attrs="{
-                                'invisible': ['|', '|',
-                                    ('peppol_proxy_state', '!=', 'active'),
+                                'invisible': ['|',
                                     ('checkbox_send_peppol', '!=', True),
                                     ('peppol_warning', '=', False),
                                 ]}">
@@ -19,8 +18,8 @@
                 </xpath>
                 <xpath expr="//div[@name='option_send_mail']" position='after'>
                     <div name="option_peppol"
-                         attrs="{'invisible': ['|', ('peppol_proxy_state', '!=', 'active'), ('enable_ubl_cii_xml', '=', False)]}">
-                        <field name="checkbox_send_peppol" attrs="{'readonly': [('checkbox_ubl_cii_xml', '=', False)]}"/>
+                         attrs="{'invisible': [('enable_peppol', '=', False)]}">
+                        <field name="checkbox_send_peppol"/>
                         <b>
                             <label for="checkbox_send_peppol"/>
                         </b>
