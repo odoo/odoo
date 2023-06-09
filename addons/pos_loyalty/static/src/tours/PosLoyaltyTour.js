@@ -2,6 +2,7 @@
 
 import { PosLoyalty } from "@pos_loyalty/tours/PosLoyaltyTourMethods";
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
+import { SelectionPopup } from "@point_of_sale/../tests/tours/helpers/SelectionPopupTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 
@@ -214,3 +215,19 @@ ProductScreen.check.totalAmountIs("92.00");
 registry
     .category("web_tour.tours")
     .add("PosCouponTour5", { test: true, url: "/pos/web", steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer('AAA Partner');
+ProductScreen.do.clickDisplayedProduct('Test Product A');
+PosLoyalty.do.clickRewardButton();
+SelectionPopup.do.clickItem("$ 1 per point on your order");
+ProductScreen.check.totalAmountIs('138.50');
+
+registry
+    .category("web_tour.tours")
+    .add("PosLoyaltyTour6", { test: true, url: "/pos/web", steps: getSteps() });
