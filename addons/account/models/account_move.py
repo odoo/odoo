@@ -2090,6 +2090,19 @@ class AccountMove(models.Model):
                                     ignore = False
                         if ignore:
                             del res[key]
+
+            # Convert float values to their "ORM cache" one to prevent different rounding calculations
+            for dict_key in res:
+                move_id = dict_key.get('move_id')
+                if not move_id:
+                    continue
+                record = self.env['account.move'].browse(move_id)
+                for fname, current_value in res[dict_key].items():
+                    field = self.env['account.move.line']._fields[fname]
+                    if isinstance(current_value, float):
+                        new_value = field.convert_to_cache(current_value, record)
+                        res[dict_key][fname] = new_value
+
             return res
 
         def dirty():
@@ -2123,17 +2136,18 @@ class AccountMove(models.Model):
         if needed_after == needed_before:
             return
 
-        to_delete = sorted({
+        to_delete = [
             line.id
             for key, line in existing_before.items()
             if key not in needed_after
             and key in existing_after
             and before2after[key] not in needed_after
-        } | {
-            line.id
+        ]
+        to_delete_set = set(to_delete)
+        to_delete.extend(line.id
             for key, line in existing_after.items()
-            if key not in needed_after
-        })
+            if key not in needed_after and line.id not in to_delete_set
+        )
         to_create = {
             key: values
             for key, values in needed_after.items()

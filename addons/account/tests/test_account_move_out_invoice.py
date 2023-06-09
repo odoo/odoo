@@ -3553,3 +3553,22 @@ class TestAccountMoveOutInvoiceOnchanges(AccountTestInvoicingCommon):
         })
         invoice.action_post()
         self.assertEqual(invoice.name, 'INV1/2023/00010')
+
+    def test_invoice_mass_posting(self):
+        """
+        With some particular setup (in this case, rounding issue), partner get mixed up in the
+        invoice lines after mass posting.
+        """
+        currency = self.company_data['currency']
+        currency.rounding = 0.0001
+        invoice1 = self.init_invoice(move_type='out_invoice', partner=self.partner_a, invoice_date='2016-01-20', products=self.product_a)
+        invoice1.invoice_line_ids.price_unit = 12.36
+        invoice2 = self.init_invoice(move_type='out_invoice', partner=self.partner_b, invoice_date='2016-01-20', products=self.product_a)
+
+        vam = self.env["validate.account.move"].create({"force_post": True})
+        vam.with_context(active_model='account.move', active_ids=[invoice2.id, invoice1.id]).validate_move()
+
+        for aml in invoice1.line_ids:
+            self.assertEqual(aml.partner_id, self.partner_a)
+        for aml in invoice2.line_ids:
+            self.assertEqual(aml.partner_id, self.partner_b)
