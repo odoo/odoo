@@ -665,7 +665,7 @@ describe('Link', () => {
                     await deleteBackward(editor);
                     console.log(a.closest('.odoo-editor-editable').outerHTML);
                 },
-                contentAfterEdit: '<p>a<a href="#/" data-oe-zws-empty-inline="">' +
+                contentAfterEdit: '<p>a<a href="#/" data-oe-zws-empty-inline="" class="o_link_in_selection">' +
                         '<span data-o-link-zws="start" contenteditable="false">\u200B</span>' + // start zws
                         '[]\u200B' + // content: empty inline zws
                         '<span data-o-link-zws="end">\u200B</span>' + // end zws
