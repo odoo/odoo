@@ -694,6 +694,7 @@ export class ThreadService {
                 "is_pinned",
                 "isLoaded",
                 "isLoadingAttachments",
+                "areAttachmentsLoaded",
                 "mainAttachment",
                 "message_unread_counter",
                 "message_needaction_counter",
