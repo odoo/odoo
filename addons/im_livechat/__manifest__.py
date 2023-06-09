@@ -84,7 +84,6 @@ Help your customers with this chat, and analyse their feedback.
         'im_livechat.assets_core': [
             'mail/static/src/core/common/**/*',
             'mail/static/src/utils/common/**/*',
-            'mail/static/src/core/web/context_service.js',
             ('remove', 'mail/static/src/core/common/emoji_data.js'),
 
             'im_livechat/static/src/embed/**/*',
