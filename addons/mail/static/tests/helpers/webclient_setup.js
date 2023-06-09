@@ -22,7 +22,6 @@ import { threadService } from "@mail/core/common/thread_service";
 import { userSettingsService } from "@mail/core/common/user_settings_service";
 import { ActivityMenu } from "@mail/core/web/activity_menu";
 import { activityService } from "@mail/core/web/activity_service";
-import { contextService } from "@mail/core/web/context_service";
 import { DiscussClientAction } from "@mail/core/web/discuss_client_action";
 import { MessagingMenu } from "@mail/core/web/messaging_menu";
 
@@ -181,7 +180,6 @@ export const setupManager = {
             im_status: imStatusService,
             effect: effectService,
             "discuss.channel.member": channelMemberService,
-            "mail.context": contextService,
             "mail.notification.permission": notificationPermissionService,
             "mail.suggestion": suggestionService,
             "mail.store": storeService,
