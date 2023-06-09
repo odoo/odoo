@@ -459,6 +459,15 @@ registry.slider = publicWidget.Widget.extend({
         // Initialize carousel and pause if in edit mode.
         this.$el.carousel(this.editableMode ? 'pause' : undefined);
         $(window).on('resize.slider', debounce(() => this._computeHeights(), 250));
+        if (this.editableMode) {
+            // Prevent carousel slide to be an history step.
+            this.$el.on("slide.bs.carousel", () => {
+                this.options.wysiwyg.odooEditor.observerUnactive();
+            });
+            this.$el.on("slid.bs.carousel", () => {
+                this.options.wysiwyg.odooEditor.observerActive();
+            });
+        }
         return this._super.apply(this, arguments);
     },
     /**
@@ -475,6 +484,7 @@ registry.slider = publicWidget.Widget.extend({
                 $(el).css("min-height", "");
             });
         $(window).off('.slider');
+        this.$target.off('.carousel');
     },
 
     //--------------------------------------------------------------------------
