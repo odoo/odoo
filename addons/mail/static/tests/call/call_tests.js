@@ -26,14 +26,16 @@ QUnit.test("basic rendering", async (assert) => {
     assert.containsOnce($, ".o-mail-CallParticipantCard[aria-label='Mitchell Admin']");
     assert.containsOnce($, ".o-mail-CallActionList");
     assert.containsOnce($, ".o-mail-CallMenu-buttonContent");
-    assert.containsN($, ".o-mail-CallActionList button", 7);
+    assert.containsN($, ".o-mail-CallActionList button", 5);
     assert.containsOnce($, "button[aria-label='Unmute'], button[aria-label='Mute']"); // FIXME depends on current browser permission
     assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Deafen']");
-    assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Raise hand']");
     assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Turn camera on']");
-    assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Share screen']");
-    assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Enter Full Screen']");
+    assert.containsOnce($, "button[title='More']");
     assert.containsOnce($, ".o-mail-CallActionList button[aria-label='Disconnect']");
+    await click("button[title='More']");
+    assert.containsOnce($, "[title='Raise Hand']");
+    assert.containsOnce($, "[title='Share Screen']");
+    assert.containsOnce($, "[title='Enter Full Screen']");
 });
 
 QUnit.test("no call with odoobot", async (assert) => {
@@ -217,9 +219,11 @@ QUnit.test("can share screen", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Start a Call']");
-    await click(".o-mail-CallActionList button[title='Share screen']");
+    await click(".o-mail-CallActionList [title='More']");
+    await click(".o-mail-CallActionList span[title='Share Screen']");
     assert.containsOnce($, ".o-mail-CallParticipantCard video");
-    await click(".o-mail-CallActionList button[title='Stop screen sharing']");
+    await click(".o-mail-CallActionList [title='More']");
+    await click(".o-mail-CallActionList span[title='Stop Sharing Screen']");
     assert.containsNone($, ".o-mail-CallParticipantCard video");
 });
 
