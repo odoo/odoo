@@ -13,7 +13,7 @@ const TableOfContent = publicWidget.Widget.extend({
     async start() {
         this._stripNavbarStyles();
         await this._super(...arguments);
-        this.$scrollingElement = $().getScrollingElement();
+        this.$scrollingElement = this.$target.closest(".s_table_of_content").closestScrollable();
         this.previousPosition = -1;
         this._updateTableOfContentNavbarPosition();
         this._updateTableOfContentNavbarPositionBound = this._updateTableOfContentNavbarPosition.bind(this);
