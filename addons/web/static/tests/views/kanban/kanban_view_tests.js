@@ -34,6 +34,7 @@ import { browser } from "@web/core/browser/browser";
 import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
 import { tooltipService } from "@web/core/tooltip/tooltip_service";
+import { translatedTerms } from "@web/core/l10n/translation";
 import { nbsp } from "@web/core/utils/strings";
 import { getNextTabableElement } from "@web/core/utils/ui";
 import { session } from "@web/session";
@@ -8471,6 +8472,39 @@ QUnit.module("Views", (hooks) => {
         await click(target, ".oe_kanban_colorpicker a.oe_kanban_color_9");
 
         assert.verifySteps(["write-color-9"], "should write on the color field");
+        assert.hasClass(getCard(0), "oe_kanban_color_9");
+    });
+
+    QUnit.test("edit the kanban color with translated colors resulting in the same terms", async (assert) => {
+        serverData.models.category.records[0].color = 12;
+
+        patchWithCleanup(translatedTerms, {
+            "Purple": "Violet",
+            "Violet": "Violet",
+        });
+
+        await makeView({
+            type: "kanban",
+            resModel: "category",
+            serverData,
+            arch: `
+                <kanban>
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-menu">
+                            <div class="oe_kanban_colorpicker"/>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div color="color">
+                                <field name="name"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+
+        await toggleRecordDropdown(0);
+        await click(target, ".oe_kanban_colorpicker a.oe_kanban_color_9");
         assert.hasClass(getCard(0), "oe_kanban_color_9");
     });
 
