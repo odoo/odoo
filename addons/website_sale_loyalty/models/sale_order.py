@@ -215,5 +215,8 @@ class SaleOrder(models.Model):
                 if coupon.expiration_date and coupon.expiration_date < fields.Date.today():
                     continue
                 if points >= reward.required_points:
-                    res[coupon] |= reward
+                    if coupon in res:
+                        res[coupon] |= reward
+                    else:
+                        res[coupon] = reward
         return res
