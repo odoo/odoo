@@ -20,7 +20,7 @@ import { useRtc } from "@mail/rtc/rtc_hook";
 export class Sidebar extends Component {
     static template = "mail.DiscussSidebar";
     static components = { ChannelSelector, ThreadIcon, ImStatus };
-    static props = [];
+    static props = ["onStartMeeting?"];
 
     setup() {
         this.messaging = useMessaging();
@@ -145,5 +145,6 @@ export class Sidebar extends Component {
             partners_to: [this.store.self.id],
         });
         await this.rtc.toggleCall(thread, { video: true });
+        await this.props.onStartMeeting?.();
     }
 }

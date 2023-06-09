@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Discuss" t-inherit-mode="extension">
         <xpath expr="//*[@t-ref='mobileTopbar']" position="before">
-            <Sidebar t-if="!props.public and !store.isSmall"/>
+            <Sidebar t-if="!props.public and !store.isSmall" onStartMeeting.bind="toggleInviteForm"/>
         </xpath>
         <xpath expr="//*[@t-ref='root']" position="inside">
             <MessagingMenu t-if="store.isSmall"/>
