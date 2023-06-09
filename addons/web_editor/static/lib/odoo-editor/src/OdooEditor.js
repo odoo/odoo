@@ -1393,6 +1393,7 @@ export class OdooEditor extends EventTarget {
                     // Only add the ZWS at the end if the link is in selection.
                     if (link === linkInSelection) {
                         link.append(this._createLinkZws('end'));
+                        link.classList.add('o_link_in_selection');
                         didAddZwsInLinkInSelection = true;
                     }
                     const zwsAfter = this._createLinkZws('after');
@@ -1762,6 +1763,7 @@ export class OdooEditor extends EventTarget {
     }
     _resetLinkZws(element = this.editable) {
         element.querySelectorAll('[data-o-link-zws]').forEach(zws => zws.remove());
+        element.querySelectorAll('.o_link_in_selection').forEach(link => link.classList.remove('o_link_in_selection'));
     }
     _activateContenteditable() {
         this.observerUnactive('_activateContenteditable');
