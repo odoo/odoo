@@ -250,13 +250,6 @@ export class Thread {
     }
 
     get imgUrl() {
-        const avatarCacheKey = this.channel?.avatarCacheKey;
-        if (this.type === "channel" || this.type === "group") {
-            return `/web/image/discuss.channel/${this.id}/avatar_128?unique=${avatarCacheKey}`;
-        }
-        if (this.type === "chat") {
-            return `/web/image/res.partner/${this.chatPartnerId}/avatar_128?unique=${avatarCacheKey}`;
-        }
         return (
             this.newestNeedactionMessage?.module_icon ?? "/mail/static/src/img/smiley/avatar.jpg"
         );

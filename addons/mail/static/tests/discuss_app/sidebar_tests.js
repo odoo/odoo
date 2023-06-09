@@ -11,6 +11,7 @@ import {
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
+import { getOrigin } from "@web/core/utils/urls";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { editInput, makeDeferred, nextTick } from "@web/../tests/helpers/utils";
 
@@ -735,18 +736,19 @@ QUnit.test("channel - avatar: should have correct avatar", async (assert) => {
     assert.containsOnce($, ".o-mail-DiscussCategoryItem img");
     assert.containsOnce(
         $,
-        `img[data-src='/web/image/discuss.channel/${channelId}/avatar_128?unique=100111']`
+        `img[data-src='${getOrigin()}/discuss/channel/${channelId}/avatar_128?unique=100111']`
     );
 });
 
 QUnit.test("channel - avatar: should update avatar url from bus", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ avatarCacheKey: "101010" });
+    const channelId = pyEnv["discuss.channel"].create({ avatarCacheKey: "101010", name: "test" });
     const { env, openDiscuss } = await start();
-    await openDiscuss();
-    assert.containsOnce(
+    await openDiscuss(channelId);
+    assert.containsN(
         $,
-        `img[data-src='/web/image/discuss.channel/${channelId}/avatar_128?unique=101010']`
+        `img[data-src='${getOrigin()}/discuss/channel/${channelId}/avatar_128?unique=101010']`,
+        2
     );
     await afterNextRender(() => {
         env.services.orm.call("discuss.channel", "write", [
@@ -756,9 +758,10 @@ QUnit.test("channel - avatar: should update avatar url from bus", async (assert)
     });
     const result = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
     const newCacheKey = result[0]["avatarCacheKey"];
-    assert.containsOnce(
+    assert.containsN(
         $,
-        `img[data-src='/web/image/discuss.channel/${channelId}/avatar_128?unique=${newCacheKey}']`
+        `img[data-src='${getOrigin()}/discuss/channel/${channelId}/avatar_128?unique=${newCacheKey}']`,
+        2
     );
 });
 
@@ -1012,22 +1015,18 @@ QUnit.test("chat - avatar: should have correct avatar", async (assert) => {
         name: "Demo",
         im_status: "offline",
     });
-    const channelId = pyEnv["discuss.channel"].create({
+    pyEnv["discuss.channel"].create({
         channel_member_ids: [
             Command.create({ partner_id: pyEnv.currentPartnerId }),
             Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
-    const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     const { openDiscuss } = await start();
     await openDiscuss();
 
     assert.containsOnce($, ".o-mail-DiscussCategoryItem img");
-    assert.containsOnce(
-        $,
-        `img[data-src='/web/image/res.partner/${partnerId}/avatar_128?unique=${channel.avatarCacheKey}']`
-    );
+    assert.containsOnce($, `img[data-src='/web/image/res.partner/${partnerId}/avatar_128']`);
 });
 
 QUnit.test("chat should be sorted by last activity time [REQUIRE FOCUS]", async (assert) => {
