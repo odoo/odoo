@@ -3,6 +3,8 @@
 
 import textwrap
 
+from markupsafe import Markup
+
 from odoo import _, api, fields, models
 from odoo.tools.translate import html_translate
 from odoo.addons.http_routing.models.ir_http import slug
@@ -21,25 +23,26 @@ class Forum(models.Model):
     _order = "sequence"
 
     def _get_default_welcome_message(self):
-        return """
-<section>
-    <div class="container py-5">
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="text-center">Welcome!</h1>
-                <p class="text-400 text-center">%(message_intro)s<br/>%(message_post)s</p>
-            </div>
-            <div class="col text-center mt-3">
-                <a href="#" class="js_close_intro btn btn-outline-light mr-2">%(hide_text)s</a>
-                <a class="btn btn-light forum_register_url" href="/web/login">%(register_text)s</a>
-            </div>
-        </div>
-    </div>
-</section>""" % {
-    'message_intro': _("This community is for professionals and enthusiasts of our products and services."),
-    'message_post': _("Share and discuss the best content and new marketing ideas, build your professional profile and become a better marketer together."),
-    'hide_text': _('Hide Intro'),
-    'register_text': _('Register')}
+        return Markup("""
+                <h1 style="text-align: center;clear-both"><font style="font-size: 62px; font-weight: bold;">%(message_intro)s</font></h1>
+                <div class="text-white">
+                    <p class="lead o_default_snippet_text" style="text-align: center;">%(message_post)s</p>
+                    <p style="text-align: center;">
+                        <a class="btn btn-primary forum_register_url" href="/web/login">%(register_text)s</a>
+                        <button type="button" class="btn btn-light js_close_intro" aria-label="Dismiss message">
+                            %(hide_text)s
+                        </button>
+                    </p>
+                </div>
+            """) % {
+            'message_intro': _("Welcome!"),
+            'message_post': _(
+                "Share and discuss the best content and new marketing ideas, build your professional profile and become"
+                " a better marketer together."
+            ),
+            'hide_text': _('Dismiss'),
+            'register_text': _('Sign up'),
+        }
 
     # description and use
     name = fields.Char('Forum Name', required=True, translate=True)
@@ -145,6 +148,13 @@ class Forum(models.Model):
         ])
         pending_forums.has_pending_post = True
         (self - pending_forums).has_pending_post = False
+
+    can_moderate = fields.Boolean(string="Is a moderator", compute="_compute_can_moderate")
+
+    @api.depends_context('uid')
+    def _compute_can_moderate(self):
+        for forum in self:
+            forum.can_moderate = self.env.user.karma > forum.karma_moderate
 
     @api.depends('description')
     def _compute_teaser(self):

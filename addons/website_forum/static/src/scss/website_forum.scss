@@ -1,42 +1,103 @@
 $gold: #eca801;
-$silver: #cccccc;
-$bronze: #eea91e;
+$silver: #acacac;
+$bronze: #ba651f;
+$-forum-sidebar-width: map-get($container-max-widths, sm) / 2;
 
+.website_forum, .o_wprofile_body {
+    --o-avatar-height: 1.875rem;
+
+    .o_wforum_avatar {
+        width: var(--o-avatar-height);
+        height: var(--o-avatar-height);
+    }
+
+    .o_wforum_author_box {
+        &.o_show_info {
+            line-height: 1.2;
+        }
+
+        &.o_compact {
+            --o-avatar-height: 1.4rem;
+            line-height: 1;
+        }
+    }
+}
 .website_forum {
-    .o_forum_ask_btn {
-        @include media-breakpoint-up(md) {
-            box-shadow: $box-shadow;
-            width: 200px;
+    --o-post-header-height: var(--o-avatar-height);
+
+    .o_wforum_wrapper {
+        @include media-breakpoint-up(xl) {
+            grid-template-columns: $-forum-sidebar-width minmax(0, auto);
+        }
+
+        @include media-breakpoint-up(xxl) {
+            max-width: 100%;
         }
     }
 
-    .o_wforum_nav .nav-link {
-        @include o-hover-text-color($body-color, $link-color);
-        line-height: 1;
+    .o_wforum_content_wrapper {
+        @include media-breakpoint-up(xxl) {
+            margin-left: -$-forum-sidebar-width;
 
-        .fa {
-            opacity: 0.5;
-        }
-
-        &:hover, &.active {
-            .fa {
-                opacity: 1;
+            > div {
+                max-width: map-get($grid-breakpoints, xl) - $-forum-sidebar-width - 100px;
+                @include make-container();
             }
         }
+    }
 
-        &.active {
-            background-color: rgba(map-get($theme-colors, 'info'), 0.1);
-            color: darken(map-get($theme-colors, 'info'), 15%)!important;
+    aside.o_wforum_sidebar {
+        min-width: $-forum-sidebar-width;
+
+        .btn.w-100:hover {
+            background-color: darken(map-get($o-color-palette, 'o-color-3'), 4%);
+        }
+    }
+
+    .o_wforum_table {
+        --o-avatar-height: 2.25rem;
+
+        img.o_wforum_avatar {
+            border: 2px solid var(--o-color-4);
         }
 
-        img.o_forum_avatar {
-            width: 30px;
-            height: 30px;
+        .o_wforum_reply_count, .o_wforum_view_count, .o_wforum_last_activity {
+            width: 100px;
         }
+
+        &> :not(caption) > * > * {
+            @include media-breakpoint-down(lg) {
+                padding-left: 0;
+                padding-right: $table-cell-padding-x-sm;
+            }
+
+        }
+
+        tbody {
+            @include media-breakpoint-down(lg) {
+                border-top: 0;
+            }
+
+            tr:hover {
+                @if ($body-bg and color-contrast($body-bg) != $color-contrast-dark) {
+                    background-color: lighten($body-bg, 10%);
+                } @else {
+                    background-color: darken($body-bg, 2%);
+                }
+            }
+        }
+    }
+
+    .o_wforum_index_entry_title a:visited span {
+        color:  lighten($body-color, 50%);
+    }
+
+    .btn[aria-expanded="true"] {
+        opacity: 1 !important;
     }
 
     // Single Post
-    .o_wforum_post, .note-editable.panel-body {
+    .o_wforum_post, .note-editable {
         word-wrap: break-word;
 
         pre {
@@ -49,22 +110,61 @@ $bronze: #eea91e;
 
         blockquote {
             position: relative;
-            padding-left: 1em;
             border-left: .25em solid map-get($grays, '500');
+            padding-left: 1em;
             color: map-get($grays, '600');
         }
+    }
 
-        #post_reply {
-            img.o_forum_avatar {
-                width: 24px;
-                height: 24px;
+    #post_reply {
+        z-index: $zindex-modal;
+        min-height: 0;
+        max-height: 0;
+        border-radius: $border-radius $border-radius 0 0;
+        transition: max-#{$transition-collapse}, min-#{$transition-collapse}, #{$transition-collapse}, #{$transition-collapse-width};
+
+        &.show {
+            max-height: 100%;
+
+            &.o_expand {
+                .o_wforum_expand_toggle {
+                    content:'\f066';
+                }
+
+                .odoo-editor-editable {
+                    transition: $transition-collapse;
+                    flex-grow: 1;
+                }
+
+                form.js_website_submit_form {
+                    height: calc(100vh - 100px);
+                }
+            }
+
+            .o_wysiwyg_textarea_wrapper {
+                display: flex;
+                flex-flow: column;
+                flex-grow: 1;
+
+                .odoo-editor {
+                    height: 200px !important;
+                    display: flex;
+                    flex-grow: 1;
+                    flex-flow: column;
+
+                    .note-editable {
+                        flex-grow: 1;
+                    }
+                }
             }
         }
     }
 
-    .o_wforum_readable {
-        max-width: 700px;
+    .o_wforum_post_header, .o_wforum_answer_header {
+        min-height: var(--o-post-header-height);
+    }
 
+    .o_wforum_readable {
         p {
             margin-bottom: 0.5rem;
         }
@@ -99,61 +199,25 @@ $bronze: #eea91e;
         }
     }
 
-    .o_wforum_author_box {
-        &.o_show_info {
-            line-height: 1.2;
-            img {
-                width: 2em;
-                height: 2em;
-            }
-        }
-
-        &.o_compact {
-            line-height: 1;
-
-            img {
-                width: 1.4em;
-                height: 1.4em;
-            }
-        }
-
-    }
-
-    .forum_answer {
-        .o_wforum_answer_correct_badge {
-            display: none;
-        }
-
-        .o_wforum_author_box_check {
-            width: 1em;
-            height: 1em;
-            display: none;
-            top: 0;
-            right: -3px;
-            box-shadow: 0 0 0 2px white;
-            line-height: .8;
-        }
-
-        .o_wforum_validate_toggler {
-            @include o-hover-text-color(map-get($grays, '400'), lighten(map-get($theme-colors, 'success'), 20%));
-        }
+    .o_wforum_answer {
+        transition: $transition-base;
 
         &.o_wforum_answer_correct {
-            .o_wforum_answer_correct_badge, .o_wforum_author_box .o_wforum_author_box_check {
-                display: inline;
+            // This hack is to have either a light or dark success color
+            // depending on the background color's contrast
+            $-cc1-bg: o-color(map-get($o-color-palette, o-cc1-bg));
+            $-isBright: color-contrast($-cc1-bg) == $color-contrast-dark;
+
+            @if ($-isBright) {
+                background-color: mix($color-contrast-light, $success, 90%);
+            } @else {
+                $-success-light: lighten(saturate($success, 70), 30);
+                border: 1px solid $-success-light;
+                background-color: mix($color-contrast-dark, $-success-light, 80%);
             }
 
-            .o_wforum_validate_toggler {
-                @include o-hover-text-color(map-get($theme-colors, 'success'), map-get($theme-colors, 'warning'));
-
-                &:hover .fa.fa-check:before {
-                    content: '\f00d';
-                }
-            }
-
-            .o_wforum_answer_header .o_wforum_author_pic {
-                border: 2px solid $success;
-                padding: 3px;
+            .o_wforum_author_pic img {
+                box-shadow: 0 0 0 2px $success;
             }
         }
     }
@@ -177,7 +241,6 @@ $bronze: #eea91e;
 .website_forum, .o_wforum_profile_tab {
     .vote {
         .vote_count {
-            line-height: 1;
             animation-play-state: paused;
 
             &.o_forum_vote_animate {
@@ -185,62 +248,13 @@ $bronze: #eea91e;
             }
         }
 
-        .vote_down, .vote_up {
-            line-height: 0.5;
-            font-size: 1.1em;
-            @include o-hover-text-color(rgba($text-muted, 0.5), map-get($theme-colors, 'success'));
+        .vote_up {
+            @include o-hover-text-color(inherit, $success);
         }
 
         .vote_down {
-            @include o-hover-text-color(rgba($text-muted, 0.5), map-get($theme-colors, 'danger'));
+            @include o-hover-text-color(inherit, $danger);
         }
-
-        &.o_wforum_vote_vertical {
-            @include media-breakpoint-up(sm) {
-                font-size: 1.2em;
-            }
-        }
-    }
-}
-
-.o_js_forum_tag_follow {
-    position: relative;
-
-    .badge {
-        font-size: 100%;
-    }
-
-    .o_forum_tag_follow_box {
-        @include o-position-absolute(100%, auto, auto, 0);
-        display: none;
-        z-index: 1;
-
-        .card {
-            padding: ($grid-gutter-width*0.5) - 1px;
-        }
-    }
-}
-
-.o_profile_main {
-    overflow: hidden;
-}
-
-img.o_forum_avatar {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-}
-
-img.o_forum_avatar_big {
-    width: 75px;
-    height: 75px;
-    object-fit: cover;
-}
-
-.o_wprofile_email_validation_container {
-    img.o_forum_avatar {
-        width: 16px;
-        height: 16px;
     }
 }
 
@@ -250,6 +264,7 @@ img.o_forum_avatar_big {
             display: flex;
             align-items: center;
         }
+
         span[data-oe-model="res.country"] {
             margin-left: 10px;
         }
@@ -258,25 +273,32 @@ img.o_forum_avatar_big {
     .o_wforum_bio_popover_info .css_editable_mode_hidden > div:last-child > .o_forum_tooltip_line {
         margin-top: -0.5rem; // compensate parent 'mt-2' class
     }
-
-    .o_wforum_bio_popover_bio p {
-        margin-top: 8px;
-        margin-bottom: 0;
-    }
 }
 
-.o_wforum_elearning_navtabs_container {
-    @include media-breakpoint-up(md) {
-        background-color: map-get($theme-colors, 'secondary');
-    }
-}
+.popover {
+    box-shadow: 0 2px 5px $gray-400;
 
-.website_forum {
-    margin-bottom: $spacer;
+    .popover-header {
+        background-color: tint-color($primary, 80%);
+        border-bottom: 0;
+        color: $primary;
+    }
 }
 
 .popover.o_wforum_bio_popover_container {
     max-width: 552px;
+
+    .o-text-gold {
+        color: $gold;
+    }
+
+    .o-text-silver {
+        color: $silver;
+    }
+
+    .o-text-bronze {
+        color: $bronze;
+    }
 }
 
 #o_wforum_forums_index_list .card {

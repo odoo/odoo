@@ -31,7 +31,24 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'click .o_wforum_favourite_toggle': '_onFavoriteQuestionClick',
         'click .comment_delete': '_onDeleteCommentClick',
         'click .js_close_intro': '_onCloseIntroClick',
+        'click .answer_collapse': '_onExpandAnswerClick',
         'submit .js_wforum_submit_form:has(:not(.karma_required).o_wforum_submit_post)': '_onSubmitForm',
+    },
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onExpandAnswerClick: function (ev) {
+        const expandableWindow = ev.currentTarget;
+        if (ev.target.matches('.o_wforum_expand_toggle')) {
+            expandableWindow.classList.toggle('o_expand')
+            expandableWindow.classList.toggle('min-vh-100');
+            expandableWindow.classList.toggle('w-lg-50');
+        } else if (ev.target.matches('.o_wforum_discard_btn')){
+            expandableWindow.classList.remove('o_expand', 'min-vh-100');
+            expandableWindow.classList.add('w-lg-50');
+        }
     },
 
     /**
@@ -243,7 +260,8 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         };
         if (session.is_website_user) {
             notifOptions.title = _t("Access Denied");
-            notifOptions.message = _t("Sorry you must be logged in to perform this action");
+            notifOptions.message =  Markup`
+            <p>Oh no! Please <a href='/web/login'>sign in</a> to vote</p>`;
         } else {
             notifOptions.title = _t("Karma Error");
             // FIXME this translation is bad, the number should be part of the
@@ -356,7 +374,8 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 if (data.error === 'own_post') {
                     message = _t('Sorry, you cannot vote for your own posts');
                 } else if (data.error === 'anonymous_user') {
-                    message = _t('Sorry you must be logged to vote');
+                    message = Markup`
+                    <p>Oh no! Please <a href='/web/login'>sign in</a> to vote</p>`;
                 }
                 this.displayNotification({
                     message: message,
@@ -425,38 +444,49 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
-    _onAcceptAnswerClick: function (ev) {
+    _onAcceptAnswerClick: async function (ev) {
         ev.preventDefault();
-        var $link = $(ev.currentTarget);
-        var target = $link.data('target');
+        const $link = $(ev.currentTarget);
+        const target = $link.data('target');
 
-        this._rpc({
-            route: $link.data('href'),
-        }).then(data => {
-            if (data.error) {
-                if (data.error === 'anonymous_user') {
-                    var message = _t("Sorry, anonymous users cannot choose correct answer.");
-                }
-                this.displayNotification({
-                    message: message,
-                    title: _t("Access Denied"),
-                    sticky: false,
-                    type: "warning",
-                });
-            } else {
-                this.$('.forum_answer').toArray().forEach((answer) => {
-                    var $answer = $(answer);
-                    var isCorrect = $answer.is(target) ? data : false;
-                    var $toggler = $answer.find('.o_wforum_validate_toggler');
-                    var newHelper = isCorrect ? $toggler.data('helper-decline') : $toggler.data('helper-accept');
-
-                    $answer.toggleClass('o_wforum_answer_correct', isCorrect);
-                    $toggler.tooltip('dispose')
-                            .attr('data-bs-original-title', newHelper)
-                            .tooltip({delay: 0});
-                });
+        const data = await this._rpc({route: $link.data('href')});
+        if (data.error) {
+            let message;
+            if (data.error === 'anonymous_user') {
+                message = _t('Sorry, anonymous users cannot choose correct answer.');
+            } else if (data.error === 'own_post') {
+                message = _t('Sorry, you cannot vote for your own posts');
             }
-        });
+            this.displayNotification({
+                message: message || data.error,
+                title: _t('Access Denied'),
+                sticky: false,
+                type: 'warning',
+            });
+        } else {
+            this.$('.o_wforum_answer').toArray().forEach((answer) => {
+                const $answer = $(answer);
+                const isCorrect = $answer.is(target) ? data : false;
+                const $toggler = $answer.find('.o_wforum_validate_toggler');
+                const $togglerIcon = $toggler.find('.fa');
+                const $correctBadge = $answer.find('.o_wforum_answer_correct_badge');
+                const newHelper = isCorrect ? $toggler.data('helper-decline') : $toggler.data('helper-accept');
+                $answer.toggleClass(
+                    "o_wforum_answer_correct my-2 mx-n3 mx-lg-n2 mx-xl-n3 py-3 px-3 px-lg-2 px-xl-3",
+                    isCorrect
+                );
+                $answer.find('div .border-start')
+                       .toggleClass('border-success', isCorrect);
+                $toggler.tooltip('dispose')
+                    .attr('data-bs-original-title', newHelper)
+                    .tooltip({delay: 0})
+                    .toggleClass('opacity-50', !isCorrect);
+                $togglerIcon
+                    .toggleClass('fa-check-circle text-success', isCorrect)
+                    .toggleClass('fa-check-circle-o', !isCorrect);
+                $correctBadge.toggleClass('d-inline', isCorrect).toggleClass('d-none', !isCorrect);
+            });
+        }
     },
     /**
      * @private
@@ -465,11 +495,13 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     _onFavoriteQuestionClick: function (ev) {
         ev.preventDefault();
         var $link = $(ev.currentTarget);
+        var $link_icon = $link.find('.fa');
         this._rpc({
             route: $link.data('href'),
         }).then(function (data) {
-            $link.toggleClass('o_wforum_gold fa-star', data)
-                 .toggleClass('fa-star-o text-muted', !data);
+            $link.toggleClass('opacity-50 opacity-100-hover', !data);
+            $link_icon.toggleClass('o_wforum_gold fa-star', data)
+                 .toggleClass('fa-star-o', !data);
         });
     },
     /**
@@ -545,7 +577,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             renderFooter: false,
         }).open();
         dialog.opened().then(() => {
-            dialog.$(".btn-light:contains('Discard')").click((ev) => {
+            dialog.$(".btn-link:contains('Discard')").click((ev) => {
                 ev.preventDefault();
                 dialog.close();
             });

@@ -363,6 +363,8 @@ class WebsiteForum(WebsiteProfile):
     def post_toggle_correct(self, forum, post, **kwargs):
         if post.parent_id is False:
             return request.redirect('/')
+        if request.uid == post.create_uid.id:
+            return {'error': 'own_post'}
         if not request.session.uid:
             return {'error': 'anonymous_user'}
 
@@ -501,6 +503,22 @@ class WebsiteForum(WebsiteProfile):
 
         return request.render("website_forum.moderation_queue", values)
 
+    @http.route('/forum/<model("forum.forum"):forum>/closed_posts', type='http', auth="user", website=True)
+    def closed_posts(self, forum, **kwargs):
+        if request.env.user.karma < forum.karma_moderate:
+            raise werkzeug.exceptions.NotFound()
+
+        domain = [('forum_id', '=', forum.id), ('state', '=', 'close')]
+        close_posts_ids = request.env['forum.post'].search(domain, order='write_date DESC')
+
+        values = self._prepare_user_values(forum=forum)
+        values.update({
+            'posts_ids': close_posts_ids.sudo(),
+            'queue_type': 'close',
+        })
+
+        return request.render("website_forum.moderation_queue", values)
+
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/validate', type='http', auth="user", website=True)
     def post_accept(self, forum, post, **kwargs):
         url = "/forum/%s/validation_queue" % (slug(forum))
@@ -508,6 +526,8 @@ class WebsiteForum(WebsiteProfile):
             url = "/forum/%s/flagged_queue" % (slug(forum))
         elif post.state == 'offensive':
             url = "/forum/%s/offensive_posts" % (slug(forum))
+        elif post.state == 'close':
+            url = "/forum/%s/closed_posts" % (slug(forum))
         post.validate()
         return request.redirect(url)
 
