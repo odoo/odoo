@@ -5,13 +5,55 @@ import { useRtc } from "@mail/discuss/call/common/rtc_hook";
 import { Component } from "@odoo/owl";
 
 import { isMobileOS } from "@web/core/browser/feature_detection";
+import { Dropdown } from "@web/core/dropdown/dropdown";
+import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { _t } from "@web/core/l10n/translation";
 
 export class CallActionList extends Component {
+    static components = { Dropdown, DropdownItem };
     static props = ["thread", "fullscreen", "compact?"];
     static template = "discuss.CallActionList";
 
     setup() {
         this.rtc = useRtc();
+    }
+
+    get MORE() {
+        return _t("More");
+    }
+
+    get moreActions() {
+        const acts = [];
+        acts.push({
+            id: "raiseHand",
+            name: !this.rtc.state?.selfSession.raisingHand ? _t("Raise Hand") : _t("Lower Hand"),
+            icon: "fa fa-fw fa-hand-paper-o",
+            onSelect: (ev) => this.onClickRaiseHand(ev),
+        });
+        if (isMobileOS) {
+            acts.push({
+                id: "shareScreen",
+                name: !this.rtc.state.sendScreen ? _t("Share Screen") : _t("Stop Sharing Screen"),
+                icon: "fa fa-fw fa-desktop",
+                onSelect: () => this.rtc.toggleVideo("screen"),
+            });
+        }
+        if (!this.props.fullscreen.isActive) {
+            acts.push({
+                id: "fullScreen",
+                name: _t("Enter Full Screen"),
+                icon: "fa fa-fw fa-arrows-alt",
+                onSelect: () => this.props.fullscreen.enter(),
+            });
+        } else {
+            acts.push({
+                id: "exitFullScreen",
+                name: _t("Exit Full Screen"),
+                icon: "fa fa-fw fa-compress",
+                onSelect: () => this.props.fullscreen.exit(),
+            });
+        }
+        return acts;
     }
 
     get isOfActiveCall() {
