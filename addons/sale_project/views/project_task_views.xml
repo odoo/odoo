@@ -125,6 +125,30 @@
                     </div>
                 </group>
             </xpath>
+            <xpath expr="//page[@name='settings']//field[@name='analytic_account_id']" position="before">
+                <field name="sale_line_id"
+                    groups="!sales_team.group_sale_salesman"
+                    options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"
+                    attrs="{
+                        'invisible': [
+                            '|',
+                                ('allow_billable', '=', False),
+                                ('partner_id', '=', False),
+                        ],
+                    }"
+                />
+                <field name="sale_line_id"
+                    groups="sales_team.group_sale_salesman"
+                    options="{'no_create': True, 'no_edit': True, 'delete': False}"
+                    attrs="{
+                        'invisible': [
+                            '|',
+                                ('allow_billable', '=', False),
+                                ('partner_id', '=', False),
+                        ],
+                    }"
+                />
+            </xpath>
         </field>
     </record>
 
