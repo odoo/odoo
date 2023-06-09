@@ -1880,9 +1880,7 @@ export class Wysiwyg extends Component {
         this.odooEditor.historyStash();
     }
     _processAndApplyColor(colorType, color, previewMode) {
-        if (!color) {
-            color = 'inherit';
-        } else if (!isCSSColor(color) && !weUtils.isColorGradient(color)) {
+        if (color && !isCSSColor(color) && !weUtils.isColorGradient(color)) {
             color = (colorType === "text" ? 'text-' : 'bg-') + color;
         }
         const coloredElements = this.odooEditor.execCommand('applyColor', color, colorType === 'text' ? 'color' : 'backgroundColor', this.lastMediaClicked);
