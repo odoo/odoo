@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from . import common
+from . import test_forum_controller
 from . import test_forum_internals
 from . import test_forum_karma_access
 from . import test_forum_tag
