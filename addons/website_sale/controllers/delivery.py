@@ -15,7 +15,8 @@ class WebsiteSaleDelivery(WebsiteSale):
     @http.route(['/shop/update_carrier'], type='json', auth='public', methods=['POST'], website=True)
     def update_eshop_carrier(self, **post):
         order = request.website.sale_get_order()
-        order.access_point_address = {}
+        if not post.get('no_reset_access_point_address'):
+            order.access_point_address = {}
         carrier_id = int(post['carrier_id'])
         if order and carrier_id != order.carrier_id.id:
             if any(tx.sudo().state not in ('cancel', 'error', 'draft') for tx in order.transaction_ids):
