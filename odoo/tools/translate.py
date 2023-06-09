@@ -1261,7 +1261,7 @@ class TranslationImporter:
             reader = TranslationFileReader(fileobj, fileformat=fileformat)
             self._load(reader, lang, xmlids)
         except IOError:
-            iso_lang = get_iso_codes(self.lang)
+            iso_lang = get_iso_codes(lang)
             filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
             _logger.exception("couldn't read translation file %s", filename)
 
