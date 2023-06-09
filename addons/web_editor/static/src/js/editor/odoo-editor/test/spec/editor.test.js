@@ -6526,58 +6526,6 @@ X[]
                     `),
                 });
             });
-            it('should not fix the selection in a protected input even if it is contenteditable="false"', async () => {
-                await testEditor(BasicEditor, {
-                    // Protected, the selection is kept.
-                    contentBefore: unformat(`
-                        <p>ab</p>
-                        <div contenteditable="false" data-oe-protected="true">
-                            [<input>]
-                        </div>
-                    `),
-                    stepFunction: async editor => editor._fixSelectionOnContenteditableFalse(),
-                    contentAfterEdit: unformat(`
-                        <p>ab</p>
-                        <div contenteditable="false" data-oe-protected="true" data-oe-keep-contenteditable="">
-                            [<input>]
-                        </div>
-                    `),
-                });
-                // Not protected, the selection is fixed.
-                await testEditor(BasicEditor, {
-                    contentBefore: unformat(`
-                        <p>ab</p>
-                        <div contenteditable="false">
-                            [<input>]
-                        </div>
-                    `),
-                    stepFunction: async editor => editor._fixSelectionOnContenteditableFalse(),
-                    contentAfterEdit: unformat(`
-                        <p>[]ab</p>
-                        <div contenteditable="false" data-oe-keep-contenteditable="">
-                            <input>
-                        </div>
-                    `),
-                });
-            });
-            it('should remove the selection in a protected element if it is contenteditable="false"', async () => {
-                await testEditor(BasicEditor, {
-                    // Protected, but not an input, the selection is fixed.
-                    contentBefore: unformat(`
-                        <p>ab</p>
-                        <div contenteditable="false" data-oe-protected="true">
-                            <div>[]content</div>
-                        </div>
-                    `),
-                    stepFunction: async editor => editor._fixSelectionOnContenteditableFalse(),
-                    contentAfterEdit: unformat(`
-                        <p>ab</p>
-                        <div contenteditable="false" data-oe-protected="true" data-oe-keep-contenteditable="">
-                            <div>content</div>
-                        </div>
-                    `),
-                });
-            });
         });
         describe('false', () => {
             it('should not ignore unprotected elements children mutations', async () => {
@@ -6621,29 +6569,6 @@ X[]
                             <ul><li><br></li></ul>
                         </div>
                     </div>
-                    `),
-                });
-            });
-            it('should fix selection in contenteditable="false" unprotected elements children', async () => {
-                await testEditor(BasicEditor, {
-                    contentBefore: unformat(`
-                    <p><br></p>
-                    <div contenteditable="false" data-oe-protected="true">
-                        <div data-oe-protected="false">
-                            <h1>[editable text which edition is temporarily disabled]</h1>
-                        </div>
-                    </div>
-                    <p><br></p>
-                    `),
-                    stepFunction: async editor => editor._fixSelectionOnContenteditableFalse(),
-                    contentAfter: unformat(`
-                    <p>[]<br></p>
-                    <div contenteditable="false" data-oe-protected="true">
-                        <div data-oe-protected="false">
-                            <h1>editable text which edition is temporarily disabled</h1>
-                        </div>
-                    </div>
-                    <p><br></p>
                     `),
                 });
             });
