@@ -10,7 +10,7 @@ from unittest.mock import patch
 
 from odoo.addons import __path__ as __addons_path__
 from odoo.tools import mute_logger
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, HttpCase
 
 class TestImportModule(TransactionCase):
     def import_zipfile(self, files):
@@ -189,3 +189,20 @@ class TestImportModule(TransactionCase):
         static_attachment = self.env['ir.attachment'].search([('url', '=', '/%s' % static_path)])
         self.assertEqual(static_attachment.name, os.path.basename(static_path))
         self.assertEqual(static_attachment.datas, base64.b64encode(static_data))
+
+
+class TestImportModuleHttp(TestImportModule, HttpCase):
+    def test_import_module_icon(self):
+        """Assert import a module with an icon result in the module displaying the icon in the apps menu,
+        and with the base module icon if module without icon"""
+        files = [
+            ('foo/__manifest__.py', b"{'name': 'foo'}"),
+            ('foo/static/description/icon.png', b"foo_icon"),
+            ('bar/__manifest__.py', b"{'name': 'bar'}"),
+        ]
+        self.import_zipfile(files)
+        foo_icon_path, foo_icon_data = files[1]
+        # Assert icon of module foo, which must be the icon provided in the zip
+        self.assertEqual(self.url_open('/' + foo_icon_path).content, foo_icon_data)
+        # Assert icon of module bar, which must be the icon of the base module as none was provided
+        self.assertEqual(self.env.ref('base.module_bar').icon_image, self.env.ref('base.module_base').icon_image)
