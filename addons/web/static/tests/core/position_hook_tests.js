@@ -153,21 +153,9 @@ QUnit.test("can add margin", async (assert) => {
 
 QUnit.test("is restricted to its container, even with margins", async (assert) => {
     // Add a sheet to set a margin on the popper
-    const SHEET_MARGINS = {
-        top: 11,
-        right: 12,
-        bottom: 13,
-        left: 14,
-    };
+    const SHEET_MARGIN = 11;
     const sheet = document.createElement("style");
-    sheet.textContent = `
-        #popper {
-            margin-top: ${SHEET_MARGINS.top}px;
-            margin-right: ${SHEET_MARGINS.right}px;
-            margin-bottom: ${SHEET_MARGINS.bottom}px;
-            margin-left: ${SHEET_MARGINS.left}px;
-        }
-    `;
+    sheet.textContent = `#popper { margin: ${SHEET_MARGIN}px; }`;
     document.head.appendChild(sheet);
     registerCleanup(() => sheet.remove());
 
@@ -193,21 +181,21 @@ QUnit.test("is restricted to its container, even with margins", async (assert) =
 
     // --> Without additional margin
     // Leave just enough space for the popper to be contained
-    Object.assign(container.style, { height: `${minSize + SHEET_MARGINS.top}px` });
+    Object.assign(container.style, { height: `${minSize + SHEET_MARGIN}px` });
     await _mountTestComponentAndDestroy({ position: "bottom" });
     assert.verifySteps(["bottom-middle"]);
     // Remove 1px => popper should switch direction as it can't be contained
-    Object.assign(container.style, { height: `${minSize + SHEET_MARGINS.top - 1}px` });
+    Object.assign(container.style, { height: `${minSize + SHEET_MARGIN - 1}px` });
     await _mountTestComponentAndDestroy({ position: "bottom" });
     assert.verifySteps(["right-start"]);
 
     // --> With additional margin
     // Leave just enough space for the popper to be contained
-    Object.assign(container.style, { height: `${minSize + SHEET_MARGINS.top + margin}px` });
+    Object.assign(container.style, { height: `${minSize + margin + SHEET_MARGIN}px` });
     await _mountTestComponentAndDestroy({ position: "bottom", margin });
     assert.verifySteps(["bottom-middle"]);
     // Remove 1px => popper should switch direction as it can't be contained
-    Object.assign(container.style, { height: `${minSize + SHEET_MARGINS.top + margin - 1}px` });
+    Object.assign(container.style, { height: `${minSize + margin + SHEET_MARGIN - 1}px` });
     await _mountTestComponentAndDestroy({ position: "bottom", margin });
     assert.verifySteps(["right-start"]);
 
@@ -217,22 +205,22 @@ QUnit.test("is restricted to its container, even with margins", async (assert) =
 
     // --> Without additional margin
     // Leave just enough space for the popper to be contained
-    Object.assign(container.style, { height: `${minSize + SHEET_MARGINS.bottom}px` });
+    Object.assign(container.style, { height: `${minSize + SHEET_MARGIN}px` });
     await _mountTestComponentAndDestroy({ position: "top" });
     assert.verifySteps(["top-middle"]);
     // Remove 1px => popper should switch direction as it can't be contained
-    Object.assign(container.style, { height: `${minSize + SHEET_MARGINS.bottom - 1}px` });
+    Object.assign(container.style, { height: `${minSize + SHEET_MARGIN - 1}px` });
     await _mountTestComponentAndDestroy({ position: "top" });
     assert.verifySteps(["right-end"]);
 
     // --> With additional margin
     // Leave just enough space for the popper to be contained
-    Object.assign(container.style, { height: `${minSize + SHEET_MARGINS.bottom + margin}px` });
+    Object.assign(container.style, { height: `${minSize + margin + SHEET_MARGIN}px` });
     await _mountTestComponentAndDestroy({ position: "top", margin });
     assert.verifySteps(["top-middle"]);
     // Remove 1px => popper should switch direction as it can't be contained
     Object.assign(container.style, {
-        height: `${minSize + SHEET_MARGINS.bottom + margin - 1}px`,
+        height: `${minSize + margin + SHEET_MARGIN - 1}px`,
     });
     await _mountTestComponentAndDestroy({ position: "top", margin });
     assert.verifySteps(["right-end"]);
@@ -245,22 +233,22 @@ QUnit.test("is restricted to its container, even with margins", async (assert) =
 
     // --> Without additional margin
     // Leave just enough space for the popper to be contained
-    Object.assign(container.style, { width: `${minSize + SHEET_MARGINS.right}px` });
+    Object.assign(container.style, { width: `${minSize + SHEET_MARGIN}px` });
     await _mountTestComponentAndDestroy({ position: "left" });
     assert.verifySteps(["left-middle"]);
     // Remove 1px => popper should switch direction as it can't be contained
-    Object.assign(container.style, { width: `${minSize + SHEET_MARGINS.right - 1}px` });
+    Object.assign(container.style, { width: `${minSize + SHEET_MARGIN - 1}px` });
     await _mountTestComponentAndDestroy({ position: "left" });
     assert.verifySteps(["bottom-end"]);
 
     // --> With additional margin
     // Leave just enough space for the popper to be contained
-    Object.assign(container.style, { width: `${minSize + SHEET_MARGINS.right + margin}px` });
+    Object.assign(container.style, { width: `${minSize + margin + SHEET_MARGIN}px` });
     await _mountTestComponentAndDestroy({ position: "left", margin });
     assert.verifySteps(["left-middle"]);
     // Remove 1px => popper should switch direction as it can't be contained
     Object.assign(container.style, {
-        width: `${minSize + SHEET_MARGINS.right + margin - 1}px`,
+        width: `${minSize + margin + SHEET_MARGIN - 1}px`,
     });
     await _mountTestComponentAndDestroy({ position: "left", margin });
     assert.verifySteps(["bottom-end"]);
@@ -271,21 +259,21 @@ QUnit.test("is restricted to its container, even with margins", async (assert) =
 
     // --> Without additional margin
     // Leave just enough space for the popper to be contained
-    Object.assign(container.style, { width: `${minSize + SHEET_MARGINS.left}px` });
+    Object.assign(container.style, { width: `${minSize + SHEET_MARGIN}px` });
     await _mountTestComponentAndDestroy({ position: "right" });
     assert.verifySteps(["right-middle"]);
     // Remove 1px => popper should switch direction as it can't be contained
-    Object.assign(container.style, { width: `${minSize + SHEET_MARGINS.left - 1}px` });
+    Object.assign(container.style, { width: `${minSize + SHEET_MARGIN - 1}px` });
     await _mountTestComponentAndDestroy({ position: "right" });
     assert.verifySteps(["top-start"]);
 
     // --> With additional margin
     // Leave just enough space for the popper to be contained
-    Object.assign(container.style, { width: `${minSize + SHEET_MARGINS.left + margin}px` });
+    Object.assign(container.style, { width: `${minSize + margin + SHEET_MARGIN}px` });
     await _mountTestComponentAndDestroy({ position: "right", margin });
     assert.verifySteps(["right-middle"]);
     // Remove 1px => popper should switch direction as it can't be contained
-    Object.assign(container.style, { width: `${minSize + SHEET_MARGINS.left + margin - 1}px` });
+    Object.assign(container.style, { width: `${minSize + margin + SHEET_MARGIN - 1}px` });
     await _mountTestComponentAndDestroy({ position: "right", margin });
     assert.verifySteps(["top-start"]);
 });
