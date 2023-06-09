@@ -26,7 +26,6 @@ import {
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
-import { url } from "@web/core/utils/urls";
 import { FileUploader } from "@web/views/fields/file_handler";
 
 export class Discuss extends Component {
@@ -86,14 +85,6 @@ export class Discuss extends Component {
 
     get thread() {
         return this.store.threads[this.store.discuss.threadLocalId];
-    }
-
-    get channelAvatar() {
-        return this.store.inPublicPage
-            ? url(
-                  `/discuss/channel/${this.thread.id}/avatar_128?unique=${this.thread?.avatarCacheKey}`
-              )
-            : this.thread.imgUrl;
     }
 
     async onFileUploaded(file) {
