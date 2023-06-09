@@ -1999,6 +1999,8 @@ QUnit.test("Create a direct message channel when clicking on start a meeting", a
     await click("button:contains(Start a meeting)");
     assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(Mitchell Admin)");
     assert.containsOnce($, ".o-mail-Call");
+    await waitUntil(".o-discuss-ChannelInvitation");
+    assert.containsOnce($, ".o-discuss-ChannelInvitation");
 });
 
 QUnit.test(
