@@ -5,7 +5,7 @@
  */
 // need to wait for owl.Component.env to be set by new/public/boot before
 // we spawn the component adapter
-import "@mail/core/public/boot";
+import "@mail/discuss/core/public/boot";
 
 import { Component } from "@odoo/owl";
 
