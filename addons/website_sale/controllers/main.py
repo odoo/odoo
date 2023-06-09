@@ -110,6 +110,9 @@ class WebsiteSaleForm(WebsiteForm):
             return json.dumps({'error_fields': e.args[0]})
 
         order = request.website.sale_get_order()
+        if not order:
+            return json.dumps({'error': "No order found; please add a product to your cart."})
+
         if data['record']:
             order.write(data['record'])
 
