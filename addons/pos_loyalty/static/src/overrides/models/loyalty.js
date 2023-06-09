@@ -803,7 +803,9 @@ patch(Order.prototype, "pos_loyalty.Order", {
                             qtyPerProduct[line.reward_product_id || line.get_product().id] =
                                 lineQty;
                         }
-                        orderedProductPaid += line.get_price_with_tax();
+                        if (!line.is_reward_line) {
+                            orderedProductPaid += line.get_price_with_tax();
+                        }
                     }
                 }
                 if (totalProductQty < rule.minimum_qty) {
