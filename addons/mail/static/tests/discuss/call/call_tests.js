@@ -28,14 +28,16 @@ QUnit.test("basic rendering", async (assert) => {
     assert.containsOnce($, ".o-discuss-CallParticipantCard[aria-label='Mitchell Admin']");
     assert.containsOnce($, ".o-discuss-CallActionList");
     assert.containsOnce($, ".o-discuss-CallMenu-buttonContent");
-    assert.containsN($, ".o-discuss-CallActionList button", 7);
+    assert.containsN($, ".o-discuss-CallActionList button", 5);
     assert.containsOnce($, "button[aria-label='Unmute'], button[aria-label='Mute']"); // FIXME depends on current browser permission
     assert.containsOnce($, ".o-discuss-CallActionList button[aria-label='Deafen']");
-    assert.containsOnce($, ".o-discuss-CallActionList button[aria-label='Raise hand']");
     assert.containsOnce($, ".o-discuss-CallActionList button[aria-label='Turn camera on']");
-    assert.containsOnce($, ".o-discuss-CallActionList button[aria-label='Share screen']");
-    assert.containsOnce($, ".o-discuss-CallActionList button[aria-label='Enter Full Screen']");
+    assert.containsOnce($, "button[title='More']");
     assert.containsOnce($, ".o-discuss-CallActionList button[aria-label='Disconnect']");
+    await click("button[title='More']");
+    assert.containsOnce($, "[title='Raise Hand']");
+    assert.containsOnce($, "[title='Share Screen']");
+    assert.containsOnce($, "[title='Enter Full Screen']");
 });
 
 QUnit.test("no call with odoobot", async (assert) => {
@@ -177,9 +179,11 @@ QUnit.test("can share screen", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Start a Call']");
-    await click(".o-discuss-CallActionList button[title='Share screen']");
+    await click(".o-discuss-CallActionList [title='More']");
+    await click("[title='Share Screen']");
     assert.containsOnce($, ".o-discuss-CallParticipantCard video");
-    await click(".o-discuss-CallActionList button[title='Stop screen sharing']");
+    await click(".o-discuss-CallActionList [title='More']");
+    await click("[title='Stop Sharing Screen']");
     assert.containsNone($, ".o-discuss-CallParticipantCard video");
 });
 
