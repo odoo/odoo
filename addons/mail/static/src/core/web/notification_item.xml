@@ -9,7 +9,7 @@
                 <t t-slot="icon"/>
             </div>
             <div class="d-flex flex-column flex-grow-1 align-self-start m-2 overflow-auto">
-                <div class="d-flex">
+                <div class="d-flex text-nowrap">
                     <span class="o-mail-NotificationItem-name text-truncate" t-att-class="props.hasMarkAsReadButton ? 'fw-bolder' : 'fw-bold'" t-esc="props.displayName"/>
                     <span t-if="props.counter > 0" class="o-mail-NotificationItem-counter mx-1" t-att-class="props.hasMarkAsReadButton ? 'fw-bolder' : fw-bold"> (<t t-esc="props.counter"/>)</span>
                     <span class="flex-grow-1"/>
