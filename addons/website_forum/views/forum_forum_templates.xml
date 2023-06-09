@@ -223,6 +223,20 @@
                 </div>
             </t>
         </div>
+        <t t-else="">
+            <t t-set="tag_filter" t-value="keep_query('filters') and keep_query('filters').split('=')[1] or ''"/>
+            <t t-call="website_forum.no_results_message">
+                <t t-if="tag_filter and tag_filter != 'all'" t-set="results_msg">
+                    There are no tags matching the selected filter.
+                </t>
+                <t t-if="search" t-set="results_msg">
+                    There are no tags matching the selected search.
+                </t>
+                <t t-else="" t-set="results_msg">
+                    There are no tags being used in this forum.
+                </t>
+            </t>
+        </t>
     </t>
 </template>
 

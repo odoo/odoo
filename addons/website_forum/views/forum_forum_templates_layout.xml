@@ -112,48 +112,74 @@
                 <em t-if="search" class="text-muted">"<t t-esc="search"/>"</em>
                 <a t-attf-href="#{tag and url_for('/forum') + '/' + slug(forum) + '?' + keep_query( 'search', 'sorting', 'filters', 'my') or url_for('') + '?' + keep_query( 'filters', 'sorting', 'my')}" class="p-1 text-decoration-none text-muted"><i class="oi oi-close d-inline-block"/></a>
             </span>
-            <div t-if="tags and not is_edit" class="d-flex justify-content-end col-lg-6">
-                <!-- [TODO] Filter for tags (tag.message_is_follower) -->
-                <div class="dropdown me-2">
-                    <a href="#" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
-                        <t t-if="tags"> [TODO] All</t>
-                        <t t-elif="filters == 'solved'"> Followed Tags</t>
-                        <t t-elif="filters == 'unsolved'"> Unused Tags</t>
-                        <t t-elif="filters == 'unanswered'"> Most used Tags</t>
+            <div t-if="question_count != 0" class="dropdown ms-lg-auto">
+                <t t-if="_page_name == 'Tags'" t-set="tag_filter" t-value="keep_query('filters') and keep_query('filters').split('=')[1] or ''"/>
+                <a href="#" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
+                    <!-- Foreach tag_filter/ Foreach filters -->
+                    <t t-if="filters == 'all' or tag_filter == 'all' or not tag_filter and not filters">All</t>
+                    <t t-if="_page_name == 'Tags'">
+                        <t t-if="tag_filter == 'followed'">Followed Tags</t>
+                        <t t-elif="tag_filter == 'unused'">Unused Tags</t>
+                        <t t-elif="tag_filter == 'most_used'">Most used Tags</t>
+                    </t>
+                    <t t-else="">
+                        <t t-if="filters == 'solved'">Solved</t>
+                        <t t-elif="filters == 'unsolved'">Unsolved</t>
+                        <t t-elif="filters == 'unanswered'">Unanswered</t>
+                    </t>
+
+                </a>
+                <div class="dropdown-menu" role="menu">
+                    <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='all')"
+                        class="dropdown-item">
+                        All
                     </a>
-                    <div class="dropdown-menu" role="menu">
-                        <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='all')"
-                            class="dropdown-item">
-                            All
-                        </a>
-                        <div class="dropdown-divider"/>
-                        <t t-if="forum.mode == 'questions'">
-                            <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='solved')"
-                                class="dropdown-item">Followed Tags
-                            </a>
-                            <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='unsolved')"
-                                class="dropdown-item">Unused Tags
+                    <div class="dropdown-divider"/>
+                        <t t-if="_page_name == 'Tags'">
+                            <t t-if="not request.env.user._is_public()">
+                                <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='followed')"
+                                    class="dropdown-item">Followed Tags
+                                </a>
+                            </t>
+                            <t t-if="forum.can_moderate">
+                                <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='unused')"
+                                    class="dropdown-item">Unused Tags
+                                </a>
+                            </t>
+                            <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='most_used')"
+                                class="dropdown-item">Most Used Tags
                             </a>
                         </t>
-                        <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='unanswered')"
-                            class="dropdown-item">Most Used Tags
-                        </a>
-                    </div>
+                        <t t-else="">
+                            <t t-if="forum.mode == 'questions'">
+                                <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='solved')"
+                                    class="dropdown-item">Solved
+                                </a>
+                                <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='unsolved')"
+                                    class="dropdown-item">Unsolved
+                                </a>
+                            </t>
+                            <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', 'my', filters='unanswered')"
+                                class="dropdown-item">Unanswered
+                            </a>
+                        </t>
                 </div>
-                <!-- [TODO] search for tags, not questions -->
-                <!-- 'Search Box' -->
-                <t t-call="website.website_search_box_input">
-                    <t t-set="search_type" t-valuef="forums"/>
-                    <t t-set="action" t-value="'/forum/%s%s' % (slug(forum), tag and ('/tag/%s/questions' % slug(tag)) or '')"/>
-                    <t t-set="display_description" t-valuef="true"/>
-                    <t t-set="display_detail" t-valuef="true"/>
-                    <t t-set="_input_classes" t-valuef="border-0 bg-light"/>
-                    <t t-set="_submit_classes" t-valuef="btn-light"/>
-                    <input t-if="filters" type="hidden" name="filters" t-att-value="filters"/>
-                    <input t-if="my" type="hidden" name="my" t-att-value="my"/>
-                    <input t-if="sorting" type="hidden" name="sorting" t-att-value="sorting"/>
-                </t>
             </div>
+            <!-- 'Search Box' [TODO] tags-->
+            <t t-if="question_count != 0" t-call="website.website_search_box_input">
+                <t t-if="_page_name == 'Tags'" t-set="search_type" t-valuef="forum_tags_only"/>
+                <t t-else="" t-set="search_type" t-valuef="forums"/>
+                <t t-if="_page_name == 'Tags'" t-set="action" t-value="'/forum/%s/tag' % (slug(forum))"/>
+                <t t-else="" t-set="action" t-value="'/forum/%s%s' % (slug(forum), tag and ('/tag/%s/questions' % slug(tag)) or '')"/>
+                <t t-set="display_description" t-valuef="true"/>
+                <t t-set="display_detail" t-valuef="true"/>
+                <t t-set="_form_classes" t-valuef="flex-grow-1"/>
+                <t t-set="_input_classes" t-valuef="border-0 bg-light"/>
+                <t t-set="_submit_classes" t-valuef="btn-light"/>
+                <input t-if="filters" type="hidden" name="filters" t-att-value="filters"/>
+                <input t-if="my" type="hidden" name="my" t-att-value="my"/>
+                <input t-if="sorting" type="hidden" name="sorting" t-att-value="sorting"/>
+            </t>
             <t t-if="_page_name == 'list_questions'">
                 <div t-if="uid and request.env.user.forum_waiting_posts_count > 0"
                      data-bs-title="You already have a pending post"
