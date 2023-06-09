@@ -1806,6 +1806,21 @@ QUnit.test("Message shows up even if channel data is incomplete", async (assert)
     assert.containsOnce($, ".o-mail-Message:contains(hello world)");
 });
 
+QUnit.test("Create a direct message channel when clicking on start a meeting", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "channel",
+        name: "General",
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    await click("button:contains(Start a meeting)");
+    assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(Mitchell Admin)");
+    assert.containsOnce($, ".o-discuss-Call");
+    await waitUntil(".o-discuss-ChannelInvitation");
+    assert.containsOnce($, ".o-discuss-ChannelInvitation");
+});
+
 QUnit.test(
     "Correct breadcrumb when open discuss from chat window then see settings",
     async (assert) => {
