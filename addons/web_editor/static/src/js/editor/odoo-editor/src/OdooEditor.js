@@ -4091,118 +4091,6 @@ export class OdooEditor extends EventTarget {
         }
     }
 
-    _fixSelectionOnContenteditableFalse() {
-        const selection = this.document.getSelection();
-        const { anchorNode, anchorOffset } = selection;
-        const selectedPositionNode = anchorNode && anchorNode.nodeType === Node.ELEMENT_NODE &&
-            anchorNode.childNodes[anchorOffset];
-        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
-            if (!(
-                selectedPositionNode && selectedPositionNode.nodeType === Node.ELEMENT_NODE &&
-                ['INPUT', 'TEXTAREA'].includes(selectedPositionNode.tagName)
-            )) {
-                selection.removeAllRanges();
-            }
-            return;
-        }
-        // When the browser set the selection inside a node that is
-        // contenteditable=false, it breaks the edition upon keystroke. Move the
-        // selection so that it remain in an editable area. An example of this
-        // case happend when the selection goes into a fontawesome node.
-
-        if (!selection.rangeCount) {
-            return;
-        }
-        const range = selection.getRangeAt(0);
-        const newRange = range.cloneRange();
-        const startContainer = closestElement(range.startContainer);
-        const endContainer = closestElement(range.endContainer);
-
-        /**
-         * Get last not editable node if the `node` is within `root` and is a
-         * non editable node.
-         *
-         * Otherwise return `undefined`.
-         *
-         * Example:
-         *
-         * ```html
-         * <div class="root" contenteditable="true">
-         *     <div class="A">
-         *         <div class="B" contenteditable="false">
-         *             <div class="C">
-         *             </div>
-         *         </div>
-         *     </div>
-         * </div>
-         * ```
-         *
-         * ```js
-         * _getLastNotEditableAncestorOfNotEditable(document.querySelector(".C")) // return "B"
-         * ```
-         */
-        function _getLastNotEditableAncestorOfNotEditable(node, root) {
-            let currentNode = node;
-            let lastEditable;
-            if (!ancestors(node, root).includes(root)) {
-                return;
-            }
-            while (currentNode && currentNode !== root) {
-                if (currentNode.isContentEditable) {
-                    return lastEditable;
-                } else if (currentNode.isContentEditable === false) {
-                    // By checking that the node is contentEditable === false,
-                    // we ensure at the same time that the currentNode is a
-                    // HTMLElement.
-                    lastEditable = currentNode;
-                }
-                currentNode = currentNode.parentElement;
-            }
-            return lastEditable;
-        }
-
-        const startContainerNotEditable = _getLastNotEditableAncestorOfNotEditable(
-            startContainer,
-            this.editable,
-        );
-        const endContainerNotEditable = _getLastNotEditableAncestorOfNotEditable(
-            endContainer,
-            this.editable,
-        );
-        const bothNotEditable = startContainerNotEditable && endContainerNotEditable;
-
-        if (startContainerNotEditable) {
-            if (startContainerNotEditable.previousSibling) {
-                newRange.setStart(
-                    startContainerNotEditable.previousSibling,
-                    startContainerNotEditable.previousSibling.length,
-                );
-                if (bothNotEditable) {
-                    newRange.setEnd(
-                        startContainerNotEditable.previousSibling,
-                        startContainerNotEditable.previousSibling.length,
-                    );
-                }
-            } else {
-                newRange.setStart(startContainerNotEditable.parentElement, 0);
-                if (bothNotEditable) {
-                    newRange.setEnd(startContainerNotEditable.parentElement, 0);
-                }
-            }
-        }
-        if (!bothNotEditable && endContainerNotEditable) {
-            if (endContainerNotEditable.nextSibling) {
-                newRange.setEnd(endContainerNotEditable.nextSibling, 0);
-            } else {
-                newRange.setEnd(...endPos(endContainerNotEditable.parentElement));
-            }
-        }
-        if (startContainerNotEditable || endContainerNotEditable) {
-            selection.removeAllRanges();
-            selection.addRange(newRange);
-        }
-    }
-
     /**
      * Places the cursor in a safe place (not the editable root).
      * Inserts an empty paragraph if selection results from mouse click and
@@ -4268,8 +4156,6 @@ export class OdooEditor extends EventTarget {
         this._currentMouseState = ev.type;
 
         this._fixFontAwesomeSelection();
-
-        this._fixSelectionOnContenteditableFalse();
     }
 
     _onMouseDown(ev) {
@@ -4425,7 +4311,6 @@ export class OdooEditor extends EventTarget {
             }
             this._onKeyupResetContenteditableNodes = [];
         }
-        this._fixSelectionOnContenteditableFalse();
     }
 
     _onDocumentMouseup() {
