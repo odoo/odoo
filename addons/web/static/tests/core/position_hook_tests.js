@@ -322,6 +322,22 @@ QUnit.test("has no effect when component is destroyed", async (assert) => {
     );
 });
 
+QUnit.test("reposition popper when its reference moves", async (assert) => {
+    const TestComp = getTestComponent();
+    await mount(TestComp, container);
+    const popBox1 = document.getElementById("popper").getBoundingClientRect();
+    const spacer = document.createElement("div");
+    spacer.id = "foo";
+    spacer.style.height = "1px";
+    spacer.style.width = "100px";
+    container.prepend(spacer);
+    await nextTick();
+    const popBox2 = document.getElementById("popper").getBoundingClientRect();
+    assert.strictEqual(popBox1.top, popBox2.top);
+    // spacer width * 0.5 because of flexbox style (justifyContent: center)
+    assert.strictEqual(popBox1.left, popBox2.left - spacer.offsetWidth * 0.5);
+});
+
 QUnit.test("is positioned relative to its containing block", async (assert) => {
     const fixtureBox = getFixture().getBoundingClientRect();
     // offset the container
@@ -445,7 +461,6 @@ function getRepositionTest(from, to, containerStyleChanges) {
         for (const styleToApply of containerStyleChanges.split(" ")) {
             Object.assign(container.style, CONTAINER_STYLE_MAP[styleToApply]);
         }
-        triggerEvent(document, null, "scroll");
         await nextTick();
         [d, v = "middle"] = to.split("-");
         assert.verifySteps([`${d}-${v}`], `has ${to} position`);
