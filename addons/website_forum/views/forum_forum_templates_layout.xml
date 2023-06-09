@@ -338,6 +338,15 @@
             <t t-out="tag.name"/>
         </a>
     </div>
+    <div t-if="my_other_forums" class="o_wforum_sidebar_section pt-3">
+        <div class="px-3 pb-1 fw-bold">My forums</div>
+        <t t-foreach="my_other_forums.sorted(lambda f: f.name.casefold())" t-as="my_forum">
+            <a class="nav-link my-1 py-1 text-reset" t-attf-href="/forum/#{slug(my_forum)}">
+                <i class="fa fa-file-o fa-fw opacity-50"/>
+                <t t-out="my_forum.name"/>
+            </a>
+        </t>
+    </div>
 </template>
 
 <template id="header_welcome_message" inherit_id="website_forum.header" name="Forum Welcome Message (oe_structure_forum_top)">

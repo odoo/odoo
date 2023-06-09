@@ -44,6 +44,13 @@ class TestForumCommon(common.TransactionCase):
             'karma': 0,
             'groups_id': [(6, 0, [group_employee_id])]
         })
+        cls.user_employee_2 = cls.env['res.users'].create({
+            'name': 'Merlin Employee',
+            'login': 'Merlin',
+            'email': 'merlin.employee@example.com',
+            'karma': KARMA['ask'],
+            'groups_id': [(6, 0, [cls.env.ref('base.group_user').id])],
+        })
         cls.user_portal = TestUsersEnv.create({
             'name': 'Beatrice Portal',
             'login': 'Beatrice',
@@ -58,6 +65,7 @@ class TestForumCommon(common.TransactionCase):
             'karma': 0,
             'groups_id': [(6, 0, [group_public_id])]
         })
+        cls.user_admin = cls.env.ref('base.user_admin')
 
         # Test forum
         cls.forum = Forum.create({
