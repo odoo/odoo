@@ -14,6 +14,7 @@
                     </searchpanel>
                     <field name="parent_id" string="Manager"/>
                     <field name="job_id"/>
+                    <field name="coach_id"/>
                     <field name="category_ids" groups="hr.group_hr_user"/>
                     <field name="private_car_plate" />
                     <separator/>
@@ -34,6 +35,7 @@
                         <filter name="group_manager" string="Manager" domain="[]" context="{'group_by': 'parent_id'}"/>
                         <filter name="group_department" string="Department" domain="[]" context="{'group_by': 'department_id'}"/>
                         <filter name="group_job" string="Job" domain="[]" context="{'group_by': 'job_id'}"/>
+                        <filter name="group_start" string="Start Date" domain="[]" context="{'group_by': 'create_date'}"/>
                         <filter name="group_category_ids" string="Tags" domain="[]" context="{'group_by': 'category_ids'}"/>
                     </group>
                 </search>
