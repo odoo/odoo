@@ -66,6 +66,13 @@ class SaleOrderLine(models.Model):
                     sale_order = self.env['sale.order'].create(so_create_values)
                     sale_order.action_confirm()
                 default_values['order_id'] = sale_order.id
+            if (name := self.env.context.get('default_name')):
+                product = self.env['product.product'].search([
+                    ('name', 'ilike', name),
+                    ('company_id', 'in', [False, self.env.company.id]),
+                ], limit=1)
+                if product:
+                    default_values['product_id'] = product.id
             return {**res, **default_values}
         return res
 
