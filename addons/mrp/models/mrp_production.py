@@ -576,9 +576,9 @@ class MrpProduction(models.Model):
 
     @api.depends('state', 'move_raw_ids.state')
     def _compute_reservation_state(self):
-        self.reservation_state = False
         for production in self:
             if production.state in ('draft', 'done', 'cancel'):
+                production.reservation_state = False
                 continue
             relevant_move_state = production.move_raw_ids._get_relevant_state_among_moves()
             # Compute reservation state according to its component's moves.
@@ -589,6 +589,8 @@ class MrpProduction(models.Model):
                     production.reservation_state = 'confirmed'
             elif relevant_move_state != 'draft':
                 production.reservation_state = relevant_move_state
+            else:
+                production.reservation_state = False
 
     @api.depends('move_raw_ids', 'state', 'move_raw_ids.product_uom_qty')
     def _compute_unreserve_visible(self):
