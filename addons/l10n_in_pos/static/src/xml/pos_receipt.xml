@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="l10n_in_pos.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
         <xpath expr="//div[hasclass('orderlines')]" position="before">
-            <t t-if="receipt.partner and pos.globalState.company.country and pos.globalState.company.country.code == 'IN'">
+            <t t-if="receipt.partner and pos.company.country and pos.company.country.code == 'IN'">
                 <div class="pos-receipt-center-align">
                     <div><t t-esc="receipt.partner.name" /></div>
                     <t t-if="receipt.partner.phone">
@@ -19,7 +19,7 @@
 
     <t t-name="l10n_in_pos.OrderLinesReceipt" t-inherit="point_of_sale.OrderLinesReceipt" t-inherit-mode="extension" owl="1">
         <xpath expr="//t[@t-foreach='receipt.orderlines']" position="inside">
-            <t t-if="line.l10n_in_hsn_code and pos.globalState.company.country and pos.globalState.company.country.code == 'IN'">
+            <t t-if="line.l10n_in_hsn_code and pos.company.country and pos.company.country.code == 'IN'">
                 <div class="pos-receipt-left-padding">
                     <span>HSN Code: </span>
                     <t t-esc="line.l10n_in_hsn_code"/>

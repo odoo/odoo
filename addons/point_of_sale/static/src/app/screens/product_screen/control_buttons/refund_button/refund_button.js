@@ -11,7 +11,7 @@ export class RefundButton extends Component {
         this.pos = usePos();
     }
     click() {
-        const order = this.pos.globalState.get_order();
+        const order = this.pos.get_order();
         const partner = order.get_partner();
         const searchDetails = partner ? { fieldName: "PARTNER", searchTerm: partner.name } : {};
         this.pos.showScreen("TicketScreen", {

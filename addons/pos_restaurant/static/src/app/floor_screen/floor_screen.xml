@@ -3,7 +3,7 @@
 
     <t t-name="pos_restaurant.FloorScreen" owl="1">
         <div class="floor-screen screen">
-            <EditBar t-if="pos.globalState.isEditMode" selectedTables="selectedTables" nbrFloors="nbrFloors" 
+            <EditBar t-if="pos.isEditMode" selectedTables="selectedTables" nbrFloors="nbrFloors" 
                         floorMapScrollTop="state.floorMapScrollTop" isColorPicker="state.isColorPicker" toggleColorPicker.bind="toggleColorPicker"
                         createTable.bind="createTable" duplicateTableOrFloor.bind="duplicateTableOrFloor" renameTable.bind="renameTable"
                         changeSeatsNum.bind="changeSeatsNum" changeToCircle.bind="changeToCircle" changeToSquare.bind="changeToSquare" 
@@ -11,7 +11,7 @@
                         toggleEditMode.bind="toggleEditMode"
             />
             <div class="floor-selector">
-                <t t-foreach="pos.globalState.floors" t-as="floor" t-key="floor.id">
+                <t t-foreach="pos.floors" t-as="floor" t-key="floor.id">
                     <span class="button button-floor" t-att-class="{ active: floor.id === state.selectedFloorId }" t-on-click="() => this.selectFloor(floor)">
                         <t t-esc="floor.name" />
                     </span>
@@ -29,7 +29,7 @@
                 class="floor-map"
                 t-ref="floor-map-ref"
             >
-                <t t-if="pos.globalState.floors.length > 0">
+                <t t-if="pos.floors.length > 0">
                     <div t-if="isFloorEmpty" class="empty-floor" t-ref="map">
                         <span>No tables available,<br/>ADD your first table</span>
                     </div>

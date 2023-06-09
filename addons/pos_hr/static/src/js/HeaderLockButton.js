@@ -10,7 +10,7 @@ export class HeaderLockButton extends Component {
         this.pos = usePos();
     }
     async showLoginScreen() {
-        this.pos.globalState.reset_cashier();
+        this.pos.reset_cashier();
         await this.pos.showTempScreen("LoginScreen");
     }
 }

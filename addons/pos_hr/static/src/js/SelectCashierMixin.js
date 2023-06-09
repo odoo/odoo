@@ -14,19 +14,17 @@ export function useCashierSelector(
     { onCashierChanged, exclusive } = { onCashierChanged: () => {}, exclusive: false }
 ) {
     const popup = useService("popup");
-    const { globalState } = usePos();
+    const pos = usePos();
     useBarcodeReader(
         {
             async cashier(code) {
-                const employee = globalState.employees.find(
-                    (emp) => emp.barcode === Sha1.hash(code.code)
-                );
+                const employee = pos.employees.find((emp) => emp.barcode === Sha1.hash(code.code));
                 if (
                     employee &&
-                    employee !== globalState.get_cashier() &&
+                    employee !== pos.get_cashier() &&
                     (!employee.pin || (await checkPin(employee)))
                 ) {
-                    globalState.set_cashier(employee);
+                    pos.set_cashier(employee);
                     if (onCashierChanged) {
                         onCashierChanged();
                     }
@@ -60,9 +58,9 @@ export function useCashierSelector(
      * Select a cashier, the returning value will either be an object or nothing (undefined)
      */
     return async function selectCashier() {
-        if (globalState.config.module_pos_hr) {
-            const employeesList = globalState.employees
-                .filter((employee) => employee.id !== globalState.get_cashier().id)
+        if (pos.config.module_pos_hr) {
+            const employeesList = pos.employees
+                .filter((employee) => employee.id !== pos.get_cashier().id)
                 .map((employee) => {
                     return {
                         id: employee.id,
@@ -80,7 +78,7 @@ export function useCashierSelector(
                 return;
             }
 
-            globalState.set_cashier(employee);
+            pos.set_cashier(employee);
             if (onCashierChanged) {
                 onCashierChanged();
             }

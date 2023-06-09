@@ -19,7 +19,7 @@ export class DiscountButton extends Component {
         var self = this;
         const { confirmed, payload } = await this.popup.add(NumberPopup, {
             title: this.env._t("Discount Percentage"),
-            startingValue: this.pos.globalState.config.discount_pc,
+            startingValue: this.pos.config.discount_pc,
             isInputSelected: true,
         });
         if (confirmed) {
@@ -29,10 +29,9 @@ export class DiscountButton extends Component {
     }
 
     async apply_discount(pc) {
-        const { globalState } = this.pos;
-        const order = globalState.get_order();
+        const order = this.pos.get_order();
         const lines = order.get_orderlines();
-        const product = globalState.db.get_product_by_id(globalState.config.discount_product_id[0]);
+        const product = this.pos.db.get_product_by_id(this.pos.config.discount_product_id[0]);
         if (product === undefined) {
             await this.popup.add(ErrorPopup, {
                 title: this.env._t("No discount product found"),
@@ -62,8 +61,8 @@ export class DiscountButton extends Component {
                 tax_ids_array,
                 lines.filter(
                     (line) =>
-                        !globalState.config.tip_product_id ||
-                        line.product.id !== globalState.config.tip_product_id[0]
+                        !this.pos.config.tip_product_id ||
+                        line.product.id !== this.pos.config.tip_product_id[0]
                 )
             );
 
@@ -81,7 +80,7 @@ export class DiscountButton extends Component {
                             ? sprintf(
                                   this.env._t("Tax: %s"),
                                   tax_ids_array
-                                      .map((taxId) => globalState.taxes_by_id[taxId].amount + "%")
+                                      .map((taxId) => this.pos.taxes_by_id[taxId].amount + "%")
                                       .join(", ")
                               )
                             : this.env._t("No tax")),
@@ -97,7 +96,7 @@ export class DiscountButton extends Component {
 ProductScreen.addControlButton({
     component: DiscountButton,
     condition: function () {
-        const { module_pos_discount, discount_product_id } = this.pos.globalState.config;
+        const { module_pos_discount, discount_product_id } = this.pos.config;
         return module_pos_discount && discount_product_id;
     },
 });

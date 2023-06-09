@@ -28,7 +28,7 @@ export class SaleOrderManagementControlPanel extends Component {
         this.saleOrderFetcher = useService("sale_order_fetcher");
         useAutofocus();
 
-        const currentPartner = this.pos.globalState.get_order().get_partner();
+        const currentPartner = this.pos.get_order().get_partner();
         if (currentPartner) {
             this.pos.orderManagement.searchString = currentPartner.name;
         }

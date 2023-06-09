@@ -11,17 +11,17 @@ export class ResetProgramsButton extends Component {
         this.pos = usePos();
     }
     _isDisabled() {
-        return !this.pos.globalState.get_order().isProgramsResettable();
+        return !this.pos.get_order().isProgramsResettable();
     }
     click() {
-        this.pos.globalState.get_order()._resetPrograms();
+        this.pos.get_order()._resetPrograms();
     }
 }
 
 ProductScreen.addControlButton({
     component: ResetProgramsButton,
     condition: function () {
-        return this.pos.globalState.programs.some((p) =>
+        return this.pos.programs.some((p) =>
             ["coupons", "promotion"].includes(p.program_type)
         );
     },

@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
      <t t-name="point_of_sale.eWalletButton" owl="1">
-        <t t-set="_order" t-value="pos.globalState.get_order()" />
+        <t t-set="_order" t-value="pos.get_order()" />
         <t t-set="_orderTotal" t-value="_order.get_total_with_tax()" />
         <t t-set="_eWalletPrograms" t-value="_getEWalletPrograms()" />
         <t t-set="_eWalletRewards" t-value="_getEWalletRewards(_order)" />

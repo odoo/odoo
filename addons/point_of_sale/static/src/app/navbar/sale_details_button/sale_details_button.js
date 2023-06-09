@@ -18,20 +18,19 @@ export class SaleDetailsButton extends Component {
     }
 
     async onClick() {
-        const { globalState } = this.pos;
         // IMPROVEMENT: Perhaps put this logic in a parent component
         // so that for unit testing, we can check if this simple
         // component correctly triggers an event.
         const saleDetails = await this.orm.call(
             "report.point_of_sale.report_saledetails",
             "get_sale_details",
-            [false, false, false, [globalState.pos_session.id]]
+            [false, false, false, [this.pos.pos_session.id]]
         );
         const report = renderToElement(
             "point_of_sale.SaleDetailsReport",
             Object.assign({}, saleDetails, {
                 date: new Date().toLocaleString(),
-                pos: globalState,
+                pos: this.pos,
                 formatCurrency: this.env.utils.formatCurrency,
             })
         );

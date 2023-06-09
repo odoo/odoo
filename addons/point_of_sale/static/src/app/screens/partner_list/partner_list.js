@@ -69,15 +69,15 @@ export class PartnerListScreen extends Component {
     // Getters
 
     get currentOrder() {
-        return this.pos.globalState.get_order();
+        return this.pos.get_order();
     }
 
     get partners() {
         let res;
         if (this.state.query && this.state.query.trim() !== "") {
-            res = this.pos.globalState.db.search_partner(this.state.query.trim());
+            res = this.pos.db.search_partner(this.state.query.trim());
         } else {
-            res = this.pos.globalState.db.get_partners_sorted(1000);
+            res = this.pos.db.get_partners_sorted(1000);
         }
         res.sort(function (a, b) {
             return (a.name || "").localeCompare(b.name || "");
@@ -147,15 +147,14 @@ export class PartnerListScreen extends Component {
     }
     createPartner() {
         // initialize the edit screen with default details about country & state
-        const { country_id, state_id } = this.pos.globalState.company;
+        const { country_id, state_id } = this.pos.company;
         this.state.editModeProps.partner = { country_id, state_id };
         this.activateEditMode();
     }
     async saveChanges(processedChanges) {
-        const { globalState } = this.pos;
         const partnerId = await this.orm.call("res.partner", "create_from_ui", [processedChanges]);
-        await globalState.load_new_partners();
-        this.state.selectedPartner = globalState.db.get_partner_by_id(partnerId);
+        await this.pos.load_new_partners();
+        this.state.selectedPartner = this.pos.db.get_partner_by_id(partnerId);
         this.confirm();
     }
     async searchPartner() {
@@ -163,7 +162,7 @@ export class PartnerListScreen extends Component {
             this.state.currentOffset = 0;
         }
         const result = await this.getNewPartners();
-        this.pos.globalState.addPartners(result);
+        this.pos.addPartners(result);
         if (this.state.previousQuery == this.state.query) {
             this.state.currentOffset += result.length;
         } else {

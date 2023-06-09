@@ -18,7 +18,7 @@ export class OrderSummary extends Component {
         const totalWithoutTax = this.props.order.get_total_without_tax();
         const taxAmount = total - totalWithoutTax;
         return {
-            hasTax: !floatIsZero(taxAmount, this.pos.globalState.currency.decimal_places),
+            hasTax: !floatIsZero(taxAmount, this.pos.currency.decimal_places),
             displayAmount: this.env.utils.formatCurrency(taxAmount),
         };
     }

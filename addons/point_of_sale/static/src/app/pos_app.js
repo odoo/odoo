@@ -19,7 +19,7 @@ export class Chrome extends Component {
         this.pos = usePos();
         this.popup = useService("popup");
 
-        const reactivePos = reactive(this.pos.globalState);
+        const reactivePos = reactive(this.pos);
         // TODO: Should we continue on exposing posmodel as global variable?
         window.posmodel = reactivePos;
 
@@ -33,6 +33,11 @@ export class Chrome extends Component {
         onMounted(this.props.disableLoader);
     }
 
+    // GETTERS //
+
+    get showCashMoveButton() {
+        return Boolean(this.pos?.config?.cash_control);
+    }
     /**
      * Unmounts the tempScreen on error and dispatches the error in a separate
      * stack so that it can be handled by the error service and display an error

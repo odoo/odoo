@@ -40,7 +40,7 @@
                         <select class="detail" name="state_id"
                                 t-on-change="captureChange">
                             <option value="">None</option>
-                            <t t-foreach="pos.globalState.states" t-as="state" t-key="state.id">
+                            <t t-foreach="pos.states" t-as="state" t-key="state.id">
                                 <option t-if="props.partner.country_id[0] == state.country_id[0]"
                                         t-att-value="state.id"
                                         t-att-selected="props.partner.state_id ? ((state.id === props.partner.state_id[0]) ? true : undefined) : undefined">
@@ -54,7 +54,7 @@
                         <select class="detail" name="country_id"
                                 t-on-change="captureChange">
                             <option value="">None</option>
-                            <t t-foreach="pos.globalState.countries" t-as="country" t-key="country.id">
+                            <t t-foreach="pos.countries" t-as="country" t-key="country.id">
                                 <option t-att-value="country.id"
                                         t-att-selected="props.partner.country_id ? ((country.id === props.partner.country_id[0]) ? true : undefined) : undefined">
                                     <t t-esc="country.name" />
@@ -68,9 +68,9 @@
                         <span class="label">Language</span>
                         <select class="detail" name="lang"
                                 t-on-change="captureChange">
-                            <t t-foreach="pos.globalState.langs" t-as="lang" t-key="lang.id">
+                            <t t-foreach="pos.langs" t-as="lang" t-key="lang.id">
                                 <option t-att-value="lang.code"
-                                        t-att-selected="props.partner.lang ? ((lang.code === props.partner.lang) ? true : undefined) : lang.code === pos.globalState.user.lang? true : undefined">
+                                        t-att-selected="props.partner.lang ? ((lang.code === props.partner.lang) ? true : undefined) : lang.code === pos.user.lang? true : undefined">
                                     <t t-esc="lang.name" />
                                 </option>
                             </t>
@@ -104,14 +104,14 @@
                         <input class="detail vat" name="vat" t-on-change="captureChange"
                                t-att-value="props.partner.vat || ''" />
                     </div>
-                    <div t-if="pos.globalState.pricelists.length gt 1" class="partner-detail">
+                    <div t-if="pos.pricelists.length gt 1" class="partner-detail">
                         <span class="label">Pricelist</span>
                         <select class="detail" name="property_product_pricelist"
                                 t-on-change="captureChange">
-                            <t t-foreach="pos.globalState.pricelists" t-as="pricelist"
+                            <t t-foreach="pos.pricelists" t-as="pricelist"
                                t-key="pricelist.id">
                                 <option t-att-value="pricelist.id"
-                                        t-att-selected="props.partner.property_product_pricelist ? (pricelist.id === props.partner.property_product_pricelist[0] ? true : undefined) : pricelist.id === pos.globalState.default_pricelist.id ? true : undefined">
+                                        t-att-selected="props.partner.property_product_pricelist ? (pricelist.id === props.partner.property_product_pricelist[0] ? true : undefined) : pricelist.id === pos.default_pricelist.id ? true : undefined">
                                     <t t-esc="pricelist.display_name" />
                                 </option>
                             </t>

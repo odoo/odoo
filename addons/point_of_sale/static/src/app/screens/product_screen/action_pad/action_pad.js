@@ -22,6 +22,6 @@ export class ActionpadWidget extends Component {
         return this.props.partner && this.props.partner.name.length > 10;
     }
     get highlightPay() {
-        return this.pos.globalState.get_order()?.orderlines?.length;
+        return this.pos.get_order()?.orderlines?.length;
     }
 }

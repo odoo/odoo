@@ -11,9 +11,9 @@ patch(Orderline.prototype, "pos_loyalty.Orderline", {
         );
     },
     _isGiftCardOrEWalletReward() {
-        const coupon = this.pos.globalState.couponCache[this.props.line.coupon_id];
+        const coupon = this.pos.couponCache[this.props.line.coupon_id];
         if (coupon) {
-            const program = this.pos.globalState.program_by_id[coupon.program_id];
+            const program = this.pos.program_by_id[coupon.program_id];
             return (
                 ["ewallet", "gift_card"].includes(program.program_type) &&
                 this.props.line.is_reward_line
@@ -22,7 +22,7 @@ patch(Orderline.prototype, "pos_loyalty.Orderline", {
         return false;
     },
     _getGiftCardOrEWalletBalance() {
-        const coupon = this.pos.globalState.couponCache[this.props.line.coupon_id];
+        const coupon = this.pos.couponCache[this.props.line.coupon_id];
         if (coupon) {
             return this.env.utils.formatCurrency(coupon.balance);
         }

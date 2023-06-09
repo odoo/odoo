@@ -6,9 +6,9 @@ import { patch } from "@web/core/utils/patch";
 patch(ClosePosPopup.prototype, "l10n_fr_pos_cert.ClosePosPopup", {
     sessionIsOutdated() {
         let isOutdated = false;
-        if (this.pos.globalState.is_french_country() && this.pos.globalState.pos_session.start_at) {
+        if (this.pos.is_french_country() && this.pos.pos_session.start_at) {
             const now = Date.now();
-            const limitDate = new Date(this.pos.globalState.pos_session.start_at);
+            const limitDate = new Date(this.pos.pos_session.start_at);
             limitDate.setDate(limitDate.getDate() + 1);
             isOutdated = limitDate < now;
         }

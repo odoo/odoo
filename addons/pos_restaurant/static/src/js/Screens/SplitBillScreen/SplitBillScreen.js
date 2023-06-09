@@ -14,20 +14,20 @@ export class SplitBillScreen extends Component {
 
     setup() {
         this.pos = usePos();
-        this.splitlines = useState(this._initSplitLines(this.pos.globalState.get_order()));
+        this.splitlines = useState(this._initSplitLines(this.pos.get_order()));
         this.newOrderLines = {};
         this.newOrder = undefined;
         this._isFinal = false;
         this.newOrder = new Order(
             {},
             {
-                pos: this.pos.globalState,
+                pos: this.pos,
                 temporary: true,
             }
         );
     }
     get currentOrder() {
-        return this.pos.globalState.get_order();
+        return this.pos.get_order();
     }
     get orderlines() {
         return this.currentOrder.get_orderlines();
@@ -53,14 +53,13 @@ export class SplitBillScreen extends Component {
 
             this.newOrder.set_screen_data({ name: "PaymentScreen" });
 
-            const { globalState } = this.pos;
             // for the kitchen printer we assume that everything
             // has already been sent to the kitchen before splitting
             // the bill. So we save all changes both for the old
             // order and for the new one. This is not entirely correct
             // but avoids flooding the kitchen with unnecessary orders.
             // Not sure what to do in this case.
-            if (globalState.orderPreparationCategories.size) {
+            if (this.pos.orderPreparationCategories.size) {
                 this.currentOrder.updateLastOrderChange();
                 this.newOrder.updateLastOrderChange();
             }
@@ -71,9 +70,9 @@ export class SplitBillScreen extends Component {
             this.currentOrder.setCustomerCount(newCustomerCount || 1);
             this.currentOrder.set_screen_data({ name: "ProductScreen" });
 
-            const reactiveNewOrder = globalState.makeOrderReactive(this.newOrder);
-            globalState.orders.add(reactiveNewOrder);
-            globalState.selectedOrder = reactiveNewOrder;
+            const reactiveNewOrder = this.pos.makeOrderReactive(this.newOrder);
+            this.pos.orders.add(reactiveNewOrder);
+            this.pos.selectedOrder = reactiveNewOrder;
         }
         this.pos.showScreen("PaymentScreen");
     }
@@ -93,7 +92,7 @@ export class SplitBillScreen extends Component {
 
         let totalQuantity = 0;
 
-        this.pos.globalState
+        this.pos
             .get_order()
             .get_orderlines()
             .forEach(function (orderLine) {
@@ -139,7 +138,7 @@ export class SplitBillScreen extends Component {
         }
     }
     _isFullPayOrder() {
-        const order = this.pos.globalState.get_order();
+        const order = this.pos.get_order();
         let full = true;
         const splitlines = this.splitlines;
         const groupedLines = groupBy(order.get_orderlines(), (line) => line.get_product().id);
@@ -163,7 +162,7 @@ export class SplitBillScreen extends Component {
         return full;
     }
     _setQuantityOnCurrentOrder() {
-        const order = this.pos.globalState.get_order();
+        const order = this.pos.get_order();
         for (var id in this.splitlines) {
             var split = this.splitlines[id];
             var line = this.currentOrder.get_orderline(parseInt(id));

@@ -8,7 +8,7 @@
  *
  * To connect the interface to the right payment methods register it:
  *
- * import { register_payment_method } models from "@point_of_sale/app/store/models";
+ * import { register_payment_method } models from "@point_of_sale/app/store/pos_store";
  * register_payment_method('my_payment', MyPayment);
  *
  * my_payment is the technical name of the added selection in

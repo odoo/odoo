@@ -19,7 +19,7 @@
             </t>
         </xpath>
         <xpath expr="//div[hasclass('before-footer')]" position="after">
-            <t t-if="props.isBill and pos.globalState.config.set_tip_after_payment">
+            <t t-if="props.isBill and pos.config.set_tip_after_payment">
                 <div class="tip-form">
                     <div class="title">For convenience, we are providing the following gratuity calculations:</div>
                     <div class="percentage-options">

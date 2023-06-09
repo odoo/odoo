@@ -11,8 +11,8 @@ import { registry } from "@web/core/registry";
 export const contextualUtilsService = {
     dependencies: ["pos"],
     start(env, { pos }) {
-        const currency = pos.globalState.currency;
-        const productUoMDecimals = pos.globalState.dp["Product Unit of Measure"];
+        const currency = pos.currency;
+        const productUoMDecimals = pos.dp["Product Unit of Measure"];
 
         const formatProductQty = (qty) => {
             return formatFloat(qty, { digits: [true, productUoMDecimals] });

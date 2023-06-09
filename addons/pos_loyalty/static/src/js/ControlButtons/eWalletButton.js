@@ -23,11 +23,11 @@ export class eWalletButton extends Component {
         return eWalletRewards;
     }
     _getEWalletPrograms() {
-        return this.pos.globalState.programs.filter((p) => p.program_type == "ewallet");
+        return this.pos.programs.filter((p) => p.program_type == "ewallet");
     }
     async _onClickWalletButton() {
-        const order = this.pos.globalState.get_order();
-        const eWalletPrograms = this.pos.globalState.programs.filter(
+        const order = this.pos.get_order();
+        const eWalletPrograms = this.pos.programs.filter(
             (p) => p.program_type == "ewallet"
         );
         const orderTotal = order.get_total_with_tax();
@@ -50,7 +50,7 @@ export class eWalletButton extends Component {
                 }
             }
             if (selectedProgram) {
-                const eWalletProduct = this.pos.globalState.db.get_product_by_id(
+                const eWalletProduct = this.pos.db.get_product_by_id(
                     selectedProgram.trigger_product_ids[0]
                 );
                 this.pos.addProductFromUi(eWalletProduct, {
@@ -110,6 +110,6 @@ export class eWalletButton extends Component {
 ProductScreen.addControlButton({
     component: eWalletButton,
     condition: function () {
-        return this.pos.globalState.programs.filter((p) => p.program_type == "ewallet").length > 0;
+        return this.pos.programs.filter((p) => p.program_type == "ewallet").length > 0;
     },
 });
