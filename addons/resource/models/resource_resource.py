@@ -166,7 +166,7 @@ class ResourceResource(models.Model):
             resource_calendars_within_period[resource.id][calendar] = Intervals([(start, end, self.env['resource.calendar.attendance'])])
         return resource_calendars_within_period
 
-    def _get_valid_work_intervals(self, start, end, calendars=None):
+    def _get_valid_work_intervals(self, start, end, calendars=None, compute_leaves=True):
         """ Gets the valid work intervals of the resource following their calendars between ``start`` and ``end``
 
             This methods handle the eventuality of a resource having multiple resource calendars, see _get_calendars_validity_within_period method
@@ -187,7 +187,7 @@ class ResourceResource(models.Model):
             calendar_resources[calendar] |= self.env['resource.resource']
         for calendar, resources in calendar_resources.items():
             # For each calendar used by the resources, retrieve the work intervals for every resources using it
-            work_intervals_batch = calendar._work_intervals_batch(start, end, resources=resources)
+            work_intervals_batch = calendar._work_intervals_batch(start, end, resources=resources, compute_leaves=compute_leaves)
             for resource in resources:
                 # Make the conjunction between work intervals and calendar validity
                 resource_work_intervals[resource.id] |= work_intervals_batch[resource.id] & resource_calendar_validity_intervals[resource.id][calendar]
