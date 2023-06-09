@@ -8,10 +8,9 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 
 export class Store {
-    constructor(env, { "mail.context": context }) {
+    constructor(env) {
         this.setup(env);
         this.lastChannelSubscription = "";
-        this.inPublicPage = Boolean(context.inPublicPage);
     }
 
     setup(env) {
@@ -147,7 +146,7 @@ export class Store {
 }
 
 export const storeService = {
-    dependencies: ["bus_service", "ui", "mail.context"],
+    dependencies: ["bus_service", "ui"],
     start(env, services) {
         const res = reactive(new Store(env, services));
         onChange(res, "threads", () => res.updateBusSubscription());
