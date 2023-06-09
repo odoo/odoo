@@ -185,7 +185,7 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/src/legacy/utils.js',
 
             'mail/static/src/core/common/**/*',
-            'mail/static/src/core/public/**/*',
+            # 'mail/static/src/core/public/**/*',
             'mail/static/src/**/common/**/*',
             'mail/static/src/**/public/**/*',
             ('remove', 'mail/static/src/core/common/emoji_data.js'),
@@ -193,7 +193,7 @@ For more specific needs, you may also assign custom-defined actions
             # discuss (loaded last to fix dependencies)
             ('remove', 'mail/static/src/discuss/**/*'),
             'mail/static/src/discuss/core/common/**/*',
-            # 'mail/static/src/discuss/core/public/**/*',
+            'mail/static/src/discuss/core/public/**/*',
             'mail/static/src/discuss/**/common/**/*',
             'mail/static/src/discuss/**/public/**/*',
             ('remove', 'mail/static/src/discuss/**/*.dark.scss'),
