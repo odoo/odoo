@@ -6,6 +6,7 @@ import {useInputField} from '@web/views/fields/input_field_hook';
 import {useService} from '@web/core/utils/hooks';
 import {Switch} from '@website/components/switch/switch';
 import {registry} from '@web/core/registry';
+import {TranslationButton} from "@web/views/fields/translation_button";
 
 const {Component, useState} = owl;
 
@@ -31,6 +32,9 @@ class PageUrlField extends Component {
     get enableRedirect() {
         return this.state.url !== this.pageUrl;
     }
+    get isTranslatable() {
+        return this.props.record.fields[this.props.name].translate;
+    }
 
     onChangeRedirectOldUrl(value) {
         this.state.redirect_old_url = value;
@@ -49,7 +53,7 @@ class PageUrlField extends Component {
     }
 }
 
-PageUrlField.components = {Switch, PageDependencies};
+PageUrlField.components = {Switch, PageDependencies, TranslationButton};
 PageUrlField.template = 'website.PageUrlField';
 PageUrlField.props = {
     ...standardFieldProps,
