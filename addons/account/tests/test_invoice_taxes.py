@@ -715,3 +715,25 @@ class TestInvoiceTaxes(AccountTestInvoicingCommon):
         self.assertRecordValues(invoice.line_ids.filtered(lambda l: l.account_id.account_type == 'asset_receivable'), [{
             'balance': 686.54,
         }])
+
+    def test_tax_account_receivable(self):
+        self.company_data['default_account_receivable'].write({
+            'tax_ids': [Command.set(self.percent_tax_1.ids)]
+        })
+        inv = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'invoice_line_ids': [
+                Command.create({'name': 'line', 'price_unit': 100.0, 'tax_ids': [Command.set(self.percent_tax_1.ids)]}),
+            ],
+        })
+        self.assertEqual(inv.amount_tax, 21.0)
+        with Form(inv) as invoice_form:
+            with invoice_form.invoice_line_ids.new() as new_inv_line:
+                new_inv_line.name = 'line2'
+                new_inv_line.price_unit = 100
+                new_inv_line.tax_ids.clear()
+                new_inv_line.tax_ids.add(self.percent_tax_1)
+        self.assertEqual(inv.amount_tax, 42.0)
