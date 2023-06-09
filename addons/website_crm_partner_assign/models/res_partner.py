@@ -40,6 +40,16 @@ class ResPartner(models.Model):
     )
     implemented_partner_count = fields.Integer(compute='_compute_implemented_partner_count', store=True)
 
+    def init(self):
+        self._cr.execute("""
+            CREATE INDEX IF NOT EXISTS res_partner_search_geo_partner_quadtree_idx ON res_partner
+            USING spgist (POINT(partner_longitude, partner_latitude))
+            WHERE active = TRUE
+              AND partner_weight > 0
+              AND partner_longitude IS NOT NULL
+              AND partner_latitude IS NOT NULL
+        """)
+
     @api.depends('implemented_partner_ids.is_published', 'implemented_partner_ids.active')
     def _compute_implemented_partner_count(self):
         rg_result = self.env['res.partner']._read_group(

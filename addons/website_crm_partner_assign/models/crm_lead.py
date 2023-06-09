@@ -128,36 +128,38 @@ class CrmLead(models.Model):
             latitude = lead.partner_latitude
             longitude = lead.partner_longitude
             if latitude and longitude:
-                # 1. first way: in the same country, small area
-                partner_ids = Partner.search([
-                    ('partner_weight', '>', 0),
-                    ('partner_latitude', '>', latitude - 2), ('partner_latitude', '<', latitude + 2),
-                    ('partner_longitude', '>', longitude - 1.5), ('partner_longitude', '<', longitude + 1.5),
-                    ('country_id', '=', lead.country_id.id),
-                    ('id', 'not in', lead.partner_declined_ids.mapped('id')),
-                ])
+                # 1st way: looking in the same country, in larger and larger areas around the lead.
+                # list of boxes defined as 2 points (top_right, bottom_left) where 1 point is defined as (longitude, latitude)
+                area_sizes = [
+                    ((1.5, 2), (-1.5, -2)),
+                    ((3, 4), (-3, -4)),
+                    ((8, 8), (-8, -8)),
+                ]
+                areas = iter(area_sizes)
+                # look iteratively for partner in the same country in areas of increasing sizes
+                while not partner_ids and (area := next(areas, False)):
+                    # translate the area based on the leads coords by doing a piecewise summation
+                    translated_coords = tuple(sum(coord) for point in area for coord in zip(point, (longitude, latitude)))
+                    translated_area = tuple(zip(translated_coords[::2], translated_coords[1::2]))
+                    # this query makes heavy use of the quadtree spgist index `res_partner_search_geo_partner_quadtree_idx`
+                    self._cr.execute("""
+                        SELECT id
+                        FROM res_partner
+                        WHERE active
+                          AND partner_weight > 0
+                          AND (POINT(partner_longitude, partner_latitude) <@ BOX(%(box)s))
+                          AND country_id = %(country_id)s
+                          AND id NOT IN (SELECT partner_id FROM crm_lead_declined_partner WHERE lead_id = %(lead_id)s)
+                    """, {
+                        'box': str(translated_area),
+                        'country_id': lead.country_id.id,
+                        'lead_id': lead.id,
+                    })
+                    ids = [row[0] for row in self.env.cr.fetchall()]
+                    if ids:
+                        partner_ids = Partner.browse(ids)
 
-                # 2. second way: in the same country, big area
-                if not partner_ids:
-                    partner_ids = Partner.search([
-                        ('partner_weight', '>', 0),
-                        ('partner_latitude', '>', latitude - 4), ('partner_latitude', '<', latitude + 4),
-                        ('partner_longitude', '>', longitude - 3), ('partner_longitude', '<', longitude + 3),
-                        ('country_id', '=', lead.country_id.id),
-                        ('id', 'not in', lead.partner_declined_ids.mapped('id')),
-                    ])
-
-                # 3. third way: in the same country, extra large area
-                if not partner_ids:
-                    partner_ids = Partner.search([
-                        ('partner_weight', '>', 0),
-                        ('partner_latitude', '>', latitude - 8), ('partner_latitude', '<', latitude + 8),
-                        ('partner_longitude', '>', longitude - 8), ('partner_longitude', '<', longitude + 8),
-                        ('country_id', '=', lead.country_id.id),
-                        ('id', 'not in', lead.partner_declined_ids.mapped('id')),
-                    ])
-
-                # 5. fifth way: anywhere in same country
+                # 2nd way: anywhere in same country
                 if not partner_ids:
                     # still haven't found any, let's take all partners in the country!
                     partner_ids = Partner.search([
@@ -166,7 +168,7 @@ class CrmLead(models.Model):
                         ('id', 'not in', lead.partner_declined_ids.mapped('id')),
                     ])
 
-                # 6. sixth way: closest partner whatsoever, just to have at least one result
+                # 3rd and last way: closest partner whatsoever, just to have at least one result
                 if not partner_ids:
                     # warning: point() type takes (longitude, latitude) as parameters in this order!
                     self._cr.execute("""SELECT id, distance
