@@ -6,4 +6,4 @@ class FuzzerModel(models.Model):
     _description = 'Test fuzzer model'
     _rec_name = 'n'  # For name_create.
 
-    n = fields.Char()
+    n = fields.Char(translate=True)

@@ -1,4 +1,3 @@
-import inspect
 import logging
 from typing import Type
 
@@ -6,6 +5,7 @@ import psycopg2
 
 from odoo import registry, tools
 from odoo.addons.test_fuzzer.injection import *
+from odoo.addons.test_fuzzer.models import FuzzerModel
 from odoo.exceptions import UserError
 from odoo.models import BaseModel
 from odoo.tests import common
@@ -25,45 +25,35 @@ class TestFuzzer(common.TransactionCase):
         self.fuzzer_model_methods = patch_function_list(get_public_functions(self.fuzzer_model.__class__))
         self.fuzzer_record = self.create_canary_record()
 
-        self.injections: dict[str, [Injection]] = {
-            "ids": wrap_payload(construct_value_injections("1337", with_closing_parenthesis=True),
-                                lambda payload: [payload]) +
-                   wrap_payload(construct_injections(create_id_payloads(), expect_error=False),
-                                lambda payload: [payload]),
-            "limit": construct_value_injections("1"),
-            "offset": construct_value_injections("0"),
-            "domain": construct_where_clause_injections("n"),
-            "order": construct_value_injections("n"),
-            "fields": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
-            "fnames": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
-            "field_names": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
-            "field_name": construct_value_injections("n"),
-            "fields_list": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
-            "fields_to_export": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
-            "name": construct_value_injections("n"),
-            "allfields": wrap_payload(construct_value_injections("n"), lambda payload: [payload]),
-            "attributes": wrap_payload(construct_value_injections("type"), lambda payload: [payload]),
-            "groupby": construct_value_injections("n"),
-            "orderby": construct_value_injections("n"),
-            "values": wrap_payload(construct_value_injections("n"), lambda payload: {payload: "1337"}),
-            "vals": wrap_payload(construct_value_injections("n"), lambda payload: {payload: "1337"}),
-            "vals_list": wrap_payload(construct_value_injections("n"), lambda payload: [{payload: "1337"}]) +
-                         wrap_payload(construct_value_injections(
-                             "n", expect_error=False, with_closing_parenthesis=True),
-                             lambda payload: [{"n": payload}]),
+        self.injection_reports: list[InjectionReport] = []
+
+        self.seeds = {
+            "ids": "1337",
+            "limit": "1",
+            "offset": "0",
+            "attributes": "type",
         }
 
         self.validation_errors = (
-            UserError,
             ValueError,
             KeyError,
             TypeError,
+            AttributeError,
+            IndexError,
+            AssertionError,
+            UserError,
         )
-        self.sql_errors = (
+        self.dangerous_sql_errors = (
+            psycopg2.errors.SyntaxError,
+            psycopg2.errors.UndefinedColumn,
             psycopg2.errors.InvalidTextRepresentation,
-            psycopg2.errors.InvalidRowCountInLimitClause,
-            psycopg2.errors.NumericValueOutOfRange,
         )
+        self.mild_sql_errors = (
+            psycopg2.errors.UndefinedFunction,
+            psycopg2.errors.DatatypeMismatch,
+            psycopg2.errors.ProgrammingError,
+        )
+        self.sql_errors = self.dangerous_sql_errors + self.mild_sql_errors
 
     def test_fuzzer(self):
         for method, signature in self.fuzzer_model_methods:
@@ -75,59 +65,56 @@ class TestFuzzer(common.TransactionCase):
             if parameter == "self":
                 continue
 
-            self.fuzz_function_parameter(parameter, function, signature)
+            for injection in payload_generator(self.seeds.get(parameter, "n")):
+                self.fuzz_function_parameter(parameter, injection, function, signature)
 
-    def fuzz_function_parameter(self, parameter: str, function: Callable, signature: inspect.Signature):
-        """Repeatedly calls a method by trying various SQL injections on the same parameter."""
-        if parameter not in self.injections:
-            _logger.debug("Unfuzzed parameter `%s` on method `%s`", parameter, function.__name__)
+    def fuzz_function_parameter(self, parameter: str, injection: Any, function: Callable, signature: inspect.Signature):
+        """Fuzzes a single parameter with a single injection."""
+        _logger.debug("Fuzzing `%s` with %s=%s", function.__name__, parameter, injection)
+
+        # If the function has multiple positional arguments, all of them must be assigned to be able to call it.
+        # We assign a default value to all of them.
+        args: dict[str, Any] = {
+            name: value for name, value in self.get_default_args().items()
+            if name in signature.parameters and signature.parameters[name].default == signature.empty}
+
+        # Replace the argument's default value with an injection.
+        args[parameter] = injection
+
+        # The reason we're not just calling the function blindly is that TypeError can actually be thrown in some
+        # cases during injections, and we wouldn't have a way to differentiate between a failed injection and a
+        # function call whose arguments are missing. Therefore, we explicitly test if the function can be called
+        # without errors before actually calling it.
+        try:
+            bound_arguments: inspect.BoundArguments = signature.bind(**args)
+        except TypeError:
+            _logger.debug("Function `%s` couldn't be called because "
+                          "some required parameters don't have a default value."
+                          "You should populate the default args dictionary.", function.__name__)
             return
 
-        for injection in self.injections[parameter]:
-            _logger.debug("Fuzzing `%s` with %s=%s", function.__name__, parameter, injection.payload)
+        savepoint = self.cr.savepoint()
 
-            # If the function has multiple positional arguments, all of them must be assigned to be able to call it.
-            # We assign a default value to all of them.
-            args: dict[str, Any] = {
-                name: value for name, value in self.get_default_args().items()
-                if name in signature.parameters and signature.parameters[name].default == signature.empty}
+        error = None
+        is_injection_successful = False
 
-            # Replace the argument's default value with an injection.
-            args[parameter] = injection.payload
+        try:
+            with tools.mute_logger('odoo.sql_db'):
+                function(*bound_arguments.args, **bound_arguments.kwargs)
+            self.cr.commit()
 
-            # The reason we're not just calling the function blindly is that TypeError can actually be thrown in some
-            # cases during injections, and we wouldn't have a way to differentiate between a failed injection and a
-            # function call whose arguments are missing. Therefore, we explicitly test if the function can be called
-            # without errors before actually calling it.
-            try:
-                bound_arguments: inspect.BoundArguments = signature.bind(**args)
-            except TypeError:
-                _logger.debug("Function `%s` couldn't be called because "
-                              "some required parameters don't have a default value."
-                              "You should populate the default args dictionary.", function.__name__)
-                return
+            is_injection_successful = self.did_injection_succeed()
 
-            savepoint = self.cr.savepoint()
+        except self.validation_errors as e:
+            error = e
 
-            try:
-                with tools.mute_logger('odoo.sql_db'):
-                    function(*bound_arguments.args, **bound_arguments.kwargs)
-                self.cr.commit()
+        except self.sql_errors as e:
+            savepoint.close()
+            error = e
 
-                self.assertFalse(self.did_injection_succeed(),
-                                 f"SQL injection successful on method `{function.__name__}` "
-                                 f"with {parameter}={injection.payload}")
-
-            except self.validation_errors as e:
-                self.assert_error_expected(e, injection, function)
-
-            except self.sql_errors as e:
-                savepoint.close()
-
-                self.assert_error_expected(e, injection, function)
-                self.assertTrue(was_execute_method_called_correctly(),
-                                f"Method `{function.__name__}` is susceptible to SQL injection "
-                                f"with {parameter}={injection.payload}")
+        finally:
+            report = InjectionReport(function, bound_arguments, error, is_injection_successful)
+            self.injection_reports.append(report)
 
     def get_default_args(self):
         """
@@ -160,14 +147,34 @@ class TestFuzzer(common.TransactionCase):
             return True
         return False
 
-    def create_canary_record(self):
+    def create_canary_record(self) -> FuzzerModel:
         return self.fuzzer_model.create({'n': '1337'})[0]
 
-    def assert_error_expected(self, e: Exception, injection: Injection, function: Callable):
-        """Something's wrong if an exception is thrown when the injection is not supposed to trigger an error."""
-        self.assertTrue(injection.expect_error,
-                        f"Method {function.__name__} threw an unexpected error during fuzzing "
-                        f"with payload {injection}: {e}")
+    def tearDown(self):
+        self.create_test_report()
+        # noinspection SqlWithoutWhere
+        self.cr.execute("delete from test_fuzzer_model")
+        self.cr.commit()
+        self.cr.close()
+        super().tearDown()
+
+    def create_test_report(self):
+        successful_injections = list(filter(lambda report: report.is_injection_successful, self.injection_reports))
+        unsafe_injections = list(
+            filter(lambda report: report.error.__class__ in self.sql_errors, self.injection_reports))
+
+        def construct_report_message() -> str:
+            msg = (f"Performed {len(self.injection_reports)} injections: "
+                   f"{len(successful_injections)} were successful, "
+                   f"{len(unsafe_injections)} were unsafe.\n\n")
+
+            for injection in successful_injections + unsafe_injections:
+                msg += f"{injection}\n\n"
+
+            return msg
+
+        self.assertTrue(len(successful_injections) == 0 and len(unsafe_injections) == 0,
+                        construct_report_message())
 
 
 def get_public_functions(cls: Type) -> list[tuple[Callable, inspect.Signature]]:
@@ -187,28 +194,6 @@ def get_public_functions(cls: Type) -> list[tuple[Callable, inspect.Signature]]:
         functions.append((function, signature))
 
     return functions
-
-
-def was_execute_method_called_correctly() -> bool:
-    """
-    Returns True if the `execute` method of the cursor was called with 2 arguments: query and params.
-    No SQL injection should be possible if this is the case.
-    This function must be called only inside an except block.
-    """
-
-    def is_execute_method(frame: inspect.FrameInfo):
-        module_name = inspect.getmodule(frame[0]).__name__
-        return module_name == "odoo.sql_db" and frame.function == "execute"
-
-    execute_method_frame = next(filter(is_execute_method, inspect.trace()), None)
-    if execute_method_frame is None:
-        return False
-
-    method_locals = inspect.getargvalues(execute_method_frame[0]).locals
-    if "query" in method_locals and "params" in method_locals:
-        return method_locals["params"] is not None
-
-    return False
 
 
 def patch_function_list(functions: list[tuple[Callable, inspect.Signature]]) \

@@ -1,63 +1,75 @@
-import dataclasses
+import functools
+import inspect
 from dataclasses import dataclass
-from math import inf, nan
-from typing import Any, Callable
+from typing import Any, Callable, Generator
 
 
-@dataclass
-class Injection:
-    payload: Any
-    expect_error: bool
+@dataclass()
+class InjectionReport:
+    function: Callable
+    arguments: inspect.BoundArguments
+    error: Exception | None
+    is_injection_successful: bool
+
+    def __str__(self) -> str:
+        args = ", ".join([f"{name}={value}" for name, value in self.arguments.arguments.items()])
+        s = f"{self.function.__name__}({args})\n"
+        if self.is_injection_successful:
+            s += "Injection successful !"
+        else:
+            s += f"{self.error.__class__}\n{self.error}" if self.error else "No errors."
+        return s
 
 
-def construct_where_clause_injections(payload: Any, expect_error=True) -> list[Injection]:
-    return [construct_where_clause_injection(payload, expect_error)
-            for payload in create_quoted_payloads(payload)]
+def with_dot(payload: Any) -> Generator[str, None, None]:
+    yield payload
+    yield f"{payload}."
 
 
-def construct_value_injections(payload: Any, expect_error=True,
-                               with_closing_parenthesis=False) -> list[Injection]:
-    return [construct_value_injection(payload, expect_error, with_closing_parenthesis)
-            for payload in create_quoted_payloads(payload)]
+def with_quotes(payload: Any) -> Generator[str, None, None]:
+    yield payload
+    yield f"{payload}\""
+    yield f"{payload}\'"
 
 
-def construct_injections(payloads: list[Any], expect_error=True) -> list[Injection]:
-    return [Injection(payload, expect_error) for payload in payloads]
+def with_parenthesis(payload: Any) -> Generator[str, None, None]:
+    yield payload
+    yield f"{payload})"
 
 
-def wrap_payload(injections: list[Injection], f: Callable[[Any], Any]) -> list[Injection]:
-    return [dataclasses.replace(injection, payload=f(injection.payload)) for injection in injections]
+def with_different_types(payload: Any) -> Generator[Any, None, None]:
+    yield payload
+    yield [payload]
+    yield {payload: "1337"}
+    yield {"n": payload}
+    yield [(payload, "ilike", "1337")]
 
 
-def construct_where_clause_injection(payload: Any, expect_error: bool) -> Injection:
-    payload = [(fr"""{payload} = "1337"); {delete_from_table} -- -""", "=", "1337")]
-    return Injection(payload, expect_error)
+def with_delete_table(payload: Any) -> Generator[str, None, None]:
+    yield f"{payload}; {delete_from_table} -- -"
 
 
-def construct_value_injection(payload: Any, expect_error: bool,
-                              with_closing_parenthesis: bool) -> Injection:
-    payload = f"""{payload}{")" if with_closing_parenthesis else ""}; {delete_from_table} -- -"""
-    return Injection(payload, expect_error)
+PayloadGenerator = Callable[[Any], Generator[str, None, None]]
 
 
-def create_quoted_payloads(payload: str) -> list[str]:
-    return [
-        f"""{payload}""",
-        f"""{payload}\"""",
-        f"""{payload}'""",
-        f"""{payload}\\""",
-    ]
+def pipe(a: PayloadGenerator, b: PayloadGenerator) -> PayloadGenerator:
+    def f(value: Any) -> Generator[str, None, None]:
+        for item in a(value):
+            yield from b(item)
+
+    return f
 
 
-def create_id_payloads() -> list[int]:
-    return [
-        -1,
-        0,
-        2 ** 64,
-        inf,
-        -inf,
-        nan,
-    ]
+def compose(*functions) -> PayloadGenerator:
+    return functools.reduce(lambda a, b: pipe(a, b), functions)
 
+
+payload_generator: PayloadGenerator = compose(
+    with_dot,
+    with_quotes,
+    with_parenthesis,
+    with_delete_table,
+    with_different_types,
+)
 
 delete_from_table = "delete from test_fuzzer_model"
