@@ -30,7 +30,7 @@ export class ErrorTracebackPopup extends ErrorPopup {
         return `${this.env._t("error")} ${moment().format("YYYY-MM-DD-HH-mm-ss")}.txt`;
     }
     emailTraceback() {
-        const address = this.pos.globalState.company.email;
+        const address = this.pos.company.email;
         const subject = this.env._t("IMPORTANT: Bug Report From Odoo Point Of Sale");
         window.open(
             "mailto:" +

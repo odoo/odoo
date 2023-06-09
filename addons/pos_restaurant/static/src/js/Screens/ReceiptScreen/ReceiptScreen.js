@@ -11,26 +11,26 @@ patch(ReceiptScreen.prototype, "pos_restaurant.ReceiptScreen", {
         onWillUnmount(() => {
             // When leaving the receipt screen to the floor screen the order is paid and can be removed
             if (this.pos.mainScreen.component === FloorScreen && this.currentOrder.finalized) {
-                this.pos.globalState.removeOrder(this.currentOrder);
+                this.pos.removeOrder(this.currentOrder);
             }
         });
     },
     //@override
     _addNewOrder() {
-        if (!this.pos.globalState.config.module_pos_restaurant) {
+        if (!this.pos.config.module_pos_restaurant) {
             this._super(...arguments);
         }
     },
     isResumeVisible() {
-        if (this.pos.globalState.config.module_pos_restaurant && this.pos.globalState.table) {
-            return this.pos.globalState.getTableOrders(this.pos.globalState.table.id).length > 1;
+        if (this.pos.config.module_pos_restaurant && this.pos.table) {
+            return this.pos.getTableOrders(this.pos.table.id).length > 1;
         }
         return this._super(...arguments);
     },
     //@override
     get nextScreen() {
-        if (this.pos.globalState.config.module_pos_restaurant) {
-            const table = this.pos.globalState.table;
+        if (this.pos.config.module_pos_restaurant) {
+            const table = this.pos.table;
             return { name: "FloorScreen", props: { floor: table ? table.floor : null } };
         } else {
             return this._super(...arguments);

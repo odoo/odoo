@@ -34,8 +34,8 @@ export class PaymentScreen extends Component {
         this.report = useService("report");
         this.notification = useService("pos_notification");
         this.hardwareProxy = useService("hardware_proxy");
-        this.payment_methods_from_config = this.pos.globalState.payment_methods.filter((method) =>
-            this.pos.globalState.config.payment_method_ids.includes(method.id)
+        this.payment_methods_from_config = this.pos.payment_methods.filter((method) =>
+            this.pos.config.payment_method_ids.includes(method.id)
         );
         this.numberBuffer = useService("number_buffer");
         this.numberBuffer.use(this._getNumberBufferConfig);
@@ -62,7 +62,7 @@ export class PaymentScreen extends Component {
         return config;
     }
     get currentOrder() {
-        return this.pos.globalState.get_order();
+        return this.pos.get_order();
     }
     get paymentLines() {
         return this.currentOrder.get_paymentlines();
@@ -158,8 +158,8 @@ export class PaymentScreen extends Component {
             title: tip ? this.env._t("Change Tip") : this.env._t("Add Tip"),
             startingValue: value,
             isInputSelected: true,
-            nbrDecimal: this.pos.globalState.currency.decimal_places,
-            inputSuffix: this.pos.globalState.currency.symbol,
+            nbrDecimal: this.pos.currency.decimal_places,
+            inputSuffix: this.pos.currency.symbol,
         });
 
         if (confirmed) {
@@ -203,8 +203,8 @@ export class PaymentScreen extends Component {
     }
     async validateOrder(isForceValidate) {
         this.numberBuffer.capture();
-        if (this.pos.globalState.config.cash_rounding) {
-            if (!this.pos.globalState.get_order().check_paymentlines_rounding()) {
+        if (this.pos.config.cash_rounding) {
+            if (!this.pos.get_order().check_paymentlines_rounding()) {
                 this.popup.add(ErrorPopup, {
                     title: this.env._t("Rounding error in payment lines"),
                     body: this.env._t(
@@ -225,7 +225,6 @@ export class PaymentScreen extends Component {
         }
     }
     async _finalizeValidation() {
-        const { globalState } = this.pos;
         if (this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) {
             this.hardwareProxy.openCashbox();
         }
@@ -237,7 +236,7 @@ export class PaymentScreen extends Component {
 
         try {
             // 1. Save order to server.
-            syncOrderResult = await globalState.push_single_order(this.currentOrder);
+            syncOrderResult = await this.pos.push_single_order(this.currentOrder);
 
             // 2. Invoice.
             if (this.currentOrder.is_to_invoice()) {
@@ -289,10 +288,10 @@ export class PaymentScreen extends Component {
             this.pos.showScreen(this.nextScreen);
             // Remove the order from the local storage so that when we refresh the page, the order
             // won't be there
-            globalState.db.remove_unpaid_order(this.currentOrder);
+            this.pos.db.remove_unpaid_order(this.currentOrder);
 
             // Ask the user to sync the remaining unsynced orders.
-            if (!hasError && syncOrderResult && globalState.db.get_orders().length) {
+            if (!hasError && syncOrderResult && this.pos.db.get_orders().length) {
                 const { confirmed } = await this.popup.add(ConfirmPopup, {
                     title: this.env._t("Remaining unsynced orders"),
                     body: this.env._t(
@@ -303,7 +302,7 @@ export class PaymentScreen extends Component {
                     // NOTE: Not yet sure if this should be awaited or not.
                     // If awaited, some operations like changing screen
                     // might not work.
-                    globalState.push_orders();
+                    this.pos.push_orders();
                 }
             }
         }
@@ -410,7 +409,7 @@ export class PaymentScreen extends Component {
                     this.currentOrder.get_rounding_applied()
             ) > 0.00001
         ) {
-            if (!this.pos.globalState.payment_methods.some((pm) => pm.is_cash_count)) {
+            if (!this.pos.payment_methods.some((pm) => pm.is_cash_count)) {
                 this.popup.add(ErrorPopup, {
                     title: this.env._t("Cannot return change without a cash payment method"),
                     body: this.env._t(
@@ -474,7 +473,7 @@ export class PaymentScreen extends Component {
             line.can_be_reversed = payment_terminal.supports_reversals;
             // Automatically validate the order when after an electronic payment,
             // the current order is fully paid and due is zero.
-            const { config, currency } = this.pos.globalState;
+            const { config, currency } = this.pos;
             if (
                 this.currentOrder.is_paid() &&
                 floatIsZero(this.currentOrder.get_due(), currency.decimal_places) &&

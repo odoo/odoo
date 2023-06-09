@@ -114,7 +114,7 @@
         <xpath expr="//t[@t-esc='line.unit_name']/.." position="after">
             <t t-if="receipt.is_gcc_country">
                 <div class="pos-receipt-left-padding">
-                    <t t-esc="Math.round(line.quantity * Math.pow(10, pos.globalState.dp['Product Unit of Measure'])) / Math.pow(10, pos.globalState.dp['Product Unit of Measure'])"/>
+                    <t t-esc="Math.round(line.quantity * Math.pow(10, pos.dp['Product Unit of Measure'])) / Math.pow(10, pos.dp['Product Unit of Measure'])"/>
                     <t t-if="!line.is_in_unit" t-esc="line.unit_name" />
                     x
                     <t t-esc="env.utils.formatCurrency(line.price_display_one, false)" />

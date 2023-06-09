@@ -14,11 +14,11 @@
                         </span>
                         <div class="input-field">
                             <input type="text" name="amount" t-model="state.amount" t-ref="amountInput" t-on-keypress="_onAmountKeypress"/>
-                            <t t-if="pos.globalState.currency.symbol.length > 1">
-                                <span class="left-currency" t-esc="pos.globalState.currency.symbol" />
+                            <t t-if="pos.currency.symbol.length > 1">
+                                <span class="left-currency" t-esc="pos.currency.symbol" />
                             </t>
                             <t t-else="">
-                                <span class="currency" t-esc="pos.globalState.currency.symbol" />
+                                <span class="currency" t-esc="pos.currency.symbol" />
                             </t>
                         </div>
                     </div>

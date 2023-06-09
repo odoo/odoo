@@ -30,7 +30,7 @@ export class RewardButton extends Component {
     }
 
     _getPotentialRewards() {
-        const order = this.pos.globalState.get_order();
+        const order = this.pos.get_order();
         // Claimable rewards excluding those from eWallet programs.
         // eWallet rewards are handled in the eWalletButton.
         let rewards = [];
@@ -61,14 +61,14 @@ export class RewardButton extends Component {
      * @param {Integer} coupon_id
      */
     async _applyReward(reward, coupon_id, potentialQty) {
-        const order = this.pos.globalState.get_order();
+        const order = this.pos.get_order();
         order.disabledRewards.delete(reward.id);
 
         const args = {};
         if (reward.reward_type === "product" && reward.multi_product) {
             const productsList = reward.reward_product_ids.map((product_id) => ({
                 id: product_id,
-                label: this.pos.globalState.db.get_product_by_id(product_id).display_name,
+                label: this.pos.db.get_product_by_id(product_id).display_name,
                 item: product_id,
             }));
             const { confirmed, payload: selectedProduct } = await this.popup.add(SelectionPopup, {
@@ -125,6 +125,6 @@ export class RewardButton extends Component {
 ProductScreen.addControlButton({
     component: RewardButton,
     condition: function () {
-        return this.pos.globalState.programs.length > 0;
+        return this.pos.programs.length > 0;
     },
 });

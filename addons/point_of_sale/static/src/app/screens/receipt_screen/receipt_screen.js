@@ -23,7 +23,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         this.orderReceipt = useRef("order-receipt");
         this.buttonMailReceipt = useRef("order-mail-receipt-button");
         this.buttonPrintReceipt = useRef("order-print-receipt-button");
-        this.currentOrder = this.pos.globalState.get_order();
+        this.currentOrder = this.pos.get_order();
         const partner = this.currentOrder.get_partner();
         this.orderUiState = this.currentOrder.uiState.ReceiptScreen;
         this.orderUiState.inputEmail =
@@ -49,14 +49,14 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         onWillStart(async () => {
             // When the order is paid, if there is still a part of the order
             // to send in preparation it is automatically sent
-            if (this.pos.globalState.orderPreparationCategories.size) {
+            if (this.pos.orderPreparationCategories.size) {
                 await this.pos.sendOrderInPreparation(this.currentOrder);
             }
         });
     }
 
     _addNewOrder() {
-        this.pos.globalState.add_new_order();
+        this.pos.add_new_order();
     }
     onSendEmail() {
         if (this.buttonMailReceipt.el.classList.contains("fa-spin")) {
@@ -96,7 +96,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
     get orderAmountPlusTip() {
         const order = this.currentOrder;
         const orderTotalAmount = order.get_total_with_tax();
-        const tip_product_id = this.pos.globalState.config.tip_product_id?.[0];
+        const tip_product_id = this.pos.config.tip_product_id?.[0];
         const tipLine = order
             .get_orderlines()
             .find((line) => tip_product_id && line.product.id === tip_product_id);
@@ -137,24 +137,24 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         }
     }
     orderDone() {
-        this.pos.globalState.removeOrder(this.currentOrder);
+        this.pos.removeOrder(this.currentOrder);
         this._addNewOrder();
         const { name, props } = this.nextScreen;
         this.pos.showScreen(name, props);
     }
     resumeOrder() {
-        this.pos.globalState.removeOrder(this.currentOrder);
-        this.pos.globalState.selectNextOrder();
+        this.pos.removeOrder(this.currentOrder);
+        this.pos.selectNextOrder();
         const { name, props } = this.ticketScreen;
         this.pos.showScreen(name, props);
     }
     continueSplitting() {
-        this.pos.globalState.selectedOrder = this.currentOrder.originalSplittedOrder;
-        this.pos.globalState.removeOrder(this.currentOrder);
+        this.pos.selectedOrder = this.currentOrder.originalSplittedOrder;
+        this.pos.removeOrder(this.currentOrder);
         this.pos.showScreen("ProductScreen");
     }
     isResumeVisible() {
-        return this.pos.globalState.get_order_list().length > 1;
+        return this.pos.get_order_list().length > 1;
     }
     async printReceipt() {
         this.buttonPrintReceipt.el.className = "fa fa-fw fa-spin fa-circle-o-notch";
@@ -170,7 +170,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         }
     }
     _shouldAutoPrint() {
-        return this.pos.globalState.config.iface_print_auto && !this.currentOrder._printed;
+        return this.pos.config.iface_print_auto && !this.currentOrder._printed;
     }
     _shouldCloseImmediately() {
         var invoiced_finalized = this.currentOrder.is_to_invoice()
@@ -178,7 +178,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
             : true;
         return (
             this.hardwareProxy.printer &&
-            this.pos.globalState.config.iface_print_skip_screen &&
+            this.pos.config.iface_print_skip_screen &&
             invoiced_finalized
         );
     }
@@ -193,7 +193,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
             email: this.orderUiState.inputEmail,
             name: partner ? partner.name : this.orderUiState.inputEmail,
         };
-        const order_server_id = this.pos.globalState.validated_orders_name_server_id_map[orderName];
+        const order_server_id = this.pos.validated_orders_name_server_id_map[orderName];
         if (!order_server_id) {
             this.popup.add(OfflineErrorPopup, {
                 title: this.env._t("Unsynced order"),

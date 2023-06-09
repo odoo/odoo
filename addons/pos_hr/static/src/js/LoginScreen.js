@@ -19,12 +19,12 @@ export class LoginScreen extends Component {
     back() {
         this.props.resolve({ confirmed: false, payload: false });
         this.pos.closeTempScreen();
-        this.pos.globalState.hasLoggedIn = true;
+        this.pos.hasLoggedIn = true;
         this.pos.openCashControl();
     }
 
     get shopName() {
-        return this.pos.globalState.config.name;
+        return this.pos.config.name;
     }
 }
 

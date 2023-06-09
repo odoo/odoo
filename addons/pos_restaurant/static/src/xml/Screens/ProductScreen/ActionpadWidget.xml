@@ -25,7 +25,7 @@
 
         <!-- Replace the customer button by the payment button, the customer button will be added in the mixins -->
         <xpath expr="//button[hasclass('set-partner')]" position="after">
-            <button t-on-click="() => pos.globalState.get_order().pay()" class="button pay-order-button" t-att-class="{ 'highlight': this.highlightPay }" t-if="this.swapButton">
+            <button t-on-click="() => pos.get_order().pay()" class="button pay-order-button" t-att-class="{ 'highlight': this.highlightPay }" t-if="this.swapButton">
                 <i class="oi oi-chevron-right" role="img" aria-label="Pay" title="Pay" />
                 Payment
             </button>

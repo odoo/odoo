@@ -9,11 +9,11 @@ import { nbsp } from "@web/core/utils/strings";
 patch(ActionpadWidget.prototype, "point_of_sale.ActionpadWidget", {
     get swapButton() {
         return (
-            this.props.actionType === "payment" && this.pos.globalState.config.module_pos_restaurant
+            this.props.actionType === "payment" && this.pos.config.module_pos_restaurant
         );
     },
     get currentOrder() {
-        return this.pos.globalState.get_order();
+        return this.pos.get_order();
     },
     get addedClasses() {
         if (!this.currentOrder) {
@@ -57,7 +57,7 @@ patch(ActionpadWidget.prototype, "point_of_sale.ActionpadWidget", {
         const orderChange = this.currentOrder.getOrderChanges().orderlines;
         for (const idx in orderChange) {
             const orderline = orderChange[idx];
-            const category = this.pos.globalState.db.get_product_by_id(orderline.product_id)
+            const category = this.pos.db.get_product_by_id(orderline.product_id)
                 .pos_categ_id[1];
             const numProd = orderline.quantity;
             categories[category] = categories[category] ? categories[category] + numProd : numProd;

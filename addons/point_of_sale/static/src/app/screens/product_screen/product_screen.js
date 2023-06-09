@@ -72,7 +72,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         return this.currentOrder ? this.currentOrder.get_partner() : null;
     }
     get currentOrder() {
-        return this.pos.globalState.get_order();
+        return this.pos.get_order();
     }
     get total() {
         return this.env.utils.formatCurrency(this.currentOrder?.get_total_with_tax() ?? 0);
@@ -81,16 +81,15 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         return this.currentOrder.orderlines?.reduce((items, line) => items + line.quantity, 0) ?? 0;
     }
     async updateSelectedOrderline({ buffer, key }) {
-        const { globalState } = this.pos;
-        if (globalState.numpadMode === "quantity" && globalState.disallowLineQuantityChange()) {
-            const order = globalState.get_order();
+        if (this.pos.numpadMode === "quantity" && this.pos.disallowLineQuantityChange()) {
+            const order = this.pos.get_order();
             if (!order.orderlines.length) {
                 return;
             }
             const selectedLine = order.get_selected_orderline();
             const orderlines = order.orderlines;
             const lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).cid;
-            const currentQuantity = globalState.get_order().get_selected_orderline().get_quantity();
+            const currentQuantity = this.pos.get_order().get_selected_orderline().get_quantity();
 
             if (selectedLine.noDecrease) {
                 this.popup.add(ErrorPopup, {
@@ -112,12 +111,12 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             this._setValue(val);
             if (val == "remove") {
                 this.numberBuffer.reset();
-                globalState.numpadMode = "quantity";
+                this.pos.numpadMode = "quantity";
             }
         }
     }
     _setValue(val) {
-        const { numpadMode } = this.pos.globalState;
+        const { numpadMode } = this.pos;
         if (this.currentOrder.get_selected_orderline()) {
             if (numpadMode === "quantity") {
                 const result = this.currentOrder.get_selected_orderline().set_quantity(val);
@@ -134,8 +133,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         }
     }
     async _barcodeProductAction(code) {
-        const { globalState } = this.pos;
-        let product = globalState.db.get_product_by_barcode(code.base_code);
+        let product = this.pos.db.get_product_by_barcode(code.base_code);
         if (!product) {
             // find the barcode in the backend
             let foundProductIds = [];
@@ -143,9 +141,9 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                 ["barcode", "=", code.base_code],
             ]);
             if (foundProductIds.length) {
-                await globalState._addProducts(foundProductIds);
+                await this.pos._addProducts(foundProductIds);
                 // assume that the result is unique.
-                product = globalState.db.get_product_by_id(foundProductIds[0]);
+                product = this.pos.db.get_product_by_id(foundProductIds[0]);
             } else {
                 return this.popup.add(ErrorBarcodePopup, { code: code.base_code });
             }
@@ -180,7 +178,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         this.numberBuffer.reset();
     }
     _barcodePartnerAction(code) {
-        const partner = this.pos.globalState.db.get_partner_by_barcode(code.code);
+        const partner = this.pos.db.get_partner_by_barcode(code.code);
         if (partner) {
             if (this.currentOrder.get_partner() !== partner) {
                 this.currentOrder.set_partner(partner);
@@ -209,7 +207,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         });
         const newQuantity = inputNumber && inputNumber !== "" ? parseFloat(inputNumber) : null;
         if (confirmed && newQuantity !== null) {
-            const order = this.pos.globalState.get_order();
+            const order = this.pos.get_order();
             const selectedLine = order.get_selected_orderline();
             const currentQuantity = selectedLine.get_quantity();
             if (newQuantity >= currentQuantity) {
@@ -268,23 +266,22 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
     // FIXME POSREF this is dead code, check if we need the business logic that's left in here
     // If we do it should be in the model.
     async onClickPay() {
-        const { globalState } = this.pos;
-        if (globalState.get_order().server_id) {
+        if (this.pos.get_order().server_id) {
             try {
                 const isPaid = await this.orm.call("pos.order", "is_already_paid", [
-                    globalState.get_order().server_id,
+                    this.pos.get_order().server_id,
                 ]);
                 if (isPaid) {
                     const searchDetails = {
                         fieldName: "RECEIPT_NUMBER",
-                        searchTerm: globalState.get_order().uid,
+                        searchTerm: this.pos.get_order().uid,
                     };
                     this.pos.showScreen("TicketScreen", {
                         ui: { filter: "SYNCED", searchDetails },
                     });
                     this.notification.add(this.env._t("The order has been already paid."), 3000);
-                    globalState.removeOrder(globalState.get_order(), false);
-                    globalState.add_new_order();
+                    this.pos.removeOrder(this.pos.get_order(), false);
+                    this.pos.add_new_order();
                     return;
                 }
             } catch (error) {
@@ -298,7 +295,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         this.currentOrder.pay();
     }
     switchPane() {
-        this.pos.globalState.switchPane();
+        this.pos.switchPane();
     }
 }
 

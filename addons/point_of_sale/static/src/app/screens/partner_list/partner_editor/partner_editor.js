@@ -29,7 +29,7 @@ export class PartnerDetailsEdit extends Component {
         if (partner.property_product_pricelist) {
             return partner.property_product_pricelist[0];
         }
-        return this.pos.globalState.default_pricelist?.id ?? false;
+        return this.pos.default_pricelist?.id ?? false;
     }
 
     get partnerImageUrl() {

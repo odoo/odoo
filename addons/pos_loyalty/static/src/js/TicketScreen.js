@@ -43,12 +43,12 @@ patch(TicketScreen.prototype, "pos_loyalty.TicketScreen", {
         );
     },
     _isEWalletGiftCard(orderline) {
-        const linkedProgramIds = this.pos.globalState.productId2ProgramIds[orderline.product.id];
+        const linkedProgramIds = this.pos.productId2ProgramIds[orderline.product.id];
         if (linkedProgramIds) {
             return linkedProgramIds.length > 0;
         }
         if (orderline.is_reward_line) {
-            const reward = this.pos.globalState.reward_by_id[orderline.reward_id];
+            const reward = this.pos.reward_by_id[orderline.reward_id];
             const program = reward && reward.program_id;
             if (program && ["gift_card", "ewallet"].includes(program.program_type)) {
                 return true;

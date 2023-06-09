@@ -27,7 +27,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         this.hardwareProxy = useService("hardware_proxy");
         this.customerDisplay = useService("customer_display");
         this.manualInputCashCount = false;
-        this.cashControl = this.pos.globalState.config.cash_control;
+        this.cashControl = this.pos.config.cash_control;
         this.closeSessionClicked = false;
         this.moneyDetails = null;
         Object.assign(this, this.props.info);
@@ -97,7 +97,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
     }
     async downloadSalesReport() {
         return this.report.download("point_of_sale.sale_details_report", [
-            this.pos.globalState.pos_session.id,
+            this.pos.pos_session.id,
         ]);
     }
     handleInputChange(paymentId) {
@@ -142,7 +142,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
                 const response = await this.orm.call(
                     "pos.session",
                     "post_closing_cash_details",
-                    [this.pos.globalState.pos_session.id],
+                    [this.pos.pos_session.id],
                     {
                         counted_cash: this.state.payments[this.defaultCashDetails.id].counted,
                     }
@@ -155,7 +155,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
 
             try {
                 await this.orm.call("pos.session", "update_closing_control_state_session", [
-                    this.pos.globalState.pos_session.id,
+                    this.pos.pos_session.id,
                     this.state.notes,
                 ]);
             } catch (error) {
@@ -176,7 +176,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
                     .filter((pm) => pm.type == "bank")
                     .map((pm) => [pm.id, this.state.payments[pm.id].difference]);
                 const response = await this.orm.call("pos.session", "close_session_from_ui", [
-                    this.pos.globalState.pos_session.id,
+                    this.pos.pos_session.id,
                     bankPaymentMethodDiffPairs,
                 ]);
                 if (!response.successful) {

@@ -6,7 +6,7 @@
             <span class="product-name">
                 <t t-esc="props.line.get_full_product_name()"/>
                 <span> </span>
-                <t t-if="props.line.get_product().tracking!=='none' &amp;&amp; (pos.globalState.picking_type.use_create_lots || pos.globalState.picking_type.use_existing_lots)">
+                <t t-if="props.line.get_product().tracking!=='none' &amp;&amp; (pos.picking_type.use_create_lots || pos.picking_type.use_existing_lots)">
                     <t t-if="props.line.has_valid_product_lot()">
                         <i  t-on-click.stop="lotIconClicked"
                             class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_green"

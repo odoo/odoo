@@ -3,7 +3,7 @@
     <t t-name="l10n_ae_pos.OrderReceiptVAT" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
         <xpath expr="//div[@id='post_receipt_taxes_container']" position="replace">
             <div id='post_receipt_taxes_container'>
-                <t t-if="pos.globalState.company.country.code == 'AE'">VAT</t>
+                <t t-if="pos.company.country.code == 'AE'">VAT</t>
                 <t t-else="">Total Taxes</t>
                 <span t-esc="env.utils.formatCurrency(receipt.total_tax)" class="pos-receipt-right-align"/>
             </div>

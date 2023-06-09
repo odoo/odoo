@@ -12,7 +12,7 @@ export class BackButton extends Component {
         this.ui = useState(useService("ui"));
     }
     async backToFloorScreen() {
-        this.pos.globalState.mobile_pane = "right";
+        this.pos.mobile_pane = "right";
         this.pos.showScreen("ProductScreen");
     }
 }

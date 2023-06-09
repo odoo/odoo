@@ -1,9 +1,10 @@
 /** @odoo-module */
 
-import { PosGlobalState, Order } from "@point_of_sale/app/store/models";
+import { PosStore } from "@point_of_sale/app/store/pos_store";
+import { Order } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 
-patch(PosGlobalState.prototype, "l10n_co_pos.PosGlobalState", {
+patch(PosStore.prototype, "l10n_co_pos.PosStore", {
     is_colombian_country() {
         return this.company.country.code === "CO";
     },

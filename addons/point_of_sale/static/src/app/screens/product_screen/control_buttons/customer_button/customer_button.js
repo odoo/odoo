@@ -12,7 +12,7 @@ export class CustomerButton extends Component {
     }
 
     get partner() {
-        const order = this.pos.globalState.get_order();
+        const order = this.pos.get_order();
         return order ? order.get_partner() : null;
     }
 }
@@ -21,6 +21,6 @@ ProductScreen.addControlButton({
     component: CustomerButton,
     position: ["before", "SetFiscalPositionButton"],
     condition: function () {
-        return this.pos.globalState.config.module_pos_restaurant;
+        return this.pos.config.module_pos_restaurant;
     },
 });

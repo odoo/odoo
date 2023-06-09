@@ -14,7 +14,7 @@ export class OrderlineNoteButton extends Component {
         this.popup = useService("popup");
     }
     get selectedOrderline() {
-        return this.pos.globalState.get_order().get_selected_orderline();
+        return this.pos.get_order().get_selected_orderline();
     }
     async click() {
         if (!this.selectedOrderline) {
@@ -35,6 +35,6 @@ export class OrderlineNoteButton extends Component {
 ProductScreen.addControlButton({
     component: OrderlineNoteButton,
     condition: function () {
-        return this.pos.globalState.config.iface_orderline_notes;
+        return this.pos.config.iface_orderline_notes;
     },
 });

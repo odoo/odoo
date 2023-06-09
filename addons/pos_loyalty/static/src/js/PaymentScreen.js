@@ -41,7 +41,7 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
                     [[], pointChanges, newCodes]
                 );
                 // Payload may contain the points of the concerned coupons to be updated in case of error. (So that rewards can be corrected)
-                const { couponCache } = this.pos.globalState;
+                const { couponCache } = this.pos;
                 if (payload && payload.updated_points) {
                     for (const pointChange of Object.entries(payload.updated_points)) {
                         if (couponCache[pointChange[0]]) {
@@ -80,7 +80,7 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
     async _postPushOrderResolve(order, server_ids) {
         // Compile data for our function
         const _super = this._super;
-        const { program_by_id, reward_by_id, couponCache } = this.pos.globalState;
+        const { program_by_id, reward_by_id, couponCache } = this.pos;
         const rewardLines = order._get_reward_lines();
         const partner = order.get_partner();
         let couponData = Object.values(order.couponPointChanges).reduce((agg, pe) => {

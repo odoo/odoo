@@ -11,8 +11,8 @@
                     <t t-if="!state.isMobile || state.mobileSearchBarIsShown">
                         <div class="pos-search-bar">
                             <i class="fa fa-search"/>
-                            <input t-model="this.pos.globalState.searchProductWord" placeholder="Search Products..." type="text" autofocus="autofocus" t-on-keyup="updateSearch" />
-                            <i t-if="this.pos.globalState.searchProductWord" class="fa fa-times" t-on-click="_clearSearch"/>
+                            <input t-model="this.pos.searchProductWord" placeholder="Search Products..." type="text" autofocus="autofocus" t-on-keyup="updateSearch" />
+                            <i t-if="this.pos.searchProductWord" class="fa fa-times" t-on-click="_clearSearch"/>
                         </div>
                     </t>
                 </div>

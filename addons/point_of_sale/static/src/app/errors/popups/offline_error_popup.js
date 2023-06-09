@@ -22,15 +22,15 @@ export class OfflineErrorPopup extends ErrorPopup {
         super.setup(...arguments);
         this.pos = usePos();
 
-        if (!this.pos.globalState.showOfflineWarning) {
+        if (!this.pos.showOfflineWarning) {
             this.cancel();
         } else {
-            this.pos.globalState.set_synch("disconnected");
+            this.pos.set_synch("disconnected");
         }
     }
 
     confirm() {
-        this.pos.globalState.showOfflineWarning = false;
+        this.pos.showOfflineWarning = false;
         this.cancel();
     }
 }

@@ -42,26 +42,26 @@ export class ProductsWidgetControlPanel extends Component {
         this.state.mobileSearchBarIsShown = !this.state.mobileSearchBarIsShown;
     }
     _clearSearch() {
-        this.pos.globalState.searchProductWord = "";
+        this.pos.searchProductWord = "";
         this.props.clearSearch();
     }
     get displayCategImages() {
         return (
             !this.ui.isSmall &&
-            Object.values(this.pos.globalState.db.category_by_id).some((categ) => categ.has_image)
+            Object.values(this.pos.db.category_by_id).some((categ) => categ.has_image)
         );
     }
     updateSearch(event) {
-        this.props.updateSearch(this.pos.globalState.searchProductWord);
+        this.props.updateSearch(this.pos.searchProductWord);
     }
     async _onPressEnterKey() {
-        if (!this.pos.globalState.searchProductWord) {
+        if (!this.pos.searchProductWord) {
             return;
         }
         this.props.loadProductFromServer();
     }
     searchProductFromInfo(productName) {
-        this.pos.globalState.searchProductWord = productName;
+        this.pos.searchProductWord = productName;
         this.props.switchCategory(0);
         this.props.updateSearch(productName);
     }

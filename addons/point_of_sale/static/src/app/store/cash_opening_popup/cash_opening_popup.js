@@ -18,7 +18,7 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
         this.pos = usePos();
         this.state = useState({
             notes: "",
-            openingCash: this.pos.globalState.pos_session.cash_register_balance_start || 0,
+            openingCash: this.pos.pos_session.cash_register_balance_start || 0,
         });
         this.popup = useService("popup");
         this.orm = useService("orm");
@@ -27,10 +27,10 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
     }
     //@override
     async confirm() {
-        this.pos.globalState.pos_session.cash_register_balance_start = this.state.openingCash;
-        this.pos.globalState.pos_session.state = "opened";
+        this.pos.pos_session.cash_register_balance_start = this.state.openingCash;
+        this.pos.pos_session.state = "opened";
         this.orm.call("pos.session", "set_cashbox_pos", [
-            this.pos.globalState.pos_session.id,
+            this.pos.pos_session.id,
             this.state.openingCash,
             this.state.notes,
         ]);

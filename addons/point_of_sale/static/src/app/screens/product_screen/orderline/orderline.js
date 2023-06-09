@@ -17,7 +17,7 @@ export class Orderline extends Component {
     }
     selectLine() {
         const line = this.props.line; // the orderline
-        if (this.pos.globalState.get_order().selected_orderline.id !== line.id) {
+        if (this.pos.get_order().selected_orderline.id !== line.id) {
             this.mp_dbclk_time = new Date().getTime();
         } else if (!this.mp_dbclk_time) {
             this.mp_dbclk_time = new Date().getTime();
@@ -37,9 +37,9 @@ export class Orderline extends Component {
         return {
             selected: this.props.line.selected,
             "has-change":
-                this.props.line.hasChange && this.pos.globalState.config.module_pos_restaurant,
+                this.props.line.hasChange && this.pos.config.module_pos_restaurant,
             "skip-change":
-                this.props.line.skipChange && this.pos.globalState.config.module_pos_restaurant,
+                this.props.line.skipChange && this.pos.config.module_pos_restaurant,
         };
     }
     get customerNote() {

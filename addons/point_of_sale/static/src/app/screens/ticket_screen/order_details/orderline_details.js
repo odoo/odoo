@@ -20,7 +20,7 @@ export class OrderlineDetails extends Component {
         const formatQty = (line) => {
             const quantity = line.get_quantity();
             const unit = line.get_unit();
-            const decimals = this.pos.globalState.dp["Product Unit of Measure"];
+            const decimals = this.pos.dp["Product Unit of Measure"];
             const rounding = Math.max(unit.rounding, Math.pow(10, -decimals));
             const roundedQuantity = round_pr(quantity, rounding);
             return formatFloat(roundedQuantity, { digits: [69, decimals] });
@@ -55,17 +55,17 @@ export class OrderlineDetails extends Component {
         return this.props.line.get_customer_note();
     }
     getToRefundDetail() {
-        return this.pos.globalState.toRefundLines[this.props.line.id];
+        return this.pos.toRefundLines[this.props.line.id];
     }
     hasRefundedQty() {
-        return !this.pos.globalState.isProductQtyZero(this.props.line.refunded_qty);
+        return !this.pos.isProductQtyZero(this.props.line.refunded_qty);
     }
     getFormattedRefundedQty() {
         return this.env.utils.formatProductQty(this.props.line.refunded_qty);
     }
     hasToRefundQty() {
         const toRefundDetail = this.getToRefundDetail();
-        return !this.pos.globalState.isProductQtyZero(toRefundDetail && toRefundDetail.qty);
+        return !this.pos.isProductQtyZero(toRefundDetail && toRefundDetail.qty);
     }
     getFormattedToRefundQty() {
         const toRefundDetail = this.getToRefundDetail();

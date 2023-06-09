@@ -86,16 +86,16 @@
                                     t-on-click="toggleIsToInvoice">
                                     <i class="fa fa-file-text-o" /> Invoice
                                 </div>
-                                <div t-if="pos.globalState.config.iface_tipproduct and pos.globalState.config.tip_product_id" class="button js_tip"
+                                <div t-if="pos.config.iface_tipproduct and pos.config.tip_product_id" class="button js_tip"
                                     t-att-class="{ highlight: currentOrder.get_tip() }"
                                     t-on-click="addTip">
                                     <i class="fa fa-heart" /> Tip <t t-if="currentOrder.get_tip() != 0">(<t t-esc="env.utils.formatCurrency(currentOrder.get_tip())"/>)</t>
                                 </div>
-                                <div t-if="pos.globalState.config.iface_cashdrawer" class="button js_cashdrawer"
+                                <div t-if="pos.config.iface_cashdrawer" class="button js_cashdrawer"
                                     t-on-click="openCashbox">
                                     <i class="fa fa-archive" /> Open Cashbox
                                 </div>
-                                <div t-if="pos.globalState.config.ship_later" class="button"
+                                <div t-if="pos.config.ship_later" class="button"
                                         t-att-class="{ highlight: currentOrder.getShippingDate() }"
                                         t-on-click="toggleShippingDatePicker">
                                     <i class="fa fa-clock-o" /> Ship Later

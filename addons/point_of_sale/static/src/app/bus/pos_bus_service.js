@@ -14,7 +14,7 @@ export class PosBus {
         this.orm = orm;
 
         // initialize bus_service and listen on pos_config-`id` channel
-        bus_service.addChannel(`pos_config-${pos.globalState.config.id}`);
+        bus_service.addChannel(`pos_config-${pos.config.id}`);
         bus_service.addEventListener("notification", ({ detail }) => {
             for (const message of detail) {
                 this.dispatch(message);

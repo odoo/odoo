@@ -18,19 +18,19 @@ patch(BackButton.prototype, "pos_restaurant.BackButton", {
      * the logic of the back button changes a bit.
      */
     async backToFloorScreen() {
-        if (this.pos.mainScreen.component && this.pos.globalState.config.module_pos_restaurant) {
+        if (this.pos.mainScreen.component && this.pos.config.module_pos_restaurant) {
             if (
                 (this.pos.mainScreen.component === ProductScreen &&
-                    this.pos.globalState.mobile_pane == "right") ||
+                    this.pos.mobile_pane == "right") ||
                 this.pos.mainScreen.component === TipScreen
             ) {
                 this.pos.showScreen("FloorScreen", { floor: this.floor });
             } else {
-                this.pos.globalState.mobile_pane = "right";
+                this.pos.mobile_pane = "right";
                 this.pos.showScreen("ProductScreen");
             }
         } else {
-            this.pos.globalState.mobile_pane = "right";
+            this.pos.mobile_pane = "right";
             this.pos.showScreen("ProductScreen");
         }
     },

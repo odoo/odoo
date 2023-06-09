@@ -31,16 +31,16 @@ export class ProductsWidget extends Component {
         this.orm = useService("orm");
     }
     get hasProducts() {
-        return Object.keys(this.pos.globalState.db.product_by_id).length > 0;
+        return Object.keys(this.pos.db.product_by_id).length > 0;
     }
     get selectedCategoryId() {
-        return this.pos.globalState.selectedCategoryId;
+        return this.pos.selectedCategoryId;
     }
     get searchWord() {
-        return this.pos.globalState.searchProductWord.trim();
+        return this.pos.searchProductWord.trim();
     }
     get productsToDisplay() {
-        const { db } = this.pos.globalState;
+        const { db } = this.pos;
         let list = [];
         if (this.searchWord !== "") {
             list = db.search_product_in_category(this.selectedCategoryId, this.searchWord);
@@ -52,13 +52,13 @@ export class ProductsWidget extends Component {
         });
     }
     get subcategories() {
-        const { db } = this.pos.globalState;
+        const { db } = this.pos;
         return db
             .get_category_childs_ids(this.selectedCategoryId)
             .map((id) => db.get_category_by_id(id));
     }
     get breadcrumbs() {
-        const { db } = this.pos.globalState;
+        const { db } = this.pos;
         if (this.selectedCategoryId === db.root_category_id) {
             return [];
         }
@@ -68,25 +68,25 @@ export class ProductsWidget extends Component {
         ].map((id) => db.get_category_by_id(id));
     }
     get hasNoCategories() {
-        return this.pos.globalState.db.get_category_childs_ids(0).length === 0;
+        return this.pos.db.get_category_childs_ids(0).length === 0;
     }
     get shouldShowButton() {
         return this.productsToDisplay.length === 0 && this.searchWord;
     }
     switchCategory(categoryId) {
-        this.pos.globalState.setSelectedCategoryId(categoryId);
+        this.pos.setSelectedCategoryId(categoryId);
     }
     updateSearch(searchWord) {
-        this.pos.globalState.searchProductWord = searchWord;
+        this.pos.searchProductWord = searchWord;
     }
     clearSearch() {
-        this.pos.globalState.searchProductWord = "";
+        this.pos.searchProductWord = "";
     }
     updateProductList(event) {
         this.switchCategory(0);
     }
     async onPressEnterKey() {
-        const { searchProductWord } = this.pos.globalState;
+        const { searchProductWord } = this.pos;
         if (!searchProductWord) {
             return;
         }
@@ -117,7 +117,7 @@ export class ProductsWidget extends Component {
         }
     }
     async loadProductFromDB() {
-        const { searchProductWord } = this.pos.globalState;
+        const { searchProductWord } = this.pos;
         if (!searchProductWord) {
             return;
         }
@@ -144,7 +144,7 @@ export class ProductsWidget extends Component {
                 }
             );
             if (ProductIds.length) {
-                await this.pos.globalState._addProducts(ProductIds, false);
+                await this.pos._addProducts(ProductIds, false);
             }
             this.updateProductList();
             return ProductIds;
@@ -169,10 +169,10 @@ export class ProductsWidget extends Component {
         const { products, categories } = await this.orm.call(
             "pos.session",
             "load_product_frontend",
-            [this.pos.globalState.pos_session.id]
+            [this.pos.pos_session.id]
         );
-        this.pos.globalState.db.add_categories(categories);
-        this.pos.globalState._loadProductProduct(products);
+        this.pos.db.add_categories(categories);
+        this.pos._loadProductProduct(products);
     }
 
     createNewProducts() {

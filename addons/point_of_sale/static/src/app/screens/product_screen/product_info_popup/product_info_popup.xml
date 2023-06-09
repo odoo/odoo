@@ -50,7 +50,7 @@
                     </div>
                     <div class="section-inventory" t-if="productInfo.warehouses.length > 0">
                         <div class="section-title">
-                            <span>Inventory <t t-if="pos.globalState.pos_session.update_stock_at_closing">(as of opening)</t></span>
+                            <span>Inventory <t t-if="pos.pos_session.update_stock_at_closing">(as of opening)</t></span>
                             <div class="section-title-line"></div>
                         </div>
                         <div class="section-inventory-body">

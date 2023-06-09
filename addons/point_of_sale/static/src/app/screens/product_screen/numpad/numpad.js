@@ -22,13 +22,13 @@ export class NumpadWidget extends Component {
     }
     get hasPriceControlRights() {
         return (
-            this.pos.globalState.cashierHasPriceControlRights() &&
+            this.pos.cashierHasPriceControlRights() &&
             !this.props.disabledModes.includes("price")
         );
     }
     get hasManualDiscount() {
         return (
-            this.pos.globalState.config.manual_discount &&
+            this.pos.config.manual_discount &&
             !this.props.disabledModes.includes("discount")
         );
     }
@@ -41,7 +41,7 @@ export class NumpadWidget extends Component {
         }
         this.numberBuffer.capture();
         this.numberBuffer.reset();
-        this.pos.globalState.numpadMode = mode;
+        this.pos.numpadMode = mode;
     }
     sendInput(key) {
         this.numberBuffer.sendKey(key);

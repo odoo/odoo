@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import { PosGlobalState } from "@point_of_sale/app/store/models";
+import { PosStore } from "@point_of_sale/app/store/pos_store";
 import { EpsonPrinter } from "@pos_epson_printer/js/epson_printer";
 import { patch } from "@web/core/utils/patch";
 
-patch(PosGlobalState.prototype, "pos_epson_printer.PosGlobalState", {
+patch(PosStore.prototype, "pos_epson_printer.PosStore", {
     after_load_server_data() {
         var self = this;
         return this._super(...arguments).then(function () {

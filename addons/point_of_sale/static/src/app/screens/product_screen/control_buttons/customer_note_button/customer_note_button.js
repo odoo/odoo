@@ -14,7 +14,7 @@ export class OrderlineCustomerNoteButton extends Component {
         this.popup = useService("popup");
     }
     async onClick() {
-        const selectedOrderline = this.pos.globalState.get_order().get_selected_orderline();
+        const selectedOrderline = this.pos.get_order().get_selected_orderline();
         // FIXME POSREF can this happen? Shouldn't the orderline just be a prop?
         if (!selectedOrderline) {
             return;

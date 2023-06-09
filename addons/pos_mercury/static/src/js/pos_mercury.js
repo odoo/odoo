@@ -1,9 +1,10 @@
 /** @odoo-module */
 
-import { PosGlobalState, Order, Payment } from "@point_of_sale/app/store/models";
+import { PosStore } from "@point_of_sale/app/store/pos_store";
+import { Order, Payment } from "@point_of_sale/app/store/models";
 import { patch } from "@web/core/utils/patch";
 
-patch(PosGlobalState.prototype, "pos_mercury.PosGlobalState", {
+patch(PosStore.prototype, "pos_mercury.PosStore", {
     getOnlinePaymentMethods() {
         var online_payment_methods = [];
 

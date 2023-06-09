@@ -11,7 +11,7 @@ export class PrintBillButton extends Component {
         this.pos = usePos();
     }
     _isDisabled() {
-        const order = this.pos.globalState.get_order();
+        const order = this.pos.get_order();
         if (!order) {
             return false;
         }
@@ -25,6 +25,6 @@ export class PrintBillButton extends Component {
 ProductScreen.addControlButton({
     component: PrintBillButton,
     condition: function () {
-        return this.pos.globalState.config.iface_printbill;
+        return this.pos.config.iface_printbill;
     },
 });

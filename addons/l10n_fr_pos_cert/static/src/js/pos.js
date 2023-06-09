@@ -1,12 +1,13 @@
 /** @odoo-module */
 
-import { PosGlobalState, Order, Orderline } from "@point_of_sale/app/store/models";
+import { PosStore } from "@point_of_sale/app/store/pos_store";
+import { Order, Orderline } from "@point_of_sale/app/store/models";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { sprintf } from "@web/core/utils/strings";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
-patch(PosGlobalState.prototype, "l10n_fr_pos_cert.PosGlobalState", {
+patch(PosStore.prototype, "l10n_fr_pos_cert.PosStore", {
     is_french_country() {
         var french_countries = ["FR", "MF", "MQ", "NC", "PF", "RE", "GF", "GP", "TF"];
         if (!this.company.country) {
