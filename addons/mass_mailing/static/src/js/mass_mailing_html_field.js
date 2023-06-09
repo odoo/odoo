@@ -605,8 +605,8 @@ export class MassMailingHtmlField extends HtmlField {
      * @override
      */
     async _setupReadonlyIframe() {
-        if (!this.props.value.length) {
-            this.props.value = this.props.record.data.body_html;
+        if (!this.props.record.data[this.props.name].length) {
+            this.props.record.data[this.props.name] = this.props.record.data.body_html;
         }
         await super._setupReadonlyIframe();
     }
