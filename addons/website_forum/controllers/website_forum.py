@@ -36,6 +36,21 @@ class WebsiteForum(WebsiteProfile):
             values['forum'] = kwargs.get('forum')
         elif kwargs.get('forum_id'):
             values['forum'] = request.env['forum.forum'].browse(int(kwargs.pop('forum_id')))
+        forum = values.get('forum')
+        if forum and forum is not True and not request.env.user._is_public():
+            def _get_my_other_forums():
+                post_domain = expression.OR(
+                    [[('create_uid', '=', request.uid)],
+                     [('favourite_ids', '=', request.uid)]]
+                )
+                return request.env['forum.forum'].search(expression.AND([
+                    request.website.website_domain(),
+                    [('id', '!=', forum.id)],
+                    [('post_ids', 'any', post_domain)]
+                ]))
+            values['my_other_forums'] = tools.lazy(_get_my_other_forums)
+        else:
+            values['my_other_forums'] = request.env['forum.forum']
         return values
 
     def _prepare_mark_as_offensive_values(self, post, **kwargs):
