@@ -24,6 +24,7 @@ const wysiwygUtils = require('@web_editor/js/common/wysiwyg_utils');
 const weUtils = require('web_editor.utils');
 const { PeerToPeer } = require('@web_editor/js/wysiwyg/PeerToPeer');
 const { Mutex } = require('web.concurrency');
+const { throttleForAnimation } = require('@web/core/utils/timing');
 
 var _t = core._t;
 const QWeb = core.qweb;
@@ -739,6 +740,9 @@ const Wysiwyg = Widget.extend({
         window.removeEventListener('beforeunload', this._onBeforeUnload);
         for (const timeout of this.tooltipTimeouts) {
             clearTimeout(timeout);
+        }
+        if (this.scrollContainer) {
+            this.scrollContainer.removeEventListener('scroll', this.updateToolbarPosition);
         }
         this._super();
     },
@@ -1611,18 +1615,38 @@ const Wysiwyg = Widget.extend({
         if ($colorpickerGroup.length) {
             this._createPalette();
         }
-        // we need the Timeout to be sure the editable content is loaded
-        // before calculating the scrollParent() element.
-        setTimeout(() => {
-            const scrollableContainer = this.$el.scrollParent();
-            if (!options.snippets && scrollableContainer.length) {
-                this.odooEditor.addDomListener(
-                    scrollableContainer[0],
-                    'scroll',
-                    this.odooEditor.updateToolbarPosition.bind(this.odooEditor),
-                );
+        if (!options.snippets) {
+            this.updateToolbarPosition =
+                throttleForAnimation(this.odooEditor.updateToolbarPosition.bind(this.odooEditor));
+            this.scrollContainer = this._scrollParent();
+            this.scrollContainer.addEventListener('scroll', this.updateToolbarPosition);
+        }
+    },
+    /**
+     * @returns {Element} closest ancestor to this.el that is scrollable
+     */
+    _scrollParent() {
+        let element = this.el.parentElement;
+        while (element) {
+            const overflowY = getComputedStyle(element)["overflow-y"];
+            if (overflowY === "scroll" || overflowY === "auto") {
+                return element;
             }
-        }, 0);
+            element = element.parentElement;
+        }
+        return document.body;
+    },
+    updateScrollContainer() {
+        if (!this.scrollContainer) {
+            return;
+        }
+        const newScrollContainer = this._scrollParent();
+        if (this.scrollContainer !== newScrollContainer) {
+            this.scrollContainer.removeEventListener('scroll', this.updateToolbarPosition);
+            newScrollContainer.addEventListener('scroll', this.updateToolbarPosition);
+            this.scrollContainer = newScrollContainer;
+        }
+        this.updateToolbarPosition();
     },
     /**
      * @private

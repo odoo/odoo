@@ -86,6 +86,7 @@ export class HtmlField extends Component {
             this.dynamicPlaceholder = useDynamicPlaceholder();
         }
         this.rpc = useService("rpc");
+        this.uiService = useService("ui");
 
         this.onIframeUpdated = this.env.onIframeUpdated || (() => {});
 
@@ -96,6 +97,8 @@ export class HtmlField extends Component {
 
         useBus(this.env.bus, "RELATIONAL_MODEL:WILL_SAVE_URGENTLY", () => this.commitChanges({ urgent: true }));
         useBus(this.env.bus, "RELATIONAL_MODEL:NEED_LOCAL_CHANGES", ({detail}) => detail.proms.push(this.commitChanges()));
+        // Changes in the DOM take effect some time after the resize event, therefore the timeout.
+        useBus(this.uiService.bus, "resize", () => setTimeout(() => this.wysiwyg.updateScrollContainer(), 500));
 
         this._onUpdateIframeId = 'onLoad_' + _.uniqueId('FieldHtml');
 
