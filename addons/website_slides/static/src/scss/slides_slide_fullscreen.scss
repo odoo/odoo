@@ -92,8 +92,18 @@
 
             .o_wslides_sidebar_content {
                 line-height: unset;
+
+                .list-unstyled i {
+                    color: $gray-600
+                }
+
                 i {
                     line-height: unset;
+
+                    &.fa-flag-checkered {
+                        padding-left: 3px;
+                        padding-right: 7px;
+                    }
                 }
             }
 
@@ -101,8 +111,8 @@
                 line-height: unset;
 
                 button {
-                    padding-top: 0;
-                    border-top: 0;
+                    padding: 0;
+                    padding-right: 3px;
                 }
             }
         }
