@@ -1231,9 +1231,14 @@ export class SearchModel extends EventBus {
     async _fetchPropertiesDefinition(definitionRecordModel, definitionRecordField) {
         const domain = [];
         if (this.context.active_id) {
-            // assume the active id is the definition record
-            // and show only its properties
-            domain.push(["id", "=", this.context.active_id]);
+            if (!this.context.active_model || this.context.active_model === definitionRecordModel) {
+                // assume the active id is the definition record
+                // and show only its properties
+                domain.push(["id", "=", this.context.active_id]);
+            } else if (this.context.properties_definition_domain) {
+                // manually added domain to filter the properties
+                domain.push(this.context.properties_definition_domain);
+            }
         }
 
         const result = await this.orm.webSearchRead(definitionRecordModel, domain, [

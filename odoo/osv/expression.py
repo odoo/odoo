@@ -1005,7 +1005,15 @@ class expression(object):
                 for dom_leaf in dom:
                     push(dom_leaf, model, alias)
 
-            elif field.type == 'properties':
+            elif field.type == 'properties' and field.related:
+                # like standard related but the last part of the path is the property name
+                rel_field, *properties_path = field.related.split('.')
+                def_model = model.env[model._fields[rel_field].comodel_name]
+                new_path = '.'.join(properties_path + path[1:])
+                query = def_model._search([(new_path, operator, right)])
+                push((rel_field, 'in', query), model, alias)
+
+            elif field.type == 'properties' and field.store:
                 if len(path) != 2 and "." in path[1]:
                     raise ValueError(f"Wrong path {path}")
                 elif operator not in ('=', '!=', '>', '>=', '<', '<=', 'in', 'not in', 'like', 'ilike', 'not like', 'not ilike'):

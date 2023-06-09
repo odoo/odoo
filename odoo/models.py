@@ -1760,7 +1760,7 @@ class BaseModel(metaclass=MetaModel):
 
         # delegate the default properties to the properties field
         for field in self._fields.values():
-            if field.type == 'properties':
+            if field.type == 'properties' and not field.inherited:
                 defaults[field.name] = field._add_default_values(self.env, defaults)
 
         return defaults

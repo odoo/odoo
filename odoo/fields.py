@@ -3237,6 +3237,10 @@ class Properties(Field):
             self._depends = (self.definition_record, )
             self.compute = self._compute
 
+        if self.related:
+            if not self.readonly and not self.inherited:
+                raise ValueError('Related properties field are readonly')
+
     # Database/cache format: a value is either None, or a dict mapping property
     # names to their corresponding value, like
     #
@@ -3308,6 +3312,9 @@ class Properties(Field):
         return self.convert_to_read_multi([value], record, use_name_get)[0]
 
     def convert_to_read_multi(self, values, records, use_name_get=True):
+        if not records:
+            return values
+
         assert len(values) == len(records)
 
         # each value is either None or a dict
@@ -3419,7 +3426,7 @@ class Properties(Field):
         definition_changed = any(
             definition.get('definition_changed')
             or definition.get('definition_deleted')
-            for definition in value
+            for definition in (value or [])
         )
         if definition_changed:
             value = [
@@ -3503,9 +3510,16 @@ class Properties(Field):
 
     def _get_properties_definition(self, record):
         """Return the properties definition of the given record."""
-        container = record[self.definition_record]
+        if self.related:
+            path, field_name = self.related.rsplit(".", 1)
+            record = record.mapped(path)
+            field = record._fields[field_name]
+        else:
+            field = self
+
+        container = record[field.definition_record]
         if container:
-            return container.sudo()[self.definition_record_field]
+            return container.sudo()[field.definition_record_field]
 
     @classmethod
     def _add_display_name(cls, values_list, env, value_keys=('value', 'default')):

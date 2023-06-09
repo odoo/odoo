@@ -223,6 +223,28 @@ class Message(models.Model):
         return super().write(vals)
 
 
+class RelatedProperties(models.Model):
+    _name = 'test_new_api.related_properties'
+    _description = 'Test Related Properties'
+
+    message_id = fields.Many2one('test_new_api.message')
+    related_attributes = fields.Properties(
+        string='Related Properties',
+        related='message_id.attributes',
+        readonly=True)
+
+
+class RelatedRelatedProperties(models.Model):
+    _name = 'test_new_api.related_related_properties'
+    _description = 'Test Related Related Properties'
+
+    related_id = fields.Many2one('test_new_api.related_properties')
+    related_related_attributes = fields.Properties(
+        string='Related Related Properties',
+        related='related_id.message_id.attributes',
+        readonly=True)
+
+
 class EmailMessage(models.Model):
     _name = 'test_new_api.emailmessage'
     _description = 'Test New API Email Message'
