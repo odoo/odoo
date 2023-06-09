@@ -4,6 +4,7 @@ import {
     dragAndDrop,
     getFixture,
     makeDeferred,
+    nextTick,
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
@@ -88,6 +89,7 @@ QUnit.module("Fields", (hooks) => {
         $jSignatureEl.on("change", def.resolve);
         await dragAndDrop("canvas.jSignature", "canvas.jSignature");
         await def; // makes sure the signature stroke is taken into account by jSignature
+        await nextTick(); // await owl rendering
         assert.containsOnce(target, ".modal .btn.btn-primary:not([disabled])");
 
         // Click on "Adopt and Sign" button
