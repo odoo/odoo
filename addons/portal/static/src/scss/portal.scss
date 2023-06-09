@@ -342,6 +342,10 @@ img, .media_iframe_video, .o_image {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+
+            &:has(a) {
+                color: $primary;
+            }
         }
     }
 
