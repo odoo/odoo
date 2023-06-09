@@ -23,13 +23,13 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
      * @override
      */
     start: async function () {
-        const carriers = Array.from(document.querySelectorAll('input[name="delivery_type"]'));
+        this.carriers = Array.from(document.querySelectorAll('input[name="delivery_type"]'));
         this.dp = new concurrency.DropPrevious();
         // Workaround to:
         // - update the amount/error on the label at first rendering
         // - prevent clicking on 'Pay Now' if the shipper rating fails
-        if (carriers.length > 0) {
-            const carrierChecked = carriers.filter(e =>e.checked)
+        if (this.carriers.length > 0) {
+            const carrierChecked = this.carriers.filter(e =>e.checked)
             if (carrierChecked.length === 0) {
                 const payButton = document.querySelector('button[name="o_payment_submit_button"]');
                 payButton? payButton.disabled = true : null;
@@ -39,7 +39,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         }
 
         await this._getCurrentLocation();
-        await _.each(carriers, async carrierInput => {
+        await _.each(this.carriers, async carrierInput => {
             this._showLoading((carrierInput));
             await this._handleCarrierUpdateResult(carrierInput)
         });
@@ -93,7 +93,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
         }
         const currentCarrierChecked = docCarrier.closest("li").getElementsByTagName("input")[0].checked;
         const span = document.createElement("em");
-        if (!currentCarrierChecked) {
+        if (!currentCarrierChecked || this.carriers.length == 1) {
             span.textContent = "select to see available Pick-Up Locations";
             span.classList.add("text-muted");
         }
@@ -399,6 +399,7 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             route: '/shop/update_carrier',
             params: {
                 'carrier_id': carrierId,
+                'no_reset_access_point_address': true,
             },
         })
         this._enableButton(result.status);
