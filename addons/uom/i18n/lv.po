@@ -9,6 +9,7 @@
 # Arnis Putniņš <arnis@allegro.lv>, 2022
 # Martin Trigaux, 2022
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
+# Will Sensors, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-07-12 07:50+0000\n"
 "PO-Revision-Date: 2021-09-14 12:27+0000\n"
-"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023\n"
+"Last-Translator: Will Sensors, 2023\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -289,6 +290,12 @@ msgid ""
 msgstr ""
 
 #. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "The value of ratio could not be Zero"
+msgstr ""
+
+#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
 msgid "Type"
 msgstr "Tips"
@@ -330,7 +337,7 @@ msgstr "Mērvienības"
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Mērvienību kategoriju vienības"
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view

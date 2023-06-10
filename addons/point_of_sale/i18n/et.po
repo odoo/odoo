@@ -10,20 +10,20 @@
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Toomas Ant <toomas.ant@gmail.com>, 2022
 # Wanradt Koell <wanradt@gmail.com>, 2022
-# Martin Trigaux, 2022
 # Maidu Targama <m.targama@gmail.com>, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
 # Ants Peetsalu <ants@avalah.ee>, 2022
 # Egon Raamat <egon@avalah.ee>, 2022
 # Marek Pontus, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
-# Algo Kärp <algokarp@gmail.com>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Anna, 2023
 # Leaanika Randmets, 2023
-# JanaAvalah, 2023
 # Patrick-Jordan Kiudorv, 2023
 # Piia Paurson <piia@avalah.ee>, 2023
+# Algo Kärp <algokarp@gmail.com>, 2023
+# JanaAvalah, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Piia Paurson <piia@avalah.ee>, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -847,6 +847,13 @@ msgstr "Ei saa klienti muuta"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Can't mix order with refund products with new products."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/Popups/CashMovePopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/ConfirmPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/EditListPopup.js:0
@@ -912,6 +919,7 @@ msgstr "Suletud seansilt tellimust ei saa arveldada."
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Cannot return change without a cash payment method"
@@ -1996,6 +2004,7 @@ msgid "Do you want to open the customer list to select customer?"
 msgstr "Kas soovite kliendi valimiseks avada klientide nimekirja?"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Documentation"
 msgstr "Dokumentatsioon"
@@ -2258,6 +2267,7 @@ msgstr "Finantspositsioonid"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Fiscal data module error"
@@ -3179,7 +3189,7 @@ msgstr "Maksimum ületatud"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/Misc/NumberBuffer.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Maximum value reached"
 msgstr "Maksimaalne väärtus on saavutatud"
@@ -3302,11 +3312,6 @@ msgstr "Uus sessioon"
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
 msgstr "Ajalehtede riiul"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Järgmine tegevus kalendris"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -3891,6 +3896,13 @@ msgid "POS Session"
 msgstr "POSi sessioon"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "POS error"
+msgstr ""
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "POS order line %s"
@@ -4068,6 +4080,13 @@ msgid "Payments:"
 msgstr "Maksed:"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid "Pending Electronic Payments"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.filters,name:point_of_sale.filter_orders_per_session
 msgid "Per session"
 msgstr "Sessiooni kohta"
@@ -4117,6 +4136,7 @@ msgstr "POSi valimine"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+#, python-format
 msgid "Pickings"
 msgstr "Toodete vastuvõtmised"
 
@@ -4151,10 +4171,20 @@ msgstr "Kontrollige, kas IoT karp on endiselt ühendatud."
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/printers.js:0
-#: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Please check if the printer is still connected."
 msgstr "Kontrollige, kas printer on endiselt ühendatud."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/printers.js:0
+#, python-format
+msgid ""
+"Please check if the printer is still connected. \n"
+"Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
+msgstr ""
+"Please check if the printer is still connected. \n"
+"Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5465,19 +5495,22 @@ msgid "Shopping cart"
 msgstr "Ostukorv"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid "Show checkout to customers through a second display"
-msgstr "Näidake klientidele kassat teise ekraani kaudu"
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display_via_proxy
 msgid "Show checkout to customers with a remotely-connected screen."
 msgstr "Näidake klientidele kassat kaugühendusega ekraaniga."
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid ""
+"Show customers checkout in a pop-up window. Can be moved to a second screen."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display_local
-msgid "Show checkout to customers."
-msgstr "Näita klientidele kassat."
+msgid ""
+"Show customers checkout in a pop-up window. Recommend to be moved to a "
+"second screen visible to the client."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
@@ -5645,6 +5678,11 @@ msgstr ""
 #: model:ir.model,name:point_of_sale.model_stock_move
 msgid "Stock Move"
 msgstr "Laoliikumine"
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_stock_rule
+msgid "Stock Rule"
+msgstr "Laoreegel"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
@@ -6173,6 +6211,15 @@ msgid "There is already an electronic payment in progress."
 msgstr "Elektrooniline makse on juba pooleli."
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"There is at least one pending electronic payment.\n"
+"Please finish the payment with the terminal or cancel it then remove the payment line."
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
@@ -6342,6 +6389,17 @@ msgid "This order is empty"
 msgstr "See tellimus on tühi"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+"See tellimus pole veel sünkroniseeritud serveriga. Palun määra kindlaks, et "
+"see on sünkroniseeritud ning proovi uuesti."
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "This product is used as reference on customer receipts."
@@ -6368,6 +6426,7 @@ msgstr ""
 "tellimuste viitenumbrite kohandamiseks."
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -6603,17 +6662,6 @@ msgid "Type of the exception activity on record."
 msgstr "Kirjel oleva erandtegevuse tüüp."
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
-#, python-format
-msgid ""
-"This order is not yet synced to server. Make sure it is synced then try "
-"again."
-msgstr ""
-"See tellimus pole veel sünkroniseeritud serveriga. Palun määra kindlaks, et "
-"see on sünkroniseeritud ning proovi uuesti."
-
-#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -6738,6 +6786,13 @@ msgid "Unsupported File Format"
 msgstr "Toetamata failivorming"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Unsynced order"
+msgstr "Sünkroniseerimata tellimus"
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "UoM"
 msgstr "Mõõtühikud"
@@ -6798,10 +6853,9 @@ msgstr "Uuid"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
-#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
-#, python-format, python-format
-msgid "Unsynced order"
-msgstr "Sünkroniseerimata tellimus"
+#, python-format
+msgid "VAT:"
+msgstr "KM:"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6915,7 +6969,6 @@ msgstr "Kas soovite demoandmeid laadida?"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/models/pos_config.py:0
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
@@ -6961,7 +7014,18 @@ msgstr ""
 " seansil."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid ""
+"You can't: create a pos order from the backend interface, or unset the "
+"pricelist, or create a pos.order in a python test with Form tool, or edit "
+"the form view in studio if no PoS order exist"
+msgstr ""
+"Te ei saa: kui PoS tellimust pole, ei saa Te luua taustaliidese kaudu pos-"
+"tellimust või tühistada hinnakirja, luua pythoni testis vormitööriistaga "
+"pos.order või muuta vormivaadet Studioga."
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -6972,6 +7036,7 @@ msgstr ""
 "Arved: %s"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
@@ -7022,6 +7087,30 @@ msgstr ""
 #, python-format
 msgid "You do not have any products"
 msgstr "Teil pole ühtegi toodet"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You don't have the access rights to get the point of sale closing control "
+"data."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "You don't have the access rights to set the point of sale cash box."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You have enabled the \"Identify Customer\" option for %s payment method,but "
+"the order %s does not contain a customer."
+msgstr ""
+"Olete lubanud %s makseviisi puhul valiku \"Identifitseeri klient\", kuid "
+"tellimus %s ei sisalda klienti."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:0
@@ -7267,17 +7356,3 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "olid olemasolevate tellimuste duplikaadid"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid "You don't have the access rights to set the point of sale cash box."
-msgstr ""
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid ""
-"You don't have the access rights to get the point of sale closing control "
-"data."
-msgstr ""

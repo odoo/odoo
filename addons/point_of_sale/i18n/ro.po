@@ -6,10 +6,10 @@
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2021
 # Iulian Cutui <iulian.cutui@gmail.com>, 2021
 # Hongu Cosmin <cosmin513@gmail.com>, 2021
-# Martin Trigaux, 2021
 # Cozmin Candea <office@terrabit.ro>, 2023
-# Dorin Hongu <dhongu@gmail.com>, 2023
 # Foldi Robert <foldirobert@nexterp.ro>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -843,6 +843,13 @@ msgstr "Nu se poate schimba clientul"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "Can't mix order with refund products with new products."
+msgstr ""
+
+#. module: point_of_sale
+#. openerp-web
 #: code:addons/point_of_sale/static/src/js/Popups/CashMovePopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/ConfirmPopup.js:0
 #: code:addons/point_of_sale/static/src/js/Popups/EditListPopup.js:0
@@ -909,6 +916,7 @@ msgstr "Nu se poate factura comanda din sesiunea închisă."
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Cannot return change without a cash payment method"
@@ -2001,6 +2009,7 @@ msgid "Do you want to open the customer list to select customer?"
 msgstr "Doriți să deschideți lista de clienți pentru a selecta clientul?"
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Documentation"
 msgstr "Documentație"
@@ -2264,6 +2273,7 @@ msgstr "Poziții fiscale"
 
 #. module: point_of_sale
 #. openerp-web
+#: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #: code:addons/point_of_sale/static/src/js/custom_hooks.js:0
 #, python-format
 msgid "Fiscal data module error"
@@ -3190,7 +3200,7 @@ msgstr "Maximul a fost depășit"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/static/src/js/Misc/NumberBuffer.js:0
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
 #, python-format
 msgid "Maximum value reached"
 msgstr "Valoarea maximă a fost atinsă"
@@ -3315,11 +3325,6 @@ msgstr "Sesiune nouă"
 #: model:product.template,name:point_of_sale.newspaper_rack_product_template
 msgid "Newspaper Rack"
 msgstr "Raft pentru ziare"
-
-#. module: point_of_sale
-#: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_calendar_event_id
-msgid "Next Activity Calendar Event"
-msgstr "Următoarea activitate din calendar"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_date_deadline
@@ -3906,6 +3911,13 @@ msgid "POS Session"
 msgstr "Sesiune POS"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/models.js:0
+#, python-format
+msgid "POS error"
+msgstr ""
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "POS order line %s"
@@ -4083,6 +4095,13 @@ msgid "Payments:"
 msgstr "Plăți:"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid "Pending Electronic Payments"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.filters,name:point_of_sale.filter_orders_per_session
 msgid "Per session"
 msgstr "Pe sesiune"
@@ -4132,6 +4151,7 @@ msgstr "Ridicare POS"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
+#, python-format
 msgid "Pickings"
 msgstr "Ridicări"
 
@@ -4166,10 +4186,20 @@ msgstr "Vă rugăm să verificați dacă IoT Box este încă conectat."
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/printers.js:0
-#: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Please check if the printer is still connected."
 msgstr "Verificați dacă imprimanta este încă conectată."
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/printers.js:0
+#, python-format
+msgid ""
+"Please check if the printer is still connected. \n"
+"Some browsers don't allow HTTP calls from websites to devices in the network (for security reasons). If it is the case, you will need to follow Odoo's documentation for 'Self-signed certificate for ePOS printers' and 'Secure connection (HTTPS)' to solve the issue"
+msgstr ""
+"Verificați dacă imprimanta este încă conectată. \n"
+"Unele browsere nu permit apeluri HTTP de la site-uri la dispozitivele din rețea (din motive de securitate). În acest caz, va trebui să urmați documentația Odoo pentru 'Certificat auto-semnat pentru imprimante ePOS' și 'Conexiune securizată (HTTPS)' pentru a rezolva problema"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5485,19 +5515,22 @@ msgid "Shopping cart"
 msgstr "Coș de cumpărături"
 
 #. module: point_of_sale
-#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
-msgid "Show checkout to customers through a second display"
-msgstr "Afișați comanda clienților printr-un al doilea afișaj"
-
-#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display_via_proxy
 msgid "Show checkout to customers with a remotely-connected screen."
 msgstr "Afișați plăți clienților cu un ecran conectat de la distanță."
 
 #. module: point_of_sale
+#: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
+msgid ""
+"Show customers checkout in a pop-up window. Can be moved to a second screen."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display_local
-msgid "Show checkout to customers."
-msgstr "Arătați checkout clienților."
+msgid ""
+"Show customers checkout in a pop-up window. Recommend to be moved to a "
+"second screen visible to the client."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
@@ -5666,6 +5699,11 @@ msgstr ""
 #: model:ir.model,name:point_of_sale.model_stock_move
 msgid "Stock Move"
 msgstr "Mișcare stoc"
+
+#. module: point_of_sale
+#: model:ir.model,name:point_of_sale.model_stock_rule
+msgid "Stock Rule"
+msgstr "Regulă stoc"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__update_stock_at_closing
@@ -6212,6 +6250,15 @@ msgid "There is already an electronic payment in progress."
 msgstr "Există deja o plată electronică în derulare."
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/PaymentScreen/PaymentScreen.js:0
+#, python-format
+msgid ""
+"There is at least one pending electronic payment.\n"
+"Please finish the payment with the terminal or cancel it then remove the payment line."
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid ""
 "There is no Chart of Accounts configured on the company. Please go to the "
@@ -6385,6 +6432,15 @@ msgid "This order is empty"
 msgstr "Această comandă este goală"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid ""
+"This order is not yet synced to server. Make sure it is synced then try "
+"again."
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__tip_product_id
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "This product is used as reference on customer receipts."
@@ -6409,6 +6465,7 @@ msgstr ""
 "personaliza numerele de referință ale comenzilor."
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -6645,15 +6702,6 @@ msgid "Type of the exception activity on record."
 msgstr "Tipul activității de excepție din înregistrare."
 
 #. module: point_of_sale
-#. openerp-web
-#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
-#, python-format
-msgid ""
-"This order is not yet synced to server. Make sure it is synced then try "
-"again."
-msgstr ""
-
-#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -6778,6 +6826,13 @@ msgid "Unsupported File Format"
 msgstr "Format fișier neacceptat"
 
 #. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
+#, python-format
+msgid "Unsynced order"
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "UoM"
 msgstr "UM"
@@ -6840,10 +6895,9 @@ msgstr "Uuid"
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/Popups/CashMoveReceipt.xml:0
-#: code:addons/point_of_sale/static/src/js/Screens/ReceiptScreen/ReceiptScreen.js:0
-#, python-format, python-format
-msgid "Unsynced order"
-msgstr ""
+#, python-format
+msgid "VAT:"
+msgstr "TVA:"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6957,7 +7011,6 @@ msgstr "Doriți să încărcați datele demo?"
 
 #. module: point_of_sale
 #. openerp-web
-#: code:addons/point_of_sale/models/pos_config.py:0
 #: code:addons/point_of_sale/static/src/js/Chrome.js:0
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
@@ -7003,7 +7056,19 @@ msgstr ""
 "punct de vânzare."
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid ""
+"You can't: create a pos order from the backend interface, or unset the "
+"pricelist, or create a pos.order in a python test with Form tool, or edit "
+"the form view in studio if no PoS order exist"
+msgstr ""
+"Nu puteți: crea o comandă de poziție din interfața de backend, sau anulați "
+"lista de prețuri, sau creați o comandă de poziție într-un test python cu "
+"Formularul de instrumente, sau editați vizualizarea formularului în studio "
+"dacă nu există nicio comandă de poziție"
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -7014,6 +7079,7 @@ msgstr ""
 "Facturi: %s"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You cannot close the POS when orders are still in draft"
@@ -7067,6 +7133,30 @@ msgstr ""
 #, python-format
 msgid "You do not have any products"
 msgstr "Nu aveți produse"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You don't have the access rights to get the point of sale closing control "
+"data."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "You don't have the access rights to set the point of sale cash box."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You have enabled the \"Identify Customer\" option for %s payment method,but "
+"the order %s does not contain a customer."
+msgstr ""
+"Ați activat opțiunea \"Identificați clientul\" pentru metoda de plată %s, "
+"dar comanda %s nu conține un client."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:0
@@ -7323,17 +7413,3 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "au fost duplicate ale unor comenzi existente"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid "You don't have the access rights to set the point of sale cash box."
-msgstr ""
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/models/pos_session.py:0
-#, python-format
-msgid ""
-"You don't have the access rights to get the point of sale closing control "
-"data."
-msgstr ""

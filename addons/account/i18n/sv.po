@@ -4907,17 +4907,17 @@ msgstr "Avstämningsdag"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
 msgid "DELIVERED AT PLACE"
-msgstr ""
+msgstr "LEVERERAS PÅ PLATS"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DPU
 msgid "DELIVERED AT PLACE UNLOADED"
-msgstr ""
+msgstr "LEVERERAT PÅ PLATSEN FÖR LOSSNING"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
-msgstr ""
+msgstr "LEVERERAT TULL BETALT"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
@@ -5096,7 +5096,7 @@ msgstr "Standard incoterm för ert bolag"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_default_pos_receivable_account_id
 msgid "Default PoS Receivable Account"
-msgstr ""
+msgstr "Standard PoS Fodringskonto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_purchase_tax_id
@@ -5182,6 +5182,8 @@ msgid ""
 "Define in which journals this account can be used. If empty, can be used in "
 "all journals."
 msgstr ""
+"Definiera i vilka journaler detta konto kan användas. Om tomt, kan det "
+"användas i alla journaler."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5219,6 +5221,8 @@ msgid ""
 "Defines the smallest coinage of the currency that can be used to pay by "
 "cash."
 msgstr ""
+"Definierar den minsta valören av valutan som kan användas för att betala "
+"kontant."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -5230,7 +5234,7 @@ msgstr "Definition"
 #: model:ir.model.fields,field_description:account.field_res_partner__trust
 #: model:ir.model.fields,field_description:account.field_res_users__trust
 msgid "Degree of trust you have in this debtor"
-msgstr ""
+msgstr "Graden av förtroende som du har för den här gäldenären"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__auto_delete
@@ -5279,18 +5283,18 @@ msgstr "Destination"
 #: model:ir.model.fields,field_description:account.field_account_payment__destination_account_id
 #, python-format
 msgid "Destination Account"
-msgstr ""
+msgstr "Destinationskonto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__destination_journal_id
 msgid "Destination Journal"
-msgstr ""
+msgstr "Destination Journal"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Destination journal"
-msgstr ""
+msgstr "Målbokföringsjournal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__auto_apply
@@ -5304,6 +5308,8 @@ msgid ""
 "Determines where the tax is selectable. Note : 'None' means a tax can't be "
 "used by itself, however it can still be used in a group."
 msgstr ""
+"Bestämmer var skatten kan väljas. Notera: ’Ingen’ innebär att en skatt inte "
+"kan användas självständigt, men den kan fortfarande användas i en grupp."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__type_tax_use
@@ -5312,6 +5318,9 @@ msgid ""
 "used by itself, however it can still be used in a group. 'adjustment' is "
 "used to perform tax adjustment."
 msgstr ""
+"Bestämmer var skatten kan väljas. Notera: ’Ingen’ innebär att en skatt inte "
+"kan användas självständigt, men den kan fortfarande användas i en grupp. "
+"’Justering’ används för att genomföra skattejustering."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__difference
@@ -5321,14 +5330,14 @@ msgstr "Skillnad"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_account_id
 msgid "Difference Account"
-msgstr ""
+msgstr "Differenskonto"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__allow_payment_tolerance
 #: model:ir.model.fields,help:account.field_account_reconcile_model_line__allow_payment_tolerance
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__allow_payment_tolerance
 msgid "Difference accepted in case of underpayment."
-msgstr ""
+msgstr "Accepterad skillnad vid underbetalning."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__difference
@@ -5371,7 +5380,7 @@ msgstr "Rabatt (%)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__display_amount
 msgid "Display Amount"
-msgstr ""
+msgstr "Visa belopp"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__display_inactive_currency_warning
@@ -5867,12 +5876,12 @@ msgstr "Växelkursskillnader"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__currency_exchange_journal_id
 msgid "Exchange Gain or Loss Journal"
-msgstr ""
+msgstr "Valutavinst- eller förlustjournal"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_full_reconcile__exchange_move_id
 msgid "Exchange Move"
-msgstr ""
+msgstr "Valutaflytt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__exclude_from_invoice_tab
@@ -5882,12 +5891,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__excluded_journal_ids
 msgid "Excluded Journals"
-msgstr ""
+msgstr "Exkluderade journaler"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__expects_chart_of_accounts
 msgid "Expects a Chart of Accounts"
-msgstr ""
+msgstr "Förväntar sig ett kontoplan"
 
 #. module: account
 #. openerp-web
@@ -5916,7 +5925,7 @@ msgstr "Expense Account on Product Template"
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__expense_accrual_account
 #: model:ir.model.fields,field_description:account.field_res_company__expense_accrual_account_id
 msgid "Expense Accrual Account"
-msgstr ""
+msgstr "Konto för periodisering av utgifter"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_expenses
@@ -5952,7 +5961,7 @@ msgstr "FREE ON BOARD"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__factor
 msgid "Factor Ratio"
-msgstr ""
+msgstr "Faktorförhållande"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor
@@ -5960,6 +5969,8 @@ msgid ""
 "Factor to apply on the account move lines generated from this distribution "
 "line"
 msgstr ""
+"Faktor att tillämpa på kontoflyttningsraderna som genereras från denna "
+"distributionsrad"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__factor_percent
@@ -5968,6 +5979,8 @@ msgid ""
 "Factor to apply on the account move lines generated from this distribution "
 "line, in percents"
 msgstr ""
+"Faktor att tillämpa på kontoflyttningsraderna som genereras från denna "
+"distributionsrad, i procent"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_search
@@ -5995,7 +6008,7 @@ msgstr "Fält"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Fill in the details of the line."
-msgstr ""
+msgstr "Fyll i detaljerna för raden."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice_send__copyvalue
@@ -6210,7 +6223,7 @@ msgstr "Font awesomeikon t.ex fa-tasks"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value_amount
 msgid "For percent enter a ratio between 0-100."
-msgstr ""
+msgstr "För procent anger du ett förhållande mellan 0-100."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_move_line_check_non_accountable_fields_null
@@ -6244,29 +6257,29 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__foreign_currency_id
 msgid "Foreign Currency"
-msgstr ""
+msgstr "Utländsk valuta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
-msgstr ""
+msgstr "Utländskt skatteregistreringsnummer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
 msgid "Foreign Vat Header Mode"
-msgstr ""
+msgstr "Utländsk moms huvudlägesinställning"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign account (%s)"
-msgstr ""
+msgstr "Utländskt konto (%s)"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Foreign tax account (%s)"
-msgstr ""
+msgstr "Konto för utländsk skatt (%s)"
 
 #. module: account
 #: code:addons/account/report/account_journal.py:0
@@ -6304,7 +6317,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line__amount_type__regex
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_line_template__amount_type__regex
 msgid "From label"
-msgstr ""
+msgstr "Från etiketten"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_invoice_report_all_supp
@@ -6313,6 +6326,9 @@ msgid ""
 "vendors. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Från denna rapport kan du få en överblick över beloppet som fakturerats från"
+" dina leverantörer. Sökverktyget kan också användas för att anpassa dina "
+"fakturarapporter och på så sätt anpassa denna analys till dina behov."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -6321,6 +6337,9 @@ msgid ""
 "customers. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
 msgstr ""
+"Från denna rapport kan du få en överblick över beloppet som fakturerats till"
+" dina kunder. Sökverktyget kan också användas för att anpassa dina "
+"fakturarapporter och på så sätt anpassa denna analys till dina behov."
 
 #. module: account
 #: model:ir.model,name:account.model_account_full_reconcile
@@ -6384,7 +6403,7 @@ msgstr "Genererade dokument"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Generated Entries"
-msgstr ""
+msgstr "Genererade poster"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_reports_legal_statements_menu
@@ -11284,12 +11303,12 @@ msgstr "Regler för avstämningsmodellen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_sepa
 msgid "SEPA Credit Transfer (SCT)"
-msgstr ""
+msgstr "SEPA-kreditöverföring (SCT)"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "SEPA Direct Debit (SDD)"
-msgstr ""
+msgstr "SEPA-autogiro (SDD)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_has_sms_error
@@ -11774,12 +11793,12 @@ msgstr "Sekvensnummer"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_resequence_wizard__sequence_number_reset
 msgid "Sequence Number Reset"
-msgstr ""
+msgstr "Återställning av sekvensnummer"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__sequence_override_regex
 msgid "Sequence Override Regex"
-msgstr ""
+msgstr "Sekvens åsidosättande Regex"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__sequence_prefix
@@ -13179,6 +13198,9 @@ msgid ""
 "You will need to clear the %(model)s's %(sequence_field)s to proceed.\n"
 "In doing so, you might want to resequence your entries in order to maintain a continuous date-based sequence."
 msgstr ""
+"%(date_field)s (%(date)s) matchar inte sekvensnumret för den relaterade %(model)s (%(sequence)s)\n"
+"Du kommer att behöva rensa %(model)s’s %(sequence_field)s för att fortsätta.\n"
+"Genom att göra så, kanske du vill omorganisera dina poster för att upprätthålla en kontinuerlig datum-baserad sekvens."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__internal_group
@@ -13235,7 +13257,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The account %s (%s) is deprecated."
-msgstr ""
+msgstr "Kontot %s (%s) är föråldrat."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -13244,6 +13266,8 @@ msgid ""
 "The account is already in use in a 'sale' or 'purchase' journal. This means "
 "that the account's type couldn't be 'receivable' or 'payable'."
 msgstr ""
+"Kontot används redan i en ’försäljnings-’ eller ’inköps-’ journal. Det "
+"innebär att kontotypen inte kunde vara ’fordran’ eller ’skuld’."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13252,6 +13276,8 @@ msgid ""
 "The account selected on your journal entry forces to provide a secondary "
 "currency. You should remove the secondary currency on the account."
 msgstr ""
+"Det konto som valts på din journalföring tvingar till att ange en sekundär "
+"valuta. Du bör ta bort den sekundära valutan på kontot."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13273,7 +13299,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_setup_bank_manual_config__journal_id
 #: model:ir.model.fields,help:account.field_res_partner_bank__journal_id
 msgid "The accounting journal corresponding to this bank account."
-msgstr ""
+msgstr "Den redovisande journalen som motsvarar detta bankkonto."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__currency_exchange_journal_id
@@ -14643,7 +14669,7 @@ msgstr "Flytt"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Transfer Date"
-msgstr ""
+msgstr "Överföringsdatum"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -15921,7 +15947,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You must specify the Profit Account (company dependent)"
-msgstr ""
+msgstr "Du måste ange vinstkontot (beroende av företaget)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15937,6 +15963,9 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"Du bör konfigurera ’Växelkursvinst eller -förlust Journal’ i dina "
+"företagsinställningar, för att automatiskt hantera bokföring av "
+"bokföringsposter relaterade till skillnader mellan växelkurser."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15946,6 +15975,9 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"Du bör konfigurera ’Vinstväxlingskursskonto’ i dina företagsinställningar, "
+"för att automatiskt hantera bokföring av bokföringsposter relaterade till "
+"skillnader mellan växelkurser."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15955,6 +15987,9 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr ""
+"Du bör konfigurera kontot för valutakursförluster i dina "
+"företagsinställningar för att automatiskt hantera bokföringen av "
+"bokföringsposter som är relaterade till skillnader mellan valutakurser."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_default_terms_and_conditions
@@ -15966,7 +16001,7 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Your taxes have been updated !"
-msgstr ""
+msgstr "Dina skatter har uppdaterats!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

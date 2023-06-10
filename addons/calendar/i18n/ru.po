@@ -15,6 +15,7 @@
 # valmasone, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
 # Alena Vlasova, 2023
+# alenafairy, 2023
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-10-05 10:53+0000\n"
 "PO-Revision-Date: 2021-09-14 12:21+0000\n"
-"Last-Translator: Alena Vlasova, 2023\n"
+"Last-Translator: alenafairy, 2023\n"
 "Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,12 +51,14 @@ msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
+"%(date_start)s at %(time_start)s To\n"
+" %(date_end)s at %(time_end)s (%(timezone)s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr ""
+msgstr "%(day)s в (%(start)s до %(end)s) (%(timezone)s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_attendee.py:0
@@ -486,7 +489,7 @@ msgstr "<span> часы</span>"
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_filters_user_id_partner_id_unique
 msgid "A user cannot have the same contact twice."
-msgstr ""
+msgstr "Пользователь не может иметь один и тот же контакт дважды."
 
 #. module: calendar
 #. openerp-web
@@ -518,6 +521,8 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"Действия могут вызывать определенное поведение, например, открывать "
+"календарь или автоматически отмечать как выполнено при загрузке документа."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
@@ -564,6 +569,8 @@ msgstr "Дополнительное сообщение"
 msgid ""
 "Additional message that would be sent with the notification for the reminder"
 msgstr ""
+"Дополнительное сообщение, которое будет отправлено вместе с уведомлением о "
+"напоминании"
 
 #. module: calendar
 #. openerp-web
@@ -577,7 +584,7 @@ msgstr "Весь день"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "All Day, %(day)s"
-msgstr ""
+msgstr "Весь день, %(day)s"
 
 #. module: calendar
 #. openerp-web
@@ -628,12 +635,12 @@ msgstr "Доступно"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
 msgid "Available/Busy"
-msgstr ""
+msgstr "Доступен/Занят"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
 msgid "Base Event"
-msgstr ""
+msgstr "Основное событие"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
@@ -683,7 +690,7 @@ msgstr "Встреча в календаре"
 #. module: calendar
 #: model:ir.model,name:calendar.model_calendar_filters
 msgid "Calendar Filters"
-msgstr ""
+msgstr "Фильтры календаря"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -715,12 +722,12 @@ msgstr "Календарь: Обновление событий"
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_invitation
 msgid "Calendar: Meeting Invitation"
-msgstr ""
+msgstr "Календарь: Приглашение"
 
 #. module: calendar
 #: model:mail.template,name:calendar.calendar_template_meeting_reminder
 msgid "Calendar: Reminder"
-msgstr ""
+msgstr "Календарь: Напоминание"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__is_organizer_alone

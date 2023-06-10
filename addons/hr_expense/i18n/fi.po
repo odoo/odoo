@@ -51,6 +51,8 @@ msgstr ""
 msgid ""
 "%(user)s confirms this expense is not a duplicate with similar expense."
 msgstr ""
+"%(user)s vahvistaa, että tämä meno ei ole päällekkäinen samankaltaisen menon"
+" kanssa."
 
 #. module: hr_expense
 #: model:ir.actions.report,print_report_name:hr_expense.action_report_hr_expense_sheet
@@ -65,7 +67,7 @@ msgstr ""
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
-msgstr ""
+msgstr "1 %(exp_cur)s = %(rate)s %(comp_cur)s"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -287,7 +289,7 @@ msgstr "Kuluraportti on odotettu"
 #: code:addons/hr_expense/static/src/js/expense_form_view.js:0
 #, python-format
 msgid "An expense of same category, amount and date already exists."
-msgstr ""
+msgstr "Samaa luokkaa, määrää ja päivämäärää vastaava kulu on jo olemassa."
 
 #. module: hr_expense
 #: code:addons/hr_expense/models/hr_expense.py:0
@@ -345,7 +347,7 @@ msgstr "Hyväksytty"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__approved_by
 msgid "Approved By"
-msgstr ""
+msgstr "Hyväksynyt"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -355,7 +357,7 @@ msgstr "Hyväksytyt kulut"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__approved_on
 msgid "Approved On"
-msgstr ""
+msgstr "Hyväksytty"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -429,7 +431,7 @@ msgstr "Kategoria:"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
 msgid "Category: not found"
-msgstr ""
+msgstr "Luokka: ei löydy"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -619,7 +621,7 @@ msgstr "Luonnos"
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__duplicate_expense_ids
 #, python-format
 msgid "Duplicate Expense"
-msgstr ""
+msgstr "Kopio kulu"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee
@@ -666,7 +668,7 @@ msgstr "Kulujen hyväksyntä"
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_expense_approve_duplicate
 msgid "Expense Approve Duplicate"
-msgstr ""
+msgstr "Kulut Hyväksy kaksoiskappale"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_employee_tree_inherit_expense
@@ -697,7 +699,7 @@ msgstr "Kululajit"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__is_editable
 msgid "Expense Lines Are Editable By Current User"
-msgstr ""
+msgstr "Kulurivit ovat nykyisen käyttäjän muokattavissa"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_employee_public__expense_manager_id
@@ -766,7 +768,7 @@ msgstr "Hyväksyttävät kuluraportit"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
 msgid "Expense Validate Duplicate"
-msgstr ""
+msgstr "Kulut Vahvista kaksoiskappale"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
@@ -1033,12 +1035,12 @@ msgstr "On seuraaja"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__same_currency
 msgid "Is currency_id different from the company_currency_id"
-msgstr ""
+msgstr "Onko currency_id eri kuin company_currency_id"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__product_has_cost
 msgid "Is product with non zero cost selected"
-msgstr ""
+msgstr "Onko tuote, jonka kustannukset eivät ole nolla"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_account_journal
@@ -1061,7 +1063,7 @@ msgstr "Päiväkirjatapahtuma"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_convert_rate
 msgid "Label Convert Rate"
-msgstr ""
+msgstr "Nimeä muuntosuhde"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__label_total_amount_company
@@ -1138,7 +1140,7 @@ msgstr "Viestit"
 #: model:product.product,name:hr_expense.mileage_expense_product
 #: model:product.template,name:hr_expense.mileage_expense_product_product_template
 msgid "Mileage"
-msgstr ""
+msgstr "Mittalukema"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__my_activity_date_deadline
@@ -1649,6 +1651,8 @@ msgid ""
 "Selected Unit of Measure for expense %(expense)s does not belong to the same"
 " category as the Unit of Measure of product %(product)s."
 msgstr ""
+"Kulun %(expense)s valittu mittayksikkö ei kuulu samaan luokkaan kuin "
+"tuotteen %(product)s mittayksikkö."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -1659,6 +1663,11 @@ msgid ""
 "category will automatically be set. Type the expense amount in the mail "
 "subject to set it on the expense too."
 msgstr ""
+"Lähetä sähköpostiviesti tähän sähköpostiosoitteeseen, jonka liitteenä on "
+"kuitti, niin voit luoda kulun yhdellä napsautuksella. Jos sähköpostin aiheen"
+" ensimmäinen sana sisältää luokan sisäisen viitteen tai luokan nimen, "
+"vastaava luokka asetetaan automaattisesti. Kirjoita kulun määrä sähköpostin "
+"aiheeseen, jotta se voidaan asettaa myös kuluun."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_res_config_settings__module_hr_expense_extract
@@ -1679,7 +1688,7 @@ msgstr "Aseta domain-alias"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_approve_duplicate__sheet_ids
 msgid "Sheet"
-msgstr ""
+msgstr "Arkki"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_view_search
@@ -1699,7 +1708,7 @@ msgstr "Nappaa kuva ja anna Odoon<br> luoda kulut automaattisesti."
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Specify expense journal to generate accounting entries."
-msgstr ""
+msgstr "Määritä kustannuspäiväkirja kirjanpitomerkintöjen luomista varten."
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_product_product__can_be_expensed
@@ -1791,6 +1800,8 @@ msgid ""
 "The first word of the email subject did not correspond to any category code."
 " You'll have to set the category manually on the expense."
 msgstr ""
+"Sähköpostin aiheen ensimmäinen sana ei vastannut mitään luokkakoodia. Sinun "
+"on asetettava luokka manuaalisesti kuluihin."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_approve_duplicate_view_form
@@ -1799,6 +1810,9 @@ msgid ""
 "than some expenses of this report. Please verify this report does not "
 "contain duplicates."
 msgstr ""
+"Seuraavilla hyväksytyillä menoilla on samanlainen työntekijä, määrä ja "
+"luokka kuin joillakin tämän kertomuksen menoilla. Tarkista, ettei tämä "
+"raportti sisällä päällekkäisyyksiä."
 
 #. module: hr_expense
 #: model:ir.model.constraint,message:hr_expense.constraint_hr_expense_sheet_journal_id_required_posted
@@ -1884,12 +1898,12 @@ msgstr "Yhteensä"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_expenses_analysis_tree
 msgid "Total Company Currency"
-msgstr ""
+msgstr "Yhteensä yrityksen valuuttana"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__total_amount
 msgid "Total In Currency"
-msgstr ""
+msgstr "Yhteensä valuutassa"
 
 #. module: hr_expense
 #: model:ir.model.fields,help:hr_expense.field_hr_expense__activity_exception_decoration
@@ -1954,7 +1968,7 @@ msgstr "Käyttäjät"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_approve_duplicate_action
 msgid "Validate Duplicate Expenses"
-msgstr ""
+msgstr "Vahvista päällekkäiset kulut"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.view_hr_expense_sheet_form
@@ -2017,7 +2031,7 @@ msgstr "Sinulla ei ole oikeutta muokata tätä kuluraporttia."
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "You can not create report without category."
-msgstr ""
+msgstr "Et voi luoda raporttia ilman luokkaa."
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_register
@@ -2097,6 +2111,8 @@ msgid ""
 "You need to have at least one category that can be expensed in your database"
 " to proceed!"
 msgstr ""
+"Tietokannassasi on oltava vähintään yksi luokka, joka voidaan kirjata "
+"kuluksi, jotta voit jatkaa!"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_template_refuse_reason

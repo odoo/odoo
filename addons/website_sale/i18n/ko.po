@@ -9,6 +9,7 @@
 # Seongseok Shin <shinss61@hotmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
 # Martin Trigaux, 2022
+# Daye Jeong, 2023
 # Sarah Park, 2023
 # 
 msgid ""
@@ -298,17 +299,17 @@ msgstr "<span class=\"o_form_label\">청구 기준</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Give us your feedback</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">고객님의 의견을 들려주세요</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Upload a document</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">자료 업로드</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Your Reference</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">참조</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
@@ -316,6 +317,8 @@ msgid ""
 "<span class=\"text-muted\" attrs=\"{'invisible': [('product_variant_count', "
 "'&lt;=', 1)]}\">Based on variants</span>"
 msgstr ""
+"<span class=\"text-muted\" attrs=\"{'invisible': [('product_variant_count', "
+"'&lt;=', 1)]}\">속성 기준</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
@@ -356,6 +359,8 @@ msgid ""
 "<span>Unfortunately your order can not be confirmed as the amount of your payment does not match the amount of your cart.\n"
 "                        Please contact the responsible of the shop for more information.</span>"
 msgstr ""
+"<span>결제 금액이 장바구니 금액과 일치하지 않아 주문을 확정할 수 없습니다.\n"
+"                        자세한 내용은 매장 담당 직원에게 문의하시기 바랍니다.</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -370,7 +375,7 @@ msgstr "<span>귀하의 결제가 승인되었습니다.</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
 msgid "<strong class=\"align-top\">URL: </strong>"
-msgstr ""
+msgstr "<strong class=\"align-top\">URL: </strong>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories
@@ -501,7 +506,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__terms_url
 msgid "A preview will be available at this URL."
-msgstr ""
+msgstr "이 URL에서는 미리보기를 사용할 수 있습니다."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -566,7 +571,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__product_cross_selling
 msgid "About cross selling products"
-msgstr ""
+msgstr "교차 판매 품목 정보"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -576,7 +581,7 @@ msgstr "허용되는 파일 크기"
 #. module: website_sale
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_accessories
 msgid "Accessories for Product"
-msgstr ""
+msgstr "품목별 액세서리"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
@@ -723,24 +728,24 @@ msgstr "은행명"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_count
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_count
 msgid "Base Unit Count"
-msgstr ""
+msgstr "기본 단위 수"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_name
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_name
 msgid "Base Unit Name"
-msgstr ""
+msgstr "기본 유닛 이름"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__group_show_uom_price
 msgid "Base Unit Price"
-msgstr ""
+msgstr "기본 단위 가격"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.base_unit_action
 #: model:ir.ui.menu,name:website_sale.website_base_unit_menu
 msgid "Base Units"
-msgstr ""
+msgstr "기본 단위"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -779,7 +784,7 @@ msgstr "청구지 주소"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Bin"
-msgstr ""
+msgstr "휴지통"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_bins
@@ -805,7 +810,7 @@ msgstr "맨 아래"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Box"
-msgstr ""
+msgstr "상자"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_boxes
@@ -905,7 +910,7 @@ msgstr ""
 #: code:addons/website_sale/models/product_template.py:0
 #, python-format
 msgid "Categories:"
-msgstr ""
+msgstr "카테고리:"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -922,7 +927,7 @@ msgstr "범주 설명"
 #: code:addons/website_sale/models/product_template.py:0
 #, python-format
 msgid "Category:"
-msgstr ""
+msgstr "카테고리:"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website_snippet_filter.py:0
@@ -1101,7 +1106,7 @@ msgstr "변환"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures_couches
 msgid "Couches"
-msgstr ""
+msgstr "소파"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_country
@@ -1147,13 +1152,13 @@ msgstr "작성일자"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "Current Category or All"
-msgstr ""
+msgstr "현재 카테고리 또는 전체"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_id
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_id
 msgid "Custom Unit of Measure"
-msgstr ""
+msgstr "맞춤 측정 단위"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -1168,7 +1173,7 @@ msgstr "고객 국가"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_comment
 msgid "Customer Reviews"
-msgstr ""
+msgstr "고객 리뷰"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_orders_customers
@@ -1196,7 +1201,7 @@ msgstr "기본 가격표"
 #: model:ir.model.fields,help:website_sale.field_website_base_unit__name
 msgid ""
 "Define a custom unit to display in the price per unit of measure field."
-msgstr ""
+msgstr "측정 단위 당 가격 필드에 표시할 사용자 지정 단위를 설정합니다."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_public_category_action
@@ -1275,7 +1280,7 @@ msgstr "장바구니에 추가할 때 옵션 제품과 함께 화면에 표시"
 msgid ""
 "Display base unit price on your eCommerce pages. Set to 0 to hide it for "
 "this product."
-msgstr ""
+msgstr "이커머스 페이지에 기본 단가를 표시합니다. 이 품목에 대해서 내용을 숨기려면 값을 0으로 설정하십시오."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
@@ -1288,7 +1293,7 @@ msgstr "관련 품목 페이지의 하단에 표시됩니다"
 msgid ""
 "Displays the custom unit for the products if defined or the selected unit of"
 " measure otherwise."
-msgstr ""
+msgstr "설정한 경우에는 품목에 사용자가 정의한 단위를 표시하고 그렇지 않은 경우 선택한 측정 단위를 표시합니다."
 
 #. module: website_sale
 #: code:addons/website_sale/models/digest.py:0
@@ -1334,12 +1339,12 @@ msgstr "서랍"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_extra_field_ids
 msgid "E-Commerce Extra Fields"
-msgstr ""
+msgstr "이커머스 추가 필드"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_sale_extra_field
 msgid "E-Commerce Extra Info Shown on product page"
-msgstr ""
+msgstr "품목 페이지에 표시되어 있는 이커머스 추가 정보"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
@@ -1442,7 +1447,7 @@ msgstr "추가 변형 미디어"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "Featured"
-msgstr ""
+msgstr "추천"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1472,7 +1477,7 @@ msgstr "웹 사이트에서"
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_furnitures
 msgid "Furnitures"
-msgstr ""
+msgstr "가구"
 
 #. module: website_sale
 #. openerp-web
@@ -1502,7 +1507,7 @@ msgstr "상품 분류 목록을 표시할 때 주문 순서를 제공합니다."
 #: code:addons/website_sale/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "Go to cart"
-msgstr ""
+msgstr "장바구니로 이동"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1645,7 +1650,7 @@ msgstr "Kpi 웹사이트 판매 총액"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Lamp"
-msgstr ""
+msgstr "스탠드"
 
 #. module: website_sale
 #: model:product.public.category,name:website_sale.public_category_lamps
@@ -1744,7 +1749,7 @@ msgstr "전자상 거래 웹 사이트를 즉시 준비하기 위해 이제 관�
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Lightbulb sold separately"
-msgstr ""
+msgstr "전구 별도 판매"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order_line__linked_line_id
@@ -1822,13 +1827,13 @@ msgstr "새 상품"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.new_ribbon
 msgid "New!"
-msgstr ""
+msgstr "신규!"
 
 #. module: website_sale
 #: model:ir.filters,name:website_sale.dynamic_snippet_newest_products_filter
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
 msgid "Newest Products"
-msgstr ""
+msgstr "최신 상품"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
@@ -1878,7 +1883,7 @@ msgstr "다음에 대한 결과가 없습니다 \""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No results found for '"
-msgstr ""
+msgstr "' 에 대한 결과를 찾을 수 없습니다."
 
 #. module: website_sale
 #. openerp-web
@@ -1936,7 +1941,7 @@ msgstr "상점의 그리드에 있는 제품 수"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "On wheels"
-msgstr ""
+msgstr "차량"
 
 #. module: website_sale
 #. openerp-web
@@ -1967,6 +1972,8 @@ msgid ""
 "Only the company's websites are allowed.\n"
 "Leave the Company field empty or select a website from that company."
 msgstr ""
+"회사 웹사이트만 사용할 수 있습니다.\n"
+"회사 필드를 공란으로 두거나 해당 회사의 웹사이트를 선택하세요."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
@@ -2078,7 +2085,7 @@ msgstr "주문/일"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.out_of_stock_ribbon
 msgid "Out of stock"
-msgstr ""
+msgstr "품절"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
@@ -2166,7 +2173,7 @@ msgstr "페이팔 사용자 유형"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Pedal-based opening system"
-msgstr ""
+msgstr "페달형 개방 시스템"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2233,7 +2240,7 @@ msgstr "낮은 가격 순"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__base_unit_price
 #: model:ir.model.fields,field_description:website_sale.field_product_template__base_unit_price
 msgid "Price Per Unit"
-msgstr ""
+msgstr "단위 당 가격"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_ids
@@ -2284,7 +2291,7 @@ msgstr "품목"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_accessories_action
 msgid "Product Accessories"
-msgstr ""
+msgstr "상품 액세서리"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_attribute
@@ -2323,7 +2330,7 @@ msgstr "품목 명"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_website_sale_website_form
 msgid "Product Page Extra Fields"
-msgstr ""
+msgstr "상품 페이지 추가 필드"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2375,7 +2382,7 @@ msgstr "상품 조회수 기록"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "Product names"
-msgstr ""
+msgstr "상품명"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2385,7 +2392,7 @@ msgstr "웹 상품안내서에 표시되는 상품 가격"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_ribbon
 msgid "Product ribbon"
-msgstr ""
+msgstr "상품 리본"
 
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
@@ -2404,12 +2411,12 @@ msgstr "품목"
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_recently_sold_with_action
 msgid "Products Recently Sold With"
-msgstr ""
+msgstr "최근에 판매된 품목"
 
 #. module: website_sale
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_cross_selling_recently_sold_with
 msgid "Products Recently Sold With Product"
-msgstr ""
+msgstr "제품과 함께 최근에 판매된 제품"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
@@ -2519,13 +2526,13 @@ msgstr "평가 사유"
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_sold_products
 msgid "Recently Sold Products"
-msgstr ""
+msgstr "최근 판매된 품목"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
 msgid "Recently Viewed Products"
-msgstr ""
+msgstr "최근 본 품목"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -2541,7 +2548,7 @@ msgstr "복구 할 이메일 보내기"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Reinforced for heavy loads"
-msgstr ""
+msgstr "물량이 과다할 경우 보충"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
@@ -2576,27 +2583,27 @@ msgstr "주문 검토"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_ribbon_id
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Ribbon"
-msgstr ""
+msgstr "리본"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__bg_color
 msgid "Ribbon background color"
-msgstr ""
+msgstr "리본 배경 색상"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__html_class
 msgid "Ribbon class"
-msgstr ""
+msgstr "리본 종류"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__html
 msgid "Ribbon html"
-msgstr ""
+msgstr "리본 HTML"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_ribbon__text_color
 msgid "Ribbon text color"
-msgstr ""
+msgstr "리본 텍스트 색상"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2617,7 +2624,7 @@ msgstr "매출"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_graph_website
 msgid "Sale Analysis"
-msgstr ""
+msgstr "판매 분석"
 
 #. module: website_sale
 #. openerp-web
@@ -2661,7 +2668,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Sales Since Last Month"
-msgstr ""
+msgstr "지난 달 이후 판매"
 
 #. module: website_sale
 #. openerp-web
@@ -2669,7 +2676,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Sales Since Last Week"
-msgstr ""
+msgstr "지난 주 이후 판매"
 
 #. module: website_sale
 #. openerp-web
@@ -2677,7 +2684,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Sales Since Last Year"
-msgstr ""
+msgstr "작년 이후 판매"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_crm_team
@@ -2842,7 +2849,7 @@ msgstr "쇼핑한 장바구니"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Show Empty Cart"
-msgstr ""
+msgstr "빈 장바구니 표시"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories
@@ -2863,7 +2870,7 @@ msgstr "가입"
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "Sit comfortably"
-msgstr ""
+msgstr "편하게 앉아 있으세요"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2885,7 +2892,7 @@ msgstr "사이즈 Y"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Slanted"
-msgstr ""
+msgstr "비스듬하게 놓임"
 
 #. module: website_sale
 #. openerp-web
@@ -2898,7 +2905,7 @@ msgstr "판매됨"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.sold_out_ribbon
 msgid "Sold out"
-msgstr ""
+msgstr "품절"
 
 #. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
@@ -3027,7 +3034,7 @@ msgstr "유효하지 않은 액세스 토큰입니다."
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "The cart has been updated. Please refresh the page."
-msgstr ""
+msgstr "장바구니가 업데이트되었습니다. 페이지를 새로고침 하세요."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
@@ -3059,7 +3066,7 @@ msgstr "여기에서 선택한 모드는 새로 생성 된 상품의 청구서 �
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "The order has been canceled."
-msgstr ""
+msgstr "주문이 취소되었습니다."
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
@@ -3083,7 +3090,7 @@ msgstr "장바구니가 취소된 것으로 표시하는 시간은 설정에서 
 msgid ""
 "The value of Base Unit Count must be greater than 0. Use 0 to hide the price"
 " per unit on this product."
-msgstr ""
+msgstr "기본 단위 수긔 값은 0보다 커야 합니다. 이 품목의 단위 당 가격을 숨기려면 0을 입력하십시오."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_orders_ecommerce
@@ -3171,12 +3178,12 @@ msgstr "참"
 msgid ""
 "True only for product filters that require a product_id because they relate "
 "to cross selling"
-msgstr ""
+msgstr "교차 판매와 관련되어 있으므로 product_id가 필수인 품목을 필터하는 경우에만 True 입니다."
 
 #. module: website_sale
 #: model:res.groups,name:website_sale.group_show_uom_price
 msgid "UOM Price Display for eCommerce"
-msgstr ""
+msgstr "이커머스용 측정 단위 당 가격"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3201,7 +3208,7 @@ msgstr "USPS"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_base_unit
 msgid "Unit of Measure for price per unit on eCommerce products."
-msgstr ""
+msgstr "이커머스 품목의 단위 당 가격에 대한 측정 단위입니다."
 
 #. module: website_sale
 #: model:product.product,uom_name:website_sale.product_product_1
@@ -3264,7 +3271,7 @@ msgstr "장바구니 보기 ("
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_centered
 msgid "View Product"
-msgstr ""
+msgstr "품목 보기"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_attribute__visibility
@@ -3324,7 +3331,7 @@ msgstr "보증서. 제조사에 의해 구매자에게 문서로 발행됩니다
 #: code:addons/website_sale/static/src/js/website_sale_validate.js:0
 #, python-format
 msgid "We are waiting for confirmation from the bank or the payment provider"
-msgstr ""
+msgstr "은행 또는 결제대행업체의 승인 대기 중입니다."
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website
@@ -3374,7 +3381,7 @@ msgstr "웹 사이트 쇼핑"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_snippet_filter
 msgid "Website Snippet Filter"
-msgstr ""
+msgstr "웹사이트 스니펫 필터"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_url
@@ -3464,7 +3471,7 @@ msgstr "이 작업을 수행하면 '%s' 웹 사이트에 사용 가능한 가격
 #: code:addons/website_sale/models/website_snippet_filter.py:0
 #, python-format
 msgid "With three feet"
-msgstr ""
+msgstr "3 피트"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -3544,7 +3551,7 @@ msgstr "코드..."
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
 msgid "e.g. lamp,bin"
-msgstr ""
+msgstr "예: 스탠드, 휴지통"
 
 #. module: website_sale
 #: code:addons/website_sale/models/website.py:0
@@ -3563,7 +3570,7 @@ msgstr "전자 상거래 카테고리"
 #: model_terms:ir.ui.view,arch_db:website_sale.attribute_tree_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_attribute_view_form
 msgid "eCommerce Filter Visibility"
-msgstr ""
+msgstr "이커머스 필터 가시성"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest__kpi_website_sale_total
@@ -3610,7 +3617,7 @@ msgstr "다음 범주에서 \""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "item(s))"
-msgstr ""
+msgstr "아이템"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address

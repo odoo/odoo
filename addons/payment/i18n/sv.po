@@ -290,7 +290,7 @@ msgstr "Belopp"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__amount_available_for_refund
 msgid "Amount Available For Refund"
-msgstr ""
+msgstr "Belopp tillgängligt för återbetalning"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
@@ -840,7 +840,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__has_pending_refund
 msgid "Has a pending refund"
-msgstr ""
+msgstr "Har en pågående återbetalning"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
@@ -1050,7 +1050,7 @@ msgstr "Manuell"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr ""
+msgstr "Högsta tillåtna återbetalning"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -1305,7 +1305,7 @@ msgstr "Tillgängliga Betalningsinlösare"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__payment_amount
 msgid "Payment Amount"
-msgstr ""
+msgstr "Betalningsbelopp"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -1337,7 +1337,7 @@ msgstr "Betalningsinstruktioner"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__journal_id
 msgid "Payment Journal"
-msgstr ""
+msgstr "Betalningsjournal"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
@@ -1362,7 +1362,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model,name:payment.model_payment_refund_wizard
 msgid "Payment Refund Wizard"
-msgstr ""
+msgstr "Guiden för återbetalning av betalning"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_token
@@ -1558,12 +1558,12 @@ msgstr "Kreditfaktura"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__amount_to_refund
 msgid "Refund Amount"
-msgstr ""
+msgstr "Återbetalningsbelopp"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__refunded_amount
 msgid "Refunded Amount"
-msgstr ""
+msgstr "Återbetalat belopp"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -1575,7 +1575,7 @@ msgstr "Krediteringar"
 #: model:ir.model.fields,field_description:payment.field_account_payment__refunds_count
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__refunds_count
 msgid "Refunds Count"
-msgstr ""
+msgstr "Återbetalningar räknas"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_payment_register
@@ -1600,7 +1600,7 @@ msgstr "SEPA Autogiro"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_account_journal_form
 msgid "SETUP"
-msgstr ""
+msgstr "INSTÄLLNING"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
@@ -1615,12 +1615,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
 msgid "Saved Payment Token"
-msgstr ""
+msgstr "Sparat betalningstoken"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__payment_token_id
 msgid "Saved payment token"
-msgstr ""
+msgstr "Sparad betalningstoken"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -1703,7 +1703,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__source_payment_id
 msgid "Source Payment"
-msgstr ""
+msgstr "Källa Betalning"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
@@ -1750,7 +1750,7 @@ msgstr "Stripe Secret Key"
 #: model:ir.model.fields,field_description:payment.field_account_payment__suitable_payment_token_ids
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__suitable_payment_token_ids
 msgid "Suitable Payment Token"
-msgstr ""
+msgstr "Lämplig betalningstoken"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
@@ -1805,6 +1805,8 @@ msgstr ""
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
 msgstr ""
+"Det belopp som skall återbetalas måste vara positivt och kan inte vara "
+"större än %s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__name
@@ -1908,7 +1910,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "Källbetalning av relaterade återbetalningsbetalningar"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
@@ -2053,7 +2055,7 @@ msgstr "Transaktioner"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__support_refund
 #: model:ir.model.fields,field_description:payment.field_payment_refund_wizard__support_refund
 msgid "Type of Refund Supported"
-msgstr ""
+msgstr "Typ av återbetalning som stöds"
 
 #. module: payment
 #. openerp-web
@@ -2072,7 +2074,7 @@ msgstr "Uppgradera"
 #: model:ir.model.fields,field_description:payment.field_account_payment__use_electronic_payment_method
 #: model:ir.model.fields,field_description:payment.field_account_payment_register__use_electronic_payment_method
 msgid "Use Electronic Payment Method"
-msgstr ""
+msgstr "Använd elektronisk betalningsmetod"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation
@@ -2109,7 +2111,7 @@ msgstr "Visa"
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Void Transaction"
-msgstr ""
+msgstr "Annullera transaktion"
 
 #. module: payment
 #. openerp-web

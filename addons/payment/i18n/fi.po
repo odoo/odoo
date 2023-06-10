@@ -87,7 +87,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Saved Payment Methods</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Tallennetut maksutavat</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -99,7 +99,7 @@ msgstr ""
 msgid ""
 "<span><i class=\"fa fa-arrow-right\"/> How to configure your PayPal "
 "account</span>"
-msgstr ""
+msgstr "<span><i class=\"fa fa-arrow-right\"/> PayPal-tilin määrittäminen</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -143,6 +143,8 @@ msgid ""
 "<strong>Warning</strong> Make sure your are logged in as the right partner "
 "before making this payment."
 msgstr ""
+"<strong>Varoitus</strong> Varmista, että olet kirjautunut sisään oikeana "
+"kumppanina ennen tämän maksun suorittamista."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -153,6 +155,8 @@ msgstr "<strong>Varoitus</strong> Valuutta puuttuu tai on virheellinen."
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<strong>Warning</strong> You must be logged in to pay."
 msgstr ""
+"<strong>Varoitus</strong> Sinun täytyy olla kirjautuneena sisään "
+"maksaaksesi."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
@@ -255,7 +259,7 @@ msgstr "Aktiivinen"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_active
 msgid "Add Extra Fees"
-msgstr ""
+msgstr "Lisää lisämaksuja"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -276,7 +280,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__allow_tokenization
 msgid "Allow Saving Payment Methods"
-msgstr ""
+msgstr "Salli säästävät maksutavat"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount
@@ -293,7 +297,7 @@ msgstr "Palautettavaksi käytettävissä oleva määrä"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__amount_max
 msgid "Amount Max"
-msgstr ""
+msgstr "Määrä Max"
 
 #. module: payment
 #. openerp-web
@@ -301,7 +305,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "An error occurred during the processing of this payment."
-msgstr ""
+msgstr "Tämän maksun käsittelyssä tapahtui virhe."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -319,7 +323,7 @@ msgstr "Arkistoitu"
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "Are you sure you want to delete this payment method?"
-msgstr ""
+msgstr "Haluatko varmasti poistaa tämän maksutavan?"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
@@ -339,17 +343,17 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__auth_msg
 msgid "Authorize Message"
-msgstr ""
+msgstr "Valtuuttaa viesti"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
 msgid "Authorize.net"
-msgstr ""
+msgstr "Authorize.net"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__authorized
 msgid "Authorized"
-msgstr ""
+msgstr "Valtuutettu"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_bank_statement_line__authorized_transaction_ids
@@ -382,32 +386,32 @@ msgstr "Pankin nimi"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_buckaroo
 msgid "Buckaroo"
-msgstr ""
+msgstr "Buckaroo"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_model_id
 msgid "Callback Document Model"
-msgstr ""
+msgstr "Takaisinkutsu asiakirjamalli"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_is_done
 msgid "Callback Done"
-msgstr ""
+msgstr "Takaisinsoitto valmis"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr ""
+msgstr "Takaisinkutsu Hash"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
 msgid "Callback Method"
-msgstr ""
+msgstr "Takaisinkutsumenetelmä"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
 msgid "Callback Record ID"
-msgstr ""
+msgstr "Takaisinkutsun tietueen ID"
 
 #. module: payment
 #. openerp-web
@@ -425,7 +429,7 @@ msgstr "Peruttu"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__cancel_msg
 msgid "Canceled Message"
-msgstr ""
+msgstr "Peruutettu viesti"
 
 #. module: payment
 #. openerp-web
@@ -437,7 +441,7 @@ msgstr "Peruutetut maksut"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__capture_manually
 msgid "Capture Amount Manually"
-msgstr ""
+msgstr "Kaappaa määrä manuaalisesti"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
@@ -452,6 +456,9 @@ msgid ""
 "Use this if you want to charge your customers cards only when\n"
 "you are sure you can ship the goods to them."
 msgstr ""
+"Tallenna summa Odoosta, kun toimitus on valmis.\n"
+"Käytä tätä, jos haluat veloittaa asiakkaasi kortit vain silloin, kun\n"
+"olet varma, että voit toimittaa tavarat heille."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -475,7 +482,7 @@ msgstr "Kaupunki"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Click here to be redirected to the confirmation page."
-msgstr ""
+msgstr "Klikkaa tästä, niin sinut ohjataan vahvistussivulle."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -529,7 +536,7 @@ msgstr "Konfiguroi"
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "Confirm Deletion"
-msgstr ""
+msgstr "Vaihvista poisto"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__done
@@ -544,7 +551,7 @@ msgstr "Kontakti"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_id
 msgid "Corresponding Module"
-msgstr ""
+msgstr "Vastaava moduuli"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__country_ids
@@ -560,7 +567,7 @@ msgstr "Maa"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__tokenize
 msgid "Create Token"
-msgstr ""
+msgstr "Luo pääsytunniste"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_acquirer
@@ -570,12 +577,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
 msgid "Create a new payment token"
-msgstr ""
+msgstr "Luo uusi maksutosite"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_icon
 msgid "Create a payment icon"
-msgstr ""
+msgstr "Luo maksukuvake"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__create_uid
@@ -607,7 +614,7 @@ msgstr "Tunnistetiedot"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_stripe
 msgid "Credit & Debit Card"
-msgstr ""
+msgstr "Luotto- ja pankkikortti"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_adyen
@@ -622,12 +629,12 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_authorize
 msgid "Credit Card (powered by Authorize)"
-msgstr ""
+msgstr "Luottokortti (Authorize)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_buckaroo
 msgid "Credit Card (powered by Buckaroo)"
-msgstr ""
+msgstr "Luottokortti (powered by Buckaroo)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_ogone
@@ -647,7 +654,7 @@ msgstr ""
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_sips
 msgid "Credit Card (powered by Sips)"
-msgstr ""
+msgstr "Luottokortti (powered by Sips)"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__stripe
@@ -674,7 +681,7 @@ msgstr "Asiakas"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__sequence
 msgid "Define the display order"
-msgstr ""
+msgstr "Näyttöjärjestyksen määrittäminen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__description
@@ -744,7 +751,7 @@ msgstr "Ota käyttöön Stripen tukemat luotto- ja pankkikorttimaksut"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__enabled
 msgid "Enabled"
-msgstr ""
+msgstr "Käytössä"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__error
@@ -757,7 +764,7 @@ msgstr "Virhe"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Error: %s"
-msgstr ""
+msgstr "Virhe: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
@@ -801,12 +808,12 @@ msgstr "Lähtöpaikka"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__support_refund__full_only
 msgid "Full Only"
-msgstr ""
+msgstr "Vain täysi"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Generate Payment Link"
-msgstr ""
+msgstr "Luo maksulinkki"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_link_wizard
@@ -843,22 +850,22 @@ msgstr "Maksun palautus on käynnissä"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
 msgid "Has the payment been post-processed"
-msgstr ""
+msgstr "Onko maksu käsitelty jälkikäteen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pre_msg
 msgid "Help Message"
-msgstr ""
+msgstr "Apuviesti"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__paypal_user_type__new_user
 msgid "I don't have a Paypal account"
-msgstr ""
+msgstr "Minulla ei ole Paypal-tiliä"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__paypal_user_type__existing_user
 msgid "I have a Paypal account"
-msgstr ""
+msgstr "Minulla on Paypal-tili"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__id
@@ -881,7 +888,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "If the payment hasn't been confirmed you can contact us."
-msgstr ""
+msgstr "Jos maksua ei ole vahvistettu, voit ottaa meihin yhteyttä."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
@@ -900,7 +907,7 @@ msgstr "Kuva"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__image_payment_form
 msgid "Image displayed on the payment form"
-msgstr ""
+msgstr "Maksulomakkeessa näkyvä kuva"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment_method_line__payment_acquirer_state
@@ -913,7 +920,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inline_form_view_id
 msgid "Inline Form Template"
-msgstr ""
+msgstr "Inline lomakkeen malli"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -924,7 +931,7 @@ msgstr "Asenna"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_state
 msgid "Installation State"
-msgstr ""
+msgstr "Asennuksen tila"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_search
@@ -936,7 +943,7 @@ msgstr "Asennettu"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Internal server error"
-msgstr ""
+msgstr "Sisäinen palvelinvirhe"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -958,14 +965,14 @@ msgstr "Laskujen määrä"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
 msgid "Is Post-processed"
-msgstr ""
+msgstr "Onko jälkikäsitelty"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "It is currently linked to the following documents:"
-msgstr ""
+msgstr "On tällä hetkellä linkitetty seuraaviin asiakirjoihin:"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_journal
@@ -985,7 +992,7 @@ msgstr "Juuri tehty"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__landing_route
 msgid "Landing Route"
-msgstr ""
+msgstr "Laskeutumisreitti"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
@@ -1006,7 +1013,7 @@ msgstr "Viimeksi muokattu"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__last_state_change
 msgid "Last State Change Date"
-msgstr ""
+msgstr "Viimeisin tilan muutospäivämäärä"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__write_uid
@@ -1038,7 +1045,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay_meth_link
 msgid "Manage payment methods"
-msgstr ""
+msgstr "Hallitse maksutapoja"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
@@ -1074,14 +1081,14 @@ msgstr "Maksutapa"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_mollie
 msgid "Mollie"
-msgstr ""
+msgstr "Mollie"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Multiple payment options selected"
-msgstr ""
+msgstr "Useita maksuvaihtoehtoja valittu"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__name
@@ -1095,7 +1102,7 @@ msgstr "Nimi"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__provider__none
 msgid "No Provider Set"
-msgstr ""
+msgstr "Ei palveluntarjoajaa"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -1110,14 +1117,14 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "No payment has been processed."
-msgstr ""
+msgstr "Maksua ei ole käsitelty."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "No payment option selected"
-msgstr ""
+msgstr "Maksuvaihtoehtoa ei ole valittu"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_acquirer_onboarding_state__not_done
@@ -1127,7 +1134,7 @@ msgstr "Ei valmis"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "Not verified"
-msgstr ""
+msgstr "Ei vahvistettu"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__payment_token_id
@@ -1151,7 +1158,7 @@ msgstr "Odoo Enterprise -moduuli"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__offline
 msgid "Offline payment by token"
-msgstr ""
+msgstr "Offline-maksaminen kupongilla"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ogone
@@ -1174,17 +1181,17 @@ msgstr "Verkkomaksut"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_direct
 msgid "Online direct payment"
-msgstr ""
+msgstr "Suora verkkomaksu"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_token
 msgid "Online payment by token"
-msgstr ""
+msgstr "Verkkomaksaminen kupongilla"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__online_redirect
 msgid "Online payment with redirection"
-msgstr ""
+msgstr "Verkkomaksu uudelleenohjauksella"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
@@ -1195,25 +1202,25 @@ msgstr "Verkkomaksut käytössä"
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
 #, python-format
 msgid "Only administrators can access this data."
-msgstr ""
+msgstr "Vain järjestelmänvalvojat voivat käyttää näitä tietoja."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only authorized transactions can be captured."
-msgstr ""
+msgstr "Vain valtuutetut tapahtumat voidaan tallentaa."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only authorized transactions can be voided."
-msgstr ""
+msgstr "Vain valtuutetut tapahtumat voidaan mitätöidä."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Only confirmed transactions can be refunded."
-msgstr ""
+msgstr "Vain vahvistetut maksutapahtumat voidaan hyvittää."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__operation
@@ -1308,18 +1315,18 @@ msgstr "Maksumäärä"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
 msgid "Payment Followup"
-msgstr ""
+msgstr "Maksun seuranta"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
 msgid "Payment Form"
-msgstr ""
+msgstr "Maksulomake"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_icon
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form
 msgid "Payment Icon"
-msgstr ""
+msgstr "Maksukuvake"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_icon
@@ -1340,7 +1347,7 @@ msgstr "Maksupäiväkirja"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
 msgid "Payment Link"
-msgstr ""
+msgstr "Maksulinkki"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__payment_method
@@ -1355,7 +1362,7 @@ msgstr "Maksutavat"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__description
 msgid "Payment Ref"
-msgstr ""
+msgstr "Maksun viite"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_refund_wizard
@@ -1372,7 +1379,7 @@ msgstr "Maksutunniste"
 #: model:ir.model.fields,field_description:payment.field_res_partner__payment_token_count
 #: model:ir.model.fields,field_description:payment.field_res_users__payment_token_count
 msgid "Payment Token Count"
-msgstr ""
+msgstr "Maksutunnisteiden määrä"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_token
@@ -1405,7 +1412,7 @@ msgstr "Maksutapahtumat"
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_transaction_linked_to_token
 msgid "Payment Transactions Linked To Token"
-msgstr ""
+msgstr "Pääsytunnisteeseen liittyvät maksutapahtumat"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_acquirer_onboarding_wizard
@@ -1462,20 +1469,20 @@ msgstr "Puhelin"
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Please select a payment option."
-msgstr ""
+msgstr "Valitse maksutapa."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "Please select only one payment option."
-msgstr ""
+msgstr "Valitse vain yksi maksutapa."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "Please set an amount smaller than %s."
-msgstr ""
+msgstr "Aseta määrä, joka on pienempi kuin %s."
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -1491,19 +1498,19 @@ msgstr "Käytä seuraavia siirtotietoja"
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid "Please use the order name as communication reference."
-msgstr ""
+msgstr "Käytä tilauksen nimeä viestinnän viitteenä."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Please wait ..."
-msgstr ""
+msgstr "Odota …"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "Processed by"
-msgstr ""
+msgstr "Käsittelytila"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__provider
@@ -1524,12 +1531,12 @@ msgstr "Syy:"
 #: code:addons/payment/models/payment_transaction.py:0
 #, python-format
 msgid "Reason: %s"
-msgstr ""
+msgstr "Syy: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__redirect_form_view_id
 msgid "Redirect Form Template"
-msgstr ""
+msgstr "Uudelleenohjauslomake malli"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
@@ -1540,7 +1547,7 @@ msgstr "Viite"
 #. module: payment
 #: model:ir.model.constraint,message:payment.constraint_payment_transaction_reference_uniq
 msgid "Reference must be unique!"
-msgstr ""
+msgstr "Viitteen on oltava ainutlaatuinen!"
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
@@ -1603,12 +1610,12 @@ msgstr "ASETUS"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "Save Payment Method"
-msgstr ""
+msgstr "Tallenna maksutapa"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 msgid "Save my payment details"
-msgstr ""
+msgstr "Tallenna maksutiedot"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
@@ -1628,7 +1635,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_onboarding_payment_method
 msgid "Selected onboarding payment method"
-msgstr ""
+msgstr "Valittu sisäänkirjautumisen maksutapa"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__sequence
@@ -1651,52 +1658,52 @@ msgstr "Palvelinvirhe"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Server error:"
-msgstr ""
+msgstr "Palvelinvirhe:"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_allow_tokenization
 msgid "Show Allow Tokenization"
-msgstr ""
+msgstr "Näytä Salli tokenisointi"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_auth_msg
 msgid "Show Auth Msg"
-msgstr ""
+msgstr "Näytä todennusviesti"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_cancel_msg
 msgid "Show Cancel Msg"
-msgstr ""
+msgstr "Näytä peruutusilmoitus"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_credentials_page
 msgid "Show Credentials Page"
-msgstr ""
+msgstr "Näytä valtuutusten sivu"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_done_msg
 msgid "Show Done Msg"
-msgstr ""
+msgstr "Näytä Valmis-viesti"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_payment_icon_ids
 msgid "Show Payment Icon"
-msgstr ""
+msgstr "Näytä maksukuvake"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_pending_msg
 msgid "Show Pending Msg"
-msgstr ""
+msgstr "Näytä vireillä oleva viesti"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__show_pre_msg
 msgid "Show Pre Msg"
-msgstr ""
+msgstr "Näytä esiviesti"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_sips
 msgid "Sips"
-msgstr ""
+msgstr "Sips"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__source_payment_id
@@ -1706,7 +1713,7 @@ msgstr "Maksun lähde"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
 msgid "Source Transaction"
-msgstr ""
+msgstr "Lähdetransaktio"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment_method_line__payment_acquirer_state
@@ -1772,7 +1779,7 @@ msgstr "Testi"
 #: model_terms:ir.ui.view,arch_db:payment.manage
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
 msgid "Test Mode"
-msgstr ""
+msgstr "Testitila"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__provider
@@ -1814,12 +1821,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__color
 msgid "The color of the card in kanban view"
-msgstr ""
+msgstr "Kortin väri kanban-näkymässä"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__state_message
 msgid "The complementary information message about the state"
-msgstr ""
+msgstr "Tilaa koskeva täydentävä tietosanoma"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__country_ids
@@ -1842,12 +1849,12 @@ msgstr ""
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "The following fields must be filled: %s"
-msgstr ""
+msgstr "Seuraavat kentät on täytettävä: %s"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__reference
 msgid "The internal reference of the transaction"
-msgstr ""
+msgstr "Tapahtuman sisäinen viite"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__journal_id
@@ -1862,13 +1869,13 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__auth_msg
 msgid "The message displayed if payment is authorized"
-msgstr ""
+msgstr "Näytettävä viesti, jos maksu on hyväksytty"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__cancel_msg
 msgid ""
 "The message displayed if the order is canceled during the payment process"
-msgstr ""
+msgstr "Viesti, joka näytetään, jos tilaus peruutetaan maksuprosessin aikana"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__done_msg
@@ -1876,16 +1883,19 @@ msgid ""
 "The message displayed if the order is successfully done after the payment "
 "process"
 msgstr ""
+"Viesti, joka näytetään, jos tilaus on tehty onnistuneesti maksuprosessin "
+"jälkeen"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pending_msg
 msgid "The message displayed if the order pending after the payment process"
 msgstr ""
+"Viesti, joka näytetään, jos tilaus on maksun suorittamisen jälkeen vireillä"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pre_msg
 msgid "The message displayed to explain and help the payment process"
-msgstr ""
+msgstr "Maksuprosessin selittämiseksi ja helpottamiseksi näytettävä viesti"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -1893,6 +1903,8 @@ msgstr ""
 msgid ""
 "The payment should either be direct, with redirection, or made by a token."
 msgstr ""
+"Maksun olisi oltava joko suora, uudelleenohjautuva tai suoritettava kupongin"
+" avulla."
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1903,7 +1915,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__landing_route
 msgid "The route the user is redirected to after the transaction"
-msgstr ""
+msgstr "Reitti, jolle käyttäjä ohjataan tapahtuman jälkeen"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__source_payment_id
@@ -1913,7 +1925,7 @@ msgstr "Tähän liittyvien maksupalautusten lähdemaksu"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
 msgid "The source transaction of related refund transactions"
-msgstr ""
+msgstr "Asiaan liittyvien palautustapahtumien lähdetapahtuma"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__redirect_form_view_id
@@ -1921,12 +1933,14 @@ msgid ""
 "The template rendering a form submitted to redirect the user when making a "
 "payment"
 msgstr ""
+"Malli, joka renderöi lomakkeen, joka lähetetään käyttäjän "
+"uudelleenohjaamiseksi maksun suorittamisen yhteydessä"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__inline_form_view_id
 msgid ""
 "The template rendering the inline payment form when making a direct payment"
-msgstr ""
+msgstr "Malli, joka renderöi rivimaksulomakkeen suoraa maksua tehtäessä"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -1972,12 +1986,12 @@ msgstr ""
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "The value of the payment amount must be positive."
-msgstr ""
+msgstr "Maksun määrän arvon on oltava positiivinen."
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_transaction
 msgid "There are no transactions to show"
-msgstr ""
+msgstr "Tapahtumia ei ole esitetty"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1998,6 +2012,8 @@ msgstr ""
 msgid ""
 "This field holds the image used for this payment icon, limited to 64x64 px"
 msgstr ""
+"Tähän kenttään tallennetaan maksukuvakkeen kuva, jonka koko on enintään "
+"64x64 pikseliä"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -2015,12 +2031,12 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has been verified by our system."
-msgstr ""
+msgstr "Järjestelmämme on vahvistanut tämän maksutavan."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has not been verified by our system."
-msgstr ""
+msgstr "Järjestelmämme ei ole vahvistanut tätä maksutapaa."
 
 #. module: payment
 #. openerp-web
@@ -2032,7 +2048,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__support_tokenization
 msgid "Tokenization Supported"
-msgstr ""
+msgstr "Tokenisointi on tuettu"
 
 #. module: payment
 #: code:addons/payment/models/payment_transaction.py:0
@@ -2060,7 +2076,7 @@ msgstr "Tuettu maksupalautustyyppi"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Unable to contact the Odoo server."
-msgstr ""
+msgstr "Odoo-palvelimeen ei saada yhteyttä."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_form
@@ -2077,28 +2093,29 @@ msgstr "Käytä sähköistä maksutapaa"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__operation__validation
 msgid "Validation of the payment method"
-msgstr ""
+msgstr "Maksutavan vahvistus"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_var
 msgid "Variable domestic fees (in percents)"
-msgstr ""
+msgstr "Muuttuvat kotimaiset maksut (prosentteina)"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Variable fees must always be positive and below 100%."
 msgstr ""
+"Muuttuvien maksujen on aina oltava positiivisia ja alle 100 prosenttia."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_var
 msgid "Variable international fees (in percents)"
-msgstr ""
+msgstr "Muuttuvat kansainväliset maksut (prosentteina)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__verified
 msgid "Verified"
-msgstr ""
+msgstr "Vahvistettu"
 
 #. module: payment
 #: model:ir.model,name:payment.model_ir_ui_view
@@ -2131,35 +2148,35 @@ msgstr "Varoitus!"
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "We are not able to delete your payment method."
-msgstr ""
+msgstr "Emme voi poistaa maksutapaasi."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "We are not able to find your payment, but don't worry."
-msgstr ""
+msgstr "Emme löydä maksuasi, mutta älä huoli."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
 msgid "We are not able to process your payment."
-msgstr ""
+msgstr "Emme pysty käsittelemään maksuasi."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/manage_form.js:0
 #, python-format
 msgid "We are not able to save your payment method."
-msgstr ""
+msgstr "Emme pysty tallentamaan maksutapaasi."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/post_processing.js:0
 #, python-format
 msgid "We are processing your payment, please wait ..."
-msgstr ""
+msgstr "Käsittelemme maksuasi, odota ..."
 
 #. module: payment
 #. openerp-web
@@ -2173,12 +2190,12 @@ msgstr ""
 msgid ""
 "Whether a payment token should be created when post-processing the "
 "transaction"
-msgstr ""
+msgstr "Luodaanko maksutapahtuman jälkikäsittelyn yhteydessä maksutunniste"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done
 msgid "Whether the callback has already been executed"
-msgstr ""
+msgstr "Onko takaisinkutsu jo suoritettu"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
@@ -2210,7 +2227,7 @@ msgstr ""
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "You do not have access to this payment token."
-msgstr ""
+msgstr "Sinulla ei ole pääsyä tähän maksutunnukseen."
 
 #. module: payment
 #. openerp-web
@@ -2218,20 +2235,22 @@ msgstr ""
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
 msgstr ""
+"Saat sähköpostiviestin, jossa vahvistetaan maksusi muutaman minuutin "
+"kuluessa."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "You will be notified when the payment is confirmed."
-msgstr ""
+msgstr "Sinulle ilmoitetaan, kun maksu on vahvistettu."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "You will be notified when the payment is fully confirmed."
-msgstr ""
+msgstr "Sinulle ilmoitetaan, kun maksu on täysin vahvistettu."
 
 #. module: payment
 #. openerp-web
@@ -2292,7 +2311,7 @@ msgstr "Maksusi on peruutettu."
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment has been received but need to be confirmed manually."
-msgstr ""
+msgstr "Maksusi on vastaanotettu, mutta se on vahvistettava manuaalisesti."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -2339,7 +2358,7 @@ msgstr "Maksusi on käsitelty onnistuneesti. Kiitos!"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment is in pending state."
-msgstr ""
+msgstr "Maksusi on odottaa tilassa."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2356,17 +2375,17 @@ msgstr "Postinumero"
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 #: model:ir.cron,name:payment.cron_post_process_payment_tx
 msgid "payment: post-process transactions"
-msgstr ""
+msgstr "maksu: jälkikäsittelyn jälkeiset maksutapahtumat"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.icon_list
 msgid "show less"
-msgstr ""
+msgstr "näytä vähemmän"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.icon_list
 msgid "show more"
-msgstr ""
+msgstr "näytä lisää"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form

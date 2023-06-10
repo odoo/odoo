@@ -33,10 +33,10 @@
 # Ramunė ViaLaurea <ramune.vialaurea@gmail.com>, 2022
 # Darius Ribinskas <dahius@gmail.com>, 2022
 # Mantas Kriaučiūnas Baltix <mantas@akl.lt>, 2022
-# Arunas V. <arunas@devoro.com>, 2023
 # Mantas, 2023
 # Raimondas Z., 2023
 # Jonas Zinkevicius <jozi@odoo.com>, 2023
+# Arunas V. <arunas@devoro.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -44,7 +44,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Jonas Zinkevicius <jozi@odoo.com>, 2023\n"
+"Last-Translator: Arunas V. <arunas@devoro.com>, 2023\n"
 "Language-Team: Lithuanian (https://app.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4131,7 +4131,7 @@ msgstr "Sukurti automatinius įrašus"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_automatic_entry_wizard_action
 msgid "Create Automatic Entries for selected Journal Items"
-msgstr ""
+msgstr "Sukurkite automatinius pasirinktų žurnalo elementų įrašus"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_accrued_orders_wizard
@@ -7564,6 +7564,8 @@ msgid ""
 "Journal Entry %s is not valid. In order to proceed, all optional journal "
 "items must share the same account."
 msgstr ""
+"Žurnalo įrašas %s yra neteisingas. Kad būtų galima tęsti, visi pasirenkami "
+"žurnalo elementai turi turėti tą pačią sąskaitą."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -7661,7 +7663,7 @@ msgstr "Žurnalo įrašo etiketė."
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Journal Items"
-msgstr "DK įrašai"
+msgstr "DK žurnalas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__name
@@ -11914,6 +11916,8 @@ msgid ""
 "Some journal items already exist in this journal but with accounts from "
 "different types than the allowed ones."
 msgstr ""
+"Kai kurie žurnalo elementai jau yra šiame žurnale, bet su kitokio tipo "
+"sąskaitomis nei leidžiama."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -11922,6 +11926,8 @@ msgid ""
 "Some journal items already exist in this journal but with other accounts "
 "than the allowed ones."
 msgstr ""
+"Kai kurie žurnalo elementai jau yra šiame žurnale, bet su kitomis paskyromis"
+" nei leidžiama."
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -11930,6 +11936,8 @@ msgid ""
 "Some journal items already exist with this account but in other journals "
 "than the allowed ones."
 msgstr ""
+"Kai kurie žurnalo elementai jau yra šioje paskyroje, bet kituose žurnaluose "
+"nei leidžiami."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -15187,6 +15195,12 @@ msgid "Warning for %s"
 msgstr "Įspėjimas %s"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Warning for Cash Rounding Method: %s"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "Warning on the Invoice"
 msgstr "Įspėjimas sąskaitoje"
@@ -15910,6 +15924,12 @@ msgid ""
 "journal."
 msgstr ""
 "Turite savo kasos aparato žurnale nustatyti \"Vidinę perkėlimo sąskaitą\"."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You must specify the Profit Account (company dependent)"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

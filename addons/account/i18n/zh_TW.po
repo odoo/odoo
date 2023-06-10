@@ -7,6 +7,7 @@
 # Martin Trigaux, 2022
 # Benson <Benson.Dr@Gmail.com>, 2023
 # Tony Ng, 2023
+# 226408 台北 <226408@so8d.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Tony Ng, 2023\n"
+"Last-Translator: 226408 台北 <226408@so8d.com>, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -14051,6 +14052,8 @@ msgid ""
 "There was an error when trying to add the banner to the original PDF.\n"
 "Please make sure the source file is valid."
 msgstr ""
+"嘗試將橫幅添加到原始PDF時出錯。\n"
+"請確保原始檔案有效。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14673,7 +14676,7 @@ msgstr "未過帳"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unposted Entries"
-msgstr ""
+msgstr "未過帳的分錄"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -15093,6 +15096,12 @@ msgid "Warning for %s"
 msgstr "%s 的警告"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Warning for Cash Rounding Method: %s"
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "Warning on the Invoice"
 msgstr "應收憑單警告"
@@ -15498,7 +15507,7 @@ msgstr "已經存在日記帳項目，不能修改公司的幣別"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Please contact your accountant to print the Hash integrity result."
-msgstr ""
+msgstr "請聯繫您的會計師列印雜湊完整性結果。"
 
 #. module: account
 #: code:addons/account/models/account_account.py:0
@@ -15791,6 +15800,12 @@ msgid ""
 "You have to define an 'Internal Transfer Account' in your cash register's "
 "journal."
 msgstr "您應該已經在現金日記帳上定義了一個'內部轉帳項目'."
+
+#. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You must specify the Profit Account (company dependent)"
+msgstr ""
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
