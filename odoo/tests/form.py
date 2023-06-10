@@ -130,6 +130,7 @@ class Form:
         # self._view = {
         #     'tree': view_arch_etree,
         #     'fields': {field_name: field_info},
+        #     'fields_spec': web_read_fields_spec,
         #     'modifiers': {field_name: {modifier: expression}},
         #     'contexts': {field_name: field_context_str},
         #     'onchange': onchange_spec,
@@ -138,26 +139,20 @@ class Form:
         # determine record values
         object.__setattr__(self, '_values', UpdateDict())
         if record:
-            assert record.id, "editing unstored records is not supported"
-            self._values.update(read_record(record, self._view['fields']))
+            self._init_from_record()
         else:
             self._init_from_defaults()
 
     def _process_view(self, tree, model, level=2):
         """ Post-processes to augment the view_get with:
         * an id field (may not be present if not in the view but needed)
-        * pre-processed modifiers (map of modifier name to json-loaded expresion)
+        * pre-processed modifiers
         * pre-processed onchanges list
         """
         fields = {'id': {'type': 'id'}}
+        fields_spec = {}
         modifiers = {'id': {'required': 'False', 'readonly': 'True'}}
         contexts = {}
-        view = {
-            'tree': tree,
-            'fields': fields,
-            'modifiers': modifiers,
-            'contexts': contexts,
-        }
         # retrieve <field> nodes at the current level
         flevel = tree.xpath('count(ancestor::field)')
         daterange_field_names = {}
@@ -167,6 +162,7 @@ class Form:
             # add field_info into fields
             field_info = self._models_info.get(model._name, {}).get(field_name) or {'type': None}
             fields[field_name] = field_info
+            fields_spec[field_name] = field_spec = {}
 
             # determine modifiers
             field_modifiers = {}
@@ -206,13 +202,13 @@ class Form:
                     else:
                         field_modifiers[modifier] = f'({expr}) and ({field_modifiers[modifier]})'
 
-
             modifiers[field_name] = field_modifiers
 
             # determine context
             ctx = node.get('context')
             if ctx:
                 contexts[field_name] = ctx
+                field_spec['context'] = get_static_context(ctx)
 
             # FIXME: better widgets support
             # NOTE: selection breaks because of m2o widget=selection
@@ -227,7 +223,9 @@ class Form:
             if field_info['type'] == 'one2many':
                 if level:
                     field_info['invisible'] = field_modifiers.get('invisible')
-                    field_info['edition_view'] = self._get_one2many_edition_view(field_info, node, level)
+                    edition_view = self._get_one2many_edition_view(field_info, node, level)
+                    field_info['edition_view'] = edition_view
+                    field_spec['fields'] = edition_view['fields_spec']
                 else:
                     # this trick enables the following invariant: every one2many
                     # field has some 'edition_view' in its info dict
@@ -236,9 +234,14 @@ class Form:
         for related_field, start_field in daterange_field_names.items():
             modifiers[related_field]['invisible'] = modifiers[start_field].get('invisible', False)
 
-        view['onchange'] = model._onchange_spec({'arch': etree.tostring(tree)})
-
-        return view
+        return {
+            'tree': tree,
+            'fields': fields,
+            'fields_spec': fields_spec,
+            'modifiers': modifiers,
+            'contexts': contexts,
+            'onchange': model._onchange_spec({'arch': etree.tostring(tree)}),
+        }
 
     def _get_one2many_edition_view(self, field_info, node, level):
         """ Return a suitable view for editing records into a one2many field. """
@@ -275,6 +278,14 @@ class Form:
 
     def __str__(self):
         return f"<{type(self).__name__} {self._record}>"
+
+    def _init_from_record(self):
+        """ Initialize the form for an existing record. """
+        assert self._record.id, "editing unstored records is not supported"
+        self._values.clear()
+        [record_values] = self._record.web_read(self._view['fields_spec'])
+        values = convert_read_to_form(record_values, self._view['fields'])
+        self._values.update(values)
 
     def _init_from_defaults(self):
         """ Initialize the form for a new record. """
@@ -402,8 +413,7 @@ class Form:
         else:
             object.__setattr__(self, '_record', self._record.create(values))
         # reload the record
-        self._values.clear()
-        self._values.update(read_record(self._record, self._view['fields']))
+        self._init_from_record()
         self._env.flush_all()
         self._env.clear()  # discard cache and pending recomputations
         return self._record
@@ -519,8 +529,7 @@ class Form:
                 record = record.with_context(**context)
 
         values = self._get_onchange_values()
-        fields_spec = get_fields_spec(self._view['fields'])
-        result = record.onchange2(values, field_names, fields_spec)
+        result = record.onchange2(values, field_names, self._view['fields_spec'])
         self._env.flush_all()
         self._env.clear()  # discard cache and pending recomputations
 
@@ -917,21 +926,6 @@ class M2MProxy(X2MProxy, collections.abc.Sequence):
         self._form._perform_onchange(self._field)
 
 
-def read_record(record, fields):
-    """ Read the given fields (field descriptions) on the given record. """
-    fields_spec = get_fields_spec(fields)
-    values = record.web_read(fields_spec)[0]
-    return convert_read_to_form(values, fields)
-
-
-def get_fields_spec(fields):
-    result = {}
-    for field, field_info in fields.items():
-        subview = field_info.get('edition_view')
-        result[field] = {'fields': get_fields_spec(subview['fields'])} if subview else {}
-    return result
-
-
 def convert_read_to_form(values, fields):
     result = {}
     for fname, value in values.items():
@@ -970,6 +964,21 @@ def _cleanup_from_default(type_, value):
     elif type_ == 'date' and isinstance(value, date):
         return odoo.fields.Date.to_string(value)
     return value
+
+
+def get_static_context(context_str):
+    """ Parse the given context string, and return the literal part of it. """
+    context_ast = ast.parse(context_str.strip(), mode='eval').body
+    assert isinstance(context_ast, ast.Dict)
+    result = {}
+    for key_ast, val_ast in zip(context_ast.keys, context_ast.values):
+        try:
+            key = ast.literal_eval(ast.unparse(key_ast))
+            val = ast.literal_eval(ast.unparse(val_ast))
+            result[key] = val
+        except ValueError:
+            pass
+    return result
 
 
 class Dotter:
