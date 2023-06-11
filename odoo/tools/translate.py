@@ -473,12 +473,16 @@ class GettextAlias(object):
     def _get_translation(self, source, module=None):
         try:
             frame = inspect.currentframe().f_back.f_back
-            lang = self._get_lang(frame)
-            if lang and lang != 'en_US':
+            lang = self._get_lang(frame) or 'en_US'
+            if lang:
                 if not module:
                     path = inspect.getfile(frame)
                     path_info = odoo.modules.get_resource_from_path(path)
                     module = path_info[0] if path_info else 'base'
+                cr, _ = self._get_cr(frame)
+                if cr:
+                    env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+                    return env['ir.code.translation'].get_python_translation(module, lang, source)
                 return code_translations.get_python_translations(module, lang).get(source, source)
             else:
                 _logger.debug('no translation language detected, skipping translation for "%r" ', source)
@@ -1153,7 +1157,6 @@ class TranslationModuleReader:
             translations = code_translations.get_python_translations(module, self._lang)
         else:
             translations = code_translations.get_web_translations(module, self._lang)
-            translations = {tran['id']: tran['string'] for tran in translations['messages']}
         try:
             for extracted in extract.extract(extract_method, src_file, keywords=extract_keywords, options=options):
                 # Babel 0.9.6 yields lineno, message, comments
@@ -1506,7 +1509,11 @@ class CodeTranslations:
 
     @staticmethod
     def _get_code_translations(module_name, lang, filter_func):
-        po_paths = CodeTranslations._get_po_paths(module_name, lang)
+        if lang:
+            po_paths = CodeTranslations._get_po_paths(module_name, lang)
+        else:
+            pot_path = get_resource_path(module_name, 'i18n', module_name + '.pot')
+            po_paths = [pot_path] if pot_path else []
         translations = {}
         for po_path in po_paths:
             try:
@@ -1537,9 +1544,7 @@ class CodeTranslations:
                     JAVASCRIPT_TRANSLATION_COMMENT in row['comments']
                     or WEB_TRANSLATION_COMMENT in row['comments'])
         translations = CodeTranslations._get_code_translations(module_name, lang, filter_func)
-        self.web_translations[(module_name, lang)] = {
-            "messages": [{"id": src, "string": value} for src, value in translations.items()]
-        }
+        self.web_translations[(module_name, lang)] = translations
 
     def get_python_translations(self, module_name, lang):
         if (module_name, lang) not in self.python_translations:

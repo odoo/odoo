@@ -248,7 +248,7 @@ class IrHttp(models.AbstractModel):
         # done server-side when the language is loaded, so we only need to load the user's lang.
         translations_per_module = {}
         for module in modules:
-            translations_per_module[module] = code_translations.get_web_translations(module, lang)
+            translations_per_module[module] = self.env['ir.code.translation'].get_web_translations(module, lang)
 
         return translations_per_module, lang_params
 

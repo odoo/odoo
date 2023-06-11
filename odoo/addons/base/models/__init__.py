@@ -11,6 +11,7 @@ from . import ir_actions
 from . import ir_actions_report
 from . import ir_attachment
 from . import ir_binary
+from . import ir_code_translation
 from . import ir_cron
 from . import ir_filters
 from . import ir_default
