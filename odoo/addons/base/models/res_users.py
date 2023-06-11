@@ -1729,6 +1729,31 @@ class UsersView(models.Model):
             )
         return result
 
+    def onchange2(self, values, field_names, fields_spec):
+        reified_fnames = [fname for fname in fields_spec if is_reified_group(fname)]
+        if reified_fnames:
+            values = {key: val for key, val in values.items() if key != 'groups_id'}
+            values = self._remove_reified_groups(values)
+
+            if any(is_reified_group(fname) for fname in field_names):
+                field_names = [fname for fname in field_names if not is_reified_group(fname)]
+                field_names.append('groups_id')
+
+            fields_spec = {
+                field_name: field_spec
+                for field_name, field_spec in fields_spec.items()
+                if not is_reified_group(field_name)
+            }
+            fields_spec['groups_id'] = {}
+
+        result = super().onchange2(values, field_names, fields_spec)
+
+        if reified_fnames and 'groups_id' in result.get('value', {}):
+            self._add_reified_groups(reified_fnames, result['value'])
+            result['value'].pop('groups_id', None)
+
+        return result
+
     def read(self, fields=None, load='_classic_read'):
         # determine whether reified groups fields are required, and which ones
         fields1 = fields or list(self.fields_get())
