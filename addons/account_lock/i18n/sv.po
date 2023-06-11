@@ -6,6 +6,7 @@
 # Martin Trigaux, 2021
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2021
 # Jakob Krabbe <jakob.krabbe@vertel.se>, 2021
+# Lasse Larsson, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2021\n"
+"Last-Translator: Lasse Larsson, 2023\n"
 "Language-Team: Swedish (https://app.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +29,8 @@ msgid ""
 "Any new All Users Lock Date must be posterior (or equal) to the previous "
 "one."
 msgstr ""
+"Alla nya låsdatum för alla användare måste vara efterföljande (eller lika "
+"med) det föregående."
 
 #. module: account_lock
 #: model:ir.model,name:account_lock.model_res_company
@@ -60,12 +63,13 @@ msgstr ""
 #, python-format
 msgid "The new tax lock date must be set after the previous lock date."
 msgstr ""
+"Det nya skattelåsdatumet måste ställas in efter det föregående låsdatumet."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The tax lock date is irreversible and can't be removed."
-msgstr ""
+msgstr "Skattelåsdatumet är oåterkalleligt och kan inte tas bort."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -74,6 +78,9 @@ msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the All Users "
 "Lock Date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
+"Du kan inte låsa en period som ännu inte har avslutats. Därför måste alla "
+"användares låsdatum vara tidigare (eller lika med) den sista dagen i "
+"föregående månad."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -82,6 +89,9 @@ msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the tax lock "
 "date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
+"Du kan inte låsa en period som ännu inte har avslutats. Därför måste "
+"skattelåsdatumet vara tidigare (eller lika med) den sista dagen i föregående"
+" månad."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
