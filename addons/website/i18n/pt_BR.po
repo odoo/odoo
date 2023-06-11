@@ -67,6 +67,12 @@ msgstr "\" alertar com um"
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
+msgid "\"URL from\" can not be empty."
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
 msgid "\"URL to\" can not be empty."
 msgstr "\"URL para\" não pode ficar vazio."
 
@@ -75,18 +81,19 @@ msgstr "\"URL para\" não pode ficar vazio."
 #, python-format
 msgid "\"URL to\" cannot contain parameter %s which is not used in \"URL from\"."
 msgstr ""
+"“URL para” não pode conter um parâmetro %s que não seja usado em “URL de”."
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" is invalid: %s"
-msgstr ""
+msgstr "“URL para” é inválido: %s"
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" must contain parameter %s used in \"URL from\"."
-msgstr ""
+msgstr "“URL para” deve conter um parâmetro %s que seja usado em “URL de”."
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
@@ -194,7 +201,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
 #: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
 msgid "+1 (650) 555-0111"
-msgstr ""
+msgstr "+1 (650) 555-0111"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -3261,7 +3268,7 @@ msgstr "Habilite o faturamento no seu Projeto Google"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Enable the right google map APIs in your google account"
-msgstr ""
+msgstr "Habilite as APIs do Google Maps corretas na sua conta Google"
 
 #. module: website
 #. openerp-web
@@ -5085,7 +5092,7 @@ msgstr "Ações Principais"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Make sure billing is enabled"
-msgstr ""
+msgstr "Certifique-se de que o faturamento esteja habilitado"
 
 #. module: website
 #. openerp-web
@@ -5095,6 +5102,9 @@ msgid ""
 "Make sure to wait if errors keep being shown: sometimes enabling an API "
 "allows to use it immediately but Google keeps triggering errors for a while"
 msgstr ""
+"Aguarde caso os erros continuem sendo exibidos; às vezes, a ativação de uma "
+"API permite usá-la imediatamente, mas o Google continua disparando erros por"
+" algum tempo"
 
 #. module: website
 #. openerp-web
@@ -5102,6 +5112,7 @@ msgstr ""
 #, python-format
 msgid "Make sure your settings are properly configured:"
 msgstr ""
+"Certifique-se de que as suas definições estejam configuradas corretamente:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -5128,14 +5139,14 @@ msgstr "Gerenciar esta página"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Maps JavaScript API"
-msgstr ""
+msgstr "API JavaScript do Maps"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Maps Static API"
-msgstr ""
+msgstr "API estática do Maps"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -5987,19 +5998,19 @@ msgstr "Pizza"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Pill"
-msgstr "Comprimido"
+msgstr "Pílula"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Pills"
-msgstr "Comprimidos"
+msgstr "Pílulas"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Places API"
-msgstr ""
+msgstr "API do Places"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -6736,7 +6747,7 @@ msgstr "Sequência"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Serve font from Google servers"
-msgstr ""
+msgstr "Oferecer fonte dos servidores Google"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_actions_server
@@ -7551,6 +7562,8 @@ msgstr ""
 #, python-format
 msgid "This font is hosted and served to your visitors by Google servers"
 msgstr ""
+"Esta fonte é hospedada e oferecida aos seus visitantes pelos servidores "
+"Google"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_view

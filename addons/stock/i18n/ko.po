@@ -12,6 +12,7 @@
 # Link Up링크업 <linkup.way@gmail.com>, 2020
 # JH CHOI <hwangtog@gmail.com>, 2021
 # Linkup <link-up@naver.com>, 2021
+# Daye Jeong, 2023
 # Sarah Park, 2023
 # 
 msgid ""
@@ -3223,6 +3224,14 @@ msgid "Is quantity done editable"
 msgstr "완료된 수량 편집 가능 여부"
 
 #. module: stock
+#: code:addons/stock/models/stock_move_line.py:0
+#, python-format
+msgid ""
+"It is not allowed to import reserved quantity, you have to use the quantity "
+"directly."
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid ""
@@ -3253,7 +3262,7 @@ msgstr "품목의 일부 또는 전부를 즉시 배달하도록 지정합니다
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__json_popover
 msgid "JSON data for the popover widget"
-msgstr ""
+msgstr "팝오버 위젯용 JSON 데이터"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__json_lead_days_popover
@@ -3880,7 +3889,7 @@ msgstr "음수 재고"
 #: model:ir.model.fields.selection,name:stock.selection__stock_package_level__state__new
 #, python-format
 msgid "New"
-msgstr "새로운"
+msgstr "신규"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -6814,6 +6823,14 @@ msgid ""
 msgstr ""
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product's company cannot be changed as long as there are stock moves of"
+" it belonging to another company."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -8138,12 +8155,4 @@ msgstr "report_stock_quantity_graph"
 #: code:addons/stock/static/src/xml/stock_orderpoint.xml:0
 #, python-format
 msgid "should be replenished to reach the maximum of"
-msgstr ""
-
-#. module: stock
-#: code:addons/stock/models/stock_move_line.py:0
-#, python-format
-msgid ""
-"It is not allow to import reserved quantity, you have to use the quantity "
-"directly."
 msgstr ""

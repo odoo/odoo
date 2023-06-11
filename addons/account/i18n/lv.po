@@ -13,6 +13,7 @@
 # Konstantins Zabogonskis <inculin4ik@gmail.com>, 2022
 # Anzelika Adejanova, 2022
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
+# Will Sensors, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023\n"
+"Last-Translator: Will Sensors, 2023\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -620,7 +621,7 @@ msgstr "<span>Nosaukums</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Disc.%</span>"
-msgstr ""
+msgstr "<span>Atl.%</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -865,7 +866,7 @@ msgstr "<strong>Pārdevējs: </strong>"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "@From: %(email)s"
-msgstr ""
+msgstr "@No: %(email)s"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -1071,7 +1072,7 @@ msgstr "Konta reģistrs"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_group
 msgid "Account Journal Group"
-msgstr ""
+msgstr "Konta reģistra grupa"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_report_journal
@@ -1093,7 +1094,7 @@ msgstr "Grāmatojumu  apvērse"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__name
 msgid "Account Name"
-msgstr ""
+msgstr "Konta nosaukums"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_acc_number
@@ -1544,7 +1545,7 @@ msgstr "Pievienot zīmi"
 #: model:ir.actions.server,name:account.action_new_bank_setting
 #: model:ir.ui.menu,name:account.menu_action_account_bank_journal_form
 msgid "Add a Bank Account"
-msgstr ""
+msgstr "Pievienot bankas kontu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -1578,7 +1579,7 @@ msgstr "Pievienot rindu"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Add a line to your invoice"
-msgstr ""
+msgstr "Pievienot rindu rēķinam"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_form
@@ -2645,7 +2646,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Bill Reference"
-msgstr ""
+msgstr "Rēķina atsauce"
 
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
@@ -2655,7 +2656,7 @@ msgstr "Billing"
 #. module: account
 #: model:res.groups,name:account.group_account_manager
 msgid "Billing Administrator"
-msgstr ""
+msgstr "Norēķinu administrators"
 
 #. module: account
 #: code:addons/account/controllers/portal.py:0
@@ -2679,7 +2680,7 @@ msgstr "Rēķini Apmaksai"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Bills to Validate"
-msgstr ""
+msgstr "Rēķini apstiprināšanai"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -3693,12 +3694,12 @@ msgstr "Izveidot jaunu nodokli"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_invoice_type
 msgid "Create a vendor bill"
-msgstr ""
+msgstr "Izveidot iepirkšanas pavadzīmi"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
 msgid "Create a vendor credit note"
-msgstr ""
+msgstr "Izveidot iepirkšanas pavadzīmes kredītrēķinu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.tax_adjustments_wizard
@@ -4086,7 +4087,7 @@ msgstr "Klienta Maksājumi"
 #: model:ir.model.fields,help:account.field_account_move__access_url
 #: model:ir.model.fields,help:account.field_account_payment__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "Klienta portāla URL"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__customer_rank
@@ -4158,7 +4159,7 @@ msgstr ""
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
 msgid "DELIVERED AT PLACE"
-msgstr ""
+msgstr "DAP"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DPU
@@ -4376,7 +4377,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_company__incoterm_id
 #: model:ir.model.fields,field_description:account.field_res_config_settings__incoterm_id
 msgid "Default incoterm"
-msgstr ""
+msgstr "Incoterm pēc noklusējuma."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_analytic_default__date_start
@@ -4552,7 +4553,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Disc.%"
-msgstr ""
+msgstr "Atl.%"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill
@@ -4680,7 +4681,7 @@ msgstr "Attēlošanas Tips"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__description
 msgid "Display on Invoices"
-msgstr ""
+msgstr "Attēlot uz rēķina"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
@@ -4754,13 +4755,13 @@ msgstr "Melnraksts"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Bill"
-msgstr ""
+msgstr "Rēķina melnraksts"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Credit Note"
-msgstr ""
+msgstr "Kredītrēķina melnraksts"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -7281,7 +7282,7 @@ msgstr "Pievienot iekšējo piezīmi"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Looks good. Let's continue."
-msgstr ""
+msgstr "Izskatās labi. Tā turpināt!"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
@@ -8957,7 +8958,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__access_url
 #: model:ir.model.fields,field_description:account.field_account_payment__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "Portāla pieejas URL"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
@@ -12782,7 +12783,7 @@ msgstr "Kopējā bilance"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tax_audit_tree
 msgid "Total Base Amount"
-msgstr ""
+msgstr "Kopējā bāzes summa"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12821,12 +12822,12 @@ msgstr "Ieņēmumu Summa"
 #: model:ir.model.fields,field_description:account.field_account_move__amount_total_signed
 #: model:ir.model.fields,field_description:account.field_account_payment__amount_total_signed
 msgid "Total Signed"
-msgstr ""
+msgstr "Parakstītā kopsumma"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
 msgid "Total amount impacted by the automatic entry."
-msgstr ""
+msgstr "Kopējā summa pēc automātiskās ievades."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__credit
@@ -12838,7 +12839,7 @@ msgstr "Kopējais daudzums, ko klients ir parādā."
 #: model:ir.model.fields,help:account.field_res_partner__debit
 #: model:ir.model.fields,help:account.field_res_users__debit
 msgid "Total amount you have to pay to this vendor."
-msgstr ""
+msgstr "Kopējā apmaksas summa šim piegādātājam."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__total_entry_encoding
@@ -12945,7 +12946,7 @@ msgstr "Tips"
 #: model:ir.model.fields,field_description:account.field_account_move__type_name
 #: model:ir.model.fields,field_description:account.field_account_payment__type_name
 msgid "Type Name"
-msgstr ""
+msgstr "Ievadīt vārdu"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__qr_code_method

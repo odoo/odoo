@@ -40,12 +40,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_invalid_count
 msgid "# Invalid recipients"
-msgstr ""
+msgstr "# Virheellisiä vastaanottajia"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_valid_count
 msgid "# Valid recipients"
-msgstr ""
+msgstr "# Kelvolliset vastaanottajat"
 
 #. module: sms
 #: code:addons/sms/models/sms_template.py:0
@@ -65,7 +65,7 @@ msgstr ""
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "%s invalid recipients"
-msgstr ""
+msgstr "%s virheelliset vastaanottajat"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -80,6 +80,8 @@ msgid ""
 "<span class=\"o_stat_text\">Add</span>\n"
 "                                <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Lisää</span>\n"
+"                                <span class=\"o_stat_text\">Kontekstin mukainen toiminto</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -87,6 +89,8 @@ msgid ""
 "<span class=\"o_stat_text\">Remove</span>\n"
 "                                <span class=\"o_stat_text\">Context Action</span>"
 msgstr ""
+"<span class=\"o_stat_text\">Poista</span>\n"
+"                                <span class=\"o_stat_text\">Kontekstin mukainen toiminto</span>"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -94,6 +98,8 @@ msgid ""
 "<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
 "False)]}\">No records</span>"
 msgstr ""
+"<span class=\"text-warning\" attrs=\"{'invisible': [('no_record', '=', "
+"False)]}\">Ei tietoja</span>"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
@@ -123,13 +129,15 @@ msgid ""
 "Add a contextual action on the related model to open a sms composer with "
 "this template"
 msgstr ""
+"Lisää kontekstisidonnainen toiminto asiaan liittyvään malliin sms-"
+"sommittelijan avaamiseksi tämän mallin avulla"
 
 #. module: sms
 #. openerp-web
 #: code:addons/sms/static/src/components/notification_group/notification_group.xml:0
 #, python-format
 msgid "An error occurred when sending an SMS."
-msgstr ""
+msgstr "Tekstiviestin lähettämisessä tapahtui virhe."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
@@ -217,7 +225,7 @@ msgstr "Sulje"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__composition_mode
 msgid "Composition Mode"
-msgstr ""
+msgstr "Kirjoitustila"
 
 #. module: sms
 #: model:ir.model,name:sms.model_res_partner
@@ -260,7 +268,7 @@ msgstr "Asiakas"
 #. module: sms
 #: model:sms.template,name:sms.sms_template_demo_0
 msgid "Customer: automated SMS"
-msgstr ""
+msgstr "Asiakas: automaattinen tekstiviesti"
 
 #. module: sms
 #: model:sms.template,body:sms.sms_template_demo_0
@@ -325,7 +333,7 @@ msgstr "Dokumentin ID"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids
 msgid "Document IDs"
-msgstr ""
+msgstr "Asiakirjan tunnukset"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_model
@@ -410,7 +418,7 @@ msgstr "Seuraajat (kumppanit)"
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "Following numbers are not correctly encoded: %s"
-msgstr ""
+msgstr "Seuraavia numeroita ei ole koodattu oikein: %s"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_cancel
@@ -420,18 +428,18 @@ msgstr "On peruutus"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_insufficient_credit
 msgid "Has Insufficient Credit"
-msgstr ""
+msgstr "Ei tarpeeksi krediittejä"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__has_sms_error
 #: model:ir.model.fields,field_description:sms.field_mail_message__has_sms_error
 msgid "Has SMS error"
-msgstr ""
+msgstr "On tekstiviestivirhe"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__has_unregistered_account
 msgid "Has Unregistered Account"
-msgstr ""
+msgstr "On rekisteröimätön tili"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_mail_mail__has_sms_error
@@ -559,6 +567,8 @@ msgstr ""
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
 msgid "Indicates if the SMS composer targets a single specific recipient"
 msgstr ""
+"Ilmaisee, onko tekstiviestisommitelu suunnattu yksittäiselle "
+"vastaanottajalle"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
@@ -575,7 +585,7 @@ msgstr ""
 #: code:addons/sms/wizard/sms_composer.py:0
 #, python-format
 msgid "Invalid recipient number. Please update it."
-msgstr ""
+msgstr "Vastaanottajan numero on virheellinen. Päivitä se."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_is_follower
@@ -585,12 +595,12 @@ msgstr "On seuraaja"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_valid
 msgid "Is valid"
-msgstr ""
+msgstr "On voimassa"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_keep_log
 msgid "Keep a note on document"
-msgstr ""
+msgstr "Pidä dokumenttia silmällä"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__lang
@@ -654,7 +664,7 @@ msgstr "KPI Sähköpostiviestien kokonaisarvo"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_ir_model__is_mail_thread_sms
 msgid "Mail Thread SMS"
-msgstr ""
+msgstr "SMS-viestiketju"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_main_attachment_id
@@ -739,7 +749,7 @@ msgstr "Numero"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__number_field_name
 msgid "Number Field"
-msgstr ""
+msgstr "Numerokenttä"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction_counter
@@ -767,6 +777,8 @@ msgid ""
 "Number of recipients that will receive the SMS if sent in mass mode, without"
 " applying the Active Domain value"
 msgstr ""
+"Niiden vastaanottajien määrä, jotka saavat tekstiviestin, jos se lähetetään "
+"massatilassa ilman aktiivisen toimialueen arvoa"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count
@@ -809,7 +821,7 @@ msgstr "Kumppani"
 #. module: sms
 #: model:ir.model,name:sms.model_mail_thread_phone
 msgid "Phone Blacklist Mixin"
-msgstr ""
+msgstr "Puhelimen mustan listan yhdistelmä"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized_blacklisted
@@ -839,7 +851,7 @@ msgstr "Esikatselu:"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Put in queue"
-msgstr ""
+msgstr "Laita jonoon"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -856,7 +868,7 @@ msgstr "Vastaanottaja"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number_itf
 msgid "Recipient Number"
-msgstr ""
+msgstr "Vastaanottajan numero"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend__recipient_ids
@@ -866,17 +878,17 @@ msgstr "Vastaanottajat"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__numbers
 msgid "Recipients (Numbers)"
-msgstr ""
+msgstr "Vastaanottajat (lukumäärä)"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_description
 msgid "Recipients (Partners)"
-msgstr ""
+msgstr "Vastaanottajat (kumppanit)"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__resource_ref
 msgid "Record reference"
-msgstr ""
+msgstr "Viite tietueeseen"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model
@@ -886,7 +898,7 @@ msgstr "Liittyvä dokumenttimalli"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "Remove the contextual action of the related model"
-msgstr ""
+msgstr "Poista asiayhteyteen liittyvän mallin kontekstuaalinen toiminto"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
@@ -897,7 +909,7 @@ msgstr "Lähetä uudelleen"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_resend_recipient
 msgid "Resend Notification"
-msgstr ""
+msgstr "Lähetä ilmoitus uudelleen"
 
 #. module: sms
 #. openerp-web
@@ -916,7 +928,7 @@ msgstr "SMS"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_api
 msgid "SMS API"
-msgstr ""
+msgstr "SMS API"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_account_analytic_account__message_has_sms_error
@@ -958,17 +970,17 @@ msgstr "Tekstiviestin toimitusvirhe"
 #: code:addons/sms/static/src/models/notification_group/notification_group.js:0
 #, python-format
 msgid "SMS Failures"
-msgstr ""
+msgstr "Tekstiviestivirheet"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_number
 msgid "SMS Number"
-msgstr ""
+msgstr "SMS-numero"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "SMS Preview"
-msgstr ""
+msgstr "SMS-esikatselu"
 
 #. module: sms
 #. openerp-web
@@ -976,17 +988,17 @@ msgstr ""
 #: code:addons/sms/static/src/js/fields_sms_widget.js:0
 #, python-format
 msgid "SMS Pricing"
-msgstr ""
+msgstr "SMS-hinnoittelu"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_resend
 msgid "SMS Resend"
-msgstr ""
+msgstr "Lähetä tekstiviesti uudelleen"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__state
 msgid "SMS Status"
-msgstr ""
+msgstr "SMS-tila"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_base_automation__sms_template_id
@@ -999,7 +1011,7 @@ msgstr "SMS Malli"
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template_preview
 msgid "SMS Template Preview"
-msgstr ""
+msgstr "SMS-mallin esikatselu"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template
@@ -1013,14 +1025,14 @@ msgstr "SMS Malli"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "SMS content"
-msgstr ""
+msgstr "SMS-sisältö"
 
 #. module: sms
 #: model:ir.actions.server,name:sms.ir_cron_sms_scheduler_action_ir_actions_server
 #: model:ir.cron,cron_name:sms.ir_cron_sms_scheduler_action
 #: model:ir.cron,name:sms.ir_cron_sms_scheduler_action
 msgid "SMS: SMS Queue Manager"
-msgstr ""
+msgstr "TEKSTIVIESTI: SMS Jonon hallinta"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized
@@ -1032,7 +1044,7 @@ msgstr "Puhdistettu numero"
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_search
 msgid "Search SMS Templates"
-msgstr ""
+msgstr "Haku SMS-malleista"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__model_object_field
@@ -1058,7 +1070,7 @@ msgstr "Lähetä tekstiviesti"
 #: code:addons/sms/models/sms_template.py:0
 #, python-format
 msgid "Send SMS (%s)"
-msgstr ""
+msgstr "Lähetä tekstiviesti (%s)"
 
 #. module: sms
 #. openerp-web
@@ -1080,22 +1092,22 @@ msgstr "Lähetä tekstiviesti ohjatulla toiminnolla"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__mass
 msgid "Send SMS in batch"
-msgstr ""
+msgstr "Lähetä tekstiviestejä erissä"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send an SMS"
-msgstr ""
+msgstr "Lähetä tekstiviesti"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_force_send
 msgid "Send directly"
-msgstr ""
+msgstr "Lähetä suoraan"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__numbers
 msgid "Send to numbers"
-msgstr ""
+msgstr "Lähetä numeroihin"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_resend_action
@@ -1127,7 +1139,7 @@ msgstr "Palvelinvirhe"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Set up an account"
-msgstr ""
+msgstr "Tilin perustaminen"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sidebar_action_id
@@ -1146,12 +1158,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__comment_single_recipient
 msgid "Single Mode"
-msgstr ""
+msgstr "Single Mode"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_resend_id
 msgid "Sms Resend"
-msgstr ""
+msgstr "SMS uudelleenlähetys"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__sms_template_id
@@ -1161,7 +1173,7 @@ msgstr "SMS-malli"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__recipient_single_number
 msgid "Stored Recipient Number"
-msgstr ""
+msgstr "Tallennettu vastaanottajan numero"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__sub_model_object_field
@@ -1192,7 +1204,7 @@ msgstr "Mallit"
 #: model:ir.model.fields,help:sms.field_sms_template__model_id
 #: model:ir.model.fields,help:sms.field_sms_template_preview__model_id
 msgid "The type of document this template can be used with"
-msgstr ""
+msgstr "Asiakirjatyyppi, jonka kanssa tätä mallia voidaan käyttää"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.res_partner_view_form
@@ -1249,7 +1261,7 @@ msgstr "Rekisteröimätön tili"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__template_id
 msgid "Use Template"
-msgstr ""
+msgstr "Käytä mallipohjaa"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__use_active_domain
@@ -1259,12 +1271,12 @@ msgstr "Käytä aktiivista domainia"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_use_blacklist
 msgid "Use blacklist"
-msgstr ""
+msgstr "Käytä mustaa listaa"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_ids_count
 msgid "Visible records count"
-msgstr ""
+msgstr "Näkyvien tietueiden määrä"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__website_message_ids
@@ -1297,7 +1309,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,help:sms.field_ir_model__is_mail_thread_sms
 msgid "Whether this model supports messages and notifications through SMS"
-msgstr ""
+msgstr "Tukeeko tämä malli viestejä ja ilmoituksia tekstiviestillä"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_number_format
@@ -1309,7 +1321,7 @@ msgstr "Väärä numeromuoto"
 #: code:addons/sms/wizard/sms_resend.py:0
 #, python-format
 msgid "You do not have access to the message and/or related document."
-msgstr ""
+msgstr "Sinulla ei ole pääsyä viestiin ja/tai siihen liittyvään asiakirjaan."
 
 #. module: sms
 #. openerp-web
@@ -1317,7 +1329,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Your SMS Text Message must include at least one non-whitespace character"
-msgstr ""
+msgstr "Tekstiviestissäsi on oltava vähintään yksi muu kuin välilyöntimerkki"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1327,7 +1339,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "e.g. +1 415 555 0100"
-msgstr ""
+msgstr "esim. +1 415 555 0100"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
