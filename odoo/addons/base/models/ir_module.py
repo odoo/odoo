@@ -1051,26 +1051,26 @@ class Module(models.Model):
                     base_trans_file = get_module_resource(module_name, 'i18n', base_lang_code + '.po')
                     if base_trans_file:
                         _logger.info('module %s: loading base translation file %s for language %s', module_name, base_lang_code, lang)
-                        translation_importer.load_file(base_trans_file, lang)
+                        translation_importer.load_file(base_trans_file, lang, ignore_code=True)
 
                     # i18n_extra folder is for additional translations handle manually (eg: for l10n_be)
                     base_trans_extra_file = get_module_resource(module_name, 'i18n_extra', base_lang_code + '.po')
                     if base_trans_extra_file:
                         _logger.info('module %s: loading extra base translation file %s for language %s', module_name, base_lang_code, lang)
-                        translation_importer.load_file(base_trans_extra_file, lang)
+                        translation_importer.load_file(base_trans_extra_file, lang, ignore_code=True)
 
                 # Step 2: then load the main translation file, possibly overriding the terms coming from the base language
                 trans_file = get_module_resource(module_name, 'i18n', lang_code + '.po')
                 if trans_file:
                     _logger.info('module %s: loading translation file %s for language %s', module_name, lang_code, lang)
-                    translation_importer.load_file(trans_file, lang)
+                    translation_importer.load_file(trans_file, lang, ignore_code=True)
                 elif lang_code != 'en_US':
                     _logger.info('module %s: no translation for language %s', module_name, lang_code)
 
                 trans_extra_file = get_module_resource(module_name, 'i18n_extra', lang_code + '.po')
                 if trans_extra_file:
                     _logger.info('module %s: loading extra translation file %s for language %s', module_name, lang_code, lang)
-                    translation_importer.load_file(trans_extra_file, lang)
+                    translation_importer.load_file(trans_extra_file, lang, ignore_code=True)
 
         translation_importer.save(overwrite=overwrite)
 

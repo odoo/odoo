@@ -209,7 +209,7 @@ class TestMailTemplateReset(MailCommon):
 
         context = {'default_template_ids': mail_template.ids, 'lang': 'fr_FR'}
 
-        def fake_load_file(translation_importer, filepath, lang, xmlids=None):
+        def fake_load_file(translation_importer, filepath, lang, xmlids=None, ignore_code=False):
             """ a fake load file to mimic the use case when
             translations for fr_FR exist in the fr.po of the directory and
             no en.po in the directory

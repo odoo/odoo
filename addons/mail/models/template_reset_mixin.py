@@ -73,13 +73,13 @@ class TemplateResetMixin(models.AbstractModel):
                 base_lang_code = lang_code.split('_')[0]
                 base_trans_file = get_module_resource(module_name, 'i18n', base_lang_code + '.po')
                 if base_trans_file:
-                    translation_importer.load_file(base_trans_file, code, xmlids=xml_ids)
+                    translation_importer.load_file(base_trans_file, code, xmlids=xml_ids, ignore_code=True)
 
             # Step 2: reset translation file with main language file (can possibly override the
             # terms coming from the base language)
             trans_file = get_module_resource(module_name, 'i18n', lang_code + '.po')
             if trans_file:
-                translation_importer.load_file(trans_file, code, xmlids=xml_ids)
+                translation_importer.load_file(trans_file, code, xmlids=xml_ids, ignore_code=True)
 
         translation_importer.save(overwrite=True, force_overwrite=True)
 

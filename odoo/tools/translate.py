@@ -473,13 +473,13 @@ class GettextAlias(object):
     def _get_translation(self, source, module=None):
         try:
             frame = inspect.currentframe().f_back.f_back
-            lang = self._get_lang(frame) or 'en_US'
+            lang = self._get_lang(frame)
             if lang:
                 if not module:
                     path = inspect.getfile(frame)
                     path_info = odoo.modules.get_resource_from_path(path)
                     module = path_info[0] if path_info else 'base'
-                cr, _ = self._get_cr(frame)
+                cr, _ = self._get_cr(frame, allow_create=False)
                 if cr:
                     env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
                     return env['ir.code.translation'].get_python_translation(module, lang, source)
@@ -1233,8 +1233,12 @@ class TranslationImporter:
         self.model_translations = DeepDefaultDict()
         # {model_name: {field_name: {xmlid: {src: {lang: value}}}}}
         self.model_terms_translations = DeepDefaultDict()
+        # {module_name: {src: ({lang: value}}}
+        self.code_python_translations = DeepDefaultDict()
+        # {module_name: {src: ({lang: value}}}
+        self.code_web_translations = DeepDefaultDict()
 
-    def load_file(self, filepath, lang, xmlids=None):
+    def load_file(self, filepath, lang, xmlids=None, ignore_code=False):
         """ Load translations from the given file path.
 
         :param filepath: file path to open
@@ -1244,9 +1248,9 @@ class TranslationImporter:
         """
         with file_open(filepath, mode='rb') as fileobj:
             fileformat = os.path.splitext(filepath)[-1][1:].lower()
-            self.load(fileobj, fileformat, lang, xmlids=xmlids)
+            self.load(fileobj, fileformat, lang, xmlids=xmlids, ignore_code=ignore_code)
 
-    def load(self, fileobj, fileformat, lang, xmlids=None):
+    def load(self, fileobj, fileformat, lang, xmlids=None, ignore_code=False):
         """Load translations from the given file object.
 
         :param fileobj: buffer open to a translation file
@@ -1263,23 +1267,27 @@ class TranslationImporter:
         try:
             fileobj.seek(0)
             reader = TranslationFileReader(fileobj, fileformat=fileformat)
-            self._load(reader, lang, xmlids)
+            self._load(reader, lang, xmlids, ignore_code)
         except IOError:
             iso_lang = get_iso_codes(lang)
             filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
             _logger.exception("couldn't read translation file %s", filename)
 
-    def _load(self, reader, lang, xmlids=None):
+    def _load(self, reader, lang, xmlids=None, ignore_code=False):
         if xmlids and not isinstance(xmlids, set):
             xmlids = set(xmlids)
         for row in reader:
             if not row.get('value') or not row.get('src'):  # ignore empty translations
                 continue
-            if row.get('type') == 'code':  # ignore code translations
-                continue
-            # TODO: CWG if the po file should not be trusted, we need to check each model term
-            model_name = row.get('imd_model')
             module_name = row['module']
+            if row.get('type') == 'code':
+                if not ignore_code:
+                    if PYTHON_TRANSLATION_COMMENT in row['comments']:
+                        self.code_python_translations[module_name][row['src']][lang] = row['value']
+                    if JAVASCRIPT_TRANSLATION_COMMENT in row['comments']:
+                        self.code_web_translations[module_name][row['src']][lang] = row['value']
+                continue
+            model_name = row.get('imd_model')
             if model_name not in self.env:
                 continue
             field_name = row['name'].split(',')[1]
@@ -1399,6 +1407,40 @@ class TranslationImporter:
                     """, params)
 
         self.model_translations.clear()
+
+        IrCodeTranslation = env['ir.code.translation']
+
+        IrCodeTranslation.create([
+            {
+                'source': src,
+                'value': value,
+                'lang': lang,
+                'module': module_name,
+                'type': 'python',
+            }
+            for module_name, module_dictionary in self.code_python_translations.items()
+            for src, translations in module_dictionary.items()
+            for lang, value in translations.items()
+            if IrCodeTranslation.get_python_translation(module_name, lang, src) != value
+        ])
+
+        self.code_python_translations.clear()
+
+        IrCodeTranslation.create([
+            {
+                'source': src,
+                'value': value,
+                'lang': lang,
+                'module': module_name,
+                'type': 'web',
+            }
+            for module_name, module_dictionary in self.code_web_translations.items()
+            for src, translations in module_dictionary.items()
+            for lang, value in translations.items()
+            if IrCodeTranslation.get_web_translations(module_name, lang).get(src) != value
+        ])
+
+        self.code_web_translations.clear()
 
         env.invalidate_all()
         env.registry.clear_caches()
