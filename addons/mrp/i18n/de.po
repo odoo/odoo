@@ -255,7 +255,7 @@ msgstr "<span class=\"o_stat_text\">Ausschuss</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"o_stat_text\">Source MO</span>"
-msgstr " <span class=\"o_stat_text\">MO-Quelle</span> "
+msgstr " <span class=\"o_stat_text\">FA-Quelle</span> "
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -818,12 +818,12 @@ msgstr "Positionen der genannten Stückliste"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_backorder_line
 msgid "Backorder Confirmation Line"
-msgstr "Bestätigungszeile des Lieferrückstandes"
+msgstr "Rückstandsbestätigungszeile"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_backorder__mrp_production_backorder_line_ids
 msgid "Backorder Confirmation Lines"
-msgstr "Bestätigungszeilen des Lieferrückstandes"
+msgstr "Rückstandsbestätigungszeilen"
 
 #. module: mrp
 #. odoo-python
@@ -1435,7 +1435,7 @@ msgstr "Lieferrückstand erstellen"
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__use_create_components_lots
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__use_create_components_lots
 msgid "Create New Lots/Serial Numbers for Components"
-msgstr "Neue Chargen-/Seriennummern für Komponenten anlegen"
+msgstr "Neue Los-/Seriennummern für Komponenten erstellen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -2381,7 +2381,7 @@ msgstr "Bild ist ein Link"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "Impacted Transfer(s):"
-msgstr "Betroffene Übertragung(en):"
+msgstr "Betroffene(r) Transfer(s):"
 
 #. module: mrp
 #. odoo-python
@@ -2502,7 +2502,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__is_planned
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__is_planned
 msgid "Its Operations are Planned"
-msgstr "Operationen sind geplant"
+msgstr "Vorgänge sind geplant"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__json_popover
@@ -2650,7 +2650,8 @@ msgstr "Ort"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__location_id
 msgid "Location where the product you want to unbuild is."
-msgstr "Ort, an dem sich das Produkt befindet, das Sie entfernen möchten."
+msgstr ""
+"Lagerort, an dem sich das Produkt befindet, das Sie demontieren möchten."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__location_src_id
@@ -3067,7 +3068,7 @@ msgstr "Nebenprodukt verschieben"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__move_line_ids
 msgid "Moves to Track"
-msgstr "Zu verfolgende Buchungen"
+msgstr "Zu verfolgende Bewegungen"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_consumption_warning_line_ids
@@ -3231,8 +3232,8 @@ msgid ""
 "of Materials, which means that operations can still be planned on it/them. "
 "To prevent this, deletion of the work center is recommended instead."
 msgstr ""
-"Beachten Sie, dass der/die archivierte(n) Arbeitsplatz(e): '%s' noch mit "
-"einer aktiven Stückliste verknüpft ist/sind, d.h., dass noch Vorgänge auf "
+"Beachten Sie, dass der/die archivierte(n) Arbeitsplatz(e): „%s“ noch mit "
+"einer aktiven Stückliste verknüpft ist/sind, d. h., dass noch Vorgänge auf "
 "ihm/ihnen geplant werden können. Um dies zu verhindern, wird stattdessen die"
 " Löschung des Arbeitsplatzes empfohlen."
 
@@ -3384,7 +3385,7 @@ msgstr "Vorgang – benötigte Produkte"
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__picking_type_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__picking_type_id
 msgid "Operation Type"
-msgstr "Vorgangstyp"
+msgstr "Vorgangsart"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_routing_action
@@ -3393,7 +3394,7 @@ msgid ""
 "                Each operation is done at a specific Work Center and has a specific duration."
 msgstr ""
 "Vorgänge definieren, die zur Durchführung eines Arbeitsauftrags erforderlich sind.\n"
-"Jeder Vorgang wird an einem bestimmten Arbeitsort durchgeführt und hat eine bestimmte Dauer."
+"Jeder Vorgang wird an einem bestimmten Arbeitsplatz durchgeführt und hat eine bestimmte Dauer."
 
 #. module: mrp
 #. odoo-python
@@ -3436,7 +3437,7 @@ msgstr "Geplante Vorgänge"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_filter
 msgid "Operations Search Filters"
-msgstr "Vorgänge Suchfilter"
+msgstr "Suchfilter für Vorgänge"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__needed_by_operation_ids
@@ -3517,7 +3518,7 @@ msgstr "Vorlage für übergeordnetes Produkt"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning_line__mrp_consumption_warning_id
 msgid "Parent Wizard"
-msgstr "übergeordneter Assistent"
+msgstr "Übergeordneter Assistent"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__worksheet_google_slide
@@ -3594,7 +3595,7 @@ msgstr "Kommissionierung vor Einzelfertigungsregel"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_type_id
 msgid "Picking Before Manufacturing Operation Type"
-msgstr "Kommissionierung vor der Fertigung Vorgangstyp"
+msgstr "Kommissionierung vor Fertigungsvorgangsart"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_route_id
@@ -4765,17 +4766,17 @@ msgstr "Bestandverfügbarkeit"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_move
 msgid "Stock Move"
-msgstr "Bestandsbewegung"
+msgstr "Lagerbuchung"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__move_dest_ids
 msgid "Stock Movements of Produced Goods"
-msgstr "Bestandsbewegungen der produzierten Waren"
+msgstr "Lagerbuchungen der produzierten Waren"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_mrp_unbuild_moves
 msgid "Stock Moves"
-msgstr "Bestandsbewegung"
+msgstr "Lagerbuchung"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_reception
@@ -5421,7 +5422,7 @@ msgstr "Typ"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_picking_type__code
 msgid "Type of Operation"
-msgstr "Vorgangstyp"
+msgstr "Vorgangsart"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__activity_exception_decoration
@@ -5854,7 +5855,7 @@ msgstr "Assistent zur Aufteilung einer Produktion"
 #: model:ir.model,name:mrp.model_mrp_production_backorder
 msgid "Wizard to mark as done or create back order"
 msgstr ""
-"Assistent, um als erledigt zu markieren oder einen rückständigen Auftrag zu "
+"Assistent, um als erledigt zu markieren oder einen Lieferrückstand zu "
 "erstellen"
 
 #. module: mrp

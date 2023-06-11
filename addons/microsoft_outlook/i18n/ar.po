@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2023-01-17 14:37+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
 "Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
@@ -59,6 +59,7 @@ msgstr ""
 "                    </span>"
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token. %s"
@@ -82,6 +83,7 @@ msgid "Config Settings"
 msgstr "تهيئة الإعدادات "
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -92,6 +94,7 @@ msgstr ""
 "افتراضياً، سيُسمح فقط للمستخدم الذي يملك عنوان البريد الإلكتروني المطابق استخدام هذا الخادم. لزيادة إمكانية استخدامه، عليك تعيين معيار نظام \"mail.default.from\". "
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid ""
@@ -122,6 +125,7 @@ msgid "Incoming Mail Server"
 msgstr "خادم البريد الوارد "
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -149,6 +153,7 @@ msgid "Microsoft Outlook Mixin"
 msgstr "مجموعة مخصصات Microsoft Outlook "
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Only the administrator can link an Outlook mail server."
@@ -192,18 +197,31 @@ msgid "Outlook Refresh Token"
 msgstr "رمز تحديث Outlook "
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please configure your Outlook credentials."
 msgstr "يرجى تهيئة بيانات اعتماد Otlook الخاصة بك. "
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please connect with your Outlook account before using it."
 msgstr "يرجى الاتصال بحساب Outlook الخاص بك قبل استخدامه. "
 
 #. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
+#, python-format
+msgid ""
+"Please fill the \"Username\" field with your Outlook/Office365 username "
+"(your email address). This should be the same account as the one used for "
+"the Outlook OAuthentication Token."
+msgstr ""
+
+#. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -219,6 +237,7 @@ msgid "Read More"
 msgstr "قراءة المزيد"
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid "SSL is required for the server %r."
@@ -257,6 +276,7 @@ msgid "The URL to generate the authorization code from Outlook"
 msgstr "رابط URL لإنشاء رمز المصادقة من Outlook "
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -267,6 +287,7 @@ msgstr ""
 " \"from_filter\" بـ %r. "
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Unknown error."

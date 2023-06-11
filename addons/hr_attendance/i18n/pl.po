@@ -7,7 +7,6 @@
 # Wojciech Warczakowski <w.warczakowski@gmail.com>, 2023
 # Piotr Strębski <strebski@gmail.com>, 2023
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2023
-# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2023
 # Paweł Wodyński <pw@myodoo.pl>, 2023
 # Karol Rybak <karolrybak85@gmail.com>, 2023
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2023
@@ -17,14 +16,16 @@
 # Martin Trigaux, 2023
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2023
 # Tomasz Leppich <t.leppich@gmail.com>, 2023
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-17 08:00+0000\n"
+"POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 11:03+0000\n"
-"Last-Translator: Tomasz Leppich <t.leppich@gmail.com>, 2023\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -486,6 +487,14 @@ msgid "Display Time"
 msgstr ""
 
 #. module: hr_attendance
+#. odoo-python
+#: code:addons/hr_attendance/models/hr_attendance.py:0
+#, python-format
+msgid ""
+"Do not have access, user cannot edit the attendances that are not his own."
+msgstr ""
+
+#. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
@@ -820,21 +829,21 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__overtime_ids
 msgid "Overtime"
-msgstr ""
+msgstr "Nadgodziny"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Please contact your administrator."
-msgstr ""
+msgstr "Skontaktuj się z Administratorem"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Please enter your PIN to"
-msgstr ""
+msgstr "Wprowadź swój PIN"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -889,14 +898,14 @@ msgstr "Wyjście"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Start from"
-msgstr ""
+msgstr "Rozpoczęcie od"
 
 #. module: hr_attendance
 #. odoo-python
 #: code:addons/hr_attendance/models/hr_employee.py:0
 #, python-format
 msgid "Such grouping is not allowed."
-msgstr ""
+msgstr "Takie grupowanie jest niedozwolone."
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
@@ -915,7 +924,7 @@ msgstr "Kto rano wstaje temu Pan Bóg daje"
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_kiosk
 msgid ""
 "The user will be able to open the kiosk mode and validate the employee PIN."
-msgstr ""
+msgstr "W trybie Kiosk, zweryfikujesz swój PIN"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance
@@ -943,6 +952,8 @@ msgid ""
 "To activate Kiosk mode without pin code, you must have access right as an "
 "Officer or above in the Attendance app. Please contact your administrator."
 msgstr ""
+"Do aktywowania trybu Kiosk bez podania kodu PIN, skontaktuj sięz osobą "
+"odpowiedzialną za aplikację."
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -950,7 +961,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Today's work hours:"
-msgstr ""
+msgstr "Dzisiejsze godziny pracy:"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_res_company__overtime_company_threshold
@@ -971,19 +982,19 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee_public__total_overtime
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__total_overtime
 msgid "Total Overtime"
-msgstr ""
+msgstr "Łącznie nadgodziny"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Total extra hours:"
-msgstr ""
+msgstr "Łącznie nadliczbowo:"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Use PIN codes (defined on the Employee's profile) to check-in."
-msgstr ""
+msgstr "Użyj kodu PIN aby zatwierdzić wejście"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_res_users
@@ -994,7 +1005,7 @@ msgstr "Użytkownik"
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_kiosk
 msgid "User : Only kiosk mode"
-msgstr ""
+msgstr "Użytkownik : tylko tryb Kiosk"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1002,7 +1013,7 @@ msgstr ""
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Want to check out?"
-msgstr ""
+msgstr "Zatwierdzasz wyjście?"
 
 #. module: hr_attendance
 #. odoo-javascript
@@ -1047,7 +1058,7 @@ msgstr "Godziny pracy"
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_user_view_form
 #: model_terms:ir.ui.view,arch_db:hr_attendance.view_employee_form_inherit_hr_attendance
 msgid "Worked hours last month"
-msgstr ""
+msgstr "Godziny pracy z ostatniego m-ca"
 
 #. module: hr_attendance
 #. odoo-python
@@ -1066,21 +1077,21 @@ msgstr "Nie możesz duplikować obecności."
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action_overview
 msgid "Your attendance records will be displayed here."
-msgstr ""
+msgstr "Twoje dane będą wyświetlane tutaj."
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "check in"
-msgstr ""
+msgstr "WEJŚCIE"
 
 #. module: hr_attendance
 #. odoo-javascript
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "check out"
-msgstr ""
+msgstr "WYJŚCIE"
 
 #. module: hr_attendance
 #. odoo-javascript

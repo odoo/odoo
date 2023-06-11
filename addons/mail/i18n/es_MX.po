@@ -7,10 +7,10 @@
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
-# Aimée Mendoza Sánchez, 2023
 # Lucia Pacheco, 2023
-# Fernanda Alvarez, 2023
 # Iran Villalobos López, 2023
+# Fernanda Alvarez, 2023
+# Aimée Mendoza Sánchez, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-25 11:23+0000\n"
 "PO-Revision-Date: 2023-01-17 11:05+0000\n"
-"Last-Translator: Iran Villalobos López, 2023\n"
+"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,12 +43,13 @@ msgid ""
 msgstr ""
 "\n"
 "            <p class=\"o_view_nocontent_smiling_face\">\n"
-"                Add addresses to the Allowed List\n"
+"                Añadir direcciones a la lista de Permitidos\n"
 "            </p><p>\n"
-"                To protect you from spam and reply loops, Odoo automatically blocks emails\n"
-"                coming to your gateway past a threshold of <b>%(threshold)i</b> emails every <b>%(minutes)i</b>\n"
-"                minutes. If there are some addresses from which you need to receive very frequent\n"
-"                updates, you can however add them below and Odoo will let them go through."
+"                Para protegerle del spam y de las respuestas en bucle, Odoo bloquea correos electrónicos de manera automática\n"
+"                que llegan a su puerta de enlace más allá del umbral de <b>%(threshold)i</b> correos electrónicos cada <b>%(minutes)i</b>\n"
+"                minutos. En caso de que necesite recibir actualizaciones frecuentes de parte de algunas direcciones\n"
+"                puede añadirlas a continuación y Odoo las dejará pasar.\n"
+"            </p>"
 
 #. module: mail
 #. odoo-python
@@ -241,7 +242,7 @@ msgstr "%s, %s, %s reaccionaron con %s"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_notification_layout
 msgid "&amp;nbsp;&amp;nbsp;"
-msgstr "&amp;nbsp;&amp;nbsp;"
+msgstr "y "
 
 #. module: mail
 #. odoo-javascript
@@ -864,7 +865,7 @@ msgstr "Botón A (grupo sanguíneo)"
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_channel_member_partner_or_guest_exists
 msgid "A channel member must be a partner or a guest."
-msgstr "El miembro de un canal debe ser partner o invitado."
+msgstr "El miembro de un canal debe ser contacto o invitado."
 
 #. module: mail
 #. odoo-python
@@ -885,7 +886,7 @@ msgstr "No se debe crear un chat con más de 2 personas. Mejor cree un grupo."
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_mail_message_reaction_partner_or_guest_exists
 msgid "A message reaction must be from a partner or from a guest."
-msgstr "La reacción a un mensaje debe ser de un partner o de un invitado."
+msgstr "La reacción a un mensaje debe ser de un contacto o de un invitado."
 
 #. module: mail
 #. odoo-python
@@ -908,7 +909,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_users_settings_volumes_partner_or_guest_exists
 msgid "A volume setting must have a partner or a guest."
-msgstr "Un ajuste de volumen debe tener un partner o un invitado."
+msgstr "Un ajuste de volumen debe tener un usuario o un invitado."
 
 #. module: mail
 #. odoo-javascript
@@ -2469,7 +2470,7 @@ msgstr "Confirmado"
 #: code:addons/mail/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Congratulations, you're done with your activities."
-msgstr "¡Felicidades! ha terminado sus actividades."
+msgstr "¡Felicidades! Ha terminado sus actividades."
 
 #. module: mail
 #. odoo-javascript
@@ -2535,7 +2536,7 @@ msgid ""
 "and new message posted."
 msgstr ""
 "Incluya la fecha y hora del último evento interesante que ha ocurrido en "
-"este canal para este partner. Esto incluye: crear, unirse, fijar, y nuevo "
+"este canal para este contacto. Esto incluye: crear, unirse, fijar, y nuevo "
 "mensaje publicado."
 
 #. module: mail
@@ -2861,7 +2862,7 @@ msgstr "Ensordecer"
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_assigned
 #: model_terms:ir.ui.view,arch_db:mail.message_user_assigned
 msgid "Dear"
-msgstr "Estimada/o"
+msgstr "Apreciable"
 
 #. module: mail
 #. odoo-python
@@ -2925,7 +2926,7 @@ msgid ""
 "- email (using email_from or email field)"
 msgstr ""
 "Destinatarios predeterminados del registro:\n"
-"- partner (usa el id del partner o partner_id) O\n"
+"- contacto (usa el id del contacto o partner_id) O\n"
 "- correo electrónico (usa email_from o el correo electrónico)"
 
 #. module: mail
@@ -5803,14 +5804,14 @@ msgstr ""
 #. module: mail
 #: model:ir.model,name:mail.model_base_partner_merge_automatic_wizard
 msgid "Merge Partner Wizard"
-msgstr "Asistente de fusión de partners"
+msgstr "Asistente de fusión de contactos"
 
 #. module: mail
 #. odoo-python
 #: code:addons/mail/wizard/base_partner_merge_automatic_wizard.py:0
 #, python-format
 msgid "Merged with the following partners:"
-msgstr "Se ha fusionado con los siguientes partners:"
+msgstr "Se ha fusionado con los siguientes contactos:"
 
 #. module: mail
 #. odoo-javascript
@@ -9941,7 +9942,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__use_twilio_rtc_servers
 msgid "Use Twilio ICE servers"
-msgstr "Usar los servicios ICE de Twilio"
+msgstr "Usar los servidores ICE de Twilio"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -10574,7 +10575,7 @@ msgstr "Su navegador no permite la activación por voz"
 #: code:addons/mail/static/src/models/thread.js:0
 #, python-format
 msgid "Your browser does not support webRTC."
-msgstr "Su navegador no permite webRTC"
+msgstr "Su navegador no es compatible con webRTC."
 
 #. module: mail
 #. odoo-javascript
@@ -10750,7 +10751,7 @@ msgstr "boletos de admisión"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "adore"
-msgstr "adoraar"
+msgstr "adorar"
 
 #. module: mail
 #. odoo-javascript
@@ -14587,7 +14588,7 @@ msgstr "buzón cerrado con la bandera arriba "
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "closed postbox with lowered flag"
-msgstr "buzón cerraado con la bandera abajo "
+msgstr "buzón cerrado con la bandera abajo "
 
 #. module: mail
 #. odoo-javascript
@@ -15486,7 +15487,7 @@ msgstr "ojos con taches"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "crossing"
-msgstr "tachar"
+msgstr "cruzar"
 
 #. module: mail
 #. odoo-javascript
@@ -18327,7 +18328,7 @@ msgstr "archivador "
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "file folder"
-msgstr "folder "
+msgstr "carpeta "
 
 #. module: mail
 #. odoo-javascript
@@ -18407,7 +18408,7 @@ msgstr "camión de bomberos "
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "fire extinguisher"
-msgstr "extinguidor de fuego "
+msgstr "extintor de fuego "
 
 #. module: mail
 #. odoo-javascript
@@ -18826,7 +18827,7 @@ msgstr "manos en oración "
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "folder"
-msgstr "archivo "
+msgstr "carpeta "
 
 #. module: mail
 #. odoo-javascript
@@ -20577,7 +20578,7 @@ msgstr "latido del corazón "
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "hearts"
-msgstr "corazón "
+msgstr "corazones"
 
 #. module: mail
 #. odoo-javascript

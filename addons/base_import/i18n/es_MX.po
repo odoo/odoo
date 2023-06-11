@@ -3,7 +3,7 @@
 # 	* base_import
 # 
 # Translators:
-# Lucia Pacheco <lpo@odoo.com>, 2023
+# Lucia Pacheco, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Martin Trigaux, 2023
@@ -142,14 +142,16 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr "La columna %s contiene valores incorrectos (valores: %s)"
+msgstr "La columna %s contiene valores que no son correctos (valor: %s)"
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "La columna %s contiene valores incorrectos. Error en la linea %d: %s"
+msgstr ""
+"La columna %s contiene valores que no son correctos. Error en la línea %d: "
+"%s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -341,14 +343,14 @@ msgstr "El tamaño del archivo excede el máximo establecido (%s bytes)"
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr "Archivo a comprobar y/o importar, binario en bruto (no base64)"
+msgstr "Archivo a comprobar y/o importar, binario sin procesar (no base64)"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Finalizing current batch before interrupting..."
-msgstr "Finalice el lote actual antes de interrumpir..."
+msgstr "Finalizando el lote actual antes de interrumpir..."
 
 #. module: base_import
 #. odoo-javascript
@@ -426,8 +428,8 @@ msgstr ""
 msgid ""
 "Image size excessive, imported images must be smaller than 42 million pixel"
 msgstr ""
-"Tamaño de imagen excesivo, las imágenes importadas deben ser menores a 42 "
-"millones de pixeles"
+"El tamaño de imagen es muy grande, las imágenes importadas deben tener menos"
+" de 42 millones de pixeles"
 
 #. module: base_import
 #. odoo-javascript
@@ -550,7 +552,7 @@ msgstr "Modelo"
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "Multiple errors occurred"
-msgstr "Ocurrieron múltiples errores"
+msgstr "Ocurrieron varios errores"
 
 #. module: base_import
 #. odoo-javascript
@@ -632,7 +634,7 @@ msgstr "Buscar un campo..."
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "See possible values"
-msgstr "Ver posibles valores"
+msgstr "Ver los valores posibles"
 
 #. module: base_import
 #. odoo-javascript

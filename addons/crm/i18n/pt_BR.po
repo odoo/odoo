@@ -6,9 +6,9 @@
 # Luis Malta <luiso.malta@gmail.com>, 2023
 # grazziano <gra.negocia@gmail.com>, 2023
 # Éder Brito <britoederr@gmail.com>, 2023
+# Marcel Savegnago <marcel.savegnago@gmail.com>, 2023
 # Fernando Colus <fcolus1@gmail.com>, 2023
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2023
-# Marcel Savegnago <marcel.savegnago@gmail.com>, 2023
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2023
 # Martin Trigaux, 2023
 # Kevilyn Rosa, 2023
@@ -1164,7 +1164,7 @@ msgstr "Criar um novo prospecto"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "Create an Opportunity"
-msgstr "Crie uma Oportunidade"
+msgstr "Criar uma oportunidade"
 
 #. module: crm
 #. odoo-python
@@ -1377,14 +1377,13 @@ msgstr "Nome exibido"
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
 msgstr ""
-"Se não tem acesso, pule esses dados para o e-mail com o Resumo do Usuário "
-"(User´s Digest)"
+"Se não tem acesso, pule esses dados para o e-mail com o resumo do usuário"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__nothing
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner_mass__action__nothing
 msgid "Do not link to a customer"
-msgstr "Não associe a um cliente"
+msgstr "Não vincular a um cliente"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
@@ -1662,7 +1661,7 @@ msgstr "Gere novos leads com base em seu país, indústria, tamanho, etc."
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Generate new leads based on their country, industry, size, etc."
-msgstr "Gere novos leads com base em seu país, setor, tamanho, etc."
+msgstr "Gere novos leads com base no país, setor, tamanho etc."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -2712,8 +2711,8 @@ msgid ""
 "Number of interval type between each cron run (e.g. each 2 days or each 4 "
 "days)"
 msgstr ""
-"Número de intervalos entre os quais cada cron é rodado (ex.: a cada 2 dias "
-"ou a cada 2 horas)"
+"Número do tipo de intervalo entre cada execução do cron (ex., a cada 2 dias "
+"ou a cada 4 dias)"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__lead_all_assigned_month_count
@@ -3040,12 +3039,12 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_fields
 msgid "Pls Fields"
-msgstr "Campos PLS"
+msgstr "Campos de PPL"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_pls_update__pls_start_date
 msgid "Pls Start Date"
-msgstr "Data de Início PLS"
+msgstr "Data de Início da PPL"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_contact
@@ -3292,7 +3291,7 @@ msgstr "Membro da Equipe de Vendas"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Sales Team Settings"
-msgstr "Definições de Time de Vendas"
+msgstr "Definições da equipe de vendas"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -3645,8 +3644,8 @@ msgid ""
 "The name of the future partner company that will be created while converting"
 " the lead into opportunity"
 msgstr ""
-"O nome da futura empresa parceira que será criada quando o prospecto for "
-"convertido para oportunidade"
+"O nome da futura empresa parceira que será criada quando o lead for "
+"convertido em oportunidade"
 
 #. module: crm
 #: model:ir.model.constraint,message:crm.constraint_crm_recurring_plan_check_number_of_months
@@ -3675,7 +3674,7 @@ msgstr "A probabilidade de fechamento do acordo deve ser entre 0% e 100%!"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "The success rate is computed based on"
-msgstr "O índice de sucesso é calculado com base em"
+msgstr "A taxa de sucesso é calculado com base em"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_pls_update_view_form
@@ -3697,7 +3696,7 @@ msgid ""
 "This bar allows to filter the opportunities based on scheduled activities."
 msgstr ""
 "Esta barra permite filtrar as oportunidades com base em atividades "
-"programadas."
+"agendadas."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3895,7 +3894,7 @@ msgstr "Campanha UTM"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__user_company_ids
 msgid "UX: Limit to lead company or all if no company"
-msgstr "UX: Limitar para empresa do lead ou todas caso não haja empresa"
+msgstr "UX: limitar à empresa do lead ou todas caso não haja empresa"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -4016,7 +4015,7 @@ msgstr "Use esse menu para ter uma visão geral do seu funil."
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_stage__sequence
 msgid "Used to order stages. Lower is better."
-msgstr "Usado para ordenar estágios. Mais baixo é melhor."
+msgstr "Usado para ordenar estágios. Um número mais baixo é melhor."
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_users
@@ -4208,7 +4207,7 @@ msgstr "por exemplo, https://www.seusite.com"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "for the leads created as of the"
-msgstr "para leads criados como o "
+msgstr "para leads criados a partir de"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0

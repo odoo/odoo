@@ -57,8 +57,8 @@ msgid ""
 "<span class=\"o_warning_text\">Test</span>\n"
 "                                    <span class=\"o_stat_text\">Environment</span>"
 msgstr ""
-"<span class=\"o_warning_text\">Test</span>\n"
-"<span class=\"o_stat_text\">Umgebung</span>"
+"<span class=\"o_warning_text\">Test-</span>\n"
+"                                    <span class=\"o_stat_text\">Umgebung</span>"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -203,7 +203,7 @@ msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
 msgstr ""
-"Betrag (in Unternehmenswährung) des Auftrags, ab dem kostenfrei geliefert "
+"Betrag (in Unternehmenswährung) des Auftrags, ab dem kostenlos geliefert "
 "wird"
 
 #. module: delivery
@@ -550,7 +550,7 @@ msgstr "Versandkostenfrei"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__free_over
 msgid "Free if order amount is above"
-msgstr "Kostenfrei, bei Bestellbetrag größer"
+msgstr "Kostenlos bei Bestellbetrag über"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__return_label_on_delivery
@@ -560,12 +560,12 @@ msgstr "Rücksendeetikett generieren"
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate
 msgid "Get Rate"
-msgstr "Bewertung erhalten"
+msgstr "Tarif erhalten"
 
 #. module: delivery
 #: model:ir.model.fields.selection,name:delivery.selection__delivery_carrier__integration_level__rate_and_ship
 msgid "Get Rate and Create Shipment"
-msgstr "Versendung erstellen und Tarife"
+msgstr "Tarif erhalten und Sendung erstellen"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
@@ -594,8 +594,8 @@ msgid ""
 "If the order total amount (shipping excluded) is above or equal to this "
 "value, the customer benefits from a free shipping"
 msgstr ""
-"Wenn die Gesamtbestellmenge (ohne Versandkosten) diesem Betrag gleicht oder "
-"ihn übersteigt, profitiert der Kunde von einem kostenfreien Versand."
+"Wenn der Gesamtbetrag der Bestellung (ohne Versandkosten) über oder gleich "
+"diesem Wert liegt, erhält der Kunde kostenlosen Versand."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -610,7 +610,7 @@ msgstr "Versicherung Prozensatz"
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__integration_level
 msgid "Integration Level"
-msgstr "Integration Level"
+msgstr "Integrationslevel"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__invoicing_message

@@ -70,7 +70,7 @@ msgstr "Erstellt am"
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__date
 #: model_terms:ir.ui.view,arch_db:account_debit_note.view_account_debit_note
 msgid "Debit Note Date"
-msgstr "Datum Lastschrift"
+msgstr "Lastschriftdatum"
 
 #. module: account_debit_note
 #. odoo-python
@@ -96,8 +96,7 @@ msgstr "ID"
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__journal_id
 msgid "If empty, uses the journal of the journal entry to be debited."
-msgstr ""
-"Wenn leer, wird das Journal des zu belastenden Journaleintrags verwendet."
+msgstr "Wenn leer, wird das Journal der Journalbuchung belastet."
 
 #. module: account_debit_note
 #: model:ir.model.fields,help:account_debit_note.field_account_debit_note__copy_lines
@@ -107,7 +106,7 @@ msgid ""
 msgstr ""
 "Für den Fall, dass Sie Korrekturen für jede Zeile vornehmen müssen, kann es "
 "praktisch sein, diese zu kopieren. Wir werden sie nicht für Lastschriften "
-"aus Gutschriften kopieren. "
+"aus Gutschriften kopieren."
 
 #. module: account_debit_note
 #: model:ir.model,name:account_debit_note.model_account_move
@@ -132,12 +131,12 @@ msgstr "Zuletzt aktualisiert am"
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__move_ids
 msgid "Move"
-msgstr "Buchungssatz"
+msgstr "Buchung"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__move_type
 msgid "Move Type"
-msgstr "Umzugstyp"
+msgstr "Buchungsart"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_bank_statement_line__debit_note_count
@@ -172,19 +171,19 @@ msgstr ""
 #: model:ir.model.fields,help:account_debit_note.field_account_move__debit_note_ids
 #: model:ir.model.fields,help:account_debit_note.field_account_payment__debit_note_ids
 msgid "The debit notes created for this invoice"
-msgstr "Die für diese Rechnung erstellten Belastungsanzeigen"
+msgstr "Die für diese Rechnung erstellten Lastschriften"
 
 #. module: account_debit_note
 #. odoo-python
 #: code:addons/account_debit_note/wizard/account_debit_note.py:0
 #, python-format
 msgid "This debit note was created from: %s"
-msgstr "Diese Belastungsanzeige wurde erstellt von: %s"
+msgstr "Diese Lastschrift wurde erstellt aus: %s"
 
 #. module: account_debit_note
 #: model:ir.model.fields,field_description:account_debit_note.field_account_debit_note__journal_id
 msgid "Use Specific Journal"
-msgstr "Benutze das spezifische Journal"
+msgstr "Spezifische Journal verwenden"
 
 #. module: account_debit_note
 #. odoo-python

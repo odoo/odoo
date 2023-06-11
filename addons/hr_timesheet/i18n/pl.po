@@ -12,7 +12,6 @@
 # Zdzisław Krajewski <zdzichucb@gmail.com>, 2023
 # Krzysztof Przygoda, 2023
 # Paweł Wodyński <pw@myodoo.pl>, 2023
-# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2023
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2023
 # Piotr Strębski <strebski@gmail.com>, 2023
 # Grzegorz Krukar <grzegorzgk1@gmail.com>, 2023
@@ -27,6 +26,7 @@
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2023
 # Martin Trigaux, 2023
 # Karol Rybak <karolrybak85@gmail.com>, 2023
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
@@ -256,6 +256,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
+"Konto analityczne, z którym powiązany jest ten projekt, jego zadania i karty czasu pracy. \n"
+"Śledź koszty i przychody swojego projektu, ustawiając to konto analityczne na powiązanych dokumentach (np. zamówieniach sprzedaży, fakturach, zamówieniach zakupu, rachunkach od dostawców, wydatkach itp.)\n"
+"To konto analityczne można w razie potrzeby zmienić indywidualnie dla każdego zadania.\n"
+"Konto analityczne jest wymagane do korzystania z kart czasu pracy."
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
@@ -272,7 +276,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_report_search
 msgid "Ancestor Task"
-msgstr ""
+msgstr "Zadanie przodka"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -327,7 +331,7 @@ msgstr "Anuluj"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr ""
+msgstr "Współpracownicy w ramach wspólnego projektu"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_company
@@ -645,7 +649,7 @@ msgstr "Projekt wewnętrzny"
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "Invalid operator: %s"
-msgstr ""
+msgstr "Nieprawidłowy operator: %s"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -653,7 +657,7 @@ msgstr ""
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "Invalid value: %s"
-msgstr ""
+msgstr "Nieprawidłowa wartość: %s"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__is_encode_uom_days
@@ -797,7 +801,7 @@ msgstr "Ok"
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__overtime
 msgid "Overtime"
-msgstr ""
+msgstr "Nadgodziny"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__partner_id
@@ -939,7 +943,7 @@ msgstr ""
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Project"
-msgstr ""
+msgstr "Wyszukiwanie w projekcie"
 
 #. module: hr_timesheet
 #. odoo-python

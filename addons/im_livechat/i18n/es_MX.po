@@ -3,10 +3,11 @@
 # 	* im_livechat
 # 
 # Translators:
-# Lucia Pacheco <lpo@odoo.com>, 2023
+# Lucia Pacheco, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Martin Trigaux, 2023
+# Aimée Mendoza Sánchez, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
 "PO-Revision-Date: 2023-01-17 11:05+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,22 +40,22 @@ msgstr "\"%s\" no es un correo electrónico válido."
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "# Messages"
-msgstr "# Mensajes"
+msgstr "Número de mensajes"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_count
 msgid "# Ratings"
-msgstr "# Calificaciones"
+msgstr "Número de calificaciones"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_operator__nbr_channel
 msgid "# of Sessions"
-msgstr "# de sesiones"
+msgstr "Número de sesiones"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__nbr_speaker
 msgid "# of speakers"
-msgstr "# de participantes"
+msgstr "Número de participantes"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -148,12 +149,12 @@ msgid ""
 "ratings\" role=\"img\" aria-label=\"Happy face\"/>"
 msgstr ""
 "<i class=\"fa fa-smile-o text-success\" title=\"Porcentaje de calificaciones"
-" felices\" role=\"img\" aria-label=\"Happy face\"/>"
+" felices\" role=\"img\" aria-label=\"Carita feliz\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "<i class=\"fa fa-user\" role=\"img\" aria-label=\"User\" title=\"User\"/>"
-msgstr "<i class=\"fa fa-user\" role=\"img\" aria-label=\"User\" title=\"Usuario\"/>"
+msgstr "<i class=\"fa fa-user\" role=\"img\" aria-label=\"Usuario\" title=\"Usuario\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -205,7 +206,7 @@ msgid ""
 "<span>Tip: Plan further steps for the Bot in case no operator is "
 "available.</span>"
 msgstr ""
-"<span>Consejo: planee pasos adicionales para el Bot en caso de que no haya "
+"<span>Consejo: planee pasos adicionales para el bot en caso de que no haya "
 "ningún operador disponible.</span>"
 
 #. module: im_livechat
@@ -866,6 +867,7 @@ msgstr "Hora de la fecha de inicio de sesión "
 #. module: im_livechat
 #. odoo-javascript
 #: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
+#: code:addons/im_livechat/models/im_livechat_channel.py:0
 #, python-format
 msgid "How may I help you?"
 msgstr "¿Cómo puedo ayudarle?"
@@ -1072,12 +1074,12 @@ msgstr "Color del botón de Chat en vivo"
 #: model:ir.model,name:im_livechat.model_im_livechat_channel
 #: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
 msgid "Livechat Channel"
-msgstr "Canal de chat en vivo"
+msgstr "Canal de Chat en vivo"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_chatbot_script__livechat_channel_count
 msgid "Livechat Channel Count"
-msgstr "Número de canales de chat en vivo"
+msgstr "Número de canales de Chat en vivo"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_channel_rule
@@ -1238,7 +1240,7 @@ msgstr "Número de días desde la primera sesión del operador"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_speaker
 msgid "Number of different speakers"
-msgstr "Numero de participantes diferentes"
+msgstr "Número de participantes diferentes"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_message
@@ -1314,7 +1316,7 @@ msgid ""
 msgstr ""
 "Operadores\n"
 "                                            <br/>\n"
-"                                            <i class=\"fa fa-comments\" role=\"img\" aria-label=\"Comments\" title=\"Comentarios\"/>"
+"                                            <i class=\"fa fa-comments\" role=\"img\" aria-label=\"Comentarios\" title=\"Comentarios\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1616,7 +1618,7 @@ msgstr "Estadísticas de sesión"
 #: code:addons/im_livechat/static/src/public_models/livechat_button_view.js:0
 #, python-format
 msgid "Session expired... Please refresh and try again."
-msgstr "La sesión expiró... Actualice la página y vuelva a intentarlo."
+msgstr "La sesión expiró... actualice la página y vuelva a intentarlo."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_unrated
@@ -1626,7 +1628,7 @@ msgstr "Sesión sin calificar"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_without_answer
 msgid "Session(s) without answer"
-msgstr "Sesiones sin respuesta"
+msgstr "Sesión(es) sin respuesta"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.mail_channel_action_from_livechat_channel
@@ -1847,9 +1849,9 @@ msgid ""
 " load a canned response, start your sentence with ':' and select the "
 "template."
 msgstr ""
-"Utilice respuestas predefinidas para definir plantillas de mensajes en la "
-"aplicación de Chat en vivo. Para cargar una respuesta predefinida, empiece "
-"su oración con \":\" y seleccione la plantilla."
+"Utilice respuestas predefinidas para establecer plantillas de mensajes en la"
+" aplicación Chat en vivo. Para cargar una respuesta predefinida, empiece su "
+"oración con \":\" y seleccione la plantilla."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_users
@@ -2020,7 +2022,7 @@ msgstr "está escribiendo"
 #: code:addons/im_livechat/static/src/legacy/widgets/feedback/feedback.xml:0
 #, python-format
 msgid "mail@example.com"
-msgstr "mail@example.com"
+msgstr "correo@ejemplo.com"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
