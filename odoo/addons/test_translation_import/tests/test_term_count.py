@@ -22,6 +22,24 @@ class TestImport(common.TransactionCase):
             'Code, Français'
         )
 
+        customized_translation = self.env['ir.code.translation'].create({
+            'source': 'Code, English',
+            'value': 'Code, Français, Customized',
+            'module': 'test_translation_import',
+            'lang': 'fr_FR',
+            'type': 'python',
+        })
+        self.assertEqual(
+            model.with_context(lang='fr_FR').get_code_translation(),
+            'Code, Français, Customized',
+            'Customized code translations were not applied'
+        )
+        customized_translation.unlink()
+        self.assertEqual(
+            model.with_context(lang='fr_FR').get_code_translation(),
+            'Code, Français'
+        )
+
     def test_import_model_translation(self):
         self.env['res.lang']._activate_lang('fr_FR')
         self.env['ir.module.module']._load_module_terms(['test_translation_import'], ['fr_FR'])
@@ -163,6 +181,19 @@ class TestImport(common.TransactionCase):
         context = {'lang': 'fr_FR'}
         self.assertEqual(str(BOOLEAN_TRANSLATIONS[0]), 'oui')
 
+        # test customized lazy translations
+        customized_translation = self.env['ir.code.translation'].create({
+            'source': 'Code Lazy, English',
+            'value': 'Code Lazy, Klingon, Customized',
+            'module': 'test_translation_import',
+            'lang': 'tlh',
+            'type': 'python',
+        })
+        context = {'lang': "tlh"}
+        self.assertEqual(str(TRANSLATED_TERM), "Code Lazy, Klingon, Customized", "The customized lazy code translation was not applied")
+        customized_translation.unlink()
+        self.assertEqual(str(TRANSLATED_TERM), "Code Lazy, Klingon", "The customized lazy code translation was not applied")
+
     def test_import_from_csv_file(self):
         """Test the import from a single CSV file works"""
         with file_open('test_translation_import/i18n/dot.csv', 'rb') as f:
@@ -219,6 +250,49 @@ class TestImport(common.TransactionCase):
         with self.assertRaises(KeyError):
             model_fr_BE.get_code_named_placeholder_translation(symbol="🧀"),
 
+    def test_customized_code_translation_cleanup(self):
+        self.env['res.lang']._activate_lang('fr_BE')
+        self.env['res.lang']._activate_lang('nl_BE')
+        self.env.ref('base.module_test_translation_import').state = 'installed'
+
+        customized_translation = self.env['ir.code.translation'].create({
+            'source': 'Code, English',
+            'value': 'Code, Français, Belgium, Customized',
+            'module': 'test_translation_import',
+            'lang': 'fr_BE',
+            'type': 'python',
+        })
+        customized_translations_to_remove = self.env['ir.code.translation'].create([{
+            'source': 'Code, %(num)s, %(symbol)s, English',
+            'value': 'Code, %(num)s, %(symbol)s, Français, Belgium',  # value is the same as the po
+            'module': 'test_translation_import',
+            'lang': 'fr_BE',
+            'type': 'python',
+        }, {
+            'source': 'Code, English, Deprecated Source',  # source is deprecated in pot
+            'value': 'Code, Français, Belgium, Customized',
+            'module': 'test_translation_import',
+            'lang': 'fr_BE',
+            'type': 'python',
+        }, {
+            'source': 'Code, English',
+            'value': 'Code, Dutch, Belgium, Customized',
+            'module': 'test_translation_import',
+            'lang': 'nl_BE',  # lang is not active
+            'type': 'python',
+        }, {
+            'source': 'Code, English',
+            'value': 'Code, Français, Belgium, Customized',
+            'module': 'uninstalled_module',  # module is uninstalled
+            'lang': 'fr_BE',
+            'type': 'python',
+        }])
+        self.env.ref('base.lang_nl_BE').active = False
+
+        customized_translation._cleanup()
+        self.assertTrue(customized_translation.exists(), "The customized translation was deleted")
+        self.assertFalse(customized_translations_to_remove.exists(), "The deprecated customized translations were not deleted")
+
 
 @tagged('post_install', '-at_install')
 class TestTranslationFlow(common.TransactionCase):
@@ -257,13 +331,8 @@ class TestTranslationFlow(common.TransactionCase):
                 return row.get('value') and (
                         JAVASCRIPT_TRANSLATION_COMMENT in row['comments']
                         or WEB_TRANSLATION_COMMENT in row['comments'])
-            new_code_translations.web_translations[('test_translation_import', 'fr_FR')] = {
-                "messages": [
-                    {"id": src, "string": value}
-                    for src, value in CodeTranslations._read_code_translations_file(
-                        po_file, filter_func_for_javascript).items()
-                ]
-            }
+            new_code_translations.web_translations[('test_translation_import', 'fr_FR')] = \
+                CodeTranslations._read_code_translations_file(po_file, filter_func_for_javascript)
 
         old_python = code_translations.get_python_translations('test_translation_import', 'fr_FR')
         new_python = new_code_translations.get_python_translations('test_translation_import', 'fr_FR')
@@ -273,13 +342,10 @@ class TestTranslationFlow(common.TransactionCase):
         new_web = new_code_translations.get_web_translations('test_translation_import', 'fr_FR')
         self.assertEqual(old_web, new_web, 'web client code translations are not exported/imported correctly')
 
+        # test customized code translations for web
+
         self.assertNotIn('text node', new_python, 'web client only translations should not be stored as python translations')
-        self.assertFalse(
-            any(
-                tran['id'] == 'Code Lazy, English'
-                for tran in new_web['messages']
-            ), 'Python only translations should not be stored as webclient translations'
-        )
+        self.assertNotIn('Code Lazy, English', new_web, 'Python only translations should not be stored as webclient translations')
 
         # test model and model terms translations
         record = self.env.ref('test_translation_import.test_translation_import_model1_record1')

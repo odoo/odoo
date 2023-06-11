@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_code_translation_tree_view" model="ir.ui.view">
+        <field name="name">ir.code.translation.tree</field>
+        <field name="model">ir.code.translation</field>
+        <field name="arch" type="xml">
+            <tree string="Customized Code Translation" js_class="ir_code_translation_tree">
+                <field name="source"/>
+                <field name="value"/>
+                <field name="module"/>
+                <field name="lang"/>
+                <field name="type"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ir_code_translation_view_search" model="ir.ui.view">
+        <field name="name">ir.code.translation.view.search</field>
+        <field name="model">ir.code.translation</field>
+        <field name="arch" type="xml">
+            <search string="Search Code Translations">
+                <field name="module"/>
+                <field name="lang"/>
+                <field name="source"/>
+                <field name="value"/>
+                <field name="type"/>
+                <separator/>
+                <filter string="Python Translations" name="python_translations" domain="[('type', '=', 'python')]"/>
+                <filter string="Web Translations" name="web_translations" domain="[('type', '=', 'web')]"/>
+                <group string="Group By">
+                    <filter string="Module" name="group_by_module" context="{'group_by': 'module'}"/>
+                    <filter string="Language" name="group_by_lang" context="{'group_by': 'lang'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ir_code_translations" model="ir.actions.server">
+        <field name="name">Customized Code Translations</field>
+        <field name="model_id" ref="base.model_ir_code_translation"/>
+        <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+        <field name="state">code</field>
+        <field name="code">action = model._open_ir_code_translations()</field>
+    </record>
+    <menuitem action="action_ir_code_translations" id="menu_ir_code_translations" parent="base.menu_translation_app"/>
+
+</odoo>
