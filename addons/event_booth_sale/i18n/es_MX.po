@@ -3,7 +3,6 @@
 # 	* event_booth_sale
 # 
 # Translators:
-# Lucia Pacheco, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Iran Villalobos López, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
@@ -28,7 +27,7 @@ msgstr ""
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event
 msgid "<span class=\"o_stat_text\">Sale Order</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Orden de venta</span>"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,help:event_booth_sale.field_product_product__detailed_type
@@ -38,7 +37,7 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Un producto almacenable es un producto para el que gestiona existencias. Debe tener instalada la aplicación de Inventario.\n"
+"Un producto almacenable es un producto para el que gestiona existencias. Debe tener instalada la aplicación Inventario.\n"
 "Un producto consumible es un producto para el que no se gestionan las existencias.\n"
 "Un servicio es un producto no material."
 
@@ -115,7 +114,7 @@ msgstr "Correo electrónico del contacto"
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__contact_mobile
 msgid "Contact Mobile"
-msgstr "Teléfono móvil del contacto"
+msgstr "Teléfono celular del contacto"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__contact_name
@@ -250,7 +249,7 @@ msgstr "De acuerdo"
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__sale_order_id
 msgid "Order Reference"
-msgstr "Referencia del pedido"
+msgstr "Referencia de la orden"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event
@@ -379,7 +378,9 @@ msgstr "Total"
 #. module: event_booth_sale
 #: model:ir.model.fields,help:event_booth_sale.field_sale_order_line__event_booth_pending_ids
 msgid "Used to create registration when providing the desired event booth."
-msgstr "Usada para crear un registro al probar el estand de evento deseado."
+msgstr ""
+"Se usa para crear un registro al proporcionar el estand deseado para el "
+"evento."
 
 #. module: event_booth_sale
 #. odoo-python
@@ -389,8 +390,8 @@ msgid ""
 "You can't delete the following booths as they are linked to sales orders: "
 "%(booths)s"
 msgstr ""
-"No puede borrar los siguientes estands ya que están vinculados a órdenes de "
-"venta: %(booths)s"
+"No puede eliminar los siguientes estands ya que están vinculados a órdenes "
+"de venta: %(booths)s"
 
 #. module: event_booth_sale
 #. odoo-python

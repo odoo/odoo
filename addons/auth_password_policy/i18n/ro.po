@@ -2,13 +2,20 @@
 # This file contains the translation of the following modules:
 # 	* auth_password_policy
 # 
+# Translators:
+# Martin Trigaux, 2023
+# Foldi Robert <foldirobert@nexterp.ro>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023
+# Claudia Baisan, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
+"PO-Revision-Date: 2023-05-30 09:25+0000\n"
+"Last-Translator: Claudia Baisan, 2023\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -18,64 +25,77 @@ msgstr ""
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Setări de configurare"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
 msgid "Minimum Password Length"
-msgstr ""
+msgstr "Lungime Minimă Parolă"
 
 #. module: auth_password_policy
 #: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
 msgid ""
 "Minimum number of characters passwords must contain, set to 0 to disable."
 msgstr ""
+"Numărul minim de caractere trebuie să conțină parolele, setați pe 0 pentru a"
+" dezactiva."
 
 #. module: auth_password_policy
-#: code:addons/auth_password_policy/models/res_users.py:30
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_field.js:0
+#, python-format
+msgid "Password"
+msgstr "Parola"
+
+#. module: auth_password_policy
+#. odoo-python
+#: code:addons/auth_password_policy/models/res_users.py:0
 #, python-format
 msgid "Passwords must have at least %d characters, got %d."
-msgstr ""
+msgstr "Parolele trebuie să aibă cel puțin %d caractere, are %d."
 
 #. module: auth_password_policy
-#. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:123
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_meter.js:0
 #, python-format
 msgid ""
-"Required: %s.\n"
+"Required: %s\n"
 "\n"
-"Hint: increase length, use multiple words and use non-letter characters to increase your password's strength."
+"Hint: to increase password strength, increase length, use multiple words, and use non-letter characters."
 msgstr ""
+"Necesar: %s\n"
+"\n"
+"Sfat: pentru a crește puterea parolei, creșteți lungimea, utilizați mai multe"
 
 #. module: auth_password_policy
 #: model:ir.model,name:auth_password_policy.model_res_users
-msgid "Users"
-msgstr ""
+msgid "User"
+msgstr "Utilizator"
 
 #. module: auth_password_policy
-#. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:28
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
-msgid "at least %d character classes"
-msgstr ""
+msgid "at least %s character classes"
+msgstr "cel puțin %s clase de caractere"
 
 #. module: auth_password_policy
-#. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:22
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
-msgid "at least %d characters"
-msgstr ""
+msgid "at least %s characters"
+msgstr "cel puțin %s caractere"
 
 #. module: auth_password_policy
-#. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:25
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_policy.js:0
 #, python-format
-msgid "at least %d words"
-msgstr ""
+msgid "at least %s words"
+msgstr "cel puțin %s cuvinte"
 
 #. module: auth_password_policy
-#. openerp-web
-#: code:addons/auth_password_policy/static/src/js/password_gauge.js:125
+#. odoo-javascript
+#: code:addons/auth_password_policy/static/src/password_meter.js:0
 #, python-format
 msgid "no requirements"
-msgstr ""
+msgstr "fără cerințe"

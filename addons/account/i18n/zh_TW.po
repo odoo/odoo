@@ -4,11 +4,11 @@
 # 
 # Translators:
 # Jeanphy <hzh0292@qq.com>, 2023
-# 226408 台北 <226408@so8d.com>, 2023
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
 # Tony Ng, 2023
 # Benson <Benson.Dr@Gmail.com>, 2023
 # Martin Trigaux, 2023
+# 226408 台北 <226408@so8d.com>, 2023
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2023\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -133,7 +133,7 @@ msgstr "%d 賬項操作"
 #: code:addons/account/models/account_account_tag.py:0
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #. module: account
 #. odoo-python
@@ -218,7 +218,7 @@ msgstr "%s 不是儲存的欄位"
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid "%s.copy"
-msgstr ""
+msgstr "%s.複製"
 
 #. module: account
 #. odoo-python
@@ -705,6 +705,9 @@ msgid ""
 "groups=\"base.group_multi_currency\" attrs=\"{'invisible': [('move_type', "
 "'=', 'entry')]}\"> in </span>"
 msgstr ""
+"<span class=\"oe_inline o_form_label mx-3\" "
+"groups=\"base.group_multi_currency\" attrs=\"{'invisible': [('move_type', "
+"'=', 'entry')]}\"> 在 </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_bank_form_inherit_account
@@ -1051,7 +1054,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.document_tax_totals_template
 msgid "<strong>Total Rounded</strong>"
-msgstr ""
+msgstr "<strong>總計（四捨五入）</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -1196,7 +1199,7 @@ msgstr "目標流水賬會自動建立第二筆付款。"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "A statement should only contain lines from the same journal."
-msgstr ""
+msgstr "對帳單應只包含同一帳簿的明細行。"
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -1353,7 +1356,7 @@ msgstr "帳戶號碼"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_onboarding_create_invoice_state_flag
 msgid "Account Onboarding Create Invoice State Flag"
-msgstr ""
+msgstr "帳戶開通創建發票狀態標誌"
 
 #. module: account
 #: model:account.account,name:account.1_payable
@@ -10010,7 +10013,7 @@ msgstr ""
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Please contact your accountant to print the Hash integrity result."
-msgstr ""
+msgstr "請聯繫您的會計師列印雜湊完整性結果。"
 
 #. module: account
 #. odoo-python
@@ -13206,7 +13209,7 @@ msgstr "日記帳項目的剩餘總量使用公司的預設幣別."
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "The running balance (%s) doesn't match the specified ending balance."
-msgstr ""
+msgstr "運行餘額（%s）與指定的結束餘額不匹配。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
@@ -13309,7 +13312,7 @@ msgstr "此日記帳的序列對於付款和未付款是不同的，但您選擇
 msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
-msgstr ""
+msgstr "起始餘額與上一份對帳單的結束餘額不匹配，或者缺少早期對帳單。"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -13435,6 +13438,8 @@ msgid ""
 "There was an error when trying to add the banner to the original PDF.\n"
 "Please make sure the source file is valid."
 msgstr ""
+"嘗試將橫幅添加到原始PDF時出錯。\n"
+"請確保原始檔案有效。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -14070,7 +14075,7 @@ msgstr "上"
 msgid ""
 "Unable to create a statement due to missing transactions. You may want to "
 "reorder the transactions before proceeding."
-msgstr ""
+msgstr "由於缺少交易，無法創建對帳單。您可能需要在繼續之前重新排序交易。"
 
 #. module: account
 #. odoo-python
@@ -14138,7 +14143,7 @@ msgstr "未過賬"
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unposted Entries"
-msgstr ""
+msgstr "未過帳的分錄"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter

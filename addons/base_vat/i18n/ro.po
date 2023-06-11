@@ -2,13 +2,19 @@
 # This file contains the translation of the following modules:
 # 	* base_vat
 # 
+# Translators:
+# Cozmin Candea <office@terrabit.ro>, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023
+# Martin Trigaux, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"POT-Creation-Date: 2023-05-30 05:09+0000\n"
+"PO-Revision-Date: 2023-05-30 09:25+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -16,32 +22,39 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: base_vat
-#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
-msgid ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" aria-label=\"Values set here are company-specific.\" "
-"groups=\"base.group_multi_company\" role=\"img\"/>"
-msgstr ""
-
-#. module: base_vat
-#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
-msgid "<span class=\"o_vat_label\">VAT</span>"
-msgstr ""
-
-#. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Companii"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
+msgstr "Setări de configurare"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"Connection with the VIES server failed. The VAT number %s could not be "
+"validated."
 msgstr ""
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Contact"
+msgstr "Contact"
+
+#. module: base_vat
+#: model:ir.model.fields,help:base_vat.field_res_partner__vies_valid
+#: model:ir.model.fields,help:base_vat.field_res_users__vies_valid
+msgid "European VAT numbers are automatically checked on the VIES database."
 msgstr ""
+
+#. module: base_vat
+#: model:ir.model,name:base_vat.model_account_fiscal_position
+msgid "Fiscal Position"
+msgstr "Poziție fiscală"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
@@ -49,37 +62,105 @@ msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
 msgstr ""
+"Dacă este bifat, nu veți putea salva o persoană de contact dacă numărul său "
+"de TVA nu poate fi verificat de serviciul european VIES."
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:188
-#, python-format
-msgid ""
-"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
-"Note: the expected format is %s"
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_valid
+#: model:ir.model.fields,field_description:base_vat.field_res_users__vies_valid
+msgid "Intra-Community Valid"
 msgstr ""
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:187
-#, python-format
-msgid ""
-"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
-"check or did not respect the expected format %s."
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__perform_vies_validation
+#: model:ir.model.fields,field_description:base_vat.field_res_users__perform_vies_validation
+msgid "Perform Vies Validation"
 msgstr ""
 
 #. module: base_vat
-#: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
-#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
-#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_short_form
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
+msgid "Tax ID"
+msgstr "CIF"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
+"Note: the expected format is %(expected_format)s"
+msgstr ""
+"Numărul de %(vat_label)s [%(wrong_vat)s] nu pare a fi valid. \n"
+"Notă: formatul așteptat este %(expected_format)s"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid ""
+"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
+"Note: the expected format is %(expected_format)s"
+msgstr ""
+"Numărul de %(vat_label)s [%(wrong_vat)s] pentru %(record_label)s nu pare a fi valid. \n"
+"Notă: formatul așteptat este %(expected_format)s"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "The VAT number %s could not be interpreted by the VIES server."
+msgstr ""
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid ""
+"The country detected for this foreign VAT number does not match the one set "
+"on this fiscal position."
+msgstr ""
+"Țara detectată pentru acest număr de TVA străin nu se potrivește cu cea "
+"setată pe această poziție fiscală."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
 msgid "VAT"
-msgstr ""
+msgstr "TVA"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr ""
+msgstr "Verificare cod de TVA"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
+msgstr "Verificare cod de TVA utilizând serviciul european VIES "
+
+#. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_vat_to_check
+#: model:ir.model.fields,field_description:base_vat.field_res_users__vies_vat_to_check
+msgid "Vies Vat To Check"
 msgstr ""
+
+#. module: base_vat
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_base_vat_form
+msgid "e.g. BE0477472701"
+msgstr "ex. RO0477472701"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/account_fiscal_position.py:0
+#, python-format
+msgid "fiscal position [%s]"
+msgstr "poziție fiscală [%s]"
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "partner [%s]"
+msgstr "partener [%s]"

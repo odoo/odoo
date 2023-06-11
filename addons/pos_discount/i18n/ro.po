@@ -2,13 +2,19 @@
 # This file contains the translation of the following modules:
 # 	* pos_discount
 # 
+# Translators:
+# Dorin Hongu <dhongu@gmail.com>, 2023
+# Foldi Robert <foldirobert@nexterp.ro>, 2023
+# Martin Trigaux, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:31+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
+"PO-Revision-Date: 2023-05-30 09:25+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -16,61 +22,101 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: pos_discount
+#. odoo-python
+#: code:addons/pos_discount/models/pos_config.py:0
+#, python-format
+msgid ""
+"A discount product is needed to use the Global Discount feature. Go to Point"
+" of Sale > Configuration > Settings to set it."
+msgstr ""
+
+#. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__iface_discount
 msgid "Allow the cashier to give discounts on the whole order."
-msgstr ""
+msgstr "Permite casierului acordarea unei reduceri pentru întreaga comandă"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/xml/discount_templates.xml:6
+#: model:ir.model,name:pos_discount.model_res_config_settings
+msgid "Config Settings"
+msgstr "Setări de configurare"
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/xml/DiscountButton.xml:0
 #, python-format
 msgid "Discount"
-msgstr ""
+msgstr "Reducere"
 
 #. module: pos_discount
-#: model_terms:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
+#: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
 msgid "Discount %"
-msgstr ""
+msgstr "Reducere %"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/discount.js:14
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_pc
 #, python-format
 msgid "Discount Percentage"
-msgstr ""
+msgstr "Procent reducere"
 
 #. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_product_id
-#: model_terms:ir.ui.view,arch_db:pos_discount.pos_config_view_form_inherit_pos_discount
+#: model_terms:ir.ui.view,arch_db:pos_discount.res_config_settings_view_form
 msgid "Discount Product"
-msgstr ""
+msgstr "Reducere produs"
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/discount.js:28
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
 #, python-format
 msgid "No discount product found"
 msgstr ""
 
 #. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#, python-format
+msgid "No tax"
+msgstr ""
+
+#. module: pos_discount
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__iface_discount
 msgid "Order Discounts"
-msgstr ""
+msgstr "Reduceri comandă"
 
 #. module: pos_discount
 #: model:ir.model,name:pos_discount.model_pos_config
 msgid "Point of Sale Configuration"
+msgstr "Configurarea Punctului de Vânzare"
+
+#. module: pos_discount
+#: model:ir.model,name:pos_discount.model_pos_session
+msgid "Point of Sale Session"
+msgstr "Sesiune Punct de vânzare"
+
+#. module: pos_discount
+#: model:ir.model.fields,field_description:pos_discount.field_res_config_settings__pos_discount_product_id
+msgid "Pos Discount Product"
+msgstr ""
+
+#. module: pos_discount
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#, python-format
+msgid "Tax: %s"
 msgstr ""
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_pc
-msgid "The default discount percentage"
+#: model:ir.model.fields,help:pos_discount.field_res_config_settings__pos_discount_pc
+msgid "The default discount percentage when clicking on the Discount button"
 msgstr ""
 
 #. module: pos_discount
-#. openerp-web
-#: code:addons/pos_discount/static/src/js/discount.js:29
+#. odoo-javascript
+#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
 #, python-format
 msgid ""
 "The discount product seems misconfigured. Make sure it is flagged as 'Can be"
@@ -79,5 +125,5 @@ msgstr ""
 
 #. module: pos_discount
 #: model:ir.model.fields,help:pos_discount.field_pos_config__discount_product_id
-msgid "The product used to model the discount."
+msgid "The product used to apply the discount on the ticket."
 msgstr ""

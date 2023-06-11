@@ -3,12 +3,12 @@
 # 	* mail
 # 
 # Translators:
-# Daye Jeong, 2023
 # Seongseok Shin <shinss61@hotmail.com>, 2023
 # Linkup <link-up@naver.com>, 2023
 # JH CHOI <hwangtog@gmail.com>, 2023
-# Sarah Park, 2023
 # Martin Trigaux, 2023
+# Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -798,7 +798,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.discuss_channel_view_kanban
 msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">보관 처리됨</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -2253,6 +2253,10 @@ msgid ""
 "Post as Message: post on document and notify followers\n"
 "Post as Note: log a note on document"
 msgstr ""
+"이메일 전송 방법 선택:\n"
+"이메일: 이메일 직접 전송\n"
+"메시지 게시: 문서에 게시하고 팔로워에게 안내\n"
+"메모 게시: 문서에 메모 기록"
 
 #. module: mail
 #. odoo-javascript
@@ -4787,7 +4791,7 @@ msgstr ""
 #: code:addons/mail/static/src/discuss/channel_invitation.xml:0
 #, python-format
 msgid "Invitation Link"
-msgstr ""
+msgstr "초대 링크"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_discuss_channel__invitation_url
@@ -6126,7 +6130,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_email_missing
 msgid "Missing email"
-msgstr ""
+msgstr "누락된 이메일"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__mail_email_missing
@@ -6388,7 +6392,7 @@ msgstr "다음"
 #: code:addons/mail/static/src/attachments/attachment_viewer.xml:0
 #, python-format
 msgid "Next (Right-Arrow)"
-msgstr ""
+msgstr "다음 (오른쪽 화살표)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_tree
@@ -7538,7 +7542,7 @@ msgstr "이전"
 #: code:addons/mail/static/src/attachments/attachment_viewer.xml:0
 #, python-format
 msgid "Previous (Left-Arrow)"
-msgstr ""
+msgstr "이전 (왼쪽 화살표)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__previous_activity_type_id
@@ -8426,7 +8430,7 @@ msgstr "Outlook 계정을 통해 이메일을 수발신합니다."
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_method
 #: model:ir.model.fields,field_description:mail.field_ir_cron__mail_post_method
 msgid "Send as"
-msgstr ""
+msgstr "다음으로 보내기"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
@@ -8887,7 +8891,7 @@ msgstr "제목 :"
 #: model:ir.model.fields,field_description:mail.field_ir_actions_server__mail_post_autofollow
 #: model:ir.model.fields,field_description:mail.field_ir_cron__mail_post_autofollow
 msgid "Subscribe Recipients"
-msgstr ""
+msgstr "구독 수신자"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode__substitution
@@ -9717,6 +9721,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"서버 작업 유형입니다. 다음과 같은 값을 사용할 수 있습니다:\n"
+"- 'Python 코드 실행': 실행할 Python 코드 블록입니다.\n"
+"- '새로운 레코드 생성': 새로운 값을 가진 새 레코드를 생성합니다,\n"
+"- '레코드 업데이트': 레코드 값을 업데이트합니다.\n"
+"- '여러 작업 실행': 여러 가지의 다른 서버 작업을 동작시키는 작업을 정의합니다.\n"
+"- '이메일 전송': 메시지나 메모를 게시하거나 이메일을 전송합니다 (메일 및 채팅 앱).\n"
+"- '팔로워 추가': 레코드에 팔로워를 추가합니다 (메일 및 채팅 앱).\n"
+"- '다음 작업 생성': 작업을 생성합니다 (메일 및 채팅 앱).\n"
+"- 'SMS 문자 메시지 전송': SMS를 전송하고, 문서에 기록합니다 (SMS)."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -10321,7 +10334,7 @@ msgstr ""
 #: code:addons/mail/static/src/public/welcome_page.xml:0
 #, python-format
 msgid "What's your name?"
-msgstr ""
+msgstr "이름이 무엇입니까?"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_fetchmail_server__original
@@ -17181,7 +17194,7 @@ msgstr ""
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "email"
-msgstr ""
+msgstr "이메일"
 
 #. module: mail
 #. odoo-javascript
@@ -27261,7 +27274,7 @@ msgstr ""
 #: code:addons/mail/static/src/emoji_picker/emoji_data.js:0
 #, python-format
 msgid "phone"
-msgstr ""
+msgstr "전화"
 
 #. module: mail
 #. odoo-javascript

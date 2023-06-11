@@ -7,11 +7,11 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Lucia Pacheco, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
-# Aimée Mendoza Sánchez, 2023
-# Iran Villalobos López, 2023
-# Fernanda Alvarez, 2023
 # Martin Trigaux, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
+# Aimée Mendoza Sánchez, 2023
+# Fernanda Alvarez, 2023
+# Iran Villalobos López, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2023\n"
+"Last-Translator: Iran Villalobos López, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,7 +74,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " (including this document)"
-msgstr ""
+msgstr "(este documento incluido)"
 
 #. module: account
 #. odoo-python
@@ -201,13 +201,15 @@ msgid ""
 "%s has reached its Credit Limit of: %s\n"
 "Total amount due"
 msgstr ""
+"%s alcanzó su límite de crédito de: %s\n"
+"Importe total adeudado "
 
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "%s installment #%s"
-msgstr ""
+msgstr "%s cuota #%s"
 
 #. module: account
 #. odoo-python
@@ -322,7 +324,7 @@ msgstr "15 días"
 #: model:account.tax,name:account.1_purchase_tax_template
 #: model:account.tax,name:account.1_sale_tax_template
 msgid "15%"
-msgstr ""
+msgstr "15%"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days_early_discount
@@ -630,7 +632,7 @@ msgstr "<i class=\"fa fa-print\"/> Imprimir"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_terms_conditions_setting_banner
 msgid "<i class=\"oi oi-arrow-right me-1\"/>Back to settings"
-msgstr ""
+msgstr "<i class=\"oi oi-arrow-right me-1\"/>Volver a ajustes"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -638,12 +640,16 @@ msgid ""
 "<i class=\"oi oi-arrow-right\"/>\n"
 "                                                Preview"
 msgstr ""
+"<i class=\"oi oi-arrow-right\"/>\n"
+"                                                Vista previa"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid ""
 "<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Configure Email Servers"
 msgstr ""
+"<i class=\"oi oi-fw o_button_icon oi-arrow-right\"/> Configure los "
+"servidores de correo electrónico "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -3482,7 +3488,7 @@ msgstr "Cuenta transitoria de base de efectivo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
 msgid "Cash Difference Expense"
-msgstr ""
+msgstr "Gasto por diferencia de efectivo"
 
 #. module: account
 #. odoo-python
@@ -3495,7 +3501,7 @@ msgstr "Ganancia por diferencia de efectivo"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_income_account_id
 msgid "Cash Difference Income"
-msgstr ""
+msgstr "Ingresos por diferencia de efectivo"
 
 #. module: account
 #. odoo-python
@@ -3512,7 +3518,7 @@ msgstr "Pérdida por diferencia de efectivo"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_early_pay_discount_gain_account_id
 #, python-format
 msgid "Cash Discount Gain"
-msgstr "Ganancias de diferencia de efectivo"
+msgstr "Ganancias por diferencia de efectivo"
 
 #. module: account
 #. odoo-python
@@ -3637,8 +3643,8 @@ msgid ""
 "Changing your company name is not allowed once invoices have been issued for"
 " your account. Please contact us directly for this operation."
 msgstr ""
-"No está permitido cambiar el nombre de su empresa una vez que se han emitido"
-" facturas para su cuenta, contáctenos para realizar esta operación."
+"No está permitido cambiar el nombre de su empresa una vez que se hayan "
+"emitido facturas para su cuenta, contáctenos para realizar esta operación."
 
 #. module: account
 #. odoo-python
@@ -3933,7 +3939,7 @@ msgstr "País de la empresa"
 #: model:ir.model.fields,field_description:account.field_account_payment__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_payment_register__company_currency_id
 msgid "Company Currency"
-msgstr " Divisa de la empresa"
+msgstr "Divisa de la empresa"
 
 #. module: account
 #: model:ir.model,name:account.model_base_document_layout
@@ -3975,7 +3981,7 @@ msgstr "Calcular todos los impuestos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__compute_all_tax_dirty
 msgid "Compute All Tax Dirty"
-msgstr "Calcular todos los impuestos sucios"
+msgstr "Calcular todos los impuestos con descuento"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4089,7 +4095,7 @@ msgstr "Costo de bienes vendidos"
 #. module: account
 #: model:account.account,name:account.1_cost_of_production
 msgid "Cost of Production"
-msgstr ""
+msgstr "Costo de producción"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__expense_direct_cost
@@ -4131,12 +4137,12 @@ msgstr "Asientos de contrapartida"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Counterpart buttons"
-msgstr ""
+msgstr "Botones de contrapartida"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Counterpart rules"
-msgstr ""
+msgstr "Reglas de contrapartida"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
@@ -4857,7 +4863,7 @@ msgstr "ENTREGADO EN EL LUGAR DE DESCARGA"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
-msgstr "ENTREGADO ARANCEL PAGADO"
+msgstr "ENTREGADO CON DERECHOS PAGADOS"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
@@ -5278,6 +5284,10 @@ msgid ""
 "used by itself, however it can still be used in a group. 'adjustment' is "
 "used to perform tax adjustment."
 msgstr ""
+"Determina en dónde se puede seleccionar un impuesto. Nota: \"Ninguno\" "
+"significa que un impuesto no se puede usar por sí mismo. Sin embargo, se "
+"puede usar en un grupo. \"Ajuste\" se usa para realizar un ajuste de "
+"impuesto. "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__writeoff_account_id
@@ -5580,7 +5590,7 @@ msgstr "Descargar archivos XSD (validación XML)"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_is_download
 msgid "Download by default"
-msgstr ""
+msgstr "Descargar de forma predeterminada"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__advance_tax_payment_account_id
@@ -5921,7 +5931,7 @@ msgstr "Solo se pueden crear los asientos para una sola empresa a la vez."
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "Entries don't belong to the same company: %s"
-msgstr ""
+msgstr "Los asientos no pertenecen a la misma empresa: %s"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_validate_account_move__force_post
@@ -5929,9 +5939,9 @@ msgid ""
 "Entries in the future are set to be auto-posted by default. Check this "
 "checkbox to post them now."
 msgstr ""
-"Los asientos en el futuro están configurados para que se publiquen "
-"automáticamente de forma predeterminada. Seleccione esta casilla para "
-"publicarlos ahora."
+"Los asientos en el futuro están configurados para que se publiquen en "
+"automático de forma predeterminada. Seleccione esta casilla para publicarlos"
+" ahora."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -5948,7 +5958,7 @@ msgstr "Asientos: %(account)s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_dirty
 msgid "Epd Dirty"
-msgstr "Descuento por pago anticipado sucio"
+msgstr "Descuento por pago anticipado con descuento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_key
@@ -6014,7 +6024,7 @@ msgstr "Descuento de vista previa de ejemplo"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Example:"
-msgstr ""
+msgstr "Ejemplo:"
 
 #. module: account
 #. odoo-javascript
@@ -6109,17 +6119,17 @@ msgstr "Valor externo"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
 msgid "FREE ALONGSIDE SHIP"
-msgstr "GRATIS JUNTO CON EL ENVÍO"
+msgstr "LIBRE AL COSTADO DEL BUQUE"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FCA
 msgid "FREE CARRIER"
-msgstr "TRANSPORTISTA GRATIS"
+msgstr "FRANCO PORTEADOR"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FOB
 msgid "FREE ON BOARD"
-msgstr "GRATIS A BORDO"
+msgstr "LIBRE A BORDO"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__factor
@@ -6483,7 +6493,7 @@ msgstr "Identificación fiscal extranjera"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Foreign VAT countries"
-msgstr "Países con IVA extranjero"
+msgstr "Países con RFC extranjero"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -8085,12 +8095,12 @@ msgstr "Nombre del diario"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_payment_credit_account_id
 msgid "Journal Outstanding Payments"
-msgstr ""
+msgstr "DIario de pagos pendientes "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_payment_debit_account_id
 msgid "Journal Outstanding Receipts"
-msgstr ""
+msgstr "Diario de recibos pendientes "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_suspense_account_id
@@ -8552,7 +8562,7 @@ msgstr "Bloquear asientos publicados con hash"
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__lock_trust_fields
 #: model:ir.model.fields,field_description:account.field_res_partner_bank__lock_trust_fields
 msgid "Lock Trust Fields"
-msgstr ""
+msgstr "Bloquear campos de crédito "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.bill_preview
@@ -8806,7 +8816,7 @@ msgstr "Partners coincidentes"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_search
 msgid "Matching rules"
-msgstr ""
+msgstr "Reglas coincidentes "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__max_date
@@ -8987,7 +8997,7 @@ msgstr "Tipo de movimiento"
 #. module: account
 #: model:ir.actions.server,name:account.action_automatic_entry_change_account
 msgid "Move to Account"
-msgstr ""
+msgstr "Mover a la cuenta "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_multi_company
@@ -9465,7 +9475,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_external_value__value
 msgid "Numeric Value"
-msgstr ""
+msgstr "Valor numérico "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -16728,13 +16738,15 @@ msgid ""
 "{amount} ({debit_credit}) from %s were transferred to "
 "<strong>{account_target_name}</strong> by {link}"
 msgstr ""
+"{amount} ({debit_credit}) de %s se transfirió a "
+"<strong>{account_target_name}</strong> mediante {link}"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{amount} ({debit_credit}) from {link}"
-msgstr ""
+msgstr "{amount} ({debit_credit}) de {link}"
 
 #. module: account
 #. odoo-python
@@ -16755,14 +16767,14 @@ msgstr "{label}: asiento de ajuste de {new_date}"
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent}% recognized on {new_date}"
-msgstr ""
+msgstr "{percent}% y se reconoció el {new_date}"
 
 #. module: account
 #. odoo-python
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "{percent}% to recognize on {new_date}"
-msgstr ""
+msgstr "{percent}% a reconocer el {new_date}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_credit_note

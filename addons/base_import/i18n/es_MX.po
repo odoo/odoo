@@ -6,9 +6,8 @@
 # Lucia Pacheco, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
-# Fernanda Alvarez, 2023
-# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Martin Trigaux, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:49+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -143,14 +142,16 @@ msgstr ""
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values (value: %s)"
-msgstr "La columna %s contiene valores incorrectos (valor: %s)"
+msgstr "La columna %s contiene valores que no son correctos (valor: %s)"
 
 #. module: base_import
 #. odoo-python
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "La columna %s contiene valores incorrectos. Error en la linea %d: %s"
+msgstr ""
+"La columna %s contiene valores que no son correctos. Error en la línea %d: "
+"%s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -342,14 +343,14 @@ msgstr "El tamaño del archivo excede el máximo establecido (%s bytes)"
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr "Archivo a comprobar y/o importar, binario en bruto (no base64)"
+msgstr "Archivo a comprobar y/o importar, binario sin procesar (no base64)"
 
 #. module: base_import
 #. odoo-javascript
 #: code:addons/base_import/static/src/import_data_progress/import_data_progress.xml:0
 #, python-format
 msgid "Finalizing current batch before interrupting..."
-msgstr "Finalice el lote actual antes de interrumpir..."
+msgstr "Finalizando el lote actual antes de interrumpir..."
 
 #. module: base_import
 #. odoo-javascript
@@ -427,8 +428,8 @@ msgstr ""
 msgid ""
 "Image size excessive, imported images must be smaller than 42 million pixel"
 msgstr ""
-"Tamaño de imagen excesivo, las imágenes importadas deben ser menores a 42 "
-"millones de pixeles"
+"El tamaño de imagen es muy grande, las imágenes importadas deben tener menos"
+" de 42 millones de pixeles"
 
 #. module: base_import
 #. odoo-javascript
@@ -456,7 +457,7 @@ msgstr "Importar un archivo"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Import file has no content or is corrupt"
-msgstr "El archivo importado no tiene contenido o está corrupto"
+msgstr "El archivo importado no tiene contenido o está dañado"
 
 #. module: base_import
 #. odoo-javascript
@@ -550,7 +551,7 @@ msgstr "Modelo"
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "Multiple errors occurred"
-msgstr "Ocurrieron múltiples errores"
+msgstr "Ocurrieron varios errores"
 
 #. module: base_import
 #. odoo-javascript
@@ -632,7 +633,7 @@ msgstr "Buscar un campo..."
 #: code:addons/base_import/static/src/import_data_column_error/import_data_column_error.xml:0
 #, python-format
 msgid "See possible values"
-msgstr "Ver posibles valores"
+msgstr "Ver los valores posibles"
 
 #. module: base_import
 #. odoo-javascript
@@ -703,7 +704,7 @@ msgstr "Saltar registro"
 #: code:addons/base_import/static/src/import_model.js:0
 #, python-format
 msgid "Space"
-msgstr "espacio"
+msgstr "Espacio"
 
 #. module: base_import
 #. odoo-javascript
@@ -860,6 +861,10 @@ msgid ""
 "system. You can use a custom format in addition to the suggestions provided."
 " Leave empty to let Odoo guess the format (recommended)"
 msgstr ""
+"Use HH para las horas en un sistema horario de 24 horas o use II con una "
+"\"p\" para el sistema de 12 horas. Puede utilizar un formato personalizado "
+"además de las sugerencias proporcionadas. Deje el campo vacío para que Odoo "
+"interprete el formato (recomendado)"
 
 #. module: base_import
 #. odoo-javascript
@@ -871,6 +876,10 @@ msgid ""
 "format in addition to the suggestions provided. Leave empty to let Odoo "
 "guess the format (recommended)"
 msgstr ""
+"Utilice YYYY para representar el año, MM para el mes y DD para el día. "
+"Incluya separadores como un punto, barra diagonal o guion. Puede utilizar un"
+" formato personalizado además de las sugerencias proporcionadas. Deje el "
+"campo vacío para que Odoo interprete el formato (recomendado)"
 
 #. module: base_import
 #. odoo-javascript

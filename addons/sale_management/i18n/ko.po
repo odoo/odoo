@@ -4,8 +4,8 @@
 # 
 # Translators:
 # JH CHOI <hwangtog@gmail.com>, 2023
-# Sarah Park, 2023
 # Martin Trigaux, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,6 +32,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
 "company-specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o p-2\" title=\"Values set here are "
+"company-specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
@@ -163,7 +165,7 @@ msgstr "작성일자"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_company__sale_order_template_id
 msgid "Default Sale Template"
-msgstr ""
+msgstr "기본 판매 서식"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_res_config_settings__company_so_template_id
@@ -175,7 +177,7 @@ msgstr "기본 서식"
 msgid ""
 "Default values will be overwritten by values provided by the quotation "
 "template."
-msgstr ""
+msgstr "기본값을 견적 서식 값으로 덮어씁니다."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__name
@@ -189,7 +191,7 @@ msgstr "설명"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.res_config_settings_view_form
 msgid "Design your quotation templates using building blocks"
-msgstr ""
+msgstr "빌딩 블록으로 견적 서식을 디자인합니다"
 
 #. module: sale_management
 #: model:ir.model,name:sale_management.model_digest_digest
@@ -231,7 +233,7 @@ msgstr "사용 권한 없음, 이 데이터는 사용자 요약 이메일에서 
 #. module: sale_management
 #: model:ir.model.constraint,message:sale_management.constraint_sale_order_template_line_non_accountable_fields_null
 msgid "Forbidden product, quantity and UoM on non-accountable sale quote line"
-msgstr ""
+msgstr "회계 처리 불가한 판매 견적서 내역에 있는 금지 품목 및 수량과 측정 단위"
 
 #. module: sale_management
 #: model:ir.model.fields,help:sale_management.field_sale_order_option__sequence
@@ -500,6 +502,8 @@ msgid ""
 "and populate your orders with multiple quantities of each variant. This "
 "feature also exists in the Purchase application."
 msgstr ""
+"동일한 품목에 대해 다른 사이즈와 색상을 판매 중이신가요? 품목 그리드를 이용하여 각 속성별로 여러 개씩 주문을 받으실 수 있습니다. 이"
+" 기능은 구매 애플리케이션에서도 찾아보실 수 있습니다."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__sequence
@@ -514,6 +518,8 @@ msgid ""
 "to help sales configure a product with different options: colors, size, "
 "capacity, etc. Make sale orders encoding easier and error-proof."
 msgstr ""
+"상품 카탈로그가 너무 복잡하여 어려움을 겪고 있으신가요? 품목 구성 도구를 사용하여 색상별, 사이즈별, 용량별 등 다양한 옵션으로 품목을"
+" 구성하실 수 있습니다. 더 쉬우면서도 오류 없이 판매 주문 인코딩을 진행합니다."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -550,13 +556,13 @@ msgstr "선택 사항 명세의 상품이 이미 견적에 있는 경우 이 필
 #: model:digest.tip,name:sale_management.digest_tip_sale1_management_0
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale1_management_0
 msgid "Tip: Odoo supports configurable products"
-msgstr ""
+msgstr "참고: Odoo에서는 품목을 구성 가능하도록 지원하고 있습니다."
 
 #. module: sale_management
 #: model:digest.tip,name:sale_management.digest_tip_sale_management_1
 #: model_terms:digest.tip,tip_description:sale_management.digest_tip_sale_management_1
 msgid "Tip: Sell or buy products in bulk with matrixes"
-msgstr ""
+msgstr "참고: 매트릭스를 사용하여 대량으로 판매하거나 구매하실 수 있습니다."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -635,6 +641,8 @@ msgid ""
 "Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n"
 " Please change the company of your template or remove the products from other companies."
 msgstr ""
+"서식에 %(product_company)s 회사의 품목이 포함되어 있으나 서식은 %(template_company)s 회사에 대한 서식입니다.\n"
+"서식 업체명을 변경하거나 다른 회사의 품목을 삭제해주시기 바랍니다."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
@@ -644,4 +652,4 @@ msgstr "일"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 msgid "e.g. Standard Consultancy Package"
-msgstr ""
+msgstr "예: 표준 컨설팅 패키지"

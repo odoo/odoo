@@ -3,9 +3,9 @@
 # 	* hr_recruitment_survey
 # 
 # Translators:
-# Sarah Park, 2023
 # JH CHOI <hwangtog@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:09+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +47,28 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        안녕하세요 <t t-out=\"object.partner_id.name or 'applicant'\">[applicant name]</t>님,<br><br>\n"
+"        <t>\n"
+"            채용 절차를 위한 몇 가지 질문에 답변 부탁드립니다.\n"
+"        </t>\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a t-att-href=\"(object.get_start_url())\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                <t>\n"
+"                    서면 인터뷰 시작하기\n"
+"                </t>\n"
+"            </a>\n"
+"        </div>\n"
+"        <t t-if=\"object.deadline\">\n"
+"            인터뷰에 대한 답변은 <t t-out=\"format_date(object.deadline)\">[deadline date]</t>까지 등록해주십시오.<br><br>\n"
+"        </t>\n"
+"        <t>\n"
+"            좋은 결과 있으시길 기원합니다. 참여해 주셔서 감사합니다.\n"
+"        </t>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -54,6 +76,8 @@ msgid ""
 "<span class=\"o_stat_text\">Consult</span>\n"
 "                        <span class=\"o_stat_text\">Interview</span>"
 msgstr ""
+"<span class=\"o_stat_text\">상담</span>\n"
+"                        <span class=\"o_stat_text\">인터뷰</span>"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
@@ -75,7 +99,7 @@ msgstr "지원자"
 #. module: hr_recruitment_survey
 #: model:mail.template,name:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Applicant: Interview"
-msgstr ""
+msgstr "지원자: 인터뷰"
 
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,help:hr_recruitment_survey.field_hr_applicant__survey_id
@@ -93,12 +117,12 @@ msgstr "면접 양식 표시"
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q4
 msgid "Education"
-msgstr "교육"
+msgstr "학력 사항"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q2
 msgid "From which university did or will you graduate?"
-msgstr ""
+msgstr "어느 대학을 졸업 또는 졸업 예정이십니까?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row2
@@ -141,17 +165,17 @@ msgstr "면접 양식"
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
 #, python-format
 msgid "Interview Form: %s"
-msgstr ""
+msgstr "면접 양식: %s"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.res_config_settings_view_form
 msgid "Interview Survey"
-msgstr ""
+msgstr "면접 설문조사"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Interviews"
-msgstr ""
+msgstr "면접"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_hr_job
@@ -161,7 +185,7 @@ msgstr "직무 영역"
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q6
 msgid "Knowledge"
-msgstr "지식 센터"
+msgstr "전문 지식 사항"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row6
@@ -181,19 +205,19 @@ msgstr "사무실 위치"
 #. module: hr_recruitment_survey
 #: model:mail.template,subject:hr_recruitment_survey.mail_template_applicant_interview_invite
 msgid "Participate to {{ object.survey_id.display_name }} interview"
-msgstr ""
+msgstr "{{ object.survey_id.display_name }} 면접에 참가하기"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q5
 msgid "Past work experiences"
-msgstr "과거의 경력"
+msgstr "과거 경력 사항"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
 msgid ""
 "Please answer those questions to help recruitment officers to preprocess "
 "your application."
-msgstr ""
+msgstr "채용 담당자가 지원서를 사전 처리하는 데 도움이 되도록 몇 가지 질문에 답변해 주세요."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
@@ -201,26 +225,28 @@ msgid ""
 "Please fill information about you: who you are, what are your education, experience, and activities.\n"
 "    It will help us managing your application."
 msgstr ""
+"본인에 대한 정보: 자기소개, 학력 사항, 경력 사항, 기타 활동 내용 등을 입력해 주세요.\n"
+"지원서를 관리하는 데 도움이 됩니다."
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 #, python-format
 msgid "Please provide an applicant name."
-msgstr ""
+msgstr "지원자의 이름을 입력하세요."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
 msgid ""
 "Please summarize your education history: schools, location, diplomas, ..."
-msgstr ""
+msgstr "학력 사항을 요약하여 적어주세요: 학교, 위치, 졸업장, ..."
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
 msgid ""
 "Please tell us a bit more about yourself: what are your main activities, ..."
-msgstr ""
+msgstr "본인에 대해 좀 더 자세히 알려주세요: 주로 하는 활동, ..."
 
 #. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
@@ -230,24 +256,24 @@ msgstr "채용 양식"
 #. module: hr_recruitment_survey
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__response_ids
 msgid "Responses"
-msgstr ""
+msgstr "응답"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "See interview report"
-msgstr ""
+msgstr "면접 보고서 보기"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
 msgid "Send Interview"
-msgstr ""
+msgstr "인터뷰 전송"
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 #, python-format
 msgid "Send an interview"
-msgstr ""
+msgstr "인터뷰 전송"
 
 #. module: hr_recruitment_survey
 #. odoo-python
@@ -277,14 +303,14 @@ msgstr "이 설문에 답변해 주셔서 감사합니다. 곧 다시 연락 드
 #: code:addons/hr_recruitment_survey/models/survey_user_input.py:0
 #, python-format
 msgid "The applicant \"%s\" has finished the survey."
-msgstr ""
+msgstr "지원자 \"%s\" 가 설문조사에 대한 응답을 완료했습니다."
 
 #. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/wizard/survey_invite.py:0
 #, python-format
 msgid "The survey %(survey_link)s has been sent to %(partner_link)s"
-msgstr ""
+msgstr "설문조사 %(survey_link)s 가 %(partner_link)s로 전송되었습니다."
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_col3
@@ -294,22 +320,22 @@ msgstr "매우 중요"
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q3
 msgid "Were you referred by an employee?"
-msgstr ""
+msgstr "직원의 추천을 받으셨습니까?"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
 msgid "What are your main knowledge regarding the job you are applying to?"
-msgstr ""
+msgstr "지원하시는 직무와 관련하여 본인이 갖고 있는 전문 지식은 무엇입니까?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
 msgid "What is important for you?"
-msgstr ""
+msgstr "당신에게 중요한 것은 무엇입니까?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q1
 msgid "Which country are you from?"
-msgstr ""
+msgstr "국적이 어디입니까?"
 
 #. module: hr_recruitment_survey
 #: model:survey.question.answer,value:hr_recruitment_survey.survey_recruitment_form_p1_q8_row4

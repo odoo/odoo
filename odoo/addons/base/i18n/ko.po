@@ -4,9 +4,10 @@
 # 
 # Translators:
 # Linkup <link-up@naver.com>, 2023
-# Sarah Park, 2023
 # Martin Trigaux, 2023
 # JH CHOI <hwangtog@gmail.com>, 2023
+# Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:28+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11085,6 +11086,12 @@ msgid ""
 "- Follow-up Address: Preferred address for follow-up reports. Selected by default when you send reminders about overdue invoices.\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
+"- 연락처: 해당 회사의 임직원 (예: CEO나 CFO 등)의 연락처 세부 정보를 구성하는데 사용합니다.\n"
+"- 청구서 주소: 전체 청구서 관련 기본 주소입니다. 이 회사와 관련된 주문서에 대한 청구서 발행 시 기본 주소로 선택됩니다..\n"
+"- 배송지 주소: 전체 배송 관련 기본 주소입니다. 이 회사와 관련된 주문 배송 시 기본 주소로 선택됩니다.\n"
+"- 개인 주소: 비공개 개인 주소는 권한이 있는 사용자만 열람이 가능하며 민감한 정보가 포함되어 있습니다 (임직원 자택 주소 등).\n"
+"- 후속 조치용 주소: 후속조치 보고용 추가 추소입니다. 청구서 연체 알림을 전송할 때 기본으로 선택됩니다.\n"
+"- 기타: 회사의 기타 주소입니다 (예: 자회사 등)"
 
 #. module: base
 #. odoo-python
@@ -11602,7 +11609,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_kanban_view
 msgid "<span class=\"text-bg-danger\">Archived</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">보관 처리됨</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
@@ -11832,7 +11839,7 @@ msgstr "<strong>이름</strong>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
 msgid "<strong>Phone:</strong>"
-msgstr "<strong>전화 : </strong>"
+msgstr "<strong>전화:</strong>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_res_company_kanban
@@ -13735,7 +13742,7 @@ msgstr "출력 문서의 우측 상단에 기본으로 출력됩니다. (보고�
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__append
 msgid "Append"
-msgstr ""
+msgstr "추가"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_category
@@ -17656,7 +17663,7 @@ msgstr "방향"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__directive
 msgid "Directive"
-msgstr ""
+msgstr "지시어"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_tree
@@ -19571,7 +19578,7 @@ msgstr ""
 #. module: base
 #: model:ir.model,name:base.model_ir_binary
 msgid "File streaming helper model for controllers"
-msgstr ""
+msgstr "컨트롤러용 파일 스트리밍 헬퍼 모델"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
@@ -22951,7 +22958,7 @@ msgstr "이제 시작합니다"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
 msgid "Let's start!"
-msgstr "시작합니다!"
+msgstr "시작하기"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__letter
@@ -24370,7 +24377,7 @@ msgstr "모델이 없습니다 : %(model)s"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__model_id
 msgid "Model of the view"
-msgstr ""
+msgstr "뷰 모델"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_server__model_id
@@ -28313,7 +28320,7 @@ msgstr "시퀀스 레코드 접두사 값"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__prepend
 msgid "Prepend"
-msgstr ""
+msgstr "준비"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_twitter_wall
@@ -33927,6 +33934,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"서버 작업 유형입니다. 다음과 같은 값을 사용할 수 있습니다:\n"
+"- 'Python 코드 실행': 실행할 Python 코드 블록입니다.\n"
+"- '새로운 레코드 생성': 새로운 값을 가진 새 레코드를 생성합니다,\n"
+"- '레코드 업데이트': 레코드 값을 업데이트합니다.\n"
+"- '여러 작업 실행': 여러 가지의 다른 서버 작업을 동작시키는 작업을 정의합니다.\n"
+"- '이메일 전송': 메시지나 메모를 게시하거나 이메일을 전송합니다 (메일 및 채팅 앱).\n"
+"- '팔로워 추가': 레코드에 팔로워를 추가합니다 (메일 및 채팅 앱).\n"
+"- '다음 작업 생성': 작업을 생성합니다 (메일 및 채팅 앱).\n"
+"- 'SMS 문자 메시지 전송': SMS를 전송하고, 문서에 기록합니다 (SMS)."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model_constraint__type

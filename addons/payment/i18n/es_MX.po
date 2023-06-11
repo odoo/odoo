@@ -88,12 +88,12 @@ msgstr "<span class=\"fs-4\">Métodos de pago guardados</span>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "<span class=\"o_stat_text text-danger\">Unpublished</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-danger\">Sin publicar</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "<span class=\"o_stat_text text-success\">Published</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text text-success\">Publicado</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
@@ -106,6 +106,8 @@ msgid ""
 "<span><i class=\"oi oi-arrow-right\"/> How to configure your PayPal "
 "account</span>"
 msgstr ""
+"<span><i class=\"oi oi-arrow-right\"/> Cómo configurar su cuenta de "
+"PayPal</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -628,7 +630,7 @@ msgstr "Credenciales"
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_stripe
 msgid "Credit & Debit Card"
-msgstr "Tarjeta de crédito & débito"
+msgstr "Tarjeta de crédito y débito"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_razorpay
@@ -1438,14 +1440,14 @@ msgstr "Elija solamente una opción de pago."
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "Please set a positive amount."
-msgstr ""
+msgstr "Establezca una cantidad positiva. "
 
 #. module: payment
 #. odoo-python
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "Please set an amount lower than %s."
-msgstr ""
+msgstr "Establezca una cantidad menor que %s."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning
@@ -1561,7 +1563,7 @@ msgstr "Modelo de documento relacionado"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__require_currency
 msgid "Require Currency"
-msgstr ""
+msgstr "Se requiere divisa"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_sepa_direct_debit
@@ -1980,7 +1982,7 @@ msgstr "Aún no hay un token creado. "
 #: code:addons/payment/wizards/payment_link_wizard.py:0
 #, python-format
 msgid "There is nothing to be paid."
-msgstr ""
+msgstr "No hay nada por pagar. "
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay

@@ -7,10 +7,10 @@
 # Aimée Mendoza Sánchez, 2023
 # Iran Villalobos López, 2023
 # Lucia Pacheco, 2023
-# Fernanda Alvarez, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
+# Fernanda Alvarez, 2023
 # Martin Trigaux, 2023
 # 
 msgid ""
@@ -64,7 +64,7 @@ msgstr "%(line_description)s (Borrador)"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
 msgid "&amp;nbsp;"
-msgstr "y"
+msgstr "&amp;nbsp;"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
@@ -497,7 +497,7 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/>Expirado"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Cotizaciones\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -649,7 +649,7 @@ msgstr "<span>Impuestos</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.payment_link_wizard_view_form
 msgid "<span>This payment will confirm the quotation.</span>"
-msgstr ""
+msgstr "<span>Este pago confirmará la cotización.</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -841,6 +841,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Según la configuración del producto, se puede calcular de forma automática la cantidad enviada:\n"
+"  - Manual: la cantidad se establece de forma manual en la línea\n"
+"  - Analítica de gastos: la cantidad equivale a la suma de los gastos registrados\n"
+"  - Hojas de horas: la cantidad equivale a la suma de las horas registradas en las tareas vinculadas a esta línea de venta\n"
+"  - Movimientos del inventario: la cantidad viene de las recolecciones confirmadas\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__acc_number
@@ -928,7 +933,7 @@ msgstr "Le permite enviar una factura proforma."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
 msgid "Already Paid"
-msgstr ""
+msgstr "Ya se pagó"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_invoiced
@@ -1185,7 +1190,7 @@ msgstr "Capturar transacción"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Catalog"
-msgstr ""
+msgstr "Catálogo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_category_id
@@ -1375,7 +1380,7 @@ msgstr "Crear factura"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_tree
 msgid "Create Invoices"
-msgstr ""
+msgstr "Crear facturas"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_invoice_salesteams
@@ -2164,7 +2169,7 @@ msgstr "Importar plantilla de productos"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_product_catalog_search_view
 msgid "In the Order"
-msgstr ""
+msgstr "En la orden"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3986,7 +3991,7 @@ msgstr "Envío"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__show_confirmation_message
 msgid "Show Confirmation Message"
-msgstr ""
+msgstr "Mostrar mensaje de confirmación"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4706,12 +4711,12 @@ msgstr "Tipo de la actividad de excepción registrada."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a customer..."
-msgstr ""
+msgstr "Comience a escribir para encontrar a un cliente..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a product..."
-msgstr ""
+msgstr "Comience a escribir para encontrar un producto..."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
@@ -4752,7 +4757,7 @@ msgstr "Unidad de medida"
 #: code:addons/sale/static/src/js/product_catalog/sale_order_line/sale_order_line.xml:0
 #, python-format
 msgid "Unit price:"
-msgstr ""
+msgstr "Precio unitario:"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
@@ -4982,7 +4987,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/product_catalog/sale_order_line/sale_order_line.xml:0
 #, python-format
 msgid "You can't edit this product in the catalog."
-msgstr ""
+msgstr "No puede editar este producto en el catálogo."
 
 #. module: sale
 #. odoo-python

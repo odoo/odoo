@@ -2,13 +2,21 @@
 # This file contains the translation of the following modules:
 # 	* website_profile
 # 
+# Translators:
+# Foldi Robert <foldirobert@nexterp.ro>, 2023
+# Cozmin Candea <office@terrabit.ro>, 2023
+# Martin Trigaux, 2023
+# Dorin Hongu <dhongu@gmail.com>, 2023
+# Hongu Cosmin <cosmin513@gmail.com>, 2023
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~16.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"POT-Creation-Date: 2023-05-30 05:10+0000\n"
+"PO-Revision-Date: 2023-05-30 09:25+0000\n"
+"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2023\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -16,19 +24,16 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
 
 #. module: website_profile
-#: model:mail.template,subject:website_profile.validation_email
-msgid "${object.company_id.name} Profile validation"
-msgstr ""
-
-#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
-msgid "&amp;times;"
+msgid ""
+"!<br/>\n"
+"            Did not receive it?"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
 msgid "(not verified)"
-msgstr ""
+msgstr "(nu e verificat)"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -40,125 +45,125 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid ". Try another search."
-msgstr ""
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
-msgid "40%"
-msgstr ""
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
-msgid "<i class=\"fa fa-arrow-right mr-1\"/>Check all available badges"
-msgstr ""
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
-msgid "<i class=\"fa fa-arrow-right\"/> Check available badges"
-msgstr ""
+msgstr ". Încercați o altă căutare."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<i class=\"fa fa-pencil fa-1g float-sm-none float-md-left\" title=\"Edit\"/>"
+msgid "<i class=\"fa fa-pencil fa-1g float-sm-none float-md-start\" title=\"Edit\"/>"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
-msgid "<i class=\"fa fa-pencil mr-1\"/>EDIT"
+msgid "<i class=\"fa fa-pencil me-1\"/>EDIT"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_header
-msgid "<i class=\"fa fa-pencil mr-2\"/>EDIT PROFILE"
+msgid "<i class=\"fa fa-pencil me-2\"/>EDIT PROFILE"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+msgid "<i class=\"oi oi-arrow-right me-1\"/>All Badges"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+msgid "<i class=\"oi oi-arrow-right\"/> All Badges"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 msgid "<i class=\"text-muted\"> awarded users</i>"
+msgstr "<i class=\"text-muted\">utilizatori premiați</i>"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+msgid "<option value=\"\">Country...</option>"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
-msgid "<small class=\"font-weight-bold mr-2\">Current rank:</small>"
+msgid "<small class=\"fw-bold me-2\">Current rank:</small>"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
-msgid "<small class=\"font-weight-bold\">Badges</small>"
+msgid "<small class=\"fw-bold\">Badges</small>"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
-msgid "<small class=\"font-weight-bold\">Joined</small>"
+msgid "<small class=\"fw-bold\">Joined</small>"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+msgid "<span class=\"fw-bold\">Biography</span>"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+msgid "<span class=\"fw-bold\">City</span>"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+msgid "<span class=\"fw-bold\">Country</span>"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+msgid "<span class=\"fw-bold\">Email</span>"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+msgid "<span class=\"fw-bold\">Name</span>"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+msgid "<span class=\"fw-bold\">Public profile</span>"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
+msgid "<span class=\"fw-bold\">Website</span>"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
-msgid ""
-"<span class=\"badge badge-danger font-weight-normal px-2 py-1 "
-"m-1\">Unpublished</span>"
-msgstr ""
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">Biography</span>"
-msgstr ""
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">City</span>"
-msgstr ""
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">Country</span>"
-msgstr ""
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">Email</span>"
-msgstr ""
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">Public profile</span>"
-msgstr ""
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">Real name</span>"
-msgstr ""
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">Website</span>"
+msgid "<span class=\"text-muted small fw-bold\">Badges</span>"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
-msgid "<span class=\"text-muted small font-weight-bold\">Badges</span>"
-msgstr ""
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
-msgid "<span class=\"text-muted small font-weight-bold\">XP</span>"
+msgid "<span class=\"text-muted small fw-bold\">XP</span>"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "<span class=\"text-muted\">Badges</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">Insigne</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "<span class=\"text-muted\">XP</span>"
-msgstr ""
+msgstr "<span class=\"text-muted\">XP</span>"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid ""
 "<span id=\"email_validated_message\">Congratulations! Your email has just "
 "been validated.</span>"
+msgstr ""
+"<span id=\"email_validated_message\">Felicitări! E-mail-ul dumneavoastră a "
+"fost validat.</span>"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "<strong class=\"mb-3 text-white me-2\">Rank by:</strong>"
 msgstr ""
 
 #. module: website_profile
@@ -174,16 +179,16 @@ msgid ""
 "                <tr>\n"
 "                    <td valign=\"middle\">\n"
 "                        <span style=\"font-size: 20px; font-weight: bold;\">\n"
-"                            ${object.company_id.name} Profile validation\n"
+"                            <t t-out=\"object.company_id.name or ''\">YourCompany</t> Profile validation\n"
 "                        </span>\n"
 "                    </td>\n"
-"                    <td valign=\"middle\" align=\"right\">\n"
-"                        <img src=\"/logo.png?company=${user.company_id.id}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" alt=\"${user.company_id.name}\"/>\n"
+"                    <td t-if=\"not user.company_id.uses_default_logo\" valign=\"middle\" align=\"right\">\n"
+"                        <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\">\n"
 "                    </td>\n"
 "                </tr>\n"
 "                <tr>\n"
 "                    <td colspan=\"2\" style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\">\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -196,11 +201,11 @@ msgid ""
 "                <tr>\n"
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                            Hello ${object.name},<br/><br/>\n"
-"                            You have been invited to validate your email in order to get access to \"${object.company_id.name}\" website.\n"
+"                            Hello <t t-out=\"object.name or ''\">Marc Demo</t>,<br><br>\n"
+"                            You have been invited to validate your email in order to get access to \"<t t-out=\"object.company_id.name or ''\">YourCompany</t>\" website.\n"
 "                            To validate your email, please click on the following link:\n"
 "                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                                <a href=\"${ctx.get('token_url')}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                                <a t-att-href=\"ctx.get('token_url')\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                                    Validate my account\n"
 "                                </a>\n"
 "                            </div>\n"
@@ -210,7 +215,7 @@ msgid ""
 "                </tr>\n"
 "                <tr>\n"
 "                    <td style=\"text-align:center;\">\n"
-"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\">\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -222,20 +227,16 @@ msgid ""
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\" font-family: 'Verdana Regular'; color: #454748; min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr>\n"
 "                    <td valign=\"middle\" align=\"left\">\n"
-"                         ${user.company_id.name}\n"
+"                         <t t-out=\"user.company_id.name or ''\">YourCompany</t>\n"
 "                    </td>\n"
 "                    <td valign=\"middle\" align=\"right\" style=\"opacity: 0.7;\">\n"
-"                        ${user.company_id.phone}\n"
-"                        % if user.company_id.email:\n"
-"                            | <a href=\"'mailto:%s' % ${user.company_id.email}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                                ${user.company_id.email}\n"
-"                            </a>\n"
-"                        % endif\n"
-"                        % if user.company_id.website:\n"
-"                            | <a href=\"${user.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
-"                                ${user.company_id.website}\n"
-"                            </a>\n"
-"                        % endif\n"
+"                        <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                        <t t-if=\"user.company_id.email\">\n"
+"                            | <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                        </t>\n"
+"                        <t t-if=\"user.company_id.website\">\n"
+"                            | <a t-attf-href=\"{{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
+"                        </t>\n"
 "                    </td>\n"
 "                </tr>\n"
 "            </table>\n"
@@ -257,123 +258,163 @@ msgid ""
 msgstr ""
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid "<u>Correct your email address</u>"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid "<u>Send Again</u>"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid "<u>here</u>"
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "About"
-msgstr ""
+msgstr "Despre"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
 msgid "All Users"
+msgstr "Toți utilizatorii"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "All time"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
+#: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Badges"
-msgstr ""
+msgstr "Insigne"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 msgid ""
 "Besides gaining reputation with your questions and answers,\n"
-"                    you receive badges for being especially helpful.<br class=\"d-none d-lg-inline-block\"/>Badges\n"
-"                    appear on your profile page, and your posts."
+"                        you receive badges for being especially helpful.<br class=\"d-none d-lg-inline-block\"/>Badges\n"
+"                        appear on your profile page, and your posts."
 msgstr ""
+"Pe lângă câștigarea reputației cu întrebările și răspunsurile dumneavoastră,\n"
+"primiți insigne deoarece ați fost deosebit de util.<br class=\"d-none d-lg-inline-block\"/> Insignele\n"
+"apar pe pagina profilului dumneavoastră și în postări."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Biography"
-msgstr ""
+msgstr "Biografie"
+
+#. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__can_publish
+msgid "Can Publish"
+msgstr "Poate publica"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Clear"
-msgstr ""
+msgstr "Golește"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid "Close"
-msgstr ""
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "Country..."
-msgstr ""
+msgstr "Închide"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Edit"
-msgstr ""
+msgstr "Editare"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Edit Profile"
+msgstr "Editează profil"
+
+#. module: website_profile
+#: model:mail.template,name:website_profile.validation_email
+msgid "Forum: Email Verification"
 msgstr ""
 
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_gamification_badge
 msgid "Gamification Badge"
+msgstr "Insignă Competiție"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
+msgid "Get"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Home"
-msgstr ""
+msgstr "Acasă"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "How do I earn badges?"
-msgstr ""
+msgstr "Cum câștig insigne?"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "How do I score more points?"
-msgstr ""
+msgstr "Cum scot mai multe puncte?"
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
-msgid "It appears your email has not been verified.<br/>"
-msgstr ""
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__is_published
+msgid "Is Published"
+msgstr "Este publicat"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "Keep learning with"
-msgstr ""
+msgstr "Continuați să învățați cu"
 
 #. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_website__karma_profile_min
 msgid "Minimal karma to see other user's profile"
-msgstr ""
+msgstr "Karma minimă pentru a vedea profilul altui utilizator"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Mobile sub-nav"
-msgstr ""
+msgstr "Sub-nav mobil"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "More info"
-msgstr ""
+msgstr "Alte informații"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Nav"
-msgstr ""
+msgstr "Nav"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Next rank:"
+msgstr "Următorul rang:"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_main
+msgid "No Leaderboard Yet :("
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
-msgid "No badge yet"
-msgstr ""
+msgid "No badges yet!"
+msgstr "Nu există ecusoane încă!"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
 msgid "No user found for"
-msgstr ""
+msgstr "Nu a fost găsit niciun utilizator pentru"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
@@ -381,72 +422,116 @@ msgid ""
 "Please enter a valid email address in order to receive notifications from "
 "answers or comments."
 msgstr ""
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
-msgid "Rank badge"
-msgstr ""
+"Vă rugăm să introduceți o adresă de e-mail validă pentru a primi notificări "
+"de la răspunsuri sau comentarii."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "Ranks"
-msgstr ""
+msgstr "Ranguri"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.private_profile
 msgid "Return to the website."
-msgstr ""
+msgstr "Reveniți pe site-ul web."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search"
-msgstr ""
+msgstr "Căutare"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search courses"
-msgstr ""
+msgstr "Căutați cursuri"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Search users"
+msgstr "Căutați utilizatori"
+
+#. module: website_profile
+#: model:mail.template,description:website_profile.validation_email
+msgid "Sent to forum visitors to confirm their mail address"
 msgstr ""
+
+#. module: website_profile
+#: model:ir.model.fields,help:website_profile.field_gamification_badge__website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+"URL-ul complet pentru accesarea documentului prin intermediul site-ului web."
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "This month"
+msgstr "Luna aceasta"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.private_profile
 msgid "This profile is private!"
-msgstr ""
+msgstr "Acest profil este privat!"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "This week"
+msgstr "Săpt. curentă"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "Unpublished"
-msgstr ""
+msgstr "Nepublicat"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Update"
-msgstr ""
+msgstr "Actualizare"
+
+#. module: website_profile
+#: model:ir.model,name:website_profile.model_res_users
+msgid "User"
+msgstr "Utilizator"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "User rank"
+msgstr "Rangul utilizatorului"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
+msgid "Users"
+msgstr "Utilizatori"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid "Verification Email sent to"
 msgstr ""
 
 #. module: website_profile
-#: model:ir.model,name:website_profile.model_res_users
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
-msgid "Users"
-msgstr ""
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_published
+msgid "Visible on current website"
+msgstr "Vizibil pe site-ul curent"
 
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_website
 msgid "Website"
-msgstr ""
+msgstr "Site web"
+
+#. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_url
+msgid "Website URL"
+msgstr "URL website"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "When you finish a course or reach milestones, you're awarded badges."
-msgstr ""
+msgstr "Când terminați un curs sau ajungeți la repere, vi se acordă insigne."
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+#: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
+msgid "XP"
+msgstr "XP"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -455,20 +540,80 @@ msgid ""
 "content. Points can also be earned on the forum. Follow this link to the "
 "guidelines of the forum."
 msgstr ""
+"Puteți înscrie mai multe puncte răspunzând la întrebări la sfârșitul "
+"fiecărui curs. Punctele pot fi câștigate și pe forum. Urmați acest link "
+"către liniile directoare ale forumului."
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
-msgid "breadcrumb"
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid ""
+"Your Account has not yet been verified.<br/>\n"
+"            Click"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid "Your account does not have an email set up. Please set it up on"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
+msgid "breadcrumb"
+msgstr "breadcrumb"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid "or"
+msgstr "sau"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "point"
+msgstr "punct"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+msgid "this month"
+msgstr "luna aceasta"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+msgid "this week"
+msgstr "această săptămână"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid "to receive a verification email"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
 msgid "xp"
+msgstr "xp"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
+msgid ""
+"xp\n"
+"                        to level up!"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
+msgid "your account settings"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.profile_next_rank_card
+msgid ""
+"{{ '%s/%s xp' % (user.karma, next_rank_id.karma_min) if next_rank_id else "
+"''}}"
+msgstr ""
+
+#. module: website_profile
+#: model:mail.template,subject:website_profile.validation_email
+msgid "{{ object.company_id.name }} Profile validation"
 msgstr ""
 
 #. module: website_profile

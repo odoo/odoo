@@ -8,8 +8,8 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
-# Fernanda Alvarez, 2023
 # Martin Trigaux, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-16 13:48+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,7 +61,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
 msgid "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Fecha\"/>"
+msgstr "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Fecha\" title=\"Fecha\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -89,6 +89,18 @@ msgid ""
 "                        Are you sure you want to delete these employees?\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('has_timesheet', '=', False)]}\">\n"
+"                        No puede eliminar empleados con hojas de horas.\n"
+"                        <span attrs=\"{'invisible': [('has_active_employee', '=', False)]}\">\n"
+"                            Puede archivar estos empleados o eliminar antes todas sus hojas de horas.\n"
+"                        </span>\n"
+"                        <span attrs=\"{'invisible': [('has_active_employee', '=', True)]}\" groups=\"hr_timesheet.group_hr_timesheet_approver\">\n"
+"                            Primero elimine todas sus hojas de horas.\n"
+"                        </span>\n"
+"                    </span>\n"
+"                    <span attrs=\"{'invisible': [('has_timesheet', '=', True)]}\">\n"
+"                        ¿Está seguro de que desea eliminar a estos empleados?\n"
+"                    </span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
@@ -497,6 +509,8 @@ msgstr "Codificación de UdM"
 msgid ""
 "Generate timesheets for validated time off requests and public holidays"
 msgstr ""
+"Genere hojas de horas para solicitudes de tiempo personal validado y días "
+"festivos"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
@@ -607,7 +621,7 @@ msgstr "Es un proyecto interno"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__job_title
 msgid "Job Title"
-msgstr "Título del trabajo"
+msgstr "Puesto de trabajo"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_hr_employee_delete_wizard__write_uid
@@ -678,7 +692,7 @@ msgstr "Actualizaciones de mi departamento"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.rating_rating_view_search_project_inherited
 msgid "My Team's Ratings"
-msgstr "Valoraciones de mi equipo"
+msgstr "Calificaciones de mi equipo"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
@@ -691,7 +705,7 @@ msgstr "Actualizaciones de mi equipo"
 #: model:ir.ui.menu,name:hr_timesheet.timesheet_menu_activity_user
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search_base
 msgid "My Timesheets"
-msgstr "Mi hoja de horas"
+msgstr "Mis hojas de horas"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -734,7 +748,7 @@ msgstr "De acuerdo"
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__overtime
 msgid "Overtime"
-msgstr "Horas extras"
+msgstr "Horas adicionales"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__parent_task_id
@@ -746,7 +760,7 @@ msgstr "Tarea padre"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__partner_id
 msgid "Partner"
-msgstr "Partner"
+msgstr "Contacto"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -791,7 +805,7 @@ msgstr "Unidad de tiempo del proyecto"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__is_project_overtime
 msgid "Project in Overtime"
-msgstr "Proyecto en horas extra"
+msgstr "Proyecto en horas adicionales"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_project
@@ -801,7 +815,7 @@ msgstr "Hojas de horas del proyecto"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__readonly_timesheet
 msgid "Readonly Timesheet"
-msgstr ""
+msgstr "Hojas de hora solo para lectura"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
@@ -814,8 +828,8 @@ msgid ""
 "Record your timesheets in an instant by pressing Shift + the corresponding "
 "hotkey to add 15min to your projects."
 msgstr ""
-"Registre sus hojas de horas en un instante al hacer clic en Shift + la tecla"
-" rápida correspondiente para agregar 15 minutos a sus proyectos."
+"Registre sus hojas de horas al instante, haga clic en Shift + la tecla "
+"rápida correspondiente para agregar 15 minutos a sus proyectos."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -968,7 +982,7 @@ msgstr "El proyecto interno de una empresa debe estar en esa misma empresa."
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "There are no timesheets."
-msgstr "No hay hoja de horas."
+msgstr "No hay hojas de horas."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1298,7 +1312,7 @@ msgstr "Total"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_tree2_inherited
 msgid "Total Allocated Time"
-msgstr ""
+msgstr "Tiempo asignado total"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -1317,7 +1331,7 @@ msgstr "Horas totales"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__total_timesheet_time
 msgid "Total Timesheet Time"
-msgstr "Tiempo total de las hojas de horas"
+msgstr "Tiempo total de la hoja de horas"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__total_timesheet_time
@@ -1325,8 +1339,8 @@ msgid ""
 "Total number of time (in the proper UoM) recorded in the project, rounded to"
 " the unit."
 msgstr ""
-"Tiempo total (en la UdM adecuada) registrado en este proyecto, redondeado  a"
-" la unidad."
+"Tiempo total (en la UdM adecuada) registrado en este proyecto, redondeado a "
+"la unidad."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1342,7 +1356,7 @@ msgid ""
 " customers."
 msgstr ""
 "Lleve el seguimiento de las horas que dedica por proyecto todos los días y "
-"factura este tiempo a sus clientes."
+"facture este tiempo a sus clientes."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1391,7 +1405,7 @@ msgstr "Usuario: solo las hojas de horas propias"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_uom_uom__timesheet_widget
 msgid "Widget"
-msgstr "Asistente"
+msgstr "Widget"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1414,8 +1428,8 @@ msgid ""
 "analytic account. Please change this account, or reactivate the current one "
 "to timesheet on the project."
 msgstr ""
-"No puede registrar hojas de horas a este proyecto porque está vinculado a "
-"una cuenta analítica inactiva, cambie de cliente o reactive el proyecto "
+"No puede registrar hojas de horas en este proyecto porque está vinculado a "
+"una cuenta analítica inactiva. Cambie de cuenta o reactive el proyecto "
 "actual en las hojas de horas del proyecto."
 
 #. module: hr_timesheet

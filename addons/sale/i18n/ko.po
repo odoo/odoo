@@ -3,9 +3,9 @@
 # 	* sale
 # 
 # Translators:
-# Daye Jeong, 2023
-# Sarah Park, 2023
 # Martin Trigaux, 2023
+# Sarah Park, 2023
+# Daye Jeong, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:10+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Daye Jeong, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -486,7 +486,7 @@ msgstr "<i class=\"fa fa-fw fa-clock-o\"/> 만료됨"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_kanban
 msgid "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-money me-1\" aria-label=\"Quotations\" role=\"img\"/>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
@@ -524,6 +524,12 @@ msgid ""
 "                whether it's a storable product, a consumable or a service.\n"
 "            </p>"
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                새로운 품목 생성하기\n"
+"            </p><p>\n"
+"                판매 또는 구매용 품목 전체를 설정해야 합니다.\n"
+"                저장용이든 소모품이든, 또는 서비스든 무관합니다.\n"
+"            </p>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -637,7 +643,7 @@ msgstr "<span>세무</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.payment_link_wizard_view_form
 msgid "<span>This payment will confirm the quotation.</span>"
-msgstr ""
+msgstr "<span>이 금액을 결제하시면 견적서를 확정하실 수 있습니다.</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -824,6 +830,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"품목의 환경 설정에 따라, 출고 수량은 자동으로 계산될 수 있습니다:\n"
+"  - 수동: 수량은 수동으로 설정됩니다\n"
+"  - 비용 분석: 수량은 게시된 비용의 합계입니다\n"
+"  - 작업기록: 수량은 이 판매 내역과 연결된 작업에 기록된 시간의 합입니다\n"
+"  - 재고 이동: 확정된 재고 이동에서 수량이 계산됩니다\n"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_provider_onboarding_wizard__acc_number
@@ -911,7 +922,7 @@ msgstr "견적송장을 전송할 수 있습니다."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__amount_paid
 msgid "Already Paid"
-msgstr ""
+msgstr "이미 결제가 완료되었습니다"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__amount_invoiced
@@ -1161,7 +1172,7 @@ msgstr "거래 포착"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Catalog"
-msgstr ""
+msgstr "카탈로그"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_category_id
@@ -2110,7 +2121,7 @@ msgstr "품목 가져오기"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_product_catalog_search_view
 msgid "In the Order"
-msgstr ""
+msgstr "주문서 상"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3087,7 +3098,7 @@ msgstr "상품안내서"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__product_catalog_product_is_in_sale_order
 msgid "Product Catalog Product Is In Sale Order"
-msgstr ""
+msgstr "품목 카탈로그 품목이 판매 주문 중입니다"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__categ_id
@@ -3687,7 +3698,7 @@ msgstr "판매: 주문 승인"
 #. module: sale
 #: model:mail.template,name:sale.mail_template_sale_payment_executed
 msgid "Sales: Payment Done"
-msgstr ""
+msgstr "판매: 결제 완료"
 
 #. module: sale
 #: model:mail.template,name:sale.email_template_edi_sale
@@ -3848,7 +3859,7 @@ msgstr "주문 확인 시 고객에게 전송"
 msgid ""
 "Sent to customers when a payment is received but doesn't immediately confirm"
 " their order"
-msgstr ""
+msgstr "주문이 즉시 승인되지는 않았으나 결제가 완료된 경우 고객에게 발송"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__sequence
@@ -3894,7 +3905,7 @@ msgstr "배송"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_link_wizard__show_confirmation_message
 msgid "Show Confirmation Message"
-msgstr ""
+msgstr "확인 메시지 표시"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4107,7 +4118,7 @@ msgstr "세금 포함"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__tax_id
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "Taxes"
-msgstr "세무"
+msgstr "세금"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__deposit_taxes_id
@@ -4269,7 +4280,7 @@ msgstr "이 판매주문서에 연결되어 있는 미결 청구서 금액은 �
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "The order is not in a state requiring customer payment."
-msgstr ""
+msgstr "주문이 고객 결제 요청 상태가 아닙니다."
 
 #. module: sale
 #. odoo-python
@@ -4571,12 +4582,12 @@ msgstr "레코드에 있는 예외 활동의 유형입니다."
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a customer..."
-msgstr ""
+msgstr "내용을 입력하여 고객을 검색합니다"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Type to find a product..."
-msgstr ""
+msgstr "내용을 입력하여 품목을 검색합니다"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
@@ -4617,7 +4628,7 @@ msgstr "단위"
 #: code:addons/sale/static/src/js/product_catalog/sale_order_line/sale_order_line.xml:0
 #, python-format
 msgid "Unit price:"
-msgstr ""
+msgstr "단가:"
 
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_form_action
@@ -4841,7 +4852,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/product_catalog/sale_order_line/sale_order_line.xml:0
 #, python-format
 msgid "You can't edit this product in the catalog."
-msgstr ""
+msgstr "카탈로그에서 이 품목을 편집할 수 없습니다."
 
 #. module: sale
 #. odoo-python

@@ -3,10 +3,10 @@
 # 	* sale_purchase
 # 
 # Translators:
-# Fernanda Alvarez, 2023
 # Lucia Pacheco, 2023
 # Iran Villalobos López, 2023
 # Martin Trigaux, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,20 +58,20 @@ msgid ""
 msgstr ""
 "<span id=\"display_invoice_alert\" position=\"after\">\n"
 "                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
-"                   ¡Hay órdenes de compra activas vinculadas a esta orden de venta que no se cancelan de forma automática! <br/>\n"
+"                   Hay órdenes de compra activas vinculadas a esta orden de venta que no se cancelan de forma automática. <br/>\n"
 "                </span>\n"
 "            </span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr "Excepcion(es) producida(s) en la(s) orden(es) de compra:"
+msgstr "Excepciones ocurridas en las órdenes de compra:"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr "Excepcion(es) producida(s) en la(s) orden(es) de venta:"
+msgstr "Excepciones ocurridas en las órdenes de venta:"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -94,14 +94,14 @@ msgid ""
 "on the product."
 msgstr ""
 "Si se encuentra seleccionado, cada vez que venda este producto a través de "
-"una orden de venta se creará automáticamente una solicitud de cotización "
-"para la compra del producto. Consejo: no olvide establecer un proveedor en "
+"una orden de venta se creará una solicitud de cotización de forma automática"
+" para la compra del producto. Consejo: no olvide establecer un proveedor en "
 "el producto."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
 msgid "Manual actions may be needed."
-msgstr "Puede que se requiera acciones manuales"
+msgstr "Puede que se necesiten acciones manuales."
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
@@ -123,7 +123,7 @@ msgstr "Número de artículos de compra generados"
 #: code:addons/sale_purchase/models/sale_order_line.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr "¡Se ha reducido la cantidad ordenada!"
+msgstr "Se ha reducido la cantidad ordenada"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__sale_line_id
@@ -232,8 +232,7 @@ msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
 "this product."
 msgstr ""
-"No hay un proveedor asociado al producto %s. Defina un proveedor para este "
-"producto."
+"No hay un proveedor asociado al producto %s, defina uno para este producto."
 
 #. module: sale_purchase
 #. odoo-python

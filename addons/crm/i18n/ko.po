@@ -6,8 +6,8 @@
 # Heesoo Choi, 2023
 # Linkup <link-up@naver.com>, 2023
 # JH CHOI <hwangtog@gmail.com>, 2023
-# Sarah Park, 2023
 # Martin Trigaux, 2023
+# Sarah Park, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-30 05:08+0000\n"
 "PO-Revision-Date: 2023-05-30 09:25+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Sarah Park, 2023\n"
 "Language-Team: Korean (https://app.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -147,7 +147,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "<i class=\"fa fa-info-circle me-2\" title=\"Assigned Lead Count\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-info-circle me-2\" title=\"Assigned Lead Count\"/>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -229,7 +229,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 msgid "<span class=\"oe_grey p-2\"> %</span>"
-msgstr ""
+msgstr "<span class=\"oe_grey p-2\"> %</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_member_view_form
@@ -244,7 +244,7 @@ msgstr "<span class=\"oe_inline\"> / </span>"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
 msgid "<span class=\"text-bg-danger\">Lost</span>"
-msgstr ""
+msgstr "<span class=\"text-bg-danger\">실패</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
@@ -252,6 +252,8 @@ msgid ""
 "<span> leads assigned this month\n"
 "                            on a maximum of </span>"
 msgstr ""
+"<span> 당월 할당 영업제안\n"
+"                            최대 </span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_merge_summary
@@ -536,7 +538,7 @@ msgstr "담당자"
 #. module: crm
 #: model:ir.actions.client,name:crm.crm_lead_action_configure_properties_field
 msgid "Add Properties"
-msgstr ""
+msgstr "속성 추가"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1363,7 +1365,7 @@ msgstr "거래가 성사되면 영업기회를 드래그해서 <b>거래 성사<
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Duration: %s"
-msgstr ""
+msgstr "소요 시간: %s"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lead_action_forecast
@@ -1460,7 +1462,7 @@ msgstr "영업 기회를 얻기까지의 예상일"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_exceeded
 msgid "Exceed monthly lead assignement"
-msgstr ""
+msgstr "월간 영업제안 할당 초과"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date_deadline
@@ -1601,7 +1603,7 @@ msgstr "%(source_name)s에서"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "From %(source_name)s: %(source_subject)s"
-msgstr ""
+msgstr "%(source_name)s에서: %(source_subject)s"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -2190,7 +2192,7 @@ msgstr "아무 일정도 잡혀 있지 않습니다"
 msgid ""
 "Looks like nothing is planned. :(<br><br><i>Tip: Schedule activities to keep"
 " track of everything you have to do!</i>"
-msgstr ""
+msgstr "계획된 내용이 없습니다: <br><br><i> 참고: 해야 할 업무 전체를 관리하기 위해 활동을 계획해보세요."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -2216,7 +2218,7 @@ msgstr "실패 수"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Lost Lead"
-msgstr ""
+msgstr "영업제안 실패"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__lost_reason_id
@@ -2327,7 +2329,7 @@ msgstr "매체:"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Meeting scheduled at %s"
-msgstr ""
+msgstr "%s에 예약되어 있는 회의"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
@@ -3290,7 +3292,7 @@ msgstr "영업기회에 반복계획을 설정하여 계약의 갱신주기를 �
 #: model:ir.model.fields,field_description:crm.field_crm_lead_lost__set_reason
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_lost_view_form
 msgid "Set a Loss Reason"
-msgstr ""
+msgstr "실패 사유 설정"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
@@ -3476,7 +3478,7 @@ msgstr "상세 주소"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Subject: "
-msgstr ""
+msgstr "제목:"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__subtype_id
@@ -3745,7 +3747,7 @@ msgstr "향후 12개월"
 msgid ""
 "True if the monthly lead assignment count is greater than the maximum "
 "assignment limit, false otherwise."
-msgstr ""
+msgstr "월별 영업제안 할당 숫자가 최대 할당 한도보다 크면 True 이고, 그렇지 않은 경우에는 False 입니다."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -4068,18 +4070,18 @@ msgstr "우편번호"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"0123456789\""
-msgstr ""
+msgstr "예; \"0123456789\""
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"Monthly\""
-msgstr ""
+msgstr "예: 월간"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "e.g. \"email@address.com\""
-msgstr ""
+msgstr "예: email@address.com"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_stage_form
