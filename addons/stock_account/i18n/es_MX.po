@@ -8,6 +8,7 @@
 # Martin Trigaux, 2023
 # Lucia Pacheco, 2023
 # Iran Villalobos López, 2023
+# Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Iran Villalobos López, 2023\n"
+"Last-Translator: Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -922,7 +923,7 @@ msgstr "Valoración"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__company_currency_id
 msgid "Valuation Currency"
-msgstr "Divisa de la valoración"
+msgstr "Valoración de la divisa"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.product_product_stock_tree_inherit_stock_account
@@ -958,14 +959,14 @@ msgstr "Valor a la mano:"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_product_product__value_svl
 msgid "Value Svl"
-msgstr "Valor Svl"
+msgstr "Valor de la capa de valoración de acciones"
 
 #. module: stock_account
 #. odoo-python
 #: code:addons/stock_account/models/product.py:0
 #, python-format
 msgid "Warning"
-msgstr "Alerta"
+msgstr "Advertencia"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_valuation_account_id
@@ -973,7 +974,7 @@ msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
-"Cuando la valoración de inventario automatizada está habilitada en un "
+"Cuando la valoración automatizada de inventario está habilitada en un "
 "producto, esta cuenta mantendrá el valor actual de los productos."
 
 #. module: stock_account
@@ -983,7 +984,7 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"Al realizar una valoración de inventario automatizada, los apuntes contables de contrapartida para todos los movimientos de existencias salientes se registrarán en esta cuenta,\n"
+"Al realizar una valoración de inventario automatizada, se registrarán los apuntes contables de contrapartida para todos los movimientos de en esta cuenta,\n"
 "                a menos que haya una cuenta de valoración específica establecida en la ubicación de destino. Este es el valor predeterminado para todos los productos de esta categoría.\n"
 "                También se puede configurar directamente en cada producto."
 
@@ -994,8 +995,8 @@ msgid ""
 "which entries will be automatically posted when stock moves are processed."
 msgstr ""
 "Al realizar una valoración de inventario automatizada, este es el diario "
-"contable en el que las entradas se publicarán automáticamente cuando se "
-"procesen los movimientos de existencias."
+"contable en el que las entradas se publicarán de manera automática cuando se"
+" procesen los movimientos de existencias."
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_valuation_layer_revaluation
@@ -1050,8 +1051,8 @@ msgid ""
 "You don't have any stock input account defined on your product category. You"
 " must define one before processing this operation."
 msgstr ""
-"No tiene ninguna cuenta de entrada de existencias definida en su categoría "
-"de producto. Debe definir una antes de procesar esta operación."
+"No tiene ninguna cuenta de entrada de valores definida en su categoría de "
+"producto. Debe definir una antes de procesar esta operación."
 
 #. module: stock_account
 #. odoo-python
@@ -1084,7 +1085,7 @@ msgstr ""
 #, python-format
 msgid "You must set a counterpart account on your product category."
 msgstr ""
-"Debe establecer una cuenta de contrapartida en su categoría de producto."
+"Debe establecer una cuenta de contrapartida en la categoría de su producto."
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_revaluation_form_view

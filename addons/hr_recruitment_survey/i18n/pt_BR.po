@@ -4,14 +4,15 @@
 # 
 # Translators:
 # Martin Trigaux, 2023
+# Marcel Savegnago <marcel.savegnago@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-23 09:13+0000\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Marcel Savegnago <marcel.savegnago@gmail.com>, 2023\n"
 "Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +25,7 @@ msgstr ""
 msgid ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant name]</t><br/><br/>\n"
+"        Dear <t t-out=\"object.partner_id.name or 'applicant'\">[applicant name]</t><br><br>\n"
 "        <t>\n"
 "            You've progressed through the recruitment process and we would like you to answer some questions.\n"
 "        </t>\n"
@@ -36,7 +37,7 @@ msgid ""
 "            </a>\n"
 "        </div>\n"
 "        <t t-if=\"object.deadline\">\n"
-"            Please answer the interview for <t t-out=\"format_date(object.deadline)\">[deadline date]</t>.<br/><br/>\n"
+"            Please answer the interview for <t t-out=\"format_date(object.deadline)\">[deadline date]</t>.<br><br>\n"
 "        </t>\n"
 "        <t>\n"
 "            We wish you good luck! Thank you in advance for your participation.\n"
@@ -44,34 +45,6 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 "            "
-msgstr ""
-
-#. module: hr_recruitment_survey
-#: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
-msgid ""
-"<p>Please fill information about you: who you are, what are your education, experience, and activities.\n"
-"    It will help us managing your application.</p>"
-msgstr ""
-
-#. module: hr_recruitment_survey
-#: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
-#: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
-msgid ""
-"<p>Please summarize your education history: schools, location, diplomas, "
-"...</p>"
-msgstr ""
-
-#. module: hr_recruitment_survey
-#: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
-msgid ""
-"<p>Please tell us a bit more about yourself: what are your main activities, "
-"...</p>"
-msgstr ""
-
-#. module: hr_recruitment_survey
-#: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
-msgid ""
-"<p>What are your main knowledge regarding the job you are applying to?</p>"
 msgstr ""
 
 #. module: hr_recruitment_survey
@@ -84,7 +57,7 @@ msgstr ""
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1
 msgid "About you"
-msgstr ""
+msgstr "Sobre você"
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q7
@@ -115,7 +88,6 @@ msgstr ""
 "se candidatam a este trabalho"
 
 #. module: hr_recruitment_survey
-#: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_job_survey_inherit
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.view_hr_job_kanban_inherit
 msgid "Display Interview Form"
 msgstr "Exibir Formulário de Entrevista"
@@ -226,10 +198,30 @@ msgid ""
 msgstr ""
 
 #. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
+msgid ""
+"Please fill information about you: who you are, what are your education, experience, and activities.\n"
+"    It will help us managing your application."
+msgstr ""
+
+#. module: hr_recruitment_survey
 #. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 #, python-format
 msgid "Please provide an applicant name."
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
+msgid ""
+"Please summarize your education history: schools, location, diplomas, ..."
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
+msgid ""
+"Please tell us a bit more about yourself: what are your main activities, ..."
 msgstr ""
 
 #. module: hr_recruitment_survey
@@ -270,7 +262,7 @@ msgstr "Pesquisa"
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_invite
 msgid "Survey Invitation Wizard"
-msgstr ""
+msgstr "Assistente de Convite para Pesquisa"
 
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
@@ -304,6 +296,11 @@ msgstr "Muito importante"
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q3
 msgid "Were you referred by an employee?"
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
+msgid "What are your main knowledge regarding the job you are applying to?"
 msgstr ""
 
 #. module: hr_recruitment_survey

@@ -210,6 +210,10 @@ msgid ""
 "Post as Message: log on document\n"
 "Post as Note: mass SMS with archives"
 msgstr ""
+"SMS 전송 방법 선택:\n"
+"SMS: 대량 SMS\n"
+"메시지 게시: 문서에 로그인\n"
+"메모 게시: 보관 항목 포함된 대량 SMM"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -1047,14 +1051,14 @@ msgstr "SMS 보내기"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.ir_actions_server_view_form
 msgid "Send as"
-msgstr ""
+msgstr "다음으로 보내기"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_base_automation__sms_method
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_method
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_method
 msgid "Send as (SMS)"
-msgstr ""
+msgstr "다음으로 보내기 (SMS)"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_force_send
@@ -1222,6 +1226,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"서버 작업 유형입니다. 다음과 같은 값을 사용할 수 있습니다:\n"
+"- 'Python 코드 실행': 실행할 Python 코드 블록입니다.\n"
+"- '새로운 레코드 생성': 새로운 값을 가진 새 레코드를 생성합니다,\n"
+"- '레코드 업데이트': 레코드 값을 업데이트합니다.\n"
+"- '여러 작업 실행': 여러 가지의 다른 서버 작업을 동작시키는 작업을 정의합니다.\n"
+"- '이메일 전송': 메시지나 메모를 게시하거나 이메일을 전송합니다 (메일 및 채팅 앱).\n"
+"- '팔로워 추가': 레코드에 팔로워를 추가합니다 (메일 및 채팅 앱).\n"
+"- '다음 작업 생성': 작업을 생성합니다 (메일 및 채팅 앱).\n"
+"- 'SMS 문자 메시지 전송': SMS를 전송하고, 문서에 기록합니다 (SMS)."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_acc

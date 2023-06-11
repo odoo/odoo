@@ -6,6 +6,7 @@
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Martin Trigaux, 2023
+# Lucia Pacheco, 2023
 # Fernanda Alvarez, 2023
 # 
 msgid ""
@@ -197,16 +198,16 @@ msgstr ""
 "                Se actualizó su cita.\n"
 "            </t>\n"
 "            La cita <strong t-out=\"object.event_id.appointment_type_id.name or ''\">Programar una demo</strong> ahora está programada para el\n"
-"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>\n"
+"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">04/05/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>\n"
 "        </t>\n"
 "        <t t-elif=\"is_online and target_customer\">\n"
 "            Se actualizó la fecha de su cita con <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t>.\n"
 "            La cita <strong t-out=\"object.event_id.appointment_type_id.name or ''\"></strong> ahora está programada para el\n"
-"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>.\n"
+"            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">04/05/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>.\n"
 "        </t>\n"
 "        <t t-else=\"\">\n"
 "            Se actualizó la fecha de la reunión.\n"
-"            La reunión <strong t-out=\"object.event_id.name or ''\">Seguimiento para propuesta de proyecto</strong> creada por <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t> ahora está programada para el            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">05/04/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>.\n"
+"            La reunión <strong t-out=\"object.event_id.name or ''\">Seguimiento para propuesta de proyecto</strong> creada por <t t-out=\"object.event_id.user_id.partner_id.name or ''\">Colleen Diaz</t> ahora está programada para el            <t t-out=\"object.event_id.get_display_time_tz(tz=object.partner_id.tz) or ''\">04/05/2021 en un horario de (11:00:00 a 11:30:00) (Europa/Bruselas)</t>.\n"
 "        </t>\n"
 "    </p>\n"
 "    <div style=\"text-align: center; padding: 16px 0px 16px 0px;\">\n"
@@ -958,9 +959,9 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
-"Las acciones pueden desencadenar comportamientos específicos como abrir la "
-"vista de calendario o marcar automáticamente como listo cuando se sube un "
-"documento"
+"Las acciones pueden desencadenar acciones específicas como abrir la vista de"
+" calendario o marcar automáticamente un documento como finalizado al momento"
+" de subirlo."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__active
@@ -1365,7 +1366,7 @@ msgstr "Eliminar todos los eventos"
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__next
 msgid "Delete this and following events"
-msgstr "Eliminar este y los eventos siguientes"
+msgstr "Eliminar este y los siguientes eventos"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_popover_delete_wizard__delete__one
@@ -1673,8 +1674,7 @@ msgstr "ID"
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_needaction
 msgid "If checked, new messages require your attention."
 msgstr ""
-"Si se encuentra seleccionado, hay nuevos mensajes que requieren de su "
-"atención."
+"Si se encuentra seleccionado, hay nuevos mensajes que requieren su atención."
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__message_has_error
@@ -1698,7 +1698,7 @@ msgid ""
 "If the time is shown as 'busy', this event will be visible to other people with either the full         information or simply 'busy' written depending on its privacy. Use this option to let other people know         that you are unavailable during that period of time. \n"
 " If the event is shown as 'free', other users know         that you are available during that period of time."
 msgstr ""
-"Si el tiempo se muestra como \"ocupado\", este evento será visible para otras personas con la información         completa o solo como \"ocupado\", según su privacidad. Utilice esta opción para indicarle a otros         que no está disponible durante ese periodo de tiempo. \n"
+"Si el tiempo se define como \"ocupado\", puede que otras personas puedan ver la información         completa del evento o solo se mostrará el texto \"ocupado\", esto dependerá de su privacidad. Utilice esta opción para indicarle a otros         que no está disponible durante ese periodo de tiempo. \n"
 " Si el evento se muestra como \"libre\", los demás usuarios pueden saber         que está disponible durante ese periodo de tiempo."
 
 #. module: calendar
@@ -1709,7 +1709,7 @@ msgstr "Intervalo"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__invalid_email_partner_ids
 msgid "Invalid Email Partner"
-msgstr "Correo electrónico de partner inválido"
+msgstr "Correo electrónico de partner no válido"
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -1844,7 +1844,7 @@ msgstr "Reunión"
 msgid ""
 "Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'"
 msgstr ""
-"La reunión '%(name)s' comienza: '%(start_datetime)s' y finaliza: "
+"La reunión '%(name)s' comienza: '%(start_datetime)s' y termina: "
 "'%(end_datetime)s'"
 
 #. module: calendar
@@ -2102,7 +2102,7 @@ msgstr "Participante"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
 msgid "Partner-related data of the user"
-msgstr "Datos relacionados al partner del usuario."
+msgstr "Datos relacionados al contacto del usuario"
 
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__privacy
@@ -2157,7 +2157,7 @@ msgstr "Regla de recurrencia"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__end_type
 msgid "Recurrence Termination"
-msgstr "Finalizar recurrencia"
+msgstr "Finalización de recurrencia"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__recurrence_update
@@ -2388,7 +2388,7 @@ msgstr "Sincronice su calendario con Outlook"
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
 msgid "Tag name already exists!"
-msgstr "¡El nombre de la etiqueta ya existe!"
+msgstr "Ya hay una etiqueta con este nombre."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
@@ -2420,7 +2420,7 @@ msgid ""
 "The activity is linked to a meeting. Deleting it will remove the meeting as "
 "well. Do you want to proceed?"
 msgstr ""
-"La actividad está vinculada a una reunión. Al eliminarla también se "
+"La actividad está vinculada a una reunión. Si la elimina, también se "
 "eliminará la reunión. ¿Desea continuar?"
 
 #. module: calendar
@@ -2437,7 +2437,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
 msgid "The day must be between 1 and 31"
-msgstr "El día debe ser entre 1 y 31."
+msgstr "El día debe estar entre 1 y 31."
 
 #. module: calendar
 #. odoo-python
@@ -2643,7 +2643,7 @@ msgstr "No puede duplicar un asistente de calendario"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "You have to choose at least one day in the week"
-msgstr "Tiene que elegir al menos un día de la semana."
+msgstr "Debe elegir al menos un día de la semana"
 
 #. module: calendar
 #. odoo-python
@@ -2655,14 +2655,14 @@ msgstr "día %s"
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "e.g. Business Lunch"
-msgstr "Por ejemplo, almuerzo de trabajo"
+msgstr "por ejemplo, almuerzo de trabajo"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "for %s events"
-msgstr "para %s eventos"
+msgstr "para eventos %s"
 
 #. module: calendar
 #. odoo-python

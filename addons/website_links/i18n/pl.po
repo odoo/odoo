@@ -3,22 +3,23 @@
 # 	* website_links
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Dariusz Żbikowski <darek@krokus.com.pl>, 2019
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019
-# Tomasz Leppich <t.leppich@gmail.com>, 2019
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
-# Paweł Wodyński <pw@myodoo.pl>, 2019
-# Maja Stawicka <mjstwck@wp.pl>, 2019
+# Tomasz Leppich <t.leppich@gmail.com>, 2023
+# Piotr Strębski <strebski@gmail.com>, 2023
+# Maja Stawicka <mjstwck@wp.pl>, 2023
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
+# Paweł Wodyński <pw@myodoo.pl>, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-27 09:12+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Maja Stawicka <mjstwck@wp.pl>, 2019\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"POT-Creation-Date: 2023-05-26 06:31+0000\n"
+"PO-Revision-Date: 2023-03-23 10:40+0000\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -26,30 +27,25 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid " clicks"
 msgstr "kliknięć"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid " countries"
 msgstr "kraje"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "# of clicks"
 msgstr "# kliknięć"
-
-#. module: website_links
-#: model_terms:ir.ui.view,arch_db:website_links.share_page_menu
-msgid "<span title=\"Track this page to count clicks\">Track this Page</span>"
-msgstr "<span title=\"Track this page to count clicks\">Śledź tą stronę</span>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -59,7 +55,7 @@ msgstr "<strong>Kampania</strong>"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "<strong>Medium</strong>"
-msgstr "<strong>Medium</strong>"
+msgstr "<strong>Średni</strong>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -89,21 +85,25 @@ msgstr "Cały czas"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Campaign <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"Campaign <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
 "placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
 "the context of your link. It might be an event you want to promote or a "
 "special promotion.\"/>"
 msgstr ""
+"Kampania <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the context of your link. It might be an event you want to promote or a "
+"special promotion.\"/>"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "Copied"
 msgstr "Skopiowano"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
@@ -111,15 +111,16 @@ msgid "Copy"
 msgstr "Kopia"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
+#: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
 msgid "Edit code"
-msgstr ""
+msgstr "Edytuj kod"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "Generating link..."
@@ -131,7 +132,7 @@ msgid "Get tracked link"
 msgstr "Uzyskaj śledzony link"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "Icon"
@@ -149,6 +150,7 @@ msgstr "Ostatni tydzień"
 
 #. module: website_links
 #: model:ir.model,name:website_links.model_link_tracker
+#: model:ir.ui.menu,name:website_links.menu_link_tracker
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 msgid "Link Tracker"
@@ -157,11 +159,15 @@ msgstr "Śledzenie źródeł"
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Medium <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"Medium <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
 "placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
 "the medium used to share your link. It might be an email, or a Facebook Ads "
 "for instance.\"/>"
 msgstr ""
+"Średni <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the medium used to share your link. It might be an email, or a Facebook Ads "
+"for instance.\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -172,6 +178,13 @@ msgstr "Najczęściej klikane"
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid "Newest"
 msgstr "Najnowsze"
+
+#. module: website_links
+#. odoo-javascript
+#: code:addons/website_links/static/src/js/website_links_charts.js:0
+#, python-format
+msgid "No data"
+msgstr "Brak danych"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -190,11 +203,15 @@ msgstr ""
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
 msgid ""
-"Source <i class=\"fa fa-info-circle\" data-toggle=\"tooltip\" data-"
+"Source <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
 "placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
 "the source from which your traffic will come from, Facebook or Twitter for "
 "instance.\"/>"
 msgstr ""
+"Źródło <i class=\"fa fa-info-circle\" data-bs-toggle=\"tooltip\" data-bs-"
+"placement=\"top\" role=\"img\" aria-label=\"Tooltip info\" title=\"Defines "
+"the source from which your traffic will come from, Facebook or Twitter for "
+"instance.\"/>"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
@@ -203,22 +220,22 @@ msgid "Statistics"
 msgstr "Statystyki"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "Stats"
 msgstr "Statystyki"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 #, python-format
 msgid "The code cannot be left empty"
-msgstr ""
+msgstr "Kod nie może pozostać pusty"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
@@ -227,12 +244,12 @@ msgid "There is no data to show"
 msgstr "Brak danych do pokazania"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #: code:addons/website_links/static/src/js/website_links_code_editor.js:0
 #, python-format
 msgid "This code is already taken"
-msgstr ""
+msgstr "Kod jest już zajęty"
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
@@ -250,27 +267,28 @@ msgid "URL"
 msgstr "URL"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "Unable to get recent links"
 msgstr "niemożliwe aby dostać niedawne linki"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links_charts.js:0
 #, python-format
 msgid "Undefined"
 msgstr "Niezdefiniowane"
 
 #. module: website_links
+#. odoo-python
 #: code:addons/website_links/models/link_tracker.py:0
 #, python-format
 msgid "Visit Webpage Statistics"
-msgstr ""
+msgstr "Zobacz statystyki witryny"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "You don't have any recent links."
@@ -282,7 +300,7 @@ msgid "Your tracked links"
 msgstr "Twoje śledzone linki"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
@@ -290,7 +308,7 @@ msgid "cancel"
 msgstr "anuluj"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #, python-format
 msgid "clicks"
@@ -302,21 +320,21 @@ msgid "copy"
 msgstr "kopia"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. Newsletter, Social Network, .."
 msgstr "e.g. Newsletter, Social Network, .."
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. Promotion of June, Winter Newsletter, .."
 msgstr "np. Promocja czerwcowa, zimowa Newslettera, ..."
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/js/website_links.js:0
 #, python-format
 msgid "e.g. Search Engine, Website page, .."
@@ -324,11 +342,11 @@ msgstr "np. Wyszukiwarka, strona internetowa, ..."
 
 #. module: website_links
 #: model_terms:ir.ui.view,arch_db:website_links.create_shorten_url
-msgid "e.g. https://www.odoo.com/page/contactus"
-msgstr "np. https://www.odoo.com/page/contactus"
+msgid "e.g. https://www.odoo.com/contactus"
+msgstr "np. https://www.odoo.com/contactus"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format
@@ -336,7 +354,7 @@ msgid "ok"
 msgstr "ok"
 
 #. module: website_links
-#. openerp-web
+#. odoo-javascript
 #: code:addons/website_links/static/src/xml/recent_link.xml:0
 #: model_terms:ir.ui.view,arch_db:website_links.graphs
 #, python-format

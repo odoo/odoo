@@ -3,36 +3,28 @@
 # 	* bus
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Mariusz, 2019
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2019
-# Andrzej Donczew <a.donczew@hadron.eu.com>, 2019
-# Maksym <ms@myodoo.pl>, 2019
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2023
+# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2023
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2023
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2023
+# Mariusz, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Maksym <ms@myodoo.pl>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2019\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"POT-Creation-Date: 2023-05-26 06:30+0000\n"
+"PO-Revision-Date: 2023-03-23 10:39+0000\n"
+"Last-Translator: Maksym <ms@myodoo.pl>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: pl\n"
 "Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
-
-#. module: bus
-#: model:ir.model.constraint,message:bus.constraint_bus_presence_bus_user_presence_unique
-msgid "A user can only have one IM status."
-msgstr "Użytkownik może mieć tylko jeden status komunikatora."
-
-#. module: bus
-#: model:ir.model,name:bus.model_ir_autovacuum
-msgid "Automatic Vacuum"
-msgstr "Automatyczne sprzątanie"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
@@ -47,7 +39,7 @@ msgstr "Kanał"
 #. module: bus
 #: model:ir.model,name:bus.model_bus_bus
 msgid "Communication Bus"
-msgstr ""
+msgstr "Magistrala komunikacyjna"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_partner
@@ -57,7 +49,7 @@ msgstr "Kontakt"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
-msgstr "Utworzona przez"
+msgstr "Utworzył(a)"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
@@ -82,12 +74,6 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:bus.field_res_users__im_status
 msgid "IM Status"
 msgstr "Status komunikatora"
-
-#. module: bus
-#: model:ir.model.fields,field_description:bus.field_bus_bus____last_update
-#: model:ir.model.fields,field_description:bus.field_bus_presence____last_update
-msgid "Last Modified on"
-msgstr "Data ostatniej modyfikacji"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__last_poll
@@ -115,6 +101,11 @@ msgid "Message"
 msgstr "Wiadomość"
 
 #. module: bus
+#: model:ir.model,name:bus.model_ir_model
+msgid "Models"
+msgstr "Modele"
+
+#. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__offline
 msgid "Offline"
 msgstr "Niedostępny"
@@ -122,7 +113,27 @@ msgstr "Niedostępny"
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__online
 msgid "Online"
-msgstr "Dostępny"
+msgstr "Online"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#, python-format
+msgid "Refresh"
+msgstr "Odśwież"
+
+#. module: bus
+#. odoo-javascript
+#: code:addons/bus/static/src/services/assets_watchdog_service.js:0
+#, python-format
+msgid "The page appears to be out of date."
+msgstr "Strona wydaje się być nieaktualna."
+
+#. module: bus
+#: model:ir.model,name:bus.model_res_users
+msgid "User"
+msgstr "Użytkownik"
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence
@@ -130,13 +141,11 @@ msgid "User Presence"
 msgstr "Obecność użytkownika"
 
 #. module: bus
-#: model:ir.model,name:bus.model_res_users
 #: model:ir.model.fields,field_description:bus.field_bus_presence__user_id
 msgid "Users"
 msgstr "Użytkownicy"
 
 #. module: bus
-#: code:addons/bus/controllers/main.py:0
-#, python-format
-msgid "bus.Bus not available in test mode"
-msgstr ""
+#: model:ir.model,name:bus.model_ir_websocket
+msgid "websocket message handling"
+msgstr "obsługa komunikatów websocket"

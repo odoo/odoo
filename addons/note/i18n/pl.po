@@ -3,28 +3,32 @@
 # 	* note
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Dariusz Żbikowski <darek@krokus.com.pl>, 2019
-# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2019
-# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2019
-# Tomasz Leppich <t.leppich@gmail.com>, 2019
-# Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
-# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2019
-# Maciej Wichowski <maciej.wichowski@openglobe.pl>, 2019
-# Karol Rybak <karolrybak85@gmail.com>, 2019
-# Andrzej Donczew <a.donczew@hadron.eu.com>, 2019
-# Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019
-# Paweł Wodyński <pw@myodoo.pl>, 2019
-# Natalia Gros <nag@odoo.com>, 2019
+# Paweł Wodyński <pw@myodoo.pl>, 2023
+# Krzysztof Przygoda, 2023
+# Andrzej Wiśniewski <a.wisniewski@hadron.eu.com>, 2023
+# Dariusz Żbikowski <darek@krokus.com.pl>, 2023
+# Dawid Prus, 2023
+# Natalia Gros <nag@odoo.com>, 2023
+# Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2023
+# Piotr Strębski <strebski@gmail.com>, 2023
+# Karol Rybak <karolrybak85@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Marcin Młynarczyk <mlynarczyk@gmail.com>, 2023
+# Grzegorz Krukar <grzegorzgk1@gmail.com>, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
+# Cezary Drożak, 2023
+# Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
+# Wojciech Warczakowski <w.warczakowski@gmail.com>, 2023
+# Piotr Szlązak <szlazakpiotr@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Natalia Gros <nag@odoo.com>, 2019\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"POT-Creation-Date: 2023-03-23 09:10+0000\n"
+"PO-Revision-Date: 2023-03-23 10:40+0000\n"
+"Last-Translator: Piotr Szlązak <szlazakpiotr@gmail.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -34,22 +38,22 @@ msgstr ""
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Action"
+msgstr "Akcja"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
 msgid "Action Needed"
-msgstr "Wymagana akcja"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
-msgid "Action to Perform"
-msgstr ""
+msgstr "Wymagane działanie"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_mail_activity_type__category
@@ -57,6 +61,9 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"Akcje mogą wyzwalać określone zachowanie, takie jak otwieranie widoku "
+"kalendarza lub automatyczne oznaczanie jako zrobione podczas przesyłania "
+"dokumentu"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
@@ -82,17 +89,22 @@ msgstr "Dekoracja wyjątku aktywności"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_state
 msgid "Activity State"
-msgstr "Stan czynności"
+msgstr "Stan aktywności"
 
 #. module: note
 #: model:ir.model,name:note.model_mail_activity_type
 msgid "Activity Type"
-msgstr "Typ czynności"
+msgstr "Typ aktywności"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Ikona typu aktywności"
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid "Add a new personal note"
-msgstr ""
+msgstr "Dodaj nową notatkę"
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.note_tag_action
@@ -100,18 +112,18 @@ msgid "Add a new tag"
 msgstr "Dodaj nowy tag"
 
 #. module: note
-#. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:0
+#. odoo-javascript
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Add a note"
 msgstr "Dodaj notatkę"
 
 #. module: note
-#. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:0
+#. odoo-javascript
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Add new note"
-msgstr ""
+msgstr "Dodaj nową notatkę"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -121,7 +133,7 @@ msgstr "Archiwizuj"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
 msgid "Attachment Count"
-msgstr "Ilość Załączników"
+msgstr "Liczba załączników"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -129,8 +141,8 @@ msgid "By sticky note Category"
 msgstr "Według kategorii karteczki"
 
 #. module: note
-#. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:0
+#. odoo-javascript
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Channel"
 msgstr "Kanał"
@@ -142,6 +154,11 @@ msgid "Color Index"
 msgstr "Indeks kolorów"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__company_id
+msgid "Company"
+msgstr "Firma"
+
+#. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
 msgid "Configuration"
 msgstr "Konfiguracja"
@@ -151,7 +168,7 @@ msgstr "Konfiguracja"
 #: model:ir.model.fields,field_description:note.field_note_stage__create_uid
 #: model:ir.model.fields,field_description:note.field_note_tag__create_uid
 msgid "Created by"
-msgstr "Utworzona przez"
+msgstr "Utworzył(a)"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__create_date
@@ -178,16 +195,6 @@ msgid "Display Name"
 msgstr "Nazwa wyświetlana"
 
 #. module: note
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
-msgid "Dropdown menu"
-msgstr "Menu typu dropdown"
-
-#. module: note
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
-msgid "Exception Activities"
-msgstr "Wyjątkowe aktywności"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
 msgid "Folded by Default"
 msgstr "Domyślnie zwinięte"
@@ -195,7 +202,7 @@ msgstr "Domyślnie zwinięte"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Follower"
-msgstr ""
+msgstr "Obserwator"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_follower_ids
@@ -203,14 +210,14 @@ msgid "Followers"
 msgstr "Obserwatorzy"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_channel_ids
-msgid "Followers (Channels)"
-msgstr "Obserwatorzy (kanały)"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
 msgid "Followers (Partners)"
 msgstr "Obserwatorzy (partnerzy)"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Ikona Font Awesome np. fa-tasks"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -220,7 +227,12 @@ msgstr "Przyszłe czynności"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
-msgstr "Grupuj wg"
+msgstr "Grupuj wg."
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__has_message
+msgid "Has Message"
+msgstr "Ma wiadomość"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__id
@@ -237,32 +249,23 @@ msgstr "Ikona"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Ikona wskazująca na wyjątkową aktywność"
+msgstr "Ikona wskazująca na wyjątek aktywności."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction
-#: model:ir.model.fields,help:note.field_note_note__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Jeśli zaznaczone, to nowa wiadomość wymaga twojej uwagi."
+msgstr "Jeśli zaznaczone, nowe wiadomości wymagają twojej uwagi."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
-"Jeśli zaznaczone, to część wiadomości napotkało na błąd przy próbie "
-"doręczenia."
+"Jeśli zaznaczone, niektóre wiadomości napotkały błędy podczas doręczenia."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
 msgid "Is Follower"
 msgstr "Jest obserwatorem"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note____last_update
-#: model:ir.model.fields,field_description:note.field_note_stage____last_update
-#: model:ir.model.fields,field_description:note.field_note_tag____last_update
-msgid "Last Modified on"
-msgstr "Data ostatniej modyfikacji"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__write_uid
@@ -281,22 +284,17 @@ msgstr "Data ostatniej aktualizacji"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Late Activities"
-msgstr "Spóźnione czynności"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
-msgid "Main Attachment"
-msgstr "Główny Załącznik"
+msgstr "Czynności zaległe"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_01
 msgid "Meeting Minutes"
-msgstr ""
+msgstr "Notatki ze spotkań"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error
 msgid "Message Delivery error"
-msgstr "Błąd Doręczenia wiadomości"
+msgstr "Błąd doręczenia wiadomości"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_ids
@@ -304,9 +302,19 @@ msgid "Messages"
 msgstr "Wiadomości"
 
 #. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Ostateczny terminin moich aktywności"
+
+#. module: note
 #: model:note.stage,name:note.note_stage_00
 msgid "New"
-msgstr "Nowa"
+msgstr "Nowe"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Następna Czynność wydarzenia w kalendarzu"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
@@ -316,7 +324,7 @@ msgstr "Termin następnej czynności"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_summary
 msgid "Next Activity Summary"
-msgstr "Następne podsumowanie aktywności"
+msgstr "Podsumowanie następnej czynności"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_type_id
@@ -348,14 +356,15 @@ msgstr "Podsumowanie notatki"
 #. module: note
 #: model:ir.model,name:note.model_note_tag
 msgid "Note Tag"
-msgstr "Znacznik notatki"
+msgstr "Tagi notatki"
 
 #. module: note
+#. odoo-python
 #: code:addons/note/models/res_users.py:0
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #: model:note.stage,name:note.note_stage_02
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 #, python-format
 msgid "Notes"
 msgstr "Notatki"
@@ -366,6 +375,8 @@ msgid ""
 "Notes are private, unless you share them by inviting follower on a note.\n"
 "            (Useful for meeting minutes)."
 msgstr ""
+"Notatki są prywatne, chyba że udostępnisz je zapraszając obserwatora na notatkę.\n"
+"            (Przydatne dla notatek ze spotkań)."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
@@ -385,12 +396,7 @@ msgstr "Liczba wiadomości wymagających akcji"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Ilość wiadomości z błędami przy doręczeniu"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__message_unread_counter
-msgid "Number of unread messages"
-msgstr "Liczba nieprzeczytanych wiadomości"
+msgstr "Liczba wiadomości z błędami przy doręczeniu"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__user_id
@@ -399,21 +405,16 @@ msgid "Owner"
 msgstr "Właściciel"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_stage__user_id
-msgid "Owner of the note stage"
-msgstr "Właściciel etapu"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity__note_id
 msgid "Related Note"
-msgstr ""
+msgstr "Notatka powiązana"
 
 #. module: note
-#. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:0
+#. odoo-javascript
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "Remember..."
-msgstr ""
+msgstr "Pamiętaj..."
 
 #. module: note
 #: model:ir.model.fields.selection,name:note.selection__mail_activity_type__category__reminder
@@ -427,29 +428,24 @@ msgid "Responsible User"
 msgstr "Użytkownik odpowiedzialny"
 
 #. module: note
-#. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:0
+#. odoo-javascript
+#: code:addons/note/static/src/components/activity_menu_view/activity_menu_view.xml:0
 #, python-format
 msgid "SAVE"
-msgstr ""
+msgstr "ZAPISZ"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
 #: model:ir.model.fields,field_description:note.field_note_stage__sequence
 msgid "Sequence"
-msgstr "Numeracja"
-
-#. module: note
-#. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:0
-#, python-format
-msgid "Set date and time"
-msgstr ""
+msgstr "Sekwencja"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Show all records which has next action date is before today"
-msgstr "Pokaż wszystkie rekordy, które mają następną akcję przed dzisiaj"
+msgstr ""
+"Pokaż wszystkie rekordy, których data kolejnej czynności przypada przed "
+"dzisiaj"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__stage_id
@@ -492,20 +488,20 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
-"Status bazuje na aktywnościach\n"
-"Opóźnione: Data \"do\" minęła\n"
-"Dziś: Aktywnośc przewidziana na dziś\n"
-"Zaplanowane: Przyszłe aktywności."
+"Status na podstawie czynności\n"
+"Zaległe: Termin już minął\n"
+"Dzisiaj: Data czynności przypada na dzisiaj\n"
+"Zaplanowane: Przyszłe czynności."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_tag__name
 msgid "Tag Name"
-msgstr "Nazwa znacznika"
+msgstr "Nazwa tagu"
 
 #. module: note
 #: model:ir.model.constraint,message:note.constraint_note_tag_name_uniq
-msgid "Tag name already exists !"
-msgstr "Nazwa znacznika już istnieje!"
+msgid "Tag name already exists!"
+msgstr "Nazwa etykiety już istnieje!"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.note_tag_action
@@ -515,11 +511,11 @@ msgstr "Nazwa znacznika już istnieje!"
 #: model_terms:ir.ui.view,arch_db:note.note_tag_view_tree
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
-msgstr "Znaczniki"
+msgstr "Tagi"
 
 #. module: note
-#. openerp-web
-#: code:addons/note/static/src/js/systray_activity_menu.js:0
+#. odoo-javascript
+#: code:addons/note/static/src/models/activity_menu_view.js:0
 #, python-format
 msgid "Today"
 msgstr "Dzisiaj"
@@ -537,24 +533,9 @@ msgstr "Do zrobienia"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Wyjątkowa aktywność w historii."
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_unread
-msgid "Unread Messages"
-msgstr "Nieprzeczytane wiadomości"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__message_unread_counter
-msgid "Unread Messages Counter"
-msgstr "Licznik nieprzeczytanych wiadomości"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_stage__sequence
-msgid "Used to order the note stages"
-msgstr "Stosowane do porządkowania notatek etapów"
+msgstr "Typ wyjątku działania na rekordzie."
 
 #. module: note
 #: model:ir.model,name:note.model_res_users
-msgid "Users"
-msgstr "Użytkownicy"
+msgid "User"
+msgstr "Użytkownik"
