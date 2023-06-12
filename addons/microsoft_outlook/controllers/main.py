@@ -62,7 +62,7 @@ class MicrosoftOutlookController(http.Controller):
             refresh_token, access_token, expiration = record._fetch_outlook_refresh_token(code)
         except UserError as e:
             return request.render('microsoft_outlook.microsoft_outlook_oauth_error', {
-                'error': str(e.name),
+                'error': str(e),
                 'model_name': model_name,
                 'rec_id': rec_id,
             })
