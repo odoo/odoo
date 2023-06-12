@@ -95,5 +95,14 @@ class Project(models.Model):
                 'action': 'action_view_mrp_bom',
                 'show': self.bom_count > 0,
                 'sequence': 35,
+            },
+            {
+                'icon': 'wrench',
+                'text': _lt('Manufacturing Orders'),
+                'number': self.production_count,
+                'action_type': 'object',
+                'action': 'action_view_mrp_production',
+                'show': self.production_count > 0,
+                'sequence': 46,
             }])
         return buttons
