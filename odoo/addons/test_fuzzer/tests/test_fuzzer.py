@@ -27,6 +27,8 @@ class TestFuzzer(common.TransactionCase):
 
         self.injection_reports: list[InjectionReport] = []
 
+        # Some parameters take other values than model field names.
+        # We try to be smart about it by choosing a value that is likely to be accepted by the function.
         self.seeds = {
             "ids": "1337",
             "limit": "1",

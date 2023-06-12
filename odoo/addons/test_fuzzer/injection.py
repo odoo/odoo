@@ -1,5 +1,6 @@
 import functools
 import inspect
+import traceback
 from dataclasses import dataclass
 from typing import Any, Callable, Generator
 
@@ -13,11 +14,13 @@ class InjectionReport:
 
     def __str__(self) -> str:
         args = ", ".join([f"{name}={value}" for name, value in self.arguments.arguments.items()])
-        s = f"{self.function.__name__}({args})\n"
+        s = f"{self.function.__name__}({args})\n\n"
         if self.is_injection_successful:
             s += "Injection successful !"
+        elif self.error:
+            s += "".join(traceback.format_exception(self.error))
         else:
-            s += f"{self.error.__class__}\n{self.error}" if self.error else "No errors."
+            s += "No errors."
         return s
 
 
