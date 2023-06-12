@@ -99,6 +99,7 @@ QUnit.module("Web Components", (hooks) => {
                     mode="'xml'"
                     value="state.value"
                     onChange.bind="onChange"
+                    maxLines="200"
                 />
             `;
             setup() {

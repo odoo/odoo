@@ -40,6 +40,7 @@ export class CodeEditor extends Component {
             optional: true,
             validate: (theme) => CodeEditor.THEMES.includes(theme),
         },
+        maxLines: { type: Number, optional: true },
     };
     static defaultProps = {
         readonly: false,
@@ -68,7 +69,7 @@ export class CodeEditor extends Component {
                 this.aceEditor = aceEditor;
 
                 this.aceEditor.setOptions({
-                    maxLines: Infinity,
+                    maxLines: this.props.maxLines,
                     showPrintMargin: false,
                 });
                 this.aceEditor.session.setOptions({
