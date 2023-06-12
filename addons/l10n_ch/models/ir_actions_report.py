@@ -38,8 +38,6 @@ class IrActionsReport(models.Model):
             # Determine which invoices need a QR.
             qr_inv_ids = []
             for invoice in invoices:
-                if invoice.company_id.country_code != 'CH':
-                    continue
                 if invoice.l10n_ch_is_qr_valid:
                     qr_inv_ids.append(invoice.id)
             # Render the additional reports.
