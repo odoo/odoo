@@ -23,11 +23,14 @@ options.registry.gallery = options.Class.extend({
         this.hasAddImages = this.el.querySelector("we-button[data-add-images]");
 
         if (!this.hasAddImages) {
+            let layoutPromise;
             const containerEl = this.$target[0].querySelector(":scope > .container, :scope > .container-fluid, :scope > .o_container_small");
             if (containerEl.querySelector(":scope > *:not(div)")) {
-                self.mode(null, self.getMode());
+                layoutPromise = self._modeWithImageWait(null, self.getMode());
+            } else {
+                layoutPromise = Promise.resolve();
             }
-            return this._super.apply(this, arguments);
+            return layoutPromise.then(this._super.apply(this, arguments));
         }
 
         // Make sure image previews are updated if images are changed
