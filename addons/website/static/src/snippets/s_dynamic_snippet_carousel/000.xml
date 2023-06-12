@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="website.s_dynamic_snippet.carousel.arrows">
-        <a t-attf-href="##{uniqueId}" class="carousel-control-prev" data-bs-slide="prev" role="button" aria-label="Previous" title="Previous">
+        <a t-attf-href="##{unique_id}" class="carousel-control-prev" data-bs-slide="prev" role="button" aria-label="Previous" title="Previous">
             <span class="fa fa-chevron-circle-left fa-2x"/>
             <span class="visually-hidden">Previous</span>
         </a>
-        <a t-attf-href="##{uniqueId}" class="carousel-control-next" data-bs-slide="next" role="button" aria-label="Next" title="Next">
+        <a t-attf-href="##{unique_id}" class="carousel-control-next" data-bs-slide="next" role="button" aria-label="Next" title="Next">
             <span class="fa fa-chevron-circle-right fa-2x"/>
             <span class="visually-hidden">Next</span>
         </a>
     </t>
     <t t-name="website.s_dynamic_snippet.carousel">
-        <div t-att-id="uniqueId" class="carousel slide" t-att-data-bs-interval="interval" data-bs-ride="carousel">
+        <div t-att-id="unique_id" class="carousel slide" t-att-data-bs-interval="interval" data-bs-ride="carousel">
             <!-- Content -->
             <t t-set="rowSize" t-value="chunkSize" />
             <t t-set="slideSize" t-value="rowSize * rowPerSlide" />
@@ -46,13 +46,13 @@
                 <t t-if="arrowPosition === 'bottom'">
                     <div class="s_dynamic_snippet_arrow_bottom pt-2 d-flex justify-content-center">
                         <t t-call="website.s_dynamic_snippet.carousel.arrows">
-                            <t t-set="uniqueId" t-value="uniqueId" />
+                            <t t-set="unique_id" t-value="unique_id" />
                         </t>
                     </div>
                 </t>
                 <t t-else="">
                     <t t-call="website.s_dynamic_snippet.carousel.arrows">
-                        <t t-set="uniqueId" t-value="uniqueId" />
+                        <t t-set="unique_id" t-value="unique_id" />
                     </t>
                 </t>
             </t>
