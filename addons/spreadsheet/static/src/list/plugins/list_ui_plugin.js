@@ -252,11 +252,12 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
      */
     getListIdFromPosition(position) {
         const cell = this.getters.getCell(position);
+        const sheetId = position.sheetId;
         if (cell && cell.isFormula) {
             const listFunction = getFirstListFunction(cell.content);
             if (listFunction) {
                 const content = astToFormula(listFunction.args[0]);
-                return this.getters.evaluateFormula(content).toString();
+                return this.getters.evaluateFormula(sheetId, content).toString();
             }
         }
         return undefined;
