@@ -1195,7 +1195,7 @@ class RecordSnapshot(dict):
                     commands.append(remove(id_.origin or id_.ref or 0))
             # commands for modified or extra lines
             for id_, line_snapshot in self[field_name].items():
-                if id_ in other.get(field_name, ()):
+                if not force and id_ in other.get(field_name, ()):
                     # existing line: check diff
                     line_diff = line_snapshot.diff(other[field_name][id_])
                     if line_diff:
