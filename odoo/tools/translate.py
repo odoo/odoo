@@ -1312,7 +1312,7 @@ class TranslationImporter:
         * model translation: the ``jsonb`` value in database has the language code as key;
         * model terms translation: the term value in the language is different from the term value in ``en_US``.
         """
-        if not self.model_translations and not self.model_terms_translations:
+        if not any((self.model_translations, self.model_terms_translations, self.code_python_translations, self.code_web_translations)):
             return
 
         cr = self.cr
@@ -1431,7 +1431,8 @@ class TranslationImporter:
             for module_name, module_dictionary in self.code_web_translations.items()
             for src, translations in module_dictionary.items()
             for lang, value in translations.items()
-            if IrCodeTranslation.get_web_translations(module_name, lang).get(src) != value
+            if IrCodeTranslation._get_translations(module_name, lang, 'web').get(src) or
+                code_translations.get_web_translations(module_name, lang).get(src) != value
         ))
         for params in cr.split_for_in_conditions(params_to_upsert, cr.IN_MAX // 4 * 4):
             cr.execute(f'''

@@ -5,7 +5,7 @@ import io
 
 from odoo.tests import common, tagged
 from odoo.tools.misc import file_open, mute_logger
-from odoo.tools.translate import TranslationModuleReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT, WEB_TRANSLATION_COMMENT
+from odoo.tools.translate import TranslationModuleReader, code_translations, CodeTranslations, PYTHON_TRANSLATION_COMMENT, JAVASCRIPT_TRANSLATION_COMMENT, WEB_TRANSLATION_COMMENT, TranslationImporter
 from odoo import Command
 from odoo.addons.base.models.ir_fields import BOOLEAN_TRANSLATIONS
 
@@ -373,6 +373,8 @@ class TestTranslationFlow(common.TransactionCase):
             '<form string="Fork"><div>Knife</div><div>Spoon</div></form>'
         )
 
+        num_customized_code_translations = self.env['ir.code.translation'].search_count([])
+
         import_fr = self.env["base.language.import"].create({
             'name': 'French',
             'code': 'fr_FR',
@@ -391,6 +393,36 @@ class TestTranslationFlow(common.TransactionCase):
             record.with_context(lang='fr_FR').xml,
             '<form string="Fourchette"><div>Couteau</div><div>Cuillère</div></form>'
         )
+
+        self.assertEqual(
+            self.env['ir.code.translation'].search_count([]),
+            num_customized_code_translations,
+            'no new customized code translations should have been created'
+        )
+        po_string = '''
+            #. module: test_translation_import
+            #. odoo-python
+            #: code:addons/test_translation_import/models/models.py:0
+            #, python-format
+            msgid "Code, English"
+            msgstr "Code, Français, Customized 2"
+        '''
+        with io.BytesIO(bytes(po_string, encoding='utf-8')) as f:
+            f.name = 'dummy'
+            translation_importer = TranslationImporter(self.env.cr, verbose=True)
+            translation_importer.load(f, 'po', 'fr_FR')
+            translation_importer.save(overwrite=True)
+        self.assertEqual(
+            self.env['ir.code.translation'].search_count([]),
+            num_customized_code_translations + 1,
+            'no new customized code translations should have been created'
+        )
+        self.assertEqual(
+            self.env['test.translation.import.model1'].with_context(lang='fr_FR').get_code_translation(),
+            'Code, Français, Customized 2',
+            'Customized code translations were not applied'
+        )
+
 
     def test_export_import_csv(self):
         """ Ensure can reimport exported csv """
