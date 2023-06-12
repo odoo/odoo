@@ -242,35 +242,6 @@ export class Message extends Component {
         return Boolean(this.message.originThread?.followerOfSelf);
     }
 
-    /**
-     * Determines whether clicking on the author's avatar opens a chat with the
-     * author.
-     *
-     * @returns {boolean}
-     */
-    get hasOpenChatFeature() {
-        if (!this.props.hasActions) {
-            return false;
-        }
-        if (!this.message.author) {
-            return false;
-        }
-        if (this.message.isSelfAuthored) {
-            return false;
-        }
-        if (this.store.inPublicPage) {
-            return false;
-        }
-        if (this.message.author.type === "guest") {
-            return false;
-        }
-        return this.props.thread.chatPartnerId !== this.message.author.id;
-    }
-
-    get hasAuthorClickable() {
-        return this.hasOpenChatFeature && !this.message.isSelfAuthored;
-    }
-
     get isActive() {
         return (
             this.state.isHovered ||
@@ -340,12 +311,6 @@ export class Message extends Component {
         await this.attachmentService.delete(attachment);
     }
 
-    onClickAuthor(ev) {
-        if (this.message.author && this.hasAuthorClickable && this.hasOpenChatFeature) {
-            this.openChatAvatar(ev);
-        }
-    }
-
     onClickMarkAsUnread() {
         const previousMessageId =
             this.message.originThread.getPreviousMessage(this.message)?.id ?? false;
@@ -357,18 +322,6 @@ export class Message extends Component {
             last_message_id: previousMessageId,
             allow_older: true,
         });
-    }
-
-    get authorText() {
-        return this.hasOpenChatFeature ? _t("Open chat") : "";
-    }
-
-    openChatAvatar(ev) {
-        markEventHandled(ev, "Message.ClickAuthor");
-        if (!this.hasOpenChatFeature) {
-            return;
-        }
-        this.threadService.openChat({ partnerId: this.message.author.id });
     }
 
     /**

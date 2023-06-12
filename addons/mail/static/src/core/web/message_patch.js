@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { Message } from "@mail/core/common/message";
+import { markEventHandled } from "@mail/utils/common/misc";
 
 import { getCurrency } from "@web/core/currency";
 import { deserializeDateTime } from "@web/core/l10n/dates";
@@ -17,24 +18,21 @@ patch(Message.prototype, "mail/core/web", {
         this._super(...arguments);
         this.action = useService("action");
     },
-
+    get authorText() {
+        return this.hasAuthorClickable ? _t("Open profile") : undefined;
+    },
+    get hasAuthorClickable() {
+        return this.message.author && !this.message.isSelfAuthored;
+    },
     onClickAuthor(ev) {
-        if (this.message.author && this.hasAuthorClickable && !this.hasOpenChatFeature) {
+        if (this.hasAuthorClickable) {
+            markEventHandled(ev, "Message.ClickAuthor");
             this.messaging.openDocument({
                 model: "res.partner",
                 id: this.message.author.id,
             });
-            return;
         }
-        return this._super(ev);
     },
-
-    get authorText() {
-        return this.hasAuthorClickable && !this.hasOpenChatFeature
-            ? _t("Open profile")
-            : this._super();
-    },
-
     openRecord() {
         if (this.message.resModel === "discuss.channel") {
             this.threadService.open(this.message.originThread);
