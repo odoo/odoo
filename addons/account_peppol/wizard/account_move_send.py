@@ -151,3 +151,6 @@ class AccountMoveSend(models.Model):
                 invoices |= invoice
             log_message = _('The document has been sent to the Peppol Access Point for processing')
             invoices._message_log_batch(bodies=dict((invoice.id, log_message) for invoice in invoices_data_peppol))
+
+        if self._can_commit():
+            self._cr.commit()
