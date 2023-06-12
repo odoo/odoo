@@ -17848,6 +17848,10 @@ QUnit.module("Views", (hooks) => {
         const input = document.activeElement;
         input.value = 'alu';
         triggerEvent(document.activeElement, null, "input"),
+        await nextTick();
+
+        input.value = 'alue';
+        triggerEvent(document.activeElement, null, "input"),
         triggerHotkey("Enter"),
         await nextTick();
 
