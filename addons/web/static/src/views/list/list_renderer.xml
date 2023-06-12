@@ -32,8 +32,8 @@
                                 tabindex="-1">
                                 <t t-if="column.hasLabel and column.widget !== 'handle'">
                                 <t t-set="isNumeric" t-value="isNumericColumn(column)"/>
-                                    <div t-att-class="{'d-flex': true, 'flex-row-reverse': isNumeric}">
-                                        <span class="d-block min-w-0 text-truncate flex-grow-1" t-att-class="isNumeric ? 'text-end' : ''"
+                                    <div t-att-class="{'d-flex': true, 'flex-row-reverse': shouldReverseHeader(column)}">
+                                        <span class="d-block min-w-0 text-truncate flex-grow-1" t-att-class="isNumeric ? 'o_list_number_th' : ''"
                                               t-esc="column.label"/>
                                         <i t-att-class="getSortableIconClass(column)"/>
                                     </div>
@@ -79,7 +79,7 @@
                         <td t-if="hasSelectors"/>
                         <t t-foreach="state.columns" t-as="column" t-key="column.id">
                             <t t-set="aggregate" t-value="aggregates[column.name]"/>
-                            <td t-if="aggregate" class="o_list_number text-end" t-att-data-tooltip="aggregate.help">
+                            <td t-if="aggregate" class="o_list_number" t-att-data-tooltip="aggregate.help">
                                 <t t-esc="aggregate.value"/>
                             </td>
                             <td t-else=""/>
