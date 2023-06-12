@@ -4004,3 +4004,46 @@ class TestStockValuation(TransactionCase):
 
         self.product1.write({'standard_price': 7})
         self.assertEqual(self.product1.value_svl, 49)
+
+    def test_average_manual_revaluation(self):
+        self.product1.categ_id.property_cost_method = 'average'
+
+        self._make_in_move(self.product1, 1, unit_cost=20)
+        self._make_in_move(self.product1, 1, unit_cost=30)
+        self.assertEqual(self.product1.standard_price, 25)
+
+        Form(self.env['stock.valuation.layer.revaluation'].with_context({
+            'default_product_id': self.product1.id,
+            'default_company_id': self.env.company.id,
+            'default_account_id': self.stock_valuation_account,
+            'default_added_value': -10.0,
+        })).save().action_validate_revaluation()
+
+        self.assertEqual(self.product1.standard_price, 20)
+
+    def test_fifo_manual_revaluation(self):
+        revaluation_vals = {
+            'default_product_id': self.product1.id,
+            'default_company_id': self.env.company.id,
+            'default_account_id': self.stock_valuation_account,
+        }
+        self.product1.categ_id.property_cost_method = 'fifo'
+
+        self._make_in_move(self.product1, 1, unit_cost=15)
+        self._make_in_move(self.product1, 1, unit_cost=30)
+        self.assertEqual(self.product1.stock_valuation_layer_ids[0].remaining_value, 15)
+
+        Form(self.env['stock.valuation.layer.revaluation'].with_context({
+            **revaluation_vals,
+            'default_added_value': -10.0,
+        })).save().action_validate_revaluation()
+
+        self.assertEqual(self.product1.stock_valuation_layer_ids[0].remaining_value, 10)
+
+        revaluation = Form(self.env['stock.valuation.layer.revaluation'].with_context({
+            **revaluation_vals,
+            'default_added_value': -25.0,
+        })).save()
+
+        with self.assertRaises(UserError):
+            revaluation.action_validate_revaluation()
