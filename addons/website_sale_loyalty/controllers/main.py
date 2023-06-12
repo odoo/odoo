@@ -41,7 +41,18 @@ class WebsiteSale(main.WebsiteSale):
         if order:
             order._update_programs_and_rewards()
             order._auto_apply_rewards()
-        return super(WebsiteSale, self).cart(**post)
+
+        res = super().cart(**post)
+
+        # TODO in master: remove and pass delete=True to the methods fetching the error/success
+        # messages in _get_website_sale_extra_values
+        # clean session messages after displaying them
+        if request.session.get('error_promo_code'):
+            request.session.pop('error_promo_code')
+        if request.session.get('successful_code'):
+            request.session.pop('successful_code')
+
+        return res
 
     @http.route(['/coupon/<string:code>'], type='http', auth='public', website=True, sitemap=False)
     def activate_coupon(self, code, r='/shop', **kw):
