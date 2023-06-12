@@ -66,7 +66,7 @@ export async function startWebClient(Webclient) {
 
     // Update Favicons
     const favicon = `/web/image/res.company/${env.services.company.currentCompany.id}/favicon`;
-    const icons = document.querySelectorAll("link[rel*='icon']");
+    const icons = document.querySelectorAll("link[rel*='icon']:not([rel='apple-touch-icon'])");
     for (const icon of icons) {
         icon.href = favicon;
     }
