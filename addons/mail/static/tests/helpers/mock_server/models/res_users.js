@@ -35,6 +35,7 @@ patch(MockServer.prototype, "mail/models/res_users", {
             current_user_settings: this._mockResUsersSettings_ResUsersSettingsFormat(
                 userSettings.id
             ),
+            initBusId: this.lastBusNotificationId,
             menu_id: false, // not useful in QUnit tests
             needaction_inbox_counter: this._mockResPartner_GetNeedactionCount(user.partner_id),
             odoobot: this._mockResPartnerMailPartnerFormat(this.odoobotId).get(this.odoobotId),

@@ -64,6 +64,7 @@ export const busService = {
             const { type } = messageEv.data;
             let { data } = messageEv.data;
             if (type === "notification") {
+                data.forEach((d) => (d.message.id = d.id)); // put notification id in notif message
                 multiTab.setSharedValue("last_notification_id", data[data.length - 1].id);
                 data = data.map((notification) => notification.message);
                 for (const { type, payload } of data) {

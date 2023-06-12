@@ -123,6 +123,7 @@ export class Messaging {
             this.insertCannedResponse(code);
         });
         this.store.hasLinkPreviewFeature = data.hasLinkPreviewFeature;
+        this.store.initBusId = data.initBusId;
         this.isReady.resolve();
         this.store.isMessagingReady = true;
     }
@@ -502,16 +503,22 @@ export class Messaging {
             if (message.isSelfAuthored) {
                 channel.seen_message_id = message.id;
             } else {
-                channel.message_unread_counter++;
+                if (notif.id > this.store.initBusId) {
+                    channel.message_unread_counter++;
+                }
                 if (message.isNeedaction) {
                     const inbox = this.store.discuss.inbox;
                     if (!inbox.messages.includes(message)) {
                         inbox.messages.push(message);
-                        inbox.counter++;
+                        if (notif.id > this.store.initBusId) {
+                            inbox.counter++;
+                        }
                     }
                     if (!channel.needactionMessages.includes(message)) {
                         channel.needactionMessages.push(message);
-                        channel.message_needaction_counter++;
+                        if (notif.id > this.store.initBusId) {
+                            channel.message_needaction_counter++;
+                        }
                     }
                 }
             }
