@@ -186,3 +186,12 @@ class SaleOrder(models.Model):
         so_to_reset.applied_coupon_ids = False
         for so in so_to_reset:
             so._update_programs_and_rewards()
+
+    def _get_website_sale_extra_values(self):
+        promo_code_success = self.get_promo_code_success_message(delete=False)
+        promo_code_error = self.get_promo_code_error(delete=False)
+
+        return {
+            'promo_code_success': promo_code_success,
+            'promo_code_error': promo_code_error,
+        }
