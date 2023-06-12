@@ -3404,6 +3404,39 @@
             }),
         ]"/>
     </record>
+    <record id="account_tax_template_p_irpf24_rdc" model="account.tax.template">
+        <field name="type_tax_use">purchase</field>
+        <field name="name">Retenciones IRPF 24% (Rendimientos del capital)</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="-24"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_24"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_4751'),
+            }),
+        ]"/>
+    </record>
     <record id="account_tax_template_s_irpf20" model="account.tax.template">
         <field name="description">Retención 20%</field>
         <field name="type_tax_use">sale</field>
@@ -3474,6 +3507,40 @@
     </record>
     <record id="account_tax_template_s_irpf24" model="account.tax.template">
         <field name="description">Retención 24%</field>
+        <field name="type_tax_use">sale</field>
+        <field name="name">Retenciones a cuenta IRPF 24%</field>
+        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
+        <field name="amount" eval="-24"/>
+        <field name="amount_type">percent</field>
+        <field name="tax_group_id" ref="tax_group_retenciones_24"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_473'),
+            }),
+
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('l10n_es.account_common_473'),
+            }),
+        ]"/>
+    </record>
+    <record id="account_tax_template_s_irpf24_rdc" model="account.tax.template">
+        <field name="description">Retención 24% (Rendimientos del capital)</field>
         <field name="type_tax_use">sale</field>
         <field name="name">Retenciones a cuenta IRPF 24%</field>
         <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
