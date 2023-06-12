@@ -94,7 +94,7 @@ class AccountAccount(models.Model):
     note = fields.Text('Internal Notes', tracking=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
         default=lambda self: self.env.company)
-    tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting")
+    tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting", ondelete='restrict')
     group_id = fields.Many2one('account.group', compute='_compute_account_group', store=True, readonly=True,
                                help="Account prefixes can determine account groups.")
     root_id = fields.Many2one('account.root', compute='_compute_account_root', store=True, precompute=True)
