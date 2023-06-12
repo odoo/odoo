@@ -9,7 +9,7 @@ from itertools import product
 from markupsafe import escape
 from unittest.mock import patch
 
-from odoo import tools
+from odoo import tools, _
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE_PLAINTEXT
@@ -18,7 +18,7 @@ from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.api import call_kw
 from odoo.exceptions import AccessError
 from odoo.tests import tagged
-from odoo.tools import mute_logger, formataddr
+from odoo.tools import mute_logger, formataddr, code_translations
 from odoo.tests.common import users
 
 
@@ -64,6 +64,9 @@ class TestMessagePostCommon(TestMailCommon, TestRecipients):
             'subject': 'Notify Test',
         })
         cls.user_admin.write({'notification_type': 'email'})
+
+        # activate translations
+        cls._activate_multi_lang()
 
     def setUp(self):
         super(TestMessagePostCommon, self).setUp()
@@ -161,6 +164,29 @@ class TestMailNotifyAPI(TestMessagePostCommon):
         self.test_message.author_id = None
         template_values = test_record._notify_by_email_prepare_rendering_context(test_message, {})
         self.assertEqual(template_values['signature'], '')
+
+    def test_notify_by_email_prepare_rendering_context_subtitle(self):
+        test_record = self.env['mail.test.simple'].browse(self.test_record.ids)
+        test_message = self.env['mail.message'].browse(self.test_message.ids)
+        MailThread = type(self.env['mail.thread'])
+        lang_es = self.env['mail.thread']._get_rendered_lang('es_ES')
+
+        """ Check that rendering uses the same language for all steps of fetching render values. """
+        def _patched_notify_by_email_prepare_rendering_context(self, *args, **kwargs):
+            result = super(MailThread, self)._notify_by_email_prepare_rendering_context(*args, **kwargs)
+            result['subtitles'] = _('TestMailTestNotificationSubtitle')
+            return result
+
+        code_translations.python_translations[('test_mail', 'es_ES')][
+            'TestMailTestNotificationSubtitle'] = 'SpanishTestMailTestNotificationSubtitle'
+
+        with patch.object(MailThread, '_notify_by_email_prepare_rendering_context',
+                          _patched_notify_by_email_prepare_rendering_context):
+            render_values = test_record.with_context(
+                lang=lang_es)._notify_by_email_prepare_rendering_context(
+                test_message, {})
+        self.assertEqual(render_values['subtitles'], 'SpanishTestMailTestNotificationSubtitle',
+                         'Translatable term should have been translated when computing rendering values')
 
     @users('employee')
     def test_notify_by_email_prepare_rendering_context(self):
