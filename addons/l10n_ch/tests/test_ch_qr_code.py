@@ -1,9 +1,10 @@
 # -*- coding:utf-8 -*-
 
+from odoo.tests import tagged
 from odoo.exceptions import UserError
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
-
+@tagged('post_install', '-at_install')
 class TestSwissQRCode(AccountTestInvoicingCommon):
     """ Tests the generation of Swiss QR-codes on invoices
     """
@@ -69,6 +70,10 @@ class TestSwissQRCode(AccountTestInvoicingCommon):
 
         # Assigning a QR reference should fix it
         self.ch_qr_invoice.payment_reference = '210000000003139471430009017'
+
+        # even if the invoice is not issued from Switzerland we want to generate the code
+        self.ch_qr_invoice.company_id.partner_id.country_id = self.env.ref('base.fr')
+        self.ch_qr_invoice._generate_qr_code()
 
     def test_ch_qr_code_detection(self):
         """ Checks Swiss QR-code auto-detection when no specific QR-method
