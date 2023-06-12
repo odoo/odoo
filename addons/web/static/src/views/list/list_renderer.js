@@ -19,6 +19,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
 import { getFormattedValue } from "../utils";
+import { localization } from "@web/core/l10n/localization";
 
 import {
     Component,
@@ -206,6 +207,7 @@ export class ListRenderer extends Component {
         useExternalListener(window, "blur", (ev) => {
             this.shiftKeyMode = false;
         });
+        this.isRTL = localization.direction === "rtl";
     }
 
     displaySaveNotification() {
@@ -722,6 +724,10 @@ export class ListRenderer extends Component {
     isNumericColumn(column) {
         const { type } = this.fields[column.name];
         return ["float", "integer", "monetary"].includes(type);
+    }
+
+    shouldReverseHeader(column) {
+        return this.isNumericColumn(column) && (!this.isRTL);
     }
 
     isSortable(column) {
