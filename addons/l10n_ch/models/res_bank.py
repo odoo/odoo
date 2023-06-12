@@ -353,8 +353,6 @@ class ResPartnerBank(models.Model):
             error_messages = [_("The QR code could not be generated for the following reason(s):")]
             if self.acc_type != 'iban':
                 error_messages.append(_("The account type isn't QR-IBAN or IBAN."))
-            if self.partner_id.country_id.code != 'CH':
-                error_messages.append(_("Your company isn't located in Switzerland."))
             if not debtor_partner or debtor_partner.country_id.code not in ('CH', 'LI'):
                 error_messages.append(_("The debtor partner's address isn't located in Switzerland."))
             if currency.id not in (self.env.ref('base.EUR').id, self.env.ref('base.CHF').id):
