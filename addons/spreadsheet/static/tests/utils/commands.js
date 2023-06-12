@@ -80,6 +80,20 @@ export function setCellContent(model, xc, content, sheetId = model.getters.getAc
     model.dispatch("UPDATE_CELL", { ...toCartesian(xc), sheetId, content });
 }
 
+/**
+ * Set the format of a cell
+ */
+export function setCellFormat(model, xc, format, sheetId = model.getters.getActiveSheetId()) {
+    model.dispatch("UPDATE_CELL", { ...toCartesian(xc), sheetId, format });
+}
+
+/**
+ * Set the style of a cell
+ */
+export function setCellStyle(model, xc, style, sheetId = model.getters.getActiveSheetId()) {
+    model.dispatch("UPDATE_CELL", { ...toCartesian(xc), sheetId, style });
+}
+
 /** Create a test chart in the active sheet*/
 export function createBasicChart(model, chartId, sheetId = model.getters.getActiveSheetId()) {
     model.dispatch("CREATE_CHART", {
