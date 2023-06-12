@@ -115,7 +115,7 @@ var PortalComposer = publicWidget.Widget.extend({
 
         this.$sendButton.prop('disabled', true);
 
-        return Promise.all(this.$fileInput[0].files.map((file) => {
+        return Promise.all([...this.$fileInput[0].files].map((file) => {
             return new Promise(function (resolve, reject) {
                 var data = self._prepareAttachmentData(file);
                 ajax.post('/portal/attachment/add', data).then(function (attachment) {
