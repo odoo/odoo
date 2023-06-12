@@ -161,7 +161,7 @@ class HrEmployeeBase(models.AbstractModel):
         today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
         holidays = self.env['hr.leave'].sudo().search([
             ('employee_id', '!=', False),
-            ('state', '=', 'validate1'),
+            ('state', '=', 'validate'),
             ('date_from', '<=', today_end),
             ('date_to', '>=', today_start),
         ])
