@@ -5342,6 +5342,52 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("Ensuring each progress bar has some space", async (assert) => {
+        serverData.models.partner.records = [
+            ({
+                id: 1,
+                foo: "blip",
+                state: "def",
+            }),
+            ({
+                id: 2,
+                foo: "blip",
+                state: "abc",
+            }),
+        ];
+        
+        for (let i = 0; i < 20; i++) {
+            serverData.models.partner.records.push({
+                id: 3 + i,
+                foo: "blip",
+                state: "ghi",
+            });
+        }
+        
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban>
+                <progressbar field="state" colors='{"abc": "success", "def": "warning", "ghi": "danger"}' />
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="state" widget="state_selection" />
+                            <div><field name="foo" /></div>
+                        </div>
+                    </templates>
+                </kanban>
+            `,
+            groupBy: ["foo"],
+        });
+
+        assert.deepEqual(
+            getProgressBars(0).map((pb) => pb.style.width),
+            ["5%", "5%", "90%"]
+        );
+    });
+
     QUnit.test(
         "completely prevent drag and drop if records_draggable set to false",
         async (assert) => {
