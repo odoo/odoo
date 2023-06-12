@@ -11,6 +11,7 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'code_digits': '3',
             'use_anglo_saxon': True,
+            'display_invoice_amount_total_words': True,
             'property_account_receivable_id': 'cuenta105_01',
             'property_account_payable_id': 'cuenta201_01',
             'property_account_expense_categ_id': 'cuenta601_84',

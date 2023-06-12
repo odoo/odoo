@@ -14,6 +14,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_expense_categ_id': 'l10n_dz_600',
             'property_account_income_categ_id': 'l10n_dz_700',
             'code_digits': 6,
+            'display_invoice_amount_total_words': True,
         }
 
     @template('dz', 'res.company')
