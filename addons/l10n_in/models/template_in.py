@@ -16,6 +16,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_tax_payable_account_id': 'p11239',
             'property_tax_receivable_account_id': 'p10059',
             'code_digits': '6',
+            'display_invoice_amount_total_words': True,
         }
 
     @template('in', 'res.company')

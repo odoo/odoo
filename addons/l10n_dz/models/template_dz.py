@@ -14,6 +14,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_expense_categ_id': 'pcg_6001',
             'property_account_income_categ_id': 'pcg_7001',
             'code_digits': 6,
+            'display_invoice_amount_total_words': True,
         }
 
     @template('dz', 'res.company')
