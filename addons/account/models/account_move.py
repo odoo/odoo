@@ -2208,7 +2208,7 @@ class AccountMove(models.Model):
         return copied_am
 
     def _sanitize_vals(self, vals):
-        if 'invoice_line_ids' in vals and 'line_ids' in vals:
+        if 'invoice_line_ids' in vals and 'line_ids' in vals and bool(vals['invoice_line_ids']) and bool(vals['line_ids']):
             # values can sometimes be in only one of the two fields, sometimes in
             # both fields, sometimes one field can be explicitely empty while the other
             # one is not, sometimes not...
