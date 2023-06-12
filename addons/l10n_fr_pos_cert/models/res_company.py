@@ -94,3 +94,5 @@ class ResCompany(models.Model):
                 'printing_date': format_date(self.env,  Date.to_string( Date.today())),
                 'corrupted_orders': corrupted_orders or 'None'
             }
+        else:
+            raise UserError(_('Accounting is not unalterable for the company %s. This mechanism is designed for companies where accounting is unalterable.') % self.env.company.name)
