@@ -79,7 +79,7 @@ class QrInvoiceWizard(models.TransientModel):
                 # The error potentially raised in the following function helps create the wizard's message.
                 inv.partner_bank_id._eligible_for_qr_code('ch_qr', inv.partner_id, inv.currency_id, raises_error=True)
             except UserError as e:
-                inv.message_post(body=e.name, message_type="comment")
+                inv.message_post(body=str(e), message_type="comment")
 
         action_vals = {
             'name': _("Invalid Invoices"),
