@@ -220,3 +220,12 @@ class SaleOrder(models.Model):
                     else:
                         res[coupon] = reward
         return res
+
+    def _get_website_sale_extra_values(self):
+        promo_code_success = self.get_promo_code_success_message(delete=False)
+        promo_code_error = self.get_promo_code_error(delete=False)
+
+        return {
+            'promo_code_success': promo_code_success,
+            'promo_code_error': promo_code_error,
+        }
