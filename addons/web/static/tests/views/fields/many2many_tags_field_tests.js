@@ -464,6 +464,65 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("use binary field as the domain", async (assert) => {
+        serverData.models.partner.fields.domain = { string: "Domain", type: "binary" };
+        serverData.models.partner.records[0].domain = [["id", "<", 50]];
+        serverData.models.partner.records[0].timmy = [12];
+        serverData.models.partner_type.records.push({ id: 99, display_name: "red", color: 8 });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="timmy" widget="many2many_tags" domain="domain"/>
+                    <field name="domain" invisible="1"/>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.containsOnce(target, ".o_field_many2many_tags .badge", "should contain 1 tag");
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".badge")),
+            ["gold"],
+            "should have fetched and rendered gold partner tag"
+        );
+
+        await clickDropdown(target, "timmy");
+
+        const autocompleteDropdown = target.querySelector(".o-autocomplete--dropdown-menu");
+
+        assert.strictEqual(
+            autocompleteDropdown.querySelectorAll("li").length,
+            2,
+            "autocomplete dropdown should have 2 entry"
+        );
+        assert.deepEqual(
+            getNodesTextContent(autocompleteDropdown.querySelectorAll("li")),
+            ["silver", "Start typing..."],
+            "should contain newly added tag 'silver'"
+        );
+        assert.strictEqual(
+            autocompleteDropdown.querySelector("li a").textContent,
+            "silver",
+            "autocomplete dropdown should contain 'silver'"
+        );
+
+        await clickOpenedDropdownItem(target, "timmy", "silver");
+
+        assert.strictEqual(
+            target.querySelectorAll(".o_field_many2many_tags .badge").length,
+            2,
+            "should contain 2 tags"
+        );
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".badge")),
+            ["gold", "silver"],
+            "should contain newly added tag 'silver'"
+        );
+    });
+
     QUnit.test("Many2ManyTagsField in a new record", async function (assert) {
         assert.expect(7);
 
