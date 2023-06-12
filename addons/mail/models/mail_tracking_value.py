@@ -3,7 +3,7 @@
 
 from datetime import datetime
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class MailTracking(models.Model):
@@ -63,11 +63,9 @@ class MailTracking(models.Model):
 
         :return: a dict values valid for 'mail.tracking.value' creation;
         """
-        tracked = True
-
         field = self.env['ir.model.fields']._get(record._name, col_name)
         if not field:
-            return
+            raise ValueError(f'Unknown field {col_name} on model {record._name}')
 
         values = {'field': field.id, 'field_desc': col_info['string'], 'field_type': col_info['type'], 'tracking_sequence': tracking_sequence}
 
@@ -106,11 +104,9 @@ class MailTracking(models.Model):
                 'new_value_char': ', '.join(new_value.mapped('display_name')) if new_value else '',
             })
         else:
-            tracked = False
+            raise NotImplementedError(f'Unsupported tracking on field {field.name} (type {col_info["type"]}')
 
-        if tracked:
-            return values
-        return {}
+        return values
 
     def _tracking_value_format(self):
         """ Return structure and formatted data structure to be used by chatter
