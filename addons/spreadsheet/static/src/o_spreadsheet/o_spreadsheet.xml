@@ -313,7 +313,7 @@
             <div
               t-if="isSameColor(props.currentColor, color)"
               align="center"
-              t-attf-style="color:{{getCheckMarkColor()}}">
+              t-attf-style="color:{{checkmarkColor}}">
               ✓
             </div>
           </div>
@@ -339,38 +339,52 @@
             t-attf-style="background-color:{{color}};"
             t-on-click="() => this.onColorClick(color)">
             <div
-              t-if="props.currentColor === color"
+              t-if="isSameColor(props.currentColor, color)"
               align="center"
-              t-attf-style="color:{{getCheckMarkColor()}}">
+              t-attf-style="color:{{checkmarkColor}}">
               ✓
             </div>
           </div>
         </div>
         <div t-if="state.showGradient" class="o-custom-selector">
-          <div class="o-magnifier-glass" t-att-style="magnifyingGlassStyle"/>
           <div
             class="o-gradient"
-            t-on-click.stop="computeCustomColor"
-            t-on-mouseout="hideMagnifier"
-            t-on-mousemove="moveMagnifier"
-            t-on-mouseover="showMagnifier"
-          />
+            t-on-click.stop=""
+            t-on-mousedown="dragGradientPointer"
+            t-att-style="gradientHueStyle">
+            <div class="saturation w-100 h-100 position-absolute pe-none"/>
+            <div class="lightness w-100 h-100 position-absolute pe-none"/>
+            <div class="magnifier pe-none" t-att-style="pointerStyle"/>
+          </div>
+          <div class="o-hue-container" t-on-mousedown="dragHuePointer">
+            <div class="o-hue-picker" t-on-click.stop=""/>
+            <div class="o-hue-slider pe-none" t-att-style="sliderStyle">
+              <t t-call="o-spreadsheet-Icon.TRIANGLE_UP"/>
+            </div>
+          </div>
           <div class="o-custom-input-preview">
             <input
               type="text"
-              t-att-class="{'o-wrong-color': state.isCurrentColorInvalid }"
+              t-att-class="{'o-wrong-color': !isHexColorInputValid }"
               t-on-click.stop=""
-              t-model="state.currentColor"
+              t-att-value="state.customHexColor"
+              t-on-input="setHexColor"
+              maxlength="7"
             />
-            <div class="o-color-preview" t-attf-style="background-color:{{state.currentColor}}"/>
+            <div class="o-color-preview" t-att-style="colorPreviewStyle"/>
           </div>
           <div class="o-custom-input-buttons">
-            <button class="o-add-button" t-on-click="setCustomColor">Add</button>
+            <button
+              class="o-add-button"
+              t-att-class="{'o-disabled': !state.customHexColor or !isHexColorInputValid}"
+              t-on-click.stop="addCustomColor">
+              Add
+            </button>
           </div>
         </div>
         <div class="o-separator"/>
         <div class="o-buttons">
-          <button t-on-click="resetColor" class="o-cancel">Reset</button>
+          <button t-on-click="resetColor" class="o-cancel">No Color</button>
         </div>
       </div>
     </Popover>
@@ -2338,10 +2352,9 @@
           as headers
         </label>
       </div>
-      <div class="o-section o-sidepanel-error" t-if="errorMessages">
-        <div t-foreach="errorMessages" t-as="error" t-key="error">
-          <t t-esc="error"/>
-        </div>
+
+      <div class="o-section" t-if="errorMessages.length">
+        <SidePanelErrors messages="errorMessages" msgType="'error'"/>
       </div>
     </div>
   </t>
@@ -2409,10 +2422,9 @@
           onSelectionConfirmed="() => this.updateDataRange()"
         />
       </div>
-      <div class="o-section o-sidepanel-error" t-if="configurationErrorMessages">
-        <div t-foreach="configurationErrorMessages" t-as="error" t-key="error">
-          <t t-esc="error"/>
-        </div>
+
+      <div class="o-section" t-if="configurationErrorMessages.length">
+        <SidePanelErrors messages="configurationErrorMessages" msgType="'error'"/>
       </div>
     </div>
   </t>
@@ -2448,8 +2460,9 @@
         <div class="o-subsection-left">
           <input
             type="text"
-            t-att-value="props.definition.sectionRule.rangeMin"
-            t-on-change="updateRangeMin"
+            t-model="state.sectionRule.rangeMin"
+            t-on-change="() => this.updateSectionRule(state.sectionRule)"
+            t-on-input="() => this.canUpdateSectionRule(state.sectionRule)"
             class="o-input o-data-range-min"
             t-att-class="{ 'o-invalid': isRangeMinInvalid() }"
           />
@@ -2457,8 +2470,9 @@
         <div class="o-subsection-right">
           <input
             type="text"
-            t-att-value="props.definition.sectionRule.rangeMax"
-            t-on-change="updateRangeMax"
+            t-model="state.sectionRule.rangeMax"
+            t-on-change="() => this.updateSectionRule(state.sectionRule)"
+            t-on-input="() => this.canUpdateSectionRule(state.sectionRule)"
             class="o-input o-data-range-max"
             t-att-class="{ 'o-invalid': isRangeMaxInvalid() }"
           />
@@ -2468,14 +2482,12 @@
       <div class="o-section">
         <div class="o-section-title">Thresholds</div>
         <t t-call="o-spreadsheet-GaugeChartColorSectionTemplate">
-          <t t-set="sectionRule" t-value="props.definition.sectionRule"/>
+          <t t-set="sectionRule" t-value="state.sectionRule"/>
         </t>
       </div>
 
-      <div class="o-section o-sidepanel-error" t-if="designErrorMessages.length">
-        <div t-foreach="designErrorMessages" t-as="error" t-key="error">
-          <t t-esc="error"/>
-        </div>
+      <div class="o-section" t-if="designErrorMessages.length">
+        <SidePanelErrors messages="designErrorMessages" msgType="'error'"/>
       </div>
     </div>
   </t>
@@ -2541,10 +2553,11 @@
         <input
           type="text"
           class="o-input"
-          t-on-change="(ev) => this.updateInflectionPointValue(inflectionPointName, ev)"
+          t-model="inflectionPoint.value"
+          t-on-input="() => this.canUpdateSectionRule(state.sectionRule)"
+          t-on-change="() => this.updateSectionRule(state.sectionRule)"
           t-attf-class="o-input-{{inflectionPointName}}"
           t-att-class="{ 'o-invalid': isInvalid }"
-          t-model="inflectionPoint.value"
         />
       </td>
       <td>
@@ -2552,7 +2565,7 @@
           class="o-input"
           name="valueType"
           t-model="inflectionPoint.type"
-          t-on-change="(ev) => this.updateInflectionPointType(inflectionPointName, ev)">
+          t-on-change="(ev) => this.updateSectionRule(state.sectionRule)">
           <option value="number">Number</option>
           <option value="percentage">Percentage</option>
         </select>
@@ -2604,10 +2617,9 @@
           as headers
         </label>
       </div>
-      <div class="o-section o-sidepanel-error" t-if="errorMessages">
-        <div t-foreach="errorMessages" t-as="error" t-key="error">
-          <t t-esc="error"/>
-        </div>
+
+      <div class="o-section" t-if="errorMessages.length">
+        <SidePanelErrors messages="errorMessages" msgType="'error'"/>
       </div>
     </div>
   </t>
@@ -2721,10 +2733,9 @@
           as headers
         </label>
       </div>
-      <div class="o-section o-sidepanel-error" t-if="errorMessages">
-        <div t-foreach="errorMessages" t-as="error" t-key="error">
-          <t t-esc="error"/>
-        </div>
+
+      <div class="o-section" t-if="errorMessages.length">
+        <SidePanelErrors messages="errorMessages" msgType="'error'"/>
       </div>
     </div>
   </t>
@@ -2821,6 +2832,7 @@
           definition="definition"
           figureId="figureId"
           updateChart.bind="updateChart"
+          canUpdateChart.bind="canUpdateChart"
           t-key="figureId + definition.type"
         />
       </t>
@@ -2830,6 +2842,7 @@
           definition="definition"
           figureId="figureId"
           updateChart.bind="updateChart"
+          canUpdateChart.bind="canUpdateChart"
           t-key="figureId + definition.type"
         />
       </t>
@@ -2869,10 +2882,9 @@
           <option value="percentage">Percentage change from key value</option>
         </select>
       </div>
-      <div class="o-section o-sidepanel-error" t-if="errorMessages">
-        <div t-foreach="errorMessages" t-as="error" t-key="error">
-          <t t-esc="error"/>
-        </div>
+
+      <div class="o-section" t-if="errorMessages.length">
+        <SidePanelErrors messages="errorMessages" msgType="'error'"/>
       </div>
     </div>
   </t>
@@ -3585,6 +3597,15 @@
     </div>
   </t>
 
+  <t t-name="o-spreadsheet-SidePanelErrors" owl="1">
+    <t t-foreach="props.messages" t-as="msg" t-key="msg">
+      <div class="d-flex align-items-center" t-att-class="divClasses">
+        <t t-call="o-spreadsheet-Icon.TRIANGLE_EXCLAMATION"/>
+        <span t-esc="msg"/>
+      </div>
+    </t>
+  </t>
+
   <t t-name="o-spreadsheet-SplitIntoColumnsPanel" owl="1">
     <div class="o-split-to-cols-panel">
       <div class="o-section">
@@ -3632,18 +3653,8 @@
           </button>
         </div>
 
-        <t t-foreach="errorMessages" t-as="error" t-key="error">
-          <div class="o-sidepanel-error d-flex align-items-center text-danger">
-            <t t-call="o-spreadsheet-Icon.TRIANGLE_EXCLAMATION"/>
-            <span t-esc="error"/>
-          </div>
-        </t>
-        <t t-foreach="warningMessages" t-as="warning" t-key="warning">
-          <div class="o-sidepanel-warning d-flex align-items-center text-warning">
-            <t t-call="o-spreadsheet-Icon.TRIANGLE_EXCLAMATION"/>
-            <span t-esc="warning"/>
-          </div>
-        </t>
+        <SidePanelErrors messages="errorMessages" msgType="'error'"/>
+        <SidePanelErrors messages="warningMessages" msgType="'warning'"/>
       </div>
     </div>
   </t>
@@ -3860,7 +3871,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.4.0-alpha.3';
-  __info__.date = '2023-06-02T10:56:27.729Z';
-  __info__.hash = '059d66a';
+  __info__.version = '16.4.0-alpha.4';
+  __info__.date = '2023-06-12T14:15:15.398Z';
+  __info__.hash = '251a52e';
 -->

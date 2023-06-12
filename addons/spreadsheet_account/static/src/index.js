@@ -18,11 +18,12 @@ cellMenuRegistry.add("move_lines_see_records", {
     sequence: 176,
     async execute(env) {
         const position = env.model.getters.getActivePosition();
+        const sheetId = position.sheetId;
         const cell = env.model.getters.getCell(position);
         const { args } = getFirstAccountFunction(cell.content);
         let [codes, date_range, offset, companyId, includeUnposted] = args
             .map(astToFormula)
-            .map((arg) => env.model.getters.evaluateFormula(arg));
+            .map((arg) => env.model.getters.evaluateFormula(sheetId, arg));
         codes = toString(codes).split(",");
         const dateRange = parseAccountingDate(date_range);
         dateRange.year += offset || 0;

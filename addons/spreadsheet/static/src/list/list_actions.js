@@ -5,13 +5,14 @@ import { getFirstListFunction, getNumberOfListFormulas } from "./list_helpers";
 
 export const SEE_RECORD_LIST = async (position, env) => {
     const cell = env.model.getters.getCell(position);
+    const sheetId = position.sheetId;
     if (!cell) {
         return;
     }
     const { args } = getFirstListFunction(cell.content);
     const evaluatedArgs = args
         .map(astToFormula)
-        .map((arg) => env.model.getters.evaluateFormula(arg));
+        .map((arg) => env.model.getters.evaluateFormula(sheetId, arg));
     const listId = env.model.getters.getListIdFromPosition(position);
     const { model } = env.model.getters.getListDefinition(listId);
     const dataSource = await env.model.getters.getAsyncListDataSource(listId);
