@@ -680,6 +680,8 @@ class AccountBankStatementLine(models.Model):
         - The lines using the liquidity account.
         - The lines using the transfer account.
         - The lines being not in one of the two previous categories.
+        If we can't exact match the account it may be that journal configuration
+        was altered after creating the line, so we try to match the account_type
         :return: (liquidity_lines, suspense_lines, other_lines)
         """
         liquidity_lines = self.env['account.move.line']
@@ -687,9 +689,9 @@ class AccountBankStatementLine(models.Model):
         other_lines = self.env['account.move.line']
 
         for line in self.move_id.line_ids:
-            if line.account_id == self.journal_id.default_account_id:
+            if line.account_id == self.journal_id.default_account_id or line.account_id.account_type == 'asset_cash':
                 liquidity_lines += line
-            elif line.account_id == self.journal_id.suspense_account_id:
+            elif line.account_id == self.journal_id.suspense_account_id or line.account_id.account_type == 'asset_current':
                 suspense_lines += line
             else:
                 other_lines += line

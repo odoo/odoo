@@ -1410,3 +1410,26 @@ class TestAccountBankStatementLine(AccountTestInvoicingCommon):
             {'res_id': statement.id, 'res_model': 'account.bank.statement'},
             {'res_id': statement.id, 'res_model': 'account.bank.statement'},
         ])
+
+    def test_statement_seek_for_lines(self):
+        ''' Ensure we can seek for lines even after a journal configuration change '''
+        journal = self.bank_journal_2
+        default_account_id = journal.default_account_id
+        amount = 100
+
+        statement_line = self.env['account.bank.statement.line'].create({
+            'date': '2019-01-01',
+            'journal_id': journal.id,
+            'payment_ref': 'line_1',
+            'partner_id': self.partner_a.id,
+            'amount': amount,
+        })
+
+        journal.default_account_id = self.bank_journal_3.default_account_id
+        liquidity_lines, suspense_lines, _ = statement_line._seek_for_lines()
+        self.assertRecordValues(liquidity_lines, [
+            {'debit': 100.0, 'credit': 0.0, 'account_id': default_account_id.id}
+        ])
+        self.assertRecordValues(suspense_lines, [
+            {'debit': 0.0, 'credit': 100.0, 'account_id': journal.suspense_account_id.id}
+        ])
