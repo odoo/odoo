@@ -59,7 +59,6 @@ patch(MockServer.prototype, {
             case "datetime":
             case "float":
             case "integer":
-            case "monetary":
             case "text":
                 values[`old_value_${irField.ttype}`] = initialValue;
                 values[`new_value_${irField.ttype}`] = newValue;
@@ -71,6 +70,10 @@ patch(MockServer.prototype, {
             case "boolean":
                 values["old_value_integer"] = initialValue ? 1 : 0;
                 values["new_value_integer"] = newValue ? 1 : 0;
+                break;
+            case "monetary":
+                values[`old_value_float`] = initialValue;
+                values[`new_value_float`] = newValue;
                 break;
             case "selection":
                 values["old_value_char"] = initialValue;
@@ -129,7 +132,6 @@ patch(MockServer.prototype, {
         switch (irField.ttype) {
             case "float":
             case "integer":
-            case "monetary":
             case "text":
                 return record[`${type}_value_${irField.ttype}`];
             case "datetime":
@@ -147,6 +149,8 @@ patch(MockServer.prototype, {
                 }
             case "boolean":
                 return !!record[`${type}_value_integer`];
+            case "monetary":
+                return record[`${type}_value_float`];
             default:
                 return record[`${type}_value_char`];
         }

@@ -17,14 +17,12 @@ class MailTracking(models.Model):
 
     old_value_integer = fields.Integer('Old Value Integer', readonly=True)
     old_value_float = fields.Float('Old Value Float', readonly=True)
-    old_value_monetary = fields.Float('Old Value Monetary', readonly=True)
     old_value_char = fields.Char('Old Value Char', readonly=True)
     old_value_text = fields.Text('Old Value Text', readonly=True)
     old_value_datetime = fields.Datetime('Old Value DateTime', readonly=True)
 
     new_value_integer = fields.Integer('New Value Integer', readonly=True)
     new_value_float = fields.Float('New Value Float', readonly=True)
-    new_value_monetary = fields.Float('New Value Monetary', readonly=True)
     new_value_char = fields.Char('New Value Char', readonly=True)
     new_value_text = fields.Text('New Value Text', readonly=True)
     new_value_datetime = fields.Datetime('New Value Datetime', readonly=True)
@@ -63,13 +61,17 @@ class MailTracking(models.Model):
 
         values = {'field': field.id}
 
-        if col_info['type'] in {'integer', 'float', 'char', 'text', 'datetime', 'monetary'}:
+        if col_info['type'] in {'integer', 'float', 'char', 'text', 'datetime'}:
             values.update({
                 f'old_value_{col_info["type"]}': initial_value,
                 f'new_value_{col_info["type"]}': new_value
             })
-            if col_info['type'] == 'monetary':
-                values['currency_id'] = record[col_info['currency_field']].id
+        elif col_info['type'] == 'monetary':
+            values.update({
+                'currency_id': record[col_info['currency_field']].id,
+                'old_value_float': initial_value,
+                'new_value_float': new_value
+            })
         elif col_info['type'] == 'date':
             values.update({
                 'old_value_datetime': initial_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(initial_value), datetime.min.time())) or False,
@@ -157,7 +159,7 @@ class MailTracking(models.Model):
             'char': ('old_value_char', 'new_value_char'),
             'float': ('old_value_float', 'new_value_float'),
             'integer': ('old_value_integer', 'new_value_integer'),
-            'monetary': ('old_value_monetary', 'new_value_monetary'),
+            'monetary': ('old_value_float', 'new_value_float'),
             'text': ('old_value_text', 'new_value_text'),
         }
 
