@@ -1704,27 +1704,36 @@
         }
         return numberString.slice(0, i + 1) || undefined;
     }
+    const leadingZeroesRegexp = /^0+/;
     /**
      * Limit the size of the decimal part of a number to the given number of digits.
      */
     function limitDecimalDigits(decimalDigits, maxDecimals) {
+        var _a;
         let integerDigits = "0";
         let resultDecimalDigits = decimalDigits;
         // Note : we'd want to simply use number.toFixed() to handle the max digits & rounding,
         // but it has very strange behaviour. Ex: 12.345.toFixed(2) => "12.35", but 1.345.toFixed(2) => "1.34"
         let slicedDecimalDigits = decimalDigits.slice(0, maxDecimals);
         const i = maxDecimals;
-        if (Number(Number(decimalDigits[i]) < 5)) {
+        if (Number(decimalDigits[i]) < 5) {
             return { integerDigits, decimalDigits: slicedDecimalDigits };
         }
         // round up
+        const leadingZeroes = ((_a = slicedDecimalDigits.match(leadingZeroesRegexp)) === null || _a === void 0 ? void 0 : _a[0]) || "";
         const slicedRoundedUp = (Number(slicedDecimalDigits) + 1).toString();
-        if (slicedRoundedUp.length > slicedDecimalDigits.length) {
-            integerDigits = (Number(integerDigits) + 1).toString();
+        const withoutLeadingZeroes = slicedDecimalDigits.slice(leadingZeroes.length);
+        // e.g. carry over from 99 to 100
+        const carryOver = slicedRoundedUp.length > withoutLeadingZeroes.length;
+        if (carryOver && !leadingZeroes) {
+            integerDigits = "1";
             resultDecimalDigits = undefined;
         }
+        else if (carryOver) {
+            resultDecimalDigits = leadingZeroes.slice(0, -1) + slicedRoundedUp;
+        }
         else {
-            resultDecimalDigits = slicedRoundedUp;
+            resultDecimalDigits = leadingZeroes + slicedRoundedUp;
         }
         return { integerDigits, decimalDigits: resultDecimalDigits };
     }
@@ -17342,6 +17351,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         (this.autoCompleteState.selectedIndex + 1) % this.autoCompleteState.values.length;
                 }
             }
+            this.updateCursorIfNeeded();
         }
         processTabKey(ev) {
             var _a;
@@ -17400,9 +17410,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             else {
                 ev.stopPropagation();
+                this.updateCursorIfNeeded();
             }
-            const { start, end } = this.contentHelper.getCurrentSelection();
+        }
+        updateCursorIfNeeded() {
             if (!this.env.model.getters.isSelectingForComposer()) {
+                const { start, end } = this.contentHelper.getCurrentSelection();
                 this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", { start, end });
                 this.isKeyStillDown = true;
             }
@@ -20033,6 +20046,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     .o-color-picker-toggler {
       display: flex;
       .o-color-picker-toggler-sign {
+        display: flex;
         margin: auto auto;
         width: 55%;
         height: 55%;
@@ -44257,9 +44271,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.1.13';
-    __info__.date = '2023-06-02T10:16:29.485Z';
-    __info__.hash = '5386a5b';
+    __info__.version = '16.1.14';
+    __info__.date = '2023-06-12T14:10:49.146Z';
+    __info__.hash = 'a51d9fa';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
