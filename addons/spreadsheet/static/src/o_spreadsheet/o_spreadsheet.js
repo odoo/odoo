@@ -1202,6 +1202,15 @@
             return false;
         }
     }
+    function isHSLAValid(color) {
+        try {
+            hslaToHex(color);
+            return true;
+        }
+        catch (error) {
+            return false;
+        }
+    }
     const isColorValueValid = (v) => v >= 0 && v <= 255;
     function rgba(r, g, b, a = 1) {
         const isInvalid = !isColorValueValid(r) || !isColorValueValid(g) || !isColorValueValid(b) || a < 0 || a > 1;
@@ -1395,8 +1404,34 @@
         l = +(l * 100).toFixed(1);
         return { a: rgba.a, h, s, l };
     }
-    function isSameColor(color1, color2) {
-        return isColorValid(color1) && isColorValid(color2) && toHex(color1) === toHex(color2);
+    function hslaToHex(hsla) {
+        return rgbaToHex(hslaToRGBA(hsla));
+    }
+    function hexToHSLA(hex) {
+        return rgbaToHSLA(colorToRGBA(hex));
+    }
+    /**
+     * Will compare two color strings
+     * A tolerance can be provided to account for small differences that could
+     * be introduced by non-bijective transformations between color spaces.
+     *
+     * E.g. HSV <-> RGB is not a bijection
+     *
+     * Note that the tolerance is applied on the euclidean distance between
+     * the two **normalized** color values.
+     */
+    function isSameColor(color1, color2, tolerance = 0) {
+        if (!(isColorValid(color1) && isColorValid(color2))) {
+            return false;
+        }
+        const rgb1 = colorToRGBA(color1);
+        const rgb2 = colorToRGBA(color2);
+        // alpha cannot differ as it is not impacted by transformations
+        if (rgb1.a !== rgb2.a) {
+            return false;
+        }
+        const diff = Math.sqrt(((rgb1.r - rgb2.r) / 255) ** 2 + ((rgb1.g - rgb2.g) / 255) ** 2 + ((rgb1.b - rgb2.b) / 255) ** 2);
+        return diff <= tolerance;
     }
 
     //------------------------------------------------------------------------------
@@ -1789,6 +1824,7 @@
         }
         return numberString.slice(0, i + 1) || undefined;
     }
+    const leadingZeroesRegexp = /^0+/;
     /**
      * Limit the size of the decimal part of a number to the given number of digits.
      */
@@ -1799,17 +1835,24 @@
         // but it has very strange behaviour. Ex: 12.345.toFixed(2) => "12.35", but 1.345.toFixed(2) => "1.34"
         let slicedDecimalDigits = decimalDigits.slice(0, maxDecimals);
         const i = maxDecimals;
-        if (Number(Number(decimalDigits[i]) < 5)) {
+        if (Number(decimalDigits[i]) < 5) {
             return { integerDigits, decimalDigits: slicedDecimalDigits };
         }
         // round up
+        const leadingZeroes = slicedDecimalDigits.match(leadingZeroesRegexp)?.[0] || "";
         const slicedRoundedUp = (Number(slicedDecimalDigits) + 1).toString();
-        if (slicedRoundedUp.length > slicedDecimalDigits.length) {
-            integerDigits = (Number(integerDigits) + 1).toString();
+        const withoutLeadingZeroes = slicedDecimalDigits.slice(leadingZeroes.length);
+        // e.g. carry over from 99 to 100
+        const carryOver = slicedRoundedUp.length > withoutLeadingZeroes.length;
+        if (carryOver && !leadingZeroes) {
+            integerDigits = "1";
             resultDecimalDigits = undefined;
         }
+        else if (carryOver) {
+            resultDecimalDigits = leadingZeroes.slice(0, -1) + slicedRoundedUp;
+        }
         else {
-            resultDecimalDigits = slicedRoundedUp;
+            resultDecimalDigits = leadingZeroes + slicedRoundedUp;
         }
         return { integerDigits, decimalDigits: resultDecimalDigits };
     }
@@ -4241,8 +4284,6 @@
         "CREATE_SHEET",
         "ADD_COLUMNS_ROWS",
         "REMOVE_COLUMNS_ROWS",
-        "DELETE_CELL",
-        "INSERT_CELL",
         "UNDO",
         "REDO",
         "ADD_MERGE",
@@ -5891,7 +5932,7 @@
         isVisible: (env) => {
             return env.model.getters.getSheetIds().length > 1;
         },
-        execute: (env) => env.askConfirmation(_lt("Are you sure you want to delete this sheet ?"), () => {
+        execute: (env) => env.askConfirmation(_lt("Are you sure you want to delete this sheet?"), () => {
             env.model.dispatch("DELETE_SHEET", { sheetId: env.model.getters.getActiveSheetId() });
         }),
     };
@@ -16253,10 +16294,21 @@
             function computeValueAndFormat(...args) {
                 const computeValue = descr.compute.bind(this);
                 const computeFormat = descr.computeFormat ? descr.computeFormat.bind(this) : () => undefined;
-                return {
-                    value: computeValue(...extractArgValuesFromArgs(args)),
-                    format: computeFormat(...args),
-                };
+                const value = computeValue(...extractArgValuesFromArgs(args));
+                const format = computeFormat(...args);
+                if (isMatrix(value)) {
+                    return {
+                        value,
+                        format,
+                    };
+                }
+                if (!isMatrix(format)) {
+                    return {
+                        value,
+                        format,
+                    };
+                }
+                throw new Error("A format matrix should never be associated with a scalar value");
             }
             this.mapping[name] = computeValueAndFormat;
             super.add(name, descr);
@@ -17909,9 +17961,35 @@
         onSelectionConfirmed: { type: Function, optional: true },
     };
 
+    css /* scss */ `
+  .o-sidepanel-error,
+  .o-sidepanel-warning {
+    margin-top: 10px;
+
+    .o-icon {
+      margin-right: 5px;
+      height: 1.2em;
+      width: 1.2em;
+    }
+  }
+`;
+    class SidePanelErrors extends owl.Component {
+        static template = "o-spreadsheet-SidePanelErrors";
+        get divClasses() {
+            if (this.props.msgType === "warning") {
+                return "o-sidepanel-warning text-warning";
+            }
+            return "o-sidepanel-error text-danger";
+        }
+    }
+    SidePanelErrors.props = {
+        messages: Array,
+        msgType: String,
+    };
+
     class LineBarPieConfigPanel extends owl.Component {
         static template = "o-spreadsheet-LineBarPieConfigPanel";
-        static components = { SelectionInput };
+        static components = { SelectionInput, SidePanelErrors };
         state = owl.useState({
             datasetDispatchResult: undefined,
             labelsDispatchResult: undefined,
@@ -17946,6 +18024,9 @@
          */
         onDataSeriesRangesChanged(ranges) {
             this.dataSeriesRanges = ranges;
+            this.state.datasetDispatchResult = this.props.canUpdateChart(this.props.figureId, {
+                dataSets: this.dataSeriesRanges,
+            });
         }
         onDataSeriesConfirmed() {
             this.dataSeriesRanges = spreadRange(this.dataSeriesRanges);
@@ -17962,6 +18043,9 @@
          */
         onLabelRangeChanged(ranges) {
             this.labelRange = ranges[0];
+            this.state.labelsDispatchResult = this.props.canUpdateChart(this.props.figureId, {
+                labelRange: this.labelRange,
+            });
         }
         onLabelRangeConfirmed() {
             this.state.labelsDispatchResult = this.props.updateChart(this.props.figureId, {
@@ -17997,6 +18081,7 @@
         figureId: String,
         definition: Object,
         updateChart: Function,
+        canUpdateChart: Function,
     };
 
     class BarConfigPanel extends LineBarPieConfigPanel {
@@ -18013,40 +18098,193 @@
         }
     }
 
-    const PICKER_PADDING = 6;
+    function startDnd(onMouseMove, onMouseUp, onMouseDown = () => { }) {
+        const _onMouseDown = (ev) => {
+            ev.preventDefault();
+            onMouseDown(ev);
+        };
+        const _onMouseMove = (ev) => {
+            ev.preventDefault();
+            onMouseMove(ev);
+        };
+        const _onMouseUp = (ev) => {
+            ev.preventDefault();
+            onMouseUp(ev);
+            window.removeEventListener("mousedown", _onMouseDown);
+            window.removeEventListener("mouseup", _onMouseUp);
+            window.removeEventListener("dragstart", _onDragStart);
+            window.removeEventListener("mousemove", _onMouseMove);
+            window.removeEventListener("wheel", _onMouseMove);
+        };
+        function _onDragStart(ev) {
+            ev.preventDefault();
+        }
+        window.addEventListener("mousedown", _onMouseDown);
+        window.addEventListener("mouseup", _onMouseUp);
+        window.addEventListener("dragstart", _onDragStart);
+        window.addEventListener("mousemove", _onMouseMove);
+        // mouse wheel on window is by default a passive event.
+        // preventDefault() is not allowed in passive event handler.
+        // https://chromestatus.com/feature/6662647093133312
+        window.addEventListener("wheel", _onMouseMove, { passive: false });
+    }
+    /**
+     * Function to be used during a mousedown event, this function allows to
+     * perform actions related to the mousemove and mouseup events and adjusts the viewport
+     * when the new position related to the mousemove event is outside of it.
+     * Among inputs are two callback functions. First intended for actions performed during
+     * the mousemove event, it receives as parameters the current position of the mousemove
+     * (occurrence of the current column and the current row). Second intended for actions
+     * performed during the mouseup event.
+     */
+    function dragAndDropBeyondTheViewport(env, cbMouseMove, cbMouseUp, only = false) {
+        let timeOutId = null;
+        let currentEv;
+        let previousEv;
+        let startingEv;
+        let startingX;
+        let startingY;
+        const getters = env.model.getters;
+        const sheetId = getters.getActiveSheetId();
+        const position = gridOverlayPosition();
+        let colIndex;
+        let rowIndex;
+        const onMouseDown = (ev) => {
+            previousEv = ev;
+            startingEv = ev;
+            startingX = startingEv.clientX - position.left;
+            startingY = startingEv.clientY - position.top;
+        };
+        const onMouseMove = (ev) => {
+            currentEv = ev;
+            if (timeOutId) {
+                return;
+            }
+            const { x: offsetCorrectionX, y: offsetCorrectionY } = getters.getMainViewportCoordinates();
+            let { top, left, bottom, right } = getters.getActiveMainViewport();
+            let { scrollX, scrollY } = getters.getActiveSheetDOMScrollInfo();
+            const { xSplit, ySplit } = getters.getPaneDivisions(sheetId);
+            let canEdgeScroll = false;
+            let timeoutDelay = MAX_DELAY;
+            const x = currentEv.clientX - position.left;
+            colIndex = getters.getColIndex(x);
+            if (only !== "vertical") {
+                const previousX = previousEv.clientX - position.left;
+                const edgeScrollInfoX = getters.getEdgeScrollCol(x, previousX, startingX);
+                if (edgeScrollInfoX.canEdgeScroll) {
+                    canEdgeScroll = true;
+                    timeoutDelay = Math.min(timeoutDelay, edgeScrollInfoX.delay);
+                    let newTarget;
+                    switch (edgeScrollInfoX.direction) {
+                        case "reset":
+                            colIndex = xSplit;
+                            newTarget = xSplit;
+                            break;
+                        case 1:
+                            colIndex = right;
+                            newTarget = left + 1;
+                            break;
+                        case -1:
+                            colIndex = left - 1;
+                            while (env.model.getters.isColHidden(sheetId, colIndex)) {
+                                colIndex--;
+                            }
+                            newTarget = colIndex;
+                            break;
+                    }
+                    scrollX = getters.getColDimensions(sheetId, newTarget).start - offsetCorrectionX;
+                }
+            }
+            const y = currentEv.clientY - position.top;
+            rowIndex = getters.getRowIndex(y);
+            if (only !== "horizontal") {
+                const previousY = previousEv.clientY - position.top;
+                const edgeScrollInfoY = getters.getEdgeScrollRow(y, previousY, startingY);
+                if (edgeScrollInfoY.canEdgeScroll) {
+                    canEdgeScroll = true;
+                    timeoutDelay = Math.min(timeoutDelay, edgeScrollInfoY.delay);
+                    let newTarget;
+                    switch (edgeScrollInfoY.direction) {
+                        case "reset":
+                            rowIndex = ySplit;
+                            newTarget = ySplit;
+                            break;
+                        case 1:
+                            rowIndex = bottom;
+                            newTarget = top + edgeScrollInfoY.direction;
+                            break;
+                        case -1:
+                            rowIndex = top - 1;
+                            while (env.model.getters.isRowHidden(sheetId, rowIndex)) {
+                                rowIndex--;
+                            }
+                            newTarget = rowIndex;
+                            break;
+                    }
+                    scrollY = env.model.getters.getRowDimensions(sheetId, newTarget).start - offsetCorrectionY;
+                }
+            }
+            if (!canEdgeScroll) {
+                if (rowIndex === -1) {
+                    rowIndex = y < 0 ? 0 : getters.getNumberRows(sheetId) - 1;
+                }
+                if (colIndex === -1 && x < 0) {
+                    colIndex = x < 0 ? 0 : getters.getNumberCols(sheetId) - 1;
+                }
+            }
+            cbMouseMove(colIndex, rowIndex, currentEv);
+            if (canEdgeScroll) {
+                env.model.dispatch("SET_VIEWPORT_OFFSET", { offsetX: scrollX, offsetY: scrollY });
+                timeOutId = setTimeout(() => {
+                    timeOutId = null;
+                    onMouseMove(currentEv);
+                }, Math.round(timeoutDelay));
+            }
+            previousEv = currentEv;
+        };
+        const onMouseUp = () => {
+            clearTimeout(timeOutId);
+            cbMouseUp();
+        };
+        startDnd(onMouseMove, onMouseUp, onMouseDown);
+    }
+
     const LINE_VERTICAL_PADDING = 1;
-    const LINE_HORIZONTAL_PADDING = 6;
-    const ITEM_HORIZONTAL_MARGIN = 1;
-    const ITEM_EDGE_LENGTH = 18;
+    const PICKER_PADDING = 8;
     const ITEM_BORDER_WIDTH = 1;
+    const ITEM_EDGE_LENGTH = 18;
     const ITEMS_PER_LINE = 10;
-    const PICKER_WIDTH = ITEMS_PER_LINE * (ITEM_EDGE_LENGTH + ITEM_HORIZONTAL_MARGIN * 2 + 2 * ITEM_BORDER_WIDTH) +
-        2 * LINE_HORIZONTAL_PADDING;
-    const GRADIENT_WIDTH = PICKER_WIDTH - 2 * LINE_HORIZONTAL_PADDING - 2 * ITEM_BORDER_WIDTH;
-    const GRADIENT_HEIGHT = PICKER_WIDTH - 50;
+    const MAGNIFIER_EDGE = 16;
+    const ITEM_GAP = 2;
+    const CONTENT_WIDTH = ITEMS_PER_LINE * (ITEM_EDGE_LENGTH + 2 * ITEM_BORDER_WIDTH) + (ITEMS_PER_LINE - 1) * ITEM_GAP;
+    const INNER_GRADIENT_WIDTH = CONTENT_WIDTH - 2 * ITEM_BORDER_WIDTH;
+    const INNER_GRADIENT_HEIGHT = CONTENT_WIDTH - 30 - 2 * ITEM_BORDER_WIDTH;
+    const CONTAINER_WIDTH = CONTENT_WIDTH + 2 * PICKER_PADDING;
     css /* scss */ `
   .o-color-picker {
-    padding: ${PICKER_PADDING}px 0px;
+    padding: ${PICKER_PADDING}px 0;
+    /** FIXME: this is useless, overiden by the popover container */
     box-shadow: 1px 2px 5px 2px rgba(51, 51, 51, 0.15);
     background-color: white;
     line-height: 1.2;
     overflow-y: auto;
     overflow-x: hidden;
-    width: ${GRADIENT_WIDTH + 2 * PICKER_PADDING}px;
+    width: ${CONTAINER_WIDTH}px;
 
     .o-color-picker-section-name {
-      margin: 0px ${ITEM_HORIZONTAL_MARGIN}px;
-      padding: 4px ${LINE_HORIZONTAL_PADDING}px;
+      margin: 0px ${ITEM_BORDER_WIDTH}px;
+      padding: 4px ${PICKER_PADDING}px;
     }
     .colors-grid {
       display: grid;
-      padding: ${LINE_VERTICAL_PADDING}px ${LINE_HORIZONTAL_PADDING}px;
+      padding: ${LINE_VERTICAL_PADDING}px ${PICKER_PADDING}px;
       grid-template-columns: repeat(${ITEMS_PER_LINE}, 1fr);
-      grid-gap: ${ITEM_HORIZONTAL_MARGIN * 2}px;
+      grid-gap: ${ITEM_GAP}px;
     }
     .o-color-picker-toggler-button {
       display: flex;
       .o-color-picker-toggler-sign {
+        display: flex;
         margin: auto auto;
         width: 55%;
         height: 55%;
@@ -18072,16 +18310,16 @@
       }
     }
     .o-buttons {
-      padding: 6px;
+      padding: ${PICKER_PADDING}px;
       display: flex;
       .o-cancel {
-        margin: 0px ${ITEM_HORIZONTAL_MARGIN}px;
         border: ${ITEM_BORDER_WIDTH}px solid #c0c0c0;
         width: 100%;
         padding: 5px;
         font-size: 14px;
         background: white;
         border-radius: 4px;
+        box-sizing: border-box;
         &:hover:enabled {
           background-color: rgba(0, 0, 0, 0.08);
         }
@@ -18101,91 +18339,106 @@
       margin-top: ${MENU_SEPARATOR_PADDING}px;
       margin-bottom: ${MENU_SEPARATOR_PADDING}px;
     }
-    input {
-      box-sizing: border-box;
-      width: 100%;
-      border-radius: 4px;
-      padding: 4px 23px 4px 10px;
-      height: 24px;
-      border: 1px solid #c0c0c0;
-      margin: 0 2px 0 0;
-    }
-    input.o-wrong-color {
-      border-color: red;
-    }
+
     .o-custom-selector {
-      padding: ${LINE_HORIZONTAL_PADDING}px;
+      padding: ${PICKER_PADDING + 2}px ${PICKER_PADDING}px;
       position: relative;
       .o-gradient {
-        background: linear-gradient(to bottom, hsl(0 100% 0%), transparent, hsl(0 0% 100%)),
-          linear-gradient(
-            to right,
-            hsl(0 100% 50%) 0%,
-            hsl(0.2turn 100% 50%) 20%,
-            hsl(0.3turn 100% 50%) 30%,
-            hsl(0.4turn 100% 50%) 40%,
-            hsl(0.5turn 100% 50%) 50%,
-            hsl(0.6turn 100% 50%) 60%,
-            hsl(0.7turn 100% 50%) 70%,
-            hsl(0.8turn 100% 50%) 80%,
-            hsl(0.9turn 100% 50%) 90%,
-            hsl(1turn 100% 50%) 100%
-          );
+        margin-bottom: ${MAGNIFIER_EDGE / 2}px;
         border: ${ITEM_BORDER_WIDTH}px solid #c0c0c0;
-        width: ${GRADIENT_WIDTH}px;
-        height: ${GRADIENT_HEIGHT}px;
-        &:hover {
-          cursor: crosshair;
-        }
+        box-sizing: border-box;
+        width: ${INNER_GRADIENT_WIDTH + 2 * ITEM_BORDER_WIDTH}px;
+        height: ${INNER_GRADIENT_HEIGHT + 2 * ITEM_BORDER_WIDTH}px;
+        position: relative;
+      }
+
+      .magnifier {
+        height: ${MAGNIFIER_EDGE}px;
+        width: ${MAGNIFIER_EDGE}px;
+        box-sizing: border-box;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        box-shadow: 0px 0px 3px #c0c0c0;
+        position: absolute;
+        z-index: 2;
+      }
+      .saturation {
+        background: linear-gradient(to right, #fff 0%, transparent 100%);
+      }
+      .lightness {
+        background: linear-gradient(to top, #000 0%, transparent 100%);
+      }
+      .o-hue-picker {
+        border: ${ITEM_BORDER_WIDTH}px solid #c0c0c0;
+        box-sizing: border-box;
+        width: 100%;
+        height: 12px;
+        border-radius: 4px;
+        background: linear-gradient(
+          to right,
+          hsl(0 100% 50%) 0%,
+          hsl(0.2turn 100% 50%) 20%,
+          hsl(0.3turn 100% 50%) 30%,
+          hsl(0.4turn 100% 50%) 40%,
+          hsl(0.5turn 100% 50%) 50%,
+          hsl(0.6turn 100% 50%) 60%,
+          hsl(0.7turn 100% 50%) 70%,
+          hsl(0.8turn 100% 50%) 80%,
+          hsl(0.9turn 100% 50%) 90%,
+          hsl(1turn 100% 50%) 100%
+        );
+        position: relative;
+        cursor: crosshair;
+      }
+      .o-hue-slider {
+        margin-top: -3px;
       }
       .o-custom-input-preview {
-        padding: 2px ${LINE_VERTICAL_PADDING}px;
+        padding: 2px 0px;
         display: flex;
+        input {
+          box-sizing: border-box;
+          width: 50%;
+          border-radius: 4px;
+          padding: 4px 23px 4px 10px;
+          height: 24px;
+          border: 1px solid #c0c0c0;
+          margin-right: 2px;
+        }
+        .o-wrong-color {
+          /** FIXME bootstrap class instead? */
+          outline-color: red;
+          border-color: red;
+          &:focus {
+            outline-style: solid;
+            outline-width: 1px;
+          }
+        }
       }
       .o-custom-input-buttons {
-        padding: 2px ${LINE_VERTICAL_PADDING}px;
-        text-align: right;
+        padding: 2px 0px;
+        display: flex;
+        justify-content: end;
       }
       .o-color-preview {
         border: 1px solid #c0c0c0;
         border-radius: 4px;
-        width: 100%;
+        width: 50%;
       }
     }
   }
-  .o-magnifier-glass {
-    position: absolute;
-    border: ${ITEM_BORDER_WIDTH}px solid #c0c0c0;
-    border-radius: 50%;
-    width: 30px;
-    height: 30px;
-  }
 `;
-    function computeCustomColor(ev) {
-        return rgbaToHex(hslaToRGBA({
-            h: (360 * ev.offsetX) / GRADIENT_WIDTH,
-            s: 100,
-            l: (100 * ev.offsetY) / GRADIENT_HEIGHT,
-            a: 1,
-        }));
-    }
     class ColorPicker extends owl.Component {
         static template = "o-spreadsheet-ColorPicker";
-        static defaultProps = {
-            currentColor: "", //TODO Change it to false instead of empty string
-        };
+        static defaultProps = { currentColor: "" };
         static components = { Popover };
         COLORS = COLOR_PICKER_DEFAULTS;
         state = owl.useState({
             showGradient: false,
-            currentColor: isColorValid(this.props.currentColor) ? this.props.currentColor : "",
-            isCurrentColorInvalid: false,
-            style: {
-                display: "none",
-                background: "#ffffff",
-                left: "0",
-                top: "0",
-            },
+            currentHslaColor: isColorValid(this.props.currentColor)
+                ? { ...hexToHSLA(this.props.currentColor), a: 1 }
+                : { h: 0, s: 100, l: 100, a: 1 },
+            customHexColor: isColorValid(this.props.currentColor) ? toHex(this.props.currentColor) : "",
         });
         get colorPickerStyle() {
             if (this.props.maxHeight !== undefined && this.props.maxHeight <= 0) {
@@ -18201,55 +18454,112 @@
                 verticalOffset: 0,
             };
         }
+        get gradientHueStyle() {
+            const hue = this.state.currentHslaColor?.h || 0;
+            return cssPropertiesToCss({
+                background: `hsl(${hue} 100% 50%)`,
+            });
+        }
+        get sliderStyle() {
+            const hue = this.state.currentHslaColor?.h || 0;
+            const delta = Math.round((hue / 360) * INNER_GRADIENT_WIDTH);
+            const left = clip(delta, 1, INNER_GRADIENT_WIDTH) - ICON_EDGE_LENGTH / 2;
+            return cssPropertiesToCss({
+                "margin-left": `${left}px`,
+            });
+        }
+        get pointerStyle() {
+            const { s, l } = this.state.currentHslaColor || { s: 0, l: 0 };
+            const left = Math.round(INNER_GRADIENT_WIDTH * clip(s / 100, 0, 1));
+            const top = Math.round(INNER_GRADIENT_HEIGHT * clip(1 - (2 * l) / (200 - s), 0, 1));
+            return cssPropertiesToCss({
+                left: `${-MAGNIFIER_EDGE / 2 + left}px`,
+                top: `${-MAGNIFIER_EDGE / 2 + top}px`,
+                background: hslaToHex(this.state.currentHslaColor),
+            });
+        }
+        get colorPreviewStyle() {
+            return cssPropertiesToCss({
+                "background-color": hslaToHex(this.state.currentHslaColor),
+            });
+        }
+        get checkmarkColor() {
+            return chartFontColor(this.props.currentColor);
+        }
+        get isHexColorInputValid() {
+            return !this.state.customHexColor || isColorValid(this.state.customHexColor);
+        }
+        setCustomGradient({ x, y }) {
+            const offsetX = clip(x, 0, INNER_GRADIENT_WIDTH);
+            const offsetY = clip(y, 0, INNER_GRADIENT_HEIGHT);
+            const deltaX = offsetX / INNER_GRADIENT_WIDTH;
+            const deltaY = offsetY / INNER_GRADIENT_HEIGHT;
+            const s = 100 * deltaX;
+            const l = 100 * (1 - deltaY) * (1 - 0.5 * deltaX);
+            this.updateColor({ s, l });
+        }
+        setCustomHue(x) {
+            // needs to be capped such that h is in [0°, 359°]
+            const h = Math.round(clip((360 * x) / INNER_GRADIENT_WIDTH, 0, 359));
+            this.updateColor({ h });
+        }
+        updateColor(newHsl) {
+            this.state.currentHslaColor = { ...this.state.currentHslaColor, ...newHsl };
+            this.state.customHexColor = hslaToHex(this.state.currentHslaColor);
+        }
         onColorClick(color) {
             if (color) {
                 this.props.onColorPicked(toHex(color));
             }
         }
-        getCheckMarkColor() {
-            return chartFontColor(this.props.currentColor);
-        }
         resetColor() {
             this.props.onColorPicked("");
-        }
-        setCustomColor(ev) {
-            if (!isColorValid(this.state.currentColor)) {
-                ev.stopPropagation();
-                this.state.isCurrentColorInvalid = true;
-                return;
-            }
-            const color = toHex(this.state.currentColor);
-            this.state.isCurrentColorInvalid = false;
-            this.props.onColorPicked(color);
-            this.state.currentColor = color;
         }
         toggleColorPicker() {
             this.state.showGradient = !this.state.showGradient;
         }
-        computeCustomColor(ev) {
-            this.state.isCurrentColorInvalid = false;
-            this.state.currentColor = computeCustomColor(ev);
+        dragGradientPointer(ev) {
+            const initialGradientCoordinates = { x: ev.offsetX, y: ev.offsetY };
+            this.setCustomGradient(initialGradientCoordinates);
+            const initialMousePosition = { x: ev.clientX, y: ev.clientY };
+            const onMouseMove = (ev) => {
+                const currentMousePosition = { x: ev.clientX, y: ev.clientY };
+                const deltaX = currentMousePosition.x - initialMousePosition.x;
+                const deltaY = currentMousePosition.y - initialMousePosition.y;
+                const currentGradientCoordinates = {
+                    x: initialGradientCoordinates.x + deltaX,
+                    y: initialGradientCoordinates.y + deltaY,
+                };
+                this.setCustomGradient(currentGradientCoordinates);
+            };
+            startDnd(onMouseMove, () => { });
         }
-        hideMagnifier(_ev) {
-            this.state.style.display = "none";
+        dragHuePointer(ev) {
+            const initialX = ev.offsetX;
+            const initialMouseX = ev.clientX;
+            this.setCustomHue(initialX);
+            const onMouseMove = (ev) => {
+                const currentMouseX = ev.clientX;
+                const deltaX = currentMouseX - initialMouseX;
+                const x = initialX + deltaX;
+                this.setCustomHue(x);
+            };
+            startDnd(onMouseMove, () => { });
         }
-        showMagnifier(_ev) {
-            this.state.style.display = "block";
+        setHexColor(ev) {
+            // only support HEX code input
+            const val = ev.target.value.slice(0, 7);
+            this.state.customHexColor = val;
+            if (!isColorValid(val)) ;
+            else {
+                this.state.currentHslaColor = { ...hexToHSLA(val), a: 1 };
+            }
         }
-        moveMagnifier(ev) {
-            this.state.style.background = computeCustomColor(ev);
-            const shiftFromCursor = 10;
-            this.state.style.left = `${ev.offsetX + shiftFromCursor}px`;
-            this.state.style.top = `${ev.offsetY + shiftFromCursor}px`;
-        }
-        get magnifyingGlassStyle() {
-            const { display, background, left, top } = this.state.style;
-            return cssPropertiesToCss({
-                display,
-                "background-color": display === "block" ? background : undefined,
-                left,
-                top,
-            });
+        addCustomColor(ev) {
+            if (!isHSLAValid(this.state.currentHslaColor) || !isColorValid(this.state.customHexColor)) {
+                return;
+            }
+            this.props.onColorPicked(toHex(this.state.customHexColor));
         }
         isSameColor(color1, color2) {
             return isSameColor(color1, color2);
@@ -18363,6 +18673,7 @@
         figureId: String,
         definition: Object,
         updateChart: Function,
+        canUpdateChart: Function,
     };
 
     class BarChartDesignPanel extends LineBarPieDesignPanel {
@@ -18371,7 +18682,7 @@
 
     class GaugeChartConfigPanel extends owl.Component {
         static template = "o-spreadsheet-GaugeChartConfigPanel";
-        static components = { SelectionInput };
+        static components = { SelectionInput, SidePanelErrors };
         state = owl.useState({
             dataRangeDispatchResult: undefined,
         });
@@ -18385,6 +18696,9 @@
         }
         onDataRangeChanged(ranges) {
             this.dataRange = ranges[0];
+            this.state.dataRangeDispatchResult = this.props.canUpdateChart(this.props.figureId, {
+                dataRange: this.dataRange,
+            });
         }
         updateDataRange() {
             this.state.dataRangeDispatchResult = this.props.updateChart(this.props.figureId, {
@@ -18399,6 +18713,7 @@
         figureId: String,
         definition: Object,
         updateChart: Function,
+        canUpdateChart: Function,
     };
 
     css /* scss */ `
@@ -18434,10 +18749,11 @@
 `;
     class GaugeChartDesignPanel extends owl.Component {
         static template = "o-spreadsheet-GaugeChartDesignPanel";
-        static components = { ColorPickerWidget };
+        static components = { ColorPickerWidget, SidePanelErrors };
         state = owl.useState({
             openedMenu: undefined,
             sectionRuleDispatchResult: undefined,
+            sectionRule: deepCopy(this.props.definition.sectionRule),
         });
         setup() {
             owl.useExternalListener(window, "click", this.closeMenus);
@@ -18478,37 +18794,11 @@
             return !!(this.state.sectionRuleDispatchResult?.isCancelledBecause(43 /* CommandResult.GaugeUpperInflectionPointNaN */) ||
                 this.state.sectionRuleDispatchResult?.isCancelledBecause(44 /* CommandResult.GaugeLowerBiggerThanUpper */));
         }
-        updateInflectionPointValue(attr, ev) {
-            const sectionRule = deepCopy(this.props.definition.sectionRule);
-            sectionRule[attr].value = ev.target.value;
-            this.updateSectionRule(sectionRule);
-        }
-        updateInflectionPointType(attr, ev) {
-            const sectionRule = deepCopy(this.props.definition.sectionRule);
-            sectionRule[attr].type = ev.target.value;
-            this.updateSectionRule(sectionRule);
-        }
         updateSectionColor(target, color) {
-            const sectionRule = deepCopy(this.props.definition.sectionRule);
+            const sectionRule = deepCopy(this.state.sectionRule);
             sectionRule.colors[target] = color;
             this.updateSectionRule(sectionRule);
             this.closeMenus();
-        }
-        updateRangeMin(ev) {
-            let sectionRule = deepCopy(this.props.definition.sectionRule);
-            sectionRule = {
-                ...sectionRule,
-                rangeMin: ev.target.value,
-            };
-            this.updateSectionRule(sectionRule);
-        }
-        updateRangeMax(ev) {
-            let sectionRule = deepCopy(this.props.definition.sectionRule);
-            sectionRule = {
-                ...sectionRule,
-                rangeMax: ev.target.value,
-            };
-            this.updateSectionRule(sectionRule);
         }
         toggleMenu(menu) {
             const isSelected = this.state.openedMenu === menu;
@@ -18522,6 +18812,11 @@
                 sectionRule,
             });
         }
+        canUpdateSectionRule(sectionRule) {
+            this.state.sectionRuleDispatchResult = this.props.canUpdateChart(this.props.figureId, {
+                sectionRule,
+            });
+        }
         closeMenus() {
             this.state.openedMenu = undefined;
         }
@@ -18530,6 +18825,7 @@
         figureId: String,
         definition: Object,
         updateChart: Function,
+        canUpdateChart: Function,
     };
 
     class LineConfigPanel extends LineBarPieConfigPanel {
@@ -18564,7 +18860,7 @@
 
     class ScorecardChartConfigPanel extends owl.Component {
         static template = "o-spreadsheet-ScorecardChartConfigPanel";
-        static components = { SelectionInput };
+        static components = { SelectionInput, SidePanelErrors };
         state = owl.useState({
             keyValueDispatchResult: undefined,
             baselineDispatchResult: undefined,
@@ -18586,6 +18882,9 @@
         }
         onKeyValueRangeChanged(ranges) {
             this.keyValue = ranges[0];
+            this.state.keyValueDispatchResult = this.props.canUpdateChart(this.props.figureId, {
+                keyValue: this.keyValue,
+            });
         }
         updateKeyValueRange() {
             this.state.keyValueDispatchResult = this.props.updateChart(this.props.figureId, {
@@ -18597,6 +18896,9 @@
         }
         onBaselineRangeChanged(ranges) {
             this.baseline = ranges[0];
+            this.state.baselineDispatchResult = this.props.canUpdateChart(this.props.figureId, {
+                baseline: this.baseline,
+            });
         }
         updateBaselineRange() {
             this.state.baselineDispatchResult = this.props.updateChart(this.props.figureId, {
@@ -18614,6 +18916,7 @@
         figureId: String,
         definition: Object,
         updateChart: Function,
+        canUpdateChart: Function,
     };
 
     class ScorecardChartDesignPanel extends owl.Component {
@@ -18663,6 +18966,7 @@
         figureId: String,
         definition: Object,
         updateChart: Function,
+        canUpdateChart: Function,
     };
 
     const chartSidePanelComponentRegistry = new Registry();
@@ -18748,6 +19052,20 @@
                 ...updateDefinition,
             };
             return this.env.model.dispatch("UPDATE_CHART", {
+                definition,
+                id: figureId,
+                sheetId: this.env.model.getters.getFigureSheetId(figureId),
+            });
+        }
+        canUpdateChart(figureId, updateDefinition) {
+            if (figureId !== this.figureId) {
+                return;
+            }
+            const definition = {
+                ...this.getChartDefinition(),
+                ...updateDefinition,
+            };
+            return this.env.model.canDispatch("UPDATE_CHART", {
                 definition,
                 id: figureId,
                 sheetId: this.env.model.getters.getFigureSheetId(figureId),
@@ -19864,6 +20182,7 @@
     ];
     class SplitIntoColumnsPanel extends owl.Component {
         static template = "o-spreadsheet-SplitIntoColumnsPanel";
+        static components = { SidePanelErrors };
         state = owl.useState({ separatorValue: "auto", addNewColumns: false, customSeparator: "" });
         setup() {
             owl.onWillUpdateProps(() => {
@@ -20209,157 +20528,6 @@
         onMouseDown: { type: Function, optional: true },
         onClickAnchor: { type: Function, optional: true },
     };
-
-    function startDnd(onMouseMove, onMouseUp, onMouseDown = () => { }) {
-        const _onMouseDown = (ev) => {
-            ev.preventDefault();
-            onMouseDown(ev);
-        };
-        const _onMouseMove = (ev) => {
-            ev.preventDefault();
-            onMouseMove(ev);
-        };
-        const _onMouseUp = (ev) => {
-            ev.preventDefault();
-            onMouseUp(ev);
-            window.removeEventListener("mousedown", _onMouseDown);
-            window.removeEventListener("mouseup", _onMouseUp);
-            window.removeEventListener("dragstart", _onDragStart);
-            window.removeEventListener("mousemove", _onMouseMove);
-            window.removeEventListener("wheel", _onMouseMove);
-        };
-        function _onDragStart(ev) {
-            ev.preventDefault();
-        }
-        window.addEventListener("mousedown", _onMouseDown);
-        window.addEventListener("mouseup", _onMouseUp);
-        window.addEventListener("dragstart", _onDragStart);
-        window.addEventListener("mousemove", _onMouseMove);
-        // mouse wheel on window is by default a passive event.
-        // preventDefault() is not allowed in passive event handler.
-        // https://chromestatus.com/feature/6662647093133312
-        window.addEventListener("wheel", _onMouseMove, { passive: false });
-    }
-    /**
-     * Function to be used during a mousedown event, this function allows to
-     * perform actions related to the mousemove and mouseup events and adjusts the viewport
-     * when the new position related to the mousemove event is outside of it.
-     * Among inputs are two callback functions. First intended for actions performed during
-     * the mousemove event, it receives as parameters the current position of the mousemove
-     * (occurrence of the current column and the current row). Second intended for actions
-     * performed during the mouseup event.
-     */
-    function dragAndDropBeyondTheViewport(env, cbMouseMove, cbMouseUp, only = false) {
-        let timeOutId = null;
-        let currentEv;
-        let previousEv;
-        let startingEv;
-        let startingX;
-        let startingY;
-        const getters = env.model.getters;
-        const sheetId = getters.getActiveSheetId();
-        const position = gridOverlayPosition();
-        let colIndex;
-        let rowIndex;
-        const onMouseDown = (ev) => {
-            previousEv = ev;
-            startingEv = ev;
-            startingX = startingEv.clientX - position.left;
-            startingY = startingEv.clientY - position.top;
-        };
-        const onMouseMove = (ev) => {
-            currentEv = ev;
-            if (timeOutId) {
-                return;
-            }
-            const { x: offsetCorrectionX, y: offsetCorrectionY } = getters.getMainViewportCoordinates();
-            let { top, left, bottom, right } = getters.getActiveMainViewport();
-            let { scrollX, scrollY } = getters.getActiveSheetDOMScrollInfo();
-            const { xSplit, ySplit } = getters.getPaneDivisions(sheetId);
-            let canEdgeScroll = false;
-            let timeoutDelay = MAX_DELAY;
-            const x = currentEv.clientX - position.left;
-            colIndex = getters.getColIndex(x);
-            if (only !== "vertical") {
-                const previousX = previousEv.clientX - position.left;
-                const edgeScrollInfoX = getters.getEdgeScrollCol(x, previousX, startingX);
-                if (edgeScrollInfoX.canEdgeScroll) {
-                    canEdgeScroll = true;
-                    timeoutDelay = Math.min(timeoutDelay, edgeScrollInfoX.delay);
-                    let newTarget;
-                    switch (edgeScrollInfoX.direction) {
-                        case "reset":
-                            colIndex = xSplit;
-                            newTarget = xSplit;
-                            break;
-                        case 1:
-                            colIndex = right;
-                            newTarget = left + 1;
-                            break;
-                        case -1:
-                            colIndex = left - 1;
-                            while (env.model.getters.isColHidden(sheetId, colIndex)) {
-                                colIndex--;
-                            }
-                            newTarget = colIndex;
-                            break;
-                    }
-                    scrollX = getters.getColDimensions(sheetId, newTarget).start - offsetCorrectionX;
-                }
-            }
-            const y = currentEv.clientY - position.top;
-            rowIndex = getters.getRowIndex(y);
-            if (only !== "horizontal") {
-                const previousY = previousEv.clientY - position.top;
-                const edgeScrollInfoY = getters.getEdgeScrollRow(y, previousY, startingY);
-                if (edgeScrollInfoY.canEdgeScroll) {
-                    canEdgeScroll = true;
-                    timeoutDelay = Math.min(timeoutDelay, edgeScrollInfoY.delay);
-                    let newTarget;
-                    switch (edgeScrollInfoY.direction) {
-                        case "reset":
-                            rowIndex = ySplit;
-                            newTarget = ySplit;
-                            break;
-                        case 1:
-                            rowIndex = bottom;
-                            newTarget = top + edgeScrollInfoY.direction;
-                            break;
-                        case -1:
-                            rowIndex = top - 1;
-                            while (env.model.getters.isRowHidden(sheetId, rowIndex)) {
-                                rowIndex--;
-                            }
-                            newTarget = rowIndex;
-                            break;
-                    }
-                    scrollY = env.model.getters.getRowDimensions(sheetId, newTarget).start - offsetCorrectionY;
-                }
-            }
-            if (!canEdgeScroll) {
-                if (rowIndex === -1) {
-                    rowIndex = y < 0 ? 0 : getters.getNumberRows(sheetId) - 1;
-                }
-                if (colIndex === -1 && x < 0) {
-                    colIndex = x < 0 ? 0 : getters.getNumberCols(sheetId) - 1;
-                }
-            }
-            cbMouseMove(colIndex, rowIndex, currentEv);
-            if (canEdgeScroll) {
-                env.model.dispatch("SET_VIEWPORT_OFFSET", { offsetX: scrollX, offsetY: scrollY });
-                timeOutId = setTimeout(() => {
-                    timeOutId = null;
-                    onMouseMove(currentEv);
-                }, Math.round(timeoutDelay));
-            }
-            previousEv = currentEv;
-        };
-        const onMouseUp = () => {
-            clearTimeout(timeOutId);
-            cbMouseUp();
-        };
-        startDnd(onMouseMove, onMouseUp, onMouseDown);
-    }
 
     // -----------------------------------------------------------------------------
     // Autofill
@@ -25141,1062 +25309,6 @@
         }
     }
 
-    class FunctionCodeBuilder {
-        scope;
-        code = "";
-        constructor(scope = new Scope()) {
-            this.scope = scope;
-        }
-        append(...lines) {
-            this.code += lines.map((line) => line.toString()).join("\n") + "\n";
-        }
-        return(expression) {
-            return new FunctionCodeImpl(this.scope, this.code, expression);
-        }
-        toString() {
-            return indentCode(this.code);
-        }
-    }
-    class FunctionCodeImpl {
-        scope;
-        returnExpression;
-        code;
-        constructor(scope, code, returnExpression) {
-            this.scope = scope;
-            this.returnExpression = returnExpression;
-            this.code = indentCode(code);
-        }
-        toString() {
-            return this.code;
-        }
-        wrapInClosure() {
-            const closureName = this.scope.nextVariableName();
-            const code = new FunctionCodeBuilder(this.scope);
-            code.append(`const ${closureName} = () => {`);
-            code.append(this.code);
-            code.append(`return ${this.returnExpression};`);
-            code.append(`}`);
-            return code.return(closureName);
-        }
-        assignResultToVariable() {
-            if (this.scope.isAlreadyDeclared(this.returnExpression)) {
-                return this;
-            }
-            const variableName = this.scope.nextVariableName();
-            const code = new FunctionCodeBuilder(this.scope);
-            code.append(this.code);
-            code.append(`const ${variableName} = ${this.returnExpression};`);
-            return code.return(variableName);
-        }
-    }
-    class Scope {
-        nextId = 1;
-        declaredVariables = new Set();
-        nextVariableName() {
-            const name = `_${this.nextId++}`;
-            this.declaredVariables.add(name);
-            return name;
-        }
-        isAlreadyDeclared(name) {
-            return this.declaredVariables.has(name);
-        }
-    }
-    /**
-     * Takes a list of strings that might be single or multiline
-     * and maps them in a list of single line strings.
-     */
-    function splitLines(str) {
-        return str
-            .split("\n")
-            .map((line) => line.trim())
-            .filter((line) => line !== "");
-    }
-    function indentCode(code) {
-        let result = "";
-        let indentLevel = 0;
-        const lines = splitLines(code);
-        for (const line of lines) {
-            if (line.startsWith("}")) {
-                indentLevel--;
-            }
-            result += "\t".repeat(indentLevel) + line + "\n";
-            if (line.endsWith("{")) {
-                indentLevel++;
-            }
-        }
-        return result.trim();
-    }
-
-    /**
-     * Tokenizer
-     *
-     * A tokenizer is a piece of code whose job is to transform a string into a list
-     * of "tokens". For example, "(12+" is converted into:
-     *   [{type: "LEFT_PAREN", value: "("},
-     *    {type: "NUMBER", value: "12"},
-     *    {type: "OPERATOR", value: "+"}]
-     *
-     * As the example shows, a tokenizer does not care about the meaning behind those
-     * tokens. It only cares about the structure.
-     *
-     * The tokenizer is usually the first step in a compilation pipeline.  Also, it
-     * is useful for the composer, which needs to be able to work with incomplete
-     * formulas.
-     */
-    const functions$2 = functionRegistry.content;
-    const POSTFIX_UNARY_OPERATORS = ["%"];
-    const OPERATORS = "+,-,*,/,:,=,<>,>=,>,<=,<,^,&".split(",").concat(POSTFIX_UNARY_OPERATORS);
-    function tokenize(str) {
-        str = replaceSpecialSpaces(str);
-        const chars = new TokenizingChars(str);
-        const result = [];
-        while (!chars.isOver()) {
-            let token = tokenizeSpace(chars) ||
-                tokenizeMisc(chars) ||
-                tokenizeOperator(chars) ||
-                tokenizeString(chars) ||
-                tokenizeDebugger(chars) ||
-                tokenizeInvalidRange(chars) ||
-                tokenizeNumber(chars) ||
-                tokenizeSymbol(chars);
-            if (!token) {
-                token = { type: "UNKNOWN", value: chars.shift() };
-            }
-            result.push(token);
-        }
-        return result;
-    }
-    function tokenizeDebugger(chars) {
-        if (chars.current() === "?") {
-            chars.shift();
-            return { type: "DEBUGGER", value: "?" };
-        }
-        return null;
-    }
-    const misc = {
-        ",": "COMMA",
-        "(": "LEFT_PAREN",
-        ")": "RIGHT_PAREN",
-    };
-    function tokenizeMisc(chars) {
-        if (chars.current() in misc) {
-            const value = chars.shift();
-            const type = misc[value];
-            return { type, value };
-        }
-        return null;
-    }
-    function tokenizeOperator(chars) {
-        for (let op of OPERATORS) {
-            if (chars.currentStartsWith(op)) {
-                chars.advanceBy(op.length);
-                return { type: "OPERATOR", value: op };
-            }
-        }
-        return null;
-    }
-    function tokenizeNumber(chars) {
-        const match = chars.remaining().match(formulaNumberRegexp);
-        if (match) {
-            chars.advanceBy(match[0].length);
-            return { type: "NUMBER", value: match[0] };
-        }
-        return null;
-    }
-    function tokenizeString(chars) {
-        if (chars.current() === '"') {
-            const startChar = chars.shift();
-            let letters = startChar;
-            while (chars.current() &&
-                (chars.current() !== startChar || letters[letters.length - 1] === "\\")) {
-                letters += chars.shift();
-            }
-            if (chars.current() === '"') {
-                letters += chars.shift();
-            }
-            return {
-                type: "STRING",
-                value: letters,
-            };
-        }
-        return null;
-    }
-    const separatorRegexp = /\w|\.|!|\$/;
-    /**
-     * A "Symbol" is just basically any word-like element that can appear in a
-     * formula, which is not a string. So:
-     *   A1
-     *   SUM
-     *   CEILING.MATH
-     *   A$1
-     *   Sheet2!A2
-     *   'Sheet 2'!A2
-     *
-     * are examples of symbols
-     */
-    function tokenizeSymbol(chars) {
-        let result = "";
-        // there are two main cases to manage: either something which starts with
-        // a ', like 'Sheet 2'A2, or a word-like element.
-        if (chars.current() === "'") {
-            let lastChar = chars.shift();
-            result += lastChar;
-            while (chars.current()) {
-                lastChar = chars.shift();
-                result += lastChar;
-                if (lastChar === "'") {
-                    if (chars.current() && chars.current() === "'") {
-                        lastChar = chars.shift();
-                        result += lastChar;
-                    }
-                    else {
-                        break;
-                    }
-                }
-            }
-            if (lastChar !== "'") {
-                return {
-                    type: "UNKNOWN",
-                    value: result,
-                };
-            }
-        }
-        while (chars.current() && separatorRegexp.test(chars.current())) {
-            result += chars.shift();
-        }
-        if (result.length) {
-            const value = result;
-            const isFunction = value.toUpperCase() in functions$2;
-            if (isFunction) {
-                return { type: "FUNCTION", value };
-            }
-            const isReference = rangeReference.test(value);
-            if (isReference) {
-                return { type: "REFERENCE", value };
-            }
-            else {
-                return { type: "SYMBOL", value };
-            }
-        }
-        return null;
-    }
-    function tokenizeSpace(chars) {
-        let length = 0;
-        while (chars.current() === NEWLINE) {
-            length++;
-            chars.shift();
-        }
-        if (length) {
-            return { type: "SPACE", value: NEWLINE.repeat(length) };
-        }
-        while (chars.current() === " ") {
-            length++;
-            chars.shift();
-        }
-        if (length) {
-            return { type: "SPACE", value: " ".repeat(length) };
-        }
-        return null;
-    }
-    function tokenizeInvalidRange(chars) {
-        if (chars.currentStartsWith(INCORRECT_RANGE_STRING)) {
-            chars.advanceBy(INCORRECT_RANGE_STRING.length);
-            return { type: "INVALID_REFERENCE", value: INCORRECT_RANGE_STRING };
-        }
-        return null;
-    }
-    class TokenizingChars {
-        text;
-        currentIndex = 0;
-        constructor(text) {
-            this.text = text;
-        }
-        current() {
-            return this.text[this.currentIndex];
-        }
-        shift() {
-            return this.text[this.currentIndex++];
-        }
-        advanceBy(length) {
-            this.currentIndex += length;
-        }
-        isOver() {
-            return this.currentIndex >= this.text.length;
-        }
-        remaining() {
-            return this.text.substring(this.currentIndex);
-        }
-        currentStartsWith(str) {
-            for (let j = 0; j < str.length; j++) {
-                if (this.text[this.currentIndex + j] !== str[j]) {
-                    return false;
-                }
-            }
-            return true;
-        }
-    }
-
-    const functionRegex = /[a-zA-Z0-9\_]+(\.[a-zA-Z0-9\_]+)*/;
-    const UNARY_OPERATORS_PREFIX = ["-", "+"];
-    const UNARY_OPERATORS_POSTFIX = ["%"];
-    const ASSOCIATIVE_OPERATORS = ["*", "+", "&"];
-    const OP_PRIORITY = {
-        "^": 30,
-        "%": 30,
-        "*": 20,
-        "/": 20,
-        "+": 15,
-        "-": 15,
-        "&": 13,
-        ">": 10,
-        "<>": 10,
-        ">=": 10,
-        "<": 10,
-        "<=": 10,
-        "=": 10,
-    };
-    /**
-     * Parse the next operand in an arithmetic expression.
-     * e.g.
-     *  for 1+2*3, the next operand is 1
-     *  for (1+2)*3, the next operand is (1+2)
-     *  for SUM(1,2)+3, the next operand is SUM(1,2)
-     */
-    function parseOperand(tokens) {
-        const current = tokens.shift();
-        if (!current) {
-            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
-        }
-        switch (current.type) {
-            case "DEBUGGER":
-                const next = parseExpression(tokens, 1000);
-                next.debug = true;
-                return next;
-            case "NUMBER":
-                return { type: "NUMBER", value: parseNumber(current.value) };
-            case "STRING":
-                return { type: "STRING", value: removeStringQuotes(current.value) };
-            case "FUNCTION":
-                const args = parseFunctionArgs(tokens);
-                return { type: "FUNCALL", value: current.value, args };
-            case "INVALID_REFERENCE":
-                throw new InvalidReferenceError();
-            case "REFERENCE":
-                if (tokens[0]?.value === ":" && tokens[1]?.type === "REFERENCE") {
-                    tokens.shift();
-                    const rightReference = tokens.shift();
-                    return {
-                        type: "REFERENCE",
-                        value: `${current.value}:${rightReference?.value}`,
-                    };
-                }
-                return {
-                    type: "REFERENCE",
-                    value: current.value,
-                };
-            case "SYMBOL":
-                if (["TRUE", "FALSE"].includes(current.value.toUpperCase())) {
-                    return { type: "BOOLEAN", value: current.value.toUpperCase() === "TRUE" };
-                }
-                if (current.value) {
-                    if (functionRegex.test(current.value) && tokens[0]?.type === "LEFT_PAREN") {
-                        throw new UnknownFunctionError(current.value);
-                    }
-                }
-                throw new BadExpressionError(_lt("Invalid formula"));
-            case "LEFT_PAREN":
-                const result = parseExpression(tokens);
-                consumeOrThrow(tokens, "RIGHT_PAREN", _lt("Missing closing parenthesis"));
-                return result;
-            case "OPERATOR":
-                const operator = current.value;
-                if (UNARY_OPERATORS_PREFIX.includes(operator)) {
-                    return {
-                        type: "UNARY_OPERATION",
-                        value: operator,
-                        operand: parseExpression(tokens, OP_PRIORITY[operator]),
-                    };
-                }
-                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
-            default:
-                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
-        }
-    }
-    function parseFunctionArgs(tokens) {
-        consumeOrThrow(tokens, "LEFT_PAREN", _lt("Missing opening parenthesis"));
-        const nextToken = tokens[0];
-        if (nextToken?.type === "RIGHT_PAREN") {
-            consumeOrThrow(tokens, "RIGHT_PAREN");
-            return [];
-        }
-        const args = [];
-        args.push(parseOneFunctionArg(tokens));
-        while (tokens[0]?.type !== "RIGHT_PAREN") {
-            consumeOrThrow(tokens, "COMMA", _lt("Wrong function call"));
-            args.push(parseOneFunctionArg(tokens));
-        }
-        consumeOrThrow(tokens, "RIGHT_PAREN");
-        return args;
-    }
-    function parseOneFunctionArg(tokens) {
-        const nextToken = tokens[0];
-        if (nextToken?.type === "COMMA" || nextToken?.type === "RIGHT_PAREN") {
-            // arg is empty: "sum(1,,2)" "sum(,1)" "sum(1,)"
-            return { type: "EMPTY", value: "" };
-        }
-        return parseExpression(tokens);
-    }
-    function consumeOrThrow(tokens, type, message = DEFAULT_ERROR_MESSAGE) {
-        const token = tokens.shift();
-        if (!token || token.type !== type) {
-            throw new BadExpressionError(message);
-        }
-    }
-    function parseExpression(tokens, parent_priority = 0) {
-        if (tokens.length === 0) {
-            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
-        }
-        let left = parseOperand(tokens);
-        // as long as we have operators with higher priority than the parent one,
-        // continue parsing the expression because it is a child sub-expression
-        while (tokens[0]?.type === "OPERATOR" && OP_PRIORITY[tokens[0].value] > parent_priority) {
-            const operator = tokens.shift().value;
-            if (UNARY_OPERATORS_POSTFIX.includes(operator)) {
-                left = {
-                    type: "UNARY_OPERATION",
-                    value: operator,
-                    operand: left,
-                    postfix: true,
-                };
-            }
-            else {
-                const right = parseExpression(tokens, OP_PRIORITY[operator]);
-                left = {
-                    type: "BIN_OPERATION",
-                    value: operator,
-                    left,
-                    right,
-                };
-            }
-        }
-        return left;
-    }
-    /**
-     * Parse an expression (as a string) into an AST.
-     */
-    function parse(str) {
-        return parseTokens(tokenize(str));
-    }
-    function parseTokens(tokens) {
-        tokens = tokens.filter((x) => x.type !== "SPACE");
-        if (tokens[0].value === "=") {
-            tokens.splice(0, 1);
-        }
-        const result = parseExpression(tokens);
-        if (tokens.length) {
-            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
-        }
-        return result;
-    }
-    /**
-     * Allows to visit all nodes of an AST and apply a mapping function
-     * to nodes of a specific type.
-     * Useful if you want to convert some part of a formula.
-     *
-     * e.g.
-     * ```ts
-     * convertAstNodes(ast, "FUNCALL", convertFormulaToExcel)
-     *
-     * function convertFormulaToExcel(ast: ASTFuncall) {
-     *   // ...
-     *   return modifiedAst
-     * }
-     * ```
-     */
-    function convertAstNodes(ast, type, fn) {
-        if (type === ast.type) {
-            ast = fn(ast);
-        }
-        switch (ast.type) {
-            case "FUNCALL":
-                return {
-                    ...ast,
-                    args: ast.args.map((child) => convertAstNodes(child, type, fn)),
-                };
-            case "UNARY_OPERATION":
-                return {
-                    ...ast,
-                    operand: convertAstNodes(ast.operand, type, fn),
-                };
-            case "BIN_OPERATION":
-                return {
-                    ...ast,
-                    right: convertAstNodes(ast.right, type, fn),
-                    left: convertAstNodes(ast.left, type, fn),
-                };
-            default:
-                return ast;
-        }
-    }
-    /**
-     * Converts an ast formula to the corresponding string
-     */
-    function astToFormula(ast) {
-        switch (ast.type) {
-            case "FUNCALL":
-                const args = ast.args.map((arg) => astToFormula(arg));
-                return `${ast.value}(${args.join(",")})`;
-            case "NUMBER":
-                return ast.value.toString();
-            case "REFERENCE":
-                return ast.value;
-            case "STRING":
-                return `"${ast.value}"`;
-            case "BOOLEAN":
-                return ast.value ? "TRUE" : "FALSE";
-            case "UNARY_OPERATION":
-                return ast.postfix
-                    ? leftOperandToFormula(ast) + ast.value
-                    : ast.value + rightOperandToFormula(ast);
-            case "BIN_OPERATION":
-                return leftOperandToFormula(ast) + ast.value + rightOperandToFormula(ast);
-            default:
-                return ast.value;
-        }
-    }
-    /**
-     * Convert the left operand of a binary operation to the corresponding string
-     * and enclose the result inside parenthesis if necessary.
-     */
-    function leftOperandToFormula(operationAST) {
-        const mainOperator = operationAST.value;
-        const leftOperation = "left" in operationAST ? operationAST.left : operationAST.operand;
-        const leftOperator = leftOperation.value;
-        const needParenthesis = leftOperation.type === "BIN_OPERATION" && OP_PRIORITY[leftOperator] < OP_PRIORITY[mainOperator];
-        return needParenthesis ? `(${astToFormula(leftOperation)})` : astToFormula(leftOperation);
-    }
-    /**
-     * Convert the right operand of a binary or unary operation to the corresponding string
-     * and enclose the result inside parenthesis if necessary.
-     */
-    function rightOperandToFormula(operationAST) {
-        const mainOperator = operationAST.value;
-        const rightOperation = "right" in operationAST ? operationAST.right : operationAST.operand;
-        const rightPriority = OP_PRIORITY[rightOperation.value];
-        const mainPriority = OP_PRIORITY[mainOperator];
-        let needParenthesis = false;
-        if (rightOperation.type !== "BIN_OPERATION") {
-            needParenthesis = false;
-        }
-        else if (rightPriority < mainPriority) {
-            needParenthesis = true;
-        }
-        else if (rightPriority === mainPriority && !ASSOCIATIVE_OPERATORS.includes(mainOperator)) {
-            needParenthesis = true;
-        }
-        return needParenthesis ? `(${astToFormula(rightOperation)})` : astToFormula(rightOperation);
-    }
-
-    var State;
-    (function (State) {
-        /**
-         * Initial state.
-         * Expecting any reference for the left part of a range
-         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
-         */
-        State[State["LeftRef"] = 0] = "LeftRef";
-        /**
-         * Expecting any reference for the right part of a range
-         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
-         */
-        State[State["RightRef"] = 1] = "RightRef";
-        /**
-         * Expecting the separator without any constraint on the right part
-         */
-        State[State["Separator"] = 2] = "Separator";
-        /**
-         * Expecting the separator for a full column range
-         */
-        State[State["FullColumnSeparator"] = 3] = "FullColumnSeparator";
-        /**
-         * Expecting the separator for a full row range
-         */
-        State[State["FullRowSeparator"] = 4] = "FullRowSeparator";
-        /**
-         * Expecting the right part of a full column range
-         * e.g. "1", "A1"
-         */
-        State[State["RightColumnRef"] = 5] = "RightColumnRef";
-        /**
-         * Expecting the right part of a full row range
-         * e.g. "A", "A1"
-         */
-        State[State["RightRowRef"] = 6] = "RightRowRef";
-        /**
-         * Final state. A range has been matched
-         */
-        State[State["Found"] = 7] = "Found";
-    })(State || (State = {}));
-    const goTo = (state, guard = () => true) => [
-        {
-            goTo: state,
-            guard,
-        },
-    ];
-    const goToMulti = (state, guard = () => true) => ({
-        goTo: state,
-        guard,
-    });
-    const machine = {
-        [State.LeftRef]: {
-            REFERENCE: goTo(State.Separator),
-            NUMBER: goTo(State.FullRowSeparator),
-            SYMBOL: [
-                goToMulti(State.FullColumnSeparator, (token) => isColReference(token.value)),
-                goToMulti(State.FullRowSeparator, (token) => isRowReference(token.value)),
-            ],
-        },
-        [State.FullColumnSeparator]: {
-            SPACE: goTo(State.FullColumnSeparator),
-            OPERATOR: goTo(State.RightColumnRef, (token) => token.value === ":"),
-        },
-        [State.FullRowSeparator]: {
-            SPACE: goTo(State.FullRowSeparator),
-            OPERATOR: goTo(State.RightRowRef, (token) => token.value === ":"),
-        },
-        [State.Separator]: {
-            SPACE: goTo(State.Separator),
-            OPERATOR: goTo(State.RightRef, (token) => token.value === ":"),
-        },
-        [State.RightRef]: {
-            SPACE: goTo(State.RightRef),
-            NUMBER: goTo(State.Found),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
-        },
-        [State.RightColumnRef]: {
-            SPACE: goTo(State.RightColumnRef),
-            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-        },
-        [State.RightRowRef]: {
-            SPACE: goTo(State.RightRowRef),
-            NUMBER: goTo(State.Found),
-            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
-        },
-        [State.Found]: {},
-    };
-    /**
-     * Check if the list of tokens starts with a sequence of tokens representing
-     * a range.
-     * If a range is found, the sequence is removed from the list and is returned
-     * as a single token.
-     */
-    function matchReference(tokens) {
-        let head = 0;
-        let transitions = machine[State.LeftRef];
-        const matchedTokens = [];
-        while (transitions !== undefined) {
-            const token = tokens[head++];
-            if (!token) {
-                return null;
-            }
-            const transition = transitions[token.type]?.find((transition) => transition.guard(token));
-            const nextState = transition ? transition.goTo : undefined;
-            switch (nextState) {
-                case undefined:
-                    return null;
-                case State.Found:
-                    matchedTokens.push(token);
-                    tokens.splice(0, head);
-                    return {
-                        type: "REFERENCE",
-                        value: concat(matchedTokens.map((token) => token.value)),
-                    };
-                default:
-                    transitions = machine[nextState];
-                    matchedTokens.push(token);
-                    break;
-            }
-        }
-        return null;
-    }
-    /**
-     * Take the result of the tokenizer and transform it to be usable in the
-     * manipulations of range
-     *
-     * @param formula
-     */
-    function rangeTokenize(formula) {
-        const tokens = tokenize(formula);
-        const result = [];
-        while (tokens.length) {
-            result.push(matchReference(tokens) || tokens.shift());
-        }
-        return result;
-    }
-
-    const functions$1 = functionRegistry.content;
-    const OPERATOR_MAP = {
-        "=": "EQ",
-        "+": "ADD",
-        "-": "MINUS",
-        "*": "MULTIPLY",
-        "/": "DIVIDE",
-        ">=": "GTE",
-        "<>": "NE",
-        ">": "GT",
-        "<=": "LTE",
-        "<": "LT",
-        "^": "POWER",
-        "&": "CONCATENATE",
-    };
-    const UNARY_OPERATOR_MAP = {
-        "-": "UMINUS",
-        "+": "UPLUS",
-        "%": "UNARY.PERCENT",
-    };
-    // this cache contains all compiled function code, grouped by "structure". For
-    // example, "=2*sum(A1:A4)" and "=2*sum(B1:B4)" are compiled into the same
-    // structural function.
-    // It is only exported for testing purposes
-    const functionCache = {};
-    // -----------------------------------------------------------------------------
-    // COMPILER
-    // -----------------------------------------------------------------------------
-    function compile(formula) {
-        const tokens = rangeTokenize(formula);
-        const { dependencies, constantValues } = formulaArguments(tokens);
-        const cacheKey = compilationCacheKey(tokens, dependencies, constantValues);
-        if (!functionCache[cacheKey]) {
-            const ast = parseTokens([...tokens]);
-            const scope = new Scope();
-            if (ast.type === "BIN_OPERATION" && ast.value === ":") {
-                throw new BadExpressionError(_lt("Invalid formula"));
-            }
-            if (ast.type === "EMPTY") {
-                throw new BadExpressionError(_lt("Invalid formula"));
-            }
-            const compiledAST = compileAST(ast);
-            const code = new FunctionCodeBuilder();
-            code.append(`// ${cacheKey}`);
-            code.append(compiledAST);
-            code.append(`return ${compiledAST.returnExpression};`);
-            let baseFunction = new Function("deps", // the dependencies in the current formula
-            "ref", // a function to access a certain dependency at a given index
-            "range", // same as above, but guarantee that the result is in the form of a range
-            "ctx", code.toString());
-            functionCache[cacheKey] = {
-                // @ts-ignore
-                execute: baseFunction,
-            };
-            /**
-             * This function compile the function arguments. It is mostly straightforward,
-             * except that there is a non trivial transformation in one situation:
-             *
-             * If a function argument is asking for a range, and get a cell, we transform
-             * the cell value into a range. This allow the grid model to differentiate
-             * between a cell value and a non cell value.
-             */
-            function compileFunctionArgs(ast) {
-                const { args } = ast;
-                const functionName = ast.value.toUpperCase();
-                const functionDefinition = functions$1[functionName];
-                assertEnoughArgs(ast);
-                const compiledArgs = [];
-                for (let i = 0; i < args.length; i++) {
-                    const argToFocus = functionDefinition.getArgToFocus(i + 1) - 1;
-                    const argDefinition = functionDefinition.args[argToFocus];
-                    const currentArg = args[i];
-                    const argTypes = argDefinition.type || [];
-                    // detect when an argument need to be evaluated as a meta argument
-                    const isMeta = argTypes.includes("META");
-                    // detect when an argument need to be evaluated as a lazy argument
-                    const isLazy = argDefinition.lazy;
-                    const hasRange = argTypes.some((t) => isRangeType(t));
-                    const isRangeOnly = argTypes.every((t) => isRangeType(t));
-                    if (isRangeOnly) {
-                        if (!isRangeInput(currentArg)) {
-                            throw new BadExpressionError(_lt("Function %s expects the parameter %s to be reference to a cell or range, not a %s.", functionName, (i + 1).toString(), currentArg.type.toLowerCase()));
-                        }
-                    }
-                    const compiledAST = compileAST(currentArg, isMeta, hasRange, {
-                        functionName,
-                        paramIndex: i + 1,
-                    });
-                    compiledArgs.push(isLazy ? compiledAST.wrapInClosure() : compiledAST);
-                }
-                return compiledArgs;
-            }
-            /**
-             * This function compiles all the information extracted by the parser into an
-             * executable code for the evaluation of the cells content. It uses a cash to
-             * not reevaluate identical code structures.
-             *
-             * The function is sensitive to parameter “isMeta”. This
-             * parameter may vary when compiling function arguments:
-             * isMeta: In some cases the function arguments expects information on the
-             * cell/range other than the associated value(s). For example the COLUMN
-             * function needs to receive as argument the coordinates of a cell rather
-             * than its value. For this we have meta arguments.
-             */
-            function compileAST(ast, isMeta = false, hasRange = false, referenceVerification = {}) {
-                const code = new FunctionCodeBuilder(scope);
-                if (ast.type !== "REFERENCE" && !(ast.type === "BIN_OPERATION" && ast.value === ":")) {
-                    if (isMeta) {
-                        throw new BadExpressionError(_lt(`Argument must be a reference to a cell or range.`));
-                    }
-                }
-                if (ast.debug) {
-                    code.append("debugger;");
-                }
-                switch (ast.type) {
-                    case "BOOLEAN":
-                        return code.return(`{ value: ${ast.value} }`);
-                    case "NUMBER":
-                        return code.return(`{ value: this.constantValues.numbers[${constantValues.numbers.indexOf(ast.value)}] }`);
-                    case "STRING":
-                        return code.return(`{ value: this.constantValues.strings[${constantValues.strings.indexOf(ast.value)}] }`);
-                    case "REFERENCE":
-                        const referenceIndex = dependencies.indexOf(ast.value);
-                        if (hasRange) {
-                            return code.return(`range(deps[${referenceIndex}])`);
-                        }
-                        else {
-                            return code.return(`ref(deps[${referenceIndex}], ${isMeta ? "true" : "false"}, "${referenceVerification.functionName || OPERATOR_MAP["="]}",  ${referenceVerification.paramIndex})`);
-                        }
-                    case "FUNCALL":
-                        const args = compileFunctionArgs(ast).map((arg) => arg.assignResultToVariable());
-                        code.append(...args);
-                        const fnName = ast.value.toUpperCase();
-                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
-                        return code.return(`ctx['${fnName}'](${args.map((arg) => arg.returnExpression)})`);
-                    case "UNARY_OPERATION": {
-                        const fnName = UNARY_OPERATOR_MAP[ast.value];
-                        const operand = compileAST(ast.operand, false, false, {
-                            functionName: fnName,
-                        }).assignResultToVariable();
-                        code.append(operand);
-                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
-                        return code.return(`ctx['${fnName}'](${operand.returnExpression})`);
-                    }
-                    case "BIN_OPERATION": {
-                        const fnName = OPERATOR_MAP[ast.value];
-                        const left = compileAST(ast.left, false, false, {
-                            functionName: fnName,
-                        }).assignResultToVariable();
-                        const right = compileAST(ast.right, false, false, {
-                            functionName: fnName,
-                        }).assignResultToVariable();
-                        code.append(left);
-                        code.append(right);
-                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
-                        return code.return(`ctx['${fnName}'](${left.returnExpression}, ${right.returnExpression})`);
-                    }
-                    case "EMPTY":
-                        return code.return("undefined");
-                }
-            }
-        }
-        const compiledFormula = {
-            execute: functionCache[cacheKey].execute,
-            dependencies,
-            constantValues,
-            tokens,
-        };
-        return compiledFormula;
-    }
-    /**
-     * Compute a cache key for the formula.
-     * References, numbers and strings are replaced with placeholders because
-     * the compiled formula does not depend on their actual value.
-     * Both `=A1+1+"2"` and `=A2+2+"3"` are compiled to the exact same function.
-     *
-     * Spaces are also ignored to compute the cache key.
-     *
-     * A formula `=A1+A2+SUM(2, 2, "2")` have the cache key `=|0|+|1|+SUM(|N0|,|N0|,|S0|)`
-     */
-    function compilationCacheKey(tokens, dependencies, constantValues) {
-        return concat(tokens.map((token) => {
-            switch (token.type) {
-                case "STRING":
-                    const value = removeStringQuotes(token.value);
-                    return `|S${constantValues.strings.indexOf(value)}|`;
-                case "NUMBER":
-                    return `|N${constantValues.numbers.indexOf(parseNumber(token.value))}|`;
-                case "REFERENCE":
-                case "INVALID_REFERENCE":
-                    return `|${dependencies.indexOf(token.value)}|`;
-                case "SPACE":
-                    return "";
-                default:
-                    return token.value;
-            }
-        }));
-    }
-    /**
-     * Return formula arguments which are references, strings and numbers.
-     */
-    function formulaArguments(tokens) {
-        const constantValues = {
-            numbers: [],
-            strings: [],
-        };
-        const dependencies = [];
-        for (const token of tokens) {
-            switch (token.type) {
-                case "INVALID_REFERENCE":
-                case "REFERENCE":
-                    dependencies.push(token.value);
-                    break;
-                case "STRING":
-                    const value = removeStringQuotes(token.value);
-                    if (!constantValues.strings.includes(value)) {
-                        constantValues.strings.push(value);
-                    }
-                    break;
-                case "NUMBER": {
-                    const value = parseNumber(token.value);
-                    if (!constantValues.numbers.includes(value)) {
-                        constantValues.numbers.push(value);
-                    }
-                    break;
-                }
-            }
-        }
-        return {
-            dependencies,
-            constantValues,
-        };
-    }
-    /**
-     * Check if arguments are supplied in the correct quantities
-     */
-    function assertEnoughArgs(ast) {
-        const nbrArg = ast.args.length;
-        const functionName = ast.value.toUpperCase();
-        const functionDefinition = functions$1[functionName];
-        if (nbrArg < functionDefinition.minArgRequired) {
-            throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s minimum, but got %s instead.", functionName, functionDefinition.minArgRequired.toString(), nbrArg.toString()));
-        }
-        if (nbrArg > functionDefinition.maxArgPossible) {
-            throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s maximum, but got %s instead.", functionName, functionDefinition.maxArgPossible.toString(), nbrArg.toString()));
-        }
-        const repeatableArgs = functionDefinition.nbrArgRepeating;
-        if (repeatableArgs > 1) {
-            const unrepeatableArgs = functionDefinition.args.length - repeatableArgs;
-            const repeatingArgs = nbrArg - unrepeatableArgs;
-            if (repeatingArgs % repeatableArgs !== 0) {
-                throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected all arguments after position %s to be supplied by groups of %s arguments", functionName, unrepeatableArgs.toString(), repeatableArgs.toString()));
-            }
-        }
-    }
-    function isRangeType(type) {
-        return type.startsWith("RANGE");
-    }
-    function isRangeInput(arg) {
-        if (arg.type === "REFERENCE") {
-            return true;
-        }
-        if (arg.type === "FUNCALL") {
-            const fnDef = functions$1[arg.value.toUpperCase()];
-            return fnDef && isRangeType(fnDef.returns[0]);
-        }
-        return false;
-    }
-
-    /**
-     * Add the following information on tokens:
-     * - length
-     * - start
-     * - end
-     */
-    function enrichTokens(tokens) {
-        let current = 0;
-        return tokens.map((x) => {
-            const len = x.value.toString().length;
-            const token = Object.assign({}, x, {
-                start: current,
-                end: current + len,
-                length: len,
-            });
-            current = token.end;
-            return token;
-        });
-    }
-    /**
-     * add on each token the length, start and end
-     * also matches the opening to its closing parenthesis (using the same number)
-     */
-    function mapParenthesis(tokens) {
-        let maxParen = 1;
-        const stack = [];
-        return tokens.map((token) => {
-            if (token.type === "LEFT_PAREN") {
-                stack.push(maxParen);
-                token.parenIndex = maxParen;
-                maxParen++;
-            }
-            else if (token.type === "RIGHT_PAREN") {
-                token.parenIndex = stack.pop();
-            }
-            return token;
-        });
-    }
-    /**
-     * add on each token its parent function and the index corresponding to
-     * its position as an argument of the function.
-     * In this example "=MIN(42,SUM(MAX(1,2),3))":
-     * - the parent function of the token correspond to number 42 is the MIN function
-     * - the argument position of the token correspond to number 42 is 0
-     * - the parent function of the token correspond to number 3 is the SUM function
-     * - the argument position of the token correspond to number 3 is 1
-     */
-    function mapParentFunction(tokens) {
-        let stack = [];
-        let functionStarted = "";
-        const res = tokens.map((token, i) => {
-            if (!["SPACE", "LEFT_PAREN"].includes(token.type)) {
-                functionStarted = "";
-            }
-            switch (token.type) {
-                case "FUNCTION":
-                    functionStarted = token.value;
-                    break;
-                case "LEFT_PAREN":
-                    stack.push({ parent: functionStarted, argPosition: 0 });
-                    functionStarted = "";
-                    break;
-                case "RIGHT_PAREN":
-                    stack.pop();
-                    break;
-                case "COMMA":
-                    if (stack.length) {
-                        // increment position on current function
-                        stack[stack.length - 1].argPosition++;
-                    }
-                    break;
-            }
-            if (stack.length) {
-                const functionContext = stack[stack.length - 1];
-                if (functionContext.parent) {
-                    token.functionContext = Object.assign({}, functionContext);
-                }
-            }
-            return token;
-        });
-        return res;
-    }
-    /**
-     * Take the result of the tokenizer and transform it to be usable in the composer.
-     *
-     * @param formula
-     */
-    function composerTokenize(formula) {
-        const tokens = rangeTokenize(formula);
-        return mapParentFunction(mapParenthesis(enrichTokens(tokens)));
-    }
-
     // -------------------------------------
     //            CF HELPERS
     // -------------------------------------
@@ -26289,16 +25401,6 @@
     function extractFormat(cell, data) {
         if (cell.format) {
             return data.formats[cell.format];
-        }
-        if (cell.isFormula) {
-            const tokens = tokenize(cell.content || "");
-            const functions = functionRegistry.content;
-            const isExported = tokens
-                .filter((tk) => tk.type === "FUNCTION")
-                .every((tk) => functions[tk.value.toUpperCase()].isExported);
-            if (!isExported) {
-                return cell.computedFormat;
-            }
         }
         return undefined;
     }
@@ -28363,6 +27465,354 @@
     }
 
     /**
+     * Tokenizer
+     *
+     * A tokenizer is a piece of code whose job is to transform a string into a list
+     * of "tokens". For example, "(12+" is converted into:
+     *   [{type: "LEFT_PAREN", value: "("},
+     *    {type: "NUMBER", value: "12"},
+     *    {type: "OPERATOR", value: "+"}]
+     *
+     * As the example shows, a tokenizer does not care about the meaning behind those
+     * tokens. It only cares about the structure.
+     *
+     * The tokenizer is usually the first step in a compilation pipeline.  Also, it
+     * is useful for the composer, which needs to be able to work with incomplete
+     * formulas.
+     */
+    const functions$2 = functionRegistry.content;
+    const POSTFIX_UNARY_OPERATORS = ["%"];
+    const OPERATORS = "+,-,*,/,:,=,<>,>=,>,<=,<,^,&".split(",").concat(POSTFIX_UNARY_OPERATORS);
+    function tokenize(str) {
+        str = replaceSpecialSpaces(str);
+        const chars = new TokenizingChars(str);
+        const result = [];
+        while (!chars.isOver()) {
+            let token = tokenizeSpace(chars) ||
+                tokenizeMisc(chars) ||
+                tokenizeOperator(chars) ||
+                tokenizeString(chars) ||
+                tokenizeDebugger(chars) ||
+                tokenizeInvalidRange(chars) ||
+                tokenizeNumber(chars) ||
+                tokenizeSymbol(chars);
+            if (!token) {
+                token = { type: "UNKNOWN", value: chars.shift() };
+            }
+            result.push(token);
+        }
+        return result;
+    }
+    function tokenizeDebugger(chars) {
+        if (chars.current() === "?") {
+            chars.shift();
+            return { type: "DEBUGGER", value: "?" };
+        }
+        return null;
+    }
+    const misc = {
+        ",": "COMMA",
+        "(": "LEFT_PAREN",
+        ")": "RIGHT_PAREN",
+    };
+    function tokenizeMisc(chars) {
+        if (chars.current() in misc) {
+            const value = chars.shift();
+            const type = misc[value];
+            return { type, value };
+        }
+        return null;
+    }
+    function tokenizeOperator(chars) {
+        for (let op of OPERATORS) {
+            if (chars.currentStartsWith(op)) {
+                chars.advanceBy(op.length);
+                return { type: "OPERATOR", value: op };
+            }
+        }
+        return null;
+    }
+    function tokenizeNumber(chars) {
+        const match = chars.remaining().match(formulaNumberRegexp);
+        if (match) {
+            chars.advanceBy(match[0].length);
+            return { type: "NUMBER", value: match[0] };
+        }
+        return null;
+    }
+    function tokenizeString(chars) {
+        if (chars.current() === '"') {
+            const startChar = chars.shift();
+            let letters = startChar;
+            while (chars.current() &&
+                (chars.current() !== startChar || letters[letters.length - 1] === "\\")) {
+                letters += chars.shift();
+            }
+            if (chars.current() === '"') {
+                letters += chars.shift();
+            }
+            return {
+                type: "STRING",
+                value: letters,
+            };
+        }
+        return null;
+    }
+    const separatorRegexp = /\w|\.|!|\$/;
+    /**
+     * A "Symbol" is just basically any word-like element that can appear in a
+     * formula, which is not a string. So:
+     *   A1
+     *   SUM
+     *   CEILING.MATH
+     *   A$1
+     *   Sheet2!A2
+     *   'Sheet 2'!A2
+     *
+     * are examples of symbols
+     */
+    function tokenizeSymbol(chars) {
+        let result = "";
+        // there are two main cases to manage: either something which starts with
+        // a ', like 'Sheet 2'A2, or a word-like element.
+        if (chars.current() === "'") {
+            let lastChar = chars.shift();
+            result += lastChar;
+            while (chars.current()) {
+                lastChar = chars.shift();
+                result += lastChar;
+                if (lastChar === "'") {
+                    if (chars.current() && chars.current() === "'") {
+                        lastChar = chars.shift();
+                        result += lastChar;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            if (lastChar !== "'") {
+                return {
+                    type: "UNKNOWN",
+                    value: result,
+                };
+            }
+        }
+        while (chars.current() && separatorRegexp.test(chars.current())) {
+            result += chars.shift();
+        }
+        if (result.length) {
+            const value = result;
+            const isFunction = value.toUpperCase() in functions$2;
+            if (isFunction) {
+                return { type: "FUNCTION", value };
+            }
+            const isReference = rangeReference.test(value);
+            if (isReference) {
+                return { type: "REFERENCE", value };
+            }
+            else {
+                return { type: "SYMBOL", value };
+            }
+        }
+        return null;
+    }
+    function tokenizeSpace(chars) {
+        let length = 0;
+        while (chars.current() === NEWLINE) {
+            length++;
+            chars.shift();
+        }
+        if (length) {
+            return { type: "SPACE", value: NEWLINE.repeat(length) };
+        }
+        while (chars.current() === " ") {
+            length++;
+            chars.shift();
+        }
+        if (length) {
+            return { type: "SPACE", value: " ".repeat(length) };
+        }
+        return null;
+    }
+    function tokenizeInvalidRange(chars) {
+        if (chars.currentStartsWith(INCORRECT_RANGE_STRING)) {
+            chars.advanceBy(INCORRECT_RANGE_STRING.length);
+            return { type: "INVALID_REFERENCE", value: INCORRECT_RANGE_STRING };
+        }
+        return null;
+    }
+    class TokenizingChars {
+        text;
+        currentIndex = 0;
+        constructor(text) {
+            this.text = text;
+        }
+        current() {
+            return this.text[this.currentIndex];
+        }
+        shift() {
+            return this.text[this.currentIndex++];
+        }
+        advanceBy(length) {
+            this.currentIndex += length;
+        }
+        isOver() {
+            return this.currentIndex >= this.text.length;
+        }
+        remaining() {
+            return this.text.substring(this.currentIndex);
+        }
+        currentStartsWith(str) {
+            for (let j = 0; j < str.length; j++) {
+                if (this.text[this.currentIndex + j] !== str[j]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    var State;
+    (function (State) {
+        /**
+         * Initial state.
+         * Expecting any reference for the left part of a range
+         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
+         */
+        State[State["LeftRef"] = 0] = "LeftRef";
+        /**
+         * Expecting any reference for the right part of a range
+         * e.g. "A1", "1", "A", "Sheet1!A1", "Sheet1!A"
+         */
+        State[State["RightRef"] = 1] = "RightRef";
+        /**
+         * Expecting the separator without any constraint on the right part
+         */
+        State[State["Separator"] = 2] = "Separator";
+        /**
+         * Expecting the separator for a full column range
+         */
+        State[State["FullColumnSeparator"] = 3] = "FullColumnSeparator";
+        /**
+         * Expecting the separator for a full row range
+         */
+        State[State["FullRowSeparator"] = 4] = "FullRowSeparator";
+        /**
+         * Expecting the right part of a full column range
+         * e.g. "1", "A1"
+         */
+        State[State["RightColumnRef"] = 5] = "RightColumnRef";
+        /**
+         * Expecting the right part of a full row range
+         * e.g. "A", "A1"
+         */
+        State[State["RightRowRef"] = 6] = "RightRowRef";
+        /**
+         * Final state. A range has been matched
+         */
+        State[State["Found"] = 7] = "Found";
+    })(State || (State = {}));
+    const goTo = (state, guard = () => true) => [
+        {
+            goTo: state,
+            guard,
+        },
+    ];
+    const goToMulti = (state, guard = () => true) => ({
+        goTo: state,
+        guard,
+    });
+    const machine = {
+        [State.LeftRef]: {
+            REFERENCE: goTo(State.Separator),
+            NUMBER: goTo(State.FullRowSeparator),
+            SYMBOL: [
+                goToMulti(State.FullColumnSeparator, (token) => isColReference(token.value)),
+                goToMulti(State.FullRowSeparator, (token) => isRowReference(token.value)),
+            ],
+        },
+        [State.FullColumnSeparator]: {
+            SPACE: goTo(State.FullColumnSeparator),
+            OPERATOR: goTo(State.RightColumnRef, (token) => token.value === ":"),
+        },
+        [State.FullRowSeparator]: {
+            SPACE: goTo(State.FullRowSeparator),
+            OPERATOR: goTo(State.RightRowRef, (token) => token.value === ":"),
+        },
+        [State.Separator]: {
+            SPACE: goTo(State.Separator),
+            OPERATOR: goTo(State.RightRef, (token) => token.value === ":"),
+        },
+        [State.RightRef]: {
+            SPACE: goTo(State.RightRef),
+            NUMBER: goTo(State.Found),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
+        },
+        [State.RightColumnRef]: {
+            SPACE: goTo(State.RightColumnRef),
+            SYMBOL: goTo(State.Found, (token) => isColHeader(token.value)),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+        },
+        [State.RightRowRef]: {
+            SPACE: goTo(State.RightRowRef),
+            NUMBER: goTo(State.Found),
+            REFERENCE: goTo(State.Found, (token) => isSingleCellReference(token.value)),
+        },
+        [State.Found]: {},
+    };
+    /**
+     * Check if the list of tokens starts with a sequence of tokens representing
+     * a range.
+     * If a range is found, the sequence is removed from the list and is returned
+     * as a single token.
+     */
+    function matchReference(tokens) {
+        let head = 0;
+        let transitions = machine[State.LeftRef];
+        const matchedTokens = [];
+        while (transitions !== undefined) {
+            const token = tokens[head++];
+            if (!token) {
+                return null;
+            }
+            const transition = transitions[token.type]?.find((transition) => transition.guard(token));
+            const nextState = transition ? transition.goTo : undefined;
+            switch (nextState) {
+                case undefined:
+                    return null;
+                case State.Found:
+                    matchedTokens.push(token);
+                    tokens.splice(0, head);
+                    return {
+                        type: "REFERENCE",
+                        value: concat(matchedTokens.map((token) => token.value)),
+                    };
+                default:
+                    transitions = machine[nextState];
+                    matchedTokens.push(token);
+                    break;
+            }
+        }
+        return null;
+    }
+    /**
+     * Take the result of the tokenizer and transform it to be usable in the
+     * manipulations of range
+     *
+     * @param formula
+     */
+    function rangeTokenize(formula) {
+        const tokens = tokenize(formula);
+        const result = [];
+        while (tokens.length) {
+            result.push(matchReference(tokens) || tokens.shift());
+        }
+        return result;
+    }
+
+    /**
      * parses a formula (as a string) into the same formula,
      * but with the references to other cells extracted
      *
@@ -29501,6 +28951,714 @@
         }
     }
 
+    class FunctionCodeBuilder {
+        scope;
+        code = "";
+        constructor(scope = new Scope()) {
+            this.scope = scope;
+        }
+        append(...lines) {
+            this.code += lines.map((line) => line.toString()).join("\n") + "\n";
+        }
+        return(expression) {
+            return new FunctionCodeImpl(this.scope, this.code, expression);
+        }
+        toString() {
+            return indentCode(this.code);
+        }
+    }
+    class FunctionCodeImpl {
+        scope;
+        returnExpression;
+        code;
+        constructor(scope, code, returnExpression) {
+            this.scope = scope;
+            this.returnExpression = returnExpression;
+            this.code = indentCode(code);
+        }
+        toString() {
+            return this.code;
+        }
+        wrapInClosure() {
+            const closureName = this.scope.nextVariableName();
+            const code = new FunctionCodeBuilder(this.scope);
+            code.append(`const ${closureName} = () => {`);
+            code.append(this.code);
+            code.append(`return ${this.returnExpression};`);
+            code.append(`}`);
+            return code.return(closureName);
+        }
+        assignResultToVariable() {
+            if (this.scope.isAlreadyDeclared(this.returnExpression)) {
+                return this;
+            }
+            const variableName = this.scope.nextVariableName();
+            const code = new FunctionCodeBuilder(this.scope);
+            code.append(this.code);
+            code.append(`const ${variableName} = ${this.returnExpression};`);
+            return code.return(variableName);
+        }
+    }
+    class Scope {
+        nextId = 1;
+        declaredVariables = new Set();
+        nextVariableName() {
+            const name = `_${this.nextId++}`;
+            this.declaredVariables.add(name);
+            return name;
+        }
+        isAlreadyDeclared(name) {
+            return this.declaredVariables.has(name);
+        }
+    }
+    /**
+     * Takes a list of strings that might be single or multiline
+     * and maps them in a list of single line strings.
+     */
+    function splitLines(str) {
+        return str
+            .split("\n")
+            .map((line) => line.trim())
+            .filter((line) => line !== "");
+    }
+    function indentCode(code) {
+        let result = "";
+        let indentLevel = 0;
+        const lines = splitLines(code);
+        for (const line of lines) {
+            if (line.startsWith("}")) {
+                indentLevel--;
+            }
+            result += "\t".repeat(indentLevel) + line + "\n";
+            if (line.endsWith("{")) {
+                indentLevel++;
+            }
+        }
+        return result.trim();
+    }
+
+    const functionRegex = /[a-zA-Z0-9\_]+(\.[a-zA-Z0-9\_]+)*/;
+    const UNARY_OPERATORS_PREFIX = ["-", "+"];
+    const UNARY_OPERATORS_POSTFIX = ["%"];
+    const ASSOCIATIVE_OPERATORS = ["*", "+", "&"];
+    const OP_PRIORITY = {
+        "^": 30,
+        "%": 30,
+        "*": 20,
+        "/": 20,
+        "+": 15,
+        "-": 15,
+        "&": 13,
+        ">": 10,
+        "<>": 10,
+        ">=": 10,
+        "<": 10,
+        "<=": 10,
+        "=": 10,
+    };
+    /**
+     * Parse the next operand in an arithmetic expression.
+     * e.g.
+     *  for 1+2*3, the next operand is 1
+     *  for (1+2)*3, the next operand is (1+2)
+     *  for SUM(1,2)+3, the next operand is SUM(1,2)
+     */
+    function parseOperand(tokens) {
+        const current = tokens.shift();
+        if (!current) {
+            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
+        }
+        switch (current.type) {
+            case "DEBUGGER":
+                const next = parseExpression(tokens, 1000);
+                next.debug = true;
+                return next;
+            case "NUMBER":
+                return { type: "NUMBER", value: parseNumber(current.value) };
+            case "STRING":
+                return { type: "STRING", value: removeStringQuotes(current.value) };
+            case "FUNCTION":
+                const args = parseFunctionArgs(tokens);
+                return { type: "FUNCALL", value: current.value, args };
+            case "INVALID_REFERENCE":
+                throw new InvalidReferenceError();
+            case "REFERENCE":
+                if (tokens[0]?.value === ":" && tokens[1]?.type === "REFERENCE") {
+                    tokens.shift();
+                    const rightReference = tokens.shift();
+                    return {
+                        type: "REFERENCE",
+                        value: `${current.value}:${rightReference?.value}`,
+                    };
+                }
+                return {
+                    type: "REFERENCE",
+                    value: current.value,
+                };
+            case "SYMBOL":
+                if (["TRUE", "FALSE"].includes(current.value.toUpperCase())) {
+                    return { type: "BOOLEAN", value: current.value.toUpperCase() === "TRUE" };
+                }
+                if (current.value) {
+                    if (functionRegex.test(current.value) && tokens[0]?.type === "LEFT_PAREN") {
+                        throw new UnknownFunctionError(current.value);
+                    }
+                }
+                throw new BadExpressionError(_lt("Invalid formula"));
+            case "LEFT_PAREN":
+                const result = parseExpression(tokens);
+                consumeOrThrow(tokens, "RIGHT_PAREN", _lt("Missing closing parenthesis"));
+                return result;
+            case "OPERATOR":
+                const operator = current.value;
+                if (UNARY_OPERATORS_PREFIX.includes(operator)) {
+                    return {
+                        type: "UNARY_OPERATION",
+                        value: operator,
+                        operand: parseExpression(tokens, OP_PRIORITY[operator]),
+                    };
+                }
+                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
+            default:
+                throw new BadExpressionError(_lt("Unexpected token: %s", current.value));
+        }
+    }
+    function parseFunctionArgs(tokens) {
+        consumeOrThrow(tokens, "LEFT_PAREN", _lt("Missing opening parenthesis"));
+        const nextToken = tokens[0];
+        if (nextToken?.type === "RIGHT_PAREN") {
+            consumeOrThrow(tokens, "RIGHT_PAREN");
+            return [];
+        }
+        const args = [];
+        args.push(parseOneFunctionArg(tokens));
+        while (tokens[0]?.type !== "RIGHT_PAREN") {
+            consumeOrThrow(tokens, "COMMA", _lt("Wrong function call"));
+            args.push(parseOneFunctionArg(tokens));
+        }
+        consumeOrThrow(tokens, "RIGHT_PAREN");
+        return args;
+    }
+    function parseOneFunctionArg(tokens) {
+        const nextToken = tokens[0];
+        if (nextToken?.type === "COMMA" || nextToken?.type === "RIGHT_PAREN") {
+            // arg is empty: "sum(1,,2)" "sum(,1)" "sum(1,)"
+            return { type: "EMPTY", value: "" };
+        }
+        return parseExpression(tokens);
+    }
+    function consumeOrThrow(tokens, type, message = DEFAULT_ERROR_MESSAGE) {
+        const token = tokens.shift();
+        if (!token || token.type !== type) {
+            throw new BadExpressionError(message);
+        }
+    }
+    function parseExpression(tokens, parent_priority = 0) {
+        if (tokens.length === 0) {
+            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
+        }
+        let left = parseOperand(tokens);
+        // as long as we have operators with higher priority than the parent one,
+        // continue parsing the expression because it is a child sub-expression
+        while (tokens[0]?.type === "OPERATOR" && OP_PRIORITY[tokens[0].value] > parent_priority) {
+            const operator = tokens.shift().value;
+            if (UNARY_OPERATORS_POSTFIX.includes(operator)) {
+                left = {
+                    type: "UNARY_OPERATION",
+                    value: operator,
+                    operand: left,
+                    postfix: true,
+                };
+            }
+            else {
+                const right = parseExpression(tokens, OP_PRIORITY[operator]);
+                left = {
+                    type: "BIN_OPERATION",
+                    value: operator,
+                    left,
+                    right,
+                };
+            }
+        }
+        return left;
+    }
+    /**
+     * Parse an expression (as a string) into an AST.
+     */
+    function parse(str) {
+        return parseTokens(tokenize(str));
+    }
+    function parseTokens(tokens) {
+        tokens = tokens.filter((x) => x.type !== "SPACE");
+        if (tokens[0].value === "=") {
+            tokens.splice(0, 1);
+        }
+        const result = parseExpression(tokens);
+        if (tokens.length) {
+            throw new BadExpressionError(DEFAULT_ERROR_MESSAGE);
+        }
+        return result;
+    }
+    /**
+     * Allows to visit all nodes of an AST and apply a mapping function
+     * to nodes of a specific type.
+     * Useful if you want to convert some part of a formula.
+     *
+     * e.g.
+     * ```ts
+     * convertAstNodes(ast, "FUNCALL", convertFormulaToExcel)
+     *
+     * function convertFormulaToExcel(ast: ASTFuncall) {
+     *   // ...
+     *   return modifiedAst
+     * }
+     * ```
+     */
+    function convertAstNodes(ast, type, fn) {
+        if (type === ast.type) {
+            ast = fn(ast);
+        }
+        switch (ast.type) {
+            case "FUNCALL":
+                return {
+                    ...ast,
+                    args: ast.args.map((child) => convertAstNodes(child, type, fn)),
+                };
+            case "UNARY_OPERATION":
+                return {
+                    ...ast,
+                    operand: convertAstNodes(ast.operand, type, fn),
+                };
+            case "BIN_OPERATION":
+                return {
+                    ...ast,
+                    right: convertAstNodes(ast.right, type, fn),
+                    left: convertAstNodes(ast.left, type, fn),
+                };
+            default:
+                return ast;
+        }
+    }
+    /**
+     * Converts an ast formula to the corresponding string
+     */
+    function astToFormula(ast) {
+        switch (ast.type) {
+            case "FUNCALL":
+                const args = ast.args.map((arg) => astToFormula(arg));
+                return `${ast.value}(${args.join(",")})`;
+            case "NUMBER":
+                return ast.value.toString();
+            case "REFERENCE":
+                return ast.value;
+            case "STRING":
+                return `"${ast.value}"`;
+            case "BOOLEAN":
+                return ast.value ? "TRUE" : "FALSE";
+            case "UNARY_OPERATION":
+                return ast.postfix
+                    ? leftOperandToFormula(ast) + ast.value
+                    : ast.value + rightOperandToFormula(ast);
+            case "BIN_OPERATION":
+                return leftOperandToFormula(ast) + ast.value + rightOperandToFormula(ast);
+            default:
+                return ast.value;
+        }
+    }
+    /**
+     * Convert the left operand of a binary operation to the corresponding string
+     * and enclose the result inside parenthesis if necessary.
+     */
+    function leftOperandToFormula(operationAST) {
+        const mainOperator = operationAST.value;
+        const leftOperation = "left" in operationAST ? operationAST.left : operationAST.operand;
+        const leftOperator = leftOperation.value;
+        const needParenthesis = leftOperation.type === "BIN_OPERATION" && OP_PRIORITY[leftOperator] < OP_PRIORITY[mainOperator];
+        return needParenthesis ? `(${astToFormula(leftOperation)})` : astToFormula(leftOperation);
+    }
+    /**
+     * Convert the right operand of a binary or unary operation to the corresponding string
+     * and enclose the result inside parenthesis if necessary.
+     */
+    function rightOperandToFormula(operationAST) {
+        const mainOperator = operationAST.value;
+        const rightOperation = "right" in operationAST ? operationAST.right : operationAST.operand;
+        const rightPriority = OP_PRIORITY[rightOperation.value];
+        const mainPriority = OP_PRIORITY[mainOperator];
+        let needParenthesis = false;
+        if (rightOperation.type !== "BIN_OPERATION") {
+            needParenthesis = false;
+        }
+        else if (rightPriority < mainPriority) {
+            needParenthesis = true;
+        }
+        else if (rightPriority === mainPriority && !ASSOCIATIVE_OPERATORS.includes(mainOperator)) {
+            needParenthesis = true;
+        }
+        return needParenthesis ? `(${astToFormula(rightOperation)})` : astToFormula(rightOperation);
+    }
+
+    const functions$1 = functionRegistry.content;
+    const OPERATOR_MAP = {
+        "=": "EQ",
+        "+": "ADD",
+        "-": "MINUS",
+        "*": "MULTIPLY",
+        "/": "DIVIDE",
+        ">=": "GTE",
+        "<>": "NE",
+        ">": "GT",
+        "<=": "LTE",
+        "<": "LT",
+        "^": "POWER",
+        "&": "CONCATENATE",
+    };
+    const UNARY_OPERATOR_MAP = {
+        "-": "UMINUS",
+        "+": "UPLUS",
+        "%": "UNARY.PERCENT",
+    };
+    // this cache contains all compiled function code, grouped by "structure". For
+    // example, "=2*sum(A1:A4)" and "=2*sum(B1:B4)" are compiled into the same
+    // structural function.
+    // It is only exported for testing purposes
+    const functionCache = {};
+    // -----------------------------------------------------------------------------
+    // COMPILER
+    // -----------------------------------------------------------------------------
+    function compile(formula) {
+        const tokens = rangeTokenize(formula);
+        const { dependencies, constantValues } = formulaArguments(tokens);
+        const cacheKey = compilationCacheKey(tokens, dependencies, constantValues);
+        if (!functionCache[cacheKey]) {
+            const ast = parseTokens([...tokens]);
+            const scope = new Scope();
+            if (ast.type === "BIN_OPERATION" && ast.value === ":") {
+                throw new BadExpressionError(_lt("Invalid formula"));
+            }
+            if (ast.type === "EMPTY") {
+                throw new BadExpressionError(_lt("Invalid formula"));
+            }
+            const compiledAST = compileAST(ast);
+            const code = new FunctionCodeBuilder();
+            code.append(`// ${cacheKey}`);
+            code.append(compiledAST);
+            code.append(`return ${compiledAST.returnExpression};`);
+            let baseFunction = new Function("deps", // the dependencies in the current formula
+            "ref", // a function to access a certain dependency at a given index
+            "range", // same as above, but guarantee that the result is in the form of a range
+            "ctx", code.toString());
+            functionCache[cacheKey] = {
+                // @ts-ignore
+                execute: baseFunction,
+            };
+            /**
+             * This function compile the function arguments. It is mostly straightforward,
+             * except that there is a non trivial transformation in one situation:
+             *
+             * If a function argument is asking for a range, and get a cell, we transform
+             * the cell value into a range. This allow the grid model to differentiate
+             * between a cell value and a non cell value.
+             */
+            function compileFunctionArgs(ast) {
+                const { args } = ast;
+                const functionName = ast.value.toUpperCase();
+                const functionDefinition = functions$1[functionName];
+                assertEnoughArgs(ast);
+                const compiledArgs = [];
+                for (let i = 0; i < args.length; i++) {
+                    const argToFocus = functionDefinition.getArgToFocus(i + 1) - 1;
+                    const argDefinition = functionDefinition.args[argToFocus];
+                    const currentArg = args[i];
+                    const argTypes = argDefinition.type || [];
+                    // detect when an argument need to be evaluated as a meta argument
+                    const isMeta = argTypes.includes("META");
+                    // detect when an argument need to be evaluated as a lazy argument
+                    const isLazy = argDefinition.lazy;
+                    const hasRange = argTypes.some((t) => isRangeType(t));
+                    const isRangeOnly = argTypes.every((t) => isRangeType(t));
+                    if (isRangeOnly) {
+                        if (!isRangeInput(currentArg)) {
+                            throw new BadExpressionError(_lt("Function %s expects the parameter %s to be reference to a cell or range, not a %s.", functionName, (i + 1).toString(), currentArg.type.toLowerCase()));
+                        }
+                    }
+                    const compiledAST = compileAST(currentArg, isMeta, hasRange, {
+                        functionName,
+                        paramIndex: i + 1,
+                    });
+                    compiledArgs.push(isLazy ? compiledAST.wrapInClosure() : compiledAST);
+                }
+                return compiledArgs;
+            }
+            /**
+             * This function compiles all the information extracted by the parser into an
+             * executable code for the evaluation of the cells content. It uses a cash to
+             * not reevaluate identical code structures.
+             *
+             * The function is sensitive to parameter “isMeta”. This
+             * parameter may vary when compiling function arguments:
+             * isMeta: In some cases the function arguments expects information on the
+             * cell/range other than the associated value(s). For example the COLUMN
+             * function needs to receive as argument the coordinates of a cell rather
+             * than its value. For this we have meta arguments.
+             */
+            function compileAST(ast, isMeta = false, hasRange = false, referenceVerification = {}) {
+                const code = new FunctionCodeBuilder(scope);
+                if (ast.type !== "REFERENCE" && !(ast.type === "BIN_OPERATION" && ast.value === ":")) {
+                    if (isMeta) {
+                        throw new BadExpressionError(_lt(`Argument must be a reference to a cell or range.`));
+                    }
+                }
+                if (ast.debug) {
+                    code.append("debugger;");
+                }
+                switch (ast.type) {
+                    case "BOOLEAN":
+                        return code.return(`{ value: ${ast.value} }`);
+                    case "NUMBER":
+                        return code.return(`{ value: this.constantValues.numbers[${constantValues.numbers.indexOf(ast.value)}] }`);
+                    case "STRING":
+                        return code.return(`{ value: this.constantValues.strings[${constantValues.strings.indexOf(ast.value)}] }`);
+                    case "REFERENCE":
+                        const referenceIndex = dependencies.indexOf(ast.value);
+                        if (hasRange) {
+                            return code.return(`range(deps[${referenceIndex}])`);
+                        }
+                        else {
+                            return code.return(`ref(deps[${referenceIndex}], ${isMeta ? "true" : "false"}, "${referenceVerification.functionName || OPERATOR_MAP["="]}",  ${referenceVerification.paramIndex})`);
+                        }
+                    case "FUNCALL":
+                        const args = compileFunctionArgs(ast).map((arg) => arg.assignResultToVariable());
+                        code.append(...args);
+                        const fnName = ast.value.toUpperCase();
+                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
+                        return code.return(`ctx['${fnName}'](${args.map((arg) => arg.returnExpression)})`);
+                    case "UNARY_OPERATION": {
+                        const fnName = UNARY_OPERATOR_MAP[ast.value];
+                        const operand = compileAST(ast.operand, false, false, {
+                            functionName: fnName,
+                        }).assignResultToVariable();
+                        code.append(operand);
+                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
+                        return code.return(`ctx['${fnName}'](${operand.returnExpression})`);
+                    }
+                    case "BIN_OPERATION": {
+                        const fnName = OPERATOR_MAP[ast.value];
+                        const left = compileAST(ast.left, false, false, {
+                            functionName: fnName,
+                        }).assignResultToVariable();
+                        const right = compileAST(ast.right, false, false, {
+                            functionName: fnName,
+                        }).assignResultToVariable();
+                        code.append(left);
+                        code.append(right);
+                        code.append(`ctx.__lastFnCalled = '${fnName}';`);
+                        return code.return(`ctx['${fnName}'](${left.returnExpression}, ${right.returnExpression})`);
+                    }
+                    case "EMPTY":
+                        return code.return("undefined");
+                }
+            }
+        }
+        const compiledFormula = {
+            execute: functionCache[cacheKey].execute,
+            dependencies,
+            constantValues,
+            tokens,
+        };
+        return compiledFormula;
+    }
+    /**
+     * Compute a cache key for the formula.
+     * References, numbers and strings are replaced with placeholders because
+     * the compiled formula does not depend on their actual value.
+     * Both `=A1+1+"2"` and `=A2+2+"3"` are compiled to the exact same function.
+     *
+     * Spaces are also ignored to compute the cache key.
+     *
+     * A formula `=A1+A2+SUM(2, 2, "2")` have the cache key `=|0|+|1|+SUM(|N0|,|N0|,|S0|)`
+     */
+    function compilationCacheKey(tokens, dependencies, constantValues) {
+        return concat(tokens.map((token) => {
+            switch (token.type) {
+                case "STRING":
+                    const value = removeStringQuotes(token.value);
+                    return `|S${constantValues.strings.indexOf(value)}|`;
+                case "NUMBER":
+                    return `|N${constantValues.numbers.indexOf(parseNumber(token.value))}|`;
+                case "REFERENCE":
+                case "INVALID_REFERENCE":
+                    return `|${dependencies.indexOf(token.value)}|`;
+                case "SPACE":
+                    return "";
+                default:
+                    return token.value;
+            }
+        }));
+    }
+    /**
+     * Return formula arguments which are references, strings and numbers.
+     */
+    function formulaArguments(tokens) {
+        const constantValues = {
+            numbers: [],
+            strings: [],
+        };
+        const dependencies = [];
+        for (const token of tokens) {
+            switch (token.type) {
+                case "INVALID_REFERENCE":
+                case "REFERENCE":
+                    dependencies.push(token.value);
+                    break;
+                case "STRING":
+                    const value = removeStringQuotes(token.value);
+                    if (!constantValues.strings.includes(value)) {
+                        constantValues.strings.push(value);
+                    }
+                    break;
+                case "NUMBER": {
+                    const value = parseNumber(token.value);
+                    if (!constantValues.numbers.includes(value)) {
+                        constantValues.numbers.push(value);
+                    }
+                    break;
+                }
+            }
+        }
+        return {
+            dependencies,
+            constantValues,
+        };
+    }
+    /**
+     * Check if arguments are supplied in the correct quantities
+     */
+    function assertEnoughArgs(ast) {
+        const nbrArg = ast.args.length;
+        const functionName = ast.value.toUpperCase();
+        const functionDefinition = functions$1[functionName];
+        if (nbrArg < functionDefinition.minArgRequired) {
+            throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s minimum, but got %s instead.", functionName, functionDefinition.minArgRequired.toString(), nbrArg.toString()));
+        }
+        if (nbrArg > functionDefinition.maxArgPossible) {
+            throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected %s maximum, but got %s instead.", functionName, functionDefinition.maxArgPossible.toString(), nbrArg.toString()));
+        }
+        const repeatableArgs = functionDefinition.nbrArgRepeating;
+        if (repeatableArgs > 1) {
+            const unrepeatableArgs = functionDefinition.args.length - repeatableArgs;
+            const repeatingArgs = nbrArg - unrepeatableArgs;
+            if (repeatingArgs % repeatableArgs !== 0) {
+                throw new BadExpressionError(_lt("Invalid number of arguments for the %s function. Expected all arguments after position %s to be supplied by groups of %s arguments", functionName, unrepeatableArgs.toString(), repeatableArgs.toString()));
+            }
+        }
+    }
+    function isRangeType(type) {
+        return type.startsWith("RANGE");
+    }
+    function isRangeInput(arg) {
+        if (arg.type === "REFERENCE") {
+            return true;
+        }
+        if (arg.type === "FUNCALL") {
+            const fnDef = functions$1[arg.value.toUpperCase()];
+            return fnDef && isRangeType(fnDef.returns[0]);
+        }
+        return false;
+    }
+
+    /**
+     * Add the following information on tokens:
+     * - length
+     * - start
+     * - end
+     */
+    function enrichTokens(tokens) {
+        let current = 0;
+        return tokens.map((x) => {
+            const len = x.value.toString().length;
+            const token = Object.assign({}, x, {
+                start: current,
+                end: current + len,
+                length: len,
+            });
+            current = token.end;
+            return token;
+        });
+    }
+    /**
+     * add on each token the length, start and end
+     * also matches the opening to its closing parenthesis (using the same number)
+     */
+    function mapParenthesis(tokens) {
+        let maxParen = 1;
+        const stack = [];
+        return tokens.map((token) => {
+            if (token.type === "LEFT_PAREN") {
+                stack.push(maxParen);
+                token.parenIndex = maxParen;
+                maxParen++;
+            }
+            else if (token.type === "RIGHT_PAREN") {
+                token.parenIndex = stack.pop();
+            }
+            return token;
+        });
+    }
+    /**
+     * add on each token its parent function and the index corresponding to
+     * its position as an argument of the function.
+     * In this example "=MIN(42,SUM(MAX(1,2),3))":
+     * - the parent function of the token correspond to number 42 is the MIN function
+     * - the argument position of the token correspond to number 42 is 0
+     * - the parent function of the token correspond to number 3 is the SUM function
+     * - the argument position of the token correspond to number 3 is 1
+     */
+    function mapParentFunction(tokens) {
+        let stack = [];
+        let functionStarted = "";
+        const res = tokens.map((token, i) => {
+            if (!["SPACE", "LEFT_PAREN"].includes(token.type)) {
+                functionStarted = "";
+            }
+            switch (token.type) {
+                case "FUNCTION":
+                    functionStarted = token.value;
+                    break;
+                case "LEFT_PAREN":
+                    stack.push({ parent: functionStarted, argPosition: 0 });
+                    functionStarted = "";
+                    break;
+                case "RIGHT_PAREN":
+                    stack.pop();
+                    break;
+                case "COMMA":
+                    if (stack.length) {
+                        // increment position on current function
+                        stack[stack.length - 1].argPosition++;
+                    }
+                    break;
+            }
+            if (stack.length) {
+                const functionContext = stack[stack.length - 1];
+                if (functionContext.parent) {
+                    token.functionContext = Object.assign({}, functionContext);
+                }
+            }
+            return token;
+        });
+        return res;
+    }
+    /**
+     * Take the result of the tokenizer and transform it to be usable in the composer.
+     *
+     * @param formula
+     */
+    function composerTokenize(formula) {
+        const tokens = rangeTokenize(formula);
+        return mapParentFunction(mapParenthesis(enrichTokens(tokens)));
+    }
+
     /**
      * Core Plugin
      *
@@ -30172,7 +30330,12 @@
         return value === "" ? NaN : Number(value);
     }
     class ConditionalFormatPlugin extends CorePlugin {
-        static getters = ["getConditionalFormats", "getRulesSelection", "getRulesByCell"];
+        static getters = [
+            "getConditionalFormats",
+            "getRulesSelection",
+            "getRulesByCell",
+            "getAdaptedCfRanges",
+        ];
         cfRules = {};
         loopThroughRangesOfSheet(sheetId, applyChange) {
             for (const rule of this.cfRules[sheetId]) {
@@ -30311,6 +30474,22 @@
             return new Set(rules.map((rule) => {
                 return this.mapToConditionalFormat(sheetId, rule);
             }));
+        }
+        /**
+         * Add or remove cells to a given conditional formatting rule and return the adapted CF's XCs.
+         */
+        getAdaptedCfRanges(sheetId, cf, toAdd, toRemove) {
+            if (toAdd.length === 0 && toRemove.length === 0) {
+                return;
+            }
+            const rules = this.getters.getConditionalFormats(sheetId);
+            const replaceIndex = rules.findIndex((c) => c.id === cf.id);
+            let currentRanges = [];
+            if (replaceIndex > -1) {
+                currentRanges = rules[replaceIndex].ranges;
+            }
+            currentRanges = currentRanges.concat(toAdd);
+            return recomputeZones(currentRanges, toRemove);
         }
         // ---------------------------------------------------------------------------
         // Private
@@ -30727,6 +30906,8 @@
             "getFilterTables",
             "getFilterTablesInZone",
             "getFilterId",
+            "getFilterHeaders",
+            "isFilterHeader",
         ];
         tables = {};
         // ---------------------------------------------------------------------------
@@ -30843,6 +31024,21 @@
                 }
             }
             return false;
+        }
+        getFilterHeaders(sheetId) {
+            const headers = [];
+            for (let filterTable of this.getFilterTables(sheetId)) {
+                const zone = filterTable.zone;
+                const row = zone.top;
+                for (let col = zone.left; col <= zone.right; col++) {
+                    headers.push({ col, row });
+                }
+            }
+            return headers;
+        }
+        isFilterHeader({ sheetId, col, row }) {
+            const headers = this.getFilterHeaders(sheetId);
+            return headers.some((header) => header.col === col && header.row === row);
         }
         onAddColumnsRows(cmd) {
             for (const filterTable of this.getFilterTables(cmd.sheetId)) {
@@ -34085,7 +34281,7 @@
         // ---------------------------------------------------------------------------
         // Getters
         // ---------------------------------------------------------------------------
-        evaluateFormula(formulaString, sheetId = this.getters.getActiveSheetId()) {
+        evaluateFormula(sheetId, formulaString) {
             const compiledFormula = compile(formulaString);
             const ranges = [];
             for (let xc of compiledFormula.dependencies) {
@@ -34249,7 +34445,7 @@
      * current spreadsheet
      */
     class CustomColorsPlugin extends UIPlugin {
-        customColors = new Set();
+        customColors = {};
         shouldUpdateColors = false;
         static getters = ["getCustomColors"];
         handle(cmd) {
@@ -34261,12 +34457,12 @@
                 case "SET_BORDER":
                 case "SET_ZONE_BORDERS":
                 case "SET_FORMATTING":
-                    this.shouldUpdateColors = true;
+                    this.history.update("shouldUpdateColors", true);
             }
         }
         finalize() {
             if (this.shouldUpdateColors) {
-                this.shouldUpdateColors = false;
+                this.history.update("shouldUpdateColors", false);
                 for (const color of this.getCustomColors()) {
                     this.tryToAddColor(color);
                 }
@@ -34282,7 +34478,9 @@
                 // remove duplicates first to check validity on a reduced
                 // set of colors, then normalize to HEX and remove duplicates
                 // again
-                [...new Set([...usedColors, ...this.customColors])].filter(isColorValid).map(toHex)),
+                [...new Set([...usedColors, ...Object.keys(this.customColors)])]
+                    .filter(isColorValid)
+                    .map(toHex)),
             ]).filter((color) => !COLOR_PICKER_DEFAULTS.includes(color));
         }
         getColorsFromCells(sheetId) {
@@ -34348,7 +34546,7 @@
         tryToAddColor(color) {
             const formattedColor = toHex(color);
             if (color && !COLOR_PICKER_DEFAULTS.includes(formattedColor)) {
-                this.customColors.add(formattedColor);
+                this.history.update("customColors", formattedColor, true);
             }
         }
     }
@@ -34362,20 +34560,22 @@
                 invalidateCFEvaluationCommands.has(cmd.type) ||
                 cmd.type === "EVALUATE_CELLS" ||
                 cmd.type === "UPDATE_CELL") {
-                for (const chartId in this.charts) {
-                    this.charts[chartId] = undefined;
+                if (cmd.type !== "UNDO" && cmd.type !== "REDO") {
+                    for (const chartId in this.charts) {
+                        this.history.update("charts", chartId, undefined);
+                    }
                 }
             }
             switch (cmd.type) {
                 case "UPDATE_CHART":
                 case "CREATE_CHART":
                 case "DELETE_FIGURE":
-                    this.charts[cmd.id] = undefined;
+                    this.history.update("charts", cmd.id, undefined);
                     break;
                 case "DELETE_SHEET":
                     for (let chartId in this.charts) {
                         if (!this.getters.isChartDefined(chartId)) {
-                            this.charts[chartId] = undefined;
+                            this.history.update("charts", chartId, undefined);
                         }
                     }
                     break;
@@ -34387,7 +34587,7 @@
                 if (!chart) {
                     throw new Error(`No chart for the given id: ${figureId}`);
                 }
-                this.charts[figureId] = this.createRuntimeChart(chart);
+                this.history.update("charts", figureId, this.createRuntimeChart(chart));
             }
             return this.charts[figureId];
         }
@@ -34414,9 +34614,6 @@
         }
     }
 
-    // -----------------------------------------------------------------------------
-    // Constants
-    // -----------------------------------------------------------------------------
     class EvaluationConditionalFormatPlugin extends UIPlugin {
         static getters = ["getConditionalIcon", "getCellComputedStyle"];
         isStale = true;
@@ -34431,28 +34628,13 @@
                 (cmd.type === "UPDATE_CELL" && "content" in cmd)) {
                 this.isStale = true;
             }
-            switch (cmd.type) {
-                case "ACTIVATE_SHEET":
-                    const activeSheet = cmd.sheetIdTo;
-                    this.computedStyles[activeSheet] = this.computedStyles[activeSheet] || {};
-                    this.computedIcons[activeSheet] = this.computedIcons[activeSheet] || {};
-                    this.isStale = true;
-                    break;
-                case "AUTOFILL_CELL":
-                    const sheetId = this.getters.getActiveSheetId();
-                    const cfOrigin = this.getters.getRulesByCell(sheetId, cmd.originCol, cmd.originRow);
-                    for (const cf of cfOrigin) {
-                        this.adaptRules(sheetId, cf, [toXC(cmd.col, cmd.row)], []);
-                    }
-                    break;
-                case "PASTE_CONDITIONAL_FORMAT":
-                    this.pasteCf(cmd.originPosition, cmd.targetPosition, cmd.operation);
-                    break;
-            }
         }
         finalize() {
             if (this.isStale) {
-                this.computeStyles();
+                for (const sheetId of this.getters.getSheetIds()) {
+                    this.computedStyles[sheetId] = lazy(() => this.getComputedStyles(sheetId));
+                    this.computedIcons[sheetId] = lazy(() => this.getComputedIcons(sheetId));
+                }
                 this.isStale = false;
             }
         }
@@ -34463,7 +34645,7 @@
             // TODO move this getter out of CF: it also depends on filters and link
             const { sheetId, col, row } = position;
             const cell = this.getters.getCell(position);
-            const styles = this.computedStyles[sheetId];
+            const styles = this.computedStyles[sheetId]();
             const cfStyle = styles && styles[col]?.[row];
             const computedStyle = {
                 ...cell?.style,
@@ -34478,10 +34660,9 @@
             }
             return computedStyle;
         }
-        getConditionalIcon({ col, row }) {
-            const activeSheet = this.getters.getActiveSheetId();
-            const icon = this.computedIcons[activeSheet];
-            return icon && icon[col]?.[row];
+        getConditionalIcon({ sheetId, col, row }) {
+            const icons = this.computedIcons[sheetId]();
+            return icons && icons[col]?.[row];
         }
         // ---------------------------------------------------------------------------
         // Private
@@ -34496,25 +34677,17 @@
          * the resulting style will have the combination of all those values.
          * If multiple conditional formatting use the same style value, they will be applied in order so that the last applied wins
          */
-        computeStyles() {
-            const sheetId = this.getters.getActiveSheetId();
-            this.computedStyles[sheetId] = {};
-            this.computedIcons[sheetId] = {};
-            const computedStyle = this.computedStyles[sheetId];
+        getComputedStyles(sheetId) {
+            const computedStyle = {};
             for (let cf of this.getters.getConditionalFormats(sheetId).reverse()) {
                 try {
                     switch (cf.rule.type) {
                         case "ColorScaleRule":
                             for (let range of cf.ranges) {
-                                this.applyColorScale(range, cf.rule);
+                                this.applyColorScale(sheetId, range, cf.rule, computedStyle);
                             }
                             break;
-                        case "IconSetRule":
-                            for (let range of cf.ranges) {
-                                this.applyIcon(range, cf.rule);
-                            }
-                            break;
-                        default:
+                        case "CellIsRule":
                             for (let ref of cf.ranges) {
                                 const zone = this.getters.getRangeFromSheetXC(sheetId, ref).zone;
                                 for (let row = zone.top; row <= zone.bottom; row++) {
@@ -34537,9 +34710,20 @@
                     // we don't care about the errors within the evaluation of a rule
                 }
             }
+            return computedStyle;
         }
-        parsePoint(range, threshold, functionName) {
-            const sheetId = this.getters.getActiveSheetId();
+        getComputedIcons(sheetId) {
+            const computedIcons = {};
+            for (let cf of this.getters.getConditionalFormats(sheetId).reverse()) {
+                if (cf.rule.type !== "IconSetRule")
+                    continue;
+                for (let range of cf.ranges) {
+                    this.applyIcon(sheetId, range, cf.rule, computedIcons);
+                }
+            }
+            return computedIcons;
+        }
+        parsePoint(sheetId, range, threshold, functionName) {
             const rangeValues = this.getters
                 .getEvaluatedCellsInZone(sheetId, this.getters.getRangeFromSheetXC(sheetId, range).zone)
                 .filter((cell) => cell.type === CellValueType.number)
@@ -34558,23 +34742,22 @@
                 case "percentile":
                     return percentile(rangeValues, Number(threshold.value) / 100, true);
                 case "formula":
-                    const value = threshold.value && this.getters.evaluateFormula(threshold.value);
+                    const value = threshold.value && this.getters.evaluateFormula(sheetId, threshold.value);
                     return !(value instanceof Promise) ? value : null;
                 default:
                     return null;
             }
         }
-        applyIcon(range, rule) {
-            const lowerInflectionPoint = this.parsePoint(range, rule.lowerInflectionPoint);
-            const upperInflectionPoint = this.parsePoint(range, rule.upperInflectionPoint);
+        /** Compute the CF icons for the given range and CF rule, and apply in in the given computedIcons object */
+        applyIcon(sheetId, range, rule, computedIcons) {
+            const lowerInflectionPoint = this.parsePoint(sheetId, range, rule.lowerInflectionPoint);
+            const upperInflectionPoint = this.parsePoint(sheetId, range, rule.upperInflectionPoint);
             if (lowerInflectionPoint === null ||
                 upperInflectionPoint === null ||
                 lowerInflectionPoint > upperInflectionPoint) {
                 return;
             }
-            const sheetId = this.getters.getActiveSheetId();
             const zone = this.getters.getRangeFromSheetXC(sheetId, range).zone;
-            const computedIcons = this.computedIcons[sheetId];
             const iconSet = [rule.icons.upper, rule.icons.middle, rule.icons.lower];
             for (let row = zone.top; row <= zone.bottom; row++) {
                 for (let col = zone.left; col <= zone.right; col++) {
@@ -34601,19 +34784,20 @@
             }
             return icons[2];
         }
-        applyColorScale(range, rule) {
-            const minValue = this.parsePoint(range, rule.minimum, "min");
-            const midValue = rule.midpoint ? this.parsePoint(range, rule.midpoint) : null;
-            const maxValue = this.parsePoint(range, rule.maximum, "max");
+        /** Compute the color scale for the given range and CF rule, and apply in in the given computedStyle object */
+        applyColorScale(sheetId, range, rule, computedStyle) {
+            const minValue = this.parsePoint(sheetId, range, rule.minimum, "min");
+            const midValue = rule.midpoint
+                ? this.parsePoint(sheetId, range, rule.midpoint)
+                : null;
+            const maxValue = this.parsePoint(sheetId, range, rule.maximum, "max");
             if (minValue === null ||
                 maxValue === null ||
                 minValue >= maxValue ||
                 (midValue && (minValue >= midValue || midValue >= maxValue))) {
                 return;
             }
-            const sheetId = this.getters.getActiveSheetId();
             const zone = this.getters.getRangeFromSheetXC(sheetId, range).zone;
-            const computedStyle = this.computedStyles[sheetId];
             const colorCellArgs = [];
             if (rule.midpoint && midValue) {
                 colorCellArgs.push({
@@ -34730,1227 +34914,6 @@
                 return false;
             },
         };
-        /**
-         * Add or remove cells to a given conditional formatting rule.
-         */
-        adaptRules(sheetId, cf, toAdd, toRemove) {
-            if (toAdd.length === 0 && toRemove.length === 0) {
-                return;
-            }
-            const rules = this.getters.getConditionalFormats(sheetId);
-            const replaceIndex = rules.findIndex((c) => c.id === cf.id);
-            let currentRanges = [];
-            if (replaceIndex > -1) {
-                currentRanges = rules[replaceIndex].ranges;
-            }
-            currentRanges = currentRanges.concat(toAdd);
-            const newRangesXC = recomputeZones(currentRanges, toRemove);
-            this.dispatch("ADD_CONDITIONAL_FORMAT", {
-                cf: {
-                    id: cf.id,
-                    rule: cf.rule,
-                    stopIfTrue: cf.stopIfTrue,
-                },
-                ranges: newRangesXC.map((xc) => this.getters.getRangeDataFromXc(sheetId, xc)),
-                sheetId,
-            });
-        }
-        pasteCf(origin, target, operation) {
-            const xc = toXC(target.col, target.row);
-            for (let rule of this.getters.getConditionalFormats(origin.sheetId)) {
-                for (let range of rule.ranges) {
-                    if (isInside(origin.col, origin.row, this.getters.getRangeFromSheetXC(origin.sheetId, range).zone)) {
-                        const cf = rule;
-                        const toRemoveRange = [];
-                        if (operation === "CUT") {
-                            //remove from current rule
-                            toRemoveRange.push(toXC(origin.col, origin.row));
-                        }
-                        if (origin.sheetId === target.sheetId) {
-                            this.adaptRules(origin.sheetId, cf, [xc], toRemoveRange);
-                        }
-                        else {
-                            this.adaptRules(target.sheetId, cf, [xc], []);
-                            this.adaptRules(origin.sheetId, cf, [], toRemoveRange);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    class FilterEvaluationPlugin extends UIPlugin {
-        static getters = [
-            "getCellBorderWithFilterBorder",
-            "getFilterHeaders",
-            "getFilterValues",
-            "isFilterHeader",
-            "isRowFiltered",
-            "isFilterActive",
-        ];
-        filterValues = {};
-        hiddenRows = new Set();
-        isEvaluationDirty = false;
-        allowDispatch(cmd) {
-            switch (cmd.type) {
-                case "UPDATE_FILTER":
-                    if (!this.getters.getFilterId(cmd)) {
-                        return 79 /* CommandResult.FilterNotFound */;
-                    }
-                    break;
-            }
-            return 0 /* CommandResult.Success */;
-        }
-        handle(cmd) {
-            switch (cmd.type) {
-                case "UNDO":
-                case "REDO":
-                case "UPDATE_CELL":
-                case "EVALUATE_CELLS":
-                case "ACTIVATE_SHEET":
-                case "REMOVE_FILTER_TABLE":
-                    this.isEvaluationDirty = true;
-                    break;
-                case "START":
-                    for (const sheetId of this.getters.getSheetIds()) {
-                        this.filterValues[sheetId] = {};
-                        for (const filter of this.getters.getFilters(sheetId)) {
-                            this.filterValues[sheetId][filter.id] = [];
-                        }
-                    }
-                    break;
-                case "CREATE_SHEET":
-                    this.filterValues[cmd.sheetId] = {};
-                    break;
-                case "HIDE_COLUMNS_ROWS":
-                    this.updateHiddenRows();
-                    break;
-                case "UPDATE_FILTER":
-                    this.updateFilter(cmd);
-                    this.updateHiddenRows();
-                    break;
-                case "DUPLICATE_SHEET":
-                    const filterValues = {};
-                    for (const newFilter of this.getters.getFilters(cmd.sheetIdTo)) {
-                        const zone = newFilter.zoneWithHeaders;
-                        filterValues[newFilter.id] = this.getFilterValues({
-                            sheetId: cmd.sheetId,
-                            col: zone.left,
-                            row: zone.top,
-                        });
-                    }
-                    this.filterValues[cmd.sheetIdTo] = filterValues;
-                    break;
-                // If we don't handle DELETE_SHEET, on one hand we will have some residual data, on the other hand we keep the data
-                // on DELETE_SHEET followed by undo
-            }
-        }
-        finalize() {
-            if (this.isEvaluationDirty) {
-                this.updateHiddenRows();
-                this.isEvaluationDirty = false;
-            }
-        }
-        isRowFiltered(sheetId, row) {
-            if (sheetId !== this.getters.getActiveSheetId()) {
-                return false;
-            }
-            return this.hiddenRows.has(row);
-        }
-        getCellBorderWithFilterBorder(position) {
-            const { sheetId, col, row } = position;
-            let filterBorder = undefined;
-            for (let filters of this.getters.getFilterTables(sheetId)) {
-                const zone = filters.zone;
-                if (isInside(col, row, zone)) {
-                    // The borders should be at the edges of the visible zone of the filter
-                    const visibleZone = this.intersectZoneWithViewport(sheetId, zone);
-                    filterBorder = {
-                        top: row === visibleZone.top ? DEFAULT_FILTER_BORDER_DESC : undefined,
-                        bottom: row === visibleZone.bottom ? DEFAULT_FILTER_BORDER_DESC : undefined,
-                        left: col === visibleZone.left ? DEFAULT_FILTER_BORDER_DESC : undefined,
-                        right: col === visibleZone.right ? DEFAULT_FILTER_BORDER_DESC : undefined,
-                    };
-                }
-            }
-            const cellBorder = this.getters.getCellBorder(position);
-            // Use removeFalsyAttributes to avoid overwriting filter borders with undefined values
-            const border = { ...filterBorder, ...removeFalsyAttributes(cellBorder || {}) };
-            return isObjectEmptyRecursive(border) ? null : border;
-        }
-        getFilterHeaders(sheetId) {
-            const headers = [];
-            for (let filters of this.getters.getFilterTables(sheetId)) {
-                const zone = filters.zone;
-                if (!zone) {
-                    continue;
-                }
-                const row = zone.top;
-                for (let col = zone.left; col <= zone.right; col++) {
-                    if (this.getters.isColHidden(sheetId, col) || this.getters.isRowHidden(sheetId, row)) {
-                        continue;
-                    }
-                    headers.push({ col, row });
-                }
-            }
-            return headers;
-        }
-        getFilterValues(position) {
-            const id = this.getters.getFilterId(position);
-            const sheetId = position.sheetId;
-            if (!id || !this.filterValues[sheetId])
-                return [];
-            return this.filterValues[sheetId][id] || [];
-        }
-        isFilterHeader({ sheetId, col, row }) {
-            const headers = this.getFilterHeaders(sheetId);
-            return headers.some((header) => header.col === col && header.row === row);
-        }
-        isFilterActive(position) {
-            const id = this.getters.getFilterId(position);
-            const sheetId = position.sheetId;
-            return Boolean(id && this.filterValues[sheetId]?.[id]?.length);
-        }
-        intersectZoneWithViewport(sheetId, zone) {
-            return {
-                left: this.getters.findVisibleHeader(sheetId, "COL", zone.left, zone.right),
-                right: this.getters.findVisibleHeader(sheetId, "COL", zone.right, zone.left),
-                top: this.getters.findVisibleHeader(sheetId, "ROW", zone.top, zone.bottom),
-                bottom: this.getters.findVisibleHeader(sheetId, "ROW", zone.bottom, zone.top),
-            };
-        }
-        updateFilter({ col, row, values, sheetId }) {
-            const id = this.getters.getFilterId({ sheetId, col, row });
-            if (!id)
-                return;
-            if (!this.filterValues[sheetId])
-                this.filterValues[sheetId] = {};
-            this.filterValues[sheetId][id] = values;
-        }
-        updateHiddenRows() {
-            const sheetId = this.getters.getActiveSheetId();
-            const filters = this.getters
-                .getFilters(sheetId)
-                .sort((filter1, filter2) => filter1.zoneWithHeaders.top - filter2.zoneWithHeaders.top);
-            const hiddenRows = new Set();
-            for (let filter of filters) {
-                // Disable filters whose header are hidden
-                if (this.getters.isRowHiddenByUser(sheetId, filter.zoneWithHeaders.top))
-                    continue;
-                if (hiddenRows.has(filter.zoneWithHeaders.top))
-                    continue;
-                const filteredValues = this.filterValues[sheetId]?.[filter.id]?.map(toLowerCase);
-                if (!filteredValues || !filter.filteredZone)
-                    continue;
-                for (let row = filter.filteredZone.top; row <= filter.filteredZone.bottom; row++) {
-                    const value = this.getCellValueAsString(sheetId, filter.col, row);
-                    if (filteredValues.includes(value)) {
-                        hiddenRows.add(row);
-                    }
-                }
-            }
-            this.hiddenRows = hiddenRows;
-        }
-        getCellValueAsString(sheetId, col, row) {
-            const value = this.getters.getEvaluatedCell({ sheetId, col, row }).formattedValue;
-            return value.toLowerCase();
-        }
-        exportForExcel(data) {
-            for (const sheetData of data.sheets) {
-                for (const tableData of sheetData.filterTables) {
-                    const tableZone = toZone(tableData.range);
-                    const filters = [];
-                    const headerNames = [];
-                    for (const i of range(0, zoneToDimension(tableZone).numberOfCols)) {
-                        const position = {
-                            sheetId: sheetData.id,
-                            col: tableZone.left + i,
-                            row: tableZone.top,
-                        };
-                        const filteredValues = this.getFilterValues(position);
-                        const filter = this.getters.getFilter(position);
-                        if (!filter)
-                            continue;
-                        const valuesInFilterZone = filter.filteredZone
-                            ? positions(filter.filteredZone)
-                                .map(({ col, row }) => this.getters.getEvaluatedCell({ sheetId: sheetData.id, col, row }))
-                                .filter((cell) => cell.type !== CellValueType.empty)
-                                .map((cell) => cell.formattedValue)
-                            : [];
-                        // In xlsx, filtered values = values that are displayed, not values that are hidden
-                        const xlsxFilteredValues = valuesInFilterZone.filter((val) => !filteredValues.includes(val));
-                        filters.push({ colId: i, filteredValues: [...new Set(xlsxFilteredValues)] });
-                        // In xlsx, filter header should ALWAYS be a string and should be unique
-                        const headerPosition = {
-                            col: filter.col,
-                            row: filter.zoneWithHeaders.top,
-                            sheetId: sheetData.id,
-                        };
-                        const headerString = this.getters.getEvaluatedCell(headerPosition).formattedValue;
-                        const headerName = this.getUniqueColNameForExcel(i, headerString, headerNames);
-                        headerNames.push(headerName);
-                        sheetData.cells[toXC(headerPosition.col, headerPosition.row)] = {
-                            ...sheetData.cells[toXC(headerPosition.col, headerPosition.row)],
-                            content: headerName,
-                            value: headerName,
-                            isFormula: false,
-                        };
-                    }
-                    tableData.filters = filters;
-                }
-            }
-        }
-        /**
-         * Get an unique column name for the column at colIndex. If the column name is already in the array of used column names,
-         * concatenate a number to the name until we find a new unique name (eg. "ColName" => "ColName1" => "ColName2" ...)
-         */
-        getUniqueColNameForExcel(colIndex, colName, usedColNames) {
-            if (!colName) {
-                colName = `Column${colIndex}`;
-            }
-            let currentColName = colName;
-            let i = 2;
-            while (usedColNames.includes(currentColName)) {
-                currentColName = colName + String(i);
-                i++;
-            }
-            return currentColName;
-        }
-    }
-
-    class InternalViewport {
-        getters;
-        sheetId;
-        boundaries;
-        top;
-        bottom;
-        left;
-        right;
-        offsetX;
-        offsetY;
-        offsetScrollbarX;
-        offsetScrollbarY;
-        canScrollVertically;
-        canScrollHorizontally;
-        viewportWidth;
-        viewportHeight;
-        offsetCorrectionX;
-        offsetCorrectionY;
-        constructor(getters, sheetId, boundaries, sizeInGrid, options, offsets) {
-            this.getters = getters;
-            this.sheetId = sheetId;
-            this.boundaries = boundaries;
-            this.viewportWidth = sizeInGrid.width;
-            this.viewportHeight = sizeInGrid.height;
-            this.offsetScrollbarX = offsets.x;
-            this.offsetScrollbarY = offsets.y;
-            this.canScrollVertically = options.canScrollVertically;
-            this.canScrollHorizontally = options.canScrollHorizontally;
-            this.offsetCorrectionX = this.getters.getColDimensions(this.sheetId, this.boundaries.left).start;
-            this.offsetCorrectionY = this.getters.getRowDimensions(this.sheetId, this.boundaries.top).start;
-            this.adjustViewportOffsetX();
-            this.adjustViewportOffsetY();
-        }
-        // PUBLIC
-        /** Returns the maximum size (in Pixels) of the viewport relative to its allocated client size
-         * When the viewport grid size is smaller than its client width (resp. height), it will return
-         * the client width (resp. height).
-         */
-        getMaxSize() {
-            const lastCol = this.getters.findLastVisibleColRowIndex(this.sheetId, "COL", {
-                first: this.boundaries.left,
-                last: this.boundaries.right,
-            });
-            const lastRow = this.getters.findLastVisibleColRowIndex(this.sheetId, "ROW", {
-                first: this.boundaries.top,
-                last: this.boundaries.bottom,
-            });
-            const { end: lastColEnd, size: lastColSize } = this.getters.getColDimensions(this.sheetId, lastCol);
-            const { end: lastRowEnd, size: lastRowSize } = this.getters.getRowDimensions(this.sheetId, lastRow);
-            const leftColIndex = this.searchHeaderIndex("COL", lastColEnd - this.viewportWidth, 0);
-            const leftColSize = this.getters.getColSize(this.sheetId, leftColIndex);
-            const leftRowIndex = this.searchHeaderIndex("ROW", lastRowEnd - this.viewportHeight, 0);
-            const topRowSize = this.getters.getRowSize(this.sheetId, leftRowIndex);
-            let width = lastColEnd - this.offsetCorrectionX;
-            if (this.canScrollHorizontally) {
-                width += Math.max(DEFAULT_CELL_WIDTH, // leave some minimal space to let the user know they scrolled all the way
-                Math.min(leftColSize, this.viewportWidth - lastColSize) // Add pixels that allows the snapping at maximum horizontal scroll
-                );
-                width = Math.max(width, this.viewportWidth); // if the viewport grid size is smaller than its client width, return client width
-            }
-            let height = lastRowEnd - this.offsetCorrectionY;
-            if (this.canScrollVertically) {
-                height += Math.max(DEFAULT_CELL_HEIGHT + 5, // leave some space to let the user know they scrolled all the way
-                Math.min(topRowSize, this.viewportHeight - lastRowSize) // Add pixels that allows the snapping at maximum vertical scroll
-                );
-                height = Math.max(height, this.viewportHeight); // if the viewport grid size is smaller than its client height, return client height
-            }
-            return { width, height };
-        }
-        /**
-         * Return the index of a column given an offset x, based on the pane left
-         * visible cell.
-         * It returns -1 if no column is found.
-         */
-        getColIndex(x, absolute = false) {
-            if (x < this.offsetCorrectionX || x > this.offsetCorrectionX + this.viewportWidth) {
-                return -1;
-            }
-            return this.searchHeaderIndex("COL", x - this.offsetCorrectionX, this.left, absolute);
-        }
-        /**
-         * Return the index of a row given an offset y, based on the pane top
-         * visible cell.
-         * It returns -1 if no row is found.
-         */
-        getRowIndex(y, absolute = false) {
-            if (y < this.offsetCorrectionY || y > this.offsetCorrectionY + this.viewportHeight) {
-                return -1;
-            }
-            return this.searchHeaderIndex("ROW", y - this.offsetCorrectionY, this.top, absolute);
-        }
-        /**
-         * This function will make sure that the provided cell position (or current selected position) is part of
-         * the pane that is actually displayed on the client. We therefore adjust the offset of the pane
-         * until it contains the cell completely.
-         */
-        adjustPosition(position) {
-            const sheetId = this.sheetId;
-            if (!position) {
-                position = this.getters.getSheetPosition(sheetId);
-            }
-            const mainCellPosition = this.getters.getMainCellPosition({ sheetId, ...position });
-            const { col, row } = this.getters.getNextVisibleCellPosition(mainCellPosition);
-            if (isInside(col, this.boundaries.top, this.boundaries)) {
-                this.adjustPositionX(col);
-            }
-            if (isInside(this.boundaries.left, row, this.boundaries)) {
-                this.adjustPositionY(row);
-            }
-        }
-        adjustPositionX(targetCol) {
-            const sheetId = this.sheetId;
-            const { end } = this.getters.getColDimensions(sheetId, targetCol);
-            const maxCol = this.getters.getNumberCols(sheetId);
-            if (this.offsetX + this.offsetCorrectionX + this.viewportWidth < end) {
-                for (let col = this.left; this.offsetX + this.offsetCorrectionX + this.viewportWidth < end; col++) {
-                    if (col > maxCol) {
-                        break;
-                    }
-                    if (this.getters.isColHidden(sheetId, col)) {
-                        continue;
-                    }
-                    this.offsetX = this.getters.getColDimensions(sheetId, col).end - this.offsetCorrectionX;
-                    this.offsetScrollbarX = this.offsetX;
-                    this.adjustViewportZoneX();
-                }
-            }
-            else if (this.left > targetCol) {
-                for (let col = this.left; col >= targetCol; col--) {
-                    if (col < 0) {
-                        break;
-                    }
-                    if (this.getters.isColHidden(sheetId, col)) {
-                        continue;
-                    }
-                    this.offsetX = this.getters.getColDimensions(sheetId, col).start - this.offsetCorrectionX;
-                    this.offsetScrollbarX = this.offsetX;
-                    this.adjustViewportZoneX();
-                }
-            }
-        }
-        adjustPositionY(targetRow) {
-            const sheetId = this.sheetId;
-            const { end } = this.getters.getRowDimensions(sheetId, targetRow);
-            const maxRow = this.getters.getNumberRows(sheetId);
-            if (this.offsetY + this.viewportHeight + this.offsetCorrectionY < end) {
-                for (let row = this.top; this.offsetY + this.viewportHeight + this.offsetCorrectionY < end; row++) {
-                    if (row > maxRow) {
-                        break;
-                    }
-                    if (this.getters.isRowHidden(sheetId, row)) {
-                        continue;
-                    }
-                    this.offsetY = this.getters.getRowDimensions(sheetId, row).end - this.offsetCorrectionY;
-                    this.offsetScrollbarY = this.offsetY;
-                    this.adjustViewportZoneY();
-                }
-            }
-            else if (this.top > targetRow) {
-                for (let row = this.top; row >= targetRow; row--) {
-                    if (row < 0) {
-                        break;
-                    }
-                    if (this.getters.isRowHidden(sheetId, row)) {
-                        continue;
-                    }
-                    this.offsetY = this.getters.getRowDimensions(sheetId, row).start - this.offsetCorrectionY;
-                    this.offsetScrollbarY = this.offsetY;
-                    this.adjustViewportZoneY();
-                }
-            }
-        }
-        setViewportOffset(offsetX, offsetY) {
-            this.setViewportOffsetX(offsetX);
-            this.setViewportOffsetY(offsetY);
-        }
-        adjustViewportZone() {
-            this.adjustViewportZoneX();
-            this.adjustViewportZoneY();
-        }
-        /**
-         *
-         * @param zone
-         * @returns Computes the absolute coordinate of a given zone inside the viewport
-         */
-        getRect(zone) {
-            const targetZone = intersection(zone, this.zone);
-            if (targetZone) {
-                const x = this.getters.getColRowOffset("COL", this.zone.left, targetZone.left) +
-                    this.offsetCorrectionX;
-                const y = this.getters.getColRowOffset("ROW", this.zone.top, targetZone.top) + this.offsetCorrectionY;
-                const width = Math.min(this.getters.getColRowOffset("COL", targetZone.left, targetZone.right + 1), this.viewportWidth);
-                const height = Math.min(this.getters.getColRowOffset("ROW", targetZone.top, targetZone.bottom + 1), this.viewportHeight);
-                return {
-                    x,
-                    y,
-                    width,
-                    height,
-                };
-            }
-            else {
-                return undefined;
-            }
-        }
-        isVisible(col, row) {
-            const isInside = row <= this.bottom && row >= this.top && col >= this.left && col <= this.right;
-            return (isInside &&
-                !this.getters.isColHidden(this.sheetId, col) &&
-                !this.getters.isRowHidden(this.sheetId, row));
-        }
-        // PRIVATE
-        searchHeaderIndex(dimension, position, startIndex = 0, absolute = false) {
-            let size = 0;
-            const sheetId = this.sheetId;
-            const headers = this.getters.getNumberHeaders(sheetId, dimension);
-            for (let i = startIndex; i <= headers - 1; i++) {
-                const isHiddenInViewport = !absolute && dimension === "COL"
-                    ? i < this.left && i > this.right
-                    : i < this.top && i > this.bottom;
-                if (this.getters.isHeaderHidden(sheetId, dimension, i) || isHiddenInViewport) {
-                    continue;
-                }
-                size +=
-                    dimension === "COL"
-                        ? this.getters.getColSize(sheetId, i)
-                        : this.getters.getRowSize(sheetId, i);
-                if (size > position) {
-                    return i;
-                }
-            }
-            return -1;
-        }
-        get zone() {
-            return { left: this.left, right: this.right, top: this.top, bottom: this.bottom };
-        }
-        setViewportOffsetX(offsetX) {
-            if (!this.canScrollHorizontally) {
-                return;
-            }
-            this.offsetScrollbarX = offsetX;
-            this.adjustViewportZoneX();
-        }
-        setViewportOffsetY(offsetY) {
-            if (!this.canScrollVertically) {
-                return;
-            }
-            this.offsetScrollbarY = offsetY;
-            this.adjustViewportZoneY();
-        }
-        /** Corrects the viewport's horizontal offset based on the current structure
-         *  To make sure that at least on column is visible inside the viewport.
-         */
-        adjustViewportOffsetX() {
-            if (this.canScrollHorizontally) {
-                const { width: viewportWidth } = this.getMaxSize();
-                if (this.viewportWidth + this.offsetScrollbarX > viewportWidth) {
-                    this.offsetScrollbarX = Math.max(0, viewportWidth - this.viewportWidth);
-                }
-            }
-            this.left = this.getColIndex(this.offsetScrollbarX, true);
-            this.right = this.getColIndex(this.offsetScrollbarX + this.viewportWidth, true);
-            if (this.right === -1) {
-                this.right = this.boundaries.right;
-            }
-            this.adjustViewportZoneX();
-        }
-        /** Corrects the viewport's vertical offset based on the current structure
-         *  To make sure that at least on row is visible inside the viewport.
-         */
-        adjustViewportOffsetY() {
-            if (this.canScrollVertically) {
-                const { height: paneHeight } = this.getMaxSize();
-                if (this.viewportHeight + this.offsetScrollbarY > paneHeight) {
-                    this.offsetScrollbarY = Math.max(0, paneHeight - this.viewportHeight);
-                }
-            }
-            this.top = this.getRowIndex(this.offsetScrollbarY, true);
-            this.bottom = this.getRowIndex(this.offsetScrollbarY + this.viewportWidth, true);
-            if (this.bottom === -1) {
-                this.bottom = this.boundaries.bottom;
-            }
-            this.adjustViewportZoneY();
-        }
-        /** Updates the pane zone and snapped offset based on its horizontal
-         * offset (will find Left) and its width (will find Right) */
-        adjustViewportZoneX() {
-            const sheetId = this.sheetId;
-            this.left = this.searchHeaderIndex("COL", this.offsetScrollbarX, this.boundaries.left);
-            this.right = Math.min(this.boundaries.right, this.searchHeaderIndex("COL", this.viewportWidth, this.left));
-            if (this.right === -1) {
-                this.right = this.getters.getNumberCols(sheetId) - 1;
-            }
-            this.offsetX =
-                this.getters.getColDimensions(sheetId, this.left).start -
-                    this.getters.getColDimensions(sheetId, this.boundaries.left).start;
-        }
-        /** Updates the pane zone and snapped offset based on its vertical
-         * offset (will find Top) and its width (will find Bottom) */
-        adjustViewportZoneY() {
-            const sheetId = this.sheetId;
-            this.top = this.searchHeaderIndex("ROW", this.offsetScrollbarY, this.boundaries.top);
-            this.bottom = Math.min(this.boundaries.bottom, this.searchHeaderIndex("ROW", this.viewportHeight, this.top));
-            if (this.bottom === -1) {
-                this.bottom = this.getters.getNumberRows(sheetId) - 1;
-            }
-            this.offsetY =
-                this.getters.getRowDimensions(sheetId, this.top).start -
-                    this.getters.getRowDimensions(sheetId, this.boundaries.top).start;
-        }
-    }
-
-    /**
-     *   EdgeScrollCases Schema
-     *
-     *  The dots/double dots represent a freeze (= a split of viewports)
-     *  In this example, we froze vertically between columns D and E
-     *  and horizontally between rows 4 and 5.
-     *
-     *  One can see that we scrolled horizontally from column E to G and
-     *  vertically from row 5 to 7.
-     *
-     *     A  B  C  D   G  H  I  J  K  L  M  N  O  P  Q  R  S  T
-     *     _______________________________________________________
-     *  1 |           :                                           |
-     *  2 |           :                                           |
-     *  3 |           :        B   ↑                 6            |
-     *  4 |           :        |   |                 |            |
-     *     ····················+···+·················+············|
-     *  7 |           :        |   |                 |            |
-     *  8 |           :        ↓   2                 |            |
-     *  9 |           :                              |            |
-     * 10 |       A --+--→                           |            |
-     * 11 |           :                              |            |
-     * 12 |           :                              |            |
-     * 13 |        ←--+-- 1                          |            |
-     * 14 |           :                              |        3 --+--→
-     * 15 |           :                              |            |
-     * 16 |           :                              |            |
-     * 17 |       5 --+-------------------------------------------+--→
-     * 18 |           :                              |            |
-     * 19 |           :                  4           |            |
-     * 20 |           :                  |           |            |
-     *     ______________________________+___________| ____________
-     *                                   |           |
-     *                                   ↓           ↓
-     */
-    /**
-     * Viewport plugin.
-     *
-     * This plugin manages all things related to all viewport states.
-     *
-     */
-    class SheetViewPlugin extends UIPlugin {
-        static getters = [
-            "getColIndex",
-            "getRowIndex",
-            "getActiveMainViewport",
-            "getSheetViewDimension",
-            "getSheetViewDimensionWithHeaders",
-            "getMainViewportRect",
-            "isVisibleInViewport",
-            "getEdgeScrollCol",
-            "getEdgeScrollRow",
-            "getVisibleFigures",
-            "getVisibleRect",
-            "getColRowOffsetInViewport",
-            "getMainViewportCoordinates",
-            "getActiveSheetScrollInfo",
-            "getActiveSheetDOMScrollInfo",
-            "getSheetViewVisibleCols",
-            "getSheetViewVisibleRows",
-            "getFrozenSheetViewRatio",
-            "isPositionVisible",
-        ];
-        viewports = {};
-        /**
-         * The viewport dimensions are usually set by one of the components
-         * (i.e. when grid component is mounted) to properly reflect its state in the DOM.
-         * In the absence of a component (standalone model), is it mandatory to set reasonable default values
-         * to ensure the correct operation of this plugin.
-         */
-        sheetViewWidth = getDefaultSheetViewSize();
-        sheetViewHeight = getDefaultSheetViewSize();
-        gridOffsetX = 0;
-        gridOffsetY = 0;
-        sheetsWithDirtyViewports = new Set();
-        // ---------------------------------------------------------------------------
-        // Command Handling
-        // ---------------------------------------------------------------------------
-        allowDispatch(cmd) {
-            switch (cmd.type) {
-                case "SET_VIEWPORT_OFFSET":
-                    return this.checkScrollingDirection(cmd);
-                case "RESIZE_SHEETVIEW":
-                    return this.chainValidations(this.checkValuesAreDifferent, this.checkPositiveDimension)(cmd);
-                default:
-                    return 0 /* CommandResult.Success */;
-            }
-        }
-        handleEvent(event) {
-            switch (event.type) {
-                case "HeadersSelected":
-                case "AlterZone":
-                    break;
-                case "ZonesSelected":
-                    let { col, row } = findCellInNewZone(event.previousAnchor.zone, event.anchor.zone);
-                    if (event.mode === "updateAnchor") {
-                        const oldZone = event.previousAnchor.zone;
-                        const newZone = event.anchor.zone;
-                        // altering a zone should not move the viewport in a dimension that wasn't changed
-                        const { top, bottom, left, right } = this.getters.getActiveMainViewport();
-                        if (oldZone.left === newZone.left && oldZone.right === newZone.right) {
-                            col = left > col || col > right ? left : col;
-                        }
-                        if (oldZone.top === newZone.top && oldZone.bottom === newZone.bottom) {
-                            row = top > row || row > bottom ? top : row;
-                        }
-                    }
-                    const sheetId = this.getters.getActiveSheetId();
-                    col = Math.min(col, this.getters.getNumberCols(sheetId) - 1);
-                    row = Math.min(row, this.getters.getNumberRows(sheetId) - 1);
-                    this.refreshViewport(this.getters.getActiveSheetId(), { col, row });
-                    break;
-            }
-        }
-        handle(cmd) {
-            this.cleanViewports();
-            switch (cmd.type) {
-                case "START":
-                    this.selection.observe(this, {
-                        handleEvent: this.handleEvent.bind(this),
-                    });
-                    this.resetViewports(this.getters.getActiveSheetId());
-                    break;
-                case "UNDO":
-                case "REDO":
-                    this.resetSheetViews();
-                    break;
-                case "RESIZE_SHEETVIEW":
-                    this.resizeSheetView(cmd.height, cmd.width, cmd.gridOffsetX, cmd.gridOffsetY);
-                    break;
-                case "SET_VIEWPORT_OFFSET":
-                    this.setSheetViewOffset(cmd.offsetX, cmd.offsetY);
-                    break;
-                case "SHIFT_VIEWPORT_DOWN":
-                    const { top } = this.getActiveMainViewport();
-                    const sheetId = this.getters.getActiveSheetId();
-                    const shiftedOffsetY = this.clipOffsetY(this.getters.getRowDimensions(sheetId, top).start + this.sheetViewHeight);
-                    this.shiftVertically(shiftedOffsetY);
-                    break;
-                case "SHIFT_VIEWPORT_UP": {
-                    const { top } = this.getActiveMainViewport();
-                    const sheetId = this.getters.getActiveSheetId();
-                    const shiftedOffsetY = this.clipOffsetY(this.getters.getRowDimensions(sheetId, top).end - this.sheetViewHeight);
-                    this.shiftVertically(shiftedOffsetY);
-                    break;
-                }
-                case "REMOVE_COLUMNS_ROWS":
-                case "RESIZE_COLUMNS_ROWS":
-                case "HIDE_COLUMNS_ROWS":
-                case "ADD_COLUMNS_ROWS":
-                case "UNHIDE_COLUMNS_ROWS":
-                case "UPDATE_FILTER":
-                    this.resetViewports(cmd.sheetId);
-                    break;
-                case "UPDATE_CELL":
-                    // update cell content or format can change hidden rows because of data filters
-                    if ("content" in cmd || "format" in cmd || cmd.style?.fontSize !== undefined) {
-                        this.sheetsWithDirtyViewports.add(cmd.sheetId);
-                    }
-                    break;
-                case "ACTIVATE_SHEET":
-                    this.setViewports();
-                    this.refreshViewport(cmd.sheetIdTo);
-                    break;
-                case "UNFREEZE_ROWS":
-                case "UNFREEZE_COLUMNS":
-                case "FREEZE_COLUMNS":
-                case "FREEZE_ROWS":
-                case "UNFREEZE_COLUMNS_ROWS":
-                    this.resetViewports(this.getters.getActiveSheetId());
-                    break;
-                case "DELETE_SHEET":
-                    this.sheetsWithDirtyViewports.delete(cmd.sheetId);
-                    break;
-                case "START_EDITION":
-                    const { col, row } = this.getters.getActivePosition();
-                    this.refreshViewport(this.getters.getActiveSheetId(), { col, row });
-                    break;
-            }
-        }
-        finalize() {
-            for (const sheetId of this.sheetsWithDirtyViewports) {
-                this.resetViewports(sheetId);
-            }
-            this.sheetsWithDirtyViewports = new Set();
-            this.setViewports();
-        }
-        setViewports() {
-            const sheetIds = this.getters.getSheetIds();
-            for (const sheetId of sheetIds) {
-                if (!this.viewports[sheetId]?.bottomRight) {
-                    this.resetViewports(sheetId);
-                }
-            }
-        }
-        // ---------------------------------------------------------------------------
-        // Getters
-        // ---------------------------------------------------------------------------
-        /**
-         * Return the index of a column given an offset x, based on the viewport left
-         * visible cell.
-         * It returns -1 if no column is found.
-         */
-        getColIndex(x) {
-            const sheetId = this.getters.getActiveSheetId();
-            return Math.max(...this.getSubViewports(sheetId).map((viewport) => viewport.getColIndex(x)));
-        }
-        /**
-         * Return the index of a row given an offset y, based on the viewport top
-         * visible cell.
-         * It returns -1 if no row is found.
-         */
-        getRowIndex(y) {
-            const sheetId = this.getters.getActiveSheetId();
-            return Math.max(...this.getSubViewports(sheetId).map((viewport) => viewport.getRowIndex(y)));
-        }
-        getSheetViewDimensionWithHeaders() {
-            return {
-                width: this.sheetViewWidth + this.gridOffsetX,
-                height: this.sheetViewHeight + this.gridOffsetY,
-            };
-        }
-        getSheetViewDimension() {
-            return {
-                width: this.sheetViewWidth,
-                height: this.sheetViewHeight,
-            };
-        }
-        /** type as pane, not viewport but basically pane extends viewport */
-        getActiveMainViewport() {
-            const sheetId = this.getters.getActiveSheetId();
-            return this.getMainViewport(sheetId);
-        }
-        /**
-         * Return the scroll info of the active sheet, ie. the offset between the viewport left/top side and
-         * the grid left/top side, snapped to the columns/rows.
-         */
-        getActiveSheetScrollInfo() {
-            const sheetId = this.getters.getActiveSheetId();
-            const viewport = this.getMainInternalViewport(sheetId);
-            return {
-                scrollX: viewport.offsetX,
-                scrollY: viewport.offsetY,
-            };
-        }
-        /**
-         * Return the DOM scroll info of the active sheet, ie. the offset between the viewport left/top side and
-         * the grid left/top side, corresponding to the scroll of the scrollbars and not snapped to the grid.
-         */
-        getActiveSheetDOMScrollInfo() {
-            const sheetId = this.getters.getActiveSheetId();
-            const viewport = this.getMainInternalViewport(sheetId);
-            return {
-                scrollX: viewport.offsetScrollbarX,
-                scrollY: viewport.offsetScrollbarY,
-            };
-        }
-        getSheetViewVisibleCols() {
-            const sheetId = this.getters.getActiveSheetId();
-            const viewports = this.getSubViewports(sheetId);
-            //TODO ake another commit to eimprove this
-            return [...new Set(viewports.map((v) => range(v.left, v.right + 1)).flat())].filter((col) => !this.getters.isHeaderHidden(sheetId, "COL", col));
-        }
-        getSheetViewVisibleRows() {
-            const sheetId = this.getters.getActiveSheetId();
-            const viewports = this.getSubViewports(sheetId);
-            return [...new Set(viewports.map((v) => range(v.top, v.bottom + 1)).flat())].filter((row) => !this.getters.isHeaderHidden(sheetId, "ROW", row));
-        }
-        /**
-         * Return the main viewport maximum size relative to the client size.
-         */
-        getMainViewportRect() {
-            const sheetId = this.getters.getActiveSheetId();
-            const viewport = this.getMainInternalViewport(sheetId);
-            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
-            let { width, height } = viewport.getMaxSize();
-            const x = this.getters.getColDimensions(sheetId, xSplit).start;
-            const y = this.getters.getRowDimensions(sheetId, ySplit).start;
-            return { x, y, width, height };
-        }
-        getMaximumSheetOffset() {
-            const sheetId = this.getters.getActiveSheetId();
-            const { width, height } = this.getMainViewportRect();
-            const viewport = this.getMainInternalViewport(sheetId);
-            return {
-                maxOffsetX: Math.max(0, width - viewport.viewportWidth + 1),
-                maxOffsetY: Math.max(0, height - viewport.viewportHeight + 1),
-            };
-        }
-        getColRowOffsetInViewport(dimension, referenceIndex, index) {
-            const sheetId = this.getters.getActiveSheetId();
-            const visibleCols = this.getters.getSheetViewVisibleCols();
-            const visibleRows = this.getters.getSheetViewVisibleRows();
-            if (index < referenceIndex) {
-                return -this.getColRowOffsetInViewport(dimension, index, referenceIndex);
-            }
-            let offset = 0;
-            const visibleIndexes = dimension === "COL" ? visibleCols : visibleRows;
-            for (let i = referenceIndex; i < index; i++) {
-                if (!visibleIndexes.includes(i)) {
-                    continue;
-                }
-                offset +=
-                    dimension === "COL"
-                        ? this.getters.getColSize(sheetId, i)
-                        : this.getters.getRowSize(sheetId, i);
-            }
-            return offset;
-        }
-        /**
-         * Check if a given position is visible in the viewport.
-         */
-        isVisibleInViewport({ sheetId, col, row }) {
-            return this.getSubViewports(sheetId).some((pane) => pane.isVisible(col, row));
-        }
-        // => return s the new offset
-        getEdgeScrollCol(x, previousX, startingX) {
-            let canEdgeScroll = false;
-            let direction = 0;
-            let delay = 0;
-            /** 4 cases : See EdgeScrollCases Schema at the top
-             * 1. previous in XRight > XLeft
-             * 3. previous in XRight > outside
-             * 5. previous in Left > outside
-             * A. previous in Left > right
-             * with X a position taken in the bottomRIght (aka scrollable) viewport
-             */
-            const { xSplit } = this.getters.getPaneDivisions(this.getters.getActiveSheetId());
-            const { width } = this.getSheetViewDimension();
-            const { x: offsetCorrectionX } = this.getMainViewportCoordinates();
-            const currentOffsetX = this.getActiveSheetScrollInfo().scrollX;
-            if (x > width) {
-                // 3 & 5
-                canEdgeScroll = true;
-                delay = scrollDelay(x - width);
-                direction = 1;
-            }
-            else if (x < offsetCorrectionX && startingX >= offsetCorrectionX && currentOffsetX > 0) {
-                // 1
-                canEdgeScroll = true;
-                delay = scrollDelay(offsetCorrectionX - x);
-                direction = -1;
-            }
-            else if (xSplit && previousX < offsetCorrectionX && x > offsetCorrectionX) {
-                // A
-                canEdgeScroll = true;
-                delay = scrollDelay(x);
-                direction = "reset";
-            }
-            return { canEdgeScroll, direction, delay };
-        }
-        getEdgeScrollRow(y, previousY, tartingY) {
-            let canEdgeScroll = false;
-            let direction = 0;
-            let delay = 0;
-            /** 4 cases : See EdgeScrollCases Schema at the top
-             * 2. previous in XBottom > XTop
-             * 4. previous in XRight > outside
-             * 6. previous in Left > outside
-             * B. previous in Left > right
-             * with X a position taken in the bottomRIght (aka scrollable) viewport
-             */
-            const { ySplit } = this.getters.getPaneDivisions(this.getters.getActiveSheetId());
-            const { height } = this.getSheetViewDimension();
-            const { y: offsetCorrectionY } = this.getMainViewportCoordinates();
-            const currentOffsetY = this.getActiveSheetScrollInfo().scrollY;
-            if (y > height) {
-                // 4 & 6
-                canEdgeScroll = true;
-                delay = scrollDelay(y - height);
-                direction = 1;
-            }
-            else if (y < offsetCorrectionY && tartingY >= offsetCorrectionY && currentOffsetY > 0) {
-                // 2
-                canEdgeScroll = true;
-                delay = scrollDelay(offsetCorrectionY - y);
-                direction = -1;
-            }
-            else if (ySplit && previousY < offsetCorrectionY && y > offsetCorrectionY) {
-                // B
-                canEdgeScroll = true;
-                delay = scrollDelay(y);
-                direction = "reset";
-            }
-            return { canEdgeScroll, direction, delay };
-        }
-        /**
-         * Computes the coordinates and size to draw the zone on the canvas
-         */
-        getVisibleRect(zone) {
-            const sheetId = this.getters.getActiveSheetId();
-            const viewportRects = this.getSubViewports(sheetId)
-                .map((viewport) => viewport.getRect(zone))
-                .filter(isDefined$1);
-            if (viewportRects.length === 0) {
-                return { x: 0, y: 0, width: 0, height: 0 };
-            }
-            const x = Math.min(...viewportRects.map((rect) => rect.x));
-            const y = Math.min(...viewportRects.map((rect) => rect.y));
-            const width = Math.max(...viewportRects.map((rect) => rect.x + rect.width)) - x;
-            const height = Math.max(...viewportRects.map((rect) => rect.y + rect.height)) - y;
-            return {
-                x: x + this.gridOffsetX,
-                y: y + this.gridOffsetY,
-                width,
-                height,
-            };
-        }
-        /**
-         * Returns the position of the MainViewport relatively to the start of the grid (without headers)
-         * It corresponds to the summed dimensions of the visible cols/rows (in x/y respectively)
-         * situated before the pane divisions.
-         */
-        getMainViewportCoordinates() {
-            const sheetId = this.getters.getActiveSheetId();
-            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
-            const x = this.getters.getColDimensions(sheetId, xSplit).start;
-            const y = this.getters.getRowDimensions(sheetId, ySplit).start;
-            return { x, y };
-        }
-        // ---------------------------------------------------------------------------
-        // Private
-        // ---------------------------------------------------------------------------
-        ensureMainViewportExist(sheetId) {
-            if (!this.viewports[sheetId]) {
-                this.resetViewports(sheetId);
-            }
-        }
-        getSubViewports(sheetId) {
-            this.ensureMainViewportExist(sheetId);
-            return Object.values(this.viewports[sheetId]).filter(isDefined$1);
-        }
-        checkPositiveDimension(cmd) {
-            if (cmd.width < 0 || cmd.height < 0) {
-                return 68 /* CommandResult.InvalidViewportSize */;
-            }
-            return 0 /* CommandResult.Success */;
-        }
-        checkValuesAreDifferent(cmd) {
-            const { height, width } = this.getSheetViewDimension();
-            if (cmd.gridOffsetX === this.gridOffsetX &&
-                cmd.gridOffsetY === this.gridOffsetY &&
-                cmd.width === width &&
-                cmd.height === height) {
-                return 76 /* CommandResult.ValuesNotChanged */;
-            }
-            return 0 /* CommandResult.Success */;
-        }
-        checkScrollingDirection({ offsetX, offsetY, }) {
-            const pane = this.getMainInternalViewport(this.getters.getActiveSheetId());
-            if ((!pane.canScrollHorizontally && offsetX > 0) ||
-                (!pane.canScrollVertically && offsetY > 0)) {
-                return 69 /* CommandResult.InvalidScrollingDirection */;
-            }
-            return 0 /* CommandResult.Success */;
-        }
-        getMainViewport(sheetId) {
-            const viewport = this.getMainInternalViewport(sheetId);
-            return {
-                top: viewport.top,
-                left: viewport.left,
-                bottom: viewport.bottom,
-                right: viewport.right,
-            };
-        }
-        getMainInternalViewport(sheetId) {
-            this.ensureMainViewportExist(sheetId);
-            return this.viewports[sheetId].bottomRight;
-        }
-        /** gets rid of deprecated sheetIds */
-        cleanViewports() {
-            const sheetIds = this.getters.getSheetIds();
-            for (let sheetId of Object.keys(this.viewports)) {
-                if (!sheetIds.includes(sheetId)) {
-                    delete this.viewports[sheetId];
-                }
-            }
-        }
-        resetSheetViews() {
-            for (let sheetId of Object.keys(this.viewports)) {
-                const position = this.getters.getSheetPosition(sheetId);
-                this.resetViewports(sheetId);
-                const viewports = this.getSubViewports(sheetId);
-                Object.values(viewports).forEach((viewport) => {
-                    viewport.adjustPosition(position);
-                });
-            }
-        }
-        resizeSheetView(height, width, gridOffsetX = 0, gridOffsetY = 0) {
-            this.sheetViewHeight = height;
-            this.sheetViewWidth = width;
-            this.gridOffsetX = gridOffsetX;
-            this.gridOffsetY = gridOffsetY;
-            this.recomputeViewports();
-        }
-        recomputeViewports() {
-            for (let sheetId of Object.keys(this.viewports)) {
-                this.resetViewports(sheetId);
-            }
-        }
-        setSheetViewOffset(offsetX, offsetY) {
-            const sheetId = this.getters.getActiveSheetId();
-            const { maxOffsetX, maxOffsetY } = this.getMaximumSheetOffset();
-            Object.values(this.getSubViewports(sheetId)).forEach((viewport) => viewport.setViewportOffset(clip(offsetX, 0, maxOffsetX), clip(offsetY, 0, maxOffsetY)));
-        }
-        /**
-         * Clip the vertical offset within the allowed range.
-         * Not above the sheet, nor below the sheet.
-         */
-        clipOffsetY(offsetY) {
-            const { height } = this.getMainViewportRect();
-            const maxOffset = height - this.sheetViewHeight;
-            offsetY = Math.min(offsetY, maxOffset);
-            offsetY = Math.max(offsetY, 0);
-            return offsetY;
-        }
-        getViewportOffset(sheetId) {
-            return {
-                x: this.viewports[sheetId]?.bottomRight.offsetScrollbarX || 0,
-                y: this.viewports[sheetId]?.bottomRight.offsetScrollbarY || 0,
-            };
-        }
-        resetViewports(sheetId) {
-            if (!this.getters.tryGetSheet(sheetId)) {
-                return;
-            }
-            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
-            const nCols = this.getters.getNumberCols(sheetId);
-            const nRows = this.getters.getNumberRows(sheetId);
-            const colOffset = this.getters.getColRowOffset("COL", 0, xSplit, sheetId);
-            const rowOffset = this.getters.getColRowOffset("ROW", 0, ySplit, sheetId);
-            const { xRatio, yRatio } = this.getFrozenSheetViewRatio(sheetId);
-            const canScrollHorizontally = xRatio < 1.0;
-            const canScrollVertically = yRatio < 1.0;
-            const previousOffset = this.getViewportOffset(sheetId);
-            const sheetViewports = {
-                topLeft: (ySplit &&
-                    xSplit &&
-                    new InternalViewport(this.getters, sheetId, { left: 0, right: xSplit - 1, top: 0, bottom: ySplit - 1 }, { width: colOffset, height: rowOffset }, { canScrollHorizontally: false, canScrollVertically: false }, { x: 0, y: 0 })) ||
-                    undefined,
-                topRight: (ySplit &&
-                    new InternalViewport(this.getters, sheetId, { left: xSplit, right: nCols - 1, top: 0, bottom: ySplit - 1 }, { width: this.sheetViewWidth - colOffset, height: rowOffset }, { canScrollHorizontally, canScrollVertically: false }, { x: canScrollHorizontally ? previousOffset.x : 0, y: 0 })) ||
-                    undefined,
-                bottomLeft: (xSplit &&
-                    new InternalViewport(this.getters, sheetId, { left: 0, right: xSplit - 1, top: ySplit, bottom: nRows - 1 }, { width: colOffset, height: this.sheetViewHeight - rowOffset }, { canScrollHorizontally: false, canScrollVertically }, { x: 0, y: canScrollVertically ? previousOffset.y : 0 })) ||
-                    undefined,
-                bottomRight: new InternalViewport(this.getters, sheetId, { left: xSplit, right: nCols - 1, top: ySplit, bottom: nRows - 1 }, {
-                    width: this.sheetViewWidth - colOffset,
-                    height: this.sheetViewHeight - rowOffset,
-                }, { canScrollHorizontally, canScrollVertically }, {
-                    x: canScrollHorizontally ? previousOffset.x : 0,
-                    y: canScrollVertically ? previousOffset.y : 0,
-                }),
-            };
-            this.viewports[sheetId] = sheetViewports;
-        }
-        /**
-         * Adjust the viewport such that the anchor position is visible
-         */
-        refreshViewport(sheetId, anchorPosition) {
-            Object.values(this.getSubViewports(sheetId)).forEach((viewport) => {
-                viewport.adjustViewportZone();
-                viewport.adjustPosition(anchorPosition);
-            });
-        }
-        /**
-         * Shift the viewport vertically and move the selection anchor
-         * such that it remains at the same place relative to the
-         * viewport top.
-         */
-        shiftVertically(offset) {
-            const { top } = this.getActiveMainViewport();
-            const { scrollX } = this.getActiveSheetScrollInfo();
-            this.setSheetViewOffset(scrollX, offset);
-            const { anchor } = this.getters.getSelection();
-            const deltaRow = this.getActiveMainViewport().top - top;
-            this.selection.selectCell(anchor.cell.col, anchor.cell.row + deltaRow);
-        }
-        getVisibleFigures() {
-            const sheetId = this.getters.getActiveSheetId();
-            const result = [];
-            const figures = this.getters.getFigures(sheetId);
-            const { scrollX, scrollY } = this.getActiveSheetScrollInfo();
-            const { x: offsetCorrectionX, y: offsetCorrectionY } = this.getters.getMainViewportCoordinates();
-            const { width, height } = this.getters.getSheetViewDimensionWithHeaders();
-            for (const figure of figures) {
-                if (figure.x >= offsetCorrectionX &&
-                    (figure.x + figure.width <= offsetCorrectionX + scrollX ||
-                        figure.x >= width + scrollX + offsetCorrectionX)) {
-                    continue;
-                }
-                if (figure.y >= offsetCorrectionY &&
-                    (figure.y + figure.height <= offsetCorrectionY + scrollY ||
-                        figure.y >= height + scrollY + offsetCorrectionY)) {
-                    continue;
-                }
-                result.push(figure);
-            }
-            return result;
-        }
-        isPositionVisible(position) {
-            const { scrollX, scrollY } = this.getters.getActiveSheetScrollInfo();
-            const { x: mainViewportX, y: mainViewportY } = this.getters.getMainViewportCoordinates();
-            const { width, height } = this.getters.getSheetViewDimension();
-            if (position.x >= mainViewportX &&
-                (position.x < mainViewportX + scrollX || position.x > width + scrollX + mainViewportX)) {
-                return false;
-            }
-            if (position.y >= mainViewportY &&
-                (position.y < mainViewportY + scrollY || position.y > height + scrollY + mainViewportY)) {
-                return false;
-            }
-            return true;
-        }
-        getFrozenSheetViewRatio(sheetId) {
-            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
-            const offsetCorrectionX = this.getters.getColDimensions(sheetId, xSplit).start;
-            const offsetCorrectionY = this.getters.getRowDimensions(sheetId, ySplit).start;
-            const width = this.sheetViewWidth + this.gridOffsetX;
-            const height = this.sheetViewHeight + this.gridOffsetY;
-            return { xRatio: offsetCorrectionX / width, yRatio: offsetCorrectionY / height };
-        }
     }
 
     /**
@@ -36073,6 +35036,7 @@
                         row: cmd.row,
                         border: cmd.border,
                     });
+                    this.autofillCF(cmd.originCol, cmd.originRow, cmd.col, cmd.row);
             }
         }
         // ---------------------------------------------------------------------------
@@ -36328,6 +35292,20 @@
                         },
                     ],
                 });
+            }
+        }
+        autofillCF(originCol, originRow, col, row) {
+            const sheetId = this.getters.getActiveSheetId();
+            const cfOrigin = this.getters.getRulesByCell(sheetId, originCol, originRow);
+            for (const cf of cfOrigin) {
+                const newCfRanges = this.getters.getAdaptedCfRanges(sheetId, cf, [toXC(col, row)], []);
+                if (newCfRanges) {
+                    this.dispatch("ADD_CONDITIONAL_FORMAT", {
+                        cf: deepCopy(cf),
+                        ranges: newCfRanges.map((xc) => this.getters.getRangeDataFromXc(sheetId, xc)),
+                        sheetId,
+                    });
+                }
             }
         }
         // ---------------------------------------------------------------------------
@@ -38783,7 +37761,7 @@
             const inputSheetId = this.activeSheet;
             const sheetId = this.getters.getActiveSheetId();
             const zone = event.anchor.zone;
-            const range = this.getters.getRangeFromZone(sheetId, event.type === "HeadersSelected" ? this.getters.getUnboundedZone(sheetId, zone) : zone);
+            const range = this.getters.getRangeFromZone(sheetId, event.options.unbounded ? this.getters.getUnboundedZone(sheetId, zone) : zone);
             this.add([this.getters.getSelectionRangeString(range, inputSheetId)]);
         }
         handle(cmd) {
@@ -40445,7 +39423,7 @@
             if (height > 1 || width > 1 || isCutOperation) {
                 const zones = this.pastedZones(target, width, height);
                 const newZone = isCutOperation ? zones[0] : union(...zones);
-                this.selection.selectZone({ cell: { col, row }, zone: newZone });
+                this.selection.selectZone({ cell: { col, row }, zone: newZone }, { scrollIntoView: false });
             }
         }
         /**
@@ -40488,11 +39466,7 @@
                     }
                     this.pasteCell(origin, position, this.operation, clipboardOptions);
                     if (shouldPasteCF) {
-                        this.dispatch("PASTE_CONDITIONAL_FORMAT", {
-                            originPosition: origin.position,
-                            targetPosition: position,
-                            operation: this.operation,
-                        });
+                        this.pasteCf(origin.position, position);
                     }
                 }
             }
@@ -40642,8 +39616,9 @@
             return htmlTable;
         }
         isColRowDirtyingClipboard(position, dimension) {
-            if (!this.zones)
+            if (!this.zones) {
                 return false;
+            }
             for (let zone of this.zones) {
                 if (dimension === "COL" && position <= zone.right) {
                     return true;
@@ -40668,6 +39643,46 @@
                     ctx.strokeRect(x, y, width, height);
                 }
             }
+        }
+        pasteCf(origin, target) {
+            const xc = toXC(target.col, target.row);
+            for (let rule of this.getters.getConditionalFormats(origin.sheetId)) {
+                for (let range of rule.ranges) {
+                    if (isInside(origin.col, origin.row, this.getters.getRangeFromSheetXC(origin.sheetId, range).zone)) {
+                        const cf = rule;
+                        const toRemoveRange = [];
+                        if (this.operation === "CUT") {
+                            //remove from current rule
+                            toRemoveRange.push(toXC(origin.col, origin.row));
+                        }
+                        if (origin.sheetId === target.sheetId) {
+                            this.adaptCFRules(origin.sheetId, cf, [xc], toRemoveRange);
+                        }
+                        else {
+                            this.adaptCFRules(target.sheetId, cf, [xc], []);
+                            this.adaptCFRules(origin.sheetId, cf, [], toRemoveRange);
+                        }
+                    }
+                }
+            }
+        }
+        /**
+         * Add or remove cells to a given conditional formatting rule.
+         */
+        adaptCFRules(sheetId, cf, toAdd, toRemove) {
+            const newRangesXC = this.getters.getAdaptedCfRanges(sheetId, cf, toAdd, toRemove);
+            if (!newRangesXC) {
+                return;
+            }
+            this.dispatch("ADD_CONDITIONAL_FORMAT", {
+                cf: {
+                    id: cf.id,
+                    rule: cf.rule,
+                    stopIfTrue: cf.stopIfTrue,
+                },
+                ranges: newRangesXC.map((xc) => this.getters.getRangeDataFromXc(sheetId, xc)),
+                sheetId,
+            });
         }
     }
 
@@ -40837,7 +39852,7 @@
                 right: activeCol + numberOfCols - 1,
                 bottom: activeRow + numberOfRows - 1,
             };
-            this.selection.selectZone({ cell: { col: activeCol, row: activeRow }, zone });
+            this.selection.selectZone({ cell: { col: activeCol, row: activeRow }, zone }, { scrollIntoView: false });
         }
         getClipboardContent() {
             return {
@@ -41244,7 +40259,7 @@
             }
             const sheetId = this.getters.getActiveSheetId();
             let unboundedZone;
-            if (event.type === "HeadersSelected") {
+            if (event.options.unbounded) {
                 unboundedZone = this.getters.getUnboundedZone(sheetId, event.anchor.zone);
             }
             else {
@@ -41818,6 +40833,222 @@
         }
     }
 
+    class FilterEvaluationPlugin extends UIPlugin {
+        static getters = [
+            "getCellBorderWithFilterBorder",
+            "getFilterValues",
+            "isRowFiltered",
+            "isFilterActive",
+        ];
+        filterValues = {};
+        hiddenRows = new Set();
+        isEvaluationDirty = false;
+        allowDispatch(cmd) {
+            switch (cmd.type) {
+                case "UPDATE_FILTER":
+                    if (!this.getters.getFilterId(cmd)) {
+                        return 79 /* CommandResult.FilterNotFound */;
+                    }
+                    break;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        handle(cmd) {
+            switch (cmd.type) {
+                case "UNDO":
+                case "REDO":
+                case "UPDATE_CELL":
+                case "EVALUATE_CELLS":
+                case "ACTIVATE_SHEET":
+                case "REMOVE_FILTER_TABLE":
+                    this.isEvaluationDirty = true;
+                    break;
+                case "START":
+                    for (const sheetId of this.getters.getSheetIds()) {
+                        this.filterValues[sheetId] = {};
+                        for (const filter of this.getters.getFilters(sheetId)) {
+                            this.filterValues[sheetId][filter.id] = [];
+                        }
+                    }
+                    break;
+                case "CREATE_SHEET":
+                    this.filterValues[cmd.sheetId] = {};
+                    break;
+                case "HIDE_COLUMNS_ROWS":
+                    this.updateHiddenRows();
+                    break;
+                case "UPDATE_FILTER":
+                    this.updateFilter(cmd);
+                    this.updateHiddenRows();
+                    break;
+                case "DUPLICATE_SHEET":
+                    const filterValues = {};
+                    for (const newFilter of this.getters.getFilters(cmd.sheetIdTo)) {
+                        const zone = newFilter.zoneWithHeaders;
+                        filterValues[newFilter.id] = this.getFilterValues({
+                            sheetId: cmd.sheetId,
+                            col: zone.left,
+                            row: zone.top,
+                        });
+                    }
+                    this.filterValues[cmd.sheetIdTo] = filterValues;
+                    break;
+                // If we don't handle DELETE_SHEET, on one hand we will have some residual data, on the other hand we keep the data
+                // on DELETE_SHEET followed by undo
+            }
+        }
+        finalize() {
+            if (this.isEvaluationDirty) {
+                this.updateHiddenRows();
+                this.isEvaluationDirty = false;
+            }
+        }
+        isRowFiltered(sheetId, row) {
+            if (sheetId !== this.getters.getActiveSheetId()) {
+                return false;
+            }
+            return this.hiddenRows.has(row);
+        }
+        getCellBorderWithFilterBorder(position) {
+            const { sheetId, col, row } = position;
+            let filterBorder = undefined;
+            for (let filters of this.getters.getFilterTables(sheetId)) {
+                const zone = filters.zone;
+                if (isInside(col, row, zone)) {
+                    // The borders should be at the edges of the visible zone of the filter
+                    const visibleZone = this.intersectZoneWithViewport(sheetId, zone);
+                    filterBorder = {
+                        top: row === visibleZone.top ? DEFAULT_FILTER_BORDER_DESC : undefined,
+                        bottom: row === visibleZone.bottom ? DEFAULT_FILTER_BORDER_DESC : undefined,
+                        left: col === visibleZone.left ? DEFAULT_FILTER_BORDER_DESC : undefined,
+                        right: col === visibleZone.right ? DEFAULT_FILTER_BORDER_DESC : undefined,
+                    };
+                }
+            }
+            const cellBorder = this.getters.getCellBorder(position);
+            // Use removeFalsyAttributes to avoid overwriting filter borders with undefined values
+            const border = { ...filterBorder, ...removeFalsyAttributes(cellBorder || {}) };
+            return isObjectEmptyRecursive(border) ? null : border;
+        }
+        getFilterValues(position) {
+            const id = this.getters.getFilterId(position);
+            const sheetId = position.sheetId;
+            if (!id || !this.filterValues[sheetId])
+                return [];
+            return this.filterValues[sheetId][id] || [];
+        }
+        isFilterActive(position) {
+            const id = this.getters.getFilterId(position);
+            const sheetId = position.sheetId;
+            return Boolean(id && this.filterValues[sheetId]?.[id]?.length);
+        }
+        intersectZoneWithViewport(sheetId, zone) {
+            return {
+                left: this.getters.findVisibleHeader(sheetId, "COL", zone.left, zone.right),
+                right: this.getters.findVisibleHeader(sheetId, "COL", zone.right, zone.left),
+                top: this.getters.findVisibleHeader(sheetId, "ROW", zone.top, zone.bottom),
+                bottom: this.getters.findVisibleHeader(sheetId, "ROW", zone.bottom, zone.top),
+            };
+        }
+        updateFilter({ col, row, values, sheetId }) {
+            const id = this.getters.getFilterId({ sheetId, col, row });
+            if (!id)
+                return;
+            if (!this.filterValues[sheetId])
+                this.filterValues[sheetId] = {};
+            this.filterValues[sheetId][id] = values;
+        }
+        updateHiddenRows() {
+            const sheetId = this.getters.getActiveSheetId();
+            const filters = this.getters
+                .getFilters(sheetId)
+                .sort((filter1, filter2) => filter1.zoneWithHeaders.top - filter2.zoneWithHeaders.top);
+            const hiddenRows = new Set();
+            for (let filter of filters) {
+                // Disable filters whose header are hidden
+                if (this.getters.isRowHiddenByUser(sheetId, filter.zoneWithHeaders.top))
+                    continue;
+                if (hiddenRows.has(filter.zoneWithHeaders.top))
+                    continue;
+                const filteredValues = this.filterValues[sheetId]?.[filter.id]?.map(toLowerCase);
+                if (!filteredValues || !filter.filteredZone)
+                    continue;
+                for (let row = filter.filteredZone.top; row <= filter.filteredZone.bottom; row++) {
+                    const value = this.getCellValueAsString(sheetId, filter.col, row);
+                    if (filteredValues.includes(value)) {
+                        hiddenRows.add(row);
+                    }
+                }
+            }
+            this.hiddenRows = hiddenRows;
+        }
+        getCellValueAsString(sheetId, col, row) {
+            const value = this.getters.getEvaluatedCell({ sheetId, col, row }).formattedValue;
+            return value.toLowerCase();
+        }
+        exportForExcel(data) {
+            for (const sheetData of data.sheets) {
+                for (const tableData of sheetData.filterTables) {
+                    const tableZone = toZone(tableData.range);
+                    const filters = [];
+                    const headerNames = [];
+                    for (const i of range(0, zoneToDimension(tableZone).numberOfCols)) {
+                        const position = {
+                            sheetId: sheetData.id,
+                            col: tableZone.left + i,
+                            row: tableZone.top,
+                        };
+                        const filteredValues = this.getFilterValues(position);
+                        const filter = this.getters.getFilter(position);
+                        if (!filter)
+                            continue;
+                        const valuesInFilterZone = filter.filteredZone
+                            ? positions(filter.filteredZone)
+                                .map(({ col, row }) => this.getters.getEvaluatedCell({ sheetId: sheetData.id, col, row }))
+                                .filter((cell) => cell.type !== CellValueType.empty)
+                                .map((cell) => cell.formattedValue)
+                            : [];
+                        // In xlsx, filtered values = values that are displayed, not values that are hidden
+                        const xlsxFilteredValues = valuesInFilterZone.filter((val) => !filteredValues.includes(val));
+                        filters.push({ colId: i, filteredValues: [...new Set(xlsxFilteredValues)] });
+                        // In xlsx, filter header should ALWAYS be a string and should be unique
+                        const headerPosition = {
+                            col: filter.col,
+                            row: filter.zoneWithHeaders.top,
+                            sheetId: sheetData.id,
+                        };
+                        const headerString = this.getters.getEvaluatedCell(headerPosition).formattedValue;
+                        const headerName = this.getUniqueColNameForExcel(i, headerString, headerNames);
+                        headerNames.push(headerName);
+                        sheetData.cells[toXC(headerPosition.col, headerPosition.row)] = {
+                            ...sheetData.cells[toXC(headerPosition.col, headerPosition.row)],
+                            content: headerName,
+                            value: headerName,
+                            isFormula: false,
+                        };
+                    }
+                    tableData.filters = filters;
+                }
+            }
+        }
+        /**
+         * Get an unique column name for the column at colIndex. If the column name is already in the array of used column names,
+         * concatenate a number to the name until we find a new unique name (eg. "ColName" => "ColName1" => "ColName2" ...)
+         */
+        getUniqueColNameForExcel(colIndex, colName, usedColNames) {
+            if (!colName) {
+                colName = `Column${colIndex}`;
+            }
+            let currentColName = colName;
+            let i = 2;
+            while (usedColNames.includes(currentColName)) {
+                currentColName = colName + String(i);
+                i++;
+            }
+            return currentColName;
+        }
+    }
+
     const selectionStatisticFunctions = [
         {
             name: _lt("Sum"),
@@ -41930,7 +41161,7 @@
                     break;
             }
             this.setSelectionMixin(event.anchor, zones);
-            /** Any change to the selection has to be  reflected in the selection processor. */
+            /** Any change to the selection has to be reflected in the selection processor. */
             this.selection.resetDefaultAnchor(this, deepCopy(this.gridSelection.anchor));
             const { col, row } = this.gridSelection.anchor.cell;
             this.moveClient({
@@ -42467,6 +41698,936 @@
         }
     }
 
+    class InternalViewport {
+        getters;
+        sheetId;
+        boundaries;
+        top;
+        bottom;
+        left;
+        right;
+        offsetX;
+        offsetY;
+        offsetScrollbarX;
+        offsetScrollbarY;
+        canScrollVertically;
+        canScrollHorizontally;
+        viewportWidth;
+        viewportHeight;
+        offsetCorrectionX;
+        offsetCorrectionY;
+        constructor(getters, sheetId, boundaries, sizeInGrid, options, offsets) {
+            this.getters = getters;
+            this.sheetId = sheetId;
+            this.boundaries = boundaries;
+            this.viewportWidth = sizeInGrid.width;
+            this.viewportHeight = sizeInGrid.height;
+            this.offsetScrollbarX = offsets.x;
+            this.offsetScrollbarY = offsets.y;
+            this.canScrollVertically = options.canScrollVertically;
+            this.canScrollHorizontally = options.canScrollHorizontally;
+            this.offsetCorrectionX = this.getters.getColDimensions(this.sheetId, this.boundaries.left).start;
+            this.offsetCorrectionY = this.getters.getRowDimensions(this.sheetId, this.boundaries.top).start;
+            this.adjustViewportOffsetX();
+            this.adjustViewportOffsetY();
+        }
+        // PUBLIC
+        /** Returns the maximum size (in Pixels) of the viewport relative to its allocated client size
+         * When the viewport grid size is smaller than its client width (resp. height), it will return
+         * the client width (resp. height).
+         */
+        getMaxSize() {
+            const lastCol = this.getters.findLastVisibleColRowIndex(this.sheetId, "COL", {
+                first: this.boundaries.left,
+                last: this.boundaries.right,
+            });
+            const lastRow = this.getters.findLastVisibleColRowIndex(this.sheetId, "ROW", {
+                first: this.boundaries.top,
+                last: this.boundaries.bottom,
+            });
+            const { end: lastColEnd, size: lastColSize } = this.getters.getColDimensions(this.sheetId, lastCol);
+            const { end: lastRowEnd, size: lastRowSize } = this.getters.getRowDimensions(this.sheetId, lastRow);
+            const leftColIndex = this.searchHeaderIndex("COL", lastColEnd - this.viewportWidth, 0);
+            const leftColSize = this.getters.getColSize(this.sheetId, leftColIndex);
+            const leftRowIndex = this.searchHeaderIndex("ROW", lastRowEnd - this.viewportHeight, 0);
+            const topRowSize = this.getters.getRowSize(this.sheetId, leftRowIndex);
+            let width = lastColEnd - this.offsetCorrectionX;
+            if (this.canScrollHorizontally) {
+                width += Math.max(DEFAULT_CELL_WIDTH, // leave some minimal space to let the user know they scrolled all the way
+                Math.min(leftColSize, this.viewportWidth - lastColSize) // Add pixels that allows the snapping at maximum horizontal scroll
+                );
+                width = Math.max(width, this.viewportWidth); // if the viewport grid size is smaller than its client width, return client width
+            }
+            let height = lastRowEnd - this.offsetCorrectionY;
+            if (this.canScrollVertically) {
+                height += Math.max(DEFAULT_CELL_HEIGHT + 5, // leave some space to let the user know they scrolled all the way
+                Math.min(topRowSize, this.viewportHeight - lastRowSize) // Add pixels that allows the snapping at maximum vertical scroll
+                );
+                height = Math.max(height, this.viewportHeight); // if the viewport grid size is smaller than its client height, return client height
+            }
+            return { width, height };
+        }
+        /**
+         * Return the index of a column given an offset x, based on the pane left
+         * visible cell.
+         * It returns -1 if no column is found.
+         */
+        getColIndex(x, absolute = false) {
+            if (x < this.offsetCorrectionX || x > this.offsetCorrectionX + this.viewportWidth) {
+                return -1;
+            }
+            return this.searchHeaderIndex("COL", x - this.offsetCorrectionX, this.left, absolute);
+        }
+        /**
+         * Return the index of a row given an offset y, based on the pane top
+         * visible cell.
+         * It returns -1 if no row is found.
+         */
+        getRowIndex(y, absolute = false) {
+            if (y < this.offsetCorrectionY || y > this.offsetCorrectionY + this.viewportHeight) {
+                return -1;
+            }
+            return this.searchHeaderIndex("ROW", y - this.offsetCorrectionY, this.top, absolute);
+        }
+        /**
+         * This function will make sure that the provided cell position (or current selected position) is part of
+         * the pane that is actually displayed on the client. We therefore adjust the offset of the pane
+         * until it contains the cell completely.
+         */
+        adjustPosition(position) {
+            const sheetId = this.sheetId;
+            if (!position) {
+                position = this.getters.getSheetPosition(sheetId);
+            }
+            const mainCellPosition = this.getters.getMainCellPosition({ sheetId, ...position });
+            const { col, row } = this.getters.getNextVisibleCellPosition(mainCellPosition);
+            if (isInside(col, this.boundaries.top, this.boundaries)) {
+                this.adjustPositionX(col);
+            }
+            if (isInside(this.boundaries.left, row, this.boundaries)) {
+                this.adjustPositionY(row);
+            }
+        }
+        adjustPositionX(targetCol) {
+            const sheetId = this.sheetId;
+            const { end } = this.getters.getColDimensions(sheetId, targetCol);
+            const maxCol = this.getters.getNumberCols(sheetId);
+            if (this.offsetX + this.offsetCorrectionX + this.viewportWidth < end) {
+                for (let col = this.left; this.offsetX + this.offsetCorrectionX + this.viewportWidth < end; col++) {
+                    if (col > maxCol) {
+                        break;
+                    }
+                    if (this.getters.isColHidden(sheetId, col)) {
+                        continue;
+                    }
+                    this.offsetX = this.getters.getColDimensions(sheetId, col).end - this.offsetCorrectionX;
+                    this.offsetScrollbarX = this.offsetX;
+                    this.adjustViewportZoneX();
+                }
+            }
+            else if (this.left > targetCol) {
+                for (let col = this.left; col >= targetCol; col--) {
+                    if (col < 0) {
+                        break;
+                    }
+                    if (this.getters.isColHidden(sheetId, col)) {
+                        continue;
+                    }
+                    this.offsetX = this.getters.getColDimensions(sheetId, col).start - this.offsetCorrectionX;
+                    this.offsetScrollbarX = this.offsetX;
+                    this.adjustViewportZoneX();
+                }
+            }
+        }
+        adjustPositionY(targetRow) {
+            const sheetId = this.sheetId;
+            const { end } = this.getters.getRowDimensions(sheetId, targetRow);
+            const maxRow = this.getters.getNumberRows(sheetId);
+            if (this.offsetY + this.viewportHeight + this.offsetCorrectionY < end) {
+                for (let row = this.top; this.offsetY + this.viewportHeight + this.offsetCorrectionY < end; row++) {
+                    if (row > maxRow) {
+                        break;
+                    }
+                    if (this.getters.isRowHidden(sheetId, row)) {
+                        continue;
+                    }
+                    this.offsetY = this.getters.getRowDimensions(sheetId, row).end - this.offsetCorrectionY;
+                    this.offsetScrollbarY = this.offsetY;
+                    this.adjustViewportZoneY();
+                }
+            }
+            else if (this.top > targetRow) {
+                for (let row = this.top; row >= targetRow; row--) {
+                    if (row < 0) {
+                        break;
+                    }
+                    if (this.getters.isRowHidden(sheetId, row)) {
+                        continue;
+                    }
+                    this.offsetY = this.getters.getRowDimensions(sheetId, row).start - this.offsetCorrectionY;
+                    this.offsetScrollbarY = this.offsetY;
+                    this.adjustViewportZoneY();
+                }
+            }
+        }
+        setViewportOffset(offsetX, offsetY) {
+            this.setViewportOffsetX(offsetX);
+            this.setViewportOffsetY(offsetY);
+        }
+        adjustViewportZone() {
+            this.adjustViewportZoneX();
+            this.adjustViewportZoneY();
+        }
+        /**
+         *
+         * @param zone
+         * @returns Computes the absolute coordinate of a given zone inside the viewport
+         */
+        getRect(zone) {
+            const targetZone = intersection(zone, this.zone);
+            if (targetZone) {
+                const x = this.getters.getColRowOffset("COL", this.zone.left, targetZone.left) +
+                    this.offsetCorrectionX;
+                const y = this.getters.getColRowOffset("ROW", this.zone.top, targetZone.top) + this.offsetCorrectionY;
+                const width = Math.min(this.getters.getColRowOffset("COL", targetZone.left, targetZone.right + 1), this.viewportWidth);
+                const height = Math.min(this.getters.getColRowOffset("ROW", targetZone.top, targetZone.bottom + 1), this.viewportHeight);
+                return {
+                    x,
+                    y,
+                    width,
+                    height,
+                };
+            }
+            else {
+                return undefined;
+            }
+        }
+        isVisible(col, row) {
+            const isInside = row <= this.bottom && row >= this.top && col >= this.left && col <= this.right;
+            return (isInside &&
+                !this.getters.isColHidden(this.sheetId, col) &&
+                !this.getters.isRowHidden(this.sheetId, row));
+        }
+        // PRIVATE
+        searchHeaderIndex(dimension, position, startIndex = 0, absolute = false) {
+            let size = 0;
+            const sheetId = this.sheetId;
+            const headers = this.getters.getNumberHeaders(sheetId, dimension);
+            for (let i = startIndex; i <= headers - 1; i++) {
+                const isHiddenInViewport = !absolute && dimension === "COL"
+                    ? i < this.left && i > this.right
+                    : i < this.top && i > this.bottom;
+                if (this.getters.isHeaderHidden(sheetId, dimension, i) || isHiddenInViewport) {
+                    continue;
+                }
+                size +=
+                    dimension === "COL"
+                        ? this.getters.getColSize(sheetId, i)
+                        : this.getters.getRowSize(sheetId, i);
+                if (size > position) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+        get zone() {
+            return { left: this.left, right: this.right, top: this.top, bottom: this.bottom };
+        }
+        setViewportOffsetX(offsetX) {
+            if (!this.canScrollHorizontally) {
+                return;
+            }
+            this.offsetScrollbarX = offsetX;
+            this.adjustViewportZoneX();
+        }
+        setViewportOffsetY(offsetY) {
+            if (!this.canScrollVertically) {
+                return;
+            }
+            this.offsetScrollbarY = offsetY;
+            this.adjustViewportZoneY();
+        }
+        /** Corrects the viewport's horizontal offset based on the current structure
+         *  To make sure that at least on column is visible inside the viewport.
+         */
+        adjustViewportOffsetX() {
+            if (this.canScrollHorizontally) {
+                const { width: viewportWidth } = this.getMaxSize();
+                if (this.viewportWidth + this.offsetScrollbarX > viewportWidth) {
+                    this.offsetScrollbarX = Math.max(0, viewportWidth - this.viewportWidth);
+                }
+            }
+            this.left = this.getColIndex(this.offsetScrollbarX, true);
+            this.right = this.getColIndex(this.offsetScrollbarX + this.viewportWidth, true);
+            if (this.right === -1) {
+                this.right = this.boundaries.right;
+            }
+            this.adjustViewportZoneX();
+        }
+        /** Corrects the viewport's vertical offset based on the current structure
+         *  To make sure that at least on row is visible inside the viewport.
+         */
+        adjustViewportOffsetY() {
+            if (this.canScrollVertically) {
+                const { height: paneHeight } = this.getMaxSize();
+                if (this.viewportHeight + this.offsetScrollbarY > paneHeight) {
+                    this.offsetScrollbarY = Math.max(0, paneHeight - this.viewportHeight);
+                }
+            }
+            this.top = this.getRowIndex(this.offsetScrollbarY, true);
+            this.bottom = this.getRowIndex(this.offsetScrollbarY + this.viewportWidth, true);
+            if (this.bottom === -1) {
+                this.bottom = this.boundaries.bottom;
+            }
+            this.adjustViewportZoneY();
+        }
+        /** Updates the pane zone and snapped offset based on its horizontal
+         * offset (will find Left) and its width (will find Right) */
+        adjustViewportZoneX() {
+            const sheetId = this.sheetId;
+            this.left = this.searchHeaderIndex("COL", this.offsetScrollbarX, this.boundaries.left);
+            this.right = Math.min(this.boundaries.right, this.searchHeaderIndex("COL", this.viewportWidth, this.left));
+            if (this.right === -1) {
+                this.right = this.getters.getNumberCols(sheetId) - 1;
+            }
+            this.offsetX =
+                this.getters.getColDimensions(sheetId, this.left).start -
+                    this.getters.getColDimensions(sheetId, this.boundaries.left).start;
+        }
+        /** Updates the pane zone and snapped offset based on its vertical
+         * offset (will find Top) and its width (will find Bottom) */
+        adjustViewportZoneY() {
+            const sheetId = this.sheetId;
+            this.top = this.searchHeaderIndex("ROW", this.offsetScrollbarY, this.boundaries.top);
+            this.bottom = Math.min(this.boundaries.bottom, this.searchHeaderIndex("ROW", this.viewportHeight, this.top));
+            if (this.bottom === -1) {
+                this.bottom = this.getters.getNumberRows(sheetId) - 1;
+            }
+            this.offsetY =
+                this.getters.getRowDimensions(sheetId, this.top).start -
+                    this.getters.getRowDimensions(sheetId, this.boundaries.top).start;
+        }
+    }
+
+    /**
+     *   EdgeScrollCases Schema
+     *
+     *  The dots/double dots represent a freeze (= a split of viewports)
+     *  In this example, we froze vertically between columns D and E
+     *  and horizontally between rows 4 and 5.
+     *
+     *  One can see that we scrolled horizontally from column E to G and
+     *  vertically from row 5 to 7.
+     *
+     *     A  B  C  D   G  H  I  J  K  L  M  N  O  P  Q  R  S  T
+     *     _______________________________________________________
+     *  1 |           :                                           |
+     *  2 |           :                                           |
+     *  3 |           :        B   ↑                 6            |
+     *  4 |           :        |   |                 |            |
+     *     ····················+···+·················+············|
+     *  7 |           :        |   |                 |            |
+     *  8 |           :        ↓   2                 |            |
+     *  9 |           :                              |            |
+     * 10 |       A --+--→                           |            |
+     * 11 |           :                              |            |
+     * 12 |           :                              |            |
+     * 13 |        ←--+-- 1                          |            |
+     * 14 |           :                              |        3 --+--→
+     * 15 |           :                              |            |
+     * 16 |           :                              |            |
+     * 17 |       5 --+-------------------------------------------+--→
+     * 18 |           :                              |            |
+     * 19 |           :                  4           |            |
+     * 20 |           :                  |           |            |
+     *     ______________________________+___________| ____________
+     *                                   |           |
+     *                                   ↓           ↓
+     */
+    /**
+     * Viewport plugin.
+     *
+     * This plugin manages all things related to all viewport states.
+     *
+     */
+    class SheetViewPlugin extends UIPlugin {
+        static getters = [
+            "getColIndex",
+            "getRowIndex",
+            "getActiveMainViewport",
+            "getSheetViewDimension",
+            "getSheetViewDimensionWithHeaders",
+            "getMainViewportRect",
+            "isVisibleInViewport",
+            "getEdgeScrollCol",
+            "getEdgeScrollRow",
+            "getVisibleFigures",
+            "getVisibleRect",
+            "getColRowOffsetInViewport",
+            "getMainViewportCoordinates",
+            "getActiveSheetScrollInfo",
+            "getActiveSheetDOMScrollInfo",
+            "getSheetViewVisibleCols",
+            "getSheetViewVisibleRows",
+            "getFrozenSheetViewRatio",
+            "isPositionVisible",
+        ];
+        viewports = {};
+        /**
+         * The viewport dimensions are usually set by one of the components
+         * (i.e. when grid component is mounted) to properly reflect its state in the DOM.
+         * In the absence of a component (standalone model), is it mandatory to set reasonable default values
+         * to ensure the correct operation of this plugin.
+         */
+        sheetViewWidth = getDefaultSheetViewSize();
+        sheetViewHeight = getDefaultSheetViewSize();
+        gridOffsetX = 0;
+        gridOffsetY = 0;
+        sheetsWithDirtyViewports = new Set();
+        // ---------------------------------------------------------------------------
+        // Command Handling
+        // ---------------------------------------------------------------------------
+        allowDispatch(cmd) {
+            switch (cmd.type) {
+                case "SET_VIEWPORT_OFFSET":
+                    return this.checkScrollingDirection(cmd);
+                case "RESIZE_SHEETVIEW":
+                    return this.chainValidations(this.checkValuesAreDifferent, this.checkPositiveDimension)(cmd);
+                default:
+                    return 0 /* CommandResult.Success */;
+            }
+        }
+        handleEvent(event) {
+            if (event.options.scrollIntoView) {
+                let { col, row } = findCellInNewZone(event.previousAnchor.zone, event.anchor.zone);
+                if (event.mode === "updateAnchor") {
+                    const oldZone = event.previousAnchor.zone;
+                    const newZone = event.anchor.zone;
+                    // altering a zone should not move the viewport in a dimension that wasn't changed
+                    const { top, bottom, left, right } = this.getters.getActiveMainViewport();
+                    if (oldZone.left === newZone.left && oldZone.right === newZone.right) {
+                        col = left > col || col > right ? left : col;
+                    }
+                    if (oldZone.top === newZone.top && oldZone.bottom === newZone.bottom) {
+                        row = top > row || row > bottom ? top : row;
+                    }
+                }
+                const sheetId = this.getters.getActiveSheetId();
+                col = Math.min(col, this.getters.getNumberCols(sheetId) - 1);
+                row = Math.min(row, this.getters.getNumberRows(sheetId) - 1);
+                this.refreshViewport(this.getters.getActiveSheetId(), { col, row });
+            }
+        }
+        handle(cmd) {
+            this.cleanViewports();
+            switch (cmd.type) {
+                case "START":
+                    this.selection.observe(this, {
+                        handleEvent: this.handleEvent.bind(this),
+                    });
+                    this.resetViewports(this.getters.getActiveSheetId());
+                    break;
+                case "UNDO":
+                case "REDO":
+                    this.resetSheetViews();
+                    break;
+                case "RESIZE_SHEETVIEW":
+                    this.resizeSheetView(cmd.height, cmd.width, cmd.gridOffsetX, cmd.gridOffsetY);
+                    break;
+                case "SET_VIEWPORT_OFFSET":
+                    this.setSheetViewOffset(cmd.offsetX, cmd.offsetY);
+                    break;
+                case "SHIFT_VIEWPORT_DOWN":
+                    const { top } = this.getActiveMainViewport();
+                    const sheetId = this.getters.getActiveSheetId();
+                    const shiftedOffsetY = this.clipOffsetY(this.getters.getRowDimensions(sheetId, top).start + this.sheetViewHeight);
+                    this.shiftVertically(shiftedOffsetY);
+                    break;
+                case "SHIFT_VIEWPORT_UP": {
+                    const { top } = this.getActiveMainViewport();
+                    const sheetId = this.getters.getActiveSheetId();
+                    const shiftedOffsetY = this.clipOffsetY(this.getters.getRowDimensions(sheetId, top).end - this.sheetViewHeight);
+                    this.shiftVertically(shiftedOffsetY);
+                    break;
+                }
+                case "REMOVE_COLUMNS_ROWS":
+                case "RESIZE_COLUMNS_ROWS":
+                case "HIDE_COLUMNS_ROWS":
+                case "ADD_COLUMNS_ROWS":
+                case "UNHIDE_COLUMNS_ROWS":
+                case "UPDATE_FILTER":
+                    this.resetViewports(cmd.sheetId);
+                    break;
+                case "UPDATE_CELL":
+                    // update cell content or format can change hidden rows because of data filters
+                    if ("content" in cmd || "format" in cmd || cmd.style?.fontSize !== undefined) {
+                        this.sheetsWithDirtyViewports.add(cmd.sheetId);
+                    }
+                    break;
+                case "ACTIVATE_SHEET":
+                    this.setViewports();
+                    this.refreshViewport(cmd.sheetIdTo);
+                    break;
+                case "UNFREEZE_ROWS":
+                case "UNFREEZE_COLUMNS":
+                case "FREEZE_COLUMNS":
+                case "FREEZE_ROWS":
+                case "UNFREEZE_COLUMNS_ROWS":
+                    this.resetViewports(this.getters.getActiveSheetId());
+                    break;
+                case "DELETE_SHEET":
+                    this.sheetsWithDirtyViewports.delete(cmd.sheetId);
+                    break;
+                case "START_EDITION":
+                    const { col, row } = this.getters.getActivePosition();
+                    this.refreshViewport(this.getters.getActiveSheetId(), { col, row });
+                    break;
+            }
+        }
+        finalize() {
+            for (const sheetId of this.sheetsWithDirtyViewports) {
+                this.resetViewports(sheetId);
+            }
+            this.sheetsWithDirtyViewports = new Set();
+            this.setViewports();
+        }
+        setViewports() {
+            const sheetIds = this.getters.getSheetIds();
+            for (const sheetId of sheetIds) {
+                if (!this.viewports[sheetId]?.bottomRight) {
+                    this.resetViewports(sheetId);
+                }
+            }
+        }
+        // ---------------------------------------------------------------------------
+        // Getters
+        // ---------------------------------------------------------------------------
+        /**
+         * Return the index of a column given an offset x, based on the viewport left
+         * visible cell.
+         * It returns -1 if no column is found.
+         */
+        getColIndex(x) {
+            const sheetId = this.getters.getActiveSheetId();
+            return Math.max(...this.getSubViewports(sheetId).map((viewport) => viewport.getColIndex(x)));
+        }
+        /**
+         * Return the index of a row given an offset y, based on the viewport top
+         * visible cell.
+         * It returns -1 if no row is found.
+         */
+        getRowIndex(y) {
+            const sheetId = this.getters.getActiveSheetId();
+            return Math.max(...this.getSubViewports(sheetId).map((viewport) => viewport.getRowIndex(y)));
+        }
+        getSheetViewDimensionWithHeaders() {
+            return {
+                width: this.sheetViewWidth + this.gridOffsetX,
+                height: this.sheetViewHeight + this.gridOffsetY,
+            };
+        }
+        getSheetViewDimension() {
+            return {
+                width: this.sheetViewWidth,
+                height: this.sheetViewHeight,
+            };
+        }
+        /** type as pane, not viewport but basically pane extends viewport */
+        getActiveMainViewport() {
+            const sheetId = this.getters.getActiveSheetId();
+            return this.getMainViewport(sheetId);
+        }
+        /**
+         * Return the scroll info of the active sheet, ie. the offset between the viewport left/top side and
+         * the grid left/top side, snapped to the columns/rows.
+         */
+        getActiveSheetScrollInfo() {
+            const sheetId = this.getters.getActiveSheetId();
+            const viewport = this.getMainInternalViewport(sheetId);
+            return {
+                scrollX: viewport.offsetX,
+                scrollY: viewport.offsetY,
+            };
+        }
+        /**
+         * Return the DOM scroll info of the active sheet, ie. the offset between the viewport left/top side and
+         * the grid left/top side, corresponding to the scroll of the scrollbars and not snapped to the grid.
+         */
+        getActiveSheetDOMScrollInfo() {
+            const sheetId = this.getters.getActiveSheetId();
+            const viewport = this.getMainInternalViewport(sheetId);
+            return {
+                scrollX: viewport.offsetScrollbarX,
+                scrollY: viewport.offsetScrollbarY,
+            };
+        }
+        getSheetViewVisibleCols() {
+            const sheetId = this.getters.getActiveSheetId();
+            const viewports = this.getSubViewports(sheetId);
+            //TODO ake another commit to eimprove this
+            return [...new Set(viewports.map((v) => range(v.left, v.right + 1)).flat())].filter((col) => !this.getters.isHeaderHidden(sheetId, "COL", col));
+        }
+        getSheetViewVisibleRows() {
+            const sheetId = this.getters.getActiveSheetId();
+            const viewports = this.getSubViewports(sheetId);
+            return [...new Set(viewports.map((v) => range(v.top, v.bottom + 1)).flat())].filter((row) => !this.getters.isHeaderHidden(sheetId, "ROW", row));
+        }
+        /**
+         * Return the main viewport maximum size relative to the client size.
+         */
+        getMainViewportRect() {
+            const sheetId = this.getters.getActiveSheetId();
+            const viewport = this.getMainInternalViewport(sheetId);
+            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
+            let { width, height } = viewport.getMaxSize();
+            const x = this.getters.getColDimensions(sheetId, xSplit).start;
+            const y = this.getters.getRowDimensions(sheetId, ySplit).start;
+            return { x, y, width, height };
+        }
+        getMaximumSheetOffset() {
+            const sheetId = this.getters.getActiveSheetId();
+            const { width, height } = this.getMainViewportRect();
+            const viewport = this.getMainInternalViewport(sheetId);
+            return {
+                maxOffsetX: Math.max(0, width - viewport.viewportWidth + 1),
+                maxOffsetY: Math.max(0, height - viewport.viewportHeight + 1),
+            };
+        }
+        getColRowOffsetInViewport(dimension, referenceIndex, index) {
+            const sheetId = this.getters.getActiveSheetId();
+            const visibleCols = this.getters.getSheetViewVisibleCols();
+            const visibleRows = this.getters.getSheetViewVisibleRows();
+            if (index < referenceIndex) {
+                return -this.getColRowOffsetInViewport(dimension, index, referenceIndex);
+            }
+            let offset = 0;
+            const visibleIndexes = dimension === "COL" ? visibleCols : visibleRows;
+            for (let i = referenceIndex; i < index; i++) {
+                if (!visibleIndexes.includes(i)) {
+                    continue;
+                }
+                offset +=
+                    dimension === "COL"
+                        ? this.getters.getColSize(sheetId, i)
+                        : this.getters.getRowSize(sheetId, i);
+            }
+            return offset;
+        }
+        /**
+         * Check if a given position is visible in the viewport.
+         */
+        isVisibleInViewport({ sheetId, col, row }) {
+            return this.getSubViewports(sheetId).some((pane) => pane.isVisible(col, row));
+        }
+        // => return s the new offset
+        getEdgeScrollCol(x, previousX, startingX) {
+            let canEdgeScroll = false;
+            let direction = 0;
+            let delay = 0;
+            /** 4 cases : See EdgeScrollCases Schema at the top
+             * 1. previous in XRight > XLeft
+             * 3. previous in XRight > outside
+             * 5. previous in Left > outside
+             * A. previous in Left > right
+             * with X a position taken in the bottomRIght (aka scrollable) viewport
+             */
+            const { xSplit } = this.getters.getPaneDivisions(this.getters.getActiveSheetId());
+            const { width } = this.getSheetViewDimension();
+            const { x: offsetCorrectionX } = this.getMainViewportCoordinates();
+            const currentOffsetX = this.getActiveSheetScrollInfo().scrollX;
+            if (x > width) {
+                // 3 & 5
+                canEdgeScroll = true;
+                delay = scrollDelay(x - width);
+                direction = 1;
+            }
+            else if (x < offsetCorrectionX && startingX >= offsetCorrectionX && currentOffsetX > 0) {
+                // 1
+                canEdgeScroll = true;
+                delay = scrollDelay(offsetCorrectionX - x);
+                direction = -1;
+            }
+            else if (xSplit && previousX < offsetCorrectionX && x > offsetCorrectionX) {
+                // A
+                canEdgeScroll = true;
+                delay = scrollDelay(x);
+                direction = "reset";
+            }
+            return { canEdgeScroll, direction, delay };
+        }
+        getEdgeScrollRow(y, previousY, tartingY) {
+            let canEdgeScroll = false;
+            let direction = 0;
+            let delay = 0;
+            /** 4 cases : See EdgeScrollCases Schema at the top
+             * 2. previous in XBottom > XTop
+             * 4. previous in XRight > outside
+             * 6. previous in Left > outside
+             * B. previous in Left > right
+             * with X a position taken in the bottomRIght (aka scrollable) viewport
+             */
+            const { ySplit } = this.getters.getPaneDivisions(this.getters.getActiveSheetId());
+            const { height } = this.getSheetViewDimension();
+            const { y: offsetCorrectionY } = this.getMainViewportCoordinates();
+            const currentOffsetY = this.getActiveSheetScrollInfo().scrollY;
+            if (y > height) {
+                // 4 & 6
+                canEdgeScroll = true;
+                delay = scrollDelay(y - height);
+                direction = 1;
+            }
+            else if (y < offsetCorrectionY && tartingY >= offsetCorrectionY && currentOffsetY > 0) {
+                // 2
+                canEdgeScroll = true;
+                delay = scrollDelay(offsetCorrectionY - y);
+                direction = -1;
+            }
+            else if (ySplit && previousY < offsetCorrectionY && y > offsetCorrectionY) {
+                // B
+                canEdgeScroll = true;
+                delay = scrollDelay(y);
+                direction = "reset";
+            }
+            return { canEdgeScroll, direction, delay };
+        }
+        /**
+         * Computes the coordinates and size to draw the zone on the canvas
+         */
+        getVisibleRect(zone) {
+            const sheetId = this.getters.getActiveSheetId();
+            const viewportRects = this.getSubViewports(sheetId)
+                .map((viewport) => viewport.getRect(zone))
+                .filter(isDefined$1);
+            if (viewportRects.length === 0) {
+                return { x: 0, y: 0, width: 0, height: 0 };
+            }
+            const x = Math.min(...viewportRects.map((rect) => rect.x));
+            const y = Math.min(...viewportRects.map((rect) => rect.y));
+            const width = Math.max(...viewportRects.map((rect) => rect.x + rect.width)) - x;
+            const height = Math.max(...viewportRects.map((rect) => rect.y + rect.height)) - y;
+            return {
+                x: x + this.gridOffsetX,
+                y: y + this.gridOffsetY,
+                width,
+                height,
+            };
+        }
+        /**
+         * Returns the position of the MainViewport relatively to the start of the grid (without headers)
+         * It corresponds to the summed dimensions of the visible cols/rows (in x/y respectively)
+         * situated before the pane divisions.
+         */
+        getMainViewportCoordinates() {
+            const sheetId = this.getters.getActiveSheetId();
+            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
+            const x = this.getters.getColDimensions(sheetId, xSplit).start;
+            const y = this.getters.getRowDimensions(sheetId, ySplit).start;
+            return { x, y };
+        }
+        // ---------------------------------------------------------------------------
+        // Private
+        // ---------------------------------------------------------------------------
+        ensureMainViewportExist(sheetId) {
+            if (!this.viewports[sheetId]) {
+                this.resetViewports(sheetId);
+            }
+        }
+        getSubViewports(sheetId) {
+            this.ensureMainViewportExist(sheetId);
+            return Object.values(this.viewports[sheetId]).filter(isDefined$1);
+        }
+        checkPositiveDimension(cmd) {
+            if (cmd.width < 0 || cmd.height < 0) {
+                return 68 /* CommandResult.InvalidViewportSize */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        checkValuesAreDifferent(cmd) {
+            const { height, width } = this.getSheetViewDimension();
+            if (cmd.gridOffsetX === this.gridOffsetX &&
+                cmd.gridOffsetY === this.gridOffsetY &&
+                cmd.width === width &&
+                cmd.height === height) {
+                return 76 /* CommandResult.ValuesNotChanged */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        checkScrollingDirection({ offsetX, offsetY, }) {
+            const pane = this.getMainInternalViewport(this.getters.getActiveSheetId());
+            if ((!pane.canScrollHorizontally && offsetX > 0) ||
+                (!pane.canScrollVertically && offsetY > 0)) {
+                return 69 /* CommandResult.InvalidScrollingDirection */;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        getMainViewport(sheetId) {
+            const viewport = this.getMainInternalViewport(sheetId);
+            return {
+                top: viewport.top,
+                left: viewport.left,
+                bottom: viewport.bottom,
+                right: viewport.right,
+            };
+        }
+        getMainInternalViewport(sheetId) {
+            this.ensureMainViewportExist(sheetId);
+            return this.viewports[sheetId].bottomRight;
+        }
+        /** gets rid of deprecated sheetIds */
+        cleanViewports() {
+            const sheetIds = this.getters.getSheetIds();
+            for (let sheetId of Object.keys(this.viewports)) {
+                if (!sheetIds.includes(sheetId)) {
+                    delete this.viewports[sheetId];
+                }
+            }
+        }
+        resetSheetViews() {
+            for (let sheetId of Object.keys(this.viewports)) {
+                const position = this.getters.getSheetPosition(sheetId);
+                this.resetViewports(sheetId);
+                const viewports = this.getSubViewports(sheetId);
+                Object.values(viewports).forEach((viewport) => {
+                    viewport.adjustPosition(position);
+                });
+            }
+        }
+        resizeSheetView(height, width, gridOffsetX = 0, gridOffsetY = 0) {
+            this.sheetViewHeight = height;
+            this.sheetViewWidth = width;
+            this.gridOffsetX = gridOffsetX;
+            this.gridOffsetY = gridOffsetY;
+            this.recomputeViewports();
+        }
+        recomputeViewports() {
+            for (let sheetId of Object.keys(this.viewports)) {
+                this.resetViewports(sheetId);
+            }
+        }
+        setSheetViewOffset(offsetX, offsetY) {
+            const sheetId = this.getters.getActiveSheetId();
+            const { maxOffsetX, maxOffsetY } = this.getMaximumSheetOffset();
+            Object.values(this.getSubViewports(sheetId)).forEach((viewport) => viewport.setViewportOffset(clip(offsetX, 0, maxOffsetX), clip(offsetY, 0, maxOffsetY)));
+        }
+        /**
+         * Clip the vertical offset within the allowed range.
+         * Not above the sheet, nor below the sheet.
+         */
+        clipOffsetY(offsetY) {
+            const { height } = this.getMainViewportRect();
+            const maxOffset = height - this.sheetViewHeight;
+            offsetY = Math.min(offsetY, maxOffset);
+            offsetY = Math.max(offsetY, 0);
+            return offsetY;
+        }
+        getViewportOffset(sheetId) {
+            return {
+                x: this.viewports[sheetId]?.bottomRight.offsetScrollbarX || 0,
+                y: this.viewports[sheetId]?.bottomRight.offsetScrollbarY || 0,
+            };
+        }
+        resetViewports(sheetId) {
+            if (!this.getters.tryGetSheet(sheetId)) {
+                return;
+            }
+            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
+            const nCols = this.getters.getNumberCols(sheetId);
+            const nRows = this.getters.getNumberRows(sheetId);
+            const colOffset = this.getters.getColRowOffset("COL", 0, xSplit, sheetId);
+            const rowOffset = this.getters.getColRowOffset("ROW", 0, ySplit, sheetId);
+            const { xRatio, yRatio } = this.getFrozenSheetViewRatio(sheetId);
+            const canScrollHorizontally = xRatio < 1.0;
+            const canScrollVertically = yRatio < 1.0;
+            const previousOffset = this.getViewportOffset(sheetId);
+            const sheetViewports = {
+                topLeft: (ySplit &&
+                    xSplit &&
+                    new InternalViewport(this.getters, sheetId, { left: 0, right: xSplit - 1, top: 0, bottom: ySplit - 1 }, { width: colOffset, height: rowOffset }, { canScrollHorizontally: false, canScrollVertically: false }, { x: 0, y: 0 })) ||
+                    undefined,
+                topRight: (ySplit &&
+                    new InternalViewport(this.getters, sheetId, { left: xSplit, right: nCols - 1, top: 0, bottom: ySplit - 1 }, { width: this.sheetViewWidth - colOffset, height: rowOffset }, { canScrollHorizontally, canScrollVertically: false }, { x: canScrollHorizontally ? previousOffset.x : 0, y: 0 })) ||
+                    undefined,
+                bottomLeft: (xSplit &&
+                    new InternalViewport(this.getters, sheetId, { left: 0, right: xSplit - 1, top: ySplit, bottom: nRows - 1 }, { width: colOffset, height: this.sheetViewHeight - rowOffset }, { canScrollHorizontally: false, canScrollVertically }, { x: 0, y: canScrollVertically ? previousOffset.y : 0 })) ||
+                    undefined,
+                bottomRight: new InternalViewport(this.getters, sheetId, { left: xSplit, right: nCols - 1, top: ySplit, bottom: nRows - 1 }, {
+                    width: this.sheetViewWidth - colOffset,
+                    height: this.sheetViewHeight - rowOffset,
+                }, { canScrollHorizontally, canScrollVertically }, {
+                    x: canScrollHorizontally ? previousOffset.x : 0,
+                    y: canScrollVertically ? previousOffset.y : 0,
+                }),
+            };
+            this.viewports[sheetId] = sheetViewports;
+        }
+        /**
+         * Adjust the viewport such that the anchor position is visible
+         */
+        refreshViewport(sheetId, anchorPosition) {
+            Object.values(this.getSubViewports(sheetId)).forEach((viewport) => {
+                viewport.adjustViewportZone();
+                viewport.adjustPosition(anchorPosition);
+            });
+        }
+        /**
+         * Shift the viewport vertically and move the selection anchor
+         * such that it remains at the same place relative to the
+         * viewport top.
+         */
+        shiftVertically(offset) {
+            const { top } = this.getActiveMainViewport();
+            const { scrollX } = this.getActiveSheetScrollInfo();
+            this.setSheetViewOffset(scrollX, offset);
+            const { anchor } = this.getters.getSelection();
+            const deltaRow = this.getActiveMainViewport().top - top;
+            this.selection.selectCell(anchor.cell.col, anchor.cell.row + deltaRow);
+        }
+        getVisibleFigures() {
+            const sheetId = this.getters.getActiveSheetId();
+            const result = [];
+            const figures = this.getters.getFigures(sheetId);
+            const { scrollX, scrollY } = this.getActiveSheetScrollInfo();
+            const { x: offsetCorrectionX, y: offsetCorrectionY } = this.getters.getMainViewportCoordinates();
+            const { width, height } = this.getters.getSheetViewDimensionWithHeaders();
+            for (const figure of figures) {
+                if (figure.x >= offsetCorrectionX &&
+                    (figure.x + figure.width <= offsetCorrectionX + scrollX ||
+                        figure.x >= width + scrollX + offsetCorrectionX)) {
+                    continue;
+                }
+                if (figure.y >= offsetCorrectionY &&
+                    (figure.y + figure.height <= offsetCorrectionY + scrollY ||
+                        figure.y >= height + scrollY + offsetCorrectionY)) {
+                    continue;
+                }
+                result.push(figure);
+            }
+            return result;
+        }
+        isPositionVisible(position) {
+            const { scrollX, scrollY } = this.getters.getActiveSheetScrollInfo();
+            const { x: mainViewportX, y: mainViewportY } = this.getters.getMainViewportCoordinates();
+            const { width, height } = this.getters.getSheetViewDimension();
+            if (position.x >= mainViewportX &&
+                (position.x < mainViewportX + scrollX || position.x > width + scrollX + mainViewportX)) {
+                return false;
+            }
+            if (position.y >= mainViewportY &&
+                (position.y < mainViewportY + scrollY || position.y > height + scrollY + mainViewportY)) {
+                return false;
+            }
+            return true;
+        }
+        getFrozenSheetViewRatio(sheetId) {
+            const { xSplit, ySplit } = this.getters.getPaneDivisions(sheetId);
+            const offsetCorrectionX = this.getters.getColDimensions(sheetId, xSplit).start;
+            const offsetCorrectionY = this.getters.getRowDimensions(sheetId, ySplit).start;
+            const width = this.sheetViewWidth + this.gridOffsetX;
+            const height = this.sheetViewHeight + this.gridOffsetY;
+            return { xRatio: offsetCorrectionX / width, yRatio: offsetCorrectionY / height };
+        }
+    }
+
     const corePluginRegistry = new Registry()
         .add("sheet", SheetPlugin)
         .add("header visibility", HeaderVisibilityPlugin)
@@ -42499,15 +42660,15 @@
     // Plugins which have a state, but which should not be shared in collaborative
     const statefulUIPluginRegistry = new Registry()
         .add("selection", GridSelectionPlugin)
+        .add("evaluation_filter", FilterEvaluationPlugin)
+        .add("viewport", SheetViewPlugin)
         .add("clipboard", ClipboardPlugin)
         .add("edition", EditionPlugin);
     // Plugins which have a derived state from core data
     const coreViewsPluginRegistry = new Registry()
         .add("evaluation", EvaluationPlugin)
-        .add("evaluation_filter", FilterEvaluationPlugin)
         .add("evaluation_chart", EvaluationChartPlugin)
         .add("evaluation_cf", EvaluationConditionalFormatPlugin)
-        .add("viewport", SheetViewPlugin)
         .add("custom_colors", CustomColorsPlugin);
 
     const clickableCellRegistry = new Registry();
@@ -43607,17 +43768,6 @@
           width: 47%;
           margin-left: 3%;
         }
-      }
-    }
-
-    .o-sidepanel-error,
-    .o-sidepanel-warning {
-      margin-top: 10px;
-
-      .o-icon {
-        margin-right: 5px;
-        height: 1.2em;
-        width: 1.2em;
       }
     }
 
@@ -45702,30 +45852,30 @@
         getBackToDefault() {
             this.stream.getBackToDefault();
         }
-        /**
-         * Select a new anchor
-         */
-        selectZone(anchor) {
-            return this.modifyAnchor(anchor, "overrideSelection", "ZonesSelected");
-        }
-        modifyAnchor(anchor, mode, eventType) {
+        modifyAnchor(anchor, mode, options) {
             const sheetId = this.getters.getActiveSheetId();
             anchor = {
                 ...anchor,
                 zone: this.getters.expandZone(sheetId, anchor.zone),
             };
             return this.processEvent({
-                type: eventType,
+                options,
                 anchor,
                 mode,
             });
+        }
+        /**
+         * Select a new anchor
+         */
+        selectZone(anchor, options = { scrollIntoView: true }) {
+            return this.modifyAnchor(anchor, "overrideSelection", options);
         }
         /**
          * Select a single cell as the new anchor.
          */
         selectCell(col, row) {
             const zone = positionToZone({ col, row });
-            return this.selectZone({ zone, cell: { col, row } });
+            return this.selectZone({ zone, cell: { col, row } }, { scrollIntoView: true });
         }
         /**
          * Set the selection to one of the cells adjacent to the current anchor cell.
@@ -45753,9 +45903,9 @@
             const expandedZone = this.getters.expandZone(sheetId, zone);
             const anchor = { zone: expandedZone, cell: { col: anchorCol, row: anchorRow } };
             return this.processEvent({
-                type: "AlterZone",
                 mode: "updateAnchor",
                 anchor: anchor,
+                options: { scrollIntoView: false },
             });
         }
         /**
@@ -45766,7 +45916,7 @@
             ({ col, row } = this.getters.getMainCellPosition({ sheetId, col, row }));
             const zone = this.getters.expandZone(sheetId, positionToZone({ col, row }));
             return this.processEvent({
-                type: "ZonesSelected",
+                options: { scrollIntoView: true },
                 anchor: { zone, cell: { col, row } },
                 mode: "newAnchor",
             });
@@ -45824,7 +45974,7 @@
                 result = result ? organizeZone(result) : result;
                 if (result && !isEqual(result, anchor.zone)) {
                     return this.processEvent({
-                        type: "ZonesSelected",
+                        options: { scrollIntoView: true },
                         mode: "updateAnchor",
                         anchor: { zone: result, cell: { col: anchorCol, row: anchorRow } },
                     });
@@ -45845,9 +45995,9 @@
             result = expand(union(currentZone, zoneWithDelta));
             const newAnchor = { zone: result, cell: { col: anchorCol, row: anchorRow } };
             return this.processEvent({
-                type: "ZonesSelected",
                 anchor: newAnchor,
                 mode: "updateAnchor",
+                options: { scrollIntoView: true },
             });
         }
         selectColumn(index, mode) {
@@ -45868,7 +46018,10 @@
                     break;
             }
             return this.processEvent({
-                type: "HeadersSelected",
+                options: {
+                    scrollIntoView: false,
+                    unbounded: true,
+                },
                 anchor: { zone, cell: { col, row } },
                 mode,
             });
@@ -45891,7 +46044,10 @@
                     break;
             }
             return this.processEvent({
-                type: "HeadersSelected",
+                options: {
+                    scrollIntoView: false,
+                    unbounded: true,
+                },
                 anchor: { zone, cell: { col, row } },
                 mode,
             });
@@ -45907,11 +46063,15 @@
             const anchor = this.anchor;
             // The whole sheet is selected, select the anchor cell
             if (isEqual(this.anchor.zone, this.getters.getSheetZone(sheetId))) {
-                return this.modifyAnchor({ ...anchor, zone: positionToZone(anchor.cell) }, "updateAnchor", "AlterZone");
+                return this.modifyAnchor({ ...anchor, zone: positionToZone(anchor.cell) }, "updateAnchor", {
+                    scrollIntoView: false,
+                });
             }
             const tableZone = this.expandZoneToTable(anchor.zone);
             return !deepEquals(tableZone, anchor.zone)
-                ? this.modifyAnchor({ ...anchor, zone: tableZone }, "updateAnchor", "AlterZone")
+                ? this.modifyAnchor({ ...anchor, zone: tableZone }, "updateAnchor", {
+                    scrollIntoView: false,
+                })
                 : this.selectAll();
         }
         /**
@@ -45921,7 +46081,9 @@
          */
         selectTableAroundSelection() {
             const tableZone = this.expandZoneToTable(this.anchor.zone);
-            return this.modifyAnchor({ ...this.anchor, zone: tableZone }, "updateAnchor", "AlterZone");
+            return this.modifyAnchor({ ...this.anchor, zone: tableZone }, "updateAnchor", {
+                scrollIntoView: false,
+            });
         }
         /**
          * Select the entire sheet
@@ -45932,9 +46094,11 @@
             const right = this.getters.getNumberCols(sheetId) - 1;
             const zone = { left: 0, top: 0, bottom, right };
             return this.processEvent({
-                type: "HeadersSelected",
                 mode: "overrideSelection",
                 anchor: { zone, cell: this.anchor.cell },
+                options: {
+                    scrollIntoView: false,
+                },
             });
         }
         /**
@@ -47868,18 +48032,18 @@
             }
             Object.assign(this.getters, this.coreGetters);
             this.session.loadInitialMessages(stateUpdateMessages);
-            for (let Plugin of statefulUIPluginRegistry.getAll()) {
-                const plugin = this.setupUiPlugin(Plugin);
-                this.statefulUIPlugins.push(plugin);
-                this.handlers.push(plugin);
-                this.uiHandlers.push(plugin);
-            }
             for (let Plugin of coreViewsPluginRegistry.getAll()) {
                 const plugin = this.setupUiPlugin(Plugin);
                 this.coreViewsPlugins.push(plugin);
                 this.handlers.push(plugin);
                 this.uiHandlers.push(plugin);
                 this.coreHandlers.push(plugin);
+            }
+            for (let Plugin of statefulUIPluginRegistry.getAll()) {
+                const plugin = this.setupUiPlugin(Plugin);
+                this.statefulUIPlugins.push(plugin);
+                this.handlers.push(plugin);
+                this.uiHandlers.push(plugin);
             }
             for (let Plugin of featurePluginRegistry.getAll()) {
                 const plugin = this.setupUiPlugin(Plugin);
@@ -48373,9 +48537,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.4.0-alpha.3';
-    __info__.date = '2023-06-02T10:56:24.014Z';
-    __info__.hash = '059d66a';
+    __info__.version = '16.4.0-alpha.4';
+    __info__.date = '2023-06-12T14:15:11.459Z';
+    __info__.hash = '251a52e';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);

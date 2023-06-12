@@ -186,11 +186,12 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
      */
     getPivotIdFromPosition(position) {
         const cell = this.getters.getCell(position);
+        const sheetId = position.sheetId;
         if (cell && cell.isFormula) {
             const pivotFunction = getFirstPivotFunction(cell.content);
             if (pivotFunction) {
                 const content = astToFormula(pivotFunction.args[0]);
-                return this.getters.evaluateFormula(content).toString();
+                return this.getters.evaluateFormula(sheetId, content).toString();
             }
         }
         return undefined;
@@ -250,7 +251,6 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
 
     /**
      * Get the filter impacted by a pivot formula's argument
-     *
      * @param {string} formula Formula of the pivot cell
      *
      * @returns {Array<Object>}
@@ -260,10 +260,11 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
         if (!functionDescription) {
             return [];
         }
+        const sheetId = this.getters.getActiveSheetId();
         const { args } = functionDescription;
         const evaluatedArgs = args
             .map(astToFormula)
-            .map((arg) => this.getters.evaluateFormula(arg));
+            .map((arg) => this.getters.evaluateFormula(sheetId, arg));
         if (evaluatedArgs.length <= 2) {
             return [];
         }

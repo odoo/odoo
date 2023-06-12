@@ -4,13 +4,14 @@ import { getFirstPivotFunction, getNumberOfPivotFormulas } from "./pivot_helpers
 
 export const SEE_RECORDS_PIVOT = async (position, env) => {
     const cell = env.model.getters.getCell(position);
+    const sheetId = position.sheetId;
     if (!cell) {
         return;
     }
     const { args, functionName } = getFirstPivotFunction(cell.content);
     const evaluatedArgs = args
         .map(astToFormula)
-        .map((arg) => env.model.getters.evaluateFormula(arg));
+        .map((arg) => env.model.getters.evaluateFormula(sheetId, arg));
     const pivotId = env.model.getters.getPivotIdFromPosition(position);
     const { model } = env.model.getters.getPivotDefinition(pivotId);
     const dataSource = await env.model.getters.getAsyncPivotDataSource(pivotId);
