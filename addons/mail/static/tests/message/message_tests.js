@@ -662,7 +662,7 @@ QUnit.test("open chat from avatar should not work on self-authored messages", as
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.doesNotHaveClass($(".o-mail-Message-avatar"), "cursor-pointer");
+    assert.doesNotHaveClass($(".o-mail-Message-avatarContainer"), "cursor-pointer");
     assert.doesNotHaveClass($(".o-mail-Message-author"), "cursor-pointer");
 
     // try to click on self, to test it doesn't work
@@ -1110,7 +1110,7 @@ QUnit.test("chat with author should be opened after clicking on their avatar", a
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId_1);
     assert.containsOnce($, ".o-mail-Message-avatar");
-    assert.hasClass($(".o-mail-Message-avatar"), "o_redirect");
+    assert.hasClass($(".o-mail-Message-avatarContainer"), "cursor-pointer");
     await click(".o-mail-Message-avatar");
     assert.containsOnce($, ".o-mail-ChatWindow-content");
     assert.containsOnce($, ".o-mail-ChatWindow-header:contains(Partner_2)");
@@ -1239,7 +1239,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         assert.containsOnce($, ".o-mail-Message-avatar");
-        assert.doesNotHaveClass($(".o-mail-Message-avatar"), "o_redirect");
+        assert.doesNotHaveClass($(".o-mail-Message-avatarContainer"), "cursor-pointer");
 
         click(".o-mail-Message-avatar").catch(() => {});
         await nextAnimationFrame();
