@@ -141,10 +141,10 @@ class SaleOrderLine(models.Model):
         }
 
     def _purchase_service_get_price_unit_and_taxes(self, supplierinfo, purchase_order):
-        supplier_taxes = self.product_id.supplier_taxes_id.filtered(lambda t: t.company_id.id == self.company_id.id)
+        supplier_taxes = self.product_id.supplier_taxes_id.filtered(lambda t: t.company_id == purchase_order.company_id)
         taxes = purchase_order.fiscal_position_id.map_tax(supplier_taxes)
         if supplierinfo:
-            price_unit = self.env['account.tax'].sudo()._fix_tax_included_price_company(supplierinfo.price, supplier_taxes, taxes, self.company_id)
+            price_unit = self.env['account.tax'].sudo()._fix_tax_included_price_company(supplierinfo.price, supplier_taxes, taxes, purchase_order.company_id)
             if purchase_order.currency_id and supplierinfo.currency_id != purchase_order.currency_id:
                 price_unit = supplierinfo.currency_id._convert(
                     price_unit,
@@ -220,15 +220,15 @@ class SaleOrderLine(models.Model):
         return self.env['purchase.order'].search([
             ('partner_id', '=', partner.id),
             ('state', '=', 'draft'),
-            ('company_id', '=', (company if company else self.company_id).id),
-        ], limit=1)
+            ('company_id', '=', (company and company or self.env.company).id),
+        ], order='id desc')
 
     def _create_purchase_order(self, supplierinfo):
         values = self._purchase_service_prepare_order_values(supplierinfo)
         return self.env['purchase.order'].with_context(mail_create_nosubscribe=True).create(values)
 
     def _match_or_create_purchase_order(self, supplierinfo):
-        purchase_order = self._purchase_service_match_purchase_order(supplierinfo.partner_id)
+        purchase_order = self._purchase_service_match_purchase_order(supplierinfo.partner_id)[:1]
         if not purchase_order:
             purchase_order = self._create_purchase_order(supplierinfo)
         return purchase_order
@@ -241,16 +241,16 @@ class SaleOrderLine(models.Model):
         """
         supplier_po_map = {}
         sale_line_purchase_map = {}
-        purchase_lines = self.env['purchase.order.line']
+
         for line in self:
             line = line.with_company(line._purchase_service_get_company())
-            supplierinfo = self._purchase_service_match_supplier()
+            supplierinfo = line._purchase_service_match_supplier()
             partner_supplier = supplierinfo.partner_id
 
             # determine (or create) PO
             purchase_order = supplier_po_map.get(partner_supplier.id)
             if not purchase_order:
-                purchase_order = self._match_or_create_purchase_order(supplierinfo)
+                purchase_order = line._match_or_create_purchase_order(supplierinfo)
             else:  # if not already updated origin in this loop
                 so_name = line.order_id.name
                 origins = (purchase_order.origin or '').split(', ')
@@ -266,9 +266,6 @@ class SaleOrderLine(models.Model):
             sale_line_purchase_map.setdefault(line, line.env['purchase.order.line'])
             sale_line_purchase_map[line] |= purchase_line
         return sale_line_purchase_map
-
-
-        return purchase_lines
 
     def _purchase_service_generation(self):
         """ Create a Purchase for the first time from the sale line. If the SO line already created a PO, it
