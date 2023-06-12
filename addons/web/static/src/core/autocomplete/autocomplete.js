@@ -29,13 +29,15 @@ export class AutoComplete extends Component {
             this.props.onInput({
                 inputValue: this.inputRef.el.value,
             });
-            try {
-                await this.open(true);
-                this.loadingPromise.resolve();
-            } catch {
-                this.loadingPromise.reject();
-            } finally {
-                this.loadingPromise = null;
+            if (this.loadingPromise) {
+                try {
+                    await this.open(true);
+                    this.loadingPromise.resolve();
+                } catch {
+                    this.loadingPromise.reject();
+                } finally {
+                    this.loadingPromise = null;
+                }
             }
         }, this.constructor.timeout);
 
