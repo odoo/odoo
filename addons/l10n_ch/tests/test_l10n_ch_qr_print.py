@@ -57,7 +57,7 @@ class QRPrintTest(AccountTestInvoicingCommon):
             invoice.action_invoice_sent()
             return True
         except UserError as e:
-            _logger.warning(e.name)
+            _logger.warning(str(e))
             return False
 
     def test_print_qr(self):
