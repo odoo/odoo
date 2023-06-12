@@ -13,7 +13,7 @@
         </a>
     </li>
     <li t-elif="show_dropdown" t-attf-class="#{item_class or ''} dropdown #{submenu.is_mega_menu and 'position-static'}">
-        <a t-attf-class="#{link_class or ''} dropdown-toggle #{submenu.is_mega_menu and 'o_mega_menu_toggle'} #{submenu._is_active() and 'active'}"
+        <a t-attf-class="#{link_class or ''} dropdown-toggle #{submenu.is_mega_menu and 'o_mega_menu_toggle'} #{submenu._is_active() and 'active'} #{dropdown_toggler_classes}"
            data-bs-toggle="dropdown" href="#" t-att-data-bs-display="'static' if submenu.is_mega_menu else None">
             <span t-field="submenu.name"/>
         </a>
@@ -21,7 +21,7 @@
              t-attf-class="dropdown-menu o_mega_menu #{submenu.mega_menu_classes}"
              data-name="Mega Menu"
              t-field="submenu.mega_menu_content"/>
-        <ul t-else="" class="dropdown-menu" role="menu">
+        <ul t-else="" t-attf-class="dropdown-menu #{dropdown_menu_classes}" role="menu">
             <t t-foreach="submenu.child_id" t-as="submenu">
                 <t t-call="website.submenu">
                     <t t-set="item_class" t-value="None"/>
@@ -344,6 +344,8 @@
                                 <t t-call="website.submenu">
                                     <t t-set="item_class" t-valuef="nav-item"/>
                                     <t t-set="link_class" t-valuef="nav-link"/>
+                                    <t t-set="dropdown_toggler_classes" t-valuef="d-flex justify-content-between align-items-center"/>
+                                    <t t-set="dropdown_menu_classes" t-valuef="position-relative rounded-0 o_dropdown_without_offset"/>
                                 </t>
                             </t>
                         </t>
@@ -399,6 +401,12 @@
     <xpath expr="//t[@t-call='website.header_social_links_no_color']" position="inside">
         <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 text-center o_border_contrast"/>
     </xpath>
+    <xpath expr="//t[@t-set='dropdown_toggler_classes']" position="attributes">
+        <attribute name="t-valuef"/>
+    </xpath>
+    <xpath expr="//t[@t-call='website.submenu']//t[@t-set='dropdown_menu_classes']" position="attributes">
+        <attribute name="t-valuef" add="text-center" separator=" "/>
+    </xpath>
 </template>
 
 <template id="template_header_mobile_align_right" inherit_id="website.template_header_mobile" active="False">
@@ -410,6 +418,12 @@
     </xpath>
     <xpath expr="//t[@t-call='website.header_social_links_no_color']" position="inside">
         <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 text-end o_border_contrast"/>
+    </xpath>
+    <xpath expr="//t[@t-set='dropdown_toggler_classes']" position="attributes">
+        <attribute name="t-valuef"/>
+    </xpath>
+    <xpath expr="//t[@t-call='website.submenu']//t[@t-set='dropdown_menu_classes']" position="attributes">
+        <attribute name="t-valuef" add="text-end" separator=" "/>
     </xpath>
 </template>
 
@@ -540,6 +554,8 @@
                                         <t t-call="website.submenu">
                                             <t t-set="item_class" t-valuef="nav-item"/>
                                             <t t-set="link_class" t-valuef="nav-link"/>
+                                            <t t-set="dropdown_toggler_classes" t-valuef="d-flex justify-content-between align-items-center"/>
+                                            <t t-set="dropdown_menu_classes" t-valuef="position-relative rounded-0 o_dropdown_without_offset"/>
                                         </t>
                                     </t>
                                 </t>
@@ -1289,6 +1305,8 @@
                                         <t t-call="website.submenu">
                                             <t t-set="item_class" t-valuef="nav-item"/>
                                             <t t-set="link_class" t-valuef="nav-link"/>
+                                            <t t-set="dropdown_toggler_classes" t-valuef="d-flex justify-content-between align-items-center"/>
+                                            <t t-set="dropdown_menu_classes" t-valuef="position-relative rounded-0 o_dropdown_without_offset"/>
                                         </t>
                                     </t>
                                 </t>
@@ -1351,6 +1369,12 @@
     <xpath expr="//t[@t-call='website.header_social_links_no_color']" position="inside">
         <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast text-center"/>
     </xpath>
+    <xpath expr="//t[@t-set='dropdown_toggler_classes']" position="attributes">
+        <attribute name="t-valuef"/>
+    </xpath>
+    <xpath expr="//t[@t-call='website.submenu']//t[@t-set='dropdown_menu_classes']" position="attributes">
+        <attribute name="t-valuef" add="text-center" separator=" "/>
+    </xpath>
 </template>
 
 <template id="template_header_sidebar_align_right" inherit_id="website.template_header_sidebar" active="False">
@@ -1362,6 +1386,12 @@
     </xpath>
     <xpath expr="//t[@t-call='website.header_social_links_no_color']" position="inside">
         <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast text-end"/>
+    </xpath>
+    <xpath expr="//t[@t-set='dropdown_toggler_classes']" position="attributes">
+        <attribute name="t-valuef"/>
+    </xpath>
+    <xpath expr="//t[@t-call='website.submenu']//t[@t-set='dropdown_menu_classes']" position="attributes">
+        <attribute name="t-valuef" add="text-end" separator=" "/>
     </xpath>
 </template>
 
