@@ -4,7 +4,7 @@
 
 <!-- Specific Forum Layout -->
 <template id="forum_index" name="Forum">
-    <t t-set="no_filters" t-value="not filters in ('solved', 'unsolved', 'unanswered') and not tag_filters"/>
+    <t t-set="no_filters" t-value="not filters in ('solved', 'unsolved', 'unanswered')"/>
     <t t-if="my == 'mine'" t-set="_page_name" t-valuef="My Posts"/>
     <t t-elif="my == 'favourites'" t-set="_page_name" t-valuef="My Favourites"/>
     <t t-else="" t-set="_page_name" t-valuef="list_questions"/>
@@ -39,7 +39,10 @@
                 </t>
             </t>
         </table>
-        <t t-if="question_count == 0 or original_search" t-call="website_forum.no_results_message"/>
+        <t t-if="question_count == 0 or original_search" t-call="website_forum.no_results_message">
+            <t t-set="record_name_plural">posts</t>
+            <t t-set="go_back_url" t-valuef="/forum/#{ slug(forum) }/"/>
+        </t>
         <t t-call="website.pager"/>
     </t>
 </template>
@@ -179,7 +182,7 @@
     </t>
 </template>
 
-<template id="tag" name="Forum Tags">
+<template id="forum_index_tags" name="Forum Tags">
     <t t-set="_page_name" t-valuef="Tags"/>
 
     <t t-call="website_forum.header">
@@ -188,7 +191,12 @@
                 <ul class="pagination overflow-auto mt0 mb0">
                     <t t-foreach="pager_tag_chars" t-as="tuple_char">
                         <t t-if="tuple_char_index &lt; 11">
-                            <li t-attf-class="page-item #{active_char_tag == tuple_char[1] and 'active'}"><a t-attf-href="/forum/#{slug(forum)}/tag/#{quote_plus(tuple_char[1])}" class="page-link"><t t-esc="tuple_char[0]"/></a></li>
+                            <li t-attf-class="page-item #{active_char_tag == tuple_char[1] and 'active'}">
+                                <a t-attf-href="/forum/#{slug(forum)}/tag/#{quote_plus(tuple_char[1]) + '?' + keep_query('filters', 'search')}"
+                                   class="page-link">
+                                    <t t-out="tuple_char[0]"/>
+                                </a>
+                            </li>
                         </t>
                     </t>
                 </ul>
@@ -198,7 +206,9 @@
                 <select name="filter" class="form-select w-auto" onchange="location = this.value;">
                     <t t-foreach="pager_tag_chars" t-as="tuple_char">
                         <option t-if="active_char_tag == tuple_char[1]" selected="selected" value="" t-out="tuple_char[0]"/>
-                        <option t-else="" t-attf-value="/forum/#{slug(forum)}/tag/#{quote_plus(tuple_char[1])}" t-esc="tuple_char[0]"/>
+                        <option t-else="" t-attf-value="/forum/#{slug(forum)}/tag/#{quote_plus(tuple_char[1]) + '?' + keep_query('filters')}"
+                                t-out="tuple_char[0]"
+                        />
                     </t>
                 </select>
             </div>
@@ -225,14 +235,16 @@
         </div>
         <t t-else="">
             <t t-set="tag_filter" t-value="keep_query('filters') and keep_query('filters').split('=')[1] or ''"/>
+            <t t-set="go_back_url" t-valuef="/forum/#{ slug(forum) }/tag"/>
+            <t t-set="record_name_plural">tags</t>
             <t t-call="website_forum.no_results_message">
-                <t t-if="tag_filter and tag_filter != 'all'" t-set="results_msg">
-                    There are no tags matching the selected filter.
+                <t t-if="tag_filter and tag_filter != 'all'" t-set="result_msg">
+                    There are no tags matching the selected filter <t t-if="search">and search</t>.
                 </t>
-                <t t-if="search" t-set="results_msg">
+                <t t-elif="search" t-set="result_msg">
                     There are no tags matching the selected search.
                 </t>
-                <t t-else="" t-set="results_msg">
+                <t t-else="" t-set="result_msg">
                     There are no tags being used in this forum.
                 </t>
             </t>

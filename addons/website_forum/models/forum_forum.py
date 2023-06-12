@@ -4,8 +4,10 @@
 import textwrap
 
 from odoo import _, api, fields, models
-from odoo.tools.translate import html_translate
 from odoo.addons.http_routing.models.ir_http import slug
+from odoo.tools.translate import html_translate
+
+MOST_USED_TAGS_COUNT = 5  # Number of tags to track as "most used" to display on frontend
 
 
 class Forum(models.Model):
@@ -18,7 +20,7 @@ class Forum(models.Model):
         'website.multi.mixin',
         'website.searchable.mixin',
     ]
-    _order = "sequence"
+    _order = "sequence, id"
 
     def _get_default_welcome_message(self):
         return """
@@ -131,10 +133,49 @@ class Forum(models.Model):
 
     can_moderate = fields.Boolean(string="Is a moderator", compute="_compute_can_moderate")
 
+    # tags
+    tag_ids = fields.One2many('forum.tag', 'forum_id', string='Tags')
+    tag_most_used_ids = fields.One2many('forum.tag', string="Most used tags", compute='_compute_tag_ids_usage')
+    tag_unused_ids = fields.One2many('forum.tag', string="Unused tags", compute='_compute_tag_ids_usage')
+
     @api.depends_context('uid')
     def _compute_can_moderate(self):
         for forum in self:
             forum.can_moderate = self.env.user.karma > forum.karma_moderate
+
+    @api.depends('post_ids', 'post_ids.tag_ids', 'post_ids.tag_ids.posts_count', 'tag_ids')
+    def _compute_tag_ids_usage(self):
+        forums_without_tags = self.filtered(lambda f: not f.tag_ids)
+        forums_without_tags.tag_most_used_ids = forums_without_tags.tag_unused_ids = False
+        forums_with_tags = self - forums_without_tags
+        if not forums_with_tags:
+            return
+
+        self.tag_ids.flush_recordset()
+        self.env.cr.execute(
+            """
+            WITH tags_with_ranks AS (
+              SELECT id, forum_id, posts_count,
+                     DENSE_RANK() OVER (PARTITION BY forum_id ORDER BY posts_count DESC, name, id) AS count_rank
+                FROM forum_tag
+               WHERE forum_id = ANY(%(forum_ids)s)
+            ORDER BY count_rank
+            )
+            SELECT forum_id,
+                   ARRAY_AGG(id) FILTER (WHERE posts_count != 0 AND count_rank <= %(most_used_count)s ) AS most_used_ids,
+                   ARRAY_AGG(id) FILTER (WHERE posts_count = 0) AS unused_ids
+              FROM tags_with_ranks
+          GROUP BY forum_id
+        """,
+            {'forum_ids': [forums_with_tags.ids], 'most_used_count': MOST_USED_TAGS_COUNT},
+        )
+        forum_tag_ids_usage_data = {
+            forum_id: (most_used_ids or [], unused_ids or []) for forum_id, most_used_ids, unused_ids in self.env.cr.fetchall()
+        }
+        for forum in forums_with_tags:
+            most_used, unused = forum_tag_ids_usage_data[forum.id]
+            forum.tag_most_used_ids = self.env['forum.tag'].browse(most_used)
+            forum.tag_unused_ids = self.env['forum.tag'].browse(unused)
 
     @api.depends('description')
     def _compute_teaser(self):
@@ -256,10 +297,13 @@ class Forum(models.Model):
         post_tags.insert(0, [6, 0, existing_keep])
         return post_tags
 
-    def get_tags_first_char(self):
-        """ get set of first letter of forum tags """
-        tags = self.env['forum.tag'].search([('forum_id', '=', self.id), ('posts_count', '>', 0)])
-        return sorted(set([tag.name[0].upper() for tag in tags if len(tag.name)]))
+    def _get_tags_first_char(self, tags=None):
+        """Get set of first letter of forum tags.
+
+        :param tags: tags recordset to further filter forum's tags that are also in these tags.
+        """
+        tag_ids = self.tag_ids if tags is None else (self.tag_ids & tags)
+        return sorted({tag.name[0].upper() for tag in tag_ids if len(tag.name)})
 
     # ----------------------------------------------------------------------
     # WEBSITE
