@@ -394,9 +394,12 @@ class TestMultiCompanySetup(MailCommon, TestRecipients):
         )
         test_records[0].activity_schedule("test_mail.mail_act_test_todo", user_id=user_admin.id)
         test_records[1].activity_schedule("test_mail.mail_act_test_todo", user_id=user_admin.id)
-        res_all = user_admin.systray_get_activities()
+        test_activity = next(
+            a for a in user_admin.systray_get_activities()
+            if a['model'] == 'mail.test.multi.company.with.activity'
+        )
         self.assertEqual(
-            res_all[0],
+            test_activity,
             {
                 "actions": [{"icon": "fa-clock-o", "name": "Summary"}],
                 "icon": "/base/static/description/icon.png",
@@ -410,9 +413,13 @@ class TestMultiCompanySetup(MailCommon, TestRecipients):
                 "type": "activity",
             }
         )
-        res_c2 = user_admin.with_context(allowed_company_ids=[self.company_2.id]).systray_get_activities()
+
+        test_activity = next(
+            a for a in user_admin.with_context(allowed_company_ids=[self.company_2.id]).systray_get_activities()
+            if a['model'] == 'mail.test.multi.company.with.activity'
+        )
         self.assertEqual(
-            res_c2[0],
+            test_activity,
             {
                 "actions": [{"icon": "fa-clock-o", "name": "Summary"}],
                 "icon": "/base/static/description/icon.png",
