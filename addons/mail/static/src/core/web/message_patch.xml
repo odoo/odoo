@@ -25,5 +25,15 @@
                 </div>
             </t>
         </xpath>
+        <xpath expr="//div[hasclass('o-mail-Message-avatarContainer')]" position="attributes">
+            <attribute name="t-att-class">{ 'cursor-pointer': hasAuthorClickable }</attribute>
+            <attribute name="t-att-title">authorText</attribute>
+            <attribute name="t-on-click">ev => this.onClickAuthor(ev)</attribute>
+        </xpath>
+        <xpath expr="//span[hasclass('o-mail-Message-author')]" position="attributes">
+            <attribute name="t-att-class">{ 'cursor-pointer': hasAuthorClickable }</attribute>
+            <attribute name="t-att-title">authorText</attribute>
+            <attribute name="t-on-click">ev => this.onClickAuthor(ev)</attribute>
+        </xpath>
     </t>
 </templates>

@@ -1,14 +1,14 @@
 /* @odoo-module */
 
 import { Message } from "@mail/core/common/message";
+import "@mail/discuss/core/web/message_patch"; // dependency ordering
 
 import { patch } from "@web/core/utils/patch";
 
 patch(Message.prototype, "im_livechat/web", {
-    get hasAuthorClickable() {
-        if (this.message.originThread?.channel?.channel_type === "livechat") {
-            return this.message.author === this.message.originThread.correspondent;
-        }
-        return this._super();
+    get hasOpenChatFeature() {
+        return this.message.originThread?.channel?.channel_type === "livechat"
+            ? false
+            : this._super();
     },
 });
