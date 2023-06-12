@@ -56,6 +56,14 @@ const FIXED_FIELD_COLUMN_WIDTHS = {
     handle: "33px",
 };
 
+/**
+ * @param {HTMLElement} parent
+ */
+ function containsActiveElement(parent) {
+    const { activeElement } = document;
+    return parent !== activeElement && parent.contains(activeElement);
+}
+
 function getElementToFocus(cell) {
     return getTabableElements(cell)[0] || cell;
 }
@@ -925,6 +933,14 @@ export class ListRenderer extends Component {
 
         if ((this.props.list.model.multiEdit && record.selected) || this.isInlineEditable(record)) {
             if (record.isInEdition && this.props.list.editedRecord === record) {
+                const cell = this.tableRef.el.querySelector(
+                    `.o_selected_row td[name='${column.name}']`
+                );
+                if (containsActiveElement(cell)) {
+                    this.lastEditedCell = { column, record };
+                    // Cell is already focused.
+                    return;
+                }
                 this.focusCell(column);
                 this.cellToFocus = null;
             } else {

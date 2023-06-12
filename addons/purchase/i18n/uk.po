@@ -28,8 +28,8 @@ msgid ""
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
 "\n"
-"                (object.state in ('draft', 'sent') and 'Request for Quotation - %s' % (object.name) or\n"
-"                'Purchase Order - %s' % (object.name))"
+"                (object.state in ('draft', 'sent') and 'Запит на комерційну пропозицію - %s' % (object.name) or\n"
+"                'Замовлення на купівлю - %s' % (object.name))"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
@@ -128,6 +128,32 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Шановний <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Це нагадування, що доставка Замовлення на купівлю <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            <span style=\"font-weight:bold;\">(<t t-out=\"object.partner_ref or ''\">REF_XXX</t>)</span>\n"
+"        </t>\n"
+"        що очікується на \n"
+"        <t t-if=\"object.date_planned\">\n"
+"            <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"        </t>\n"
+"         <t t-else=\"\">\n"
+"            <span style=\"font-weight:bold;\">невизначена</span>.\n"
+"        </t>\n"
+"        Чи можете ви підтвердити, чи буде вона доставлена вчасно?\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase_done
@@ -159,6 +185,32 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Шановний <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br><br>\n"
+"        Це прикрпілення Замовлення на купівлю <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            з референсом: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"        </t>\n"
+"        у сумі <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+"        від <t t-out=\"object.company_id.name or ''\">YourCompany</t>. \n"
+"        <br><br>\n"
+"        <t t-if=\"object.date_planned\">\n"
+"            Надходження очікується на <span style=\"font-weight:bold;\" t-out=\"format_date(object.date_planned) or ''\">05/05/2021</span>.\n"
+"            <br><br>\n"
+"            Не могли б ви підтвердити отримання цього замовлення?\n"
+"        </t>\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"        <br><br>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -186,6 +238,28 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Шановний <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>\n"
+"        <t t-if=\"object.partner_id.parent_id\">\n"
+"            (<t t-out=\"object.partner_id.parent_id.name or ''\">Azure Interior</t>)\n"
+"        </t>\n"
+"        <br><br>\n"
+"        У прикріплення Запит на комреційну пропозицію <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">P00015</span>\n"
+"        <t t-if=\"object.partner_ref\">\n"
+"            з референсом: <t t-out=\"object.partner_ref or ''\">REF_XXX</t>\n"
+"        </t>\n"
+"        від <t t-out=\"object.company_id.name or ''\">YourCompany</t>.\n"
+"        <br><br>\n"
+"        Якщо у вас є будь-які запитання, не соромтеся зв'язуватися з нами.\n"
+"        <br><br>\n"
+"        З найкращими побажаннями,\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br><br>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br>Mitchell Admin</t>\n"
+"        </t>\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
@@ -403,7 +477,7 @@ msgstr "<strong>Дата замовлення:</strong>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "<strong>Order Deadline:</strong>"
-msgstr ""
+msgstr "<strong>Дедлайн замовлення:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -767,7 +841,7 @@ msgstr "Середня кількість днів для Закупівлі"
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Avg Order Value"
-msgstr ""
+msgstr "Середнє значення замовлення"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__default_purchase_method
@@ -828,12 +902,12 @@ msgstr "Блокування повідомлення"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__user_id
 msgid "Buyer"
-msgstr ""
+msgstr "Покупець"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_calendar
 msgid "Calendar View"
-msgstr "Календарний вид"
+msgstr "Перегляд у календарі"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -841,6 +915,8 @@ msgid ""
 "Calls for tenders are when you want to generate requests for quotations with"
 " several vendors for a given set of products to compare offers."
 msgstr ""
+"Тендери – це тендери, коли ви хочете створити запити на пропозиції від "
+"кількох постачальників для певного набору товарів для порівняння пропозицій."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -859,7 +935,7 @@ msgstr "Скасовано"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
 msgid "Cancelled Purchase Order #"
-msgstr "Скасовані замовлення на купівлю #"
+msgstr "Скасоване замовлення на купівлю #"
 
 #. module: purchase
 #. odoo-python
@@ -980,8 +1056,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Перетворення між одиницями вимірювання може відбуватися лише у тому випадку,"
-" якщо вони належать до однієї і тієї ж категорії. Конвертація буде "
+"Конвертація між одиницями вимірювання може відбуватися лише у тому випадку, "
+"якщо вони належать до однієї і тієї ж категорії. Конвертація буде "
 "здійснюватися на основі співвідношення."
 
 #. module: purchase
@@ -1188,7 +1264,7 @@ msgstr "Помічник створення електронного листа"
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__date_planned
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__date_planned
 msgid "Expected Arrival"
-msgstr ""
+msgstr "Очікуване прибуття"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_search
@@ -1221,7 +1297,7 @@ msgstr "Підписники (Партнери)"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "Іконка зі шрифтом Font awesome, напр. fa-tasks"
+msgstr "Іконка з чудовим шрифтом, напр. fa-tasks"
 
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
@@ -1233,7 +1309,7 @@ msgstr "Заборонені значення на необчислюваних 
 #: code:addons/purchase/models/account_invoice.py:0
 #, python-format
 msgid "From %s document"
-msgstr ""
+msgstr "З документу %s "
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
@@ -1680,7 +1756,7 @@ msgstr "Немає повідомлення"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_order_report_all
 msgid "No Purchase Analysis"
-msgstr ""
+msgstr "Немає аналізу закупівлі"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
@@ -1695,7 +1771,7 @@ msgstr "Не знайдено жодного замовлення на купі�
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.action_purchase_history
 msgid "No purchase order were made for this product yet!"
-msgstr ""
+msgstr "Для цього товару ще не було зроблено замовлення на закупівлю!"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
@@ -1728,7 +1804,7 @@ msgstr "Примітки"
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__no
 msgid "Nothing to Bill"
-msgstr "Немає нічого для рахунку"
+msgstr "Немає нічого для виставлення у рахунок"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction_counter
@@ -2024,7 +2100,7 @@ msgstr "Запис купівлі у таблиці"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Purchase History"
-msgstr ""
+msgstr "Історія закупівель"
 
 #. module: purchase
 #. odoo-python
@@ -2033,7 +2109,7 @@ msgstr ""
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Purchase History for %s"
-msgstr ""
+msgstr "Історія закупівель для %s"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_company__po_lead
@@ -2195,17 +2271,17 @@ msgstr ""
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_done
 msgid "Purchase: Purchase Order"
-msgstr ""
+msgstr "Закупівлі: Замовлення на купівлю"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase
 msgid "Purchase: Request For Quotation"
-msgstr ""
+msgstr "Купівлі: Запит на комерційну пропозицію"
 
 #. module: purchase
 #: model:mail.template,name:purchase.email_template_edi_purchase_reminder
 msgid "Purchase: Vendor Reminder"
-msgstr ""
+msgstr "Купівлі: Нагадування постачальнику"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_product__purchased_product_qty
@@ -2218,7 +2294,7 @@ msgstr "Придбано"
 #: code:addons/purchase/static/src/views/purchase_dashboard.xml:0
 #, python-format
 msgid "Purchased Last 7 Days"
-msgstr ""
+msgstr "Закупівлі за останні 7 днів"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.product_normal_form_view_inherit_purchase
@@ -2599,18 +2675,20 @@ msgstr "Надішліть запит на комерційну пропозиц
 #. module: purchase
 #: model:mail.template,description:purchase.email_template_edi_purchase
 msgid "Sent manually to vendor to request a quotation"
-msgstr ""
+msgstr "Надсилається вручну постачальнику для запиту на комерційну пропозиції"
 
 #. module: purchase
 #: model:mail.template,description:purchase.email_template_edi_purchase_done
 msgid "Sent to vendor with the purchase order in attachment"
-msgstr ""
+msgstr "Надсилається постачальнику із замовленням на купівлю у вкладенні"
 
 #. module: purchase
 #: model:mail.template,description:purchase.email_template_edi_purchase_reminder
 msgid ""
 "Sent to vendors before expected arrival, based on the purchase order setting"
 msgstr ""
+"Надсилається постачальникам до очікуваного надходження відповідно до "
+"налаштувань замовлення на купівлю"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__sequence
@@ -2731,7 +2809,7 @@ msgstr "Країна податку"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__tax_totals
 msgid "Tax Totals"
-msgstr ""
+msgstr "Всього податків"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__amount_tax
@@ -2817,6 +2895,8 @@ msgid ""
 "This analysis allows you to easily check and analyse your company purchase history and performance.\n"
 "                You can track your negotiation performance, the delivery performance of your vendors, etc"
 msgstr ""
+"Цей аналіз дозволяє вам легко перевірити та проаналізувати історію закупівель вашої компанії та ефективність.\n"
+"Ви можете відстежувати ефективність переговорів, ефективність доставки ваших постачальників тощо"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_partner__property_purchase_currency_id
@@ -3038,7 +3118,7 @@ msgstr "Одиниця вимірювання"
 #: code:addons/purchase/models/purchase.py:0
 #, python-format
 msgid "Update Dates"
-msgstr ""
+msgstr "Оновити дати"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__priority__1
@@ -3058,6 +3138,9 @@ msgid ""
 "Value: 'avg_days_to_purchase' should only be used to show an average. If you"
 " are seeing this message then it is being accessed incorrectly."
 msgstr ""
+"Значення: 'avg_days_to_purchase' слід використовувати лише для відображення "
+"середнього значення. Якщо ви бачите це повідомлення, це означає, що доступ "
+"до нього здійснюється неправильно."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase

@@ -111,19 +111,19 @@ function getBestPosition(reference, popper, { container, margin, position }) {
     // Compute positioning data
     /** @type {DirectionsData} */
     const directionsData = {
-        t: refBox.top - popMargins.bottom - popBox.height - margin,
+        t: refBox.top - popMargins.bottom - margin - popBox.height,
         b: refBox.bottom + popMargins.top + margin,
         r: refBox.right + popMargins.left + margin,
-        l: refBox.left - popMargins.right - popBox.width - margin,
+        l: refBox.left - popMargins.right - margin - popBox.width,
     };
     /** @type {VariantsData} */
     const variantsData = {
-        vs: refBox.left,
-        vm: refBox.left + refBox.width / 2 + -popBox.width / 2,
-        ve: refBox.right - popBox.width,
-        hs: refBox.top,
-        hm: refBox.top + refBox.height / 2 + -popBox.height / 2,
-        he: refBox.bottom - popBox.height,
+        vs: refBox.left + popMargins.left,
+        vm: refBox.left + refBox.width / 2 - popBox.width / 2,
+        ve: refBox.right - popMargins.right - popBox.width,
+        hs: refBox.top + popMargins.top,
+        hm: refBox.top + refBox.height / 2 - popBox.height / 2,
+        he: refBox.bottom - popMargins.bottom - popBox.height,
     };
 
     function getPositioningData(d = directions[0], v = variants[0], containerRestricted = false) {
@@ -265,14 +265,20 @@ export function usePosition(reference, options) {
 
     const popperRef = useRef(popper);
     const getReference = reference instanceof HTMLElement ? () => reference : reference;
+    let ref;
     const update = () => {
-        const ref = getReference();
         if (popperRef.el && ref) {
             reposition(ref, popperRef.el, options);
         }
     };
-    useEffect(update);
     const throttledUpdate = throttleForAnimation(update);
+    const referenceObserver = new IntersectionObserver(throttledUpdate);
+    useEffect(() => {
+        ref = getReference();
+        referenceObserver.observe(ref);
+        update();
+        return () => referenceObserver.disconnect();
+    });
     useExternalListener(document, "scroll", throttledUpdate, { capture: true });
     useExternalListener(window, "resize", throttledUpdate);
     onWillUnmount(throttledUpdate.cancel);

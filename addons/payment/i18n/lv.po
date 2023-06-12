@@ -11,6 +11,7 @@
 # Martin Trigaux, 2022
 # Arnis Putniņš <arnis@allegro.lv>, 2022
 # Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023
+# Will Sensors, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:52+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Armīns Jeltajevs <armins.jeltajevs@gmail.com>, 2023\n"
+"Last-Translator: Will Sensors, 2023\n"
 "Language-Team: Latvian (https://app.transifex.com/odoo/teams/41243/lv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr ""
+msgstr "Iegūtie dati"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
@@ -1192,7 +1193,7 @@ msgstr "Maksājuma ikonas"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "Maksāšanas instrukcija"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__link
@@ -1290,7 +1291,7 @@ msgstr "Maksājumi"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_user_type
 msgid "Paypal User Type"
-msgstr ""
+msgstr "Paypal lietotāja veids"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__pending
@@ -1577,7 +1578,7 @@ msgstr "Statuss"
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__stripe
 #: model:payment.provider,name:payment.payment_provider_stripe
 msgid "Stripe"
-msgstr ""
+msgstr "Svītra"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_icon_ids
@@ -1597,7 +1598,7 @@ msgstr ""
 #: code:addons/payment/controllers/portal.py:0
 #, python-format
 msgid "The access token is invalid."
-msgstr ""
+msgstr "Pieejas žetons nav derīgs"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
@@ -2010,6 +2011,13 @@ msgstr ""
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_transfer
 msgid "Wire Transfer"
+msgstr ""
+
+#. module: payment
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
+#, python-format
+msgid "You cannot delete the payment provider %s; archive it instead."
 msgstr ""
 
 #. module: payment
