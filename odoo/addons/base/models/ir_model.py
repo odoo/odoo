@@ -305,6 +305,11 @@ class IrModel(models.Model):
         # delete fields whose comodel is being removed
         self.env['ir.model.fields'].search([('relation', 'in', self.mapped('model'))]).unlink()
 
+        # delete ir_crons created by user
+        crons = self.env['ir.cron'].with_context(active_test=False).search([('model_id', 'in', self.ids)])
+        if crons:
+            crons.unlink()
+
         self._drop_table()
         res = super(IrModel, self).unlink()
 
@@ -649,6 +654,8 @@ class IrModelFields(models.Model):
                 names = seq.strip().split(".")
                 last = len(names) - 1
                 for index, name in enumerate(names):
+                    if name == 'id':
+                        raise UserError(_("Compute method cannot depend on field 'id'"))
                     field = model._fields.get(name)
                     if field is None:
                         raise UserError(_("Unknown field %r in dependency %r") % (name, seq.strip()))

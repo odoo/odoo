@@ -11,9 +11,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2023-05-23 08:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
 "Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
 "Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
@@ -62,6 +62,7 @@ msgstr ""
 "                    </span>"
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "An error occurred when fetching the access token. %s"
@@ -85,6 +86,7 @@ msgid "Config Settings"
 msgstr "Asetukset"
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -95,6 +97,7 @@ msgstr ""
 "Oletusarvoisesti vain käyttäjä, jolla on vastaava sähköpostiosoite, voi käyttää tätä palvelinta. Voit laajentaa sen käyttöä asettamalla järjestelmäparametrin \"mail.default.from\"."
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid ""
@@ -125,6 +128,7 @@ msgid "Incoming Mail Server"
 msgstr "Saapuvan sähköpostin palvelin"
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -152,6 +156,7 @@ msgid "Microsoft Outlook Mixin"
 msgstr "Microsoft Outlook Mixin"
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Only the administrator can link an Outlook mail server."
@@ -195,18 +200,34 @@ msgid "Outlook Refresh Token"
 msgstr "Outlook virkistä pääsytunniste"
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please configure your Outlook credentials."
 msgstr "Määritä Outlook-tunnukset."
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Please connect with your Outlook account before using it."
 msgstr "Muodosta yhteys Outlook-tiliisi ennen sen käyttöä."
 
 #. module: microsoft_outlook
+#. odoo-python
+#: code:addons/microsoft_outlook/models/ir_mail_server.py:0
+#, python-format
+msgid ""
+"Please fill the \"Username\" field with your Outlook/Office365 username "
+"(your email address). This should be the same account as the one used for "
+"the Outlook OAuthentication Token."
+msgstr ""
+"Täytä \"Käyttäjätunnus\"-kenttään Outlook/Office365-käyttäjätunnuksesi "
+"(sähköpostiosoitteesi). Tämän pitäisi olla sama tili kuin Outlook "
+"OAuthentication Tokenin käyttämä tili."
+
+#. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -222,6 +243,7 @@ msgid "Read More"
 msgstr "Lue lisää"
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid "SSL is required for the server %r."
@@ -260,6 +282,7 @@ msgid "The URL to generate the authorization code from Outlook"
 msgstr "URL-osoite, jonka avulla valtuutuskoodi luodaan Outlookista"
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
 #, python-format
 msgid ""
@@ -270,6 +293,7 @@ msgstr ""
 "sähköpostiosoitteeseesi. Täytä \"from_filter\"-kenttään %r."
 
 #. module: microsoft_outlook
+#. odoo-python
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
 #, python-format
 msgid "Unknown error."

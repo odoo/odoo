@@ -225,7 +225,7 @@
                         class="oe_stat_button"
                         icon="fa-address-card-o"
                         type="object"
-                        attrs="{'invisible': [('related_contacts_count', '=', 0)]}">
+                        attrs="{'invisible': ['|', ('id', '=', False), ('related_contacts_count', '=', 0)]}">
                         <div class="o_field_widget o_stat_info">
                             <span class="o_stat_value"><field name="related_contacts_count"/></span>
                             <span class="o_stat_text">Contacts</span>

@@ -701,3 +701,30 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
         self.assertEqual(len(inv.line_ids), 3) # 1 prod, 1 tax, 1 payment terms
         inv.write({'invoice_payment_term_id': self.early_pay_10_percents_10_days.id})
         self.assertEqual(len(inv.line_ids), 6)
+
+    def test_mixed_epd_with_tax_deleted_line(self):
+        self.env.company.early_pay_discount_computation = 'mixed'
+        tax_a = self.env['account.tax'].create({
+             'name': 'Test A',
+             'amount': 10,
+        })
+        tax_b = self.env['account.tax'].create({
+             'name': 'Test B',
+             'amount': 15,
+        })
+
+        inv = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'invoice_line_ids': [
+                Command.create({'name': 'line', 'price_unit': 100.0, 'tax_ids': [Command.set(tax_a.ids)]}),
+                Command.create({'name': 'line2', 'price_unit': 100.0, 'tax_ids': [Command.set(tax_b.ids)]}),
+            ],
+            'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+        })
+        self.assertEqual(len(inv.line_ids), 10) # 2 prod, 2 tax, 3 epd, 2 epd tax discount, 1 payment terms
+        inv.invoice_line_ids[1].unlink()
+        self.assertEqual(len(inv.line_ids), 6) # 1 prod, 1 tax, 2 epd, 1 epd tax discount, 1 payment terms
+        self.assertEqual(inv.amount_tax, 9.00) # $100.0 @ 10% tax (-10% epd)

@@ -9,6 +9,7 @@ from odoo.osv import expression
 from odoo.tools import Query
 
 from datetime import date
+from functools import reduce
 
 class Project(models.Model):
     _inherit = 'project.project'
@@ -299,8 +300,18 @@ class Project(models.Model):
         } for sol_read in sols.with_context(with_price_unit=True).read(['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom'])]
 
     def _get_sale_items_domain(self, additional_domain=None):
-        sale_orders = self._get_sale_orders()
-        domain = [('order_id', 'in', sale_orders.ids), ('is_downpayment', '=', False), ('state', 'in', ['sale', 'done']), ('display_type', '=', False)]
+        sale_items = self._get_sale_order_items()
+        domain = [
+            ('order_id', 'in', sale_items.order_id.ids),
+            ('is_downpayment', '=', False),
+            ('state', 'in', ['sale', 'done']),
+            ('display_type', '=', False),
+            '|',
+                '|',
+                    ('project_id', 'in', self.ids),
+                    ('project_id', '=', False),
+                ('id', 'in', sale_items.ids),
+        ]
         if additional_domain:
             domain = expression.AND([domain, additional_domain])
         return domain
@@ -356,20 +367,30 @@ class Project(models.Model):
     def _get_revenues_items_from_sol(self, domain=None, with_action=True):
         sale_line_read_group = self.env['sale.order.line'].sudo()._read_group(
             self._get_profitability_sale_order_items_domain(domain),
-            ['product_id', 'ids:array_agg(id)', 'untaxed_amount_to_invoice', 'untaxed_amount_invoiced'],
-            ['product_id'],
+            ['product_id', 'ids:array_agg(id)', 'untaxed_amount_to_invoice', 'untaxed_amount_invoiced', 'currency_id'],
+            ['product_id', 'currency_id'],
+            lazy=False,
         )
         display_sol_action = with_action and len(self) == 1 and self.user_has_groups('sales_team.group_sale_salesman')
         revenues_dict = {}
         total_to_invoice = total_invoiced = 0.0
         if sale_line_read_group:
-            sols_per_product = {
-                res['product_id'][0]: (
-                    res['untaxed_amount_to_invoice'],
-                    res['untaxed_amount_invoiced'],
-                    res['ids'],
-                ) for res in sale_line_read_group
-            }
+            # Get conversion rate from currencies of the sale order lines to currency of project
+            currency_ids = list(set([line['currency_id'][0] for line in sale_line_read_group] + [self.currency_id.id]))
+            rates = self.env['res.currency'].browse(currency_ids)._get_rates(self.company_id, date.today())
+            conversion_rates = {cid: rates[self.currency_id.id] / rate_from for cid, rate_from in rates.items()}
+
+            sols_per_product = {}
+            for group in sale_line_read_group:
+                product_id = group['product_id'][0]
+                currency_id = group['currency_id'][0]
+                sols_total_amounts = sols_per_product.setdefault(product_id, (0, 0, []))
+                sols_current_amounts = (
+                    group['untaxed_amount_to_invoice'] * conversion_rates[currency_id],
+                    group['untaxed_amount_invoiced'] * conversion_rates[currency_id],
+                    group['ids'],
+                )
+                sols_per_product[product_id] = tuple(reduce(lambda x, y: x + y, pair) for pair in zip(sols_total_amounts, sols_current_amounts))
             product_read_group = self.env['product.product'].sudo()._read_group(
                 [('id', 'in', list(sols_per_product)), ('expense_policy', '=', 'no')],
                 ['invoice_policy', 'service_type', 'type', 'ids:array_agg(id)'],
@@ -494,7 +515,15 @@ class Project(models.Model):
 
     def _get_profitability_items(self, with_action=True):
         profitability_items = super()._get_profitability_items(with_action)
-        domain = [('order_id', 'in', self.sudo()._get_sale_orders().ids)]
+        sale_items = self.sudo()._get_sale_order_items()
+        domain = [
+            ('order_id', 'in', sale_items.order_id.ids),
+            '|',
+                '|',
+                    ('project_id', 'in', self.ids),
+                    ('project_id', '=', False),
+                ('id', 'in', sale_items.ids),
+        ]
         revenue_items_from_sol = self._get_revenues_items_from_sol(
             domain,
             with_action,

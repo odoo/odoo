@@ -54,7 +54,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
 
         // Initialize forum's tooltips
         this.$('[data-bs-toggle="tooltip"]').tooltip({delay: 0});
-        this.$('[data-bs-toggle="popover"]').popover({offset: 8});
+        this.$('[data-bs-toggle="popover"]').popover({offset: '8'});
 
         $('input.js_select2').select2({
             tags: true,
