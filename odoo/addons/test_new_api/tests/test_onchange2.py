@@ -38,6 +38,18 @@ class TestOnchange2(SavepointCaseWithUserDemo):
         self.assertEqual(values['name'], f'[] {user.name}')
         self.assertEqual(values['size'], 0)
 
+    def test_default_x2many(self):
+        """ checking default values for x2many fields """
+        tag = self.env['test_new_api.multi.tag'].create({'name': 'alpha'})
+        model = self.env['test_new_api.multi'].with_context(default_tags=[Command.set(tag.ids)])
+
+        values = model.default_get(['tags'])
+        self.assertEqual(values, {'tags': [Command.set(tag.ids)]})
+
+        fields_spec = {'tags': {}}
+        result = model.onchange2({}, [], fields_spec)
+        self.assertEqual(result['value'], {'tags': [(Command.LINK, tag.id, {})]})
+
     def test_get_field(self):
         """ checking that accessing an unknown attribute does nothing special """
         with self.assertRaises(AttributeError):
