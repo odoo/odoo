@@ -176,6 +176,7 @@ export const imageField = {
     ],
     supportedTypes: ["binary"],
     fieldDependencies: [{ name: "write_date", type: "datetime" }],
+    isEmpty: () => false,
     extractProps: ({ attrs, options }) => ({
         enableZoom: options.zoom,
         zoomDelay: options.zoom_delay,
