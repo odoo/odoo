@@ -263,8 +263,8 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(
             target,
-            "thead th:nth(2) .text-end",
-            "header cells of integer fields should be right aligned"
+            "thead th:nth(2) .o_list_number_th",
+            "header cells of integer fields should have o_list_number_th class"
         );
         assert.strictEqual(
             $(target).find("tbody tr:first td:nth(2)").css("text-align"),
@@ -17379,4 +17379,39 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(input, document.activeElement);
         assert.strictEqual(input.value, 'Value 1');
     });
+    QUnit.test("monetary field display for rtl languages", async function (assert){
+        patchWithCleanup(localization, {
+            direction: "rtl",
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: '<tree><field name="foo"/><field name="amount_currency"/></tree>',
+        });
+
+        assert.containsOnce(
+            target,
+            "thead th:nth(2) .o_list_number_th",
+            "header cells of monetary fields should have o_list_number_th class"
+        );
+        assert.strictEqual(
+            $(target).find("thead th:nth(2)").css("text-align"),
+            "right",
+            "header cells of monetary fields should be right alined"
+        );
+
+        assert.strictEqual(
+            $(target).find("tbody tr:first td:nth(2)").css("text-align"),
+            "right",
+            "Monetary cells should be right alined"
+        );
+
+        assert.strictEqual(
+            $(target).find("tbody tr:first td:nth(2)").css("direction"),
+            "ltr",
+            "Monetary cells should have ltr direction"
+        );
+    })
 });
