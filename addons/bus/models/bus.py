@@ -15,6 +15,8 @@ from odoo import api, fields, models, SUPERUSER_ID
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools import date_utils
 
+from psycopg2 import sql
+
 _logger = logging.getLogger(__name__)
 
 # longpolling timeout connection
