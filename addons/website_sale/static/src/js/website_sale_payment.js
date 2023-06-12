@@ -61,7 +61,9 @@ import checkoutForm from "payment.checkout_form";
          * @return {boolean} Whether the submit button can be enabled
          */
         _isButtonReady: function () {
-            const disabledReasonFound = this.$submitButton.data("disabled_reasons");
+            const disabledReasonFound = Object.values(
+                this.$submitButton.data("disabled_reasons") || {}
+            ).includes(true);
             return !disabledReasonFound && this._super();
         },
 
