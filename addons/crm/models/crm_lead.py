@@ -1277,6 +1277,7 @@ class Lead(models.Model):
         if fnames is None:
             fnames = self._merge_get_fields()
         fcallables = self._merge_get_fields_specific()
+        fields_get_res = self.fields_get(fnames)
 
         # helpers
         def _get_first_not_null(attr, opportunities):
@@ -1290,53 +1291,53 @@ class Lead(models.Model):
         # process the field's values
         data = {}
         for field_name in fnames:
-            field = self._fields.get(field_name)
-            if field is None:
+            if field_name not in self:
                 continue
 
             fcallable = fcallables.get(field_name)
             if fcallable and callable(fcallable):
                 data[field_name] = fcallable(field_name, self)
-            elif not fcallable and field.type in ('many2many', 'one2many'):
+            elif not fcallable and fields_get_res[field_name]['type'] in ('many2many', 'one2many'):
                 continue
             else:
                 data[field_name] = _get_first_not_null(field_name, self)  # take the first not null
 
         return data
 
-    def _merge_notify_get_merged_fields_message(self):
+    def _merge_notify_get_merged_fields_message(self, fnames=None):
         """ Generate the message body with the changed values
 
         :param fields : list of fields to track
         :returns a list of message bodies for the corresponding leads
         """
+        if fnames is None:
+            fnames = self._merge_get_fields()
+        fields_get_res = self.fields_get(fnames)
+
         bodies = []
         for lead in self:
             title = "%s : %s\n" % (_('Merged opportunity') if lead.type == 'opportunity' else _('Merged lead'), lead.name)
             body = [title]
-            _fields = self.env['ir.model.fields'].sudo().search([
-                ('name', 'in', self._merge_get_fields()),
-                ('model_id.model', '=', lead._name),
-            ])
-            for field in _fields:
-                value = getattr(lead, field.name, False)
-                if field.ttype == 'selection':
-                    selections = lead.fields_get()[field.name]['selection']
+            for fname in fnames:
+                value = lead[fname]
+                field_info = fields_get_res[fname]
+                if field_info['type'] == 'selection':
+                    selections = field_info['selection']
                     value = next((v[1] for v in selections if v[0] == value), value)
-                elif field.ttype == 'many2one':
+                elif field_info['type'] == 'many2one':
                     if value:
                         value = value.sudo().display_name
-                elif field.ttype == 'many2many':
+                elif field_info['type'] == 'many2many':
                     if value:
                         value = ','.join(
                             val.display_name
                             for val in value.sudo()
                         )
-                body.append("%s: %s" % (field.field_description, value or ''))
+                body.append("%s: %s" % (field_info['string'], value or ''))
             bodies.append("<br/>".join(body + ['<br/>']))
         return bodies
 
-    def _merge_notify(self, opportunities):
+    def _merge_notify(self, opportunities, fnames=None):
         """ Post a message gathering merged leads/opps informations. It explains
         which fields has been merged and their new value. `self` is the resulting
         merge crm.lead record.
@@ -1348,7 +1349,7 @@ class Lead(models.Model):
         merge_message = _('Merged leads') if self.type == 'lead' else _('Merged opportunities')
         subject = merge_message + ": " + ", ".join(opportunities.mapped('name'))
         # message bodies
-        message_bodies = opportunities._merge_notify_get_merged_fields_message()
+        message_bodies = opportunities._merge_notify_get_merged_fields_message(fnames=fnames)
         message_body = "\n\n".join(message_bodies)
         return self.message_post(body=message_body, subject=subject)
 
@@ -1386,7 +1387,8 @@ class Lead(models.Model):
 
         # merge all the sorted opportunity. This means the value of
         # the first (head opp) will be a priority.
-        merged_data = opportunities._merge_data(self._merge_get_fields())
+        tomerge_fnames = self._merge_get_fields()
+        merged_data = opportunities._merge_data(fnames=tomerge_fnames)
 
         # force value for saleperson and Sales Team
         if user_id:
@@ -1395,7 +1397,7 @@ class Lead(models.Model):
             merged_data['team_id'] = team_id
 
         # log merge message
-        opportunities_head._merge_notify(opportunities_tail)
+        opportunities_head._merge_notify(opportunities_tail, fnames=tomerge_fnames)
         # merge other data (mail.message, attachments, ...) from tail into head
         opportunities_head._merge_dependences(opportunities_tail)
 
