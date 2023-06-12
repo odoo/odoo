@@ -648,6 +648,7 @@ class SaleOrder(models.Model):
             res = carrier.rate_shipment(self)
             return res['success']
         # searching on website_published will also search for available website (_search method on computed field)
+<<<<<<< HEAD
         return self.env['delivery.carrier'].sudo().search([
             ('website_published', '=', True),
         ]).available_carriers(
@@ -659,6 +660,7 @@ class SaleOrder(models.Model):
     def _is_public_order(self):
         self.ensure_one()
         return self.partner_id.id == request.website.user_id.sudo().partner_id.id
+<<<<<<< HEAD
 
     def _get_lang(self):
         res = super()._get_lang()
@@ -668,3 +670,19 @@ class SaleOrder(models.Model):
             return request.env.lang
 
         return res
+||||||| parent of 6a6d070d6819 (temp)
+=======
+||||||| parent of 5db0e4057bdf (temp)
+        return self.env['delivery.carrier'].sudo().search([('website_published', '=', True)]).available_carriers(address)
+=======
+        return self.env['delivery.carrier'].sudo().search([('website_published', '=', True)]).available_carriers(address)
+
+    def _get_website_sale_extra_values(self):
+        """ Hook to provide additional rendering values for the cart template.
+        :return: additional values to be passed to the cart template
+        :rtype: dict
+        """
+        self.ensure_one()
+        return {}
+>>>>>>> 5db0e4057bdf (temp)
+>>>>>>> 6a6d070d6819 (temp)

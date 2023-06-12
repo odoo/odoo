@@ -220,6 +220,7 @@ class SaleOrder(models.Model):
                     else:
                         res[coupon] = reward
         return res
+<<<<<<< HEAD
 
     def _cart_find_product_line(self, product_id, line_id=None, **kwargs):
         """ Override to filter out reward lines from the cart lines.
@@ -229,3 +230,15 @@ class SaleOrder(models.Model):
         lines = super()._cart_find_product_line(product_id, line_id, **kwargs)
         lines = lines.filtered(lambda l: not l.is_reward_line) if not line_id else lines
         return lines
+||||||| parent of 6a6d070d6819 (temp)
+=======
+
+    def _get_website_sale_extra_values(self):
+        promo_code_success = self.get_promo_code_success_message(delete=False)
+        promo_code_error = self.get_promo_code_error(delete=False)
+
+        return {
+            'promo_code_success': promo_code_success,
+            'promo_code_error': promo_code_error,
+        }
+>>>>>>> 6a6d070d6819 (temp)

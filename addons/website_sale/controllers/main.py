@@ -730,7 +730,14 @@ class WebsiteSale(payment_portal.PaymentPortal):
             'suggested_products': [],
         })
         if order:
+<<<<<<< HEAD
             order.order_line.filtered(lambda sol: not sol.product_id.active).unlink()
+||||||| parent of 6a6d070d6819 (temp)
+            order.order_line.filtered(lambda l: not l.product_id.active).unlink()
+=======
+            values.update(order._get_website_sale_extra_values())
+            order.order_line.filtered(lambda l: not l.product_id.active).unlink()
+>>>>>>> 6a6d070d6819 (temp)
             values['suggested_products'] = order._cart_accessories()
             values.update(self._get_express_shop_payment_values(order))
 
