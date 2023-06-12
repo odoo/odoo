@@ -1409,36 +1409,37 @@ class TranslationImporter:
         self.model_translations.clear()
 
         IrCodeTranslation = env['ir.code.translation']
-
-        IrCodeTranslation.create([
-            {
-                'source': src,
-                'value': value,
-                'lang': lang,
-                'module': module_name,
-                'type': 'python',
-            }
+        params_to_upsert = tuple(itertools.chain.from_iterable(
+            (src, value, lang, module_name)
             for module_name, module_dictionary in self.code_python_translations.items()
             for src, translations in module_dictionary.items()
             for lang, value in translations.items()
             if IrCodeTranslation.get_python_translation(module_name, lang, src) != value
-        ])
+        ))
+        for params in cr.split_for_in_conditions(params_to_upsert, cr.IN_MAX // 4 * 4):
+            cr.execute(f'''
+                INSERT INTO "ir_code_translation" ("source", "value", "lang", "module", "type")
+                VALUES {', '.join(["(%s, %s, %s, %s, 'python')"] * (len(params) // 4))}
+                ON CONFLICT ("source", "lang", "module", "type")
+                DO UPDATE SET "value" = EXCLUDED."value"
+            ''', params)
 
         self.code_python_translations.clear()
 
-        IrCodeTranslation.create([
-            {
-                'source': src,
-                'value': value,
-                'lang': lang,
-                'module': module_name,
-                'type': 'web',
-            }
+        params_to_upsert = tuple(itertools.chain.from_iterable(
+            (src, value, lang, module_name)
             for module_name, module_dictionary in self.code_web_translations.items()
             for src, translations in module_dictionary.items()
             for lang, value in translations.items()
             if IrCodeTranslation.get_web_translations(module_name, lang).get(src) != value
-        ])
+        ))
+        for params in cr.split_for_in_conditions(params_to_upsert, cr.IN_MAX // 4 * 4):
+            cr.execute(f'''
+                INSERT INTO "ir_code_translation" ("source", "value", "lang", "module", "type")
+                VALUES {', '.join(["(%s, %s, %s, %s, 'web')"] * (len(params) // 4))}
+                ON CONFLICT ("source", "lang", "module", "type")
+                DO UPDATE SET "value" = EXCLUDED."value"
+            ''', params)
 
         self.code_web_translations.clear()
 
