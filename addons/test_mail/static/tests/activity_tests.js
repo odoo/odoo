@@ -814,7 +814,7 @@ QUnit.module("test_mail", {}, function () {
     );
 
     QUnit.test("Activity view: apply progressbar filter", async function (assert) {
-        assert.expect(10);
+        assert.expect(12);
 
         const mailActivityTypeIds = pyEnv["mail.activity.type"].search([]);
         const mailTemplateIds = pyEnv["mail.template"].search([]);
@@ -848,7 +848,7 @@ QUnit.module("test_mail", {}, function () {
             },
         };
 
-        const { webClient } = await start({ serverData });
+        const { target, webClient } = await start({ serverData });
 
         await doAction(webClient, 1);
 
@@ -880,6 +880,8 @@ QUnit.module("test_mail", {}, function () {
             ".o_activity_filter_planned",
             "planned should be active filter"
         );
+        assert.hasClass(target.querySelector(".o_activity_type_cell:nth-child(2) .bg-success"), "progress-bar-animated progress-bar-striped", "progress bar is animated with a strip effect");
+        assert.containsOnce(target, ".progress-bar-striped", "only one progress bar is animated");
         assert.containsN(
             document.querySelector(".o_activity_view tbody"),
             ".o_activity_filter_planned",
