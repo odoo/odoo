@@ -140,6 +140,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 },
                 resizable: true,
                 userGeneratedContent: true,
+                height: 350,
             };
             if (!hasFullEdit) {
                 options.plugins = {
