@@ -1569,7 +1569,7 @@ class Lead(models.Model):
         if not user_ids and team_id:
             self.write(update_vals)
         else:
-            lead_ids = self.ids
+            lead_ids, LeadPrefetched = self.ids, self.env['crm.lead'].with_prefetch(self.ids)
             steps = len(user_ids)
             # pass 1 : lead_ids[0:6:3] = [L1,L4]
             # pass 2 : lead_ids[1:6:3] = [L2,L5]
@@ -1578,7 +1578,7 @@ class Lead(models.Model):
             for idx in range(0, steps):
                 subset_ids = lead_ids[idx:len(lead_ids):steps]
                 update_vals['user_id'] = user_ids[idx]
-                self.env['crm.lead'].browse(subset_ids).write(update_vals)
+                LeadPrefetched.browse(subset_ids).write(update_vals)
 
     # ------------------------------------------------------------
     # MERGE / CONVERT TOOLS
