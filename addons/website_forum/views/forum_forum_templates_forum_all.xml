@@ -39,11 +39,12 @@
     <t t-foreach="sorted_forums" t-as="forum">
         <t t-set="has_desc" t-value="forum.description"/>
         <div t-attf-class="#{col_class}">
-            <a t-attf-href="/forum/#{slug(forum)}" class="card oe_img_bg h-100 justify-content-end shadow-sm border-0 p-3 pt-5 text-reset text-decoration-none transition-base" t-attf-style="background-image: url('#{forum.image_1920 and website.image_url(forum, 'image_1920') or ''}')">
+            <a t-attf-href="/forum/#{slug(forum)}"
+               class="card oe_img_bg h-100 justify-content-end shadow-sm border-0 p-3 pt-5 text-reset text-decoration-none transition-base"
+               t-attf-style="background-image: url('#{forum.image_1920 and website.image_url(forum, 'image_1920') or ''}')"
+            >
                 <div class="o_we_bg_filter" style="background-image: linear-gradient(0deg, rgba(255, 255, 255, .75) 30%, rgba(255, 255, 255, 0) 100%);"></div>
-                <div t-if="_forums == courses_discussions" class="badge position-absolute top-0 end-0 m-3 border text-bg-light">
-                    Course
-                </div>
+                <div t-if="forum_badge" class="badge position-absolute top-0 end-0 m-3 border text-bg-light" t-out="forum_badge"></div>
                 <div class="mt-5 pt-5">
                     <h3 class="mb-0 fw-bold" t-field="forum.name"/>
                     <t t-if="is_view_active('website_forum.opt_post_count')">
@@ -56,9 +57,6 @@
             </a>
         </div>
     </t>
-    <div t-if="_forums == courses_discussions" class="d-flex justify-content-center">
-        <a href="/slides" class="btn btn-link">Check out our courses <i class="fa fa-long-arrow-right"></i></a>
-    </div>
 </template>
 
 <!-- (Options) Forum : List View
