@@ -983,10 +983,8 @@ class Base(models.AbstractModel):
         # values of the move, among which the one2many that contains the line
         # itself, with old values!
         #
-        changed_values = {fname: values[fname] for fname in field_names}
-        # set changed values to null in initial_values; not setting them
-        # triggers default_get() on the new record when creating snapshot0
-        initial_values = dict(values, **dict.fromkeys(field_names, False))
+        initial_values = dict(values)
+        changed_values = {fname: initial_values.pop(fname) for fname in field_names}
 
         # do not force delegate fields to False
         for parent_name in self._inherits.values():
@@ -999,7 +997,13 @@ class Base(models.AbstractModel):
             # fill in the cache of record with the values of self
             cache_values = {fname: self[fname] for fname in fields_spec}
             record._update_cache(cache_values, validate=False)
-        record._update_cache(initial_values)
+            # apply initial values on top of the values of self
+            record._update_cache(initial_values)
+        else:
+            # set changed values to null in initial_values; not setting them
+            # triggers default_get() on the new record when creating snapshot0
+            initial_values.update(dict.fromkeys(field_names, False))
+            record._update_cache(initial_values, validate=False)
 
         # make parent records match with the form values; this ensures that
         # computed fields on parent records have all their dependencies at
@@ -1016,7 +1020,7 @@ class Base(models.AbstractModel):
         # store changed values in cache; also trigger recomputations based on
         # subfields (e.g., line.a has been modified, line.b is computed stored
         # and depends on line.a, but line.b is not in the form view)
-        record._update_cache(changed_values, validate=False)
+        record._update_cache(changed_values)
 
         # update snapshot0 with changed values
         for field_name in field_names:

@@ -353,6 +353,29 @@ class TestOnchange2(SavepointCaseWithUserDemo):
         result = multi.onchange2(values, ['partner'], fields_spec)
         self.assertEqual(result['value'], expected_value)
 
+    def test_onchange_one2many_default(self):
+        """ test onchange on x2many field with default value in context """
+        default_messages = [Command.create({'body': 'A'})]
+        model = self.Discussion.with_context(default_messages=default_messages)
+
+        # the command CREATE below must be applied on the empty value, instead
+        # of the default value above
+        values = {
+            'name': 'Stuff',
+            'messages': [(Command.CREATE, 'virtual1', {'name': '[] ', 'body': 'B'})],
+        }
+        fields_spec = {
+            'name': {},
+            'messages': {'fields': {
+                'name': {},
+                'body': {},
+            }},
+        }
+        result = model.onchange2(values, ['name'], fields_spec)
+        self.assertEqual(result['value'], {
+            'messages': [Command.update('virtual1', {'name': '[Stuff] OdooBot'})],
+        })
+
     def test_fields_specific(self):
         """ test the effect of field-specific onchange method """
         discussion = self.env.ref('test_new_api.discussion_0')
