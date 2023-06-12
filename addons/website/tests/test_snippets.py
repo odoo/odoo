@@ -77,3 +77,6 @@ class TestSnippets(HttpCase):
 
     def test_11_snippet_popup_display_on_click(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_popup_display_on_click', login='admin')
+
+    def test_12_snippet_images_wall(self):
+        self.start_tour('/', 'snippet_images_wall', login='admin')
