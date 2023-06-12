@@ -192,8 +192,7 @@ class PosOrder(models.Model):
             order.add_payment(return_payment_vals)
 
     def _prepare_invoice_line(self, order_line):
-        display_name = order_line.product_id.get_product_multiline_description_sale()
-        name = order_line.product_id.default_code + " " + display_name if order_line.product_id.default_code else display_name
+        name = order_line.product_id.get_product_multiline_description_sale()
         return {
             'product_id': order_line.product_id.id,
             'quantity': order_line.qty if self.amount_total >= 0 else -order_line.qty,
