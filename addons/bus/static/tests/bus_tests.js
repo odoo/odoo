@@ -413,7 +413,7 @@ QUnit.module(
                 await env2.services["bus_service"].start();
                 await updateLastNotificationDeferred;
                 // Second bus service sends the last known notification id.
-                assert.verifySteps([`initialize_connection - 1`]);
+                assert.verifySteps([`initialize_connection - 2`]);
             }
         );
 

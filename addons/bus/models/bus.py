@@ -103,6 +103,10 @@ class ImBus(models.Model):
             })
         return result
 
+    def _bus_last_id(self):
+        last = self.env['bus.bus'].search([], order='id desc', limit=1)
+        return last.id if last else 0
+
 
 #----------------------------------------------------------
 # Dispatcher

@@ -59,7 +59,7 @@ patch(MockServer.prototype, "bus", {
         const values = [];
         for (const notification of notifications) {
             const [type, payload] = notification.slice(1, notification.length);
-            values.push({ id: this.lastBusNotificationId++, message: { payload, type } });
+            values.push({ id: ++this.lastBusNotificationId, message: { payload, type } });
             if (this.debug) {
                 console.log("%c[bus]", "color: #c6e; font-weight: bold;", type, payload);
             }
@@ -70,7 +70,7 @@ patch(MockServer.prototype, "bus", {
      * Simulate the lost of the connection by simulating a closeEvent on
      * the worker websocket.
      *
-     * @param {number} clodeCode the code to close the connection with.
+     * @param {number} closeCode the code to close the connection with.
      */
     _simulateConnectionLost(closeCode) {
         this.websocketWorker.websocket.close(closeCode);
