@@ -71,7 +71,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
             ('product_id', '=', product_id.id),
             ('remaining_qty', '>', 0),
             ('company_id', '=', self.company_id.id),
-        ])
+        ]).sorted(key=lambda svl: svl.remaining_value / svl.remaining_qty)
 
         # Create a manual stock valuation layer
         if self.reason:
@@ -94,21 +94,26 @@ class StockValuationLayerRevaluation(models.TransientModel):
 
         remaining_qty = sum(remaining_svls.mapped('remaining_qty'))
         remaining_value = self.added_value
-        remaining_value_unit_cost = self.currency_id.round(remaining_value / remaining_qty)
         for svl in remaining_svls:
-            if float_is_zero(svl.remaining_qty - remaining_qty, precision_rounding=self.product_id.uom_id.rounding):
-                svl.remaining_value += remaining_value
-            else:
-                taken_remaining_value = remaining_value_unit_cost * svl.remaining_qty
-                svl.remaining_value += taken_remaining_value
-                remaining_value -= taken_remaining_value
-                remaining_qty -= svl.remaining_qty
+            unit_difference = self.currency_id.round(remaining_value / remaining_qty)
+            is_last_layer = float_is_zero(svl.remaining_qty - remaining_qty, precision_rounding=self.product_id.uom_id.rounding)
+            taken_remaining_value = max(-svl.remaining_value, remaining_value if is_last_layer else unit_difference * svl.remaining_qty)
+            svl.remaining_value += taken_remaining_value
+            remaining_value -= taken_remaining_value
+            remaining_qty -= svl.remaining_qty
+
+        if not float_is_zero(remaining_value, precision_rounding=self.product_id.uom_id.rounding):
+            raise UserError(_('Cannot decrease product value below zero'))
 
         revaluation_svl = self.env['stock.valuation.layer'].create(revaluation_svl_vals)
 
         # Update the stardard price in case of AVCO
         if product_id.categ_id.property_cost_method == 'average':
             product_id.with_context(disable_auto_svl=True).standard_price += self.added_value / self.current_quantity_svl
+        elif product_id.categ_id.property_cost_method == 'fifo':
+            # The revaluation might not have been distributed equally, as such
+            # we cannot simply deduct the average unit cost difference
+            product_id._run_fifo(0, self.company_id)
 
         # If the Inventory Valuation of the product category is automated, create related account move.
         if self.property_valuation != 'real_time':

@@ -324,19 +324,21 @@ class ProductProduct(models.Model):
 
             candidate_unit_cost = candidate.remaining_value / candidate.remaining_qty
             new_standard_price = candidate_unit_cost
-            value_taken_on_candidate = qty_taken_on_candidate * candidate_unit_cost
-            value_taken_on_candidate = candidate.currency_id.round(value_taken_on_candidate)
-            new_remaining_value = candidate.remaining_value - value_taken_on_candidate
 
-            candidate_vals = {
-                'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
-                'remaining_value': new_remaining_value,
-            }
+            if not float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+                value_taken_on_candidate = qty_taken_on_candidate * candidate_unit_cost
+                value_taken_on_candidate = candidate.currency_id.round(value_taken_on_candidate)
+                new_remaining_value = candidate.remaining_value - value_taken_on_candidate
 
-            candidate.write(candidate_vals)
+                candidate_vals = {
+                    'remaining_qty': candidate.remaining_qty - qty_taken_on_candidate,
+                    'remaining_value': new_remaining_value,
+                }
 
-            qty_to_take_on_candidates -= qty_taken_on_candidate
-            tmp_value += value_taken_on_candidate
+                candidate.write(candidate_vals)
+
+                qty_to_take_on_candidates -= qty_taken_on_candidate
+                tmp_value += value_taken_on_candidate
 
             if float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
                 if float_is_zero(candidate.remaining_qty, precision_rounding=self.uom_id.rounding):
@@ -345,7 +347,7 @@ class ProductProduct(models.Model):
                 break
 
         # Update the standard price with the price of the last used candidate, if any.
-        if new_standard_price and self.cost_method == 'fifo':
+        if candidates and self.cost_method == 'fifo':
             self.sudo().with_company(company.id).with_context(disable_auto_svl=True).standard_price = new_standard_price
 
         # If there's still quantity to value but we're out of candidates, we fall in the
@@ -353,9 +355,10 @@ class ProductProduct(models.Model):
         # last out and a correction entry will be made once `_fifo_vacuum` is called.
         vals = {}
         if float_is_zero(qty_to_take_on_candidates, precision_rounding=self.uom_id.rounding):
+            is_zero_quantity = float_is_zero(quantity, precision_rounding=self.uom_id.rounding)
             vals = {
                 'value': -tmp_value,
-                'unit_cost': tmp_value / quantity,
+                'unit_cost': new_standard_price if is_zero_quantity else tmp_value / quantity,
             }
         else:
             assert qty_to_take_on_candidates > 0
