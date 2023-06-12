@@ -331,7 +331,10 @@ class LoyaltyProgram(models.Model):
                 })],
                 'communication_plan_ids': [(5, 0, 0), (0, 0, {
                     'trigger': 'create',
-                    'mail_template_id': (self.env.ref('loyalty.mail_template_gift_card', raise_if_not_found=False) or self.env['mail.template']).id,
+                    'mail_template_id': (
+                        self.env.ref('loyalty.mail_template_loyalty_card', raise_if_not_found=False)
+                        or self.env['mail.template']
+                    ).id,
                 })],
             },
         }
