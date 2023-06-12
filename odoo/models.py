@@ -3423,7 +3423,8 @@ Fields:
         """
         if not self:
             return True
-
+        if not self._auto:
+            raise ValidationError(_('You cannot delete these records.'))
         self.check_access_rights('unlink')
         self.check_access_rule('unlink')
         self._check_concurrency()
