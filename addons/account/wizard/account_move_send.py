@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from odoo import _, api, fields, models, tools, Command
+from odoo import _, api, fields, models, modules, tools, Command
 from odoo.exceptions import UserError
 from odoo.tools.misc import get_lang
 
@@ -482,6 +482,14 @@ class AccountMoveSend(models.Model):
                 email_from=email_from,
                 **mail_params,
             )
+
+    def _can_commit(self):
+        """ Helper to know if we can commit the current transaction or not.
+
+        :return: True if commit is accepted, False otherwise.
+        """
+        self.ensure_one()
+        return not tools.config['test_enable'] and not modules.module.current_test
 
     def _call_web_service(self, invoices_data):
         # TO OVERRIDE
