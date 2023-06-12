@@ -26,16 +26,20 @@ export class AutoComplete extends Component {
         this.root = useRef("root");
 
         this.debouncedProcessInput = useDebounced(async () => {
+            const currentPromise = this.pendingPromise;
+            this.pendingPromise = null;
             this.props.onInput({
                 inputValue: this.inputRef.el.value,
             });
             try {
                 await this.open(true);
-                this.loadingPromise.resolve();
+                currentPromise.resolve();
             } catch {
-                this.loadingPromise.reject();
+                currentPromise.reject();
             } finally {
-                this.loadingPromise = null;
+                if (currentPromise === this.loadingPromise) {
+                    this.loadingPromise = null;
+                }
             }
         }, this.constructor.timeout);
 
@@ -239,7 +243,8 @@ export class AutoComplete extends Component {
         });
     }
     async onInput() {
-        this.loadingPromise = this.loadingPromise || new Deferred();
+        this.pendingPromise = this.pendingPromise || new Deferred();
+        this.loadingPromise = this.pendingPromise;
         this.debouncedProcessInput();
     }
 
