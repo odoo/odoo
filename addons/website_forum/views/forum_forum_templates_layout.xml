@@ -118,7 +118,7 @@
                     <i class="oi oi-close d-inline-block"/>
                 </a>
             </span>
-            <div t-if="question_count != 0" class="dropdown ms-lg-auto">
+            <div t-if="question_count != 0 or tags" class="dropdown ms-lg-auto">
                 <t t-if="_page_name == 'Tags'" t-set="tag_filter" t-value="keep_query('filters') and keep_query('filters').split('=')[1] or ''"/>
                 <a href="#" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown">
                     <!-- Foreach tag_filter/ Foreach filters -->
@@ -133,7 +133,6 @@
                         <t t-elif="filters == 'unsolved'">Unsolved</t>
                         <t t-elif="filters == 'unanswered'">Unanswered</t>
                     </t>
-
                 </a>
                 <div class="dropdown-menu" role="menu">
                     <a t-att-href="url_for('') + '?' + keep_query('search', 'sorting', filters='all')"
@@ -141,42 +140,46 @@
                         All
                     </a>
                     <div class="dropdown-divider"/>
-                        <t t-if="_page_name == 'Tags'">
-                            <t t-if="not request.env.user._is_public()">
+                    <t t-if="_page_name == 'Tags'">
+                        <t t-if="not request.env.user._is_public()">
                             <a t-att-href="url_for('') + '?' + keep_query('search', 'sorting', 'my', filters='followed')"
-                                    class="dropdown-item">Followed Tags
-                                </a>
-                            </t>
-                            <t t-if="forum.can_moderate">
+                                class="dropdown-item">Followed Tags
+                            </a>
+                        </t>
+                        <t t-if="forum.can_moderate">
                             <a t-att-href="url_for('') + '?' + keep_query('search', 'sorting', 'my', filters='unused')"
-                                    class="dropdown-item">Unused Tags
-                                </a>
-                            </t>
+                                class="dropdown-item">Unused Tags
+                            </a>
+                        </t>
                         <a t-att-href="url_for('') + '?' + keep_query('search', 'sorting', 'my', filters='most_used')"
-                                class="dropdown-item">Most Used Tags
-                            </a>
-                        </t>
-                        <t t-else="">
-                            <t t-if="forum.mode == 'questions'">
+                            class="dropdown-item">Most Used Tags
+                        </a>
+                    </t>
+                    <t t-else="">
+                        <t t-if="forum.mode == 'questions'">
                             <a t-att-href="url_for('') + '?' + keep_query('search', 'sorting', 'my', filters='solved')"
-                                    class="dropdown-item">Solved
-                                </a>
+                            class="dropdown-item">Solved
+                            </a>
                             <a t-att-href="url_for('') + '?' + keep_query('search', 'sorting', 'my', filters='unsolved')"
-                                    class="dropdown-item">Unsolved
-                                </a>
-                            </t>
-                        <a t-att-href="url_for('') + '?' + keep_query('search', 'sorting', 'my', filters='unanswered')"
-                                class="dropdown-item">Unanswered
+                            class="dropdown-item">Unsolved
                             </a>
                         </t>
+                        <a t-att-href="url_for('') + '?' + keep_query('search', 'sorting', 'my', filters='unanswered')"
+                        class="dropdown-item">Unanswered
+                        </a>
+                    </t>
                 </div>
             </div>
-            <!-- 'Search Box' [TODO] tags-->
-            <t t-if="question_count != 0" t-call="website.website_search_box_input">
-                <t t-if="_page_name == 'Tags'" t-set="search_type" t-valuef="forum_tags_only"/>
-                <t t-else="" t-set="search_type" t-valuef="forums"/>
-                <t t-if="_page_name == 'Tags'" t-set="action" t-value="'/forum/%s/tag' % (slug(forum))"/>
-                <t t-else="" t-set="action" t-value="'/forum/%s%s' % (slug(forum), tag and ('/tag/%s/questions' % slug(tag)) or '')"/>
+            <!-- 'Search Box' -->
+            <t  t-if="question_count != 0 or tags" t-call="website.website_search_box_input">
+                <t t-if="_page_name == 'Tags'">
+                    <t t-set="search_type" t-valuef="forum_tags_only"/>
+                    <t t-set="action" t-value="'/forum/%s/tag' % (slug(forum))"/>
+                </t>
+                <t t-else="">
+                    <t t-set="search_type" t-valuef="forums"/>
+                    <t t-set="action" t-value="'/forum/%s' % (slug(forum))"/>
+                </t>
                 <t t-set="display_description" t-valuef="true"/>
                 <t t-set="display_detail" t-valuef="true"/>
                 <t t-set="_form_classes" t-valuef="flex-grow-1"/>
@@ -295,7 +298,7 @@
 
 <template id="website_forum.user_sidebar_body">
     <div class="o_wforum_sidebar_section">
-        <t t-set="location" t-value="url_for('/forum') + '/' + slug(forum) + ( ('/tag/' + slug(tag) + '/questions?') if tag else '?' )"/>
+        <t t-set="location" t-value="url_for('/forum') + '/' + slug(forum) + ( ('/tag/' + slug(tag) + '/questions?') if (tag and not tags) else '?' )"/>
         <!-- All Posts -->
         <a t-attf-class="nav-link my-1 py-1 #{request.httprequest.path ==  (url_for('/forum') + '/' + slug(forum)) and no_filters and not my and not queue_type and not tags and 'bg-primary-light text-primary disabled' or 'text-reset'}" t-att-href="location">
             <i t-attf-class="fa fa-list fa-fw #{(request.httprequest.path != (url_for('/forum') + '/' + slug(forum)) or my or queue_type) and 'opacity-50'}"/> Posts
@@ -336,13 +339,13 @@
             <i t-attf-class="fa fa-window-close fa-fw #{queue_type != 'close' and 'opacity-50'}"/> Closed
         </a>
     </div>
-    <div t-if="forum.post_ids.tag_ids" class="o_wforum_sidebar_section pt-3">
+    <div t-if="forum.tag_most_used_ids" class="o_wforum_sidebar_section pt-3">
         <div class="d-flex align-items-center px-3 pb-1 fw-bold">Tags
             <a class="ms-auto px-0 fw-normal" t-attf-href="/forum/#{slug(forum)}/tag">
                 <small>View all</small>
             </a>
         </div>
-        <t t-foreach="forum.post_ids.tag_ids" t-as="tag">
+        <t t-foreach="forum.tag_most_used_ids" t-as="tag">
             <a t-att-href="'/forum/' + slug(tag.forum_id) + '/tag/' + slug(tag) + '/questions?' + keep_query( 'search', 'sorting', 'my', filters='tag')"
                 t-attf-class="nav-link my-1 py-1 text-reset">
                 <i class="fa fa-tag fa-fw small opacity-50"/>
@@ -388,11 +391,15 @@
    <t t-if="queue_type">
         <t t-set="_no_results_title">You've Completely Caught&amp;nbsp;Up!</t>
         <t t-set="result_msg">Go enjoy a cup of coffee</t>
+        <t t-set="record_name_plural" t-value="'posts'"/>
+        <t t-set="go_back_url" t-valuef="/forum/#{ slug(forum) }/"/>
    </t>
    <t t-else="">
         <t t-set="_no_results_title">Oops!</t>
-        <t t-set="result_msg">Sorry, we could not find any<b>%s</b> results<b>%s</b>%s%s%s.</t>
-        <t t-set="result_msg" t-value="result_msg % (_filters_str.strip(), _my_str.strip(), _search_str.strip(), _search_and_tag_str.strip(), _tag_str.strip())"></t>
+        <t t-if="not result_msg">
+            <t t-set="result_msg">Sorry, we could not find any<b>%s</b> results<b>%s</b>%s%s%s.</t>
+            <t t-set="result_msg" t-value="result_msg % (_filters_str.strip(), _my_str.strip(), _search_str.strip(), _search_and_tag_str.strip(), _tag_str.strip())"></t>
+       </t>
    </t>
     <div t-attf-class="#{queue_type and 'o_caught_up_alert'} row g-0 justify-content-center">
         <div class="p-3 d-flex flex-column align-items-center">
@@ -408,7 +415,7 @@
             <span t-elif="forum.total_posts == 0">Because there are no posts in this forum yet.</span>
             <div class="mt-3">
                 <a t-if="uid and forum.total_posts == 0" role="button" type="button" class="o_forum_ask_btn btn btn-primary ms-2" t-attf-href="/forum/#{slug(forum)}/ask">Start by creating a post</a>
-                <a t-else="" role="button" type="button" class="btn btn-primary mt-2" t-attf-href="/forum/#{slug(forum)}/">Go back to questions list</a>
+                <a t-else="" role="button" type="button" class="btn btn-primary mt-2" t-att-href="go_back_url">Go back to the list of <t t-out="record_name_plural"/></a>
             </div>
         </div>
     </div>
