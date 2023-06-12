@@ -351,9 +351,7 @@ class ResPartnerBank(models.Model):
         if qr_method == 'sct_qr' and debtor_partner.country_id.code == 'CH' and self.journal_id.country_code == 'CH':
             return False
         if qr_method == 'ch_qr':
-
             return self.acc_type == 'iban' and \
-                   self.partner_id.country_id.code == 'CH' and \
                    (not debtor_partner or debtor_partner.country_id.code in ('CH', 'LI')) \
                    and currency.name in ('EUR', 'CHF')
 
