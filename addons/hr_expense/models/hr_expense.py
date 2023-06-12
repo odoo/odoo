@@ -892,7 +892,7 @@ class HrExpenseSheet(models.Model):
     amount_residual = fields.Monetary(
         string="Amount Due", store=True,
         currency_field='currency_id',
-        related='account_move_id.amount_residual')
+        compute='_compute_amount_residual')
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     attachment_number = fields.Integer(compute='_compute_attachment_number', string='Number of Attachments')
@@ -916,6 +916,13 @@ class HrExpenseSheet(models.Model):
     def _compute_amount(self):
         for sheet in self:
             sheet.total_amount = sum(sheet.expense_line_ids.mapped('total_amount_company'))
+
+    @api.depends("account_move_id.line_ids")
+    def _compute_amount_residual(self):
+        for sheet in self:
+            payment_term_lines = sheet.account_move_id.sudo().line_ids \
+                .filtered(lambda line: line.expense_id in sheet.expense_line_ids and line.account_internal_type in ('receivable', 'payable'))
+            sheet.amount_residual = -sum(payment_term_lines.mapped('amount_residual'))
 
     @api.depends('account_move_id.payment_state')
     def _compute_payment_state(self):

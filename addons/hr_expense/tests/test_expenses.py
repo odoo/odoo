@@ -243,6 +243,8 @@ class TestExpenses(TestExpenseCommon):
         expense.action_sheet_move_create()
         self.assertEqual(expense.state, 'post', 'Expense is not in Waiting Payment state')
         self.assertTrue(expense.account_move_id.id, 'Expense Journal Entry is not created')
+        # Amount due should be expressed in company currency
+        self.assertEqual(expense.amount_residual, 350.0, 'Expense sheet amount due is not correct')
 
         # Should get this result [(0.0, 350.0, -700.0), (318.18, 0.0, 636.36), (31.82, 0.0, 63.64)]
         for line in expense.account_move_id.line_ids:
