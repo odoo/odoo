@@ -1312,8 +1312,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
         assert.strictEqual(
             target.querySelector(".o_cw_popover .list-group-item b.text-capitalize").textContent,
-            "Wednesday, December 14, 2016",
-            "should display date 'Wednesday, December 14, 2016'"
+            "December 14, 2016",
+            "should display date 'December 14, 2016'"
         );
         assert.containsN(
             target,
@@ -2103,6 +2103,28 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         await selectAllDayRange(target, "2016-12-14", "2016-12-15");
         assert.verifySteps(["doAction"]);
+    });
+
+    QUnit.test(`create event with default title in context (with quickCreate)`, async (assert) => {
+        assert.expect(1);
+
+        serverData.models.event.records = [];
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" mode="week" all_day="allday" />
+            `,
+            context: {
+                default_name: "Example Title",
+            },
+        });
+
+        await selectAllDayRange(target, "2016-12-14", "2016-12-15");
+        const input = target.querySelector(".o-calendar-quick-create--input");
+        assert.strictEqual(input.value, "Example Title");
     });
 
     QUnit.test(`create all day event in week mode (no quickCreate)`, async (assert) => {
@@ -3528,7 +3550,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         await clickEvent(target, 1);
         assert.strictEqual(
             target.querySelector(".o_cw_popover .list-group-item").textContent,
-            "Wednesday, December 14, 2016 (All day)"
+            "December 14, 2016 (All day)"
         );
     });
 

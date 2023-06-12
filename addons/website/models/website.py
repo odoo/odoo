@@ -813,7 +813,7 @@ class Website(models.Model):
         website_id = self.env.context.get('website_id', False)
         if website_id:
             domain_static = [('website_id', 'in', (False, website_id))]
-        while self.env['website.page'].with_context(active_test=False).sudo().search([('key', '=', key_copy)] + domain_static):
+        while self.env['ir.ui.view'].with_context(active_test=False).sudo().search([('key', '=', key_copy)] + domain_static):
             inc += 1
             key_copy = string + (inc and "-%s" % inc or "")
         return key_copy
@@ -1667,7 +1667,7 @@ class Website(models.Model):
         :param limit: maximum number of records fetched per model to build the word list
         :return: yields words
         """
-        match_pattern = r'[\w-]{%s,}' % min(4, len(search) - 3)
+        match_pattern = r'[\w./-]{%s,}' % min(4, len(search) - 3)
         similarity_threshold = 0.3
         lang = self.env.lang or 'en_US'
         for search_detail in search_details:
@@ -1777,7 +1777,7 @@ class Website(models.Model):
         :param limit: maximum number of records fetched per model to build the word list
         :return: yields words
         """
-        match_pattern = r'[\w-]{%s,}' % min(4, len(search) - 3)
+        match_pattern = r'[\w./-]{%s,}' % min(4, len(search) - 3)
         first = escape_psql(search[0])
         for search_detail in search_details:
             model_name, fields = search_detail['model'], search_detail['search_fields']

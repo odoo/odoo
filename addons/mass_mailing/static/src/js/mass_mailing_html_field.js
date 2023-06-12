@@ -19,6 +19,7 @@ const {
     onWillStart,
     useSubEnv,
     onWillUpdateProps,
+    status,
 } = owl;
 
 export class MassMailingHtmlField extends HtmlField {
@@ -155,6 +156,10 @@ export class MassMailingHtmlField extends HtmlField {
                 '/mass_mailing/static/src/snippets/s_rating/options.js',
             ],
         });
+
+        if (status(this) === "destroyed") {
+            return;
+        }
 
         await this._resetIframe();
     }
@@ -600,6 +605,15 @@ export class MassMailingHtmlField extends HtmlField {
     }
     async _getWysiwygClass() {
         return getWysiwygClass({moduleName: 'mass_mailing.wysiwyg'});
+    }
+    /**
+     * @override
+     */
+    async _setupReadonlyIframe() {
+        if (!this.props.value.length) {
+            this.props.value = this.props.record.data.body_html;
+        }
+        await super._setupReadonlyIframe();
     }
 }
 

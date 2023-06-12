@@ -4,7 +4,7 @@
 # 
 # Translators:
 # NGUYỄN HỮU DŨNG, 2022
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
+# Nancy Momoland <thanh.np2502@gmail.com>, 2022
 # Martin Trigaux, 2023
 # Thi Huong Nguyen, 2023
 # 
@@ -345,6 +345,24 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        <t t-set=\"doc_name\" t-value=\"object.type_name\"></t>\n"
+"        Kính gửi <t t-out=\"object.partner_id.name or ''\">người dùng</t>,\n"
+"        <br><br>\n"
+"        Xin lưu ý rằng\n"
+"        <t t-out=\"doc_name or ''\">báo giá</t> <strong t-out=\"object.name or ''\">S00052</strong>\n"
+"        <t t-if=\"object.origin\">\n"
+"            (với mã tham chiếu: <t t-out=\"object.origin or ''\">S00052</t> )\n"
+"        </t>\n"
+"        đã bị hủy. Do đó, bạn sẽ không bị tính thêm tiền cho đơn hàng này.\n"
+"        Nếu cần hoàn tiền, việc này sẽ được thực hiện theo cách thuận tiện nhất.\n"
+"        <br><br>\n"
+"        Đừng ngần ngại liên hệ với chúng tôi nếu bạn có câu hỏi cần được giải đáp.\n"
+"        <br>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -807,7 +825,7 @@ msgstr "Thêm sản phẩm"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a section"
-msgstr "Thêm phân đoạn"
+msgstr "Thêm phần"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -862,7 +880,7 @@ msgstr "Tài khoản phân tích"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution_search
 msgid "Analytic Distribution Search"
-msgstr ""
+msgstr "Tìm kiếm phân bổ phân tích"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__analytic
@@ -1030,7 +1048,7 @@ msgstr "Đã hủy"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Capture Transaction"
-msgstr "Chấp nhận giao dịch"
+msgstr "Hoàn thành giao dịch"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_category_id
@@ -1678,7 +1696,7 @@ msgstr "Trình soạn thảo email"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__invoice_mail_template_id
 msgid "Email sent to the customer once the invoice is available."
-msgstr "Email được gửi cho khách hàng sau khi đơn hàng được thanh toán"
+msgstr "Email được gửi cho khách hàng sau khi có hoá đơn."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__expected_date
@@ -2298,7 +2316,7 @@ msgstr "Tệp đính kèm chính"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage Promotions, coupons, loyalty cards, Gift cards &amp; eWallet"
 msgstr ""
-"Quản lý khuyến mại, phiếu giảm giá, thẻ khách hàng thân thiết, thẻ quà tăng "
+"Quản lý khuyến mại, phiếu giảm giá, thẻ khách hàng thân thiết, thẻ quà tặng "
 "và ví điện tử"
 
 #. module: sale
@@ -2866,7 +2884,7 @@ msgstr "Giảm Giá"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr "Giảm giá chưa bao gồm thuế"
+msgstr "Giá giảm chưa bao gồm thuế"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
@@ -3119,7 +3137,7 @@ msgstr "Báo giá đã gửi"
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
 #, python-format
 msgid "Quotation Validity is required and must be greater than 0."
-msgstr "Xác nhận báo giá là bắt buộc và phải lớn hơn 0. "
+msgstr "Hiệu lực báo giá là bắt buộc và phải lớn hơn 0. "
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -3330,7 +3348,7 @@ msgstr "Cảnh báo bán hàng"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
 msgid "Sale onboarding selected payment method"
-msgstr "Chuẩn bị phương thức thanh toán đã chọn "
+msgstr "Hướng dẫn bán hàng phương thức thanh toán đã chọn"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_packaging__sales
@@ -3562,7 +3580,7 @@ msgstr "Mục"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Section Name (eg. Products, Services)"
-msgstr "Tên M=mục (ví dụ: Sản phẩm, Dịch vụ)"
+msgstr "Tên mục (ví dụ: Sản phẩm, Dịch vụ)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_token

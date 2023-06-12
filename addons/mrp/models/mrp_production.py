@@ -1217,7 +1217,7 @@ class MrpProduction(models.Model):
             'view_mode': 'tree,form',
         }
 
-    def action_generate_serial(self):
+    def _prepare_stock_lot_values(self):
         self.ensure_one()
         if self.product_id.tracking == 'lot':
             name = self.env['ir.sequence'].next_by_code('stock.lot.serial')
@@ -1230,11 +1230,15 @@ class MrpProduction(models.Model):
                 name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
         else:
             name = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id) or self.env['ir.sequence'].next_by_code('stock.lot.serial')
-        self.lot_producing_id = self.env['stock.lot'].create({
+        return {
             'product_id': self.product_id.id,
             'company_id': self.company_id.id,
             'name': name,
-        })
+        }
+
+    def action_generate_serial(self):
+        self.ensure_one()
+        self.lot_producing_id = self.env['stock.lot'].create(self._prepare_stock_lot_values())
         if self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_line_ids:
             self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_line_ids.lot_id = self.lot_producing_id
         if self.product_id.tracking == 'serial':
@@ -1523,9 +1527,11 @@ class MrpProduction(models.Model):
         for order in self:
             finish_moves = order.move_finished_ids.filtered(lambda m: m.product_id == order.product_id and m.state not in ('done', 'cancel'))
             # the finish move can already be completed by the workorder.
-            if finish_moves and not finish_moves.quantity_done:
-                finish_moves._set_quantity_done(float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP'))
-                finish_moves.move_line_ids.lot_id = order.lot_producing_id
+            for move in finish_moves:
+                if move.quantity_done:
+                    continue
+                move._set_quantity_done(float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP'))
+                move.move_line_ids.lot_id = order.lot_producing_id
             # workorder duration need to be set to calculate the price of the product
             for workorder in order.workorder_ids:
                 if workorder.state not in ('done', 'cancel'):

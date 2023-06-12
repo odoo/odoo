@@ -34,14 +34,14 @@ msgstr "%s 사용 완료"
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "(%(sign)s%(hours)s:%(minutes)s remaining)"
-msgstr ""
+msgstr "(%(sign)s%(hours)s:%(minutes)s 남음)"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "(%s days remaining)"
-msgstr ""
+msgstr "(%s 일 남음)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -52,12 +52,12 @@ msgstr "(포함 내역"
 #. module: hr_timesheet
 #: model_terms:digest.tip,tip_description:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "<b class=\"tip_title\">Tip: Record your Timesheets faster</b>"
-msgstr ""
+msgstr "<b class=\"tip_title\">팁: 작업시간표를 빠르게 기록할 수 있습니다</b>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
 msgid "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-calendar me-1\" role=\"img\" aria-label=\"날ㅉ\" title=\"날짜\"/>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
@@ -97,16 +97,18 @@ msgid ""
 "<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">Hours Spent on Sub-tasks:</span>\n"
 "                                <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">Days Spent on Sub-tasks:</span>"
 msgstr ""
+"<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">하위 작업에 소요된 시간:</span>\n"
+"                                <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">하위 작업에 소요된 일수:</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span style=\"margin-right: 15px;\">Total (Days)</span>"
-msgstr ""
+msgstr "<span style=\"margin-right: 15px;\">합계(일)</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span style=\"margin-right: 15px;\">Total (Hours)</span>"
-msgstr ""
+msgstr "<span style=\"margin-right: 15px;\">합계 (시간)</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
@@ -121,27 +123,27 @@ msgstr "<span>설명</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span>Employee</span>"
-msgstr ""
+msgstr "<span>임직원</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span>Project</span>"
-msgstr ""
+msgstr "<span>프로젝트</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 msgid "<span>Task</span>"
-msgstr ""
+msgstr "<span>작업</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task_planned_hours_template
 msgid "<strong>Allocated Days:</strong>"
-msgstr ""
+msgstr "<strong>할당된 일수:</strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Days Spent:</strong>"
-msgstr ""
+msgstr "<strong>소요 일자:</strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_kanban_account_analytic_line
@@ -151,17 +153,17 @@ msgstr "<strong>기간 : </strong>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "<strong>Hours Spent:</strong>"
-msgstr ""
+msgstr "<strong>소요 시간:</strong>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_task
 msgid "<strong>Progress:</strong>"
-msgstr ""
+msgstr "<strong>진행:</strong>"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__analytic_account_active
 msgid "Active Analytic Account"
-msgstr ""
+msgstr "활성 분석 계정"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_timesheet_manager
@@ -185,7 +187,7 @@ msgstr "모든 작업 기록"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Allocated Days"
-msgstr ""
+msgstr "할당된 일수"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__allocated_hours
@@ -234,6 +236,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
+"이 프로젝트와 작업, 작업 기록이 연결된 분석 계정입니다. \n"
+"관련 문서(예: 판매 주문서, 청구서, 구매 주문서, 공급업체 청구서, 비용 등)에 이 분석 계정을 설정하여 프로젝트에 소요된 비용과 수익을 추적할 수 있습니다.\n"
+"분석 계정은 필요한 경우 각 작업에서 개별적으로 변경할 수 있습니다.\n"
+"작업기록을 사용하려면 분석 계정이 필요합니다."
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_report
@@ -243,6 +249,8 @@ msgid ""
 "Analyze the projects and tasks on which your employees spend their time.<br>\n"
 "                Evaluate which part is billable and what costs it represents."
 msgstr ""
+"직원들의 시간을 기록한 프로젝트와 작업을 분석합니다.<br>\n"
+"                청구 가능한 부분과 비용을 평가하십시오."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__ancestor_task_id
@@ -260,7 +268,7 @@ msgstr "애플 앱스토어"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_ids
 msgid "Associated Timesheets"
-msgstr ""
+msgstr "관련된 작업기록"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_synchro
@@ -290,7 +298,7 @@ msgstr "작업별"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_project_collaborator
 msgid "Collaborators in project shared"
-msgstr ""
+msgstr "공유된 프로젝트의 공동 작업자"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_res_company
@@ -337,12 +345,12 @@ msgstr "일자"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheet_table
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Days Spent"
-msgstr ""
+msgstr "소요 일자"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Days recorded on sub-tasks:"
-msgstr ""
+msgstr "하위 작업에 기록된 날짜:"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_res_company__internal_project_id
@@ -420,7 +428,7 @@ msgstr "직원 알림"
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__encode_uom_in_days
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__encode_uom_in_days
 msgid "Encode Uom In Days"
-msgstr ""
+msgstr "일별로 Uom 인코딩"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__timesheet_encode_uom_id
@@ -435,7 +443,7 @@ msgstr "인코딩 Uom"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Generate timesheets upon time off validation"
-msgstr ""
+msgstr "휴가 승인 시 작업기록 생성"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -480,7 +488,7 @@ msgstr "소요 시간"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Hours recorded on sub-tasks:"
-msgstr ""
+msgstr "하위 작업에 기록된 시간:"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_timesheets_analysis_report__id
@@ -519,7 +527,7 @@ msgstr "내부 프로젝트"
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "Invalid operator: %s"
-msgstr ""
+msgstr "잘못된 운영자: %s"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -527,17 +535,17 @@ msgstr ""
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "Invalid value: %s"
-msgstr ""
+msgstr "잘못된 값: %s"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__is_encode_uom_days
 msgid "Is Encode Uom Days"
-msgstr ""
+msgstr "일별로 Uom 인코딩 여부"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__is_internal_project
 msgid "Is Internal Project"
-msgstr ""
+msgstr "내부 프로젝트임"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_account_analytic_line__job_title
@@ -615,7 +623,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.rating_rating_view_search_project_inherited
 msgid "My Department's Ratings"
-msgstr ""
+msgstr "나의 부서 평가"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
@@ -626,7 +634,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
 msgid "My Department's Updates"
-msgstr ""
+msgstr "나의 부서 업데이트"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_project_project_filter_inherit_timesheet
@@ -642,7 +650,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.rating_rating_view_search_project_inherited
 msgid "My Team's Ratings"
-msgstr ""
+msgstr "나의 팀 평가"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
@@ -653,7 +661,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_update_view_search_inherit
 msgid "My Team's Updates"
-msgstr ""
+msgstr "나의 팀 업데이트"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line
@@ -694,7 +702,7 @@ msgstr "없음"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__remaining_hours
 msgid "Number of allocated hours minus the number of hours spent."
-msgstr ""
+msgstr "할당된 시간에서 실제 소요된 시간을 뺀 값"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
@@ -755,12 +763,12 @@ msgstr "프로젝트 시간 단위"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__is_project_overtime
 msgid "Project in Overtime"
-msgstr ""
+msgstr "연장된 프로젝트"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_project
 msgid "Project's Timesheets"
-msgstr ""
+msgstr "프로젝트의 작업기록"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_project_project_filter_inherit_timesheet
@@ -782,7 +790,7 @@ msgstr "새로운 활동 기록하기"
 msgid ""
 "Record your timesheets in an instant by pressing Shift + the corresponding "
 "hotkey to add 15min to your projects."
-msgstr ""
+msgstr "Shift + 해당 단축키를 누르면 프로젝트의 작업기록에 15분을 추가할 수 있습니다."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
@@ -793,7 +801,7 @@ msgstr "잔여일수"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Remaining Days:"
-msgstr ""
+msgstr "잔여 일수:"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__remaining_hours
@@ -808,17 +816,17 @@ msgstr "잔여 시간"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__remaining_hours_percentage
 msgid "Remaining Hours Percentage"
-msgstr ""
+msgstr "잔여 시간 백분율"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Remaining Hours:"
-msgstr ""
+msgstr "잔여 시간:"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__remaining_hours
 msgid "Remaining Invoiced Time"
-msgstr ""
+msgstr "잔여 청구서 시간"
 
 #. module: hr_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_timesheets_reports
@@ -837,14 +845,14 @@ msgstr "전체에서 검색"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Description"
-msgstr ""
+msgstr "설명 검색"
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Employee"
-msgstr ""
+msgstr "직원 검색"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -858,7 +866,7 @@ msgstr "프로젝트에서 검색"
 #: code:addons/hr_timesheet/controllers/portal.py:0
 #, python-format
 msgid "Search in Task"
-msgstr ""
+msgstr "작업 검색"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -866,7 +874,7 @@ msgstr ""
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "See timesheet entries"
-msgstr ""
+msgstr "작업기록 항목 보기"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
@@ -911,7 +919,7 @@ msgstr "작업"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_task
 msgid "Task's Timesheets"
-msgstr ""
+msgstr "작업에 대한 작업기록"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_report_project_task_user
@@ -951,6 +959,7 @@ msgid ""
 "These projects have some timesheet entries referencing them. Before removing"
 " these projects, you have to remove these timesheet entries."
 msgstr ""
+"이 프로젝트에는 다른 곳에서 참조되고 있는 일부 작업기록 항목이 있습니다. 프로젝트를 삭제하기 전에 작업기록 항목을 먼저 제거하십시오."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -960,6 +969,7 @@ msgid ""
 "These tasks have some timesheet entries referencing them. Before removing "
 "these tasks, you have to remove these timesheet entries."
 msgstr ""
+"이 작업에는 다른 곳에서 참조되고 있는 일부 작업기록 항목이 있습니다. 작업을 삭제하기 전에 작업기록 항목을 먼저 제거하십시오."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -980,7 +990,7 @@ msgstr "이번 달"
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "This operator %s is not supported in this search method."
-msgstr ""
+msgstr "이 검색 방법에서는 해당 운영자 %s 가 지원되지 않습니다."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -990,6 +1000,7 @@ msgid ""
 "This project has some timesheet entries referencing it. Before removing this"
 " project, you have to remove these timesheet entries."
 msgstr ""
+"이 프로젝트에는 다른 곳에서 참조되고 있는 일부 작업기록 항목이 있습니다. 프로젝트를 삭제하기 전에 작업기록 항목을 먼저 제거하십시오."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -999,6 +1010,7 @@ msgid ""
 "This task has some timesheet entries referencing it. Before removing this "
 "task, you have to remove these timesheet entries."
 msgstr ""
+"이 작업에는 다른 곳에서 참조되고 있는 일부 작업기록 항목이 있습니다. 작업을 삭제하기 전에 작업기록 항목을 먼저 제거하십시오."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1047,17 +1059,17 @@ msgstr "휴가"
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__subtask_effective_hours
 msgid "Time spent on the sub-tasks (and their own sub-tasks) of this task."
-msgstr ""
+msgstr "이 작업의 하위 작업(및 자신의 하위 작업)에 소요된 시간입니다."
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__total_hours_spent
 msgid "Time spent on this task and its sub-tasks (and their own sub-tasks)."
-msgstr ""
+msgstr "이 작업과 하위 작업(및 자신의 하위 작업)에 소요된 시간입니다."
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Time unit used to record your timesheets"
-msgstr ""
+msgstr "작업기록을 기록하는 데 사용되는 시간 단위"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_timesheet_line_search
@@ -1088,12 +1100,12 @@ msgstr "작업 기록 활동"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_my_timesheet_line_pivot
 msgid "Timesheet Costs"
-msgstr ""
+msgstr "작업 기록 비용"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_count
 msgid "Timesheet Count"
-msgstr ""
+msgstr "작업 기록 수"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_encode_uom_id
@@ -1150,39 +1162,39 @@ msgstr "작업 기록"
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "Timesheets - %s"
-msgstr ""
+msgstr "작업기록 - %s"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_employee
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_project
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.timesheets_analysis_report_pivot_task
 msgid "Timesheets Analysis"
-msgstr ""
+msgstr "작업기록 분석"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_timesheets_analysis_report
 msgid "Timesheets Analysis Report"
-msgstr ""
+msgstr "작업기록 분석 보고서"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Timesheets Control"
-msgstr ""
+msgstr "작업 기록 관리"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
 msgid "Timesheets by Employee"
-msgstr ""
+msgstr "직원별 작업 기록"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
 msgid "Timesheets by Project"
-msgstr ""
+msgstr "프로젝트별 작업 기록"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
 msgid "Timesheets by Task"
-msgstr ""
+msgstr "단위 작업별 작업 기록"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__allow_timesheets
@@ -1196,12 +1208,12 @@ msgstr "이 작업은 작업 기록표를 기록할 수 있습니다."
 msgid ""
 "Timesheets must be created with an active employee in the selected "
 "companies."
-msgstr ""
+msgstr "작업기록은 선택한 회사의 활성 직원으로 생성해야 합니다."
 
 #. module: hr_timesheet
 #: model:digest.tip,name:hr_timesheet.digest_tip_hr_timesheet_0
 msgid "Tip: Record your Timesheets faster"
-msgstr ""
+msgstr "팁: 작업시간표를 빠르게 기록할 수 있습니다"
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1219,7 +1231,7 @@ msgstr "합계"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_sharing_inherit_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_task_form2_inherited
 msgid "Total Days"
-msgstr ""
+msgstr "총 일수"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__total_hours_spent
@@ -1231,14 +1243,14 @@ msgstr "총 시간"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__total_timesheet_time
 msgid "Total Timesheet Time"
-msgstr ""
+msgstr "전체 작업기록 시간"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_project__total_timesheet_time
 msgid ""
 "Total number of time (in the proper UoM) recorded in the project, rounded to"
 " the unit."
-msgstr ""
+msgstr "올림 후 프로젝트에 기록한 총 시간(적절한 단위 사용)"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -1257,7 +1269,7 @@ msgstr ""
 msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
-msgstr ""
+msgstr "매일 프로젝트별로 작업 시간을 추적하고 고객에게 청구서를 발행하십시오."
 
 #. module: hr_timesheet
 #. odoo-python
@@ -1275,12 +1287,12 @@ msgstr "사용자"
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_approver
 msgid "User: all timesheets"
-msgstr ""
+msgstr "사용자: 모든 작업기록"
 
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
 msgid "User: own timesheets only"
-msgstr ""
+msgstr "사용자 : 자신의 작업기록만"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_uom_uom__timesheet_widget
@@ -1326,20 +1338,22 @@ msgid ""
 "analytic account. Please change this account, or reactivate the current one "
 "to timesheet on the project."
 msgstr ""
+"이 프로젝트는 비활성 분석 계정에 연결되어 있으므로 작업 시간을 기록할 수 없습니다. 다른 계정으로 변경하거나 현재 계정의 프로젝트 작업"
+" 기록을 다시 활성화하십시오."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
 #, python-format
 msgid "You cannot set an archived employee to the existing timesheets."
-msgstr ""
+msgstr "보관 처리된 직원은 기존 작업기록에 설정할 수 없습니다."
 
 #. module: hr_timesheet
 #. odoo-python
 #: code:addons/hr_timesheet/models/project.py:0
 #, python-format
 msgid "You cannot use timesheets without an analytic account."
-msgstr ""
+msgstr "분석 계정이 없는 경우 작업기록을 사용할 수 없습니다."
 
 #. module: hr_timesheet
 #. odoo-python

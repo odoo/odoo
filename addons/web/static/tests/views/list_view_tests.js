@@ -11,11 +11,13 @@ import { getNextTabableElement } from "@web/core/utils/ui";
 import { session } from "@web/session";
 import { FloatField } from "@web/views/fields/float/float_field";
 import { TextField } from "@web/views/fields/text/text_field";
+import { listView } from "@web/views/list/list_view";
 import { ListController } from "@web/views/list/list_controller";
 import { DynamicRecordList, DynamicGroupList } from "@web/views/relational_model";
 import { actionService } from "@web/webclient/actions/action_service";
 import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
+import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import {
     addRow,
     click,
@@ -63,7 +65,7 @@ import {
 import { createWebClient, doAction, loadState } from "../webclient/helpers";
 import { makeView, setupViewRegistries } from "./helpers";
 
-import { Component, onWillStart, xml } from "@odoo/owl";
+import { Component, onWillStart, xml, markup } from "@odoo/owl";
 
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
@@ -119,6 +121,12 @@ QUnit.module("Views", (hooks) => {
                             currency_field: "company_currency_id",
                         },
                         currency_id: {
+                            string: "Currency",
+                            type: "many2one",
+                            relation: "res_currency",
+                            default: 1,
+                        },
+                        currency_test: {
                             string: "Currency",
                             type: "many2one",
                             relation: "res_currency",
@@ -1334,7 +1342,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_data_cell"));
         assert.containsOnce(target, ".o_selected_row");
 
-        await click(target, ".o_datepicker input");
+        await click(target, ".o_datepicker .o_datepicker_input");
         assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
         triggerHotkey("Escape");
         await nextTick();
@@ -1362,7 +1370,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_list_button_add"));
         assert.containsOnce(target, ".o_selected_row");
 
-        await click(target, ".o_datepicker input");
+        await click(target, ".o_datepicker .o_datepicker_input");
         assert.containsOnce(
             document.body,
             ".bootstrap-datetimepicker-widget",
@@ -3186,10 +3194,164 @@ QUnit.module("Views", (hooks) => {
         );
         assert.strictEqual(
             target.querySelectorAll("tfoot td")[1].textContent,
-            "2000.000",
-            "aggregates monetary use digits attribute if available"
+            "—",
+            "aggregates monetary should never work if no currency field is present"
         );
     });
+
+    QUnit.test("aggregates monetary (same currency)", async function (assert) {
+        serverData.models.foo.records[0].currency_id = 1;
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="amount" widget="monetary" sum="Sum"/>
+                    <field name="currency_id"/>
+                </tree>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll("tbody .o_monetary_cell")), [
+            "$\u00a01200.00",
+            "$\u00a0500.00",
+            "$\u00a0300.00",
+            "$\u00a00.00",
+        ]);
+
+        assert.strictEqual(target.querySelectorAll("tfoot td")[1].textContent, "$\u00a02000.00");
+    });
+
+    QUnit.test("aggregates monetary (different currencies)", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="amount" widget="monetary" sum="Sum"/>
+                    <field name="currency_id"/>
+                </tree>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll("tbody .o_monetary_cell")), [
+            "1200.00\u00a0€",
+            "$\u00a0500.00",
+            "$\u00a0300.00",
+            "$\u00a00.00",
+        ]);
+
+        assert.strictEqual(target.querySelectorAll("tfoot td")[1].textContent, "—");
+    });
+
+    QUnit.test("aggregates monetary (currency field not in view)", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="amount" widget="monetary" sum="Sum" options="{'currency_field': 'currency_test'}"/>
+                    <field name="currency_id"/>
+                </tree>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll("tbody .o_monetary_cell")), [
+            "1200.00",
+            "500.00",
+            "300.00",
+            "0.00",
+        ]);
+
+        assert.strictEqual(target.querySelectorAll("tfoot td")[1].textContent, "—");
+    });
+
+    QUnit.test("aggregates monetary (currency field in view)", async function (assert) {
+        serverData.models.foo.fields.amount.currency_field = "currency_test";
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="amount" widget="monetary" sum="Sum"/>
+                    <field name="currency_test"/>
+                </tree>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll("tbody .o_monetary_cell")), [
+            "$\u00a01200.00",
+            "$\u00a0500.00",
+            "$\u00a0300.00",
+            "$\u00a00.00",
+        ]);
+
+        assert.strictEqual(target.querySelectorAll("tfoot td")[1].textContent, "$\u00a02000.00");
+    });
+
+    QUnit.test("aggregates monetary with custom digits (same currency)", async function (assert) {
+        serverData.models.foo.records = serverData.models.foo.records.map((record) => ({
+            ...record,
+            currency_id: 1,
+        }));
+        patchWithCleanup(session.currencies, {
+            1: { ...session.currencies[1], digits: [42, 4] },
+        });
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree>
+                    <field name="amount" sum="Sum"/>
+                    <field name="currency_id"/>
+                </tree>`,
+        });
+
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll("tbody [name='amount']")), [
+            "$\u00a01200.0000",
+            "$\u00a0500.0000",
+            "$\u00a0300.0000",
+            "$\u00a00.0000",
+        ]);
+
+        assert.strictEqual(target.querySelectorAll("tfoot td")[1].textContent, "$\u00a02000.0000");
+    });
+
+    QUnit.test(
+        "aggregates float with monetary widget and custom digits (same currency)",
+        async function (assert) {
+            serverData.models.foo.records = serverData.models.foo.records.map((record) => ({
+                ...record,
+                currency_id: 1,
+            }));
+            patchWithCleanup(session.currencies, {
+                1: { ...session.currencies[1], digits: [42, 4] },
+            });
+
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: `
+                <tree>
+                    <field name="qux" widget="monetary" sum="Sum"/>
+                    <field name="currency_id"/>
+                </tree>`,
+            });
+
+            assert.deepEqual(
+                getNodesTextContent(target.querySelectorAll("tbody .o_monetary_cell")),
+                ["$\u00a00.4000", "$\u00a013.0000", "$\u00a0-3.0000", "$\u00a09.0000"]
+            );
+
+            assert.strictEqual(
+                target.querySelectorAll("tfoot td")[1].textContent,
+                "$\u00a019.4000"
+            );
+        }
+    );
 
     QUnit.test(
         "currency_field is taken into account when formatting monetary values",
@@ -3216,6 +3378,11 @@ QUnit.module("Views", (hooks) => {
                 target.querySelectorAll('.o_data_row td[name="amount_currency"]')[0].textContent,
                 "$\u00a01100.00",
                 "field should be formatted based on company_currency_id"
+            );
+            assert.strictEqual(
+                target.querySelectorAll("tfoot td")[1].textContent,
+                "—",
+                "aggregates monetary should never work if different currencies are used"
             );
         }
     );
@@ -4774,6 +4941,48 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["unlink"]);
 
         assert.containsN(target, "tbody td.o_list_record_selector", 3, "should have 3 records");
+    });
+
+    QUnit.test("custom delete confirmation dialog", async (assert) => {
+
+        class CautiousController extends ListController {
+            get deleteConfirmationDialogProps() {
+                const props = super.deleteConfirmationDialogProps;
+                props.body = markup(`<span class="text-danger">These are the consequences</span><br/>${props.body}`);
+                return props;
+            }
+        }
+        const cautiousView = {
+            ...listView,
+            Controller: CautiousController,
+        };
+        registry.category("views").add("caution", cautiousView);
+
+        await makeView({
+            resModel: "foo",
+            type: "list",
+            arch: `
+                <tree js_class="caution">
+                    <field name="foo"/>
+                </tree>
+            `,
+            serverData,
+            actionMenus: {},
+        });
+
+        await click(target.querySelector("tbody td.o_list_record_selector:first-child input"));
+        assert.containsOnce(target, "div.o_control_panel .o_cp_action_menus");
+
+        await toggleActionMenu(target);
+        await toggleMenuItem(target, "Delete");
+        assert.containsOnce(
+            document.body,
+            ".modal:contains('you sure') .text-danger:contains('consequences')",
+            "confirmation dialog should have markup and more"
+        );
+
+        await click(document, "body .modal footer button.btn-secondary");
+        assert.containsN(target, "tbody td.o_list_record_selector", 4, "nothing deleted, 4 records remain");
     });
 
     QUnit.test(
@@ -7279,7 +7488,7 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o_field_widget[name=foo] input")
         );
 
-        await click(target, ".o_field_widget[name=date] input");
+        await click(target, ".o_field_widget[name=date] .o_datepicker_input");
         assert.strictEqual(
             document.activeElement,
             target.querySelector(".o_field_widget[name=date] input")
@@ -7301,6 +7510,39 @@ QUnit.module("Views", (hooks) => {
         );
         assert.strictEqual(document.activeElement.selectionStart, 0);
         assert.strictEqual(document.activeElement.selectionEnd, 10);
+    });
+
+    QUnit.test("text field should keep it's selection when clicking on it", async (assert) => {
+        serverData.models.foo.records[0].text = "1234";
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom" limit="1">
+                    <field name="text"/>
+                </tree>`,
+        });
+
+        await click(target, "td[name=text]");
+        assert.strictEqual(
+            window.getSelection().toString(),
+            "1234",
+            "the entire content should be selected on initial click"
+        );
+
+        Object.assign(
+            target.querySelector("[name=text] textarea"),
+            { selectionStart: 0, selectionEnd: 1 }
+        );
+
+        await click(target, "[name=text] textarea");
+
+        assert.strictEqual(
+            window.getSelection().toString(),
+            "1",
+            "the selection shouldn't be changed"
+        );
     });
 
     QUnit.test("click on a button in a list view", async function (assert) {
@@ -16367,6 +16609,23 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(td2.textContent, "61%");
     });
 
+    QUnit.test(
+        "Formatted group operator with digit precision on the field definition",
+        async function (assert) {
+            serverData.models.foo.fields.qux.digits = [16, 3];
+            await makeView({
+                type: "list",
+                resModel: "foo",
+                serverData,
+                arch: '<tree><field name="qux"/></tree>',
+                groupBy: ["bar"],
+            });
+            const [td1, td2] = target.querySelectorAll("td.o_list_number");
+            assert.strictEqual(td1.textContent, "9.000");
+            assert.strictEqual(td2.textContent, "10.400");
+        }
+    );
+
     QUnit.test("list view does not crash when clicked button cell", async function (assert) {
         await makeView({
             type: "list",
@@ -16960,4 +17219,122 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
+    QUnit.test("context keys not passed down the stack and not to fields", async (assert) => {
+        patchWithCleanup(AutoComplete, {
+            timeout: 0,
+        });
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Foo",
+                res_model: "foo",
+                type: "ir.actions.act_window",
+                views: [[false, "list"]],
+                context: {
+                    tree_view_ref: "foo_view_ref",
+                    search_default_bar: true,
+                },
+            },
+        };
+        serverData.views = {
+            "foo,foo_view_ref,list": `
+                <tree default_order="foo" editable="top">
+                    <field name="m2m" widget="many2many_tags"/>
+                </tree>`,
+            "foo,false,search": "<search/>",
+            "bar,false,list": `<tree><field name="name" /></tree>`,
+            "bar,false,search": "<search/>",
+        };
+
+        const barRecs = [];
+        for (let i = 1; i < 50; i++) {
+            barRecs.push({
+                id: i,
+                display_name: `Value ${i}`,
+            });
+        }
+        serverData.models.bar.records = barRecs;
+
+        const mockRPC = (route, args) => {
+            if (args.method) {
+                assert.step(
+                    `${args.model}: ${args.method}: ${JSON.stringify(args.kwargs.context)}`
+                );
+            }
+        };
+        const wc = await createWebClient({ serverData, mockRPC });
+        await doAction(wc, 1);
+        assert.verifySteps([
+            `foo: get_views: {"lang":"en","uid":7,"tz":"taht","tree_view_ref":"foo_view_ref","search_default_bar":true}`,
+            `foo: web_search_read: {"lang":"en","uid":7,"tz":"taht","bin_size":true}`,
+            `bar: read: {"lang":"en","uid":7,"tz":"taht","bin_size":true}`,
+        ]);
+
+        await click(target.querySelectorAll(".o_data_row .o_data_cell")[1]);
+
+        const input = target.querySelector(".o_selected_row .o_field_many2many_tags input");
+        await triggerEvent(input, null, "focus");
+        await click(input);
+        await nextTick();
+        assert.verifySteps([`bar: name_search: {"lang":"en","uid":7,"tz":"taht"}`]);
+
+        const items = Array.from(
+            target.querySelectorAll(".o_selected_row .o_field_many2many_tags .dropdown-item")
+        );
+        await click(items.find((el) => el.textContent.trim() === "Search More..."));
+        assert.verifySteps([
+            `bar: get_views: {"lang":"en","uid":7,"tz":"taht"}`,
+            `bar: web_search_read: {"lang":"en","uid":7,"tz":"taht","bin_size":true}`,
+        ]);
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(
+            target.querySelector(".modal .modal-header .modal-title").textContent,
+            "Search: M2M field"
+        );
+    });
+
+    QUnit.test("search nested many2one field with early option selection", async (assert) => {
+        const deferred = makeDeferred();
+        serverData.models.parent = {
+            fields: {
+                foo: { string: "Foo", type: "one2many", relation: "foo" },
+            },
+        },
+        await makeView({
+            type: "form",
+            resModel: "parent",
+            serverData,
+            arch: `
+            <form>
+                <field name="foo">
+                    <tree editable="bottom">
+                        <field name="m2o"/>
+                    </tree>
+                </field>
+            </form>`,
+            mockRPC: async (route, { method }) => {
+                if (method === "name_search") {
+                    await deferred;
+                }
+            },
+        });
+
+        await triggerEvent(document.querySelector('.o_field_x2many_list_row_add a'), null, "click");
+
+        const input = document.activeElement;
+        input.value = 'alu';
+        triggerEvent(document.activeElement, null, "input"),
+        await nextTick();
+
+        input.value = 'alue';
+        triggerEvent(document.activeElement, null, "input"),
+        triggerHotkey("Enter"),
+        await nextTick();
+
+        deferred.resolve();
+        await nextTick();
+
+        assert.strictEqual(input, document.activeElement);
+        assert.strictEqual(input.value, 'Value 1');
+    });
 });

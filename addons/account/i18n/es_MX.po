@@ -9,8 +9,8 @@
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
 # Iran Villalobos López, 2023
 # Lucia Pacheco, 2023
-# Fernanda Alvarez, 2023
 # Aimée Mendoza Sánchez, 2023
+# Fernanda Alvarez, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Aimée Mendoza Sánchez, 2023\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4273,7 +4273,7 @@ msgstr "Calcular todos los impuestos"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__compute_all_tax_dirty
 msgid "Compute All Tax Dirty"
-msgstr "Calcular todos los impuestos sucios"
+msgstr "Calcular todos los impuestos con descuento"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4586,7 +4586,7 @@ msgstr "Crear un nuevo registro de efectivo"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.res_partner_action_customer
 msgid "Create a new customer in your address book"
-msgstr "Crear un nuevo cliente en su directorio"
+msgstr "Crear un nuevo cliente en su libreta de direcciones"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_fiscal_position_form
@@ -5184,7 +5184,7 @@ msgstr "ENTREGADO EN LUGAR DE DESCARGA"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_DDP
 msgid "DELIVERED DUTY PAID"
-msgstr "ENTREGADO ARANCEL PAGADO"
+msgstr "ENTREGADO CON DERECHOS PAGADOS"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__down
@@ -6314,7 +6314,7 @@ msgstr "Asientos: %(account)s"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_dirty
 msgid "Epd Dirty"
-msgstr "Descuento por pago anticipado sucio"
+msgstr "Descuento por pago anticipado con descuento"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__epd_key
@@ -6471,17 +6471,17 @@ msgstr "Valor externo"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
 msgid "FREE ALONGSIDE SHIP"
-msgstr "GRATIS JUNTO CON EL ENVÍO"
+msgstr "LIBRE AL COSTADO DEL BUQUE"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FCA
 msgid "FREE CARRIER"
-msgstr "TRANSPORTISTA GRATIS"
+msgstr "FRANCO PORTEADOR"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FOB
 msgid "FREE ON BOARD"
-msgstr "GRATIS A BORDO"
+msgstr "LIBRE A BORDO"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__factor
@@ -16241,6 +16241,12 @@ msgid "Warning for %s"
 msgstr "Advertencia para %s"
 
 #. module: account
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "Warning for Cash Rounding Method: %s"
+msgstr "Advertencia para el método de redondeo de efectivo: %s"
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.partner_view_buttons
 msgid "Warning on the Invoice"
 msgstr "Advertencia en la factura"
@@ -17157,6 +17163,12 @@ msgstr "Seleccionó los siguientes tipos de documento al mismo tiempo:"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#, python-format
+msgid "You must specify the Profit Account (company dependent)"
+msgstr "Debe especificar la cuenta de ganancias (dependiente de la empresa)"
+
+#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You need to add a line before posting."

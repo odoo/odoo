@@ -2305,7 +2305,8 @@ options.registry.HeaderNavbar = options.Class.extend({
         // For all header templates except those in the following array, change
         // the label of the option to "Mobile Alignment" (instead of
         // "Alignment") because it only impacts the mobile view.
-        if (!["'default'", "'hamburger'", "'sidebar'"].includes(weUtils.getCSSVariableValue('header-template'))) {
+        if (!["'default'", "'hamburger'", "'sidebar'", "'magazine'", "'hamburger-full'", "'slogan'"]
+            .includes(weUtils.getCSSVariableValue("header-template"))) {
             const alignmentOptionTitleEl = this.el.querySelector('[data-name="header_alignment_opt"] we-title');
             alignmentOptionTitleEl.textContent = _t("Mobile Alignment");
         }
@@ -3102,6 +3103,28 @@ options.registry.ScrollButton = options.Class.extend({
             this.$target.append(this.$button);
         } else {
             this.$button.detach();
+        }
+    },
+    /**
+     * @override
+     */
+    async selectClass(previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        // If a "d-lg-block" class exists on the section (e.g., for mobile
+        // visibility option), it should be replaced with a "d-lg-flex" class.
+        // This ensures that the section has the "display: flex" property
+        // applied, which is the default rule for both "height" option classes.
+        if (params.possibleValues.includes("o_half_screen_height")) {
+            if (widgetValue) {
+                this.$target[0].classList.replace("d-lg-block", "d-lg-flex");
+            } else if (this.$target[0].classList.contains("d-lg-flex")) {
+                // There are no known cases, but we still make sure that the
+                // <section> element doesn't have a "display: flex" originally.
+                this.$target[0].classList.remove("d-lg-flex");
+                const sectionStyle = window.getComputedStyle(this.$target[0]);
+                const hasDisplayFlex = sectionStyle.getPropertyValue("display") === "flex";
+                this.$target[0].classList.add(hasDisplayFlex ? "d-lg-flex" : "d-lg-block");
+            }
         }
     },
 

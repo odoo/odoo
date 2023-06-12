@@ -15,8 +15,8 @@
                         t-on-click="(ev) => this.onGroupClick(group, ev)"
                     >
                         <div class="o_kanban_header top-0" t-attf-class="{{ !env.isSmall and group.isFolded ? 'pt-3' : 'py-3' }}">
-                            <div class="o_kanban_header_title position-relative d-flex align-items-center lh-lg text-900" t-att="tooltipAttributes(group)">
-                                <span class="o_column_title flex-grow-1 d-inline-block mw-100 text-truncate fs-4 fw-bold align-top" t-att-class="{ 'overflow-visible': !env.isSmall and group.isFolded }" t-esc="getGroupName(group)"/>
+                            <div class="o_kanban_header_title position-relative d-flex align-items-center lh-lg text-900">
+                                <span t-att="tooltipAttributes(group)" class="o_column_title flex-grow-1 d-inline-block mw-100 text-truncate fs-4 fw-bold align-top" t-att-class="{ 'overflow-visible': !env.isSmall and group.isFolded }" t-esc="getGroupName(group)"/>
                                 <t t-if="env.isSmall or !group.isFolded">
                                     <Dropdown class="'o_kanban_config'" togglerClass="'btn p-0 border-0'">
                                         <t t-set-slot="toggler">

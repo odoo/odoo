@@ -17,6 +17,7 @@ class TestReports(odoo.tests.TransactionCase):
             'account.report_original_vendor_bill': [('move_type', 'in', ('in_invoice', 'in_receipt'))],
             'account.report_invoice_with_payments': invoice_domain,
             'account.report_invoice': invoice_domain,
+            'l10n_th.report_commercial_invoice': invoice_domain,
         }
         Report = self.env['ir.actions.report']
         for report in Report.search([('report_type', 'like', 'qweb')]):

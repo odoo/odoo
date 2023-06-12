@@ -119,43 +119,41 @@
     <template id="report_invoice_wizard_preview">
         <t t-call="web.html_preview_container">
            <t t-call="web.external_layout">
-                   <div class="pt-5">
-                       <div class="address row">
-                           <div name="address" class="col-5" style="margin-left: auto">
-                               <address>
-                                   <address class="mb-0" itemscope="itemscope"
-                                            itemtype="http://schema.org/Organization">
-                                       <div>
-                                           <span itemprop="name">Deco Addict</span>
+                   <div class="address row">
+                       <div name="address" class="col-5" style="margin-left: auto">
+                           <address>
+                               <address class="mb-0" itemscope="itemscope"
+                                        itemtype="http://schema.org/Organization">
+                                   <div>
+                                       <span itemprop="name">Deco Addict</span>
+                                   </div>
+                                   <div itemprop="address" itemscope="itemscope"
+                                        itemtype="http://schema.org/PostalAddress">
+                                       <div class="d-flex align-items-baseline">
+                                           <span class="w-100 o_force_ltr" itemprop="streetAddress">77 Santa Barbara
+                                               Rd<br/>Pleasant Hill CA 94523<br/>United States</span>
                                        </div>
-                                       <div itemprop="address" itemscope="itemscope"
-                                            itemtype="http://schema.org/PostalAddress">
-                                           <div class="d-flex align-items-baseline">
-                                               <span class="w-100 o_force_ltr" itemprop="streetAddress">77 Santa Barbara
-                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>
-                                           </div>
-                                       </div>
-                                   </address>
+                                   </div>
                                </address>
-                           </div>
+                           </address>
                        </div>
                    </div>
-                   <div class="page">
+                   <div class="page mt-5">
                        <h2>
                            <span>Invoice</span>
-                           <span>INV/2020/07/0003</span>
+                           <span>INV/2023/00003</span>
                        </h2>
-                       <div id="informations" class="row mt32 mb32">
-                           <div class="col-auto mw-100 mb-2" name="invoice_date">
+                       <div id="informations" class="row mt-4 mb-4">
+                           <div class="col-auto col-3 mw-100 mb-2" name="invoice_date">
                                <strong>Invoice Date:</strong>
                                <p class="m-0">07/08/2020</p>
                            </div>
-                           <div class="col-auto mw-100 mb-2" name="due_date">
+                           <div class="col-auto col-3 mw-100 mb-2" name="due_date">
                                <strong>Due Date:</strong>
                                <p class="m-0">08/07/2020</p>
                            </div>
                        </div>
-                       <table class="table table-sm o_main_table" name="invoice_line_table">
+                       <table class="table table-sm o_main_table table-borderless" name="invoice_line_table">
                            <thead>
                                <tr>
                                    <th name="th_description" class="text-start"><span>Description</span></th>
@@ -172,13 +170,13 @@
                                    <td name="account_invoice_line_name"><span>[FURN_8999] Three-Seat Sofa<br/>
                                        Three Seater Sofa with Lounger in Steel Grey Colour</span></td>
                                    <td class="text-end">
-                                       <span>5.000</span>
+                                       <span>5.00</span>
                                    </td>
                                    <td class="text-end d-md-table-cell">
                                        <span class="text-nowrap">1,500.00</span>
                                    </td>
                                    <td class="text-start d-md-table-cell">
-                                       <span id="line_tax_ids">15.00%</span>
+                                       <span id="line_tax_ids">Tax 15%</span>
                                    </td>
                                    <td class="text-end o_price_total">
                                        <span class="text-nowrap">$ <span class="oe_currency_value">7,500.00</span></span>
@@ -188,13 +186,13 @@
                                    <td name="account_invoice_line_name"><span>[FURN_8220] Four Person Desk<br/>
                                        Four person modern office workstation</span></td>
                                    <td class="text-end">
-                                       <span>5.000</span>
+                                       <span>5.00</span>
                                    </td>
                                    <td class="text-end d-md-table-cell">
                                        <span class="text-nowrap">2,350.00</span>
                                    </td>
                                    <td class="text-start d-md-table-cell">
-                                       <span id="line_tax_ids">15.00%</span>
+                                       <span id="line_tax_ids">Tax 15%</span>
                                    </td>
                                    <td class="text-end o_price_total">
                                        <span class="text-nowrap">$ <span class="oe_currency_value">11,750.00</span></span>
@@ -204,10 +202,10 @@
                        </table>
                        <div class="clearfix">
                            <div id="total" class="row">
-                               <div class="col-7 ms-auto">
-                                   <table class="table table-sm" style="page-break-inside: avoid; position:relative;">
+                               <div class="col-6 ms-auto">
+                                   <table class="table table-sm table-borderless" style="page-break-inside: avoid; position:relative;">
                                        <tbody><tr class="border-black o_subtotal" style="">
-                                           <td><strong>Subtotal</strong></td>
+                                           <td><strong>Untaxed Amount</strong></td>
                                            <td class="text-end">
                                                <span>$ <span class="oe_currency_value">19,250.00</span></span>
                                            </td>
@@ -229,9 +227,9 @@
                                </div>
                            </div>
                        </div>
-                       <p>
+                       <p class="mt-4">
                            Please use the following communication for your payment : <b><span>
-                           INV/2020/07/0003</span></b>
+                           INV/2023/00003</span></b>
                        </p>
                        <p name="payment_term">
                            <span>Payment terms: 30 Days</span>
@@ -315,7 +313,14 @@
             </div>
             <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" class="float-start" alt="Logo"/>
             <div class="float-start company_address">
-                <span t-if="company.company_details" t-field="company.company_details"></span>
+                <ul class="list-unstyled">
+                    <li t-if="company.is_company_details_empty"><t t-esc="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
+                    <li t-else=""><t t-esc="company.company_details"/></li>
+                    <li t-if="forced_vat">
+                        <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                        <span t-esc="forced_vat"/>
+                    </li>
+                </ul>
             </div>
             <div class="clearfix mb8"/>
             </div>
@@ -351,7 +356,14 @@
                 <div class="col-6 text-end mb4">
                     <div class="mt0 h4" t-field="company.report_header"/>
                     <div name="company_address" class="float-end mb4">
-                        <span t-if="company.company_details" t-field="company.company_details"></span>
+                        <ul class="list-unstyled">
+                            <li t-if="company.is_company_details_empty"><t t-esc="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
+                            <li t-else=""><t t-esc="company.company_details"/></li>
+                            <li t-if="forced_vat">
+                                <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                                <span t-esc="forced_vat"/>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -379,14 +391,21 @@
     <template id="external_layout_bold">
         <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
             <div class="o_clean_header">
-            <div class="row">
-                <div class="col-6">
-                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                <div class="row">
+                    <div class="col-6">
+                        <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" alt="Logo"/>
+                    </div>
+                    <div class="col-5 offset-1" name="company_address">
+                        <ul class="list-unstyled">
+                            <li t-if="company.is_company_details_empty"><t t-esc="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
+                            <li t-else=""><t t-esc="company.company_details"/></li>
+                            <li t-if="forced_vat">
+                                <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                                <span t-esc="forced_vat"/>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <div class="col-5 offset-1" name="company_address">
-                    <span t-if="company.company_details" t-field="company.company_details"></span>
-                </div>
-            </div>
             </div>
         </div>
 
@@ -401,7 +420,8 @@
                     <span t-field="company.report_footer"/>
                 </div>
                 <div class="col-4">
-                    <span t-if="company.company_details" t-field="company.company_details"/>
+                    <span t-if="company.is_company_details_empty" t-field="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+                    <span t-else="" t-field="company.company_details"/>
                 </div>
                 <div class="col-3">
                     <div class="mt0 mb0 h5" t-field="company.report_header"/>
@@ -430,9 +450,14 @@
             </div>
             <div class="row">
                 <div class="col-6" name="company_address">
-                    <span t-if="company.company_details" t-field="company.company_details"></span>
-                    <span t-else="" t-field="company.partner_id"
-                            t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
+                    <ul class="list-unstyled">
+                        <li t-if="company.is_company_details_empty"><t t-esc="company.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/></li>
+                        <li t-else=""><t t-esc="company.company_details"/></li>
+                        <li t-if="forced_vat">
+                            <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                            <span t-esc="forced_vat"/>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -563,6 +588,7 @@
 
     <template id="styles_company_report">
         <t t-foreach="company_ids" t-as="company" t-translation="off">
+            <t t-set="forced_vat" t-value="False"/>
             <t t-set="font" t-value="company.font or 'Lato'" />
             <t t-set="primary" t-value="company.primary_color or 'black'" />
             <t t-set="secondary" t-value="company.secondary_color or 'black'" />

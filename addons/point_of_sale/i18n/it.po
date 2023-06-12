@@ -4,8 +4,9 @@
 # 
 # Translators:
 # Friederike Fasterling-Nesselbosch, 2022
-# Martin Trigaux, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
+# Martin Trigaux, 2023
+# Sebastiano Picchi, 2023
 # Marianna Ciofani, 2023
 # 
 msgid ""
@@ -913,6 +914,10 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+"Incrementa le vendite con vari tipi di programmi: buoni sconto, promozioni, "
+"carte regalo e fedeltà. È possibile impostate condizioni specifiche "
+"(prodotti, clienti, importo minimo di acquisto, periodo). Le ricompense "
+"possono essere sconti (% o importo) oppure prodotti gratuiti."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -4987,7 +4992,7 @@ msgstr ""
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Promotions, Coupons, Gift Card & Loyalty Program"
-msgstr ""
+msgstr "Promozioni, buoni sconto, carte regalo & programmi fedeltà"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5310,6 +5315,14 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "Storno di: %s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "Richiesta di storno inviata al terminale"
@@ -7328,13 +7341,6 @@ msgstr ""
 msgid ""
 "You can add some from the Products menu, or linked any existing by flagging them as \"Available in PoS\".\n"
 "                    Or you can add demo data for testing purpose. Please mind that this is an irreversible action."
-msgstr ""
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
 msgstr ""
 
 #. module: point_of_sale

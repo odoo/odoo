@@ -8,9 +8,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:23+0000\n"
+"POT-Creation-Date: 2023-05-23 08:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
@@ -21,21 +21,21 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 #, python-format
 msgid "An error occured while loading the dashboard"
 msgstr "Beim Laden des Dashboards ist ein Fehler aufgetreten"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_search_panel/mobile_search_panel.xml:0
 #, python-format
 msgid "BACK"
 msgstr "zurück"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_search_panel/mobile_search_panel.js:0
 #, python-format
 msgid "Choose a dashboard...."
@@ -106,6 +106,13 @@ msgid "ID"
 msgstr "ID"
 
 #. module: spreadsheet_dashboard
+#. odoo-python
+#: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard.py:0
+#, python-format
+msgid "Invalid JSON Data"
+msgstr "Ungültige JSON-Daten"
+
+#. module: spreadsheet_dashboard
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard____last_update
 #: model:ir.model.fields,field_description:spreadsheet_dashboard.field_spreadsheet_dashboard_group____last_update
 msgid "Last Modified on"
@@ -124,7 +131,7 @@ msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 #, python-format
 msgid "Loading..."
@@ -137,14 +144,14 @@ msgid "Name"
 msgstr "Name"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/dashboard_action.xml:0
 #, python-format
 msgid "No available dashboard"
 msgstr "Kein verfügbares Dashboard"
 
 #. module: spreadsheet_dashboard
-#. openerp-web
+#. odoo-javascript
 #: code:addons/spreadsheet_dashboard/static/src/bundle/dashboard_action/mobile_figure_container/mobile_figure_container.xml:0
 #, python-format
 msgid ""
@@ -166,6 +173,7 @@ msgid "Sequence"
 msgstr "Sequenz"
 
 #. module: spreadsheet_dashboard
+#. odoo-python
 #: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard.py:0
 #, python-format
 msgid "Sheet1"
@@ -191,4 +199,4 @@ msgstr "Vorschaubild"
 #: code:addons/spreadsheet_dashboard/models/spreadsheet_dashboard_group.py:0
 #, python-format
 msgid "You cannot delete %s as it is used in another module."
-msgstr ""
+msgstr "Sie können %s nicht löschen, da es in anderen Modulen verwendet wird."
