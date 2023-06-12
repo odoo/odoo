@@ -20,6 +20,7 @@ class AccountChartTemplate(models.AbstractModel):
             'name': 'План рахунків ПСБО',
             'code_digits': '6',
             'use_storno_accounting': True,
+            'display_invoice_amount_total_words': True,
         }
 
     @template('ua_psbo', 'res.company')
