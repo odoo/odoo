@@ -2417,6 +2417,18 @@ class AccountMove(models.Model):
         with self.env.protecting([self._fields[fname] for fname in field_name or []], self):
             return super().onchange(values, field_name, field_onchange)
 
+    def onchange2(self, values, field_names, fields_spec):
+        # Since only one field can be changed at the same time (the record is
+        # saved when changing tabs) we can avoid building the snapshots for the
+        # other field
+        if 'line_ids' in field_names:
+            values = {key: val for key, val in values.items() if key != 'invoice_line_ids'}
+            fields_spec = {key: val for key, val in fields_spec.items() if key != 'invoice_line_ids'}
+        elif 'invoice_line_ids' in field_names:
+            values = {key: val for key, val in values.items() if key != 'line_ids'}
+            fields_spec = {key: val for key, val in fields_spec.items() if key != 'line_ids'}
+        return super().onchange2(values, field_names, fields_spec)
+
     # -------------------------------------------------------------------------
     # RECONCILIATION METHODS
     # -------------------------------------------------------------------------
