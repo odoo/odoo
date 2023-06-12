@@ -43,17 +43,14 @@ class TestFuzzer(common.TransactionCase):
             AssertionError,
             UserError,
         )
-        self.dangerous_sql_errors = (
+        self.sql_errors = (
             psycopg2.errors.SyntaxError,
             psycopg2.errors.UndefinedColumn,
             psycopg2.errors.InvalidTextRepresentation,
-        )
-        self.mild_sql_errors = (
             psycopg2.errors.UndefinedFunction,
             psycopg2.errors.DatatypeMismatch,
-            psycopg2.errors.ProgrammingError,
+            psycopg2.errors.ProgrammingError,  # Must be last because it's a superclass.
         )
-        self.sql_errors = self.dangerous_sql_errors + self.mild_sql_errors
 
     def test_fuzzer(self):
         for method, signature in self.fuzzer_model_methods:
@@ -61,12 +58,14 @@ class TestFuzzer(common.TransactionCase):
 
     def fuzz_function(self, function: Callable, signature: inspect.Signature):
         """Iterates over all parameters of a function and fuzzes them."""
-        for parameter in signature.parameters:
-            if parameter == "self":
-                continue
+        for model_field in ["char", "char_translate", "text", "integer", "selection", "boolean", "float", "html",
+                            "date", "datetime", "binary", "many2one", "one2many"]:
+            for parameter in signature.parameters:
+                if parameter == "self":
+                    continue
 
-            for injection in payload_generator(self.seeds.get(parameter, "n")):
-                self.fuzz_function_parameter(parameter, injection, function, signature)
+                for injection in payload_generator(self.seeds.get(parameter, model_field)):
+                    self.fuzz_function_parameter(parameter, injection, function, signature)
 
     def fuzz_function_parameter(self, parameter: str, injection: Any, function: Callable, signature: inspect.Signature):
         """Fuzzes a single parameter with a single injection."""
@@ -99,7 +98,7 @@ class TestFuzzer(common.TransactionCase):
         is_injection_successful = False
 
         try:
-            with tools.mute_logger('odoo.sql_db'):
+            with tools.mute_logger("odoo.sql_db", "odoo.osv.expression", "odoo.tools.cache"):
                 function(*bound_arguments.args, **bound_arguments.kwargs)
             self.cr.commit()
 
@@ -124,14 +123,14 @@ class TestFuzzer(common.TransactionCase):
         return {
             "self": self.fuzzer_record,
             "domain": [],
-            "fields": ["n"],
-            "groupby": "n",
-            "field_names": ["n"],
+            "fields": ["char"],
+            "groupby": "char",
+            "field_names": ["char"],
             "data": [[]],
             "operation": "read",
-            "values": {"n": "1337"},
-            "field_name": "n",
-            "field_onchange": {"n"},
+            "values": {"char": "1337"},
+            "field_name": "char",
+            "field_onchange": {"char"},
             "translations": {},
         }
 
@@ -145,18 +144,32 @@ class TestFuzzer(common.TransactionCase):
             self.fuzzer_record = self.create_canary_record()
             self.cr.commit()
             return True
+
+        elif count >= 1000:
+            # Reinitialize the table occasionally because having too many records in it slows down the fuzzing.
+            self.clear_fuzzer_table()
+            self.fuzzer_record = self.create_canary_record()
+            self.cr.commit()
+
         return False
 
     def create_canary_record(self) -> FuzzerModel:
-        return self.fuzzer_model.create({'n': '1337'})[0]
+        return self.fuzzer_model.create({
+            "char": "1337",
+            "char_translate": "1337",
+        })[0]
 
     def tearDown(self):
+        # noinspection SqlWithoutWhere
+        self.clear_fuzzer_table()
+        self.cr.close()
         self.create_test_report()
+        super().tearDown()
+
+    def clear_fuzzer_table(self):
         # noinspection SqlWithoutWhere
         self.cr.execute("delete from test_fuzzer_model")
         self.cr.commit()
-        self.cr.close()
-        super().tearDown()
 
     def create_test_report(self):
         successful_injections = list(filter(lambda report: report.is_injection_successful, self.injection_reports))
@@ -164,16 +177,13 @@ class TestFuzzer(common.TransactionCase):
             filter(lambda report: report.error.__class__ in self.sql_errors, self.injection_reports))
 
         def construct_report_message() -> str:
-            msg = (f"Performed {len(self.injection_reports)} injections: "
-                   f"{len(successful_injections)} were successful, "
-                   f"{len(unsafe_injections)} were unsafe.\n\n")
-
-            for injection in successful_injections + unsafe_injections:
-                msg += f"{injection}\n\n"
-
+            msg = "\n\n".join(map(str, successful_injections + unsafe_injections))
+            msg += (f"\n\nPerformed {len(self.injection_reports)} injections: "
+                    f"{len(successful_injections)} were successful, "
+                    f"{len(unsafe_injections)} were unsafe.")
             return msg
 
-        self.assertTrue(len(successful_injections) == 0 and len(unsafe_injections) == 0,
+        self.assertTrue(not successful_injections and not unsafe_injections,
                         construct_report_message())
 
 
