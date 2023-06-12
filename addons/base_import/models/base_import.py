@@ -1042,12 +1042,17 @@ class Import(models.TransientModel):
 
         if options.get('has_headers'):
             rows_to_import = rows_to_import[1:]
-        data = [
-            list(row) for row in map(mapper, rows_to_import)
-            # don't try inserting completely empty rows (e.g. from
-            # filtering out o2m fields)
-            if any(row)
-        ]
+        try:
+            data = [
+                list(row) for row in map(mapper, rows_to_import)
+                # don't try inserting completely empty rows (e.g. from
+                # filtering out o2m fields)
+                if any(row)
+            ]
+        except IndexError:
+            raise ImportValidationError(_("Invalid separator or text delimiter"))
+        except Exception:
+            raise ImportValidationError(_("Sorry, something went wrong"))
 
         # slicing needs to happen after filtering out empty rows as the
         # data offsets from load are post-filtering
