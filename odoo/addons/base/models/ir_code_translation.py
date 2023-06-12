@@ -22,6 +22,8 @@ class IrCodeTranslation(models.Model):
         ('python', 'Python code translation'),
     ], string='Translation Type')
 
+    _sql_constraints = [('unique_source_lang_module_type', 'UNIQUE(source, lang, module, type)', '(source, lang, module, type) should be unique')]
+
     def _get_languages(self):
         return self.env['res.lang'].get_installed()
 
