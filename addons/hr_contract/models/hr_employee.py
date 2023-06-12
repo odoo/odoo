@@ -110,7 +110,6 @@ class Employee(models.Model):
             action['context'] = {
                 'default_employee_id': self.id,
             }
-            action['target'] = 'new'
             return action
 
         target_contract = self.contract_id
