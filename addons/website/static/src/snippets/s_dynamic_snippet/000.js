@@ -31,7 +31,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
         this.data = [];
         this.renderedContent = '';
         this.isDesplayedAsMobile = config.device.isMobile;
-        this.uniqueId = uniqueId("s_dynamic_snippet_");
+        this.unique_id = uniqueId("s_dynamic_snippet_");
         this.template_key = 'website.s_dynamic_snippet.grid';
     },
     /**
@@ -159,7 +159,7 @@ const DynamicSnippet = publicWidget.Widget.extend({
         return {
             chunkSize: chunkSize,
             data: this.data,
-            uniqueId: this.uniqueId,
+            unique_id: this.unique_id,
             extraClasses: dataset.extraClasses || '',
         };
     },
