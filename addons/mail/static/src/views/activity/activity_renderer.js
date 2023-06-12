@@ -87,6 +87,7 @@ export class ActivityRenderer extends Component {
 
         const progressBar = {
             bars: [],
+            activeBar: isColumnFiltered ? this.activeFilter.progressValue.active : null,
         };
         for (const [value, count] of Object.entries(types)) {
             progressBar.bars.push({
