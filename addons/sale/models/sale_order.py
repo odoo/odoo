@@ -611,6 +611,11 @@ class SaleOrder(models.Model):
     @api.depends('invoice_ids.state', 'currency_id', 'amount_total')
     def _compute_amount_to_invoice(self):
         for order in self:
+            # If the invoice status is 'Fully Invoiced' force the amount to invoice to equal zero and return early.
+            if order.invoice_status == 'invoiced':
+                order.amount_to_invoice = 0.0
+                return
+
             order.amount_to_invoice = order.amount_total
             for invoice in order.invoice_ids.filtered(lambda x: x.state == 'posted'):
                 invoice_amount_currency = invoice.currency_id._convert(
