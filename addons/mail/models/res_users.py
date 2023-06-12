@@ -267,6 +267,7 @@ class Users(models.Model):
             'current_user_id': self.id,
             'current_user_settings': self.env['res.users.settings']._find_or_create_for_user(self)._res_users_settings_format(),
             'hasLinkPreviewFeature': self.env['mail.link.preview']._is_link_preview_enabled(),
+            'initBusId': self.env['bus.bus'].sudo()._bus_last_id(),
             'internalUserGroupId': self.env.ref('base.group_user').id,
             'menu_id': self.env['ir.model.data']._xmlid_to_res_id('mail.menu_root_discuss'),
             'needaction_inbox_counter': self.partner_id._get_needaction_count(),
