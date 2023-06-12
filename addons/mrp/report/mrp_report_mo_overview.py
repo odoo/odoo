@@ -240,10 +240,12 @@ class ReportMoOverview(models.AbstractModel):
         reserved_quantity = self._get_reserved_qty(move, warehouse, replenish_data)
         missing_quantity = move.product_uom_qty - reserved_quantity
         free_qty = product.uom_id._compute_quantity(product.free_qty, move.product_uom)
-        if not has_to_order_line and float_compare(missing_quantity, free_qty, precision_rounding=move.product_uom.rounding) <= 0:
+        if float_compare(missing_quantity, 0.0, precision_rounding=move.product_uom.rounding) <= 0 \
+           or (not has_to_order_line
+               and float_compare(missing_quantity, free_qty, precision_rounding=move.product_uom.rounding) <= 0):
             return self._format_receipt_date('available')
 
-        max_date = max(map(lambda rep: get(rep, 'date', True), replenishments))
+        max_date = max(map(lambda rep: get(rep, 'date', True), replenishments), default=fields.datetime.today())
         if has_to_order_line or any(get(rep, 'type', True) == 'estimated' for rep in replenishments):
             return self._format_receipt_date('estimated', max_date)
         else:
