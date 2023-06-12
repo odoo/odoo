@@ -116,6 +116,9 @@ Model({
             if (!this.component.root.el || this.component.root.el.contains(ev.target)) {
                 return;
             }
+            if (ev.target.closest(".ui-autocomplete")) {
+                return;
+            }
             // in all other cases: close the messaging menu when clicking outside
             this.close();
         },
