@@ -284,6 +284,7 @@ class PaymentPortal(portal.CustomerPortal):
             # the current user's partner if logged in, or the partner on behalf of whom the payment
             # is being made).
             partner_sudo = request.env['res.partner'].sudo().browse(partner_id)
+            import ipdb; ipdb.set_trace()
             if partner_sudo.commercial_partner_id != token_sudo.partner_id.commercial_partner_id:
                 raise AccessError(_("You do not have access to this payment token."))
 
