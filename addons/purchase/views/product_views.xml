@@ -136,4 +136,15 @@
             </field>
         </record>
 
+    <record id="product_template_search_view_purchase" model="ir.ui.view">
+        <field name="name">product.template.search.purchase</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='categ_id']" position="after">
+                <field string="Vendor" name="seller_ids"/>
+            </xpath>
+        </field>
+    </record>
+
 </odoo>
