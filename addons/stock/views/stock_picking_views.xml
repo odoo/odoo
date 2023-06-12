@@ -208,7 +208,7 @@
                             <field name="partner_id" nolabel="1" readonly="state in ['cancel', 'done']"/>
                             <field name="picking_type_id" options="{'no_open': True}"
                                    invisible="hide_picking_type"
-                                   readonly="id"
+                                   readonly="state != 'draft' and id"
                                    domain="context.get('restricted_picking_type_code') and [('code', '=', context.get('restricted_picking_type_code'))] or [(1,'=',1)]"/>
                             <field name="location_id" groups="!stock.group_stock_multi_locations" invisible="1" readonly="state == 'done'"/>
                             <field name="location_dest_id" groups="!stock.group_stock_multi_locations" invisible="1" readonly="state == 'done'"/>
