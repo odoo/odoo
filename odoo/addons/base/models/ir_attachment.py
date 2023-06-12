@@ -119,7 +119,8 @@ class IrAttachment(models.Model):
                 self._mark_for_gc(fname)
             except IOError:
                 _logger.info("_file_write writing %s", full_path, exc_info=True)
-        return fname
+            return fname, False
+        return fname, True
 
     @api.model
     def _file_delete(self, fname):
@@ -222,7 +223,7 @@ class IrAttachment(models.Model):
         for attach in self:
             # compute the fields that depend on datas
             bin_data = asbytes(attach)
-            vals = self._get_datas_related_values(bin_data, attach.mimetype)
+            vals, _ = self._get_datas_related_values(bin_data, attach.mimetype)
 
             # take current location in filestore to possibly garbage-collect it
             fname = attach.store_fname
@@ -244,10 +245,11 @@ class IrAttachment(models.Model):
             'store_fname': False,
             'db_datas': data,
         }
+        file_exists = False
         if data and self._storage() != 'db':
-            values['store_fname'] = self._file_write(data, values['checksum'])
+            values['store_fname'], file_exists = self._file_write(data, values['checksum'])
             values['db_datas'] = False
-        return values
+        return values, file_exists
 
     def _compute_checksum(self, bin_data):
         """ compute the checksum for the given datas
@@ -608,10 +610,13 @@ class IrAttachment(models.Model):
                 if isinstance(raw, str):
                     # b64decode handles str input but raw needs explicit encoding
                     raw = raw.encode()
-                values.update(self._get_datas_related_values(
+                vals, file_exists = self._get_datas_related_values(
                     raw or base64.b64decode(datas or b''),
-                    values['mimetype']
-                ))
+                    values['mimetype'])
+                values.update(vals)
+                if file_exists and values['index_content'] == 'image':
+                    while self.search_count([('name', '=', values['name'])]) > 0:
+                        values['name'] += ' ' + _('(copy)')
 
             # 'check()' only uses res_model and res_id from values, and make an exists.
             # We can group the values by model, res_id to make only one query when
