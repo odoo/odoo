@@ -193,7 +193,8 @@ class CustomerPortal(portal.CustomerPortal):
         :return: The payment-specific values.
         :rtype: dict
         """
-        partner = order_sudo.partner_id
+        logged_in = not request.env.user._is_public()
+        partner_sudo = request.env.user.partner_id if logged_in else order_sudo.partner_id
         company = order_sudo.company_id
         if downpayment:
             amount = order_sudo._get_prepayment_required_amount()
@@ -202,7 +203,7 @@ class CustomerPortal(portal.CustomerPortal):
         currency = order_sudo.currency_id
         providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
             company.id,
-            partner.id,
+            partner_sudo.id,
             amount,
             currency_id=currency.id,
             sale_order_id=order_sudo.id,
@@ -210,22 +211,22 @@ class CustomerPortal(portal.CustomerPortal):
         )  # In sudo mode to read the fields of providers and partner (if not logged in).
         payment_form_values = {
             'providers': providers_sudo,
-            'tokens': request.env['payment.token']._get_available_tokens(
-                providers_sudo.ids, partner.id, **kwargs
-            ),
+            'tokens': request.env['payment.token'].sudo()._get_available_tokens(
+                providers_sudo.ids, partner_sudo.id, **kwargs
+            ),  # In sudo mode to read the partner's tokens (if logged out).
             'show_tokenize_input': PaymentPortal._compute_show_tokenize_input_mapping(
                 providers_sudo, sale_order_id=order_sudo.id
             ),
             'amount': amount,
             'currency': currency,
-            'partner_id': partner.id,
+            'partner_id': partner_sudo.id,
             'access_token': order_sudo._portal_ensure_token(),
             'transaction_route': order_sudo.get_portal_url(suffix='/transaction'),
             'landing_route': order_sudo.get_portal_url(),
         }
 
         company_mismatch = not payment_portal.PaymentPortal._can_partner_pay_in_company(
-            partner, company
+            partner_sudo, company
         )  # Make sure that the partner's company matches the order's company.
         portal_page_values = {'company_mismatch': company_mismatch, 'expected_company': company}
 
@@ -338,9 +339,11 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except AccessError:
             raise ValidationError(_("The access token is invalid."))
 
+        logged_in = not request.env.user._is_public()
+        partner_sudo = request.env.user.partner_id if logged_in else order_sudo.partner_invoice_id
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
-            'partner_id': order_sudo.partner_invoice_id.id,
+            'partner_id': partner_sudo.id,
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions tokenizing the tx
         })
         kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
