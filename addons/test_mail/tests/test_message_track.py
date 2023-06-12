@@ -635,6 +635,32 @@ class TestTrackingInternals(MailCommon):
         self.assertEqual(record.name, 'TestDoNoCrash')
 
     @users('employee')
+    def test_track_invalid(self):
+        """ Test invalid use cases: unknown field, unsupported type, ... """
+        test_record = self.env['mail.test.track.all'].create({
+            'company_id': self.env.company.id,
+        })
+        self.flush_tracking()
+
+        # raise on non existing field
+        with self.assertRaises(ValueError):
+            self.env['mail.tracking.value']._create_tracking_values(
+                '', 'Test',
+                'not_existing_field', {'string': 'Test', 'type': 'char'},
+                0,
+                test_record,
+            )
+
+        # raise on unsupported field type
+        with self.assertRaises(NotImplementedError):
+            self.env['mail.tracking.value']._create_tracking_values(
+                '', '<p>Html</p>',
+                'html_field', {'string': 'HTML', 'type': 'html'},
+                0,
+                test_record,
+            )
+
+    @users('employee')
     def test_track_sequence(self):
         """ Update some tracked fields and check that the mail.tracking.value are ordered according to their tracking_sequence"""
         record = self.record.with_env(self.env)
