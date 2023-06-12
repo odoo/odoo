@@ -64,4 +64,22 @@ export async function startWebClient(Webclient) {
     // delete odoo.debug; // FIXME: some legacy code rely on this
     odoo.__WOWL_DEBUG__ = { root };
     odoo.isReady = true;
+<<<<<<< HEAD
+||||||| parent of e249e65e4a4 (temp)
+
+    // Update Favicons
+    const favicon = `/web/image/res.company/${env.services.company.currentCompany.id}/favicon`;
+    const icons = document.querySelectorAll("link[rel*='icon']");
+    for (const icon of icons) {
+        icon.href = favicon;
+    }
+=======
+
+    // Update Favicons
+    const favicon = `/web/image/res.company/${env.services.company.currentCompany.id}/favicon`;
+    const icons = document.querySelectorAll("link[rel*='icon']:not([rel='apple-touch-icon'])");
+    for (const icon of icons) {
+        icon.href = favicon;
+    }
+>>>>>>> e249e65e4a4 (temp)
 }
