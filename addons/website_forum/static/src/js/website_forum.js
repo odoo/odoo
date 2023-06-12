@@ -137,6 +137,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 },
                 resizable: true,
                 userGeneratedContent: true,
+                height: 350,
             };
             options.allowCommandLink = hasFullEdit;
             options.allowCommandImage = hasFullEdit;
