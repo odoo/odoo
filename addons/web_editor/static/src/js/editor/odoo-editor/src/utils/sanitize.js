@@ -154,17 +154,24 @@ function sanitizeNode(node, root) {
     return node;
 }
 
-export function sanitize(root) {
-    const start = root.ownerDocument.getSelection()?.anchorNode;
-    const rootClosestBlock = closestBlock(root);
-    if (rootClosestBlock) {
+/**
+ * Sanitize a node tree and return the sanitized node.
+ *
+ * @param {Node} nodeToSanitize the node to sanitize
+ * @param {Node} [root] the root of the tree to sanitize (will not sanitize nodes outside of this tree)
+ * @returns {Node} the sanitized node
+ */
+export function sanitize(nodeToSanitize, root = nodeToSanitize) {
+    const start = nodeToSanitize.ownerDocument.getSelection()?.anchorNode;
+    const block = closestBlock(nodeToSanitize);
+    if (block && root.contains(block)) {
         // If the node is a list, start sanitization from its parent to ensure
         // adjacent lists are merged when needed.
-        const isList = ['UL', 'OL'].includes(rootClosestBlock.nodeName);
-        let node = isList ? rootClosestBlock.parentElement : rootClosestBlock;
+        const isList = ['UL', 'OL'].includes(block.nodeName);
+        let node = isList ? block.parentElement : block;
 
         // Sanitize the tree.
-        while (node?.isConnected) {
+        while (node?.isConnected && root.contains(node)) {
             if (!isProtected(node)) {
                 node = sanitizeNode(node, root); // The node itself might be replaced during sanitization.
             }
@@ -172,11 +179,11 @@ export function sanitize(root) {
         }
 
         // Ensure unique ids on checklists and stars.
-        const elementsWithId = [...rootClosestBlock.querySelectorAll('[id^=checkId-]')];
+        const elementsWithId = [...block.querySelectorAll('[id^=checkId-]')];
         const maxId = Math.max(...[0, ...elementsWithId.map(node => +node.getAttribute('id').substring(8))]);
         let nextId = maxId + 1;
         const ids = [];
-        for (const node of rootClosestBlock.querySelectorAll('[id^=checkId-], .o_checklist > li, .o_stars')) {
+        for (const node of block.querySelectorAll('[id^=checkId-], .o_checklist > li, .o_stars')) {
             if (
                 !node.classList.contains('o_stars') && (
                     !node.parentElement.classList.contains('o_checklist') ||
@@ -200,7 +207,7 @@ export function sanitize(root) {
 
         // Update link URL if label is a new valid link.
         const startEl = start && closestElement(start, 'a');
-        if (startEl) {
+        if (startEl && root.contains(startEl)) {
             const linkLabel = startEl.innerText;
             const urlInfo = getUrlsInfosInString(linkLabel);
             if (urlInfo.length && urlInfo[0].label === linkLabel && !startEl.href.startsWith('mailto:')) {
@@ -208,5 +215,5 @@ export function sanitize(root) {
             }
         }
     }
-    return root;
+    return nodeToSanitize;
 }
