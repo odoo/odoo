@@ -10,10 +10,7 @@ class AccountTourUploadBill(models.TransientModel):
     _name = 'account.tour.upload.bill'
     _description = 'Account tour upload bill'
 
-    attachment_ids = fields.Many2many(
-        comodel_name='ir.attachment',
-        relation='account_tour_upload_bill_ir_attachments_rel',
-        string='Attachments')
+    linked_attachment_ids = fields.One2many(comodel_name='ir.attachment', inverse_name='res_id')
 
     selection = fields.Selection(
         selection=lambda self: self._selection_values(),
@@ -79,7 +76,7 @@ class AccountTourUploadBill(models.TransientModel):
             purchase_journal = self.env['account.journal'].search([('type', '=', 'purchase')], limit=1)
 
         if self.selection == 'upload':
-            return purchase_journal.with_context(default_journal_id=purchase_journal.id, default_move_type='in_invoice').create_document_from_attachment(attachment_ids=self.attachment_ids.ids)
+            return purchase_journal.with_context(default_journal_id=purchase_journal.id, default_move_type='in_invoice').create_document_from_attachment(attachment_ids=self.linked_attachment_ids.ids)
         elif self.selection == 'sample':
             invoice_date = fields.Date.today() - timedelta(days=12)
             partner = self.env['res.partner'].search([('name', '=', 'Deco Addict')], limit=1)
