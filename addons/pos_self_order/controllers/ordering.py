@@ -299,7 +299,7 @@ class PosSelfOrderController(http.Controller):
                 item.get("description"),
             ),
             "customer_note": item.get("customer_note"),
-            "price_manually_set": False,
+            "pricec_type": "original",
             "note": "",
             "uuid": str(uuid.uuid4()),
         }
