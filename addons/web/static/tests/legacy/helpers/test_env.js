@@ -1,9 +1,10 @@
 /** @odoo-module alias=web.test_env **/
-    
+
     import Bus from "web.Bus";
     import session from "web.session";
     import { makeTestEnvServices } from "@web/../tests/legacy/helpers/test_services";
     import { templates, setLoadXmlDefaultApp } from "@web/core/assets";
+    import { _t } from "@web/core/l10n/translation";
     import { renderToString } from "@web/core/utils/render";
     const { App, Component } = owl;
 
@@ -24,25 +25,6 @@
             renderToString.app = app;
             setLoadXmlDefaultApp(app);
         }
-
-        const defaultTranslationParamters = {
-            code: "en_US",
-            date_format: '%m/%d/%Y',
-            decimal_point: ".",
-            direction: 'ltr',
-            grouping: [],
-            thousands_sep: ",",
-            time_format: '%H:%M:%S',
-        };
-
-        let _t;
-        if ('_t' in env) {
-            _t = Object.assign(env._t, {database: env._t.database || {}})
-        } else {
-            _t = Object.assign(((s) => s), { database: {} });
-        }
-
-        _t.database.parameters = Object.assign(defaultTranslationParamters, _t.database.parameters);
 
         const defaultEnv = {
             _t,

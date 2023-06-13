@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import core from "web.core";
 import time from "web.time";
+import translation from "web.translation";
 
 QUnit.module('core', {}, function () {
 
@@ -147,8 +147,8 @@ QUnit.module('core', {}, function () {
 
     QUnit.test("Get lang datetime format", (assert) => {
         assert.expect(4);
-        const originalParameters = Object.assign({}, core._t.database.parameters);
-        Object.assign(core._t.database.parameters, {
+        const originalParameters = Object.assign({}, translation.database.parameters);
+        Object.assign(translation.database.parameters, {
             date_format: '%m/%d/%Y',
             time_format: '%H:%M:%S',
         });
@@ -156,7 +156,7 @@ QUnit.module('core', {}, function () {
         assert.strictEqual(time.getLangDateFormatWoZero(), "M/D/YYYY");
         assert.strictEqual(time.getLangTimeFormat(), "HH:mm:ss");
         assert.strictEqual(time.getLangTimeFormatWoZero(), "H:m:s");
-        Object.assign(core._t.database.parameters, originalParameters);
+        Object.assign(translation.database.parameters, originalParameters);
     });
 
 });

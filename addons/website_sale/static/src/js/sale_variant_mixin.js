@@ -3,7 +3,7 @@
 import concurrency from "web.concurrency";
 import utils from "web.utils";
 import ajax from "web.ajax";
-import core from "web.core";
+import translation from "web.translation";
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 import { memoize, uniqueId } from "@web/core/utils/functions";
@@ -606,7 +606,7 @@ var VariantMixin = {
      * @param {float} price
      */
     _priceToStr: function (price) {
-        var l10n = core._t.database.parameters;
+        var l10n = translation.database.parameters;
         var precision = 2;
 
         if ($('.decimal_precision').length) {

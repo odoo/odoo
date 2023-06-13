@@ -1,9 +1,9 @@
 /** @odoo-module alias=web.searchUtils **/
 
     import { _lt } from "@web/core/l10n/translation";
-    import { _t } from "web.core";
     import Domain from "web.Domain";
     import pyUtils from "web.py_utils";
+    import translation from "web.translation";
 
     //-------------------------------------------------------------------------
     // Constants
@@ -312,7 +312,7 @@
 
         // compute description
         const descriptions = [date.format("YYYY")];
-        const method = _t.database.parameters.direction === "rtl" ? "push" : "unshift";
+        const method = translation.database.parameters.direction === "rtl" ? "push" : "unshift";
         if (granularity === "month") {
             descriptions[method](date.format("MMMM"));
         } else if (granularity === "quarter") {

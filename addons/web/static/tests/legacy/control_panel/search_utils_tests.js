@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
-    import { _t } from "web.core";
     import { constructDateDomain } from "web.searchUtils";
     import testUtils from "web.test_utils";
+    import translation from "web.translation";
     import { registry } from "@web/core/registry";
     import { translatedTerms } from "@web/core/l10n/translation";
     import { patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -295,7 +295,7 @@
 
             const unpatchDate = patchDate(2020, 5, 1, 13, 0, 0);
             const referenceMoment = moment().locale('en');
-            testUtils.mock.patch(_t.database.parameters, {
+            testUtils.mock.patch(translation.database.parameters, {
                 direction: "rtl",
             });
 
@@ -309,7 +309,7 @@
             );
 
             unpatchDate();
-            testUtils.mock.unpatch(_t.database.parameters);
+            testUtils.mock.unpatch(translation.database.parameters);
         });
 
         QUnit.test("Quarter option: custom translation and right to left", async function (assert) {
@@ -322,7 +322,7 @@
             patchWithCleanup(translatedTerms, {
                 "Q2": "2e Trimestre",
             });
-            testUtils.mock.patch(_t.database.parameters, {
+            testUtils.mock.patch(translation.database.parameters, {
                 direction: "rtl",
             });
 
@@ -336,7 +336,7 @@
             );
 
             unpatchDate();
-            testUtils.mock.unpatch(_t.database.parameters);
+            testUtils.mock.unpatch(translation.database.parameters);
         });
 
         QUnit.test("Moment.js localization does not affect formatted domain dates", async function (assert) {

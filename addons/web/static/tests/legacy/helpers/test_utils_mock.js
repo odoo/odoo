@@ -55,14 +55,11 @@ const DebouncedField = basic_fields.DebouncedField;
 async function _getMockedOwlEnv(params, mockServer) {
     params.env = params.env || {};
 
-    const database = {parameters: params.translateParameters || {}};
-
     // build the env
     const favoriteFilters = params.favoriteFilters;
     const debug = params.debug;
     const services = {};
     const env = Object.assign({}, params.env, {
-        _t: params.env && params.env._t || Object.assign((s => s), { database }),
         browser: Object.assign({
             fetch: (resource, init) => mockServer.performFetch(resource, init),
         }, params.env.browser),
@@ -173,8 +170,6 @@ async function _getMockedOwlEnv(params, mockServer) {
  *   config,
  * @param {Object} [params.session] if given, it is used to extend the current,
  *   real session.
- * @param {Object} [params.translateParameters] if given, it will be used to
- *   extend the core._t.database.parameters object.
  * @returns {function} a cleanUp function to restore everything, to call at the
  *   end of the test
  */
@@ -201,13 +196,6 @@ function _mockGlobalObjects(params) {
         }
     }
 
-    // patch translate params
-    let initialParameters;
-    if ('translateParameters' in params) {
-        initialParameters = Object.assign({}, core._t.database.parameters);
-        Object.assign(core._t.database.parameters, params.translateParameters);
-    }
-
     // build the cleanUp function to restore everything at the end of the test
     function cleanUp() {
         let key;
@@ -220,12 +208,6 @@ function _mockGlobalObjects(params) {
                 delete config[key];
             }
             Object.assign(config, initialConfig);
-        }
-        if ('translateParameters' in params) {
-            for (key in core._t.database.parameters) {
-                delete core._t.database.parameters[key];
-            }
-            Object.assign(core._t.database.parameters, initialParameters);
         }
     }
 
@@ -460,9 +442,6 @@ async function addMockEnvironmentOwl(Component, params, mockServer) {
  *   for all calls to this.getSession() by the widget, of its children.  Also,
  *   it will be used to extend the current, real session. This side effect is
  *   undone when the widget is destroyed.
- * @param {Object} [params.translateParameters] if given, it will be used to
- *   extend the core._t.database.parameters object. After the widget
- *   destruction, the original parameters will be restored.
  * @param {Object} [params.intercepts] an object with event names as key, and
  *   callback as value.  Each key,value will be used to intercept the event.
  *   Note that this is particularly useful if you want to intercept events going

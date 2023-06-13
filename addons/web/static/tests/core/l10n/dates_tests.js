@@ -13,10 +13,10 @@ import {
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { patch, unpatch } from "@web/core/utils/patch";
-import core from "web.core";
 import field_utils from "web.field_utils";
 import session from "web.session";
 import test_utils from "web.test_utils";
+import translation from "web.translation";
 import { registerCleanup } from "../../helpers/cleanup";
 import { defaultLocalization } from "../../helpers/mock_services";
 import { patchDate, patchTimeZone, patchWithCleanup } from "../../helpers/utils";
@@ -24,7 +24,7 @@ import { patchDate, patchTimeZone, patchWithCleanup } from "../../helpers/utils"
 const { DateTime, Settings } = luxon;
 
 const legacy = {
-    core,
+    translation,
     field_utils,
     session,
     test_utils,
@@ -559,7 +559,7 @@ QUnit.module(
                     dateTimeFormat: `${dateFormat} ${timeFormat}`,
                 });
 
-                patchWithCleanup(legacy.core._t.database.parameters, {
+                patchWithCleanup(legacy.translation.database.parameters, {
                     date_format: formats.date,
                     time_format: formats.time,
                 });

@@ -11,7 +11,8 @@
 
 import { uniqueId } from "@web/core/utils/functions";
 import concurrency from "web.concurrency";
-import core, { _t } from "web.core";
+import core from "web.core";
+import translation from "web.translation";
 
 /**
  * Private function to notify that something has been attached in the DOM
@@ -112,7 +113,7 @@ var dom = {
             class: $textarea[0].className,
         });
 
-        var direction = _t.database.parameters.direction === 'rtl' ? 'right' : 'left';
+        var direction = translation.database.parameters.direction === 'rtl' ? 'right' : 'left';
         $fixedTextarea.css({
             position: 'absolute',
             opacity: 0,

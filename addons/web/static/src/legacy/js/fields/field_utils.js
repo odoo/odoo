@@ -14,12 +14,12 @@
  * conversions.
  */
 
-import core from "web.core";
 import { _t } from "@web/core/l10n/translation";
 import { escape, escapeRegExp, sprintf } from "@web/core/utils/strings";
 import dom from "web.dom";
 import session from "web.session";
 import time from "web.time";
+import translation from "web.translation";
 import utils from "web.utils";
 
 const NBSP = "\u00a0";
@@ -176,7 +176,7 @@ function formatFloat(value, field, options) {
     }
     var formatted = (value || 0).toFixed(precision).split(".");
     formatted[0] = utils.insert_thousand_seps(formatted[0]);
-    return formatted.join(core._t.database.parameters.decimal_point);
+    return formatted.join(translation.database.parameters.decimal_point);
 }
 
 
@@ -387,7 +387,7 @@ function formatPercentage(value, field, options) {
     options = options || {};
     let result = formatFloat(value * 100, field, options) || '0';
     if (!options.humanReadable || !options.humanReadable(value * 100)) {
-        result = parseFloat(result).toString().replace('.', _t.database.parameters.decimal_point);
+        result = parseFloat(result).toString().replace('.', translation.database.parameters.decimal_point);
     }
     return result + (options.noSymbol ? '' : '%');
 }
@@ -574,12 +574,12 @@ function parseDateTime(value, field, options) {
  */
 function parseNumber(value) {
 
-    if (core._t.database.parameters.thousands_sep) {
-        var escapedSep = escapeRegExp(core._t.database.parameters.thousands_sep);
+    if (translation.database.parameters.thousands_sep) {
+        var escapedSep = escapeRegExp(translation.database.parameters.thousands_sep);
         value = value.replace(new RegExp(escapedSep, 'g'), '');
     }
-    if (core._t.database.parameters.decimal_point) {
-        value = value.replace(core._t.database.parameters.decimal_point, '.');
+    if (translation.database.parameters.decimal_point) {
+        value = value.replace(translation.database.parameters.decimal_point, '.');
     }
     return Number(value);
 }

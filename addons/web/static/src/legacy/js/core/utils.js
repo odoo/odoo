@@ -549,7 +549,7 @@ const utils = {
         var negative = num[0] === '-';
         num = (negative ? num.slice(1) : num);
         return (negative ? '-' : '') + utils.intersperse(
-            num, translation._t.database.parameters.grouping, translation._t.database.parameters.thousands_sep);
+            num, translation.database.parameters.grouping, translation.database.parameters.thousands_sep);
     },
     /**
      * Intersperses ``separator`` in ``str`` at the positions indicated by

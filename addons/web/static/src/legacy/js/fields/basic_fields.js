@@ -7,13 +7,13 @@
  */
 
 import AbstractField from "web.AbstractField";
-import core from "web.core";
 import datepicker from "web.datepicker";
 import dom from "web.dom";
 import framework from "web.framework";
 import py_utils from "web.py_utils";
 import session from "web.session";
 import field_utils from "web.field_utils";
+import translation from "web.translation";
 import utils from "web.utils";
 import { _lt, _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
@@ -30,8 +30,8 @@ var TranslatableFieldMixin = {
      * @returns {jQuery}
      */
     _renderTranslateButton: function () {
-        if (core._t.database.multi_lang && this.field.translate) {
-            var lang = core._t.database.parameters.code.split('_')[0].toUpperCase();
+        if (translation.database.multi_lang && this.field.translate) {
+            var lang = translation.database.parameters.code.split('_')[0].toUpperCase();
             return $(`<span class="o_field_translate btn btn-link">${lang}</span>`)
                 .on('click', this._onTranslate.bind(this));
         }
@@ -684,7 +684,7 @@ var NumericField = InputField.extend({
             const curVal = inputField.value;
             const from = inputField.selectionStart;
             const to = inputField.selectionEnd;
-            const point = core._t.database.parameters.decimal_point;
+            const point = translation.database.parameters.decimal_point;
 
             // Make sure the correct decimal separator
             // from the user's settings is inserted

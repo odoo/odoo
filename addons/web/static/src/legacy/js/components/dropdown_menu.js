@@ -1,7 +1,7 @@
 /** @odoo-module alias=web.DropdownMenu **/
 
-    import { _t } from "web.core";
     import DropdownMenuItem from "web.DropdownMenuItem";
+    import translation from "web.translation";
     import { LegacyComponent } from "@web/legacy/legacy_component";
 
     const { useExternalListener, useRef, useState } = owl;
@@ -71,7 +71,7 @@
             if (this.env.device.isMobile) {
                 const threshold = document.documentElement.clientWidth / 2;
                 const { left, right } = this.el.getBoundingClientRect();
-                if (_t.database.parameters.direction === 'rtl') {
+                if (translation.database.parameters.direction === 'rtl') {
                     return right > threshold ? 'dropdown-menu-start' : 'dropdown-menu-end';
                 }
                 return left > threshold ? 'dropdown-menu-end' : 'dropdown-menu-start';

@@ -1,15 +1,12 @@
 /** @odoo-module alias=web.Session **/
 
 import ajax from "web.ajax";
-import core from "web.core";
+import core, { qweb } from "web.core";
 import mixins from "web.mixins";
+import translation from "web.translation";
 import {setCookie} from "web.utils.cookies";
 import { session } from "@web/session";
 import { loadJS } from "@web/core/assets";
-
-
-var _t = core._t;
-var qweb = core.qweb;
 
 // To do: refactor session. Session accomplishes several concerns (rpc,
 // configuration, currencies (wtf?), user permissions...). They should be
@@ -93,7 +90,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
                     promise,
                     self.rpc('/web/webclient/bootstrap_translations')
                         .then(function (trans) {
-                            _t.database.set_bundle(trans);
+                            translation.database.set_bundle(trans);
                         })
                     ]);
         });
@@ -197,7 +194,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         });
     },
     load_translations: function (modules=null) {
-        return _t.database.load_translations(this, modules, this.user_context.lang, this.translationURL);
+        return translation.database.load_translations(this, modules, this.user_context.lang, this.translationURL);
     },
     load_js: function (files) {
         var self = this;
@@ -327,7 +324,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
      */
     _configureLocale: function () {
         // TODO: try to test when re - writing this file in the new system with luxon
-        const dow = (_t.database.parameters.week_start || 0) % 7;
+        const dow = (translation.database.parameters.week_start || 0) % 7;
         moment.updateLocale(moment.locale(), {
             week: {
                 dow: dow,

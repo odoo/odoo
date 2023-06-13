@@ -2,7 +2,7 @@
 /** @odoo-module alias=web.translation **/
 
 import Class from "web.Class";
-import { _lt, _t as gettext, translatedTerms } from "@web/core/l10n/translation";
+import { translatedTerms } from "@web/core/l10n/translation";
 
 var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# */{
     init: function() {
@@ -37,14 +37,6 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
         mod.messages.forEach((message) => {
             self.db[message.id] = message.string;
         });
-    },
-    build_translation_function: function() {
-        var fcnt = function(str) {
-            console.warn("_t from web.translation is deprecated. Use the one from @web/core/l10n/translation instead.");
-            return gettext(str);
-        };
-        fcnt.database = this;
-        return fcnt;
     },
     get: function(key) {
         return this.db[key];
@@ -81,20 +73,6 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
     }
 });
 
-/**
- * Eager translation function, performs translation immediately at call
- * site. Beware using this outside of method bodies (before the
- * translation database is loaded), you probably want :func:`_lt`
- * instead.
- *
- * @function _t
- * @param {String} source string to translate
- * @returns {String} source translated into the current locale
- */
-var _t = new TranslationDataBase().build_translation_function();
-
 export default {
-    _t: _t,
-    _lt: _lt,
-    TranslationDataBase: TranslationDataBase,
+    database: new TranslationDataBase(),
 };
