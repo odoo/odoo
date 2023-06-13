@@ -73,7 +73,7 @@ export class SearchBarMenu extends Component {
             title: _t("Add Custom Filter"),
             confirmButtonText: _t("Add"),
             discardButtonText: _t("Cancel"),
-            isDebugMode: !!this.env.debug,
+            isDebugMode: this.env.searchModel.isDebugMode,
         });
     }
 
