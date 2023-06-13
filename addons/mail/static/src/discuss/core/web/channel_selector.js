@@ -4,7 +4,8 @@ import { useStore } from "@mail/core/common/messaging_hook";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { DEBOUNCE_FETCH_SUGGESTION_TIME } from "@mail/core/common/suggestion_service";
 import { cleanTerm } from "@mail/utils/common/format";
-import { createLocalId, isEventHandled, markEventHandled } from "@mail/utils/common/misc";
+import { createLocalId } from "@mail/utils/common/misc";
+import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 
 import { Component, onMounted, useRef, useState } from "@odoo/owl";
 

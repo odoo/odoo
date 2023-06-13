@@ -219,7 +219,7 @@ QUnit.test("add an emoji after a canned response", async (assert) => {
         "previous content + canned response substitution + additional whitespace afterwards"
     );
     await click("button[aria-label='Emojis']");
-    await click(".o-mail-Emoji:contains(😊)");
+    await click(".o-Emoji:contains(😊)");
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),
         "Hello! How are you? 😊"

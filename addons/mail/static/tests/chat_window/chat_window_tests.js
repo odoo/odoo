@@ -279,7 +279,7 @@ QUnit.test(
         await start();
         await click("button[aria-label='Emojis']");
         await afterNextRender(() => triggerHotkey("Escape"));
-        assert.containsNone($, ".o-mail-EmojiPicker");
+        assert.containsNone($, ".o-EmojiPicker");
         assert.containsOnce($, ".o-mail-ChatWindow");
     }
 );

@@ -70,6 +70,6 @@ QUnit.test("add an emoji after a command", async (assert) => {
     );
 
     await click("button[aria-label='Emojis']");
-    await click(".o-mail-Emoji:contains(😊)");
+    await click(".o-Emoji:contains(😊)");
     assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "/who 😊");
 });

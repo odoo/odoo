@@ -14,7 +14,7 @@ import { MessageSeenIndicator } from "@mail/core/common/message_seen_indicator";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
 import { RelativeTime } from "@mail/core/common/relative_time";
 import { convertBrToLineBreak, htmlToTextContentInline } from "@mail/utils/common/format";
-import { isEventHandled, markEventHandled } from "@mail/utils/common/misc";
+import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 
 import {
     Component,

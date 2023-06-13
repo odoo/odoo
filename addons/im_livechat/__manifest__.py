@@ -98,7 +98,6 @@ Help your customers with this chat, and analyse their feedback.
             'mail/static/src/core/common/**/*',
             'mail/static/src/utils/common/**/*',
             ('remove', 'mail/static/src/**/*.dark.scss'),
-            ('remove', 'mail/static/src/core/common/emoji_data.js'),
 
             'im_livechat/static/src/embed/**/*',
             'im_livechat/static/src/embed/livechat_data.js',
@@ -118,6 +117,7 @@ Help your customers with this chat, and analyse their feedback.
             'web/static/src/env.js',
             ('remove', 'web/static/src/legacy/js/services/ajax_service.js'),
             ('remove', 'web/static/src/legacy/js/common_env.js'),
+            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             'web/static/src/views/fields/formatters.js',
             'web/static/src/views/fields/file_handler.*',
             'bus/static/src/bus_parameters_service.js',
