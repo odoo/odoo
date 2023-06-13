@@ -7,7 +7,7 @@
         <field name="model">project.task</field>
         <field name="priority">800</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="personal_stage_type_ids"
+            <kanban default_group_by="personal_stage_type_id"
                     class="o_kanban_small_column"
                     on_create="quick_create"
                     quick_create_view="project_todo.project_task_view_todo_quick_create_form"
@@ -77,7 +77,7 @@
         <field name="model">project.task</field>
         <field name="arch" type="xml">
             <tree string="To-dos"
-                  default_group_by="personal_stage_type_ids"
+                  default_group_by="personal_stage_type_id"
                   editable="bottom"
                   multi_edit="1"
                   open_form_view="True"
@@ -234,7 +234,7 @@
                 <group expand="0" string="Group By">
                     <filter string="Tags" name="tags" help="By assigned tags" context="{'group_by':'tag_ids'}"/>
                     <filter string="Assignees" name="user_ids" context="{'group_by': 'user_ids'}"/>
-                    <filter string="Stage" name="stage" help="By personal stages" context="{'group_by':'personal_stage_type_ids'}"/>
+                    <filter string="Stage" name="stage" help="By personal stages" context="{'group_by':'personal_stage_type_id'}"/>
                 </group>
             </search>
         </field>
