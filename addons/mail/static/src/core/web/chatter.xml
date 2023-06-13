@@ -38,7 +38,7 @@
                             <span class="o-mail-Followers-counter ps-1" t-esc="state.thread.followers.length"/>
                         </t>
                         <t t-set-slot="default">
-                            <t t-if="this.props.threadModel !== 'discuss.channel' and state.thread.hasWriteAccess">
+                            <t t-if="state.thread.hasWriteAccess">
                                 <a class="dropdown-item" href="#" role="menuitem" t-on-click.prevent="onClickAddFollowers">
                                     Add Followers
                                 </a>
