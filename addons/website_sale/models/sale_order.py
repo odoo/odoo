@@ -150,9 +150,6 @@ class SaleOrder(models.Model):
         if add_qty and (not product or not product._is_add_to_cart_allowed()):
             raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
 
-        if product.lst_price == 0 and product.website_id.prevent_zero_price_sale:
-            raise UserError(_("The given product does not have a price therefore it cannot be added to cart."))
-
         if line_id is not False:
             order_line = self._cart_find_product_line(product_id, line_id, **kwargs)[:1]
         else:
@@ -192,6 +189,11 @@ class SaleOrder(models.Model):
             warning = ''
 
         order_line = self._cart_update_order_line(product_id, quantity, order_line, **kwargs)
+
+        if order_line and order_line.price_unit == 0 and self.website_id.prevent_zero_price_sale:
+            raise UserError(_(
+                "The given product does not have a price therefore it cannot be added to cart.",
+            ))
 
         return {
             'line_id': order_line.id,
