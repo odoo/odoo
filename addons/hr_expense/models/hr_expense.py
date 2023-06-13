@@ -76,7 +76,7 @@ class HrExpense(models.Model):
     quantity = fields.Float(required=True, digits='Product Unit of Measure', default=1)
     description = fields.Text(string="Internal Notes")
     nb_attachment = fields.Integer(string="Number of Attachments", compute='_compute_nb_attachment')
-    attachment_ids = fields.One2many(
+    linked_attachment_ids = fields.One2many(
         comodel_name='ir.attachment',
         inverse_name='res_id',
         domain="[('res_model', '=', 'hr.expense')]",
