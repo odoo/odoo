@@ -30,7 +30,7 @@ export class TableGuestsButton extends Component {
         });
 
         if (confirmed) {
-            const guestCount = parseInt(inputNumber, 10) || 1;
+            const guestCount = parseInt(inputNumber, 10) || 0;
             // Set the maximum number possible for an integer
             const max_capacity = 2 ** 31 - 1;
             if (guestCount > max_capacity) {
@@ -43,6 +43,12 @@ export class TableGuestsButton extends Component {
                 });
                 return;
             }
+
+            if (guestCount == 0 && this.currentOrder.orderlines.length === 0) {
+                this.pos.removeOrder(this.currentOrder);
+                this.pos.showScreen("FloorScreen");
+            }
+
             this.currentOrder.setCustomerCount(guestCount);
         }
     }

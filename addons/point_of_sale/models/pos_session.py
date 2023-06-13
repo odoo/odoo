@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+import secrets
 from collections import defaultdict
 from datetime import timedelta
 from itertools import groupby
@@ -33,6 +33,7 @@ class PosSession(models.Model):
         required=True,
         index=True)
     name = fields.Char(string='Session ID', required=True, readonly=True, default='/')
+    access_token = fields.Char('Security Token', copy=False)
     user_id = fields.Many2one(
         'res.users', string='Opened By',
         required=True,
@@ -1757,13 +1758,24 @@ class PosSession(models.Model):
 
         return taxes
 
+    def _ensure_access_token(self):
+        # Code taken from addons/portal/models/portal_mixin.py
+        if not self.access_token:
+            # we use a `write` to force the cache clearing otherwise `return self.access_token` will return False
+            self.sudo().write({'access_token': secrets.token_hex(16)})
+        return self.access_token
+
+    def _get_bus_channel_name(self):
+        return f'pos_session-{self.id}-{self._ensure_access_token()}'
+
     def _loader_params_pos_session(self):
+        self._ensure_access_token()
         return {
             'search_params': {
                 'domain': [('id', '=', self.id)],
                 'fields': [
                     'id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at', 'sequence_number',
-                    'payment_method_ids', 'state', 'update_stock_at_closing', 'cash_register_balance_start'
+                    'payment_method_ids', 'state', 'update_stock_at_closing', 'cash_register_balance_start', 'access_token'
                 ],
             },
         }

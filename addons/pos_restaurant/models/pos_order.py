@@ -71,8 +71,11 @@ class PosOrder(models.Model):
     def send_table_count_notification(self, table_ids):
         messages = []
         for config in self.env['pos.config'].search([('floor_ids', 'in', table_ids.floor_id.ids)]):
-            order_count = config.get_tables_order_count_and_printing_changes()
-            messages.append((f'pos_config-{config.id}', 'TABLE_ORDER_COUNT', order_count))
+            config_cur_session = config.current_session_id
+
+            if config_cur_session:
+                order_count = config.get_tables_order_count_and_printing_changes()
+                messages.append((config_cur_session._get_bus_channel_name(), 'TABLE_ORDER_COUNT', order_count))
         self.env['bus.bus']._sendmany(messages)
 
     @api.model

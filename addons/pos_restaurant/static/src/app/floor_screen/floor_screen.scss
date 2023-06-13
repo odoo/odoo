@@ -150,40 +150,43 @@
 
     // Should probably be moved to table.scss but currently the selectors are too generic
     .table {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         position: absolute;
         text-align: center;
-        font-size: 18px;
         color: white;
         background: rgb(53, 211, 116);
         border-radius: 3px;
         cursor: pointer;
         box-shadow: 0px 3px rgba(0,0,0,0.07);
         transition: background-color 300ms ease-in-out;
-        overflow: hidden;
+        box-sizing: border-box;
 
         &.selected {
             outline: solid rgba(255,255,255,0.3);
             cursor: move;
             z-index: 50;
+            overflow: hidden;
+        }
 
-            .table-seats {
-                margin-left: -12px;
-            }
+        .infos {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: center;
         }
 
         .order-count {
-            position: absolute;
-            top: 0;
-            left: 50%;
             background: black;
-            width: 20px;
-            margin-top: 1px;
-            margin-left: -10px;
-            height: 20px;
-            line-height: 20px;
-            border-radius: 10px;
-            font-size: 16px;
+            border-radius: 999px;
             z-index: 10;
+            width: 16px;
+            height: 16px;
+            line-height: 16px;
+            font-size: 16px;
+            position: absolute;
+            padding: 3px;
 
             &.notify-printing {
                 background: red;
@@ -195,37 +198,32 @@
         }
     }
 
-    .table-cover {
-        display: block;
-        position: absolute;
-        left: 0; right: 0; bottom: 0;
-        border-radius: 0px 0px 3px 3px;
-        background: rgba(0,0,0,0.2);
-
-        &.full {
-            border-radius: 3px 3px 3px 3px;
-        }
-    }
-
     .table-seats {
-        position: absolute;
         display: inline-block;
-        bottom: 0;
-        left: 50%;
-        height: 20px;
-        line-height: 20px;
-        font-size: 16px;
         border-radius: 5px;
-        margin-left: -16px;
-        margin-bottom: 4px;
-        background: black;
+        background: rgba(0,0,0,0.2);
         color: white;
-        opacity: 0.2;
         z-index: 3;
-        padding: 0 4px;
-    }
-    .table-seats-presence {
-        opacity: 1;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        padding: 0 10px;
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        .cover {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: black;
+            opacity: 0.4;
+            z-index: -1;
+        }
     }
 
     .table-handle {
@@ -253,7 +251,6 @@
         max-height: 100%;
         overflow: hidden;
         position: relative;
-        bottom: 5px;
     }
 
     .edit-button.editing {
