@@ -241,6 +241,7 @@ class Lead(models.Model):
     meeting_display_date = fields.Date(compute="_compute_meeting_display")
     meeting_display_label = fields.Char(compute="_compute_meeting_display")
     # UX
+    linked_attachment_ids = fields.One2many(comodel_name='ir.attachment', inverse_name='res_id')
     partner_email_update = fields.Boolean('Partner Email will Update', compute='_compute_partner_email_update')
     partner_phone_update = fields.Boolean('Partner Phone will Update', compute='_compute_partner_phone_update')
     is_partner_visible = fields.Boolean('Is Partner Visible', compute='_compute_is_partner_visible')
@@ -1521,14 +1522,8 @@ class Lead(models.Model):
         """
         self.ensure_one()
 
-        all_attachments = self.env['ir.attachment'].search([
-            ('res_model', '=', self._name),
-            ('res_id', 'in', opportunities.ids)
-        ])
-
         for opportunity in opportunities:
-            attachments = all_attachments.filtered(lambda attach: attach.res_id == opportunity.id)
-            for attachment in attachments:
+            for attachment in opportunity.linked_attachment_ids:
                 attachment.write({
                     'res_id': self.id,
                     'name': _("%(attach_name)s (from %(lead_name)s)",
