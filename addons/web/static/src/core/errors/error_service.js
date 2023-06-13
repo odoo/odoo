@@ -4,6 +4,8 @@ import { browser } from "../browser/browser";
 import { _lt } from "../l10n/translation";
 import { registry } from "../registry";
 import { completeUncaughtError, getErrorTechnicalName } from "./error_utils";
+import { isIOS } from "@web/core/browser/feature_detection";
+import { session } from "@web/session";
 
 /**
  * Uncaught Errors have 4 properties:
@@ -84,6 +86,13 @@ export const errorService = {
             }
             let uncaughtError;
             if (!filename && !lineno && !colno) {
+                if (isIOS() && session.is_frontend && odoo.debug !== "assets") {
+                    // In Safari 16.4+ (as of Jun 14th 2023), an error occurs
+                    // when going back and forward through the browser when the
+                    // cache is enabled. A feedback has been reported but in the
+                    // meantime, hide any script error in these versions.
+                    return;
+                }
                 uncaughtError = new UncaughtCorsError();
                 uncaughtError.traceback = env._t(
                     `Unknown CORS error\n\n` +
