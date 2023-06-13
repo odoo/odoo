@@ -16,7 +16,7 @@ from .project_task import CLOSED_STATES
 class Project(models.Model):
     _name = "project.project"
     _description = "Project"
-    _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread', 'mail.activity.mixin', 'rating.parent.mixin']
+    _inherit = ['portal.mixin', 'mail.alias.mixin', 'rating.parent.mixin', 'mail.thread', 'mail.activity.mixin']
     _order = "sequence, name, id"
     _rating_satisfaction_days = 30  # takes 30 days by default
     _check_company_auto = True
