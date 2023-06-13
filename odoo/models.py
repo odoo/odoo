@@ -2568,20 +2568,6 @@ class BaseModel(metaclass=MetaModel):
 
         return rows_dict
 
-    def _inherits_join_add(self, current_model, parent_model_name, query):
-        """
-        Add missing table SELECT and JOIN clause to ``query`` for reaching the parent table (no duplicates)
-        :param current_model: current model object
-        :param parent_model_name: name of the parent model for which the clauses should be added
-        :param query: query object on which the JOIN should be added
-        """
-        inherits_field = current_model._inherits[parent_model_name]
-        parent_model = self.env[parent_model_name]
-        parent_alias = query.left_join(
-            current_model._table, inherits_field, parent_model._table, 'id', inherits_field,
-        )
-        return parent_alias
-
     @api.model
     def _inherits_join_calc(self, alias, fname, query):
         """
@@ -4714,16 +4700,19 @@ class BaseModel(metaclass=MetaModel):
         # apply main rules on the object
         Rule = self.env['ir.rule']
         domain = Rule._compute_domain(self._name, mode)
-        if domain:
-            expression.expression(domain, self.sudo(), self._table, query)
+        all_domain = domain if domain else []
 
         # apply ir.rules from the parents (through _inherits)
-        for parent_model_name in self._inherits:
+        for parent_model_name, path_field_name in self._inherits.items():
             domain = Rule._compute_domain(parent_model_name, mode)
             if domain:
-                parent_model = self.env[parent_model_name]
-                parent_alias = self._inherits_join_add(self, parent_model_name, query)
-                expression.expression(domain, parent_model.sudo(), parent_alias, query)
+                all_domain = expression.AND([all_domain, [
+                    leaf if (expression.is_operator(leaf) or expression.is_boolean(leaf)) else (f'{path_field_name}.{leaf[0]}', leaf[1], leaf[2])
+                    for leaf in domain
+                ]])
+
+        if all_domain:
+            expression.expression(all_domain, self.sudo(), self._table, query)
 
     @api.model
     def _generate_m2o_order_by(self, alias, order_field, query, reverse_direction, seen):
