@@ -73,15 +73,15 @@
     -->
     <t t-name="im_livechat.legacy.mail.AbstractThreadWindow.HeaderContent">
         <span t-if="widget.isMobile()">
-            <a href="#" class="o_thread_window_close fa fa-1x fa-arrow-left" aria-label="Close chat window" title="Close chat window"/>
+            <a href="#" class="o_thread_window_closeStyle o_thread_window_fold fa fa-1x fa-arrow-left" aria-label="Hide chat window" title="Hide chat window"/>
         </span>
         <span class="o_thread_window_title">
             <t t-esc="title"/>
             <span t-if="unreadCounter"> (<t t-esc="unreadCounter"/>)</span>
             <t t-if="thread and thread.hasTypingNotification() and thread.isSomeoneTyping()" t-call="im_livechat.legacy.mail.ThreadTypingIcon"/>
         </span>
-        <span t-if="!widget.isMobile()" class="o_thread_window_buttons">
-            <a href="#" class="o_thread_window_close fa fa-close"/>
+        <span class="o_thread_window_buttons">
+            <a href="#" class="o_thread_window_closeStyle o_thread_window_close fa fa-close" aria-label="Close chat window" title="Close chat window"/>
         </span>
     </t>
 

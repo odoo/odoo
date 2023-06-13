@@ -53,7 +53,7 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
                 margin-left: 10px;
             }
 
-            .o_thread_window_close {
+            .o_thread_window_closeStyle {
                 $o-close-font-size: 17px;
                 padding: (($o-mail-chat-header-height - $o-close-font-size) / 2);
                 font-size: $o-close-font-size;
@@ -96,9 +96,9 @@ $o-mail-thread-window-zindex: $zindex-modal + 1 !default;
 
         .o_thread_window_buttons {
             flex: 0 0 auto;
-            .o_thread_window_close, .o_thread_window_expand {
+            .o_thread_window_closeStyle, .o_thread_window_expand {
                 color: white;
-                padding: 0px 3px;
+                padding: 0px 15px;
                 margin-left: 5px;
                 @include o-hover-opacity(0.7, 1);
             }

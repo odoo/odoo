@@ -17,7 +17,12 @@ LivechatButton.include({
      */
     willStart: function () {
         if (this.options.chat_request_session) {
-            utils.set_cookie('im_livechat_session', JSON.stringify(this.options.chat_request_session), 60*60);
+            const cookie = utils.get_cookie('im_livechat_session');
+            const cookieData = cookie ? JSON.parse(cookie) : undefined;
+            const folded = cookieData ? cookieData.folded : undefined;
+            // locally saved folded state has precedence over chat_request_session folded state
+            const initSessionData = Object.assign({}, this.options.chat_request_session, { folded: folded === undefined ? this.options.chat_request_session.folded : folded });
+            utils.set_cookie('im_livechat_session', JSON.stringify(initSessionData), 60*60);
         }
         return this._super();
     },

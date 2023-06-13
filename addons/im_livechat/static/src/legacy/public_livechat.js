@@ -52,7 +52,7 @@ var LivechatButton = Widget.extend({
         'updated_unread_counter': '_onUpdatedUnreadCounter',
     },
     events: {
-        'click': '_openChat'
+        'click': '_onClick'
     },
     init: function (parent, serverURL, options) {
         this._super(parent);
@@ -143,6 +143,10 @@ var LivechatButton = Widget.extend({
         if (hasAlreadyMessage) {
             return;
         }
+        if (this._chatWindow && this._chatWindow.$el) {
+            this._chatWindow.$el.show();
+            this.$el.hide();
+        }
 
         if (this._livechat) {
             this._livechat.addMessage(message);
@@ -222,6 +226,15 @@ var LivechatButton = Widget.extend({
             });
         });
     },
+    _onClick() {
+        if (config.device.isMobile && this._chatWindow) {
+            this._chatWindow.toggleFold();
+            this._chatWindow.$el.show();
+            this.$el.hide();
+        } else {
+            this._openChat();
+        }
+    },
     /**
      * @private
      */
@@ -274,7 +287,7 @@ var LivechatButton = Widget.extend({
                     self.call('bus_service', 'addChannel', self._livechat.getUUID());
                     self.call('bus_service', 'startPolling');
 
-                    utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(self._livechat.toData())), 60 * 60);
+                    self.saveLivechatSessionInCookie();
                     utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60 * 60);
                     if (livechatData.operator_pid[0]) {
                         // livechatData.operator_pid contains a tuple (id, name)
@@ -282,6 +295,10 @@ var LivechatButton = Widget.extend({
                         var operatorPidId = livechatData.operator_pid[0];
                         var oneWeek = 7 * 24 * 60 * 60;
                         utils.set_cookie('im_livechat_previous_operator_pid', operatorPidId, oneWeek);
+                    }
+                    if (config.device.isMobile && self._chatWindow.isFolded()) {
+                        self._chatWindow.$el.hide();
+                        self.$el.show();
                     }
                 });
             }
@@ -441,6 +458,12 @@ var LivechatButton = Widget.extend({
      */
     _onSaveChatWindow: function (ev) {
         ev.stopPropagation();
+        this.saveLivechatSessionInCookie();
+    },
+    saveLivechatSessionInCookie() {
+        if (!this._livechat) {
+            return;
+        }
         utils.set_cookie('im_livechat_session', utils.unaccent(JSON.stringify(this._livechat.toData())), 60 * 60);
     },
     /**
@@ -2034,7 +2057,8 @@ var AbstractThreadWindow = Widget.extend({
     },
     events: {
         'click .o_thread_window_close': '_onClickClose',
-        'click .o_thread_window_title': '_onClickFold',
+        'click .o_thread_window_fold': '_onClickFold',
+        'click .o_thread_window_title': '_onClickTitle',
         'click .o_composer_text_field': '_onComposerClick',
         'click .o_mail_thread': '_onThreadWindowClicked',
         'keydown .o_composer_text_field': '_onKeydown',
@@ -2059,6 +2083,7 @@ var AbstractThreadWindow = Widget.extend({
      */
     init: function (parent, thread, options) {
         this._super(parent);
+        this._livechatButton = parent;
 
         this.options = _.defaults(options || {}, {
             autofocus: true,
@@ -2437,8 +2462,16 @@ var AbstractThreadWindow = Widget.extend({
      * @private
      */
     _onClickFold: function () {
+        this.toggleFold();
+        if (config.device.isMobile) {
+            this._livechatButton.$el.show();
+            this.$el.hide();
+            this._livechatButton.saveLivechatSessionInCookie();
+        }
+    },
+    _onClickTitle() {
         if (!config.device.isMobile) {
-            this.toggleFold();
+            this._onClickFold();
         }
     },
     /**
