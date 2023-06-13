@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
+
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError
 
 
 class ProjectTaskType(models.Model):
@@ -13,6 +15,9 @@ class ProjectTaskType(models.Model):
     def _get_default_project_ids(self):
         default_project_id = self.env.context.get('default_project_id')
         return [default_project_id] if default_project_id else None
+
+    def _default_user_id(self):
+        return 'default_project_id' not in self.env.context and self.env.uid
 
     active = fields.Boolean('Active', default=True)
     name = fields.Char(string='Name', required=True, translate=True)
@@ -41,7 +46,7 @@ class ProjectTaskType(models.Model):
             " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n")
     disabled_rating_warning = fields.Text(compute='_compute_disabled_rating_warning')
 
-    user_id = fields.Many2one('res.users', 'Stage Owner', index=True)
+    user_id = fields.Many2one('res.users', 'Stage Owner', default=_default_user_id, compute='_compute_user_id', store=True, index=True)
 
     def unlink_wizard(self, stage_view=False):
         self = self.with_context(active_test=False)
@@ -79,6 +84,65 @@ class ProjectTaskType(models.Model):
             default['name'] = _("%s (copy)", self.name)
         return super().copy(default)
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_remaining_personal_stages(self):
+        """ Prepare personal stages for deletion (i.e. move task to other personal stages) and
+            avoid unlink if no remaining personal stages for an active internal user.
+        """
+        # Personal stages are processed if the user still has at least one personal stage after unlink
+        personal_stages = self.filtered('user_id')
+        if not personal_stages:
+            return
+        remaining_personal_stages_all = self.env['project.task.type']._read_group(
+            [('user_id', 'in', personal_stages.user_id.ids), ('id', 'not in', personal_stages.ids)],
+            groupby=['user_id', 'sequence', 'id'],
+            order="user_id,sequence DESC",
+        )
+        remaining_personal_stages_by_user = defaultdict(list)
+        for user, sequence, stage in remaining_personal_stages_all:
+            remaining_personal_stages_by_user[user].append({'id': stage.id, 'seq': sequence})
+
+        # For performance issue, project.task.stage.personal records that need to be modified are listed before calling _prepare_personal_stages_deletion
+        personal_stages_to_update = self.env['project.task.stage.personal']._read_group([('stage_id', 'in', personal_stages.ids)], ['stage_id'], ['id:recordset'])
+        for user in personal_stages.user_id:
+            if not user.active or user.share:
+                continue
+            user_stages_to_unlink = personal_stages.filtered(lambda stage: stage.user_id == user)
+            user_remaining_stages = remaining_personal_stages_by_user[user]
+            if not user_remaining_stages:
+                raise UserError(_("Each user should have at least one personal stage. Create a new stage to which the tasks can be transferred after the selected ones are deleted."))
+            user_stages_to_unlink._prepare_personal_stages_deletion(user_remaining_stages, personal_stages_to_update)
+
+    def _prepare_personal_stages_deletion(self, remaining_stages_dict, personal_stages_to_update):
+        """ _prepare_personal_stages_deletion prepare the deletion of personal stages of a single user.
+            Tasks using that stage will be moved to the first stage with a lower sequence if it exists
+            higher if not.
+        :param self: project.task.type recordset containing the personal stage of a user
+                     that need to be deleted
+        :param remaining_stages_dict: list of dict representation of the personal stages of a user that
+                                      can be used to replace the deleted ones. Can not be empty.
+                                      e.g: [{'id': stage1_id, 'seq': stage1_sequence}, ...]
+        :param personal_stages_to_update: project.task.stage.personal recordset containing the records
+                                          that need to be updated after stage modification. Is passed to
+                                          this method as an argument to avoid to reload it for each users
+                                          when this method is called multiple times.
+        """
+        stages_to_delete_dict = sorted([{'id': stage.id, 'seq': stage.sequence} for stage in self],
+                                       key=lambda stage: stage['seq'])
+        replacement_stage_id = remaining_stages_dict.pop()['id']
+        next_replacement_stage = remaining_stages_dict and remaining_stages_dict.pop()
+
+        personal_stages_by_stage = {
+            stage.id: personal_stages
+            for stage, personal_stages in personal_stages_to_update
+        }
+        for stage in stages_to_delete_dict:
+            while next_replacement_stage and next_replacement_stage['seq'] < stage['seq']:
+                replacement_stage_id = next_replacement_stage['id']
+                next_replacement_stage = remaining_stages_dict and remaining_stages_dict.pop()
+            if stage['id'] in personal_stages_by_stage:
+                personal_stages_by_stage[stage['id']].stage_id = replacement_stage_id
+
     def toggle_active(self):
         res = super().toggle_active()
         stage_active = self.filtered('active')
@@ -109,38 +173,15 @@ class ProjectTaskType(models.Model):
             else:
                 stage.disabled_rating_warning = False
 
+    @api.depends('project_ids')
+    def _compute_user_id(self):
+        """ Fields project_ids and user_id cannot be set together for a stage. It can happen that
+            project_ids is set after stage creation (e.g. when setting demo data). In such case, the
+            default user_id has to be removed.
+        """
+        self.sudo().filtered('project_ids').user_id = False
+
     @api.constrains('user_id', 'project_ids')
     def _check_personal_stage_not_linked_to_projects(self):
         if any(stage.user_id and stage.project_ids for stage in self):
             raise UserError(_('A personal stage cannot be linked to a project because it is only visible to its corresponding user.'))
-
-    def remove_personal_stage(self):
-        """
-        Remove a personal stage, tasks using that stage will move to the first
-        stage with a lower priority if it exists higher if not.
-        This method will not allow to delete the last personal stage.
-        Having no personal_stage_type_id makes the task not appear when grouping by personal stage.
-        """
-        self.ensure_one()
-        assert self.user_id == self.env.user or self.env.su
-
-        users_personal_stages = self.env['project.task.type']\
-            .search([('user_id', '=', self.user_id.id)], order='sequence DESC')
-        if len(users_personal_stages) == 1:
-            raise ValidationError(_("You should at least have one personal stage. Create a new stage to which the tasks can be transferred after this one is deleted."))
-
-        # Find the most suitable stage, they are already sorted by sequence
-        new_stage = self.env['project.task.type']
-        for stage in users_personal_stages:
-            if stage == self:
-                continue
-            if stage.sequence > self.sequence:
-                new_stage = stage
-            elif stage.sequence <= self.sequence:
-                new_stage = stage
-                break
-
-        self.env['project.task.stage.personal'].search([('stage_id', '=', self.id)]).write({
-            'stage_id': new_stage.id,
-        })
-        self.unlink()

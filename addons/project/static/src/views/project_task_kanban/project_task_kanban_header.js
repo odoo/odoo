@@ -3,7 +3,6 @@
 import { _t } from "@web/core/l10n/translation";
 import { useService } from '@web/core/utils/hooks';
 import { KanbanHeader } from "@web/views/kanban/kanban_header";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { onWillStart } from "@odoo/owl";
 
 export class ProjectTaskKanbanHeader extends KanbanHeader {
@@ -17,29 +16,9 @@ export class ProjectTaskKanbanHeader extends KanbanHeader {
     }
 
     async onWillStart() {
-        if (!this.props.list.isGroupedByPersonalStages) { // no need to check it if the group by is personal stages
+        if (this.props.list.isGroupedByStage) { // no need to check it if not grouped by stage
             this.isProjectManager = await this.userService.hasGroup('project.group_project_manager');
         }
-    }
-
-    editGroup() {
-        const groupBy = this.props.list.groupBy;
-        if (groupBy.length !== 1 || groupBy[0] !== 'personal_stage_type_ids') {
-            super.editGroup();
-            return;
-        }
-        const context = Object.assign({}, this.group.context, {
-            form_view_ref: 'project.personal_task_type_edit',
-        });
-        this.dialog.add(FormViewDialog, {
-            context,
-            resId: this.group.value,
-            resModel: this.group.groupByField.relation,
-            title: _t('Edit Personal Stage'),
-            onRecordSaved: async () => {
-                await this.props.list.load();
-            },
-        });
     }
 
     async deleteGroup() {
@@ -57,11 +36,11 @@ export class ProjectTaskKanbanHeader extends KanbanHeader {
     }
 
     canEditGroup(group) {
-        return super.canEditGroup(group) && (!this.props.list.isGroupedByStage || this.isProjectManager) || this.props.list.isGroupedByPersonalStages;
+        return super.canEditGroup(group) && (!this.props.list.isGroupedByStage || this.isProjectManager);
     }
 
     canDeleteGroup(group) {
-        return super.canDeleteGroup(group) && (!this.props.list.isGroupedByStage || this.isProjectManager) || this.props.list.isGroupedByPersonalStages;
+        return super.canDeleteGroup(group) && (!this.props.list.isGroupedByStage || this.isProjectManager);
     }
 
     /**
