@@ -17333,4 +17333,44 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(input, document.activeElement);
         assert.strictEqual(input.value, 'Value 1');
     });
+
+    QUnit.test("keep the offset after activating a filter", async function (assert) {
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <list limit="2">
+                    <field name="foo"/>
+                    <field name="bar"/>
+                </list>
+            `,
+            searchViewArch: `
+                <search>
+                    <filter name="always_true" string="True" domain="[('id', '>', -1)]"/>
+                </search>
+            `,
+        });
+        assert.containsN(target, "tbody .o_data_row", 2);
+        assert.deepEqual(
+            [...target.querySelectorAll("tbody .o_data_row")].map((el) => el.innerText.trim()),
+            ["yop", "blip"]
+        );
+
+        await pagerNext(target);
+        assert.containsN(target, "tbody .o_data_row", 2);
+        assert.deepEqual(
+            [...target.querySelectorAll("tbody .o_data_row")].map((el) => el.innerText.trim()),
+            ["gnap", "blip"]
+        );
+
+        await toggleFilterMenu(target);
+        await toggleMenuItem(target, "True");
+        assert.containsN(target, "tbody .o_data_row", 2);
+        assert.strictEqual(target.querySelector(".o_pager_value").innerText, '3-4');
+        assert.deepEqual(
+            [...target.querySelectorAll("tbody .o_data_row")].map((el) => el.innerText.trim()),
+            ["gnap", "blip"]
+        );
+    });
 });

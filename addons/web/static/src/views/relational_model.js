@@ -3483,7 +3483,11 @@ export class RelationalModel extends Model {
      * @returns {Promise<void>}
      */
     async load(params = {}) {
+        const extraState = {};
         const rootParams = { ...this.rootParams, ...params };
+        if ((params.groupBy || []).join(' ') !== (this.rootParams.groupBy || []).join(' ')) {
+            extraState.offset = 0;
+        }
         if (this.defaultOrderBy && !(params.orderBy && params.orderBy.length)) {
             rootParams.orderBy = this.defaultOrderBy;
         }
@@ -3511,7 +3515,7 @@ export class RelationalModel extends Model {
             },
         };
         const state = this.root
-            ? Object.assign(this.root.exportState(), { offset: 0 })
+            ? Object.assign(this.root.exportState(), extraState)
             : this.initialRootState;
 
         const newRoot = this.createDataPoint(this.rootType, rootParams, state);
