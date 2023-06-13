@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { loadEmoji } from "@mail/core/common/emoji_picker";
+import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 
 import { escape, unaccent } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";

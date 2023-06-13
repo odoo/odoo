@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { Composer } from "@mail/core/common/composer_model";
-import { loadEmoji } from "@mail/core/common/emoji_picker";
+import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { DEFAULT_AVATAR } from "@mail/core/common/persona_service";
 import { Thread } from "@mail/core/common/thread_model";
 import {

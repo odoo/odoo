@@ -110,12 +110,12 @@ export const loader = {
 };
 
 /**
- * @returns {import("@mail/core/common/emoji_data")}
+ * @returns {import("@web/core/emoji_picker/emoji_data")}
  */
 export async function loadEmoji() {
     try {
         await loader.loadEmoji();
-        return odoo.runtimeImport("@mail/core/common/emoji_data");
+        return odoo.runtimeImport("@web/core/emoji_picker/emoji_data");
     } catch {
         // Could be intentional (tour ended successfully while emoji still loading)
         return { emojis: [], categories: [] };

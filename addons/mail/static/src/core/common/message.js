@@ -2,7 +2,7 @@
 
 import { AttachmentList } from "@mail/core/common/attachment_list";
 import { Composer } from "@mail/core/common/composer";
-import { useEmojiPicker } from "@mail/core/common/emoji_picker";
+import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 import { ImStatus } from "@mail/core/common/im_status";
 import { LinkPreviewList } from "@mail/core/common/link_preview_list";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";

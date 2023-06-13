@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { useEmojiPicker } from "@mail/core/common/emoji_picker";
+import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 
 import { useRef } from "@odoo/owl";
 
