@@ -493,6 +493,12 @@ class AccountMoveSend(models.Model):
 
     def _call_web_service(self, invoices_data):
         # TO OVERRIDE
+        # call a web service before the pdfs are rendered
+        self.ensure_one()
+
+    def _call_web_service_after_invoice_pdf_render(self, invoices_data):
+        # TO OVERRIDE
+        # call a web service after the pdfs are rendered
         self.ensure_one()
 
     def _generate_invoice_documents(self, invoices_data, allow_fallback_pdf=False):
@@ -530,6 +536,15 @@ class AccountMoveSend(models.Model):
                 form._prepare_invoice_pdf_report(invoice, invoice_data)
                 form._hook_invoice_document_after_pdf_report_render(invoice, invoice_data)
                 form._link_invoice_documents(invoice, invoice_data)
+
+        # check for errors again
+        invoices_data_web_service = {
+            invoice: invoice_data
+            for invoice, invoice_data in invoices_data.items()
+            if not invoice_data.get('error')
+        }
+        if invoices_data_web_service:
+            self._call_web_service_after_invoice_pdf_render(invoices_data_web_service)
 
     def _generate_invoice_fallback_documents(self, invoices_data):
         """ Generate the invoice PDF and electronic documents.

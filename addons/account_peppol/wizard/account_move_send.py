@@ -104,9 +104,9 @@ class AccountMoveSend(models.Model):
 
         return values
 
-    def _call_web_service(self, invoices_data):
+    def _call_web_service_after_invoice_pdf_render(self, invoices_data):
         # Overrides 'account'
-        super()._call_web_service(invoices_data)
+        super()._call_web_service_after_invoice_pdf_render(invoices_data)
 
         if not self.checkbox_send_peppol:
             return
