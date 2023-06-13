@@ -27,12 +27,12 @@ QUnit.test("Rendering of visitor banner", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.containsOnce($, ".o-website_livechat-VisitorBanner-avatar img");
+    assert.containsOnce($, "img.o-website_livechat-VisitorBanner-avatar");
     assert.containsOnce(
         $,
-        ".o-website_livechat-VisitorBanner-avatar img[data-src='/mail/static/src/img/smiley/avatar.jpg']"
+        "img.o-website_livechat-VisitorBanner-avatar[data-src='/mail/static/src/img/smiley/avatar.jpg']"
     );
-    assert.containsOnce($, ".o-website_livechat-VisitorBanner-avatar .o-mail-ImStatus");
+    assert.containsOnce($, ".o-website_livechat-VisitorBanner .o-mail-ImStatus");
     assert.containsOnce($, ".o_country_flag[data-src='/base/static/img/country_flags/be.png']");
     assert.containsOnce($, "span:contains(Visitor #11)");
     assert.containsOnce($, "span:contains(English)");
