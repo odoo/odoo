@@ -15,6 +15,7 @@ class PosConfig(models.Model):
     floor_ids = fields.Many2many('restaurant.floor', string='Restaurant Floors', help='The restaurant floors served by this point of sale.')
     set_tip_after_payment = fields.Boolean('Set Tip After Payment', help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day.")
     module_pos_restaurant = fields.Boolean(default=True)
+    module_pos_restaurant_appointment = fields.Boolean("Table Booking")
 
     def get_tables_order_count_and_printing_changes(self):
         self.ensure_one()

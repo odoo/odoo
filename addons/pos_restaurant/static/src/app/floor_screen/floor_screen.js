@@ -44,7 +44,8 @@ export class FloorScreen extends Component {
             isColorPicker: false,
         });
         const ui = useState(useService("ui"));
-        this.pos.floorPlanStyle = ui.isSmall ? "kanban" : "default";
+        const mode = localStorage.getItem("floorPlanStyle");
+        this.pos.floorPlanStyle = ui.isSmall || mode == "kanban" ? "kanban" : "default";
         this.floorMapRef = useRef("floor-map-ref");
         this.addFloorRef = useRef("add-floor-ref");
         this.map = useRef("map");
@@ -268,11 +269,26 @@ export class FloorScreen extends Component {
         return firstNum.toString();
     }
     async _save(table) {
-        const tableCopy = { ...table };
-        delete tableCopy.floor;
-        const tableId = await this.orm.call("restaurant.table", "create_from_ui", [tableCopy]);
-        table.id = tableId;
-        this.pos.tables_by_id[tableId] = table;
+        const tableCopy = {
+            floor_id: table.floor.id,
+            color: table.color,
+            height: table.height,
+            name: table.name,
+            position_h: table.position_h,
+            position_v: table.position_v,
+            seats: table.seats,
+            shape: table.shape,
+            width: table.width,
+        };
+
+        if (table.id) {
+            await this.orm.write("restaurant.table", [table.id], tableCopy);
+        } else {
+            const tableId = await this.orm.create("restaurant.table", [tableCopy]);
+
+            table.id = tableId[0];
+            this.pos.tables_by_id[tableId] = table;
+        }
     }
     async _renameFloor(floorId, newName) {
         await this.orm.call("restaurant.floor", "rename_floor", [floorId, newName]);
@@ -359,7 +375,9 @@ export class FloorScreen extends Component {
         }
     }
     async onSaveTable(table) {
-        await this._save(table);
+        if (this.pos.tables_by_id[table.id]) {
+            await this._save(table);
+        }
     }
     async addFloor() {
         const { confirmed, payload: newName } = await this.popup.add(TextInputPopup, {
@@ -381,6 +399,9 @@ export class FloorScreen extends Component {
     }
     async createTable() {
         const newTable = await this._createTableHelper();
+        newTable.skip_changes = 0;
+        newTable.changes_count = 0;
+        newTable.order_count = 0;
         if (newTable) {
             this.state.selectedTableIds = [];
             this.state.selectedTableIds.push(newTable.id);
@@ -564,9 +585,7 @@ export class FloorScreen extends Component {
                     }
                 }
                 this.pos.tables_by_id[id].active = false;
-                await this.orm.call("restaurant.table", "create_from_ui", [
-                    { active: false, id: id },
-                ]);
+                this.orm.write("restaurant.table", [id], { active: false });
                 this.activeFloor.tables = this.activeTables.filter((table) => table.id !== id);
                 delete this.pos.tables_by_id[id];
             } else {

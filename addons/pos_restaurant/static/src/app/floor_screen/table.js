@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/store/pos_hook";
 
 export class Table extends Component {
@@ -25,25 +25,63 @@ export class Table extends Component {
 
     setup() {
         this.pos = usePos();
+        this.state = useState({
+            containerHeight: 0,
+            containerWidth: 0,
+        });
+    }
+    get fontSize() {
+        const size = this.state.containerHeight / 3;
+        return size > 20 ? 20 : size;
+    }
+    get badgeStyle() {
+        if (this.props.table.shape !== "round") {
+            return `top: -6px; right: -6px;`;
+        }
+
+        const tableHeight = this.state.containerHeight;
+        const tableWidth = this.state.containerWidth;
+        const radius = Math.min(tableWidth, tableHeight) / 2;
+
+        let left = 0;
+        let bottom = 0;
+
+        if (tableHeight > tableWidth) {
+            left = radius;
+            bottom = radius + (tableHeight - tableWidth);
+        } else {
+            bottom = radius;
+            left = radius + (tableWidth - tableHeight);
+        }
+
+        bottom += 0.7 * radius - 8;
+        left += 0.7 * radius - 8;
+
+        return `bottom: ${bottom}px; left: ${left}px;`;
     }
     get style() {
         const table = this.props.table;
-
+        let style = "";
         let background = table.color ? table.color : "rgb(53, 211, 116)";
         let textColor = "white";
-        let border = "auto";
-        let boxShadow = "0px 3px rgba(0,0,0,0.07)";
+
         if (!this.isOccupied()) {
-            background = "transparent";
+            background = "#00000020";
             const rgb = table.floor.background_color
                 .substring(4, table.floor.background_color.length - 1)
                 .replace(/ /g, "")
                 .split(",");
             textColor =
                 (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255 > 0.5 ? "black" : "white";
-            border = "3px solid " + table.color;
-            boxShadow = "none";
         }
+
+        style += `
+            border: 3px solid ${table.color};
+            border-radius: ${table.shape === "round" ? 1000 : 3}px;
+            background: ${background};
+            box-shadow: 0px 3px rgba(0,0,0,0.07);
+            padding: ${table.shape === "round" ? "4px 10px" : "4px 8px"};
+            color: ${textColor};`;
 
         if (this.pos.floorPlanStyle == "kanban") {
             const floor = table.floor;
@@ -54,37 +92,35 @@ export class Table extends Component {
             const position_h =
                 widthTable * (index % nbrHorizontal) + 5 + (index % nbrHorizontal) * 10;
             const position_v =
-                widthTable * Math.floor(index / nbrHorizontal) +
-                5 +
+                (widthTable + 25) * Math.floor(index / nbrHorizontal) +
+                10 +
                 Math.floor(index / nbrHorizontal) * 10;
-            return `
+            this.state.containerHeight = widthTable;
+            this.state.containerWidth = widthTable;
+
+            style += `
                 width: ${widthTable}px;
                 height: ${widthTable}px;
-                line-height: ${widthTable}px;
                 top: ${position_v}px;
                 left: ${position_h}px;
-                border: ${border};
-                border-radius: ${table.shape === "round" ? 1000 : 3}px;
-                background: ${background};
-                box-shadow: ${boxShadow};
-                font-size: ${widthTable >= 150 ? 32 : 16}px;
-                color: ${textColor};
             `;
         } else {
-            return `
+            this.state.containerHeight = table.height;
+            this.state.containerWidth = table.width;
+
+            style += `
                 width: ${table.width}px;
                 height: ${table.height}px;
-                line-height: ${table.height}px;
                 top: ${table.position_v}px;
                 left: ${table.position_h}px;
-                border: ${border};
-                border-radius: ${table.shape === "round" ? 1000 : 3}px;
-                background: ${background};
-                box-shadow: ${boxShadow};
-                font-size: ${table.height >= 150 && table.width >= 150 ? 32 : 16}px;
-                color: ${textColor};
             `;
         }
+
+        style += `
+            font-size: ${this.fontSize}px;
+            line-height: ${this.fontSize}px;`;
+
+        return style;
     }
     get fill() {
         const customerCount = this.pos.getCustomerCount(this.props.table.id);
@@ -110,18 +146,16 @@ export class Table extends Component {
         return !Number.isNaN(result) ? result : 0;
     }
     get orderCountClass() {
-        const countClass = { "order-count": true };
-        if (this.pos.orderPreparationCategories.size) {
-            const notifications = this._getNotifications();
-            countClass["notify-printing"] = notifications.printing;
-            countClass["notify-skipped"] = notifications.skipped;
-        }
+        const notifications = this._getNotifications();
+        const countClass = {
+            "order-count": true,
+            "notify-printing": notifications.printing,
+            "notify-skipped": notifications.skipped,
+        };
         return countClass;
     }
     get customerCountDisplay() {
-        return `${this.pos.getCustomerCount(this.props.table.id)}/${
-            this.props.table.seats
-        }`;
+        return `${this.pos.getCustomerCount(this.props.table.id)}/${this.props.table.seats}`;
     }
     _getNotifications() {
         const table = this.props.table;
@@ -133,8 +167,7 @@ export class Table extends Component {
     }
     isOccupied() {
         return (
-            this.pos.getCustomerCount(this.props.table.id) > 0 ||
-            this.props.table.order_count > 0
+            this.pos.getCustomerCount(this.props.table.id) > 0 || this.props.table.order_count > 0
         );
     }
 }

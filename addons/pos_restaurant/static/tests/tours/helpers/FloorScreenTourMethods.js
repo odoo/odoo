@@ -132,16 +132,24 @@ class Check {
     tableSeatIs(table, val) {
         return [
             {
+                content: `Unselect table`,
+                trigger: `.floor-map`,
+            },
+            {
                 content: `number of seats in table '${table}' is '${val}'`,
-                trigger: `.floor-map .table .label:contains("${table}") ~ .table-seats:contains("${val}")`,
+                trigger: `.floor-map .table .infos:has(.label:contains("${table}")) ~ .table-seats:contains("${val}")`,
                 run: function () {},
+            },
+            {
+                content: `click table '${table}'`,
+                trigger: `.floor-map .table .label:contains("${table}")`,
             },
         ];
     }
     orderCountSyncedInTableIs(table, count) {
         return [
             {
-                trigger: `.floor-map .table .order-count:contains("${count}") ~ .label:contains("${table}")`,
+                trigger: `.floor-map .table .label:contains("${table}") ~ .order-count:contains("${count}")`,
                 run: function () {},
             },
         ];

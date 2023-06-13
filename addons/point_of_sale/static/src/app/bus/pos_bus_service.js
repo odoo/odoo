@@ -13,8 +13,7 @@ export class PosBus {
         this.pos = pos;
         this.orm = orm;
 
-        // initialize bus_service and listen on pos_config-`id` channel
-        bus_service.addChannel(`pos_config-${pos.config.id}`);
+        bus_service.addChannel(`pos_session-${pos.pos_session.id}-${pos.pos_session.access_token}`);
         bus_service.addEventListener("notification", ({ detail }) => {
             for (const message of detail) {
                 this.dispatch(message);

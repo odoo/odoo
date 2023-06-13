@@ -6,9 +6,6 @@
             <span class="label drag-handle">
                 <t t-esc="props.table.name" />
             </span>
-            <span class="table-seats">
-                <t t-esc="props.table.seats" />
-            </span>
             <t t-if="pos.floorPlanStyle != 'kanban'" t-foreach="handles" t-as="handle" t-key="handle">
                 <span class="table-handle" t-ref="{{handle}}" t-att-style="computeHandleStyle(handle)"/>
             </t>

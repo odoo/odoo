@@ -16,8 +16,16 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         });
     },
     getTable(order) {
-        if (order.getTable()) {
-            return `${order.getTable().floor.name} (${order.getTable().name})`;
+        const table = order.getTable();
+        if (table) {
+            let floorAndTable = "";
+
+            if (this.pos.floors && this.pos.floors.length > 1) {
+                floorAndTable = `${table.floor.name}/`;
+            }
+
+            floorAndTable += table.name;
+            return floorAndTable;
         }
     },
     //@override
@@ -118,9 +126,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     async onDoRefund() {
         const order = this.getSelectedSyncedOrder();
         if (this.pos.config.module_pos_restaurant && order && !this.pos.table) {
-            this.pos.setTable(
-                order.table ? order.table : Object.values(this.pos.tables_by_id)[0]
-            );
+            this.pos.setTable(order.table ? order.table : Object.values(this.pos.tables_by_id)[0]);
         }
         this._super(...arguments);
     },
