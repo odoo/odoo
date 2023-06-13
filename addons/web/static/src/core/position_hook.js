@@ -293,14 +293,24 @@ export function usePosition(reference, options) {
         }
     };
     const throttledUpdate = throttleForAnimation(update);
-    const referenceObserver = new IntersectionObserver(() => {
-        throttledUpdate("intersection");
+    let observingSince;
+    const referenceObserver = new IntersectionObserver((entries, observer) => {
+        console.log(
+            "intersection",
+            entries[0].time,
+            observingSince,
+            entries[0].time - observingSince
+        );
+        if (entries[0].time - observingSince > 3) {
+            throttledUpdate("intersection");
+        }
     });
     useEffect(() => {
         ref = getReference();
         update("effect");
+        observingSince = performance.now();
         referenceObserver.observe(ref);
-        return () => referenceObserver.disconnect();
+        return () => { referenceObserver.disconnect(); observingSince = null; };
     });
     const listener = () => throttledUpdate("listener");
     useExternalListener(document, "scroll", listener, { capture: true });

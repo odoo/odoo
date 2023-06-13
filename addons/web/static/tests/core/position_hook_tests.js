@@ -447,6 +447,7 @@ const CONTAINER_STYLE_MAP = {
 function getRepositionTest(from, to, containerStyleChanges) {
     return async (assert) => {
         assert.expect(4);
+        console.log(assert.test.testName);
         const TestComp = getTestComponent({
             position: from,
             onPositioned: (el, { direction, variant }) => {
