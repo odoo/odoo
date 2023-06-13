@@ -216,7 +216,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                             description: line.name,
                             price: line.price_unit,
                             tax_ids: orderFiscalPos ? undefined : line.tax_id,
-                            price_manually_set: true,
+                            price_type: "manual",
                             sale_order_origin_id: clickedOrder,
                             sale_order_line_id: line,
                             customer_note: line.customer_note,
@@ -360,7 +360,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(Component) {
                             order: globalState.get_order(),
                             product: down_payment_product,
                             price: down_payment,
-                            price_automatically_set: true,
+                            price_type: "automatic",
                             sale_order_origin_id: clickedOrder,
                             down_payment_details: tab,
                         }

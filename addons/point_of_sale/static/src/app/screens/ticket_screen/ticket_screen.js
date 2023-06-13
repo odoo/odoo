@@ -547,7 +547,7 @@ export class TicketScreen extends Component {
         return {
             quantity: -qty,
             price: orderline.price,
-            extras: { price_automatically_set: true },
+            extras: { price_type: "automatic" },
             merge: false,
             refunded_orderline_id: orderline.id,
             tax_ids: orderline.tax_ids,
