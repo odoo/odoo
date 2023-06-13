@@ -40,25 +40,6 @@
         }
     }
 
-    .input-field {
-        position: relative;
-        flex-grow: 1;
-
-        .currency {
-            position: absolute;
-            right: 10px;
-            top: 10px;
-        }
-
-        .left-currency {
-            position: absolute;
-            left: 10px;
-            top: 10px;
-            background-color: #fff;
-            padding-right: 8px;
-        }
-    }
-
     textarea {
         resize: none;
         margin-top: 10px;
@@ -84,6 +65,23 @@
         .button.cancel {
             margin-right: 0;
         }
+    }
+
+    .input-container {
+        padding: 0px;
+        padding-left: 5px;
+    }
+
+    .input-container input,
+    .input-container input:focus {
+        position: relative;
+        flex-grow: 1;
+        border: none;
+        outline: none;
+        box-shadow: none;
+        background-color: transparent;
+        padding: 0px;
+        padding-left: 5px;
     }
 }
 
