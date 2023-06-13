@@ -158,7 +158,9 @@ export class Field extends Component {
                             return new Domain(evaluateExpr(fieldInfo.domain, evalContext)).toList();
                         }
                         const { domain } = record.fields[fieldInfo.name];
-                        return domain ? new Domain(domain).toList(evalContext) : [];
+                        return typeof domain === "string"
+                            ? new Domain(evaluateExpr(domain, evalContext)).toList()
+                            : domain || [];
                     },
                     readonly: readonly || readonlyFromModifiers,
                     get required() {
