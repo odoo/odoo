@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
 <t t-name="discuss.ChannelSelector" owl="1">
-    <div class="o-mail-ChannelSelector d-flex flex-wrap form-control rounded bg-white p-1" t-att-class="props.class" t-ref="root">
+    <div class="o-discuss-ChannelSelector d-flex flex-wrap form-control rounded bg-white p-1" t-att-class="props.class" t-ref="root">
         <TagsList t-if="props.multiple" tags="tagsList"/>
         <input
             class="text-truncate form-control flex-grow-1 border-0 px-2 py-0"
@@ -14,7 +14,7 @@
             type="text"
         />
     </div>
-    <NavigableList class="'o-mail-ChannelSelector-list z-index-1'" t-props="navigableListProps"/>
+    <NavigableList class="'o-discuss-ChannelSelector-list z-index-1'" t-props="navigableListProps"/>
 </t>
 
 <t t-name="discuss.ChannelSelector.channel" owl="1">

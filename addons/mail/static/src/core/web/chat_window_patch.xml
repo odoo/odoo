@@ -4,11 +4,5 @@
         <xpath expr="//*[hasclass('o-mail-ChatWindow')]" position="attributes">
             <attribute name="class" add="border border-bottom-0" separator=" "/>
         </xpath>
-        <xpath expr="//t[@name='thread content']" position="after">
-            <div t-if="!thread" class="d-flex align-items-center m-3">
-                <span class="flex-shrink-0 me-2">To :</span>
-                <ChannelSelector category="store.discuss.chats" onValidate="() => chatWindowService.closeNewMessage()" multiple="false" autofocus="true"/>
-            </div>
-        </xpath>
     </t>
 </templates>

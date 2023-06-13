@@ -52,13 +52,13 @@ export class ChannelSelector extends Component {
                 const choices = results.map((channel) => {
                     return {
                         channelId: channel.id,
-                        classList: "o-mail-ChannelSelector-suggestion",
+                        classList: "o-discuss-ChannelSelector-suggestion",
                         label: channel.name,
                     };
                 });
                 choices.push({
                     channelId: "__create__",
-                    classList: "o-mail-ChannelSelector-suggestion",
+                    classList: "o-discuss-ChannelSelector-suggestion",
                     label: cleanedTerm,
                 });
                 return choices;
@@ -74,21 +74,21 @@ export class ChannelSelector extends Component {
                     .map((data) => {
                         this.personaService.insert({ ...data, type: "partner" });
                         return {
-                            classList: "o-mail-ChannelSelector-suggestion",
+                            classList: "o-discuss-ChannelSelector-suggestion",
                             label: data.name,
                             partner: data,
                         };
                     });
                 if (this.store.self.name.includes(cleanedTerm)) {
                     suggestions.push({
-                        classList: "o-mail-ChannelSelector-suggestion",
+                        classList: "o-discuss-ChannelSelector-suggestion",
                         label: this.store.self.name,
                         partner: this.store.self,
                     });
                 }
                 if (suggestions.length === 0) {
                     suggestions.push({
-                        classList: "o-mail-ChannelSelector-suggestion",
+                        classList: "o-discuss-ChannelSelector-suggestion",
                         label: _t("No results found"),
                         unselectable: true,
                     });

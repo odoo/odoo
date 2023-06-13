@@ -3,7 +3,6 @@
 import {
     afterNextRender,
     click,
-    insertText,
     start,
     startServer,
     waitUntil,
@@ -88,22 +87,6 @@ QUnit.test("Thread description update", async (assert) => {
         tab2.target,
         ".o-mail-Discuss-threadDescription[title='The very best channel']"
     );
-});
-
-QUnit.test("Channel subscription is renewed when channel is manually added", async (assert) => {
-    const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "General", channel_member_ids: [] });
-    const { env, openDiscuss } = await start();
-    patchWithCleanup(env.services["bus_service"], {
-        forceUpdateChannels() {
-            assert.step("update-channels");
-        },
-    });
-    await openDiscuss();
-    await click("[title='Add or join a channel']");
-    await insertText(".o-mail-ChannelSelector", "General");
-    await afterNextRender(() => triggerHotkey("Enter"));
-    assert.verifySteps(["update-channels"]);
 });
 
 QUnit.test("Channel subscription is renewed when channel is added from invite", async (assert) => {

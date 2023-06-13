@@ -18,7 +18,7 @@ registry.category("web_tour.tours").add("mail_tour", {
             position: "bottom",
         },
         {
-            trigger: ".o-mail-ChannelSelector input",
+            trigger: ".o-discuss-ChannelSelector input",
             content: Markup(_t("<p>Create a channel here.</p>")),
             position: "bottom",
             auto: true,
@@ -28,12 +28,12 @@ registry.category("web_tour.tours").add("mail_tour", {
             },
         },
         {
-            trigger: ".o-mail-ChannelSelector-list",
-            extra_trigger: ".o-mail-ChannelSelector-suggestion",
+            trigger: ".o-discuss-ChannelSelector-list",
+            extra_trigger: ".o-discuss-ChannelSelector-suggestion",
             content: Markup(_t("<p>Create a public or private channel.</p>")),
             position: "right",
             run() {
-                document.querySelector(".o-mail-ChannelSelector-suggestion").click();
+                document.querySelector(".o-discuss-ChannelSelector-suggestion").click();
             },
         },
         {

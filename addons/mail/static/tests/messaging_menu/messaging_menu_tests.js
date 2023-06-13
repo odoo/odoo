@@ -1,20 +1,19 @@
 /* @odoo-module */
 
 import { Command } from "@mail/../tests/helpers/command";
+import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
+import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import {
     afterNextRender,
     click,
-    insertText,
     start,
     startServer,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 
-import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
-import { patchWithCleanup, triggerEvent, triggerHotkey } from "@web/../tests/helpers/utils";
-import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
-import { patchUiSize, SIZES } from "@mail/../tests/helpers/patch_ui_size";
 import { browser } from "@web/core/browser/browser";
+import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
+import { patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 
 QUnit.module("messaging menu");
 
@@ -489,45 +488,6 @@ QUnit.test('"New Channel" in mobile shows channel selector (+ click away)', asyn
     assert.containsNone($, "input[placeholder='Add or join a channel']");
 });
 
-QUnit.test('"Start a conversation" item selection opens chat', async (assert) => {
-    patchUiSize({ height: 360, width: 640 });
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Gandalf" });
-    pyEnv["res.users"].create({ partner_id: partnerId });
-    const { openDiscuss } = await start();
-    await openDiscuss();
-    await click("button:contains(Chat)");
-    await click("button:contains(Start a conversation)");
-    await insertText("input[placeholder='Start a conversation']", "Gandalf");
-    await click(".o-mail-ChannelSelector-suggestion");
-    await afterNextRender(() => triggerHotkey("Enter"));
-    assert.containsOnce($, ".o-mail-ChatWindow-name[title='Gandalf']");
-});
-
-QUnit.test('"New channel" item selection opens channel (existing)', async (assert) => {
-    patchUiSize({ height: 360, width: 640 });
-    const pyEnv = await startServer();
-    pyEnv["discuss.channel"].create({ name: "Gryffindors" });
-    const { openDiscuss } = await start();
-    await openDiscuss();
-    await click("button:contains(Channel)");
-    await click("button:contains(New Channel)");
-    await insertText("input[placeholder='Add or join a channel']", "Gryff");
-    await click(".o-mail-ChannelSelector-suggestion");
-    assert.containsOnce($, ".o-mail-ChatWindow-name[title='Gryffindors']");
-});
-
-QUnit.test('"New channel" item selection opens channel (new)', async (assert) => {
-    patchUiSize({ height: 360, width: 640 });
-    const { openDiscuss } = await start();
-    await openDiscuss();
-    await click("button:contains(Channel)");
-    await click("button:contains(New Channel)");
-    await insertText("input[placeholder='Add or join a channel']", "slytherins");
-    await click(".o-mail-ChannelSelector-suggestion");
-    assert.containsOnce($, ".o-mail-ChatWindow-name[title='slytherins']");
-});
-
 QUnit.test("'New Message' button should open a chat window in mobile", async (assert) => {
     patchUiSize({ height: 360, width: 640 });
     await start();
@@ -617,15 +577,6 @@ QUnit.test("switch tab", async (assert) => {
     assert.hasClass($('.o-mail-MessagingMenu button:contains("All")'), "fw-bolder");
     assert.doesNotHaveClass($('.o-mail-MessagingMenu button:contains("Chats")'), "fw-bolder");
     assert.doesNotHaveClass($('.o-mail-MessagingMenu button:contains("Channels")'), "fw-bolder");
-});
-
-QUnit.test("new message [REQUIRE FOCUS]", async (assert) => {
-    await start();
-    await click(".o_menu_systray .dropdown-toggle:has(i[aria-label='Messages'])");
-    await click('.o-mail-MessagingMenu button:contains("New Message")');
-    assert.containsOnce($, ".o-mail-ChatWindow");
-    assert.containsOnce($, ".o-mail-ChatWindow .o-mail-ChannelSelector");
-    assert.containsOnce($, ".o-mail-ChannelSelector input:focus");
 });
 
 QUnit.test("channel preview: basic rendering", async (assert) => {

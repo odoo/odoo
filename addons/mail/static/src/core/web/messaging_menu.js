@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { ChannelSelector } from "@mail/core/common/channel_selector";
 import { ImStatus } from "@mail/core/common/im_status";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
 import { NotificationItem } from "@mail/core/web/notification_item";
@@ -17,7 +16,7 @@ import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 
 export class MessagingMenu extends Component {
-    static components = { Dropdown, NotificationItem, ImStatus, ChannelSelector };
+    static components = { Dropdown, NotificationItem, ImStatus };
     static props = [];
     static template = "mail.MessagingMenu";
 

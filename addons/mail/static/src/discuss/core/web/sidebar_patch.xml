@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.DiscussCategory" t-inherit-mode="extension" owl="1">
+        <xpath expr="//t[@t-call='mail.DiscussCategoryItem']" position="before">
+            <div t-if="state.editing === category.id" class="p-2" t-ref="selector">
+                <ChannelSelector category="category" onValidate.bind="stopEditing" autofocus="true"/>
+            </div>
+        </xpath>
+    </t>
+</templates>
