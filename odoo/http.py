@@ -2092,6 +2092,10 @@ class Application:
         current_thread.query_count = 0
         current_thread.query_time = 0
         current_thread.perf_t0 = time.time()
+        if hasattr(current_thread, 'dbname'):
+            del current_thread.dbname
+        if hasattr(current_thread, 'uid'):
+            del current_thread.uid
 
         if odoo.tools.config['proxy_mode'] and environ.get("HTTP_X_FORWARDED_HOST"):
             # The ProxyFix middleware has a side effect of updating the
