@@ -12,14 +12,10 @@
                         <span t-on-click="() => this.onClickButton('out')" class="input-type" t-att-class="{ 'red-highlight': state.type === 'out' }">
                             Cash Out
                         </span>
-                        <div class="input-field">
-                            <input type="text" name="amount" t-model="state.amount" t-ref="amountInput" t-on-keypress="_onAmountKeypress"/>
-                            <t t-if="pos.globalState.currency.symbol.length > 1">
-                                <span class="left-currency" t-esc="pos.globalState.currency.symbol" />
-                            </t>
-                            <t t-else="">
-                                <span class="currency" t-esc="pos.globalState.currency.symbol" />
-                            </t>
+                        <div class="input-container popup-input" >
+                            <span class="currency" t-esc="pos.globalState.currency.symbol" t-if="pos.globalState.currency.position=='before'"/>
+                            <input class="input-field" type="text" name="amount" t-model="state.amount" t-ref="amountInput" t-on-keypress="_onAmountKeypress"/>
+                            <span class="currency" t-esc="pos.globalState.currency.symbol" t-if="pos.globalState.currency.position=='after'"/>
                         </div>
                     </div>
                     <textarea name="reason" t-model="state.reason" placeholder="Reason"></textarea>
