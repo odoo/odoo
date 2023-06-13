@@ -3293,7 +3293,12 @@ export class OdooEditor extends EventTarget {
             if (files.length && !clipboardElem.content.querySelector('table')) {
                 this.addImagesFiles(files).then(html => this._applyCommand('insertHTML', this._prepareClipboardData(html)));
             } else {
-                this._applyCommand('insertHTML', clipboardElem.content);
+                if(closestElement(sel.anchorNode, 'a')) {
+                    this._applyCommand('insertText', clipboardElem.content.textContent);
+                }
+                else {
+                    this._applyCommand('insertHTML', clipboardElem.content);
+                }
             }
         } else {
             const text = ev.clipboardData.getData('text/plain');
