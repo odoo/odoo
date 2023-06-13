@@ -677,6 +677,9 @@ export class SearchModel extends EventBus {
         return deepCopy(this._orderBy);
     }
 
+    get isDebugMode() {
+        return !!this.env.debug;
+    }
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -983,7 +986,7 @@ export class SearchModel extends EventBus {
             context = makeContext(contexts);
         }
 
-        const tree = toTree(domain);
+        const tree = toTree(domain, { distributeNot: !this.isDebugMode });
         const trees = !tree.negate && tree.value === "&" ? tree.children : [tree];
         const promises = trees.map(async (tree) => {
             const description = await this.getDomainTreeDescription(this.resModel, tree);
