@@ -137,7 +137,7 @@ class AccountMove(models.Model):
     journal_id = fields.Many2one(
         'account.journal',
         string='Journal',
-        compute='_compute_journal_id', store=True, readonly=False, precompute=True,
+        compute='_compute_journal_id', inverse='_inverse_journal_id', store=True, readonly=False, precompute=True,
         required=True,
         states={'draft': [('readonly', False)]},
         check_company=True,
@@ -615,14 +615,6 @@ class AccountMove(models.Model):
     def _compute_journal_id(self):
         for record in self:
             record.journal_id = record._search_default_journal()
-        self._conditional_add_to_compute('company_id', lambda m: (
-            not m.company_id
-            or m.company_id != m.journal_id.company_id
-        ))
-        self._conditional_add_to_compute('currency_id', lambda m: (
-            not m.currency_id
-            or m.journal_id.currency_id and m.currency_id != m.journal_id.currency_id
-        ))
 
     def _search_default_journal(self):
         if self.payment_id and self.payment_id.journal_id:
@@ -645,10 +637,13 @@ class AccountMove(models.Model):
         domain = [('company_id', '=', company_id), ('type', 'in', journal_types)]
 
         journal = None
-        currency_id = self.currency_id.id or self._context.get('default_currency_id')
-        if currency_id and currency_id != self.company_id.currency_id.id:
-            currency_domain = domain + [('currency_id', '=', currency_id)]
-            journal = self.env['account.journal'].search(currency_domain, limit=1)
+        # the currency is not a hard dependence, it triggers via manual add_to_compute
+        # avoid computing the currency before all it's dependences are set (like the journal...)
+        if self.env.cache.contains(self, self._fields['currency_id']):
+            currency_id = self.currency_id.id or self._context.get('default_currency_id')
+            if currency_id and currency_id != self.company_id.currency_id.id:
+                currency_domain = domain + [('currency_id', '=', currency_id)]
+                journal = self.env['account.journal'].search(currency_domain, limit=1)
 
         if not journal:
             journal = self.env['account.journal'].search(domain, limit=1)
@@ -1526,15 +1521,31 @@ class AccountMove(models.Model):
 
     @api.onchange('company_id')
     def _inverse_company_id(self):
-        for move in self:
-            if move.journal_id.company_id != move.company_id:
-                self.env.add_to_compute(self._fields['journal_id'], move)
+        self._conditional_add_to_compute('journal_id', lambda m: (
+            m.journal_id.company_id != m.company_id
+        ))
 
     @api.onchange('currency_id')
     def _inverse_currency_id(self):
-        for invoice in self:
-            if invoice.journal_id.currency_id and invoice.journal_id.currency_id != invoice.currency_id:
-                self.env.add_to_compute(self._fields['journal_id'], invoice)
+        self._conditional_add_to_compute('journal_id', lambda m: (
+            m.journal_id.currency_id
+            and m.journal_id.currency_id != m.currency_id
+        ))
+        (self.line_ids | self.invoice_line_ids)._conditional_add_to_compute('currency_id', lambda l: (
+            l.move_id.is_invoice(True)
+            and l.move_id.currency_id != l.currency_id
+        ))
+
+    @api.onchange('journal_id')
+    def _inverse_journal_id(self):
+        self._conditional_add_to_compute('company_id', lambda m: (
+            not m.company_id
+            or m.company_id != m.journal_id.company_id
+        ))
+        self._conditional_add_to_compute('currency_id', lambda m: (
+            not m.currency_id
+            or m.journal_id.currency_id and m.currency_id != m.journal_id.currency_id
+        ))
 
     def _inverse_payment_reference(self):
         self.line_ids._conditional_add_to_compute('name', lambda line: (
