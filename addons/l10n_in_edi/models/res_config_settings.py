@@ -32,6 +32,15 @@ class ResConfigSettings(models.TransientModel):
         self.env["account.edi.format"]._l10n_in_edi_authenticate(self.company_id)
         if not self.company_id.sudo()._l10n_in_edi_token_is_valid():
             raise UserError(_("Incorrect username or password, or the GST number on company does not match."))
+        return {
+              'type': 'ir.actions.client',
+              'tag': 'display_notification',
+              'params': {
+                  'type': 'info',
+                  'sticky': False,
+                  'message': _("API credentials validated successfully"),
+              }
+          }
 
     def l10n_in_edi_buy_iap(self):
         if not self.l10n_in_edi_production_env:
