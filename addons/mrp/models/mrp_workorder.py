@@ -424,7 +424,7 @@ class MrpWorkorder(models.Model):
 
     @api.onchange('date_finished')
     def _onchange_date_finished(self):
-        if self.date_start and self.date_finished:
+        if self.date_start and self.date_finished and self.workcenter_id:
             self.duration_expected = self._calculate_duration_expected()
 
     def _calculate_duration_expected(self, date_start=False, date_finished=False):
