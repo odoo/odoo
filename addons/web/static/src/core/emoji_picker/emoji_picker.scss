@@ -1,9 +1,9 @@
-.popover .o-mail-EmojiPicker {
+.popover .o-EmojiPicker {
     width: 285px;
     height: 350px;
 }
 
-.o-mail-EmojiPicker {
+.o-EmojiPicker {
 
     display: grid;
     grid-template-areas:
@@ -15,7 +15,7 @@
         grid-template-rows: 40px 1fr 32px;
     }
 
-    .o-mail-Emoji {
+    .o-Emoji {
         width: 30px;
         font-size: 1rem;
         &:hover {
@@ -23,27 +23,27 @@
         }
     }
 
-    &.o-small .o-mail-Emoji {
+    &.o-small .o-Emoji {
         width: 40px;
         font-size: 1.5rem;
     }
 
-    .o-mail-EmojiPicker-content {
+    .o-EmojiPicker-content {
         grid-area: content;
     }
 
-    .o-mail-EmojiPicker-navbar {
+    .o-EmojiPicker-navbar {
         grid-area: navbar;
-        .o-mail-Emoji {
+        .o-Emoji {
             filter: grayscale(1);
         }
     }
 
-    .o-mail-EmojiPicker-sectionIcon {
+    .o-EmojiPicker-sectionIcon {
         filter: grayscale(1);
     }
 
-    .o-mail-EmojiPicker-search {
+    .o-EmojiPicker-search {
         grid-area: search;
         background-color: $input-bg;
 
@@ -59,13 +59,13 @@
         }
     }
 
-    .o-mail-EmojiPicker-empty {
+    .o-EmojiPicker-empty {
         font-size: 5rem !important;
         filter: grayscale(0.25);
     }
 }
 
-.o-mail-EmojiPicker-category:before {
+.o-EmojiPicker-category:before {
     // invisible character so that category has constant height, regardless of text content.
     content: "\200b"; /* unicode zero width space character */
 }

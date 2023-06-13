@@ -2,7 +2,7 @@
 
 import { ImStatus } from "@mail/core/common/im_status";
 import { onExternalClick } from "@mail/utils/common/hooks";
-import { markEventHandled, isEventHandled } from "@mail/utils/common/misc";
+import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 
 import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
 

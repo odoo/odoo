@@ -172,7 +172,7 @@ QUnit.test("Do not stop edition on click away when clicking on emoji", async (as
     await click(".o-mail-Message [title='Expand']");
     await click(".o-mail-Message [title='Edit']");
     await click(".o-mail-Composer button[aria-label='Emojis']");
-    await click(".o-mail-EmojiPicker-content .o-mail-Emoji");
+    await click(".o-EmojiPicker-content .o-Emoji");
     assert.containsOnce($, ".o-mail-Message-editable .o-mail-Composer");
 });
 
@@ -442,7 +442,7 @@ QUnit.test("Can open emoji picker after edit mode", async (assert) => {
     await click(".o-mail-Message [title='Edit']");
     await triggerEvent(document.body, ".o-mail-DiscussSidebar", "click");
     await click("[title='Add a Reaction']");
-    assert.containsOnce($, ".o-mail-EmojiPicker");
+    assert.containsOnce($, ".o-EmojiPicker");
 });
 
 QUnit.test("Can add a reaction", async (assert) => {
@@ -460,7 +460,7 @@ QUnit.test("Can add a reaction", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("[title='Add a Reaction']");
-    await click(".o-mail-Emoji:contains(😅)");
+    await click(".o-Emoji:contains(😅)");
     assert.containsOnce($, ".o-mail-MessageReaction:contains('😅')");
 });
 
@@ -479,7 +479,7 @@ QUnit.test("Can remove a reaction", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("[title='Add a Reaction']");
-    await click(".o-mail-Emoji:contains(😅)");
+    await click(".o-Emoji:contains(😅)");
     await click(".o-mail-MessageReaction");
     assert.containsNone($, ".o-mail-MessageReaction:contains('😅')");
 });
@@ -543,7 +543,7 @@ QUnit.test("Reaction summary", async (assert) => {
         const partnerId = pyEnv["res.partner"].create({ name });
         pyEnv.currentPartnerId = partnerId;
         await click("[title='Add a Reaction']");
-        await click(".o-mail-Emoji:contains(😅)");
+        await click(".o-Emoji:contains(😅)");
         assert.hasAttrValue($(".o-mail-MessageReaction")[0], "title", expectedSummaries[idx]);
     }
 });
@@ -563,9 +563,9 @@ QUnit.test("Add the same reaction twice from the emoji picker", async (assert) =
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("[title='Add a Reaction']");
-    await click(".o-mail-Emoji:contains(😅)");
+    await click(".o-Emoji:contains(😅)");
     await click("[title='Add a Reaction']");
-    await click(".o-mail-Emoji:contains(😅)");
+    await click(".o-Emoji:contains(😅)");
     assert.containsOnce($, ".o-mail-MessageReaction:contains('😅')");
 });
 

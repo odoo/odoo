@@ -28,6 +28,7 @@ import { groupBy } from "@web/core/utils/arrays";
 import { debounce } from "@web/core/utils/timing";
 import { registry } from "@web/core/registry";
 import { FileViewer } from "@web/core/file_viewer/file_viewer";
+import { EmojiPickerWrapper } from '@web_editor/components/emoji_popover/emoji_popover'
 
 var _t = core._t;
 const QWeb = core.qweb;
@@ -44,6 +45,8 @@ const setSelection = OdooEditorLib.setSelection;
 const endPos = OdooEditorLib.endPos;
 const hasValidSelection = OdooEditorLib.hasValidSelection;
 const parseHTML = OdooEditorLib.parseHTML;
+const closestBlock = OdooEditorLib.closestBlock;
+const getRangePosition = OdooEditorLib.getRangePosition;
 
 var id = 0;
 const basicMediaSelector = 'img, .fa, .o_image, .media_iframe_video';
@@ -1432,6 +1435,32 @@ const Wysiwyg = Widget.extend({
         // component is mounted on the global document.
         return this.mediaDialogWrapper.mount(document.body);
     },
+
+    showEmojiPicker() {
+        const targetEl = this.odooEditor.document.getSelection();
+        const closest = closestBlock(targetEl.anchorNode);
+        const restoreSelection = preserveCursor(this.odooEditor.document);
+        const blockWidth = parseInt(getComputedStyle(closest).width.slice(0, -2)); // remove 'px'
+        // Calculate one/fouth portion of blockWidth, and then on the basis of our cursor position
+        // check in which quadrant it falls, give the popover its position accordingly
+        const portionWidth = (blockWidth / 4);
+        const cursorAt = getRangePosition(targetEl, this.odooEditor.document).left;
+        let position = 'end';
+        if (cursorAt < portionWidth * 2) {
+            position = 'start';
+        } else if (cursorAt <= portionWidth * 3) {
+            position = 'middle';
+        }
+        const emojiPicker = new ComponentWrapper(this, EmojiPickerWrapper, {
+            targetEl: closest,
+            position,
+            onSelect: (str) => {
+                restoreSelection();
+                this.odooEditor.execCommand('insert', str);
+            }
+        });
+        emojiPicker.mount(closest);
+    },
     /**
      * Sets custom CSS Variables on the snippet menu element.
      * Used for color previews and color palette to get the color
@@ -2226,6 +2255,16 @@ const Wysiwyg = Widget.extend({
                         const anchor = this.odooEditor.document.getSelection().anchorNode;
                         const row = closestElement(anchor, '.o_text_columns .row');
                         return !row;
+                    },
+                },
+                {
+                    category: _t('Widget'),
+                    name: _t('Emoji'),
+                    priority: 70,
+                    description: _t('Add an emoji'),
+                    fontawesome: 'fa-smile-o',
+                    callback: () => {
+                        this.showEmojiPicker();
                     },
                 },
             );

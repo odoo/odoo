@@ -246,6 +246,7 @@ Featuring
             'web/static/src/core/**/*.js',
             'web/static/src/env.js',
             'web/static/src/legacy/js/services/session.js',
+            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
 
             ('include', 'web._assets_helpers'),
             'web/static/src/scss/pre_variables.scss',

@@ -928,7 +928,7 @@ export class ThreadService {
             const prettyContent = await prettifyMessageContent(body, params.validMentions);
             const { emojis } = await loadEmoji();
             const recentEmojis = JSON.parse(
-                browser.localStorage.getItem("mail.emoji.frequent") || "{}"
+                browser.localStorage.getItem("web.emoji.frequent") || "{}"
             );
             const emojisInContent =
                 prettyContent.match(/\p{Emoji_Presentation}|\p{Emoji}\uFE0F/gu) ?? [];
@@ -938,7 +938,7 @@ export class ThreadService {
                     recentEmojis[codepoints]++;
                 }
             }
-            browser.localStorage.setItem("mail.emoji.frequent", JSON.stringify(recentEmojis));
+            browser.localStorage.setItem("web.emoji.frequent", JSON.stringify(recentEmojis));
             tmpMsg = this.messageService.insert({
                 ...tmpData,
                 body: markup(prettyContent),

@@ -132,7 +132,6 @@ For more specific needs, you may also assign custom-defined actions
             'mail/static/src/**/common/**/*',
             'mail/static/src/**/web/**/*',
             ('remove', 'mail/static/src/**/*.dark.scss'),
-            ('remove', 'mail/static/src/core/common/emoji_data.js'),
             # discuss (loaded last to fix dependencies)
             ('remove', 'mail/static/src/discuss/**/*'),
             'mail/static/src/discuss/core/common/**/*',
@@ -160,9 +159,7 @@ For more specific needs, you may also assign custom-defined actions
             ('remove', 'mail/static/tests/tours/**/*'),
             ('remove', 'mail/static/tests/helpers/**/*'),
         ],
-        'mail.assets_emoji': [
-            'mail/static/src/core/common/emoji_data.js',
-        ],
+
         'mail.assets_public': [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
@@ -174,6 +171,7 @@ For more specific needs, you may also assign custom-defined actions
             'web/static/src/core/**/*',
             'web/static/src/env.js',
             ('remove', 'web/static/src/legacy/js/services/ajax_service.js'),
+            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             'web/static/src/views/fields/formatters.js',
             'web/static/src/views/fields/file_handler.*',
 
@@ -189,7 +187,6 @@ For more specific needs, you may also assign custom-defined actions
             # 'mail/static/src/core/public/**/*',
             'mail/static/src/**/common/**/*',
             'mail/static/src/**/public/**/*',
-            ('remove', 'mail/static/src/core/common/emoji_data.js'),
             ('remove', 'mail/static/src/**/*.dark.scss'),
             # discuss (loaded last to fix dependencies)
             ('remove', 'mail/static/src/discuss/**/*'),
