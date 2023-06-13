@@ -913,6 +913,8 @@ actual arch.
 
         if node.tag in ('kanban', 'tree', 'form', 'activity', 'calendar'):
             for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
+                if action == 'delete' and not Model._auto:
+                    node.set('delete', 'false')
                 if (not node.get(action) and
                         not Model.check_access_rights(operation, raise_exception=False) or
                         not self._context.get(action, True) and is_base_model):
