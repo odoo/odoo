@@ -53,29 +53,6 @@
             </field>
         </record>
 
-        <!-- TODO: remove in master -->
-        <record id="personal_task_type_edit" model="ir.ui.view">
-            <field name="name">project.task.type.form</field>
-            <field name="model">project.task.type</field>
-            <field name="arch" type="xml">
-                <form string="Task Stage" delete="0">
-                    <field name="active" invisible="1" />
-                    <sheet>
-                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="active" />
-                        <group>
-                            <group>
-                                <field name="name" placeholder="e.g. To Do"/>
-                                <field name="sequence" groups="base.group_no_one"/>
-                            </group>
-                            <group>
-                                <field name="fold"/>
-                            </group>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
         <record id="task_type_tree" model="ir.ui.view">
             <field name="name">project.task.type.tree</field>
             <field name="model">project.task.type</field>
