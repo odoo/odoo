@@ -149,11 +149,7 @@ class Query(object):
             if extra:
                 condition = condition + " AND " + extra.format(lhs=lhs_alias, rhs=rhs_alias)
             condition_params = list(extra_params)
-            if kind:
-                self._joins[rhs_alias] = (kind, rhs_table, condition, condition_params)
-            else:
-                self._tables[rhs_alias] = rhs_table
-                self.add_where(condition, condition_params)
+            self._joins[rhs_alias] = (kind, rhs_table, condition, condition_params)
             self._ids = None
 
         return rhs_alias

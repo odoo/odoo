@@ -95,6 +95,8 @@ class Task(models.Model):
     _description = "Project task"
 
     name = fields.Char(required=True)
+    parent_id = fields.Many2one('test_read_group.task')
+    parent_name = fields.Char('Parent Name', related='parent_id.name')
     user_ids = fields.Many2many(
         'test_read_group.user',
         'test_read_group_task_user_rel',
@@ -102,3 +104,16 @@ class Task(models.Model):
         'user_id',
         string="Collaborators",
     )
+
+
+class UserTask(models.Model):
+    _name = 'test_read_group.user_task'
+    _description = "User/Task"
+
+    key = fields.Char()
+    task_id = fields.Many2one('test_read_group.task')
+    task_name = fields.Char('Task Name', related='task_id.name', related_sudo=False)
+    sudo_task_name = fields.Char('Sudo Task Name', related='task_id.name')
+
+    user_id = fields.Many2one('test_read_group.user', required=True)
+    user_name = fields.Char('User Name', related='user_id.name')

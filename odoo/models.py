@@ -1906,7 +1906,7 @@ class BaseModel(metaclass=MetaModel):
         if func == 'recordset' and not (field.relational or fname == 'id'):
             raise ValueError(f"Aggregate method {func!r} can be only used on relational field (or id) (for {aggregate_spec!r}).")
 
-        field_expression = self._inherits_join_calc(self._table, fname, query)
+        field_expression = self._field_sql_expression(field, self._table, query)
 
         expression = READ_GROUP_AGGREGATE[func](self._table, field_expression)
         return expression, [fname]
@@ -1925,10 +1925,11 @@ class BaseModel(metaclass=MetaModel):
         if granularity and field.type not in ('datetime', 'date'):
             raise ValueError(f"Granularity set on a no-datetime field: {groupby_spec!r}")
 
-        if not field.store and not field.inherited:  # TODO: should be manage by _inherits_join_calc
-            raise ValueError(f"Groupby on no-store field: {groupby_spec!r}")
+        try:
+            field_expression = self._field_sql_expression(field, self._table, query)
+        except TypeError:
+            raise ValueError(f"Groupby on no-groupable field: {groupby_spec!r}, field should be store or related to a store field")
 
-        field_expression = self._inherits_join_calc(self._table, fname, query)
         if field.type == 'datetime' and self.env.context.get('tz') in pytz.all_timezones_set:
             # TODO: `self.env.context.get('tz')` should be passed as args
             field_expression = f"timezone('{self.env.context.get('tz')}', timezone('UTC', {field_expression}))"
@@ -2582,56 +2583,68 @@ class BaseModel(metaclass=MetaModel):
         )
         return parent_alias
 
-    @api.model
-    def _inherits_join_calc(self, alias, fname, query):
-        """
-        Adds missing table select and join clause(s) to ``query`` for reaching
-        the field coming from an '_inherits' parent table (no duplicates).
+    def _field_sql_expression(self, field, alias_table: str, query: Query) -> str:
+        """ Not for the where clause """
+        if field.store:
+            if field.type == 'many2many':
+                # special case for many2many fields: prepare a query on the comodel
+                # in order to reuse the mechanism _apply_ir_rules, then inject the
+                # query as an extra condition of the left join
+                comodel = self.env[field.comodel_name]
+                subquery = Query(self.env.cr, comodel._table)
+                comodel._apply_ir_rules(subquery)
+                # add the extra join condition only if there is an actual subquery
+                extra, extra_params = None, ()
+                if subquery.where_clause:
+                    subquery_str, extra_params = subquery.select()
+                    extra = f'"{{rhs}}"."{field.column2}" IN ({subquery_str})'
+                # LEFT JOIN field_relation ON
+                #     alias.id = field_relation.field_column1
+                #     AND field_relation.field_column2 IN (subquery)
+                rel_alias = query.left_join(
+                    alias_table, 'id', field.relation, field.column1, field.name,
+                    extra=extra, extra_params=extra_params,
+                )
+                return f'"{rel_alias}"."{field.column2}"'
 
-        :param alias: name of the initial SQL alias
-        :param fname: name of inherited field to reach
-        :param query: query object on which the JOIN should be added
-        :return: qualified name of field, to be used in SELECT clause
-        """
-        # INVARIANT: alias is the SQL alias of model._table in query
-        model, field = self, self._fields[fname]
-        while field.inherited:
-            # retrieve the parent model where field is inherited from
-            parent_model = self.env[field.related_field.model_name]
-            parent_fname = field.related.split('.')[0]
-            # JOIN parent_model._table AS parent_alias ON alias.parent_fname = parent_alias.id
-            parent_alias = query.left_join(
-                alias, parent_fname, parent_model._table, 'id', parent_fname,
-            )
-            model, alias, field = parent_model, parent_alias, field.related_field
+            if field.translate and not self.env.context.get('prefetch_langs'):
+                lang = self.env.lang or 'en_US'
+                if lang == 'en_US':
+                    return f'"{alias_table}"."{field.name}"->>\'en_US\''
+                return f'COALESCE("{alias_table}"."{field.name}"->>\'{lang}\', "{alias_table}"."{field.name}"->>\'en_US\')'
 
-        if field.type == 'many2many':
-            # special case for many2many fields: prepare a query on the comodel
-            # in order to reuse the mechanism _apply_ir_rules, then inject the
-            # query as an extra condition of the left join
-            comodel = self.env[field.comodel_name]
-            subquery = Query(self.env.cr, comodel._table)
-            comodel._apply_ir_rules(subquery)
-            # add the extra join condition only if there is an actual subquery
-            extra, extra_params = None, ()
-            if subquery.where_clause:
-                subquery_str, extra_params = subquery.select()
-                extra = '"{rhs}"."%s" IN (%s)' % (field.column2, subquery_str)
-            # LEFT JOIN field_relation ON
-            #     alias.id = field_relation.field_column1
-            #     AND field_relation.field_column2 IN (subquery)
-            rel_alias = query.left_join(
-                alias, 'id', field.relation, field.column1, field.name,
-                extra=extra, extra_params=extra_params,
+            return f'"{alias_table}"."{field.name}"'
+
+        if field.related:
+            relational_fname = field.related.split('.')[0]
+            relational_model: BaseModel = self.env[self._fields[relational_fname].comodel_name]
+
+            join_method = query.join if field.related_field.required else query.left_join
+
+            if (field.related and field.compute_sudo) or field.inherited:  # inherited field should be sudo by default ?
+                relational_alias = join_method(
+                    alias_table, relational_fname, relational_model._table, 'id', relational_fname,
+                )
+                return relational_model._field_sql_expression(field.related_field, relational_alias, query)
+
+            relational_model.check_access_rights('read')
+            # TODO: Should be _search([]) but some override can be horrible
+            # What about mail.message / ir.attachment where _search is override for security reason
+
+            # TODO: not correct, apply_ir_rule won't use the coorect alias and then condition on join won't be correct
+            subquery = Query(self.env.cr, alias_table, relational_model._table)
+            relational_model._apply_ir_rules(subquery, 'read')
+
+            relational_alias = join_method(
+                alias_table, relational_fname, relational_model._table, 'id', relational_fname,
+                " AND ".join(subquery._where_clauses) or None, subquery._where_params,
             )
-            return '"%s"."%s"' % (rel_alias, field.column2)
-        elif field.translate and not self.env.context.get('prefetch_langs'):
-            lang = self.env.lang or 'en_US'
-            if lang == 'en_US':
-                return f'"{alias}"."{fname}"->>\'en_US\''
-            return f'COALESCE("{alias}"."{fname}"->>\'{lang}\', "{alias}"."{fname}"->>\'en_US\')'
-        else:
-            return '"%s"."%s"' % (alias, fname)
+            for alias, (kind, table, condition, condition_params) in subquery._joins.items():
+                query._joins[alias] = (kind, table, condition, condition_params)
+
+            return relational_model._field_sql_expression(field.related_field, relational_alias, query)
+
+        raise TypeError(f'No SQL expression exist for {field!r}')
 
     def _parent_store_compute(self):
         """ Compute parent_path field from scratch. """
@@ -2871,7 +2884,7 @@ class BaseModel(metaclass=MetaModel):
                     inherited=True,
                     inherited_field=field,
                     related=f"{parent_fname}.{name}",
-                    related_sudo=False,
+                    related_sudo=False,  # There is already _inherits_join_calc which bypass security
                     copy=field.copy,
                     readonly=field.readonly,
                 ))
@@ -2892,6 +2905,7 @@ class BaseModel(metaclass=MetaModel):
             field.delegate = True
 
         # reflect fields with delegate=True in dictionary self._inherits
+        # TODO: should we remove this, two ways to make the same stuff...
         for field in self._fields.values():
             if field.type == 'many2one' and not field.related and field.delegate:
                 if not field.required:
@@ -3520,7 +3534,7 @@ class BaseModel(metaclass=MetaModel):
             # the query may involve several tables: we need fully-qualified names
             select_terms = [f'"{self._table}"."id"']
             for field in column_fields:
-                qname = self._inherits_join_calc(self._table, field.name, query)
+                qname = self._field_sql_expression(field, self._table, query)
                 if field.type == 'binary' and (
                         context.get('bin_size') or context.get('bin_size_' + field.name)):
                     # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
@@ -4737,7 +4751,7 @@ class BaseModel(metaclass=MetaModel):
         field = self._fields[order_field]
         if field.inherited:
             # also add missing joins for reaching the table containing the m2o field
-            qualified_field = self._inherits_join_calc(alias, order_field, query)
+            qualified_field = self._field_sql_expression(field, alias, query)
             alias, order_field = qualified_field.replace('"', '').split('.', 1)
             field = field.base_field
 
@@ -4788,13 +4802,13 @@ class BaseModel(metaclass=MetaModel):
 
             if order_field == 'id':
                 order_by_elements.append(f'"{alias}"."{order_field}" {order_direction} {order_nulls}')
-            else:
-                if field.inherited:
-                    field = field.base_field
-                if field.store and field.type == 'many2one':
+                continue
+
+            try:
+                if field.type == 'many2one':
                     key = (field.model_name, field.comodel_name, order_field)
                     if order_nulls:
-                        qname = self._inherits_join_calc(alias, order_field, query)
+                        qname = self._field_sql_expression(field, alias, query)
                         if order_nulls == 'NULLS LAST':
                             order_by_elements.append(f"{qname} IS NULL")
                         elif order_nulls == 'NULLS FIRST':
@@ -4802,16 +4816,16 @@ class BaseModel(metaclass=MetaModel):
                     if key not in seen:
                         seen.add(key)
                         order_by_elements += self._generate_m2o_order_by(alias, order_field, query, do_reverse, seen)
-                elif field.store and field.column_type:
-                    qualifield_name = self._inherits_join_calc(alias, order_field, query)
+                else:
+                    qualifield_name = self._field_sql_expression(field, alias, query)
                     if field.type == 'boolean':
                         qualifield_name = "COALESCE(%s, false)" % qualifield_name
                     elif field.type == 'properties' and property_name:
                         qualifield_name = f"({qualifield_name} -> '{property_name}')"
                     order_by_elements.append(f"{qualifield_name} {order_direction} {order_nulls}")
-                else:
-                    _logger.warning("Model %r cannot be sorted on field %r (not a column)", self._name, order_field)
-                    continue  # ignore non-readable or "non-joinable" fields
+            except ValueError:
+                # ignore non-readable or "non-joinable" fields
+                _logger.warning("Model %r cannot be sorted on field %r (not a column)", self._name, order_field)
 
         return order_by_elements
 

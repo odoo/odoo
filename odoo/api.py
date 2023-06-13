@@ -1244,7 +1244,7 @@ class Cache(object):
 
             # select the column for the given ids
             query = Query(env.cr, model._table, model._table_query)
-            qname = model._inherits_join_calc(model._table, field.name, query)
+            qname = model._field_sql_expression(field, model._table, query)
             if field.type == 'binary' and (
                 model.env.context.get('bin_size') or model.env.context.get('bin_size_' + field.name)
             ):

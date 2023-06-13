@@ -5,7 +5,6 @@
 
 from collections import defaultdict
 from datetime import date, datetime, time
-from lxml import etree, html
 from operator import attrgetter
 from xmlrpc.client import MAXINT
 import ast
@@ -869,6 +868,10 @@ class Field(MetaField('DummyField', (object,), {})):
     _description_group_operator = property(attrgetter('group_operator'))
     _description_default_export_compatible = property(attrgetter('default_export_compatible'))
     _description_exportable = property(attrgetter('exportable'))
+
+    def _description_groupable(self, env):
+        # TODO
+        pass
 
     def _description_depends(self, env):
         return env.registry.field_depends[self]

@@ -686,3 +686,61 @@ class TestPrivateReadGroup(common.TransactionCase):
                 (User, ["Donkey Kong"]),                            # tasks of nobody
             ],
         )
+
+    def test_related_grouping(self):
+        Model = self.env['test_read_group.user_task']
+        with self.assertQueries([
+            """
+            SELECT "test_read_group_user_task__task_id"."name"
+            FROM "test_read_group_user_task"
+                JOIN "test_read_group_task" AS "test_read_group_user_task__task_id" ON ("test_read_group_user_task"."task_id" = "test_read_group_user_task__task_id"."id")
+            GROUP BY "test_read_group_user_task__task_id"."name"
+            ORDER BY "test_read_group_user_task__task_id"."name" ASC
+            """
+        ]):
+            Model._read_group([], ['task_name'], [])
+
+        with self.assertQueries([
+            """
+            SELECT "test_read_group_user_task__task_id"."name", "test_read_group_user_task__task_id"."name"
+            FROM "test_read_group_user_task"
+                JOIN "test_read_group_task" AS "test_read_group_user_task__task_id" ON ("test_read_group_user_task"."task_id" = "test_read_group_user_task__task_id"."id")
+            GROUP BY "test_read_group_user_task__task_id"."name", "test_read_group_user_task__task_id"."name"
+            ORDER BY "test_read_group_user_task__task_id"."name" ASC, "test_read_group_user_task__task_id"."name" ASC
+            """
+        ]):
+            Model._read_group([], ['sudo_task_name', 'task_name'], [])
+
+    def test_related_grouping_security(self):
+
+        self.env['ir.rule'].create({
+            'name': "Forbid everything",
+            'model_id': self.env['ir.model']._get('test_read_group.task').id,
+            'domain_force': [('id', '=', 0)],
+        })
+        Model = self.env['test_read_group.user_task'].with_user(self.env.ref('base.user_demo'))
+        Model._read_group([], ['task_name'], [])
+        with self.assertQueries([
+            """
+            SELECT "test_read_group_user_task__task_id"."name"
+            FROM "test_read_group_user_task"
+                JOIN "test_read_group_task" AS "test_read_group_user_task__task_id" ON (
+                    "test_read_group_user_task"."task_id" = "test_read_group_user_task__task_id"."id"
+                    AND ("test_read_group_user_task__task_id"."id" = %s)
+                )
+            GROUP BY "test_read_group_user_task__task_id"."name"
+            ORDER BY "test_read_group_user_task__task_id"."name" ASC
+            """
+        ]):
+            Model._read_group([], ['task_name'], [])
+
+        with self.assertQueries([
+            """
+            SELECT "test_read_group_user_task__task_id"."name"
+            FROM "test_read_group_user_task"
+                JOIN "test_read_group_task" AS "test_read_group_user_task__task_id" ON ("test_read_group_user_task"."task_id" = "test_read_group_user_task__task_id"."id")
+            GROUP BY "test_read_group_user_task__task_id"."name"
+            ORDER BY "test_read_group_user_task__task_id"."name" ASC
+            """
+        ]):
+            Model._read_group([], ['sudo_task_name'], [])
