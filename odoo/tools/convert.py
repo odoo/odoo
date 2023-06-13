@@ -143,7 +143,7 @@ def _eval_xml(self, node, env):
 
         data = node.text
         if node.get('file'):
-            with file_open(node.get('file'), 'rb') as f:
+            with file_open(node.get('file'), 'rb', env=env) as f:
                 data = f.read()
 
         if t == 'base64':
