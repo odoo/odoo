@@ -752,7 +752,7 @@ export class OdooEditor extends EventTarget {
         }
 
         // sanitize and mark current position as sanitized
-        sanitize(target);
+        sanitize(target, this.editable);
         this._pluginCall('sanitizeElement',
                          [target.parentElement || target]);
         this.options.onPostSanitize(target);
@@ -3902,7 +3902,7 @@ export class OdooEditor extends EventTarget {
             node.replaceChildren();
         }
 
-        sanitize(element);
+        sanitize(element, this.editable);
 
         // Remove contenteditable=false on elements
         for (const el of element.querySelectorAll('[contenteditable="false"]')) {
