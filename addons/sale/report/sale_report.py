@@ -53,7 +53,7 @@ class SaleReport(models.Model):
     industry_id = fields.Many2one(
         comodel_name='res.partner.industry', string="Customer Industry", readonly=True)
     partner_zip = fields.Char(string="Customer ZIP", readonly=True)
-    state_id = fields.Many2one(comodel_name='res.country.state', readonly=True)
+    state_id = fields.Many2one(comodel_name='res.country.state', string="Customer State", readonly=True)
 
     # sale.order.line fields
     order_id = fields.Many2one(comodel_name='sale.order', string="Order #", readonly=True)
