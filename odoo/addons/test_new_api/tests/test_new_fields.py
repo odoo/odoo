@@ -3794,6 +3794,31 @@ class TestMany2oneReference(TransactionCase):
         self.assertIn(record, records)
 
 
+class TestOne2manyReference(TransactionCase):
+    def test_invalidate(self):
+        dummy = self.env['test_new_api.model_many2one_reference'].create({})
+        record = self.env['test_new_api.inverse_m2o_ref'].create({})
+
+        dummy.write({'res_id': record.id, 'res_model': record._name})
+        self.assertEqual(record.model_ids, dummy)
+        dummy.write({'res_id': False, 'res_model': record._name})
+        self.assertFalse(record.model_ids)
+
+    def test_switch_record(self):
+        dummy1, dummy2 = self.env['test_new_api.model_many2one_reference'].create([{}] * 2)
+        record1, record2 = self.env['test_new_api.inverse_m2o_ref'].create([{}] * 2)
+
+        record1.model_ids += dummy1
+        self.assertEqual(record1.model_ids, dummy1)
+
+        record1.model_ids += dummy2
+        self.assertEqual(record1.model_ids, dummy1 + dummy2)
+
+        record2.model_ids += dummy1
+        self.assertEqual(record1.model_ids, dummy2)
+        self.assertEqual(record2.model_ids, dummy1)
+
+
 @tagged('selection_abstract')
 class TestSelectionDeleteUpdate(TransactionCase):
 

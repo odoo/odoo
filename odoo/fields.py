@@ -3234,6 +3234,7 @@ class Many2oneReference(Integer):
     :param str model_field: name of the :class:`Char` where the model name is stored.
     """
     type = 'many2one_reference'
+    write_sequence = -10  # because it must be written before the `model_field`
 
     model_field = None
     aggregator = None
@@ -3248,21 +3249,58 @@ class Many2oneReference(Integer):
             value = value._ids[0] if value._ids else None
         return super().convert_to_cache(value, record, validate)
 
-    def _update_inverses(self, records, value):
+    def write(self, records, value):
+        value, new_model = value if isinstance(value, tuple) else (value, False)
+        # discard recomputation of self on records
+        records.env.remove_to_compute(self, records)
+
+        # discard the records that are not modified
+        cache = records.env.cache
+        cache_value = self.convert_to_cache(value, records)
+        records = cache.get_records_different_from(records, self, cache_value)
+        if not records:
+            return
+
+        # remove records from the cache of one2many fields of old corecords
+        self._remove_inverses(records, cache_value)
+
+        # update the cache of self
+        dirty = self.store and any(records._ids)
+        cache.update(records, self, itertools.repeat(cache_value), dirty=dirty)
+
+        # update the cache of one2many fields of new corecord
+        self._update_inverses(records, cache_value, new_model)
+
+    def _remove_inverses(self, records, value):
+        """ Remove `records` from the cached values of the inverse fields of `self`. """
+        cache = records.env.cache
+        model_ids = self._record_ids_per_res_model(records)
+
+        for invf in records.pool.field_inverses[self]:
+            records = records.browse(model_ids[invf.model_name])
+            # align(id) returns a NewId if records are new, a real id otherwise
+            align = (lambda id_: id_) if all(records.ids) else (lambda id_: id_ and NewId(id_))
+            corecords = records.env[invf.model_name].browse(
+                align(id_) for id_ in cache.get_values(records, self)
+            )
+            for corecord in corecords:
+                ids0 = cache.get(corecord, invf, None)
+                if ids0 is not None:
+                    ids1 = tuple(id_ for id_ in ids0 if id_ not in records._ids)
+                    cache.set(corecord, invf, ids1)
+
+    def _update_inverses(self, records, value, new_model=False):
         """ Add `records` to the cached values of the inverse fields of `self`. """
         if not value:
             return
         cache = records.env.cache
-        model_ids = self._record_ids_per_res_model(records)
+        model_ids = self._record_ids_per_res_model(records, new_model)
 
         for invf in records.pool.field_inverses[self]:
             records = records.browse(model_ids[invf.model_name])
             if not records:
                 continue
             corecord = records.env[invf.model_name].browse(value)
-            records = records.filtered_domain(invf.get_domain_list(corecord))
-            if not records:
-                continue
             ids0 = cache.get(corecord, invf, None)
             # if the value for the corecord is not in cache, but this is a new
             # record, assign it anyway, as you won't be able to fetch it from
@@ -3271,13 +3309,18 @@ class Many2oneReference(Integer):
                 ids1 = tuple(unique((ids0 or ()) + records._ids))
                 cache.set(corecord, invf, ids1)
 
-    def _record_ids_per_res_model(self, records):
+    def _record_ids_per_res_model(self, records, new_model=None):
         model_ids = defaultdict(set)
         for record in records:
-            model = record[self.model_field]
-            if not model and record._fields[self.model_field].compute:
+            model = new_model or record[self.model_field]
+            model_field = record._fields[self.model_field]
+            if (
+                not model
+                and model_field.compute
+                and not record.env.is_protected(model_field, record)
+            ):
                 # fallback when the model field is computed :-/
-                record._fields[self.model_field].compute_value(record)
+                model_field.compute_value(record)
                 model = record[self.model_field]
                 if not model:
                     continue
@@ -4502,6 +4545,7 @@ class One2many(_RelationalMulti):
 
         if self.store:
             inverse = self.inverse_name
+            inverse_field = comodel._fields[inverse]
             to_create = []                      # line vals to create
             to_delete = []                      # line ids to delete
             to_link = defaultdict(OrderedSet)   # {record: line_ids}
@@ -4529,17 +4573,26 @@ class One2many(_RelationalMulti):
                         lines = comodel.browse(line_ids) - before[record]
                         # linking missing lines should fail
                         lines.mapped(inverse)
-                        lines[inverse] = record
+                        if inverse_field.type == 'many2one_reference':
+                            lines.write({inverse: record.id, inverse_field.model_field: record._name})
+                        else:
+                            lines[inverse] = record
                     to_link.clear()
 
             for recs, commands in records_commands_list:
                 for command in (commands or ()):
                     if command[0] == Command.CREATE:
                         for record in recs:
-                            to_create.append(dict(command[2], **{inverse: record.id}))
+                            create_vals = dict(command[2], **{inverse: record.id})
+                            if inverse_field.type == 'many2one_reference':
+                                create_vals[inverse_field.model_field] = record._name
+                            to_create.append(create_vals)
                         allow_full_delete = False
                     elif command[0] == Command.UPDATE:
-                        comodel.browse(command[1]).write(command[2])
+                        write_vals = command[2]
+                        if inverse_field.type == 'many2one_reference':
+                            write_vals[inverse_field.model_field] = record._name
+                        comodel.browse(command[1]).write(write_vals)
                     elif command[0] == Command.DELETE:
                         to_delete.append(command[1])
                     elif command[0] == Command.UNLINK:
@@ -4564,7 +4617,10 @@ class One2many(_RelationalMulti):
                         domain = self.get_domain_list(model) + \
                             [(inverse, 'in', recs.ids), ('id', 'not in', lines.ids)]
                         unlink(comodel.search(domain))
-                        lines[inverse] = recs[-1]
+                        if inverse_field.type == 'many2one_reference':
+                            lines.write({inverse: recs[-1].id, inverse_field.model_field: recs._name})
+                        else:
+                            lines[inverse] = recs[-1]
 
             flush()
 
