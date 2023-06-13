@@ -86,7 +86,7 @@ def load_demo(env, package, idref, mode):
         if package.data.get('demo') or package.data.get('demo_xml'):
             _logger.info("Module %s: loading demo", package.name)
             with env.cr.savepoint(flush=False):
-                load_data(env, idref, mode, kind='demo', package=package)
+                load_data(env(su=True), idref, mode, kind='demo', package=package)
         return True
     except Exception as e:
         # If we could not install demo data for this module
