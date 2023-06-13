@@ -197,3 +197,19 @@ class TestProjectBase(TestProjectCommon):
         with self.assertRaises(UserError):
             # Cannot change the company of a project if the company of the partner is different
             self.project_pigs.company_id = company_1
+
+    def test_add_customer_rating_project(self):
+        """ Tests that the rating_ids field contains a rating once created
+        """
+        rate = self.env['rating.rating'].create({
+            'res_id': self.task_1.id,
+            'parent_res_id': self.project_pigs.id,
+            'res_model_id': self.env['ir.model']._get('project.task').id,
+            'parent_res_model_id': self.env['ir.model']._get('project.project').id,
+        })
+        rating = 5
+
+        self.task_1.rating_apply(rating, token=rate.access_token)
+
+        self.project_pigs.rating_ids.invalidate_recordset()
+        self.assertEqual(len(self.project_pigs.rating_ids), 1, "There should be 1 rating linked to the project")
