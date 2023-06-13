@@ -223,7 +223,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     foundProductIds = await this.rpc({
                         model: 'product.product',
                         method: 'search',
-                        args: [[['barcode', '=', code.base_code]]],
+                        args: [[['barcode', '=', code.base_code], ['sale_ok', '=', true]]],
                         context: this.env.session.user_context,
                     });
                 } catch (error) {
