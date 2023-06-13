@@ -74,9 +74,9 @@ class AccountMoveSend(models.Model):
 
         return super().action_send_and_print(from_cron=from_cron, allow_fallback_pdf=allow_fallback_pdf)
 
-    def _call_web_service(self, invoices_data):
+    def _call_web_service_after_invoice_pdf_render(self, invoices_data):
         # Overrides 'account'
-        super()._call_web_service(invoices_data)
+        super()._call_web_service_after_invoice_pdf_render(invoices_data)
 
         if not self.checkbox_send_peppol:
             return
