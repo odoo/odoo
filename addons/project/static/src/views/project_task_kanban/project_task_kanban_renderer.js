@@ -12,30 +12,13 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
 
     }
 
-    get canMoveRecords() {
-        let canMoveRecords = super.canMoveRecords;
-        if (!canMoveRecords && this.canResequenceRecords && this.props.list.isGroupedByPersonalStages) {
-            const { groupByField } = this.props.list;
-            canMoveRecords = groupByField.readonly !== "True";
-        }
-        return canMoveRecords;
-    }
-
-    get canResequenceGroups() {
-        let canResequenceGroups = super.canResequenceGroups;
-        if (!canResequenceGroups && this.props.list.isGroupedByPersonalStages) {
-            const { groupsDraggable } = this.props.archInfo;
-            canResequenceGroups = groupsDraggable && groupsDraggable.readonly !== "True";
-        }
-        return canResequenceGroups;
-    }
-
     canCreateGroup() {
-        return (super.canCreateGroup() && this.isProjectTasksContext() && this.props.list.isGroupedByStage) || this.props.list.isGroupedByPersonalStages;
+        // This restrict the creation of project stages to the kanban view of a given project
+        return super.canCreateGroup() && (this.isProjectTasksContext() == this.props.list.isGroupedByStage);
     }
 
     isProjectTasksContext() {
-        return this.props.list.context.active_model === "project.project" && this.props.list.context.default_project_id;
+        return this.props.list.context.active_model === "project.project" && !!this.props.list.context.default_project_id;
     }
 }
 
