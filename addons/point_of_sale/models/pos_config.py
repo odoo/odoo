@@ -657,19 +657,25 @@ class PosConfig(models.Model):
             })
             pos_config.write({'payment_method_ids': [(6, 0, payment_methods.ids)]})
 
+    def generate_pos_journal_vals(self, company):
+        vals = {
+            'type': 'general',
+            'name': 'Point of Sale',
+            'code': 'POSS',
+            'company_id': company.id,
+            'sequence': 20
+        }
+        if company.country_code == 'IN':
+            vals['type'] = 'sale'
+        return vals
+
     def generate_pos_journal(self, company):
         for pos_config in self:
             if pos_config.journal_id:
                 continue
             pos_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('code', '=', 'POSS')])
             if not pos_journal:
-                pos_journal = self.env['account.journal'].create({
-                    'type': 'general',
-                    'name': 'Point of Sale',
-                    'code': 'POSS',
-                    'company_id': company.id,
-                    'sequence': 20
-                })
+                pos_journal = self.env['account.journal'].create(self.generate_pos_journal_vals(company))
             pos_config.write({'journal_id': pos_journal.id})
 
     def setup_invoice_journal(self, company):
