@@ -386,7 +386,10 @@ class HrEmployeePrivate(models.Model):
         if 'address_home_id' in vals:
             account_id = vals.get('bank_account_id') or self.bank_account_id.id
             if account_id:
-                self.env['res.partner.bank'].browse(account_id).partner_id = vals['address_home_id']
+                bank_account = self.env['res.partner.bank'].browse(account_id)
+                if vals['address_home_id'] != bank_account.partner_id.id:
+                    bank_account.sudo().allow_out_payment = False
+                    bank_account.partner_id = vals['address_home_id']
             self.message_unsubscribe(self.address_home_id.ids)
             if vals['address_home_id']:
                 self._message_subscribe([vals['address_home_id']])
