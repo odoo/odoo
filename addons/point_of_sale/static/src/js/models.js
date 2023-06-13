@@ -2432,6 +2432,10 @@ class Order extends PosModel {
         this.is_tipped = json.is_tipped || false;
         this.tip_amount = json.tip_amount || 0;
         this.access_token = json.access_token || '';
+        // Replace the default cashier with the one from the order.
+        if (json.cashier) {
+            this.cashier = json.cashier;
+        }
     }
     export_as_JSON() {
         var orderLines, paymentLines;

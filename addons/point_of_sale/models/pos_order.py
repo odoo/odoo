@@ -1024,6 +1024,15 @@ class PosOrder(models.Model):
         totalCount = self.search_count(real_domain)
         return {'ids': ids, 'totalCount': totalCount}
 
+    def _get_cashier(self):
+        self.ensure_one()
+        if self.user_id:
+            user_params = self.session_id._loader_params_res_users()
+            user_params['search_params']['domain'] = [('id', '=', self.user_id.id)]
+            user = self.session_id._get_pos_ui_res_users(user_params)
+            return user
+        return False
+
     def _export_for_ui(self, order):
         timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
         return {
@@ -1050,6 +1059,7 @@ class PosOrder(models.Model):
             'is_tipped': order.is_tipped,
             'tip_amount': order.tip_amount,
             'access_token': order.access_token,
+            'cashier': order._get_cashier(),
         }
 
     def _get_fields_for_order_line(self):
