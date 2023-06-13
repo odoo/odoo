@@ -12,16 +12,6 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
 
     }
 
-    get canMoveRecords() {
-        let canMoveRecords = super.canMoveRecords;
-        if (!canMoveRecords && this.canResequenceRecords && this.props.list.isGroupedByPersonalStages) {
-            const { groupByField } = this.props.list;
-            const { modifiers } = groupByField;
-            canMoveRecords = !(modifiers && modifiers.readonly);
-        }
-        return canMoveRecords;
-    }
-
     get canResequenceGroups() {
         let canResequenceGroups = super.canResequenceGroups;
         if (!canResequenceGroups && this.props.list.isGroupedByPersonalStages) {
