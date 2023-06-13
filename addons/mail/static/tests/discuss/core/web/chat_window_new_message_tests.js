@@ -36,7 +36,7 @@ QUnit.test("basic rendering", async (assert) => {
         ".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Close Chat Window']"
     );
     assert.containsOnce($, "span:contains('To :')");
-    assert.containsOnce($, ".o-mail-ChannelSelector");
+    assert.containsOnce($, ".o-discuss-ChannelSelector");
 });
 
 QUnit.test("focused on open [REQUIRE FOCUS]", async (assert) => {
@@ -45,7 +45,7 @@ QUnit.test("focused on open [REQUIRE FOCUS]", async (assert) => {
     await click("button:contains(New Message)");
     assert.strictEqual(
         document.activeElement,
-        $(".o-mail-ChatWindow .o-mail-ChannelSelector input")[0]
+        $(".o-mail-ChatWindow .o-discuss-ChannelSelector input")[0]
     );
 });
 
@@ -62,15 +62,15 @@ QUnit.test("fold", async (assert) => {
     await click(".o_menu_systray i[aria-label='Messages']");
     await click("button:contains(New Message)");
     assert.containsOnce($, ".o-mail-ChatWindow-content");
-    assert.containsOnce($, ".o-mail-ChannelSelector");
+    assert.containsOnce($, ".o-discuss-ChannelSelector");
 
     await click(".o-mail-ChatWindow-header");
     assert.containsNone($, ".o-mail-ChatWindow .o-mail-ChatWindow-content");
-    assert.containsNone($, ".o-mail-ChatWindow .o-mail-ChannelSelector");
+    assert.containsNone($, ".o-mail-ChatWindow .o-discuss-ChannelSelector");
 
     await click(".o-mail-ChatWindow-header");
     assert.containsOnce($, ".o-mail-ChatWindow .o-mail-ChatWindow-content");
-    assert.containsOnce($, ".o-mail-ChannelSelector");
+    assert.containsOnce($, ".o-discuss-ChannelSelector");
 });
 
 QUnit.test(
@@ -116,7 +116,7 @@ QUnit.test(
         await click("button:contains(New Message)");
         assert.containsOnce($, ".o-mail-ChatWindow-header:contains(New message)");
         assert.containsN($, ".o-mail-ChatWindow", 2);
-        assert.containsOnce($, ".o-mail-ChatWindow .o-mail-ChannelSelector");
+        assert.containsOnce($, ".o-mail-ChatWindow .o-discuss-ChannelSelector");
         assert.ok(
             Array.from(document.querySelectorAll(".o-mail-ChatWindow"))
                 .pop()
@@ -135,11 +135,11 @@ QUnit.test(
 
         // search for a user in "new message" autocomplete
         await afterNextRender(async () => {
-            await insertText(".o-mail-ChannelSelector input", "131");
+            await insertText(".o-discuss-ChannelSelector input", "131");
             await imSearchDef;
         });
-        assert.containsOnce($, ".o-mail-ChannelSelector-suggestion a");
-        const $link = $(".o-mail-ChannelSelector-suggestion a");
+        assert.containsOnce($, ".o-discuss-ChannelSelector-suggestion a");
+        const $link = $(".o-discuss-ChannelSelector-suggestion a");
         assert.strictEqual($link.text(), "Partner 131");
 
         await click($link);
@@ -173,8 +173,8 @@ QUnit.test(
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
         await click("button:contains(New Message)");
-        await insertText(".o-mail-ChannelSelector", "131");
-        await click(".o-mail-ChannelSelector-suggestion a");
+        await insertText(".o-discuss-ChannelSelector", "131");
+        await click(".o-discuss-ChannelSelector-suggestion a");
         assert.containsNone($, ".o-mail-ChatWindow-header:contains(New message)");
         assert.containsOnce($, ".o-mail-ChatWindow");
     }
@@ -197,8 +197,8 @@ QUnit.test("new message autocomplete should automatically select first result", 
     await click("button:contains(New Message)");
     // search for a user in "new message" autocomplete
     await afterNextRender(async () => {
-        await insertText(".o-mail-ChannelSelector", "131");
+        await insertText(".o-discuss-ChannelSelector", "131");
         await imSearchDef;
     });
-    assert.hasClass($(".o-mail-ChannelSelector-suggestion a"), "o-mail-NavigableList-active");
+    assert.hasClass($(".o-discuss-ChannelSelector-suggestion a"), "o-mail-NavigableList-active");
 });
