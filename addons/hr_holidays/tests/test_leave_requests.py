@@ -948,7 +948,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'holiday_status_id': self.holidays_support_document.id,
                 'request_date_from': '2022-10-17',
                 'request_date_to': '2022-10-17',
-                'supported_attachment_ids': [(6, 0, [])],  # Sent by webclient
+                'attachment_ids': [(6, 0, [])],  # Sent by webclient
             })
 
     def test_prevent_misplacement_of_allocations_without_end_date(self):

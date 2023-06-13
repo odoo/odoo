@@ -195,7 +195,7 @@ class HrExpenseSheet(models.Model):
         domain="[('id', 'in', selectable_payment_method_line_ids)]",
         help="The payment method used when the expense is paid by the company.",
     )
-    attachment_ids = fields.One2many(
+    linked_attachment_ids = fields.One2many(
         comodel_name='ir.attachment',
         inverse_name='res_id',
         domain="[('res_model', '=', 'hr.expense.sheet')]",
@@ -301,10 +301,10 @@ class HrExpenseSheet(models.Model):
             else:
                 sheet.state = 'draft'
 
-    @api.depends('expense_line_ids.attachment_ids')
+    @api.depends('expense_line_ids.linked_attachment_ids')
     def _compute_main_attachment(self):
         for sheet in self:
-            attachments = sheet.attachment_ids
+            attachments = sheet.linked_attachment_ids
             if not sheet.message_main_attachment_id or sheet.message_main_attachment_id not in attachments:
                 expenses = sheet.expense_line_ids
                 expenses_mma_checksums = expenses.message_main_attachment_id.mapped('checksum')
@@ -681,7 +681,7 @@ class HrExpenseSheet(models.Model):
         # Set the main attachment on the moves directly to avoid recomputing the
         # `register_as_main_attachment` on the moves which triggers the OCR again
         for move in moves:
-            move.message_main_attachment_id = move.attachment_ids[0] if move.attachment_ids else None
+            move.message_main_attachment_id = move.linked_attachment_ids[0] if move.linked_attachment_ids else None
         payments = self.env['account.payment'].with_context(**skip_context).create([
             expense._prepare_payments_vals() for expense in company_account_sheets.expense_line_ids
         ])

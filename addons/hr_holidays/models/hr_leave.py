@@ -219,10 +219,6 @@ class HolidaysRequest(models.Model):
     can_cancel = fields.Boolean('Can Cancel', compute='_compute_can_cancel')
 
     attachment_ids = fields.One2many('ir.attachment', 'res_id', string="Attachments")
-    # To display in form view
-    supported_attachment_ids = fields.Many2many(
-        'ir.attachment', string="Attach File", compute='_compute_supported_attachment_ids',
-        inverse='_inverse_supported_attachment_ids')
     supported_attachment_ids_count = fields.Integer(compute='_compute_supported_attachment_ids')
     # UX fields
     all_employee_ids = fields.Many2many('hr.employee', compute='_compute_all_employees', compute_sudo=True)
@@ -683,15 +679,10 @@ class HolidaysRequest(models.Model):
             holiday.is_striked = holiday.state == 'refuse'
             holiday.is_hatched = holiday.state not in ['refuse', 'validate']
 
-    @api.depends('leave_type_support_document', 'attachment_ids')
+    @api.depends('attachment_ids')
     def _compute_supported_attachment_ids(self):
         for holiday in self:
-            holiday.supported_attachment_ids = holiday.attachment_ids
             holiday.supported_attachment_ids_count = len(holiday.attachment_ids.ids)
-
-    def _inverse_supported_attachment_ids(self):
-        for holiday in self:
-            holiday.attachment_ids = holiday.supported_attachment_ids
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date(self):
@@ -964,7 +955,7 @@ Attempting to double-book your time off won't magically make your vacation 2x be
 
     def write(self, values):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user') or self.env.is_superuser()
-        if not is_officer and values.keys() - {'attachment_ids', 'supported_attachment_ids', 'message_main_attachment_id'}:
+        if not is_officer and values.keys() - {'attachment_ids', 'message_main_attachment_id'}:
             if any(hol.date_from.date() < fields.Date.today() and hol.employee_id.leave_manager_id != self.env.user for hol in self):
                 raise UserError(_('You must have manager rights to modify/validate a time off that already begun'))
             if any(leave.state == 'cancel' for leave in self):
