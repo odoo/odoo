@@ -311,6 +311,7 @@ export function usePosition(reference, options) {
         useChildSubEnv({ [POSITION_BUS]: bus });
         const throttledUpdate = throttleForAnimation(() => bus.trigger("update"));
         useExternalListener(document, "scroll", throttledUpdate, { capture: true });
+        useExternalListener(document, "load", throttledUpdate, { capture: true });
         useExternalListener(window, "resize", throttledUpdate);
         onWillUnmount(throttledUpdate.cancel);
     }
