@@ -1304,6 +1304,15 @@ actual arch.
                     for arch, _view in self._get_x2many_missing_view_archs(field, node, node_info):
                         node.append(arch)
 
+                if (
+                    field.relational
+                    and not node.get('options')
+                ):
+                    model = self.env[field.comodel_name]
+                    options = model._view_options
+                    if options:
+                        node.set('options', str(options))
+
                 for child in node:
                     if child.tag in ('form', 'tree', 'graph', 'kanban', 'calendar'):
                         node_info['children'] = []
@@ -2349,6 +2358,8 @@ class Model(models.AbstractModel):
     _inherit = 'base'
 
     _date_name = 'date'         #: field to use for default calendar view
+    # default UI options for the views that have relational fields to the model
+    _view_options = {}
 
     def _get_access_action(self, access_uid=None, force_website=False):
         """ Return an action to open the document. This method is meant to be
