@@ -379,7 +379,7 @@ export class SearchBar extends Component {
             onConfirm: (domain) => this.env.searchModel.splitAndAddDomain(domain, groupId),
             disableConfirmButton: (domain) => domain === `[]`,
             title: _t("Modify Condition"),
-            isDebugMode: !!this.env.debug,
+            isDebugMode: this.env.searchModel.isDebugMode,
         });
     }
 
