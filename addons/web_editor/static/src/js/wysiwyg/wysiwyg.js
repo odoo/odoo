@@ -2622,10 +2622,10 @@ const Wysiwyg = Widget.extend({
             this.odooEditor.historyReset();
             return;
         }
-        this.odooEditor.collaborationSetClientId(this._currentClientId);
         this.setValue(value);
-        this.odooEditor.historyReset();
         this.setupCollaboration(collaborationChannel);
+        this.odooEditor.collaborationSetClientId(this._currentClientId);
+        this.odooEditor.historyReset();
         if (this.options.collaborativeTrigger === 'start') {
             this._joinPeerToPeer();
         } else if (this.options.collaborativeTrigger === 'focus') {
