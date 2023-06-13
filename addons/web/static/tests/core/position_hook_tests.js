@@ -322,15 +322,26 @@ QUnit.test("has no effect when component is destroyed", async (assert) => {
     );
 });
 
-QUnit.test("reposition popper when its reference moves", async (assert) => {
+QUnit.only("reposition popper when its reference moves", async (assert) => {
+    patchWithCleanup(odoo, { debug: true });
     const TestComp = getTestComponent();
     await mount(TestComp, container);
     const popBox1 = document.getElementById("popper").getBoundingClientRect();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
     const spacer = document.createElement("div");
     spacer.id = "foo";
     spacer.style.height = "1px";
     spacer.style.width = "100px";
     container.prepend(spacer);
+    console.log("spacer", spacer);
+    await nextTick();
+    await nextTick();
+    await nextTick();
+    await nextTick();
     await nextTick();
     const popBox2 = document.getElementById("popper").getBoundingClientRect();
     assert.strictEqual(popBox1.top, popBox2.top);

@@ -288,29 +288,17 @@ export function usePosition(reference, options) {
     let ref;
     const update = (from) => {
         if (popperRef.el && ref) {
-            reposition(ref, popperRef.el, options);
             console.trace(from);
+            reposition(ref, popperRef.el, options);
         }
     };
     const throttledUpdate = throttleForAnimation(update);
-    let observingSince;
-    const referenceObserver = new IntersectionObserver((entries, observer) => {
-        console.log(
-            "intersection",
-            entries[0].time,
-            observingSince,
-            entries[0].time - observingSince
-        );
-        if (entries[0].time - observingSince > 3) {
-            throttledUpdate("intersection");
-        }
-    });
+    const referenceObserver = new ResizeObserver(() => throttledUpdate("observer"));
     useEffect(() => {
         ref = getReference();
         update("effect");
-        observingSince = performance.now();
         referenceObserver.observe(ref);
-        return () => { referenceObserver.disconnect(); observingSince = null; };
+        return () => referenceObserver.disconnect();
     });
     const listener = () => throttledUpdate("listener");
     useExternalListener(document, "scroll", listener, { capture: true });
