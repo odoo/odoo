@@ -22,3 +22,12 @@ class ResConfigSettings(models.TransientModel):
             if response.get("error"):
                 error_message = "\n".join(["[%s] %s" % (e.get("code"), html_escape(e.get("message"))) for e in response["error"]])
             raise UserError(error_message)
+        return {
+              'type': 'ir.actions.client',
+              'tag': 'display_notification',
+              'params': {
+                  'type': 'info',
+                  'sticky': False,
+                  'message': _("API credentials validated successfully"),
+              }
+          }
