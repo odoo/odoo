@@ -286,20 +286,24 @@ export function usePosition(reference, options) {
     const popperRef = useRef(popper);
     const getReference = reference instanceof HTMLElement ? () => reference : reference;
     let ref;
-    const update = () => {
+    const update = (from) => {
         if (popperRef.el && ref) {
             reposition(ref, popperRef.el, options);
+            console.trace(from);
         }
     };
     const throttledUpdate = throttleForAnimation(update);
-    const referenceObserver = new IntersectionObserver(throttledUpdate);
+    const referenceObserver = new IntersectionObserver(() => {
+        throttledUpdate("intersection");
+    });
     useEffect(() => {
         ref = getReference();
+        update("effect");
         referenceObserver.observe(ref);
-        update();
         return () => referenceObserver.disconnect();
     });
-    useExternalListener(document, "scroll", throttledUpdate, { capture: true });
-    useExternalListener(window, "resize", throttledUpdate);
+    const listener = () => throttledUpdate("listener");
+    useExternalListener(document, "scroll", listener, { capture: true });
+    useExternalListener(window, "resize", listener);
     onWillUnmount(throttledUpdate.cancel);
 }
