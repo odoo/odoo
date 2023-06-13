@@ -464,6 +464,57 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("Domain: allow python code domain in fieldInfo", async function (assert) {
+        assert.expect(4);
+        serverData.models.partner.fields.timmy.domain =
+            "foo and [('color', '>', 3)] or [('color', '<', 3)]";
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="foo"/>
+                    <field name="timmy" widget="many2many_tags"></field>
+                </form>`,
+            resId: 1,
+        });
+
+        // foo set => only silver (id=5) selectable
+        await clickDropdown(target, "timmy");
+        let autocompleteDropdown = target.querySelector(".o-autocomplete--dropdown-menu");
+        assert.containsN(
+            autocompleteDropdown,
+            "li",
+            2,
+            "autocomplete should contain 'silver' and 'Start typing...' options"
+        );
+        assert.strictEqual(
+            autocompleteDropdown.querySelector("li a").textContent,
+            "silver",
+            "autocomplete dropdown should contain 'silver'"
+        );
+        await clickOpenedDropdownItem(target, "timmy", "Start typing...");
+
+        // set foo = "" => only gold (id=2) selectable
+        const textInput = target.querySelector("[name=foo] input");
+        textInput.focus();
+        await editInput(textInput, null, "");
+        await clickDropdown(target, "timmy");
+        autocompleteDropdown = target.querySelector(".o-autocomplete--dropdown-menu");
+        assert.containsN(
+            autocompleteDropdown,
+            "li",
+            2,
+            "autocomplete should contain 'gold' and 'Start typing...' options"
+        );
+        assert.strictEqual(
+            autocompleteDropdown.querySelector("li a").textContent,
+            "gold",
+            "autocomplete dropdown should contain 'gold'"
+        );
+    });
+
     QUnit.test("Many2ManyTagsField in a new record", async function (assert) {
         assert.expect(7);
 
