@@ -22,11 +22,12 @@ class IrCodeTranslation(models.Model):
         ('python', 'Python code translation'),
     ], string='Translation Type')
 
-    _sql_constraints = [('unique_source_lang_module_type', 'UNIQUE(source, lang, module, type)', '(source, lang, module, type) should be unique')]
+    _sql_constraints = [('unique_module_lang_type_source', 'UNIQUE(module, lang, type, source)', '(module, lang, type, source) should be unique')]
 
     def _get_languages(self):
         return self.env['res.lang'].get_installed()
 
+    @api.model_create_multi
     def create(self, vals_list):
         res = super().create(vals_list)
         self.clear_caches()
