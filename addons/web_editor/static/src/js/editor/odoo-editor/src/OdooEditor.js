@@ -4517,7 +4517,12 @@ export class OdooEditor extends EventTarget {
                     }
                 });
             } else {
-                this._applyCommand('insert', clipboardElem);
+                if (closestElement(sel.anchorNode, 'a')) {
+                    this._applyCommand('insert', clipboardElem.textContent);
+                }
+                else {
+                    this._applyCommand('insert', clipboardElem);
+                }
             }
         } else {
             const text = ev.clipboardData.getData('text/plain');
