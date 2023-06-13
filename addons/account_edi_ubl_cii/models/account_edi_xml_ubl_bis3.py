@@ -304,7 +304,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             ) if intracom_delivery else None,
         }
 
-        for line in invoice.invoice_line_ids:
+        for line in invoice.invoice_line_ids.filtered(lambda x: x.display_type not in ('line_note', 'line_section')):
             if len(line.tax_ids.flatten_taxes_hierarchy().filtered(lambda t: t.amount_type != 'fixed')) != 1:
                 # [UBL-SR-48]-Invoice lines shall have one and only one classified tax category.
                 # /!\ exception: possible to have any number of ecotaxes (fixed tax) with a regular percentage tax
