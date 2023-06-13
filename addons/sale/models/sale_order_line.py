@@ -442,7 +442,8 @@ class SaleOrderLine(models.Model):
                     'sale',
                     fiscal_position=line.order_id.fiscal_position_id,
                     product_price_unit=price,
-                    product_currency=line.currency_id
+                    product_currency=line.currency_id,
+                    pricelist=line.order_id.pricelist_id
                 )
 
     def _get_display_price(self):

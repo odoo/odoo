@@ -188,7 +188,8 @@ class DeliveryCarrier(models.Model):
                 'sale',
                 fiscal_position=order.fiscal_position_id,
                 product_price_unit=res['price'],
-                product_currency=company.currency_id
+                product_currency=company.currency_id,
+                pricelist=order.pricelist_id
             )
             # apply margin on computed price
             res['price'] = float(res['price']) * (1.0 + (self.margin / 100.0))

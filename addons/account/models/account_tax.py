@@ -1250,7 +1250,9 @@ class AccountTax(models.Model):
         prod_taxes = prod_taxes._origin
         line_taxes = line_taxes._origin
         incl_tax = prod_taxes.filtered(lambda tax: tax not in line_taxes and tax.price_include)
-        if incl_tax:
+        all_incl_prod_taxes = all(prod_taxes.mapped(lambda tax: tax.price_include))
+        all_incl_line_taxes = all(line_taxes.mapped(lambda tax: tax.price_include))
+        if incl_tax and not (all_incl_prod_taxes and all_incl_line_taxes):
             return incl_tax.compute_all(price)['total_excluded']
         return price
 

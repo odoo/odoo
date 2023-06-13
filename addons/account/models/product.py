@@ -117,7 +117,8 @@ class ProductProduct(models.Model):
     @api.model
     def _get_tax_included_unit_price(self, company, currency, document_date, document_type,
             is_refund_document=False, product_uom=None, product_currency=None,
-            product_price_unit=None, product_taxes=None, fiscal_position=None
+            product_price_unit=None, product_taxes=None, fiscal_position=None,
+            pricelist=None
         ):
         """ Helper to get the price unit from different models.
             This is needed to compute the same unit price in different models (sale order, account move, etc.) with same parameters.
@@ -126,6 +127,18 @@ class ProductProduct(models.Model):
         product = self
 
         assert document_type
+
+        pricelist_for_fp_country = False
+        # Check whether we have a pricelist and fiscal position applied for the same country.
+        # If so, mappings from tax included to tax included keep their gross price the same.
+        if fiscal_position and pricelist:
+            fp_countries = (
+                fiscal_position.country_id
+                or (fiscal_position.country_group_id and fiscal_position.country_group_id.country_ids)
+            )
+            pl_countries = pricelist.country_group_ids and pricelist.country_group_ids.country_ids
+            if fp_countries and pl_countries and len(fp_countries & pl_countries) > 0:
+                pricelist_for_fp_country = True
 
         if product_uom is None:
             product_uom = product.uom_id
@@ -156,6 +169,10 @@ class ProductProduct(models.Model):
             flattened_taxes_after_fp = product_taxes_after_fp._origin.flatten_taxes_hierarchy()
             flattened_taxes_before_fp = product_taxes._origin.flatten_taxes_hierarchy()
             taxes_before_included = all(tax.price_include for tax in flattened_taxes_before_fp)
+            taxes_after_included = (
+                pricelist_for_fp_country
+                and all(tax.price_include for tax in flattened_taxes_after_fp)
+            )
 
             if set(product_taxes.ids) != set(product_taxes_after_fp.ids) and taxes_before_included:
                 taxes_res = flattened_taxes_before_fp.compute_all(
@@ -165,9 +182,11 @@ class ProductProduct(models.Model):
                     product=product,
                     is_refund=is_refund_document,
                 )
-                product_price_unit = taxes_res['total_excluded']
+                # We want to keep the gross price the same when mapping taxes included to taxes included and we have
+                # a pricelist and fiscal position for the same country applied.
+                product_price_unit = taxes_res['total_excluded'] if not taxes_after_included else taxes_res['total_included']
 
-                if any(tax.price_include for tax in flattened_taxes_after_fp):
+                if not taxes_after_included and any(tax.price_include for tax in flattened_taxes_after_fp):
                     taxes_res = flattened_taxes_after_fp.compute_all(
                         product_price_unit,
                         quantity=1.0,
