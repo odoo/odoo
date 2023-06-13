@@ -318,6 +318,18 @@ QUnit.test("has no effect when component is destroyed", async (assert) => {
     );
 });
 
+QUnit.test("reposition popper when a load event occurs", async (assert) => {
+    const TestComp = getTestComponent({
+        onPositioned: () => {
+            assert.step("onPositioned called");
+        },
+    });
+    await mount(TestComp, container);
+    assert.verifySteps(["onPositioned called"], "onPositioned called when component mounted");
+    await document.querySelector('[id="popper"]').dispatchEvent(new Event("load"));
+    assert.verifySteps(["onPositioned called"], "onPositioned called when load event is triggered");
+});
+
 QUnit.test("is positioned relative to its containing block", async (assert) => {
     const fixtureBox = getFixture().getBoundingClientRect();
     // offset the container
