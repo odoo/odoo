@@ -142,6 +142,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             let foundProductIds = [];
             foundProductIds = await this.orm.search("product.product", [
                 ["barcode", "=", code.base_code],
+                ["sale_ok", "=", true],
             ]);
             if (foundProductIds.length) {
                 await this.env.pos._addProducts(foundProductIds);
