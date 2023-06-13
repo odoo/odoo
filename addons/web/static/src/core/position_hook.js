@@ -339,9 +339,11 @@ export function usePosition(target, options) {
             // Attach listeners to keep the positioning up to date
             const targetDocument = getTarget()?.ownerDocument;
             targetDocument?.addEventListener("scroll", throttledUpdate, { capture: true });
+            targetDocument?.addEventListener("load", throttledUpdate, { capture: true });
             window.addEventListener("resize", throttledUpdate);
             return () => {
                 targetDocument?.removeEventListener("scroll", throttledUpdate, { capture: true });
+                targetDocument?.removeEventListener("load", throttledUpdate, { capture: true });
                 window.removeEventListener("resize", throttledUpdate);
             };
         }
