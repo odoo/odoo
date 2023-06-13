@@ -309,6 +309,7 @@ export function usePosition(reference, options) {
         useChildSubEnv({ [POSITION_BUS]: bus });
         const throttledUpdate = useThrottleForAnimation(() => bus.trigger("update"));
         useExternalListener(document, "scroll", throttledUpdate, { capture: true });
+        useExternalListener(document, "load", throttledUpdate, { capture: true });
         useExternalListener(window, "resize", throttledUpdate);
     }
 }
