@@ -270,7 +270,8 @@ class PaymentProvider(models.Model):
             # Stripe can send 4XX errors for payment failures (not only for badly-formed requests).
             # Check if an error code is present in the response content and raise only if not.
             # See https://stripe.com/docs/error-codes.
-            # If the request originates from an offline operation, don't raise and return the resp.
+            # If the request originates from an offline operation, don't raise to avoid a cursor
+            # rollback and return the response as-is for flow-specific handling.
             if not response.ok \
                     and not offline \
                     and 400 <= response.status_code < 500 \

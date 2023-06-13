@@ -1,5 +1,7 @@
 /** @odoo-module **/
+/* global checkVATNumber */
 
+import { loadJS } from "@web/core/assets";
 import { _t } from "@web/core/l10n/translation";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useService } from "@web/core/utils/hooks";
@@ -21,8 +23,24 @@ export function usePartnerAutocomplete() {
     const notification = useService("notification");
     const orm = useService("orm");
 
-    function autocomplete(value, isVAT = false) {
+    function sanitizeVAT(value) {
+        return value ? value.replace(/[^A-Za-z0-9]/g, '') : '';
+    }
+
+    async function isVATNumber(value) {
+        // Lazyload jsvat only if the component is being used.
+        await loadJS("/partner_autocomplete/static/lib/jsvat.js");
+
+        // checkVATNumber is defined in library jsvat.
+        // It validates that the input has a valid VAT number format
+        return checkVATNumber(sanitizeVAT(value));
+    }
+
+    async function autocomplete(value) {
         value = value.trim();
+
+        const isVAT = await isVATNumber(value);
+
         let odooSuggestions = [];
         let clearbitSuggestions = [];
         return new Promise((resolve, reject) => {
@@ -292,5 +310,5 @@ export function usePartnerAutocomplete() {
             notification.add(title);
         }
     }
-    return { autocomplete, getCreateData };
+    return { autocomplete, getCreateData, isVATNumber };
 }

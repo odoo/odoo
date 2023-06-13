@@ -141,7 +141,7 @@
                         onFoldChange="folded => state.columnQuickCreateIsFolded = props.list.groups.length > 0 and folded"
                         onValidate="name => props.list.createGroup(name)"
                         exampleData="exampleData"
-                        groupByFieldString="props.list.groupByField.string"
+                        groupByField="props.list.groupByField"
                     />
                     <!-- Kanban Example Background -->
                     <div t-if="props.list.groups.length === 0" class="o_kanban_example_background_container d-flex opacity-50">

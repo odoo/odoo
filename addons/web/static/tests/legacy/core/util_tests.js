@@ -2,6 +2,7 @@ odoo.define('web.util_tests', function (require) {
 "use strict";
 
 var utils = require('web.utils');
+const { getDataURLFromFile } = require('@web/core/utils/urls')
 
 QUnit.module('core', {}, function () {
 
@@ -301,6 +302,14 @@ QUnit.module('core', {}, function () {
         // Descending order
         assert.deepEqual(sortBy(ints, null, 'desc'), [5, 2, 1]);
         assert.deepEqual(sortBy(objstrss, prop, 'desc'), [{ x: 'z' }, { x: 'b' }, { x: 'a' }]);
+    });
+
+    QUnit.test('getDataURLFromFile handles empty file', async function (assert) {
+        assert.expect(1);
+
+        const emptyFile = new File([""], "empty.txt", { type: "text/plain" });
+        const dataUrl = await getDataURLFromFile(emptyFile);
+        assert.strictEqual(dataUrl, "data:text/plain;base64,", "dataURL for empty file is not proper");
     });
 });
 

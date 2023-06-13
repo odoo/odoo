@@ -29,5 +29,6 @@ MovesListRenderer.components = { ...ListRenderer.components, ViewButton: MoveVie
 
 export class StockMoveX2ManyField extends X2ManyField {}
 StockMoveX2ManyField.components = { ...X2ManyField.components, ListRenderer: MovesListRenderer };
+StockMoveX2ManyField.additionalClasses = ['o_field_one2many'];
 
 registry.category("fields").add("stock_move_one2many", StockMoveX2ManyField);

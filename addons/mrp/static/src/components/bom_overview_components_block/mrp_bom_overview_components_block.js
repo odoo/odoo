@@ -96,6 +96,7 @@ BomOverviewComponentsBlock.props = {
     showOptions: Object,
     currentWarehouseId: { type: Number, optional: true },
     data: Object,
+    precision: Number,
     changeFolded: Function,
 };
 BomOverviewComponentsBlock.defaultProps = {

@@ -42,6 +42,26 @@ action = {
         </field>
     </record>
 
+    <record model="ir.ui.view" id="demo_wizard_form_view">
+        <field name="name">Demo Failure Form</field>
+        <field name="model">ir.demo_failure</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="module_id"/>
+                            <field name="wizard_id"/>
+                        </group>
+                        <group>
+                            <field name="error"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record model="ir.actions.todo" id="demo_failure_todo">
         <field name="name">Demo Failure Notification</field>
         <field name="sequence">1</field>

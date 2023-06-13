@@ -49,7 +49,7 @@ export class ReceptionReportTable extends Component {
         for (const line of this.props.lines) {
             if (!line.is_assigned) continue;
             modelIds.push(line.move_out_id);
-            quantities.push(line.quantity || 1);
+            quantities.push(Math.ceil(line.quantity) || 1);
         }
         if (!modelIds.length) {
             return;

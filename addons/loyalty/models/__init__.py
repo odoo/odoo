@@ -7,3 +7,4 @@ from . import loyalty_reward
 from . import loyalty_rule
 from . import loyalty_program
 from . import product_product
+from . import product_template

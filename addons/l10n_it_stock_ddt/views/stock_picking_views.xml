@@ -7,12 +7,13 @@
         <field name="arch" type="xml">
             <xpath expr="//button[@name='do_print_picking']" position="after">
                 <field name="country_code" invisible="1"/>
+                <field name="l10n_it_show_print_ddt_button" invisible="1"/>
                 <button name="%(l10n_it_stock_ddt.action_report_ddt)d" type="action" string="Print"
-                        attrs="{'invisible': ['|', '|', '|', ('picking_type_code', '!=', 'outgoing'), ('country_code', '!=', 'IT'), ('state', '!=', 'done'), ('is_locked', '=', False)]}"
+                        attrs="{'invisible': [('l10n_it_show_print_ddt_button', '=', False)]}"
                         groups="base.group_user"/>
             </xpath>
             <xpath expr="//button[@name='%(stock.action_report_delivery)d']" position="attributes">
-                <attribute name="attrs">{'invisible': ['|', ('state', '!=', 'done'), '|', ('is_locked', '=', False), '&amp;', ('picking_type_code', '=', 'outgoing'), ('country_code', '=', 'IT')]}</attribute>
+                <attribute name="attrs">{'invisible': ['|', ('l10n_it_show_print_ddt_button', '=', True), '&amp;', ('picking_type_code', '=', 'outgoing'), ('country_code', '=', 'IT')]}</attribute>
             </xpath>
             <group name='carrier_data' position="after">
                 <group string="DDT Information" attrs="{'invisible': ['|', ('country_code', '!=', 'IT'), ('picking_type_code', '!=', 'outgoing')]}">

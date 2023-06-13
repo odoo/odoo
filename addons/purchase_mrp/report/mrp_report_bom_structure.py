@@ -12,13 +12,15 @@ class ReportBomStructure(models.AbstractModel):
         if self._is_buy_route(rules, product, bom):
             buy_rules = [rule for rule in rules if rule.action == 'buy']
             supplier = product._select_seller(quantity=quantity, uom_id=product.uom_id)
+            parent_bom = self.env.context.get('parent_bom')
+            purchase_lead = parent_bom.company_id.days_to_purchase + parent_bom.company_id.po_lead if parent_bom and parent_bom.company_id else 0
             if supplier:
                 return {
                     'route_type': 'buy',
                     'route_name': buy_rules[0].route_id.display_name,
                     'route_detail': supplier.display_name,
-                    'lead_time': supplier.delay + rules_delay,
-                    'supplier_delay': supplier.delay + rules_delay,
+                    'lead_time': supplier.delay + rules_delay + purchase_lead,
+                    'supplier_delay': supplier.delay + rules_delay + purchase_lead,
                     'supplier': supplier,
                 }
         return res

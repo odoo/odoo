@@ -4,7 +4,7 @@ import { WebsiteEditorComponent } from '../editor/editor';
 import { WebsiteDialog } from '../dialog/dialog';
 import localStorage from 'web.local_storage';
 
-const { useEffect, useRef, Component } = owl;
+const { useEffect, useRef, Component, xml } = owl;
 
 const localStorageNoDialogKey = 'website_translator_nodialog';
 
@@ -24,12 +24,19 @@ export class AttributeTranslateDialog extends Component {
                 $input.on('change keyup', function () {
                     const value = $input.val();
                     $node.text(value).trigger('change', node);
-                    if ($node.data('attribute')) {
-                        $node.data('$node').attr($node.data('attribute'), value).trigger('translate');
+                    const $originalNode = $node.data('$node');
+                    const nodeAttribute = $node.data('attribute');
+                    if (nodeAttribute) {
+                        $originalNode.attr(nodeAttribute, value);
+                        if (nodeAttribute === 'value') {
+                            $originalNode[0].value = value;
+                        }
+                        $originalNode.trigger('translate');
                     } else {
-                        $node.data('$node').val(value).trigger('translate');
+                        $originalNode.val(value).trigger('translate');
                     }
                     $node.trigger('change');
+                    $originalNode[0].classList.add('oe_translated');
                 });
                 $group.append($label).append($input);
             });
@@ -38,6 +45,37 @@ export class AttributeTranslateDialog extends Component {
 }
 AttributeTranslateDialog.components = { WebsiteDialog };
 AttributeTranslateDialog.template = 'website.AttributeTranslateDialog';
+
+// Used to translate the text of `<select/>` options since it should not be
+// possible to interact with the content of `.o_translation_select` elements.
+export class SelectTranslateDialog extends Component {
+    setup() {
+        this.title = this.env._t("Translate Selection Option");
+        this.inputEl = useRef('input');
+        this.optionEl = this.props.node;
+    }
+
+    onInputKeyup() {
+        const value = this.inputEl.el.value;
+        this.optionEl.textContent = value;
+        this.optionEl.classList.toggle(
+            'oe_translated',
+            value !== this.optionEl.dataset.initialTranslationValue
+        );
+    }
+}
+SelectTranslateDialog.components = {WebsiteDialog};
+SelectTranslateDialog.template = xml`
+<WebsiteDialog close="props.close"
+    title="title"
+    showSecondaryButton="false">
+    <input
+        t-ref="input"
+        type="text" class="form-control my-3"
+        t-att-value="optionEl.textContent or ''"
+        t-on-keyup="onInputKeyup"/>
+</WebsiteDialog>
+`;
 
 export class TranslatorInfoDialog extends Component {
     setup() {
@@ -138,6 +176,13 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
 
                 translation[attr] = $trans[0];
                 $node.attr(attr, match[2]);
+                // Using jQuery attr() to update the "value" will not change
+                // what appears in the DOM and will not update the value
+                // property on inputs. We need to force the right value instead
+                // of the original translation <span/>.
+                if (attr === 'value') {
+                    $node[0].value = match[2];
+                }
 
                 $node.addClass('o_translatable_attribute').data('translation', translation);
             });
@@ -153,10 +198,12 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             $trans.data('$node', $node);
 
             translation['textContent'] = $trans[0];
-            $trans.remove();
             $node.val(match[2]);
+            // Update the text content of textarea too.
+            $node[0].innerText = match[2];
 
-            $node.addClass('o_translatable_text').data('translation', translation);
+            $node.addClass('o_translatable_text').removeClass('o_text_content_invisible')
+                .data('translation', translation);
         });
         $edited = $edited.add(textEdit);
 
@@ -170,6 +217,23 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
                 });
                 $node = select2.container.find('input');
             }
+        });
+
+        // Hack: we add a temporary element to handle option's text
+        // translations from the linked <select/>. The final values are
+        // copied to the original element right before save.
+        $editable.filter('[data-oe-translation-initial-sha] > select').each((index, select) => {
+            const selectTranslationEl = document.createElement('div');
+            selectTranslationEl.className = 'o_translation_select';
+            const optionNames = [...select.options].map(option => option.text);
+            optionNames.forEach(option => {
+                const optionEl = document.createElement('div');
+                optionEl.textContent = option;
+                optionEl.dataset.initialTranslationValue = option;
+                optionEl.className = 'o_translation_select_option';
+                selectTranslationEl.appendChild(optionEl);
+            });
+            select.before(selectTranslationEl);
         });
 
         this.translations = [];
@@ -257,13 +321,25 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             _.each(translation, function (node, attr) {
                 var trans = self.getTranslationObject(node);
                 trans.value = (trans.value ? trans.value : $node.html()).replace(/[ \t\n\r]+/, ' ');
+                trans.state = node.dataset.oeTranslationState;
+                // If a node has an already translated attribute, we don't
+                // need to update its state, since it can be set again as
+                // "to_translate" by other attributes...
+                if ($node[0].dataset.oeTranslationState === 'translated') {
+                    return;
+                }
                 $node.attr('data-oe-translation-state', (trans.state || 'to_translate'));
             });
         });
 
-        this.$translations.prependEvent('click.translator', (ev) => {
-            this.dialogService.add(AttributeTranslateDialog, { node: ev.target });
-        });
+        this.$translations
+            .add(this.getEditableArea().filter('.o_translation_select_option'))
+            .prependEvent('click.translator', (ev) => {
+                const node = ev.target;
+                const isSelectTranslation = !!node.closest('.o_translation_select');
+                this.dialogService.add(isSelectTranslation ?
+                    SelectTranslateDialog : AttributeTranslateDialog, {node});
+            });
     }
 
     _onSave(ev) {

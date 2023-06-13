@@ -907,3 +907,139 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertTrue(exchange_diff)
         with self.assertRaises(UserError), self.cr.savepoint():
             exchange_diff.button_draft()
+
+    def test_always_exigible_caba_account(self):
+        """ Always exigible misc operations (so, the ones without payable/receivable line) with cash basis
+        taxes should see their tax lines use the final tax account, not the transition account.
+        """
+        tax_account = self.company_data['default_account_tax_sale']
+
+        caba_tax = self.env['account.tax'].create({
+            'name': "CABA",
+            'amount_type': 'percent',
+            'amount': 20.0,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': self.safe_copy(tax_account).id,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'account_id': tax_account.id,
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'account_id': tax_account.id,
+                }),
+            ],
+        })
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='entry'))
+
+        # Create a new account.move.line with debit amount.
+        income_account = self.company_data['default_account_revenue']
+        with move_form.line_ids.new() as debit_line:
+            debit_line.name = 'debit'
+            debit_line.account_id = income_account
+            debit_line.debit = 120
+
+        with move_form.line_ids.new() as credit_line:
+            credit_line.name = 'credit'
+            credit_line.account_id = income_account
+            credit_line.credit = 100
+            credit_line.tax_ids.clear()
+            credit_line.tax_ids.add(caba_tax)
+
+        move = move_form.save()
+
+        self.assertTrue(move.always_tax_exigible)
+
+        self.assertRecordValues(move.line_ids.sorted(lambda x: -x.balance), [
+            # pylint: disable=C0326
+            {'name': 'debit',  'debit': 120.0, 'credit': 0.0,   'account_id': income_account.id, 'tax_ids': [],           'tax_line_id': False},
+            {'name': 'CABA',   'debit': 0.0,   'credit': 20.0,  'account_id': tax_account.id,    'tax_ids': [],           'tax_line_id': caba_tax.id},
+            {'name': 'credit', 'debit': 0.0,   'credit': 100.0, 'account_id': income_account.id, 'tax_ids': caba_tax.ids, 'tax_line_id': False},
+        ])
+
+    def test_misc_with_taxes_reverse(self):
+        test_account = self.company_data['default_account_revenue']
+
+        # With a sale tax
+        sale_tax = self.company_data['default_tax_sale']
+
+        move_form = Form(self.env['account.move'])
+
+        with move_form.line_ids.new() as debit_line_form:
+            debit_line_form.name = 'debit'
+            debit_line_form.account_id = test_account
+            debit_line_form.debit = 115
+
+        with move_form.line_ids.new() as credit_line_form:
+            credit_line_form.name = 'credit'
+            credit_line_form.account_id = test_account
+            credit_line_form.credit = 100
+            credit_line_form.tax_ids.clear()
+            credit_line_form.tax_ids.add(sale_tax)
+
+        sale_move = move_form.save()
+
+        sale_invoice_rep_line = sale_tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+
+        self.assertRecordValues(sale_move.line_ids.sorted(lambda x: -x.balance), [
+            # pylint: disable=C0326
+            {'name': 'debit',   'debit': 115.0, 'credit':   0.0, 'account_id': test_account.id,                                  'tax_ids': [],           'tax_base_amount': 0,   'tax_tag_invert': False, 'tax_repartition_line_id': False},
+            {'name': 'Tax 15%', 'debit':   0.0, 'credit':  15.0, 'account_id': self.company_data['default_account_tax_sale'].id, 'tax_ids': [],           'tax_base_amount': 100, 'tax_tag_invert': True,  'tax_repartition_line_id': sale_invoice_rep_line.id},
+            {'name': 'credit',  'debit':   0.0, 'credit': 100.0, 'account_id': test_account.id,                                  'tax_ids': sale_tax.ids, 'tax_base_amount': 0,   'tax_tag_invert': True,  'tax_repartition_line_id': False},
+        ])
+
+        # Same with a purchase tax
+        purchase_tax = self.company_data['default_tax_purchase']
+
+        move_form = Form(self.env['account.move'])
+
+        with move_form.line_ids.new() as credit_line_form:
+            credit_line_form.name = 'credit'
+            credit_line_form.account_id = test_account
+            credit_line_form.credit = 115
+
+        with move_form.line_ids.new() as debit_line_form:
+            debit_line_form.name = 'debit'
+            debit_line_form.account_id = test_account
+            debit_line_form.debit = 100
+            debit_line_form.tax_ids.clear()
+            debit_line_form.tax_ids.add(purchase_tax)
+
+        purchase_move = move_form.save()
+
+        purchase_invoice_rep_line = purchase_tax.invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax')
+        self.assertRecordValues(purchase_move.line_ids.sorted(lambda x: x.balance), [
+            # pylint: disable=C0326
+            {'name': 'credit',           'credit': 115.0, 'debit':   0.0, 'account_id': test_account.id,                                      'tax_ids': [],               'tax_base_amount': 0,   'tax_tag_invert': False, 'tax_repartition_line_id': False},
+            {'name': 'Purchase Tax 15%', 'credit':   0.0, 'debit':  15.0, 'account_id': self.company_data['default_account_tax_purchase'].id, 'tax_ids': [],               'tax_base_amount': 100, 'tax_tag_invert': False,  'tax_repartition_line_id': purchase_invoice_rep_line.id},
+            {'name': 'debit',            'credit':   0.0, 'debit': 100.0, 'account_id': test_account.id,                                      'tax_ids': purchase_tax.ids, 'tax_base_amount': 0,   'tax_tag_invert': False,  'tax_repartition_line_id': False},
+        ])
+
+    @freeze_time('2021-10-01 00:00:00')
+    def test_change_journal_account_move(self):
+        """Changing the journal should change the name of the move"""
+        journal = self.env['account.journal'].create({
+            'name': 'awesome journal',
+            'type': 'general',
+            'code': 'AJ',
+        })
+        move = self.env['account.move'].with_context(default_move_type='entry')
+        with Form(move) as move_form:
+            self.assertEqual(move_form.name, 'MISC/2021/10/0001')
+            move_form.journal_id, journal = journal, move_form.journal_id
+            self.assertEqual(move_form.name, 'AJ/2021/10/0001')
+            # ensure we aren't burning any sequence by switching journal
+            move_form.journal_id, journal = journal, move_form.journal_id
+            self.assertEqual(move_form.name, 'MISC/2021/10/0001')
+            move_form.journal_id, journal = journal, move_form.journal_id
+            self.assertEqual(move_form.name, 'AJ/2021/10/0001')

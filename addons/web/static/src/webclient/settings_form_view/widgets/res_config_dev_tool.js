@@ -12,7 +12,7 @@ import { Component, onWillStart } from "@odoo/owl";
  * Can be used to enable/disable the debug modes.
  * Can be used to load the demo data.
  */
-class ResConfigDevTool extends Component {
+export class ResConfigDevTool extends Component {
     setup() {
         this.isDebug = Boolean(odoo.debug);
         this.isAssets = odoo.debug.includes("assets");

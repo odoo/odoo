@@ -76,6 +76,7 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
             'partner_id': self.partner_id.id,
             'user_id': self.origin_po_id.user_id.id,
             'dest_address_id': self.origin_po_id.dest_address_id.id,
+            'origin': self.origin_po_id.origin,
         }
         if self.copy_products and self.origin_po_id:
             vals['order_line'] = [Command.create({

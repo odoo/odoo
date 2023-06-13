@@ -258,6 +258,7 @@ export class ListController extends Component {
                         body: this.env._t(
                             "Are you sure that you want to archive all the selected records?"
                         ),
+                        confirmLabel: this.env._t("Archive"),
                         confirm: () => {
                             this.toggleArchiveState(true);
                         },
@@ -431,13 +432,13 @@ export class ListController extends Component {
         }
     }
 
-    async onDeleteSelectedRecords() {
+    get deleteConfirmationDialogProps() {
         const root = this.model.root;
         const body =
             root.isDomainSelected || root.selection.length > 1
                 ? this.env._t("Are you sure you want to delete these records?")
                 : this.env._t("Are you sure you want to delete this record?");
-        const dialogProps = {
+        return {
             body,
             confirm: async () => {
                 const total = root.count;
@@ -462,7 +463,10 @@ export class ListController extends Component {
             },
             cancel: () => {},
         };
-        this.dialogService.add(ConfirmationDialog, dialogProps);
+    }
+
+    async onDeleteSelectedRecords() {
+        this.dialogService.add(ConfirmationDialog, this.deleteConfirmationDialogProps);
     }
 
     discardSelection() {

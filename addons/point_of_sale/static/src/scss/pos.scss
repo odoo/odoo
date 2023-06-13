@@ -915,6 +915,28 @@ td {
     text-align: center;
 }
 
+.pos .search-more-button {
+    display: flex;
+    justify-content: center;
+
+    .button {
+        flex-basis: 1;
+        line-height: 32px;
+        padding: 3px 13px;
+        font-size: 14px;
+        margin-top: 12px;
+        margin-bottom: 12px;
+        margin-left: 6px;
+        margin-right: 6px;
+        cursor: pointer;
+        transition: all 150ms linear;
+        background: $primary;
+        color: white;
+        border: solid 1px $primary;
+    }
+    
+}
+
 .pos .product-list-scroller{
     -webkit-box-sizing: border-box;
        -moz-box-sizing: border-box;
@@ -1170,6 +1192,10 @@ td {
     padding: 2px 5px;
     font-weight: bold;
     padding: 0 map-get($spacers, 2) map-get($spacers, 2);
+}
+
+.pos .product .product-name.no-image {
+    -webkit-line-clamp: 9;
 }
 
 .pos .product .product-info-button {

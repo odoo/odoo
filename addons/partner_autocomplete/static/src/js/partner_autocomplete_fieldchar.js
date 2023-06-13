@@ -1,5 +1,4 @@
 /** @odoo-module **/
-/* global checkVATNumber */
 
 import { AutoComplete } from "@web/core/autocomplete/autocomplete";
 import { useChildRef } from "@web/core/utils/hooks";
@@ -7,7 +6,6 @@ import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { CharField } from "@web/views/fields/char/char_field";
 import { useInputField } from "@web/views/fields/input_field_hook";
-import { loadJS } from "@web/core/assets";
 
 import { usePartnerAutocomplete } from "@partner_autocomplete/js/partner_autocomplete_core"
 
@@ -21,19 +19,9 @@ export class PartnerAutoCompleteCharField extends CharField {
         useInputField({ getValue: () => this.props.value || "", parse: (v) => this.parse(v), ref: this.inputRef});
     }
 
-    sanitizeVAT(request) {
-        return request ? request.replace(/[^A-Za-z0-9]/g, '') : '';
-    }
-
-    isVAT(request) {
-        // checkVATNumber is defined in library jsvat.
-        // It validates that the input has a valid VAT number format
-        return checkVATNumber(this.sanitizeVAT(request));
-    }
-
-    validateSearchTerm(request) {
+    async validateSearchTerm(request) {
         if (this.props.name == 'vat') {
-            return this.isVAT(request);
+            return this.partner_autocomplete.isVATNumber(request);
         }
         else {
             return request && request.length > 2;
@@ -44,11 +32,8 @@ export class PartnerAutoCompleteCharField extends CharField {
         return [
             {
                 options: async (request) => {
-                    // Lazyload jsvat only if the component is being used.
-                    await loadJS("/partner_autocomplete/static/lib/jsvat.js");
-                    
-                    if (this.validateSearchTerm(request)) {
-                        const suggestions = await this.partner_autocomplete.autocomplete(request, this.isVAT(request));
+                    if (await this.validateSearchTerm(request)) {
+                        const suggestions = await this.partner_autocomplete.autocomplete(request);
                         suggestions.forEach((suggestion) => {
                             suggestion.classList = "partner_autocomplete_dropdown_char";
                         });

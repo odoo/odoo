@@ -173,7 +173,8 @@ class TestSaleProject(TransactionCase):
 
         sale_order_lines = sale_order.order_line + sale_line_1_order_2  # exclude the Section and Note Sales Order Items
         sale_items_data = self.project_global._get_sale_items(with_action=False)
-        self.assertEqual(sale_items_data['total'], len(sale_order_lines))
+        self.assertEqual(sale_items_data['total'], len(sale_order_lines - so_line_order_new_task_new_project - so_line_order_only_project),
+                         "Should be all the sale items linked to the global project.")
         expected_sale_line_dict = {
             sol_read['id']: sol_read
             for sol_read in sale_order_lines.read(['display_name', 'product_uom_qty', 'qty_delivered', 'qty_invoiced', 'product_uom'])

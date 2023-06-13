@@ -791,6 +791,7 @@ class Environment(Mapping):
         """ Mark ``field`` to be computed on ``records``. """
         if not records:
             return records
+        assert field.store and field.compute, "Cannot add to recompute no-store or no-computed field"
         self.all.tocompute[field].update(records._ids)
 
     def remove_to_compute(self, field, records):

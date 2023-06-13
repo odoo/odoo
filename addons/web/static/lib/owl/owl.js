@@ -281,6 +281,96 @@
         }
     }
 
+    /**
+     * Creates a batched version of a callback so that all calls to it in the same
+     * microtick will only call the original callback once.
+     *
+     * @param callback the callback to batch
+     * @returns a batched version of the original callback
+     */
+    function batched(callback) {
+        let called = false;
+        return async () => {
+            // This await blocks all calls to the callback here, then releases them sequentially
+            // in the next microtick. This line decides the granularity of the batch.
+            await Promise.resolve();
+            if (!called) {
+                called = true;
+                // wait for all calls in this microtick to fall through before resetting "called"
+                // so that only the first call to the batched function calls the original callback.
+                // Schedule this before calling the callback so that calls to the batched function
+                // within the callback will proceed only after resetting called to false, and have
+                // a chance to execute the callback again
+                Promise.resolve().then(() => (called = false));
+                callback();
+            }
+        };
+    }
+    /**
+     * Determine whether the given element is contained in its ownerDocument:
+     * either directly or with a shadow root in between.
+     */
+    function inOwnerDocument(el) {
+        if (!el) {
+            return false;
+        }
+        if (el.ownerDocument.contains(el)) {
+            return true;
+        }
+        const rootNode = el.getRootNode();
+        return rootNode instanceof ShadowRoot && el.ownerDocument.contains(rootNode.host);
+    }
+    function validateTarget(target) {
+        // Get the document and HTMLElement corresponding to the target to allow mounting in iframes
+        const document = target && target.ownerDocument;
+        if (document) {
+            const HTMLElement = document.defaultView.HTMLElement;
+            if (target instanceof HTMLElement || target instanceof ShadowRoot) {
+                if (!document.body.contains(target instanceof HTMLElement ? target : target.host)) {
+                    throw new OwlError("Cannot mount a component on a detached dom node");
+                }
+                return;
+            }
+        }
+        throw new OwlError("Cannot mount component: the target is not a valid DOM element");
+    }
+    class EventBus extends EventTarget {
+        trigger(name, payload) {
+            this.dispatchEvent(new CustomEvent(name, { detail: payload }));
+        }
+    }
+    function whenReady(fn) {
+        return new Promise(function (resolve) {
+            if (document.readyState !== "loading") {
+                resolve(true);
+            }
+            else {
+                document.addEventListener("DOMContentLoaded", resolve, false);
+            }
+        }).then(fn || function () { });
+    }
+    async function loadFile(url) {
+        const result = await fetch(url);
+        if (!result.ok) {
+            throw new OwlError("Error while fetching xml templates");
+        }
+        return await result.text();
+    }
+    /*
+     * This class just transports the fact that a string is safe
+     * to be injected as HTML. Overriding a JS primitive is quite painful though
+     * so we need to redfine toString and valueOf.
+     */
+    class Markup extends String {
+    }
+    /*
+     * Marks a value as safe, that is, a value that can be injected as HTML directly.
+     * It should be used to wrap the value passed to a t-out directive to allow a raw rendering.
+     */
+    function markup(value) {
+        return new Markup(value);
+    }
+
     function createEventHandler(rawEvent) {
         const eventName = rawEvent.split(".")[0];
         const capture = rawEvent.includes(".capture");
@@ -300,7 +390,7 @@
         }
         function listener(ev) {
             const currentTarget = ev.currentTarget;
-            if (!currentTarget || !currentTarget.ownerDocument.contains(currentTarget))
+            if (!currentTarget || !inOwnerDocument(currentTarget))
                 return;
             const data = currentTarget[eventKey];
             if (!data)
@@ -2165,82 +2255,6 @@
         });
     }
 
-    /**
-     * Creates a batched version of a callback so that all calls to it in the same
-     * microtick will only call the original callback once.
-     *
-     * @param callback the callback to batch
-     * @returns a batched version of the original callback
-     */
-    function batched(callback) {
-        let called = false;
-        return async () => {
-            // This await blocks all calls to the callback here, then releases them sequentially
-            // in the next microtick. This line decides the granularity of the batch.
-            await Promise.resolve();
-            if (!called) {
-                called = true;
-                // wait for all calls in this microtick to fall through before resetting "called"
-                // so that only the first call to the batched function calls the original callback.
-                // Schedule this before calling the callback so that calls to the batched function
-                // within the callback will proceed only after resetting called to false, and have
-                // a chance to execute the callback again
-                Promise.resolve().then(() => (called = false));
-                callback();
-            }
-        };
-    }
-    function validateTarget(target) {
-        // Get the document and HTMLElement corresponding to the target to allow mounting in iframes
-        const document = target && target.ownerDocument;
-        if (document) {
-            const HTMLElement = document.defaultView.HTMLElement;
-            if (target instanceof HTMLElement) {
-                if (!document.body.contains(target)) {
-                    throw new OwlError("Cannot mount a component on a detached dom node");
-                }
-                return;
-            }
-        }
-        throw new OwlError("Cannot mount component: the target is not a valid DOM element");
-    }
-    class EventBus extends EventTarget {
-        trigger(name, payload) {
-            this.dispatchEvent(new CustomEvent(name, { detail: payload }));
-        }
-    }
-    function whenReady(fn) {
-        return new Promise(function (resolve) {
-            if (document.readyState !== "loading") {
-                resolve(true);
-            }
-            else {
-                document.addEventListener("DOMContentLoaded", resolve, false);
-            }
-        }).then(fn || function () { });
-    }
-    async function loadFile(url) {
-        const result = await fetch(url);
-        if (!result.ok) {
-            throw new OwlError("Error while fetching xml templates");
-        }
-        return await result.text();
-    }
-    /*
-     * This class just transports the fact that a string is safe
-     * to be injected as HTML. Overriding a JS primitive is quite painful though
-     * so we need to redfine toString and valueOf.
-     */
-    class Markup extends String {
-    }
-    /*
-     * Marks a value as safe, that is, a value that can be injected as HTML directly.
-     * It should be used to wrap the value passed to a t-out directive to allow a raw rendering.
-     */
-    function markup(value) {
-        return new Markup(value);
-    }
-
     let currentNode = null;
     function getCurrent() {
         if (!currentNode) {
@@ -2292,6 +2306,7 @@
             this.bdom = null;
             this.status = 0 /* NEW */;
             this.forceNextRender = false;
+            this.nextProps = null;
             this.children = Object.create(null);
             this.refs = {};
             this.willStart = [];
@@ -2421,7 +2436,7 @@
             this.status = 2 /* DESTROYED */;
         }
         async updateAndRender(props, parentFiber) {
-            const rawProps = props;
+            this.nextProps = props;
             props = Object.assign({}, props);
             // update
             const fiber = makeChildFiber(this, parentFiber);
@@ -2445,7 +2460,6 @@
                 return;
             }
             component.props = props;
-            this.props = rawProps;
             fiber.render();
             const parentRoot = parentFiber.root;
             if (this.willPatch.length) {
@@ -2520,6 +2534,7 @@
                 // by the component will be patched independently in the appropriate
                 // fiber.complete
                 this._patch();
+                this.props = this.nextProps;
             }
         }
         _patch() {
@@ -2870,14 +2885,27 @@
         if ("element" in descr) {
             result = validateArrayType(key, value, descr.element);
         }
-        else if ("shape" in descr && !result) {
+        else if ("shape" in descr) {
             if (typeof value !== "object" || Array.isArray(value)) {
                 result = `'${key}' is not an object`;
             }
             else {
                 const errors = validateSchema(value, descr.shape);
                 if (errors.length) {
-                    result = `'${key}' has not the correct shape (${errors.join(", ")})`;
+                    result = `'${key}' doesn't have the correct shape (${errors.join(", ")})`;
+                }
+            }
+        }
+        else if ("values" in descr) {
+            if (typeof value !== "object" || Array.isArray(value)) {
+                result = `'${key}' is not an object`;
+            }
+            else {
+                const errors = Object.entries(value)
+                    .map(([key, value]) => validateType(key, value, descr.values))
+                    .filter(Boolean);
+                if (errors.length) {
+                    result = `some of the values in '${key}' are invalid (${errors.join(", ")})`;
                 }
             }
         }
@@ -2992,7 +3020,7 @@
      * Safely outputs `value` as a block depending on the nature of `value`
      */
     function safeOutput(value, defaultValue) {
-        if (value === undefined) {
+        if (value === undefined || value === null) {
             return defaultValue ? toggler("default", defaultValue) : toggler("undefined", text(""));
         }
         let safeKey;
@@ -3196,7 +3224,7 @@
         }
         callTemplate(owner, subTemplate, ctx, parent, key) {
             const template = this.getTemplate(subTemplate);
-            return toggler(subTemplate, template.call(owner, ctx, parent, key));
+            return toggler(subTemplate, template.call(owner, ctx, parent, key + subTemplate));
         }
     }
     // -----------------------------------------------------------------------------
@@ -5480,8 +5508,8 @@
         return new Function("app, bdom, helpers", code);
     }
 
-    // do not modify manually. This value is updated by the release script.
-    const version = "2.0.9";
+    // do not modify manually. This file is generated by the release script.
+    const version = "2.1.3";
 
     // -----------------------------------------------------------------------------
     //  Scheduler
@@ -5774,7 +5802,7 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
         return {
             get el() {
                 const el = refs[name];
-                return (el === null || el === void 0 ? void 0 : el.ownerDocument.contains(el)) ? el : null;
+                return inOwnerDocument(el) ? el : null;
             },
         };
     }
@@ -5924,14 +5952,15 @@ See https://github.com/odoo/owl/blob/${hash}/doc/reference/app.md#configuration 
     exports.useState = useState;
     exports.useSubEnv = useSubEnv;
     exports.validate = validate;
+    exports.validateType = validateType;
     exports.whenReady = whenReady;
     exports.xml = xml;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.date = '2023-03-13T09:56:54.968Z';
-    __info__.hash = '8893e02';
+    __info__.date = '2023-04-29T07:46:30.326Z';
+    __info__.hash = 'ba20267';
     __info__.url = 'https://github.com/odoo/owl';
 
 

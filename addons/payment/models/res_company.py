@@ -41,7 +41,13 @@ class ResCompany(models.Model):
             [('type', '=', 'bank'), ('company_id', '=', new_env.company.id)], limit=1
         )
 
-        stripe_provider = new_env.ref('payment.payment_provider_stripe')
+        stripe_provider = new_env['payment.provider'].search(
+            [('company_id', '=', self.env.company.id), ('code', '=', 'stripe')], limit=1
+        )
+        if not stripe_provider:
+            base_provider = self.env.ref('payment.payment_provider_stripe')
+            # Use sudo to access payment provider record that can be in different company.
+            stripe_provider = base_provider.sudo().copy(default={'company_id': self.env.company.id})
         stripe_provider.journal_id = stripe_provider.journal_id or default_journal
 
         return stripe_provider.action_stripe_connect_account(menu_id=menu_id)

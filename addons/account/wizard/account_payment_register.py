@@ -523,7 +523,7 @@ class AccountPaymentRegister(models.TransientModel):
     @api.depends('can_edit_wizard', 'payment_date', 'currency_id', 'amount')
     def _compute_early_payment_discount_mode(self):
         for wizard in self:
-            if wizard.can_edit_wizard:
+            if wizard.can_edit_wizard and wizard.currency_id:
                 batch_result = wizard._get_batches()[0]
                 total_amount_residual_in_wizard_currency, mode = wizard._get_total_amount_in_wizard_currency_to_full_reconcile(batch_result)
                 wizard.early_payment_discount_mode = \
@@ -744,7 +744,9 @@ class AccountPaymentRegister(models.TransientModel):
         :param edit_mode:   Is the wizard in edition mode.
         """
 
-        payments = self.env['account.payment'].create([x['create_vals'] for x in to_process])
+        payments = self.env['account.payment']\
+            .with_context(skip_invoice_sync=True)\
+            .create([x['create_vals'] for x in to_process])
 
         for payment, vals in zip(payments, to_process):
             vals['payment'] = payment

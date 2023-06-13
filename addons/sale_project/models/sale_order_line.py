@@ -309,7 +309,7 @@ class SaleOrderLine(models.Model):
         if self.product_id.service_policy == 'delivered_milestones':
             milestone = self.env['project.milestone'].create({
                 'name': self.name,
-                'project_id': self.project_id.id,
+                'project_id': self.project_id.id or self.order_id.project_id.id,
                 'sale_line_id': self.id,
                 'quantity_percentage': 1,
             })

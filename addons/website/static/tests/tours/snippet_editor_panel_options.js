@@ -147,4 +147,6 @@ wTourUtils.dragNDrop({
             console.error("The paragraph text selection was lost.");
         }
     },
-}]);
+},
+...wTourUtils.clickOnSave(),
+]);

@@ -14,7 +14,7 @@
 
     <t t-name="analytic.AnalyticDistributionPopup" owl="1">
         <div class="analytic_distribution_popup o-dropdown-menu show rounded py-0" t-if="state.showDropdown" t-ref="analyticDropdown">
-            <div class="popover-header">
+            <div class="popover-header sticky-top">
                 <div class="d-flex">
                     <div class="h5 mt-2 me-auto">Analytic</div>
                     <div class="popupButtons">
@@ -37,15 +37,14 @@
                         <t t-foreach="plan.distribution" t-as="dist_tag" t-key="dist_tag.id">
                             <tr t-attf-class="{{tagIsReady(dist_tag) and 'ready' or !!dist_tag.analytic_account_id and 'to_remove' or 'incomplete'}} tag_{{dist_tag.id}}">
                                 <td class="o_analytic_account_name">
-                                    <AnalyticAutoComplete
+                                    <AutoComplete
                                         id="dist_tag.id.toString()"
                                         placeholder="'Search Analytic Account'"
                                         value="dist_tag.analytic_account_name"
-                                        sources="sourcesAnalyticAccount"
+                                        sources="sourcesAnalyticAccount(plan.id)"
                                         autoSelect="true"
                                         onSelect.alike="(option, params) => this.onSelect(option, params, dist_tag)"
-                                        onFocus.alike="() => this.groupAutocompleteFocus(plan.id)"
-                                        onInput.alike="(inputVal) => this.autoCompleteInput(dist_tag, inputVal)"/>
+                                        onChange.alike="({inputValue}) => this.autoCompleteInputChanged(dist_tag, inputValue)"/>
                                 </td>
                                 <td class="o_analytic_percentage">
                                     <input
@@ -57,15 +56,10 @@
                                         t-on-change="(ev) => this.percentageChanged(dist_tag, ev)"/>
                                 </td>
                                 <td>
-                                    <span class="fa fa-trash-o cursor-pointer" t-on-click.stop="() => this.deleteTag(dist_tag.id)"/>
+                                    <span t-if="dist_tag.analytic_account_id" class="fa fa-trash-o cursor-pointer" t-on-click.stop="() => this.deleteTag(dist_tag.id, dist_tag.group_id)"/>
                                 </td>
                             </tr>
                         </t>
-                        <tr>
-                            <td class="o_field_x2many_list_row_add" colspan="3">
-                                <a t-if="plan.all_account_count" href="#" role="button" tabindex="-1" t-on-click.prevent.stop="() => this.addLineToGroup(plan.id)">Add a line</a>
-                            </td>
-                        </tr>
                     </table>
                 </t>
                 <div tabindex="0" class="hidden-focus"/>

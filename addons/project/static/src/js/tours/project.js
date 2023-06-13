@@ -38,26 +38,22 @@ tour.register('project_tour', {
         actions.auto('.modal:visible .btn.btn-primary');
     },
 }, {
-    trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group",
+    trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group .o_input",
     content: Markup(_t("Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In Progress - Done</i>.")),
-    position: 'right',
-    run: function (actions) {
-        actions.text("Test", this.$anchor.find("input"));
-    },
+    position: 'bottom',
+    run: "text Test",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
-    auto: true,
+    position: 'right',
 }, {
-    trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group",
+    trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group .o_input",
     extra_trigger: '.o_kanban_group',
     content: Markup(_t("Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In Progress - Done</i>.")),
-    position: 'right',
-    run: function (actions) {
-        actions.text("Test", this.$anchor.find("input"));
-    },
+    position: 'bottom',
+    run: "text Test",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
-    auto: true,
+    position: 'right',
 }, {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_kanban_group:eq(1)',

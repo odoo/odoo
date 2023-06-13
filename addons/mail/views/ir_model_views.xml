@@ -35,7 +35,7 @@
         <field name="arch" type="xml">
             <field name="copied" position="after">
                 <field name="state" invisible="1"/>
-                <field name="tracking" attrs="{'readonly': [('state','!=', 'manual')]}"/>
+                <field name="tracking" attrs="{'invisible': [('ttype', '=', 'binary')], 'readonly': [('state','!=', 'manual')]}"/>
             </field>
         </field>
     </record>

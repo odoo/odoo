@@ -98,7 +98,6 @@ export function useViewButtons(model, ref, options = {}) {
                     await action.doActionButton(doActionParams);
                 } catch (_e) {
                     error = _e;
-                    await doActionParams.onClose();
                 }
                 await afterExecuteAction(clickParams);
                 if (closeDialog) {

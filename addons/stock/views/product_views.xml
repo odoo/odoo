@@ -145,9 +145,9 @@
                         </group>
                     </group>
                 </page>
-                <page name="inventory" position="attributes">
-                    <attribute name="groups">stock.group_stock_user,product.group_stock_packaging</attribute>
-                </page>
+                <xpath expr="//page[@name='inventory']" position="attributes">
+                    <attribute name="groups" add="stock.group_stock_user" separator=","/>
+                </xpath>
             </field>
         </record>
 

@@ -688,13 +688,10 @@ class ConnectionPool(object):
         ignore_keys = ['password']
         dsn1, dsn2 = ({
             alias_keys.get(key, key): str(value)
-            for key, value in (isinstance(dsn, str) and self._dsn_to_dict(dsn) or dsn).items()
+            for key, value in (psycopg2.extensions.parse_dsn(dsn) if isinstance(dsn, str) else dsn).items()
             if key not in ignore_keys
         } for dsn in (dsn1, dsn2))
         return dsn1 == dsn2
-
-    def _dsn_to_dict(self, dsn):
-        return dict(value.split('=', 1) for value in dsn.strip().split())
 
 
 class Connection(object):
@@ -741,7 +738,11 @@ def connection_info_for(db_or_uri):
     :param str db_or_uri: database name or postgres dsn
     :rtype: (str, dict)
     """
-    app_name = "odoo-%d" % os.getpid()
+    if 'ODOO_PGAPPNAME' in os.environ:
+        # Using manual string interpolation for security reason and trimming at default NAMEDATALEN=63
+        app_name = os.environ['ODOO_PGAPPNAME'].replace('{pid}', str(os.getpid()))[0:63]
+    else:
+        app_name = "odoo-%d" % os.getpid()
     if db_or_uri.startswith(('postgresql://', 'postgres://')):
         # extract db from uri
         us = urls.url_parse(db_or_uri)

@@ -221,7 +221,7 @@ const Wysiwyg = Widget.extend({
             categories: powerboxOptions.categories,
             plugins: options.editorPlugins,
             direction: options.direction || localization.direction || 'ltr',
-            collaborationClientAvatarUrl: `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${this.getSession().uid}`,
+            collaborationClientAvatarUrl: `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${encodeURIComponent(this.getSession().uid)}`,
             renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
             foldSnippets: !!options.foldSnippets,
         }, editorCollaborationOptions));
@@ -504,7 +504,7 @@ const Wysiwyg = Widget.extend({
                         }
                         return this._userName;
                     },
-                    get_client_avatar: () => `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${this.getSession().uid}`,
+                    get_client_avatar: () => `${browser.location.origin}/web/image?model=res.users&field=avatar_128&id=${encodeURIComponent(this.getSession().uid)}`,
                     get_missing_steps: (params) => this.odooEditor.historyGetMissingSteps(params.requestPayload),
                     get_history_from_snapshot: () => this.odooEditor.historyGetSnapshotSteps(),
                     get_collaborative_selection: () => this.odooEditor.getCurrentCollaborativeSelection(),
@@ -958,7 +958,7 @@ const Wysiwyg = Widget.extend({
                 // it was modified previously, as the other modified image may be used
                 // elsewhere if the snippet was duplicated or was saved as a custom one.
                 const newAttachmentSrc = await this._rpc({
-                    route: `/web_editor/modify_image/${el.dataset.originalId}`,
+                    route: `/web_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
                     params: {
                         res_model: resModel,
                         res_id: parseInt(resId),
@@ -1239,6 +1239,7 @@ const Wysiwyg = Widget.extend({
             const linkDialog = new weWidgets.LinkDialog(this, {
                 forceNewWindow: this.options.linkForceNewWindow,
                 wysiwyg: this,
+                focusField: link.innerHTML ? 'url' : '',
             }, this.$editable[0], {
                 needLabel: true
             }, undefined, link);
@@ -1502,7 +1503,7 @@ const Wysiwyg = Widget.extend({
                     break;
             }
         };
-        if (!this.options.snippets) {
+        if (!options.snippets) {
             $toolbar.find('#justify, #table, #media-insert').remove();
         }
         $toolbar.find('#media-insert, #media-replace, #media-description').click(openTools);
@@ -1665,7 +1666,7 @@ const Wysiwyg = Widget.extend({
             let manualOpening = false;
             // Prevent dropdown closing on colorpicker click
             $dropdown.on('hide.bs.dropdown', ev => {
-                return !(ev.clickEvent && ev.clickEvent.originalEvent && ev.clickEvent.originalEvent.__isColorpickerClick);
+                return !(ev.clickEvent && ev.clickEvent.__isColorpickerClick);
             });
             $dropdown.on('show.bs.dropdown', () => {
                 if (manualOpening) {
@@ -1720,16 +1721,16 @@ const Wysiwyg = Widget.extend({
                     colorpicker.on('color_leave', null, ev => {
                         this.odooEditor.historyRevertCurrentStep();
                     });
+                    const $childElement = $dropdown.children('.dropdown-toggle');
+                    const dropdownToggle = new Dropdown($childElement);
                     colorpicker.on('enter_key_color_colorpicker', null, () => {
-                        $dropdown.children('.dropdown-toggle').dropdown('hide');
+                        dropdownToggle.hide();
                     });
                     return colorpicker.replace(hookEl).then(() => {
                         if (oldColorpicker) {
                             oldColorpicker.destroy();
                         }
                         manualOpening = true;
-                        const $childElement = $dropdown.children('.dropdown-toggle');
-                        const dropdownToggle = new Dropdown($childElement);
                         dropdownToggle.show();
                         const $colorpicker = $dropdown.find('.colorpicker');
                         const colorpickerHeight = $colorpicker.outerHeight();
@@ -1751,14 +1752,14 @@ const Wysiwyg = Widget.extend({
         }
         const coloredElements = this.odooEditor.execCommand('applyColor', color, eventName === 'foreColor' ? 'color' : 'backgroundColor', this.lastMediaClicked);
 
-        const coloredTds = coloredElements.filter(coloredElement => coloredElement.classList.contains('o_selected_td'));
+        const coloredTds = coloredElements && coloredElements.length && coloredElements.filter(coloredElement => coloredElement.classList.contains('o_selected_td'));
         if (coloredTds.length) {
             const propName = eventName === 'foreColor' ? 'color' : 'background-color';
             for (const td of coloredTds) {
                 // Make it important so it has priority over selection color.
                 td.style.setProperty(propName, td.style[propName], previewMode ? 'important' : '');
             }
-        } else if (!this.lastMediaClicked) {
+        } else if (!this.lastMediaClicked && coloredElements && coloredElements.length) {
             // Ensure the selection in the fonts tags, otherwise an undetermined
             // race condition could generate a wrong selection later.
             const first = coloredElements[0];
@@ -1810,21 +1811,16 @@ const Wysiwyg = Widget.extend({
         if (e && e.key === 'a' && (e.ctrlKey || e.metaKey)) {
             e.preventDefault();
             const selection = this.odooEditor.document.getSelection();
-            const containerSelector = '#wrap>*, [contenteditable], .oe_structure>*';
-            let $deepestParent =
-                selection ?
-                    $(selection.anchorNode).parentsUntil(containerSelector).last() :
-                    $();
-
-            if ($deepestParent.is('html')) {
-                // In case we didn't find a suitable container
-                // we need to restrict the selection inside to the editable area.
-                $deepestParent = this.$editable.find(containerSelector);
-            }
-
-            if ($deepestParent.length) {
+            const containerSelector = '#wrap>*, .oe_structure>*, [contenteditable]';
+            const container =
+                (selection &&
+                    closestElement(selection.anchorNode, containerSelector)) ||
+                // In case a suitable container could not be found then the
+                // selection is restricted inside the editable area.
+                this.$editable.find(containerSelector);
+            if (container) {
                 const range = document.createRange();
-                range.selectNodeContents($deepestParent.parent()[0]);
+                range.selectNodeContents(container);
                 selection.removeAllRanges();
                 selection.addRange(range);
             }
@@ -1860,7 +1856,7 @@ const Wysiwyg = Widget.extend({
         ].join(',')).toggleClass('d-none', !isInMedia);
         // The image replace button is in the image options when the sidebar
         // exists.
-        if (this.snippetsMenu && $target.is('img')) {
+        if (this.snippetsMenu && !this.snippetsMenu.folded && $target.is('img')) {
             this.toolbar.$el.find('#media-replace').toggleClass('d-none', true);
         }
         // Only show the image-transform, image-crop and media-description
@@ -1910,7 +1906,7 @@ const Wysiwyg = Widget.extend({
             // Always hide the unlink button on media.
             this.toolbar.$el.find('#unlink').toggleClass('d-none', true);
             // Show the floatingtoolbar on the topleft of the media.
-            if (this.options.autohideToolbar) {
+            if (this.odooEditor.autohideToolbar && !this.odooEditor.isMobile) {
                 const imagePosition = this.lastMediaClicked.getBoundingClientRect();
                 this.toolbar.$el.css({
                     visibility: 'visible',
@@ -2110,71 +2106,75 @@ const Wysiwyg = Widget.extend({
                     }
                 },
             },
-            {
-                category: _t('Structure'),
-                name: _t('2 columns'),
-                priority: 13,
-                description: _t('Convert into 2 columns.'),
-                fontawesome: 'fa-columns',
-                callback: () => this.odooEditor.execCommand('columnize', 2, editorOptions.insertParagraphAfterColumns),
-                isDisabled: () => {
-                    if (!this.odooEditor.isSelectionInBlockRoot()) {
-                        return true;
-                    }
-                    const anchor = this.odooEditor.document.getSelection().anchorNode;
-                    const row = closestElement(anchor, '.o_text_columns .row');
-                    return row && row.childElementCount === 2;
-                },
-            },
-            {
-                category: _t('Structure'),
-                name: _t('3 columns'),
-                priority: 12,
-                description: _t('Convert into 3 columns.'),
-                fontawesome: 'fa-columns',
-                callback: () => this.odooEditor.execCommand('columnize', 3, editorOptions.insertParagraphAfterColumns),
-                isDisabled: () => {
-                    if (!this.odooEditor.isSelectionInBlockRoot()) {
-                        return true;
-                    }
-                    const anchor = this.odooEditor.document.getSelection().anchorNode;
-                    const row = closestElement(anchor, '.o_text_columns .row');
-                    return row && row.childElementCount === 3;
-                },
-            },
-            {
-                category: _t('Structure'),
-                name: _t('4 columns'),
-                priority: 11,
-                description: _t('Convert into 4 columns.'),
-                fontawesome: 'fa-columns',
-                callback: () => this.odooEditor.execCommand('columnize', 4, editorOptions.insertParagraphAfterColumns),
-                isDisabled: () => {
-                    if (!this.odooEditor.isSelectionInBlockRoot()) {
-                        return true;
-                    }
-                    const anchor = this.odooEditor.document.getSelection().anchorNode;
-                    const row = closestElement(anchor, '.o_text_columns .row');
-                    return row && row.childElementCount === 4;
-                },
-            },
-            {
-                category: _t('Structure'),
-                name: _t('Remove columns'),
-                priority: 10,
-                description: _t('Back to one column.'),
-                fontawesome: 'fa-columns',
-                callback: () => this.odooEditor.execCommand('columnize', 0),
-                isDisabled: () => {
-                    if (!this.odooEditor.isSelectionInBlockRoot()) {
-                        return true;
-                    }
-                    const anchor = this.odooEditor.document.getSelection().anchorNode;
-                    const row = closestElement(anchor, '.o_text_columns .row');
-                    return !row;
-                },
-            },
         ];
+        if (!editorOptions.inlineStyle) {
+            commands.push(
+                {
+                    category: _t('Structure'),
+                    name: _t('2 columns'),
+                    priority: 13,
+                    description: _t('Convert into 2 columns.'),
+                    fontawesome: 'fa-columns',
+                    callback: () => this.odooEditor.execCommand('columnize', 2, editorOptions.insertParagraphAfterColumns),
+                    isDisabled: () => {
+                        if (!this.odooEditor.isSelectionInBlockRoot()) {
+                            return true;
+                        }
+                        const anchor = this.odooEditor.document.getSelection().anchorNode;
+                        const row = closestElement(anchor, '.o_text_columns .row');
+                        return row && row.childElementCount === 2;
+                    },
+                },
+                {
+                    category: _t('Structure'),
+                    name: _t('3 columns'),
+                    priority: 12,
+                    description: _t('Convert into 3 columns.'),
+                    fontawesome: 'fa-columns',
+                    callback: () => this.odooEditor.execCommand('columnize', 3, editorOptions.insertParagraphAfterColumns),
+                    isDisabled: () => {
+                        if (!this.odooEditor.isSelectionInBlockRoot()) {
+                            return true;
+                        }
+                        const anchor = this.odooEditor.document.getSelection().anchorNode;
+                        const row = closestElement(anchor, '.o_text_columns .row');
+                        return row && row.childElementCount === 3;
+                    },
+                },
+                {
+                    category: _t('Structure'),
+                    name: _t('4 columns'),
+                    priority: 11,
+                    description: _t('Convert into 4 columns.'),
+                    fontawesome: 'fa-columns',
+                    callback: () => this.odooEditor.execCommand('columnize', 4, editorOptions.insertParagraphAfterColumns),
+                    isDisabled: () => {
+                        if (!this.odooEditor.isSelectionInBlockRoot()) {
+                            return true;
+                        }
+                        const anchor = this.odooEditor.document.getSelection().anchorNode;
+                        const row = closestElement(anchor, '.o_text_columns .row');
+                        return row && row.childElementCount === 4;
+                    },
+                },
+                {
+                    category: _t('Structure'),
+                    name: _t('Remove columns'),
+                    priority: 10,
+                    description: _t('Back to one column.'),
+                    fontawesome: 'fa-columns',
+                    callback: () => this.odooEditor.execCommand('columnize', 0),
+                    isDisabled: () => {
+                        if (!this.odooEditor.isSelectionInBlockRoot()) {
+                            return true;
+                        }
+                        const anchor = this.odooEditor.document.getSelection().anchorNode;
+                        const row = closestElement(anchor, '.o_text_columns .row');
+                        return !row;
+                    },
+                },
+            );
+        }
         if (editorOptions.allowCommandLink) {
             categories.push({ name: _t('Navigation'), priority: 40 });
             commands.push(
@@ -2440,7 +2440,7 @@ const Wysiwyg = Widget.extend({
         }
     },
     _onSelectionChange() {
-        if (this.options.autohideToolbar) {
+        if (this.odooEditor.autohideToolbar) {
             const isVisible = this.linkPopover && this.linkPopover.el.offsetParent;
             if (isVisible && !this.odooEditor.document.getSelection().isCollapsed) {
                 this.linkPopover.hide();

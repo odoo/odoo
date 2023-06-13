@@ -55,9 +55,9 @@ class SaleOrder(models.Model):
 
     @api.model
     def _get_note_url(self):
-        website = self.env['website'].get_current_website()
-        if website:
-            return website.get_base_url()
+        website_id = self._context.get('website_id')
+        if website_id:
+            return self.env['website'].browse(website_id).get_base_url()
         return super()._get_note_url()
 
     @api.depends('order_line')
@@ -116,7 +116,7 @@ class SaleOrder(models.Model):
             update_values = self._prepare_order_line_update_values(order_line, quantity, **kwargs)
             if update_values:
                 self._update_cart_line_values(order_line, update_values)
-        elif quantity >= 0:
+        elif quantity > 0:
             # Create new line
             order_line_values = self._prepare_order_line_values(product_id, quantity, **kwargs)
             order_line = self.env['sale.order.line'].sudo().create(order_line_values)

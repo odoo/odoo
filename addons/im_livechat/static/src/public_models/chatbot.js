@@ -238,9 +238,10 @@ registerModel({
                         }
                         this.messaging.publicLivechatGlobal.chatWindow.widget.$('.o_mail_thread_content').append(
                             $(qweb.render('im_livechat.legacy.chatbot.is_typing_message', {
-                                'chatbotImageSrc': `/im_livechat/operator/${
+                                'chatbotImageSrc': this.messaging.publicLivechatGlobal.serverUrl + `/im_livechat/operator/${
                                     this.messaging.publicLivechatGlobal.publicLivechat.operator.id
                                 }/avatar`,
+                                'chatbotIsTypingImageSrc': this.messaging.publicLivechatGlobal.serverUrl + '/im_livechat/static/src/img/chatbot_is_typing.gif',
                                 'chatbotName': this.name,
                                 'isWelcomeMessage': isWelcomeMessage,
                             }))

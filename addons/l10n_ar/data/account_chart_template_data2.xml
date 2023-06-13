@@ -11,18 +11,24 @@
         <field name="expense_currency_exchange_account_id" ref="base_diferencias_de_cambio"/>
         <field name="income_currency_exchange_account_id" ref="base_diferencias_de_cambio"/>
         <field name="default_pos_receivable_account_id" ref="base_deudores_por_ventas_pos"/>
+        <field name="property_tax_payable_account_id" ref="base_default_vat"/>
+        <field name="property_tax_receivable_account_id" ref="base_default_vat"/>
     </record>
 
     <record id="l10nar_ex_chart_template" model="account.chart.template">
         <field name="default_pos_receivable_account_id" ref="base_deudores_por_ventas_pos"/>
         <field name="expense_currency_exchange_account_id" ref="base_diferencias_de_cambio"/>
         <field name="income_currency_exchange_account_id" ref="base_diferencias_de_cambio"/>
+        <field name="property_tax_payable_account_id" ref="base_default_vat"/>
+        <field name="property_tax_receivable_account_id" ref="base_default_vat"/>
     </record>
 
     <record id="l10nar_ri_chart_template" model="account.chart.template">
         <field name="default_pos_receivable_account_id" ref="base_deudores_por_ventas_pos"/>
         <field name="expense_currency_exchange_account_id" ref="base_diferencias_de_cambio"/>
         <field name="income_currency_exchange_account_id" ref="base_diferencias_de_cambio"/>
+        <field name="property_tax_payable_account_id" ref="ri_iva_saldo_a_pagar"/>
+        <field name="property_tax_receivable_account_id" ref="ri_iva_saldo_tecnico_favor"/>
     </record>
 
 </odoo>

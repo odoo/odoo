@@ -134,6 +134,7 @@
             'mass_mailing/static/src/snippets/s_showcase/options.js',
             'mass_mailing/static/src/snippets/s_rating/options.js',
             'mass_mailing/static/tests/mass_mailing_html_tests.js',
+            'mass_mailing/static/tests/mailing_mailing_view_form_tests.js',
         ],
     },
     'license': 'LGPL-3',

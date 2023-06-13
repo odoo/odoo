@@ -189,7 +189,7 @@ class ProductTemplate(models.Model):
                 'price_reduce': price_reduce
             }
             base_price = None
-            price_list_contains_template = price_reduce != base_sales_prices[template.id]
+            price_list_contains_template = pricelist.currency_id.compare_amounts(price_reduce, base_sales_prices[template.id]) != 0
 
             if template.compare_list_price:
                 # The base_price becomes the compare list price and the price_reduce becomes the price
@@ -201,10 +201,12 @@ class ProductTemplate(models.Model):
                 base_price = base_sales_prices[template.id]
 
             if base_price and base_price != price_reduce:
-                base_price = self.env['account.tax']._fix_tax_included_price_company(
-                    base_price, product_taxes, taxes, self.env.company)
-                base_price = taxes.compute_all(base_price, pricelist.currency_id, 1, template, partner_sudo)[
-                    tax_display]
+                if not template.compare_list_price:
+                    # Compare_list_price are never tax included
+                    base_price = self.env['account.tax']._fix_tax_included_price_company(
+                        base_price, product_taxes, taxes, self.env.company)
+                    base_price = taxes.compute_all(base_price, pricelist.currency_id, 1, template, partner_sudo)[
+                        tax_display]
                 template_price_vals['base_price'] = base_price
             template_price_vals['price_reduce'] = self.env['account.tax']._fix_tax_included_price_company(template_price_vals['price_reduce'], product_taxes, taxes, self.env.company)
             template_price_vals['price_reduce'] = taxes.compute_all(template_price_vals['price_reduce'], pricelist.currency_id, 1, template, partner_sudo)[tax_display]
@@ -438,10 +440,11 @@ class ProductTemplate(models.Model):
                     ids = [value[1]]
             if attrib:
                 domains.append([('attribute_line_ids.value_ids', 'in', ids)])
-        search_fields = ['name', 'product_variant_ids.default_code']
+        search_fields = ['name', 'default_code', 'product_variant_ids.default_code']
         fetch_fields = ['id', 'name', 'website_url']
         mapping = {
             'name': {'name': 'name', 'type': 'text', 'match': True},
+            'default_code': {'name': 'default_code', 'type': 'text', 'match': True},
             'product_variant_ids.default_code': {'name': 'product_variant_ids.default_code', 'type': 'text', 'match': True},
             'website_url': {'name': 'website_url', 'type': 'text', 'truncate': False},
         }

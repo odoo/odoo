@@ -16,15 +16,16 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
+# Halil, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:49+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2022\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Last-Translator: Halil, 2023\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -34,7 +35,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields.selection,name:pos_restaurant.selection__restaurant_printer__printer_type__iot
 msgid " Use a printer connected to the IoT Box"
-msgstr " IoT Box'a bağlı bir yazıcı kullanma"
+msgstr " IoT Box'a bağlı bir yazıcı kullan"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
@@ -52,8 +53,8 @@ msgid ""
 "A restaurant floor represents the place where customers are served, this is where you can\n"
 "                define and position the tables."
 msgstr ""
-"Bir restoran katı, müşterilerin hizmet edildiği yeri temsil eder, burası "
-"masaları tanımlayıp konumlandırabileceğiniz yerdir."
+"Bir restoran katı, müşterilerin hizmet edildiği yeri temsil eder, burası masaları\n"
+"                 tanımlayıp konumlandırabileceğiniz yerdir."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__active
@@ -79,19 +80,19 @@ msgstr "Dahili Not Ekle"
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
 msgid "Add a new restaurant floor"
-msgstr "Yeni bir restoran katı ekleme"
+msgstr "Yeni bir restoran katı ekle"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_printer_form
 msgid "Add a new restaurant order printer"
-msgstr "Yeni bir restoran siparişi yazıcısı ekleme"
+msgstr "Yeni bir restoran siparişi yazıcısı ekle"
 
 #. module: pos_restaurant
 #. odoo-javascript
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
 msgid "Add a tip"
-msgstr "Bahşiş Ekleme"
+msgstr "Bahşiş Ekle"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -104,7 +105,7 @@ msgstr "Buton Ekle"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Add internal notes on order lines for the kitchen"
-msgstr ""
+msgstr "Mutfak için sipariş satırlarına dahili notlar ekleyin"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -131,7 +132,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow Bill Splitting"
-msgstr ""
+msgstr "Fatura Bölmeye İzin Ver"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
@@ -141,7 +142,7 @@ msgstr "Sipariş satırlarında özel dahili notlara izin verin."
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Allow to print receipt before payment"
-msgstr ""
+msgstr "Ödemeden önce makbuz yazdırmaya izin ver"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_printbill
@@ -242,7 +243,7 @@ msgstr "Fiş Bölme"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "Blocked action"
-msgstr ""
+msgstr "Engellenen eylem"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -262,9 +263,16 @@ msgid "CANCELLED"
 msgstr "İPTAL"
 
 #. module: pos_restaurant
+#. odoo-python
+#: code:addons/pos_restaurant/models/pos_config.py:0
+#, python-format
+msgid "Cash Bar"
+msgstr "Nakit Bar"
+
+#. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_cheeseburger_product_template
 msgid "Cheese Burger"
-msgstr "Çizburger"
+msgstr "Peynirli Hamburger"
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_chicken_product_template
@@ -352,7 +360,7 @@ msgstr "İçecekler"
 #: code:addons/pos_restaurant/static/src/js/ChromeWidgets/TicketButton.js:0
 #, python-format
 msgid "Due to a connection error, the orders are not synchronized."
-msgstr ""
+msgstr "Bir bağlantı hatası nedeniyle, siparişler senkronize edilmez."
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -378,7 +386,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Early Receipt Printing"
-msgstr ""
+msgstr "Erken Makbuz Yazdırma"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -436,7 +444,7 @@ msgstr "Katlar & Masalar"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Floors & Tables Map"
-msgstr ""
+msgstr "Zeminler & Tablolar Haritası"
 
 #. module: pos_restaurant
 #: model:pos.category,name:pos_restaurant.food
@@ -550,17 +558,17 @@ msgstr "Restoran, Bistro, Kafe, Pastane veya Bar ise seçin"
 #: code:addons/pos_restaurant/static/src/xml/Screens/PaymentScreen/PaymentScreen.xml:0
 #, python-format
 msgid "Keep Open"
-msgstr "Keep Open"
+msgstr "Açık Tutun"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Kitchen Notes"
-msgstr ""
+msgstr "Mutfak Notları"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Kitchen Printers"
-msgstr ""
+msgstr "Mutfak Yazıcıları"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor____last_update
@@ -586,7 +594,7 @@ msgstr "Son Güncelleme"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__multiprint_resume
 msgid "Last printed state of the order"
-msgstr ""
+msgstr "Siparişin son basılı durumu"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -653,7 +661,7 @@ msgstr "YENİ"
 #: code:addons/pos_restaurant/static/src/xml/multiprint.xml:0
 #, python-format
 msgid "NOTE"
-msgstr "Not"
+msgstr "NOT"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -764,7 +772,7 @@ msgstr "PRO FORMA"
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_4formaggi_product_template
 msgid "Pasta 4 formaggi "
-msgstr "Makarna 4 formagi"
+msgstr "Makarna 4 formagi "
 
 #. module: pos_restaurant
 #: model:product.template,name:pos_restaurant.pos_food_bolo_product_template
@@ -811,32 +819,32 @@ msgstr "Satış Noktası Oturumu"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_orderline_notes
 msgid "Pos Iface Orderline Notes"
-msgstr ""
+msgstr "Pos Iface Sipariş Satırı Notları"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_printbill
 msgid "Pos Iface Printbill"
-msgstr ""
+msgstr "Pos Iface Baskı Fatura"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_iface_splitbill
 msgid "Pos Iface Splitbill"
-msgstr ""
+msgstr "Pos Iface Bölünmüş Fatura"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_order_printer
 msgid "Pos Is Order Printer"
-msgstr ""
+msgstr "Pos Sipariş Yazıcısıdır"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_is_table_management
 msgid "Pos Is Table Management"
-msgstr ""
+msgstr "Pos Masa Yönetimidir"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_res_config_settings__pos_set_tip_after_payment
 msgid "Pos Set Tip After Payment"
-msgstr ""
+msgstr "Ödeme Sonrası Pos Bahşişi Ayarla"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -946,13 +954,13 @@ msgstr "Makbuzu yeniden yazdır"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Restaurant &amp; Bar"
-msgstr ""
+msgstr "Restoran &amp; Bar"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_restaurant_floor
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Restaurant Floor"
-msgstr "Restaurant Katı"
+msgstr "Restoran Katı"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__floor_ids
@@ -975,7 +983,7 @@ msgstr "Restoran Yazıcısı"
 #: model:ir.model,name:pos_restaurant.model_restaurant_table
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_table_form
 msgid "Restaurant Table"
-msgstr "Masa"
+msgstr "Restoran Masası"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1137,7 +1145,7 @@ msgstr "Tel:"
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 #, python-format
 msgid "The %s is already used in another Pos Config."
-msgstr ""
+msgstr "%s zaten başka bir Pos Config'de kullanılıyor."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__proxy_ip
@@ -1152,7 +1160,7 @@ msgstr "Bu sipariş ile hizmet edilen müşteri sayısı."
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__background_color
 msgid "The background color of the floor in a html-compatible format"
-msgstr ""
+msgstr "Zeminin html uyumlu bir formattaki arka plan rengi"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__seats
@@ -1305,7 +1313,7 @@ msgstr "Masa silinemiyor"
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Unable to fetch orders"
-msgstr ""
+msgstr "Siparişler getirilemiyor"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1382,7 +1390,7 @@ msgstr "Sarı"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "You cannot put a number that exceeds %s "
-msgstr ""
+msgstr "Sınırı aşan bir sayı koyamazsınız %s "
 
 #. module: pos_restaurant
 #. odoo-python
@@ -1448,9 +1456,3 @@ msgstr "yeni masalar oluşturmak için düzenleme araç çubuğundaki buton."
 #, python-format
 msgid "discount"
 msgstr "indirim"
-
-#. module: pos_restaurant
-#: code:addons/pos_restaurant/models/pos_config.py:0
-#, python-format
-msgid "Cash Bar"
-msgstr ""

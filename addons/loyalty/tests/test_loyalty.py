@@ -3,6 +3,7 @@
 
 from psycopg2 import IntegrityError
 
+from odoo.fields import Command
 from odoo.tests import tagged, TransactionCase
 from odoo.tools import mute_logger
 
@@ -96,3 +97,31 @@ class TestLoyalty(TransactionCase):
             self.assertFalse(sent_mails)
             coupon.points = 100
             self.assertEqual(sent_mails, hundred_tmpl)
+
+    def test_loyalty_program_preserve_reward_upon_writing(self):
+        self.program.program_type = 'buy_x_get_y'
+        # recompute of rewards
+        self.program.flush_recordset(['reward_ids'])
+
+        self.program.write({
+            'reward_ids': [
+                Command.create({
+                    'description': 'Test Product',
+                }),
+            ],
+        })
+        self.assertTrue(all(r.reward_type == 'product' for r in self.program.reward_ids))
+
+    def test_archiving_unarchiving(self):
+        self.program.write({
+            'reward_ids': [
+                Command.create({
+                    'description': 'Test Product',
+                }),
+            ],
+        })
+        before_archived_reward_ids = self.program.reward_ids
+        self.program.toggle_active()
+        self.program.toggle_active()
+        after_archived_reward_ids = self.program.reward_ids
+        self.assertEqual(before_archived_reward_ids, after_archived_reward_ids)

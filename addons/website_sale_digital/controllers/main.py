@@ -7,6 +7,7 @@ import os
 import mimetypes
 
 from odoo import http
+from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.addons.sale.controllers.portal import CustomerPortal
 
@@ -67,25 +68,25 @@ class WebsiteSaleDigital(CustomerPortal):
         else:
             return request.redirect(self.orders_page)
 
-        # Check if the user has bought the associated product
-        res_model = attachment['res_model']
-        res_id = attachment['res_id']
-        purchased_products = request.env['account.move.line'].get_digital_purchases()
+        try:
+            request.env['ir.attachment'].browse(attachment_id).check('read')
+        except AccessError:  # The user does not have read access on the attachment.
+            # Check if access can be granted through their purchases.
+            res_model = attachment['res_model']
+            res_id = attachment['res_id']
+            digital_purchases = request.env['account.move.line'].get_digital_purchases()
+            if res_model == 'product.product':
+                purchased_product_ids = digital_purchases
+            elif res_model == 'product.template':
+                purchased_product_ids = request.env['product.product'].sudo().browse(
+                    digital_purchases
+                ).mapped('product_tmpl_id').ids
+            else:
+                purchased_product_ids = []  # The purchases must be related to products.
+            if res_id not in purchased_product_ids:  # No related purchase was found.
+                return request.redirect(self.orders_page)  # Prevent the user from downloading.
 
-        if res_model == 'product.product':
-            if res_id not in purchased_products:
-                return request.redirect(self.orders_page)
-
-        # Also check for attachments in the product templates
-        elif res_model == 'product.template':
-            template_ids = request.env['product.product'].sudo().browse(purchased_products).mapped('product_tmpl_id').ids
-            if res_id not in template_ids:
-                return request.redirect(self.orders_page)
-
-        else:
-            return request.redirect(self.orders_page)
-
-        # The client has bought the product, otherwise it would have been blocked by now
+        # The user has bought the product, or has the rights to the attachment
         if attachment["type"] == "url":
             if attachment["url"]:
                 return request.redirect(attachment["url"])

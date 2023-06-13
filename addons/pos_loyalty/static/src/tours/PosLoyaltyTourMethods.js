@@ -26,7 +26,7 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
                 },
             ];
         }
-        enterCode(code, valid=true) {
+        enterCode(code) {
             const steps = [
                 {
                     content: 'open code input dialog',
@@ -42,13 +42,6 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
                     trigger: '.popup-textinput .button.confirm',
                 },
             ];
-            if (valid) {
-                steps.push({
-                    content: 'wait for the coupon to be loaded',
-                    trigger: `.active-coupon:contains("(${code})")`,
-                    run: () => {},
-                });
-            }
             return steps;
         }
         resetActivePrograms() {

@@ -50,6 +50,22 @@ class SequenceMixin(models.AbstractModel):
     def _must_check_constrains_date_sequence(self):
         return True
 
+    def _sequence_matches_date(self):
+        self.ensure_one()
+        date = fields.Date.to_date(self[self._sequence_date_field])
+        sequence = self[self._sequence_field]
+
+        if not sequence or not date:
+            return True
+
+        format_values = self._get_sequence_format_param(sequence)[1]
+        year_match = (
+            not format_values["year"]
+            or format_values["year"] == date.year % 10 ** len(str(format_values["year"]))
+        )
+        month_match = not format_values['month'] or format_values['month'] == date.month
+        return year_match and month_match
+
     @api.constrains(lambda self: (self._sequence_field, self._sequence_date_field))
     def _constrains_date_sequence(self):
         # Make it possible to bypass the constraint to allow edition of already messed up documents.
@@ -63,22 +79,22 @@ class SequenceMixin(models.AbstractModel):
                 continue
             date = fields.Date.to_date(record[record._sequence_date_field])
             sequence = record[record._sequence_field]
-            if sequence and date and date > constraint_date:
-                format_values = record._get_sequence_format_param(sequence)[1]
-                if (
-                    format_values['year'] and format_values['year'] != date.year % 10**len(str(format_values['year']))
-                    or format_values['month'] and format_values['month'] != date.month
-                ):
-                    raise ValidationError(_(
-                        "The %(date_field)s (%(date)s) doesn't match the sequence number of the related %(model)s (%(sequence)s)\n"
-                        "You will need to clear the %(model)s's %(sequence_field)s to proceed.\n"
-                        "In doing so, you might want to resequence your entries in order to maintain a continuous date-based sequence.",
-                        date=format_date(self.env, date),
-                        sequence=sequence,
-                        date_field=record._fields[record._sequence_date_field]._description_string(self.env),
-                        sequence_field=record._fields[record._sequence_field]._description_string(self.env),
-                        model=self.env['ir.model']._get(record._name).display_name,
-                    ))
+            if (
+                sequence
+                and date
+                and date > constraint_date
+                and not record._sequence_matches_date()
+            ):
+                raise ValidationError(_(
+                    "The %(date_field)s (%(date)s) doesn't match the sequence number of the related %(model)s (%(sequence)s)\n"
+                    "You will need to clear the %(model)s's %(sequence_field)s to proceed.\n"
+                    "In doing so, you might want to resequence your entries in order to maintain a continuous date-based sequence.",
+                    date=format_date(self.env, date),
+                    sequence=sequence,
+                    date_field=record._fields[record._sequence_date_field]._description_string(self.env),
+                    sequence_field=record._fields[record._sequence_field]._description_string(self.env),
+                    model=self.env['ir.model']._get(record._name).display_name,
+                ))
 
     @api.depends(lambda self: [self._sequence_field])
     def _compute_split_sequence(self):

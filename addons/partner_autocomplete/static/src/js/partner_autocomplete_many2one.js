@@ -38,7 +38,7 @@ export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
         );
     }
 
-    async onSelect(option) {
+    async onSelect(option, params) {
         if (option.partner_gid) {  // Checks that it is a partner autocomplete option
             const data = await this.partner_autocomplete.getCreateData(Object.getPrototypeOf(option));
             let context = {
@@ -55,7 +55,7 @@ export class PartnerMany2XAutocomplete extends Many2XAutocomplete {
             return this.openMany2X({ context });
         }
         else {
-            return super.onSelect(option);
+            return super.onSelect(option, params);
         }
     }
 

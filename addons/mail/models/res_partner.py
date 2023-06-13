@@ -218,7 +218,11 @@ class Partner(models.Model):
             remaining_limit = limit - len(partners)
             if remaining_limit <= 0:
                 break
-            partners |= self.search(expression.AND([[('id', 'not in', partners.ids)], domain]), limit=remaining_limit)
+            # We are using _search to avoid the default order that is
+            # automatically added by the search method. "Order by" makes the query
+            # really slow.
+            query = self._search(expression.AND([[('id', 'not in', partners.ids)], domain]), limit=remaining_limit)
+            partners |= self.browse(query)
         partners_format = partners.mail_partner_format()
         if channel_id:
             member_by_partner = {member.partner_id: member for member in self.env['mail.channel.member'].search([('channel_id', '=', channel_id), ('partner_id', 'in', partners.ids)])}

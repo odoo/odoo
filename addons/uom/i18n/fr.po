@@ -14,7 +14,7 @@ msgstr ""
 "POT-Creation-Date: 2022-09-23 08:03+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -120,7 +120,7 @@ msgstr "Jours"
 #: model:ir.model.fields,field_description:uom.field_uom_category__display_name
 #: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom d'affichage"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
@@ -309,6 +309,12 @@ msgstr ""
 "même catégorie que l'unité de mesure %s définie sur le produit. Veuillez "
 "corriger l'unité de mesure définie sur la ligne de commande ou sur le "
 "produit, elles doivent appartenir à la même catégorie."
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "The value of ratio could not be Zero"
+msgstr "La valeur du ratio ne peut pas être zéro"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type

@@ -476,6 +476,26 @@ QUnit.module("ActionManager", (hooks) => {
         assert.hasClass(target.querySelector(".o_dialog .modal-dialog"), "modal-xl");
     });
 
+    QUnit.test('click on record in list view action in target="new"', async function (assert) {
+        const webClient = await createWebClient({ serverData });
+        await doAction(webClient, 1001);
+        await doAction(webClient, {
+            name: "Favorite Ponies",
+            res_model: "pony",
+            type: "ir.actions.act_window",
+            target: "new",
+            views: [[false, "list"], [false, "form"]],
+        });
+
+        // The list view has been opened in a dialog
+        assert.containsOnce(target, ".o_dialog .modal-dialog .o_list_view");
+
+        // click on a record in the dialog -> should do nothing as we can't switch view in the dialog
+        await click(target.querySelector(".modal .o_data_row .o_data_cell"));
+        assert.containsOnce(target, ".o_dialog .modal-dialog .o_list_view");
+        assert.containsNone(target, ".o_form_view");
+    });
+
     QUnit.module('Actions in target="fullscreen"');
 
     QUnit.test(

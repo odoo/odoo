@@ -413,6 +413,12 @@ class AccountMove(models.Model):
         res.append((10, self.env['account.edi.format'].search([])._update_invoice_from_attachment))
         return res
 
+    # this override is to make sure that the main attachment is not the edi xml otherwise the attachment viewer will not work correctly
+    def _message_set_main_attachment_id(self, attachment_ids):
+        if self.message_main_attachment_id and len(attachment_ids) > 1 and self.message_main_attachment_id in self.edi_document_ids.attachment_id:
+            self.message_main_attachment_id = self.env['ir.attachment']
+        super()._message_set_main_attachment_id(attachment_ids)
+
     ####################################################
     # Business operations
     ####################################################

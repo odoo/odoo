@@ -615,6 +615,7 @@ QUnit.module("ActionManager", (hooks) => {
             action: 3,
             view_type: "form",
         });
+        await testUtils.nextTick();
         await legacyExtraNextTick();
 
         // Go back to the list view
@@ -623,7 +624,7 @@ QUnit.module("ActionManager", (hooks) => {
             action: 3,
             view_type: "list",
         });
-        await legacyExtraNextTick();
+        await testUtils.nextTick();
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_list_view", "should still display the list view");
 
@@ -2704,7 +2705,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb-item")), [
             "Partners",
-            "First record",
+            "Partners",
             "Partners",
             "Second record",
         ]);

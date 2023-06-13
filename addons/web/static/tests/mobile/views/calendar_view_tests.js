@@ -384,6 +384,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         // Tap on a date
         await tap(target, ".fc-day-top[data-date='2016-02-10']");
+        await nextTick(); // await reload & render
         await nextTick(); // await breadcrumb update
 
         assert.containsNone(target, ".fc-dayGridMonth-view");

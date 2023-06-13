@@ -21,10 +21,11 @@
                             </t>
                         </t>
                         <t t-else="">
-                            <h2>Daily Report
-                                <t t-if='state == "closed"'>Z</t>
+                            <h2 t-if="state == 'closed' or state == 'opened'">Daily Report
+                                <t t-if="state == 'closed'">Z</t>
                                 <t t-else="">X</t>
                             </h2>
+                            <h2 t-else="">Multiple Report</h2>
                             <t t-if="session_name">
                                 Session ID: <t t-esc="session_name" />
                             </t>
@@ -332,7 +333,7 @@
                     </table>
                 </t>
 
-                <t t-if="(state == 'closed' or state == 'multiple') and payments" id="closing_session">
+                <t id="closing_session">
                     <h3>Session Control</h3>
                     <br/>
                     <strong>Total: 
@@ -352,8 +353,8 @@
                             <th>Name</th>
                             <th/>
                             <th>Expected</th>
-                            <th>Counted</th>
-                            <th>Difference</th>
+                            <th t-if="(state == 'closed' or state == 'multiple') and payments" >Counted</th>
+                            <th t-if="(state == 'closed' or state == 'multiple') and payments" >Difference</th>
                         </tr></thead>
                         <tbody>
                             <t t-foreach="payments" t-as="method">
@@ -369,7 +370,7 @@
                                                 <t t-esc='currency["symbol"]' /><t t-esc="method['final_count']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                                             </t>
                                         </td>
-                                        <td>
+                                        <td t-if="(state == 'closed' or state == 'multiple') and payments" >
                                             <t t-if="currency['position']">
                                                 <t t-esc="method['money_counted']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
                                             </t>
@@ -377,7 +378,7 @@
                                                 <t t-esc='currency["symbol"]' /><t t-esc="method['money_counted']" t-options="{'widget': 'float', 'precision': currency['precision']}"/>
                                             </t>
                                         </td>
-                                        <td>
+                                        <td t-if="(state == 'closed' or state == 'multiple') and payments" >
                                             <t t-if="currency['position']">
                                                 <t t-esc="method['money_difference']" t-options="{'widget': 'float', 'precision': currency['precision']}"/><t t-esc='currency["symbol"]' />
                                             </t>
@@ -386,7 +387,7 @@
                                             </t>
                                         </td>
                                     </tr>
-                                    <tr t-foreach="method['cash_moves']" t-as="move">
+                                    <tr t-if="(state == 'closed' or state == 'multiple') and payments" t-foreach="method['cash_moves']" t-as="move">
                                         <td/>
                                         <td><t t-esc="move['name']"/></td>
                                         <td>

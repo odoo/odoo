@@ -39,6 +39,9 @@ export class ConcretePolicy extends Policy {
     }
 
     score(password) {
+        if (!password) {
+            return 0;
+        }
         const lengthscore = Math.min(password.length / this.minlength, 1.0);
         // we want the number of "words". Splitting on no-words doesn't work
         // because JS will add an empty string when matching a leading or

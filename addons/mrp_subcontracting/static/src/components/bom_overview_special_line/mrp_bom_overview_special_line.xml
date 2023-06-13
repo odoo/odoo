@@ -7,7 +7,7 @@
         </xpath>
 
         <xpath expr="//td[@name='quantity']" position="inside">
-            <span t-if="props.type == 'subcontracting'" t-esc="formatFloat(subcontracting.quantity)"/>
+            <span t-if="props.type == 'subcontracting'" t-esc="formatFloat(subcontracting.quantity, {'digits': [false, precision]})"/>
         </xpath>
 
         <xpath expr="//td[@name='uom']" position="inside">

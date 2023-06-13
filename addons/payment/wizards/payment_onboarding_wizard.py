@@ -64,7 +64,9 @@ class PaymentWizard(models.TransientModel):
         ]).mapped('name')
 
         if 'payment_paypal' in installed_modules:
-            provider = self.env.ref('payment.payment_provider_paypal')
+            provider = self.env['payment.provider'].search(
+                [('company_id', '=', self.env.company.id), ('code', '=', 'paypal')], limit=1
+            )
             self._payment_provider_onboarding_cache['paypal_email_account'] = provider['paypal_email_account'] or self.env.user.email or ''
             self._payment_provider_onboarding_cache['paypal_pdt_token'] = provider['paypal_pdt_token']
 
@@ -93,11 +95,17 @@ class PaymentWizard(models.TransientModel):
             new_env = api.Environment(self.env.cr, self.env.uid, self.env.context)
 
             if self.payment_method == 'paypal':
-                provider = new_env.ref('payment.payment_provider_paypal', raise_if_not_found=False)
+                provider = new_env['payment.provider'].search(
+                    [('company_id', '=', self.env.company.id), ('code', '=', 'paypal')], limit=1
+                )
+                if not provider:
+                    base_provider = self.env.ref('payment.payment_provider_paypal')
+                    # Use sudo to access payment provider record that can be in different company.
+                    provider = base_provider.sudo().copy(default={'company_id':self.env.company.id})
                 default_journal = new_env['account.journal'].search(
                     [('type', '=', 'bank'), ('company_id', '=', new_env.company.id)], limit=1
                 )
-                new_env.ref('payment.payment_provider_paypal').write({
+                provider.write({
                     'paypal_email_account': self.paypal_email_account,
                     'paypal_pdt_token': self.paypal_pdt_token,
                     'state': 'enabled',

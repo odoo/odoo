@@ -10,13 +10,17 @@ import { useSortable } from "@web/core/utils/sortable";
 import { standardViewProps } from "@web/views/standard_view_props";
 import { BoardAction } from "./board_action";
 
-const { Component, useState, useRef } = owl;
+const { blockDom, Component, useState, useRef } = owl;
 
 export class BoardController extends Component {
     setup() {
         this.board = useState(this.props.board);
         this.rpc = useService("rpc");
         this.dialogService = useService("dialog");
+        if (this.env.isSmall) {
+            this.board.layout = "1";
+            this.board.colNumber = 1;
+        }
         const mainRef = useRef("main");
         useSortable({
             ref: mainRef,
@@ -102,9 +106,16 @@ export class BoardController extends Component {
     }
 
     saveBoard() {
+        const templateFn = renderToString.app.getTemplate("board.arch");
+        const bdom = templateFn(this.board, {});
+        const root = document.createElement("rendertostring");
+        blockDom.mount(bdom, root);
+        const result = xmlSerializer.serializeToString(root);
+        const arch = result.slice(result.indexOf("<", 1), result.indexOf("</rendertostring>"));
+
         this.rpc("/web/view/edit_custom", {
             custom_id: this.board.customViewId,
-            arch: renderToString("board.arch", this.board),
+            arch,
         });
         this.env.bus.trigger("CLEAR-CACHES");
     }
@@ -116,3 +127,5 @@ BoardController.props = {
     ...standardViewProps,
     board: Object,
 };
+
+const xmlSerializer = new XMLSerializer();

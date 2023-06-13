@@ -134,7 +134,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         assert.deepEqual(model.getters.getChartRuntime(chartId).chartJsConfig.data, {
             datasets: [
                 {
-                    backgroundColor: "#1f77b466",
+                    backgroundColor: "#1F77B466",
                     borderColor: "rgb(31,119,180)",
                     data: [1, 3],
                     label: "Count",

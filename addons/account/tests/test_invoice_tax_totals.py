@@ -35,6 +35,23 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             'sequence': 5
         })
 
+        cls.tax_16 = cls.env['account.tax'].create({
+            'name': "tax_16",
+            'amount_type': 'percent',
+            'amount': 16.0,
+        })
+        cls.tax_53 = cls.env['account.tax'].create({
+            'name': "tax_53",
+            'amount_type': 'percent',
+            'amount': 53.0,
+        })
+        cls.tax_17a = cls.env['account.tax'].create({
+            'name': "tax_17a",
+            'amount_type': 'percent',
+            'amount': 17.0,
+        })
+        cls.tax_17b = cls.tax_17a.copy({'name': "tax_17b"})
+
     def assertTaxTotals(self, document, expected_values):
         main_keys_to_ignore = {'formatted_amount_total', 'formatted_amount_untaxed'}
         group_keys_to_ignore = {'group_key', 'formatted_tax_group_amount', 'formatted_tax_group_base_amount'}
@@ -617,3 +634,159 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             }],
             'subtotals_order': ["Tax exemption", "Tax application", "Reapply amount"],
         })
+
+    def test_invoice_grouped_taxes_with_tax_group(self):
+        """ A tax of type group with a tax_group_id being the same as one of the children tax shouldn't affect the
+        result of the _prepare_tax_totals.
+        """
+        tax_10_withheld = self.env['account.tax'].create({
+            'name': "tax_10_withheld",
+            'amount_type': 'group',
+            'tax_group_id': self.tax_group1.id,
+            'children_tax_ids': [
+                Command.create({
+                    'name': "tax_withheld",
+                    'amount_type': 'percent',
+                    'amount': -47,
+                    'tax_group_id': self.tax_group_sub1.id,
+                    'sequence': 1,
+                }),
+                Command.create({
+                    'name': "tax_10",
+                    'amount_type': 'percent',
+                    'amount': 10,
+                    'tax_group_id': self.tax_group1.id,
+                    'sequence': 2,
+                }),
+            ]
+        })
+        self.tax_group_sub1.preceding_subtotal = "Tax withholding"
+
+        document = self._create_document_for_tax_totals_test([
+            (100, tax_10_withheld),
+        ])
+
+        self.assertTaxTotals(document, {
+            'amount_total': 63,
+            'amount_untaxed': 100,
+            'display_tax_base': True,
+            'groups_by_subtotal': {
+                'Untaxed Amount': [{
+                    'tax_group_name': self.tax_group1.name,
+                    'tax_group_amount': 10,
+                    'tax_group_base_amount': 100,
+                    'tax_group_id': self.tax_group1.id,
+                }],
+                "Tax withholding": [{
+                    'tax_group_name': self.tax_group_sub1.name,
+                    'tax_group_amount': -47,
+                    'tax_group_base_amount': 100,
+                    'tax_group_id': self.tax_group_sub1.id,
+                }],
+            },
+            'subtotals': [{
+                'name': "Untaxed Amount",
+                'amount': 100,
+            }, {
+                'name': "Tax withholding",
+                'amount': 110,
+            }],
+            'subtotals_order': ["Untaxed Amount", "Tax withholding"],
+        })
+
+    def test_taxtotals_with_different_tax_rounding_methods(self):
+
+        def run_case(rounding_line, lines, expected_tax_group_amounts):
+            self.env.company.tax_calculation_rounding_method = rounding_line
+
+            document = self._create_document_for_tax_totals_test(lines)
+            tax_amounts = document.tax_totals['groups_by_subtotal']['Untaxed Amount']
+
+            if len(expected_tax_group_amounts) != len(tax_amounts):
+                self.fail("Wrong number of values to compare.")
+
+            for tax_amount, expected in zip(tax_amounts, expected_tax_group_amounts):
+                actual = tax_amount['tax_group_amount']
+                if document.currency_id.compare_amounts(actual, expected) != 0:
+                    self.fail(f'{document.currency_id.round(actual)} != {expected}')
+
+        # one line, two taxes
+        lines = [
+            (100.41, self.tax_16 + self.tax_53),
+        ]
+        run_case('round_per_line', lines, [69.29])
+        run_case('round_globally', lines, [69.29])
+
+        # two lines, different taxes
+        lines = [
+            (50.4, self.tax_17a),
+            (47.21, self.tax_17b),
+        ]
+        run_case('round_per_line', lines, [16.60])
+        run_case('round_globally', lines, [16.60])
+
+        # two lines, same tax
+        lines = [
+            (50.4, self.tax_17a),
+            (47.21, self.tax_17a),
+        ]
+        run_case('round_per_line', lines, [16.60])
+        run_case('round_globally', lines, [16.59])
+
+    def test_cash_rounding_amount_total_rounded(self):
+        tax_15 = self.env['account.tax'].create({
+            'name': "tax_15",
+            'amount_type': 'percent',
+            'amount': 15.0,
+        })
+        cash_rounding = self.env['account.cash.rounding'].create({
+            'name': 'Rounding HALF-UP',
+            'rounding': 1,
+            'strategy': 'biggest_tax',
+            'rounding_method': 'HALF-UP',
+        })
+
+        invoice = self.init_invoice('out_invoice', amounts=[378], taxes=tax_15)
+        invoice.invoice_cash_rounding_id = cash_rounding
+        self.assertEqual(invoice.tax_totals['amount_total_rounded'], 435)
+
+        bill = self.init_invoice('in_invoice', amounts=[378], taxes=tax_15)
+        bill.invoice_cash_rounding_id = cash_rounding
+        self.assertEqual(bill.tax_totals['amount_total_rounded'], 435)
+
+    def test_cash_rounding_amount_total_rounded_foreign_currency(self):
+        tax_15 = self.env['account.tax'].create({
+            'name': "tax_15",
+            'amount_type': 'percent',
+            'amount': 15.0,
+        })
+        cash_rounding = self.env['account.cash.rounding'].create({
+            'name': 'Rounding HALF-UP',
+            'rounding': 10,
+            'strategy': 'biggest_tax',
+            'rounding_method': 'HALF-UP',
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2023-01-01',
+            'rate': 0.2,
+            'currency_id': self.currency_data['currency'].id,
+            'company_id': self.env.company.id,
+        })
+        for move_type in ['out_invoice', 'in_invoice']:
+            move = self.env['account.move'].create({
+                'move_type': move_type,
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2023-01-01',
+                'currency_id': self.currency_data['currency'].id,
+                'invoice_line_ids': [
+                    Command.create({
+                        'name': 'line',
+                        'display_type': 'product',
+                        'price_unit': 100,
+                        'tax_ids': [tax_15.id],
+                    })
+                ]
+            })
+            move.invoice_cash_rounding_id = cash_rounding
+            self.assertEqual(move.tax_totals['amount_total'], 115)
+            self.assertEqual(move.tax_totals['amount_total_rounded'], 120)

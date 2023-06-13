@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { browser } from "@web/core/browser/browser";
-import { getOrigin, url } from "@web/core/utils/urls";
+import { getDataURLFromFile, getOrigin, url } from "@web/core/utils/urls";
 import { patchWithCleanup } from "../../helpers/utils";
 
 QUnit.module("URLS", (hooks) => {
@@ -58,5 +58,11 @@ QUnit.module("URLS", (hooks) => {
             my_param: [1, 2],
         });
         assert.strictEqual(testUrl, "https://cors_server/cors_route/?my_param=1%2C2");
+    });
+
+    QUnit.test("getDataURLFromFile handles empty file", async (assert) => {
+        const emptyFile = new File([""], "empty.txt", { type: "text/plain" });
+        const dataUrl = await getDataURLFromFile(emptyFile);
+        assert.strictEqual(dataUrl, "data:text/plain;base64,", "dataURL for empty file is not proper");
     });
 });

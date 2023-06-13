@@ -321,6 +321,10 @@ registerPatch({
             isCausal: true,
             readonly: true,
         }),
+        discussPublicView: one('DiscussPublicView', {
+            inverse: 'messagingAsPublicView',
+            isCausal: true,
+        }),
         emojiRegistry: one('EmojiRegistry', {
             default: {},
             isCausal: true,

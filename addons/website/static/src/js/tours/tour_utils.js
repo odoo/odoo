@@ -141,7 +141,8 @@ function changePaddingSize(direction) {
 
 /**
  * Click on the top right edit button
- * @param {*} position Where the purple arrow will show up
+ *
+ * @deprecated use `clickOnEditAndWaitEditMode` instead to avoid race condition
  */
 function clickOnEdit(position = "bottom") {
     return {
@@ -164,6 +165,23 @@ function clickOnElement(elementName, selector) {
         trigger: selector,
         run: 'click'
     };
+}
+
+/**
+ * Click on the top right edit button and wait for the edit mode
+ *
+ * @param {string} position Where the purple arrow will show up
+ */
+function clickOnEditAndWaitEditMode(position = "bottom") {
+    return [{
+        content: _t("<b>Click Edit</b> to start designing your homepage."),
+        trigger: ".o_menu_systray .o_edit_website_container a",
+        position: position,
+    }, {
+        content: "Check that we are in edit mode",
+        trigger: ".o_website_preview.editor_enable.editor_has_snippets",
+        run: () => null, // it's a check
+    }];
 }
 
 /**
@@ -285,7 +303,10 @@ function prepend_trigger(steps, prepend_text='') {
 }
 
 function getClientActionUrl(path, edition) {
-    let url = `/web#action=website.website_preview&path=${encodeURIComponent(path)}`;
+    let url = `/web#action=website.website_preview`;
+    if (path) {
+        url += `&path=${encodeURIComponent(path)}`;
+    }
     if (edition) {
         url += '&enable_editor=1';
     }
@@ -404,6 +425,7 @@ return {
     changePaddingSize,
     clickOnEdit,
     clickOnElement,
+    clickOnEditAndWaitEditMode,
     clickOnSave,
     clickOnSnippet,
     clickOnText,

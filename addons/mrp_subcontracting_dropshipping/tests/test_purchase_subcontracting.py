@@ -324,15 +324,9 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
             ],
         }])
 
-        dropship_picking_type = self.env['stock.picking.type'].search([
-            ('company_id', '=', self.env.company.id),
-            ('default_location_src_id.usage', '=', 'supplier'),
-            ('default_location_dest_id.usage', '=', 'customer'),
-        ], limit=1, order='sequence')
-
         po = self.env['purchase.order'].create({
             "partner_id": subcontractor.id,
-            "picking_type_id": dropship_picking_type.id,
+            "picking_type_id": self.env.company.dropship_subcontractor_pick_type_id.id,
             "dest_address_id": super_subcontractor.id,
             "order_line": [(0, 0, {
                 'product_id': product.id,

@@ -97,6 +97,7 @@
             </t>
             <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
               <t t-set="items" t-value="section.childrenTree" />
+              <t t-set="decalage" t-value="20" />
             </t>
           </MenuDropdown>
         </t>
@@ -112,29 +113,34 @@
     </div>
   </t>
 
+  <t t-name="web.NavBar.DropdownItem" t-inherit="web.DropdownItem" t-inherit-mode="primary" owl="1">
+    <xpath expr="//t[@t-tag]" position="attributes">
+      <attribute name="t-att-style">props.style</attribute>
+    </xpath>
+  </t>
+
   <t t-name="web.NavBar.SectionsMenu.Dropdown.MenuSlot" owl="1">
+    <t t-set="style" t-value="`padding-left: ${decalage}px;`" />
     <t t-foreach="items" t-as="item" t-key="item.id">
       <DropdownItem
         t-if="!item.childrenTree.length"
         href="getMenuItemHref(item)"
-        class="'dropdown-item'"
+        class="{
+          'dropdown-item': true,
+          o_dropdown_menu_group_entry: decalage gt 20
+        }"
+        style="style"
         t-esc="item.name"
         dataset="{ menuXmlid: item.xmlid, section: item.id }"
         onSelected="() => this.onNavBarDropdownItemSelection(item)"
       />
 
       <t t-else="">
-        <div class="dropdown-menu_group dropdown-header" t-esc="item.name" />
-        <DropdownItem
-          t-foreach="item.childrenTree"
-          t-as="subItem"
-          t-key="subItem.id"
-          class="'o_dropdown_menu_group_entry dropdown-item'"
-          href="getMenuItemHref(subItem)"
-          t-esc="subItem.name"
-          dataset="{ menuXmlid: subItem.xmlid, section: subItem.id }"
-          onSelected="() => this.onNavBarDropdownItemSelection(subItem)"
-        />
+        <div class="dropdown-menu_group dropdown-header" t-att-style="style" t-esc="item.name" />
+        <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
+          <t t-set="items" t-value="item.childrenTree" />
+          <t t-set="decalage" t-value="decalage + 12" />
+        </t>
       </t>
     </t>
   </t>
@@ -162,6 +168,7 @@
           />
           <t t-call="web.NavBar.SectionsMenu.Dropdown.MenuSlot">
             <t t-set="items" t-value="section.childrenTree" />
+            <t t-set="decalage" t-value="20" />
           </t>
         </t>
       </t>

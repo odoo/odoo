@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Jolien De Paepe, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2023-04-14 05:52+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -86,16 +86,6 @@ msgstr ""
 "<span><i class=\"fa fa-arrow-right\"/> Je PayPal-account configureren</span>"
 
 #. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
-msgid ""
-"<span>Start selling directly without an account; an email will be sent by "
-"Paypal to create your new account and collect your payments.</span>"
-msgstr ""
-"<span>Begin direct met verkopen zonder een account; Er wordt een e-mail "
-"verzonden door Paypal om je nieuwe account te maken en je betalingen te "
-"innen.</span>"
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid ""
 "<strong>No suitable payment option could be found.</strong><br/>\n"
@@ -107,7 +97,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_methods
 msgid "<strong>No suitable payment provider could be found.</strong>"
-msgstr "<strong>Geen geschikte betalingsprovider gevonden.</strong>"
+msgstr "<strong>Geen geschikte betaalprovider gevonden.</strong>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -115,7 +105,7 @@ msgid ""
 "<strong>Warning</strong> Creating a payment provider from the <em>CREATE</em> button is not supported.\n"
 "                        Please use the <em>Duplicate</em> action instead."
 msgstr ""
-"<strong>Waarschuwing</strong> Het maken van een betalingsprovider via de knop <em>CREATE</em> wordt niet ondersteund.\n"
+"<strong>Waarschuwing</strong> Het maken van een betaalprovider via de knop <em>CREATE</em> wordt niet ondersteund.\n"
 "                        Gebruik in plaats daarvan de actie <em>Dupliceren</em>."
 
 #. module: payment
@@ -234,7 +224,7 @@ msgstr "Snel afrekenen toestaan"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__payment_provider_selection
 msgid "Allow Payment Provider"
-msgstr "Betalingsprovider toestaan"
+msgstr "Betaalprovider toestaan"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_tokenization
@@ -392,8 +382,8 @@ msgstr "Geannuleerd bericht"
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
-msgid "Cancelled payments"
-msgstr "Geannuleerde betalingen"
+msgid "Canceled operations"
+msgstr "Geannuleerde bewerkingen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
@@ -434,6 +424,8 @@ msgstr "Plaats"
 
 #. module: payment
 #. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Click here to be redirected to the confirmation page."
@@ -523,7 +515,7 @@ msgstr "Token maken"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_provider
 msgid "Create a new payment provider"
-msgstr "Een nieuwe betalingsprovider maken"
+msgstr "Een nieuwe betaalprovider maken"
 
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_token
@@ -709,8 +701,8 @@ msgid "Error"
 msgstr "Fout"
 
 #. module: payment
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/payment/models/payment_transaction.py:0
 #: code:addons/payment/static/src/js/payment_form_mixin.js:0
 #, python-format
@@ -726,6 +718,13 @@ msgstr "Express Checkout-formuliersjabloon"
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_express_checkout
 msgid "Express Checkout Supported"
 msgstr "Express Checkout ondersteund"
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Failed operations"
+msgstr "Mislukte bewerkingen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
@@ -828,9 +827,9 @@ msgid ""
 "to pay via this one. If 'All' is selected, customers can pay via any "
 "available payment provider."
 msgstr ""
-"Als een specifieke betalingsprovider wordt geselecteerd, kunnen klanten "
-"alleen via deze betalen. Als 'Alle' is geselecteerd, kunnen klanten betalen "
-"via elke beschikbare betalingsprovider."
+"Als een specifieke betaalprovider wordt geselecteerd, kunnen klanten alleen "
+"via deze betalen. Als 'Alle' is geselecteerd, kunnen klanten betalen via "
+"elke beschikbare betaalprovider."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1054,7 +1053,7 @@ msgid ""
 "from the Payment Provider menu."
 msgstr ""
 "Er is geen handmatige betaalmethode gevonden voor dit bedrijf. Maak er een "
-"aan in het menu Payment Provider."
+"aan in het menu Betaalprovider."
 
 #. module: payment
 #. odoo-javascript
@@ -1147,6 +1146,13 @@ msgid "Operation"
 msgstr "Handeling"
 
 #. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Operations in progress"
+msgstr "Bewerkingen in uitvoering"
+
+#. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__other
 msgid "Other"
 msgstr "Overige"
@@ -1230,13 +1236,13 @@ msgstr "Betalingsmethode"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_provider
 msgid "Payment Provider"
-msgstr "Betalingsprovider"
+msgstr "Betaalprovider"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_provider
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_list
 msgid "Payment Providers"
-msgstr "Betalingsproviders"
+msgstr "Betaalproviders"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__available_provider_ids
@@ -1298,31 +1304,17 @@ msgstr "Betalingsgegevens opgeslagen op %(date)s"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Payment provider"
-msgstr "Betalingsprovider"
+msgstr "Betaalprovider"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_provider_onboarding_wizard
 msgid "Payment provider onboarding wizard"
-msgstr "Onboarding-wizard voor betalingsproviders"
+msgstr "Onboarding-wizard voor betaalproviders"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_form
 msgid "Payments"
 msgstr "Betalingen"
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Payments failed"
-msgstr "Betalingen mislukt"
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Payments received"
-msgstr "Betalingen ontvangen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_user_type
@@ -1498,6 +1490,13 @@ msgid "Save my payment details"
 msgstr "Bewaar mijn betalingsgegevens"
 
 #. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Saving your payment method, please wait..."
+msgstr "Opslaan van je betaalmethode, even geduld..."
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
 msgid "Select countries. Leave empty to make available everywhere."
 msgstr "Selecteer landen. Laat leeg om overal beschikbaar te maken."
@@ -1596,7 +1595,7 @@ msgstr "Status"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_provider_onboarding_state
 msgid "State of the onboarding payment provider step"
-msgstr "Status van de stap van de onboarding-betalingsprovider"
+msgstr "Status van de stap van de onboarding-betaalprovider"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
@@ -1656,8 +1655,8 @@ msgid ""
 "The countries in which this payment provider is available. Leave blank to "
 "make it available in all countries."
 msgstr ""
-"De landen waarin deze betalingsprovider beschikbaar is. Laat dit veld leeg "
-"om het in alle landen beschikbaar te maken."
+"De landen waarin deze betaalprovider beschikbaar is. Laat dit veld leeg om "
+"het in alle landen beschikbaar te maken."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
@@ -1696,8 +1695,8 @@ msgid ""
 "The maximum payment amount that this payment provider is available for. "
 "Leave blank to make it available for any payment amount."
 msgstr ""
-"Het maximale betalingsbedrag waarvoor deze betalingsprovider beschikbaar is."
-" Laat leeg om het beschikbaar te maken voor elk betalingsbedrag."
+"Het maximale betalingsbedrag waarvoor deze betaalprovider beschikbaar is. "
+"Laat leeg om het beschikbaar te maken voor elk betalingsbedrag."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__auth_msg
@@ -1768,7 +1767,7 @@ msgstr "De brontransactie van gerelateerde terugbetalingstransacties"
 #: model:ir.model.fields,help:payment.field_payment_token__provider_code
 #: model:ir.model.fields,help:payment.field_payment_transaction__provider_code
 msgid "The technical code of this payment provider."
-msgstr "De technische code van deze betalingsprovider."
+msgstr "De technische code van deze betaalprovider."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__redirect_form_view_id
@@ -1905,6 +1904,13 @@ msgstr ""
 "Het wordt aangeraden om een e-mailadres in te stellen voor deze relatie."
 
 #. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "This payment has been canceled."
+msgstr "Deze betaling is geannuleerd."
+
+#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has been verified by our system."
 msgstr "Deze betaalmethode is geverifieerd door ons systeem."
@@ -1913,13 +1919,6 @@ msgstr "Deze betaalmethode is geverifieerd door ons systeem."
 #: model_terms:ir.ui.view,arch_db:payment.verified_token_checkmark
 msgid "This payment method has not been verified by our system."
 msgstr "Deze betaalmethode is niet geverifieerd door ons systeem."
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "This transaction has been cancelled."
-msgstr "De transactie is geannuleerd."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -1940,7 +1939,7 @@ msgid ""
 "providers: %s"
 msgstr ""
 "Transactieautorisatie wordt niet ondersteund door de volgende "
-"betalingsproviders: %s"
+"betaalproviders: %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_refund
@@ -2003,8 +2002,8 @@ msgstr "Ongeldige transactie"
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
-msgid "Waiting for payment"
-msgstr "Wacht op betaling"
+msgid "Waiting for operations to process"
+msgstr "Wachten op het verwerken van de bewerkingen"
 
 #. module: payment
 #. odoo-python
@@ -2061,7 +2060,7 @@ msgstr "We verwerken je betaling, een moment geduld..."
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "We are waiting for the payment provider to confirm the payment."
-msgstr "We wachten op de betalingsprovider om de betaling te bevestigen."
+msgstr "We wachten op de betaalprovider om de betaling te bevestigen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__tokenize
@@ -2092,12 +2091,12 @@ msgid "Wire Transfer"
 msgstr "Overschrijving"
 
 #. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#. odoo-python
+#: code:addons/payment/models/payment_provider.py:0
 #, python-format
-msgid "You can click here to be redirected to the confirmation page."
+msgid "You cannot delete the payment provider %s; archive it instead."
 msgstr ""
-"Je kunt hier klikken om doorverwezen te worden naar de bevestigingspagina."
+"Je kan de betaalprovider %s niet verwijderen; archiveer hem in de plaats."
 
 #. module: payment
 #. odoo-python
@@ -2135,20 +2134,6 @@ msgstr "Je wordt verwittigd wanneer de betaling bevestigd is."
 #, python-format
 msgid "You will be notified when the payment is fully confirmed."
 msgstr "Je ontvangt een bericht wanneer de betaling volledig bevestigd is."
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Your order has been processed."
-msgstr "Je bestelling is verwerkt."
-
-#. module: payment
-#. odoo-javascript
-#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
-#, python-format
-msgid "Your order is being processed, please wait ..."
-msgstr "Je bestelling wordt verwerkt, even geduld ..."
 
 #. module: payment
 #. odoo-python
@@ -2193,6 +2178,13 @@ msgstr "Je betaling is geautoriseerd."
 #, python-format
 msgid "Your payment has been cancelled."
 msgstr "Je betaling is geannuleerd."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Your payment has been processed."
+msgstr "Je betaling is verwerkt."
 
 #. module: payment
 #. odoo-javascript
@@ -2254,8 +2246,22 @@ msgstr "Je betaling is nog niet verwerkt."
 #. odoo-javascript
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
+msgid "Your payment is being processed, please wait..."
+msgstr "Je betaling wordt verwerkt, even geduld..."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
 msgid "Your payment is in pending state."
 msgstr "Je betaling is in afwachting."
+
+#. module: payment
+#. odoo-javascript
+#: code:addons/payment/static/src/xml/payment_post_processing.xml:0
+#, python-format
+msgid "Your payment method has been saved."
+msgstr "Je betaalmethode is bewaard."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2281,7 +2287,7 @@ msgstr "info"
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
 #: model:ir.cron,cron_name:payment.cron_post_process_payment_tx
 msgid "payment: post-process transactions"
-msgstr "betaling: transacties na verwerking"
+msgstr "Betaling: transacties na verwerking"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
@@ -2308,13 +2314,3 @@ msgstr "succes"
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "warning"
 msgstr "waarschuwing"
-
-#. module: payment
-#: code:addons/payment/models/account_journal.py:0
-#, python-format
-msgid ""
-"You must first deactivate a payment provider before deleting its journal.\n"
-"Linked providers: %s"
-msgstr ""
-"Je moet eerst een betaalprovider deactiveren voordat je het dagboek ervan verwijdert. \n"
-"Gekoppelde providers: %s"

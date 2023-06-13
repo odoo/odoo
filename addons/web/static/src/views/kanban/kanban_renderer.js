@@ -24,6 +24,16 @@ import { Component, useState, useRef, onPatched, onWillPatch, onWillDestroy } fr
 const DRAGGABLE_GROUP_TYPES = ["many2one"];
 const MOVABLE_RECORD_TYPES = ["char", "boolean", "integer", "selection", "many2one"];
 
+function validateColumnQuickCreateExamples(data) {
+    const { allowedGroupBys = [], examples = [] } = data;
+    if (!allowedGroupBys.length) {
+        throw new Error("The example data must contain an array of allowed groupbys");
+    }
+    if (!examples.length) {
+        throw new Error("The example data must contain an array of examples");
+    }
+}
+
 export class KanbanRenderer extends Component {
     setup() {
         this.dialogClose = [];
@@ -35,6 +45,9 @@ export class KanbanRenderer extends Component {
         this.exampleData = registry
             .category("kanban_examples")
             .get(this.props.archInfo.examples, null);
+        if (this.exampleData) {
+            validateColumnQuickCreateExamples(this.exampleData);
+        }
         this.ghostColumns = this.generateGhostColumns();
 
         // Sortable
@@ -121,7 +134,7 @@ export class KanbanRenderer extends Component {
                 }
 
                 // Open first link
-                const firstLink = target.querySelector("a, button");
+                const firstLink = target.querySelector(".oe_kanban_global_click, a, button");
                 if (firstLink && firstLink instanceof HTMLElement) {
                     firstLink.click();
                 }

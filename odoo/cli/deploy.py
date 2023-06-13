@@ -1,12 +1,11 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-from __future__ import print_function
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import argparse
 import os
 import requests
 import sys
 import tempfile
 import zipfile
+from pathlib import Path
 
 from . import Command
 
@@ -63,7 +62,7 @@ class Deploy(Command):
 
     def run(self, cmdargs):
         parser = argparse.ArgumentParser(
-            prog="%s deploy" % sys.argv[0].split(os.path.sep)[-1],
+            prog=f'{Path(sys.argv[0]).name} {self.name}',
             description=self.__doc__
         )
         parser.add_argument('path', help="Path of the module to deploy")

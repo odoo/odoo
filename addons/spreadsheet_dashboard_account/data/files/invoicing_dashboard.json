@@ -1281,7 +1281,7 @@
                     "data": {
                         "baselineColorDown": "#DC6965",
                         "baselineColorUp": "#00A04A",
-                        "baselineMode": "difference",
+                        "baselineMode": "text",
                         "title": "Invoiced",
                         "type": "scorecard",
                         "baseline": "Data!C11",
@@ -1389,7 +1389,7 @@
                 },
                 "B3": {
                     "format": 1,
-                    "content": "=ODOO.PIVOT(6,\"__count\")"
+                    "content": "=ODOO.PIVOT(6,\"move_id\")"
                 },
                 "B4": {
                     "content": "=YEAR(TODAY())"
@@ -1864,7 +1864,7 @@
             "id": "6",
             "measures": [
                 {
-                    "field": "__count"
+                    "field": "move_id"
                 },
                 {
                     "field": "price_subtotal"

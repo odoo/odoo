@@ -146,6 +146,7 @@ class Message(models.Model):
     important = fields.Boolean()
     label = fields.Char(translate=True)
     priority = fields.Integer()
+    active = fields.Boolean(default=True)
 
     attributes = fields.Properties(
         string='Properties',
@@ -230,6 +231,7 @@ class EmailMessage(models.Model):
     message = fields.Many2one('test_new_api.message', 'Message',
                               required=True, ondelete='cascade')
     email_to = fields.Char('To')
+    active = fields.Boolean('Active Message', related='message.active', store=True, related_sudo=False)
 
 
 class DiscussionPartner(models.Model):
@@ -1762,3 +1764,48 @@ class EmptyChar(models.Model):
     _description = 'A model to test emtpy char'
 
     name = fields.Char('Name')
+
+class UnlinkContainer(models.Model):
+    _name = 'test_new_api.unlink.container'
+    _description = 'A container model to test unlink + trigger'
+
+    name = fields.Char('Name', translate=True)
+
+class UnlinkLine(models.Model):
+    _name = 'test_new_api.unlink.line'
+    _description = 'A line model to test unlink + trigger'
+
+    container_id = fields.Many2one('test_new_api.unlink.container')
+    container_name = fields.Char('Container Name', related='container_id.name', store=True)
+
+
+class Team(models.Model):
+    _name = 'test_new_api.team'
+    _description = 'Odoo Team'
+
+    name = fields.Char()
+    parent_id = fields.Many2one('test_new_api.team')
+    member_ids = fields.One2many('test_new_api.team.member', 'team_id')
+
+
+class TeamMember(models.Model):
+    _name = 'test_new_api.team.member'
+    _description = 'Odoo Developer'
+
+    name = fields.Char('Name')
+    team_id = fields.Many2one('test_new_api.team')
+    parent_id = fields.Many2one('test_new_api.team', related='team_id.parent_id')
+
+class UnsearchableO2M(models.Model):
+    _name = 'test_new_api.unsearchable.o2m'
+    _description = 'Test non-stored unsearchable o2m'
+
+    name = fields.Char('Name')
+    stored_parent_id = fields.Many2one('test_new_api.unsearchable.o2m', store=True)
+    parent_id = fields.Many2one('test_new_api.unsearchable.o2m', store=False, compute="_compute_parent_id")
+    child_ids = fields.One2many('test_new_api.unsearchable.o2m', 'parent_id')
+
+    @api.depends('stored_parent_id')
+    def _compute_parent_id(self):
+        for r in self:
+            r.parent_id = r.stored_parent_id

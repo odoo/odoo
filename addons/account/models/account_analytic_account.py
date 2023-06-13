@@ -20,7 +20,7 @@ class AccountAnalyticAccount(models.Model):
         sale_types = self.env['account.move'].get_sale_types(include_receipts=True)
 
         query = self.env['account.move.line']._search([
-            ('move_id.state', '=', 'posted'),
+            ('parent_state', '=', 'posted'),
             ('move_id.move_type', 'in', sale_types),
         ])
         query.add_where(
@@ -45,7 +45,7 @@ class AccountAnalyticAccount(models.Model):
         purchase_types = self.env['account.move'].get_purchase_types(include_receipts=True)
 
         query = self.env['account.move.line']._search([
-            ('move_id.state', '=', 'posted'),
+            ('parent_state', '=', 'posted'),
             ('move_id.move_type', 'in', purchase_types),
         ])
         query.add_where(
@@ -77,7 +77,7 @@ class AccountAnalyticAccount(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "account.move",
             "domain": [('id', 'in', move_ids)],
-            "context": {"create": False},
+            "context": {"create": False, 'default_move_type': 'out_invoice'},
             "name": _("Customer Invoices"),
             'view_mode': 'tree,form',
         }
@@ -95,7 +95,7 @@ class AccountAnalyticAccount(models.Model):
             "type": "ir.actions.act_window",
             "res_model": "account.move",
             "domain": [('id', 'in', move_ids)],
-            "context": {"create": False},
+            "context": {"create": False, 'default_move_type': 'in_invoice'},
             "name": _("Vendor Bills"),
             'view_mode': 'tree,form',
         }

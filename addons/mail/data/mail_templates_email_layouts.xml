@@ -37,8 +37,8 @@
                     <table cellspacing="0" cellpadding="0" border="0">
                         <tbody>
                             <tr>
-                                <td t-if="has_button_access" t-att-style="'border-radius: 3px; text-align: center; padding: 8px 12px 11px; background: ' + (company.secondary_color if company.secondary_color else '#875A7B')">
-                                    <a t-att-href="button_access['url']" style="font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400;">
+                                <td t-if="has_button_access" t-att-style="'border-radius: 3px; text-align: center; background: ' + (company.secondary_color if company.secondary_color else '#875A7B')">
+                                    <a t-att-href="button_access['url']" style="font-size: 12px; color: #FFFFFF; display: block; padding: 8px 12px 11px; text-decoration: none !important; font-weight: 400;">
                                         <t t-out="button_access['title']"/>
                                     </a>
                                 </td>
@@ -180,7 +180,7 @@
         </template>
 
         <template id="notification_preview">
-<div style="display: none; max-height: 0px; overflow: hidden;">
+<div style="display: none; max-height: 0px; overflow: hidden; color:#fff; font-size:0px; line-height:0px">
     <t t-if="tracking_values">
         <t t-out="tracking_values[0][0]"/>: <t t-out="tracking_values[0][1]"/> &#8594; <t t-out="tracking_values[0][2]"/>
         <t t-if="len(tracking_values) > 1"> |...</t>

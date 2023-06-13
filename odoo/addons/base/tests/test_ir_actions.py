@@ -531,6 +531,21 @@ class TestCustomFields(common.TransactionCase):
         for partner in partners:
             self.assertEqual(partner.x_oh_boy, partner.country_id.code)
 
+    def test_relation_of_a_custom_field(self):
+        """ change the relation model of a custom field """
+        model = self.env['ir.model'].search([('model', '=', self.MODEL)])
+        field = self.env['ir.model.fields'].create({
+            'name': 'x_foo',
+            'model_id': model.id,
+            'field_description': 'x_foo',
+            'ttype': 'many2many',
+            'relation': self.COMODEL,
+        })
+
+        # change the relation
+        with self.assertRaises(ValidationError):
+            field.relation = 'foo'
+
     def test_selection(self):
         """ custom selection field """
         Model = self.env[self.MODEL]

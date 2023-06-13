@@ -151,7 +151,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
                     dateRange: parseAccountingDate("2022"),
                     codes: ["100"],
                     companyId: null,
-                    includeUnposted: true,
+                    includeUnposted: false,
                 })
             ),
             JSON.stringify(
@@ -159,7 +159,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
                     dateRange: parseAccountingDate("01/2022"),
                     codes: ["100"],
                     companyId: null,
-                    includeUnposted: true,
+                    includeUnposted: false,
                 })
             ),
             JSON.stringify(
@@ -167,7 +167,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
                     dateRange: parseAccountingDate("Q2/2022"),
                     codes: ["100"],
                     companyId: null,
-                    includeUnposted: true,
+                    includeUnposted: false,
                 })
             ),
             JSON.stringify(
@@ -175,7 +175,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
                     dateRange: parseAccountingDate("2021"),
                     codes: ["10"],
                     companyId: null,
-                    includeUnposted: true,
+                    includeUnposted: false,
                 })
             ),
             JSON.stringify(
@@ -183,7 +183,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
                     dateRange: parseAccountingDate("2021"),
                     codes: ["5"],
                     companyId: 2,
-                    includeUnposted: true,
+                    includeUnposted: false,
                 })
             ),
             JSON.stringify(
@@ -191,7 +191,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
                     dateRange: parseAccountingDate("05/04/2022"),
                     codes: ["5"],
                     companyId: null,
-                    includeUnposted: true,
+                    includeUnposted: false,
                 })
             ),
             JSON.stringify(
@@ -237,7 +237,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
                     dateRange: parseAccountingDate("2022"),
                     codes: ["100", "200"],
                     companyId: null,
-                    includeUnposted: true,
+                    includeUnposted: false,
                 })
             ),
         ]);
@@ -270,7 +270,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
                     dateRange: parseAccountingDate("2022"),
                     codes: ["100104", "200104"],
                     companyId: null,
-                    includeUnposted: true,
+                    includeUnposted: false,
                 })
             ),
         ]);
@@ -310,7 +310,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
                     dateRange: parseAccountingDate("2022"),
                     codes: ["100"],
                     companyId: null,
-                    includeUnposted: true,
+                    includeUnposted: false,
                 })
             ),
             "spreadsheet_fetch_debit_credit",
@@ -319,7 +319,7 @@ QUnit.module("spreadsheet_account > Accounting", { beforeEach }, () => {
                     dateRange: parseAccountingDate("2022"),
                     codes: ["100104", "200104"],
                     companyId: null,
-                    includeUnposted: true,
+                    includeUnposted: false,
                 })
             ),
         ]);

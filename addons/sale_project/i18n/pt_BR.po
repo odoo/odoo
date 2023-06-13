@@ -6,6 +6,8 @@
 # grazziano <gra.negocia@gmail.com>, 2022
 # Éder Brito <britoederr@gmail.com>, 2022
 # Martin Trigaux, 2022
+# Layna Nascimento, 2023
+# Kevilyn Rosa, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +15,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
+"Last-Translator: Kevilyn Rosa, 2023\n"
+"Language-Team: Portuguese (Brazil) (https://app.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -34,6 +36,13 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                  Nenhum etapa foi encontrada. Vamos criar uma?\n"
+"                </p><p>\n"
+"                  Acompanhe os principais pontos de progresso que devem ser alcançados para obter sucesso.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_project
 #. odoo-python
@@ -324,7 +333,7 @@ msgstr ""
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Materials"
-msgstr ""
+msgstr "Materiais"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__qty_delivered_method
@@ -334,7 +343,7 @@ msgstr "Método para atualizar a quantidade entregue"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__milestone_count
 msgid "Milestone Count"
-msgstr ""
+msgstr "Contagem de etapas"
 
 #. module: sale_project
 #. odoo-python
@@ -343,7 +352,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 #, python-format
 msgid "Milestones"
-msgstr ""
+msgstr "Etapas"
 
 #. module: sale_project
 #. odoo-python
@@ -376,7 +385,7 @@ msgstr "Nada"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
 msgid "Number of Projects"
-msgstr ""
+msgstr "Número de projetos"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
@@ -443,7 +452,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "Etapa do projeto"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
@@ -494,7 +503,7 @@ msgstr "Pedido de Venda"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_count
 msgid "Sale Order Count"
-msgstr "Contagem Pedido de Venda"
+msgstr "Contagem do pedido de venda"
 
 #. module: sale_project
 #. odoo-javascript
@@ -554,6 +563,9 @@ msgid ""
 "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
 "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
 msgstr ""
+"Item do pedido de vendas ao qual o tempo gasto nessa tarefa será adicionado para ser faturado ao seu cliente.\n"
+"Por padrão, o item do pedido de vendas definido no projeto será selecionado. Na ausência de um, será usado o último item de ordem de vendas pré-pago que tiver tempo restante.\n"
+"Remova o item do pedido de vendas para tornar essa tarefa não faturável. Você também pode alterar ou remover o item de ordem de venda de cada registro de planilha de horas individualmente."
 
 #. module: sale_project
 #. odoo-javascript
@@ -574,7 +586,7 @@ msgstr "Linha do pedido de vendas"
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Sales Orders"
-msgstr "Ordens de Vendas"
+msgstr "Pedidos de vendas"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
@@ -582,6 +594,8 @@ msgid ""
 "Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
 "It can be modified on each task and timesheet entry individually if necessary."
 msgstr ""
+"Item de pedido de vendas que será selecionado por padrão nas tarefas e planilhas de horas desse projeto, exceto se o funcionário definido nas planilhas de horas estiver explicitamente vinculado a outro item de pedido de vendas no projeto.\n"
+"Ele pode ser modificado em cada tarefa e entrada de planilha de horas individualmente, se necessário."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
@@ -709,7 +723,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
 msgid "To invoice"
-msgstr "Para faturar"
+msgstr "A faturar"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_type

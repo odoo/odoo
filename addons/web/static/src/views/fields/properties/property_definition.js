@@ -181,9 +181,14 @@ export class PropertyDefinition extends Component {
         const propertyDefinition = {
             ...this.state.propertyDefinition,
             type: newType,
-            default: false,
-            value: false,
         };
+        if (["integer", "float"].includes(newType)) {
+            propertyDefinition.value = 0;
+            propertyDefinition.default = 0;
+        } else {
+            propertyDefinition.value = false;
+            propertyDefinition.default = false;
+        }
 
         delete propertyDefinition.comodel;
 
@@ -394,6 +399,7 @@ PropertyDefinition.components = {
 PropertyDefinition.props = {
     readonly: { type: Boolean, optional: true },
     canChangeDefinition: { type: Boolean, optional: true },
+    checkDefinitionWriteAccess: { type: Function, optional: true },
     propertyDefinition: { optional: true },
     hideKanbanOption: { type: Boolean, optional: true },
     context: { type: Object },

@@ -9,9 +9,15 @@ options.registry.Map = options.Class.extend({
      * @override
      */
     onBuilt() {
-        const iframeEl = generateGMapIframe();
-        this.$target[0].querySelector('.s_map_color_filter').before(iframeEl);
-        this._updateSource();
+        // The iframe is added here to the snippet when it is dropped onto the
+        // page. However, in the case where a custom snippet saved by the user
+        // is dropped, the iframe already exists and doesn't need to be added
+        // again.
+        if (!this.$target[0].querySelector('.s_map_embedded')) {
+            const iframeEl = generateGMapIframe();
+            this.$target[0].querySelector('.s_map_color_filter').before(iframeEl);
+            this._updateSource();
+        }
     },
 
     //--------------------------------------------------------------------------

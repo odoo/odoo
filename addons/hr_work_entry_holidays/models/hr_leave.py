@@ -171,7 +171,7 @@ Contracts:
         stop = max(self.mapped('date_to') + [fields.Datetime.from_string(vals.get('date_to', False)) or datetime.min])
         employee_ids = self.employee_id.ids
         if 'employee_id' in vals and vals['employee_id']:
-            employee_ids += vals['employee_id']
+            employee_ids += [vals['employee_id']]
         with self.env['hr.work.entry']._error_checking(start=start, stop=stop, skip=skip_check, employee_ids=employee_ids):
             return super().write(vals)
 

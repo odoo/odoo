@@ -162,7 +162,7 @@
                                     <field name="location" />
                                     <label for="videocall_location"/>
                                     <div col="2" class="o_row">
-                                        <field name="videocall_location" class="oe_inline" string="Videocall URL" widget="CopyClipboardChar" force_save="1" readonly="1" attrs="{'readonly':[('videocall_source','=', 'discuss')]}"/>
+                                        <field name="videocall_location" class="oe_inline" string="Videocall URL" widget="CopyClipboardChar" force_save="1" attrs="{'readonly':[('videocall_source','=', 'discuss')]}"/>
                                         <button name="clear_videocall_location" type="object" class="btn btn-link"
                                             attrs="{'invisible': [('videocall_location', '=', False)]}" context="{'recurrence_update': recurrence_update}">
                                             <span class="fa fa-times"></span><span> Clear meeting</span>

@@ -17,4 +17,5 @@ from . import test_pos_other_currency_config
 from . import test_pos_with_fiscal_position
 from . import test_pos_stock_account
 from . import test_js
+from . import test_report_pos_order
 from . import test_res_config_settings

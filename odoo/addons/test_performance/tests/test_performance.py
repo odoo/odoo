@@ -685,3 +685,20 @@ class TestIncrementFieldsSkipLock(TransactionCase):
 
         self.assertEqual(self.other_record.value, 10, "other_record should not have been updated.")
         self.assertEqual(self.other_record.value_plus_one, 11, "other_record should not have been updated.")
+
+    def test_increment_fields_skiplock_null_field(self):
+        """Test that incrementing a field with a NULL value in database works.
+        When an integer is NULL in database, the ORM automatically converts it to 0.
+        However, increment_fields_skiplock is a special tool using raw sql and by-passing the ORM"""
+        # First, ensure our value is NULL in database
+        self.env.cr.execute("SELECT value_null_by_default FROM test_performance_mozzarella WHERE id = %s", (self.record.id,))
+        [value] = self.env.cr.fetchone()
+        self.assertIsNone(value)
+        self.assertEqual(self.record.value_null_by_default, 0)
+        # Then, increment its count.
+        with self.assertQueryCount(1):
+            sql.increment_fields_skiplock(self.record, 'value_null_by_default')
+        # Invalidate the cache regarding the value of `value_null_by_default` for our record to force fetching from database
+        # as `increment_fields_skiplock` only does raw SQL and doesn't assign the new value in the cache
+        self.record.invalidate_recordset(['value_null_by_default'])
+        self.assertEqual(self.record.value_null_by_default, 1)

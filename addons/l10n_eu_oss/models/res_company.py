@@ -127,7 +127,9 @@ class Company(models.Model):
 
     def _get_oss_tags(self):
         oss_tag = self.env.ref('l10n_eu_oss.tag_oss')
-        [chart_template_xml_id] = self.chart_template_id.parent_id.get_external_id().values() or self.chart_template_id.get_external_id().values()
+        chart_template_xml_id = ''
+        if self.chart_template_id:
+            [chart_template_xml_id] = self.chart_template_id.parent_id.get_external_id().values() or self.chart_template_id.get_external_id().values()
         tag_for_country = EU_TAG_MAP.get(chart_template_xml_id, {
             'invoice_base_tag': None,
             'invoice_tax_tag': None,
@@ -139,7 +141,7 @@ class Company(models.Model):
         for repartition_line_key, tag_xml_id in tag_for_country.items():
             tag = self.env.ref(tag_xml_id) if tag_xml_id else self.env['account.account.tag']
             if tag and tag._name == "account.report.expression":
-                tag = tag._get_matching_tags().filtered(lambda t: not t.tax_negate)
+                tag = tag._get_matching_tags("+")
             mapping[repartition_line_key] = tag + oss_tag
 
         return mapping

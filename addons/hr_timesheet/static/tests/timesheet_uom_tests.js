@@ -74,7 +74,7 @@ QUnit.module("hr_timesheet", (hooks) => {
             resId: 1,
         });
         const unitAmountInput = target.querySelector('div[name="unit_amount"] input');
-        assert.containsOnce(target, 'div[name="unit_amount"] input[inputmode="numeric"]', "unit_amount is displayed as float");
+        assert.containsOnce(target, 'div[name="unit_amount"] input[inputmode="decimal"]', "unit_amount is displayed as float");
         assert.equal(unitAmountInput.value, "1.00", "unit_amount is not displayed as float and not as time");
         assert.containsNone(target, 'div[name="unit_amount"].o_field_float_toggle', "unit_amount is not displayed as float toggle");
     });

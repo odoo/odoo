@@ -12,16 +12,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
 
         <style type="text/css">
-            :root {
-                --color-company: <t t-esc="company.secondary_color or '#875a7b'"/>;
-            }
+            <t t-set="company_color" t-value="company.secondary_color or '#875a7b'"/>
             body {
                 margin: 0;
                 padding: 0;
                 font-family: Arial, Helvetica, Verdana, sans-serif;
             }
             #header_background {
-                background-color: var(--color-company);
+                background-color: <t t-out="company_color"/>;
             }
             .global_layout {
                 max-width: 588px;
@@ -43,7 +41,7 @@
             }
             .button {
                 float: right;
-                background-color: var(--color-company);
+                background-color: <t t-out="company_color"/>;
                 color: #ffffff;
                 border-radius: 5px;
             }
@@ -64,7 +62,7 @@
                 text-justify: inter-word;
             }
             .tip_button {
-                background-color: var(--color-company);
+                background-color: <t t-out="company_color"/>;
                 border-radius: 5px;
                 margin: 14px 16px 14px 0px;
                 padding: 10px;
@@ -100,7 +98,7 @@
                 padding-top: 2px;
             }
             .kpi_cell_center {
-                border-top: 2px solid var(--color-company);
+                border-top: 2px solid <t t-out="company_color"/>;
             }
             .kpi_cell_border {
                 border-top: 2px solid #00A09D;
@@ -111,7 +109,7 @@
                 text-decoration: none;
             }
             .kpi_center_col {
-                color: var(--color-company);
+                color: <t t-out="company_color"/>;
             }
             .kpi_border_col {
                 color: #00A09D;
@@ -167,7 +165,7 @@
             }
             .odoo_link_text {
                 font-weight: bold;
-                color: var(--color-company);
+                color: <t t-out="company_color"/>;
             }
             .run_business {
                 color: #2d2a26;
@@ -253,8 +251,8 @@
                 }
                 #header {
                     padding: 20px 30px 25px 30px;
-                    border-left: 1px solid var(--color-company);
-                    border-right: 1px solid var(--color-company);
+                    border-left: 1px solid <t t-out="company_color"/>;
+                    border-right: 1px solid <t t-out="company_color"/>;
                 }
                 .global_layout {
                     padding: 25px 30px 30px 30px;

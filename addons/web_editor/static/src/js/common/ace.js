@@ -337,10 +337,12 @@ var ViewEditor = Widget.extend({
         function startResizing(e) {
             refX = e.pageX;
             resizing = true;
+            document.body.classList.add("o_ace_view_editor_resizing");
         }
         function stopResizing() {
             if (resizing) {
                 resizing = false;
+                document.body.classList.remove("o_ace_view_editor_resizing");
 
                 if (this.errorSession) {
                     // To trigger an update of the error display

@@ -7,7 +7,7 @@ from odoo import api, fields, models
 class Users(models.Model):
     _inherit = 'res.users'
 
-    karma = fields.Integer('Karma', default=0)
+    karma = fields.Integer('Karma', default=0, copy=False)
     karma_tracking_ids = fields.One2many('gamification.karma.tracking', 'user_id', string='Karma Changes', groups="base.group_system")
     badge_ids = fields.One2many('gamification.badge.user', 'user_id', string='Badges', copy=False)
     gold_badge = fields.Integer('Gold badges count', compute="_get_user_badge_level")

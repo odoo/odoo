@@ -2,7 +2,6 @@
 
 import { getFixture, patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
-import { dialogService } from "@web/core/dialog/dialog_service";
 import { registry } from "@web/core/registry";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { FavoriteMenu } from "@web/search/favorite_menu/favorite_menu";
@@ -64,7 +63,6 @@ QUnit.module("Search", (hooks) => {
         };
         setupControlPanelFavoriteMenuRegistry();
         setupControlPanelServiceRegistry();
-        serviceRegistry.add("dialog", dialogService);
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
             clearTimeout: () => {},
@@ -347,44 +345,47 @@ QUnit.module("Search", (hooks) => {
         }
     );
 
-    QUnit.test("undefined name for filter shows notification and not error", async function (assert) {
-        assert.expect(2);
+    QUnit.test(
+        "undefined name for filter shows notification and not error",
+        async function (assert) {
+            assert.expect(2);
 
-        serviceRegistry.add(
-            "notification",
-            {
-                start() {
-                    return {
-                        add(message, options) {
-                            assert.strictEqual(
-                                message,
-                                "A name for your favorite filter is required.",
-                                "The notification should match: A name for your favorite filter is required."
-                            );
-                            assert.deepEqual(options, { type: "danger" });
-                        },
-                    };
+            serviceRegistry.add(
+                "notification",
+                {
+                    start() {
+                        return {
+                            add(message, options) {
+                                assert.strictEqual(
+                                    message,
+                                    "A name for your favorite filter is required.",
+                                    "The notification should match: A name for your favorite filter is required."
+                                );
+                                assert.deepEqual(options, { type: "danger" });
+                            },
+                        };
+                    },
                 },
-            },
-            { force: true }
-        );
+                { force: true }
+            );
 
-        await makeWithSearch({
-            serverData,
-            mockRPC: (_, args) => {
-                if (args.model === "ir.filters" && args.method === "create_or_replace") {
-                    return 7; // fake serverSideId
-                }
-            },
-            resModel: "foo",
-            Component: FavoriteMenu,
-            searchViewId: false,
-        });
+            await makeWithSearch({
+                serverData,
+                mockRPC: (_, args) => {
+                    if (args.model === "ir.filters" && args.method === "create_or_replace") {
+                        return 7; // fake serverSideId
+                    }
+                },
+                resModel: "foo",
+                Component: FavoriteMenu,
+                searchViewId: false,
+            });
 
-        await toggleFavoriteMenu(target);
-        await toggleSaveFavorite(target);
-        await saveFavorite(target);
-    });
+            await toggleFavoriteMenu(target);
+            await toggleSaveFavorite(target);
+            await saveFavorite(target);
+        }
+    );
 
     QUnit.skip("save search filter in modal", async function (assert) {
         /** @todo I don't know yet how to convert this test */

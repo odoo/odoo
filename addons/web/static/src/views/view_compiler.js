@@ -199,8 +199,8 @@ export class ViewCompiler {
         this.id = 1;
         /** @type {Compiler[]} */
         this.compilers = [
-            { selector: "a[type],a[data-type]", fn: this.compileButton },
-            { selector: "button", fn: this.compileButton, doNotCopyAttributes: true },
+            { selector: "a[type]:not([data-bs-toggle]),a[data-type]:not([data-bs-toggle])", fn: this.compileButton },
+            { selector: "button:not([data-bs-toggle])", fn: this.compileButton, doNotCopyAttributes: true },
             { selector: "field", fn: this.compileField },
             { selector: "widget", fn: this.compileWidget },
         ];

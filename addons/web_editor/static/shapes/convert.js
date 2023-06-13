@@ -48,14 +48,14 @@ files.filter(f => f.endsWith('svg')).forEach(filePath => {
         repeatX: fileName.includes('repeatx'),
         repeatY: fileName.includes('repeaty'),
     };
-    shape.optionXML = `<we-button data-shape="web_editor/${shape.page}/${shape.name}" data-select-label="${shape.page} ${shape.name}"/>`;
+    shape.optionXML = `<we-button data-shape="web_editor/${encodeURIComponent(shape.page)}/${encodeURIComponent(shape.name)}" data-select-label="${shape.page} ${shape.name}"/>`;
     if (shape.position[0] === 'stretch') {
         shape.position = ['center'];
         shape.size = '100% 100%';
     } else {
         shape.size = '100% auto';
     }
-    shape.scss = `'${shape.page}/${shape.name}': ('position': ${shape.position[0]}, 'size': ${shape.size}, 'colors': (${shape.colors.join(', ')})${shape.repeatX ? ", 'repeat-x': true" : ""}${shape.repeatY ? ", 'repeat-y': true" : ""})`;
+    shape.scss = `'${encodeURIComponent(shape.page)}/${encodeURIComponent(shape.name)}': ('position': ${shape.position[0]}, 'size': ${shape.size}, 'colors': (${shape.colors.join(', ')})${shape.repeatX ? ", 'repeat-x': true" : ""}${shape.repeatY ? ", 'repeat-y': true" : ""})`;
     shapes.push(shape);
 });
 const xml = shapes.map(shape => shape.optionXML).join('\n');

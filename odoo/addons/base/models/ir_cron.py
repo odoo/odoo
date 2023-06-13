@@ -476,11 +476,15 @@ class ir_cron(models.Model):
         :param list[datetime.datetime] at_list:
             Execute the cron later, at precise moments in time.
         """
-        if not at_list:
-            return
-
         self.ensure_one()
         now = fields.Datetime.now()
+
+        if not self.sudo().active:
+            # skip triggers that would be ignored
+            at_list = [at for at in at_list if at > now]
+
+        if not at_list:
+            return
 
         self.env['ir.cron.trigger'].sudo().create([
             {'cron_id': self.id, 'call_at': at}
@@ -509,3 +513,7 @@ class ir_cron_trigger(models.Model):
 
     cron_id = fields.Many2one("ir.cron", index=True)
     call_at = fields.Datetime()
+
+    @api.autovacuum
+    def _gc_cron_triggers(self):
+        self.search([('call_at', '<', datetime.now() + relativedelta(weeks=-1))]).unlink()

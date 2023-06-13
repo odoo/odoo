@@ -792,3 +792,18 @@ class TestProjectrecurrence(TransactionCase):
 
         for f in self.env['project.task.recurrence']._get_recurring_fields():
             self.assertTrue(all_tasks[0][f] == all_tasks[1][f] == all_tasks[2][f], "Field %s should have been copied" % f)
+
+    def test_compute_recurrence_message_with_lang_not_set(self):
+        task = self.env['project.task'].create({
+            'name': 'Test task with user language not set',
+            'project_id': self.project_recurring.id,
+            'recurring_task': True,
+            'repeat_interval': 1,
+            'repeat_unit': 'week',
+            'repeat_type': 'after',
+            'repeat_number': 2,
+            'mon': True,
+        })
+
+        self.env.user.lang = None
+        task._compute_recurrence_message()

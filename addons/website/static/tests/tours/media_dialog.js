@@ -1,15 +1,12 @@
 /** @odoo-module */
 
-import tour from 'web_tour.tour';
 import wTourUtils from 'website.tour_utils';
 
-tour.register('website_media_dialog_undraw', {
+wTourUtils.registerWebsitePreviewTour("website_media_dialog_undraw", {
     test: true,
     url: '/',
+    edition: true,
 }, [
-{
-    trigger: 'a[data-action=edit]',
-},
 wTourUtils.dragNDrop({
     id: 's_text_image',
     name: 'Text - Image',

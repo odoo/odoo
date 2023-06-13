@@ -23,7 +23,6 @@ wTourUtils.registerWebsitePreviewTour('edit_megamenu', {
     // Add a megamenu item to the top menu.
     {
         content: "Click on a menu item",
-        extra_trigger: '#oe_snippets.o_loaded',
         trigger: 'iframe #top_menu .nav-item a',
     },
     {

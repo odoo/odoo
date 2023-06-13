@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="SaleDetailsReport" t-inherit="point_of_sale.SaleDetailsReport" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('orderlines')]" position="replace">
+            <div>
+                SOLD:
+            </div>
+    
+            <div class="orderlines">
+                <t t-foreach="products" t-as="category" t-key="category['name']">
+                    <t t-foreach="category['products']" t-as="line" t-key="line_index">
+                        <div class="responsive-price">
+                            <t t-esc="line['product_name'].substr(0,20)" />
+                            <span class="pos-receipt-right-align">
+                                <t t-esc="Math.round(line.quantity * Math.pow(10, pos.dp['Product Unit of Measure'])) / Math.pow(10, pos.dp['Product Unit of Measure'])" />
+                                <t t-if="line.uom !== 'Units'">
+                                    <t t-esc="line.uom" />
+                                </t>
+                                x
+                                <t t-esc="pos.format_currency_no_symbol(line.price_unit)" />
+                            </span>
+                        </div>
+                        <t t-if="line.discount !== 0">
+                            <div class="pos-receipt-left-padding">Discount: <t t-esc="line.discount" />%</div>
+                        </t>
+                    </t>
+                </t>
+            </div>
+    
+            <br/>
+            <div>------------------------</div>
+            <br/>
+    
+            <div>
+                REFUNDED:
+            </div>
+    
+            <div class="orderlines">
+                <t t-foreach="refund_products" t-as="category" t-key="category['name']">
+                    <t t-foreach="category['products']" t-as="line" t-key="line_index">
+                        <div class="responsive-price">
+                            <t t-esc="line['product_name'].substr(0,20)" />
+                            <span class="pos-receipt-right-align">
+                                <t t-esc="Math.round(line.quantity * Math.pow(10, pos.dp['Product Unit of Measure'])) / Math.pow(10, pos.dp['Product Unit of Measure'])" />
+                                <t t-if="line.uom !== 'Units'">
+                                    <t t-esc="line.uom" />
+                                </t>
+                                x
+                                <t t-esc="pos.format_currency_no_symbol(line.price_unit)" />
+                            </span>
+                        </div>
+                        <t t-if="line.discount !== 0">
+                            <div class="pos-receipt-left-padding">Discount: <t t-esc="line.discount" />%</div>
+                        </t>
+                    </t>
+                </t>
+            </div>
+        </xpath>
+    </t>
+
+</templates>
+

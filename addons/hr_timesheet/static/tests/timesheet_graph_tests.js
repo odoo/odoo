@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { companyService } from "@web/webclient/company_service";
-import { dialogService } from "@web/core/dialog/dialog_service";
 import { getGraphRenderer } from "@web/../tests/views/graph_view_tests";
 import { makeView } from "@web/../tests/views/helpers";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
@@ -37,7 +36,6 @@ QUnit.module('hr_timesheet', function (hooks) {
         }
         setupControlPanelServiceRegistry();
         serviceRegistry.add("company", companyService, { force: true });
-        serviceRegistry.add("dialog", dialogService);
     });
 
     QUnit.module("hr_timesheet_graphview");

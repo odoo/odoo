@@ -11,23 +11,35 @@ class HrPlanWizard(models.TransientModel):
 
     def _default_plan_id(self):
         # We know that all employees belong to the same company
-        employee = self.env['hr.employee'].browse(self.env.context.get('active_ids')[0] if self.env.context.get('active_ids') else [])
-        return self.env['hr.plan'].search([
-            ('company_id', '=', employee.company_id.id),
-            '|',
-            ('department_id', '=', employee.department_id.id),
-            ('department_id', '=', False)
+        employees = self.env['hr.employee'].browse(self.env.context.get('active_ids') if self.env.context.get('active_ids') else [])
+        if len(employees.department_id) > 1:
+            return self.env['hr.plan'].search([
+                ('company_id', '=', employees[0].company_id.id),
+                ('department_id', '=', False)
             ], limit=1)
+        else:
+            return self.env['hr.plan'].search([
+                ('company_id', '=', employees[0].company_id.id),
+                '|',
+                ('department_id', '=', employees[0].department_id.id),
+                ('department_id', '=', False)
+                ], limit=1)
 
     plan_id = fields.Many2one('hr.plan', default=lambda self: self._default_plan_id(),
         domain="[('company_id', '=', company_id), '|', ('department_id', '=', department_id), ('department_id', '=', False)]")
-    department_id = fields.Many2one(related='employee_ids.department_id')
+    department_id = fields.Many2one('hr.department', compute='_compute_department_id')
     employee_ids = fields.Many2many(
         'hr.employee', 'hr_employee_hr_plan_wizard_rel', 'employee_id', 'plan_wizard_id', string='Employee', required=True,
         default=lambda self: self.env.context.get('active_ids', []),
     )
     company_id = fields.Many2one('res.company', 'Company', compute='_compute_company_id', required=True)
     warning = fields.Html(compute='_compute_warning')
+
+    @api.depends('employee_ids')
+    def _compute_department_id(self):
+        for wizard in self:
+            all_departments = wizard.employee_ids.department_id
+            wizard.department_id = False if len(all_departments) > 1 else all_departments
 
     @api.constrains('employee_ids')
     def _check_employee_companies(self):

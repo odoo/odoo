@@ -561,7 +561,7 @@
             <field name="name">product.product.expense.categories.tree.view</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree class="o_expense_categories">
                     <field name="name" readonly="1"/>
                     <field name="default_code" optional="show" readonly="1"/>
                     <field name="description" widget="html" string="Internal Note" optional="show" readonly="1"/>
@@ -754,7 +754,6 @@
                                         'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header',
                                         'default_company_id': company_id,
                                         'default_employee_id': employee_id,
-                                        'default_sheet_id': active_id,
                                         'default_payment_mode': payment_mode,
                                     }"
                                     attrs="{'readonly': [('is_editable', '=', False)]}"

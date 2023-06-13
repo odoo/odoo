@@ -142,12 +142,14 @@
             'website/static/src/js/content/inject_dom.js',
             'website/static/src/js/content/auto_hide_menu.js',
             'website/static/src/js/content/redirect.js',
+            'website/static/src/js/content/adapt_content.js',
         ],
         'web.assets_frontend_lazy': [
             # Remove assets_frontend_minimal
             ('remove', 'website/static/src/js/content/inject_dom.js'),
             ('remove', 'website/static/src/js/content/auto_hide_menu.js'),
             ('remove', 'website/static/src/js/content/redirect.js'),
+            ('remove', 'website/static/src/js/content/adapt_content.js'),
         ],
         'web._assets_primary_variables': [
             'website/static/src/scss/primary_variables.scss',
@@ -182,6 +184,7 @@
             'website/static/src/components/views/*',
             'website/static/src/services/website_service.js',
             'website/static/src/js/utils.js',
+            'website/static/src/xml/website.xml',
 
             # Don't include dark mode files in light mode
             ('remove', 'website/static/src/client_actions/*/*.dark.scss'),

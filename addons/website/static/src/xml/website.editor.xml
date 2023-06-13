@@ -69,10 +69,10 @@
         </div>
     </div>
     <t t-name="website.delete_google_font_btn">
-        <i t-if="!local" role="button" class="text-info ms-2 fa fa-cloud" title="This font is hosted and served to your visitors by Google servers"/>
+        <i t-if="!local" role="button" class="text-info me-2 fa fa-cloud" title="This font is hosted and served to your visitors by Google servers"/>
         <t t-set="delete_font_title">Delete this font</t>
         <i role="button"
-           class="text-danger ms-2 fa fa-trash-o o_we_delete_google_font_btn"
+           class="text-danger fa fa-trash-o o_we_delete_google_font_btn"
            t-att-aria-label="delete_font_title"
            t-att-title="delete_font_title"
            t-att-data-local-font="local"

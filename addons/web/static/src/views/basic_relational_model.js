@@ -263,6 +263,21 @@ export class Record extends DataPoint {
         return !this._invalidFields.size;
     }
 
+    openInvalidFieldsNotification() {
+        if (this._invalidFields.size) {
+            const invalidFields = [...this._invalidFields].map((fieldName) => {
+                return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
+            }, this);
+            this._closeInvalidFieldsNotification = this.model.notificationService.add(
+                markup(`<ul>${invalidFields.join("")}</ul>`),
+                {
+                    title: this.model.env._t("Invalid fields: "),
+                    type: "danger",
+                }
+            );
+        }
+    }
+
     async switchMode(mode, options) {
         if (this.mode === mode) {
             return true;
@@ -605,16 +620,7 @@ export class Record extends DataPoint {
         });
         this._closeInvalidFieldsNotification();
         if (!(await this.checkValidity())) {
-            const invalidFields = [...this._invalidFields].map((fieldName) => {
-                return `<li>${escape(this.fields[fieldName].string || fieldName)}</li>`;
-            }, this);
-            this._closeInvalidFieldsNotification = this.model.notificationService.add(
-                markup(`<ul>${invalidFields.join("")}</ul>`),
-                {
-                    title: this.model.env._t("Invalid fields: "),
-                    type: "danger",
-                }
-            );
+            this.openInvalidFieldsNotification();
             resolveSavePromise();
             return false;
         }
@@ -1068,15 +1074,19 @@ export class StaticList extends DataPoint {
                 this.model.__bm__.notifyChanges(
                     parentID,
                     { [this.__fieldName__]: op },
-                    { notifyChange: false }
+                    { notifyChange: false, viewType: "form" }
                 );
             })
         );
 
         try {
-            await this.model.__bm__.notifyChanges(parentID, {
-                [this.__fieldName__]: lastOperation,
-            });
+            await this.model.__bm__.notifyChanges(
+                parentID,
+                {
+                    [this.__fieldName__]: lastOperation,
+                },
+                { viewType: "form" }
+            );
         } finally {
             if (this.__viewType === "list") {
                 await this.model.__bm__.setSort(this.__bm_handle__, handleField);

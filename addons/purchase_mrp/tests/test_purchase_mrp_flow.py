@@ -564,3 +564,110 @@ class TestPurchaseMrpFlow(TransactionCase):
         po.button_confirm()
         move_in = po.picking_ids.move_ids
         self.assertEqual(move_in.move_dest_ids.ids, move_check.ids)
+
+    def test_procurement_with_preferred_route_2(self):
+        """
+        Check that the route set in the product is taken into account
+        when the product have a supplier and bom.
+        """
+        manu_route = self.warehouse.manufacture_pull_id.route_id
+        buy_route = self.warehouse.buy_pull_id.route_id
+
+        vendor = self.env['res.partner'].create({'name': 'super vendor'})
+
+        product = self.env['product.product'].create({
+            'name': 'super product',
+            'type': 'product',
+            'seller_ids': [(0, 0, {'partner_id': vendor.id})],
+            'route_ids': buy_route,
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'product_uom_id': product.uom_id.id,
+        })
+        # create a need of the product with a picking
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        picking = self.env['stock.picking'].create({
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'move_ids': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': 1,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            })]
+        })
+        picking.action_assign()
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
+            [('product_id', '=', product.id)])
+        self.assertEqual(orderpoint_product.route_id, buy_route, "The route buy should be set on the orderpoint")
+        # Delete the orderpoint to generate a new one with the manufacture route
+        orderpoint_product.unlink()
+        # switch the product route to manufacture
+        product.write({'route_ids': [(3, buy_route.id), (4, manu_route.id)]})
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
+            [('product_id', '=', product.id)])
+        self.assertEqual(orderpoint_product.route_id, manu_route, "The route manufacture should be set on the orderpoint")
+
+    def test_compute_bom_days_00(self):
+        """Check Days to prepare Manufacturing Order are correctly computed when
+        Security Lead Time and Days to Purchase are set.
+        """
+        purchase_route = self.env.ref("purchase_stock.route_warehouse0_buy")
+        manufacture_route = self.env['stock.route'].search([('name', '=', 'Manufacture')])
+        vendor = self.env['res.partner'].create({'name': 'super vendor'})
+
+        company_1 = self.kit_parent.bom_ids.company_id
+        company_2 = self.env['res.company'].create({
+            'name': 'TestCompany2',
+        })
+
+        company_1.po_lead = 0
+        company_1.days_to_purchase = 0
+        company_1.manufacturing_lead = 0
+        company_2.po_lead = 0
+        company_2.days_to_purchase = 0
+        company_2.manufacturing_lead = 0
+
+        components = self.component_a | self.component_b | self.component_c | self.component_d | self.component_e | self.component_f | self.component_g
+        kits = self.kit_parent | self.kit_1 | self.kit_2 | self.kit_3
+        kits.route_ids = [(6, 0, manufacture_route.ids)]
+        components.write({
+            'route_ids': [(6, 0, purchase_route.ids)],
+            'seller_ids': [(0, 0, {
+                'partner_id': vendor.id,
+                'min_qty': 1,
+                'price': 1,
+                'delay': 1,
+            })],
+        })
+
+        self.kit_parent.action_compute_bom_days()
+        self.assertEqual(self.kit_parent.days_to_prepare_mo, 1)
+
+        # set "Security Lead Time" for Purchase and manufacturing, and "Days to Purchase"
+        company_1.po_lead = 10
+        company_1.days_to_purchase = 10
+        company_1.manufacturing_lead = 10
+        company_2.po_lead = 20
+        company_2.days_to_purchase = 20
+        company_2.manufacturing_lead = 20
+
+        # check "Security Lead Time" and "Days to Purchase" will also be included if bom has company_id
+        self.kit_parent.action_compute_bom_days()
+        self.assertEqual(self.kit_parent.days_to_prepare_mo, 10 + 10 + 10 + 10 + 1)
+
+        self.kit_1.bom_ids.company_id = company_2
+        self.kit_parent.action_compute_bom_days()
+        self.assertEqual(self.kit_parent.days_to_prepare_mo, 20 + 20 + 20 + 10 + 1)
+
+        # check "Security Lead Time" and "Days to Purchase" will won't be included if bom doesn't have company_id
+        kits.bom_ids.company_id = False
+        self.kit_parent.action_compute_bom_days()
+        self.assertEqual(self.kit_parent.days_to_prepare_mo, 1)

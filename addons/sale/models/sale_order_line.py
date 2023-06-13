@@ -355,9 +355,9 @@ class SaleOrderLine(models.Model):
             name += "\n" + ptav.display_name
 
         # Sort the values according to _order settings, because it doesn't work for virtual records in onchange
-        custom_values = sorted(self.product_custom_attribute_value_ids, key=lambda r: (r.custom_product_template_attribute_value_id.id, r.id))
-        # display the is_custom values
-        for pacv in custom_values:
+        sorted_custom_ptav = self.product_custom_attribute_value_ids.custom_product_template_attribute_value_id.sorted()
+        for patv in sorted_custom_ptav:
+            pacv = self.product_custom_attribute_value_ids.filtered(lambda pcav: pcav.custom_product_template_attribute_value_id == patv)
             name += "\n" + pacv.display_name
 
         return name
@@ -384,7 +384,7 @@ class SaleOrderLine(models.Model):
             if not line.product_uom or (line.product_id.uom_id.id != line.product_uom.id):
                 line.product_uom = line.product_id.uom_id
 
-    @api.depends('product_id')
+    @api.depends('product_id', 'company_id')
     def _compute_tax_id(self):
         taxes_by_product_company = defaultdict(lambda: self.env['account.tax'])
         lines_by_company = defaultdict(lambda: self.env['sale.order.line'])
@@ -915,7 +915,8 @@ class SaleOrderLine(models.Model):
     @api.depends('state')
     def _compute_product_uom_readonly(self):
         for line in self:
-            line.product_uom_readonly = line.state in ['sale', 'done', 'cancel']
+            # line.ids checks whether it's a new record not yet saved
+            line.product_uom_readonly = line.ids and line.state in ['sale', 'done', 'cancel']
 
     #=== CONSTRAINT METHODS ===#
 
@@ -958,16 +959,16 @@ class SaleOrderLine(models.Model):
 
     #=== CRUD METHODS ===#
     def _add_precomputed_values(self, vals_list):
-        """ In the specific case where the discount is provided in the create values
+        """ In case an editable precomputed field is provided in the create values
         without being rounded, we have to 'manually' round it otherwise it won't be,
-        because editable precomputed field values are kept 'as is'.
+        because those field values are kept 'as is'.
 
         This is a temporary fix until the problem is fixed in the ORM.
         """
-        precision = self.env['decimal.precision'].precision_get('Discount')
         for vals in vals_list:
-            if vals.get('discount'):
-                vals['discount'] = float_round(vals['discount'], precision_digits=precision)
+            for fname in ('discount', 'product_uom_qty'):
+                if fname in vals:
+                    vals[fname] = self._fields[fname].convert_to_cache(vals[fname], self)
         return super()._add_precomputed_values(vals_list)
 
     @api.model_create_multi
@@ -1120,6 +1121,7 @@ class SaleOrderLine(models.Model):
         if self.analytic_distribution and not self.display_type:
             res['analytic_distribution'] = self.analytic_distribution
         if analytic_account_id and not self.display_type:
+            analytic_account_id = str(analytic_account_id)
             if 'analytic_distribution' in res:
                 res['analytic_distribution'][analytic_account_id] = res['analytic_distribution'].get(analytic_account_id, 0) + 100
             else:

@@ -45,7 +45,7 @@ function updatePager(position) {
     });
 }
 
-const COMMANDS = {
+export const COMMANDS = {
     "O-CMD.EDIT": () => clickOnButton(".o_form_button_edit"),
     "O-CMD.DISCARD": () => clickOnButton(".o_form_button_cancel"),
     "O-CMD.SAVE": () => clickOnButton(".o_form_button_save"),

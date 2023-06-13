@@ -48,7 +48,8 @@
                     altDescription="record.alt_description"
                     selected="this.selectedRecordIds.includes(record.id)"
                     onImageClick="() => this.onClickRecord(record)"
-                    minRowHeight="MIN_ROW_HEIGHT"/>
+                    minRowHeight="MIN_ROW_HEIGHT"
+                    onLoaded="(imgEl) => this.onImageLoaded(imgEl, record)"/>
             </t>
         </t>
     </xpath>

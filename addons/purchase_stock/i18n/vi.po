@@ -13,7 +13,7 @@ msgstr ""
 "POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2023\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -115,14 +115,14 @@ msgid ""
 "group_operator=avg"
 msgstr ""
 "Khoảng thời gian từ ngày nhận dự kiến đến ngày nhận hàng thực tế. Do cần "
-"hack để tính toán thời gian này,               mọi bản ghi sẽ hiển thị cùng "
-"một giá trị trung bình, do đó, chỉ sử dụng giá trị này làm giá trị tổng hợp "
-"với group_operator=avg"
+"hack để tính toán thời gian này,               mọi tập dữ liệu sẽ hiển thị "
+"cùng một giá trị trung bình, do đó, chỉ sử dụng giá trị này làm giá trị tổng"
+" hợp với group_operator=avg"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__effective_date
 msgid "Arrival"
-msgstr "Hàng về"
+msgstr "Ngày hàng về"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_report__avg_receipt_delay
@@ -230,7 +230,7 @@ msgid ""
 "order, etc."
 msgstr ""
 "Phụ thuộc vào module đã được cài đặt, sẽ cho phép bạn xác định quy trình của"
-" sản phẩm: nó sẽ được mua, sản xuất, cung ứng theo đơn hàng,..."
+" sản phẩm: liệu nó sẽ được mua, sản xuất, cung ứng theo đơn hàng,..."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -293,7 +293,7 @@ msgid ""
 " with the location (%s) of the reordering rule (%s). Change the operation "
 "type or cancel the request for quotation."
 msgstr ""
-"Đối với sản phẩm %s, nhà kho của loại hoạt động (%s) không tương thích với "
+"Đối với sản phẩm %s, kho hàng của loại hoạt động (%s) không tương thích với "
 "vị trí (%s) của quy tắc tái đặt hàng (%s). Hãy thay đổi loại hoạt động hoặc "
 "huỷ yêu cầu báo giá."
 
@@ -603,7 +603,7 @@ msgstr ""
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
 msgid "Receipt"
-msgstr "Biên nhận"
+msgstr "Phiếu nhập kho"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__receipt_status
@@ -647,7 +647,7 @@ msgstr "Yêu cầu báo giá"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
 msgid "Reservation"
-msgstr "Đặt trước"
+msgstr "Dự trữ"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_return_picking
@@ -784,14 +784,16 @@ msgstr "Điều này sẽ xác định loại hoạt động của lô hàng v�
 msgid ""
 "Those dates couldn’t be modified accordingly on the receipt %s which had "
 "already been validated."
-msgstr "Không thể điều chỉnh những ngày đó theo biên lai %s đã được xác nhận."
+msgstr ""
+"Không thể điều chỉnh tương ứng những ngày đó trên phiếu nhập kho %s đã được "
+"xác nhận."
 
 #. module: purchase_stock
 #. odoo-python
 #: code:addons/purchase_stock/models/purchase.py:0
 #, python-format
 msgid "Those dates have been updated accordingly on the receipt %s."
-msgstr "Đã cập nhật những ngày đó theo biên lai %s."
+msgstr "Đã cập nhật tương ứng những ngày đó trên phiếu nhập kho %s."
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_vendor_delay_report__qty_total
@@ -876,7 +878,7 @@ msgid ""
 msgstr ""
 "Khi cần sản phẩm trong <b>%s</b>, <br/> một yêu cầu báo giá sẽ được tạo để "
 "đáp ứng nhu cầu. <br/>Lưu ý: Quy tắc này sẽ được sử dụng cùng với những quy "
-"tắc <br/>về (các) tuyến biên nhận."
+"tắc <br/>về (các) tuyến nhập kho."
 
 #. module: purchase_stock
 #. odoo-python

@@ -60,6 +60,12 @@ registerModel({
         isChannelTokenSecret: attr({
             default: true,
         }),
+        messagingAsPublicView: one('Messaging', {
+            compute() {
+                return this.messaging;
+            },
+            inverse: 'discussPublicView',
+        }),
         shouldAddGuestAsMemberOnJoin: attr({
             default: false,
             readonly: true,

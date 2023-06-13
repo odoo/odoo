@@ -319,5 +319,5 @@ class WebsiteBlog(http.Controller):
                 if not request.session.get('posts_viewed'):
                     request.session['posts_viewed'] = []
                 request.session['posts_viewed'].append(blog_post.id)
-                request.session.modified = True
+                request.session.touch()
         return response
