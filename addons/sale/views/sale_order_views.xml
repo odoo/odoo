@@ -660,7 +660,7 @@
                             <group name="sales_person" string="Sales">
                                 <field name="user_id" widget="many2one_avatar_user"/>
                                 <field name="team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}" options="{'no_create': True}"/>
-                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                                 <label for="require_signature" string="Online confirmation"/>
                                 <div>
                                     <field name="require_signature" class="oe_inline"/>

@@ -362,7 +362,7 @@
                                 <group name="misc" string="Misc">
                                     <field name="company_registry" attrs="{'invisible': [('parent_id','!=',False)]}"/>
                                     <field name="ref" string="Reference"/>
-                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('parent_id', '!=', False)]}" force_save="1"/>
+                                    <field name="company_id" groups="base.group_multi_company" attrs="{'readonly': [('parent_id', '!=', False)]}" force_save="1"/>
                                     <field name="industry_id" attrs="{'invisible': [('is_company', '=', False)]}" options="{'no_create': True}"/>
                                 </group>
                             </group>

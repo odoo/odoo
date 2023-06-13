@@ -69,7 +69,7 @@
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
                                         <field name="deprecated"/>
                                         <field name="group_id"/>
-                                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                        <field name="company_id" groups="base.group_multi_company"/>
                                     </group>
                                 </group>
                             </page>
@@ -101,7 +101,7 @@
                     <field name="tag_ids" optional="hide" widget="many2many_tags"/>
                     <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
                     <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
-                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <button name="action_read_account" type="object" string="Setup" class="float-end btn-secondary"/>
                 </tree>
             </field>

@@ -73,7 +73,7 @@
                         </group>
                         <group string="Attached To" groups="base.group_no_one">
                             <field name="res_name"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group string="History" groups="base.group_no_one" attrs="{'invisible':[('create_date','=',False)]}">
                             <label for="create_uid" string="Creation"/>

@@ -99,7 +99,7 @@
                             <field name="schedule_date"/>
                             <field name="user_id" domain="[('share', '=', False)]"/>
                             <field name="location_id" options="{'no_create': True}"/>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                             <field name="guarantee_limit"/>
                             <field name="invoice_method"/>
                             <field name="partner_invoice_id" attrs="{'invisible':[('invoice_method','=', 'none')],'required':[('invoice_method','!=','none')]}" groups="account.group_delivery_invoice_address"/>

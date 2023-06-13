@@ -22,6 +22,7 @@ class Company(models.Model):
     _name = "res.company"
     _description = 'Companies'
     _order = 'sequence, name'
+    _view_options = {'no_create': True}
 
     def copy(self, default=None):
         raise UserError(_('Duplicating a company is not allowed. Please create a new company instead.'))
