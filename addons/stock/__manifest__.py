@@ -96,8 +96,6 @@
     'assets': {
         'web.report_assets_common': [
             # legacy reports (delete when all reports are converted)
-            'stock/static/src/legacy_web_report/utils.js',
-            'stock/static/src/legacy_web_report/report.js',
             'stock/static/src/legacy_web_report/report_backend.scss',
 
             'web/static/src/legacy/scss/views.scss',
