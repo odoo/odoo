@@ -92,6 +92,7 @@
             'web/static/src/env.js',
             'web/static/src/core/utils/transitions.scss', # needs to be loaded before other scss files
             'web/static/src/core/**/*',
+            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             ('remove', 'web/static/src/core/errors/error_handlers.js'), # error handling in PoS is different from the webclient
             # formatMonetary
             'web/static/src/views/fields/formatters.js',

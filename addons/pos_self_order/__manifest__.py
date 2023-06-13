@@ -36,6 +36,7 @@
             "web/static/src/session.js",
             "web/static/src/core/utils/transitions.scss",
             "web/static/src/core/**/*",
+            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             ("remove", "web/static/src/core/browser/router_service.js"),
             ("remove", "web/static/src/core/debug/**/*"),
             "web/static/lib/owl/owl.js",

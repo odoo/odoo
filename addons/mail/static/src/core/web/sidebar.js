@@ -4,7 +4,7 @@ import { ImStatus } from "@mail/core/common/im_status";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
 import { onExternalClick } from "@mail/utils/common/hooks";
-import { markEventHandled } from "@mail/utils/common/misc";
+import { markEventHandled } from "@web/core/utils/misc";
 
 import { Component, useState } from "@odoo/owl";
 

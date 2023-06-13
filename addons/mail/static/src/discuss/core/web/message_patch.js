@@ -2,7 +2,7 @@
 
 import { Message } from "@mail/core/common/message";
 import "@mail/core/web/message_patch"; // dependency ordering
-import { markEventHandled } from "@mail/utils/common/misc";
+import { markEventHandled } from "@web/core/utils/misc";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";

@@ -72,9 +72,9 @@ QUnit.test("reply: discard on pressing escape", async (assert) => {
 
     // Escape on emoji picker does not stop replying
     await click(".o-mail-Composer button[aria-label='Emojis']");
-    assert.containsOnce($, ".o-mail-EmojiPicker");
+    assert.containsOnce($, ".o-EmojiPicker");
     await afterNextRender(() => triggerHotkey("Escape"));
-    assert.containsNone($, ".o-mail-EmojiPicker");
+    assert.containsNone($, ".o-EmojiPicker");
     assert.containsOnce($, ".o-mail-Composer");
 
     // Escape on suggestion prompt does not stop replying

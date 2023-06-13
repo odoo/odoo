@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { Message } from "@mail/core/common/message";
-import { markEventHandled } from "@mail/utils/common/misc";
+import { markEventHandled } from "@web/core/utils/misc";
 
 import { getCurrency } from "@web/core/currency";
 import { deserializeDateTime } from "@web/core/l10n/dates";

@@ -163,6 +163,9 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/xml/colorpicker.xml',
             'web/static/src/legacy/translations_loaded.js',
         ],
+        'web.assets_emoji': [
+            'web/static/src/core/emoji_picker/emoji_data.js'
+        ],
         'web.assets_backend': [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
@@ -184,6 +187,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/webclient/clickbot/clickbot.js'), # lazy loaded
             ('remove', 'web/static/src/views/form/button_box/*.scss'),
             ('remove', 'web/static/src/core/file_viewer/file_viewer.dark.scss'),
+            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
 
             # remove the report code and whitelist only what's needed
             ('remove', 'web/static/src/webclient/actions/reports/**/*'),
@@ -397,6 +401,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/core/commands/**/*'),
             ('remove', 'web/static/src/core/debug/debug_menu.js'),
             ('remove', 'web/static/src/core/file_viewer/file_viewer.dark.scss'),
+            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             'web/static/src/public/error_notifications.js',
 
             'web/static/src/legacy/utils.js',

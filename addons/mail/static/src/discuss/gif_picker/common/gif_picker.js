@@ -3,7 +3,7 @@
 import { useStore } from "@mail/core/common/messaging_hook";
 import { removeFromArrayWithPredicate } from "@mail/utils/common/arrays";
 import { useOnBottomScrolled } from "@mail/utils/common/hooks";
-import { markEventHandled } from "@mail/utils/common/misc";
+import { markEventHandled } from "@web/core/utils/misc";;
 
 import { Component, onWillStart, useRef, useState } from "@odoo/owl";
 

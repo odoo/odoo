@@ -5,7 +5,7 @@ import { CallContextMenu } from "@mail/discuss/call/common/call_context_menu";
 import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant_video";
 import { useRtc } from "@mail/discuss/call/common/rtc_hook";
 import { useHover } from "@mail/utils/common/hooks";
-import { isEventHandled, markEventHandled } from "@mail/utils/common/misc";
+import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 
 import { Component, onMounted, onWillUnmount, useRef } from "@odoo/owl";
 

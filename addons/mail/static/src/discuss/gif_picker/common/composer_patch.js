@@ -3,7 +3,7 @@
 import { GifPicker, useGifPicker } from "@mail/discuss/gif_picker/common/gif_picker";
 import { Composer } from "@mail/core/common/composer";
 import { onExternalClick } from "@mail/utils/common/hooks";
-import { isEventHandled, markEventHandled } from "@mail/utils/common/misc";
+import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 
 import { useState } from "@odoo/owl";
 

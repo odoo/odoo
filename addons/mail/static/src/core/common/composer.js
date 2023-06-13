@@ -10,11 +10,8 @@ import { NavigableList } from "@mail/core/common/navigable_list";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
 import { escapeAndCompactTextContent } from "@mail/utils/common/format";
 import { useSelection } from "@mail/utils/common/hooks";
-import {
-    isDragSourceExternalFile,
-    isEventHandled,
-    markEventHandled,
-} from "@mail/utils/common/misc";
+import { isDragSourceExternalFile } from "@mail/utils/common/misc";
+import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 
 import {
     Component,
