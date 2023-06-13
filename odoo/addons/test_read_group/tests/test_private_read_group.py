@@ -693,7 +693,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             """
             SELECT "test_read_group_user_task__task_id"."name"
             FROM "test_read_group_user_task"
-                JOIN "test_read_group_task" AS "test_read_group_user_task__task_id" ON ("test_read_group_user_task"."task_id" = "test_read_group_user_task__task_id"."id")
+                LEFT JOIN "test_read_group_task" AS "test_read_group_user_task__task_id" ON ("test_read_group_user_task"."task_id" = "test_read_group_user_task__task_id"."id")
             GROUP BY "test_read_group_user_task__task_id"."name"
             ORDER BY "test_read_group_user_task__task_id"."name" ASC
             """
@@ -704,7 +704,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             """
             SELECT "test_read_group_user_task__task_id"."name", "test_read_group_user_task__task_id"."name"
             FROM "test_read_group_user_task"
-                JOIN "test_read_group_task" AS "test_read_group_user_task__task_id" ON ("test_read_group_user_task"."task_id" = "test_read_group_user_task__task_id"."id")
+                LEFT JOIN "test_read_group_task" AS "test_read_group_user_task__task_id" ON ("test_read_group_user_task"."task_id" = "test_read_group_user_task__task_id"."id")
             GROUP BY "test_read_group_user_task__task_id"."name", "test_read_group_user_task__task_id"."name"
             ORDER BY "test_read_group_user_task__task_id"."name" ASC, "test_read_group_user_task__task_id"."name" ASC
             """
@@ -724,7 +724,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             """
             SELECT "test_read_group_user_task__task_id"."name"
             FROM "test_read_group_user_task"
-                JOIN "test_read_group_task" AS "test_read_group_user_task__task_id" ON (
+                LEFT JOIN "test_read_group_task" AS "test_read_group_user_task__task_id" ON (
                     "test_read_group_user_task"."task_id" = "test_read_group_user_task__task_id"."id"
                     AND ("test_read_group_user_task__task_id"."id" = %s)
                 )
@@ -738,7 +738,7 @@ class TestPrivateReadGroup(common.TransactionCase):
             """
             SELECT "test_read_group_user_task__task_id"."name"
             FROM "test_read_group_user_task"
-                JOIN "test_read_group_task" AS "test_read_group_user_task__task_id" ON ("test_read_group_user_task"."task_id" = "test_read_group_user_task__task_id"."id")
+                LEFT JOIN "test_read_group_task" AS "test_read_group_user_task__task_id" ON ("test_read_group_user_task"."task_id" = "test_read_group_user_task__task_id"."id")
             GROUP BY "test_read_group_user_task__task_id"."name"
             ORDER BY "test_read_group_user_task__task_id"."name" ASC
             """

@@ -2569,19 +2569,18 @@ class BaseModel(metaclass=MetaModel):
 
         return rows_dict
 
-    def _inherits_join_add(self, current_model, parent_model_name, query):
+    def _inherits_join_add(self, alias_table, parent_model_name, query):
         """
         Add missing table SELECT and JOIN clause to ``query`` for reaching the parent table (no duplicates)
-        :param current_model: current model object
+        :param alias_table: current model object
         :param parent_model_name: name of the parent model for which the clauses should be added
         :param query: query object on which the JOIN should be added
         """
-        inherits_field = current_model._inherits[parent_model_name]
+        inherits_field = self._inherits[parent_model_name]
         parent_model = self.env[parent_model_name]
-        parent_alias = query.left_join(
-            current_model._table, inherits_field, parent_model._table, 'id', inherits_field,
+        return query.left_join(
+            alias_table, inherits_field, parent_model._table, 'id', inherits_field,
         )
-        return parent_alias
 
     def _field_sql_expression(self, field, alias_table: str, query: Query) -> str:
         """ Not for the where clause """
@@ -2617,12 +2616,11 @@ class BaseModel(metaclass=MetaModel):
 
         if field.related:
             relational_fname = field.related.split('.')[0]
-            relational_model: BaseModel = self.env[self._fields[relational_fname].comodel_name]
+            path_field = self._fields[relational_fname]
+            relational_model: BaseModel = self.env[path_field.comodel_name]
 
-            join_method = query.join if field.related_field.required else query.left_join
-
-            if (field.related and field.compute_sudo) or field.inherited:  # inherited field should be sudo by default ?
-                relational_alias = join_method(
+            if (field.related and field.compute_sudo) or path_field.auto_join:  # inherited field should be sudo by default ?
+                relational_alias = query.left_join(
                     alias_table, relational_fname, relational_model._table, 'id', relational_fname,
                 )
                 return relational_model._field_sql_expression(field.related_field, relational_alias, query)
@@ -2633,9 +2631,10 @@ class BaseModel(metaclass=MetaModel):
 
             # TODO: not correct, apply_ir_rule won't use the coorect alias and then condition on join won't be correct
             subquery = Query(self.env.cr, alias_table, relational_model._table)
-            relational_model._apply_ir_rules(subquery, 'read')
+            # Alias `{rhs}` will be format (into the alias choose by the object query) in `_join`
+            relational_model._apply_ir_rules(subquery, 'read', '{rhs}')
 
-            relational_alias = join_method(
+            relational_alias = query.left_join(
                 alias_table, relational_fname, relational_model._table, 'id', relational_fname,
                 " AND ".join(subquery._where_clauses) or None, subquery._where_params,
             )
@@ -4716,7 +4715,7 @@ class BaseModel(metaclass=MetaModel):
         return True
 
     @api.model
-    def _apply_ir_rules(self, query, mode='read'):
+    def _apply_ir_rules(self, query, mode='read', alias=None):
         """Add what's missing in ``query`` to implement all appropriate ir.rules
           (using the ``model_name``'s rules or the current model's rules if ``model_name`` is None)
 
@@ -4729,14 +4728,14 @@ class BaseModel(metaclass=MetaModel):
         Rule = self.env['ir.rule']
         domain = Rule._compute_domain(self._name, mode)
         if domain:
-            expression.expression(domain, self.sudo(), self._table, query)
+            expression.expression(domain, self.sudo(), alias or self._table, query)
 
         # apply ir.rules from the parents (through _inherits)
         for parent_model_name in self._inherits:
             domain = Rule._compute_domain(parent_model_name, mode)
             if domain:
                 parent_model = self.env[parent_model_name]
-                parent_alias = self._inherits_join_add(self, parent_model_name, query)
+                parent_alias = self._inherits_join_add(alias or self._table, parent_model_name, query)
                 expression.expression(domain, parent_model.sudo(), parent_alias, query)
 
     @api.model
