@@ -253,7 +253,6 @@ class AccountMove(models.Model):
     show_name_warning = fields.Boolean(store=False)
     type_name = fields.Char('Type Name', compute='_compute_type_name')
     country_code = fields.Char(related='company_id.account_fiscal_country_id.code', readonly=True)
-    attachment_ids = fields.One2many('ir.attachment', 'res_id', domain=[('res_model', '=', 'account.move')], string='Attachments')
 
     # === Hash Fields === #
     restrict_mode_hash_table = fields.Boolean(related='journal_id.restrict_mode_hash_table')
@@ -558,6 +557,7 @@ class AccountMove(models.Model):
         help='Defines the smallest coinage of the currency that can be used to pay by cash.',
     )
     send_and_print_values = fields.Json(copy=False)
+    linked_attachment_ids = fields.One2many(comodel_name='ir.attachment', inverse_name='res_id')
     invoice_pdf_report_id = fields.Many2one(
         comodel_name='ir.attachment',
         string="PDF Attachment",
@@ -1618,7 +1618,7 @@ class AccountMove(models.Model):
                        move.ref = duplicate_move.ref
                        AND (move.invoice_date = duplicate_move.invoice_date OR move.state = 'draft')
                    )
-               ) 
+               )
              WHERE move.id IN %(moves)s
              GROUP BY move.id
         """, {
