@@ -94,6 +94,10 @@ class Task(models.Model):
         return (default_id or self.env['project.task.type'].search([('user_id', '=', self.env.user.id)], limit=1).ids or [False])[0]
 
     @api.model
+    def _default_user_ids(self):
+        return self.env.user if 'default_personal_stage_type_ids' in self.env.context or 'default_personal_stage_type_id' in self.env.context else False
+
+    @api.model
     def _default_company_id(self):
         if self._context.get('default_project_id'):
             return self.env['project.project'].browse(self._context['default_project_id']).company_id
@@ -156,21 +160,22 @@ class Task(models.Model):
     subtask_planned_hours = fields.Float("Sub-tasks Planned Hours", compute='_compute_subtask_planned_hours',
         help="Sum of the hours allocated for all the sub-tasks (and their own sub-tasks) linked to this task. Usually less than or equal to the allocated hours of this task.")
     # Tracking of this field is done in the write function
-    user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id', string='Assignees', context={'active_test': False}, tracking=True)
+    user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
+        string='Assignees', context={'active_test': False}, tracking=True, default=_default_user_ids)
     # User names displayed in project sharing views
     portal_user_names = fields.Char(compute='_compute_portal_user_names', compute_sudo=True, search='_search_portal_user_names')
     # Second Many2many containing the actual personal stage for the current user
     # See project_task_stage_personal.py for the model defininition
     personal_stage_type_ids = fields.Many2many('project.task.type', 'project_task_user_rel', column1='task_id', column2='stage_id',
         ondelete='restrict', group_expand='_read_group_personal_stage_type_ids', copy=False,
-        domain="[('user_id', '=', user.id)]", depends=['user_ids'], string='Personal Stage')
+        domain="[('user_id', '=', user.id)]", depends=['user_ids'], string='Saved Personal Stage')
     # Personal Stage computed from the user
     personal_stage_id = fields.Many2one('project.task.stage.personal', string='Personal Stage State', compute_sudo=False,
         compute='_compute_personal_stage_id', help="The current user's personal stage.")
     # This field is actually a related field on personal_stage_id.stage_id
     # However due to the fact that personal_stage_id is computed, the orm throws out errors
     # saying the field cannot be searched.
-    personal_stage_type_id = fields.Many2one('project.task.type', string='Personal User Stage',
+    personal_stage_type_id = fields.Many2one('project.task.type', string='Personal Stage',
         compute='_compute_personal_stage_type_id', inverse='_inverse_personal_stage_type_id', store=False,
         search='_search_personal_stage_type_id', default=_default_personal_stage_type_id,
         help="The current user's personal task stage.")
@@ -1613,3 +1618,16 @@ class Task(models.Model):
             'url': '/web#model=project.task&id=%s&action=%s&view_type=form' % (self.id, self.env.ref('project.action_view_my_task').id),
             'target': 'new',
         }
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True): #TODO: multiple groupby ??
+        # A read_group can not be performed if records are grouped by personal_stage_type_id as it is a computed field.
+        # personal_stage_type_ids behaves like a M2O from the point of view of the user, we therefore use this field instead.
+        if 'personal_stage_type_id' in groupby and (not lazy or groupby[0] == 'personal_stage_type_id'):
+            groupby = list(map(lambda field: "personal_stage_type_ids" if field == "personal_stage_type_id" else field, groupby)) # limitation, problem when grouped on personal_stage_type_id and personal_stage_type_ids but who does that?
+            result = super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+            for group in result:
+                group['personal_stage_type_id'] = group.pop('personal_stage_type_ids', False)
+                group['personal_stage_type_id_count'] = group.pop('personal_stage_type_ids_count', False)
+            return result
+        return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)

@@ -20,7 +20,7 @@ export class ProjectTaskKanbanDynamicGroupList extends KanbanDynamicGroupList {
     }
 
     get isGroupedByPersonalStages() {
-        return !!this.groupByField && this.groupByField.name === 'personal_stage_type_ids';
+        return !!this.groupByField && this.groupByField.name === 'personal_stage_type_id';
     }
 
     async _loadGroups() {

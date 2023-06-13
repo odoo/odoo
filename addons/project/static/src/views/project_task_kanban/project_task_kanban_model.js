@@ -28,7 +28,7 @@ export class ProjectTaskRecord extends Record {
 
 export class ProjectTaskKanbanGroup extends KanbanModel.Group {
     get isPersonalStageGroup() {
-        return !!this.groupByField && this.groupByField.name === 'personal_stage_type_ids';
+        return !!this.groupByField && this.groupByField.name === 'personal_stage_type_id';
     }
 
     async delete() {
