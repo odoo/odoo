@@ -25,9 +25,16 @@
                         <group>
                             <group>
                                 <field name="name" placeholder="e.g. To Do"/>
-                                <field name="mail_template_id" context="{'default_model': 'project.task'}"/>
-                                <field name="rating_template_id" placeholder="Task: Rating Request" groups="project.group_project_rating" context="{'default_model': 'project.task'}"/>
-                                <div class="alert alert-warning" role="alert" colspan='2' invisible="not rating_template_id or not disabled_rating_warning" groups="project.group_project_rating">
+                                <field name="user_id" invisible="True"/>
+                                <field name="mail_template_id" context="{'default_model': 'project.task'}" invisible="user_id"/>
+                                <field name="rating_template_id"
+                                       placeholder="Task: Rating Request"
+                                       groups="project.group_project_rating"
+                                       context="{'default_model': 'project.task'}"
+                                       invisible="user_id"/>
+                                <div class="alert alert-warning" role="alert" colspan='2'
+                                     invisible="not rating_template_id or not disabled_rating_warning or user_id"
+                                     groups="project.group_project_rating">
                                     <i class="fa fa-warning" title="Customer disabled on projects"/><b> Customer Ratings</b> are disabled on the following project(s) : <br/>
                                     <field name="disabled_rating_warning" class="mb-0" />
                                 </div>
@@ -36,7 +43,9 @@
                             </group>
                             <group>
                                 <field name="fold"/>
-                                <field name="project_ids" required="1" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <field name="project_ids" widget="many2many_tags" options="{'color_field': 'color'}"
+                                       invisible="user_id"
+                                       required="not user_id"/>
                             </group>
                         </group>
                     </sheet>
@@ -44,6 +53,7 @@
             </field>
         </record>
 
+        <!-- TODO: remove in master -->
         <record id="personal_task_type_edit" model="ir.ui.view">
             <field name="name">project.task.type.form</field>
             <field name="model">project.task.type</field>
@@ -90,7 +100,7 @@
                 <xpath expr="//field[@name='name']" position="after">
                     <field name="mail_template_id" optional="hide"/>
                     <field name="rating_template_id" optional="hide" groups="project.group_project_rating"/>
-                    <field name="project_ids" optional="show" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="project_ids" required="1" optional="show" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 </xpath>
             </field>
         </record>
@@ -130,6 +140,7 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="task_type_tree_inherited"/>
             <field name="domain">[('user_id', '=', False)]</field>
+            <field name="context">{'default_project_id': False}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 No stages found. Let's create one!

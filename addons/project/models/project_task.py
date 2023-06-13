@@ -101,6 +101,10 @@ class Task(models.Model):
         return (default_id or self.env['project.task.type'].search([('user_id', '=', self.env.user.id)], limit=1).ids or [False])[0]
 
     @api.model
+    def _default_user_ids(self):
+        return self.env.context.keys() & {'default_personal_stage_type_ids', 'default_personal_stage_type_id'} and self.env.user
+
+    @api.model
     def _default_company_id(self):
         if self._context.get('default_project_id'):
             return self.env['project.project'].browse(self._context['default_project_id']).company_id
@@ -162,7 +166,8 @@ class Task(models.Model):
     subtask_allocated_hours = fields.Float("Sub-tasks Allocated Time", compute='_compute_subtask_allocated_hours',
         help="Sum of the hours allocated for all the sub-tasks (and their own sub-tasks) linked to this task. Usually less than or equal to the allocated hours of this task.")
     # Tracking of this field is done in the write function
-    user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id', string='Assignees', context={'active_test': False}, tracking=True)
+    user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id',
+        string='Assignees', context={'active_test': False}, tracking=True, default=_default_user_ids)
     # User names displayed in project sharing views
     portal_user_names = fields.Char(compute='_compute_portal_user_names', compute_sudo=True, search='_search_portal_user_names')
     # Second Many2many containing the actual personal stage for the current user
@@ -1690,3 +1695,16 @@ class Task(models.Model):
             'url': '/web#model=project.task&id=%s&action=%s&view_type=form' % (self.id, self.env.ref('project.action_view_my_task').id),
             'target': 'new',
         }
+
+    @api.model
+    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
+        # A read_group can not be performed if records are grouped by personal_stage_type_id as it is a computed field.
+        # personal_stage_type_ids behaves like a M2O from the point of view of the user, we therefore use this field instead.
+        if 'personal_stage_type_id' in groupby and (not lazy or groupby[0] == 'personal_stage_type_id'):
+            groupby = ["personal_stage_type_ids" if field == "personal_stage_type_id" else field for field in groupby] # limitation: problem when both personal_stage_type_id and personal_stage_type_ids appear in read_group, but this has no functional utility
+            result = super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
+            for group in result:
+                group['personal_stage_type_id'] = group.pop('personal_stage_type_ids', False)
+                group['personal_stage_type_id_count'] = group.pop('personal_stage_type_ids_count', 0)
+            return result
+        return super().read_group(domain, fields, groupby, offset, limit, orderby, lazy)
