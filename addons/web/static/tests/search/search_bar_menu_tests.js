@@ -1703,5 +1703,34 @@ QUnit.module("Search", (hooks) => {
             assert.deepEqual(getFacetTexts(target), [`ID is between 0 and 10`]);
             assert.deepEqual(getDomain(controlPanel), ["&", ["id", ">=", 0], ["id", "<=", 10]]);
         });
+
+        QUnit.test("consistent display of ! in debug mode", async function (assert) {
+            patchWithCleanup(odoo, { debug: true });
+
+            const controlPanel = await makeWithSearch({
+                serverData,
+                resModel: "foo",
+                Component: SearchBar,
+                searchMenuTypes: ["filter"],
+                searchViewId: false,
+                searchViewArch: `<search />`,
+            });
+            await toggleSearchBarMenu(target);
+            await openAddCustomFilterDialog(target);
+            await editInput(
+                target,
+                ".o_domain_debug_input",
+                `["!", "|", ("foo", "=", 1 ), ("id", "=", 2)]`
+            );
+            assert.strictEqual(
+                target.querySelector(".o_domain_tree_connector_caret").textContent,
+                "none"
+            );
+
+            await click(target.querySelector(".modal footer button"));
+
+            assert.deepEqual(getFacetTexts(target), [`! ( Foo = 1 or ID = 2 )`]);
+            assert.deepEqual(getDomain(controlPanel), ["!", "|", ["foo", "=", 1], ["id", "=", 2]]);
+        });
     });
 });
