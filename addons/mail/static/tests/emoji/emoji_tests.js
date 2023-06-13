@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { EMOJI_PER_ROW } from "@mail/core/common/emoji_picker";
+import { EMOJI_PER_ROW } from "@web/core/emoji_picker/emoji_picker";
 import {
     afterNextRender,
     click,
