@@ -329,3 +329,43 @@ class TestImportModuleHttp(TestImportModule, odoo.tests.HttpCase):
         self.assertEqual(self.url_open('/' + foo_icon_path).content, foo_icon_data)
         # Assert icon of module bar, which must be the icon of the base module as none was provided
         self.assertEqual(self.env.ref('base.module_bar').icon_image, self.env.ref('base.module_base').icon_image)
+
+    def test_import_module_field_file(self):
+        files = [
+            ('foo/__manifest__.py', b"{'data': ['data.xml']}"),
+            ('foo/data.xml', b"""
+                <data>
+                    <record id="logo" model="ir.attachment">
+                        <field name="name">Company Logo</field>
+                        <field name="datas" type="base64" file="foo/static/src/img/content/logo.png"/>
+                        <field name="res_model">ir.ui.view</field>
+                        <field name="public" eval="True"/>
+                    </record>
+                </data>
+            """),
+            ('foo/static/src/img/content/logo.png', b"foo_logo"),
+        ]
+        self.import_zipfile(files)
+        logo_path, logo_data = files[2]
+        self.assertEqual(base64.b64decode(self.env.ref('foo.logo').datas), logo_data)
+        self.assertEqual(self.url_open('/' + logo_path).content, logo_data)
+
+    def test_import_module_assets_http(self):
+        asset_bundle = 'web_assets_backend'
+        asset_path = '/foo/static/src/js/test.js'
+        files = [
+            ('foo/__manifest__.py', json.dumps({
+                'assets': {
+                    asset_bundle: [
+                        asset_path,
+                    ]
+                },
+            })),
+            ('foo/static/src/js/test.js', b"foo_assets_backend"),
+        ]
+        self.import_zipfile(files)
+        asset = self.env.ref('foo.web_assets_backend_/foo/static/src/js/test_js')
+        self.assertEqual(asset.bundle, asset_bundle)
+        self.assertEqual(asset.path, asset_path)
+        asset_data = files[1][1]
+        self.assertEqual(self.url_open(asset_path).content, asset_data)
