@@ -783,6 +783,8 @@ class MrpProduction(models.Model):
                     finished_move_lines.write({'lot_id': vals.get('lot_producing_id')})
                 if 'qty_producing' in vals:
                     finished_move_lines.write({'qty_done': vals.get('qty_producing')})
+            elif production.state not in ['draft', 'done', 'cancel'] and 'lot_producing_id' in vals:
+                production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id).move_line_ids.write({'lot_id': production.lot_producing_id.id})
 
             if not production.workorder_ids.operation_id and vals.get('date_planned_start') and not vals.get('date_planned_finished'):
                 new_date_planned_start = fields.Datetime.to_datetime(vals.get('date_planned_start'))
@@ -1181,8 +1183,6 @@ class MrpProduction(models.Model):
             'company_id': self.company_id.id,
             'name': name,
         })
-        if self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_line_ids:
-            self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_line_ids.lot_id = self.lot_producing_id
         if self.product_id.tracking == 'serial':
             self._set_qty_producing()
 
