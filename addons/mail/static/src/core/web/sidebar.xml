@@ -61,9 +61,6 @@
         </div>
     </div>
     <t t-if="category.isOpen">
-        <div t-if="state.editing === category.id" class="p-2" t-ref="selector">
-            <ChannelSelector category="category" onValidate.bind="stopEditing" autofocus="true"/>
-        </div>
         <t t-foreach="filteredThreads(category)" t-as="threadLocalId" t-key="threadLocalId" t-call="mail.DiscussCategoryItem">
             <t t-set="thread" t-value="store.threads[threadLocalId]"/>
         </t>

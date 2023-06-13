@@ -1,6 +1,5 @@
 /* @odoo-module */
 
-import { ChannelSelector } from "@mail/core/common/channel_selector";
 import { ImStatus } from "@mail/core/common/im_status";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
@@ -19,7 +18,7 @@ import { useService } from "@web/core/utils/hooks";
  */
 export class Sidebar extends Component {
     static template = "mail.DiscussSidebar";
-    static components = { ChannelSelector, ThreadIcon, ImStatus };
+    static components = { ThreadIcon, ImStatus };
     static props = [];
 
     setup() {

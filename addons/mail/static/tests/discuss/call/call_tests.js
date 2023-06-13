@@ -11,7 +11,7 @@ import {
 } from "@mail/../tests/helpers/test_utils";
 
 import { browser } from "@web/core/browser/browser";
-import { editInput, nextTick, patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
+import { nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 
 QUnit.module("call");
 
@@ -112,48 +112,6 @@ QUnit.test("should disconnect when closing page while in call", async (assert) =
     await afterNextRender(() => window.dispatchEvent(new Event("pagehide"), { bubble: true }));
     await nextTick();
     assert.verifySteps(["sendBeacon_leave_call"]);
-});
-
-QUnit.test("no default rtc after joining a chat conversation", async (assert) => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "Mario" });
-    pyEnv["res.users"].create({ partner_id: partnerId });
-    const { openDiscuss } = await start();
-    await openDiscuss();
-    assert.containsNone($, ".o-mail-DiscussCategoryItem");
-
-    await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
-    await afterNextRender(() => editInput(document.body, ".o-mail-ChannelSelector input", "mario"));
-    await click(".o-mail-ChannelSelector-suggestion");
-    await triggerEvent(document.body, ".o-mail-ChannelSelector input", "keydown", {
-        key: "Enter",
-    });
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem");
-    assert.containsNone($, ".o-mail-Discuss-content .o-mail-Message");
-    assert.containsNone($, ".o-discuss-Call");
-});
-
-QUnit.test("no default rtc after joining a group conversation", async (assert) => {
-    const pyEnv = await startServer();
-    const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
-        { name: "Mario" },
-        { name: "Luigi" },
-    ]);
-    pyEnv["res.users"].create([{ partner_id: partnerId_1 }, { partner_id: partnerId_2 }]);
-    const { openDiscuss } = await start();
-    await openDiscuss();
-    assert.containsNone($, ".o-mail-DiscussCategoryItem");
-    await click(".o-mail-DiscussSidebar i[title='Start a conversation']");
-    await afterNextRender(() => editInput(document.body, ".o-mail-ChannelSelector input", "mario"));
-    await click(".o-mail-ChannelSelector-suggestion");
-    await afterNextRender(() => editInput(document.body, ".o-mail-ChannelSelector input", "luigi"));
-    await click(".o-mail-ChannelSelector-suggestion");
-    await triggerEvent(document.body, ".o-mail-ChannelSelector input", "keydown", {
-        key: "Enter",
-    });
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem");
-    assert.containsNone($, ".o-mail-Discuss-content .o-mail-Message");
-    assert.containsNone($, ".o-discuss-Call");
 });
 
 QUnit.test("should display invitations", async (assert) => {

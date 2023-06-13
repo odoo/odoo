@@ -17,32 +17,11 @@
 <t t-name="mail.MessagingMenu.content" owl="1">
     <t t-set="failures" t-value="store.notificationGroups"/>
     <div class="o-mail-MessagingMenu d-flex flex-column flex-grow-1" t-att-class="{ 'overflow-auto w-100 mh-100': ui.isSmall }">
-        <div t-att-class="{'flex-row-reverse text-uppercase': ui.isSmall,
-        'o-mail-MessagingMenu-header border-bottom d-flex flex-shrink-0 p-2': !env.inDiscussApp,
-        }">
+        <div class="o-mail-MessagingMenu-header" t-att-class="{'flex-row-reverse text-uppercase': ui.isSmall, 'border-bottom d-flex flex-shrink-0 p-2': !env.inDiscussApp }">
             <t t-if="!ui.isSmall">
                 <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'all' ? 'fw-bolder' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'all'">All</button>
                 <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'chat' ? 'fw-bolder' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'chat'">Chats</button>
                 <button class="btn btn-link" t-att-class="store.discuss.activeTab === 'channel' ? 'fw-bolder' : 'text-muted'" type="button" role="tab" t-on-click="() => store.discuss.activeTab = 'channel'">Channels</button>
-            </t>
-            <div class="flex-grow-1"></div>
-            <t t-if="!store.discuss.isActive or ui.isSmall and store.discuss.activeTab !== 'mailbox'">
-                <t t-if="env.inDiscussApp and ['chat', 'channel'].includes(store.discuss.activeTab)">
-                    <div t-if="state.addingChat or state.addingChannel" class="p-4 border-bottom bg-light" t-ref="selector">
-                        <t t-if="state.addingChat" t-set="category" t-value="store.discuss.chats"/>
-                        <t t-if="state.addingChannel" t-set="category" t-value="store.discuss.channels"/>
-                        <ChannelSelector category="category" autofocus="true"/>
-                    </div>
-                </t>
-                <button t-if="!env.inDiscussApp or (env.inDiscussApp and store.discuss.activeTab === 'chat' and !state.addingChat)" t-att-class="env.inDiscussApp ? 'w-100 p-2 btn btn-secondary border-bottom bg-light' : 'btn btn-link'" t-on-click.stop="onClickNewMessage">
-                    <t t-if="env.inDiscussApp">Start a conversation</t>
-                    <t t-else="">New Message</t>
-                </button>
-                <div t-if="env.inDiscussApp and store.discuss.activeTab === 'channel' and !state.addingChannel">
-                    <button class="w-100 p-2 btn btn-secondary border-bottom bg-light" t-on-click.stop="() => this.state.addingChannel = true">
-                        New Channel
-                    </button>
-                </div>
             </t>
         </div>
         <div t-if="!env.inDiscussApp or ['chat', 'channel'].includes(store.discuss.activeTab)" class="d-flex flex-column overflow-auto flex-grow-1">
