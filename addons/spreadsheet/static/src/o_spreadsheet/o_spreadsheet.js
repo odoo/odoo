@@ -1614,27 +1614,36 @@
         }
         return numberString.slice(0, i + 1) || undefined;
     }
+    const leadingZeroesRegexp = /^0+/;
     /**
      * Limit the size of the decimal part of a number to the given number of digits.
      */
     function limitDecimalDigits(decimalDigits, maxDecimals) {
+        var _a;
         let integerDigits = "0";
         let resultDecimalDigits = decimalDigits;
         // Note : we'd want to simply use number.toFixed() to handle the max digits & rounding,
         // but it has very strange behaviour. Ex: 12.345.toFixed(2) => "12.35", but 1.345.toFixed(2) => "1.34"
         let slicedDecimalDigits = decimalDigits.slice(0, maxDecimals);
         const i = maxDecimals;
-        if (Number(Number(decimalDigits[i]) < 5)) {
+        if (Number(decimalDigits[i]) < 5) {
             return { integerDigits, decimalDigits: slicedDecimalDigits };
         }
         // round up
+        const leadingZeroes = ((_a = slicedDecimalDigits.match(leadingZeroesRegexp)) === null || _a === void 0 ? void 0 : _a[0]) || "";
         const slicedRoundedUp = (Number(slicedDecimalDigits) + 1).toString();
-        if (slicedRoundedUp.length > slicedDecimalDigits.length) {
-            integerDigits = (Number(integerDigits) + 1).toString();
+        const withoutLeadingZeroes = slicedDecimalDigits.slice(leadingZeroes.length);
+        // e.g. carry over from 99 to 100
+        const carryOver = slicedRoundedUp.length > withoutLeadingZeroes.length;
+        if (carryOver && !leadingZeroes) {
+            integerDigits = "1";
             resultDecimalDigits = undefined;
         }
+        else if (carryOver) {
+            resultDecimalDigits = leadingZeroes.slice(0, -1) + slicedRoundedUp;
+        }
         else {
-            resultDecimalDigits = slicedRoundedUp;
+            resultDecimalDigits = leadingZeroes + slicedRoundedUp;
         }
         return { integerDigits, decimalDigits: resultDecimalDigits };
     }
@@ -8360,6 +8369,7 @@
     .o-color-picker-toggler {
       display: flex;
       .o-color-picker-toggler-sign {
+        display: flex;
         margin: auto auto;
         width: 55%;
         height: 55%;
@@ -20232,6 +20242,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                     this.autocompleteAPI.moveDown();
                 }
             }
+            this.updateCursorIfNeeded();
         }
         processTabKey(ev) {
             ev.preventDefault();
@@ -20288,9 +20299,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
             else {
                 ev.stopPropagation();
+                this.updateCursorIfNeeded();
             }
-            const { start, end } = this.contentHelper.getCurrentSelection();
+        }
+        updateCursorIfNeeded() {
             if (!this.env.model.getters.isSelectingForComposer()) {
+                const { start, end } = this.contentHelper.getCurrentSelection();
                 this.env.model.dispatch("CHANGE_COMPOSER_CURSOR_SELECTION", { start, end });
                 this.isKeyStillDown = true;
             }
@@ -33179,14 +33193,19 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                         if (!filter)
                             continue;
                         const valuesInFilterZone = filter.filteredZone
-                            ? positions(filter.filteredZone)
-                                .map((pos) => { var _a; return (_a = this.getters.getCell(sheetData.id, pos.col, pos.row)) === null || _a === void 0 ? void 0 : _a.formattedValue; })
-                                .filter(isNonEmptyString)
+                            ? positions(filter.filteredZone).map((pos) => { var _a; return (_a = this.getters.getCell(sheetData.id, pos.col, pos.row)) === null || _a === void 0 ? void 0 : _a.formattedValue; })
                             : [];
-                        // In xlsx, filtered values = values that are displayed, not values that are hidden
-                        const xlsxFilteredValues = valuesInFilterZone.filter((val) => !filteredValues.includes(val));
-                        filters.push({ colId: i, filteredValues: [...new Set(xlsxFilteredValues)] });
-                        // In xlsx, filter header should ALWAYS be a string and should be unique
+                        if (filteredValues.length) {
+                            const xlsxDisplayedValues = valuesInFilterZone
+                                .filter(isNonEmptyString)
+                                .filter((val) => !filteredValues.includes(val));
+                            filters.push({
+                                colId: i,
+                                displayedValues: [...new Set(xlsxDisplayedValues)],
+                                displayBlanks: !filteredValues.includes("") && valuesInFilterZone.some((val) => !val),
+                            });
+                        }
+                        // In xlsx, filter header should ALWAYS be a string and should be unique in the table
                         const headerPosition = { col: filter.col, row: filter.zoneWithHeaders.top };
                         const headerString = (_a = this.getters.getCell(sheetData.id, headerPosition.col, headerPosition.row)) === null || _a === void 0 ? void 0 : _a.formattedValue;
                         const headerName = this.getUniqueColNameForExcel(i, headerString, headerNames);
@@ -41877,15 +41896,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
   `;
     }
     function addFilterColumns(table) {
-        const tableZone = toZone(table.range);
         const columns = [];
-        for (const i of range(0, zoneToDimension(tableZone).width)) {
-            const filter = table.filters[i];
-            if (!filter || !filter.filteredValues.length) {
-                continue;
-            }
+        for (const filter of table.filters) {
             const colXml = escapeXml /*xml*/ `
-      <filterColumn ${formatAttributes([["colId", i]])}>
+      <filterColumn ${formatAttributes([["colId", filter.colId]])}>
         ${addFilter(filter)}
       </filterColumn>
       `;
@@ -41894,9 +41908,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         return columns;
     }
     function addFilter(filter) {
-        const filterValues = filter.filteredValues.map((val) => escapeXml /*xml*/ `<filter ${formatAttributes([["val", val]])}/>`);
+        const filterValues = filter.displayedValues.map((val) => escapeXml /*xml*/ `<filter ${formatAttributes([["val", val]])}/>`);
+        const filterAttributes = filter.displayBlanks ? [["blank", 1]] : [];
         return escapeXml /*xml*/ `
-  <filters>
+  <filters ${formatAttributes(filterAttributes)}>
       ${joinXmlNodes(filterValues)}
   </filters>
 `;
@@ -42801,9 +42816,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.0.12';
-    __info__.date = '2023-06-02T10:15:35.826Z';
-    __info__.hash = '9718465';
+    __info__.version = '16.0.13';
+    __info__.date = '2023-06-12T14:08:55.739Z';
+    __info__.hash = '3c9ec1e';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
