@@ -2127,9 +2127,12 @@ class PosSession(models.Model):
 
         return fps
 
-    def load_product_frontend(self):
+    def _load_onboarding_data(self):
         convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init',
                              kind='data')
+
+    def load_product_frontend(self):
+        self.sudo()._load_onboarding_data()
         return self.get_onboarding_data()
 
 
