@@ -15,24 +15,31 @@ import { DateTimePicker } from "./datetime_picker";
  * }} DateTimeInputProps
  */
 
+const dateTimeInputOwnProps = {
+    format: { type: String, optional: true },
+    id: { type: String, optional: true },
+    onChange: { type: Function, optional: true },
+    onApply: { type: Function, optional: true },
+    placeholder: { type: String, optional: true },
+};
+
 /** @extends {Component<DateTimeInputProps>} */
 export class DateTimeInput extends Component {
     static props = {
         ...DateTimePicker.props,
-        format: { type: String, optional: true },
-        id: { type: String, optional: true },
-        onChange: { type: Function, optional: true },
-        onApply: { type: Function, optional: true },
-        placeholder: { type: String, optional: true },
+        ...dateTimeInputOwnProps,
     };
 
     static template = "web.DateTimeInput";
 
     setup() {
+        const getPickerProps = () => omit(this.props, ...Object.keys(dateTimeInputOwnProps));
+
         useDateTimePicker({
             format: this.props.format,
-            pickerProps: (props) =>
-                omit(props, "format", "placeholder", "id", "onChange", "onApply"),
+            get pickerProps() {
+                return getPickerProps();
+            },
             onApply: (...args) => this.props.onApply?.(...args),
             onChange: (...args) => this.props.onChange?.(...args),
         });
