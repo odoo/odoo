@@ -718,6 +718,8 @@ class Picking(models.Model):
                 "company_id": self.company_id,
             })
             for move in (self.move_ids | self.move_ids_without_package):
+                if not move.product_id:
+                    continue
                 move.description_picking = move.product_id._get_description(move.picking_type_id)
 
         if self.partner_id and self.partner_id.picking_warn:
