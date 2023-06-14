@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import json
 import logging
-from datetime import datetime
 
 import lxml
 import requests
@@ -281,7 +280,6 @@ class WebsiteForum(WebsiteProfile):
             'main_object': question,
             'edit_in_backend': True,
             'question': question,
-            'can_bump': (question.forum_id.allow_bump and not question.child_count and (datetime.today() - question.write_date).days > 9),
             'header': {'question_data': True},
             'filters': filters,
             'reversed': reversed,
@@ -378,11 +376,13 @@ class WebsiteForum(WebsiteProfile):
             'parent_id': post_parent and post_parent.id or False,
             'tag_ids': post_tag_ids
         })
+        if post_parent:
+            post_parent._update_last_activity()
         return request.redirect("/forum/%s/%s" % (slug(forum), post_parent and slug(post_parent) or new_question.id))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment', type='http', auth="user", methods=['POST'], website=True)
     def post_comment(self, forum, post, **kwargs):
-        question = post.parent_id if post.parent_id else post
+        question = post.parent_id or post
         if kwargs.get('comment') and post.forum_id.id == forum.id:
             # TDE FIXME: check that post_id is the question or one of its answers
             body = tools.mail.plaintext2html(kwargs['comment'])
@@ -390,6 +390,7 @@ class WebsiteForum(WebsiteProfile):
                 body=body,
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment')
+            question._update_last_activity()
         return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="public", website=True)
@@ -466,13 +467,6 @@ class WebsiteForum(WebsiteProfile):
             return {'error': 'own_post'}
         upvote = True if post.user_vote < 0 else False
         return post.vote(upvote=upvote)
-
-    @http.route('/forum/post/bump', type='json', auth="public", website=True)
-    def post_bump(self, post_id, **kwarg):
-        post = request.env['forum.post'].browse(int(post_id))
-        if not post.exists() or post.parent_id:
-            return False
-        return post.bump()
 
     # Moderation Tools
     # --------------------------------------------------

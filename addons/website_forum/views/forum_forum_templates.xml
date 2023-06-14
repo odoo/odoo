@@ -33,8 +33,8 @@
                         </a>
                     </th>
                     <th class="o_wforum_table_activity small fw-normal text-center">
-                        <a class="text-muted" t-att-href="sorting=='write_date desc' and url_for('') + '?' + keep_query( 'search', 'filters', sorting='write_date asc') or url_for('') + '?' + keep_query( 'search', 'filters', sorting='write_date desc')">
-                            Activity <i t-attf-class="fa fa-caret-#{sorting=='write_date desc' and 'down' or 'up'}  #{sorting == 'write_date desc' or sorting == 'write_date asc' and ' ' or 'd-none'}"></i>
+                        <a class="text-muted" t-attf-href="?#{ keep_query('search', 'filters', sorting='last_activity asc' if sorting == 'last_activity_date desc' else 'last_activity_date desc') }">
+                            Activity <i t-attf-class="fa fa-caret-#{ 'down' if sorting == 'last_activity_date desc' else 'up'}  #{ not sorting.startswith('last_activity') and 'd-none ' }"></i>
                         </a>
                     </th>
                 </tr>
