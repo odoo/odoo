@@ -21,4 +21,10 @@
         <value model="fleet.vehicle.assignation.log" eval="obj().search([('driver_employee_id', '=', False), ('driver_id', '!=', False)]).ids"/>
     </function>
 
+    <record id="onboarding_fleet_training" model="hr.plan.activity.type">
+        <field name="summary">Fleet Training</field>
+        <field name="responsible">fleet_manager</field>
+        <field name="plan_id" ref="hr.onboarding_plan"/>
+    </record>
+
 </odoo>
