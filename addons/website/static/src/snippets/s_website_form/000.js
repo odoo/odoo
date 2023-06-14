@@ -587,10 +587,32 @@ odoo.define('website.s_website_form', function (require) {
          * @returns {boolean}
          */
         _compareTo(comparator, value = '', comparable, between) {
+            const valueWasNull = (value === null);
+            if (valueWasNull) {
+                // TODO One customer apparently reached that case of receiving
+                // a `null` value (actually possible when retrieving a form
+                // data which is an unchecked checkbox for example) but combined
+                // with an operator which really requires the received value to
+                // be a string... but not sure how this is possible. In any
+                // case, it should not make the form crash: it's just a
+                // problematic *visibility* dependency, it should not prevent
+                // using the form. So if the caller sends a `null` value, treat
+                // it as an empty string. For now, let's also add an error in
+                // the console so we may investigate the issue if it ever shows
+                // up in a test (grep: COMPARE_TO_INVALID_OPERATOR)
+                value = '';
+            }
+
             switch (comparator) {
                 case 'contains':
+                    if (valueWasNull) { // grep: COMPARE_TO_INVALID_OPERATOR
+                        console.error("This field value is null but also uses an invalid operator");
+                    }
                     return value.includes(comparable);
                 case '!contains':
+                    if (valueWasNull) { // grep: COMPARE_TO_INVALID_OPERATOR
+                        console.error("This field value is null but also uses an invalid operator");
+                    }
                     return !value.includes(comparable);
                 case 'equal':
                 case 'selected':
@@ -616,6 +638,9 @@ odoo.define('website.s_website_form', function (require) {
                     return value.name === '';
             }
             // Date & Date Time comparison requires formatting the value
+            if (valueWasNull) { // grep: COMPARE_TO_INVALID_OPERATOR
+                console.error("This field value is null but also uses an invalid operator");
+            }
             if (value.includes(':')) {
                 const datetimeFormat = time.getLangDatetimeFormat();
                 value = moment(value, datetimeFormat)._d.getTime() / 1000;
