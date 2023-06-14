@@ -16,7 +16,7 @@
                     <field name="picking_code" invisible="1"/>
                     <field name="move_id" invisible="1"/>
                     <field name="move_location_dest_id" invisible="1"/>
-                    <field name="lots"/>
+                    <field name="lots" required="1"/>
                     <field name="location_dest_id" attrs="{'invisible': [('picking_code', '=', 'outgoing')]}"/>
                 </group>
             </group>
