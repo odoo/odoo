@@ -57,6 +57,27 @@ QUnit.test('click on "follow" button', async (assert) => {
     assert.containsOnce($, "button:contains(Following)");
 });
 
+QUnit.test('Click on "follow" button should save draft record', async (assert) => {
+    const views = {
+        "res.partner,false,form": `
+            <form string="Partners">
+                <sheet>
+                    <field name="name" required="1"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                </div>
+            </form>`,
+    };
+    const { openFormView } = await start({ serverData: { views } });
+    await openFormView("res.partner");
+    assert.containsOnce($, "button:contains(Follow)");
+    assert.containsOnce($, "div.o_field_char");
+
+    await click("button:contains(Follow)");
+    assert.containsOnce($, "div.o_field_invalid");
+});
+
 QUnit.test('click on "unfollow" button', async (assert) => {
     const pyEnv = await startServer();
     const threadId = pyEnv["res.partner"].create({});
