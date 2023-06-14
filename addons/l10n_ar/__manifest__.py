@@ -97,6 +97,7 @@ Master Data:
         'views/l10n_latam_document_type_view.xml',
         'views/report_invoice.xml',
         'views/res_config_settings_view.xml',
+        'views/templates.xml',
         'report/invoice_report_view.xml',
     ],
     'demo': [
