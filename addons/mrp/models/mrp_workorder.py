@@ -6,7 +6,7 @@ from dateutil.relativedelta import relativedelta
 from collections import defaultdict
 import json
 
-from odoo import api, fields, models, _, SUPERUSER_ID
+from odoo import api, fields, models, _, SUPERUSER_ID, Command
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_compare, float_round, format_datetime
 
@@ -24,6 +24,7 @@ class MrpWorkorder(models.Model):
     name = fields.Char(
         'Work Order', required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+    barcode = fields.Char(compute='_compute_barcode', store=True)
     workcenter_id = fields.Many2one(
         'mrp.workcenter', 'Work Center', required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)], 'progress': [('readonly', True)]},
@@ -271,6 +272,11 @@ class MrpWorkorder(models.Model):
     def _check_no_cyclic_dependencies(self):
         if not self._check_m2m_recursion('blocked_by_workorder_ids'):
             raise ValidationError(_("You cannot create cyclic dependency."))
+
+    @api.depends('production_id.name')
+    def _compute_barcode(self):
+        for wo in self:
+            wo.barcode = f"{wo.production_id.name}/{wo.id}"
 
     @api.depends('production_id', 'product_id')
     def _compute_display_name(self):
@@ -662,6 +668,7 @@ class MrpWorkorder(models.Model):
         return True
 
     def end_all(self):
+        self.employee_ids = [Command.clear()]
         return self.end_previous(doall=True)
 
     def button_pending(self):

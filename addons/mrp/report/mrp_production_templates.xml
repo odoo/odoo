@@ -64,6 +64,7 @@
                                 <th><strong>WorkCenter</strong></th>
                                 <th><strong>Duration (minutes)</strong></th>
                                 <th t-if="o.state in ('progress', 'to_close')"><strong>Actual Duration (minutes)</strong></th>
+                                <th style="width:30%"><strong>Barcode</strong></th>
                             </tr>
                             <tr t-foreach="o.workorder_ids" t-as="line2">
                                 <td><span t-field="line2.name"/></td>
@@ -74,6 +75,9 @@
                                 </td>
                                 <td t-if="o.state in ('progress', 'to_close')">
                                     <span t-field="line2.duration"/>
+                                </td>
+                                <td>
+                                    <div t-field="line2.barcode" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:100%;height:35px'}"/>
                                 </td>
                             </tr>
                         </table>
