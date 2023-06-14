@@ -57,10 +57,10 @@ export class ProjectTaskKanbanHeader extends KanbanHeader {
     }
 
     canEditGroup(group) {
-        return super.canEditGroup(group) && (!this.props.list.isGroupedByStage || this.isProjectManager) || this.props.list.isGroupedByPersonalStages;
+        return super.canEditGroup(group) && (!this.props.list.isGroupedByStage || this.isProjectManager);
     }
 
     canDeleteGroup(group) {
-        return super.canDeleteGroup(group) && (!this.props.list.isGroupedByStage || this.isProjectManager) || this.props.list.isGroupedByPersonalStages;
+        return super.canDeleteGroup(group) && (!this.props.list.isGroupedByStage || this.isProjectManager);
     }
 }

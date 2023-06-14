@@ -41,7 +41,7 @@ class ProjectTaskType(models.Model):
             " * Neutral or bad feedback will set the kanban state to 'Changes Requested' (orange bullet).\n")
     disabled_rating_warning = fields.Text(compute='_compute_disabled_rating_warning')
 
-    user_id = fields.Many2one('res.users', 'Stage Owner', index=True)
+    user_id = fields.Many2one('res.users', 'Stage Owner', compute='_compute_user_id', store=True, index=True)
 
     def unlink_wizard(self, stage_view=False):
         self = self.with_context(active_test=False)
@@ -108,6 +108,14 @@ class ProjectTaskType(models.Model):
                 stage.disabled_rating_warning = '\n'.join('- %s' % p.name for p in disabled_projects)
             else:
                 stage.disabled_rating_warning = False
+
+    @api.depends('project_ids')
+    def _compute_user_id(self):
+        for stage in self.sudo():
+            if stage.project_ids:
+                stage.user_id = False
+            elif not stage.user_id:
+                stage.user_id = self.env.uid
 
     @api.constrains('user_id', 'project_ids')
     def _check_personal_stage_not_linked_to_projects(self):
