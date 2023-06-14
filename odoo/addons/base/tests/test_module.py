@@ -8,7 +8,7 @@ from unittest.mock import patch
 import odoo.addons
 from odoo.modules.module import load_manifest
 from odoo.release import major_version
-from odoo.tests.common import BaseCase
+from odoo.tests.common import BaseCase, TransactionCase, tagged
 
 
 class TestModuleManifest(BaseCase):
@@ -83,3 +83,62 @@ class TestModuleManifest(BaseCase):
             manifest = load_manifest(self.module_name)
         self.assertEqual(manifest['license'], 'LGPL-3')
         self.assertIn("Missing `license` key", capture.output[0])
+
+
+@tagged('-at_install', 'post_install')
+class TestModuleDependencies(TransactionCase):
+    def test_main_modules(self):
+        """Ensure that the one app free doesn't change over time, unless explicitely decided."""
+        excluded_apps = (
+            self.env.ref('base.module_calendar')
+            + self.env.ref('base.module_contacts')
+            + self.env.ref('base.module_mail')
+            + self.env.ref('base.module_mass_mailing')
+        )
+        allowed = {
+            'account_accountant': ['account'],
+            'account_consolidation': ['account', 'account_accountant'],
+            'approvals': ['hr'],
+            'delivery_bpost': ['sale_management', 'account', 'stock'],
+            'delivery_dhl': ['sale_management', 'account', 'stock'],
+            'delivery_easypost': ['sale_management', 'account', 'stock'],
+            'delivery_fedex': ['sale_management', 'account', 'stock'],
+            'delivery_sendcloud': ['sale_management', 'account', 'stock'],
+            'delivery_ups': ['sale_management', 'account', 'stock'],
+            'delivery_usps': ['sale_management', 'account', 'stock'],
+            'hr_appraisal': ['hr'],
+            'hr_attendance': ['hr'],
+            'hr_contract': ['hr'],
+            'hr_expense': ['account', 'hr'],
+            'hr_holidays': ['hr'],
+            'hr_payroll': ['hr', 'hr_contract'],
+            'hr_recruitment': ['hr'],
+            'hr_referral': ['website', 'hr_recruitment', 'hr', 'website_hr_recruitment'],
+            'hr_skills': ['hr'],
+            'industry_fsm': ['project', 'timesheet_grid', 'hr'],
+            'mrp': ['stock'],
+            'mrp_plm': ['stock', 'mrp'],
+            'planning': ['hr'],
+            'point_of_sale': ['account', 'stock'],
+            'project_todo': ['project'],
+            'purchase': ['account'],
+            'quality_control': ['stock'],
+            'repair': ['sale_management', 'account', 'stock'],
+            'sale_amazon': ['sale_management', 'account', 'stock'],
+            'sale_ebay': ['sale_management', 'account', 'stock'],
+            'sale_management': ['account'],
+            'sale_renting': ['account'],
+            'sale_subscription': ['sale_management', 'account', 'account_accountant'],
+            'stock_barcode': ['stock'],
+            'timesheet_grid': ['project', 'hr'],
+            'website_event': ['website'],
+            'website_hr_recruitment': ['website', 'hr_recruitment', 'hr'],
+            'website_sale': ['account', 'website'],
+            'website_slides': ['website'],
+        }
+        main_apps = self.env['ir.module.module'].search([('application', '=', True)])
+        for app in main_apps:
+            dependencies = app.upstream_dependencies(exclude_states={'uninstallable'})
+            main_dependencies = main_apps & dependencies - excluded_apps
+            if main_dependencies:
+                self.assertEqual(main_dependencies.mapped('name'), allowed.get(app.name, []), f"Dependency change for {app.name}")
