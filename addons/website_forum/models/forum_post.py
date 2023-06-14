@@ -23,7 +23,7 @@ class Post(models.Model):
         'website.seo.metadata',
         'website.searchable.mixin',
     ]
-    _order = "is_correct DESC, vote_count DESC, write_date DESC"
+    _order = "is_correct DESC, vote_count DESC, last_activity_date DESC"
 
     name = fields.Char('Title')
     forum_id = fields.Many2one('forum.forum', string='Forum', required=True)
@@ -48,10 +48,11 @@ class Post(models.Model):
     create_date = fields.Datetime('Asked on', index=True, readonly=True)
     create_uid = fields.Many2one('res.users', string='Created by', index=True, readonly=True)
     write_date = fields.Datetime('Updated on', index=True, readonly=True)
-    bump_date = fields.Datetime('Bumped on', readonly=True,
-                                help="Technical field allowing to bump a question. Writing on this field will trigger "
-                                     "a write on write_date and therefore bump the post. Directly writing on write_date "
-                                     "is currently not supported and this field is a workaround.")
+    last_activity_date = fields.Datetime(
+        'Last activity on', readonly=True, required=True, default=fields.Datetime.now,
+        help="Field to keep track of a post's last activity. Updated whenever it is replied to, "
+             "or when a comment is added on the post or one of its replies."
+    )
     write_uid = fields.Many2one('res.users', string='Updated by', index=True, readonly=True)
     relevancy = fields.Float('Relevance', compute="_compute_relevancy", store=True)
 
@@ -602,15 +603,6 @@ class Post(models.Model):
         _logger.info('User %s marked as spams (in batch): %s' % (self.env.uid, spams))
         return spams.mark_as_offensive(reason_id)
 
-    def bump(self):
-        """ Bump a question: trigger a write_date by writing on a dummy bump_date
-        field. One cannot bump a question more than once every 10 days. """
-        self.ensure_one()
-        if self.forum_id.allow_bump and not self.child_ids and (datetime.today() - datetime.strptime(self.write_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)).days > 9:
-            # write through super to bypass karma; sudo to allow public user to bump any post
-            return self.sudo().write({'bump_date': fields.Datetime.now()})
-        return False
-
     def vote(self, upvote=True):
         self.ensure_one()
         Vote = self.env['forum.post.vote']
@@ -723,6 +715,10 @@ class Post(models.Model):
     def _set_viewed(self):
         self.ensure_one()
         return sql.increment_fields_skiplock(self, 'views')
+
+    def _update_last_activity(self):
+        self.ensure_one()
+        return self.sudo().write({'last_activity_date': fields.Datetime.now()})
 
     # ----------------------------------------------------------------------
     # MESSAGING
