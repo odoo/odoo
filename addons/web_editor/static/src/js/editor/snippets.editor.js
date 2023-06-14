@@ -113,37 +113,11 @@ var SnippetEditor = Widget.extend({
         // Initialize move/clone/remove buttons
         if (this.isTargetMovable) {
             this.dropped = false;
-            const smoothScrollOptions = this.options.getScrollOptions({
-                jQueryDraggableOptions: {
-                    cursorAt: {
-                        left: 10,
-                        top: 10
-                    },
-                    handle: '.o_move_handle',
-                    helper: () => {
-                        var $clone = this.$el.clone().css({width: '24px', height: '24px', border: 0});
-                        $clone.appendTo(this.$el[0].ownerDocument.body).removeClass('d-none');
-                        return $clone;
-                    },
-                    start: this._onDragAndDropStart.bind(this),
-                    stop: (...args) => {
-                        // Delay our stop handler so that some wysiwyg handlers
-                        // which occur on mouseup (and are themself delayed) are
-                        // executed first (this prevents the library to crash
-                        // because our stop handler may change the DOM).
-                        setTimeout(() => {
-                            this._onDragAndDropStop(...args);
-                        }, 0);
-                    },
-                    refreshPositions: true, // So the dropzone expands when its size increases.
-                },
-            });
-            const modalAncestorEl = this.$target[0].closest('.modal');
-            const $scrollable = modalAncestorEl && $(modalAncestorEl)
-                || (this.options.wysiwyg.snippetsMenu && this.options.wysiwyg.snippetsMenu.$scrollable)
-                || (this.$scrollingElement.length && this.$scrollingElement)
-                || $().getScrollingElement(this.ownerDocument);
-            this.draggableComponent = new SmoothScrollOnDrag(this.$el, $scrollable, smoothScrollOptions);
+            this.draggableComponent = this._initSmoothScrollOnDrag(".o_move_handle", this.$el);
+            if (!this.$target[0].matches("section")) {
+                // Allow the user to drag the image itself to move the target.
+                this.draggableComponentImgs = this._initSmoothScrollOnDrag("img", this.$target);
+            }
         } else {
             this.$('.o_overlay_move_options').addClass('d-none');
             $customize.find('.oe_snippet_clone').addClass('d-none');
@@ -194,6 +168,7 @@ var SnippetEditor = Widget.extend({
         // about it so that it can update its list of alived snippet editors.
         this.trigger_up('snippet_editor_destroyed');
         this.draggableComponent && this.draggableComponent.destroy();
+        this.draggableComponentImgs?.destroy();
         if (this.$optionsSection) {
             this.$optionsSection.remove();
         }
@@ -816,6 +791,61 @@ var SnippetEditor = Widget.extend({
         });
     },
     /**
+     * Creates a SmoothScrollOnDrag object.
+     *
+     * @private
+     * @param {String} handle css selector for grabble element
+     * @param {jQuery} $element the smooth scroll on drag has to be set on
+     * @returns {SmoothScrollOnDrag}
+     */
+    _initSmoothScrollOnDrag(handle, $element) {
+        const jQueryDraggableOptions = {
+            cursorAt: {
+                left: 10,
+                top: 10
+            },
+            handle: handle,
+            helper: () => {
+                const cloneEl = this.$el[0].cloneNode(true);
+                cloneEl.style.width = "24px";
+                cloneEl.style.height = "24px";
+                cloneEl.style.border = "0";
+                this.$el[0].ownerDocument.body.appendChild(cloneEl);
+                cloneEl.classList.remove("d-none");
+                return $(cloneEl);
+            },
+            start: (ev, ui) => {
+                if (!this.$el.find('.o_move_handle:visible').length) {
+                    return false;
+                }
+                this.dragStarted = true;
+                this._onDragAndDropStart();
+            },
+            stop: (...args) => {
+                if (!this.dragStarted) {
+                    return false;
+                }
+                this.dragStarted = false;
+                // Delay our stop handler so that some wysiwyg handlers
+                // which occur on mouseup (and are themself delayed) are
+                // executed first (this prevents the library to crash
+                // because our stop handler may change the DOM).
+                setTimeout(() => {
+                    this._onDragAndDropStop(...args);
+                }, 0);
+            },
+            refreshPositions: true, // So the dropzone expands when its size increases.
+        };
+        const scrollOptions =
+            this.options.getScrollOptions({ jQueryDraggableOptions: jQueryDraggableOptions });
+        const modalAncestorEl = this.$target[0].closest('.modal');
+        const $scrollable = modalAncestorEl && $(modalAncestorEl)
+            || (this.options.wysiwyg.snippetsMenu && this.options.wysiwyg.snippetsMenu.$scrollable)
+            || (this.$scrollingElement.length && this.$scrollingElement)
+            || $().getScrollingElement(this.ownerDocument);
+        return new SmoothScrollOnDrag($element, $scrollable, scrollOptions);
+    },
+    /**
      * @private
      * @param {boolean} [show]
      */
@@ -1413,6 +1443,9 @@ var SnippetEditor = Widget.extend({
             $snippet: this.$target,
         });
         this.draggableComponent.$scrollTarget.off('scroll.scrolling_element');
+        if (this.draggableComponentImgs) {
+            this.draggableComponentImgs.$scrollTarget.off('scroll.scrolling_element');
+        }
         const samePositionAsStart = this.$target[0].classList.contains('o_grid_item')
             ? (this.$target[0].parentNode === this.dragState.startingGrid
                 && this.$target[0].style.gridArea === this.dragState.prevGridArea)
