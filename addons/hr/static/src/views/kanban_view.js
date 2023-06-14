@@ -1,5 +1,7 @@
 /** @odoo-module */
 
+import { openChat } from '@mail/core/common/thread_service';
+
 import { registry } from '@web/core/registry';
 
 import { kanbanView } from '@web/views/kanban/kanban_view';
@@ -7,7 +9,7 @@ import { KanbanModel } from '@web/views/kanban/kanban_model';
 
 export class EmployeeKanbanRecord extends KanbanModel.Record {
     async openChat(employeeId) {
-        this.model.env.services["mail.messaging"].openChat({ employeeId });
+        openChat({ employeeId });
     }
 }
 

@@ -65,7 +65,7 @@
                     hasMarkAsReadButton="thread.isUnread"
                     onClick="(isMarkAsRead) => this.onClickThread(isMarkAsRead, thread)"
                     onSwipeRight="hasTouch() and thread.isUnread ? { action: () => this.markAsRead(thread), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
-                    onSwipeLeft="hasTouch() and threadService.canUnpin(thread) ? { action: () => this.threadService.unpin(thread), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
+                    onSwipeLeft="hasTouch() and canUnpinThread(thread) ? { action: () => unpinThread(thread), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
                 >
                     <t t-set-slot="icon">
                         <ImStatus t-if="thread.type === 'chat'" persona="thread.correspondent" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>

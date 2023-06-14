@@ -1,30 +1,25 @@
 /* @odoo-module */
 
-import { ThreadService } from "@mail/core/common/thread_service";
+import { executeChannelCommand, postMessage } from "@mail/core/common/thread_service";
+import { patchFn } from "@mail/utils/common/patch";
 
 import { registry } from "@web/core/registry";
-import { patch } from "@web/core/utils/patch";
 
 const commandRegistry = registry.category("discuss.channel_commands");
 
-patch(ThreadService.prototype, "discuss/core/common", {
-    /**
-     * @override
-     * @param {import("@mail/core/common/thread_model").Thread} thread
-     * @param {string} body
-     */
-    async post(thread, body) {
-        if (thread.model === "discuss.channel" && body.startsWith("/")) {
-            const [firstWord] = body.substring(1).split(/\s/);
-            const command = commandRegistry.get(firstWord, false);
-            if (
-                command &&
-                (!command.channel_types || command.channel_types.includes(thread.type))
-            ) {
-                await this.executeCommand(thread, command, body);
-                return;
-            }
+/**
+ * @override
+ * @param {import("@mail/core/common/thread_model").Thread} thread
+ * @param {string} body
+ */
+patchFn(postMessage, async function (thread, body) {
+    if (thread.model === "discuss.channel" && body.startsWith("/")) {
+        const [firstWord] = body.substring(1).split(/\s/);
+        const command = commandRegistry.get(firstWord, false);
+        if (command && (!command.channel_types || command.channel_types.includes(thread.type))) {
+            await executeChannelCommand(thread, command, body);
+            return;
         }
-        return this._super(...arguments);
-    },
+    }
+    return this._super(...arguments);
 });

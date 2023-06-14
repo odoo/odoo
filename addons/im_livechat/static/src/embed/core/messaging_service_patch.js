@@ -1,19 +1,28 @@
 /* @odoo-module */
 
-import { Messaging } from "@mail/core/common/messaging_service";
+import { Messaging, initializeMessaging } from "@mail/core/common/messaging_service";
+import { insertPersona } from "@mail/core/common/persona_service";
+import { patchFn } from "@mail/utils/common/patch";
 
 import { patch } from "@web/core/utils/patch";
 import { session } from "@web/session";
 
-patch(Messaging.prototype, "im_livechat", {
-    initialize() {
-        if (session.livechatData?.options.current_partner_id) {
-            this.store.user = this.personaService.insert({
-                type: "partner",
-                id: session.livechatData.options.current_partner_id,
-            });
-        }
-        this.store.isMessagingReady = true;
-        this.isReady.resolve();
+let store;
+
+patchFn(initializeMessaging, function () {
+    if (session.livechatData?.options.current_partner_id) {
+        store.user = insertPersona({
+            type: "partner",
+            id: session.livechatData.options.current_partner_id,
+        });
+    }
+    store.isMessagingReady = true;
+    store.messagingReadyProm.resolve();
+});
+
+patch(Messaging.prototype, {
+    setup(env, services) {
+        this._super(...arguments);
+        store = services["mail.store"];
     },
 });

@@ -138,6 +138,8 @@ QUnit.test("Adding attachments", async (assert) => {
     const attachmentId = pyEnv["ir.attachment"].create({
         name: "test.txt",
         mimetype: "text/plain",
+        res_model: "discuss.channel",
+        res_id: channelId,
     });
     await afterNextRender(() =>
         tab1.env.services.rpc("/mail/message/update_content", {
@@ -155,6 +157,8 @@ QUnit.test("Remove attachment from message", async (assert) => {
     const attachmentId = pyEnv["ir.attachment"].create({
         name: "test.txt",
         mimetype: "text/plain",
+        res_model: "discuss.channel",
+        res_id: channelId,
     });
     pyEnv["mail.message"].create({
         attachment_ids: [attachmentId],

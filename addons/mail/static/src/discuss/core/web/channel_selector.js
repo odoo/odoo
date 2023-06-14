@@ -2,6 +2,15 @@
 
 import { useStore } from "@mail/core/common/messaging_hook";
 import { NavigableList } from "@mail/core/common/navigable_list";
+import { insertPersona } from "@mail/core/common/persona_service";
+import { sortPartnerSuggestions } from "@mail/core/common/suggestion_service";
+import {
+    createChannel,
+    createGroupChat,
+    joinChannel,
+    joinChat,
+    openThread,
+} from "@mail/core/common/thread_service";
 import { cleanTerm } from "@mail/utils/common/format";
 import { createLocalId, isEventHandled, markEventHandled } from "@mail/utils/common/misc";
 
@@ -20,8 +29,6 @@ export class ChannelSelector extends Component {
 
     setup() {
         this.store = useStore();
-        this.threadService = useState(useService("mail.thread"));
-        this.personaService = useService("mail.persona");
         /** @type {import("@mail/core/common/suggestion_service").SuggestionService} */
         this.suggestionService = useService("mail.suggestion");
         this.orm = useService("orm");
@@ -69,16 +76,14 @@ export class ChannelSelector extends Component {
                     10,
                     this.state.selectedPartners,
                 ]);
-                const suggestions = this.suggestionService
-                    .sortPartnerSuggestions(results, cleanedTerm)
-                    .map((data) => {
-                        this.personaService.insert({ ...data, type: "partner" });
-                        return {
-                            classList: "o-discuss-ChannelSelector-suggestion",
-                            label: data.name,
-                            partner: data,
-                        };
-                    });
+                const suggestions = sortPartnerSuggestions(results, cleanedTerm).map((data) => {
+                    insertPersona({ ...data, type: "partner" });
+                    return {
+                        classList: "o-discuss-ChannelSelector-suggestion",
+                        label: data.name,
+                        partner: data,
+                    };
+                });
                 if (this.store.self.name.includes(cleanedTerm)) {
                     suggestions.push({
                         classList: "o-discuss-ChannelSelector-suggestion",
@@ -102,9 +107,9 @@ export class ChannelSelector extends Component {
     onSelect(option) {
         if (this.props.category.id === "channels") {
             if (option.channelId === "__create__") {
-                this.threadService.createChannel(option.label);
+                createChannel(option.label);
             } else {
-                this.threadService.joinChannel(option.channelId, option.label);
+                joinChannel(option.channelId, option.label);
             }
             this.onValidate();
         }
@@ -126,12 +131,12 @@ export class ChannelSelector extends Component {
                 return;
             }
             if (selectedPartners.length === 1) {
-                await this.threadService
-                    .joinChat(selectedPartners[0])
-                    .then((chat) => this.threadService.open(chat, this.env.inChatWindow));
+                await joinChat(selectedPartners[0]).then((chat) =>
+                    openThread(chat, this.env.inChatWindow)
+                );
             } else {
                 const partners_to = [...new Set([this.store.self.id, ...selectedPartners])];
-                await this.threadService.createGroupChat({ partners_to });
+                await createGroupChat({ partners_to });
             }
         }
         if (this.props.onValidate) {

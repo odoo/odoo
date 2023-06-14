@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
+import { setDiscussThread } from "@mail/core/common/thread_service";
 
 import { _t } from "@web/core/l10n/translation";
 
@@ -16,7 +17,7 @@ threadActionsRegistry.add("expand-discuss", {
     icon: "fa fa-fw fa-expand",
     name: _t("Open in Discuss"),
     open(component) {
-        component.threadService.setDiscussThread(component.thread);
+        setDiscussThread(component.thread);
         component.actionService.doAction(
             {
                 type: "ir.actions.client",

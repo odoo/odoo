@@ -56,8 +56,8 @@
             <i t-if="category.canView" t-attf-class="fa fa-cog {{ hover_class }}" title="View or join channels" t-on-click="() => this.openCategory(category)" role="img"/>
             <i t-if="category.canAdd and category.isOpen" class="o-mail-DiscussCategory-add" t-attf-class="fa fa-plus {{ hover_class }} ms-1" t-on-click="() => this.addToCategory(category)" t-att-title="category.addTitle" role="img"/>
         </div>
-        <div t-if="!category.isOpen and threadService.getDiscussCategoryCounter(category.id) > 0" class="o-mail-DiscussSidebar-badge badge rounded-pill me-3 o-discuss-badge fw-bold">
-            <t t-esc="threadService.getDiscussCategoryCounter(category.id)"/>
+        <div t-if="!category.isOpen and getDiscussCategoryCounter(category.id) > 0" class="o-mail-DiscussSidebar-badge badge rounded-pill me-3 o-discuss-badge fw-bold">
+            <t t-esc="getDiscussCategoryCounter(category.id)"/>
         </div>
     </div>
     <t t-if="category.isOpen">
@@ -72,7 +72,7 @@
 </t>
 
 <t t-name="mail.DiscussCategoryItem" owl="1">
-    <t t-set="counter" t-value="threadService.getCounter(thread)"/>
+    <t t-set="counter" t-value="getThreadCounter(thread)"/>
     <button class="o-mail-DiscussCategoryItem o-mail-DiscussSidebar-item btn btn-secondary d-flex align-items-center w-100 px-0 py-2 border-0 rounded-0 text-reset"
         t-att-class="{
             'o-bg-inherit': threadLocalId !== store.discuss.threadLocalId,
@@ -91,9 +91,9 @@
         <div class="flex-grow-1"/>
         <div class="o-mail-DiscussCategoryItem-commands d-none ms-1 me-3">
             <i t-if="thread.type === 'channel'" t-attf-class="fa fa-cog {{ hover_class }}" title="Channel settings" t-on-click.stop="() => this.openSettings(thread)" role="img"/>
-            <div t-if="threadService.canLeave(thread)" class="fa fa-times ms-1" t-attf-class="{{ hover_class }}"
+            <div t-if="canLeaveThread(thread)" class="fa fa-times ms-1" t-attf-class="{{ hover_class }}"
                 t-on-click.stop="() => this.leaveChannel(thread)" title="Leave this channel" role="img"/>
-            <div t-if="threadService.canUnpin(thread)" t-attf-class="fa fa-times ms-1 {{ hover_class }}" t-on-click.stop="() => threadService.unpin(thread)" title="Unpin Conversation" role="img"/>
+            <div t-if="canUnpinThread(thread)" t-attf-class="fa fa-times ms-1 {{ hover_class }}" t-on-click.stop="() => unpinThread(thread)" title="Unpin Conversation" role="img"/>
         </div>
         <div t-if="Object.keys(thread.rtcSessions).length > 0" class="fa fa-volume-up ms-1 me-3" t-att-class="{ 'text-danger': rtc.state.channel?.id === thread.id }"/>
         <div t-if="counter > 0">

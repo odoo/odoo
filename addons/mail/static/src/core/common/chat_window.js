@@ -1,5 +1,12 @@
 /* @odoo-module */
 
+import {
+    closeChatWindow,
+    getVisibleChatWindows,
+    makeChatWindowVisible,
+    notifyChatWindowState,
+    toggleFoldChatWindow,
+} from "@mail/core/common/chat_window_service";
 import { Composer } from "@mail/core/common/composer";
 import { ImStatus } from "@mail/core/common/im_status";
 import { useStore } from "@mail/core/common/messaging_hook";
@@ -43,8 +50,6 @@ export class ChatWindow extends Component {
         this.store = useStore();
         /** @type {import("@mail/core/common/chat_window_service").ChatWindowService} */
         this.chatWindowService = useState(useService("mail.chat_window"));
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
-        this.threadService = useState(useService("mail.thread"));
         this.messageEdition = useMessageEdition();
         this.messageHighlight = useMessageHighlight();
         this.messageToReplyTo = useMessageToReplyTo();
@@ -83,14 +88,13 @@ export class ChatWindow extends Component {
                 this.close({ escape: true });
                 break;
             case "Tab": {
-                const index = this.chatWindowService.visible.findIndex(
+                const index = getVisibleChatWindows().findIndex(
                     (cw) => cw === this.props.chatWindow
                 );
                 if (index === 0) {
-                    this.chatWindowService.visible[this.chatWindowService.visible.length - 1]
-                        .autofocus++;
+                    getVisibleChatWindows()[getVisibleChatWindows().length - 1].autofocus++;
                 } else {
-                    this.chatWindowService.visible[index - 1].autofocus++;
+                    getVisibleChatWindows()[index - 1].autofocus++;
                 }
                 break;
             }
@@ -102,14 +106,14 @@ export class ChatWindow extends Component {
             return;
         }
         if (this.props.chatWindow.hidden) {
-            this.chatWindowService.makeVisible(this.props.chatWindow);
+            makeChatWindowVisible(this.props.chatWindow);
         } else {
-            this.chatWindowService.toggleFold(this.props.chatWindow);
+            toggleFoldChatWindow(this.props.chatWindow);
         }
     }
 
     close(options) {
-        this.chatWindowService.close(this.props.chatWindow, options);
+        closeChatWindow(this.props.chatWindow, options);
     }
 
     get moreMenuText() {

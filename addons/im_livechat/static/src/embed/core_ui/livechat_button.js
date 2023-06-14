@@ -3,6 +3,7 @@
 import { SESSION_STATE } from "@im_livechat/embed/core/livechat_service";
 
 import { useStore } from "@mail/core/common/messaging_hook";
+import { openChat } from "@mail/core/common/thread_service";
 
 import { Component, useState } from "@odoo/owl";
 
@@ -16,12 +17,11 @@ export class LivechatButton extends Component {
         this.store = useStore();
         this.chatWindowService = useService("mail.chat_window");
         this.livechatService = useState(useService("im_livechat.livechat"));
-        this.threadService = useService("mail.thread");
         this.onClick = debounce(this.onClick.bind(this), 500, { leading: true });
     }
 
     onClick() {
-        this.threadService.openChat();
+        openChat();
     }
 
     get isShown() {

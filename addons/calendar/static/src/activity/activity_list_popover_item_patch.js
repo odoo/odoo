@@ -2,6 +2,7 @@
 
 import { ActivityListPopoverItem } from "@mail/core/web/activity_list_popover_item";
 import { patch } from "@web/core/utils/patch";
+import { rescheduleMeeting } from "./activity_service_patch";
 
 patch(ActivityListPopoverItem.prototype, "calendar", {
     get hasEditButton() {
@@ -9,6 +10,6 @@ patch(ActivityListPopoverItem.prototype, "calendar", {
     },
 
     async onClickReschedule() {
-        await this.env.services["mail.activity"].rescheduleMeeting(this.props.activity.id);
+        await rescheduleMeeting(this.props.activity.id);
     },
 });

@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { start } from "@mail/../tests/helpers/test_utils";
+import { insertThread } from "@mail/core/common/thread_service";
 
 import { str_to_datetime } from "web.time";
 
@@ -8,7 +9,7 @@ QUnit.module("message model test", {});
 
 QUnit.test("Message model properties", async (assert) => {
     const { env } = await start();
-    env.services["mail.thread"].insert({
+    insertThread({
         id: 3,
         model: "res.partner",
         name: "general",

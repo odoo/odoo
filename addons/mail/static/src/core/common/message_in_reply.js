@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
+import { avatarUrl } from "@mail/core/common/thread_service";
 
 import { Component } from "@odoo/owl";
 
@@ -15,8 +16,6 @@ export class MessageInReply extends Component {
         this.messaging = useMessaging();
         this.store = useStore();
         this.user = useService("user");
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
-        this.threadService = useService("mail.thread");
     }
 
     get authorAvatarUrl() {
@@ -26,7 +25,7 @@ export class MessageInReply extends Component {
         ) {
             return url("/mail/static/src/img/email_icon.png");
         }
-        return this.threadService.avatarUrl(
+        return avatarUrl(
             this.message.parentMessage.author,
             this.props.message.parentMessage.originThread
         );

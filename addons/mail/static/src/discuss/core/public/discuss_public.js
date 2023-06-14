@@ -2,11 +2,14 @@
 
 import { Discuss } from "@mail/core/common/discuss";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
+import {
+    fetchChannelMembers,
+    insertThread,
+    setDiscussThread,
+} from "@mail/core/common/thread_service";
 import { WelcomePage } from "@mail/discuss/core/public/welcome_page";
 
 import { Component, useEffect, useState } from "@odoo/owl";
-
-import { useService } from "@web/core/utils/hooks";
 
 export class DiscussPublic extends Component {
     static components = { Discuss, WelcomePage };
@@ -15,8 +18,6 @@ export class DiscussPublic extends Component {
 
     setup() {
         this.messaging = useMessaging();
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
-        this.threadService = useService("mail.thread");
         this.store = useStore();
         this.state = useState({
             welcome: this.props.data.discussPublicViewData.shouldDisplayWelcomeViewInitially,
@@ -40,12 +41,12 @@ export class DiscussPublic extends Component {
     }
 
     displayChannel() {
-        this.threadService.setDiscussThread(this.thread, false);
-        this.threadService.fetchChannelMembers(this.thread);
+        setDiscussThread(this.thread, false);
+        fetchChannelMembers(this.thread);
     }
 
     get thread() {
-        return this.threadService.insert({
+        return insertThread({
             id: this.props.data.channelData.id,
             model: "discuss.channel",
             type: this.props.data.channelData.channel.channel_type,

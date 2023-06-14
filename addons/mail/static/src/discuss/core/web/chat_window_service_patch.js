@@ -1,43 +1,60 @@
 /* @odoo-module */
 
-import { ChatWindowService } from "@mail/core/common/chat_window_service";
+import {
+    ChatWindowService,
+    closeChatWindow,
+    hideChatWindow,
+    openChatWindow,
+    showChatWindow,
+    toggleFoldChatWindow,
+} from "@mail/core/common/chat_window_service";
+import { patchFn } from "@mail/utils/common/patch";
 
 import { patch } from "@web/core/utils/patch";
 
+let orm;
+let ui;
+
+function notifyChatWindowState(chatWindow) {
+    if (ui.isSmall) {
+        return;
+    }
+    if (chatWindow.thread?.model === "discuss.channel") {
+        return orm.silent.call("discuss.channel", "channel_fold", [[chatWindow.thread.id]], {
+            state: chatWindow.thread.state,
+        });
+    }
+}
+
+patchFn(closeChatWindow, function (chatWindow) {
+    this._super(...arguments);
+    notifyChatWindowState(chatWindow);
+});
+
+patchFn(hideChatWindow, function (chatWindow) {
+    this._super(...arguments);
+    notifyChatWindowState(chatWindow);
+});
+
+patchFn(openChatWindow, function () {
+    const chatWindow = this._super(...arguments);
+    notifyChatWindowState(chatWindow);
+});
+
+patchFn(showChatWindow, function (chatWindow) {
+    this._super(...arguments);
+    notifyChatWindowState(chatWindow);
+});
+
+patchFn(toggleFoldChatWindow, function (chatWindow) {
+    this._super(...arguments);
+    notifyChatWindowState(chatWindow);
+});
+
 patch(ChatWindowService.prototype, "discuss/core/web", {
-    close(chatWindow) {
+    setup(env, services) {
         this._super(...arguments);
-        this.notifyState(chatWindow);
-    },
-    hide(chatWindow) {
-        this._super(...arguments);
-        this.notifyState(chatWindow);
-    },
-    notifyState(chatWindow) {
-        if (this.ui.isSmall) {
-            return;
-        }
-        if (chatWindow.thread?.model === "discuss.channel") {
-            return this.orm.silent.call(
-                "discuss.channel",
-                "channel_fold",
-                [[chatWindow.thread.id]],
-                {
-                    state: chatWindow.thread.state,
-                }
-            );
-        }
-    },
-    open() {
-        const chatWindow = this._super(...arguments);
-        this.notifyState(chatWindow);
-    },
-    show(chatWindow) {
-        this._super(...arguments);
-        this.notifyState(chatWindow);
-    },
-    toggleFold(chatWindow) {
-        this._super(...arguments);
-        this.notifyState(chatWindow);
+        ui = services.ui;
+        orm = services.orm;
     },
 });

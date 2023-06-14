@@ -3,6 +3,7 @@
 import { Activity } from "@mail/core/web/activity";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
+import { rescheduleMeeting } from "./activity_service_patch";
 
 patch(Activity.prototype, "calendar", {
     setup() {
@@ -10,7 +11,7 @@ patch(Activity.prototype, "calendar", {
         this.orm = useService("orm");
     },
     async onClickReschedule() {
-        await this.env.services["mail.activity"].rescheduleMeeting(this.props.data.id);
+        await rescheduleMeeting(this.props.data.id);
     },
     /**
      * @override

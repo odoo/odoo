@@ -27,6 +27,14 @@ import {
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { FileUploader } from "@web/views/fields/file_handler";
+import {
+    avatarUrl,
+    notifyThreadAvatarToServer,
+    notifyThreadDescriptionToServer,
+    notifyThreadNameToServer,
+    setDiscussThread,
+} from "./thread_service";
+import { updateGuestName } from "./persona_service";
 
 export class Discuss extends Component {
     static components = {
@@ -43,9 +51,6 @@ export class Discuss extends Component {
     setup() {
         this.messaging = useMessaging();
         this.store = useStore();
-        this.threadService = useState(useService("mail.thread"));
-        this.messageService = useState(useService("mail.message"));
-        this.personaService = useService("mail.persona");
         this.messageHighlight = useMessageHighlight();
         this.messageEdition = useMessageEdition();
         this.messageToReplyTo = useMessageToReplyTo();
@@ -62,6 +67,8 @@ export class Discuss extends Component {
         });
         this.notification = useService("notification");
         this.threadActions = useThreadActions();
+        this.avatarUrl = avatarUrl;
+        this.setDiscussThread = setDiscussThread;
         useEffect(
             () => {
                 if (
@@ -79,7 +86,7 @@ export class Discuss extends Component {
             },
             () => [this.store.discuss.inbox.counter]
         );
-        onWillStart(() => this.messaging.isReady);
+        onWillStart(() => this.store.messagingReadyProm);
         onMounted(() => (this.store.discuss.isActive = true));
         onWillUnmount(() => (this.store.discuss.isActive = false));
     }
@@ -89,7 +96,7 @@ export class Discuss extends Component {
     }
 
     async onFileUploaded(file) {
-        await this.threadService.notifyThreadAvatarToServer(this.thread.id, file.data);
+        await notifyThreadAvatarToServer(this.thread.id, file.data);
         this.notification.add(_t("The avatar has been updated!"), { type: "success" });
     }
 
@@ -101,7 +108,7 @@ export class Discuss extends Component {
                 this.thread.type === "chat" ||
                 this.thread.type === "group")
         ) {
-            await this.threadService.notifyThreadNameToServer(this.thread, newName);
+            await notifyThreadNameToServer(this.thread, newName);
         }
     }
 
@@ -111,14 +118,14 @@ export class Discuss extends Component {
             return;
         }
         if (newDescription !== this.thread.description) {
-            await this.threadService.notifyThreadDescriptionToServer(this.thread, newDescription);
+            await notifyThreadDescriptionToServer(this.thread, newDescription);
         }
     }
 
     async renameGuest({ value: name }) {
         const newName = name.trim();
         if (this.store.guest?.name !== newName) {
-            await this.personaService.updateGuestName(this.store.self, newName);
+            await updateGuestName(this.store.self, newName);
         }
     }
 }

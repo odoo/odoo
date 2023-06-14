@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Activity } from "@mail/core/web/activity";
+import { deleteActivity } from "@mail/core/web/activity_service";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -13,7 +14,7 @@ const ActivityPatch = {
             [[this.props.data.res_id]],
             { partner_id: this.props.data.request_partner_id }
         );
-        this.activityService.delete(this.props.data);
+        deleteActivity(this.props.data);
         this.props.reloadParentView();
     },
     async onRefuseAccess() {
@@ -23,7 +24,7 @@ const ActivityPatch = {
             [[this.props.data.res_id]],
             { partner_id: this.props.data.request_partner_id }
         );
-        this.activityService.delete(this.props.data);
+        deleteActivity(this.props.data);
         this.props.reloadParentView();
     },
 };

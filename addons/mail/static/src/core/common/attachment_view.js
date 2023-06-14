@@ -1,8 +1,8 @@
 /* @odoo-module */
 
+import { insertThread, setMainAttachmentFromIndex } from "@mail/core/common/thread_service";
 import { Component, onWillUpdateProps, useEffect, useRef, useState } from "@odoo/owl";
 
-import { useService } from "@web/core/utils/hooks";
 import { hidePDFJSButtons } from "@web/legacy/js/libs/pdfjs";
 
 /**
@@ -17,8 +17,6 @@ export class AttachmentView extends Component {
     static props = ["threadId", "threadModel"];
 
     setup() {
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
-        this.threadService = useService("mail.thread");
         this.iframeViewerPdfRef = useRef("iframeViewerPdf");
         this.state = useState({
             /** @type {import("@mail/core/common/thread_model").Thread} */
@@ -37,7 +35,7 @@ export class AttachmentView extends Component {
         const index = this.state.thread.attachmentsInWebClientView.findIndex(
             (attachment) => attachment.id === this.state.thread.mainAttachment.id
         );
-        this.threadService.setMainAttachmentFromIndex(
+        setMainAttachmentFromIndex(
             this.state.thread,
             index === this.state.thread.attachmentsInWebClientView.length - 1 ? 0 : index + 1
         );
@@ -47,14 +45,14 @@ export class AttachmentView extends Component {
         const index = this.state.thread.attachmentsInWebClientView.findIndex(
             (attachment) => attachment.id === this.state.thread.mainAttachment.id
         );
-        this.threadService.setMainAttachmentFromIndex(
+        setMainAttachmentFromIndex(
             this.state.thread,
             index === 0 ? this.state.thread.attachmentsInWebClientView.length - 1 : index - 1
         );
     }
 
     updateFromProps(props) {
-        this.state.thread = this.threadService.insert({
+        this.state.thread = insertThread({
             id: props.threadId,
             model: props.threadModel,
         });

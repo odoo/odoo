@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { ChatWindow } from "@mail/core/common/chat_window";
+import { unpinThread } from "@mail/core/common/thread_service";
 
 import { patch } from "@web/core/utils/patch";
 
@@ -12,7 +13,7 @@ patch(ChatWindow.prototype, "im_livechat", {
             this.thread.isLoaded &&
             this.thread.messages.length === 0
         ) {
-            this.threadService.unpin(this.thread);
+            unpinThread(this.thread);
         }
     },
 });

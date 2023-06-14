@@ -1,13 +1,14 @@
 /* @odoo-module */
 
+import {
+    fetchSuggestions,
+    getSupportedSuggestionDelimiters,
+    searchSuggestions,
+} from "@mail/core/common/suggestion_service";
 import { useComponent, useEffect, useState } from "@odoo/owl";
-
-import { useService } from "@web/core/utils/hooks";
 
 export function useSuggestion() {
     const comp = useComponent();
-    /** @type {import("@mail/core/common/suggestion_service").SuggestionService} */
-    const suggestionService = useService("mail.suggestion");
     const self = {
         clearRawMentions() {
             comp.props.composer.rawMentions.partnerIds.length = 0;
@@ -39,7 +40,7 @@ export function useSuggestion() {
             if (selectionStart > 0) {
                 candidatePositions.push(selectionStart - 1);
             }
-            const supportedDelimiters = suggestionService.getSupportedDelimiters(
+            const supportedDelimiters = getSupportedSuggestionDelimiters(
                 comp.props.composer.thread
             );
             for (const candidatePosition of candidatePositions) {
@@ -122,7 +123,7 @@ export function useSuggestion() {
             if (!self.search.delimiter || !comp.props.composer.thread) {
                 return;
             }
-            const suggestions = suggestionService.searchSuggestions(
+            const suggestions = searchSuggestions(
                 self.search,
                 { thread: comp.props.composer.thread },
                 true
@@ -153,7 +154,7 @@ export function useSuggestion() {
                 if (!comp.props.composer.thread) {
                     return;
                 }
-                await suggestionService.fetchSuggestions(self.search, {
+                await fetchSuggestions(self.search, {
                     thread: comp.props.composer.thread,
                     onFetched() {
                         if (owl.status(comp) === "destroyed") {

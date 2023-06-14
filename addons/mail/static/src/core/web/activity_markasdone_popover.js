@@ -2,9 +2,11 @@
 
 import { useMessaging } from "@mail/core/common/messaging_hook";
 
-import { Component, onMounted, useExternalListener, useRef, useState } from "@odoo/owl";
+import { Component, onMounted, useExternalListener, useRef } from "@odoo/owl";
 
-import { useService } from "@web/core/utils/hooks";
+import { fetchNewMessages } from "../common/thread_service";
+import { getThread } from "./thread_service_patch";
+import { markActivityAsDone, markActivityAsDoneAndScheduleNext } from "./activity_service";
 
 export class ActivityMarkAsDone extends Component {
     static template = "mail.ActivityMarkAsDone";
@@ -19,7 +21,6 @@ export class ActivityMarkAsDone extends Component {
 
     setup() {
         this.messaging = useMessaging();
-        this.threadService = useState(useService("mail.thread"));
         this.textArea = useRef("textarea");
         onMounted(() => {
             this.textArea.el.focus();
@@ -35,27 +36,25 @@ export class ActivityMarkAsDone extends Component {
 
     async onClickDone() {
         const { res_id: resId, res_model: resModel } = this.props.activity;
-        const thread = this.threadService.getThread(resModel, resId);
-        await this.env.services["mail.activity"].markAsDone(this.props.activity);
+        const thread = getThread(resModel, resId);
+        await markActivityAsDone(this.props.activity);
         if (this.props.reload) {
             this.props.reload(this.props.activity.res_id, ["activities"]);
         }
-        await this.threadService.fetchNewMessages(thread);
+        await fetchNewMessages(thread);
     }
 
     async onClickDoneAndScheduleNext() {
         const { res_id: resId, res_model: resModel } = this.props.activity;
-        const thread = this.threadService.getThread(resModel, resId);
+        const thread = getThread(resModel, resId);
         if (this.props.onClickDoneAndScheduleNext) {
             this.props.onClickDoneAndScheduleNext();
         }
         if (this.props.close) {
             this.props.close();
         }
-        const action = await this.env.services["mail.activity"].markAsDoneAndScheduleNext(
-            this.props.activity
-        );
-        this.threadService.fetchNewMessages(thread);
+        const action = await markActivityAsDoneAndScheduleNext(this.props.activity);
+        fetchNewMessages(thread);
         if (this.props.reload) {
             this.props.reload(this.props.activity.res_id, ["activities", "attachments"]);
         }

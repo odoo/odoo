@@ -2,11 +2,12 @@
 
 import { useStore } from "@mail/core/common/messaging_hook";
 
-import { Component, useState } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
+import { reactToMessage, removeReaction } from "./message_service";
 
 export class MessageReactions extends Component {
     static props = ["message", "openReactionMenu"];
@@ -17,7 +18,6 @@ export class MessageReactions extends Component {
         this.messaging = useService("mail.messaging");
         this.store = useStore();
         this.ui = useService("ui");
-        this.messageService = useState(useService("mail.message"));
     }
 
     getReactionSummary(reaction) {
@@ -68,9 +68,9 @@ export class MessageReactions extends Component {
 
     onClickReaction(reaction) {
         if (this.hasSelfReacted(reaction)) {
-            this.messageService.removeReaction(reaction);
+            removeReaction(reaction);
         } else {
-            this.messageService.react(this.props.message, reaction.content);
+            reactToMessage(this.props.message, reaction.content);
         }
     }
 

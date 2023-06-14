@@ -2,7 +2,10 @@
 
 import { Message } from "@mail/core/common/message";
 import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
-import { useMessagePinService } from "@mail/discuss/message_pin/common/message_pin_service";
+import {
+    getMessagePinnedAt,
+    setPinOnMessage,
+} from "@mail/discuss/message_pin/common/message_pin_service";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
@@ -13,12 +16,8 @@ patch(Message, "discuss/message_pin/common", {
 });
 
 patch(Message.prototype, "discuss/message_pin/common", {
-    setup() {
-        this._super();
-        this.messagePinService = useMessagePinService();
-    },
     onClickPin() {
-        const pinnedAt = this.messagePinService.getPinnedAt(this.message.id);
+        const pinnedAt = getMessagePinnedAt(this.message.id);
         const thread = this.message.originThread;
         this.env.services.dialog.add(MessageConfirmDialog, {
             confirmColor: pinnedAt ? "btn-danger" : undefined,
@@ -33,11 +32,7 @@ patch(Message.prototype, "discuss/message_pin/common", {
                   ),
             size: "md",
             title: pinnedAt ? _t("Unpin Message") : _t("Pin It"),
-            onConfirm: () =>
-                this.messagePinService.setPin(
-                    this.message,
-                    !this.messagePinService.getPinnedAt(this.message.id)
-                ),
+            onConfirm: () => setPinOnMessage(this.message, !getMessagePinnedAt(this.message.id)),
         });
     },
     get attClass() {
@@ -52,7 +47,7 @@ patch(Message.prototype, "discuss/message_pin/common", {
         return !this.env.pinnedPanel && this._super();
     },
     get pinOptionText() {
-        return this.messagePinService.getPinnedAt(this.message.id) ? _t("Unpin") : _t("Pin");
+        return getMessagePinnedAt(this.message.id) ? _t("Unpin") : _t("Pin");
     },
     get shouldDisplayAuthorName() {
         if (this.env.pinnedPanel) {

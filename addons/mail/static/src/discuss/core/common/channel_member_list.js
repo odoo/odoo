@@ -2,10 +2,9 @@
 
 import { ImStatus } from "@mail/core/common/im_status";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
+import { avatarUrl, fetchChannelMembers, openChat } from "@mail/core/common/thread_service";
 
-import { Component, onWillUpdateProps, onWillStart, useState } from "@odoo/owl";
-
-import { useService } from "@web/core/utils/hooks";
+import { Component, onWillUpdateProps, onWillStart } from "@odoo/owl";
 
 export class ChannelMemberList extends Component {
     static components = { ImStatus };
@@ -15,11 +14,12 @@ export class ChannelMemberList extends Component {
     setup() {
         this.messaging = useMessaging();
         this.store = useStore();
-        this.threadService = useState(useService("mail.thread"));
-        onWillStart(() => this.threadService.fetchChannelMembers(this.props.thread));
+        this.avatarUrl = avatarUrl;
+        this.fetchChannelMembers = fetchChannelMembers;
+        onWillStart(() => fetchChannelMembers(this.props.thread));
         onWillUpdateProps((nextProps) => {
             if (nextProps.thread.channelMembers.length === 0) {
-                this.threadService.fetchChannelMembers(nextProps.thread);
+                fetchChannelMembers(nextProps.thread);
             }
         });
     }
@@ -41,6 +41,6 @@ export class ChannelMemberList extends Component {
         if (!this.canOpenChatWith(member)) {
             return;
         }
-        this.threadService.openChat({ partnerId: member.persona.id });
+        openChat({ partnerId: member.persona.id });
     }
 }

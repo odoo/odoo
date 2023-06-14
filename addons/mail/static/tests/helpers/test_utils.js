@@ -20,6 +20,7 @@ import {
 } from "@web/../tests/helpers/mock_env";
 import { getFixture, makeDeferred, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { doAction, getActionManagerServerData } from "@web/../tests/webclient/helpers";
+import { insertThread, setDiscussThread } from "@mail/core/common/thread_service";
 
 const { prepareRegistriesWithCleanup } = utils;
 const { afterNextRender } = App;
@@ -167,8 +168,8 @@ function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {})
             threadId = parseInt(threadId, 10);
         }
         // TODO-DISCUSS-REFACTORING: remove when activeId will be handled.
-        webClient.env.services["mail.thread"].setDiscussThread(
-            webClient.env.services["mail.thread"].insert({
+        setDiscussThread(
+            insertThread({
                 model: threadModel,
                 id: threadId,
             })

@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { loadAround } from "@mail/core/common/thread_service";
 import {
     onMounted,
     onPatched,
@@ -9,8 +10,6 @@ import {
     useRef,
     useState,
 } from "@odoo/owl";
-
-import { useService } from "@web/core/utils/hooks";
 
 function useExternalListener(target, eventName, handler, eventParams) {
     const boundHandler = handler.bind(useComponent());
@@ -204,10 +203,9 @@ export function useScrollSnapshot(refName, { onWillPatch: p_onWillPatch, onPatch
  */
 export function useMessageHighlight(duration = 2000) {
     let timeout;
-    const threadService = useService("mail.thread");
     const state = useState({
         async highlightMessage(msgId, thread) {
-            await threadService.loadAround(thread, msgId);
+            await loadAround(thread, msgId);
             const lastHighlightedMessageId = state.highlightedMessageId;
             clearHighlight();
             if (lastHighlightedMessageId === msgId) {

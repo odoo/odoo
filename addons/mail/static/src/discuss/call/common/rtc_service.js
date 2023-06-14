@@ -1,5 +1,7 @@
 /* @odoo-module */
 
+import { insertChannelMember } from "@mail/core/common/channel_member_service";
+import { playSound, stopPlaying } from "@mail/core/common/sound_effects_service";
 import { BlurManager } from "@mail/discuss/call/common/blur_manager";
 import { monitorAudio } from "@mail/discuss/call/common/media_monitoring";
 import { RtcSession } from "@mail/discuss/call/common/rtc_session_model";
@@ -97,16 +99,8 @@ export class Rtc {
         this.store = services["mail.store"];
         this.notification = services.notification;
         this.rpc = services.rpc;
-        /** @type {import("@mail/core/common/channel_member_service").ChannelMemberService} */
-        this.channelMemberService = services["discuss.channel.member"];
-        /** @type {import("@mail/core/common/sound_effects_service").SoundEffects} */
-        this.soundEffectsService = services["mail.sound_effects"];
         /** @type {import("@mail/core/common/user_settings_service").UserSettings} */
         this.userSettingsService = services["mail.user_settings"];
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
-        this.threadService = services["mail.thread"];
-        /** @type {import("@mail/core/common/persona_service").PersonaService} */
-        this.personaService = services["mail.persona"];
         this.state = reactive({
             hasPendingRequest: false,
             selfSession: undefined,
@@ -214,7 +208,7 @@ export class Rtc {
             }
             browser.clearTimeout(this.state.pttReleaseTimeout);
             if (!this.state.selfSession.isTalking && !this.state.selfSession.isMute) {
-                this.soundEffectsService.play("push-to-talk-on", { volume: 0.3 });
+                playSound("push-to-talk-on", { volume: 0.3 });
             }
             this.setTalking(true);
         });
@@ -228,7 +222,7 @@ export class Rtc {
                 return;
             }
             if (!this.state.selfSession.isMute) {
-                this.soundEffectsService.play("push-to-talk-off", { volume: 0.3 });
+                playSound("push-to-talk-off", { volume: 0.3 });
             }
             this.state.pttReleaseTimeout = browser.setTimeout(
                 () => this.setTalking(false),
@@ -346,21 +340,21 @@ export class Rtc {
         channel.rtcInvitingSessionId = undefined;
         if (this.state.channel === channel) {
             this.clear();
-            this.soundEffectsService.play("channel-leave");
+            playSound("channel-leave");
         }
     }
 
     onRingingThreadsChange() {
         if (this.ringingThreads.length > 0) {
-            this.soundEffectsService.play("incoming-call", { loop: true });
+            playSound("incoming-call", { loop: true });
         } else {
-            this.soundEffectsService.stop("incoming-call");
+            stopPlaying("incoming-call");
         }
     }
 
     async deafen() {
         await this.setDeaf(true);
-        this.soundEffectsService.play("deafen");
+        playSound("deafen");
     }
 
     async handleNotification(sessionId, content) {
@@ -521,7 +515,7 @@ export class Rtc {
 
     async mute() {
         await this.setMute(true);
-        this.soundEffectsService.play("mute");
+        playSound("mute");
     }
 
     /**
@@ -554,7 +548,7 @@ export class Rtc {
 
     async undeafen() {
         await this.setDeaf(false);
-        this.soundEffectsService.play("undeafen");
+        playSound("undeafen");
     }
 
     async unmute() {
@@ -563,7 +557,7 @@ export class Rtc {
         } else {
             await this.resetAudioTrack({ force: true });
         }
-        this.soundEffectsService.play("unmute");
+        playSound("unmute");
     }
 
     //----------------------------------------------------------------------
@@ -825,7 +819,7 @@ export class Rtc {
         );
         this.state.channel.rtcInvitingSessionId = undefined;
         this.call();
-        this.soundEffectsService.play("channel-join");
+        playSound("channel-join");
         await this.resetAudioTrack({ force: true });
         if (video) {
             await this.toggleVideo("camera");
@@ -1205,7 +1199,7 @@ export class Rtc {
         };
         if (!activateVideo) {
             if (type === "screen") {
-                this.soundEffectsService.play("screen-sharing");
+                playSound("screen-sharing");
             }
             stopVideo();
             return;
@@ -1225,7 +1219,7 @@ export class Rtc {
                 sourceStream = await browser.navigator.mediaDevices.getDisplayMedia({
                     video: VIDEO_CONFIG,
                 });
-                this.soundEffectsService.play("screen-sharing");
+                playSound("screen-sharing");
             }
         } catch {
             const str =
@@ -1418,7 +1412,7 @@ export class Rtc {
             session.channelId = channelMember.channel.id;
         }
         if (channelMember) {
-            const channelMemberRecord = this.channelMemberService.insert(channelMember);
+            const channelMemberRecord = insertChannelMember(channelMember);
             channelMemberRecord.rtcSessionId = session.id;
             session.channelMemberId = channelMemberRecord.id;
             if (channelMemberRecord.thread) {
@@ -1524,9 +1518,9 @@ export class Rtc {
                 break;
         }
         if (Object.keys(channel.rtcSessions).length > oldCount) {
-            this.soundEffectsService.play("channel-join");
+            playSound("channel-join");
         } else if (Object.keys(channel.rtcSessions).length < oldCount) {
-            this.soundEffectsService.play("member-leave");
+            playSound("member-leave");
         }
     }
 }
@@ -1538,9 +1532,7 @@ export const rtcService = {
         "notification",
         "rpc",
         "bus_service",
-        "mail.sound_effects",
         "mail.user_settings",
-        "mail.thread",
         "mail.persona",
     ],
     start(env, services) {

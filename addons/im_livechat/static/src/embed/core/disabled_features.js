@@ -4,9 +4,13 @@ import { Composer } from "@mail/core/common/composer";
 import { Message as MessageModel } from "@mail/core/common/message_model";
 import { Store } from "@mail/core/common/store_service";
 import { Thread } from "@mail/core/common/thread_model";
-import { ThreadService } from "@mail/core/common/thread_service";
+import { fetchNewMessages, loadAround } from "@mail/core/common/thread_service";
+import { patchFn } from "@mail/utils/common/patch";
 
 import { patch } from "@web/core/utils/patch";
+
+patchFn(fetchNewMessages, function (thread) {});
+patchFn(loadAround, function () {});
 
 patch(Composer.prototype, "im_livechat/disabled", {
     get allowUpload() {
@@ -23,15 +27,6 @@ patch(MessageModel.prototype, "im_livechat/disabled", {
 patch(Thread.prototype, "im_livechat/disabled", {
     get hasMemberList() {
         return false;
-    },
-});
-
-patch(ThreadService.prototype, "im_livechat/disabled", {
-    async fetchNewMessages(thread) {
-        return;
-    },
-    async loadAround() {
-        return;
     },
 });
 

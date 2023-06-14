@@ -5,128 +5,145 @@ import { assignDefined } from "@mail/utils/common/misc";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { fetchNewMessages } from "../common/thread_service";
+import { makeFnPatchable } from "@mail/utils/common/patch";
+
+let gEnv;
+let actionService;
+let broadcastChannel;
+let orm;
+let store;
+
+export function deleteActivity(activity, { broadcast = true } = {}) {
+    delete store.activities[activity.id];
+    if (broadcast) {
+        broadcastChannel.postMessage({ type: "delete", payload: { id: activity.id } });
+    }
+}
+
+/**
+ * @param {import("@mail/core/web/activity_model").Data} data
+ * @param {Object} [param1]
+ * @param {boolean} param1.broadcast
+ * @returns {import("@mail/core/web/activity_model").Activity}
+ */
+export const insertActivity = makeFnPatchable(function (data, { broadcast = true } = {}) {
+    const activity = store.activities[data.id] ?? new Activity(store, data.id);
+    if (data.request_partner_id) {
+        data.request_partner_id = data.request_partner_id[0];
+    }
+    assignDefined(activity, data);
+    if (broadcast) {
+        broadcastChannel.postMessage({
+            type: "insert",
+            payload: _serializeActivity(activity),
+        });
+    }
+    return activity;
+});
+
+/**
+ * @param {import("@mail/core/web/activity_model").Activity} activity
+ * @param {number[]} attachmentIds
+ */
+export async function markActivityAsDone(activity, attachmentIds = []) {
+    await orm.call("mail.activity", "action_feedback", [[activity.id]], {
+        attachment_ids: attachmentIds,
+        feedback: activity.feedback,
+    });
+    broadcastChannel.postMessage({
+        type: "reload chatter",
+        payload: { resId: activity.res_id, resModel: activity.res_model },
+    });
+}
+
+export async function markActivityAsDoneAndScheduleNext(activity) {
+    const action = await orm.call(
+        "mail.activity",
+        "action_feedback_schedule_next",
+        [[activity.id]],
+        { feedback: activity.feedback }
+    );
+    broadcastChannel.postMessage({
+        type: "reload chatter",
+        payload: { resId: activity.res_id, resModel: activity.res_model },
+    });
+    return action;
+}
+
+export async function scheduleActivity(
+    resModel,
+    resId,
+    activityId = false,
+    defaultActivityTypeId = undefined
+) {
+    const context = {
+        default_res_model: resModel,
+        default_res_id: resId,
+    };
+    if (defaultActivityTypeId !== undefined) {
+        context.default_activity_type_id = defaultActivityTypeId;
+    }
+    return new Promise((resolve) => {
+        actionService.doAction(
+            {
+                type: "ir.actions.act_window",
+                name: _t("Schedule Activity"),
+                res_model: "mail.activity",
+                view_mode: "form",
+                views: [[false, "form"]],
+                target: "new",
+                context,
+                res_id: activityId,
+            },
+            { onClose: resolve }
+        );
+    });
+}
+
+function _serializeActivity(activity) {
+    const data = { ...activity };
+    delete data._store;
+    return JSON.parse(JSON.stringify(data));
+}
 
 export class ActivityService {
     constructor(env, services) {
+        gEnv = env;
+        actionService = services.action;
         // useful for synchronizing activity data between multiple tabs
-        this.broadcastChannel = new BroadcastChannel("mail.activity.channel");
-        this.broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
+        broadcastChannel = this.broadcastChannel = new BroadcastChannel("mail.activity.channel");
+        broadcastChannel.onmessage = this._onBroadcastChannelMessage.bind(this);
         this.env = env;
         /** @type {import("@mail/core/common/store_service").Store} */
-        this.store = services["mail.store"];
-        this.orm = services.orm;
-    }
-
-    /**
-     * @param {import("@mail/core/web/activity_model").Activity} activity
-     * @param {number[]} attachmentIds
-     */
-    async markAsDone(activity, attachmentIds = []) {
-        await this.orm.call("mail.activity", "action_feedback", [[activity.id]], {
-            attachment_ids: attachmentIds,
-            feedback: activity.feedback,
-        });
-        this.broadcastChannel.postMessage({
-            type: "reload chatter",
-            payload: { resId: activity.res_id, resModel: activity.res_model },
-        });
-    }
-
-    async markAsDoneAndScheduleNext(activity) {
-        const action = await this.env.services.orm.call(
-            "mail.activity",
-            "action_feedback_schedule_next",
-            [[activity.id]],
-            { feedback: activity.feedback }
-        );
-        this.broadcastChannel.postMessage({
-            type: "reload chatter",
-            payload: { resId: activity.res_id, resModel: activity.res_model },
-        });
-        return action;
-    }
-
-    async schedule(resModel, resId, activityId = false, defaultActivityTypeId = undefined) {
-        const context = {
-            default_res_model: resModel,
-            default_res_id: resId,
-        };
-        if (defaultActivityTypeId !== undefined) {
-            context.default_activity_type_id = defaultActivityTypeId;
-        }
-        return new Promise((resolve) => {
-            this.env.services.action.doAction(
-                {
-                    type: "ir.actions.act_window",
-                    name: _t("Schedule Activity"),
-                    res_model: "mail.activity",
-                    view_mode: "form",
-                    views: [[false, "form"]],
-                    target: "new",
-                    context,
-                    res_id: activityId,
-                },
-                { onClose: resolve }
-            );
-        });
-    }
-
-    /**
-     * @param {import("@mail/core/web/activity_model").Data} data
-     * @param {Object} [param1]
-     * @param {boolean} param1.broadcast
-     * @returns {import("@mail/core/web/activity_model").Activity}
-     */
-    insert(data, { broadcast = true } = {}) {
-        const activity = this.store.activities[data.id] ?? new Activity(this.store, data.id);
-        if (data.request_partner_id) {
-            data.request_partner_id = data.request_partner_id[0];
-        }
-        assignDefined(activity, data);
-        if (broadcast) {
-            this.broadcastChannel.postMessage({
-                type: "insert",
-                payload: this._serialize(activity),
-            });
-        }
-        return activity;
-    }
-
-    delete(activity, { broadcast = true } = {}) {
-        delete this.store.activities[activity.id];
-        if (broadcast) {
-            this.broadcastChannel.postMessage({ type: "delete", payload: { id: activity.id } });
-        }
+        store = services["mail.store"];
+        orm = services.orm;
     }
 
     _onBroadcastChannelMessage({ data }) {
         switch (data.type) {
             case "insert":
-                this.insert(data.payload, { broadcast: false });
+                insertActivity(data.payload, { broadcast: false });
                 break;
             case "delete":
-                this.delete(data.payload, { broadcast: false });
+                deleteActivity(data.payload, { broadcast: false });
                 break;
             case "reload chatter": {
-                const thread = this.env.services["mail.thread"].getThread(
-                    data.payload.resModel,
-                    data.payload.resId
-                );
-                this.env.services["mail.thread"].fetchNewMessages(thread);
+                let thread;
+                // this prevents cyclic dependencies between message service and insertFollower
+                gEnv.bus.trigger("core/web/thread_service.getThread", {
+                    cb: (res) => (thread = res),
+                    params: [data.payload.resModel, data.payload.resId],
+                });
+                fetchNewMessages(thread);
                 break;
             }
         }
     }
-
-    _serialize(activity) {
-        const data = { ...activity };
-        delete data._store;
-        return JSON.parse(JSON.stringify(data));
-    }
 }
 
 export const activityService = {
-    dependencies: ["mail.store", "orm"],
+    dependencies: ["action", "mail.store", "orm"],
     start(env, services) {
         return new ActivityService(env, services);
     },

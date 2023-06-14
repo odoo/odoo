@@ -6,6 +6,7 @@ import { reactive } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { Deferred } from "@web/core/utils/concurrency";
 
 export class Store {
     constructor(env) {
@@ -152,6 +153,7 @@ export class Store {
     /** @type {Object.<string, import("@mail/core/common/thread_model").Thread>} */
     threads = {};
 
+    messagingReadyProm = new Deferred();
     isMessagingReady = false;
 }
 

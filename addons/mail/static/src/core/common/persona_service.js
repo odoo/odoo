@@ -2,10 +2,77 @@
 
 import { Persona } from "@mail/core/common/persona_model";
 import { assignDefined, createLocalId, nullifyClearCommands } from "@mail/utils/common/misc";
+import { makeFnPatchable } from "@mail/utils/common/patch";
 
 import { registry } from "@web/core/registry";
 
 export const DEFAULT_AVATAR = "/mail/static/src/img/smiley/avatar.jpg";
+
+let rpc;
+/** @type {import("@mail/core/common/store_service").Store} */
+let store;
+
+/**
+ * List of known partner ids with a direct chat, ordered
+ * by most recent interest (1st item being the most recent)
+ *
+ * @returns {[integer]}
+ */
+export function getRecentChatPartnerIds() {
+    return Object.values(store.threads)
+        .filter((thread) => thread.type === "chat")
+        .sort((a, b) => {
+            if (!a.lastInterestDateTime && !b.lastInterestDateTime) {
+                return 0;
+            }
+            if (a.lastInterestDateTime && !b.lastInterestDateTime) {
+                return -1;
+            }
+            if (!a.lastInterestDateTime && b.lastInterestDateTime) {
+                return 1;
+            }
+            return b.lastInterestDateTime.ts - a.lastInterestDateTime.ts;
+        })
+        .map((thread) => thread.chatPartnerId);
+}
+
+/**
+ * @param {import("@mail/core/common/persona_model").Data} data
+ * @returns {import("@mail/core/common/persona_model").Persona}
+ */
+export function insertPersona(data) {
+    const localId = createLocalId(data.type, data.id);
+    let persona = store.personas[localId];
+    if (!persona) {
+        persona = new Persona();
+        persona._store = store;
+        persona.localId = localId;
+        store.personas[localId] = persona;
+    }
+    updatePersona(persona, data);
+    // return reactive version
+    return store.personas[localId];
+}
+
+export async function updateGuestName(guest, name) {
+    await rpc("/mail/guest/update_name", {
+        guest_id: guest.id,
+        name,
+    });
+}
+
+export const updatePersona = makeFnPatchable(function (persona, data) {
+    nullifyClearCommands(data);
+    assignDefined(persona, { ...data });
+    if (
+        persona.type === "partner" &&
+        persona.im_status !== "im_partner" &&
+        !persona.is_public &&
+        !store.registeredImStatusPartners?.includes(persona.id)
+    ) {
+        store.registeredImStatusPartners?.push(persona.id);
+    }
+});
 
 export class PersonaService {
     constructor(...args) {
@@ -14,71 +81,8 @@ export class PersonaService {
 
     setup(env, services) {
         this.env = env;
-        this.rpc = services.rpc;
-        /** @type {import("@mail/core/common/store_service").Store} */
-        this.store = services["mail.store"];
-    }
-
-    async updateGuestName(guest, name) {
-        await this.rpc("/mail/guest/update_name", {
-            guest_id: guest.id,
-            name,
-        });
-    }
-
-    /**
-     * @param {import("@mail/core/common/persona_model").Data} data
-     * @returns {import("@mail/core/common/persona_model").Persona}
-     */
-    insert(data) {
-        const localId = createLocalId(data.type, data.id);
-        let persona = this.store.personas[localId];
-        if (!persona) {
-            persona = new Persona();
-            persona._store = this.store;
-            persona.localId = localId;
-            this.store.personas[localId] = persona;
-        }
-        this.update(persona, data);
-        // return reactive version
-        return this.store.personas[localId];
-    }
-
-    update(persona, data) {
-        nullifyClearCommands(data);
-        assignDefined(persona, { ...data });
-        if (
-            persona.type === "partner" &&
-            persona.im_status !== "im_partner" &&
-            !persona.is_public &&
-            !this.store.registeredImStatusPartners?.includes(persona.id)
-        ) {
-            this.store.registeredImStatusPartners?.push(persona.id);
-        }
-    }
-
-    /**
-     * List of known partner ids with a direct chat, ordered
-     * by most recent interest (1st item being the most recent)
-     *
-     * @returns {[integer]}
-     */
-    getRecentChatPartnerIds() {
-        return Object.values(this.store.threads)
-            .filter((thread) => thread.type === "chat")
-            .sort((a, b) => {
-                if (!a.lastInterestDateTime && !b.lastInterestDateTime) {
-                    return 0;
-                }
-                if (a.lastInterestDateTime && !b.lastInterestDateTime) {
-                    return -1;
-                }
-                if (!a.lastInterestDateTime && b.lastInterestDateTime) {
-                    return 1;
-                }
-                return b.lastInterestDateTime.ts - a.lastInterestDateTime.ts;
-            })
-            .map((thread) => thread.chatPartnerId);
+        rpc = services.rpc;
+        store = services["mail.store"];
     }
 }
 

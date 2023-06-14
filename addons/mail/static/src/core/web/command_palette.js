@@ -6,6 +6,9 @@ import { Component, xml } from "@odoo/owl";
 
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { joinChannel, openChat, openThread } from "../common/thread_service";
+import { searchPartners } from "@mail/core/common/messaging_service";
+import { sortPartnerSuggestions } from "@mail/core/common/suggestion_service";
 
 const commandSetupRegistry = registry.category("command_setup");
 const commandProviderRegistry = registry.category("command_provider");
@@ -31,24 +34,17 @@ DialogCommand.template = xml`
 commandProviderRegistry.add("mail.partner", {
     namespace: "@",
     async provide(env, options) {
-        /** @type {import("@mail/core/common/messaging_service").Messaging} */
-        const messaging = env.services["mail.messaging"];
-        const threadService = env.services["mail.thread"];
-        /** @type {import("@mail/core/common/suggestion_service").SuggestionService} */
-        const suggestionService = env.services["mail.suggestion"];
-        const results = await messaging.searchPartners(options.searchValue);
-        return suggestionService
-            .sortPartnerSuggestions(results, options.searchValue)
-            .map(function (partner) {
-                return {
-                    Component: DialogCommand,
-                    action() {
-                        threadService.openChat({ partnerId: partner.id });
-                    },
-                    name: partner.name,
-                    props: { email: partner.email },
-                };
-            });
+        const results = await searchPartners(options.searchValue);
+        return sortPartnerSuggestions(results, options.searchValue).map(function (partner) {
+            return {
+                Component: DialogCommand,
+                action() {
+                    openChat({ partnerId: partner.id });
+                },
+                name: partner.name,
+                props: { email: partner.email },
+            };
+        });
     },
 });
 
@@ -68,7 +64,6 @@ commandProviderRegistry.add("discuss.channel", {
     async provide(env, options) {
         /** @type {import("@mail/core/common/messaging_service").Messaging} */
         const messaging = env.services["mail.messaging"];
-        const threadService = env.services["mail.thread"];
         const domain = [
             ["channel_type", "=", "channel"],
             ["name", "ilike", cleanTerm(options.searchValue)],
@@ -81,8 +76,8 @@ commandProviderRegistry.add("discuss.channel", {
         );
         return channelsData.map((data) => ({
             async action() {
-                const channel = await threadService.joinChannel(data.id, data.name);
-                threadService.open(channel);
+                const channel = await joinChannel(data.id, data.name);
+                openThread(channel);
             },
             // todo: handle displayname in a way (seems like "group" channels
             // do not have a name

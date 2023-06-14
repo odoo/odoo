@@ -10,6 +10,9 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
 import { format } from "web.field_utils";
+import { openThread } from "../common/thread_service";
+import { openDocument } from "../common/messaging_service";
+import { unfollowMessage } from "../web/message_service_patch";
 
 const formatters = registry.category("formatters");
 
@@ -17,6 +20,7 @@ patch(Message.prototype, "mail/core/web", {
     setup() {
         this._super(...arguments);
         this.action = useService("action");
+        this.unfollowMessage = unfollowMessage;
     },
     get authorText() {
         return this.hasAuthorClickable ? _t("Open profile") : undefined;
@@ -27,7 +31,7 @@ patch(Message.prototype, "mail/core/web", {
     onClickAuthor(ev) {
         if (this.hasAuthorClickable) {
             markEventHandled(ev, "Message.ClickAuthor");
-            this.messaging.openDocument({
+            openDocument({
                 model: "res.partner",
                 id: this.message.author.id,
             });
@@ -35,7 +39,7 @@ patch(Message.prototype, "mail/core/web", {
     },
     openRecord() {
         if (this.message.resModel === "discuss.channel") {
-            this.threadService.open(this.message.originThread);
+            openThread(this.message.originThread);
         } else {
             this.action.doAction({
                 type: "ir.actions.act_window",

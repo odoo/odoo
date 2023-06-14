@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { insertChannelMember } from "@mail/core/common/channel_member_service";
 import { reactive, useState } from "@odoo/owl";
 
 import { browser } from "@web/core/browser/browser";
@@ -10,8 +11,6 @@ export const OTHER_LONG_TYPING = 60000;
 
 export class Typing {
     busService;
-    /** @type {import("@mail/core/common/channel_member_service").ChannelMemberService} */
-    channelMemberService;
     /** @type {Map<number, Set<number>>} */
     memberIdsByChannelId = new Map();
     /** @type {Map<number, number>} */
@@ -19,17 +18,13 @@ export class Typing {
     /** @type {import("@mail/core/common/store_service").Store} */
     storeService;
 
-    constructor({
-        bus_service: busService,
-        "discuss.channel.member": channelMemberService,
-        "mail.store": storeService,
-    }) {
-        Object.assign(this, { busService, channelMemberService, storeService });
+    constructor({ bus_service: busService, "mail.store": storeService }) {
+        Object.assign(this, { busService, storeService });
     }
 
     setup() {
         this.busService.subscribe("discuss.channel.member/typing_status", (payload) => {
-            const member = this.channelMemberService.insert(payload);
+            const member = insertChannelMember(payload);
             if (payload.isTyping) {
                 this.addTypingMember(member);
             } else {
@@ -61,7 +56,7 @@ export class Typing {
      */
     getTypingMembers(channel) {
         return [...(this.memberIdsByChannelId.get(channel.id) ?? new Set())]
-            .map((id) => this.channelMemberService.insert({ id }))
+            .map((id) => insertChannelMember({ id }))
             .filter((member) => member.persona !== this.storeService.self);
     }
 

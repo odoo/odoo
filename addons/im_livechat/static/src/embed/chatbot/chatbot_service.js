@@ -3,6 +3,7 @@
 import { Chatbot } from "@im_livechat/embed/chatbot/chatbot_model";
 import { ChatbotStep } from "@im_livechat/embed/chatbot/chatbot_step_model";
 import { SESSION_STATE } from "@im_livechat/embed/core/livechat_service";
+import { getNextMessageTemporaryId, insertMessage } from "@mail/core/common/message_service";
 
 import { EventBus, markup, reactive } from "@odoo/owl";
 
@@ -38,7 +39,6 @@ export class ChatBotService {
      * @param {import("@web/env").OdooEnv} env
      * @param {{
      * "im_livechat.livechat": import("@im_livechat/embed/core/livechat_service").LivechatService,
-     * "mail.message": import("@mail/core/common/message_service").MessageService,
      * "mail.store": import("@mail/core/common/store_service").Store,
      * rpc: typeof import("@web/core/network/rpc_service").rpcService.start,
      * }} services
@@ -47,7 +47,6 @@ export class ChatBotService {
         this.env = env;
         this.bus = new EventBus();
         this.livechatService = services["im_livechat.livechat"];
-        this.messageService = services["mail.message"];
         this.store = services["mail.store"];
         this.rpc = services.rpc;
 
@@ -112,7 +111,7 @@ export class ChatBotService {
             chatbot_script_id: this.chatbot.scriptId,
         });
         this.livechatService.thread?.messages.push(
-            this.messageService.insert({ ...message, body: markup(message.body) })
+            insertMessage({ ...message, body: markup(message.body) })
         );
         this.currentStep = null;
         this.start();
@@ -127,7 +126,7 @@ export class ChatBotService {
             chatbot_script_id: this.chatbot.scriptId,
         });
         for (const rawMessage of rawMessages) {
-            const message = this.messageService.insert({
+            const message = insertMessage({
                 ...rawMessage,
                 body: markup(rawMessage.body),
             });
@@ -158,7 +157,7 @@ export class ChatBotService {
                 return;
             }
             if (stepMessage) {
-                const message = this.messageService.insert({
+                const message = insertMessage({
                     ...stepMessage,
                     body: markup(stepMessage.body),
                 });
@@ -197,7 +196,7 @@ export class ChatBotService {
                 step: new ChatbotStep(welcomeStep),
                 stepMessage: {
                     chatbotStep: welcomeStep,
-                    id: this.messageService.getNextTemporaryId(),
+                    id: getNextMessageTemporaryId(),
                     body: welcomeStep.message,
                     res_id: this.livechatService.thread.id,
                     model: this.livechatService.thread.model,
@@ -263,7 +262,7 @@ export class ChatBotService {
         this.currentStep.isEmailValid = success;
         if (msg && !this.livechatService.thread.hasMessage(msg)) {
             this.livechatService.thread.messages.push(
-                this.messageService.insert({ ...msg, body: markup(msg.body) })
+                insertMessage({ ...msg, body: markup(msg.body) })
             );
         }
     }

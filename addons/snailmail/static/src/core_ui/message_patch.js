@@ -6,8 +6,13 @@ import { SnailmailError } from "./snailmail_error";
 import { SnailmailNotificationPopover } from "./snailmail_notification_popover";
 
 import { patch } from "@web/core/utils/patch";
+import { useService } from "@web/core/utils/hooks";
 
 patch(Message.prototype, "snailmail", {
+    setup() {
+        this._super(...arguments);
+        this.orm = useService("orm");
+    },
     onClickFailure() {
         if (this.message.type === "snailmail") {
             const failureType = this.message.notifications[0].failure_type;
@@ -34,7 +39,7 @@ patch(Message.prototype, "snailmail", {
     },
 
     async openMissingFieldsLetterAction() {
-        const letterIds = await this.messageService.orm.searchRead(
+        const letterIds = await this.orm.searchRead(
             "snailmail.letter",
             [["message_id", "=", this.message.id]],
             ["id"]

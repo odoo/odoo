@@ -1,7 +1,19 @@
 /* @odoo-module */
 
+import { openNewMessage } from "@mail/core/common/chat_window_service";
 import { ImStatus } from "@mail/core/common/im_status";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
+import {
+    avatarUrl,
+    canUnpinThread,
+    fetchNewMessages,
+    fetchPreviews,
+    markAllMessagesAsRead,
+    markThreadAsRead,
+    openThread,
+    setDiscussThread,
+    unpinThread,
+} from "@mail/core/common/thread_service";
 import { NotificationItem } from "@mail/core/web/notification_item";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { createLocalId } from "@mail/utils/common/misc";
@@ -27,8 +39,6 @@ export class MessagingMenu extends Component {
         this.notification = useState(useService("mail.notification.permission"));
         /** @type {import("@mail/core/common/chat_window_service").ChatWindowService} */
         this.chatWindowService = useState(useService("mail.chat_window"));
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
-        this.threadService = useState(useService("mail.thread"));
         this.action = useService("action");
         this.ui = useState(useService("ui"));
         this.state = useState({
@@ -36,19 +46,21 @@ export class MessagingMenu extends Component {
             addingChannel: false,
             isOpen: false,
         });
+        this.canUnpinThread = canUnpinThread;
+        this.unpinThread = unpinThread;
         onExternalClick("selector", () => {
             Object.assign(this.state, { addingChat: false, addingChannel: false });
         });
     }
 
     beforeOpen() {
-        this.threadService.fetchPreviews();
+        fetchPreviews();
         if (
             !this.store.discuss.inbox.isLoaded &&
             this.store.discuss.inbox.status !== "loading" &&
             this.store.discuss.inbox.counter !== this.store.discuss.inbox.messages.length
         ) {
-            this.threadService.fetchNewMessages(this.store.discuss.inbox);
+            fetchNewMessages(this.store.discuss.inbox);
         }
     }
 
@@ -62,10 +74,10 @@ export class MessagingMenu extends Component {
 
     markAsRead(thread) {
         if (thread.hasNeedactionMessages) {
-            this.threadService.markAllMessagesAsRead(thread);
+            markAllMessagesAsRead(thread);
         }
         if (thread.model === "discuss.channel") {
-            this.threadService.markAsRead(thread);
+            markThreadAsRead(thread);
         }
     }
 
@@ -93,7 +105,7 @@ export class MessagingMenu extends Component {
         return {
             body: _t("Enable desktop notifications to chat"),
             displayName: sprintf(_t("%s has a request"), this.store.odoobot.name),
-            iconSrc: this.threadService.avatarUrl(this.store.odoobot),
+            iconSrc: avatarUrl(this.store.odoobot),
             partner: this.store.odoobot,
             isLast: this.threads.length === 0 && this.store.notificationGroups.length === 0,
             isShown:
@@ -196,7 +208,7 @@ export class MessagingMenu extends Component {
     }
 
     openDiscussion(thread) {
-        this.threadService.open(thread);
+        openThread(thread);
         this.close();
     }
 
@@ -204,7 +216,7 @@ export class MessagingMenu extends Component {
         if (this.ui.isSmall && this.env.inDiscussApp) {
             this.state.addingChat = true;
         } else {
-            this.chatWindowService.openNewMessage();
+            openNewMessage();
         }
         this.close();
     }
@@ -238,7 +250,7 @@ export class MessagingMenu extends Component {
             // and the chat window does not look good.
             this.store.chatWindows.find(({ thr }) => thr === thread)?.close();
         } else {
-            this.threadService.open(thread);
+            openThread(thread);
         }
         this.close();
     }
@@ -285,7 +297,7 @@ export class MessagingMenu extends Component {
             (!this.store.discuss.threadLocalId ||
                 this.store.threads[this.store.discuss.threadLocalId].type !== "mailbox")
         ) {
-            this.threadService.setDiscussThread(
+            setDiscussThread(
                 Object.values(this.store.threads).find((thread) => thread.id === "inbox")
             );
         }

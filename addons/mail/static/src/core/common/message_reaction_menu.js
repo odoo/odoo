@@ -2,6 +2,7 @@
 
 import { loadEmoji } from "@mail/core/common/emoji_picker";
 import { useStore } from "@mail/core/common/messaging_hook";
+import { avatarUrl } from "@mail/core/common/thread_service";
 import { onExternalClick } from "@mail/utils/common/hooks";
 
 import {
@@ -15,6 +16,7 @@ import {
 
 import { Dialog } from "@web/core/dialog/dialog";
 import { useService } from "@web/core/utils/hooks";
+import { removeReaction } from "./message_service";
 
 export class MessageReactionMenu extends Component {
     static props = ["close", "message"];
@@ -22,15 +24,14 @@ export class MessageReactionMenu extends Component {
     static template = "mail.MessageReactionMenu";
 
     setup() {
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
-        this.threadService = useService("mail.thread");
         this.root = useRef("root");
         this.store = useStore();
         this.ui = useState(useService("ui"));
-        this.messageService = useService("mail.message");
+        this.avatarUrl = avatarUrl;
         this.state = useState({
             reaction: this.props.message.reactions[0],
         });
+        this.removeReaction = removeReaction;
         useExternalListener(document, "keydown", this.onKeydown);
         onExternalClick("root", () => this.props.close());
         useEffect(

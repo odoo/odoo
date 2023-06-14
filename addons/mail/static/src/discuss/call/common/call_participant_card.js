@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { useStore } from "@mail/core/common/messaging_hook";
+import { avatarUrl, updateThread } from "@mail/core/common/thread_service";
 import { CallContextMenu } from "@mail/discuss/call/common/call_context_menu";
 import { CallParticipantVideo } from "@mail/discuss/call/common/call_participant_video";
 import { useRtc } from "@mail/discuss/call/common/rtc_hook";
@@ -26,7 +27,7 @@ export class CallParticipantCard extends Component {
         this.rtc = useRtc();
         this.store = useStore();
         this.rootHover = useHover("root");
-        this.threadService = useService("mail.thread");
+        this.avatarUrl = avatarUrl;
         onMounted(() => {
             if (!this.rtcSession) {
                 return;
@@ -108,7 +109,7 @@ export class CallParticipantCard extends Component {
             channel_id: this.props.thread.id,
             member_ids: [this.channelMember.id],
         });
-        this.threadService.update(this.props.thread, {
+        updateThread(this.props.thread, {
             invitedMembers: channelData.invitedMembers,
         });
     }

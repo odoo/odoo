@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { avatarUrl, openThread } from "@mail/core/common/thread_service";
 import { Component } from "@odoo/owl";
 
 import { useService } from "@web/core/utils/hooks";
@@ -9,12 +10,12 @@ export class CallInvitation extends Component {
     static template = "discuss.CallInvitation";
 
     setup() {
-        this.threadService = useService("mail.thread");
+        this.avatarUrl = avatarUrl;
         this.rtc = useService("discuss.rtc");
     }
 
     async onClickAccept(ev) {
-        this.threadService.open(this.props.thread);
+        openThread(this.props.thread);
         if (this.rtc.state.hasPendingRequest) {
             return;
         }
@@ -22,7 +23,7 @@ export class CallInvitation extends Component {
     }
 
     onClickAvatar(ev) {
-        this.threadService.open(this.props.thread);
+        openThread(this.props.thread);
     }
 
     onClickRefuse(ev) {

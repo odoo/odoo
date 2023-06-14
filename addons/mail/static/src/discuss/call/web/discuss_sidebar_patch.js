@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { createGroupChat } from "@mail/core/common/thread_service";
 import { Sidebar } from "@mail/core/web/sidebar";
 import { useRtc } from "@mail/discuss/call/common/rtc_hook";
 
@@ -11,7 +12,7 @@ patch(Sidebar.prototype, "discuss/call/web", {
         this.rtc = useRtc();
     },
     async onClickStartMeeting() {
-        const thread = await this.threadService.createGroupChat({
+        const thread = await createGroupChat({
             default_display_mode: "video_full_screen",
             partners_to: [this.store.self.id],
         });

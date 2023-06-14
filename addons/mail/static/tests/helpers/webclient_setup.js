@@ -15,7 +15,6 @@ import { messagingService } from "@mail/core/common/messaging_service";
 import { notificationPermissionService } from "@mail/core/common/notification_permission_service";
 import { outOfFocusService } from "@mail/core/common/out_of_focus_service";
 import { personaService } from "@mail/core/common/persona_service";
-import { soundEffects } from "@mail/core/common/sound_effects_service";
 import { storeService } from "@mail/core/common/store_service";
 import { suggestionService } from "@mail/core/common/suggestion_service";
 import { threadService } from "@mail/core/common/thread_service";
@@ -189,7 +188,6 @@ export const setupManager = {
             "mail.message": messageService,
             "mail.chat_window": chatWindowService,
             "mail.messaging": messagingService,
-            "mail.sound_effects": soundEffects,
             "mail.user_settings": userSettingsService,
             "mail.persona": personaService,
             "mail.out_of_focus": outOfFocusService,

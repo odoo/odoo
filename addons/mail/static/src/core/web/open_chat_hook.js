@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { useService } from "@web/core/utils/hooks";
+import { openChat } from "../common/thread_service";
 
 export const helpers = {
     SUPPORTED_M2X_AVATAR_MODELS: ["res.users"],
@@ -12,7 +12,6 @@ export const helpers = {
 };
 
 export function useOpenChat(resModel) {
-    const threadService = useService("mail.thread");
     if (!helpers.SUPPORTED_M2X_AVATAR_MODELS.includes(resModel)) {
         throw new Error(
             `This widget is only supported on many2one and many2many fields pointing to ${JSON.stringify(
@@ -21,6 +20,6 @@ export function useOpenChat(resModel) {
         );
     }
     return async (id) => {
-        threadService.openChat(helpers.buildOpenChatParams(resModel, id));
+        openChat(helpers.buildOpenChatParams(resModel, id));
     };
 }

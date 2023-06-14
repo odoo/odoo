@@ -12,6 +12,8 @@ import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { url } from "@web/core/utils/urls";
 import { FileUploader } from "@web/views/fields/file_handler";
+import { getThread } from "./thread_service_patch";
+import { markActivityAsDone } from "./activity_service";
 
 /**
  * @typedef {Object} Props
@@ -36,10 +38,7 @@ export class ActivityListPopoverItem extends Component {
         this.state = useState({ hasMarkDoneView: false });
         if (this.props.activity.activity_category === "upload_file") {
             this.attachmentUploader = useAttachmentUploader(
-                this.env.services["mail.thread"].getThread(
-                    this.props.activity.res_model,
-                    this.props.activity.res_id
-                )
+                getThread(this.props.activity.res_model, this.props.activity.res_id)
             );
         }
         this.closeMarkAsDone = this.closeMarkAsDone.bind(this);
@@ -93,7 +92,7 @@ export class ActivityListPopoverItem extends Component {
 
     async onFileUploaded(data) {
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data);
-        await this.env.services["mail.activity"].markAsDone(this.props.activity, [attachmentId]);
+        await markActivityAsDone(this.props.activity, [attachmentId]);
         this.props.onActivityChanged();
     }
 

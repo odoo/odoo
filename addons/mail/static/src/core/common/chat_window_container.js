@@ -5,6 +5,11 @@ import {
     CHAT_WINDOW_END_GAP_WIDTH,
     CHAT_WINDOW_INBETWEEN_WIDTH,
     CHAT_WINDOW_WIDTH,
+    getHiddenChatWindows,
+    getMaxVisibleChatWindows,
+    getVisibleChatWindows,
+    hideChatWindow,
+    showChatWindow,
 } from "@mail/core/common/chat_window_service";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
 
@@ -47,11 +52,13 @@ export class ChatWindowContainer extends Component {
         this.chatWindowService = useState(useService("mail.chat_window"));
         this.ui = useState(useService("ui"));
         this.hiddenMenuRef = useRef("hiddenMenu");
+        this.getHiddenChatWindows = getHiddenChatWindows;
+        this.getVisibleChatWindows = getVisibleChatWindows;
         useEffect(
             () => this.setHiddenMenuOffset(),
-            () => [this.chatWindowService.hidden]
+            () => [getHiddenChatWindows()]
         );
-        onWillStart(() => this.messaging.isReady);
+        onWillStart(() => this.store.messagingReadyProm);
         onMounted(() => this.setHiddenMenuOffset());
 
         this.onResize();
@@ -66,29 +73,27 @@ export class ChatWindowContainer extends Component {
         const offsetFrom = textDirection === "rtl" ? "left" : "right";
         const visibleOffset =
             CHAT_WINDOW_END_GAP_WIDTH +
-            this.chatWindowService.maxVisible * (CHAT_WINDOW_WIDTH + CHAT_WINDOW_END_GAP_WIDTH);
+            getMaxVisibleChatWindows() * (CHAT_WINDOW_WIDTH + CHAT_WINDOW_END_GAP_WIDTH);
         const oppositeFrom = offsetFrom === "right" ? "left" : "right";
         this.hiddenMenuRef.el.style = `${offsetFrom}: ${visibleOffset}px; ${oppositeFrom}: auto`;
     }
 
     onResize() {
-        while (this.chatWindowService.visible.length > this.chatWindowService.maxVisible) {
-            this.chatWindowService.hide(
-                this.chatWindowService.visible[this.chatWindowService.visible.length - 1]
-            );
+        while (getVisibleChatWindows().length > getMaxVisibleChatWindows()) {
+            hideChatWindow(getVisibleChatWindows()[getVisibleChatWindows().length - 1]);
         }
         while (
-            this.chatWindowService.visible.length < this.chatWindowService.maxVisible &&
-            this.chatWindowService.hidden.length > 0
+            getVisibleChatWindows().length < getMaxVisibleChatWindows() &&
+            getHiddenChatWindows().length > 0
         ) {
-            this.chatWindowService.show(this.chatWindowService.hidden[0]);
+            showChatWindow(getHiddenChatWindows()[0]);
         }
         this.setHiddenMenuOffset();
     }
 
     get unread() {
         let unreadCounter = 0;
-        for (const chatWindow of this.chatWindowService.hidden) {
+        for (const chatWindow of getHiddenChatWindows()) {
             unreadCounter += chatWindow.thread.message_unread_counter;
         }
         return unreadCounter;

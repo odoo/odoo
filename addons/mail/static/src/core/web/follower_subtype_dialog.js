@@ -6,6 +6,7 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
+import { removeFollower } from "./thread_service_patch";
 
 /**
  * @typedef {Object} SubtypeData
@@ -50,7 +51,7 @@ export class FollowerSubtypeDialog extends Component {
     async onClickApply() {
         const selectedSubtypes = this.state.subtypes.filter((s) => s.followed);
         if (selectedSubtypes.length === 0) {
-            await this.env.services["mail.thread"].removeFollower(this.props.follower);
+            await removeFollower(this.props.follower);
         } else {
             await this.env.services.orm.call(
                 this.props.follower.followedThread.model,

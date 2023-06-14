@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { openChat } from "@mail/core/common/thread_service";
 import { _t } from "@web/core/l10n/translation";
 import core from "web.core";
 import fieldRegistry from "web.field_registry";
@@ -51,9 +52,7 @@ const M2XAvatarMixin = {
      * @param {Object} params
      */
     async _openChat(params) {
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
-        const threadService = await odoo.__WOWL_DEBUG__.root.env.services["mail.thread"];
-        threadService.openChat(params);
+        openChat(params);
     },
 };
 

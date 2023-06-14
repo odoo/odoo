@@ -4,6 +4,7 @@ import { SESSION_STATE } from "@im_livechat/embed/core/livechat_service";
 import { FeedbackPanel } from "@im_livechat/embed/feedback_panel/feedback_panel";
 
 import { ChatWindow } from "@mail/core/common/chat_window";
+import { showChatWindow } from "@mail/core/common/chat_window_service";
 
 import { useState } from "@odoo/owl";
 
@@ -28,7 +29,7 @@ patch(ChatWindow.prototype, "im_livechat", {
         }
         if (this.livechatService.state === SESSION_STATE.PERSISTED) {
             this.livechatState.hasFeedbackPanel = true;
-            this.chatWindowService.show(this.props.chatWindow);
+            showChatWindow(this.props.chatWindow);
         } else {
             this._super();
         }

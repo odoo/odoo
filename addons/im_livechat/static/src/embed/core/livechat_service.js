@@ -57,7 +57,6 @@ export class LivechatService {
      * cookie: typeof import("@web/core/browser/cookie_service").cookieService.start,
      * bus_service: typeof import("@bus/services/bus_service").busService.start,
      * rpc: typeof import("@web/core/network/rpc_service").rpcService.start,
-     * "mail.message": import("@mail/core/common/message_service").MessageService,
      * "mail.store": import("@mail/core/common/store_service").Store
      * }} services
      */
@@ -65,7 +64,6 @@ export class LivechatService {
         this.cookie = services.cookie;
         this.busService = services.bus_service;
         this.rpc = services.rpc;
-        this.messageService = services["mail.message"];
         this.store = services["mail.store"];
 
         this.available = session.livechatData?.isAvailable;

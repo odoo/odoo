@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { AttachmentView } from "@mail/core/common/attachment_view";
+import { insertThread } from "@mail/core/common/thread_service";
 import { Chatter } from "@mail/core/web/chatter";
 
 import { onMounted, onWillUnmount, useState } from "@odoo/owl";
@@ -23,9 +24,6 @@ patch(FormRenderer.prototype, "mail/views/web", {
             /** @type {import("@mail/core/common/thread_model").Thread} */
             thread: undefined,
         });
-        if (this.env.services["mail.thread"]) {
-            this.threadService = useService("mail.thread");
-        }
         this.uiService = useService("ui");
 
         this.onResize = useDebounced(this.render, 200);
@@ -36,10 +34,10 @@ patch(FormRenderer.prototype, "mail/views/web", {
      * @returns {boolean}
      */
     hasFileViewer() {
-        if (!this.threadService || this.uiService.size < SIZES.XXL || !this.props.record.resId) {
+        if (this.uiService.size < SIZES.XXL || !this.props.record.resId) {
             return false;
         }
-        this.messagingState.thread = this.threadService.insert({
+        this.messagingState.thread = insertThread({
             id: this.props.record.resId,
             model: this.props.record.resModel,
             type: "chatter",

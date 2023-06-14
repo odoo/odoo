@@ -46,7 +46,7 @@
                         </button>
                     </t>
                     <div t-if="store.inPublicPage and !ui.isSmall" class="d-flex align-items-center">
-                        <img class="o-mail-Discuss-selfAvatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="threadService.avatarUrl(store.self, thread)"/>
+                        <img class="o-mail-Discuss-selfAvatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="avatarUrl(store.self, thread)"/>
                         <div class="lead fw-bold flex-shrink-1 text-dark">
                             <t t-if="store.user" t-esc="store.user.name"/>
                             <t t-else="">
@@ -92,7 +92,7 @@
     <button class="btn btn-secondary flex-grow-1 p-2"
         t-att-class="{
             'active o-active shadow-none': store.discuss.threadLocalId === mailbox.localId,
-        }" t-on-click="() => this.threadService.setDiscussThread(mailbox)" t-esc="mailbox.name"
+        }" t-on-click="() => setDiscussThread(mailbox)" t-esc="mailbox.name"
     />
 </t>
 

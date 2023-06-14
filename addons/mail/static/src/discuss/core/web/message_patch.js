@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { Message } from "@mail/core/common/message";
+import { openChat } from "@mail/core/common/thread_service";
 import "@mail/core/web/message_patch"; // dependency ordering
 import { markEventHandled } from "@mail/utils/common/misc";
 
@@ -24,7 +25,7 @@ patch(Message.prototype, "discuss/core/web", {
     onClickAuthor(ev) {
         if (this.hasOpenChatFeature) {
             markEventHandled(ev, "Message.ClickAuthor");
-            this.threadService.openChat({ partnerId: this.message.author.id });
+            openChat({ partnerId: this.message.author.id });
             return;
         }
         return this._super(ev);

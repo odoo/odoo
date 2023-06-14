@@ -8,6 +8,13 @@ import { MessageConfirmDialog } from "@mail/core/common/message_confirm_dialog";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
 import { NavigableList } from "@mail/core/common/navigable_list";
 import { useSuggestion } from "@mail/core/common/suggestion_hook";
+import {
+    avatarUrl,
+    clearComposer,
+    fetchNewMessages,
+    markThreadAsRead,
+    postMessage,
+} from "@mail/core/common/thread_service";
 import { escapeAndCompactTextContent } from "@mail/utils/common/format";
 import { useSelection } from "@mail/utils/common/hooks";
 import {
@@ -30,6 +37,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { FileUploader } from "@web/views/fields/file_handler";
+import { deleteMessage, editMessage } from "./message_service";
 
 const EDIT_CLICK_TYPE = {
     CANCEL: "cancel",
@@ -79,6 +87,7 @@ export class Composer extends Component {
     static template = "mail.Composer";
 
     setup() {
+        this.avatarUrl = avatarUrl;
         this.SEND_KEYBIND_TO_SEND = markup(
             sprintf(_t("<samp>%(send_keybind)s</samp><i> to send</i>"), {
                 send_keybind: this.sendKeybind,
@@ -94,9 +103,6 @@ export class Composer extends Component {
                 { composer: this.props.composer }
             );
         }
-        this.messageService = useState(useService("mail.message"));
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
-        this.threadService = useService("mail.thread");
         this.ui = useState(useService("ui"));
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
@@ -420,7 +426,7 @@ export class Composer extends Component {
             onClose: () => {
                 this.clear();
                 if (this.props.composer.thread) {
-                    this.threadService.fetchNewMessages(this.props.composer.thread);
+                    fetchNewMessages(this.props.composer.thread);
                 }
             },
         };
@@ -429,7 +435,7 @@ export class Composer extends Component {
 
     clear() {
         this.attachmentUploader?.clear();
-        this.threadService.clearComposer(this.props.composer);
+        clearComposer(this.props.composer);
     }
 
     onClickAddEmoji(ev) {
@@ -480,7 +486,7 @@ export class Composer extends Component {
                 rawMentions: this.props.composer.rawMentions,
                 parentId: this.props.messageToReplyTo?.message?.id,
             };
-            const message = await this.threadService.post(thread, value, postData);
+            const message = await postMessage(thread, value, postData);
             if (this.props.composer.thread.type === "mailbox") {
                 this.env.services.notification.add(
                     sprintf(_t('Message posted on "%s"'), message.originThread.displayName),
@@ -495,7 +501,7 @@ export class Composer extends Component {
     async editMessage() {
         if (this.ref.el.value || this.props.composer.message.attachments.length > 0) {
             await this.processMessage(async (value) =>
-                this.messageService.edit(
+                editMessage(
                     this.props.composer.message,
                     value,
                     this.props.composer.attachments,
@@ -506,7 +512,7 @@ export class Composer extends Component {
             this.env.services.dialog.add(MessageConfirmDialog, {
                 message: this.props.composer.message,
                 messageComponent: this.props.messageComponent,
-                onConfirm: () => this.messageService.delete(this.message),
+                onConfirm: () => deleteMessage(this.message),
                 prompt: _t("Are you sure you want to delete this message?"),
             });
         }
@@ -525,7 +531,7 @@ export class Composer extends Component {
     onFocusin() {
         this.props.composer.isFocused = true;
         if (this.props.composer.thread) {
-            this.threadService.markAsRead(this.props.composer.thread);
+            markThreadAsRead(this.props.composer.thread);
         }
     }
 }

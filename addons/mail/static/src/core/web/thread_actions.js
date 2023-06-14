@@ -3,6 +3,8 @@
 import { threadActionsRegistry } from "@mail/core/common/thread_actions";
 
 import { _t } from "@web/core/l10n/translation";
+import { unstarAllMessages } from "../common/message_service";
+import { closeChatWindow } from "../common/chat_window_service";
 
 threadActionsRegistry
     .add("mark-all-read", {
@@ -26,7 +28,7 @@ threadActionsRegistry
             return component.thread.isEmpty;
         },
         open(component) {
-            component.messageService.unstarAll();
+            unstarAllMessages();
         },
         sequence: 2,
         text: _t("Unstar all"),
@@ -44,7 +46,7 @@ threadActionsRegistry
                 res_model: component.thread.model,
                 views: [[false, "form"]],
             });
-            component.chatWindowService.close(component.props.chatWindow);
+            closeChatWindow(component.props.chatWindow);
         },
         sequence: 50,
     });

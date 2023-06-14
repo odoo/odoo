@@ -6,6 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
+import { fetchThreadData } from "./thread_service_patch";
 
 /**
  * @typedef {Object} Props
@@ -19,8 +20,6 @@ export class SuggestedRecipient extends Component {
 
     setup() {
         this.dialogService = useService("dialog");
-        /** @type {import("@mail/core/common/thread_service").ThreadService)}*/
-        this.threadService = useService("mail.thread");
     }
 
     get titleText() {
@@ -47,8 +46,7 @@ export class SuggestedRecipient extends Component {
                     force_email: true,
                     ref: "compound_context",
                 },
-                onRecordSaved: () =>
-                    this.threadService.fetchData(this.props.thread, ["suggestedRecipients"]),
+                onRecordSaved: () => fetchThreadData(this.props.thread, ["suggestedRecipients"]),
                 resModel: "res.partner",
                 title: _t("Please complete customer's information"),
             });

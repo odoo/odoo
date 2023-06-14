@@ -14,10 +14,8 @@ patch(PropertyValue.prototype, "mail/views/web", {
     setup() {
         this._super();
 
-        if (this.env.services["mail.thread"]) {
-            // work only for the res.users model
-            this.openChat = useOpenChat("res.users");
-        }
+        // work only for the res.users model
+        this.openChat = useOpenChat("res.users");
     },
 
     _onAvatarClicked() {
@@ -36,9 +34,7 @@ export class Many2manyPropertiesTagsList extends TagsList {
 
     setup() {
         super.setup();
-        if (this.env.services["mail.thread"]) {
-            this.openChat = useOpenChat("res.users");
-        }
+        this.openChat = useOpenChat("res.users");
     }
 
     _onAvatarClicked(tagIndex) {

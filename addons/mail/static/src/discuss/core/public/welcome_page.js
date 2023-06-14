@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
+import { updateGuestName } from "@mail/core/common/persona_service";
 
 import { Component, useRef, useState } from "@odoo/owl";
 
@@ -15,8 +16,6 @@ export class WelcomePage extends Component {
         this.messaging = useMessaging();
         this.store = useStore();
         this.rpc = useService("rpc");
-        /** @type {import("@mail/core/common/persona_service").PersonaService} */
-        this.personaService = useService("mail.persona");
         this.state = useState({
             userName: "Guest",
             audioStream: null,
@@ -34,7 +33,7 @@ export class WelcomePage extends Component {
 
     async joinChannel() {
         if (this.store.guest) {
-            await this.personaService.updateGuestName(this.store.self, this.state.userName.trim());
+            await updateGuestName(this.store.self, this.state.userName.trim());
         }
         if (this.props.data?.discussPublicViewData.addGuestAsMemberOnJoin) {
             await this.rpc("/discuss/channel/add_guest_as_member", {

@@ -1,7 +1,9 @@
 /* @odoo-module */
 
+import { openChat } from "@mail/core/common/thread_service";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { getLivechatThread } from "./thread_service_patch";
 
 export class AutopopupService {
     static COOKIE = "im_livechat_auto_popup";
@@ -11,7 +13,6 @@ export class AutopopupService {
      * @param {{
      * "im_livechat.chatbot": import("@im_livechat/embed/chatbot/chatbot_service").ChatBotService,
      * "im_livechat.livechat": import("@im_livechat/embed/core/livechat_service").LivechatService,
-     * "mail.thread": import("@mail/core/common/thread_service").ThreadService,
      * "mail.store": import("@mail/core/common/store_service").Store,
      * cookie: typeof import("@web/core/browser/cookie_service").cookieService.start,
      * ui: typeof import("@web/core/ui/ui_service").uiService.start,
@@ -22,13 +23,11 @@ export class AutopopupService {
         {
             "im_livechat.chatbot": chatbotService,
             "im_livechat.livechat": livechatService,
-            "mail.thread": threadService,
             "mail.store": storeService,
             ui,
             cookie,
         }
     ) {
-        this.threadService = threadService;
         this.storeService = storeService;
         this.livechatService = livechatService;
         this.chatbotService = chatbotService;
@@ -37,12 +36,12 @@ export class AutopopupService {
 
         livechatService.initializedDeferred.then(() => {
             if (livechatService.shouldRestoreSession) {
-                threadService.openChat();
+                openChat();
             } else if (this.allowAutoPopup) {
                 browser.setTimeout(async () => {
                     if (await this.shouldOpenChatWindow()) {
                         this.cookie.setCookie(AutopopupService.COOKIE, JSON.stringify(false));
-                        threadService.openChat();
+                        openChat();
                     }
                 }, livechatService.rule.auto_popup_timer * 1000);
             }
@@ -57,7 +56,7 @@ export class AutopopupService {
      * @returns {Promise<boolean>}
      */
     async shouldOpenChatWindow() {
-        const thread = await this.threadService.getLivechatThread();
+        const thread = await getLivechatThread();
         return this.storeService.chatWindows.every(
             (chatWindow) => chatWindow.thread.localId !== thread?.localId
         );
@@ -74,14 +73,7 @@ export class AutopopupService {
 }
 
 export const autoPopupService = {
-    dependencies: [
-        "im_livechat.livechat",
-        "im_livechat.chatbot",
-        "mail.thread",
-        "mail.store",
-        "cookie",
-        "ui",
-    ],
+    dependencies: ["im_livechat.livechat", "im_livechat.chatbot", "mail.store", "cookie", "ui"],
 
     start(env, services) {
         return new AutopopupService(env, services);

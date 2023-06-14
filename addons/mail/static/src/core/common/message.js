@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { AttachmentList } from "@mail/core/common/attachment_list";
+import { deleteAttachment } from "@mail/core/common/attachment_service";
 import { Composer } from "@mail/core/common/composer";
 import { useEmojiPicker } from "@mail/core/common/emoji_picker";
 import { ImStatus } from "@mail/core/common/im_status";
@@ -11,8 +12,23 @@ import { MessageNotificationPopover } from "@mail/core/common/message_notificati
 import { MessageReactionMenu } from "@mail/core/common/message_reaction_menu";
 import { MessageReactions } from "@mail/core/common/message_reactions";
 import { MessageSeenIndicator } from "@mail/core/common/message_seen_indicator";
+import {
+    dateSimpleOfMessage,
+    deleteMessage,
+    reactToMessage,
+    scheduledDateSimple,
+    setMessageDone,
+    toggleMessageStar,
+} from "@mail/core/common/message_service";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
 import { RelativeTime } from "@mail/core/common/relative_time";
+import {
+    avatarUrl,
+    insertComposer,
+    insertThread,
+    openChat,
+    openThread,
+} from "@mail/core/common/thread_service";
 import { convertBrToLineBreak, htmlToTextContentInline } from "@mail/utils/common/format";
 import { isEventHandled, markEventHandled } from "@mail/utils/common/misc";
 
@@ -26,6 +42,8 @@ import {
     useRef,
     useState,
 } from "@odoo/owl";
+
+export { setMessageDone };
 
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 import { hasTouch } from "@web/core/browser/feature_detection";
@@ -95,14 +113,12 @@ export class Message extends Component {
         this.messaging = useMessaging();
         this.store = useStore();
         this.rpc = useService("rpc");
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
-        this.threadService = useState(useService("mail.thread"));
-        /** @type {import("@mail/core/common/message_service").MessageService} */
-        this.messageService = useState(useService("mail.message"));
-        /** @type {import("@mail/core/common/attachment_service").AttachmentService} */
-        this.attachmentService = useService("mail.attachment");
+        this.dateSimpleOfMessage = dateSimpleOfMessage;
+        this.scheduledDateSimple = scheduledDateSimple;
         this.user = useService("user");
         this.dialog = useService("dialog");
+        this.setMessageDone = setMessageDone;
+        this.toggleMessageStar = toggleMessageStar;
         this.openReactionMenu = this.openReactionMenu.bind(this);
         useChildSubEnv({
             alignedRight: this.isAlignedRight,
@@ -129,7 +145,7 @@ export class Message extends Component {
                             personas.find((persona) => persona === this.store.self)
                     );
                     if (!reaction) {
-                        this.messageService.react(this.message, emoji);
+                        reactToMessage(this.message, emoji);
                     }
                 },
             });
@@ -174,7 +190,7 @@ export class Message extends Component {
         ) {
             return url("/mail/static/src/img/email_icon.png");
         }
-        return this.threadService.avatarUrl(this.message.author, this.props.message.originThread);
+        return avatarUrl(this.message.author, this.props.message.originThread);
     }
 
     get expandText() {
@@ -301,7 +317,7 @@ export class Message extends Component {
             message: this.message,
             messageComponent: Message,
             prompt: _t("Are you sure you want to delete this message?"),
-            onConfirm: () => this.messageService.delete(this.message),
+            onConfirm: () => deleteMessage(this.message),
         });
     }
 
@@ -310,7 +326,7 @@ export class Message extends Component {
     }
 
     async onClickAttachmentUnlink(attachment) {
-        await this.attachmentService.delete(attachment);
+        await deleteAttachment(attachment);
     }
 
     onClickMarkAsUnread() {
@@ -334,15 +350,15 @@ export class Message extends Component {
         const id = Number(ev.target.dataset.oeId);
         if (ev.target.closest(".o_channel_redirect")) {
             ev.preventDefault();
-            const thread = this.threadService.insert({ model, id });
-            this.threadService.open(thread);
+            const thread = insertThread({ model, id });
+            openThread(thread);
             return;
         }
         if (ev.target.closest(".o_mail_redirect")) {
             ev.preventDefault();
             const partnerId = Number(ev.target.dataset.oeId);
             if (this.user.partnerId !== partnerId) {
-                this.threadService.openChat({ partnerId });
+                openChat({ partnerId });
             }
             return;
         }
@@ -383,7 +399,7 @@ export class Message extends Component {
 
     enterEditMode() {
         const messageContent = convertBrToLineBreak(this.props.message.body);
-        this.threadService.insertComposer({
+        insertComposer({
             mentions: this.props.message.recipients,
             message: this.props.message,
             textInputContent: messageContent,

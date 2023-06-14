@@ -3,6 +3,15 @@
 import { ImStatus } from "@mail/core/common/im_status";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
 import { ThreadIcon } from "@mail/core/common/thread_icon";
+import {
+    canLeaveThread,
+    canUnpinThread,
+    getDiscussCategoryCounter,
+    getThreadCounter,
+    leaveChannel,
+    setDiscussThread,
+    unpinThread,
+} from "@mail/core/common/thread_service";
 import { onExternalClick } from "@mail/utils/common/hooks";
 import { markEventHandled } from "@mail/utils/common/misc";
 
@@ -24,8 +33,6 @@ export class Sidebar extends Component {
     setup() {
         this.messaging = useMessaging();
         this.store = useStore();
-        /** @type {import("@mail/core/common/thread_service").ThreadService} */
-        this.threadService = useState(useService("mail.thread"));
         this.actionService = useService("action");
         this.dialogService = useService("dialog");
         this.userSettings = useService("mail.user_settings");
@@ -34,6 +41,11 @@ export class Sidebar extends Component {
             editing: false,
             quickSearchVal: "",
         });
+        this.canLeaveThread = canLeaveThread;
+        this.canUnpinThread = canUnpinThread;
+        this.getDiscussCategoryCounter = getDiscussCategoryCounter;
+        this.getThreadCounter = getThreadCounter;
+        this.unpinThread = unpinThread;
         onExternalClick("selector", () => {
             this.state.editing = false;
         });
@@ -41,7 +53,7 @@ export class Sidebar extends Component {
 
     openThread(ev, thread) {
         markEventHandled(ev, "sidebar.openThread");
-        this.threadService.setDiscussThread(thread);
+        setDiscussThread(thread);
     }
 
     async toggleCategory(category) {
@@ -106,7 +118,7 @@ export class Sidebar extends Component {
                 )
             );
         }
-        this.threadService.leaveChannel(thread);
+        leaveChannel(thread);
     }
 
     askConfirmation(body) {

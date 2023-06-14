@@ -20,7 +20,7 @@
             <span t-if="props.thread.unknownMembersCount === 1" class="mx-2 mt-2">And 1 other member.</span>
             <span t-if="props.thread.unknownMembersCount > 1" class="mx-2 mt-2">And <t t-esc="props.thread.unknownMembersCount"/> other members.</span>
             <div t-if="!props.thread.areAllMembersLoaded" class="mx-2 my-1">
-                <button class="btn btn-secondary" title="Load more" t-on-click.stop="() => threadService.fetchChannelMembers(props.thread)">Load more</button>
+                <button class="btn btn-secondary" title="Load more" t-on-click.stop="() => fetchChannelMembers(props.thread)">Load more</button>
             </div>
         </div>
     </t>
@@ -29,7 +29,7 @@
         <div class="o-discuss-ChannelMember d-flex align-items-center p-2 bg-view" t-att-class="{ 'cursor-pointer': canOpenChatWith(member) }" t-on-click.stop="() => this.openChatAvatar(member)">
             <div class="o-bg-inherit o-discuss-ChannelMember-avatar position-relative d-flex ms-4 flex-shrink-0">
                 <img class="w-100 h-100 rounded o_object_fit_cover"
-                     t-att-src="threadService.avatarUrl(member.persona, props.thread)"/>
+                     t-att-src="avatarUrl(member.persona, props.thread)"/>
                 <ImStatus persona="member.persona" className="'position-absolute top-100 start-100 translate-middle mt-n1 ms-n1'"/>
             </div>
             <span class="ms-2 text-truncate" t-esc="member.persona.name"/>

@@ -2,6 +2,9 @@
 
 import { ImStatus } from "@mail/core/common/im_status";
 import { useMessaging, useStore } from "@mail/core/common/messaging_hook";
+import { insertPersona } from "@mail/core/common/persona_service";
+import { sortPartnerSuggestions } from "@mail/core/common/suggestion_service";
+import { avatarUrl, createGroupChat } from "@mail/core/common/thread_service";
 
 import { Component, onMounted, onWillStart, useRef, useState } from "@odoo/owl";
 
@@ -18,8 +21,7 @@ export class ChannelInvitation extends Component {
         this.messaging = useMessaging();
         this.store = useStore();
         this.notification = useService("notification");
-        this.threadService = useState(useService("mail.thread"));
-        this.personaService = useService("mail.persona");
+        this.avatarUrl = avatarUrl;
         /** @type {import("@mail/core/common/suggestion_service").SuggestionService} */
         this.suggestionService = useService("mail.suggestion");
         this.ui = useService("ui");
@@ -52,14 +54,14 @@ export class ChannelInvitation extends Component {
         for (const selectablePartner of Partners) {
             const partnerId = selectablePartner.id;
             const name = selectablePartner.name;
-            const newPartner = this.personaService.insert({
+            const newPartner = insertPersona({
                 id: partnerId,
                 name: name,
                 type: "partner",
             });
             selectablePartners.push(newPartner);
         }
-        this.state.selectablePartners = this.suggestionService.sortPartnerSuggestions(
+        this.state.selectablePartners = sortPartnerSuggestions(
             selectablePartners,
             this.searchStr,
             this.props.thread
@@ -104,7 +106,7 @@ export class ChannelInvitation extends Component {
                 this.props.thread.chatPartnerId,
                 ...this.state.selectedPartners.map((partner) => partner.id),
             ];
-            await this.threadService.createGroupChat({ partners_to });
+            await createGroupChat({ partners_to });
         } else if (["channel", "group"].includes(this.props.thread.type)) {
             await this.messaging.orm.call(
                 "discuss.channel",
