@@ -5,7 +5,7 @@ import odoo
 import odoo.tests
 from odoo.addons.iap.tools import iap_tools
 
-@odoo.tests.tagged('external')
+@odoo.tests.tagged('website_nightly', '-standard')
 class TestIap(odoo.tests.HttpCase):
 
     def test_01_industries_lang(self):
