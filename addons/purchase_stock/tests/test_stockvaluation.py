@@ -1561,3 +1561,34 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         price_diff_aml = invoice.line_ids.filtered(lambda l: l.account_id == self.price_diff_account)
         self.assertEqual(len(price_diff_aml), 1, "A line should have been generated in the price difference account.")
         self.assertAlmostEqual(price_diff_aml.balance, 18.90)
+
+    def test_create_invoice_with_price_include_tax(self):
+        tax = self.env['account.tax'].create({
+            'name': 'Tax 15% included',
+            'amount': 15,
+            'type_tax_use': 'purchase',
+            'price_include': True,
+        })
+        product_category = self.env['product.category'].create({
+            'name': 'Test Category',
+            'property_valuation': 'real_time',
+            'property_account_creditor_price_difference_categ': self.price_diff_account.id
+        })
+        product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'type': 'product',
+            'categ_id': product_category.id,
+            'standard_price': 1000,
+            'supplier_taxes_id': tax.ids,
+        })
+        invoice = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'invoice_date': '2023-01-01',
+            'partner_id': self.partner_id.id,
+            'invoice_line_ids': [
+                (0, 0, {'product_id': product.id, 'quantity': 1.0, 'price_unit': 1000, 'tax_ids': tax.ids}),
+            ]
+        })
+        invoice.action_post()
+
+        return self.assertEqual(len(invoice.line_ids), 3)

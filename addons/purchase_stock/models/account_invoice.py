@@ -89,7 +89,14 @@ class AccountMove(models.Model):
 
                 else:
                     # Valuation_price unit is always expressed in invoice currency, so that it can always be computed with the good rate
-                    price_unit = line.product_id.uom_id._compute_price(line.product_id.standard_price, line.product_uom_id)
+                    standard_price = line.product_id.standard_price
+                    included_taxes_in_product = line.product_id.supplier_taxes_id.filtered_domain([('price_include', '=', True)])
+                    if included_taxes_in_product:
+                        prec = 1e+6
+                        standard_price *= prec
+                        standard_price = included_taxes_in_product.with_context(round=False).compute_all(standard_price)['total_excluded']
+                        standard_price /= prec
+                    price_unit = line.product_id.uom_id._compute_price(standard_price, line.product_uom_id)
                     valuation_date = valuation_stock_moves and max(valuation_stock_moves.mapped('date')) or move.date
                     valuation_price_unit = line.company_currency_id._convert(
                         price_unit, move.currency_id,
