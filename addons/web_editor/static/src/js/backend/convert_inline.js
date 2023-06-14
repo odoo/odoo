@@ -449,7 +449,8 @@ function classToStyle($editable, cssRules) {
         }
         // Apple Mail
         if (node.nodeName === 'TD' && !node.childNodes.length) {
-            writes.push(() => { node.appendChild(document.createTextNode('&nbsp;')); });
+            // Append non-breaking spaces to empty table cells.
+            writes.push(() => { node.appendChild(document.createTextNode('\u00A0')); });
         }
         // Outlook
         if (node.nodeName === 'A' && node.classList.contains('btn') && !node.classList.contains('btn-link') && !node.children.length) {
