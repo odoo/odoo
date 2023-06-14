@@ -554,3 +554,33 @@ class TestProjectrecurrence(SavepointCase):
 
         self.env.user.lang = None
         task._compute_recurrence_message()
+
+    def test_disabling_recurrence(self):
+        """
+        Disabling the recurrence of one task in a recurrence suite should disable *all*
+        recurrences option on the tasks linked to that recurrence
+        """
+        with freeze_time("2020-01-01"):
+            self.env['project.task'].create({
+                'name': 'test recurring task',
+                'project_id': self.project_recurring.id,
+                'recurring_task': True,
+                'repeat_interval': 1,
+                'repeat_unit': 'week',
+                'repeat_type': 'after',
+                'repeat_number': 2,
+                'mon': True,
+            })
+
+        with freeze_time("2020-01-06"):
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+
+        with freeze_time("2020-01-13"):
+            self.env['project.task.recurrence']._cron_create_recurring_tasks()
+
+        task_c, task_b, task_a = self.env['project.task'].search([('project_id', '=', self.project_recurring.id)])
+
+        task_b.recurring_task = False
+
+        self.assertFalse(any((task_a + task_b + task_c).mapped('recurring_task')),
+                         "All tasks in the recurrence should have their recurrence disabled")
