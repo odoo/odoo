@@ -144,9 +144,8 @@
         <td class="o_wforum_view_count d-none d-lg-table-cell text-center">
             <span t-out="question.views" t-attf-class="#{question.views == 0 and 'opacity-50'}" />
         </td>
-        <td class="o_wforum_last_activity d-none d-lg-table-cell order-4 text-center">
-            <!-- [TODO] write_date gives last date of ANY update including favouriting. Need a "last answer" date field. -->
-            <span t-field="question.write_date" t-options='{"format": "d MMM yy "}'/>
+        <td class="o_wforum_last_activity d-none d-lg-table-cell order-4 text-center" t-att-data-last-activity="question.bump_date">
+            <span class="o_wforum_relative_datetime"/>
         </td>
     </tr>
 </template>
@@ -342,6 +341,7 @@
 
     <div t-attf-class="o_wforum_#{post_type} row g-0 mb-2 rounded #{can_bump and 'oe_js_bump'} #{post_id == answer and post_id.is_correct and 'o_wforum_answer_correct my-2 mx-n3 mx-lg-n2 mx-xl-n3 py-3 px-3 px-lg-2 px-xl-3'}"
             t-att-data-type="post_type"
+            t-att-data-last-activity="post_id.create_date"
             t-att-data-last-update="post_id.write_date"
             t-attf-data-id="#{post_type}-#{post_id.id}"
             t-attf-id="#{post_type}-#{post_id.id}"
@@ -360,12 +360,7 @@
                         <t t-set="allow_biography" t-value="True"/>
                         <t t-set="show_name" t-value="True"/>
                     </t>
-                    <!-- [TODO] To be replaced with relative date/time (ex: "2 days ago") -->
-                    <span class="ms-2 opacity-75 small text-muted">
-                        <!-- <time  t-field="post_id.create_date" t-options='{"format": "d MMMM y "}'/>
-                        at
-                        <time t-field="post_id.create_date" t-options='{"format": "HH:mm "}'/> -->
-                        2d ago
+                    <span class="o_wforum_relative_datetime ms-2 opacity-75 small text-muted">
                     </span>
                     <t t-if="answer">
                         <span t-if="_question_author == _answer_author" class="badge ms-2 border border-dark rounded-pill px-2 py-1 text-reset">
@@ -585,7 +580,7 @@
         <div t-if="object.website_message_ids" class="o_wforum_post_comments d-flex flex-column gap-2">
             <t t-foreach="reversed(object.website_message_ids)" t-as="message">
                 <t t-set="_comment_author" t-value="message.create_uid.id"/>
-                <div t-attf-class="o_wforum_post_comment d-flex rounded o_cc2 ps-3">
+                <div t-attf-class="o_wforum_post_comment d-flex rounded o_cc2 ps-3" t-att-data-last-activity="message.create_date">
                     <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_unlink_own or object.forum_id.karma_comment_unlink_all"/>
                     <t t-set="required_karma" t-value="message.author_id.id == user.partner_id.id and object.forum_id.karma_comment_convert_own or object.forum_id.karma_comment_convert_all"/>
                     <t t-if="(object.parent_id and object.parent_id.state != 'close' and object.parent_id.active != False) or (not object.parent_id and object.state != 'close' and object.active != False)">
@@ -598,7 +593,7 @@
                                 <t t-set="compact" t-value="True"/>
                                 <t t-set="show_name" t-value="True"/>
                             </span>
-                            <span class="ms-2 mb-2 small text-muted"><small>Just now</small></span>
+                            <span class="ms-2 mb-2 small text-muted"><small class="o_wforum_relative_datetime"/></span>
                             <span t-if="_question_author == _comment_author" class="badge ms-2 border border-dark rounded-pill px-2 py-1 text-reset">
                                 Author
                             </span>
