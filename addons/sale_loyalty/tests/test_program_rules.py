@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import date, timedelta
+from freezegun import freeze_time
 
 from odoo import Command
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponCommon
@@ -207,6 +208,7 @@ class TestProgramRules(TestSaleCouponCommon):
         self.assertEqual(len(discounts), 1, "The order should contains the Product A line and a discount")
         self.assertTrue('Discount: 10% on your order' in discounts.pop(), "The discount should be a 10% discount")
 
+    @freeze_time('2011-11-02 09:00:21')
     def test_program_rules_validity_dates(self):
         # Test date_to (no date_from)
         today = date.today()
