@@ -6,9 +6,17 @@ import {
     setTestSelection,
     Direction,
     nextTick,
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/test/spec/copyPaste.test.js
+||||||| parent of 3ba27899b98 (temp):addons/web_editor/static/lib/odoo-editor/test/spec/copyPaste.test.js
+    readFromFile,
+=======
+    pasteHtml,
+    pasteText,
+>>>>>>> 3ba27899b98 (temp):addons/web_editor/static/lib/odoo-editor/test/spec/copyPaste.test.js
 } from "../utils.js";
 import {CLIPBOARD_WHITELISTS} from "../../src/OdooEditor.js";
 
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/test/spec/copyPaste.test.js
 // Mock an paste event and send it to the editor.
 const pasteData = async function (editor, text, type) {
     var mockEvent = {
@@ -157,6 +165,29 @@ describe('Cut', () => {
 });
 
 describe('Paste', () => {
+||||||| parent of 3ba27899b98 (temp):addons/web_editor/static/lib/odoo-editor/test/spec/copyPaste.test.js
+// Mock an paste event and send it to the editor.
+const pasteData = async function (editor, text, type) {
+    var mockEvent = {
+        dataType: 'text/plain',
+        data: text,
+        clipboardData: {
+            getData: (datatype) => type === datatype ? text : null,
+            files: [],
+            items: [],
+        },
+        preventDefault: () => {},
+    };
+    await editor._onPaste(mockEvent);
+};
+
+const pasteText = async (editor, text) => pasteData(editor, text, 'text/plain');
+const pasteHtml = async (editor, html) => pasteData(editor, html, 'text/html');
+
+describe('Copy and paste', () => {
+=======
+describe('Copy and paste', () => {
+>>>>>>> 3ba27899b98 (temp):addons/web_editor/static/lib/odoo-editor/test/spec/copyPaste.test.js
     describe('Html Paste cleaning', () => {
         describe('whitelist', async () => {
             it('should keep whitelisted Tags tag', async () => {
@@ -2097,6 +2128,7 @@ describe('Paste', () => {
             });
         });
     });
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/test/spec/copyPaste.test.js
     describe('Odoo editor own html', () => {
         it('should paste html as is', async () => {
             await testEditor(BasicEditor, {
@@ -2117,4 +2149,51 @@ describe('Paste', () => {
             });
         });
     });
+||||||| parent of 3ba27899b98 (temp):addons/web_editor/static/lib/odoo-editor/test/spec/copyPaste.test.js
+    describe('HTML tables', async () => {
+        describe('From Microsoft Excel Online', async () => {
+            it('should keep all allowed style (Excel Online)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>\n',
+                    stepFunction: async editor => {
+                        const clipboard = await readFromFile('/web_editor/static/lib/odoo-editor/test/spec/html_tables/excel_clipboard.html');
+                        await pasteHtml(editor, clipboard);
+                    },
+                    // NOTE: clipboard & result files contain blank/whitespace
+                    // lines that are required for the test to pass.
+                    contentAfter: await readFromFile('/web_editor/static/lib/odoo-editor/test/spec/html_tables/excel_result.html'),
+                });
+            });
+        });
+        describe('From Google Sheets', async () => {
+            it('should keep all allowed style (Google Sheets)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>\n',
+                    stepFunction: async editor => {
+                        const clipboard = await readFromFile('/web_editor/static/lib/odoo-editor/test/spec/html_tables/google_clipboard.html');
+                        await pasteHtml(editor, clipboard);
+                    },
+                    // NOTE: clipboard & result files contain blank/whitespace
+                    // lines that are required for the test to pass.
+                    contentAfter: await readFromFile('/web_editor/static/lib/odoo-editor/test/spec/html_tables/google_result.html'),
+                });
+            });
+        });
+        describe('From Libre Office', async () => {
+            it('should keep all allowed style (Libre Office)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>\n',
+                    stepFunction: async editor => {
+                        const clipboard = await readFromFile('/web_editor/static/lib/odoo-editor/test/spec/html_tables/libre_clipboard.html');
+                        await pasteHtml(editor, clipboard);
+                    },
+                    // NOTE: clipboard & result files contain blank/whitespace
+                    // lines that are required for the test to pass.
+                    contentAfter: await readFromFile('/web_editor/static/lib/odoo-editor/test/spec/html_tables/libre_result.html'),
+                });
+            });
+        });
+    });
+=======
+>>>>>>> 3ba27899b98 (temp):addons/web_editor/static/lib/odoo-editor/test/spec/copyPaste.test.js
 });
