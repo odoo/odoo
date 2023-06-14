@@ -14,9 +14,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Junko Augias, 2023\n"
+||||||| parent of 4be71421442 (temp)
+"POT-Creation-Date: 2023-02-17 06:43+0000\n"
+"PO-Revision-Date: 2023-01-17 14:39+0000\n"
+"Last-Translator: Andy Yiu, 2023\n"
+=======
+"POT-Creation-Date: 2023-05-25 12:24+0000\n"
+"PO-Revision-Date: 2023-01-17 14:39+0000\n"
+"Last-Translator: Andy Yiu, 2023\n"
+>>>>>>> 4be71421442 (temp)
 "Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,10 +52,29 @@ msgstr "行数"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
+<<<<<<< HEAD
 msgstr "販売オーダ数"
 
 #. module: sale
 #. odoo-python
+||||||| parent of 4be71421442 (temp)
+msgstr "販売注文数"
+
+#. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "%(amount)s due %(date)s"
+msgstr "%(amount)sは%(date)sに期限切れます"
+
+#. module: sale
+#. odoo-python
+=======
+msgstr "販売注文数"
+
+#. module: sale
+#. odoo-python
+>>>>>>> 4be71421442 (temp)
 #: code:addons/sale/models/sale_order_line.py:0
 #, python-format
 msgid "%(line_description)s (Canceled)"
@@ -834,6 +863,11 @@ msgstr "分析勘定"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution
 msgid "Analytic Distribution"
 msgstr "分析用配分"
+
+#. module: sale
+#: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution_search
+msgid "Analytic Distribution Search"
+msgstr ""
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__analytic_distribution_search

@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Camille Dantinne <cmd@odoo.com>, 2023
+# Rémi CAZENAVE, 2023
 # Cécile Collart <cco@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Jolien De Paepe, 2023
@@ -12,8 +13,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
+||||||| parent of 4be71421442 (temp)
+"POT-Creation-Date: 2023-02-17 06:43+0000\n"
+"PO-Revision-Date: 2023-01-17 14:39+0000\n"
+=======
+"POT-Creation-Date: 2023-05-25 12:24+0000\n"
+"PO-Revision-Date: 2023-01-17 14:39+0000\n"
+>>>>>>> 4be71421442 (temp)
 "Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
@@ -295,11 +304,25 @@ msgstr ""
 "        <t t-set=\"transaction\" t-value=\"object.get_portal_last_transaction()\"></t>\n"
 "        Votre commande <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> d'un montant de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
 "        <t t-if=\"object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized'))\">\n"
+<<<<<<< HEAD
 "            a été confirmée.<br>\n"
 "            Merci pour votre confiance !\n"
+||||||| parent of 4be71421442 (temp)
+"            a été confirmée.<br/>\n"
+"            Merci pour votre confiance !\n"
+=======
+"            est confirmée.<br>\n"
+"            Merci de votre confiance !\n"
+>>>>>>> 4be71421442 (temp)
 "        </t>\n"
 "        <t t-elif=\"transaction and transaction.state == 'pending'\">\n"
+<<<<<<< HEAD
 "            est en attente. Elle sera confirmée dès réception du paiement.\n"
+||||||| parent of 4be71421442 (temp)
+"           est en attente. Elle sera confirmée lors de la réception du paiement.\n"
+=======
+"            est en attente. Elle sera confirmée à la réception du paiement.\n"
+>>>>>>> 4be71421442 (temp)
 "            <t t-if=\"object.reference\">\n"
 "                Votre référence de paiement est <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"></span>.\n"
 "            </t>\n"
@@ -319,6 +342,7 @@ msgstr ""
 "                <td style=\"width: 150px;\"><span style=\"font-weight:bold;\">Produits</span></td>\n"
 "                <td></td>\n"
 "                <td width=\"15%\" align=\"center\"><span style=\"font-weight:bold;\">Quantité</span></td>\n"
+<<<<<<< HEAD
 "                <td width=\"20%\" align=\"right\">\n"
 "                    <span style=\"font-weight:bold;\">\n"
 "                        <t t-if=\"object.company_id.tax_calculation_rounding_method == 'round_per_line'\">\n"
@@ -329,6 +353,25 @@ msgstr ""
 "                        </t>\n"
 "                    </span>\n"
 "                </td>\n"
+||||||| parent of 4be71421442 (temp)
+"                <td width=\"20%\" align=\"right\"><span style=\"font-weight:bold;\">\n"
+"                <t t-if=\"object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')\">\n"
+"                    Hors TVA\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    TVA comprise\n"
+"                </t>\n"
+"                </span></td>\n"
+=======
+"                <td width=\"20%\" align=\"right\"><span style=\"font-weight:bold;\">\n"
+"                <t t-if=\"object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')\">\n"
+"                    Hors TVA\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    Toutes taxes comprises\n"
+"                </t>\n"
+"                </span></td>\n"
+>>>>>>> 4be71421442 (temp)
 "            </tr>\n"
 "        </table>\n"
 "        <t t-foreach=\"object.order_line\" t-as=\"line\">\n"
@@ -374,8 +417,16 @@ msgstr ""
 "    <div style=\"margin: 0px; padding: 0px;\" t-if=\"hasattr(object, 'carrier_id') and object.carrier_id\">\n"
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
+<<<<<<< HEAD
 "                <td style=\"width: 60%\"></td>\n"
 "                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Expédition :</span></td>\n"
+||||||| parent of 4be71421442 (temp)
+"                <td style=\"width: 60%\"/>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Livraison :</span></td>\n"
+=======
+"                <td style=\"width: 60%\"></td>\n"
+"                <td style=\"width: 30%; border-top: 1px solid #dee2e6;\" align=\"right\"><span style=\"font-weight:bold;\">Livraison :</span></td>\n"
+>>>>>>> 4be71421442 (temp)
 "                <td style=\"width: 10%; border-top: 1px solid #dee2e6;\" align=\"right\" t-out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">$ 0.00</td>\n"
 "            </tr>\n"
 "            <tr>\n"
@@ -454,7 +505,7 @@ msgstr ""
 "                    <span style=\"font-weight:bold;\">Mode d'expédition :</span>\n"
 "                    <t t-out=\"object.carrier_id.name or ''\"></t>\n"
 "                    <t t-if=\"object.amount_delivery == 0.0\">\n"
-"                        (Gratuit)\n"
+"                        (gratuit)\n"
 "                    </t>\n"
 "                    <t t-else=\"\">\n"
 "                        (<t t-out=\"format_amount(object.amount_delivery, object.currency_id) or ''\">$ 10.00</t>)\n"
@@ -513,7 +564,7 @@ msgstr ""
 "        <br><br>\n"
 "        Votre\n"
 "        <t t-if=\"ctx.get('proforma')\">\n"
-"            facture pro forma pour <t t-out=\"doc_name or ''\">le devis</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
+"            facture pro forma pour le <t t-out=\"doc_name or ''\">devis</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\">S00052</span>\n"
 "            <t t-if=\"object.origin\">\n"
 "                (avec référence : <t t-out=\"object.origin or ''\"></t> )\n"
 "            </t>\n"
@@ -4506,9 +4557,19 @@ msgid ""
 msgstr ""
 "Il n'y a rien à facturer !\n"
 "\n"
+<<<<<<< HEAD
 "Les raisons de ce comportement peuvent être :\n"
 "- Vous devez livrer vos produits avant de les facturer.\n"
 "- Vous devez modifier la politique de facturation de votre produit : Ouvrez le produit, allez à l'onglet \"Ventes\" et changez la politique de facturation de \"quantités livrées\" en \"quantités commandées\". Pour les services, vous devez changer la politique de facturation du service en 'Prépayé'."
+||||||| parent of 4be71421442 (temp)
+"La ou les raisons de ce comportement peuvent être :\n"
+"- Vous devez livrer vos produits avant de les facturer : Cliquez sur l'icône \"camion\" (en haut à droite de votre écran) et suivez les instructions.\n"
+"- Vous devez modifier la politique de facturation de votre produit : Ouvrez le produit, allez dans l'onglet \"Ventes\" et modifiez la politique de facturation de \"quantités livrées\" à \"quantités commandées\". Pour les services, vous devez modifier la politique de facturation des services en \"prépayé\"."
+=======
+"Les raisons de ce comportement peuvent être :\n"
+"- Vous devez livrer vos produits avant de les facturer.\n"
+"- Vous devez modifier la politique de facturation de votre produit : Ouvrez le produit, allez à l'onglet \"Vente\" et changez la politique de facturation de \"quantités livrées\" en \"quantités commandées\". Pour les services, vous devez changer la politique de facturation du service en 'Prépayé'."
+>>>>>>> 4be71421442 (temp)
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form

@@ -15,9 +15,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~16.2\n"
 "Report-Msgid-Bugs-To: \n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2023-05-26 06:31+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Martin Trigaux, 2023\n"
+||||||| parent of 4be71421442 (temp)
+"POT-Creation-Date: 2023-02-17 06:43+0000\n"
+"PO-Revision-Date: 2023-01-17 14:39+0000\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
+=======
+"POT-Creation-Date: 2023-05-25 12:24+0000\n"
+"PO-Revision-Date: 2023-01-17 14:39+0000\n"
+"Last-Translator: Fernanda Alvarez, 2023\n"
+>>>>>>> 4be71421442 (temp)
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -294,15 +304,31 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 12px;\">\n"
 "        Hola,\n"
+<<<<<<< HEAD
 "        <br><br>\n"
 "        <t t-set=\"transaction\" t-value=\"object.get_portal_last_transaction()\"></t>\n"
 "        Su orden <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> con un importe de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+||||||| parent of 4be71421442 (temp)
+"        <br/><br/>\n"
+"        <t t-set=\"transaction\" t-value=\"object.get_portal_last_transaction()\"/>\n"
+"        Se ha confirmado su orden <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> con un importe de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+=======
+"        <br><br>\n"
+"        <t t-set=\"transaction\" t-value=\"object.get_portal_last_transaction()\"></t>\n"
+"        Se ha confirmado su orden <span style=\"font-weight:bold;\" t-out=\"object.name or ''\">S00049</span> con un importe de <span style=\"font-weight:bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span>\n"
+>>>>>>> 4be71421442 (temp)
 "        <t t-if=\"object.state == 'sale' or (transaction and transaction.state in ('done', 'authorized'))\">\n"
+<<<<<<< HEAD
 "            ha sido confirmada.<br>\n"
+||||||| parent of 4be71421442 (temp)
+"            .<br/>\n"
+=======
+"            .<br>\n"
+>>>>>>> 4be71421442 (temp)
 "            ¡Gracias por su confianza!\n"
 "        </t>\n"
 "        <t t-elif=\"transaction and transaction.state == 'pending'\">\n"
-"            está pendiente. Se confirmará cuando recibamos su pago.\n"
+"            está pendiente y se confirmará cuando recibamos su pago.\n"
 "            <t t-if=\"object.reference\">\n"
 "                Su referencia de pago es <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"></span>.\n"
 "            </t>\n"
@@ -322,6 +348,7 @@ msgstr ""
 "                <td style=\"width: 150px;\"><span style=\"font-weight:bold;\">Productos</span></td>\n"
 "                <td></td>\n"
 "                <td width=\"15%\" align=\"center\"><span style=\"font-weight:bold;\">Cantidad</span></td>\n"
+<<<<<<< HEAD
 "                <td width=\"20%\" align=\"right\">\n"
 "                    <span style=\"font-weight:bold;\">\n"
 "                        <t t-if=\"object.company_id.tax_calculation_rounding_method == 'round_per_line'\">\n"
@@ -332,6 +359,25 @@ msgstr ""
 "                        </t>\n"
 "                    </span>\n"
 "                </td>\n"
+||||||| parent of 4be71421442 (temp)
+"                <td width=\"20%\" align=\"right\"><span style=\"font-weight:bold;\">\n"
+"                <t t-if=\"object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')\">\n"
+"                    Precio sin incluir IVA\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    IVA Incluido\n"
+"                </t>\n"
+"                </span></td>\n"
+=======
+"                <td width=\"20%\" align=\"right\"><span style=\"font-weight:bold;\">\n"
+"                <t t-if=\"object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')\">\n"
+"                    Precio sin IVA incluido\n"
+"                </t>\n"
+"                <t t-else=\"\">\n"
+"                    IVA incluido\n"
+"                </t>\n"
+"                </span></td>\n"
+>>>>>>> 4be71421442 (temp)
 "            </tr>\n"
 "        </table>\n"
 "        <t t-foreach=\"object.order_line\" t-as=\"line\">\n"
@@ -362,8 +408,16 @@ msgstr ""
 "                        <td align=\"left\" t-out=\"line.product_id.name or ''\">\tCurso sobre el cuidado de los árboles</td>\n"
 "                        <td width=\"15%\" align=\"center\" t-out=\"line.product_uom_qty or ''\">1</td>\n"
 "                        <td width=\"20%\" align=\"right\"><span style=\"font-weight:bold;\">\n"
+<<<<<<< HEAD
 "                        <t t-if=\"object.company_id.tax_calculation_rounding_method == 'round_per_line'\">\n"
 "                            <t t-out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">$ 10.00</t>\n"
+||||||| parent of 4be71421442 (temp)
+"                        <t t-if=\"object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')\">\n"
+"                            <t t-out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">$10.00</t>\n"
+=======
+"                        <t t-if=\"object.user_id.has_group('account.group_show_line_subtotals_tax_excluded')\">\n"
+"                            <t t-out=\"format_amount(line.price_reduce_taxexcl, object.currency_id) or ''\">$ 10.00</t>\n"
+>>>>>>> 4be71421442 (temp)
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            <t t-out=\"format_amount(line.price_reduce_taxinc, object.currency_id) or ''\">$ 10.00</t>\n"
@@ -466,8 +520,16 @@ msgstr ""
 "            </tr>\n"
 "            <tr t-if=\"object.carrier_id.carrier_description\">\n"
 "                <td>\n"
+<<<<<<< HEAD
 "                    <strong>Descripción de envío:</strong>\n"
 "                    <t t-out=\"object.carrier_id.carrier_description\"></t>\n"
+||||||| parent of 4be71421442 (temp)
+"                    <strong>Descripción del envío:</strong>\n"
+"                    <t t-out=\"object.carrier_id.carrier_description\"/>\n"
+=======
+"                    <strong>Descripción del envío:</strong>\n"
+"                    <t t-out=\"object.carrier_id.carrier_description\"></t>\n"
+>>>>>>> 4be71421442 (temp)
 "                </td>\n"
 "            </tr>\n"
 "        </table>\n"
@@ -520,10 +582,22 @@ msgstr ""
 "            <t t-if=\"object.origin\">\n"
 "                (con referencia: <t t-out=\"object.origin or ''\"></t> )\n"
 "            </t>\n"
+<<<<<<< HEAD
 "            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.currency_id) or ''\">$ 10.00</span> está disponible.\n"
+||||||| parent of 4be71421442 (temp)
+"            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> se encuentra disponible.\n"
+=======
+"            por un importe de <span style=\"font-weight: bold;\" t-out=\"format_amount(object.amount_total, object.pricelist_id.currency_id) or ''\">$ 10.00</span> está disponible.\n"
+>>>>>>> 4be71421442 (temp)
 "        </t>\n"
 "        <t t-else=\"\">\n"
+<<<<<<< HEAD
 "            <t t-out=\"doc_name or ''\">cotización</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
+||||||| parent of 4be71421442 (temp)
+"            <t t-out=\"doc_name or ''\">presupuesto</t> <span style=\"font-weight: bold;\" t-out=\"object.name or ''\"/>\n"
+=======
+"           <t t-out=\"doc_name or ''\"> cotización</t><span style=\"font-weight: bold;\" t-out=\"object.name or ''\"></span>\n"
+>>>>>>> 4be71421442 (temp)
 "            <t t-if=\"object.origin\">\n"
 "                (con referencia: <t t-out=\"object.origin or ''\">S00052</t> )\n"
 "            </t>\n"
@@ -1229,8 +1303,16 @@ msgid ""
 "purchase amount, period). Rewards can be discounts (% or amount) or free "
 "products."
 msgstr ""
+<<<<<<< HEAD
 "Aumente sus ventas con múltiples tipos de programas: cupones, promociones, "
 "tarjetas de regalo, fidelidad. Puede establecer condiciones específicas "
+||||||| parent of 4be71421442 (temp)
+"Aumente sus ventas con múltiples tipos de programas: cupones, promociones, "
+"tarjetas de regalo y lealtad. Puede establecer condiciones específicas "
+=======
+"Aumente sus ventas con varios tipos de programas: cupones, promociones, "
+"tarjetas de regalo y lealtad. Puede establecer condiciones específicas "
+>>>>>>> 4be71421442 (temp)
 "(productos, clientes, importe de compra mínimo, periodo). Las recompensas "
 "pueden ser descuentos (% o un importe) o productos gratis."
 
@@ -2930,8 +3012,8 @@ msgstr ""
 #, python-format
 msgid "Open Sales app to send your first quotation in a few clicks."
 msgstr ""
-"Abra la aplicación de ventas para enviar su primera cotización en unos pocos"
-" clics."
+"Abra la aplicación Ventas para enviar su primera cotización en unos pocos "
+"clics."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_cancel__lang
@@ -4006,8 +4088,15 @@ msgstr "Secuencia"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set multiple prices per product, automated discounts, etc."
+<<<<<<< HEAD
 msgstr ""
 "Establezca precios múltiples por producto, descuentos automáticos, etc."
+||||||| parent of 4be71421442 (temp)
+msgstr ""
+"Establezca múltiples precios por producto, descuentos automáticos, etc."
+=======
+msgstr "Establezca varios precios por producto, descuentos automáticos, etc."
+>>>>>>> 4be71421442 (temp)
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_order_confirmation_step
