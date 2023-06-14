@@ -8,6 +8,14 @@ export class Many2ManyTagsAvatarEmployeeField extends Many2ManyTagsAvatarUserFie
         return "hr.employee.public";
     }
 }
+
+Many2ManyTagsAvatarEmployeeField.extractProps = ({ field, attrs }) => {
+    return {
+        ...Many2ManyTagsAvatarUserField.extractProps({ field, attrs }),
+        canQuickCreate: false,
+    }
+};
+
 Many2ManyTagsAvatarEmployeeField.additionalClasses = [...Many2ManyTagsAvatarUserField.additionalClasses, "o_field_many2many_avatar_user"];
 
 registry.category("fields").add("many2many_avatar_employee", Many2ManyTagsAvatarEmployeeField);

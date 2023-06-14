@@ -324,6 +324,24 @@ QUnit.module(
             unpatch(localization, "patch loc");
         });
 
+        QUnit.test("parseDateTime with escaped characters (eg. Basque locale)", async (assert) => {
+            const dateFormat = strftimeToLuxonFormat("%a, %Y.eko %bren %da");
+            const timeFormat = strftimeToLuxonFormat("%H:%M:%S");
+            patch(localization, "patch loc", {
+                dateFormat,
+                timeFormat,
+                dateTimeFormat: `${dateFormat} ${timeFormat}`,
+            });
+
+            const dateTimeFormat = `${dateFormat} ${timeFormat}`;
+            assert.equal(dateTimeFormat, "ccc, yyyy.'e''k''o' MMM'r''e''n' dd'a' HH:mm:ss");
+            assert.equal(
+                parseDateTime("1985-01-31 08:30:00").toFormat(dateTimeFormat),
+                "Thu, 1985.eko Janren 31a 08:30:00"
+            );
+            unpatch(localization, "patch loc");
+        });
+
         QUnit.test("parse smart date input", async (assert) => {
             patchDate(2020, 0, 1, 0, 0, 0); // 2020-01-01 00:00:00
 
@@ -1100,5 +1118,43 @@ QUnit.module(
                         .toISOString(),
             });
         });
+
+        QUnit.test(
+            "parseDateTime: arab locale, latin numbering system as input",
+            async (assert) => {
+                const dateFormat = "dd MMM, yyyy";
+                const timeFormat = "hh:mm:ss";
+
+                patchWithCleanup(localization, {
+                    dateFormat,
+                    timeFormat,
+                    dateTimeFormat: `${dateFormat} ${timeFormat}`,
+                });
+                patchWithCleanup(Settings, {
+                    defaultLocale: "ar-001",
+                    defaultNumberingSystem: "arab",
+                });
+
+                // Check it works with arab
+                assert.strictEqual(
+                    parseDateTime("١٥ يوليو, ٢٠٢٠ ١٢:٣٠:٤٣").toISO().split(".")[0],
+                    "2020-07-15T12:30:43"
+                );
+
+                // Check it also works with latin numbers
+                assert.strictEqual(
+                    parseDateTime("15 07, 2020 12:30:43").toISO().split(".")[0],
+                    "2020-07-15T12:30:43"
+                );
+                assert.strictEqual(
+                    parseDateTime("22/01/2023").toISO().split(".")[0],
+                    "2023-01-22T00:00:00"
+                );
+                assert.strictEqual(
+                    parseDateTime("2023-01-22").toISO().split(".")[0],
+                    "2023-01-22T00:00:00"
+                );
+            }
+        );
     }
 );

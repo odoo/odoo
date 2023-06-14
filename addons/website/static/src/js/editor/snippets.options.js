@@ -12,12 +12,14 @@ const wLinkPopoverWidget = require('@website/js/widgets/link_popover_widget')[Sy
 const wUtils = require('website.utils');
 const {isImageSupportedForStyle} = require('web_editor.image_processing');
 require('website.s_popup_options');
+const {Domain} = require('@web/core/domain');
 
 var _t = core._t;
 var qweb = core.qweb;
 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
+const Many2oneUserValueWidget = options.userValueWidgetsRegistry['we-many2one'];
 
 options.UserValueWidget.include({
     loadMethodsData() {
@@ -36,6 +38,28 @@ options.UserValueWidget.include({
                 this._methodsNames[indexView] = 'customizeWebsiteVariable';
             }
         }
+    },
+});
+
+Many2oneUserValueWidget.include({
+    /**
+     * @override
+     */
+    async _getSearchDomain() {
+        // Add the current website's domain if the model has a website_id field.
+        // Note that the `_rpc` method is cached in Many2X user value widget,
+        // see `_rpcCache`.
+        const websiteIdField = await this._rpc({
+            model: this.options.model,
+            method: "fields_get",
+            args: [["website_id"]],
+        });
+        const modelHasWebsiteId = !!websiteIdField["website_id"];
+        if (modelHasWebsiteId && !this.options.domain.find(arr => arr[0] === "website_id")) {
+            this.options.domain =
+                Domain.and([this.options.domain, wUtils.websiteDomain(this)]).toList();
+        }
+        return this.options.domain;
     },
 });
 
@@ -2305,7 +2329,8 @@ options.registry.HeaderNavbar = options.Class.extend({
         // For all header templates except those in the following array, change
         // the label of the option to "Mobile Alignment" (instead of
         // "Alignment") because it only impacts the mobile view.
-        if (!["'default'", "'hamburger'", "'sidebar'"].includes(weUtils.getCSSVariableValue('header-template'))) {
+        if (!["'default'", "'hamburger'", "'sidebar'", "'magazine'", "'hamburger-full'", "'slogan'"]
+            .includes(weUtils.getCSSVariableValue("header-template"))) {
             const alignmentOptionTitleEl = this.el.querySelector('[data-name="header_alignment_opt"] we-title');
             alignmentOptionTitleEl.textContent = _t("Mobile Alignment");
         }
@@ -3104,6 +3129,28 @@ options.registry.ScrollButton = options.Class.extend({
             this.$button.detach();
         }
     },
+    /**
+     * @override
+     */
+    async selectClass(previewMode, widgetValue, params) {
+        await this._super(...arguments);
+        // If a "d-lg-block" class exists on the section (e.g., for mobile
+        // visibility option), it should be replaced with a "d-lg-flex" class.
+        // This ensures that the section has the "display: flex" property
+        // applied, which is the default rule for both "height" option classes.
+        if (params.possibleValues.includes("o_half_screen_height")) {
+            if (widgetValue) {
+                this.$target[0].classList.replace("d-lg-block", "d-lg-flex");
+            } else if (this.$target[0].classList.contains("d-lg-flex")) {
+                // There are no known cases, but we still make sure that the
+                // <section> element doesn't have a "display: flex" originally.
+                this.$target[0].classList.remove("d-lg-flex");
+                const sectionStyle = window.getComputedStyle(this.$target[0]);
+                const hasDisplayFlex = sectionStyle.getPropertyValue("display") === "flex";
+                this.$target[0].classList.add(hasDisplayFlex ? "d-lg-flex" : "d-lg-block");
+            }
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -3204,20 +3251,11 @@ options.registry.ConditionalVisibility = options.registry.DeviceVisibility.exten
         await this._super(...arguments);
         this.$target[0].classList.remove('o_conditional_hidden');
     },
+    // Todo: remove me in master.
     /**
      * @override
      */
-    async cleanForSave() {
-        await this._super(...arguments);
-        // Kinda hacky: the snippet is forced hidden via onTargetHide on save
-        // but should be marked as visible as when entering edit mode later, the
-        // snippet will be shown naturally (as the CSS rules won't apply).
-        // Without this, the "eye" icon of the visibility panel would be shut
-        // when entering edit mode.
-        if (this.$target[0].classList.contains('o_snippet_invisible')) {
-            this.trigger_up('snippet_option_visibility_update', { show: true });
-        }
-    },
+    cleanForSave() {},
 
     //--------------------------------------------------------------------------
     // Options

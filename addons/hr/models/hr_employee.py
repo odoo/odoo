@@ -362,7 +362,7 @@ class HrEmployeePrivate(models.Model):
             self.message_unsubscribe(self.address_home_id.ids)
             if vals['address_home_id']:
                 self._message_subscribe([vals['address_home_id']])
-        if vals.get('user_id'):
+        if 'user_id' in vals:
             # Update the profile pictures with user, except if provided 
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']),
                                         (bool(self.image_1920))))

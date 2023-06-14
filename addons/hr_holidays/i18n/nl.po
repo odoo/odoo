@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
 "Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
 "Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
@@ -644,7 +644,7 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                           Vrije tijd\n"
+"                           Verlof\n"
 "                        </span>"
 
 #. module: hr_holidays
@@ -1398,7 +1398,7 @@ msgstr "Annuleer Verlaat Wizard"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 #, python-format
 msgid "Cancel Time Off"
-msgstr "Annuleer vrije tijd"
+msgstr "Annuleer verlof"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_departure_wizard__cancel_leaves
@@ -1424,7 +1424,7 @@ msgstr "Geannuleerd"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "Cancelled Time Off"
-msgstr "Geannuleerde vrije tijd"
+msgstr "Geannuleerde verlof"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__category_id
@@ -1534,13 +1534,13 @@ msgid ""
 "Count of allocations for this time off type (approved or waiting for "
 "approbation) with a validity period starting this year."
 msgstr ""
-"Telling van allocaties voor deze vrije tijd (goedgekeurd of wachtend op "
+"Telling van toewijzing voor deze verlof (goedgekeurd of wachtend op "
 "goedkeuring) met een geldigheidsperiode vanaf dit jaar."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Count of plans linked to this time off type."
-msgstr "Aantal plannen gekoppeld aan dit type vrije tijd."
+msgstr "Aantal plannen gekoppeld aan dit type verlof."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1778,8 +1778,8 @@ msgstr "Dropdown menu"
 msgid ""
 "Due to a change in global time offs, you have been granted %s day(s) back."
 msgstr ""
-"Als gevolg van een wijziging in de algemene vrije tijd, heb je %s dag(en) "
-"terug gekregen."
+"Als gevolg van een wijziging in het algemene verlof, heb je %s dag(en) terug"
+" gekregen."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__duration
@@ -2209,8 +2209,8 @@ msgid ""
 "If checked, the rate will be prorated on time off type where type is set on "
 "Working Time in the configuration."
 msgstr ""
-"Indien aangevinkt, wordt het tarief naar rato berekend op het type vrije "
-"tijd waarbij het type is ingesteld op Werktijd in de configuratie."
+"Indien aangevinkt, wordt het tarief naar rato berekend op het type verlof "
+"waarbij het type is ingesteld op Werktijd in de configuratie."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__active_employee
@@ -2256,6 +2256,13 @@ msgid ""
 msgstr ""
 "Direct: wanneer de datum overeenkomt met het nieuwe niveau, wordt je opbouw automatisch berekend, toegekend en schakel je over naar het nieuwe niveau\n"
 "                Na deze opbouwperiode: Als de opbouw is afgerond (een week, een maand) en is toegekend, stap je over naar het volgende niveau als de toekenningsdatum overeenkomt"
+
+#. module: hr_holidays
+#. odoo-python
+#: code:addons/hr_holidays/models/hr_leave_allocation.py:0
+#, python-format
+msgid "Incorrect state for new allocation"
+msgstr "Onjuiste status voor nieuwe toewijzing"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_is_follower
@@ -2315,7 +2322,7 @@ msgstr "Houd je betaald verlof bij."
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__time_type
 msgid "Kind of Time Off"
-msgstr "Soort van vrije tijd"
+msgstr "Verlofsoort"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_cancel_leave____last_update
@@ -2445,8 +2452,7 @@ msgstr "Laten we het gaan valideren"
 #, python-format
 msgid "Let's try to create a Sick Time Off, select it in the list"
 msgstr ""
-"Laten we proberen een ziektevrije tijd aan te maken, selecteer deze in de "
-"lijst"
+"Laten we proberen een ziekteverlof aan te maken, selecteer deze in de lijst"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__level_ids
@@ -3327,7 +3333,7 @@ msgstr "Tweede maand weergave"
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 #, python-format
 msgid "Select Time Off"
-msgstr "Selecteer vrije tijd"
+msgstr "Selecteer verlof"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__holiday_type
@@ -3697,7 +3703,7 @@ msgstr "De verlofaanvraag werd automatisch goedgekeurd"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "The time off has been canceled: %s"
-msgstr "De vrije tijd is geannuleerd: %s"
+msgstr "De verlof is geannuleerd: %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
@@ -3780,7 +3786,7 @@ msgstr "Deze wijziging is in de huidige staat niet toegelaten."
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "This time off cannot be canceled."
-msgstr "Deze vrije tijd kan niet worden geannuleerd."
+msgstr "Deze verlof kan niet worden geannuleerd."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -4073,8 +4079,7 @@ msgstr "Toewijzingen goedkeuren of goedkeuren"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "To Approve or Need Second Approval or Approved Time Off"
-msgstr ""
-"Tweede goedkeuring of goedgekeurde vrije tijd goedkeuren of nodig hebben"
+msgstr "Tweede goedkeuring of goedgekeurde verlof goedkeuren of nodig hebben"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_to
@@ -4260,7 +4265,7 @@ msgstr "Geldigheidsduur"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Validity Start"
-msgstr "Geldigheid Begin"
+msgstr "Geldigheid begin"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
@@ -4393,7 +4398,7 @@ msgid ""
 "%s"
 msgstr ""
 "Je kunt voor dezelfde werknemer niet twee vrije dagen die elkaar overlappen op dezelfde dag instellen.\n"
-"Bestaande vrije tijd:\n"
+"Bestaande verlof:\n"
 "%s"
 
 #. module: hr_holidays
@@ -4406,7 +4411,7 @@ msgid ""
 "%s"
 msgstr ""
 "Je kunt niet twee vrije dagen die elkaar overlappen op dezelfde dag voor dezelfde werknemers vastleggen.\n"
-"Bestaande vrije tijd:\n"
+"Bestaande verlof:\n"
 "%s"
 
 #. module: hr_holidays
@@ -4419,7 +4424,7 @@ msgid ""
 "%s"
 msgstr ""
 "Je kunt niet twee vrije dagen instellen die elkaar overlappen op dezelfde dag.\n"
-"Bestaande vrije tijd:\n"
+"Bestaande verlof:\n"
 "%s"
 
 #. module: hr_holidays
@@ -4443,7 +4448,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You can't manually archive/unarchive a time off."
-msgstr "Je kunt een vrije tijd niet handmatig archiveren/dearchiveren."
+msgstr "Je kunt een verlof niet handmatig archiveren/dearchiveren."
 
 #. module: hr_holidays
 #. odoo-python
@@ -4460,7 +4465,7 @@ msgstr ""
 #, python-format
 msgid "You cannot delete a time off assigned to several employees"
 msgstr ""
-"Je kunt een aan meerdere werknemers toegewezen vrije tijd niet verwijderen"
+"Je kunt een aan meerdere werknemers toegewezen verlof niet verwijderen"
 
 #. module: hr_holidays
 #. odoo-python
@@ -4577,7 +4582,7 @@ msgstr "Je %(leave_type)s gepland op %(date)s is afgewezen"
 #: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
 #, python-format
 msgid "Your time off has been canceled."
-msgstr "Je vrije tijd is geannuleerd."
+msgstr "Je verlof is geannuleerd."
 
 #. module: hr_holidays
 #. odoo-python

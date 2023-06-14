@@ -1039,7 +1039,7 @@ class AccountMoveLine(models.Model):
                         'amount_currency': 0.0,
                         'balance': 0.0,
                         'price_subtotal': 0.0,
-                        'tax_ids': [],
+                        'tax_ids': [Command.clear()],
                     },
                 )
                 epd_needed_vals['amount_currency'] += line.amount_currency * percentage * line_percentage
@@ -1860,7 +1860,7 @@ class AccountMoveLine(models.Model):
                         if credit_vals.get('record'):
                             exchange_lines_to_fix += credit_vals['record']
                         amounts_list.append({'amount_residual': credit_exchange_amount})
-                        remaining_credit_amount += credit_exchange_amount
+                        remaining_credit_amount -= credit_exchange_amount
                         if credit_vals['currency'] == company_currency:
                             remaining_credit_amount_curr -= credit_exchange_amount
                 else:

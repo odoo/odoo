@@ -2759,6 +2759,13 @@ msgstr ""
 "unitat per omissió de mesura del producte en cas contrari."
 
 #. module: product
+#. odoo-python
+#: code:addons/product/models/product_pricelist_item.py:0
+#, python-format
+msgid "The rounding method must be strictly positive."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_product__lst_price
 msgid ""
 "The sale price is managed from the product template. Click on the 'Configure"
@@ -3304,6 +3311,9 @@ msgid ""
 "%s\n"
 " If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
+"No podeu suprimir el valor %s perquè s'utilitza en els productes següents:\n"
+"%s\n"
+" Si el valor s'ha associat a un producte en el passat, no el podreu suprimir."
 
 #. module: product
 #. odoo-python
@@ -3336,6 +3346,7 @@ msgstr ""
 #, python-format
 msgid "You cannot delete value %s because it was used in some products."
 msgstr ""
+"No podeu suprimir el valor %s perquè s'ha utilitzat en alguns productes."
 
 #. module: product
 #. odoo-python

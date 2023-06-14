@@ -24,7 +24,8 @@ export class ForecastWidgetField extends FloatField {
         if (data.forecast_expected_date && data.date_deadline) {
             this.forecastIsLate = data.forecast_expected_date > data.date_deadline;
         }
-        this.willBeFulfilled = data.forecast_availability >= data.product_qty;
+        const digits = fields.forecast_availability.digits;
+        this.willBeFulfilled = parseFloat(formatFloat(data.forecast_availability, {"digits" : digits})) >= parseFloat(formatFloat(data.product_qty, {"digits" : digits}));
         this.state = data.state;
     }
 

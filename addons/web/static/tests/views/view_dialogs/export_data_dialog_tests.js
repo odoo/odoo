@@ -1128,9 +1128,7 @@ QUnit.module("ViewDialogs", (hooks) => {
         );
     });
 
-    QUnit.test("Export dialog: search in debug", async function (assert) {
-        patchWithCleanup(odoo, { debug: "1" });
-
+    QUnit.test("Export dialog: expand subfields after search", async function (assert) {
         await makeView({
             serverData,
             type: "list",
@@ -1156,8 +1154,57 @@ QUnit.module("ViewDialogs", (hooks) => {
         const firstField = target.querySelector(
             ".o_left_field_panel .o_export_tree_item:first-child"
         );
+        // show then hide content for the 'activity_ids' field.
+        // this will load subfields and make them available to search
         await click(firstField);
-        await click(firstField.querySelector(".o_export_tree_item"));
+        await click(firstField);
+        await editInput(target, ".o_export_search_input", "Attendants");
+        assert.containsOnce(
+            target,
+            ".o_export_tree_item[data-field_id='activity_ids/partner_ids']",
+            "subfield that was known has been found and is displayed"
+        );
+
+        await click(
+            target.querySelector(".o_export_tree_item[data-field_id='activity_ids/partner_ids']")
+        );
+        await nextTick();
+        // 'Company' should be shown even if the company_ids string doesn't match the search string
+        // since the toggle was done by the user to show subfields
+        assert.containsOnce(
+            target,
+            ".o_export_tree_item[data-field_id='activity_ids/partner_ids/company_ids']",
+            "subfield has been loaded and is displayed"
+        );
+    });
+
+    QUnit.test("Export dialog: search in debug", async function (assert) {
+        patchWithCleanup(odoo, { debug: "1" });
+
+        await makeView({
+            serverData,
+            type: "list",
+            resModel: "partner",
+            arch: `
+                <tree export_xlsx="1"><field name="foo"/></tree>`,
+            actionMenus: {},
+            mockRPC(route, args) {
+                if (route === "/web/export/formats") {
+                    return Promise.resolve([{ tag: "csv", label: "CSV" }]);
+                }
+                if (route === "/web/export/get_fields") {
+                    if (!args.parent_field) {
+                        return Promise.resolve(fetchedFields.root);
+                    }
+                    return Promise.resolve(fetchedFields[args.prefix]);
+                }
+            },
+        });
+
+        await openExportDataDialog();
+
+        await click(target.querySelector(".o_left_field_panel .o_export_tree_item:first-child"));
+        await click(target.querySelector(".o_export_tree_item:first-child .o_export_tree_item"));
         await editInput(target, ".o_export_search_input", "company_ids");
         assert.containsOnce(
             target,

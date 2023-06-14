@@ -148,5 +148,41 @@ wTourUtils.dragNDrop({
         }
     },
 },
+// Test keeping the text selection when toggling the grid mode.
+wTourUtils.changeOption("layout_column", 'we-button[data-name="grid_mode"]'),
+{
+    content: "The snippet row should have the grid mode class.",
+    trigger: "iframe .s_text_block .row.o_grid_mode",
+    run: () => {}, // It's a check.
+}, {
+    content: "The text toolbar should still be visible, and the text still selected.",
+    trigger: "#oe_snippets .o_we_customize_panel > #o_we_editor_toolbar_container",
+    run() {
+        const iframeDocument = document.querySelector(".o_iframe").contentDocument;
+        const pText = iframeDocument.querySelector(".s_text_block p").textContent;
+        const selection = iframeDocument.getSelection().toString();
+        if (pText !== selection) {
+            console.error("The paragraph text selection was lost.");
+        }
+    },
+},
+// Test keeping the text selection when toggling back the normal mode.
+wTourUtils.changeOption("layout_column", 'we-button[data-name="normal_mode"]'),
+{
+    content: "The snippet row should not have the grid mode class anymore.",
+    trigger: "iframe .s_text_block .row:not(.o_grid_mode)",
+    run: () => {}, // It's a check.
+}, {
+    content: "The text toolbar should still be visible, and the text still selected.",
+    trigger: "#oe_snippets .o_we_customize_panel > #o_we_editor_toolbar_container",
+    run() {
+        const iframeDocument = document.querySelector(".o_iframe").contentDocument;
+        const pText = iframeDocument.querySelector(".s_text_block p").textContent;
+        const selection = iframeDocument.getSelection().toString();
+        if (pText !== selection) {
+            console.error("The paragraph text selection was lost.");
+        }
+    },
+},
 ...wTourUtils.clickOnSave(),
 ]);

@@ -991,6 +991,28 @@ class TestXMLTranslation(TransactionCase):
         self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_fr)
         self.assertEqual(view.with_env(env_nl).arch_db, archf % terms_nl)
 
+    def test_sync_text_to_xml(self):
+        """ Check translations of 'arch' after xml tags changes in source terms. """
+        archf = '<form string="X">%s</form>'
+        terms_en = ('<span>Hi</span>',)
+        terms_fr = ('<span>Salut</span>',)
+        terms_nl = ('<span>Hallo</span>',)
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr, nl_NL=terms_nl)
+
+        env_nolang = self.env(context={})
+        env_en = self.env(context={'lang': 'en_US'})
+        env_fr = self.env(context={'lang': 'fr_FR'})
+
+        # modify the arch view, keep the same text content: 'Hi'
+        terms_en = 'Hi'
+        archf = '<form string="X"><setting string="%s"><span color="red"/></setting></form>'
+        view.with_env(env_en).write({'arch_db': archf % terms_en})
+
+        self.assertEqual(view.with_env(env_nolang).arch_db, archf % terms_en)
+        self.assertEqual(view.with_env(env_en).arch_db, archf % terms_en)
+        # check that we didn't set string="&lt;span&gt;Salut&lt;/span&gt;"
+        self.assertEqual(view.with_env(env_fr).arch_db, archf % terms_en)
+
     def test_sync_xml_collision(self):
         """ Check translations of 'arch' after xml tags changes in source terms
             when the same term appears in different elements with different

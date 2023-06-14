@@ -6,6 +6,7 @@ from odoo import api, fields, models, tools
 
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 from odoo.modules import get_resource_path
+from odoo.tools import html2plaintext
 
 try:
     import sass as libsass
@@ -62,6 +63,7 @@ class BaseDocumentLayout(models.TransientModel):
     report_header = fields.Html(related='company_id.report_header', readonly=False)
     report_footer = fields.Html(related='company_id.report_footer', readonly=False, default=_default_report_footer)
     company_details = fields.Html(related='company_id.company_details', readonly=False, default=_default_company_details)
+    is_company_details_empty = fields.Boolean(compute='_compute_empty_company_details')
 
     # The paper format changes won't be reflected in the preview.
     paperformat_id = fields.Many2one(related='company_id.paperformat_id', readonly=False)
@@ -304,3 +306,10 @@ class BaseDocumentLayout(models.TransientModel):
             )
         except libsass.CompileError as e:
             raise libsass.CompileError(e.args[0])
+
+    @api.depends('company_details')
+    def _compute_empty_company_details(self):
+        # In recent change when an html field is empty a <p> balise remains with a <br> in it,
+        # but when company details is empty we want to put the info of the company
+        for record in self:
+            record.is_company_details_empty = not html2plaintext(record.company_details or '')

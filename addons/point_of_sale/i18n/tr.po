@@ -5351,6 +5351,14 @@ msgstr "Sipariş %s için POS kapanış giriş %s oturum %s tersine çevrilmesi"
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "Ters Kaydı: %s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "Terminale gönderilen iptal isteği"
@@ -6343,6 +6351,13 @@ msgstr ""
 "\n"
 "\n"
 "                        Kapanış farkını kabul etmek için lütfen yöneticinizle iletişime geçin."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
@@ -7362,13 +7377,6 @@ msgid ""
 msgstr ""
 "Bazılarını Ürünler menüsünden ekleyebilir veya mevcut olanları \"PoS'ta Kullanılabilir\" olarak işaretleyerek bağlayabilirsiniz.\n"
 "                    Veya test amacıyla demo verileri ekleyebilirsiniz. Lütfen bunun geri dönüşü olmayan bir eylem olduğunu unutmayın."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr "Yalnızca bir nakit ödeme yönteminiz olabilir."
 
 #. module: point_of_sale
 #. odoo-python

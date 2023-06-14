@@ -31,6 +31,21 @@ tour.register('course_member', {
     trigger: '.o_wslides_fs_slide_name:contains("Home Gardening")',
     run: 'click',
 },
+// eLearning: share the first slide
+{
+    trigger: '.o_wslides_fs_share'
+}, {
+    trigger: '.o_wslides_js_share_email input',
+    run: 'text friend@example.com'
+}, {
+    trigger: '.o_wslides_js_share_email button',
+}, {
+    trigger: '.o_wslides_js_share_email:contains("Sharing is caring")',
+    run: function () {}  // check email has been sent
+}, {
+    trigger: '.modal-footer button:contains("Close")',
+},
+// eLeaning: course completion
 {
     trigger: '.o_wslides_fs_sidebar_header',
     run: function () {

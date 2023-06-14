@@ -191,6 +191,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             py_module = sys.modules['odoo.addons.%s' % (module_name,)]
             pre_init = package.info.get('pre_init_hook')
             if pre_init:
+                registry.setup_models(cr)
                 getattr(py_module, pre_init)(cr)
 
         model_names = registry.load(cr, package)

@@ -268,6 +268,24 @@
         }
     }
 
+    %o_we_sublevel > we-title::before {
+        content: "└"; // TODO The size and look of this depends on the
+                      // browser default font, we should use a SVG instead.
+        display: inline-block;
+        margin-right: 0.4em;
+    }
+    @for $level from 1 through 3 {
+        .o_we_sublevel_#{$level} {
+            @extend %o_we_sublevel;
+
+            @if $level > 1 {
+                > we-title {
+                    padding-left: ($level - 1) * 0.6em;
+                }
+            }
+        }
+    }
+
     #snippets_menu {
         flex: 0 0 auto;
         display: flex;
@@ -1658,24 +1676,6 @@
             }
         }
 
-        %o_we_sublevel > we-title::before {
-            content: "└"; // TODO The size and look of this depends on the
-                          // browser default font, we should use a SVG instead.
-            display: inline-block;
-            margin-right: 0.4em;
-        }
-        @for $level from 1 through 3 {
-            .o_we_sublevel_#{$level} {
-                @extend %o_we_sublevel;
-
-                @if $level > 1 {
-                    > we-title {
-                        padding-left: ($level - 1) * 0.6em;
-                    }
-                }
-            }
-        }
-
         .o_we_image_weight {
             margin-left: $o-we-sidebar-content-field-label-spacing * 2;
         }
@@ -1708,6 +1708,21 @@
 
             &:hover {
                 background-color: $o-we-sidebar-bg;
+            }
+        }
+
+        div.o_we_invisible_root_parent {
+            padding-bottom: 3px;
+        }
+
+        ul {
+            list-style: none;
+            padding-inline-start: 15px;
+            margin-bottom: $o-we-sidebar-content-field-spacing - 3px;
+
+            div.o_we_invisible_entry {
+                padding-top: 3px;
+                padding-bottom: 3px;
             }
         }
     }

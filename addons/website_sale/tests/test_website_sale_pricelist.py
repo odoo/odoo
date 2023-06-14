@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from unittest.mock import patch
 
+from odoo.fields import Command
+from odoo.tests import tagged, TransactionCase
+
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo, HttpCaseWithUserPortal
 from odoo.addons.website.tools import MockRequest
-from odoo.tests import tagged
-from odoo.tests.common import HttpCase, TransactionCase
-from odoo.tools import DotDict
 
 ''' /!\/!\
 Calling `get_pricelist_available` after setting `property_product_pricelist` on
@@ -296,6 +296,45 @@ class TestWebsitePriceList(TransactionCase):
         prices = product._get_sales_prices(self.list_christmas)
         self.assertFalse('base_price' in prices[product.id])
 
+    def test_pricelist_item_based_on_cost_for_templates(self):
+        """ Test that `_get_sales_prices` from `product_template` computes the correct price when
+        the pricelist item is based on the cost of the product.
+        """
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Pricelist base on cost',
+            'item_ids': [Command.create({
+                'base': 'standard_price',
+                'compute_price': 'percentage',
+                'percent_price': 10,
+            })]
+        })
+
+        pa = self.env['product.attribute'].create({'name': 'Attribute'})
+        pav1 = self.env['product.attribute.value'].create({'name': 'Value1', 'attribute_id': pa.id})
+        pav2 = self.env['product.attribute.value'].create({'name': 'Value2', 'attribute_id': pa.id})
+
+        product_template = self.env['product.template'].create({
+            'name': 'Product Template', 'list_price': 10.0, 'standard_price': 5.0
+        })
+        self.assertEqual(product_template.standard_price, 5)
+        price = product_template._get_sales_prices(pricelist)[product_template.id]['price_reduce']
+        msg = "Template has no variants, the price should be computed based on the template's cost."
+        self.assertEqual(price, 4.5, msg)
+
+        product_template.attribute_line_ids = [Command.create({
+            'attribute_id': pa.id, 'value_ids': [Command.set([pav1.id, pav2.id])]
+        })]
+        msg = "Product template with variants should have no cost."
+        self.assertEqual(product_template.standard_price, 0, msg)
+        self.assertEqual(product_template.product_variant_ids[0].standard_price, 0)
+
+        price = product_template._get_sales_prices(pricelist)[product_template.id]['price_reduce']
+        msg = "Template has variants, the price should be computed based on the 1st variant's cost."
+        self.assertEqual(price, 0, msg)
+
+        product_template.product_variant_ids[0].standard_price = 20
+        price = product_template._get_sales_prices(pricelist)[product_template.id]['price_reduce']
+        self.assertEqual(price, 18, msg)
 
 def simulate_frontend_context(self, website_id=1):
     # Mock this method will be enough to simulate frontend context in most methods

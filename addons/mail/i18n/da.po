@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Walther Barnett <walther@gundogpro.dk>, 2022
-# lhmflexerp <lhm@flexerp.dk>, 2022
 # Sanne Kristensen <sanne@vkdata.dk>, 2022
 # Preben Lisby <preben.lisby@gmail.com>, 2022
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2022
@@ -13,14 +12,15 @@
 # Mads Søndergaard, 2022
 # Martin Trigaux, 2023
 # JonathanStein <jstein@image.dk>, 2023
+# lhmflexerp <lhm@flexerp.dk>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-14 05:51+0000\n"
+"POT-Creation-Date: 2023-05-23 08:22+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: JonathanStein <jstein@image.dk>, 2023\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2023\n"
 "Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4021,13 +4021,6 @@ msgid "Gmail Credentials"
 msgstr ""
 
 #. module: mail
-#. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid "Go to the configuration panel"
-msgstr "Gå til konfigurations fanebladet"
-
-#. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_channel__channel_type__group
 msgid "Group"
 msgstr "Gruppe"
@@ -5091,7 +5084,7 @@ msgstr "Deltag i kanal"
 #: code:addons/mail/static/src/components/call_action_list/call_action_list.xml:0
 #, python-format
 msgid "Join Video Call"
-msgstr ""
+msgstr "Deltag i videoopkald"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_channel_action_view
@@ -5736,6 +5729,13 @@ msgstr "Mærk som To do"
 #, python-format
 msgid "Mark as done"
 msgstr "Markér som udført"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "Media devices unobtainable"
+msgstr ""
 
 #. module: mail
 #: model:mail.activity.type,name:mail.mail_activity_data_meeting
@@ -7959,16 +7959,16 @@ msgid "SSL"
 msgstr "SSL"
 
 #. module: mail
-#: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
-msgid "SSL/TLS"
-msgstr "SSL / TLS"
-
-#. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models/call_settings_menu.js:0
 #, python-format
 msgid "SSL might not be set up properly"
 msgstr ""
+
+#. module: mail
+#: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
+msgid "SSL/TLS"
+msgstr "SSL / TLS"
 
 #. module: mail
 #. odoo-javascript
@@ -8618,7 +8618,7 @@ msgstr "Start en samtale"
 #: code:addons/mail/static/src/components/discuss_sidebar/discuss_sidebar.xml:0
 #, python-format
 msgid "Start a meeting"
-msgstr ""
+msgstr "Start et møde"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__state
@@ -10285,17 +10285,6 @@ msgstr "Du kan kun åbne profilen for eksisterende kanaler."
 #, python-format
 msgid "You can only open the profile of existing users."
 msgstr "Du kan kun åbne profilen for eksisterende brugere."
-
-#. module: mail
-#. odoo-python
-#: code:addons/mail/models/res_users.py:0
-#, python-format
-msgid ""
-"You cannot create a new user from here.\n"
-" To create new user please go to configuration panel."
-msgstr ""
-"Du kan ikke oprette en ny bruger herfra.\n"
-" For at oprette en ny bruger, bedes du venligst gå til konfigurations panelet."
 
 #. module: mail
 #. odoo-python
@@ -23995,13 +23984,6 @@ msgstr ""
 
 #. module: mail
 #. odoo-javascript
-#: code:addons/mail/static/src/models/call_settings_menu.js:0
-#, python-format
-msgid "Media devices unobtainable"
-msgstr ""
-
-#. module: mail
-#. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
@@ -28638,7 +28620,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "reminder"
-msgstr ""
+msgstr "påmindelse"
 
 #. module: mail
 #. odoo-javascript

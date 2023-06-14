@@ -291,21 +291,21 @@ msgstr "최근 갱신 일자"
 #. module: account_payment
 #: model:ir.model.fields,field_description:account_payment.field_payment_refund_wizard__amount_available_for_refund
 msgid "Maximum Refund Allowed"
-msgstr ""
+msgstr "최대 환불 가능"
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__payment_token_id
 msgid ""
 "Note that only tokens from providers allowing to capture the amount are "
 "available."
-msgstr ""
+msgstr "금액을 캡쳐할 수 있는 업체의 토큰만 사용하실 수 있습니다."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment_register__payment_token_id
 msgid ""
 "Note that tokens from providers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
-msgstr ""
+msgstr "트랜잭션만 (금액 캡쳐 대신) 승인하도록 설정되어 있는 업체의 토큰은 사용하실 수 없습니다."
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_my_invoices_payment
@@ -474,12 +474,12 @@ msgstr "유효하지 않은 액세스 토큰입니다."
 #, python-format
 msgid ""
 "The amount to be refunded must be positive and cannot be superior to %s."
-msgstr ""
+msgstr "환불 금액은 양수여야 하며 %s보다 클 수 없습니다."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_payment_provider__journal_id
 msgid "The journal in which the successful transactions are posted."
-msgstr ""
+msgstr "전표에 트랜잭션을 성공적으로 반영하여 발행하였습니다. "
 
 #. module: account_payment
 #. odoo-python
@@ -488,7 +488,7 @@ msgstr ""
 msgid ""
 "The payment related to the transaction with reference %(ref)s has been "
 "posted: %(link)s"
-msgstr ""
+msgstr "참조 내역 %(ref)s인 트랜잭션에 대한 결제 항목이 발행되었습니다: %(link)s"
 
 #. module: account_payment
 #. odoo-python
@@ -496,12 +496,12 @@ msgstr ""
 #: code:addons/account_payment/controllers/payment.py:0
 #, python-format
 msgid "The provided parameters are invalid."
-msgstr ""
+msgstr "유효하지 않은 매개변수입니다."
 
 #. module: account_payment
 #: model:ir.model.fields,help:account_payment.field_account_payment__source_payment_id
 msgid "The source payment of related refund payments"
-msgstr ""
+msgstr "환불 금액에 대한 원래 금액"
 
 #. module: account_payment
 #: model_terms:ir.ui.view,arch_db:account_payment.portal_invoice_error
@@ -556,6 +556,8 @@ msgid ""
 "You can't delete a payment method that is linked to a provider in the enabled or test state.\n"
 "Linked provider(s): %s"
 msgstr ""
+"활성화되어 있거나 테스트 중인 업체에 연결되어 있는 결제 방법은 삭제할 수 없습니다. \n"
+"연결되어 있는 업체: %s"
 
 #. module: account_payment
 #. odoo-python
@@ -565,3 +567,5 @@ msgid ""
 "You must first deactivate a payment provider before deleting its journal.\n"
 "Linked providers: %s"
 msgstr ""
+"전표 삭제 전에 먼저 결제대행업체를 비활성화해야 합니다.\n"
+"연결되어 있는 업체: %s"

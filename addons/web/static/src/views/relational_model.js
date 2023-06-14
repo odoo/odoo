@@ -3494,6 +3494,17 @@ export class RelationalModel extends Model {
         ) {
             rootParams.groupBy = [this.defaultGroupBy];
         }
+
+        if (rootParams.context) {
+            // *_view_ref and search_default_* context keys are not destined to us, rather
+            // they were tyîcally "consumed" by the View.
+            // The default_* context keys are, on the contrary, destined for us.
+            rootParams.context = Object.fromEntries(
+                Object.entries(rootParams.context).filter(
+                    ([key]) => !key.endsWith("_view_ref") && !key.startsWith("search_default_")
+                )
+            );
+        }
         rootParams.rawContext = {
             make: () => {
                 return makeContext([rootParams.context], {});

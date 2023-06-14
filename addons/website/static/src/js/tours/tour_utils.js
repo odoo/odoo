@@ -303,7 +303,10 @@ function prepend_trigger(steps, prepend_text='') {
 }
 
 function getClientActionUrl(path, edition) {
-    let url = `/web#action=website.website_preview&path=${encodeURIComponent(path)}`;
+    let url = `/web#action=website.website_preview`;
+    if (path) {
+        url += `&path=${encodeURIComponent(path)}`;
+    }
     if (edition) {
         url += '&enable_editor=1';
     }

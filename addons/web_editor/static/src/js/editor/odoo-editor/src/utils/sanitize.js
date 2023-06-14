@@ -145,6 +145,11 @@ class Sanitize {
                 node = nodeP;
             }
 
+            // Remove comment nodes to avoid issues with mso comments.
+            if (node.nodeType === Node.COMMENT_NODE) {
+                node.remove();
+            }
+
             const selection = this.root.ownerDocument.getSelection();
             const anchor = selection && selection.anchorNode;
             const anchorEl = anchor && closestElement(anchor);

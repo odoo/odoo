@@ -6,8 +6,8 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Pierre Delacroix <pde@odoo.com>, 2022
 # Logan Gônet <logan.gonet.perso@outlook.com>, 2022
-# Martin Trigaux, 2023
 # Jolien De Paepe, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
+"Last-Translator: Martin Trigaux, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -438,7 +438,7 @@ msgstr "Activités"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activité d'exception de décoration"
+msgstr "Activité exception décoration"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__activity_state
@@ -1247,7 +1247,7 @@ msgstr "Vérifier les produits"
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__cash_control
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_cash_control
 msgid "Check the amount of the cashbox at opening and closing."
-msgstr "Contrôlez le montant de la caisse à l'ouverture et à la fermeture."
+msgstr "Contrôler le montant de la caisse à l'ouverture et à la fermeture."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1279,8 +1279,8 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
-"Choisissez un régime fiscal adapté à la commande en fonction du type de "
-"client (exonération de taxes, sur place ou à emporter, etc.)."
+"Choisir un régime fiscal adapté à la commande en fonction du type de client "
+"(exonération de taxes, sur place ou à emporter, etc.)."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -3286,7 +3286,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Manage promotion that will grant customers discounts or gifts"
 msgstr ""
-"Gérez la promotion qui accordera des remises ou des cadeaux aux clients"
+"Gérer la promotion qui accordera des remises ou des cadeaux aux clients"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__margin
@@ -4296,7 +4296,7 @@ msgstr "Téléphone"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Pick which product categories are available"
-msgstr "Choisissez les catégories de produits disponibles"
+msgstr "Choisir les catégories de produits disponibles"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__picking_ids
@@ -4420,7 +4420,7 @@ msgid ""
 "Please create/select a Point of Sale above to show the configuration "
 "options."
 msgstr ""
-"Créez/sélectionnez un point de vente ci-dessous pour afficher les options de"
+"Créer/sélectionner un point de vente ci-dessous pour afficher les options de"
 " configuration."
 
 #. module: point_of_sale
@@ -5372,6 +5372,14 @@ msgstr ""
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "Extourne de : %s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "Demande d'extourne envoyée au terminal"
@@ -5612,7 +5620,7 @@ msgstr "Sélectionner le ou les produits à rembourser et définir la quantité"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Sell products and deliver them later."
-msgstr "Vendez des produits et livrez-les plus tard."
+msgstr "Vendre des produits et les livrer plus tard."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5822,7 +5830,7 @@ msgstr "Panier"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show checkout to customers through a second display"
-msgstr "Montrer le passage en caisse aux clients sur un second écran"
+msgstr "Afficher le passage en caisse aux clients sur un second écran"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display_via_proxy
@@ -5834,18 +5842,18 @@ msgstr ""
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_customer_facing_display_local
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_iface_customer_facing_display_local
 msgid "Show checkout to customers."
-msgstr "Montrer le passage en caisse aux clients."
+msgstr "Afficher le passage en caisse aux clients."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__module_pos_hr
 #: model:ir.model.fields,help:point_of_sale.field_res_config_settings__pos_module_pos_hr
 msgid "Show employee login screen"
-msgstr "Montrer l'écran de connexion de l'employé"
+msgstr "Afficher l'écran de connexion de l'employé"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Show margins &amp; costs on product information"
-msgstr "Montrer les marges &amp; coûts sur les informations du produit"
+msgstr "Afficher les marges &amp; coûts sur les informations du produit"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.ticket_validation_screen
@@ -6378,6 +6386,13 @@ msgstr ""
 "L'écart maximum autorisé s'élève à %s.\n"
 "\n"
 "                        Veuillez contacter votre manager pour accepter l'écart à la fermeture."
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr "Le nom des pièces/billets doit être un nombre."
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
@@ -7423,13 +7438,6 @@ msgid ""
 msgstr ""
 "Vous pouvez en ajouter certains depuis le menu Produits ou lier des produits existants en les marquant comme \"Disponible dans le point de vente\".\n"
 "                    Vous pouvez également ajouter des données de démonstration à des fins de test. Attention : cette action est irréversible."
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr "Vous ne pouvez qu'avoir un seul mode de paiement en espèces."
 
 #. module: point_of_sale
 #. odoo-python

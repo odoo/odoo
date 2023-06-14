@@ -132,6 +132,7 @@ export class CalendarController extends Component {
             record,
             model: this.model,
             editRecord: this.editRecordInCreation.bind(this),
+            title: this.props.context.default_name,
         };
     }
 

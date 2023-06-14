@@ -538,6 +538,9 @@ export function makeDraggableHook(hookParams = {}) {
             const updateRects = () => {
                 // Container rect
                 const containerRect = getRect(ctx.currentContainer, { adjust: true });
+                // Adjust container rect according to its overflowing size
+                containerRect.width = ctx.currentContainer.scrollWidth;
+                containerRect.height = ctx.currentContainer.scrollHeight;
                 let scrollParentXRect = null;
                 let scrollParentYRect = null;
                 if (ctx.edgeScrolling.enabled) {
@@ -545,7 +548,7 @@ export function makeDraggableHook(hookParams = {}) {
                     if (ctx.currentScrollParentX) {
                         scrollParentXRect = getRect(ctx.currentScrollParentX, { adjust: true });
                         const right = Math.min(
-                            containerRect.right,
+                            containerRect.left + ctx.currentContainer.scrollWidth,
                             scrollParentXRect.right
                         );
                         containerRect.x = Math.max(
@@ -557,7 +560,7 @@ export function makeDraggableHook(hookParams = {}) {
                     if (ctx.currentScrollParentY) {
                         scrollParentYRect = getRect(ctx.currentScrollParentY, { adjust: true });
                         const bottom = Math.min(
-                            containerRect.bottom,
+                            containerRect.top + ctx.currentContainer.scrollHeight,
                             scrollParentYRect.bottom
                         );
                         containerRect.y = Math.max(

@@ -12017,6 +12017,40 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "Auto save: save on closing tab/browser (onchanges + invalid field)",
+        async function (assert) {
+            const def = makeDeferred();
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                    <form>
+                        <group>
+                            <field name="display_name"/>
+                            <field name="name" required="1"/>
+                        </group>
+                    </form>`,
+                resId: 1,
+                async mockRPC(route, { method, model }) {
+                    if (method === "write" && model === "partner") {
+                        assert.step("write");
+                        await def;
+                    }
+                },
+            });
+
+            await editInput(target, '.o_field_widget[name="display_name"] input', "test");
+
+            await clickSave(target);
+            window.dispatchEvent(new Event("beforeunload"));
+            await nextTick();
+
+            assert.verifySteps(["write"]);
+        }
+    );
+
     QUnit.test("Auto save: save when action button clicked", async function (assert) {
         await makeView({
             type: "form",

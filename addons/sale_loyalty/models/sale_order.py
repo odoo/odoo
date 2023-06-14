@@ -297,8 +297,6 @@ class SaleOrder(models.Model):
             discountable, discountable_per_tax = self._discountable_specific(reward)
         elif reward_applies_on == 'cheapest':
             discountable, discountable_per_tax = self._discountable_cheapest(reward)
-        # Discountable should never surpass the order's current total amount
-        discountable = min(self.amount_total, discountable)
         if not discountable:
             if not reward.program_id.is_payment_program and any(line.reward_id.program_id.is_payment_program for line in self.order_line):
                 return [{
@@ -316,6 +314,8 @@ class SaleOrder(models.Model):
                 }]
             raise UserError(_('There is nothing to discount'))
         max_discount = reward.currency_id._convert(reward.discount_max_amount, self.currency_id, self.company_id, fields.Date.today()) or float('inf')
+        # discount should never surpass the order's current total amount
+        max_discount = min(self.amount_total, max_discount)
         if reward.discount_mode == 'per_point':
             max_discount = min(max_discount,
                 reward.currency_id._convert(reward.discount * self._get_real_points_for_coupon(coupon),

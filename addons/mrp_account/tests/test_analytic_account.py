@@ -256,8 +256,8 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         self.assertEqual(len(mo.move_raw_ids.analytic_account_line_id), 1)
         self.assertEqual(len(mo.workorder_ids.mo_analytic_account_line_id), 1)
 
-    def test_add_wo_analytic_no_company(self):
-        """Test the addition of work orders to a MO linked to
+    def test_add_remove_wo_analytic_no_company(self):
+        """Test the addition and removal of work orders to a MO linked to
         an analytic account that has no company associated
         """
         # Create an analytic account and remove the company
@@ -275,11 +275,16 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         })
 
         mo_no_c_form = Form(mo_no_company)
-        self.env['mrp.workorder'].create({
+        wo = self.env['mrp.workorder'].create({
             'name': 'Work_order',
             'workcenter_id': self.workcenter.id,
             'product_uom_id': self.bom.product_uom_id.id,
             'production_id': mo_no_c_form.id,
+            'duration': 60,
         })
         mo_no_c_form.save()
         self.assertTrue(mo_no_company.workorder_ids)
+        self.assertEqual(wo.production_id.analytic_account_id, analytic_account_no_company)
+        self.assertEqual(len(analytic_account_no_company.line_ids), 1)
+        mo_no_company.workorder_ids.unlink()
+        self.assertEqual(len(analytic_account_no_company.line_ids), 0)

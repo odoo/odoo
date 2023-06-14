@@ -199,6 +199,14 @@ class AccountPayment(models.Model):
             self.journal_id.outbound_payment_method_line_ids.payment_account_id,
         )
 
+    def _get_aml_default_display_map(self):
+        return {
+            ('outbound', 'customer'): _("Customer Reimbursement"),
+            ('inbound', 'customer'): _("Customer Payment"),
+            ('outbound', 'supplier'): _("Vendor Payment"),
+            ('inbound', 'supplier'): _("Vendor Reimbursement"),
+        }
+
     def _get_aml_default_display_name_list(self):
         """ Hook allowing custom values when constructing the default label to set on the journal items.
 
@@ -212,12 +220,7 @@ class AccountPayment(models.Model):
             ]
         """
         self.ensure_one()
-        display_map = {
-            ('outbound', 'customer'): _("Customer Reimbursement"),
-            ('inbound', 'customer'): _("Customer Payment"),
-            ('outbound', 'supplier'): _("Vendor Payment"),
-            ('inbound', 'supplier'): _("Vendor Reimbursement"),
-        }
+        display_map = self._get_aml_default_display_map()
         values = [
             ('label', _("Internal Transfer") if self.is_internal_transfer else display_map[(self.payment_type, self.partner_type)]),
             ('sep', ' '),
@@ -689,7 +692,7 @@ class AccountPayment(models.Model):
             vals['move_type'] = 'entry'
 
         payments = super(AccountPayment, self.with_context(is_payment=True))\
-            .create(vals_list)\
+            .create([{'name': '/', **vals} for vals in vals_list])\
             .with_context(is_payment=False)
 
         for i, pay in enumerate(payments):
@@ -709,7 +712,10 @@ class AccountPayment(models.Model):
                 to_write['line_ids'] = [(0, 0, line_vals) for line_vals in pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)]
 
             pay.move_id.write(to_write)
+            self.env.add_to_compute(self.env['account.move']._fields['name'], pay.move_id)
 
+        # We need to reset the cached name, since it was recomputed on the delegate account.move model
+        payments.invalidate_recordset(fnames=['name'])
         return payments
 
     def write(self, vals):

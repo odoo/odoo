@@ -1816,7 +1816,10 @@ class _String(Field):
                     matches = get_close_matches(old_term_text, text2terms, 1, 0.9)
                     if matches:
                         closest_term = get_close_matches(old_term, text2terms[matches[0]], 1, 0)[0]
-                        translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
+                        old_is_text = old_term == self.get_text_content(old_term)
+                        closest_is_text = closest_term == self.get_text_content(closest_term)
+                        if old_is_text or not closest_is_text:
+                            translation_dictionary[closest_term] = translation_dictionary.pop(old_term)
             # pylint: disable=not-callable
             new_translations = {
                 l: self.translate(lambda term: translation_dictionary.get(term, {l: None})[l], cache_value)
@@ -3759,6 +3762,13 @@ class PropertiesDefinition(Field):
         'name', 'string', 'type', 'comodel', 'default',
         'selection', 'tags', 'domain', 'view_in_kanban',
     )
+    # those keys will be removed if the types does not match
+    PROPERTY_PARAMETERS_MAP = {
+        'comodel': {'many2one', 'many2many'},
+        'domain': {'many2one', 'many2many'},
+        'selection': {'selection'},
+        'tags': {'tags'},
+    }
 
     def convert_to_column(self, value, record, values=None, validate=True):
         """Convert the value before inserting it in database.
@@ -3859,6 +3869,10 @@ class PropertiesDefinition(Field):
                     del property_definition['domain']
 
             result.append(property_definition)
+
+            for property_parameter, allowed_types in self.PROPERTY_PARAMETERS_MAP.items():
+                if property_definition.get('type') not in allowed_types:
+                    property_definition.pop(property_parameter, None)
 
         return result
 
@@ -4342,15 +4356,21 @@ class One2many(_RelationalMulti):
         domain = self.get_domain_list(records) + [(inverse, 'in', records.ids)]
         lines = comodel.search(domain)
 
+        get_id = (lambda rec: rec.id) if inverse_field.type == 'many2one' else int
+
         if len(records) == 1:
             # optimization: all lines have the same value for 'inverse_field',
             # so we don't need to fetch it from database
+            if not inverse_field._description_searchable:
+                # fix: if the field is not searchable maybe we got some lines that are not linked to records
+                lines = lines.with_context(prefetch_fields=False).filtered(
+                    lambda line: get_id(line[inverse]) == records.id
+                )
             records.env.cache.insert_missing(records, self, [lines._ids])
             records.env.cache.insert_missing(lines, inverse_field, itertools.repeat(records.id))
             return
 
         # group lines by inverse field (without prefetching other fields)
-        get_id = (lambda rec: rec.id) if inverse_field.type == 'many2one' else int
         group = defaultdict(list)
         for line in lines.with_context(prefetch_fields=False):
             # line[inverse] may be a record or an integer

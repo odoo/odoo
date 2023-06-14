@@ -5315,6 +5315,14 @@ msgstr "عكس قيد إقفال نقطة البيع %s للطلب %s من ال�
 #. module: point_of_sale
 #. odoo-javascript
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenPaymentLines.xml:0
+#: code:addons/point_of_sale/models/pos_order.py:0
+#, python-format
+msgid "Reversal of: %s"
+msgstr "عكس: %s"
+
+#. module: point_of_sale
+#. openerp-web
+#: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reversal request sent to terminal"
 msgstr "تم إرسال طلب العكس إلى جهاز الدفع "
@@ -6302,6 +6310,13 @@ msgstr ""
 "الحد الأقصى للفرق المسموح به هو %s.\n"
 "\n"
 "                        يرجى التواصل مع مديرك لقبول فرق الإقفال. "
+
+#. module: point_of_sale
+#. odoo-python
+#: code:addons/point_of_sale/models/pos_bill.py:0
+#, python-format
+msgid "The name of the Coins/Bills must be a number."
+msgstr ""
 
 #. module: point_of_sale
 #: model:ir.model.constraint,message:point_of_sale.constraint_pos_session_uniq_name
@@ -7305,13 +7320,6 @@ msgid ""
 msgstr ""
 "يمكنك إضافة بعضها من قائمة المنتجات، أو ربط الموجودة منها عن طريق وضع علامة \"متاح في نقطة البيع\".\n"
 "                    أو بإمكانك إضافة البيانات التوضيحية لأغراض الاختبار. يرجى العلم بأن هذا الإجراء لا يمكن التراجع عنه. "
-
-#. module: point_of_sale
-#. odoo-python
-#: code:addons/point_of_sale/models/pos_config.py:0
-#, python-format
-msgid "You can only have one cash payment method."
-msgstr "يمكن أن تكون لديك طريقة دفع نقدية واحدة فقط. "
 
 #. module: point_of_sale
 #. odoo-python
