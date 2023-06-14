@@ -444,6 +444,13 @@ class StockRoute(models.Model):
         'stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id',
         'Warehouses', copy=False, domain="[('id', 'in', warehouse_domain_ids)]")
 
+    def copy(self, default=None):
+        self.ensure_one()
+        default = dict(default or {})
+        if 'name' not in default:
+            default['name'] = _("%s (copy)", self.name)
+        return super().copy(default=default)
+
     @api.depends('company_id')
     def _compute_warehouses(self):
         for loc in self:

@@ -124,6 +124,13 @@ class PickingType(models.Model):
                     }).id
         return super().create(vals_list)
 
+    def copy(self, default=None):
+        self.ensure_one()
+        default = dict(default or {})
+        if 'name' not in default:
+            default['name'] = _("%s (copy)", self.name)
+        return super().copy(default=default)
+
     def write(self, vals):
         if 'company_id' in vals:
             for picking_type in self:
