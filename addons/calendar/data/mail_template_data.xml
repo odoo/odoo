@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
         <record id="calendar_template_meeting_invitation" model="mail.template">
-            <field name="name">Calendar: Meeting Invitation</field>
+            <field name="name">📆 Calendar: Meeting Invitation</field>
             <field name="model_id" ref="calendar.model_calendar_attendee"/>
             <field name="subject">Invitation to {{ object.event_id.name }}</field>
             <field name="email_from">{{ (object.event_id.user_id.email_formatted or user.email_formatted or '') }}</field>
@@ -150,7 +150,7 @@
         </record>
 
         <record id="calendar_template_meeting_changedate" model="mail.template">
-            <field name="name">Calendar: Date Updated</field>
+            <field name="name">📆 Calendar: Date Updated</field>
             <field name="model_id" ref="calendar.model_calendar_attendee"/>
             <field name="subject">{{ object.event_id.name }}: Date updated</field>
             <field name="email_from">{{ (object.event_id.user_id.email_formatted or user.email_formatted or '') }}</field>
@@ -281,7 +281,7 @@
         </record>
 
         <record id="calendar_template_meeting_reminder" model="mail.template">
-            <field name="name">Calendar: Reminder</field>
+            <field name="name">📆 Calendar: Reminder</field>
             <field name="model_id" ref="calendar.model_calendar_attendee"/>
             <field name="subject">{{ object.event_id.name }} - Reminder</field>
             <field name="email_from">{{ (object.event_id.user_id.email_formatted or user.email_formatted or '') }}</field>
@@ -388,7 +388,7 @@
         </record>
 
         <record id="calendar_template_meeting_update" model="mail.template">
-            <field name="name">Calendar: Event Update</field>
+            <field name="name">📆 Calendar: Event Update</field>
             <field name="model_id" ref="calendar.model_calendar_event"/>
             <field name="subject">{{object.name}}: Event update</field>
             <field name="email_from">{{ (object.user_id.email_formatted or user.email_formatted or '') }}</field>

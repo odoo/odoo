@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
          <record id="slide_template_published" model="mail.template">
-            <field name="name">Elearning: New Course Content Notification</field>
+            <field name="name">👩‍🏫 Elearning: New Course Content Notification</field>
             <field name="model_id" ref="model_slide_slide"/>
             <field name="subject">New {{ object.slide_category }} published on {{ object.channel_id.name }}</field>
             <field name="description">Sent to attendees when new course is published</field>
@@ -35,7 +35,7 @@
         </record>
 
         <record id="slide_template_shared" model="mail.template">
-            <field name="name">Elearning: Course Share</field>
+            <field name="name">👩‍🏫 Elearning: Course Share</field>
             <field name="model_id" ref="model_slide_slide"/>
             <field name="subject">{{ user.name }} shared a {{ object.slide_category }} with you!</field>
             <field name="email_from">{{ user.email_formatted }}</field>
@@ -67,7 +67,7 @@
 
         <!-- Completed Channel Message -->
         <record id="mail_template_channel_completed" model="mail.template">
-            <field name="name">Elearning: Completed Course</field>
+            <field name="name">👩‍🏫 Elearning: Completed Course</field>
             <field name="model_id" ref="model_slide_channel_partner"/>
             <field name="subject">Congratulations! You completed {{ object.channel_id.name }}</field>
             <field name="email_from">{{ (object.channel_id.user_id.email_formatted or object.channel_id.user_id.company_id.catchall_formatted) }}</field>
@@ -133,7 +133,7 @@
 
         <!-- Slide channel invite feature -->
         <record id="mail_template_slide_channel_enroll" model="mail.template">
-            <field name="name">Elearning: Add Attendees to Course</field>
+            <field name="name">👩‍🏫 Elearning: Add Attendees to Course</field>
             <field name="model_id" ref="model_slide_channel_partner" />
             <field name="subject">You have been invited to join {{ object.channel_id.name }}</field>
             <field name="email_from">{{ user.email_formatted }}</field>
@@ -153,7 +153,7 @@
 
         <!-- Slide channel sharing feature -->
         <record id="mail_template_slide_channel_invite" model="mail.template">
-            <field name="name">Elearning: Promotional Course Invitation</field>
+            <field name="name">👩‍🏫 Elearning: Promotional Course Invitation</field>
             <field name="model_id" ref="model_slide_channel_partner" />
             <field name="subject">You have been invited to check out {{ object.channel_id.name }}</field>
             <field name="email_from">{{ user.email_formatted }}</field>

@@ -3,7 +3,7 @@
     <data noupdate="0">
         <!-- Technical template, keep updated -->
         <record id="email_template_lead_forward_mail" model="mail.template">
-            <field name="name">Lead Forward: Send to partner</field>
+            <field name="name">🤝 Lead Forward: Send to partner</field>
             <field name="model_id" ref="website_crm_partner_assign.model_crm_lead_forward_to_partner" />
             <field name="subject">Fwd: Lead: {{ ctx['partner_id'].name }}</field>
             <field name="email_from">{{ user.email_formatted }}</field>

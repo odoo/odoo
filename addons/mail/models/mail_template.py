@@ -46,6 +46,7 @@ class MailTemplate(models.Model):
     email_from = fields.Char('From',
                              help="Sender address (placeholders may be used here). If not set, the default "
                                   "value will be the author's email alias if configured, or email address.")
+    user_id = fields.Many2one('res.users', string='User', help='The template will belong to this user')
     # recipients
     use_default_to = fields.Boolean(
         'Default recipients',
@@ -88,6 +89,7 @@ class MailTemplate(models.Model):
     # access
     can_write = fields.Boolean(compute='_compute_can_write',
                                help='The current user can edit the template.')
+    current_user_is_template_admin = fields.Boolean(compute="_compute_current_user_is_template_admin")
 
     # Overrides of mail.render.mixin
     @api.depends('model')
@@ -120,6 +122,10 @@ class MailTemplate(models.Model):
                     template.template_category = 'hidden_template'
                 else:
                     template.template_category = 'custom_template'
+
+    def _compute_current_user_is_template_admin(self):
+        for record in self:
+            record.current_user_is_template_admin = record.user_has_groups('mail.group_template_admin')
 
     @api.model
     def _search_template_category(self, operator, value):
@@ -182,29 +188,45 @@ class MailTemplate(models.Model):
                 template.ref_ir_act_window.unlink()
         return True
 
-    def create_action(self):
+    def add_or_remove_context_action(self):
+        self.ensure_one()
         ActWindow = self.env['ir.actions.act_window']
         view = self.env.ref('mail.email_compose_message_wizard_form')
-        for template in self:
-            context = {
-                'default_composition_mode': 'mass_mail',
-                'default_model': template.model,
-                'default_template_id' : template.id,
-            }
-            button_name = _('Send Mail (%s)', template.name)
-            action = ActWindow.create({
-                'name': button_name,
-                'type': 'ir.actions.act_window',
-                'res_model': 'mail.compose.message',
-                'context': repr(context),
-                'view_mode': 'form,tree',
-                'view_id': view.id,
-                'target': 'new',
-                'binding_model_id': template.model_id.id,
-            })
-            template.write({'ref_ir_act_window': action.id})
 
-        return True
+        if self.ref_ir_act_window:
+            self.ref_ir_act_window.unlink()
+            return self._display_notification('Removed contextual action')
+
+        context = {
+            'default_composition_mode': 'mass_mail',
+            'default_model': self.model,
+            'default_template_id' : self.id,
+        }
+        button_name = _('Send Mail (%s)', self.name)
+        action = ActWindow.create({
+            'name': button_name,
+            'type': 'ir.actions.act_window',
+            'res_model': 'mail.compose.message',
+            'context': repr(context),
+            'view_mode': 'form,tree',
+            'view_id': view.id,
+            'target': 'new',
+            'binding_model_id': self.model_id.id,
+        })
+        self.write({'ref_ir_act_window': action.id})
+
+        return self._display_notification('Added contextual action')
+
+    def _display_notification(self, message):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Contextual action'),
+                'message': message,
+                'sticky': False,
+            }
+        }
 
     # ------------------------------------------------------------
     # MESSAGE/EMAIL VALUES GENERATION

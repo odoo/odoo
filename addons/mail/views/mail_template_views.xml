@@ -8,44 +8,24 @@
                 <form string="Templates">
                     <header>
                         <field name="template_fs" invisible="1"/>
+                        <field name="current_user_is_template_admin" invisible="1"/>
+                        <button string="Preview"
+                                name="%(mail_template_preview_action)d" type="action"
+                                class="btn-primary" target="new"/>
                         <button string="Reset Template"
                                 name="%(mail_template_reset_action)d" type="action"
                                 groups="mail.group_mail_template_editor"
                                 attrs="{'invisible': [('template_fs', '=', False)]}"/>
+                        <button string="Delete"
+                                name="unlink" type="object"
+                                class="btn-secondary"
+                                attrs="{'invisible': &quot;[('current_user_is_template_admin', '=', False), ('user_id', '!=', uid)]&quot;}"
+                                help="Permanently delete this template"/>
                     </header>
                     <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <field name="ref_ir_act_window" invisible="1"/>
-                            <button class="oe_stat_button"
-                                    groups="base.group_no_one"
-                                    name="create_action" type="object"
-                                    attrs="{'invisible':[('ref_ir_act_window','!=',False)]}" icon="fa-plus"
-                                    help="Display an option on related documents to open a composition wizard with this template">
-                                <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_text">Add</span>
-                                    <span class="o_stat_text">Context Action</span>
-                                </div>
-                            </button>
-                            <button name="unlink_action" type="object"
-                                    groups="base.group_no_one"
-                                    class="oe_stat_button" icon="fa-minus"
-                                    attrs="{'invisible':[('ref_ir_act_window','=',False)]}"
-                                    help="Remove the contextual action to use this template on related documents" widget="statinfo">
-                                <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_text">Remove</span>
-                                    <span class="o_stat_text">Context Action</span>
-                                </div>
-                            </button>
-                            <button class="oe_stat_button" name="%(mail_template_preview_action)d" icon="fa-search-plus"
-                                    type="action" target="new">
-                                    <div class="o_field_widget o_stat_info">
-                                        <span class="o_stat_text">Preview</span>
-                                    </div>
-                            </button>
-                        </div>
                         <div class="oe_title">
                             <label for="name"/>
-                            <h1><field name="name" class="w-100"
+                            <h1><field name="name" class="w-100" widget="char_emojis"
                                 required="1" placeholder='e.g. "Welcome email"'/></h1>
                             <group>
                                 <field name="model_id" placeholder="e.g. Contact" required="1" options="{'no_create': True}"/>
@@ -80,13 +60,19 @@
                                 </group>
                             </page>
                             <page string="Settings" name="email_settings">
-                                <group>
-                                    <field name="lang" placeholder="{{ object.partner_id.lang }}"/>
-                                    <field name="mail_server_id"/>
-                                    <field name="auto_delete"/>
-                                    <field name="report_template_ids" domain="[('model','=',model)]"
-                                        widget="many2many_tags"
-                                        options="{'no_create': True}"/>
+                                <group col="2">
+                                    <group>
+                                        <field name="lang" placeholder="{{ object.partner_id.lang }}"/>
+                                        <field name="mail_server_id"/>
+                                        <field name="auto_delete"/>
+                                        <field name="report_template_ids" domain="[('model','=',model)]"
+                                            widget="many2many_tags"
+                                            options="{'no_create': True}"/>
+                                    </group>
+                                    <group>
+                                        <field name="user_id" widget="many2one_avatar_user"
+                                            attrs="{'readonly': [('current_user_is_template_admin', '=', False)]}"/>
+                                    </group>
                                 </group>
                             </page>
                         </notebook>
@@ -137,6 +123,15 @@
             <field name="view_id" ref="email_template_tree" />
             <field name="search_view_id" ref="view_email_template_search"/>
             <field name="context">{'search_default_base_templates': 1}</field>
+        </record>
+
+        <record id="model_mail_template_action_add_context_action" model="ir.actions.server">
+            <field name="name">Add/Remove Context Action</field>
+            <field name="model_id" ref="mail.model_mail_template"/>
+            <field name="binding_model_id" ref="mail.model_mail_template"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">action = records.add_or_remove_context_action()</field>
         </record>
 
     </data>

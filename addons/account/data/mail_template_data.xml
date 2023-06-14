@@ -6,7 +6,7 @@
     <data noupdate="1">
         <!--Email template -->
         <record id="email_template_edi_invoice" model="mail.template">
-            <field name="name">Invoice: Sending</field>
+            <field name="name">💰 Invoice: Sending</field>
             <field name="model_id" ref="account.model_account_move"/>
             <field name="email_from">{{ (object.invoice_user_id.email_formatted or object.company_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to">{{ object.partner_id.id }}</field>

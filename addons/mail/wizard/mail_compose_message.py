@@ -91,7 +91,10 @@ class MailComposer(models.TransientModel):
         compute='_compute_body', readonly=False, store=True)
     parent_id = fields.Many2one(
         'mail.message', 'Parent Message', ondelete='set null')
-    template_id = fields.Many2one('mail.template', 'Use template', domain="[('model', '=', model)]")
+    template_id = fields.Many2one(
+        'mail.template', 'Use template',
+        domain="[('model', '=', model), '|', ('user_id','=', False), ('user_id', '=', uid)]"
+    )
     attachment_ids = fields.Many2many(
         'ir.attachment', 'mail_compose_message_ir_attachments_rel',
         'wizard_id', 'attachment_id', string='Attachments',
@@ -710,18 +713,30 @@ class MailComposer(models.TransientModel):
         return mails_sudo
 
     def action_save_as_template(self):
+        context = {}
+        context['mail_compose_message_id'] = self.id
+        context['reopen_composer'] = _reopen(self, self.id, self.model, context=self.env.context)
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'name': 'Enter template\'s name',
+            'res_model': 'mail.template.name.prompt',
+            'context': context,
+            'target': 'new',
+        }
+
+    def _save_as_template(self, name):
         """ hit save as template button: current form value will be a new
             template attached to the current document. """
         for record in self:
             model = self.env['ir.model']._get(record.model or 'mail.message')
-            model_name = model.name or ''
-            template_name = "%s: %s" % (model_name, tools.ustr(record.subject))
             values = {
-                'name': template_name,
+                'name': name,
                 'subject': record.subject or False,
                 'body_html': record.body or False,
                 'model_id': model.id or False,
                 'use_default_to': True,
+                'user_id': self.env.uid,
             }
             template = self.env['mail.template'].create(values)
 

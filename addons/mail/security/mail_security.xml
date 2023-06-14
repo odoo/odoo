@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo noupdate="1">
 
+        <!-- GROUPS -->
+        <record id="group_template_admin" model="res.groups">
+            <field name="name">Mail Templates Administrator</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+        </record>
+
         <!-- RULES -->
         <record id="discuss_channel_rule" model="ir.rule">
             <field name="name">discuss.channel: access only public and joined groups</field>

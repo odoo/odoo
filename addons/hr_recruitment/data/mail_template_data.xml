@@ -3,7 +3,7 @@
 
     <!-- Templates for interest / refusing applicants -->
     <record id="email_template_data_applicant_refuse" model="mail.template">
-        <field name="name">Recruitment: Refuse</field>
+        <field name="name">🔍 Recruitment: Refuse</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="subject">Your Job Application: {{ object.job_id.name }}</field>
         <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
@@ -58,7 +58,7 @@
     </record>
 
     <record id="email_template_data_applicant_interest" model="mail.template">
-        <field name="name">Recruitment: Interest</field>
+        <field name="name">🔍 Recruitment: Interest</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="subject">Your Job Application: {{ object.job_id.name }}</field>
         <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
@@ -150,7 +150,7 @@
     </record>
 
     <record id="email_template_data_applicant_congratulations" model="mail.template">
-        <field name="name">Recruitment: Application Acknowledgement</field>
+        <field name="name">🔍 Recruitment: Application Acknowledgement</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="subject">Your Job Application: {{ object.job_id.name }}</field>
         <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>
@@ -230,7 +230,7 @@
     </record>
 
     <record id="email_template_data_applicant_not_interested" model="mail.template">
-        <field name="name">Recruitment: Not interested anymore</field>
+        <field name="name">🔍 Recruitment: Not interested anymore</field>
         <field name="model_id" ref="hr_recruitment.model_hr_applicant"/>
         <field name="subject">Your Job Application: {{ object.job_id.name }}</field>
         <field name="email_to">{{ (not object.partner_id and object.email_from or '') }}</field>

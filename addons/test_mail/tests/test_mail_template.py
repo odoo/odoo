@@ -69,7 +69,7 @@ class TestMailTemplateCommon(MailCommon, TestRecipients):
 class TestMailTemplate(TestMailTemplateCommon):
 
     def test_template_add_context_action(self):
-        self.test_template.create_action()
+        self.test_template.add_or_remove_context_action()
 
         # check template act_window has been updated
         self.assertTrue(bool(self.test_template.ref_ir_act_window))
