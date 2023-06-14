@@ -30,6 +30,24 @@ QUnit.test(
 );
 
 QUnit.test(
+    "should display channel invitation form after clicking on chat window button",
+    async (assert) => {
+        const pyEnv = await startServer();
+        pyEnv["discuss.channel"].create({
+            name: "TestChanel",
+            channel_member_ids: [
+                Command.create({ partner_id: pyEnv.currentPartnerId, is_minimized: true }),
+            ],
+            channel_type: "channel",
+        });
+        await start();
+        await click("[title='More actions']");
+        await click("[title='Add Users']");
+        assert.containsOnce($, ".o-discuss-ChannelInvitation");
+    }
+);
+
+QUnit.test(
     "should be able to search for a new user to invite from an existing chat",
     async (assert) => {
         const pyEnv = await startServer();
