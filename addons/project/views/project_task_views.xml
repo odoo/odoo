@@ -521,7 +521,7 @@
                     quick_create_view="project.quick_create_task_form"
                     examples="project"
                     js_class="project_task_kanban" sample="1"
-                    default_order="priority desc, state, date_deadline asc, sequence, id desc"
+                    default_order="priority desc, sequence, state, date_deadline asc, id desc"
                 >
                     <field name="color"/>
                     <field name="priority"/>
@@ -639,7 +639,7 @@
             <field name="name">project.task.view.tree.main.base</field>
             <field name="model">project.task</field>
             <field name="arch" type="xml">
-                <tree string="Tasks" sample="1" default_order="priority desc, state, date_deadline asc, sequence, id desc">
+                <tree string="Tasks" sample="1" default_order="priority desc, sequence, state, date_deadline asc, id desc">
                     <field name="company_id" invisible="1"/>
                     <field name="is_private" invisible="1" />
                     <field name="sequence" invisible="1" readonly="1"/>
