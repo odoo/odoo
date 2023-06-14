@@ -270,6 +270,9 @@ registerModel({
                         );
                     }
                 }
+                if (!this.message.datetime) {
+                    return clear();
+                }
                 return sprintf(
                     this.env._t("Posted on %s"), this.message.datetime
                 );
@@ -593,6 +596,23 @@ registerModel({
                 return this.message.author && this.message.author.isImStatusSet ? {} : clear();
             },
             inverse: 'messageViewOwner',
+        }),
+        /**
+         * Sender (impersonation note)
+         */
+        senderView: attr({
+            compute() {
+                if (this.messaging.currentGuest) {
+                    return false;
+                }
+                if (!this.message) {
+                    return clear();
+                }
+                if (!this.message.author || !this.message.sender || this.message.author === this.message.sender) {
+                    return false;
+                }
+                return sprintf(this.env._t("sent by %s"), this.message.sender.name);
+            },
         }),
     },
 });

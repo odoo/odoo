@@ -5,7 +5,7 @@ from odoo import Command
 from odoo.tests.common import users, tagged, TransactionCase
 
 
-@tagged('post_install', '-at_install')
+@tagged('post_install', '-at_install', 'mail_thread')
 class TestImLivechatMessage(TransactionCase):
     def setUp(self):
         super().setUp()
@@ -47,7 +47,7 @@ class TestImLivechatMessage(TransactionCase):
             'attachment_ids': [],
             'author': {
                 'id': self.users[1].partner_id.id,
-                'name': self.users[1].partner_id.name,
+                'name': "test1",
             },
             'body': message.body,
             'date': message.date,
@@ -74,7 +74,7 @@ class TestImLivechatMessage(TransactionCase):
             'res_id': channel_livechat_1.id,
             'sender': {
                 'id': self.users[0].partner_id.id,
-                'name': self.users[0].partner_id.name,
+                'name': "Ernest Employee",
             },
             'sms_ids': [],
             'starred_partner_ids': [],

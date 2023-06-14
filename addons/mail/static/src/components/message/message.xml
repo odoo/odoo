@@ -73,11 +73,6 @@
                                             <t t-esc="messageView.message.author.nameOrDisplayName"/>
                                         </t>
                                     </strong>
-                                    <span t-if="messageView.message.sender and messageView.message.sender !== messageView.message.author"
-                                          class="me-1 small fw-light">
-                                        sent by
-                                        <t t-esc="messageView.message.sender.name"/>
-                                    </span>
                                 </t>
                                 <t t-elif="messageView.message.guestAuthor">
                                     <strong class="o_Message_authorName me-2 text-truncate text-muted">
@@ -96,6 +91,7 @@
                                         Anonymous
                                     </strong>
                                 </t>
+                                <span t-if="messageView.senderView" class="me-1 small fw-light" t-esc="messageView.senderView"/>
                                 <t t-if="messageView.message.date">
                                     <small class="o_Message_date o_Message_headerDate text-muted opacity-50" t-att-class="{ 'o-message-selected': messageView.isSelected, 'me-2': !(messageView.isInChatWindowAndIsAlignedRight) }" t-att-title="messageView.dateEnriched">
                                         <span t-if="messageView.isShowingAuthorName">-</span> <t t-esc="messageView.dateFromNow"/>
