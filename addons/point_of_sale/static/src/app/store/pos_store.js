@@ -4,7 +4,7 @@ import { PosGlobalState } from "@point_of_sale/app/store/models";
 
 import { registry } from "@web/core/registry";
 import { ConfirmPopup } from "@point_of_sale/app/utils/confirm_popup/confirm_popup";
-import { Reactive } from "@point_of_sale/utils";
+import { Reactive } from "@web/core/utils/reactive";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 import { _t } from "@web/core/l10n/translation";
 import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";

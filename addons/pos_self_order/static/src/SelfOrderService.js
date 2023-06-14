@@ -6,7 +6,7 @@ import { session } from "@web/session";
 import { formatMonetary } from "@web/views/fields/formatters";
 import { _t } from "@web/core/l10n/translation";
 import { groupBy } from "@web/core/utils/arrays";
-import { effect } from "@point_of_sale/utils";
+import { effect } from "@web/core/utils/reactive";
 
 /**
  * @template T
