@@ -17,10 +17,10 @@ class AccountMoveSend(models.Model):
             }]
         return []
 
-    def _get_default_mail_attachments_data(self, mail_template, move):
+    def _get_default_email_attachment_data(self, mail_template, move):
         """ Returns all the placeholder data and mail template data
         """
-        results = super()._get_default_mail_attachments_data(mail_template, move)
+        results = super()._get_default_email_attachment_data(mail_template, move)
         for doc in move.edi_document_ids:
             results += self._get_mail_attachment_from_doc(doc)
         return results
