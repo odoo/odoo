@@ -9,8 +9,11 @@ class PosSessionCheckProductWizard(models.TransientModel):
     _name = 'pos.session.check_product_wizard'
     _description = 'Verify if there are any products for the PoS'
 
-    def load_demo_products(self):
+    def _load_onboarding_data(self):
         convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init', kind='data')
+
+    def load_demo_products(self):
+        self.sudo()._load_onboarding_data()
         return self.open_ui()
 
     def open_ui(self):
