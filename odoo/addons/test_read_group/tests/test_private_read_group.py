@@ -49,8 +49,8 @@ class TestPrivateReadGroup(common.TransactionCase):
                      "test_read_group_aggregate__partner_id"."complete_name",
                      "test_read_group_aggregate__partner_id"."id"
             ORDER BY "test_read_group_aggregate"."key" ASC,
-                     "test_read_group_aggregate__partner_id"."complete_name",
-                     "test_read_group_aggregate__partner_id"."id"
+                     "test_read_group_aggregate__partner_id"."complete_name" ASC,
+                     "test_read_group_aggregate__partner_id"."id" DESC
         """]):
             self.assertEqual(
                 Model._read_group([], groupby=['key', 'partner_id'], aggregates=['value:sum'], order="key, partner_id"),
@@ -155,7 +155,7 @@ class TestPrivateReadGroup(common.TransactionCase):
                      "test_read_group_aggregate__partner_id"."complete_name",
                      "test_read_group_aggregate__partner_id"."id"
             ORDER BY "test_read_group_aggregate__partner_id"."complete_name" DESC,
-                     "test_read_group_aggregate__partner_id"."id" DESC
+                     "test_read_group_aggregate__partner_id"."id" ASC
         """]):
             result = Model._read_group(
                 [],
