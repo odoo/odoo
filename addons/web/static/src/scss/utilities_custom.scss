@@ -52,6 +52,15 @@ $utilities: map-merge(
                 values: join(map-get(map-get($utilities, "display"), "values"), contents),
             ),
         ),
+        "white-space": map-merge(
+            map-get($utilities, "white-space"),
+            (
+                values: map-merge(
+                    map-get(map-get($utilities, "white-space"), "values"),
+                    ("prewrap": pre-wrap),
+                ),
+            ),
+        ),
         "position": map-merge(
             map-get($utilities, "position"),
             (
