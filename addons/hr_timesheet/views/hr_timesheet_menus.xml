@@ -6,6 +6,11 @@
               groups="group_hr_timesheet_user"
               web_icon="hr_timesheet,static/description/icon_timesheet.png"
     >
+        <menuitem id="timesheet_menu_activity_user"
+                  name="My Timesheets"
+                  groups="group_hr_timesheet_user"
+                  action="act_hr_timesheet_line"
+        />
         <menuitem id="menu_hr_time_tracking"
                   name="Timesheets"
                   groups="group_hr_timesheet_approver"
@@ -16,11 +21,6 @@
                       groups="group_hr_timesheet_approver"
                       action="act_hr_timesheet_line"
             />
-            <menuitem id="timesheet_menu_activity_user"
-                      name="My Timesheets"
-                      groups="group_hr_timesheet_user"
-                      action="act_hr_timesheet_line"
-            />
             <menuitem id="timesheet_menu_activity_all"
                       name="All Timesheets"
                       action="timesheet_action_all"
@@ -29,6 +29,7 @@
         </menuitem>
         <menuitem id="menu_timesheets_reports"
                   name="Reporting"
+                  groups="group_hr_timesheet_approver"
                   sequence="99"
         >
             <menuitem id="menu_timesheets_reports_timesheet"
