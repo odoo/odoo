@@ -956,3 +956,23 @@ class TestExpenses(TestExpenseCommon):
         move = expense_sheet.account_move_id
         expected_date = fields.Date.from_string('2021-01-31')
         self.assertEqual(move.invoice_date_due, expected_date, 'Bill due date should follow employee payment terms')
+
+    def test_inverse_total_amount(self):
+        """ Test if the inverse method works correctly """
+
+        expense = self.env['hr.expense'].create({
+            'name': 'Choucroute Saucisse',
+            'employee_id': self.expense_employee.id,
+            'product_id': self.product_c.id,
+            'total_amount': 60,
+            'unit_amount': 0,
+            'tax_ids': [self.tax_purchase_a.id, self.tax_purchase_b.id],
+            'analytic_distribution': {
+                self.analytic_account_1.id: 50,
+                self.analytic_account_2.id: 50,
+            },
+        })
+
+        expense.total_amount = 90
+
+        self.assertEqual(expense.unit_amount, 90, 'Unit amount should be the same as total amount was written to')
