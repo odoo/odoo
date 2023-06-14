@@ -2395,6 +2395,11 @@ class BaseModel(metaclass=MetaModel):
                     row[group] = (value, name_get_dict[value]) if value else value
 
                 additional_domain = [(field_name, '=', value)]
+                if not value and field.type == 'many2many':
+                    other_values = [other_row[group][0] if isinstance(other_row[group], tuple)
+                                    else other_row[group].id if isinstance(value, BaseModel)
+                                    else other_row[group] for other_row in rows_dict if other_row[group]]
+                    additional_domain = [(field_name, 'not in', other_values)]
 
                 if field.type in ('date', 'datetime'):
                     if value:
