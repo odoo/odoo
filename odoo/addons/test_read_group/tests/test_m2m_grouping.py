@@ -107,7 +107,7 @@ class TestM2MGrouping(common.TransactionCase):
                 'user_ids': False,
                 'user_ids_count': 1,
                 'name': unordered(["Donkey Kong"]),
-                '__domain': [('user_ids', '=', False)],
+                '__domain': [('user_ids', 'not in', [self.users[0].id, self.users[1].id])],
             },
         ])
 
@@ -171,7 +171,7 @@ class TestM2MGrouping(common.TransactionCase):
                 'user_ids': False,
                 'user_ids_count': 1,
                 'name': unordered(["Donkey Kong"]),
-                '__domain': [('user_ids', '=', False)],
+                '__domain': [('user_ids', 'not in', [self.users[0].id, self.users[1].id])],
             },
         ])
 
@@ -216,9 +216,17 @@ class TestM2MGrouping(common.TransactionCase):
                 'user_ids': False,
                 'user_ids_count': 2,
                 'name': unordered(["Luigi's Mansion", 'Donkey Kong']),
-                '__domain': [('user_ids', '=', False)],
+                '__domain': [('user_ids', 'not in', self.users[0].ids)],
             },
         ])
+
+        for group in as_demo:
+            self.assertEqual(
+                group['user_ids_count'],
+                tasks.search_count(group['__domain']),
+                'A search using the domain returned by the read_group should give the '
+                'same number of records as counted in the group',
+            )
 
 
 class unordered(list):
