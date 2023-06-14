@@ -366,6 +366,14 @@ class PosConfig(models.Model):
                 if trusted_config.currency_id != config.currency_id:
                     raise ValidationError(_("You cannot share open orders with configuration that does not use the same currency."))
 
+
+    @api.onchange('name')
+    def _onchange_name(self):
+        self.sequence_id.name = _('POS Order %s', self.name),
+        self.sequence_id.prefix = "%s/" % self.name
+        self.sequence_line_id.name = _('POS order line %s', self.name)
+        self.sequence_line_id.prefix = "%s/" % self.name
+
     def name_get(self):
         result = []
         for config in self:
