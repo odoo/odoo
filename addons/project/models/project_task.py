@@ -69,7 +69,7 @@ class Task(models.Model):
     _date_name = "date_assign"
     _inherit = ['portal.mixin', 'mail.thread.cc', 'mail.activity.mixin', 'rating.mixin']
     _mail_post_access = 'read'
-    _order = "priority desc, date_deadline asc, sequence, id desc"
+    _order = "priority desc, sequence, date_deadline asc, id desc"
     _primary_email = 'email_from'
     _check_company_auto = True
 
