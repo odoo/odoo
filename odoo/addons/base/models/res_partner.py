@@ -134,7 +134,7 @@ class Partner(models.Model):
     _description = 'Contact'
     _inherit = ['format.address.mixin', 'image.mixin']
     _name = "res.partner"
-    _order = "display_name"
+    _order = "display_name ASC, id DESC"
 
     def _default_category(self):
         return self.env['res.partner.category'].browse(self._context.get('category_id'))
