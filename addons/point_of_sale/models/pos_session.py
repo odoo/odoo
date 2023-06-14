@@ -2108,7 +2108,7 @@ class PosSession(models.Model):
     def load_product_frontend(self):
         allowed = not self._pos_has_valid_product()
         if allowed:
-            self._load_onboarding_data()
+            self.sudo()._load_onboarding_data()
 
         return {
             'models_data': self.get_onboarding_data(),
