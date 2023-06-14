@@ -1021,21 +1021,11 @@ export class PosStore extends Reactive {
      * @returns {string}
      */
     async customerDisplayHTML(closeUI = false) {
-        const backgroundImageBase64 =
-            this.config.iface_customer_facing_display_background_image_1920;
-        let backgroundImageCSSValue;
-        if (backgroundImageBase64) {
-            backgroundImageCSSValue = "url('data:image/png;base64," + backgroundImageBase64 + "')";
-        } else {
-            backgroundImageCSSValue = "none";
-        }
-
         const order = this.get_order();
         if (closeUI || !order) {
             return renderToString("point_of_sale.CustomerFacingDisplayNoOrder", {
                 pos: this,
                 origin: window.location.origin,
-                backgroundImageCSSValue,
             });
         }
 
@@ -1053,7 +1043,6 @@ export class PosStore extends Reactive {
             pos: this,
             formatCurrency: this.env.utils.formatCurrency,
             origin: window.location.origin,
-            backgroundImageCSSValue,
             order,
             productImages,
         });
