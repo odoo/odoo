@@ -73,7 +73,7 @@ class HrExpense(models.Model):
         help="Both price-included and price-excluded taxes will behave as price-included taxes for expenses.")
     amount_tax = fields.Monetary(string='Tax amount in Currency', help="Tax amount in currency", compute='_compute_amount_tax', store=True, currency_field='currency_id')
     amount_tax_company = fields.Monetary('Tax amount', help="Tax amount in company currency", compute='_compute_amount_tax', store=True, currency_field='company_currency_id')
-    total_amount = fields.Monetary("Total In Currency", compute='_compute_amount', store=True, currency_field='currency_id', tracking=True, readonly=False)
+    total_amount = fields.Monetary("Total In Currency", compute='_compute_amount', store=True, currency_field='currency_id', tracking=True, readonly=False, inverse='_inverse_total_amount')
     untaxed_amount = fields.Monetary("Total Untaxed Amount In Currency", compute='_compute_amount_tax', store=True, currency_field='currency_id')
     company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='company_id.currency_id', readonly=True)
     total_amount_company = fields.Monetary('Total', compute='_compute_amount_tax', store=True, currency_field='company_currency_id')
@@ -173,7 +173,7 @@ class HrExpense(models.Model):
     @api.depends('quantity', 'unit_amount', 'tax_ids')
     def _compute_amount(self):
         for expense in self:
-            if expense.product_id and not expense.unit_amount:
+            if expense.product_id and not expense.product_has_cost:
                 continue
             taxes = expense._get_taxes_results(expense.unit_amount, expense.quantity, expense.currency_id)
             expense.total_amount = taxes['total_included']
@@ -314,6 +314,11 @@ class HrExpense(models.Model):
                 'company_id': expense.company_id.id,
             })
             expense.analytic_distribution = distribution or expense.analytic_distribution
+
+    @api.onchange('total_amount')
+    def _inverse_total_amount(self):
+        for expense in self:
+            expense.unit_amount = expense.total_amount_company / expense.quantity
 
     @api.constrains('payment_mode')
     def _check_payment_mode(self):
@@ -663,7 +668,7 @@ class HrExpense(models.Model):
         vals = {
             'employee_id': employee.id,
             'name': expense_description,
-            'unit_amount': price,
+            'total_amount': price,
             'product_id': product.id if product else None,
             'product_uom_id': product.uom_id.id,
             'tax_ids': [(4, tax.id, False) for tax in product.supplier_taxes_id.filtered(lambda r: r.company_id == company)],
