@@ -1042,8 +1042,10 @@ class Task(models.Model):
                     recurrence = self.env['project.task.recurrence'].create(rec_values)
                     task.recurrence_id = recurrence.id
 
-        if 'recurring_task' in vals and not vals.get('recurring_task'):
+        if not vals.get('recurring_task', True) and self.recurrence_id:
+            tasks_in_recurrence = self.recurrence_id.task_ids
             self.recurrence_id.unlink()
+            tasks_in_recurrence.write({'recurring_task': False})
 
         # The sudo is required for a portal user as the record update
         # requires the write access on others models, as rating.rating
