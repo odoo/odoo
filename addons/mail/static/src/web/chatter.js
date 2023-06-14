@@ -271,11 +271,26 @@ export class Chatter extends Component {
         document.body.click(); // hack to close dropdown
     }
 
-    async onClickFollow() {
-        await this.orm.call(this.props.threadModel, "message_subscribe", [[this.props.threadId]], {
+    async _follow(threadModel, threadId) {
+        await this.orm.call(threadModel, "message_subscribe", [[threadId]], {
             partner_ids: [this.store.self.id],
         });
         this.onFollowerChanged();
+    }
+
+    async onClickFollow() {
+        if (this.props.threadId) {
+            this._follow(this.props.threadModel, this.props.threadId);
+        } else {
+            this.onNextUpdate = (nextProps) => {
+                if (nextProps.threadId) {
+                    this._follow(nextProps.threadModel, nextProps.threadId);
+                } else {
+                    return true;
+                }
+            };
+            await this.props.saveRecord?.();
+        }
     }
 
     /**
