@@ -404,6 +404,7 @@ class AdjustmentLines(models.Model):
         Afterwards, for the goods that are already out of stock, we should create the out moves
         """
         AccountMoveLine = []
+        company_currency_id = self.currency_id
 
         base_line = {
             'name': self.name,
@@ -433,7 +434,7 @@ class AdjustmentLines(models.Model):
                                name=(self.name + ": " + str(qty_out) + _(' already out')),
                                quantity=0,
                                account_id=debit_account_id)
-            diff = diff * qty_out / self.quantity
+            diff = company_currency_id.round(diff * qty_out / self.quantity)
             if diff > 0:
                 debit_line['debit'] = diff
                 credit_line['credit'] = diff
