@@ -2,6 +2,7 @@
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
 from odoo.tests import tagged, Form
+from odoo import fields
 
 
 @tagged('post_install', '-at_install')
@@ -742,6 +743,27 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             self.env['account.payment.register']\
                 .with_context(active_model='account.move', active_ids=self.out_invoice_2.ids)\
                 .create({})
+
+    def test_register_payment_multi_currency_conversion(self):
+        ''' When registering a payment using a different currency than the invoice, the amount should update when
+        changing wizard date
+        '''
+
+        PaymentRegister = self.env['account.payment.register']
+        data = [
+            (self.out_invoice_2, self.company_data['currency'], [1000.0, 666.67], "invoice is in foreign currency and payment is in company currency"),
+            (self.out_invoice_3, self.currency_data['currency'], [24.02, 36.03], "invoice is in company currency and payment is in foreign currency"),
+            (self.out_invoice_2, self.currency_data_3['currency'], [10.0, 2000.0], "invoice and payment are in different foreign currencies"),
+        ]
+        date = ('2017-01-01', '2016-01-01')
+
+        for invoice, pay_currency, expected_amounts, msg in data:
+            wizard = Form(PaymentRegister.with_context(active_model='account.move', active_ids=invoice.ids))
+            wizard.currency_id = pay_currency
+            for d, expected in zip(date, expected_amounts):
+                payment_date = fields.Date.from_string(d)
+                wizard.payment_date = payment_date
+                self.assertEqual(wizard.amount, expected, f"Amount in payment wizard when {msg} is not correct")
 
     def test_register_payment_multi_currency_rounding_issue_positive_delta(self):
         ''' When registering a payment using a different currency than the invoice one, the invoice must be fully paid
