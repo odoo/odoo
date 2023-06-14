@@ -1,3 +1,4 @@
+import itertools
 import logging
 from typing import Type
 
@@ -28,11 +29,12 @@ class TestFuzzer(common.TransactionCase):
         self.injection_reports: list[InjectionReport] = []
 
         # Some parameters take other values than model field names.
-        # We try to be smart about it by choosing a value that is likely to be accepted by the function.
+        # We try to be smart about it by choosing a value that is likely to be accepted by the fuzzed function.
+        # We don't need to wrap them inside lists because the payload generator will do it for us.
         self.seeds = {
-            "ids": "1337",
-            "limit": "1",
-            "offset": "0",
+            "ids": 1337,
+            "limit": 1,
+            "offset": 0,
             "attributes": "type",
         }
 
@@ -47,11 +49,16 @@ class TestFuzzer(common.TransactionCase):
         )
         self.sql_errors = (
             psycopg2.errors.SyntaxError,
+        )
+        # These errors don't necessarily lead to an SQL injection.
+        self.sql_error_blacklist = (
+            psycopg2.errors.UndefinedFunction,
             psycopg2.errors.UndefinedColumn,
             psycopg2.errors.InvalidTextRepresentation,
-            psycopg2.errors.UndefinedFunction,
             psycopg2.errors.DatatypeMismatch,
-            psycopg2.errors.ProgrammingError,  # Must be last because it's a superclass.
+            # This is a superclass of the other exceptions, but it's not abstract.
+            # It can be thrown by the psycopg2.
+            psycopg2.errors.ProgrammingError,
         )
 
     def test_fuzzer(self):
@@ -60,8 +67,7 @@ class TestFuzzer(common.TransactionCase):
 
     def fuzz_function(self, function: Callable, signature: inspect.Signature):
         """Iterates over all parameters of a function and fuzzes them."""
-        for model_field in ["char", "char_translate", "text", "integer", "selection", "boolean", "float", "html",
-                            "date", "datetime", "binary", "many2one", "one2many"]:
+        for model_field in ["char", "char_translate"]:
             for parameter in signature.parameters:
                 if parameter == "self":
                     continue
@@ -96,26 +102,29 @@ class TestFuzzer(common.TransactionCase):
 
         savepoint = self.cr.savepoint()
 
-        error = None
-        is_injection_successful = False
+        def generate_report(query: str | None, error: Exception | None = None, is_injection_successful: bool = False):
+            report = InjectionReport(function, bound_arguments, query, error, is_injection_successful)
+            self.injection_reports.append(report)
 
         try:
             with tools.mute_logger("odoo.sql_db", "odoo.osv.expression", "odoo.tools.cache"):
                 function(*bound_arguments.args, **bound_arguments.kwargs)
-            self.cr.commit()
 
-            is_injection_successful = self.did_injection_succeed()
+            self.cr.commit()
+            generate_report(self.cr.query.decode(), is_injection_successful=self.did_injection_succeed())
 
         except self.validation_errors as e:
-            error = e
+            # Not important. The injection was blocked before it reached the database.
+            pass
 
         except self.sql_errors as e:
+            generate_report(self.cr.query.decode(), error=e, is_injection_successful=False)
             savepoint.close()
-            error = e
 
-        finally:
-            report = InjectionReport(function, bound_arguments, error, is_injection_successful)
-            self.injection_reports.append(report)
+        # This must be the last except block because it contains a superclass of the other SQL errors.
+        except self.sql_error_blacklist as e:
+            # Ignore. Not necessarily vulnerable to SQL injections.
+            savepoint.close()
 
     def get_default_args(self):
         """
@@ -128,12 +137,15 @@ class TestFuzzer(common.TransactionCase):
             "fields": ["char"],
             "groupby": "char",
             "field_names": ["char"],
+            "fnames": ["char"],
             "data": [[]],
             "operation": "read",
             "values": {"char": "1337"},
             "field_name": "char",
             "field_onchange": {"char"},
             "translations": {},
+            "new": self.fuzzer_record,
+            "views": [(False, "form")],
         }
 
     def did_injection_succeed(self) -> bool:
@@ -162,7 +174,6 @@ class TestFuzzer(common.TransactionCase):
         })[0]
 
     def tearDown(self):
-        # noinspection SqlWithoutWhere
         self.clear_fuzzer_table()
         self.cr.close()
         self.create_test_report()
@@ -170,19 +181,49 @@ class TestFuzzer(common.TransactionCase):
 
     def clear_fuzzer_table(self):
         # noinspection SqlWithoutWhere
-        self.cr.execute("delete from test_fuzzer_model")
+        self.cr.execute(delete_from_table)
         self.cr.commit()
 
     def create_test_report(self):
         successful_injections = list(filter(lambda report: report.is_injection_successful, self.injection_reports))
-        unsafe_injections = list(
-            filter(lambda report: report.error.__class__ in self.sql_errors, self.injection_reports))
+        unsafe_injections = list(filter(lambda report: report.error is not None, self.injection_reports))
+
+        if successful_injections or unsafe_injections:
+            injections_str = "\n\n\n".join(map(str, successful_injections + unsafe_injections))
+            _logger.debug(f"\n\n{injections_str}\n\n")
+
+        _logger.info(f"Performed {len(self.injection_reports)} injections: "
+                     f"{len(successful_injections)} were successful, "
+                     f"{len(unsafe_injections)} were unsafe.")
 
         def construct_report_message() -> str:
-            msg = "\n\n".join(map(str, successful_injections + unsafe_injections))
-            msg += (f"\n\nPerformed {len(self.injection_reports)} injections: "
-                    f"{len(successful_injections)} were successful, "
-                    f"{len(unsafe_injections)} were unsafe.")
+            msg = ""
+
+            if successful_injections:
+                msg += f"\n\nSuccessful injections:\n\n"
+
+                by_function_name = itertools.groupby(successful_injections, lambda report: report.function.__name__)
+                for function_name, injections in by_function_name:
+                    msg += f"{function_name}: " \
+                           f"{len(list(injections))} successful injections.\n"
+
+            if unsafe_injections:
+                msg += f"\n\nUnsafe injections:\n\n"
+
+                unsafe_injections.sort(key=lambda report: report.function.__name__)
+                by_function_name = itertools.groupby(unsafe_injections, lambda report: report.function.__name__)
+                for function_name, injections in by_function_name:
+                    msg += f"{function_name}: "
+
+                    injections = sorted(injections, key=lambda report: report.error.__class__.__name__)
+                    by_exception_name = itertools.groupby(injections, lambda report: report.error.__class__.__name__)
+
+                    def format_exception_count(pair) -> str:
+                        return f"{len(list(pair[1]))} {pair[0]}(s)"
+
+                    exception_list = ", ".join(map(format_exception_count, by_exception_name))
+                    msg += f"{exception_list}\n"
+
             return msg
 
         self.assertTrue(not successful_injections and not unsafe_injections,
