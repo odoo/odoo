@@ -4,6 +4,7 @@ import { LONG_TYPING, SHORT_TYPING } from "@mail/discuss/typing/composer_patch";
 import { OTHER_LONG_TYPING } from "@mail/discuss/typing/typing_service";
 import {
     afterNextRender,
+    click,
     insertText,
     nextAnimationFrame,
     start,
@@ -358,4 +359,41 @@ QUnit.test("chat: correspondent is typing", async (assert) => {
         })
     );
     assert.containsOnce($, ".fa-circle.text-success");
+});
+
+QUnit.test("chat: correspondent is typing in chat window", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({
+        im_status: "online",
+        name: "Demo",
+    });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_member_ids: [
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
+        ],
+        channel_type: "chat",
+    });
+    const { env } = await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    assert.containsNone($, "[title='Demo is typing...']");
+    // simulate receive typing notification from demo "is typing"
+    await afterNextRender(() =>
+        env.services.rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            context: { mockedPartnerId: partnerId },
+            is_typing: true,
+        })
+    );
+    assert.containsOnce($, "[title='Demo is typing...']");
+    // simulate receive typing notification from demo "no longer is typing"
+    await afterNextRender(() =>
+        env.services.rpc("/discuss/channel/notify_typing", {
+            channel_id: channelId,
+            context: { mockedPartnerId: partnerId },
+            is_typing: false,
+        })
+    );
+    assert.containsNone($, "[title='Demo is typing...']");
 });
