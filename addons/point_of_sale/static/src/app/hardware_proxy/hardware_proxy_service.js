@@ -4,7 +4,8 @@ import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { EventBus, reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { effect, deduceUrl } from "@point_of_sale/utils";
+import { deduceUrl } from "@point_of_sale/utils";
+import { effect } from "@web/core/utils/reactive";
 
 /**
  * This object interfaces with the local proxy to communicate to the various hardware devices
