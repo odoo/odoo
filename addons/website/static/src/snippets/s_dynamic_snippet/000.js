@@ -176,7 +176,11 @@ const DynamicSnippet = publicWidget.Widget.extend({
             this.renderedContent = '';
         }
         this._renderContent();
-        this.trigger_up('widgets_start_request', {$target: this.$el.children(), options: {parent: this}});
+        this.trigger_up('widgets_start_request', {
+            $target: this.$el.children(),
+            options: {parent: this},
+            editableMode: this.editableMode,
+        });
     },
     /**
      * @private
