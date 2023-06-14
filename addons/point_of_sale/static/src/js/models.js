@@ -596,7 +596,7 @@ class PosGlobalState extends PosModel {
         // component state and refs definition
         const state = {notes: '', acceptClosing: false, payments: {}};
         if (cashControl) {
-            state.payments[defaultCashDetails.id] = {counted: 0, difference: -defaultCashDetails.amount, number: 0};
+            state.payments[defaultCashDetails.id] = {counted: "0", difference: -defaultCashDetails.amount, number: 0};
         }
         if (otherPaymentMethods.length > 0) {
             otherPaymentMethods.forEach(pm => {

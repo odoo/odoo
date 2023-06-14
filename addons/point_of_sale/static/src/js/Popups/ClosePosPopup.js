@@ -6,6 +6,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
     const { identifyError } = require('point_of_sale.utils');
     const { ConnectionLostError, ConnectionAbortedError} = require('@web/core/network/rpc_service')
     const { useState } = owl;
+    const { parse } = require('web.field_utils');
 
     class ClosePosPopup extends AbstractAwaitablePopup {
         setup() {
@@ -17,11 +18,15 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             Object.assign(this, this.props.info);
             this.state = useState({
                 displayMoneyDetailsPopup: false,
+                inputHasError: false,
             });
             Object.assign(this.state, this.props.info.state);
         }
         //@override
         async confirm() {
+            if (this.state.inputHasError) {
+                return;
+            }
             if (!this.cashControl || !this.hasDifference()) {
                 this.closeSession();
             } else if (this.hasUserAuthority()) {
@@ -51,7 +56,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             }
         }
         openDetailsPopup() {
-            this.state.payments[this.defaultCashDetails.id].counted = 0;
+            this.state.payments[this.defaultCashDetails.id].counted = "0";
             this.state.payments[this.defaultCashDetails.id].difference = -this.defaultCashDetails.amount;
             this.state.notes = "";
             this.state.displayMoneyDetailsPopup = true;
@@ -75,8 +80,16 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
             } else {
                 expectedAmount = this.otherPaymentMethods.find(pm => paymentId === pm.id).amount;
             }
+            try {
+                parse.float(this.state.payments[paymentId].counted);
+                this.state.inputHasError = false;
+            } catch (_error) {
+                this.state.inputHasError = true;
+                this.errorMessage = this.env._t('Invalid amount');
+                return;
+            }
             this.state.payments[paymentId].difference =
-                this.env.pos.round_decimals_currency(this.state.payments[paymentId].counted - expectedAmount);
+                this.env.pos.round_decimals_currency(parse.float(this.state.payments[paymentId].counted) - expectedAmount);
         }
         updateCountedCash({ total, moneyDetailsNotes, moneyDetails }) {
             this.state.payments[this.defaultCashDetails.id].counted = total;
@@ -112,7 +125,7 @@ odoo.define('point_of_sale.ClosePosPopup', function(require) {
                         method: 'post_closing_cash_details',
                         args: [this.env.pos.pos_session.id],
                         kwargs: {
-                            counted_cash: this.state.payments[this.defaultCashDetails.id].counted,
+                            counted_cash: parse.float(this.state.payments[this.defaultCashDetails.id].counted),
                         }
                     })
                     if (!response.successful) {

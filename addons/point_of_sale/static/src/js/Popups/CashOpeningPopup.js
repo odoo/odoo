@@ -4,6 +4,7 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
     const AbstractAwaitablePopup = require('point_of_sale.AbstractAwaitablePopup');
     const Registries = require('point_of_sale.Registries');
 
+    const { parse } = require('web.field_utils');
     const { useState } = owl;
 
     class CashOpeningPopup extends AbstractAwaitablePopup {
@@ -14,10 +15,18 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
                 notes: "",
                 openingCash: this.env.pos.pos_session.cash_register_balance_start || 0,
                 displayMoneyDetailsPopup: false,
+                inputHasError: false,
             });
         }
         //@override
         async confirm() {
+            try {
+                this.state.openingCash = parse.float(this.state.openingCash);
+            } catch (_error) {
+                this.state.inputHasError = true;
+                this.errorMessage = this.env._t('Invalid amount');
+                return;
+            }
             this.env.pos.pos_session.cash_register_balance_start = this.state.openingCash;
             this.env.pos.pos_session.state = 'opened';
             this.rpc({
@@ -43,11 +52,16 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
             this.manualInputCashCount = false;
             this.closeDetailsPopup();
         }
-        handleInputChange() {
+        handleInputChange(ev) {
             this.manualInputCashCount = true;
             this.state.notes = "";
-            if (typeof(this.state.openingCash) !== "number") {
-                this.state.openingCash = 0;
+            try {
+                parse.float(this.state.openingCash);
+                this.state.inputHasError = false;
+            } catch (_error) {
+                this.state.inputHasError = true;
+                this.errorMessage = this.env._t('Invalid amount');
+                return;
             }
         }
     }
