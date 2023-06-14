@@ -3,7 +3,7 @@
 
 from collections import defaultdict
 
-from odoo import api, fields, models, tools, _
+from odoo import api, Command, fields, models, tools, _
 from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_is_zero
 
@@ -82,6 +82,13 @@ class StockLandedCost(models.Model):
     def _onchange_target_model(self):
         if self.target_model != 'picking':
             self.picking_ids = False
+
+    @api.onchange('vendor_bill_id')
+    def _onchange_vendor_bill_id(self):
+        if self.vendor_bill_id:
+            self.write({'cost_lines': [Command.clear()] + [Command.create(line_vals)
+                for line_vals in self.vendor_bill_id._prepare_value_cost_lines()]
+            })
 
     @api.model_create_multi
     def create(self, vals_list):
