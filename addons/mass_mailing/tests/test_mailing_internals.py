@@ -257,7 +257,7 @@ class TestMassMailValues(MassMailCommon):
         self.assertEqual(literal_eval(mailing.mailing_domain), literal_eval(filter_1.mailing_domain))
 
         # changing the domain should not empty the mailing_filter_id
-        mailing.mailing_domain = "[('email', 'ilike', 'info_be@odoo.com')]"
+        mailing.mailing_domain = "[('name', '=', 'sales')]"
         self.assertEqual(mailing.mailing_filter_id, filter_1, "Filter should not be unset even if domain is changed")
 
         # deleting the filter record should not delete the domain on mailing

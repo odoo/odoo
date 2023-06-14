@@ -112,17 +112,6 @@ export class DomainField extends Component {
         }
 
         let recordCount;
-        const context = this.getContext(props);
-        try {
-            recordCount = await this.orm.silent.searchCount(resModel, domain, { context });
-        } catch (error) {
-            if (error.data?.name === "builtins.KeyError" && error.data.message === resModel) {
-                // we don't want to support invalid models
-                throw new Error(`Invalid model: ${resModel}`);
-            }
-            this.updateState({ isValid: false, recordCount: 0 });
-            return;
-        }
 
         this.updateState({ isValid: true, recordCount });
     }

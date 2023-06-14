@@ -211,12 +211,6 @@ QUnit.module("Fields", (hooks) => {
         input.value = 2;
         await triggerEvent(input, null, "change");
 
-        assert.strictEqual(
-            target.querySelector(".o_domain_show_selection_button").textContent.trim().substr(0, 2),
-            "1 ",
-            "changing color value to 2 should reveal only one record"
-        );
-
         // Saving the form view should show a readonly domain containing the
         // "color" field
         await clickSave(target);
@@ -326,46 +320,8 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test(
-        "domain field can be reset with a new domain (from onchange)",
-        async function (assert) {
-            serverData.models.partner.records[0].foo = "[]";
-            serverData.models.partner.onchanges = {
-                display_name(obj) {
-                    obj.foo = `[("id", "=", 1)]`;
-                },
-            };
-
-            await makeView({
-                type: "form",
-                resModel: "partner",
-                resId: 1,
-                serverData,
-                arch: `
-                    <form>
-                        <field name="display_name" />
-                        <field name="foo" widget="domain" options="{'model': 'partner'}" />
-                    </form>`,
-            });
-
-            assert.strictEqual(
-                target.querySelector(".o_domain_show_selection_button").textContent.trim(),
-                "5 record(s)",
-                "the domain being empty, there should be 5 records"
-            );
-
-            // update display_name to trigger the onchange and reset foo
-            await editInput(target, ".o_field_widget[name='display_name'] input", "new value");
-            assert.strictEqual(
-                target.querySelector(".o_domain_show_selection_button").textContent.trim(),
-                "1 record(s)",
-                "the domain has changed, there should be only 1 record"
-            );
-        }
-    );
-
     QUnit.test("domain field: handle false domain as []", async function (assert) {
-        assert.expect(3);
+        assert.expect(2);
 
         serverData.models.partner.records[0].foo = false;
         serverData.models.partner.fields.bar.type = "char";
@@ -385,11 +341,6 @@ QUnit.module("Fields", (hooks) => {
                         </group>
                     </sheet>
                 </form>`,
-            mockRPC(route, { args, method }) {
-                if (method === "search_count") {
-                    assert.deepEqual(args[0], [], "should send a valid domain");
-                }
-            },
         });
         assert.containsOnce(target, ".o_field_widget[name='foo']:not(.o_field_empty)");
         assert.containsNone(target, ".o_field_widget[name='foo'] .text-warning");
@@ -416,12 +367,6 @@ QUnit.module("Fields", (hooks) => {
                     </sheet>
                 </form>`,
         });
-
-        assert.equal(
-            target.querySelector(".o_domain_show_selection_button").textContent.trim().substr(0, 2),
-            "2 ",
-            "selection should contain 2 records"
-        );
 
         // open the selection
         await click(target, ".o_domain_show_selection_button");
@@ -464,204 +409,6 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("domain field: manually edit domain with textarea", async function (assert) {
-        patchWithCleanup(odoo, { debug: true });
-
-        serverData.models.partner.records[0].foo = false;
-        serverData.models.partner.fields.bar.type = "char";
-        serverData.models.partner.records[0].bar = "product";
-
-        serverData.views = {
-            "partner,false,form": `
-                <form>
-                    <field name="bar"/>
-                    <field name="foo" widget="domain" options="{'model': 'bar'}"/>
-                </form>`,
-            "partner,false,search": `<search />`,
-        };
-
-        serverData.actions = {
-            1: {
-                id: 1,
-                name: "test",
-                res_id: 1,
-                res_model: "partner",
-                type: "ir.actions.act_window",
-                views: [[false, "form"]],
-            },
-        };
-
-        const webClient = await createWebClient({
-            serverData,
-            mockRPC(route, { method, args }) {
-                if (method === "search_count") {
-                    assert.step(JSON.stringify(args[0]));
-                }
-            },
-        });
-
-        await doAction(webClient, 1);
-        assert.verifySteps(["[]"]);
-
-        assert.strictEqual(
-            target.querySelector(".o_domain_show_selection_button").textContent.trim(),
-            "2 record(s)"
-        );
-
-        await editInput(target, ".o_domain_debug_input", "[['id', '<', 40]]");
-        // the count should not be re-computed when editing with the textarea
-        assert.strictEqual(
-            target.querySelector(".o_domain_show_selection_button").textContent.trim(),
-            "2 record(s)"
-        );
-        assert.verifySteps([]);
-
-        await clickSave(target);
-        assert.strictEqual(
-            target.querySelector(".o_domain_show_selection_button").textContent.trim(),
-            "1 record(s)"
-        );
-        assert.verifySteps(['[["id","<",40]]']);
-    });
-
-    QUnit.test(
-        "domain field: manually set an invalid domain with textarea",
-        async function (assert) {
-            patchWithCleanup(odoo, { debug: true });
-
-            serverData.models.partner.records[0].foo = false;
-            serverData.models.partner.fields.bar.type = "char";
-            serverData.models.partner.records[0].bar = "product";
-
-            serverData.views = {
-                "partner,false,form": `
-                    <form>
-                        <field name="bar"/>
-                        <field name="foo" widget="domain" options="{'model': 'bar'}"/>
-                    </form>`,
-                "partner,false,search": `<search />`,
-            };
-
-            serverData.actions = {
-                1: {
-                    id: 1,
-                    name: "test",
-                    res_id: 1,
-                    res_model: "partner",
-                    type: "ir.actions.act_window",
-                    views: [[false, "form"]],
-                },
-            };
-
-            const webClient = await createWebClient({
-                serverData,
-                mockRPC(route, { method, args }) {
-                    if (method === "search_count") {
-                        assert.step(JSON.stringify(args[0]));
-                    }
-                    if (method === "write") {
-                        throw new Error("should not save");
-                    }
-                },
-            });
-
-            await doAction(webClient, 1);
-            assert.verifySteps(["[]"]);
-
-            assert.strictEqual(
-                target.querySelector(".o_domain_show_selection_button").textContent.trim(),
-                "2 record(s)"
-            );
-
-            await editInput(target, ".o_domain_debug_input", "[['abc', '=', 1]]");
-            // the count should not be re-computed when editing with the textarea
-            assert.strictEqual(
-                target.querySelector(".o_domain_show_selection_button").textContent.trim(),
-                "2 record(s)"
-            );
-            assert.verifySteps([]);
-
-            await editInput(target, ".o_domain_debug_input", "[['abc']]");
-            assert.verifySteps([]);
-
-            await clickSave(target);
-            assert.hasClass(
-                target.querySelector(".o_field_domain"),
-                "o_field_invalid",
-                "the field is marked as invalid"
-            );
-            assert.containsOnce(
-                target,
-                ".o_form_view .o_form_editable",
-                "the view is still in edit mode"
-            );
-            assert.verifySteps([]);
-        }
-    );
-
-    QUnit.test(
-        "domain field: reload count by clicking on the refresh button",
-        async function (assert) {
-            patchWithCleanup(odoo, { debug: true });
-
-            serverData.models.partner.records[0].foo = "[]";
-            serverData.models.partner.fields.bar.type = "char";
-            serverData.models.partner.records[0].bar = "product";
-
-            serverData.views = {
-                "partner,false,form": `
-                    <form>
-                        <field name="bar"/>
-                        <field name="foo" widget="domain" options="{'model': 'bar'}"/>
-                    </form>`,
-                "partner,false,search": `<search />`,
-            };
-
-            serverData.actions = {
-                1: {
-                    id: 1,
-                    name: "test",
-                    res_id: 1,
-                    res_model: "partner",
-                    type: "ir.actions.act_window",
-                    views: [[false, "form"]],
-                },
-            };
-
-            const webClient = await createWebClient({
-                serverData,
-                mockRPC(route, { method, args }) {
-                    if (method === "search_count") {
-                        assert.step(JSON.stringify(args[0]));
-                    }
-                },
-            });
-
-            await doAction(webClient, 1);
-            assert.verifySteps(["[]"]);
-
-            assert.strictEqual(
-                target.querySelector(".o_domain_show_selection_button").textContent.trim(),
-                "2 record(s)"
-            );
-
-            await editInput(target, ".o_domain_debug_input", "[['id', '<', 40]]");
-            // the count should not be re-computed when editing with the textarea
-            assert.strictEqual(
-                target.querySelector(".o_domain_show_selection_button").textContent.trim(),
-                "2 record(s)"
-            );
-
-            // click on the refresh button
-            await click(target, ".o_refresh_count");
-            assert.strictEqual(
-                target.querySelector(".o_domain_show_selection_button").textContent.trim(),
-                "1 record(s)"
-            );
-            assert.verifySteps(['[["id","<",40]]']);
-        }
-    );
-
     QUnit.test("domain field: does not wait for the count to render", async function (assert) {
         serverData.models.partner.records[0].foo = "[]";
         serverData.models.partner.fields.bar.type = "char";
@@ -678,25 +425,13 @@ QUnit.module("Fields", (hooks) => {
                     <field name="bar"/>
                     <field name="foo" widget="domain" options="{'model': 'bar'}"/>
                 </form>`,
-            async mockRPC(route, { method }) {
-                if (method === "search_count") {
-                    await def;
-                }
-            },
         });
-
-        assert.containsOnce(target, ".o_field_domain_panel .fa-circle-o-notch.fa-spin");
-        assert.containsNone(target, ".o_field_domain_panel .o_domain_show_selection_button");
 
         def.resolve();
         await nextTick();
 
         assert.containsNone(target, ".o_field_domain_panel .fa-circle-o-notch .fa-spin");
         assert.containsOnce(target, ".o_field_domain_panel .o_domain_show_selection_button");
-        assert.strictEqual(
-            target.querySelector(".o_domain_show_selection_button").textContent.trim(),
-            "2 record(s)"
-        );
     });
 
     QUnit.test("domain field: edit domain with dynamic content", async function (assert) {
@@ -786,7 +521,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["/web/webclient/load_menus"]);
 
         await doAction(webClient, 1);
-        assert.verifySteps(["/web/action/load", "get_views", "read", "search_count", "fields_get"]);
+        assert.verifySteps(["/web/action/load", "get_views", "read", "fields_get"]);
 
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
         assert.containsOnce(target, ".o_ds_expr_value", "there should be an expression");
@@ -794,7 +529,6 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_ds_expr_value button");
         rawDomain = `[("date", ">=", "2020-09-05")]`;
         assert.containsOnce(target, ".o_datetime_input", "there should be a datepicker");
-        assert.verifySteps(["search_count"]);
 
         // Open and close the datepicker
         await click(target, ".o_datetime_input");
@@ -807,12 +541,12 @@ QUnit.module("Fields", (hooks) => {
         // Manually input a date
         rawDomain = `[("date", ">=", "2020-09-09")]`;
         await editInput(target, ".o_datetime_input", "09/09/2020");
-        assert.verifySteps(["search_count"]);
+        assert.verifySteps([]);
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
 
         // Save
         await clickSave(target);
-        assert.verifySteps(["write", "read", "search_count"]);
+        assert.verifySteps(["write", "read"]);
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
     });
 
@@ -841,15 +575,6 @@ QUnit.module("Fields", (hooks) => {
             "should contain an error message saying the model is missing"
         );
         assert.verifySteps([]);
-
-        await editInput(target, ".o_field_widget[name=model_name] input", "partner");
-        assert.strictEqual(
-            target
-                .querySelector('.o_field_widget[name="display_name"] .o_field_domain_panel')
-                .innerText.toLowerCase(),
-            "5 record(s)"
-        );
-        assert.verifySteps(["partner"]);
     });
 
     QUnit.test("domain field in kanban view", async function (assert) {

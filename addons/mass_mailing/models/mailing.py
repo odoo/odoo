@@ -12,6 +12,7 @@ import re
 import requests
 import threading
 import werkzeug.urls
+import ast
 from ast import literal_eval
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
@@ -233,6 +234,15 @@ class MassMailing(models.Model):
         'CHECK(ab_testing_pc >= 0 AND ab_testing_pc <= 100)',
         'The A/B Testing Percentage needs to be between 0 and 100%'
     )]
+
+    @api.constrains('mailing_domain')
+    def _check_mailing_domain(self):
+        try:
+            for mailing in self:
+                domain = ast.literal_eval(mailing.mailing_domain)
+                self.env[mailing.mailing_model_real]._search(domain)
+        except ValueError:
+            raise ValidationError(_("Invalid leaf %s", self.mailing_domain))
 
     @api.constrains('mailing_model_id', 'mailing_filter_id')
     def _check_mailing_filter_model(self):
