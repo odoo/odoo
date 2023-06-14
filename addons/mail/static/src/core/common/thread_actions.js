@@ -35,7 +35,9 @@ function transformAction(component, id, action) {
             return this.isActive && this.component && this.condition && !this.popover;
         },
         /** Props to pass to the component of this action. */
-        componentProps: action.componentProps,
+        get componentProps() {
+            return action.componentProps?.(this);
+        },
         /** Condition to display this action. */
         get condition() {
             return action.condition(component);
