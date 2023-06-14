@@ -377,6 +377,8 @@ class WebsiteForum(WebsiteProfile):
             'parent_id': post_parent and post_parent.id or False,
             'tag_ids': post_tag_ids
         })
+        if post_parent:
+            post_parent.bump(force=True)
         return request.redirect("/forum/%s/%s" % (slug(forum), post_parent and slug(post_parent) or new_question.id))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment', type='http', auth="user", methods=['POST'], website=True)
@@ -389,6 +391,7 @@ class WebsiteForum(WebsiteProfile):
                 body=body,
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment')
+            question.bump(force=True)
         return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="public", website=True)

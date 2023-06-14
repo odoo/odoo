@@ -27,8 +27,8 @@
                         </a>
                     </th>
                     <th class="o_wforum_table_activity small fw-normal text-center">
-                        <a class="text-muted" t-att-href="sorting=='write_date desc' and url_for('') + '?' + keep_query( 'search', 'filters', sorting='write_date asc') or url_for('') + '?' + keep_query( 'search', 'filters', sorting='write_date desc')">
-                            Activity <i t-attf-class="fa fa-caret-#{sorting=='write_date desc' and 'down' or 'up'}  #{sorting == 'write_date desc' or sorting == 'write_date asc' and ' ' or 'd-none'}"></i>
+                        <a class="text-muted" t-attf-href="#{url_for('')}?#{keep_query('search', 'filters', sorting='bump_date asc' if sorting=='bump_date desc' else 'bump_date desc')}">
+                            Activity <i t-attf-class="fa fa-caret-#{sorting=='bump_date desc' and 'down' or 'up'}  #{sorting == 'bump_date desc' or sorting == 'bump_date asc' and ' ' or 'd-none'}"></i>
                         </a>
                     </th>
                 </tr>

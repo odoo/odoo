@@ -180,6 +180,12 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             });
         });
 
+        this.$('.o_wforum_question, .o_wforum_answer, .o_wforum_post_comment, .o_wforum_last_activity').toArray()
+            .forEach((post) => {
+                const relativeDateTime = luxon.DateTime.fromSQL($(post).data('lastActivity'), { zone: 'utc'}).toRelative();
+                $(post).find('.o_wforum_relative_datetime').first().text(relativeDateTime);
+            });
+
         return this._super.apply(this, arguments);
     },
 
