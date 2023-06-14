@@ -1,8 +1,9 @@
 /** @odoo-module */
 
-import { batched, effect, Reactive } from "@point_of_sale/utils";
+import { batched } from "@point_of_sale/utils";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
+import { Reactive, effect } from "@web/core/utils/reactive";
 
 export class LocalDisplay extends Reactive {
     status = "success";
