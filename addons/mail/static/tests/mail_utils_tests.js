@@ -157,3 +157,17 @@ QUnit.test("url with ellipsis at the end", async (assert) => {
     assert.containsOnce($, `.o-mail-Message a:contains(https://odoo.com)`);
     assert.containsOnce($, `.o-mail-Message:contains(${messageBody})`);
 });
+
+QUnit.test("url with number in subdomain", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
+    const { click, insertText, openDiscuss } = await start();
+    await openDiscuss(channelId);
+    const messageBody = "https://www.45017478-master-all.runbot134.odoo.com/web";
+    await insertText(".o-mail-Composer-input", messageBody);
+    await click("button:contains(Send)");
+    assert.containsOnce(
+        $,
+        `.o-mail-Message a:contains(https://www.45017478-master-all.runbot134.odoo.com/web)`
+    );
+});
