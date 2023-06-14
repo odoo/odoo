@@ -1808,7 +1808,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if order_sudo.state == "cancel":
             raise ValidationError(_("The order has been canceled."))
 
-        self._check_kwargs_validity(kwargs, extra_protected_kwargs=("sale_order_id",))
+        self._validate_transaction_kwargs(kwargs)
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
             'partner_id': order_sudo.partner_invoice_id.id,

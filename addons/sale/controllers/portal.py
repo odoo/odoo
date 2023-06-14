@@ -307,7 +307,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         except AccessError:
             raise ValidationError(_("The access token is invalid."))
 
-        self._check_kwargs_validity(kwargs, extra_protected_kwargs=('sale_order_id',))
+        self._validate_transaction_kwargs(kwargs)
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
             'partner_id': order_sudo.partner_invoice_id.id,

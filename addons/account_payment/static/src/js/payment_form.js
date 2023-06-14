@@ -23,7 +23,8 @@
             const transactionRouteParams = this._super(...arguments);
             return {
                 ...transactionRouteParams,
-                'invoice_id': this.txContext.invoiceId ? parseInt(this.txContext.invoiceId) : null,
+                'invoice_id': this.txContext['invoiceId']
+                    ? parseInt(this.txContext['invoiceId']) : undefined,
             };
         },
 

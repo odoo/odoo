@@ -322,13 +322,17 @@
                     ? this.txContext.accessToken : undefined,
                 'csrf_token': core.csrf_token,
             };
-            if(this.txContext.transactionRoute == '/payment/transaction'){
-                tx_params['partner_id']=parseInt(this.txContext.partnerId)
-                tx_params['currency_id']= this.txContext.currencyId ? parseInt(this.txContext.currencyId) : null
-                tx_params['amount']= this.txContext.amount !== undefined ? parseFloat(this.txContext.amount) : null
-            };
-
-            return  tx_params;
+            // Generic payment flows that are not attached to a document require extra params.
+            if (this.txContext['transactionRoute'] === '/payment/transaction') {
+                Object.assign(tx_params, {
+                    'amount': this.txContext.amount !== undefined
+                        ? parseFloat(this.txContext.amount) : null,
+                    'currency_id': this.txContext.currencyId
+                        ? parseInt(this.txContext.currencyId) : null,
+                    'partner_id': parseInt(this.txContext.partnerId),
+                });
+            }
+            return tx_params;
         },
 
         /**
