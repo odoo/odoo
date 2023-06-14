@@ -16,7 +16,7 @@
                         </div>
                     </t>
                     <t t-foreach="month.weeks" t-as="week" t-key="week.number">
-                        <t t-if="!isRange">
+                        <t t-if="!props.range">
                             <div
                                 class="o_week_number_cell o_center o_cell_md o_text_sm bg-100 fw-bolder"
                                 t-att-class="{ 'border-bottom': !week_last }"
@@ -40,19 +40,23 @@
                                 }"
                                 t-att-disabled="itemInfo.isInvalid"
                                 t-on-pointerenter="() => (state.hoveredDate = itemInfo.range[0])"
-                                t-on-click="() => this.zoomOrSelect(itemInfo)">
-                                <span t-esc="itemInfo.label" class="z-index-1"/>
+                                t-on-click="() => this.zoomOrSelect(itemInfo)"
+                            >
+                                <span t-esc="itemInfo.label" class="z-index-1" />
                             </button>
                         </t>
                     </t>
                 </div>
             </t>
         </div>
-        <div class="d-flex flex-column flex-md-row justify-content-center position-relative gap-4 gap-md-3">
+        <div
+            class="d-flex flex-column flex-md-row justify-content-center position-relative gap-4 gap-md-3"
+        >
             <div class="d-flex gap-3 w-100 justify-content-center">
                 <t t-if="props.type === 'datetime'">
                     <t t-foreach="state.timeValues" t-as="timeValue" t-key="timeValue_index">
                         <div
+                            t-if="timeValue"
                             class="o_time_picker d-flex align-items-center justify-content-center w-lg-50 w-100 gap-1"
                         >
                             <t t-call="web.DateTimePicker.Select">
@@ -98,8 +102,9 @@
                         o_out_of_range: itemInfo.isOutOfRange or itemInfo.isInvalid,
                     }"
                     t-att-disabled="itemInfo.isInvalid"
-                    t-on-click="() => this.zoomOrSelect(itemInfo)">
-                    <span t-esc="itemInfo.label" class="z-index-1"/>
+                    t-on-click="() => this.zoomOrSelect(itemInfo)"
+                >
+                    <span t-esc="itemInfo.label" class="z-index-1" />
                 </button>
             </t>
         </div>
@@ -126,7 +131,7 @@
     <t t-name="web.DateTimePicker" owl="1">
         <div
             class="o_datetime_picker d-flex flex-column gap-2 p-2 p-lg-3 user-select-none"
-            t-attf-style="--DateTimePicker__Day-template-columns: {{ isRange ? 7 : 8 }}"
+            t-attf-style="--DateTimePicker__Day-template-columns: {{ props.range ? 7 : 8 }}"
         >
             <nav class="o_datetime_picker_header btn-group">
                 <button class="o_previous btn btn-light flex-grow-0" t-on-click="previous">
@@ -139,7 +144,12 @@
                     t-on-click="zoomOut"
                 >
                     <t t-foreach="titles" t-as="title" t-key="title">
-                        <strong t-attf-class="o_header_part fs-5 {{ isRange ? 'flex-basis-50' : 'flex-basis-100'}}" t-esc="title" />
+                        <strong
+                            t-attf-class="o_header_part fs-5 {{
+                                props.range ? 'flex-basis-50' : 'flex-basis-100'
+                            }}"
+                            t-esc="title"
+                        />
                     </t>
                 </button>
                 <button class="o_next btn btn-light flex-grow-0" t-on-click="next">

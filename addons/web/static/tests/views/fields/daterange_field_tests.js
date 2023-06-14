@@ -15,6 +15,8 @@ import {
 import { pagerNext } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
+const getInputs = () => target.querySelectorAll(".o_field_daterange input");
+
 /**
  * @param {HTMLElement} el
  */
@@ -820,5 +822,253 @@ QUnit.module("Fields", (hooks) => {
             "30",
             "active end date minute should be '30' in date range picker"
         );
+    });
+
+    QUnit.test("related end date, both start date and end date empty", async (assert) => {
+        serverData.models.partner.records[0].datetime = false;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <form>
+                    <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}"/>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(getInputs().length, 1);
+        assert.hasAttrValue(getInputs()[0], "data-field", "datetime");
+        assert.strictEqual(getInputs()[0].value, "");
+        assert.containsNone(target, ".o_add_date");
+
+        await editInput(getInputs()[0], null, "06/06/2023 12:00:00");
+
+        assert.strictEqual(getInputs().length, 1);
+        assert.hasAttrValue(getInputs()[0], "data-field", "datetime");
+        assert.strictEqual(getInputs()[0].value, "06/06/2023 12:00:00");
+        assert.strictEqual(target.querySelector(".o_add_date").textContent.trim(), "Add end date");
+
+        await click(target, ".o_add_date");
+
+        assert.strictEqual(getInputs().length, 2);
+        assert.hasAttrValue(getInputs()[0], "data-field", "datetime");
+        assert.strictEqual(getInputs()[0].value, "06/06/2023 12:00:00");
+        assert.hasAttrValue(getInputs()[1], "data-field", "datetime_end");
+        assert.strictEqual(getInputs()[0].value, "06/06/2023 12:00:00");
+        assert.containsNone(target, ".o_add_date");
+    });
+
+    QUnit.test("required: related end date, both start date and end date empty", async (assert) => {
+        serverData.models.partner.records[0].datetime = false;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <form>
+                    <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}" attrs="{'required':[('datetime', '!=', False), ('datetime_end', '!=', False)]}"/>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(getInputs().length, 2);
+        assert.hasAttrValue(getInputs()[0], "data-field", "datetime");
+        assert.strictEqual(getInputs()[0].value, "");
+        assert.hasAttrValue(getInputs()[1], "data-field", "datetime_end");
+        assert.strictEqual(getInputs()[1].value, "");
+        assert.containsNone(target, ".o_add_date");
+
+        await editInput(getInputs()[0], null, "06/06/2023 12:00:00");
+
+        assert.strictEqual(getInputs().length, 2);
+        assert.hasAttrValue(getInputs()[0], "data-field", "datetime");
+        assert.strictEqual(getInputs()[0].value, "06/06/2023 12:00:00");
+        assert.hasAttrValue(getInputs()[1], "data-field", "datetime_end");
+        assert.strictEqual(getInputs()[1].value, "");
+        assert.containsNone(target, ".o_add_date");
+
+        await editInput(getInputs()[1], null, "07/07/2023 13:00:00");
+
+        assert.strictEqual(getInputs().length, 2);
+        assert.hasAttrValue(getInputs()[0], "data-field", "datetime");
+        assert.strictEqual(getInputs()[0].value, "06/06/2023 12:00:00");
+        assert.hasAttrValue(getInputs()[1], "data-field", "datetime_end");
+        assert.strictEqual(getInputs()[1].value, "07/07/2023 13:00:00");
+        assert.containsNone(target, ".o_add_date");
+
+        await editInput(getInputs()[0], null, "");
+
+        assert.strictEqual(getInputs().length, 2);
+        assert.hasAttrValue(getInputs()[0], "data-field", "datetime");
+        assert.strictEqual(getInputs()[0].value, "");
+        assert.hasAttrValue(getInputs()[1], "data-field", "datetime_end");
+        assert.strictEqual(getInputs()[1].value, "07/07/2023 13:00:00");
+        assert.containsNone(target, ".o_add_date");
+    });
+
+    QUnit.test("related start date, both start date and end date empty", async (assert) => {
+        serverData.models.partner.records[0].datetime = false;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <form>
+                    <field name="datetime_end" widget="daterange" options="{'start_date_field': 'datetime'}"/>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(getInputs().length, 1);
+        assert.hasAttrValue(getInputs()[0], "data-field", "datetime_end");
+        assert.strictEqual(getInputs()[0].value, "");
+        assert.containsNone(target, ".o_add_date");
+    });
+
+    QUnit.test("related end date, start date set and end date empty", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <form>
+                    <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}"/>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(getInputs().length, 1);
+        assert.hasAttrValue(getInputs()[0], "data-field", "datetime");
+        assert.strictEqual(target.querySelector(".o_add_date").textContent.trim(), "Add end date");
+    });
+
+    QUnit.test("related start date, start date set and end date empty", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <form>
+                    <field name="datetime_end" widget="daterange" options="{'start_date_field': 'datetime'}"/>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(getInputs().length, 1);
+        assert.hasAttrValue(getInputs()[0], "data-field", "datetime");
+        assert.strictEqual(target.querySelector(".o_add_date").textContent.trim(), "Add end date");
+    });
+
+    QUnit.test("related end date, start date empty and end date set", async (assert) => {
+        const recordData = serverData.models.partner.records[0];
+        recordData.datetime_end = recordData.datetime;
+        recordData.datetime = false;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <form>
+                    <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}"/>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(getInputs().length, 1);
+        assert.hasAttrValue(getInputs()[0], "data-field", "datetime_end");
+        assert.strictEqual(
+            target.querySelector(".o_add_date").textContent.trim(),
+            "Add start date"
+        );
+    });
+
+    QUnit.test("related start date, start date empty and end date set", async (assert) => {
+        const recordData = serverData.models.partner.records[0];
+        recordData.datetime_end = recordData.datetime;
+        recordData.datetime = false;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <form>
+                    <field name="datetime_end" widget="daterange" options="{'start_date_field': 'datetime'}"/>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(getInputs().length, 1);
+        assert.hasAttrValue(getInputs()[0], "data-field", "datetime_end");
+        assert.strictEqual(
+            target.querySelector(".o_add_date").textContent.trim(),
+            "Add start date"
+        );
+    });
+
+    QUnit.test("related end date, both start date and end date set", async (assert) => {
+        const recordData = serverData.models.partner.records[0];
+        recordData.datetime_end = recordData.datetime;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <form>
+                    <field name="datetime" widget="daterange" options="{'end_date_field': 'datetime_end'}"/>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(getInputs().length, 2);
+        assert.hasAttrValue(getInputs()[0], "data-field", "datetime");
+        assert.hasAttrValue(getInputs()[1], "data-field", "datetime_end");
+        assert.containsNone(target, ".o_add_date");
+    });
+
+    QUnit.test("related start date, both start date and end date set", async (assert) => {
+        const recordData = serverData.models.partner.records[0];
+        recordData.datetime_end = recordData.datetime;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <form>
+                    <field name="datetime_end" widget="daterange" options="{'start_date_field': 'datetime'}"/>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.strictEqual(getInputs().length, 2);
+        assert.hasAttrValue(getInputs()[0], "data-field", "datetime");
+        assert.strictEqual(getInputs()[0].value, "02/08/2017 15:30:00");
+        assert.hasAttrValue(getInputs()[1], "data-field", "datetime_end");
+        assert.strictEqual(getInputs()[0].value, "02/08/2017 15:30:00");
+        assert.containsNone(target, ".o_add_date");
+
+        await editInput(getInputs()[0], null, "");
+
+        assert.strictEqual(getInputs().length, 1);
+        assert.hasAttrValue(getInputs()[0], "data-field", "datetime_end");
+        assert.strictEqual(getInputs()[0].value, "02/08/2017 15:30:00");
+        assert.strictEqual(
+            target.querySelector(".o_add_date").textContent.trim(),
+            "Add start date"
+        );
+
+        await editInput(getInputs()[0], null, "");
+
+        assert.strictEqual(getInputs().length, 1);
+        assert.hasAttrValue(getInputs()[0], "data-field", "datetime_end");
+        assert.strictEqual(getInputs()[0].value, "");
+        assert.containsNone(target, ".o_add_date");
     });
 });
