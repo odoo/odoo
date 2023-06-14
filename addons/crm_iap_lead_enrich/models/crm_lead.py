@@ -99,7 +99,7 @@ class Lead(models.Model):
                             _logger.info('Sent batch %s enrich requests: success', len(lead_emails))
                             self._iap_enrich_from_response(iap_response)
                 except OperationalError:
-                    _logger.error('A batch of leads could not be enriched :%s', repr(leads))
+                    _logger.warning('A batch of leads could not be enriched :%s', repr(leads))
                     continue
             # Commit processed batch to avoid complete rollbacks and therefore losing credits.
             if not self.env.registry.in_test_mode():
