@@ -54,6 +54,9 @@ var VariantMixin = {
         }
 
         const $parent = $(ev.target).closest('.js_product');
+        if(!$parent.length){
+            return Promise.resolve();
+        }
         const combination = this.getSelectedVariantValues($parent);
         let parentCombination;
 
