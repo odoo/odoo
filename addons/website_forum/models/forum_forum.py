@@ -76,17 +76,13 @@ class Forum(models.Model):
         sanitize_attributes=False, sanitize_form=False)
     default_order = fields.Selection([
         ('create_date desc', 'Newest'),
-        ('write_date desc', 'Last Updated'),
+        ('last_activity_date desc', 'Last Updated'),
         ('vote_count desc', 'Most Voted'),
         ('relevancy desc', 'Relevance'),
         ('child_count desc', 'Answered')],
-        string='Default', required=True, default='write_date desc')
+        string='Default', required=True, default='last_activity_date desc')
     relevancy_post_vote = fields.Float('First Relevance Parameter', default=0.8, help="This formula is used in order to sort by relevance. The variable 'votes' represents number of votes for a post, and 'days' is number of days since the post creation")
     relevancy_time_decay = fields.Float('Second Relevance Parameter', default=1.8)
-    allow_bump = fields.Boolean('Allow Bump', default=True,
-                                help='Check this box to display a popup for posts older than 10 days '
-                                     'without any given answer. The popup will offer to share it on social '
-                                     'networks. When shared, a question is bumped at the top of the forum.')
     allow_share = fields.Boolean('Sharing Options', default=True,
                                  help='After posting the user will be proposed to share its question '
                                       'or answer on social networks, enabling social network propagation '
