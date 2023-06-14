@@ -5,7 +5,7 @@
  * @property {string} [id]
  * @property {string} name
  * @property {boolean} [readonly]
- * @property {RelationalRecord} record
+ * @property {import("@web/views/relational_model").Record} record
  */
 
 export const standardFieldProps = {

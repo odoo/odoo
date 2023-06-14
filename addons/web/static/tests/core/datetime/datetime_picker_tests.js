@@ -274,6 +274,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                 DateTime.fromObject({ hour: 9, minute: 36 }),
                 DateTime.fromObject({ hour: 21, minute: 5 }),
             ],
+            range: true,
             type: "date",
         });
 
@@ -309,6 +310,7 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("additional month, empty range value", async (assert) => {
         await mountPicker({
             value: [null, null],
+            range: true,
         });
 
         assertDateTimePicker({
@@ -362,6 +364,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                 DateTime.fromObject({ day: 5, hour: 17, minute: 18 }),
                 DateTime.fromObject({ month: 5, day: 18, hour: 5, minute: 25 }),
             ],
+            range: true,
         });
 
         assertDateTimePicker({
@@ -417,6 +420,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                 DateTime.fromObject({ hour: 9, minute: 36 }),
                 DateTime.fromObject({ hour: 21, minute: 5 }),
             ],
+            range: true,
         });
 
         assertDateTimePicker({
@@ -456,6 +460,7 @@ QUnit.module("Components", ({ beforeEach }) => {
     QUnit.test("range value, previous month", async (assert) => {
         await mountPicker({
             value: [false, false],
+            range: true,
         });
 
         assertDateTimePicker({
@@ -619,6 +624,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                 DateTime.fromObject({ day: 20, hour: 8, minute: 43 }),
                 DateTime.fromObject({ day: 23, hour: 17, minute: 16 }),
             ],
+            range: true,
             // focusedDateIndex is implicitly 0
             onSelect: (values) => assert.step(formatForStep(values)),
         });
@@ -634,6 +640,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                 DateTime.fromObject({ day: 20, hour: 8, minute: 43 }),
                 DateTime.fromObject({ day: 23, hour: 17, minute: 16 }),
             ],
+            range: true,
             focusedDateIndex: 0,
             onSelect: (values) => assert.step(formatForStep(values)),
         });
@@ -654,6 +661,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                 DateTime.fromObject({ day: 20, hour: 8, minute: 43 }),
                 DateTime.fromObject({ day: 23, hour: 17, minute: 16 }),
             ],
+            range: true,
             focusedDateIndex: 1,
             onSelect: (values) => assert.step(formatForStep(values)),
         });
@@ -669,6 +677,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                 DateTime.fromObject({ day: 20, hour: 8, minute: 43 }),
                 DateTime.fromObject({ day: 23, hour: 17, minute: 16 }),
             ],
+            range: true,
             focusedDateIndex: 1,
             onSelect: (values) => assert.step(formatForStep(values)),
         });
@@ -689,6 +698,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                 DateTime.fromObject({ day: 20, hour: 8, minute: 43 }),
                 DateTime.fromObject({ day: 23, hour: 17, minute: 16 }),
             ],
+            range: true,
             focusedDateIndex: 1,
             onSelect: (values) => assert.step(formatForStep(values)),
         });
@@ -704,6 +714,7 @@ QUnit.module("Components", ({ beforeEach }) => {
                 DateTime.fromObject({ day: 20, hour: 8, minute: 43 }),
                 DateTime.fromObject({ day: 23, hour: 17, minute: 16 }),
             ],
+            range: true,
             focusedDateIndex: 0,
             onSelect: (values) => assert.step(formatForStep(values)),
         });
