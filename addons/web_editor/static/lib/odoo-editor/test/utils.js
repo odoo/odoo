@@ -618,11 +618,22 @@ export function triggerEvent(
     return ev;
 }
 
-export async function readFromFile(url) {
-    const response = await fetch(url);
-    const reader = response.body.getReader();
-    const {value: chunk} = await reader.read();
-    return new TextDecoder().decode(chunk);
-}
+// Mock an paste event and send it to the editor.
+async function pasteData (editor, text, type) {
+    var mockEvent = {
+        dataType: 'text/plain',
+        data: text,
+        clipboardData: {
+            getData: (datatype) => type === datatype ? text : null,
+            files: [],
+            items: [],
+        },
+        preventDefault: () => { },
+    };
+    await editor._onPaste(mockEvent);
+};
+
+export const pasteText = async (editor, text) => pasteData(editor, text, 'text/plain');
+export const pasteHtml = async (editor, html) => pasteData(editor, html, 'text/html');
 
 export class BasicEditor extends OdooEditor {}
