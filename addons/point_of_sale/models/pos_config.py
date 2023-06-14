@@ -378,19 +378,27 @@ class PosConfig(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        def set_ir_sequence_name(default_name, sequence_name, number):
+            if self.env['ir.sequence'].search([('prefix', '=', sequence_name + '/')]):
+                sequence_name = default_name + ' ' + str(number)
+                return set_ir_sequence_name(default_name, sequence_name, number + 1)
+            else:
+                return sequence_name
+
         for vals in vals_list:
             IrSequence = self.env['ir.sequence'].sudo()
+            name = set_ir_sequence_name(vals['name'], vals['name'], 1)
             val = {
-                'name': _('POS Order %s', vals['name']),
+                'name': _('POS Order %s', name),
                 'padding': 4,
-                'prefix': "%s/" % vals['name'],
+                'prefix': "%s/" % name,
                 'code': "pos.order",
                 'company_id': vals.get('company_id', False),
             }
             # force sequence_id field to new pos.order sequence
             vals['sequence_id'] = IrSequence.create(val).id
 
-            val.update(name=_('POS order line %s', vals['name']), code='pos.order.line')
+            val.update(name=_('POS order line %s', name), code='pos.order.line')
             vals['sequence_line_id'] = IrSequence.create(val).id
         pos_configs = super().create(vals_list)
         pos_configs.sudo()._check_modules_to_install()
