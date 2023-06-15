@@ -126,6 +126,7 @@ class ProductProduct(models.Model):
             flattened_taxes_after_fp = product_taxes_after_fp._origin.flatten_taxes_hierarchy()
             flattened_taxes_before_fp = product_taxes._origin.flatten_taxes_hierarchy()
             taxes_before_included = all(tax.price_include for tax in flattened_taxes_before_fp)
+            keep_included_price = self.env["ir.config_parameter"].sudo().get_param("account.fiscal.position.keep_included_price")
 
             if set(product_taxes.ids) != set(product_taxes_after_fp.ids) and taxes_before_included:
                 taxes_res = flattened_taxes_before_fp.compute_all(
@@ -137,7 +138,10 @@ class ProductProduct(models.Model):
                 )
                 product_price_unit = taxes_res['total_excluded']
 
-                if any(tax.price_include for tax in flattened_taxes_after_fp):
+                if any(tax.price_include for tax in flattened_taxes_after_fp) and keep_included_price:
+                    product_price_unit = taxes_res['total_included']
+
+                if any(tax.price_include for tax in flattened_taxes_after_fp) and not keep_included_price:
                     taxes_res = flattened_taxes_after_fp.compute_all(
                         product_price_unit,
                         quantity=1.0,
