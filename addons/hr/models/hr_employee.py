@@ -37,6 +37,7 @@ class HrEmployeePrivate(models.Model):
     user_partner_id = fields.Many2one(related='user_id.partner_id', related_sudo=False, string="User's partner")
     active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
     resource_calendar_id = fields.Many2one(tracking=True)
+    department_id = fields.Many2one(tracking=True)
     company_id = fields.Many2one('res.company', required=True)
     company_country_id = fields.Many2one('res.country', 'Company Country', related='company_id.country_id', readonly=True)
     company_country_code = fields.Char(related='company_country_id.code', depends=['company_country_id'], readonly=True)
