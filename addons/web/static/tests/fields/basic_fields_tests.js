@@ -4886,6 +4886,75 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test("datetime field: use picker with arabic numbering system", async function (assert) {
+        assert.expect(2);
+
+        const symbols = [
+            ["1", "١"],
+            ["2", "٢"],
+            ["3", "٣"],
+            ["4", "٤"],
+            ["5", "٥"],
+            ["6", "٦"],
+            ["7", "٧"],
+            ["8", "٨"],
+            ["9", "٩"],
+            ["0", "٠"],
+        ];
+        const symbolMap = Object.fromEntries(symbols);
+        const numberMap = Object.fromEntries(symbols.map(([latn, arab]) => [arab, latn]));
+
+        const originalLocale = moment.locale();
+        moment.defineLocale("TEST_ar", {
+            preparse:
+                (string) => string
+                    .replace(/\u200f/g, "")
+                    .replace(/[١٢٣٤٥٦٧٨٩٠]/g, (match) => numberMap[match])
+                    .replace(/،/g, ","),
+            postformat:
+                (string) => string
+                    .replace(/\d/g, (match) => symbolMap[match])
+                    .replace(/,/g, "،"),
+        });
+
+        const form = await createView({
+            View: FormView,
+            model: "partner",
+            data: this.data,
+            arch: /* xml */ `
+                <form string="Partners">
+                    <field name="datetime" />
+                </form>
+            `,
+            res_id: 1,
+            viewOptions: {
+                mode: "edit",
+            },
+        });
+
+        const getInput = () => form.el.querySelector("[name=datetime] input")
+        const click = (el) => testUtils.dom.click($(el));
+
+        assert.strictEqual(getInput().value, "٠٢/٠٨/٢٠١٧ ١٠:٠٠:٠٠");
+
+        await click(getInput());
+
+        await click(document.querySelector("[data-action=togglePicker]"));
+
+        await click(document.querySelector("[data-action=showMinutes]"));
+        await click(document.querySelectorAll("[data-action=selectMinute]")[9]);
+
+        await click(document.querySelector("[data-action=showSeconds]"));
+        await click(document.querySelectorAll("[data-action=selectSecond]")[3]);
+
+        assert.strictEqual(getInput().value, "٠٢/٠٨/٢٠١٧ ١٠:٤٥:١٥");
+
+        moment.locale(originalLocale);
+        moment.updateLocale("TEST_ar", null);
+
+        form.destroy();
+    })
+
     QUnit.module('RemainingDays');
 
     QUnit.test('remaining_days widget on a date field in list view', async function (assert) {
