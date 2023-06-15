@@ -495,7 +495,6 @@ QUnit.module("SettingsFormView", (hooks) => {
         });
 
         await click(target.querySelector(".o_field_char .btn.o_field_translate")); // Transalte
-        await click(target.querySelector(".modal-footer .btn-primary")); // Warning dialog (OK)
         await click(target.querySelectorAll(".modal-footer .btn")[1]); // Discard
         await click(target.querySelector(".o_control_panel .o_form_button_save")); // Save Settings
     });

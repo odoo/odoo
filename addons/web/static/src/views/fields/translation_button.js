@@ -3,9 +3,8 @@
 import { localization } from "@web/core/l10n/localization";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { TranslationDialog } from "./translation_dialog";
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 
-import { Component, useEnv } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 /**
  * Prepares a function that will open the dialog that allows to edit translation
@@ -17,30 +16,11 @@ import { Component, useEnv } from "@odoo/owl";
  */
 export function useTranslationDialog() {
     const addDialog = useOwnedDialogs();
-    const env = useEnv();
 
     async function openTranslationDialog({ record, fieldName }) {
-        if (!record.resId) {
-            let _continue = true;
-            await new Promise((resolve) => {
-                addDialog(ConfirmationDialog, {
-                    async confirm() {
-                        _continue = await record.save({ stayInEdition: true });
-                        resolve();
-                    },
-                    cancel() {
-                        _continue = false;
-                        resolve();
-                    },
-                    body: env._t(
-                        "You need to save this new record before editing the translation. Do you want to proceed?"
-                    ),
-                    title: env._t("Warning"),
-                });
-            });
-            if (!_continue) {
-                return;
-            }
+        const saved = await record.save();
+        if (!saved) {
+            return;
         }
         const { resModel, resId } = record;
 
@@ -51,7 +31,7 @@ export function useTranslationDialog() {
             userLanguageValue: record.data[fieldName] || "",
             isComingFromTranslationAlert: false,
             onSave: async () => {
-                await record.load({}, { keepChanges: true });
+                await record.load();
                 record.model.notify();
             },
         });
