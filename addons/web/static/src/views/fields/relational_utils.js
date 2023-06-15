@@ -730,13 +730,16 @@ export function useOpenX2ManyRecord({
 export function useX2ManyCrud(getList, isMany2Many) {
     let saveRecord;
     if (isMany2Many) {
-        saveRecord = (object) => {
+        saveRecord = async (object) => {
             const list = getList();
             const currentIds = list.currentIds;
             let resIds;
             if (Array.isArray(object)) {
                 resIds = [...currentIds, ...object];
             } else if (object.resId) {
+                if (object.isDirty) {
+                   await object.save();
+                }
                 resIds = [...currentIds, object.resId];
             } else {
                 return list.add(object, { isM2M: isMany2Many });
