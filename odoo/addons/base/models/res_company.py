@@ -223,9 +223,24 @@ class Company(models.Model):
 
         return companies
 
+    def cache_invalidation_fields(self):
+        # This list is not well defined and tests should be improved
+        return {
+            'active', # user._get_company_ids and other potential cached search
+            'sequence', # user._get_company_ids and other potential cached search
+        }
+
     def write(self, values):
-        self.env.registry.clear_cache()
-        # Make sure that the selected currency is enabled
+        invalidation_fields = self.cache_invalidation_fields()
+        asset_invalidation_fields = {'font', 'primary_color', 'secondary_color', 'external_report_layout_id'}
+        if not invalidation_fields.isdisjoint(values):
+            self.env.registry.clear_cache()
+
+        if not asset_invalidation_fields.isdisjoint(values):
+            # this is used in the content of an asset (see asset_styles_company_report)
+            # and thus needs to invalidate the assets cache when this is changed
+            self.env.registry.clear_cache('assets')  # not 100% it is useful a test is missing if it is the case
+
         if values.get('currency_id'):
             currency = self.env['res.currency'].browse(values['currency_id'])
             if not currency.active:
