@@ -696,7 +696,7 @@ function getCSSRules(doc) {
             const conditionText = rule.conditionText;
             const minWidthMatch = conditionText && conditionText.match(/\(min-width *: *(\d+)/);
             const minWidth = minWidthMatch && +(minWidthMatch[1] || '0');
-            if (minWidth && minWidth >= 1200) {
+            if (minWidth && minWidth >= 992) {
                 // Large min-width media queries should be included.
                 // eg., .container has a default max-width for all screens.
                 let mediaRules;
