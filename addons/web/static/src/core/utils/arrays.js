@@ -1,5 +1,7 @@
 /** @odoo-module **/
 
+import { shallowEqual as _shallowEqual } from "./objects";
+
 /**
  * Same values returned as those returned by cartesian function for case n = 0
  * and n > 1. For n = 1, brackets are put around the unique parameter elements.
@@ -165,24 +167,7 @@ export function cartesian() {
     }
 }
 
-/**
- * Shallow compares two arrays.
- * @template T
- * @param {T[]} arrayA
- * @param {T[]} arrayB
- * @returns {boolean} true iff arrayA and arrayB are shallow equal
- */
-export function shallowEqual(arrayA, arrayB) {
-    if (arrayA.length !== arrayB.length) {
-        return false;
-    }
-    for (let i = 0; i < arrayA.length; i++) {
-        if (arrayA[i] !== arrayB[i]) {
-            return false;
-        }
-    }
-    return true;
-}
+export const shallowEqual = _shallowEqual;
 
 /**
  * Returns all initial sections of a given array, e.g. for [1, 2] the array
