@@ -444,6 +444,7 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var record = this.localData[recordID];
         var context = this._getContext(record);
+        context.is_duplicate = true;
         return this._rpc({
                 model: record.model,
                 method: 'copy',

@@ -1764,6 +1764,13 @@ class _String(Field):
         if not self.translate or value is False or value is None:
             super().write(records, value)
             return
+        if self.translate is True and records.env.context.get('is_duplicate'):
+            translations = {lang: False for lang, _ in records.env['res.lang'].get_installed()}
+            translations['en_US'] = value
+            translations[records.env.lang or 'en_US'] = value
+            for record in records.with_context(is_duplicate=False):
+                record.update_field_translations(self.name, translations)
+            return
         cache = records.env.cache
         cache_value = self.convert_to_cache(value, records)
         records = cache.get_records_different_from(records, self, cache_value)
