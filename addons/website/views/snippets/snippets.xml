@@ -955,6 +955,47 @@
             data-page-option-name="header_text_color"/>
     </div>
 
+    <div data-js="HeaderExtraElts"
+         data-selector="#wrapwrap > header"
+         data-no-check="true"
+         groups="website.group_website_designer">
+        <we-row string="Elements" class="o_we_full_row align-items-start">
+            <we-button title="Show/hide text element" class="d-flex justify-content-center flex-grow-1"
+                    data-img="/website/static/src/img/snippets_options/header_extra_element_text.svg"
+                    data-customize-website-views="website.header_text_element"
+                    data-reset-view-arch="true"
+                    data-reload="/"/>
+            <we-button title="Show/hide language selector" class="fa fa-flag d-flex justify-content-center flex-grow-1"
+                    data-customize-website-views="website.header_language_selector"
+                    data-reset-view-arch="true"
+                    data-reload="/"/>
+            <we-button title="Show/hide search bar" class="fa fa-search d-flex justify-content-center flex-grow-1"
+                    data-customize-website-views="website.header_search_box"
+                    data-reset-view-arch="true"
+                    data-reload="/"/>
+            <we-button title="Show/hide sign in button" class="fa fa-sign-in d-flex justify-content-center flex-grow-1"
+                    data-customize-website-views="portal.user_sign_in"
+                    data-reload="/"
+                    data-no-preview="true"/>
+        </we-row>
+        <we-row string=" " class="o_we_full_row align-items-start mt-1">
+            <we-button title="Show/hide social links" class="flex-grow-1 d-flex justify-content-center"
+                    data-img="/website/static/src/img/snippets_options/header_extra_element_social.svg"
+                    data-customize-website-views="website.header_social_links"
+                    data-reset-view-arch="true"
+                    data-reload="/"/>
+            <we-button title="Show/hide button" class="flex-grow-1 d-flex justify-content-center"
+                    data-img="/website/static/src/img/snippets_options/header_extra_element_cta.svg"
+                    data-customize-website-views="website.header_call_to_action"
+                    data-reset-view-arch="true"
+                    data-reload="/"/>
+            <we-button title="Show/hide logo" class="flex-grow-1 d-flex justify-content-center"
+                    data-img="/website/static/src/img/snippets_options/header_extra_element_logo.svg"
+                    data-customize-website-views="website.option_header_brand_logo"
+                    data-reload="/"/>
+        </we-row>
+    </div>
+
     <!-- Header > Navbar Options -->
     <div data-js="HeaderNavbar"
          data-selector="#wrapwrap > header nav.navbar"
@@ -1020,10 +1061,6 @@
                        data-customize-website-views="website.header_hoverable_dropdown">On Hover</we-button>
             <we-button data-select-class="" data-name="header_dropdown_on_click_opt">On Click</we-button>
         </we-select>
-
-        <we-checkbox string="Show Sign In" data-customize-website-views="portal.user_sign_in" data-reload="/" data-no-preview="true"/>
-        <we-checkbox string="Call to Action" data-customize-website-views="website.header_call_to_action"
-                     data-reset-view-arch="true" data-reload="/"/>
         <we-select string="Language Selector" data-reload="/">
             <we-button data-name="header_language_selector_none_opt"
                        data-customize-website-views="">None</we-button>
