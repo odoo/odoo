@@ -8163,6 +8163,31 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    QUnit.test("click on a button cell in a list view", async (assert) => {
+        serverData.models.foo.records[0].foo = "bar";
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree editable="bottom" limit="1">
+                    <field name="foo"/>
+                    <button name="action_do_something" type="object" string="Action"/>
+                </tree>`,
+        });
+
+        // Need to set the line in edition. 
+        await click(target, "td[name=foo]");
+        assert.strictEqual(window.getSelection().toString(), "bar");
+
+        await click(target.querySelector(".o_data_cell.o_list_button"));
+        assert.strictEqual(
+            window.getSelection().toString(),
+            "bar",
+            "Focus should have returned to the editable cell without throwing an error"
+        );
+    });
+
     QUnit.test("click on a button in a list view", async function (assert) {
         assert.expect(10);
 
