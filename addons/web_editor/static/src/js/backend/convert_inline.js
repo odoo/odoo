@@ -475,9 +475,11 @@ function toInline($editable, cssRules, $iframe) {
             }
         }
     }
-
-    // Fix outlook image rendering bug (this change will be kept in both
-    // fields).
+    // Fix card-img-top heights (must happen before we transform everything).
+    for (const imgTop of editable.querySelectorAll('.card-img-top')) {
+        imgTop.style.setProperty('height', _getHeight(imgTop) + 'px');
+    }
+    // Fix Outlook image rendering bug.
     for (const attributeName of ['width', 'height']) {
         const images = editable.querySelectorAll('img');
         for (const image of images) {
@@ -502,6 +504,12 @@ function toInline($editable, cssRules, $iframe) {
     const rootFontSize = parseFloat(rootFontSizeProperty.replace(/[^\d\.]/g, ''));
     normalizeRem($editable, rootFontSize);
 
+    // Fix mx-auto on images in table cells.
+    for (const centeredImage of editable.querySelectorAll('td > img.mx-auto')) {
+        if (centeredImage.parentElement.children.length === 1) {
+            centeredImage.parentElement.style.setProperty('text-align', 'center');
+        }
+    }
     // Fix img-fluid.
     for (const image of editable.querySelectorAll('img.img-fluid')) {
         // Outlook requires absolute width/height.
@@ -606,6 +614,9 @@ function fontToImg($editable) {
             wrapper.style.setProperty('display', 'inline-block');
             wrapper.append(image);
             font.before(wrapper);
+            if (font.classList.contains('mx-auto')) {
+                wrapper.parentElement.style.textAlign = 'center';
+            }
             font.remove();
             wrapper.style.setProperty('padding', padding);
             const wrapperWidth = width + ['left', 'right'].reduce((sum, side) => (
