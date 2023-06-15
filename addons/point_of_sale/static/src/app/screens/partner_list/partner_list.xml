@@ -22,9 +22,10 @@
                         <t t-else=""> Discard</t>
                     </div>
                     <div class="top-right-buttons">
-                    <div t-if="state.detailIsShown &amp;&amp; state.editModeProps.partner.id" class="button more-info">
-                        <a t-att-href="partnerLink" target="_blank"> More info</a>
+                    <div t-if="state.detailIsShown and state.editModeProps.partner.id" class="button more-info" t-on-click="goToOrders">
+                        <span> Orders</span>
                     </div>
+                    <a t-if="state.detailIsShown &amp;&amp; state.editModeProps.partner.id" class="button more-info" t-att-href="partnerLink" target="_blank"> More info</a>
                     <div class="search-bar-container sb-partner" t-if="!state.detailIsShown">
                         <div class="pos-search-bar">
                             <i class="fa fa-search" t-on-click="_onPressEnterKey"/>

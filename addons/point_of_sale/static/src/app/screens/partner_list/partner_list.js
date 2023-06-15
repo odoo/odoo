@@ -51,14 +51,31 @@ export class PartnerListScreen extends Component {
         this.partnerEditor = {}; // create an imperative handle for PartnerDetailsEdit
     }
     // Lifecycle hooks
-    back() {
-        if (this.state.detailIsShown) {
+    back(force = false) {
+        if (this.state.detailIsShown && !force) {
             this.state.detailIsShown = false;
         } else {
             this.props.resolve({ confirmed: false, payload: false });
             this.pos.closeTempScreen();
         }
     }
+
+    goToOrders() {
+        this.back(true);
+        const partner = this.state.editModeProps.partner;
+        const partnerHasActiveOrders = this.pos
+            .get_order_list()
+            .some((order) => order.partner?.id === partner.id);
+        const ui = {
+            searchDetails: {
+                fieldName: "PARTNER",
+                searchTerm: partner.name,
+            },
+            filter: partnerHasActiveOrders ? "" : "SYNCED",
+        };
+        this.pos.showScreen("TicketScreen", { ui });
+    }
+
     confirm() {
         this.props.resolve({ confirmed: true, payload: this.state.selectedPartner });
         this.pos.closeTempScreen();
