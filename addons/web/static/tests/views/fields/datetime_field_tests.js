@@ -8,10 +8,12 @@ import {
     editInput,
     getFixture,
     patchTimeZone,
+    patchWithCleanup,
     triggerEvent,
     triggerEvents,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { registerCleanup } from "../../helpers/cleanup";
 
 let serverData;
 let target;
@@ -657,5 +659,73 @@ QUnit.module("Fields", (hooks) => {
             ".bootstrap-datetimepicker-widget",
             "datepicker should be opened"
         );
+    });
+
+    QUnit.test("datetime field: use picker with arabic numbering system", async (assert) => {
+        assert.expect(2);
+
+        const symbols = [
+            ["1", "١"],
+            ["2", "٢"],
+            ["3", "٣"],
+            ["4", "٤"],
+            ["5", "٥"],
+            ["6", "٦"],
+            ["7", "٧"],
+            ["8", "٨"],
+            ["9", "٩"],
+            ["0", "٠"],
+        ];
+        const symbolMap = Object.fromEntries(symbols);
+        const numberMap = Object.fromEntries(symbols.map(([latn, arab]) => [arab, latn]));
+
+        patchWithCleanup(luxon.Settings, {
+            defaultLocale: "ar-001",
+            defaultNumberingSystem: "arab",
+        });
+
+        const originalLocale = window.moment.locale();
+        const originalARLocale = window.moment.localeData("ar");
+        window.moment.defineLocale("ar", {
+            preparse: (string) =>
+                string
+                    .replace(/\u200f/g, "")
+                    .replace(/[١٢٣٤٥٦٧٨٩٠]/g, (match) => numberMap[match])
+                    .replace(/،/g, ","),
+            postformat: (string) =>
+                string.replace(/\d/g, (match) => symbolMap[match]).replace(/,/g, "،"),
+        });
+        registerCleanup(() => {
+            window.moment.locale(originalLocale);
+            window.moment.updateLocale("ar", originalARLocale);
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: /* xml */ `
+                <form string="Partners">
+                    <field name="datetime" />
+                </form>
+            `,
+        });
+
+        const getInput = () => target.querySelector("[name=datetime] input");
+
+        assert.strictEqual(getInput().value, "٠٢/٠٨/٢٠١٧ ١١:٠٠:٠٠");
+
+        await click(getInput());
+
+        await click(document.body, "[data-action=togglePicker]");
+
+        await click(document.body, "[data-action=showMinutes]");
+        await click(document.body.querySelectorAll("[data-action=selectMinute]")[9]);
+
+        await click(document.body, "[data-action=showSeconds]");
+        await click(document.body.querySelectorAll("[data-action=selectSecond]")[3]);
+
+        assert.strictEqual(getInput().value, "٠٢/٠٨/٢٠١٧ ١١:٤٥:١٥");
     });
 });
