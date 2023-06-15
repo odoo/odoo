@@ -107,7 +107,27 @@ function bootstrapToTable($editable) {
     const editable = $editable.get(0);
     // First give all rows in columns a separate container parent.
     for (const rowInColumn of [...editable.querySelectorAll('.row')].filter(row => RE_COL_MATCH.test(row.parentElement.className))) {
-        _wrap(rowInColumn, 'div', 'o_fake_table');
+        const parentColumn = rowInColumn.parentElement;
+        const previous = rowInColumn.previousElementSibling;
+        if (previous && previous.classList.contains('o_fake_table')) {
+            // If a container was already created there, append to it.
+            previous.append(rowInColumn);
+        } else {
+            _wrap(rowInColumn, 'div', 'o_fake_table');
+        }
+        // Bootstrap rows have negative left and right margins, which are not
+        // supported by GMail and Outlook. Add up the padding of the column with
+        // the negative margin of the row to get the correct padding.
+        const rowStyle = getComputedStyle(rowInColumn);
+        const columnStyle = getComputedStyle(parentColumn);
+        for (const side of ['left', 'right']) {
+            const negativeMargin = +rowStyle[`margin-${side}`].replace('px', '');
+            const columnPadding = +columnStyle[`padding-${side}`].replace('px', '');
+            if (negativeMargin < 0 && columnPadding >= Math.abs(negativeMargin)) {
+                parentColumn.style[`padding-${side}`] = `${columnPadding + negativeMargin}px`;
+                rowInColumn.style[`margin-${side}`] = 0;
+            }
+        }
     }
 
     // These containers from the mass mailing masonry snippet require full
