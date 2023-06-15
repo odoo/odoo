@@ -21,6 +21,7 @@ export class TaskViewButton extends ViewButton {
                 [record.resId],
             );
             this.actionService.doAction(action);
+            return super.onClick(ev)
         } else {
             this.props.record.openInvalidFieldsNotification();
             this.props.record.model.root.openInvalidFieldsNotification();

@@ -1563,7 +1563,7 @@ class Task(models.Model):
             )
         }
         for task in self:
-            task.subtask_count, task.closed_subtask_count = total_and_closed_subtask_count_per_parent_id.get(task.id, (0, 0))
+            task.subtask_count, task.closed_subtask_count = total_and_closed_subtask_count_per_parent_id.get(task._origin.id, (0, 0))
 
     @api.onchange('company_id')
     def _onchange_task_company(self):
