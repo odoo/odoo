@@ -157,8 +157,10 @@ export class SettingsFormCompiler extends FormCompiler {
 
     createLabelFromField(fieldId, fieldName, fieldString, label, params) {
         const res = super.createLabelFromField(fieldId, fieldName, fieldString, label, params);
-        if (res.hasAttribute("string") && params.labels) {
-            params.labels.push(res.getAttribute("string"));
+        if (params.labels && !label.hasAttribute("data-no-label")) {
+            let labelText = label.textContent || fieldString;
+            labelText = labelText ? labelText : params.record.fields[fieldName].string;
+            params.labels.push(labelText);
         }
         return res;
     }
