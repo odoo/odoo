@@ -8,7 +8,6 @@ import pytz
 from dateutil.parser import parse
 
 from odoo import api, fields, models, registry
-from odoo.tools import ormcache_context
 from odoo.exceptions import UserError
 from odoo.osv import expression
 
@@ -76,10 +75,7 @@ class MicrosoftSync(models.AbstractModel):
     active = fields.Boolean(default=True)
 
     def write(self, vals):
-        if 'ms_universal_event_id' in vals:
-            self._from_uids.clear_cache(self)
-
-        fields_to_sync = [x for x in vals.keys() if x in self._get_microsoft_synced_fields()]
+        fields_to_sync = [x for x in vals if x in self._get_microsoft_synced_fields()]
         if fields_to_sync and 'need_sync_m' not in vals and not self.env.user.microsoft_synchronization_stopped:
             vals['need_sync_m'] = True
 
@@ -173,13 +169,6 @@ class MicrosoftSync(models.AbstractModel):
     @api.model
     def _create_from_microsoft(self, microsoft_event, vals_list):
         return self.create(vals_list)
-
-    @api.model
-    @ormcache_context('uids', keys=('active_test',))
-    def _from_uids(self, uids):
-        if not uids:
-            return self.browse()
-        return self.search([('ms_universal_event_id', 'in', uids)])
 
     def _sync_odoo2microsoft(self):
         if not self:
