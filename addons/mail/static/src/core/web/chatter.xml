@@ -92,8 +92,13 @@
                 </button>
             </div>
             <t t-if="state.thread.composer.type">
-                <t t-if="state.thread.composer.type === 'message'">
-                    <div class="flex-shrink-0 px-3 pt-3 text-truncate small" style="margin-left:48px" t-out="toFollowersText"/>
+                <t t-if="state.thread.composer.type === 'message' and state.thread.followers.length > 0">
+                    <div class="flex-shrink-0 px-3 pt-3 text-truncate small mb-2" style="margin-left:48px">
+                        <span class="fw-bold">To:</span> <t t-out="toRecipientsText"/>
+                        <button class="o-mail-Chatter-recipientListButton btn btn-link badge rounded-pill border-0 p-1 ms-1" title="Show all recipients" t-on-click="onClickRecipientList">
+                            <i class="fa fa-caret-down"/>
+                        </button>
+                    </div>
                 </t>
                 <t t-if="state.thread.composer.type === 'message'" t-set="placeholder">Send a message to followers...</t>
                 <t t-else="" t-set="placeholder">Log an internal note...</t>

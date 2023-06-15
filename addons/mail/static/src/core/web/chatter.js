@@ -27,10 +27,12 @@ import {
 
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { _t } from "@web/core/l10n/translation";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { escape, sprintf } from "@web/core/utils/strings";
+import { escape } from "@web/core/utils/strings";
 import { useThrottleForAnimation } from "@web/core/utils/timing";
 import { FileUploader } from "@web/views/fields/file_handler";
+import { RecipientList } from "./recipient_list";
 
 /**
  * @typedef {Object} Props
@@ -105,6 +107,7 @@ export class Chatter extends Component {
         this.scrollPosition = useScrollPosition("root", undefined, "top");
         this.rootRef = useRef("root");
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
+        this.recipientsPopover = usePopover(RecipientList);
         useChildSubEnv({ inChatter: true });
         useDropzone(
             this.rootRef,
@@ -197,19 +200,23 @@ export class Chatter extends Component {
     /**
      * @returns {string}
      */
-    get toFollowersText() {
-        const threadName = this.state.thread.displayName || this.state.thread.name;
-        const toFollowersText = threadName
-            ? sprintf(
-                  _t(
-                      '<span class="fw-bold">To:</span> <span class="fst-italic">Followers of</span> <span class="fw-bold">"%(thread name)s"</span>.'
-                  ),
-                  { "thread name": escape(threadName) }
-              )
-            : _t(
-                  '<span class="fw-bold">To:</span> <span class="fst-italic">Followers of</span> this document.'
-              );
-        return markup(toFollowersText);
+    get toRecipientsText() {
+        const followers = this.state.thread.followers.slice(0, 5).map(({ partner }) => {
+            if (partner === this.store.self) {
+                return `<span class="text-muted" title="${escape(partner.email)}">me</span>`;
+            }
+            return `<span class="text-muted" title="${escape(partner.email)}">${escape(
+                partner.emailWithoutDomain
+            )}</span>`;
+        });
+        const formatter = new Intl.ListFormat(
+            this.store.env.services["user"].lang?.replace("_", "-"),
+            { type: "unit" }
+        );
+        if (this.state.thread.followers.length > 5) {
+            followers.push("…");
+        }
+        return markup(formatter.format(followers));
     }
 
     /**
@@ -408,5 +415,12 @@ export class Chatter extends Component {
 
     onScroll() {
         this.state.isTopStickyPinned = this.rootRef.el.scrollTop !== 0;
+    }
+
+    onClickRecipientList(ev) {
+        if (this.recipientsPopover.isOpen) {
+            return this.recipientsPopover.close();
+        }
+        this.recipientsPopover.open(ev.target, { thread: this.state.thread });
     }
 }

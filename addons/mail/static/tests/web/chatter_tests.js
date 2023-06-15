@@ -40,14 +40,6 @@ QUnit.test("simple chatter on a record", async (assert) => {
     ]);
 });
 
-QUnit.test("displayname is used when sending a message", async (assert) => {
-    const { openFormView, pyEnv } = await start();
-    const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
-    await openFormView("res.partner", partnerId);
-    await click("button:contains(Send message)");
-    assert.containsOnce($, '.o-mail-Chatter:contains(To: Followers of "John Doe")');
-});
-
 QUnit.test("can post a message on a record thread", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
