@@ -3,15 +3,19 @@
 /**
  * Shallow compares two objects.
  *
- * @param {Record<string, any>} obj1
- * @param {Record<string, any>} obj2
- * @returns {boolean}
+ * @template {unknown} T
+ * @param {T} obj1
+ * @param {T} obj2
+ * @param {(a: T[keyof T], b: T[keyof T]) => boolean} [comparisonFn]
  */
-export function shallowEqual(obj1, obj2) {
+export function shallowEqual(obj1, obj2, comparisonFn = (a, b) => a === b) {
+    if (!obj1 || !obj2 || typeof obj1 !== "object" || typeof obj2 !== "object") {
+        return obj1 === obj2;
+    }
     const obj1Keys = Object.keys(obj1);
     return (
         obj1Keys.length === Object.keys(obj2).length &&
-        obj1Keys.every((key) => obj1[key] === obj2[key])
+        obj1Keys.every((key) => comparisonFn(obj1[key], obj2[key]))
     );
 }
 
