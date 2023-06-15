@@ -252,43 +252,6 @@ class AccountMove(models.Model):
 
         return res
 
-    def _update_payments_edi_documents(self):
-        ''' Update the edi documents linked to the current journal entries. These journal entries must be linked to an
-        account.payment of an account.bank.statement.line. This additional method is needed because the payment flow is
-        not the same as the invoice one. Indeed, the edi documents must be updated when the reconciliation with some
-        invoices is changing.
-        '''
-        edi_document_vals_list = []
-        for payment in self:
-            edi_formats = payment._get_reconciled_invoices().journal_id.edi_format_ids + payment.edi_document_ids.edi_format_id
-            edi_formats = self.env['account.edi.format'].browse(edi_formats.ids) # Avoid duplicates
-            for edi_format in edi_formats:
-                existing_edi_document = payment.edi_document_ids.filtered(lambda x: x.edi_format_id == edi_format)
-                move_applicability = edi_format._get_move_applicability(payment)
-
-                if move_applicability:
-                    if existing_edi_document:
-                        existing_edi_document.write({
-                            'state': 'to_send',
-                            'error': False,
-                            'blocking_level': False,
-                        })
-                    else:
-                        edi_document_vals_list.append({
-                            'edi_format_id': edi_format.id,
-                            'move_id': payment.id,
-                            'state': 'to_send',
-                        })
-                elif existing_edi_document:
-                    existing_edi_document.write({
-                        'state': False,
-                        'error': False,
-                        'blocking_level': False,
-                    })
-
-        self.env['account.edi.document'].create(edi_document_vals_list)
-        self.edi_document_ids._process_documents_no_web_services()
-
     def _is_ready_to_be_sent(self):
         # OVERRIDE
         # Prevent a mail to be sent to the customer if the EDI document is not sent.
@@ -501,56 +464,4 @@ class AccountMoveLine(models.Model):
             'gross_price_total_unit': self.currency_id.round(gross_price_subtotal / self.quantity) if self.quantity else 0.0,
             'unece_uom_code': self.product_id.product_tmpl_id.uom_id._get_unece_code(),
         }
-        return res
-
-    def _reconcile_pre_hook(self):
-        # EXTENDS 'account'
-        # In some countries, the payments must be sent to the government under some condition. One of them could be
-        # there is at least one reconciled invoice to the payment. Then, we need to update the state of the edi
-        # documents during the reconciliation.
-        results = super()._reconcile_pre_hook()
-        all_lines = self + self.matched_debit_ids.debit_move_id + self.matched_credit_ids.credit_move_id
-        results['edi_payments'] = all_lines.move_id\
-            .filtered(lambda move: move.payment_id or move.statement_line_id)
-        results['edi_invoices_per_payment_before'] = {
-            pay: pay._get_reconciled_invoices()
-            for pay in results['edi_payments']
-        }
-        return results
-
-    def _reconcile_post_hook(self, data):
-        # EXTENDS 'account'
-        super()._reconcile_post_hook(data)
-        payments = data['edi_payments']
-        invoices_per_payment_before = data['edi_invoices_per_payment_before']
-        invoices_per_payment_after = {pay: pay._get_reconciled_invoices() for pay in payments}
-
-        changed_payments = self.env['account.move']
-        for payment, invoices_after in invoices_per_payment_after.items():
-            invoices_before = invoices_per_payment_before[payment]
-
-            if set(invoices_after.ids) != set(invoices_before.ids):
-                changed_payments |= payment
-        changed_payments._update_payments_edi_documents()
-
-    def remove_move_reconcile(self):
-        # OVERRIDE
-        # When a payment has been sent to the government, it usually contains some information about reconciled
-        # invoices. If the user breaks a reconciliation, the related payments must be cancelled properly and then, a new
-        # electronic document must be generated.
-        all_lines = self + self.matched_debit_ids.debit_move_id + self.matched_credit_ids.credit_move_id
-        payments = all_lines.move_id.filtered(lambda move: move.payment_id or move.statement_line_id)
-
-        invoices_per_payment_before = {pay: pay._get_reconciled_invoices() for pay in payments}
-        res = super().remove_move_reconcile()
-        invoices_per_payment_after = {pay: pay._get_reconciled_invoices() for pay in payments}
-
-        changed_payments = self.env['account.move']
-        for payment, invoices_after in invoices_per_payment_after.items():
-            invoices_before = invoices_per_payment_before[payment]
-
-            if set(invoices_after.ids) != set(invoices_before.ids):
-                changed_payments |= payment
-        changed_payments._update_payments_edi_documents()
-
         return res

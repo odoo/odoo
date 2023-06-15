@@ -14,17 +14,10 @@ def _generate_mocked_needs_web_services(needs_web_services):
 
 
 def _mocked_get_move_applicability(edi_format, move):
-    if move.is_invoice():
-        return {
-            'post': edi_format._post_invoice_edi,
-            'cancel': edi_format._cancel_invoice_edi,
-        }
-    elif move.payment_id or move.statement_line_id:
-        return {
-            'post': edi_format._post_payment_edi,
-            'cancel': edi_format._cancel_invoice_edi,
-        }
-
+    return {
+        'post': edi_format._post_invoice_edi,
+        'cancel': edi_format._cancel_invoice_edi,
+    }
 
 def _mocked_check_move_configuration_success(edi_format, move):
     return []

@@ -17,7 +17,6 @@ governements, etc.)
         'security/ir.model.access.csv',
         'views/account_edi_document_views.xml',
         'views/account_move_views.xml',
-        'views/account_payment_views.xml',
         'views/account_journal_views.xml',
         'data/cron.xml'
     ],
