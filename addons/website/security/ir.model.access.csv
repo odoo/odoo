@@ -1,16 +1,21 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_website_public,website.public,website.model_website,,1,0,0,0
+access_website_public_public,website.public,website.model_website,base.group_public,1,0,0,0
+access_website_public_portal,website.public,website.model_website,base.group_portal,1,0,0,0
+access_website_public_employee,website.public,website.model_website,base.group_user,1,0,0,0
 access_website_designer,website.website.designer,website.model_website,group_website_designer,1,1,1,1
-access_website_menu,access_website_menu,model_website_menu,,1,0,0,0
+access_website_menu_public,access_website_menu,model_website_menu,base.group_public,1,0,0,0
+access_website_menu_portal,access_website_menu,model_website_menu,base.group_portal,1,0,0,0
+access_website_menu_employee,access_website_menu,model_website_menu,base.group_user,1,0,0,0
 access_website_menu_designer,Web Menu Manager,model_website_menu,group_website_designer,1,1,1,1
 access_website_rewrite,access_website_rewrite,model_website_rewrite,,0,0,0,0
 access_website_rewrite_designer,Web Rewrite Manager,model_website_rewrite,group_website_designer,1,1,1,1
-access_website_page,access_website_page,model_website_page,,0,0,0,0
 access_website_page_designer,Web Page Manager,model_website_page,group_website_designer,1,1,1,1
 access_website_ir_ui_view_restricted_editor,access_website_ir_ui_view_restricted_editor,model_ir_ui_view,group_website_restricted_editor,1,0,0,0
 access_website_ir_ui_view_designer,access_website_ir_ui_view_designer,model_ir_ui_view,group_website_designer,1,1,1,1
 access_website_ir_asset_designer,access_website_ir_asset_designer,model_ir_asset,group_website_designer,1,1,1,1
-access_seo_public,access_seo_public,model_website_seo_metadata,,1,0,0,0
+access_seo_public_public,access_seo_public,model_website_seo_metadata,base.group_public,1,0,0,0
+access_seo_public_portal,access_seo_public,model_website_seo_metadata,base.group_portal,1,0,0,0
+access_seo_public_employee,access_seo_public,model_website_seo_metadata,base.group_user,1,0,0,0
 access_seo_designer,access_seo_designer,model_website_seo_metadata,group_website_designer,1,1,1,1
 access_website_visitor_designer,access_website_visitor_designer,model_website_visitor,website.group_website_designer,1,1,0,1
 access_website_visitor_system,access_website_visitor_system,model_website_visitor,base.group_system,1,1,0,1
