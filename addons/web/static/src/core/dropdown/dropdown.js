@@ -120,12 +120,11 @@ export class Dropdown extends Component {
             },
         },
 
-        /* To be used with useChildRef */
-        menuRef: { type: Function, optional: true },
-
+        enabled: { type: Boolean, optional: true },
         onOpened: { type: Function, optional: true },
         beforeOpen: { type: Function, optional: true },
         options: { type: Object, optional: true },
+        menuRef: { type: Function, optional: true }, // To be used with useChildRef
 
         // Manual State Handling
         state: {
@@ -145,6 +144,7 @@ export class Dropdown extends Component {
             navigation: {},
             popover: {},
         },
+        enabled: true,
         state: undefined,
     };
 

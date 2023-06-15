@@ -983,10 +983,7 @@ export function getDropdownMenu(target, togglerSelector) {
     if (!(target instanceof HTMLElement)) {
         throw new Error(`getDropdownMenu: target is not an HTMLElement.`);
     }
-    const el =
-        togglerSelector instanceof HTMLElement
-            ? togglerSelector
-            : target.querySelector(togglerSelector);
+    const el = target.querySelector(togglerSelector);
     if (!el) {
         throw new Error(`getDropdownMenu: Could not find element "${togglerSelector}".`);
     }
