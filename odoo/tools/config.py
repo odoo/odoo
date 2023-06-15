@@ -259,6 +259,8 @@ class configmanager(object):
                          help="specify the database ssl connection mode (see PostgreSQL documentation)")
         group.add_option("--db_maxconn", dest="db_maxconn", type='int', my_default=64,
                          help="specify the maximum number of physical connections to PostgreSQL")
+        group.add_option("--db_maxconn_gevent", dest="db_maxconn_gevent", type='int', my_default=False,
+                         help="specify the maximum number of physical connections to PostgreSQL specifically for the gevent worker")
         group.add_option("--db-template", dest="db_template", my_default="template0",
                          help="specify a custom database template to create a new database")
         parser.add_option_group(group)
@@ -448,7 +450,7 @@ class configmanager(object):
                 'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password', 'from_filter',
                 'smtp_ssl_certificate_filename', 'smtp_ssl_private_key_filename',
-                'db_maxconn', 'import_partial', 'addons_path', 'upgrade_path',
+                'db_maxconn', 'db_maxconn_gevent', 'import_partial', 'addons_path', 'upgrade_path',
                 'syslog', 'without_demo', 'screencasts', 'screenshots',
                 'dbfilter', 'log_level', 'log_db',
                 'log_db_level', 'geoip_city_db', 'geoip_country_db', 'dev_mode',
