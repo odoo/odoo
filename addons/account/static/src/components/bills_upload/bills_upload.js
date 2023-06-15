@@ -80,7 +80,7 @@ export const accountFileUploader = {
     extractProps: ({ attrs }) => ({
         togglerTemplate: attrs.template || "account.JournalUploadLink",
         btnClass: attrs.btnClass || "",
-        linkText: attrs.linkText || _lt("Upload"),
+        linkText: attrs.linkText || attrs.title || _lt("Upload"), //TODO: remove linkText attr in master (not translatable)
     }),
     fieldDependencies: [
         { name: "id", type: "integer" },
