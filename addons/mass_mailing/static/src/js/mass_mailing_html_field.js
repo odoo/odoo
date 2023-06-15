@@ -136,6 +136,7 @@ export class MassMailingHtmlField extends HtmlField {
             const inlineHtml = editableClone.innerHTML;
             $editorEnable.addClass('editor_enable');
             this.wysiwyg.odooEditor.historyUnpauseSteps();
+            this.wysiwyg.odooEditor.historyStep();
             this.wysiwyg.odooEditor.historyRevertCurrentStep();
 
             const fieldName = this.props.inlineField;
