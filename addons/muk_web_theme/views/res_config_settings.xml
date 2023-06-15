@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+
+    Copyright (c) 2017-today MuK IT GmbH.
+
+    This file is part of MuK Backend Theme
+    (see https://mukit.at).
+
+    MuK Proprietary License v1.0
+
+    This software and associated files (the "Software") may only be used
+    (executed, modified, executed after modifications) if you have
+    purchased a valid license from MuK IT GmbH.
+
+    The above permissions are granted for a single database per purchased
+    license. Furthermore, with a valid license it is permitted to use the
+    software on other databases as long as the usage is limited to a testing
+    or development environment.
+
+    You may develop modules based on the Software or that use the Software
+    as a library (typically by depending on it, importing it and using its
+    resources), but without copying any source code or material from the
+    Software. You may distribute those modules under the license of your
+    choice, provided that this license is compatible with the terms of the
+    MuK Proprietary License (For example: LGPL, MIT, or proprietary licenses
+    similar to this one).
+
+    It is forbidden to publish, distribute, sublicense, or sell copies of
+    the Software or modified copies of the Software.
+
+    The above copyright notice and this permission notice must be included
+    in all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+    OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+    THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+    DEALINGS IN THE SOFTWARE.
+
+-->
+
+<odoo>
+
+	<record id="res_config_settings_view_form" model="ir.ui.view">
+	    <field name="name">res.config.settings.view.form</field>
+	    <field name="model">res.config.settings</field>
+	    <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+	    <field name="arch" type="xml">
+	        <div id="companies" position="after">
+	            <h2 id="web_theme_title">Backend Theme</h2>
+	            <div class="row mt16 o_settings_container" name="web_theme">
+	                <div class="col-12 col-lg-6 o_setting_box">
+	                    <div class="o_setting_right_pane">
+	                        <span class="o_form_label">Theme Colors</span>
+                            <div class="text-muted">
+                                Set the main theme colors
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16 row">
+                                	<label for="theme_color_brand" string="Brand" class="col-3 o_light_label"/>
+                            		<field name="theme_color_brand" class="d-block w-25 p-0 m-0" widget="color"/>
+                                    <div class="w-100 mt-1"></div>
+                                	<label for="theme_color_primary" string="Primary" class="col-3 o_light_label"/>
+                            		<field name="theme_color_primary" class="d-block w-25 p-0 m-0" widget="color"/>
+                                </div>
+                                <button 
+	                                name="action_reset_theme_assets" 
+	                                icon="fa-arrow-right" 
+	                                type="object" 
+	                                string="Reset Colors" 
+	                                class="btn-link"
+                                />
+                            </div>
+	                    </div>
+	                </div>
+	                <div class="col-12 col-lg-6 o_setting_box">
+	                    <div class="o_setting_right_pane">
+	                        <span class="o_form_label">Menu Colors</span>
+                            <div class="text-muted">
+                                Set the main menu colors
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16 row">
+                                	<label for="theme_color_appbar_color" string="Menu Color" class="col-3 o_light_label"/>
+                            		<field name="theme_color_appbar_color" class="d-block w-25 p-0 m-0" widget="color"/>
+                                    <div class="w-100 mt-1"></div>
+                                	<label for="theme_color_appbar_background" string="Background" class="col-3 o_light_label"/>
+                            		<field name="theme_color_appbar_background" class="d-block w-25 p-0 m-0" widget="color"/>
+                                    <div class="w-100 mt-1"></div>
+                                	<label for="theme_color_menu" string="Apps Color" class="col-3 o_light_label"/>
+                            		<field name="theme_color_menu" class="d-block w-25 p-0 m-0" widget="color"/>
+                                </div>
+                            </div>
+	                    </div>
+	                </div>
+	                <div class="col-12 col-lg-6 o_setting_box">
+	                    <div class="o_setting_right_pane">
+	                        <span class="o_form_label">Background Image</span>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                            <div class="text-muted">
+                                Set the background image for the apps menu
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16 row">
+                                    <field name="theme_background_image" widget="image" class="ml-4 w-75"/>
+                                </div>
+                            </div>
+	                    </div>
+	                </div>
+	                <div class="col-12 col-lg-6 o_setting_box">
+	                    <div class="o_setting_right_pane">
+	                        <span class="o_form_label">Favicon</span>
+                            <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." aria-label="Values set here are company-specific." groups="base.group_multi_company" role="img"/>
+                            <div class="text-muted">
+                                Set the favicon for the system
+                            </div>
+                            <div class="content-group">
+                                <div class="mt16 row">
+                                    <field name="theme_favicon" widget="image" class="ml-4 oe_avatar"/>
+                                </div>
+                            </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </field>
+	</record>
+	
+</odoo>
