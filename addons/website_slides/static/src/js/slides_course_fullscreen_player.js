@@ -803,6 +803,8 @@
             var proms = [this._super.apply(this, arguments)];
             var fullscreen = new Fullscreen(this, this._getSlides(), this._getCurrentSlideID(), this._extractChannelData());
             proms.push(fullscreen.attachTo(".o_wslides_fs_main"));
+            // To prevent double scrollbar due to footer overflow
+            document.querySelector('.o_footer')?.classList.add('d-none');
             return proms;
         },
         _extractChannelData: function (){

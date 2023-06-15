@@ -157,15 +157,23 @@
                     <div t-att-class="'o_wslides_lesson_aside_list_link d-flex p-1 %s%s' % (('bg-100 active' if aside_slide == slide else ''), 'text-muted' if not can_access else '')"
                         t-att-data-id="slide.id"
                         t-att-data-completed="slide_completed">
+                        <t t-set="slide_icon" t-if="aside_slide.slide_type == 'pdf'" t-value="'fa-file-pdf-o'"/>
+                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'sheet'" t-value="'fa-file-excel-o'"/>
+                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'doc'" t-value="'fa-file-word-o'"/>
+                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'slides'" t-value="'fa-file-powerpoint-o'"/>
+                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'image'" t-value="'fa-file-picture-o'"/>
+                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'youtube_video'" t-value="'fa-youtube-play'"/>
+                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'google_drive_video'" t-value="'fa-play-circle-o'"/>
+                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'vimeo_video'" t-value="'fa-vimeo'"/>
+                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'article'" t-value="'fa-file-text-o'"/>
+                        <t t-set="slide_icon" t-elif="aside_slide.slide_type == 'quiz'" t-value="'fa-question-circle-o'"/>
+                        <t t-set="slide_icon" t-else="" t-value="'fa-file-o'"/>
                         <t t-call="website_slides.slide_sidebar_done_button">
                             <t t-set="slide" t-value="aside_slide"/>
                             <t t-set="slide_completed" t-value="channel_progress[aside_slide.id].get('completed')"/>
                         </t>
                         <a t-att-href="'/slides/slide/%s' % (slug(aside_slide)) if can_access else '#'"
-                            t-attf-class="d-flex text-decoration-none mw-100 overflow-hidden ms-2 #{'text-muted' if not can_access else ''}">
-                            <t t-call="website_slides.slide_icon">
-                                <t t-set="slide" t-value="aside_slide"/>
-                            </t>
+                            t-attf-class="d-flex text-decoration-none mw-100 overflow-hidden #{'text-muted' if not can_access else ''}">
                             <div class="o_wslides_lesson_link_name" t-att-title="aside_slide.name">
                                 <span t-esc="aside_slide.name"/>
                                 <span class="align-items-end" t-if="aside_slide.question_ids">
@@ -176,33 +184,33 @@
                             </div>
                         </a>
                     </div>
-                    <ul t-if="aside_slide._has_additional_resources() or aside_slide.question_ids" class="list-group ps-5 mb-1 list-unstyled">
+                    <ul t-if="aside_slide._has_additional_resources() or aside_slide.question_ids" class="o_wslides_lesson_aside_list_links list-group mb-1 list-unstyled fw-light">
                         <t t-if="can_access_channel">
                             <t t-foreach="aside_slide.slide_resource_ids" t-as="resource" t-if="resource.resource_type == 'url'">
-                                <li class="ps-4">
+                                <li class="ps-3">
                                     <a t-if="can_access" t-att-href="resource.link" target="new" class="text-decoration-none small">
-                                        <i class="fa fa-link me-1"/><span t-field="resource.name"/>
+                                        <i class="fa fa-link"/><span t-field="resource.name"/>
                                     </a>
                                 </li>
                             </t>
-                            <div class="o_wslides_js_course_join ps-4" t-if="aside_slide._has_additional_resources()">
+                            <div class="o_wslides_js_course_join ps-3" t-if="aside_slide._has_additional_resources()">
                                 <li t-foreach="aside_slide.slide_resource_ids" t-as="resource" t-if="resource.resource_type == 'file'">
                                     <a t-att-href="resource.download_url" class="text-decoration-none small">
-                                        <i class="fa fa-download me-1"/><span t-field="resource.name"/>
+                                        <i class="fa fa-download"/><span t-field="resource.name"/>
                                     </a>
                                 </li>
                             </div>
                         </t>
-                        <div t-else="" class="o_wslides_js_course_join o_wslides_no_access">
+                        <div t-else="" class="o_wslides_js_course_join o_wslides_no_access ps-3">
                             <li t-if="aside_slide.channel_id.enroll == 'public' or (aside_slide.channel_id.enroll == 'invite' and aside_slide.channel_id.is_member_invited)"
                                 class="text-decoration-none small">
-                                <i class="fa fa-download me-1"/>
+                                <i class="fa fa-download"/>
                                 <t t-call="website_slides.join_course_link">
                                     <t t-set="for_resources" t-value="1"/>
                                 </t>
                             </li>
                         </div>
-                        <li t-if="aside_slide.question_ids and aside_slide.slide_category != 'quiz'" class="ps-4">
+                        <li t-if="aside_slide.question_ids and aside_slide.slide_category != 'quiz'" class="ps-3">
                             <a t-if="can_access" t-att-href="'/slides/slide/%s#lessonQuiz' % (slug(aside_slide))"
                                 class="o_wslides_lesson_aside_list_link text-decoration-none small text-600">
                                 <i class="fa fa-flag text-warning"/> Quiz
