@@ -250,7 +250,7 @@ class SaleOrderLine(models.Model):
         allocated_hours = 0.0
         for line in self.order_id.order_line:
             product_type = line.product_id.service_tracking
-            if line.is_service and (product_type == 'task_in_project' or product_type == 'project_only'):
+            if line.is_service and (product_type == 'task_in_project' or product_type == 'project_only') and line.product_id.project_template_id == self.product_id.project_template_id:
                 if uom_per_id.get(line.product_uom.id) or line.product_uom.id == uom_unit.id:
                     allocated_hours += line.product_uom_qty * uom_per_id.get(line.product_uom.id, project_uom).factor_inv * uom_hour.factor
 

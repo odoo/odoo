@@ -34,3 +34,6 @@ class TestUi(odoo.tests.HttpCase):
                 .write({'l10n_latam_use_documents': False})
 
         self.start_tour("/web", 'account_tour', login="admin")
+
+    def test_01_account_tax_groups_tour(self):
+        self.start_tour("/web", 'account_tax_group', login="admin")
