@@ -413,6 +413,7 @@ export function compileTourToMacro(tour, options) {
                     action() {
                         tourState.clear(tour.name);
                         onTourEnd(tour);
+                        clearTimeout(tourTimeout);
                     },
                 },
             ]),
