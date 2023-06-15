@@ -150,6 +150,7 @@ class Registry(Mapping):
         # must be reloaded.
         # The `base_cache_signaling sequence` indicates all caches must be
         # invalidated (i.e. cleared).
+        print('init registry_sequenc')
         self.registry_sequence = None
         self.cache_sequence = None
 
@@ -739,6 +740,8 @@ class Registry(Mapping):
             if not cr.fetchall():
                 cr.execute("CREATE SEQUENCE base_registry_signaling INCREMENT BY 1 START WITH 1")
                 cr.execute("SELECT nextval('base_registry_signaling')")
+            cr.execute("SELECT sequence_name FROM information_schema.sequences WHERE sequence_name='base_cache_signaling'")
+            if not cr.fetchall():
                 cr.execute("CREATE SEQUENCE base_cache_signaling INCREMENT BY 1 START WITH 1")
                 cr.execute("SELECT nextval('base_cache_signaling')")
 
@@ -746,6 +749,11 @@ class Registry(Mapping):
                                   base_cache_signaling.last_value
                            FROM base_registry_signaling, base_cache_signaling""")
             self.registry_sequence, self.cache_sequence = cr.fetchone()
+
+            print('fetchone setup_signaling registry_sequenc', self.registry_sequence)
+            import traceback
+            traceback.print_stack()
+            
             _logger.debug("Multiprocess load registry signaling: [Registry: %s] [Cache: %s]",
                           self.registry_sequence, self.cache_sequence)
 
@@ -779,6 +787,8 @@ class Registry(Mapping):
             self.registry_sequence = r
             self.cache_sequence = c
 
+
+            print('check_signaling registry_sequenc', r)
         return self
 
     def signal_changes(self):
@@ -797,6 +807,7 @@ class Registry(Mapping):
             with closing(self.cursor()) as cr:
                 cr.execute("select nextval('base_registry_signaling')")
                 self.registry_sequence = cr.fetchone()[0]
+                print('fetchone 2signal_change registry_sequenc', self.registry_sequence)
 
         # no need to notify cache invalidation in case of registry invalidation,
         # because reloading the registry implies starting with an empty cache
