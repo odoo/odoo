@@ -24,6 +24,7 @@ const wysiwygUtils = require('@web_editor/js/common/wysiwyg_utils');
 const weUtils = require('web_editor.utils');
 const { PeerToPeer } = require('@web_editor/js/wysiwyg/PeerToPeer');
 const { Mutex } = require('web.concurrency');
+const snippetsOptions = require('web_editor.snippets.options');
 
 var _t = core._t;
 const QWeb = core.qweb;
@@ -740,6 +741,7 @@ const Wysiwyg = Widget.extend({
         for (const timeout of this.tooltipTimeouts) {
             clearTimeout(timeout);
         }
+        snippetsOptions.clearM2oRpcCache();
         this._super();
     },
     /**
@@ -2530,7 +2532,7 @@ const Wysiwyg = Widget.extend({
         }
     },
     _getInitialHistoryId: function (value) {
-        const matchId = value.match(/data-last-history-steps="([0-9,]+)"/);
+        const matchId = value.match(/data-last-history-steps="(?:[0-9]+,)*([0-9]+)"/);
         return matchId && matchId[1];
     },
     /**
@@ -2584,10 +2586,10 @@ const Wysiwyg = Widget.extend({
             this.odooEditor.historyReset();
             return;
         }
-        this.odooEditor.collaborationSetClientId(this._currentClientId);
         this.setValue(value);
-        this.odooEditor.historyReset();
         this.setupCollaboration(collaborationChannel);
+        this.odooEditor.collaborationSetClientId(this._currentClientId);
+        this.odooEditor.historyReset();
         // Wait until editor is focused to join the peer to peer network.
         this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
         const initialHistoryId = value && this._getInitialHistoryId(value);

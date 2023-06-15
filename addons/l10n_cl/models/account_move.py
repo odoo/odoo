@@ -44,8 +44,9 @@ class AccountMove(models.Model):
             domain += [('code', 'in', ['70', '71', '56', '61'])]
         elif self.partner_id.l10n_cl_sii_taxpayer_type == '3':
             domain += [('code', 'in', ['35', '38', '39', '41', '56', '61'])]
-        elif not self.partner_id.l10n_cl_sii_taxpayer_type or self.partner_id.country_id != self.env.ref(
-                'base.cl') or self.partner_id.l10n_cl_sii_taxpayer_type == '4':
+        elif self.partner_id.country_id.code != 'CL' or self.partner_id.l10n_cl_sii_taxpayer_type == '4':
+            domain += [('code', '=', '46')]
+        else:
             domain += [('code', 'in', [])]
         return domain
 
@@ -86,7 +87,7 @@ class AccountMove(models.Model):
                     if latam_document_type_code in ['110', '111', '112']:
                         raise ValidationError(_('The tax payer type of this supplier is not entitled to deliver '
                                                 'imports documents'))
-                if tax_payer_type == '4' or country_id.code != "CL":
+                if (tax_payer_type == '4' or country_id.code != "CL") and latam_document_type_code != '46':
                     raise ValidationError(_('You need a journal without the use of documents for foreign '
                                             'suppliers'))
 
