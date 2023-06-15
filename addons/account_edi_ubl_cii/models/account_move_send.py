@@ -216,8 +216,9 @@ class AccountMoveSend(models.Model):
 
         anchor_index = tree.index(anchor_elements[0])
         tree.insert(anchor_index, etree.fromstring(to_inject))
-        invoice_data['ubl_cii_xml_attachment_values']['raw'] = b"<?xml version='1.0' encoding='UTF-8'?>\n" \
-            + etree.tostring(cleanup_xml_node(tree))
+        invoice_data['ubl_cii_xml_attachment_values']['raw'] = etree.tostring(
+            cleanup_xml_node(tree), xml_declaration=True, encoding='UTF-8'
+        )
 
     def _link_invoice_documents(self, invoice, invoice_data):
         # EXTENDS 'account'
