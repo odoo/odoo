@@ -248,6 +248,7 @@ class AccountChartTemplate(models.AbstractModel):
             )
 
         obsolete_xmlid = set()
+        skip_update = set()
         for model_name, records in data.items():
             _fields = self.env[model_name]._fields
             for xmlid, values in records.items():
@@ -312,6 +313,15 @@ class AccountChartTemplate(models.AbstractModel):
                                 'record': existing_account,
                                 'noupdate': True,
                             }])
+                            account = existing_account
+                    # on existing accounts, only tag_ids are to be updated using default data
+                    if account and 'tag_ids' in data[model_name][xmlid]:
+                        data[model_name][xmlid] = {'tag_ids': data[model_name][xmlid]['tag_ids']}
+                    elif account:
+                        skip_update.add((model_name, xmlid))
+
+        for skip_model, skip_xmlid in skip_update:
+            data[skip_model].pop(skip_xmlid, None)
 
         if obsolete_xmlid:
             self.env['ir.model.data'].search([
@@ -352,7 +362,8 @@ class AccountChartTemplate(models.AbstractModel):
         # Normalize the code_digits of the accounts
         code_digits = int(template_data.get('code_digits', 6))
         for key, account_data in data.get('account.account', {}).items():
-            data['account.account'][key]['code'] = f'{account_data["code"]:<0{code_digits}}'
+            if 'code' in account_data:
+                data['account.account'][key]['code'] = f'{account_data["code"]:<0{code_digits}}'
 
         for model in ('account.fiscal.position', 'account.reconcile.model'):
             if model in data:
