@@ -366,7 +366,7 @@ class AccountMoveSend(models.Model):
         # note: Binary is used for security reason
         invoice.message_main_attachment_id = self.env['ir.attachment'].create(invoice_data['pdf_attachment_values'])
         invoice.invalidate_recordset(fnames=['invoice_pdf_report_id', 'invoice_pdf_report_file'])
-        self.env.add_to_compute(invoice._fields['is_move_sent'], invoice)
+        invoice.is_move_sent = True
 
     def _hook_if_errors(self, moves_data, from_cron=False, allow_fallback_pdf=False):
         """ Process errors found so far when generating the documents.
