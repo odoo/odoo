@@ -746,6 +746,11 @@
                        data-customize-website-views="website.template_header_hamburger, website.no_autohide_menu"
                        data-customize-website-variable="'hamburger'"
                        data-img="/website/static/src/img/snippets_options/header_template_hamburger.svg"/>
+            <we-button title="Rounded box menu"
+                       data-name="header_boxed_opt"
+                       data-customize-website-views="website.template_header_boxed"
+                       data-customize-website-variable="'boxed'"
+                       data-img="/website/static/src/img/snippets_options/header_template_boxed.svg"/>
             <we-button title="Vertical"
                        data-name="header_vertical_opt"
                        data-customize-website-views="website.template_header_vertical"
@@ -766,11 +771,6 @@
                        data-customize-website-views="website.template_header_contact"
                        data-customize-website-variable="'Contact'"
                        data-img="/website/static/src/img/snippets_options/header_template_contact.svg"/>
-            <we-button title="Boxed"
-                       data-name="header_boxed_opt"
-                       data-customize-website-views="website.template_header_boxed"
-                       data-customize-website-variable="'boxed'"
-                       data-img="/website/static/src/img/snippets_options/header_template_boxed.svg"/>
             <we-button title="Centered Logo"
                        data-name="header_centered_logo_opt"
                        data-customize-website-views="website.template_header_centered_logo"
@@ -805,13 +805,6 @@
         <we-row string="Background">
             <we-colorpicker data-customize-website-color="" data-color="menu"
                             data-customize-website-layer2-color="" data-layer-color="menu-custom" data-layer-gradient="menu-gradient"
-                            data-no-bundle-reload="true"
-                            data-null-value="'NULL'"
-                            data-with-combinations="customizeWebsiteColor"
-                            data-with-gradients="true"/>
-            <we-colorpicker data-dependencies="header_boxed_opt"
-                            data-customize-website-color="" data-color="header-boxed"
-                            data-customize-website-layer2-color="" data-layer-color="header-boxed-custom" data-layer-gradient="header-boxed-gradient"
                             data-no-bundle-reload="true"
                             data-null-value="'NULL'"
                             data-with-combinations="customizeWebsiteColor"
@@ -959,15 +952,15 @@
             <!-- Generic alignment option controling all the template at once. -->
             <!-- Currently needed to be this way as the SCSS variable controls -->
             <!-- the mobile alignement which is the same for all templates. -->
-            <we-select class="o_we_icon_select" data-name="header_alignment_opt" data-variable="hamburger-position" data-reload="/" title="Alignment" data-dependencies="header_default_opt, header_hamburger_opt, header_slogan_opt">
+            <we-select class="o_we_icon_select" data-name="header_alignment_opt" data-variable="hamburger-position" data-reload="/" title="Alignment" data-dependencies="header_default_opt, header_hamburger_opt, header_slogan_opt, header_boxed_opt">
                 <we-button data-customize-website-views=""
                            data-customize-website-variable="'left'"
                            data-icon="fa-align-left"/>
-                <we-button data-customize-website-views="website.template_header_default_align_center, website.template_header_slogan_align_center"
+                <we-button data-customize-website-views="website.template_header_default_align_center, website.template_header_slogan_align_center, website.template_header_boxed_align_center"
                            data-customize-website-variable="'center'"
                            data-icon="fa-align-center"
                            data-dependencies="!header_hamburger_opt"/>
-                <we-button data-customize-website-views="website.template_header_default_align_right, website.template_header_hamburger_align_right, website.template_header_slogan_align_right"
+                <we-button data-customize-website-views="website.template_header_default_align_right, website.template_header_hamburger_align_right, website.template_header_boxed_align_right, website.template_header_slogan_align_right"
                            data-customize-website-variable="'right'"
                            data-icon="fa-align-right"/>
             </we-select>
