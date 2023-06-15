@@ -15,7 +15,8 @@ access_mail_followers_system,mail.followers.system,model_mail_followers,base.gro
 access_mail_notification_portal,mail.notification.portal,model_mail_notification,base.group_portal,1,0,0,0
 access_mail_notification_user,mail.notification.user,model_mail_notification,base.group_user,1,1,1,0
 access_mail_notification_system, mail.notification.system,model_mail_notification,base.group_system,1,1,1,1
-access_discuss_channel_all,discuss.channel.all,model_discuss_channel,,1,0,0,0
+access_discuss_channel_public,discuss.channel.all,model_discuss_channel,base.group_public,1,0,0,0
+access_discuss_channel_portal,discuss.channel.all,model_discuss_channel,base.group_portal,1,0,0,0
 access_discuss_channel_user,discuss.channel.user,model_discuss_channel,base.group_user,1,1,1,0
 access_discuss_channel_admin,discuss.channel.system,model_discuss_channel,base.group_system,1,1,1,1
 access_discuss_channel_member_public,discuss.channel.member.public,model_discuss_channel_member,base.group_public,1,0,0,0
@@ -29,7 +30,8 @@ access_mail_alias_system,mail.alias.system,model_mail_alias,base.group_system,1,
 access_mail_gateway_allowed_system,mail.gateway.allowed.system,model_mail_gateway_allowed,base.group_system,1,1,1,1
 access_mail_message_reaction_all,mail.message.reaction.all,model_mail_message_reaction,,0,0,0,0
 access_mail_message_reaction_system,mail.message.reaction.system,model_mail_message_reaction,base.group_system,1,1,1,1
-access_mail_message_subtype_all,mail.message.subtype.all,model_mail_message_subtype,,1,0,0,0
+access_mail_message_subtype_public,mail.message.subtype.all,model_mail_message_subtype,base.group_public,1,0,0,0
+access_mail_message_subtype_portal,mail.message.subtype.all,model_mail_message_subtype,base.group_portal,1,0,0,0
 access_mail_message_subtype_user,mail.message.subtype.user,model_mail_message_subtype,base.group_user,1,0,0,0
 access_mail_message_subtype_system,mail.message.subtype.system,model_mail_message_subtype,base.group_system,1,1,1,1
 access_mail_tracking_value_all,mail.tracking.value.all,model_mail_tracking_value,,0,0,0,0

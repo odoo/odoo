@@ -7,7 +7,7 @@
             <div class="container pt32 pb16" t-if="event.sponsor_ids">
                 <div t-attf-class="d-flex flex-wrap mb-5 #{'' if (len(event.sponsor_ids) > 10) else 'justify-content-md-center'}">
                     <t t-foreach="event.sponsor_ids.sorted(
-                            lambda sponsor: (not sponsor.website_published, sponsor.sponsor_type_id.sequence, sponsor.sequence)
+                            lambda sponsor: (not sponsor.website_published, sponsor.sudo().sponsor_type_id.sequence, sponsor.sequence)
                         )" t-as="sponsor">
                         <t t-set="popover_content">
                             <div t-field="sponsor.name" class="h5"/>
@@ -33,8 +33,8 @@
     <div class="h-100 shadow-sm p-2">
         <span t-field="sponsor.image_128"
             t-options='{"widget": "image", "class": "img img-fluid", "filename-field": "partner_name"}'/>
-        <span t-if="sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon'"
-            t-field="sponsor.sponsor_type_id" t-attf-class="o_ribbon o_ribbon_right ribbon_#{sponsor.sponsor_type_id.display_ribbon_style}"/>
+        <span t-if="sponsor.sudo().sponsor_type_id.display_ribbon_style and sponsor.sudo().sponsor_type_id.display_ribbon_style != 'no_ribbon'"
+            t-field="sponsor.sudo().sponsor_type_id" t-attf-class="o_ribbon o_ribbon_right ribbon_#{sponsor.sudo().sponsor_type_id.display_ribbon_style}"/>
     </div>
     <span t-if="not sponsor.website_published"
         class="d-flex justify-content-center badge text-bg-danger o_wevent_online_badge_unpublished">Unpublished</span>
