@@ -453,7 +453,7 @@ class AccountBankStatementLine(models.Model):
             # Base domain.
             ('display_type', 'not in', ('line_section', 'line_note')),
             ('parent_state', '=', 'posted'),
-            ('company_id', '=', self.company_id.id),
+            ('company_id', 'child_of', self.company_id.root_id.id),
             # Reconciliation domain.
             ('reconciled', '=', False),
             ('account_id.reconcile', '=', True),
@@ -469,8 +469,8 @@ class AccountBankStatementLine(models.Model):
     def _get_default_journal(self):
         journal_type = self.env.context.get('journal_type', 'bank')
         return self.env['account.journal'].search([
+                *self.env['account.journal']._check_company_domain(self.env.company),
                 ('type', '=', journal_type),
-                ('company_id', '=', self.env.company.id)
             ], limit=1)
 
     @api.model

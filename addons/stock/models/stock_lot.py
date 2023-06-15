@@ -91,9 +91,6 @@ class StockLot(models.Model):
         domain = [
             "('tracking', '!=', 'none')",
             "('type', '=', 'product')",
-            "'|'",
-                "('company_id', '=', False)",
-                "('company_id', '=', company_id)"
         ]
         if self.env.context.get('default_product_tmpl_id'):
             domain.insert(0,

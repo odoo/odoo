@@ -32,7 +32,7 @@ class StockWarehouseOrderpoint(models.Model):
         elif self.env.context.get('default_product_id', False):
             product_id = self.env.context.get('default_product_id', False)
             domain = f"('id', '=', {product_id})"
-        return f"[{domain}, '|', ('company_id', '=', False), ('company_id', '=', company_id)]"
+        return f"[{domain}]"
 
     name = fields.Char(
         'Name', copy=False, required=True, readonly=True,

@@ -67,7 +67,7 @@ class ProductTemplate(models.Model):
         if target_company:  # don't prevent writing `False`, should always work
             subquery_products = self.env['product.product'].sudo().with_context(active_test=False)._search([('product_tmpl_id', 'in', self.ids)])
             so_lines = self.env['sale.order.line'].sudo().search_read(
-                [('product_id', 'in', subquery_products), ('company_id', '!=', target_company.id)],
+                [('product_id', 'in', subquery_products), '!', ('company_id', 'child_of', target_company.root_id.id)],
                 fields=['id', 'product_id'],
             )
             used_products = list(map(lambda sol: sol['product_id'][1], so_lines))

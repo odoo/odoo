@@ -1,3 +1,5 @@
+import uuid
+
 from odoo.tests import tagged
 from odoo import Command
 from .common import TestSaleCommon
@@ -66,7 +68,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
     @classmethod
     def create_tax(cls, amount, values=None):
         vals = {
-            'name': 'Tax %s' % amount,
+            'name': f'Tax {amount} {uuid.uuid4()}',
             'amount_type': 'percent',
             'amount': amount,
             'type_tax_use': 'sale',

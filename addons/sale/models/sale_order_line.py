@@ -81,7 +81,7 @@ class SaleOrderLine(models.Model):
         comodel_name='product.product',
         string="Product",
         change_default=True, ondelete='restrict', check_company=True, index='btree_not_null',
-        domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        domain="[('sale_ok', '=', True)]")
     product_template_id = fields.Many2one(
         string="Product Template",
         comodel_name='product.template',
@@ -412,7 +412,10 @@ class SaleOrderLine(models.Model):
                 taxes_by_product_company[(product, tax.company_id)] += tax
         for company, lines in lines_by_company.items():
             for line in lines.with_company(company):
-                taxes = taxes_by_product_company[(line.product_id, company)]
+                taxes, comp = None, company
+                while not taxes and comp:
+                    taxes = taxes_by_product_company[(line.product_id, comp)]
+                    comp = comp.parent_id
                 if not line.product_id or not taxes:
                     # Nothing to map
                     line.tax_id = False

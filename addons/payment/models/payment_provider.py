@@ -15,6 +15,7 @@ class PaymentProvider(models.Model):
     _name = 'payment.provider'
     _description = 'Payment Provider'
     _order = 'module_state, state desc, sequence, name'
+    _check_company_auto = True
 
     def _valid_field_parameter(self, field, name):
         return name == 'required_if_provider' or super()._valid_field_parameter(field, name)
@@ -476,7 +477,10 @@ class PaymentProvider(models.Model):
         :rtype: recordset of `payment.provider`
         """
         # Compute the base domain for compatible providers.
-        domain = ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', company_id)]
+        domain = [
+            *self.env['payment.provider']._check_company_domain(company_id),
+            ('state', 'in', ['enabled', 'test']),
+        ]
 
         # Handle the is_published state.
         if not self.env.user._is_internal():

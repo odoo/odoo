@@ -47,8 +47,10 @@ class AccountTourUploadBill(models.TransientModel):
             record.preview_invoice = html
 
     def _selection_values(self):
-        journal_alias = self.env['account.journal'] \
-            .search([('type', '=', 'purchase'), ('company_id', '=', self.env.company.id)], limit=1)
+        journal_alias = self.env['account.journal'].search([
+            *self.env['account.journal']._check_company_domain(self.env.company),
+            ('type', '=', 'purchase'),
+        ], limit=1)
 
         values = [('sample', _('Try a sample vendor bill')), ('upload', _('Upload your own bill'))]
         if journal_alias.alias_name and journal_alias.alias_domain:

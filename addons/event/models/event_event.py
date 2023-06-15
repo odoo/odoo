@@ -127,7 +127,7 @@ class EventEvent(models.Model):
     organizer_id = fields.Many2one(
         'res.partner', string='Organizer', tracking=True,
         default=lambda self: self.env.company.partner_id,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        check_company=True)
     event_type_id = fields.Many2one('event.type', string='Template', ondelete='set null')
     event_mail_ids = fields.One2many(
         'event.mail', 'event_id', string='Mail Schedule', copy=True,
@@ -207,7 +207,9 @@ class EventEvent(models.Model):
     # Location and communication
     address_id = fields.Many2one(
         'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
-        tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        check_company=True,
+        tracking=True
+    )
     address_search = fields.Many2one(
         'res.partner', string='Address', compute='_compute_address_search', search='_search_address_search')
     address_inline = fields.Char(

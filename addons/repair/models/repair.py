@@ -21,6 +21,7 @@ class Repair(models.Model):
     _description = 'Repair Order'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'priority desc, create_date desc'
+    _check_company_auto = True
 
     name = fields.Char(
         'Repair Reference',
@@ -30,8 +31,9 @@ class Repair(models.Model):
     description = fields.Char('Repair Description')
     product_id = fields.Many2one(
         'product.product', string='Product to Repair',
-        domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', company_id), ('company_id', '=', False)]",
-        readonly=True, required=True, states={'draft': [('readonly', False)]}, check_company=True)
+        check_company=True,
+        domain="[('type', 'in', ['product', 'consu'])]",
+        readonly=True, required=True, states={'draft': [('readonly', False)]})
     product_qty = fields.Float(
         'Product Quantity',
         default=1.0, digits='Product Unit of Measure',
@@ -666,6 +668,7 @@ class Repair(models.Model):
 class RepairLine(models.Model):
     _name = 'repair.line'
     _description = 'Repair Line (parts)'
+    _check_company_auto = True
 
     name = fields.Text('Description', required=True)
     repair_id = fields.Many2one(
@@ -680,14 +683,14 @@ class RepairLine(models.Model):
         ('remove', 'Remove')], 'Type', default='add', required=True)
     product_id = fields.Many2one(
         'product.product', 'Product', required=True, check_company=True,
-        domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
+        domain="[('type', 'in', ['product', 'consu'])]")
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
     price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
     price_subtotal = fields.Float('Subtotal', compute='_compute_price_total_and_subtotal', store=True, digits=0)
     price_total = fields.Float('Total', compute='_compute_price_total_and_subtotal', store=True, digits=0)
     tax_id = fields.Many2many(
         'account.tax', 'repair_operation_line_tax', 'repair_operation_line_id', 'tax_id', 'Taxes',
-        domain="[('type_tax_use','=','sale'), ('company_id', '=', company_id)]", check_company=True)
+        domain="[('type_tax_use','=','sale')]", check_company=True)
     product_uom_qty = fields.Float(
         'Quantity', default=1.0,
         digits='Product Unit of Measure', required=True)
@@ -712,7 +715,7 @@ class RepairLine(models.Model):
         copy=False, readonly=True)
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',
-        domain="[('product_id','=', product_id), ('company_id', '=', company_id)]", check_company=True)
+        domain="[('product_id','=', product_id)]", check_company=True)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('confirmed', 'Confirmed'),
@@ -804,6 +807,7 @@ class RepairLine(models.Model):
 class RepairFee(models.Model):
     _name = 'repair.fee'
     _description = 'Repair Fees'
+    _check_company_auto = True
 
     repair_id = fields.Many2one(
         'repair.order', 'Repair Order Reference',
@@ -815,7 +819,7 @@ class RepairFee(models.Model):
     name = fields.Text('Description', index=True, required=True)
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,
-        domain="[('type', '=', 'service'), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
+        domain="[('type', '=', 'service')]")
     product_uom_qty = fields.Float('Quantity', digits='Product Unit of Measure', required=True, default=1.0)
     price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
     product_uom = fields.Many2one(
@@ -827,7 +831,7 @@ class RepairFee(models.Model):
     price_total = fields.Float('Total', compute='_compute_price_total_and_subtotal', store=True, digits=0)
     tax_id = fields.Many2many(
         'account.tax', 'repair_fee_line_tax', 'repair_fee_line_id', 'tax_id', 'Taxes',
-        domain="[('type_tax_use','=','sale'), ('company_id', '=', company_id)]", check_company=True)
+        domain="[('type_tax_use','=','sale')]", check_company=True)
     invoice_line_id = fields.Many2one('account.move.line', 'Invoice Line', copy=False, readonly=True, check_company=True)
     invoiced = fields.Boolean('Invoiced', copy=False, readonly=True)
 

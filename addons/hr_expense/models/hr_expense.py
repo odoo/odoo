@@ -12,7 +12,6 @@ from odoo.tools import email_split, float_repr, float_compare, is_html_empty
 
 
 class HrExpense(models.Model):
-
     _name = "hr.expense"
     _inherit = ['mail.thread.main.attachment', 'mail.activity.mixin', 'analytic.mixin']
     _description = "Expense"
@@ -56,7 +55,15 @@ class HrExpense(models.Model):
         states={'approved': [('readonly', True)], 'done': [('readonly', True)]},
         default=_default_employee_id, domain=lambda self: self._get_employee_id_domain(), check_company=True)
     # product_id not required to allow create an expense without product via mail alias, but should be required on the view.
-    product_id = fields.Many2one('product.product', string='Category', tracking=True, states={'done': [('readonly', True)]}, domain="[('can_be_expensed', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", ondelete='restrict')
+    product_id = fields.Many2one(
+        'product.product',
+        string='Category',
+        tracking=True,
+        states={'done': [('readonly', True)]},
+        check_company=True,
+        domain="[('can_be_expensed', '=', True)]",
+        ondelete='restrict',
+    )
     product_description = fields.Html(compute='_compute_product_description')
     product_uom_id = fields.Many2one('uom.uom', string='Unit of Measure', compute='_compute_product_uom_id',
         store=True, precompute=True, copy=True, readonly=True,
@@ -68,7 +75,8 @@ class HrExpense(models.Model):
     quantity = fields.Float(required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure', default=1)
     tax_ids = fields.Many2many('account.tax', 'expense_tax', 'expense_id', 'tax_id',
         compute='_compute_tax_ids', store=True, readonly=False, precompute=True,
-        domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase')]", string='Included taxes',
+        check_company=True,
+        domain="[('type_tax_use', '=', 'purchase')]", string='Included taxes',
         help="Both price-included and price-excluded taxes will behave as price-included taxes for expenses.")
     amount_tax = fields.Monetary(string='Tax amount in Currency', help="Tax amount in currency", compute='_compute_amount_tax', store=True, currency_field='currency_id')
     amount_tax_company = fields.Monetary('Tax amount', help="Tax amount in company currency", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
@@ -80,8 +88,14 @@ class HrExpense(models.Model):
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', required=True, readonly=False, store=True, states={'reported': [('readonly', True)], 'approved': [('readonly', True)], 'done': [('readonly', True)]}, compute='_compute_currency_id', default=lambda self: self.env.company.currency_id)
     currency_rate = fields.Float(compute='_compute_currency_rate', tracking=True)
-    account_id = fields.Many2one('account.account', compute='_compute_account_id', store=True, readonly=False, precompute=True, string='Account',
-        domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card')), ('company_id', '=', company_id)]", help="An expense account is expected")
+    account_id = fields.Many2one(
+        'account.account',
+        compute='_compute_account_id', store=True, readonly=False, precompute=True,
+        string='Account',
+        check_company=True,
+        domain="[('account_type', 'not in', ('asset_receivable','liability_payable','asset_cash','liability_credit_card'))]",
+        help="An expense account is expected",
+    )
     description = fields.Text('Internal Notes', readonly=True, states={'draft': [('readonly', False)], 'reported': [('readonly', False)], 'refused': [('readonly', False)]})
     payment_mode = fields.Selection([
         ("own_account", "Employee (to reimburse)"),
@@ -144,7 +158,7 @@ class HrExpense(models.Model):
     def _compute_product_has_cost(self):
         for expense in self:
             expense.product_has_cost = expense.product_id and (float_compare(expense.product_id.standard_price, 0.0, precision_digits=2) != 0)
-            tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == expense.company_id)
+            tax_ids = expense.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(expense.company_id))
             expense.product_has_tax = bool(tax_ids)
 
     @api.depends('sheet_id', 'sheet_id.account_move_ids', 'sheet_id.state')
@@ -310,7 +324,7 @@ class HrExpense(models.Model):
     def _compute_tax_ids(self):
         for expense in self:
             expense = expense.with_company(expense.company_id)
-            expense.tax_ids = expense.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == expense.company_id)  # taxes only from the same company
+            expense.tax_ids = expense.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(expense.company_id))
 
 
     @api.depends('product_id', 'company_id')
@@ -959,12 +973,21 @@ class HrExpenseSheet(models.Model):
         if company_journal_id:
             return company_journal_id.id
         default_company_id = self.default_get(['company_id'])['company_id']
-        journal = self.env['account.journal'].search([('type', '=', 'purchase'), ('company_id', '=', default_company_id)], limit=1)
+        journal = self.env['account.journal'].search([
+            *self.env['account.journal']._check_company_domain(default_company_id),
+            ('type', '=', 'purchase'),
+        ], limit=1)
         return journal.id
 
     name = fields.Char('Expense Report Summary', required=True, tracking=True)
     expense_line_ids = fields.One2many('hr.expense', 'sheet_id', string='Expense Lines', copy=False)
-    product_ids = fields.Many2many('product.product', compute='_compute_product_ids', search='_search_product_ids', string='Categories')
+    product_ids = fields.Many2many(
+        'product.product',
+        string='Categories',
+        compute='_compute_product_ids',
+        search='_search_product_ids',
+        check_company=True,
+    )
     expense_number = fields.Integer(compute='_compute_expense_number', string='Number of Expenses')
     nb_account_move = fields.Integer(
         string='Number of Journal Entries',
@@ -1015,8 +1038,14 @@ class HrExpenseSheet(models.Model):
         tracking=True,
         related='expense_line_ids.payment_mode', readonly=True)
     employee_journal_id = fields.Many2one(
-        'account.journal', string='Journal', states={'done': [('readonly', True)], 'post': [('readonly', True)]}, check_company=True, domain="[('type', '=', 'purchase'), ('company_id', '=', company_id)]",
-        default=_default_journal_id, help="The journal used when the expense is paid by employee.")
+        'account.journal',
+        string='Journal',
+        states={'done': [('readonly', True)], 'post': [('readonly', True)]},
+        check_company=True,
+        domain="[('type', '=', 'purchase')]",
+        default=_default_journal_id,
+        help="The journal used when the expense is paid by employee.",
+    )
     selectable_payment_method_line_ids = fields.Many2many('account.payment.method.line', compute='_compute_selectable_payment_method_line_ids')
     payment_method_line_id = fields.Many2one(
         comodel_name='account.payment.method.line',
@@ -1029,7 +1058,13 @@ class HrExpenseSheet(models.Model):
     )
     accounting_date = fields.Date("Accounting Date")
     account_move_ids = fields.One2many('account.move', 'expense_sheet_id', string='Journal Entries', readonly=True)
-    journal_id = fields.Many2one('account.journal', compute='_compute_journal_id', string="Expense Journal", store=True)
+    journal_id = fields.Many2one(
+        'account.journal',
+        compute='_compute_journal_id',
+        string="Expense Journal",
+        store=True,
+        check_company=True,
+    )
 
     # === Security fields === #
     can_reset = fields.Boolean('Can Reset', compute='_compute_can_reset')

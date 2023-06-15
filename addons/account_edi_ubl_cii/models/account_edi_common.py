@@ -412,7 +412,7 @@ class AccountEdiCommon(models.AbstractModel):
             tax_ids = []
             for tax_categ_percent_el in allow_el.findall(tax_xpath):
                 tax = self.env['account.tax'].search([
-                    ('company_id', '=', invoice.company_id.id),
+                    *self.env['account.tax']._check_company_domain(invoice.company_id),
                     ('amount', '=', float(tax_categ_percent_el.text)),
                     ('amount_type', '=', 'percent'),
                     ('type_tax_use', '=', invoice.journal_id.type),  # Journal type is ensured by _create_invoice_from_xml_tree to be either 'sale' or 'purchase'
@@ -654,7 +654,7 @@ class AccountEdiCommon(models.AbstractModel):
         4. price_include matching the amount
         """
         base_domain = [
-            ('company_id', '=', invoice_line.company_id.id),
+            *self.env['account.journal']._check_company_domain(invoice_line.company_id),
             ('amount_type', '=', 'fixed'),
             ('amount', '=', fixed_tax_vals['tax_amount']),
         ]
@@ -675,7 +675,7 @@ class AccountEdiCommon(models.AbstractModel):
         for tax_node in tax_nodes:
             amount = float(tax_node.text)
             domain = [
-                ('company_id', '=', invoice_line.company_id.id),
+                *self.env['account.journal']._check_company_domain(invoice_line.company_id),
                 ('amount_type', '=', 'percent'),
                 ('type_tax_use', '=', invoice_line.move_id.journal_id.type),
                 ('amount', '=', amount),

@@ -133,8 +133,8 @@ class AccountMove(models.Model):
     def get_account_group(self, account_types):
         data = self._read_group(
             [
+                *self._check_company_domain(self.env.company),
                 ("account_type", "in", account_types),
-                ("company_id", "=", self.env.company.id),
             ],
             ['account_type'],
             ['code:array_agg'],

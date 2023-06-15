@@ -9,7 +9,6 @@ from markupsafe import Markup, escape
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare, convert
-from odoo.osv.expression import AND, OR
 from odoo.service.common import exp_version
 
 
@@ -180,7 +179,7 @@ class PosSession(models.Model):
         for record in self:
             company = record.config_id.journal_id.company_id
             start_date = record.start_at.date()
-            if (company.period_lock_date and start_date <= company.period_lock_date) or (company.fiscalyear_lock_date and start_date <= company.fiscalyear_lock_date):
+            if (company.period_lock_date and start_date <= company.period_lock_date) or (start_date <= company._get_user_fiscal_lock_date()):
                 raise ValidationError(_("You cannot create a session before the accounting lock date."))
 
     def _check_invoices_are_posted(self):
@@ -1730,7 +1729,7 @@ class PosSession(models.Model):
     def _loader_params_account_tax(self):
         return {
             'search_params': {
-                'domain': [('company_id', '=', self.company_id.id)],
+                'domain': self.env['account.tax']._check_company_domain(self.company_id),
                 'fields': [
                     'name', 'price_include', 'include_base_amount', 'is_base_affected',
                     'amount_type', 'children_tax_ids', 'amount', 'id'
@@ -1924,18 +1923,9 @@ class PosSession(models.Model):
         return self.env['pos.category'].search_read(**params['search_params'])
 
     def _loader_params_product_product(self):
-        domain = [
-            '&', '&', ('sale_ok', '=', True), ('available_in_pos', '=', True), '|',
-            ('company_id', '=', self.config_id.company_id.id), ('company_id', '=', False)
-        ]
-        if self.config_id.limit_categories and self.config_id.iface_available_categ_ids:
-            domain = AND([domain, [('pos_categ_ids', 'in', self.config_id.iface_available_categ_ids.ids)]])
-        if self.config_id.iface_tipproduct:
-            domain = OR([domain, [('id', '=', self.config_id.tip_product_id.id)]])
-
         return {
             'search_params': {
-                'domain': domain,
+                'domain': self.config_id._get_availlable_product_domain(),
                 'fields': [
                     'display_name', 'lst_price', 'standard_price', 'categ_id', 'pos_categ_ids', 'taxes_id', 'barcode',
                     'default_code', 'to_weight', 'uom_id', 'description_sale', 'description', 'product_tmpl_id', 'tracking',

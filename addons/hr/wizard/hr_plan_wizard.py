@@ -30,7 +30,8 @@ class HrPlanWizard(models.TransientModel):
                 ], limit=1)
 
     plan_id = fields.Many2one('hr.plan', default=lambda self: self._default_plan_id(),
-        domain="[('company_id', 'in', [False, company_id]), '|', ('department_id', '=', department_id), ('department_id', '=', False)]")
+        check_company=True,
+        domain="['|', ('department_id', '=', department_id), ('department_id', '=', False)]")
     department_id = fields.Many2one('hr.department', compute='_compute_department_id')
     employee_ids = fields.Many2many(
         'hr.employee', 'hr_employee_hr_plan_wizard_rel', 'employee_id', 'plan_wizard_id', string='Employee', required=True,

@@ -16,7 +16,8 @@ class AccountAnalyticLine(models.Model):
         'account.account',
         string='Financial Account',
         ondelete='restrict',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
+        domain="[('deprecated', '=', False)]",
+        check_company=True,
         compute='_compute_general_account_id', store=True, readonly=False
     )
     journal_id = fields.Many2one(

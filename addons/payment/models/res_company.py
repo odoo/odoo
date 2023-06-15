@@ -33,13 +33,15 @@ class ResCompany(models.Model):
         new_env = api.Environment(self.env.cr, self.env.uid, self.env.context)
 
         # Configure Stripe
-        default_journal = new_env['account.journal'].search(
-            [('type', '=', 'bank'), ('company_id', '=', new_env.company.id)], limit=1
-        )
+        default_journal = new_env['account.journal'].search([
+            *self.env['account.journal']._check_company_domain(new_env.company),
+            ('type', '=', 'bank'),
+        ], limit=1)
 
-        stripe_provider = new_env['payment.provider'].search(
-            [('company_id', '=', self.env.company.id), ('code', '=', 'stripe')], limit=1
-        )
+        stripe_provider = new_env['payment.provider'].search([
+            *self.env['payment.provider']._check_company_domain(self.env.company),
+            ('code', '=', 'stripe')
+        ], limit=1)
         if not stripe_provider:
             base_provider = self.env.ref('payment.payment_provider_stripe')
             # Use sudo to access payment provider record that can be in different company.
