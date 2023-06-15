@@ -103,14 +103,7 @@ export class OutOfFocusService {
      */
     async sendOdooNotification(message, options) {
         this.notificationService.add(message, options);
-        if (this.canPlayAudio && this.multiTab.isOnMainTab()) {
-            try {
-                await this.audio.play();
-            } catch {
-                // Ignore errors due to the user not having interracted
-                // with the page before playing the sound.
-            }
-        }
+        this._playSound();
     }
 
     /**
@@ -131,6 +124,18 @@ export class OutOfFocusService {
             window.focus();
             notification.close();
         });
+        this._playSound();
+    }
+
+    async _playSound() {
+        if (this.canPlayAudio && this.multiTab.isOnMainTab()) {
+            try {
+                await this.audio.play();
+            } catch {
+                // Ignore errors due to the user not having interracted
+                // with the page before playing the sound.
+            }
+        }
     }
 
     get canPlayAudio() {
