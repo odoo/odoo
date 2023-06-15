@@ -1158,8 +1158,12 @@ function _normalizeStyle(style) {
  */
  function _wrap(element, wrapperTag, wrapperClass, wrapperStyle) {
     const wrapper = document.createElement(wrapperTag);
-    wrapper.className = wrapperClass;
-    wrapper.style.cssText = wrapperStyle;
+    if (wrapperClass) {
+        wrapper.className = wrapperClass;
+    }
+    if (wrapperStyle) {
+        wrapper.style.cssText = wrapperStyle;
+    }
     element.parentElement.insertBefore(wrapper, element);
     wrapper.append(element);
     return wrapper;
