@@ -286,6 +286,16 @@ function bootstrapToTable($editable) {
             }
             tr.remove(); // row was cloned and inserted already
         }
+        // Merge tables in tds into one common table, each in its own row.
+        const tds = [...editable.querySelectorAll('td')]
+            .filter(td => td.children.length > 1 && [...td.children].every(child => child.nodeName === 'TABLE'))
+            .reverse();
+        for (const td of tds) {
+            const table = _createTable();
+            const trs = [...td.children].map(child => _wrap(child, 'td')).map(wrappedChild => _wrap(wrappedChild, 'tr'));
+            trs[0].before(table);
+            table.append(...trs);
+        }
     }
 }
 /**
