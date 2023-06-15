@@ -29,12 +29,12 @@ MOUNT_POINT="${__dir}/root_mount"
 OVERWRITE_FILES_BEFORE_INIT_DIR="${__dir}/overwrite_before_init"
 OVERWRITE_FILES_AFTER_INIT_DIR="${__dir}/overwrite_after_init"
 VERSION=16.0
-VERSION_IOTBOX=22.11
+VERSION_IOTBOX=23.07
 REPO=https://github.com/odoo/odoo.git
 
 if ! file_exists *raspios*.img ; then
-    wget 'https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2021-05-28/2021-05-07-raspios-buster-armhf-lite.zip' -O raspios.img.zip
-    unzip raspios.img.zip
+    wget 'https://downloads.raspberrypi.org/raspios_lite_armhf/images/raspios_lite_armhf-2023-05-03/2023-05-03-raspios-bullseye-armhf-lite.img.xz' -O raspios.img.xz
+    unxz --verbose raspios.img.xz
 fi
 
 RASPIOS=$(echo *raspios*.img)
@@ -76,10 +76,9 @@ dd if=/dev/zero bs=1M count=2048 status=progress >> iotbox.img
 echo "Fdisking"
 
 SECTORS_BOOT_START=$(sudo fdisk -l iotbox.img | tail -n 2 | awk 'NR==1 {print $2}')
-SECTORS_BOOT_END=$((SECTORS_BOOT_START + 1048576)) # sectors to have a partition of ~512Mo
+SECTORS_BOOT_END=$((SECTORS_BOOT_START + 1056767)) # sectors to have a partition of ~512Mo
 SECTORS_ROOT_START=$((SECTORS_BOOT_END + 1))
 
-START_OF_ROOT_PARTITION=$(fdisk -l iotbox.img | tail -n 1 | awk '{print $2}')
 (echo 'p';                          # print
  echo 'd';                          # delete
  echo '2';                          #    number 2
@@ -103,12 +102,14 @@ LOOP_RASPIOS=$(kpartx -avs "${RASPIOS}")
 LOOP_RASPIOS_ROOT=$(echo "${LOOP_RASPIOS}" | tail -n 1 | awk '{print $3}')
 LOOP_RASPIOS_PATH="/dev/${LOOP_RASPIOS_ROOT::-2}"
 LOOP_RASPIOS_ROOT="/dev/mapper/${LOOP_RASPIOS_ROOT}"
+LOOP_RASPIOS_BOOT=$(echo "${LOOP_RASPIOS}" | head -n 1 | awk '{print $3}')
+LOOP_RASPIOS_BOOT="/dev/mapper/${LOOP_RASPIOS_BOOT}"
 
 LOOP_IOT=$(kpartx -avs iotbox.img)
 LOOP_IOT_ROOT=$(echo "${LOOP_IOT}" | tail -n 1 | awk '{print $3}')
 LOOP_IOT_PATH="/dev/${LOOP_IOT_ROOT::-2}"
 LOOP_IOT_ROOT="/dev/mapper/${LOOP_IOT_ROOT}"
-LOOP_IOT_BOOT=$(echo "${LOOP_IOT}" | tail -n 2 | awk 'NR==1 {print $3}')
+LOOP_IOT_BOOT=$(echo "${LOOP_IOT}" | head -n 1 | awk 'NR==1 {print $3}')
 LOOP_IOT_BOOT="/dev/mapper/${LOOP_IOT_BOOT}"
 
 mkfs.ext4 -v "${LOOP_IOT_ROOT}"

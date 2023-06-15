@@ -19,6 +19,8 @@ from threading import Thread
 import time
 import contextlib
 import requests
+import crypt
+import secrets
 
 from odoo import _, http, service
 from odoo.tools.func import lazy_property
@@ -187,6 +189,21 @@ def save_conf_server(url, token, db_uuid, enterprise_code):
     write_file('token', token)
     write_file('odoo-db-uuid.conf', db_uuid or '')
     write_file('odoo-enterprise-code.conf', enterprise_code or '')
+
+def generate_password():
+    """
+    Generate an unique code to secure raspberry pi
+    """
+    alphabet = 'abcdefghijkmnpqrstuvwxyz23456789'
+    password = ''.join(secrets.choice(alphabet) for i in range(12))
+    shadow_password = crypt.crypt(password, crypt.mksalt())
+    subprocess.call(('sudo', 'usermod', '-p', shadow_password, 'pi'))
+
+    with writable():
+        subprocess.call(('sudo', 'cp', '/etc/shadow', '/root_bypass_ramdisks/etc/shadow'))
+
+    return password
+
 
 def get_certificate_status(is_first=True):
     """
