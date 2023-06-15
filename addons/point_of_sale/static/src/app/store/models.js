@@ -778,6 +778,7 @@ export class Orderline extends PosModel {
             price_without_tax: this.get_price_without_tax(),
             price_with_tax_before_discount: this.get_price_with_tax_before_discount(),
             tax: this.get_tax(),
+            tax_details: this.get_tax_details(),
             product_description: this.get_product().description,
             product_description_sale: this.get_product().description_sale,
             pack_lot_lines: this.get_lot_lines(),
@@ -995,7 +996,10 @@ export class Orderline extends PosModel {
         );
         all_taxes.taxes.forEach(function (tax) {
             taxtotal += tax.amount;
-            taxdetail[tax.id] = tax.amount;
+            taxdetail[tax.id] = {
+                amount: tax.amount,
+                base: tax.base,
+            };
         });
 
         return {
@@ -2299,7 +2303,10 @@ export class Order extends PosModel {
             var ldetails = line.get_tax_details();
             for (var id in ldetails) {
                 if (Object.hasOwnProperty.call(ldetails, id)) {
-                    details[id] = (details[id] || 0) + ldetails[id];
+                    details[id] = {
+                        amount: (details[id]?.amount || 0) + ldetails[id].amount,
+                        base: (details[id]?.base || 0) + ldetails[id].base,
+                    };
                 }
             }
         });
@@ -2307,7 +2314,8 @@ export class Order extends PosModel {
         for (var id in details) {
             if (Object.hasOwnProperty.call(details, id)) {
                 fulldetails.push({
-                    amount: details[id],
+                    amount: details[id].amount,
+                    base: details[id].base,
                     tax: this.pos.taxes_by_id[id],
                     name: this.pos.taxes_by_id[id].name,
                 });

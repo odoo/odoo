@@ -104,18 +104,27 @@
                     <span t-esc="env.utils.formatCurrency(receipt.total_discount)" class="pos-receipt-right-align"/>
                 </div>
             </t>
-            <t t-if="isTaxIncluded">
-                <t t-foreach="receipt.tax_details" t-as="tax" t-key="tax.name">
-                    <div>
-                        <t t-esc="tax.name" />
-                        <span t-esc="env.utils.formatCurrency(tax.amount, false)" class="pos-receipt-right-align"/>
-                    </div>
+            <div t-if="isTaxIncluded" class="pos-receipt-taxes">
+                <span />
+                <span>VAT%</span>
+                <span>VAT</span>
+                <span>ExVAT</span>
+                <span>Total</span>
+                <t t-foreach="receipt.tax_details" t-as="tax" t-key="tax.tax.id">
+                    <span t-esc="getTaxLetter(tax.tax)" />
+                    <span><t t-esc="tax.tax.amount"/> %</span> 
+                    <span t-esc="env.utils.formatCurrency(tax.amount, false)" />
+                    <span t-esc="env.utils.formatCurrency(tax.base, false)" />
+                    <span t-esc="env.utils.formatCurrency(tax.amount + tax.base, false)" />
                 </t>
-                <div id="post_receipt_taxes_container">
-                    Total Taxes
-                    <span t-esc="env.utils.formatCurrency(receipt.total_tax)" class="pos-receipt-right-align"/>
-                </div>
-            </t>
+                <t t-if="receipt.tax_details.length > 1">
+                    <span />
+                    <span />
+                    <span t-esc="env.utils.formatCurrency(receipt.total_tax, false)" />
+                    <span t-esc="env.utils.formatCurrency(receipt.total_without_tax, false)" />
+                    <span t-esc="env.utils.formatCurrency(receipt.total_with_tax, false)" />
+                </t>
+            </div>
 
             <div class="before-footer" />
 
@@ -207,9 +216,10 @@
                 <t t-if="!line.is_in_unit" t-esc="line.unit_name" />
                 x
                 <t t-esc="env.utils.formatCurrency(line.price_display_one)" />
-                <span class="price_display pos-receipt-right-align">
-                    <t t-esc="env.utils.formatCurrency(line.price_display, false)" />
-                </span>
+                <div class="price_display pos-receipt-right-align">
+                    <span t-esc="env.utils.formatCurrency(line.price_display, false)" />
+                    <span t-esc="getTaxLetter(...getOrderlineTaxes(line))" class="tax-letter" /> 
+                </div>
             </div>
             <t t-if="line.customer_note">
                 <div class="pos-receipt-left-padding pos-receipt-customer-note">
