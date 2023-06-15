@@ -582,13 +582,13 @@
                         <button name="action_invoice_sent"
                                 type="object"
                                 string="Send &amp; Print"
-                                attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', True), ('move_type', 'not in', ('out_invoice', 'out_refund'))]}"
+                                attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('invoice_pdf_report_id', '=', True), ('move_type', 'not in', ('out_invoice', 'out_refund'))]}"
                                 class="oe_highlight"
                                 data-hotkey="y"/>
                         <button name="action_invoice_sent"
                                 type="object"
                                 string="Send &amp; Print"
-                                attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', False), ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"
+                                attrs="{'invisible':['|', '|', ('state', '!=', 'posted'), ('invoice_pdf_report_id', '=', False), ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}"
                                 data-hotkey="y"/>
                         <!-- Register Payment (only invoices / receipts) -->
                         <button name="action_register_payment" id="account_invoice_payment_btn"
@@ -742,6 +742,7 @@
 
                         <field name="invoice_has_outstanding" invisible="1"/>
                         <field name="is_move_sent" invisible="1"/>
+                        <field name="invoice_pdf_report_id" invisible="1"/>
                         <field name="has_reconciled_entries" invisible="1"/>
                         <field name="restrict_mode_hash_table" invisible="1"/>
                         <field name="country_code" invisible="1"/>
