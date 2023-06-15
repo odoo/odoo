@@ -135,7 +135,7 @@ wTourUtils.registerWebsitePreviewTour('edit_link_popover', {
     // 3. Test other links (CTA in navbar & links in footer)
     {
         content: "Click CTA in navbar",
-        trigger: 'iframe #top_menu_container a.btn-primary[href="/contactus"]',
+        trigger: 'iframe #o_main_nav a.btn-primary[href="/contactus"]',
     },
     {
         content: "Popover should be shown (3)",

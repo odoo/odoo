@@ -304,7 +304,7 @@
         <t t-set="_navbar_expand_class" t-valuef="None"/>
         <t t-set="_navbar_name" t-valuef="Mobile"/>
 
-        <div id="top_menu_container" class="container flex-wrap justify-content-between">
+        <div id="o_main_nav" class="container flex-wrap justify-content-between">
             <!-- Brand -->
             <t t-call="website.placeholder_header_brand"/>
             <ul class="o_header_mobile_buttons_wrap navbar-nav flex-row align-items-center gap-2 mb-0">
@@ -433,7 +433,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block shadow-sm"/>
 
-            <div id="top_menu_container" class="container">
+            <div id="o_main_nav" class="container">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand">
                     <t t-set="_link_class" t-valuef="me-4"/>
@@ -509,7 +509,7 @@
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block shadow-sm"/>
             <t t-set="_navbar_expand_class" t-valuef="None"/>
 
-            <div id="top_menu_container" class="container d-grid py-0 o_grid_header_3_cols">
+            <div id="o_main_nav" class="container d-grid py-0 o_grid_header_3_cols">
                 <!-- Nav Toggler -->
                 <t t-call="website.navbar_toggler">
                     <t t-set="_toggler_class" t-valuef="btn me-auto p-2"/>
@@ -639,7 +639,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block py-0 shadow-sm"/>
 
-            <div id="top_menu_container" class="container align-items-stretch">
+            <div id="o_main_nav" class="container align-items-stretch">
                 <!-- Brand -->
                 <t t-call="website.placeholder_header_brand">
                     <t t-set="_link_class" t-valuef="d-flex align-items-center me-4 p-2"/>
@@ -725,7 +725,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block pt-3 shadow-sm"/>
 
-            <div id="top_menu_container" class="container flex-wrap gap-3">
+            <div id="o_main_nav" class="container flex-wrap gap-3">
                 <div class="d-grid align-items-center w-100 o_grid_header_3_cols">
                     <ul class="navbar-nav align-items-center gap-1">
                         <!-- Search bar -->
@@ -796,7 +796,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block p-0 shadow-sm"/>
 
-            <div id="top_menu_container" class="flex-wrap">
+            <div id="o_main_nav" class="flex-wrap">
                 <div aria-label="Top" class="border-bottom o_border_contrast">
                     <div class="container d-flex justify-content-between flex-wrap w-100">
                         <ul class="o_header_search_left_col navbar-nav flex-wrap">
@@ -901,7 +901,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block p-0 shadow-sm"/>
 
-            <div id="top_menu_container">
+            <div id="o_main_nav">
                 <div aria-label="Top" class="container d-flex justify-content-between py-3">
                     <!-- Brand -->
                     <t t-call="website.placeholder_header_brand">
@@ -992,7 +992,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block p-0 shadow-sm"/>
 
-            <div id="top_menu_container">
+            <div id="o_main_nav">
                 <div aria-label="Top" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links') or is_view_active('website.header_language_selector')" class="o_header_sales_two_top py-1">
                     <ul class="navbar-nav container d-grid h-100 px-3 o_grid_header_3_cols">
                         <!-- Return empty placeholder if the element is not active to keep the right layout -->
@@ -1093,7 +1093,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block p-0 shadow-sm"/>
 
-            <div id="top_menu_container">
+            <div id="o_main_nav">
                 <div aria-label="Top" t-if="is_view_active('website.header_text_element') or is_view_active('website.header_social_links') or is_view_active('website.header_search_box') or is_view_active('website.header_call_to_action')" class="o_header_sales_three_top position-relative border-bottom z-index-1 o_border_contrast">
                     <div class="container d-flex justify-content-between gap-3 h-100">
                         <ul class="navbar-nav align-items-center gap-3 py-1">
@@ -1176,7 +1176,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="o_header_sales_four_top d-none d-lg-block p-0 shadow-sm z-index-1"/>
 
-            <div id="top_menu_container">
+            <div id="o_main_nav">
                 <div aria-label="Top" class="container d-flex">
                     <!-- Navbar -->
                     <t t-call="website.navbar_nav">
@@ -1280,7 +1280,7 @@
         <t t-call="website.navbar">
             <t t-set="_navbar_classes" t-valuef="d-none d-lg-block shadow"/>
 
-            <div id="top_menu_container" class="navbar-nav d-flex flex-column justify-content-between h-100 w-100">
+            <div id="o_main_nav" class="navbar-nav d-flex flex-column justify-content-between h-100 w-100">
                <div class="d-flex flex-column w-100 h-100">
                     <div class="d-flex pb-3">
                         <!-- Brand -->
@@ -1402,7 +1402,7 @@
             <t t-call="website.navbar">
                 <t t-set="_navbar_classes" t-valuef="d-none d-lg-block rounded-pill py-2 px-3 shadow-sm"/>
 
-                <div id="top_menu_container" class="container">
+                <div id="o_main_nav" class="container">
                     <!-- Brand -->
                     <t t-call="website.placeholder_header_brand">
                         <t t-set="_link_class" t-valuef="me-4"/>
