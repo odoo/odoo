@@ -7027,6 +7027,21 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 .prepend($(`<we-colorpicker data-color="true" data-color-name="${colorName}"></we-colorpicker>`)[0]);
         });
 
+        // Inventory shape URLs per class.
+        const style = window.getComputedStyle(this.$target[0]);
+        const palette = [1, 2, 3, 4, 5].map(n => style.getPropertyValue(`--o-cc${n}-bg`)).join();
+        if (palette !== this._lastShapePalette) {
+            this._lastShapePalette = palette;
+            this._shapeBackgroundImagePerClass = {};
+            for (const styleSheet of this.$target[0].ownerDocument.styleSheets) {
+                for (const rule of [...styleSheet.cssRules]) {
+                    if (rule.selectorText && rule.selectorText.startsWith(".o_we_shape.")) {
+                        this._shapeBackgroundImagePerClass[rule.selectorText] = rule.style.backgroundImage;
+                    }
+                }
+            }
+        }
+
         uiFragment.querySelectorAll('we-select-pager we-button[data-shape]').forEach(btn => {
             const btnContent = document.createElement('div');
             btnContent.classList.add('o_we_shape_btn_content', 'position-relative', 'border-dark');
@@ -7040,7 +7055,11 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
 
             const {shape} = btn.dataset;
             const shapeEl = btnContent.querySelector('.o_we_shape');
-            shapeEl.classList.add(`o_${shape.replace(/\//g, '_')}`);
+            const shapeClassName = `o_${shape.replace(/\//g, '_')}`;
+            shapeEl.classList.add(shapeClassName);
+            // Match current palette.
+            const shapeBackgroundImage = this._shapeBackgroundImagePerClass[`.o_we_shape.${shapeClassName}`];
+            shapeEl.style.setProperty("background-image", shapeBackgroundImage);
             btn.append(btnContent);
         });
         return uiFragment;
