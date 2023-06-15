@@ -776,7 +776,6 @@ export class OdooEditor extends EventTarget {
 
     sanitize(target) {
         this.observerFlush();
-
         let record;
         if (!target) {
             // If the target is not given,
@@ -784,6 +783,9 @@ export class OdooEditor extends EventTarget {
             // in the mutations from the last step.
             for (record of this._currentStep.mutations) {
                 const node = this.idFind(record.parentId || record.id) || this.editable;
+                if (!this.editable.contains(node)) {
+                    continue;
+                }
                 target = target
                     ? commonParentGet(target, node, this.editable)
                     : node;
@@ -2016,7 +2018,9 @@ export class OdooEditor extends EventTarget {
             insertedZws = zws;
         }
         let start = range.startContainer;
+        const startBlock = closestBlock(start);
         let end = range.endContainer;
+        const endBlock = closestBlock(end);
         // Let the DOM split and delete the range.
         const doJoin =
             (closestBlock(start) !== closestBlock(range.commonAncestorContainer) ||
@@ -2087,6 +2091,21 @@ export class OdooEditor extends EventTarget {
                 restore();
                 break;
             }
+        }
+        // If the oDeleteBackward loop have emptied the start block and the
+        // range end in another element (rangeStart != rangeEnd), we delete
+        // the start block and move the cursor to the end block.
+        if (
+            startBlock &&
+            startBlock.textContent === '\u200B' &&
+            endBlock &&
+            startBlock !== endBlock &&
+            !isEmptyBlock(endBlock) &&
+            paragraphRelatedElements.includes(endBlock.nodeName)
+        ) {
+            startBlock.remove();
+            setSelection(endBlock, 0);
+            fillEmpty(endBlock);
         }
         if (insertedZws) {
             // Remove the zero-width space (zws) that was added to preserve the
