@@ -14,6 +14,7 @@ import {
     editSelect,
     getFixture,
     patchTimeZone,
+    patchWithCleanup,
     triggerEvent,
     triggerEvents,
 } from "@web/../tests/helpers/utils";
@@ -543,5 +544,33 @@ QUnit.module("Fields", (hooks) => {
 
         await click(target.querySelector("label.o_form_label"));
         assert.containsOnce(target, ".o_datetime_picker", "datepicker should be opened");
+    });
+
+    QUnit.test("datetime field: use picker with arabic numbering system", async (assert) => {
+        patchWithCleanup(luxon.Settings, {
+            defaultLocale: "ar-001",
+            defaultNumberingSystem: "arab",
+        });
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: 1,
+            serverData,
+            arch: /* xml */ `
+                <form string="Partners">
+                    <field name="datetime" />
+                </form>
+            `,
+        });
+
+        const getInput = () => target.querySelector("[name=datetime] input");
+
+        assert.strictEqual(getInput().value, "٠٢/٠٨/٢٠١٧ ١١:٠٠:٠٠");
+
+        await click(getInput());
+        await editSelect(getTimePickers()[0][1], null, 45);
+
+        assert.strictEqual(getInput().value, "٠٢/٠٨/٢٠١٧ ١١:٤٥:٠٠");
     });
 });
