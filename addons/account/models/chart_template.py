@@ -231,6 +231,10 @@ class AccountChartTemplate(models.AbstractModel):
                         'noupdate': True,
                     }])
 
+        account_group_count = self.env['account.group'].search_count([('company_id', '=', company.id)])
+        if account_group_count:
+            data.pop('account.group', None)
+
         current_taxes = self.env['account.tax'].search([('company_id', '=', company.id)])
         unique_tax_name_key = lambda t: (t.name, t.type_tax_use, t.tax_scope, t.company_id)
         unique_tax_name_keys = set(current_taxes.mapped(unique_tax_name_key))
