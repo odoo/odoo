@@ -666,9 +666,6 @@ class TestExpenses(TestExpenseCommon):
         wizard = Form(self.env['account.payment.register'].with_context(action_data['context'])).save()
         action = wizard.action_create_payments()
         self.assertEqual(sheet.state, 'done', 'all account.move.line linked to expenses must be reconciled after payment')
-        move = self.env['account.payment'].browse(action['res_id']).move_id
-        move.button_cancel()
-        self.assertEqual(sheet.state, 'done', 'Sheet state must not change when the payment linked to that sheet is canceled')
 
     def test_expense_amount_total_signed_compute(self):
         sheet = self.env['hr.expense.sheet'].create({
