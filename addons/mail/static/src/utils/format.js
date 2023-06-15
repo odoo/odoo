@@ -8,6 +8,25 @@ const urlRegexp =
     /\b(?:https?:\/\/\d{1,3}(?:\.\d{1,3}){3}|(?:https?:\/\/|(?:www\.))[-a-z0-9@:%._+~#=\u00C0-\u024F\u1E00-\u1EFF]{2,256}\.[a-z]{2,13})\b(?:[-a-z0-9@:%_+~#?&[\]^|{}`\\'$//=\u00C0-\u024F\u1E00-\u1EFF]|,(?!$| )|\.(?!$| |\.)|;(?!$| ))*/gi;
 
 /**
+ * Escape < > & as html entities
+ *
+ * @param {string}
+ * @return {string}
+ */
+const _escapeEntities = (function () {
+    const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;" };
+    const escaper = function (match) {
+        return map[match];
+    };
+    const testRegexp = RegExp("(?:&|<|>)");
+    const replaceRegexp = RegExp("(?:&|<|>)", "g");
+    return function (string) {
+        string = string == null ? "" : "" + string;
+        return testRegexp.test(string) ? string.replace(replaceRegexp, escaper) : string;
+    };
+})();
+
+/**
  * @param rawBody {string}
  * @param validRecords {Object}
  * @param validRecords.partners {Partner}
@@ -39,7 +58,7 @@ export async function prettifyMessageContent(rawBody, validRecords = []) {
  * @param {function} transformFunction
  * @returns {string}
  */
-function parseAndTransform(htmlString, transformFunction) {
+export function parseAndTransform(htmlString, transformFunction) {
     const openToken = "OPEN" + Date.now();
     const string = htmlString.replace(/&lt;/g, openToken);
     let children;
@@ -79,29 +98,25 @@ function _parseAndTransform(nodes, transformFunction) {
 
 /**
  * @param {string} text
- * @param {Object} [attrs={}]
  * @return {string} linkified text
  */
-function linkify(text, attrs) {
-    attrs = attrs || {};
-    if (attrs.target === undefined) {
-        attrs.target = "_blank";
+function linkify(text) {
+    let curIndex = 0;
+    let result = "";
+    let match;
+    while ((match = urlRegexp.exec(text)) !== null) {
+        result += _escapeEntities(text.slice(curIndex, match.index));
+        const url = match[0];
+        const href = encodeURI(!/^https?:\/\//i.test(url) ? "http://" + url : url);
+        result += `<a target="_blank" rel="noreferrer noopener" href="${href}">${_escapeEntities(
+            url
+        )}</a>`;
+        curIndex = match.index + match[0].length;
     }
-    if (attrs.target === "_blank") {
-        attrs.rel = "noreferrer noopener";
-    }
-    attrs = Object.keys(attrs)
-        .map(function (key) {
-            return key + '="' + escape(attrs[key]) + '"';
-        })
-        .join(" ");
-    return text.replace(urlRegexp, function (url) {
-        var href = !/^https?:\/\//i.test(url) ? "http://" + url : url;
-        return "<a " + attrs + ' href="' + href + '">' + url + "</a>";
-    });
+    return result + _escapeEntities(text.slice(curIndex));
 }
 
-function addLink(node, transformChildren) {
+export function addLink(node, transformChildren) {
     if (node.nodeType === 3) {
         // text node
         const linkified = linkify(node.data);
