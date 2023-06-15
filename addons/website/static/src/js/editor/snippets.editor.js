@@ -457,14 +457,18 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      * @private
      */
     _onReloadBundles(ev) {
-        if (this._currentTab === this.tabs.THEME) {
+        this._mutex.exec(() => {
             const excludeSelector = this.optionsTabStructure.map(element => element[0]).join(', ');
             for (const editor of this.snippetEditors) {
                 if (!editor.$target[0].matches(excludeSelector)) {
-                    this._mutex.exec(() => editor.destroy());
+                    if (this._currentTab === this.tabs.THEME) {
+                        editor.destroy();
+                    } else {
+                        editor.updateOptionsUI(true);
+                    }
                 }
             }
-        }
+        });
     },
 });
 

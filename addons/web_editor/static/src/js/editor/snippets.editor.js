@@ -707,11 +707,12 @@ var SnippetEditor = Widget.extend({
      * is up-to-date thanks to the function here, as the visibility depends on
      * the UI's status.
      *
+     * @param {boolean} [assetsChanged=false]
      * @returns {Promise}
      */
-    async updateOptionsUI() {
+    async updateOptionsUI(assetsChanged) {
         const proms = Object.values(this.styles).map(opt => {
-            return opt.updateUI({noVisibility: true});
+            return opt.updateUI({noVisibility: true, assetsChanged: assetsChanged});
         });
         return Promise.all(proms);
     },
