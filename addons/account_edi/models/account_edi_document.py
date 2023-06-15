@@ -72,7 +72,7 @@ class AccountEdiDocument(models.Model):
     def _prepare_jobs(self):
         """Creates a list of jobs to be performed by '_process_job' for the documents in self.
         Each document represent a job, BUT if multiple documents have the same state, edi_format_id,
-        doc_type (invoice or payment) and company_id AND the edi_format_id supports batching, they are grouped
+        doc_type invoice and company_id AND the edi_format_id supports batching, they are grouped
         into a single job.
 
         :returns:  [{
@@ -106,8 +106,7 @@ class AccountEdiDocument(models.Model):
 
     @api.model
     def _process_job(self, job):
-        """Post or cancel move_id (invoice or payment) by calling the related methods on edi_format_id.
-        Invoices are processed before payments.
+        """Post or cancel move_id by calling the related methods on edi_format_id.
 
         :param job:  {
             'documents': account.edi.document,
@@ -196,10 +195,7 @@ class AccountEdiDocument(models.Model):
         documents.move_id.line_ids.flush_recordset()  # manual flush for tax details
         moves = documents.move_id
         if state == 'to_send':
-            if all(move.is_invoice(include_receipts=True) for move in moves):
-                with moves._send_only_when_ready():
-                    edi_result = method_to_call(moves)
-            else:
+            with moves._send_only_when_ready():
                 edi_result = method_to_call(moves)
             _postprocess_post_edi_results(documents, edi_result)
         elif state == 'to_cancel':
