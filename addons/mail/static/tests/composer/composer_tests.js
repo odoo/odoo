@@ -827,25 +827,52 @@ QUnit.test("remove an uploading attachment", async (assert) => {
     assert.containsNone($, ".o-mail-Composer .o-mail-AttachmentCard");
 });
 
-QUnit.test(
-    "Show a default status in the recipient status text when the thread doesn't have a name.",
-    async (assert) => {
-        const pyEnv = await startServer();
-        const partnerId = pyEnv["res.partner"].create({});
-        const { openFormView } = await start();
-        await openFormView("res.partner", partnerId);
-        await click("button:contains(Send message)");
-        assert.containsOnce($, ".o-mail-Chatter:contains(To: Followers of this document)");
-    }
-);
-
 QUnit.test("Show a thread name in the recipient status text.", async (assert) => {
     const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({ name: "test name" });
+    const partnerId = pyEnv["res.partner"].create({ name: "test name", email: "test@odoo.com" });
+    pyEnv["mail.followers"].create({
+        is_active: true,
+        partner_id: partnerId,
+        res_id: partnerId,
+        res_model: "res.partner",
+    });
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
     await click("button:contains(Send message)");
-    assert.containsOnce($, '.o-mail-Chatter:contains(To: Followers of "test name")');
+    assert.containsOnce($, ".o-mail-Chatter:contains(To: test)");
+    assert.containsOnce($, 'span[title="test@odoo.com"]');
+});
+
+QUnit.test("Show follower list when there is more than 5 followers.", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerIds = pyEnv["res.partner"].create([
+        { name: "test name 1", email: "test1@odoo.com" },
+        { name: "test name 2", email: "test2@odoo.com" },
+        { name: "test name 3", email: "test3@odoo.com" },
+        { name: "test name 4", email: "test4@odoo.com" },
+        { name: "test name 5", email: "test5@odoo.com" },
+        { name: "test name 6", email: "test6@odoo.com" },
+    ]);
+    for (const partner of partnerIds) {
+        pyEnv["mail.followers"].create({
+            is_active: true,
+            partner_id: partner,
+            res_id: partnerIds[0],
+            res_model: "res.partner",
+        });
+    }
+    const { openFormView } = await start();
+    await openFormView("res.partner", partnerIds[0]);
+    await click("button:contains(Send message)");
+    assert.containsOnce($, "button[title='Show all recipients']");
+    await click("button[title='Show all recipients']");
+    assert.containsOnce($, "li:contains('test1@odoo.com')");
+    assert.containsOnce($, "li:contains('test2@odoo.com')");
+    assert.containsOnce($, "li:contains('test3@odoo.com')");
+    assert.containsOnce($, "li:contains('test4@odoo.com')");
+    assert.containsOnce($, "li:contains('test5@odoo.com')");
+    assert.containsOnce($, "li:contains('test6@odoo.com')");
+    assert.containsOnce($, ".o-mail-Chatter:contains('test1, test2, test3, test4, test5, …')");
 });
 
 QUnit.test(
