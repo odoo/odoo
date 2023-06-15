@@ -146,6 +146,7 @@ class AccountMove(models.Model):
                     'account_id': debit_interim_account.id,
                     'display_type': 'cogs',
                     'tax_ids': [],
+                    'cogs_origin_id': line.id,
                 })
 
                 # Add expense account line.
@@ -162,6 +163,7 @@ class AccountMove(models.Model):
                     'analytic_distribution': line.analytic_distribution,
                     'display_type': 'cogs',
                     'tax_ids': [],
+                    'cogs_origin_id': line.id,
                 })
         return lines_vals_list
 
@@ -232,6 +234,9 @@ class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
 
     stock_valuation_layer_ids = fields.One2many('stock.valuation.layer', 'account_move_line_id', string='Stock Valuation Layer')
+    cogs_origin_id = fields.Many2one(  # technical field used to keep track in the originating line of the anglo-saxon lines
+        "account.move.line", copy=False,
+    )
 
     def _compute_account_id(self):
         super()._compute_account_id()
