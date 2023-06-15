@@ -1483,6 +1483,59 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
     });
 
+    QUnit.test("Settings with createLabelFromField", async function (assert) {
+        serverData.models["res.config.settings"].fields.baz.string = "Zab";
+
+        await makeView({
+            type: "form",
+            resModel: "res.config.settings",
+            serverData,
+            arch: `
+                <form string="Settings" class="oe_form_configuration o_base_settings" js_class="base_settings">
+                    <app string="CRM" name="crm">
+                        <block title="Title of group Bar">
+                            <setting>
+                                <label for="baz"/>
+                                <field name="baz"/>
+                            </setting>
+                        </block>
+                    </app>
+                </form>`,
+        });
+
+        await editSearch(target, "__comp__.props.record");
+        await execTimeouts();
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_settings_container .o_setting_box .o_form_label")].map(
+                (x) => x.textContent
+            ),
+            []
+        );
+
+        await editSearch(target, "baz");
+        await execTimeouts();
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_settings_container .o_setting_box .o_form_label")].map(
+                (x) => x.textContent
+            ),
+            []
+        );
+
+        await editSearch(target, "zab");
+        await execTimeouts();
+        assert.strictEqual(
+            target.querySelector(".highlighter").textContent,
+            "Zab",
+            "Zab word highlighted"
+        );
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_settings_container .o_setting_box .o_form_label")].map(
+                (x) => x.textContent
+            ),
+            ["Zab"]
+        );
+    });
+
     QUnit.test("standalone field labels with string inside a settings page", async (assert) => {
         let compiled = undefined;
         patchWithCleanup(SettingsFormCompiler.prototype, {
@@ -1516,7 +1569,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         const expectedCompiled = `
             <SettingsPage slots="{NoContentHelper:__comp__.props.slots.NoContentHelper}" initialTab="__comp__.props.initialApp" t-slot-scope="settings" modules="[{&quot;key&quot;:&quot;crm&quot;,&quot;string&quot;:&quot;CRM&quot;,&quot;imgurl&quot;:&quot;/crm/static/description/icon.png&quot;}]">
                 <SettingsApp key="\`crm\`" string="\`CRM\`" imgurl="\`/crm/static/description/icon.png\`" selectedTab="settings.selectedTab">
-                    <SearchableSetting title="\`\`"  help="\`\`" companyDependent="false" documentation="\`\`" record="__comp__.props.record" string="\`\`" addLabel="true" labels="[&quot;\`My\\&quot; little '  Label\`&quot;]">
+                    <SearchableSetting title="\`\`"  help="\`\`" companyDependent="false" documentation="\`\`" record="__comp__.props.record" string="\`\`" addLabel="true" labels="[&quot;My\\&quot; little '  Label&quot;]">
                         <FormLabel id="'display_name'" fieldName="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']" className="&quot;highhopes&quot;" string="\`My&quot; little '  Label\`"/>
                         <Field id="'display_name'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']"/>
                     </SearchableSetting>
