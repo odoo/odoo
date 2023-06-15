@@ -210,10 +210,14 @@
         <div data-selector="#wrapwrap > header"
             data-no-check="true"
             groups="website.group_website_designer">
-            <we-checkbox string="Show Empty Cart"
-                         data-customize-website-views="website_sale.header_hide_empty_cart_link|"
-                         data-no-preview="true"
-                         data-reload="/"/>
+            <we-row string="Show Empty" class="o_we_full_row">
+                <div class="d-flex gap-1 mb-1 w-100">
+                    <we-button title="Show/hide shopping cart" class="o_btn_show_empty_cart fa fa-shopping-cart d-flex justify-content-center flex-grow-1"
+                            data-customize-website-views="website_sale.header_hide_empty_cart_link|"
+                            data-no-preview="true"
+                            data-reload="/"/>
+                </div>
+            </we-row>
         </div>
         <!-- Product image -->
         <div data-js="WebsiteSaleProductAttribute" data-selector="#product_detail .o_wsale_product_attribute" data-no-check="true">

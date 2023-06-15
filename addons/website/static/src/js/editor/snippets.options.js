@@ -2243,19 +2243,7 @@ options.registry.HeaderLayout = options.registry.WebsiteLevelColor.extend({
     }
 });
 
-options.registry.HeaderNavbar = options.Class.extend({
-    /**
-     * Particular case: we want the option to be associated on the header navbar
-     * in XML so that the related options only appear on navbar click (not
-     * header), in a different section, etc... but we still want the target to
-     * be the header itself.
-     *
-     * @constructor
-     */
-    init() {
-        this._super(...arguments);
-        this.setTarget(this.$target.closest('#wrapwrap > header'));
-    },
+options.registry.HeaderExtraElts = options.Class.extend({
 
     //--------------------------------------------------------------------------
     // Public
@@ -2269,6 +2257,21 @@ options.registry.HeaderNavbar = options.Class.extend({
         // TODO Remove in master.
         const signInOptionEl = this.el.querySelector('[data-customize-website-views="portal.user_sign_in"]');
         signInOptionEl.dataset.noPreview = 'true';
+    },
+});
+
+options.registry.HeaderNavbar = options.Class.extend({
+    /**
+     * Particular case: we want the option to be associated on the header navbar
+     * in XML so that the related options only appear on navbar click (not
+     * header), in a different section, etc... but we still want the target to
+     * be the header itself.
+     *
+     * @constructor
+     */
+    init() {
+        this._super(...arguments);
+        this.setTarget(this.$target.closest('#wrapwrap > header'));
     },
 
     //--------------------------------------------------------------------------
