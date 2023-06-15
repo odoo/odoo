@@ -743,7 +743,7 @@
                        data-img="/website/static/src/img/snippets_options/header_template_default.svg"/>
             <we-button title="Hamburger menu"
                        data-name="header_hamburger_opt"
-                       data-customize-website-views="website.template_header_hamburger"
+                       data-customize-website-views="website.template_header_hamburger, website.no_autohide_menu"
                        data-customize-website-variable="'hamburger'"
                        data-img="/website/static/src/img/snippets_options/header_template_hamburger.svg"/>
             <we-button title="Vertical"
@@ -963,9 +963,10 @@
                 <we-button data-customize-website-views=""
                            data-customize-website-variable="'left'"
                            data-icon="fa-align-left"/>
-                <we-button data-customize-website-views="website.template_header_default_align_center, website.template_header_hamburger_align_center, website.template_header_slogan_align_center"
+                <we-button data-customize-website-views="website.template_header_default_align_center, website.template_header_slogan_align_center"
                            data-customize-website-variable="'center'"
-                           data-icon="fa-align-center"/>
+                           data-icon="fa-align-center"
+                           data-dependencies="!header_hamburger_opt"/>
                 <we-button data-customize-website-views="website.template_header_default_align_right, website.template_header_hamburger_align_right, website.template_header_slogan_align_right"
                            data-customize-website-variable="'right'"
                            data-icon="fa-align-right"/>
