@@ -3308,6 +3308,8 @@ class Properties(Field):
         return self.convert_to_read_multi([value], record, use_name_get)[0]
 
     def convert_to_read_multi(self, values, records, use_name_get=True):
+        if not records:
+            return values
         assert len(values) == len(records)
 
         # each value is either None or a dict
@@ -3419,7 +3421,7 @@ class Properties(Field):
         definition_changed = any(
             definition.get('definition_changed')
             or definition.get('definition_deleted')
-            for definition in value
+            for definition in (value or [])
         )
         if definition_changed:
             value = [
