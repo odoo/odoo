@@ -25,7 +25,7 @@ export class QtyAtDatePopover extends Component {
     }
 }
 
-QtyAtDatePopover.template = "sale_stock.QtyDetailPopOver";
+QtyAtDatePopover.template = "sale_stock.QtyAtDatePopover";
 
 export class QtyAtDateWidget extends Component {
     setup() {
@@ -79,7 +79,7 @@ export class QtyAtDateWidget extends Component {
 }
 
 QtyAtDateWidget.components = { Popover: QtyAtDatePopover };
-QtyAtDateWidget.template = "sale_stock.qtyAtDate";
+QtyAtDateWidget.template = "sale_stock.QtyAtDate";
 
 export const qtyAtDateWidget = {
     component: QtyAtDateWidget,
