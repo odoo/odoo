@@ -36,4 +36,8 @@ export class Persona {
     get nameOrDisplayName() {
         return this.name || this.displayName;
     }
+
+    get emailWithoutDomain() {
+        return this.email.substring(0, this.email.lastIndexOf("@"));
+    }
 }

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.RecipientList" owl="1">
+        <div class="o-mail-RecipientList p-2 overflow-auto">
+            <ul class="list-unstyled mb-0">
+                <li t-foreach="props.thread.followers" t-as="follower" t-key="follower.id">
+                    <t t-out="follower.partner.email"/>
+                </li>
+            </ul>
+        </div>
+    </t>
+
+</templates>
