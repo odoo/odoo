@@ -119,3 +119,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
         return super()._create_transaction(
             *args, invoice_id=invoice_id, custom_create_values=custom_create_values, **kwargs
         )
+
+    @staticmethod
+    def _validate_transaction_kwargs(kwargs, additional_allowed_keys=()):
+        
+        return super(PaymentPortal, PaymentPortal)._validate_transaction_kwargs(kwargs, additional_allowed_keys=additional_allowed_keys+('invoice_id',))
