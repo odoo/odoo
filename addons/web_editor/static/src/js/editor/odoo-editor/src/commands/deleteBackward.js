@@ -27,6 +27,7 @@ import {
     isNotEditableNode,
     createDOMPathGenerator,
     closestElement,
+    closestBlock,
 } from '../utils/utils.js';
 
 Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
@@ -138,6 +139,29 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
                 }
             }
             parentEl.oDeleteBackward(parentOffset, alreadyMoved);
+            return;
+        }
+
+        /** If we are at the beninning of a block node,
+         *  And the previous node is empty, remove it.
+         *
+         *   E.g. (previousEl == empty)
+         *        <p><br></p><h1>[]def</h1> + BACKSPACE
+         *   <=>  <h1>[]def</h1>
+         *
+         *   E.g. (previousEl != empty)
+         *        <h3>abc</h3><h1>[]def</h1> + BACKSPACE
+         *   <=>  <h3>abc[]def</h3>
+        */
+        const previousElementSiblingClosestBlock = closestBlock(this.previousElementSibling);
+        if (
+            previousElementSiblingClosestBlock &&
+            (isEmptyBlock(previousElementSiblingClosestBlock) ||
+                previousElementSiblingClosestBlock.textContent === '\u200B') &&
+            paragraphRelatedElements.includes(this.nodeName)
+        ) {
+            previousElementSiblingClosestBlock.remove();
+            setSelection(this, 0);
             return;
         }
 
