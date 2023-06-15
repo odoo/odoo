@@ -11,6 +11,8 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, tools
 from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
+from odoo.exceptions import UserError
+
 
 _logger = logging.getLogger(__name__)
 
@@ -66,6 +68,19 @@ class EventTypeMail(models.Model):
             'interval_type': self.interval_type,
             'template_ref': '%s,%i' % (self.template_ref._name, self.template_ref.id)
         }
+
+    @api.onchange('notification_type')
+    def set_template_ref_model(self):
+        notification_model = self.template_model_id.model
+        model = self.env[notification_model]
+        try:
+            model.search_count([('model', '=', 'event.registration')])
+            exists = model.search([('model', '=', 'event.registration')], limit=1)
+            if exists:
+                self.template_ref = "{},{}".format(notification_model, exists.id)
+        except:
+            raise UserError(
+                _("There is no template data relevant to the notification type."))
 
 
 class EventMailScheduler(models.Model):
