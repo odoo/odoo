@@ -503,6 +503,19 @@ function toInline($editable, cssRules, $iframe) {
     const rootFontSize = parseFloat(rootFontSizeProperty.replace(/[^\d\.]/g, ''));
     normalizeRem($editable, rootFontSize);
 
+    // Fix img-fluid for Outlook.
+    for (const image of editable.querySelectorAll('img.img-fluid')) {
+        const width = _getWidth(image);
+        const clone = image.cloneNode();
+        clone.setAttribute('width', width);
+        clone.style.setProperty('width', width + 'px');
+        clone.style.removeProperty('max-width');
+        image.before(document.createComment(`[if mso]>${clone.outerHTML}<![endif]`));
+        image.setAttribute('style', `${image.getAttribute('style') || ''} mso-hide: all;`.trim());
+        image.before(document.createComment('[if !mso]><!'));
+        image.after(document.createComment('<![endif]'));
+    }
+
     for (const [node, displayValue] of displaysToRestore) {
         node.style.setProperty('display', displayValue);
     }
