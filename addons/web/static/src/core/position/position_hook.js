@@ -242,7 +242,7 @@ export function usePosition(reference, options) {
     options = { ...DEFAULTS, ...options };
     const { popper } = options;
     const popperRef = popper ? useRef(popper) : useComponent();
-    const getReference = reference instanceof HTMLElement ? () => reference : reference;
+    const getReference = typeof reference === "function" ? reference : () => reference;
     const update = () => {
         const ref = getReference();
         if (popperRef.el && ref) {
