@@ -258,13 +258,14 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
 };
 
 HTMLLIElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
-    if (offset > 0 || this.previousElementSibling) {
-        // If backspace inside li content or if the li is not the first one,
-        // it behaves just like in a normal element.
-        HTMLElement.prototype.oDeleteBackward.call(this, offset, alreadyMoved);
+    // If the deleteBackward is performed at the begening of a LI element,
+    // we take the current LI out of the list.
+    if (offset === 0) {
+        this.oToggleList(offset);
         return;
     }
-    this.oShiftTab(offset);
+    // Otherwise, call the HTMLElement deleteBackward method.
+    HTMLElement.prototype.oDeleteBackward.call(this, offset, alreadyMoved);
 };
 
 HTMLBRElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {

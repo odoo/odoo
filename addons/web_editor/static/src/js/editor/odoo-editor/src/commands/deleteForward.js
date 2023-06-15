@@ -25,6 +25,7 @@ import {
     childNodeIndex,
     boundariesOut,
     isEditorTab,
+    isVisible,
 } from '../utils/utils.js';
 
 /**
@@ -144,7 +145,32 @@ HTMLElement.prototype.oDeleteForward = function (offset) {
         firstLeafNode.oDeleteBackward(Math.min(1, nodeSize(firstLeafNode)));
         return;
     }
+
     const nextSibling = this.nextSibling;
+    if (
+        (
+            offset === this.childNodes.length ||
+            (this.childNodes.length === 1 && this.childNodes[0].tagName === 'BR')
+        ) &&
+        this.parentElement &&
+        nextSibling &&
+        ['LI', 'UL', 'OL'].includes(nextSibling.tagName)
+    ) {
+        const nextSiblingNestedLi = nextSibling.querySelector('li:first-child');
+        if (nextSiblingNestedLi) {
+            // Add the first LI from the next sibbling list to the current list.
+            this.after(nextSiblingNestedLi);
+            // Remove the next sibbling list if it's empty.
+            if (!isVisible(nextSibling, false) || nextSibling.textContent === '') {
+                nextSibling.remove();
+            }
+            HTMLElement.prototype.oDeleteBackward.call(nextSiblingNestedLi, 0, true);
+        } else {
+            HTMLElement.prototype.oDeleteBackward.call(nextSibling, 0);
+        }
+        return;
+    }
+
     // Remove the nextSibling if it is a non-editable element.
     if (
         nextSibling &&
@@ -176,6 +202,13 @@ HTMLElement.prototype.oDeleteForward = function (offset) {
     );
     if (firstOutNode) {
         const [node, offset] = leftPos(firstOutNode);
+        // If the next node is a <LI> we call directly the htmlElement
+        // oDeleteBackward : because we don't want the special cases of
+        // deleteBackward for LI when we comme from a deleteForward.
+        if (node.tagName === 'LI') {
+            HTMLElement.prototype.oDeleteBackward.call(node, offset);
+            return;
+        }
         node.oDeleteBackward(offset);
         return;
     }
