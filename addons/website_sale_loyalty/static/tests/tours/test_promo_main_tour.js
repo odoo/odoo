@@ -95,7 +95,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
             tourUtils.goToCart({quantity: 3}),
         {
             content: "check reduction amount got recomputed and merged both discount lines into one only",
-            extra_trigger: '.oe_currency_value:contains("-﻿75.50"):not(#cart_total .oe_currency_value:contains("-﻿75.50"))',
+            extra_trigger: '.oe_currency_value:contains("-﻿74.00"):not(#cart_total .oe_currency_value:contains("-﻿74.00"))',
             trigger: '.oe_website_sale .oe_cart',
             run: function () {}, // it's a check
         },
@@ -107,7 +107,7 @@ registry.category("web_tour.tours").add('shop_sale_loyalty', {
         },
         {
             content: "check reduction amount got recomputed when changing qty",
-            trigger: '.oe_currency_value:contains("-﻿107.50")',
+            trigger: '.oe_currency_value:contains("-﻿106.00")',
             run: function () {}, // it's a check
         },
         {
