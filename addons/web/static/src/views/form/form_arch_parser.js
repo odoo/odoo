@@ -4,8 +4,17 @@ import { addFieldDependencies, archParseBoolean, getActiveActions } from "@web/v
 import { Field } from "@web/views/fields/field";
 import { XMLParser } from "@web/core/utils/xml";
 import { Widget } from "@web/views/widgets/widget";
+import { Domain } from "@web/core/domain";
 
 export class FormArchParser extends XMLParser {
+    combineDomain(d1, d2) {
+        if (d1 === true || d2 === true) {
+            return true;
+        } else if (d1 && d2) {
+            return Domain.or([d1 || [], d2 || []]).ast.value;
+        }
+    }
+
     parse(arch, models, modelName) {
         const xmlDoc = this.parseXML(arch);
         const jsClass = xmlDoc.getAttribute("js_class");
@@ -51,26 +60,29 @@ export class FormArchParser extends XMLParser {
         for (const fieldNode of Object.values(fieldNodes)) {
             const fieldName = fieldNode.name;
             if (activeFields[fieldName]) {
-                const { alwaysInvisible } = fieldNode;
+                const { alwaysInvisible, onChange, modifiers } = fieldNode;
+                const readonly = this.combineDomain(
+                    modifiers.readonly,
+                    activeFields[fieldNode.name].modifiers.readonly
+                );
+                const required = this.combineDomain(
+                    modifiers.required,
+                    activeFields[fieldNode.name].modifiers.required
+                );
                 activeFields[fieldName] = {
                     ...fieldNode,
                     // a field can only be considered to be always invisible
                     // if all its nodes are always invisible
                     alwaysInvisible: activeFields[fieldName].alwaysInvisible && alwaysInvisible,
+                    modifiers: {
+                        ...(readonly && { readonly }),
+                        ...(required && { required }),
+                    },
+                    onChange: activeFields[fieldNode.name].onChange || onChange,
                 };
             } else {
                 activeFields[fieldName] = fieldNode;
             }
-            // const { onChange, modifiers } = fieldNode;
-            // let readonly = modifiers.readonly || [];
-            // let required = modifiers.required || [];
-            // if (activeFields[fieldNode.name]) {
-            //     activeFields[fieldNode.name].readonly = Domain.combine([activeFields[fieldNode.name].readonly, readonly], "|");
-            //     activeFields[fieldNode.name].required = Domain.combine([activeFields[fieldNode.name].required, required], "|");
-            //     activeFields[fieldNode.name].onChange = activeFields[fieldNode.name].onChange || onChange;
-            // } else {
-            //     activeFields[fieldNode.name] = { readonly, required, onChange };
-            // }
         }
         return {
             arch,
