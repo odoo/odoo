@@ -944,6 +944,9 @@ class AccountPayment(models.Model):
         ''' draft -> cancelled '''
         self.move_id.button_cancel()
 
+    def button_request_cancel(self):
+        self.move_id.button_request_cancel()
+
     def action_draft(self):
         ''' posted -> draft '''
         self.move_id.button_draft()
