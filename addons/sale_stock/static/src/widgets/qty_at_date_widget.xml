@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <template id="template" xml:space="preserve">
 
-    <!-- TODO: rename this to QtyAtDate in master version -->
-    <t t-name="sale_stock.qtyAtDate">
-        <div t-att-class="!props.record.data.display_qty_widget ? 'invisible' : ''">
-            <a t-att-tabindex="props.record.data.display_qty_widget ? '0' : '-1'" t-on-click="showPopup" t-attf-class="fa fa-area-chart {{ calcData.forecasted_issue ? 'text-danger' : 'text-primary' }}"/>
-        </div>
+    <t t-name="sale_stock.QtyAtDate">
+        <a t-att-tabindex="props.record.data.display_qty_widget ? '0' : '-1'"
+            t-on-click="showPopup"
+            t-att-class="!props.record.data.display_qty_widget ? 'invisible' : ''"
+            t-attf-class="fa fa-area-chart {{ calcData.forecasted_issue ? 'text-danger' : 'text-primary' }}"
+        />
     </t>
 
-    <!-- TODO: rename this to QtyAtDatePopup in master version -->
-    <t t-name="sale_stock.QtyDetailPopOver">
+    <t t-name="sale_stock.QtyAtDatePopover">
         <div class="p-2">
         <h6>Availability</h6>
         <table class="table table-borderless table-sm">
