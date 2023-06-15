@@ -542,7 +542,7 @@ function fontToImg($editable) {
             image.style.setProperty('line-height', lineHeight);
             image.style.setProperty('width', intrinsicWidth + 'px');
             image.style.setProperty('height', intrinsicHeight + 'px');
-            image.style.setProperty('display', 'block');
+            image.style.setProperty('vertical-align', 'unset'); // undo Bootstrap's default (middle).
             if (!padding) {
                 image.style.setProperty('margin', _getStylePropertyValue(font, 'margin'));
             }
@@ -555,9 +555,12 @@ function fontToImg($editable) {
             font.before(wrapper);
             font.remove();
             wrapper.style.setProperty('padding', padding);
-            wrapper.style.setProperty('width', width + 'px');
+            const wrapperWidth = width + ['left', 'right'].reduce((sum, side) => (
+                sum + (+_getStylePropertyValue(image, `margin-${side}`).replace('px', '') || 0)
+            ), 0);
+            wrapper.style.setProperty('width', wrapperWidth + 'px');
             wrapper.style.setProperty('height', height + 'px');
-            wrapper.style.setProperty('vertical-align', 'middle');
+            wrapper.style.setProperty('vertical-align', 'text-bottom');
             wrapper.style.setProperty('background-color', image.style.backgroundColor);
             wrapper.setAttribute('class', font.getAttribute('class').replace(new RegExp('(^|\\s+)' + icon + '(-[^\\s]+)?', 'gi'), '')); // remove inline font-awsome style);
         } else {
@@ -885,7 +888,6 @@ function _createColumnGrid() {
 function _createTable(attributes = []) {
     const table = document.createElement('table');
     Object.entries(TABLE_ATTRIBUTES).forEach(([att, value]) => table.setAttribute(att, value));
-    // $table.attr(TABLE_ATTRIBUTES);
     table.style.setProperty('width', '100%', 'important');
     for (const attr of attributes) {
         if (!(attr.name === 'width' && attr.value === '100%')) {
