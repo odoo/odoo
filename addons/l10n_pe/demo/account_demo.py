@@ -11,7 +11,7 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_demo_data_move(self, company=False):
         def _get_tax_by_code(code, type_tax='sale'):
             taxes = self.env['account.tax'].search([
-                ('company_id', '=', company.id), ('type_tax_use', '=', type_tax), ('l10n_pe_edi_tax_code', '=', code)], limit=1)
+                ('type_tax_use', '=', type_tax), ('l10n_pe_edi_tax_code', '=', code)], limit=1)
             return [Command.set(taxes.ids)]
 
         move_data = super()._get_demo_data_move(company)
@@ -53,7 +53,7 @@ class AccountChartTemplate(models.AbstractModel):
             move_data['demo_invoice_5']['invoice_line_ids'] = [
                 Command.create({'product_id': ref('product.consu_delivery_03').id, 'quantity': 1.0, 'price_unit': 500.0, 'tax_ids': _get_tax_by_code('1000', 'purchase')}),
             ]
-            igv_gyng_tax = self.env['account.tax'].search([('company_id', '=', company.id), ('type_tax_use', '=', 'purchase'), ('tax_group_id.name', '=', 'IGV GyNG')], limit=1)
+            igv_gyng_tax = self.env['account.tax'].search([('type_tax_use', '=', 'purchase'), ('tax_group_id.name', '=', 'IGV GyNG')], limit=1)
             move_data['demo_invoice_equipment_purchase']['partner_id'] = ref('base.res_partner_2').id
             move_data['demo_invoice_equipment_purchase']['invoice_date'] = last_month_date
             move_data['demo_invoice_equipment_purchase']['l10n_latam_document_number'] = 'FFF-100003'

@@ -108,10 +108,13 @@ class AccountPaymentMethodLine(models.Model):
         copy=False,
         ondelete='restrict',
         domain="[('deprecated', '=', False), "
-                "('company_id', '=', company_id), "
                 "'|', ('account_type', 'in', ('asset_current', 'liability_current')), ('id', '=', parent.default_account_id)]"
     )
-    journal_id = fields.Many2one(comodel_name='account.journal', ondelete="cascade")
+    journal_id = fields.Many2one(
+        comodel_name='account.journal',
+        ondelete="cascade",
+        check_company=True,
+    )
 
     # == Display purpose fields ==
     code = fields.Char(related='payment_method_id.code')

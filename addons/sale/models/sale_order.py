@@ -446,9 +446,11 @@ class SaleOrder(models.Model):
             key = (default_team_id, user_id, company_id)
             if key not in cached_teams:
                 cached_teams[key] = self.env['crm.team'].with_context(
-                    default_team_id=default_team_id
+                    default_team_id=default_team_id,
                 )._get_default_team_id(
-                    user_id=user_id, domain=[('company_id', 'in', [company_id, False])])
+                    user_id=user_id,
+                    domain=self.env['crm.team']._check_company_domain(company_id),
+                )
             order.team_id = cached_teams[key]
 
     @api.depends('order_line.price_subtotal', 'order_line.price_tax', 'order_line.price_total')

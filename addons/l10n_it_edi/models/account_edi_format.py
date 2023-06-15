@@ -378,9 +378,10 @@ class AccountEdiFormat(models.Model):
     def _l10n_it_get_partner_invoice(self, tree, company):
         # Partner (first step to avoid warning 'Warning! You must first select a partner.'). <1.2>
         elements = tree.xpath('//CedentePrestatore//IdCodice')
-        partner = elements and self.env['res.partner'].search(
-            ['&', ('vat', 'ilike', elements[0].text), '|', ('company_id', '=', company.id), ('company_id', '=', False)],
-            limit=1)
+        partner = elements and self.env['res.partner'].search([
+            *self.env['res.partner']._check_company_domain(company),
+            ('vat', 'ilike', elements[0].text)
+        ], limit=1)
         if not partner:
             elements = tree.xpath('//CedentePrestatore//CodiceFiscale')
             if elements:
@@ -391,13 +392,16 @@ class AccountEdiFormat(models.Model):
                 elif re.match(r'^IT[0-9]{11}$', codice):
                     domains.append([('l10n_it_codice_fiscale', '=',
                                      self.env['res.partner']._l10n_it_edi_normalized_codice_fiscale(codice))])
-                partner = elements and self.env['res.partner'].search(
-                    AND([OR(domains), OR([[('company_id', '=', company.id)], [('company_id', '=', False)]])]), limit=1)
+                partner = elements and self.env['res.partner'].search(AND([
+                    *self.env['res.partner']._check_company_domain(company),
+                    OR(domains)
+                ]), limit=1)
         if not partner:
             elements = tree.xpath('//DatiTrasmissione//Email')
-            partner = elements and self.env['res.partner'].search(
-                ['&', '|', ('email', '=', elements[0].text), ('l10n_it_pec_email', '=', elements[0].text), '|',
-                 ('company_id', '=', company.id), ('company_id', '=', False)], limit=1)
+            partner = elements and self.env['res.partner'].search([
+                *self.env['res.partner']._check_company_domain(company),
+                '|', ('email', '=', elements[0].text), ('l10n_it_pec_email', '=', elements[0].text)
+            ], limit=1)
 
         return partner
 
@@ -415,8 +419,8 @@ class AccountEdiFormat(models.Model):
     def _l10n_it_edi_search_tax_for_import(self, company, percentage, extra_domain=None):
         """ Returns the VAT, Withholding or Pension Fund tax that suits the conditions given
             and matches the percentage found in the XML for the company. """
-        conditions = [
-            ('company_id', '=', company.id),
+        domain = [
+            *self.env['account.tax']._check_company_domain(company),
             ('amount', '=', percentage),
             ('amount_type', '=', 'percent'),
             ('type_tax_use', '=', 'purchase'),
@@ -425,7 +429,7 @@ class AccountEdiFormat(models.Model):
         # As we're importing vendor bills, we're excluding Reverse Charge Taxes
         # which have a [100.0, 100.0, -100.0] repartition lines factor_percent distribution.
         # We only allow for taxes that have all positive repartition lines factor_percent distribution.
-        taxes = self.env['account.tax'].search(conditions).filtered(
+        taxes = self.env['account.tax'].search(domain).filtered(
             lambda tax: all([rep_line.factor_percent >= 0 for rep_line in tax.invoice_repartition_line_ids]))
 
         return taxes[0] if taxes else taxes

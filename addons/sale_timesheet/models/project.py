@@ -48,8 +48,9 @@ class Project(models.Model):
             ('detailed_type', '=', 'service'),
             ('invoice_policy', '=', 'delivery'),
             ('service_type', '=', 'timesheet'),
-            '|', ('company_id', '=', False), ('company_id', '=', company_id)]""",
+        ]""",
         help='Service that will be used by default when invoicing the time spent on a task. It can be modified on each task individually by selecting a specific sales order item.',
+        check_company=True,
         compute="_compute_timesheet_product_id", store=True, readonly=False,
         default=_default_timesheet_product_id)
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate', compute_sudo=True)

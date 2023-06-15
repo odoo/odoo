@@ -51,7 +51,8 @@ class PaymentProvider(models.Model):
             for provider in self.filtered(lambda p: p.custom_mode == 'wire_transfer'):
                 company_id = provider.company_id.id
                 accounts = self.env['account.journal'].search([
-                    ('type', '=', 'bank'), ('company_id', '=', company_id)
+                    *self.env['account.journal']._check_company_domain(company_id),
+                    ('type', '=', 'bank'),
                 ]).bank_account_id
                 account_names = "".join(f"<li>{account.display_name}</li>" for account in accounts)
                 provider.pending_msg = f'<div>' \

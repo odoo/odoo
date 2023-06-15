@@ -50,7 +50,7 @@ class AccountChartTemplate(models.AbstractModel):
 
     @api.model
     def _get_demo_data_products(self, company=False):
-        prod_templates = self.env['product.product'].search(['|', ('company_id', '=', self.env.company.id), ('company_id', '=', False)])
+        prod_templates = self.env['product.product'].search(self.env['product.product']._check_company_domain(company))
         if self.env.company.account_sale_tax_id:
             prod_templates.write({'taxes_id': [Command.link(self.env.company.account_sale_tax_id.id)]})
         if self.env.company.account_purchase_tax_id:
@@ -138,7 +138,10 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_demo_data_statement(self, company=False):
         cid = company.id or self.env.company.id
         bnk_journal = self.env['account.journal'].search(
-            domain=[('type', '=', 'bank'), ('company_id', '=', cid)],
+            domain=[
+                *self.env['account.journal']._check_company_domain(cid),
+                ('type', '=', 'bank'),
+            ],
             limit=1,
         )
         return {
@@ -168,7 +171,10 @@ class AccountChartTemplate(models.AbstractModel):
     def _get_demo_data_transactions(self, company=False):
         cid = company.id or self.env.company.id
         bnk_journal = self.env['account.journal'].search(
-            domain=[('type', '=', 'bank'), ('company_id', '=', cid)],
+            domain=[
+                *self.env['account.journal']._check_company_domain(cid),
+                ('type', '=', 'bank'),
+            ],
             limit=1,
         )
         return {
@@ -350,8 +356,10 @@ class AccountChartTemplate(models.AbstractModel):
                 ('module', '=like', 'l10n%')
             ], limit=1).res_id)
             or self.env['account.account'].search([
+                *self.env['account.account']._check_company_domain(company),
                 ('account_type', '=', account_type),
-                ('company_id', '=', company.id)
             ], limit=1)
-            or self.env['account.account'].search([('company_id', '=', company.id)], limit=1)
+            or self.env['account.account'].search([
+                *self.env['account.account']._check_company_domain(company),
+            ], limit=1)
         )

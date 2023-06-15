@@ -7,6 +7,7 @@ from odoo.exceptions import UserError
 class L10nLatamPaymentMassTransfer(models.TransientModel):
     _name = 'l10n_latam.payment.mass.transfer'
     _description = 'Checks Mass Transfers'
+    _check_company_auto = True
 
     payment_date = fields.Date(
         string="Payment Date",
@@ -16,13 +17,15 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
     destination_journal_id = fields.Many2one(
         comodel_name='account.journal',
         string='Destination Journal',
-        domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', company_id), ('id', '!=', journal_id)]",
+        check_company=True,
+        domain="[('type', 'in', ('bank', 'cash')), ('id', '!=', journal_id)]",
     )
     communication = fields.Char(
         string="Memo",
     )
     journal_id = fields.Many2one(
         'account.journal',
+        check_company=True,
         compute='_compute_journal_company'
     )
     company_id = fields.Many2one(
@@ -31,6 +34,7 @@ class L10nLatamPaymentMassTransfer(models.TransientModel):
     )
     check_ids = fields.Many2many(
         'account.payment',
+        check_company=True,
     )
 
     @api.depends('check_ids')

@@ -21,8 +21,8 @@ class AccountPaymentMethodLine(models.Model):
     @api.depends('payment_method_id')
     def _compute_payment_provider_id(self):
         providers = self.env['payment.provider'].sudo().search([
+            *self.env['payment.provider']._check_company_domain(self.journal_id.company_id),
             ('code', 'in', self.mapped('code')),
-            ('company_id', 'in', self.journal_id.company_id.ids),
         ])
 
         # Make sure to pick the active provider, if any.
@@ -37,7 +37,10 @@ class AccountPaymentMethodLine(models.Model):
         for line in self:
             code = line.payment_method_id.code
             company = line.journal_id.company_id
-            line.payment_provider_id = providers_map.get((code, company), False)
+            line.payment_provider_id = False
+            while not line.payment_provider_id and company:
+                line.payment_provider_id = providers_map.get((code, company), False)
+                company = company.parent_id
 
     @api.model
     def _get_payment_method_domain(self, code):
@@ -49,7 +52,7 @@ class AccountPaymentMethodLine(models.Model):
         if unique:
             company_ids = self.env['payment.provider'].sudo().search([('code', '=', code)]).mapped('company_id')
             if company_ids:
-                domain = expression.AND([domain, [('company_id', 'in', company_ids.ids)]])
+                domain = expression.AND([domain, self.env['payment.provider']._check_company_domain(company_ids)])
 
         return domain
 

@@ -19,28 +19,29 @@ class HrEmployeeBase(models.AbstractModel):
     name = fields.Char()
     active = fields.Boolean("Active")
     color = fields.Integer('Color Index', default=0)
-    department_id = fields.Many2one('hr.department', 'Department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    department_id = fields.Many2one('hr.department', 'Department', check_company=True)
     member_of_department = fields.Boolean("Member of department", compute='_compute_part_of_department', search='_search_part_of_department',
         help="Whether the employee is a member of the active user's department or one of it's child department.")
-    job_id = fields.Many2one('hr.job', 'Job Position', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    job_id = fields.Many2one('hr.job', 'Job Position', check_company=True)
     job_title = fields.Char("Job Title", compute="_compute_job_title", store=True, readonly=False)
     company_id = fields.Many2one('res.company', 'Company')
     address_id = fields.Many2one('res.partner', 'Work Address', compute="_compute_address_id", store=True, readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        check_company=True)
     work_phone = fields.Char('Work Phone', compute="_compute_phones", store=True, readonly=False)
     mobile_phone = fields.Char('Work Mobile', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_email = fields.Char('Work Email', compute="_compute_work_contact_details", store=True, inverse='_inverse_work_contact_details')
     work_contact_id = fields.Many2one('res.partner', 'Work Contact', copy=False)
     work_location_id = fields.Many2one('hr.work.location', 'Work Location', compute="_compute_work_location_id", store=True, readonly=False,
-    domain="[('address_id', '=', address_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        check_company=True,
+        domain="[('address_id', '=', address_id)]")
     user_id = fields.Many2one('res.users')
     resource_id = fields.Many2one('resource.resource')
-    resource_calendar_id = fields.Many2one('resource.calendar', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    resource_calendar_id = fields.Many2one('resource.calendar', check_company=True)
     parent_id = fields.Many2one('hr.employee', 'Manager', compute="_compute_parent_id", store=True, readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        check_company=True)
     coach_id = fields.Many2one(
         'hr.employee', 'Coach', compute='_compute_coach', store=True, readonly=False,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        check_company=True,
         help='Select the "Employee" who is the coach of this employee.\n'
              'The "Coach" has no specific rights or responsibilities by default.')
     tz = fields.Selection(

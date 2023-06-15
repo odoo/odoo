@@ -6,7 +6,7 @@
     <record id="payment_provider_company_rule" model="ir.rule">
         <field name="name">Access providers in own companies only</field>
         <field name="model_id" ref="payment.model_payment_provider"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'parent_of', company_ids)]</field>
     </record>
 
     <!-- Transactions -->
@@ -31,7 +31,7 @@
     <record id="payment_token_company_rule" model="ir.rule">
         <field name="name">Access tokens in own companies only</field>
         <field name="model_id" ref="payment.model_payment_token"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'parent_of', company_ids)]</field>
     </record>
 
     <!-- Wizards -->

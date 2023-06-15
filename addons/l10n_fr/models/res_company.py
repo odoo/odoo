@@ -11,8 +11,8 @@ class ResCompany(models.Model):
     siret = fields.Char(related='partner_id.siret', string='SIRET', size=14, readonly=False)
     ape = fields.Char(string='APE')
 
-    l10n_fr_rounding_difference_loss_account_id = fields.Many2one('account.account')
-    l10n_fr_rounding_difference_profit_account_id = fields.Many2one('account.account')
+    l10n_fr_rounding_difference_loss_account_id = fields.Many2one('account.account', check_company=True)
+    l10n_fr_rounding_difference_profit_account_id = fields.Many2one('account.account', check_company=True)
 
     @api.model
     def _get_unalterable_country(self):

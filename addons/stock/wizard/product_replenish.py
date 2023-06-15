@@ -12,6 +12,7 @@ from odoo.tools.misc import clean_context
 class ProductReplenish(models.TransientModel):
     _name = 'product.replenish'
     _description = 'Product Replenish'
+    _check_company_auto = True
 
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_tmpl_id = fields.Many2one('product.template', string='Product Template', required=True)
@@ -23,11 +24,13 @@ class ProductReplenish(models.TransientModel):
     date_planned = fields.Datetime('Scheduled Date', required=True, help="Date at which the replenishment should take place.")
     warehouse_id = fields.Many2one(
         'stock.warehouse', string='Warehouse', required=True,
-        domain="[('company_id', '=', company_id)]")
+        check_company=True,
+    )
     route_id = fields.Many2one(
         'stock.route', string='Preferred Route',
         help="Apply specific route for the replenishment instead of product's default routes.",
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+        check_company=True,
+    )
     company_id = fields.Many2one('res.company')
     forecasted_quantity = fields.Float(string="Forecasted Quantity", compute="_compute_forecasted_quantity")
     allowed_route_ids = fields.Many2many("stock.route", compute="_compute_allowed_route_ids")

@@ -21,6 +21,7 @@ class ProductProduct(models.Model):
 
     def _optional_product_pos_domain(self):
         return [
-            '&', '&', ['sale_ok', '=', True], ['available_in_pos', '=', True],
-            '|', ['company_id', '=', self.env.company], ['company_id', '=', False]
+            *self.env['product.product']._check_company_domain(self.env.company),
+            ['sale_ok', '=', True],
+            ['available_in_pos', '=', True],
         ]

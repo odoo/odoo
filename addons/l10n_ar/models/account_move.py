@@ -182,7 +182,11 @@ class AccountMove(models.Model):
         for rec in self.filtered(lambda x: x.company_id.account_fiscal_country_id.code == "AR" and x.journal_id.type == 'sale'
                                  and x.l10n_latam_use_documents and x.partner_id.l10n_ar_afip_responsibility_type_id):
             res_code = rec.partner_id.l10n_ar_afip_responsibility_type_id.code
-            domain = [('company_id', '=', rec.company_id.id), ('l10n_latam_use_documents', '=', True), ('type', '=', 'sale')]
+            domain = [
+                *self.env['account.journal']._check_company_domain(rec.company_id),
+                ('l10n_latam_use_documents', '=', True),
+                ('type', '=', 'sale'),
+            ]
             journal = self.env['account.journal']
             msg = False
             if res_code in ['9', '10'] and rec.journal_id.l10n_ar_afip_pos_system not in expo_journals:

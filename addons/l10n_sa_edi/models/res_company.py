@@ -44,12 +44,18 @@ class ResCompany(models.Model):
     l10n_sa_additional_identification_number = fields.Char(
         related='partner_id.l10n_sa_additional_identification_number', readonly=False)
 
+    def _get_company_root_delegated_field_names(self):
+        return super()._get_company_root_delegated_field_names() + [
+            'l10n_sa_api_mode',
+            'l10n_sa_private_key',
+        ]
+
     def write(self, vals):
         for company in self:
             if 'l10n_sa_api_mode' in vals:
                 if company.l10n_sa_api_mode == 'prod' and vals['l10n_sa_api_mode'] != 'prod':
                     raise UserError("You cannot change the ZATCA Submission Mode once it has been set to Production")
-                journals = self.env['account.journal'].search([('company_id', '=', company.id)])
+                journals = self.env['account.journal'].search(self.env['account.journal']._check_company_domain(company))
                 journals._l10n_sa_reset_certificates()
                 journals.l10n_sa_latest_submission_hash = False
         return super().write(vals)

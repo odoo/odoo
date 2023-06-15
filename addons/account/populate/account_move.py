@@ -39,7 +39,10 @@ class AccountMove(models.Model):
                                payable, receivable, liquidity, other, False.
             :return (Model<account.account>): the recordset of accounts found.
             """
-            domain = [('company_id', '=', company_id), ('account_type', '!=', 'off_balance')]
+            domain = [
+                *self.env['account.account']._check_company_domain(company_id),
+                ('account_type', '!=', 'off_balance'),
+            ]
             if types:
                 domain += [('account_type', 'in', types)]
             return self.env['account.account'].search(domain)
@@ -56,7 +59,7 @@ class AccountMove(models.Model):
             :return (list<int>): the ids of the journals of a company and a certain type
             """
             return self.env['account.journal'].search([
-                ('company_id', '=', company_id),
+                *self.env['account.journal']._check_company_domain(company_id),
                 ('currency_id', 'in', (False, currency_id)),
                 ('type', '=', journal_type),
             ]).ids
@@ -70,7 +73,7 @@ class AccountMove(models.Model):
             :return (Model<product.product>): all the products te company has access to
             """
             return self.env['product.product'].search([
-                ('company_id', 'in', (False, company_id)),
+                *self.env['product.product']._check_company_domain(company_id),
                 ('id', 'in', self.env.registry.populated_models['product.product']),
             ])
 
@@ -83,7 +86,7 @@ class AccountMove(models.Model):
             :return (list<int>): the ids of partner the company has access to.
             """
             return self.env['res.partner'].search([
-                '|', ('company_id', '=', company_id), ('company_id', '=', False),
+                *self.env['res.partner']._check_company_domain(company_id),
                 ('id', 'in', self.env.registry.populated_models['res.partner']),
             ]).ids
 

@@ -105,7 +105,10 @@ class OnboardingStep(models.Model):
         # Then, we open will open a custom tree view allowing to edit opening balances of the account
         view_id = self.env.ref('account.init_accounts_tree').id
         # Hide the current year earnings account as it is automatically computed
-        domain = [('account_type', '!=', 'equity_unaffected'), ('company_id', '=', company.id)]
+        domain = [
+            *self.env['account.account']._check_company_domain(company),
+            ('account_type', '!=', 'equity_unaffected'),
+        ]
         return {
             'type': 'ir.actions.act_window',
             'name': _('Chart of Accounts'),

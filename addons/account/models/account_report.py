@@ -773,7 +773,7 @@ class AccountReportExternalValue(models.Model):
     foreign_vat_fiscal_position_id = fields.Many2one(
         string="Fiscal position",
         comodel_name='account.fiscal.position',
-        domain="[('company_id', '=', company_id), ('country_id', '=', report_country_id), ('foreign_vat', '!=', False)]",
+        domain="[('country_id', '=', report_country_id), ('foreign_vat', '!=', False)]",
         check_company=True,
         help="The foreign fiscal position for which this external value is made.",
     )

@@ -30,11 +30,7 @@ class StockQuant(models.Model):
     def _domain_lot_id(self):
         if not self._is_inventory_mode():
             return
-        domain = [
-            "'|'",
-                "('company_id', '=', company_id)",
-                "('company_id', '=', False)"
-        ]
+        domain = []
         if self.env.context.get('active_model') == 'product.product':
             domain.insert(0, "('product_id', '=', %s)" % self.env.context.get('active_id'))
         elif self.env.context.get('active_model') == 'product.template':

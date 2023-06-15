@@ -33,8 +33,8 @@ class AccountJournal(models.Model):
             for journal in self:
                 to_remove = []
 
-                available_providers = installed_providers.filtered(
-                    lambda p: p.company_id == journal.company_id
+                available_providers = installed_providers.filtered_domain(
+                    self.env['payment.provider']._check_company_domain(journal.company_id)
                 ).mapped('code')
                 available = payment_method.code in available_providers
 

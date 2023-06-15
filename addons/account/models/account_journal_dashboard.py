@@ -78,8 +78,14 @@ class account_journal(models.Model):
               JOIN mail_activity activity ON activity.res_id = move.id AND activity.res_model = 'account.move'
          LEFT JOIN mail_activity_type act_type ON activity.activity_type_id = act_type.id
              WHERE move.journal_id = ANY(%(ids)s)
+               AND move.company_id = ANY(%(company_ids)s)
         """
-        self.env.cr.execute(sql_query, {'ids': self.ids, 'today': today, 'lang': lang})
+        self.env.cr.execute(sql_query, {
+            'ids': self.ids,
+            'company_ids': self.env.companies.ids,
+            'today': today,
+            'lang': lang,
+        })
         for activity in self.env.cr.dictfetchall():
             act = {
                 'id': activity['id'],
@@ -335,14 +341,15 @@ class account_journal(models.Model):
             SELECT journal.id, statement.id
               FROM account_journal journal
          LEFT JOIN LATERAL (
-                      SELECT id
+                      SELECT id, company_id
                         FROM account_bank_statement
                        WHERE journal_id = journal.id
                     ORDER BY first_line_index DESC
                        LIMIT 1
                    ) statement ON TRUE
              WHERE journal.id = ANY(%s)
-        """, [self.ids])
+               AND statement.company_id = ANY(%s)
+        """, [self.ids, self.env.companies.ids])
         last_statements = {journal_id: statement_id for journal_id, statement_id in self.env.cr.fetchall()}
         self.env['account.bank.statement'].browse(i for i in last_statements.values() if i).mapped('balance_end_real')  # prefetch
 
@@ -463,6 +470,7 @@ class account_journal(models.Model):
 
     def _get_open_bills_to_pay_query(self):
         return self.env['account.move']._where_calc([
+            *self.env['account.move']._check_company_domain(self.env.companies),
             ('journal_id', 'in', self.ids),
             ('state', '=', 'posted'),
             ('payment_state', 'in', ('not_paid', 'partial')),
@@ -471,6 +479,7 @@ class account_journal(models.Model):
 
     def _get_draft_bills_query(self):
         return self.env['account.move']._where_calc([
+            *self.env['account.move']._check_company_domain(self.env.companies),
             ('journal_id', 'in', self.ids),
             ('state', '=', 'draft'),
             ('payment_state', 'in', ('not_paid', 'partial')),
@@ -479,6 +488,7 @@ class account_journal(models.Model):
 
     def _get_late_bills_query(self):
         return self.env['account.move']._where_calc([
+            *self.env['account.move']._check_company_domain(self.env.companies),
             ('journal_id', 'in', self.ids),
             ('invoice_date_due', '<', fields.Date.context_today(self)),
             ('state', '=', 'posted'),

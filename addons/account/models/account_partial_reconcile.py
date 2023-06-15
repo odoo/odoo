@@ -54,7 +54,7 @@ class AccountPartialReconcile(models.Model):
     company_id = fields.Many2one(
         comodel_name='res.company',
         string="Company", store=True, readonly=False,
-        related='debit_move_id.company_id')
+        compute='_compute_company_id')
     max_date = fields.Date(
         string="Max Date of Matched Lines", store=True,
         compute='_compute_max_date')
@@ -81,6 +81,15 @@ class AccountPartialReconcile(models.Model):
                 partial.debit_move_id.date,
                 partial.credit_move_id.date
             )
+
+    @api.depends('debit_move_id', 'credit_move_id')
+    def _compute_company_id(self):
+        for partial in self:
+            # Potential exchange diff and caba entries should be created on the invoice side if any
+            if partial.debit_move_id.move_id.is_invoice(True):
+                partial.company_id = partial.debit_move_id.company_id
+            else:
+                partial.company_id = partial.credit_move_id.company_id
 
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS

@@ -62,7 +62,7 @@ class AccountReconcileModelLine(models.Model):
                                 asset, liability, equity, off_balance, False.
             :return (Model<account.account>): the recordset of accounts found.
             """
-            domain = [('company_id', '=', company_id)]
+            domain = self.env['account.account']._check_company_domain(company_id)
             if type:
                 domain += [('account_type', '=', type)]
             if group:

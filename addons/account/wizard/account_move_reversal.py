@@ -50,11 +50,13 @@ class AccountMoveReversal(models.TransientModel):
         for record in self:
             if record.move_ids:
                 record.available_journal_ids = self.env['account.journal'].search([
-                    ('company_id', '=', record.company_id.id),
+                    *self.env['account.journal']._check_company_domain(record.company_id),
                     ('type', 'in', record.move_ids.journal_id.mapped('type')),
                 ])
             else:
-                record.available_journal_ids = self.env['account.journal'].search([('company_id', '=', record.company_id.id)])
+                record.available_journal_ids = self.env['account.journal'].search([
+                    *self.env['account.journal']._check_company_domain(record.company_id),
+                ])
 
     @api.constrains('journal_id', 'move_ids')
     def _check_journal_type(self):
@@ -70,7 +72,7 @@ class AccountMoveReversal(models.TransientModel):
         if any(move.state != "posted" for move in move_ids):
             raise UserError(_('You can only reverse posted moves.'))
         if 'company_id' in fields:
-            res['company_id'] = move_ids.company_id.id or self.env.company.id
+            res['company_id'] = move_ids.company_id.root_id.id or self.env.company.id
         if 'move_ids' in fields:
             res['move_ids'] = [(6, 0, move_ids.ids)]
         return res

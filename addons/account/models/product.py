@@ -26,10 +26,14 @@ class ProductTemplate(models.Model):
     _inherit = "product.template"
 
     taxes_id = fields.Many2many('account.tax', 'product_taxes_rel', 'prod_id', 'tax_id', help="Default taxes used when selling the product.", string='Customer Taxes',
-        domain=[('type_tax_use', '=', 'sale')], default=lambda self: self.env.company.account_sale_tax_id)
+        domain=[('type_tax_use', '=', 'sale')],
+        default=lambda self: self.env.company.account_sale_tax_id or self.env.company.root_id.account_sale_tax_id,
+    )
     tax_string = fields.Char(compute='_compute_tax_string')
     supplier_taxes_id = fields.Many2many('account.tax', 'product_supplier_taxes_rel', 'prod_id', 'tax_id', string='Vendor Taxes', help='Default taxes used when buying the product.',
-        domain=[('type_tax_use', '=', 'purchase')], default=lambda self: self.env.company.account_purchase_tax_id)
+        domain=[('type_tax_use', '=', 'purchase')],
+        default=lambda self: self.env.company.account_purchase_tax_id or self.env.company.root_id.account_purchase_tax_id,
+    )
     property_account_income_id = fields.Many2one('account.account', company_dependent=True,
         string="Income Account",
         domain=ACCOUNT_DOMAIN,
@@ -229,6 +233,6 @@ class ProductProduct(models.Model):
 
         domain = expression.AND([
             expression.OR(domains),
-            [('company_id', 'in', [False, company or self.env.company.id])],
+            self.env['product.product']._check_company_domain(company),
         ])
         return self.env['product.product'].search(domain, limit=1)

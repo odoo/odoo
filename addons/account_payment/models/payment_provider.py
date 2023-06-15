@@ -12,7 +12,8 @@ class PaymentProvider(models.Model):
         comodel_name='account.journal',
         compute='_compute_journal_id',
         inverse='_inverse_journal_id',
-        domain='[("type", "=", "bank"), ("company_id", "=", company_id)]',
+        check_company=True,
+        domain='[("type", "=", "bank")]',
     )
 
     #=== COMPUTE METHODS ===#
@@ -21,7 +22,7 @@ class PaymentProvider(models.Model):
     def _compute_journal_id(self):
         for provider in self:
             payment_method = self.env['account.payment.method.line'].search([
-                ('journal_id.company_id', '=', provider.company_id.id),
+                *self.env['account.payment.method.line']._check_company_domain(provider.company_id),
                 ('code', '=', provider._get_code())
             ], limit=1)
             if payment_method:
@@ -33,13 +34,14 @@ class PaymentProvider(models.Model):
         for provider in self:
             code = provider._get_code()
             payment_method_line = self.env['account.payment.method.line'].search([
-                ('journal_id.company_id', '=', provider.company_id.id),
+                *self.env['account.payment.method.line']._check_company_domain(provider.company_id),
                 ('code', '=', code),
             ], limit=1)
             if provider.journal_id:
                 if not payment_method_line:
                     default_payment_method_id = provider._get_default_payment_method_id(code)
                     existing_payment_method_line = self.env['account.payment.method.line'].search([
+                        *self.env['account.payment.method.line']._check_company_domain(provider.company_id),
                         ('payment_method_id', '=', default_payment_method_id),
                         ('journal_id', '=', provider.journal_id.id),
                     ], limit=1)

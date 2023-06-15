@@ -29,13 +29,9 @@ class ResCompany(models.Model):
         for record in self:
             sessions_in_period = pos_session_model.search(
                 [
-                    "&",
-                    "&",
-                    ("company_id", "=", record.id),
+                    ("company_id", "child_of", record.id),
                     ("state", "!=", "closed"),
-                    "|",
-                    ("start_at", "<=", record.period_lock_date),
-                    ("start_at", "<=", record.fiscalyear_lock_date),
+                    ("start_at", "<=", record._get_user_fiscal_lock_date()),
                 ]
             )
             if sessions_in_period:

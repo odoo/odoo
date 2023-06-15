@@ -60,7 +60,7 @@ class StorageCategoryProductCapacity(models.Model):
         elif self.env.context.get('default_product_id', False):
             product_id = self.env.context.get('default_product_id', False)
             domain = f"('id', '=', {product_id})"
-        return f"[{domain}, '|', ('company_id', '=', False), ('company_id', '=', company_id)]"
+        return f"[{domain}]"
 
     storage_category_id = fields.Many2one('stock.storage.category', ondelete='cascade', required=True, index=True)
     product_id = fields.Many2one('product.product', 'Product', domain=lambda self: self._domain_product_id(), ondelete='cascade', check_company=True)
