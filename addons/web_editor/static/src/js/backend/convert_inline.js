@@ -119,7 +119,7 @@ function bootstrapToTable($editable) {
     for (const masonryGrid of editable.querySelectorAll('.o_masonry_grid_container')) {
         masonryGrid.style.setProperty('padding', 0);
         for (const fakeTable of [...masonryGrid.children].filter(c => c.classList.contains('o_fake_table'))) {
-            fakeTable.style.setProperty('height', _getHeight(fakeTable));
+            fakeTable.style.setProperty('height', _getHeight(fakeTable) + 'px');
         }
     }
     for (const masonryRow of editable.querySelectorAll('.o_masonry_grid_container > .o_fake_table > .row.h-100')) {
