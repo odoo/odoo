@@ -28,21 +28,6 @@
         </t>
     </template>
 
-    <template id="report_invoice" inherit_id="account.report_invoice">
-        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
-            <t t-if="o._get_name_invoice_report() == 'l10n_th.report_invoice_document'"
-               t-call="l10n_th.report_invoice_document" t-lang="lang"/>
-        </xpath>
-    </template>
-
-    <template id="report_invoice_with_payments" inherit_id="account.report_invoice_with_payments">
-        <xpath expr='//t[@t-call="account.report_invoice_document"]' position="after">
-            <t t-if="o._get_name_invoice_report() == 'l10n_th.report_invoice_document'"
-               t-call="l10n_th.report_invoice_document" t-lang="lang"/>
-        </xpath>
-    </template>
-
-
     <record id="action_report_commercial_invoice" model="ir.actions.report">
         <field name="name">Commercial Invoice</field>
         <field name="model">account.move</field>

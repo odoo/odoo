@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from unittest.mock import patch
 
 from odoo import _, api, fields, models, modules, tools, Command
 from odoo.exceptions import UserError
@@ -306,6 +307,10 @@ class AccountMoveSend(models.Model):
         """
         self.ensure_one()
 
+    def _get_invoice_pdf_report_to_render(self, invoice, invoice_data):
+        self.ensure_one()
+        return None, {}
+
     def _prepare_invoice_pdf_report(self, invoice, invoice_data):
         """ Prepare the pdf report for the invoice passed as parameter.
 
@@ -317,7 +322,30 @@ class AccountMoveSend(models.Model):
         if invoice.invoice_pdf_report_id:
             return
 
-        content, _report_format = self.env['ir.actions.report']._render('account.account_invoices', invoice.ids)
+        # Render the invoice PDF but allow to set a custom report_name and custom values.
+        # That way, all invoice reports are separated from the main one but don't need an
+        # extra report every time.
+        IrActionsReport = type(self.env['ir.actions.report'])
+        _render_template = IrActionsReport._render_template
+        inv_report, inv_report_values = self._get_invoice_pdf_report_to_render(invoice, invoice_data)
+
+        def render_template(records, template, values=None):
+            return _render_template(
+                records,
+                template,
+                values={
+                    **(values or {}),
+                    **inv_report_values,
+                },
+            )
+
+        with patch.object(IrActionsReport, '_render_template', side_effect=render_template, autospec=True):
+            content, _report_format = self.env['ir.actions.report']\
+                .with_context(force_report_invoice_template=inv_report)\
+                ._render(
+                    'account.account_invoices',
+                    invoice.ids,
+                )
 
         invoice_data['pdf_attachment_values'] = {
             'raw': content,
