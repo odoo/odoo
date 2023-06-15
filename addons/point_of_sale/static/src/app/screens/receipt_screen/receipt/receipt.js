@@ -34,4 +34,21 @@ export class OrderReceipt extends Component {
     get shippingDate() {
         return this.receiptEnv.shippingDate;
     }
+
+    /**
+     * @param {object} line item of the array given by `this.receiptEnv.orderlines`
+     * @returns {object} the corresponding tax objects from `pos.taxes_by_id`
+     */
+    getOrderlineTaxes(line) {
+        return Object.keys(line.tax_details).map((taxId) => this.pos.taxes_by_id[taxId]);
+    }
+
+    /**
+     * Override this method to customize the tax letter mapping.
+     * @param {array} taxes array of tax objects from `pos.taxes_by_id`
+     * @returns {string} the tax letter
+     */
+    getTaxLetter(...taxes) {
+        return "";
+    }
 }

@@ -84,14 +84,9 @@
             </div>
         </xpath>
 
-        <xpath expr="//span[@t-esc='env.utils.formatCurrency(receipt.total_tax)']/.." position="attributes">
-            <attribute name="t-if">!receipt.is_gcc_country</attribute>
-        </xpath>
-        <xpath expr="//span[@t-esc='env.utils.formatCurrency(receipt.total_tax)']/.." position="after">
-            <div t-if="receipt.is_gcc_country" t-translation="off">
-                Total Taxes / إجمالي الضرائب
-                <span t-esc="env.utils.formatCurrency(receipt.total_tax)" class="pos-receipt-right-align"/>
-            </div>
+        <xpath expr="//div[hasclass('pos-receipt-taxes')]/span[text()='Total']" position="replace">
+            <span t-if="receipt.is_gcc_country" t-translation="off">Total Taxes / إجمالي الضرائب</span>
+            <span t-else="">Total</span>
         </xpath>
     </t>
 
