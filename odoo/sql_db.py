@@ -26,6 +26,7 @@ from psycopg2.pool import PoolError
 from psycopg2.sql import SQL, Identifier
 from werkzeug import urls
 
+import odoo
 from . import tools
 from .tools.func import frame_codeinfo, locked
 
@@ -751,7 +752,10 @@ _Pool = None
 def db_connect(to, allow_uri=False):
     global _Pool
     if _Pool is None:
-        _Pool = ConnectionPool(int(tools.config['db_maxconn']))
+        _Pool = ConnectionPool(int(
+            odoo.evented and tools.config['db_maxconn_gevent']
+            or tools.config['db_maxconn']
+        ))
 
     db, info = connection_info_for(to)
     if not allow_uri and db != to:
