@@ -1409,39 +1409,37 @@ class TranslationImporter:
         self.model_translations.clear()
 
         IrCodeTranslation = env['ir.code.translation']
-        params_to_upsert = tuple(itertools.chain.from_iterable(
-            (src, value, lang, module_name)
-            for module_name, module_dictionary in self.code_python_translations.items()
-            for src, translations in module_dictionary.items()
-            for lang, value in translations.items()
-            if IrCodeTranslation.get_python_translation(module_name, lang, src) != value
+        if overwrite or force_overwrite:
+            def needs_upsert(module_name, lang, src, value, type_):
+                if src in (customized_translations := IrCodeTranslation._get_translations(module_name, lang, type_)):
+                    return customized_translations[src] != value
+                return code_translations.get_translations(module_name, lang, type_).get(src) != value
+        else:
+            def needs_upsert(module_name, lang, src, value, type_):
+                return src not in IrCodeTranslation._get_translations(module_name, lang, type_) and \
+                    code_translations.get_translations(module_name, lang, type_).get(src) != value
+
+        params_to_upsert = tuple(itertools.chain(
+            *((src, value, lang, module_name, 'python')
+              for module_name, module_dictionary in self.code_python_translations.items()
+              for src, translations in module_dictionary.items()
+              for lang, value in translations.items()
+              if needs_upsert(module_name, lang, src, value, 'python')),
+            *((src, value, lang, module_name, 'web')
+              for module_name, module_dictionary in self.code_web_translations.items()
+              for src, translations in module_dictionary.items()
+              for lang, value in translations.items()
+              if needs_upsert(module_name, lang, src, value, 'web'))
         ))
-        for params in cr.split_for_in_conditions(params_to_upsert, cr.IN_MAX // 4 * 4):
+        for params in cr.split_for_in_conditions(params_to_upsert, cr.IN_MAX // 5 * 5):
             cr.execute(f'''
                 INSERT INTO "ir_code_translation" ("source", "value", "lang", "module", "type")
-                VALUES {', '.join(["(%s, %s, %s, %s, 'python')"] * (len(params) // 4))}
+                VALUES {', '.join(["(%s, %s, %s, %s, %s)"] * (len(params) // 5))}
                 ON CONFLICT ("source", "lang", "module", "type")
                 DO UPDATE SET "value" = EXCLUDED."value"
             ''', params)
 
         self.code_python_translations.clear()
-
-        params_to_upsert = tuple(itertools.chain.from_iterable(
-            (src, value, lang, module_name)
-            for module_name, module_dictionary in self.code_web_translations.items()
-            for src, translations in module_dictionary.items()
-            for lang, value in translations.items()
-            if IrCodeTranslation._get_translations(module_name, lang, 'web').get(src) or
-                code_translations.get_web_translations(module_name, lang).get(src) != value
-        ))
-        for params in cr.split_for_in_conditions(params_to_upsert, cr.IN_MAX // 4 * 4):
-            cr.execute(f'''
-                INSERT INTO "ir_code_translation" ("source", "value", "lang", "module", "type")
-                VALUES {', '.join(["(%s, %s, %s, %s, 'web')"] * (len(params) // 4))}
-                ON CONFLICT ("source", "lang", "module", "type")
-                DO UPDATE SET "value" = EXCLUDED."value"
-            ''', params)
-
         self.code_web_translations.clear()
 
         env.invalidate_all()
@@ -1589,6 +1587,12 @@ class CodeTranslations:
                     or WEB_TRANSLATION_COMMENT in row['comments'])
         translations = CodeTranslations._get_code_translations(module_name, lang, filter_func)
         self.web_translations[(module_name, lang)] = translations
+
+    def get_translations(self, module_name, lang, type_):
+        if type_ == 'web':
+            return self.get_web_translations(module_name, lang)
+        if type_ == 'python':
+            return self.get_python_translations(module_name, lang)
 
     def get_python_translations(self, module_name, lang):
         if (module_name, lang) not in self.python_translations:
