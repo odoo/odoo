@@ -11,6 +11,14 @@ class EventTypeMail(models.Model):
     def _selection_template_model(self):
         return super(EventTypeMail, self)._selection_template_model() + [('sms.template', 'SMS')]
 
+    @api.onchange('notification_type', 'template_ref')
+    def set_template_ref_model(self):
+        super().set_template_ref_model()
+        mail_model = self.env['sms.template']
+        if self.notification_type == 'sms':
+            record = mail_model.search([('model', '=', 'event.registration')], limit=1)
+            self.template_ref = "{},{}".format('sms.template', record.id) if record else False
+
     notification_type = fields.Selection(selection_add=[('sms', 'SMS')], ondelete={'sms': 'set default'})
 
     @api.depends('notification_type')
@@ -60,7 +68,7 @@ class EventMailScheduler(models.Model):
 
         return super(EventMailScheduler, self).execute()
 
-    @api.onchange('notification_type')
+    @api.onchange('notification_type', 'template_ref')
     def set_template_ref_model(self):
         super().set_template_ref_model()
         mail_model = self.env['sms.template']
