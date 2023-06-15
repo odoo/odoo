@@ -55,7 +55,7 @@ $-seen-urls: ();
     // 3) The values in the $colors map are also printed by Bootstrap. However,
     // we have color variables which can contain a reference to a color
     // combination and that is the info we want in that case.
-    @each $key in ('menu', 'header-boxed', 'footer', 'copyright') {
+    @each $key in ('menu', 'footer', 'copyright') {
         $-value: map-get($o-color-palette, $key);
         @if type-of($-value) == 'number' {
             @include print-variable($key, $-value);
@@ -970,10 +970,6 @@ $-transition-duration: 200ms;
         transition: transform $-transition-duration;
     }
 
-    @if o-website-value('header-template') == 'boxed' {
-        background: transparent;
-    }
-
     &.o_header_is_scrolled {
         .navbar-brand {
             @include font-size($o-theme-navbar-fixed-logo-height / $line-height-base);
@@ -1201,12 +1197,6 @@ header {
                 }
             }
         }
-    }
-} @else if o-website-value('header-template') == 'boxed' {
-    #wrapwrap:not(.o_header_overlay) .o_header_boxed_background {
-        @include o-apply-colors('header-boxed');
-        @include o-apply-colors('header-boxed-custom');
-        @include o-add-gradient('header-boxed-gradient');
     }
 } @else if o-website-value('header-template') == 'centered_logo' {
     header .o_header_centered_logo {
