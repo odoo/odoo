@@ -155,10 +155,16 @@
                         <button name="action_post" string="Confirm" type="object" class="oe_highlight"
                                 attrs="{'invisible': [('state', '!=', 'draft')]}" data-hotkey="q"/>
                         <button name="action_draft" string="Reset To Draft" type="object" class="btn btn-secondary"
-                                attrs="{'invisible': [('state', 'not in', ('posted', 'cancel'))]}"
+                                attrs="{'invisible': [('show_reset_to_draft_button', '=', False)]}"
                                 groups="account.group_account_invoice" data-hotkey="w"/>
                         <button name="action_cancel" string="Cancel" type="object"
                                 attrs="{'invisible': ['|', ('id', '=', False), ('state', '!=', 'draft')]}" data-hotkey="x"/>
+                        <button string="Request Cancel"
+                                name="button_request_cancel"
+                                type="object"
+                                groups="account.group_account_invoice"
+                                attrs="{'invisible' : ['|', '|', ('state', '!=', 'posted'), ('show_reset_to_draft_button', '=', True), ('need_cancel_request', '=', False)]}"
+                                data-hotkey="w"/>
                         <button name="mark_as_sent" string="Mark as Sent" type="object" data-hotkey="v"
                                 attrs="{'invisible': ['|', '|', ('state', '!=', 'posted'), ('is_move_sent', '=', True), ('payment_method_code', '!=', 'manual')]}"/>
                         <button name="unmark_as_sent"  string="Unmark as Sent" type="object" data-hotkey="k"
@@ -174,6 +180,8 @@
                         <!-- Invisible fields -->
                         <field name="id" invisible="1"/>
                         <field name="is_move_sent" invisible="1"/>
+                        <field name="need_cancel_request" invisible="1"/>
+                        <field name="show_reset_to_draft_button" invisible="1"/>
                         <field name="is_reconciled" invisible="1"/>
                         <field name="is_matched" invisible="1"/>
                         <field name="payment_method_code" invisible="1"/>
@@ -250,7 +258,7 @@
                             <h1 attrs="{'invisible': [('state', '=', 'draft')]}"><field name="name" readonly="1"/></h1>
                         </div>
 
-                        <group>
+                        <group name="main_group">
                             <group name="group1">
                                 <label for="is_internal_transfer"/>
                                 <div>

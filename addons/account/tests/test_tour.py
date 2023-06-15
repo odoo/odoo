@@ -12,7 +12,7 @@ class TestUi(odoo.tests.HttpCase):
         super().setUpClass()
 
         all_moves = cls.env['account.move'].search([('move_type', '!=', 'entry')])
-        all_moves.button_draft()
+        all_moves.filtered(lambda x: x.state in ('posted', 'cancel')).button_draft()
         all_moves.with_context(force_delete=True).unlink()
 
         # In case of latam impacting multiple countries, disable the required fields manually.
