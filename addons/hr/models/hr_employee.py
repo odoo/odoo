@@ -404,7 +404,7 @@ class HrEmployeePrivate(models.Model):
             if vals['work_contact_id']:
                 self._message_subscribe([vals['work_contact_id']])
         if 'user_id' in vals:
-            # Update the profile pictures with user, except if provided 
+            # Update the profile pictures with user, except if provided
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']),
                                         (bool(self.image_1920))))
         if 'work_permit_expiration_date' in vals:

@@ -92,12 +92,19 @@ class PosConfig(models.Model):
     def add_cash_payment_method(self):
         companies = self.env['res.company'].search([])
         for company in companies.filtered('chart_template'):
-            pos_configs = self.search([('company_id', '=', company.id), ('module_pos_restaurant', '=', True)])
+            pos_configs = self.search([
+                *self._check_company_domain(company),
+                ('module_pos_restaurant', '=', True)
+            ])
             journal_counter = 2
             for pos_config in pos_configs:
                 if pos_config.payment_method_ids.filtered('is_cash_count'):
                     continue
-                cash_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'cash'), ('pos_payment_method_ids', '=', False)], limit=1)
+                cash_journal = self.env['account.journal'].search([
+                    *self.env['account.journal']._check_company_domain(company),
+                    ('type', '=', 'cash'),
+                    ('pos_payment_method_ids', '=', False),
+                ], limit=1)
                 if not cash_journal:
                     cash_journal = self.env['account.journal'].create({
                         'name': 'Cash %s' % journal_counter,
@@ -120,10 +127,12 @@ class PosConfig(models.Model):
         if not companies:
             companies = self.env['res.company'].search([])
         for company in companies.filtered('chart_template'):
-            pos_configs = self.search([('company_id', '=', company.id), ('module_pos_restaurant', '=', True)])
+            pos_configs = self.search([
+                *self.env['account.journal']._check_company_domain(company),
+                ('module_pos_restaurant', '=', True),
+            ])
             if not pos_configs:
-                self = self.with_company(company)
-                pos_configs = self.env['pos.config'].create({
+                pos_configs = self.env['pos.config'].with_company(company).create({
                 'name': 'Bar',
                 'company_id': company.id,
                 'module_pos_restaurant': True,

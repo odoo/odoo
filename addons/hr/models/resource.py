@@ -8,4 +8,4 @@ class ResourceResource(models.Model):
     _inherit = "resource.resource"
 
     user_id = fields.Many2one(copy=False)
-    employee_id = fields.One2many('hr.employee', 'resource_id', domain="[('company_id', '=', company_id)]")
+    employee_id = fields.One2many('hr.employee', 'resource_id', check_company=True)

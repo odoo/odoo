@@ -75,7 +75,7 @@ class AccountBankStatementLine(models.Model):
             :return (list<int>): the ids of partner the company has access to.
             """
             return self.env['res.partner'].search([
-                '|', ('company_id', '=', company_id), ('company_id', '=', False),
+                *self.env['res.company']._check_company_domain(company_id),
                 ('id', 'in', self.env.registry.populated_models['res.partner']),
             ]).ids
 
@@ -128,7 +128,7 @@ class AccountBankStatementLine(models.Model):
         ])
 
         journal_ids = self.env['account.journal'].search([
-            ('company_id', 'in', company_ids.ids),
+            *self.env['account.journal']._check_company_domain(company_ids),
             ('type', 'in', ('cash', 'bank')),
         ]).ids
         return [

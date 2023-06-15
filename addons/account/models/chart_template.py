@@ -174,10 +174,15 @@ class AccountChartTemplate(models.AbstractModel):
 
         if not reload_template:
             for model in ('account.move',) + TEMPLATE_MODELS[::-1]:
-                self.env[model].sudo().search([('company_id', '=', company.id)]).with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
+                if not company.parent_id:
+                    self.env[model].sudo().search([('company_id', 'child_of', company.id)]).with_context({MODULE_UNINSTALL_FLAG: True}).unlink()
 
         data = self._get_chart_template_data(template_code)
         template_data = data.pop('template_data')
+        if company.parent_id:
+            data = {
+                'res.company': data['res.company'],
+            }
 
         if reload_template:
             self._pre_reload_data(company, template_data, data)
@@ -201,6 +206,8 @@ class AccountChartTemplate(models.AbstractModel):
             except Exception:
                 # Do not rollback installation of CoA if demo data failed
                 _logger.exception('Error while loading accounting demo data')
+        for subsidiary in company.child_ids:
+            self._load(template_code, subsidiary, install_demo)
 
     def _pre_reload_data(self, company, template_data, data):
         """Pre-process the data in case of reloading the chart of accounts.
@@ -221,15 +228,15 @@ class AccountChartTemplate(models.AbstractModel):
             else:
                 if 'code' in journal_data:
                     journal = self.env['account.journal'].with_context(active_test=False).search([
+                        *self.env['account.journal']._check_company_domain(company),
                         ('code', '=', journal_data['code']),
-                        ('company_id', '=', company.id),
                     ])
                 # Try to match by journal name to avoid conflict in the unique constraint on the mail alias
                 if not journal and 'name' in journal_data and 'type' in journal_data:
                     journal = self.env['account.journal'].with_context(active_test=False).search([
+                        *self.env['account.journal']._check_company_domain(company),
                         ('type', '=', journal_data['type']),
                         ('name', '=', journal_data['name']),
-                        ('company_id', '=', company.id),
                     ], limit=1)
                 if journal:
                     del data['account.journal'][xmlid]
@@ -239,11 +246,13 @@ class AccountChartTemplate(models.AbstractModel):
                         'noupdate': True,
                     }])
 
-        account_group_count = self.env['account.group'].search_count([('company_id', '=', company.id)])
+        account_group_count = self.env['account.group'].search_count([])
         if account_group_count:
             data.pop('account.group', None)
 
-        current_taxes = self.env['account.tax'].search([('company_id', '=', company.id)])
+        current_taxes = self.env['account.tax'].search([
+            *self.env['account.tax']._check_company_domain(company),
+        ])
         unique_tax_name_key = lambda t: (t.name, t.type_tax_use, t.tax_scope, t.company_id)
         unique_tax_name_keys = set(current_taxes.mapped(unique_tax_name_key))
         xmlid2tax = {
@@ -314,8 +323,8 @@ class AccountChartTemplate(models.AbstractModel):
                     account = self.ref(xmlid, raise_if_not_found=False)
                     if not account or (account and account.code != values['code']):
                         existing_account = self.env['account.account'].search([
+                            *self.env['account.account']._check_company_domain(company),
                             ('code', '=', values['code']),
-                            ('company_id', '=', company.id),
                         ])
                         if existing_account:
                             self.env['ir.model.data']._update_xmlids([{
@@ -525,12 +534,14 @@ class AccountChartTemplate(models.AbstractModel):
         # Set default Purchase and Sale taxes on the company
         if not company.account_sale_tax_id:
             company.account_sale_tax_id = self.env['account.tax'].search([
-                ('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company.id)], limit=1).id
+                *self.env['account.tax']._check_company_domain(company),
+                ('type_tax_use', 'in', ('sale', 'all'))], limit=1).id
         if not company.account_purchase_tax_id:
             company.account_purchase_tax_id = self.env['account.tax'].search([
-                ('type_tax_use', 'in', ('purchase', 'all')), ('company_id', '=', company.id)], limit=1).id
+                *self.env['account.tax']._check_company_domain(company),
+                ('type_tax_use', 'in', ('purchase', 'all'))], limit=1).id
         # Display caba fields if there are caba taxes
-        if self.env['account.tax'].search([('tax_exigibility', '=', 'on_payment')]):
+        if not company.parent_id and self.env['account.tax'].search([('tax_exigibility', '=', 'on_payment')]):
             company.tax_exigibility = True
 
         for field, model in {
@@ -633,10 +644,13 @@ class AccountChartTemplate(models.AbstractModel):
         for fname in list(accounts_data):
             if company[fname]:
                 del accounts_data[fname]
-
-        accounts = self.env['account.account'].create(accounts_data.values())
-        for company_attr_name, account in zip(accounts_data.keys(), accounts):
-            company[company_attr_name] = account
+        if company.parent_id:
+            for company_attr_name in accounts_data:
+                company[company_attr_name] = company.parent_ids[0][company_attr_name]
+        else:
+            accounts = self.env['account.account'].create(accounts_data.values())
+            for company_attr_name, account in zip(accounts_data.keys(), accounts):
+                company[company_attr_name] = account
 
     @api.model
     def _instantiate_foreign_taxes(self, country, company):
@@ -655,8 +669,8 @@ class AccountChartTemplate(models.AbstractModel):
         # - Creates tax group and taxes with their ir.model.data
 
         taxes_in_country = self.env['account.tax'].search([
+            *self.env['account.tax']._check_company_domain(company),
             ('country_id', '=', country.id),
-            ('company_id', '=', company.id)
         ])
         if taxes_in_country:
             return
@@ -693,6 +707,7 @@ class AccountChartTemplate(models.AbstractModel):
                 if account_template_xml_id in existing_accounts:
                     continue
                 local_tax_group = self.env["account.tax.group"].search([
+                    *self.env['account.tax.group']._check_company_domain(company),
                     ('country_id', '=', company.account_fiscal_country_id.id),
                     (field, '!=', False),
                 ], limit=1)
@@ -710,7 +725,7 @@ class AccountChartTemplate(models.AbstractModel):
 
                     sign_comparator = '<' if float(foreign_tax_rep_line.get('factor_percent', 100)) < 0 else '>'
                     minimal_domain = [
-                        ('company_id', '=', company.id),
+                        *self.env['account.tax.repartition.line']._check_company_domain(company),
                         ('account_id', '!=', False),
                         ('factor_percent', sign_comparator, 0),
                     ]
@@ -735,6 +750,7 @@ class AccountChartTemplate(models.AbstractModel):
 
         # Try to create cash basis account if not mapped
         local_cash_basis_tax = self.env["account.tax"].search([
+            *self.env['account.tax']._check_company_domain(company),
             ('country_id', '=', company.account_fiscal_country_id.id),
             ('cash_basis_transition_account_id', '!=', False)
         ], limit=1)
@@ -900,7 +916,12 @@ class AccountChartTemplate(models.AbstractModel):
     # --------------------------------------------------------------------------------
 
     def ref(self, xmlid, raise_if_not_found=True):
-        return self.env.ref(f"account.{self.env.company.id}_{xmlid}" if xmlid and '.' not in xmlid else xmlid, raise_if_not_found)
+        if '.' in xmlid:
+            return self.env.ref(xmlid, raise_if_not_found)
+        return (
+            self.env.ref(f"account.{self.env.company.id}_{xmlid}", raise_if_not_found=False)
+            or self.env.ref(f"account.{self.env.company.parent_ids[0].id}_{xmlid}", raise_if_not_found)
+        )
 
     def _get_parent_template(self, code):
         parents = []

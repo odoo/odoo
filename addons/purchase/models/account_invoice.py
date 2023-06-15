@@ -94,8 +94,8 @@ class AccountMove(models.Model):
         if self.partner_id and self.move_type in ['in_invoice', 'in_refund'] and self.currency_id != currency_id:
             if not self.env.context.get('default_journal_id'):
                 journal_domain = [
+                    *self.env['account.journal']._check_company_domain(self.company_id),
                     ('type', '=', 'purchase'),
-                    ('company_id', '=', self.company_id.id),
                     ('currency_id', '=', currency_id.id),
                 ]
                 default_journal_id = self.env['account.journal'].search(journal_domain, limit=1)

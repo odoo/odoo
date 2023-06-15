@@ -33,9 +33,9 @@ class AccountFiscalPosition(models.Model):
 
         # If the company has a fiscal position with a foreign vat in Europe, in the same country as the partner, then the VIES validity applies
         if self.search_count([
+                *self._check_company_domain(company),
                 ('foreign_vat', '!=', False),
                 ('country_id', '=', delivery.country_id.id),
-                ('company_id', '=', company.id)
         ]) or company.country_id in eu_countries:
             return super()._get_vat_valid(delivery, company) and delivery.vies_valid
 

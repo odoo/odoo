@@ -11,6 +11,7 @@ class ResConfigSettings(models.TransientModel):
 
     company_id = fields.Many2one('res.company', string='Company', required=True,
         default=lambda self: self.env.company)
+    is_root_company = fields.Boolean(compute='_compute_is_root_company')
     user_default_rights = fields.Boolean(
         "Default Access Rights",
         config_parameter='base_setup.default_user_rights')
@@ -119,3 +120,8 @@ class ResConfigSettings(models.TransientModel):
 
         for record in self:
             record.company_informations = informations
+
+    @api.depends('company_id')
+    def _compute_is_root_company(self):
+        for record in self:
+            record.is_root_company = not record.company_id.parent_id

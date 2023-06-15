@@ -121,10 +121,10 @@ class AccountEdiProxyClientUser(models.Model):
                 # use the first purchase journal if the Peppol journal is not set up
                 # to create the move anyway
                 if not journal_id:
-                    journal_id = self.env['account.journal'].search(
-                        [('company_id', '=', company.id), ('type', '=', 'purchase')],
-                        limit=1,
-                    )
+                    journal_id = self.env['account.journal'].search([
+                        *self.env['account.journal']._check_company_domain(company),
+                        ('type', '=', 'purchase')
+                    ], limit=1)
 
                 attachment_vals = {
                     'name': f'{filename}.xml',

@@ -616,7 +616,7 @@ class AccountEdiXmlUBL20(models.AbstractModel):
         # Product
         product = self._import_retrieve_info_from_map(
             tree,
-            self._import_retrieve_product_map(invoice_line.move_id.journal_id),
+            self._import_retrieve_product_map(invoice_line.move_id.company_id),
         )
         if product is not None:
             invoice_line.product_id = product
@@ -740,9 +740,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
             return self.env['product.product'].search(extra_domain + [('name', 'ilike', name_node.text)], limit=1)
 
         return {
-            10: lambda tree: with_code_barcode(tree, [('company_id', '=', company.id)]),
+            10: lambda tree: with_code_barcode(tree, self.env['product.product']._check_company_domain(company)),
             20: lambda tree: with_code_barcode(tree, []),
-            30: lambda tree: with_name(tree, [('company_id', '=', company.id)]),
+            30: lambda tree: with_name(tree, self.env['product.product']._check_company_domain(company)),
             40: lambda tree: with_name(tree, []),
         }
 

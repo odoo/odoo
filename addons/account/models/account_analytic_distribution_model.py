@@ -14,6 +14,7 @@ class AccountAnalyticDistributionModel(models.Model):
         'product.product',
         string='Product',
         ondelete='cascade',
+        check_company=True,
         help="Select a product for which the analytic distribution will be used (e.g. create new customer invoice or Sales order if we select this product, it will automatically take this as an analytic account)",
     )
     product_categ_id = fields.Many2one(

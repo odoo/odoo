@@ -16,7 +16,7 @@ def _edit_tax_types(env, template_data):
     ]
     if not concerned_company_ids:
         return
-    current_taxes = env['account.tax'].search([('company_id', 'in', concerned_company_ids)])
+    current_taxes = env['account.tax'].search(env['account.tax']._check_company_domain(concerned_company_ids))
     if not current_taxes:
         return
     xmlid2tax = {

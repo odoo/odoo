@@ -4188,7 +4188,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         })
 
         foreign_caba_tax = self.env['account.tax'].create({
-            'name': 'tax_1',
+            'name': 'foreign tax_1',
             'amount': 33.3333,
             'company_id': self.company_data['company'].id,
             'cash_basis_transition_account_id': self.cash_basis_transfer_account.id,

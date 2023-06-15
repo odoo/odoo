@@ -11,9 +11,11 @@ from dateutil.relativedelta import relativedelta
 class AccountReconcileModelPartnerMapping(models.Model):
     _name = 'account.reconcile.model.partner.mapping'
     _description = 'Partner mapping for reconciliation models'
+    _check_company_auto = True
 
     model_id = fields.Many2one(comodel_name='account.reconcile.model', readonly=True, required=True, ondelete='cascade')
-    partner_id = fields.Many2one(comodel_name='res.partner', string="Partner", required=True, ondelete='cascade')
+    company_id = fields.Many2one(related='model_id.company_id')
+    partner_id = fields.Many2one(comodel_name='res.partner', string="Partner", required=True, ondelete='cascade', check_company=True)
     payment_ref_regex = fields.Char(string="Find Text in Label")
     narration_regex = fields.Char(string="Find Text in Notes")
 
@@ -48,12 +50,12 @@ class AccountReconcileModelLine(models.Model):
     company_id = fields.Many2one(related='model_id.company_id', store=True)
     sequence = fields.Integer(required=True, default=10)
     account_id = fields.Many2one('account.account', string='Account', ondelete='cascade',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', '!=', 'off_balance')]",
+        domain="[('deprecated', '=', False), ('account_type', '!=', 'off_balance')]",
         required=True, check_company=True)
 
     # This field is ignored in a bank statement reconciliation.
     journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade',
-        domain="[('type', '=', 'general'), ('company_id', '=', company_id)]", check_company=True)
+        domain="[('type', '=', 'general')]", check_company=True)
     label = fields.Char(string='Journal Item Label')
     amount_type = fields.Selection([
         ('fixed', 'Fixed'),
@@ -169,7 +171,7 @@ class AccountReconcileModel(models.Model):
         tracking=True,
     )
     match_journal_ids = fields.Many2many('account.journal', string='Journals Availability',
-        domain="[('type', 'in', ('bank', 'cash')), ('company_id', '=', company_id)]",
+        domain="[('type', 'in', ('bank', 'cash'))]",
         check_company=True,
         help='The reconciliation model will only be available from the selected journals.')
     match_nature = fields.Selection(selection=[

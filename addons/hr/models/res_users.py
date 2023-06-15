@@ -242,7 +242,10 @@ class User(models.Model):
             # Raise meaningful error message
             raise AccessError(_("You are only allowed to update your preferences. Please contact a HR officer to update other information."))
 
-        employee_domain = [('user_id', 'in', self.ids), ('company_id', '=', self.env.company.id)]
+        employee_domain = [
+            *self.env['hr.employee']._check_company_domain(self.env.company),
+            ('user_id', 'in', self.ids),
+        ]
         if hr_fields:
             employees = self.env['hr.employee'].sudo().search(employee_domain)
             get_field = self.env['ir.model.fields']._get

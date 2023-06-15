@@ -26,7 +26,7 @@ class AccountFrFec(models.TransientModel):
         ('official', 'Official FEC report (posted entries only)'),
         ('nonofficial', 'Non-official FEC report (posted and unposted entries)'),
     ], string='Export Type', required=True, default='official')
-    excluded_journal_ids = fields.Many2many('account.journal', string="Excluded Journals", domain="[('company_id', '=', current_company_id)]")
+    excluded_journal_ids = fields.Many2many('account.journal', string="Excluded Journals", domain="[('company_id', 'parent_of', current_company_id)]")
 
     @api.onchange('test_file')
     def _onchange_export_file(self):
@@ -152,8 +152,8 @@ class AccountFrFec(models.TransientModel):
         rows_to_write = [header]
         # INITIAL BALANCE
         unaffected_earnings_account = self.env['account.account'].search([
+            *self.env['account.account']._check_company_domain(company),
             ('account_type', '=', 'equity_unaffected'),
-            ('company_id', '=', company.id)
         ], limit=1)
         unaffected_earnings_line = True  # used to make sure that we add the unaffected earning initial balance only once
         if unaffected_earnings_account:
@@ -236,8 +236,9 @@ class AccountFrFec(models.TransientModel):
             and (unaffected_earnings_results[11] != '0,00'
                  or unaffected_earnings_results[12] != '0,00')):
             #search an unaffected earnings account
-            unaffected_earnings_account = self.env['account.account'].search([('account_type', '=', 'equity_unaffected'),
-                                                                              ('company_id', '=', company.id)], limit=1)
+            unaffected_earnings_account = self.env['account.account'].search([
+                ('account_type', '=', 'equity_unaffected')
+            ], limit=1)
             if unaffected_earnings_account:
                 unaffected_earnings_results[4] = unaffected_earnings_account.code
                 unaffected_earnings_results[5] = unaffected_earnings_account.name

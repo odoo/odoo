@@ -9,6 +9,7 @@ from odoo.tools import frozendict
 class AccountPaymentRegister(models.TransientModel):
     _name = 'account.payment.register'
     _description = 'Register Payment'
+    _check_company_auto = True
 
     # == Business fields ==
     payment_date = fields.Date(string="Payment Date", required=True,
@@ -30,6 +31,7 @@ class AccountPaymentRegister(models.TransientModel):
     journal_id = fields.Many2one(
         comodel_name='account.journal',
         compute='_compute_journal_id', store=True, readonly=False, precompute=True,
+        check_company=True,
         domain="[('id', 'in', available_journal_ids)]")
     available_journal_ids = fields.Many2many(
         comodel_name='account.journal',
@@ -111,7 +113,8 @@ class AccountPaymentRegister(models.TransientModel):
         comodel_name='account.account',
         string="Difference Account",
         copy=False,
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
+        domain="[('deprecated', '=', False)]",
+        check_company=True,
         compute='_compute_writeoff_account_id',
         store=True,
         readonly=False,
@@ -153,7 +156,10 @@ class AccountPaymentRegister(models.TransientModel):
         """
         payment_type = batch_result['payment_values']['payment_type']
         company = batch_result['lines'].company_id
-        journals = self.env['account.journal'].search([('company_id', '=', company.id), ('type', 'in', ('bank', 'cash'))])
+        journals = self.env['account.journal'].search([
+            *self.env['account.journal']._check_company_domain(company),
+            ('type', 'in', ('bank', 'cash')),
+        ])
         if payment_type == 'inbound':
             return journals.filtered('inbound_payment_method_line_ids')
         else:
@@ -169,13 +175,16 @@ class AccountPaymentRegister(models.TransientModel):
         payment_values = batch_result['payment_values']
         foreign_currency_id = payment_values['currency_id']
         partner_bank_id = payment_values['partner_bank_id']
+        company = batch_result['lines'].company_id
+        if len(company) > 1:
+            company = company._accessible_branches()[:1]
 
         currency_domain = [('currency_id', '=', foreign_currency_id)]
         partner_bank_domain = [('bank_account_id', '=', partner_bank_id)]
 
         default_domain = [
+            *self.env['account.journal']._check_company_domain(company),
             ('type', 'in', ('bank', 'cash')),
-            ('company_id', '=', batch_result['lines'].company_id.id),
             ('id', 'in', self.available_journal_ids.ids)
         ]
 
@@ -202,7 +211,7 @@ class AccountPaymentRegister(models.TransientModel):
     @api.model
     def _get_batch_available_partner_banks(self, batch_result, journal):
         payment_values = batch_result['payment_values']
-        company = batch_result['lines'].company_id
+        company = batch_result['lines'].company_id._accessible_branches()[:1]
 
         # A specific bank account is set on the journal. The user must use this one.
         if payment_values['payment_type'] == 'inbound':
@@ -244,7 +253,7 @@ class AccountPaymentRegister(models.TransientModel):
 
         lines = self.line_ids._origin
 
-        if len(lines.company_id) > 1:
+        if len(lines.company_id.root_id) > 1:
             raise UserError(_("You can't create payments for entries belonging to different companies."))
         if not lines:
             raise UserError(_("You can't open the register payment wizard without at least one receivable/payable line."))
@@ -306,7 +315,7 @@ class AccountPaymentRegister(models.TransientModel):
         '''
         payment_values = batch_result['payment_values']
         lines = batch_result['lines']
-        company = lines[0].company_id
+        company = lines[0].company_id._accessible_branches()[:1]
 
         source_amount = abs(sum(lines.mapped('amount_residual')))
         if payment_values['currency_id'] == company.currency_id.id:
@@ -369,7 +378,7 @@ class AccountPaymentRegister(models.TransientModel):
             else:
                 # == Multiple batches: The wizard is not editable  ==
                 wizard.update({
-                    'company_id': batches[0]['lines'][0].company_id.id,
+                    'company_id': batches[0]['lines'][0].company_id._accessible_branches()[:1].id,
                     'partner_id': False,
                     'partner_type': False,
                     'payment_type': wizard_values_from_batch['payment_type'],
@@ -414,7 +423,7 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.available_journal_ids = wizard._get_batch_available_journals(batch)
             else:
                 wizard.available_journal_ids = self.env['account.journal'].search([
-                    ('company_id', '=', wizard.company_id.id),
+                    *self.env['account.journal']._check_company_domain(wizard.company_id),
                     ('type', 'in', ('bank', 'cash')),
                 ])
 
@@ -426,8 +435,8 @@ class AccountPaymentRegister(models.TransientModel):
                 wizard.journal_id = wizard._get_batch_journal(batch)
             else:
                 wizard.journal_id = self.env['account.journal'].search([
+                    *self.env['account.journal']._check_company_domain(wizard.company_id),
                     ('type', 'in', ('bank', 'cash')),
-                    ('company_id', '=', wizard.company_id.id),
                     ('id', 'in', self.available_journal_ids.ids)
                 ], limit=1)
 
@@ -609,8 +618,10 @@ class AccountPaymentRegister(models.TransientModel):
                     "The register payment wizard should only be called on account.move or account.move.line records."
                 ))
 
-            if 'journal_id' in res and not self.env['account.journal'].browse(res['journal_id'])\
-                    .filtered_domain([('company_id', '=', lines.company_id.id), ('type', 'in', ('bank', 'cash'))]):
+            if 'journal_id' in res and not self.env['account.journal'].browse(res['journal_id']).filtered_domain([
+                *self.env['account.journal']._check_company_domain(lines.company_id),
+                ('type', 'in', ('bank', 'cash')),
+            ]):
                 # default can be inherited from the list view, should be computed instead
                 del res['journal_id']
 
@@ -633,7 +644,7 @@ class AccountPaymentRegister(models.TransientModel):
             # Check.
             if not available_lines:
                 raise UserError(_("You can't register a payment because there is nothing left to pay on the selected journal items."))
-            if len(lines.company_id) > 1:
+            if len(lines.company_id.root_id) > 1:
                 raise UserError(_("You can't create payments for entries belonging to different companies."))
             if len(set(available_lines.mapped('account_type'))) > 1:
                 raise UserError(_("You can't register payments for journal items being either all inbound, either all outbound."))
@@ -654,6 +665,7 @@ class AccountPaymentRegister(models.TransientModel):
             'partner_type': self.partner_type,
             'ref': self.communication,
             'journal_id': self.journal_id.id,
+            'company_id': self.company_id.id,
             'currency_id': self.currency_id.id,
             'partner_id': self.partner_id.id,
             'partner_bank_id': self.partner_bank_id.id,
@@ -725,6 +737,7 @@ class AccountPaymentRegister(models.TransientModel):
             'partner_type': batch_values['partner_type'],
             'ref': self._get_batch_communication(batch_result),
             'journal_id': self.journal_id.id,
+            'company_id': self.company_id.id,
             'currency_id': batch_values['source_currency_id'],
             'partner_id': batch_values['partner_id'],
             'partner_bank_id': partner_bank_id,

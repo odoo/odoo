@@ -45,7 +45,7 @@ class StockMove(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product',
         check_company=True,
-        domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True, required=True,
+        domain="[('type', 'in', ['product', 'consu'])]", index=True, required=True,
         states={'done': [('readonly', True)]})
     description_picking = fields.Text('Description of Picking')
     product_qty = fields.Float(

@@ -4,7 +4,7 @@ from odoo.osv import expression
 from odoo.tools.float_utils import float_round
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import formatLang
-from odoo.tools import frozendict
+from odoo.tools import frozendict, groupby
 
 from collections import defaultdict
 import math
@@ -22,6 +22,8 @@ class AccountTaxGroup(models.Model):
     _name = 'account.tax.group'
     _description = 'Tax Group'
     _order = 'sequence asc'
+    _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
     name = fields.Char(required=True, translate=True)
     sequence = fields.Integer(default=10)
@@ -68,7 +70,7 @@ class AccountTaxGroup(models.Model):
                  of these countries, in this company
         """
         return bool(self.env['account.tax'].search([
-            ('company_id', '=', company.id),
+            *self.env['account.tax']._check_company_domain(company),
             ('country_id', 'in', countries.ids),
             '|',
             ('tax_group_id.tax_payable_account_id', '=', False),
@@ -82,6 +84,7 @@ class AccountTax(models.Model):
     _order = 'sequence,id'
     _check_company_auto = True
     _rec_names_search = ['name', 'description', 'invoice_label']
+    _check_company_domain = models.check_company_domain_parent_of
 
     name = fields.Char(string='Tax Name', required=True, translate=True)
     name_searchable = fields.Char(store=False, search='_search_name',
@@ -139,7 +142,7 @@ class AccountTax(models.Model):
         "Based on Payment: the tax is due as soon as the payment of the invoice is received.")
     cash_basis_transition_account_id = fields.Many2one(string="Cash Basis Transition Account",
         check_company=True,
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
+        domain="[('deprecated', '=', False)]",
         comodel_name='account.account',
         help="Account used to transition the tax amount for cash basis taxes. It will contain the tax amount as long as the original invoice has not been reconciled ; at reconciliation, this amount cancelled on this account and put on the regular tax account.")
     invoice_repartition_line_ids = fields.One2many(
@@ -172,9 +175,23 @@ class AccountTax(models.Model):
     )
     country_code = fields.Char(related='country_id.code', readonly=True)
 
-    _sql_constraints = [
-        ('name_company_uniq', 'unique(name, company_id, type_tax_use, tax_scope)', 'Tax names must be unique!'),
-    ]
+    @api.constrains('company_id', 'name', 'type_tax_use', 'tax_scope')
+    def _constrains_name(self):
+        domains = []
+        for record in self:
+            if record.type_tax_use != 'none':
+                domains.append([
+                    ('company_id', 'child_of', record.company_id.root_id.id),
+                    ('name', '=', record.name),
+                    ('type_tax_use', '=', record.type_tax_use),
+                    ('tax_scope', '=', record.tax_scope),
+                    ('id', '!=', record.id),
+                ])
+        if duplicates := self.search(expression.OR(domains)):
+            raise ValidationError(
+                _("Tax names must be unique!")
+                + "\n" + "\n".join(f"- {duplicate.name} in {duplicate.company_id.name}" for duplicate in duplicates)
+            )
 
     @api.constrains('tax_group_id')
     def validate_tax_group_id(self):
@@ -199,10 +216,10 @@ class AccountTax(models.Model):
                 by_country_company[(tax.country_id, tax.company_id)] += tax
         for (country, company), taxes in by_country_company.items():
             taxes.tax_group_id = self.env['account.tax.group'].search([
-                ('company_id', '=', company.id),
+                *self.env['account.tax.group']._check_company_domain(company),
                 ('country_id', '=', country.id),
             ], limit=1) or self.env['account.tax.group'].search([
-                ('company_id', '=', company.id),
+                *self.env['account.tax.group']._check_company_domain(company),
                 ('country_id', '=', False),
             ], limit=1)
 
@@ -308,29 +325,14 @@ class AccountTax(models.Model):
 
     @api.constrains('company_id')
     def _check_company_consistency(self):
-        if not self:
-            return
-
-        self.env['account.move.line'].flush_model(['company_id', 'tax_line_id'])
-        self.flush_recordset(['company_id'])
-        self._cr.execute('''
-            SELECT line.id
-            FROM account_move_line line
-            JOIN account_tax tax ON tax.id = line.tax_line_id
-            WHERE line.tax_line_id IN %s
-            AND line.company_id != tax.company_id
-
-            UNION ALL
-
-            SELECT line.id
-            FROM account_move_line_account_tax_rel tax_rel
-            JOIN account_tax tax ON tax.id = tax_rel.account_tax_id
-            JOIN account_move_line line ON line.id = tax_rel.account_move_line_id
-            WHERE tax_rel.account_tax_id IN %s
-            AND line.company_id != tax.company_id
-        ''', [tuple(self.ids)] * 2)
-        if self._cr.fetchone():
-            raise UserError(_("You can't change the company of your tax since there are some journal items linked to it."))
+        for company, taxes in groupby(self, lambda tax: tax.company_id):
+            if self.env['account.move.line'].search([
+                '|',
+                ('tax_line_id', 'in', [tax.id for tax in taxes]),
+                ('tax_ids', 'in', [tax.id for tax in taxes]),
+                '!', ('company_id', 'child_of', company.id)
+            ], limit=1):
+                raise UserError(_("You can't change the company of your tax since there are some journal items linked to it."))
 
     def _sanitize_vals(self, vals):
         """Normalize the create/write values."""
@@ -522,7 +524,7 @@ class AccountTax(models.Model):
         if not self:
             company = self.env.company
         else:
-            company = self[0].company_id
+            company = self[0].company_id._accessible_branches()[:1]
 
         # 1) Flatten the taxes.
         taxes, groups_map = self.flatten_taxes_hierarchy(create_map=True)
@@ -1341,6 +1343,7 @@ class AccountTaxRepartitionLine(models.Model):
     _description = "Tax Repartition Line"
     _order = 'sequence, repartition_type, id'
     _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
     factor_percent = fields.Float(
         string="%",
@@ -1353,7 +1356,7 @@ class AccountTaxRepartitionLine(models.Model):
     document_type = fields.Selection(string="Related to", selection=[('invoice', 'Invoice'), ('refund', 'Refund')], required=True)
     account_id = fields.Many2one(string="Account",
         comodel_name='account.account',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
+        domain="[('deprecated', '=', False), ('account_type', 'not in', ('asset_receivable', 'liability_payable'))]",
         check_company=True,
         help="Account on which to post the tax amount")
     tag_ids = fields.Many2many(string="Tax Grids", comodel_name='account.account.tag', domain=[('applicability', '=', 'taxes')], copy=True, ondelete='restrict')

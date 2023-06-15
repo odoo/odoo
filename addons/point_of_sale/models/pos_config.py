@@ -6,31 +6,40 @@ from uuid import uuid4
 import pytz
 
 from odoo import api, fields, models, _
+from odoo.osv.expression import OR
 from odoo.exceptions import ValidationError, UserError
 
 
 class PosConfig(models.Model):
     _name = 'pos.config'
     _description = 'Point of Sale Configuration'
+    _check_company_auto = True
 
     def _default_warehouse_id(self):
-        return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).id
+        return self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).id
 
     def _default_picking_type_id(self):
-        return self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).pos_type_id.id
+        return self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1).pos_type_id.id
 
     def _default_sale_journal(self):
-        return self.env['account.journal'].search([('type', 'in', ('sale', 'general')), ('company_id', '=', self.env.company.id), ('code', '=', 'POSS')], limit=1)
+        return self.env['account.journal'].search([
+            *self.env['account.journal']._check_company_domain(self.env.company),
+            ('type', 'in', ('sale', 'general')),
+            ('code', '=', 'POSS'),
+        ], limit=1)
 
     def _default_invoice_journal(self):
-        return self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', self.env.company.id)], limit=1)
+        return self.env['account.journal'].search([
+            *self.env['account.journal']._check_company_domain(self.env.company),
+            ('type', '=', 'sale'),
+        ], limit=1)
 
     def _default_payment_methods(self):
         """ Should only default to payment methods that are compatible to this config's company and currency.
         """
         domain = [
+            *self.env['pos.payment.method']._check_company_domain(self.env.company),
             ('split_transactions', '=', False),
-            ('company_id', '=', self.env.company.id),
             '|',
                 ('journal_id', '=', False),
                 ('journal_id.currency_id', 'in', (False, self.env.company.currency_id.id)),
@@ -61,11 +70,13 @@ class PosConfig(models.Model):
     journal_id = fields.Many2one(
         'account.journal', string='Point of Sale Journal',
         domain=[('type', 'in', ('general', 'sale'))],
+        check_company=True,
         help="Accounting journal used to post POS session journal entries and POS invoice payments.",
         default=_default_sale_journal,
         ondelete='restrict')
     invoice_journal_id = fields.Many2one(
         'account.journal', string='Invoice Journal',
+        check_company=True,
         domain=[('type', '=', 'sale')],
         help="Accounting journal used to create invoices.",
         default=_default_invoice_journal)
@@ -271,23 +282,11 @@ class PosConfig(models.Model):
                     value=selection_value,
                 ))
 
-    @api.constrains('company_id', 'journal_id')
-    def _check_company_journal(self):
-        for config in self:
-            if config.journal_id and config.journal_id.company_id.id != config.company_id.id:
-                raise ValidationError(_("The sales journal of the point of sale %s must belong to its company.", config.name))
-
     def _check_profit_loss_cash_journal(self):
         if self.cash_control and self.payment_method_ids:
             for method in self.payment_method_ids:
                 if method.is_cash_count and (not method.journal_id.loss_account_id or not method.journal_id.profit_account_id):
                     raise ValidationError(_("You need a loss and profit account on your cash journal."))
-
-    @api.constrains('company_id', 'invoice_journal_id')
-    def _check_company_invoice_journal(self):
-        for config in self:
-            if config.invoice_journal_id and config.invoice_journal_id.company_id.id != config.company_id.id:
-                raise ValidationError(_("The invoice journal of the point of sale %s must belong to the same company.", config.name))
 
     @api.constrains('company_id', 'payment_method_ids')
     def _check_company_payment(self):
@@ -349,10 +348,7 @@ class PosConfig(models.Model):
 
     @api.constrains('payment_method_ids')
     def _check_payment_method_ids_journal(self):
-        cash_journal = self.env['account.journal'].search(
-            [('company_id', '=', self.env.company.id), ('type', '=', 'cash')])
-
-        for cash_method in self.payment_method_ids.filtered(lambda s: s.journal_id.id in cash_journal.ids):
+        for cash_method in self.payment_method_ids.filtered(lambda m: m.journal_id.type == 'cash'):
             if self.env['pos.config'].search([('id', '!=', self.id), ('payment_method_ids', 'in', cash_method.ids)]):
                 raise ValidationError(_("This cash payment method is already used in another Point of Sale.\n"
                                         "A new cash payment method should be created for this Point of Sale."))
@@ -521,8 +517,6 @@ class PosConfig(models.Model):
     def _check_before_creating_new_session(self):
         self._check_company_has_template()
         self._check_pricelists()
-        self._check_company_journal()
-        self._check_company_invoice_journal()
         self._check_company_payment()
         self._check_currencies()
         self._check_profit_loss_cash_journal()
@@ -605,8 +599,14 @@ class PosConfig(models.Model):
         for pos_config in self:
             if pos_config.payment_method_ids or pos_config.has_active_session:
                 continue
-            cash_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'cash')], limit=1)
-            bank_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'bank')], limit=1)
+            cash_journal = self.env['account.journal'].search([
+                *self.env['account.journal']._check_company_domain(company),
+                ('type', '=', 'cash'),
+            ], limit=1)
+            bank_journal = self.env['account.journal'].search([
+                *self.env['account.journal']._check_company_domain(company),
+                ('type', '=', 'bank'),
+            ], limit=1)
             payment_methods = self.env['pos.payment.method']
             if cash_journal and len(cash_journal.pos_payment_method_ids.ids) == 0:
                 payment_methods |= payment_methods.create({
@@ -631,7 +631,10 @@ class PosConfig(models.Model):
         for pos_config in self:
             if pos_config.journal_id:
                 continue
-            pos_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('code', '=', 'POSS')])
+            pos_journal = self.env['account.journal'].search([
+                *self.env['account.journal']._check_company_domain(company),
+                ('code', '=', 'POSS'),
+            ])
             if not pos_journal:
                 pos_journal = self.env['account.journal'].create({
                     'type': 'general',
@@ -644,43 +647,46 @@ class PosConfig(models.Model):
 
     def setup_invoice_journal(self, company):
         for pos_config in self:
-            invoice_journal_id = pos_config.invoice_journal_id or self.env['account.journal'].search([('type', '=', 'sale'), ('company_id', '=', company.id)], limit=1)
+            invoice_journal_id = pos_config.invoice_journal_id or self.env['account.journal'].search([
+                *self.env['account.journal']._check_company_domain(company),
+                ('type', '=', 'sale'),
+            ], limit=1)
             if invoice_journal_id:
                 pos_config.write({'invoice_journal_id': invoice_journal_id.id})
 
+    def _get_availlable_product_domain(self):
+        domain = [
+            *self.env['product.product']._check_company_domain(self.company_id),
+            ('available_in_pos', '=', True),
+            ('sale_ok', '=', True),
+        ]
+        if self.iface_available_categ_ids:
+            domain.append(('pos_category_id', 'in', self.iface_available_categ_ids.ids))
+        if self.iface_tipproduct:
+            domain = OR([domain, [('id', '=', self.tip_product_id.id)]])
+        return domain
+
     def get_limited_products_loading(self, fields):
-        query = """
+        tables, where_clause, params = self.env['product.product']._where_calc(
+            self._get_availlable_product_domain()
+        ).get_sql()
+        query = f"""
             WITH pm AS (
                   SELECT product_id,
                          Max(write_date) date
                     FROM stock_quant
                 GROUP BY product_id
             )
-               SELECT p.id
-                 FROM product_product p
-            LEFT JOIN product_template t ON product_tmpl_id=t.id
-            LEFT JOIN pm ON p.id=pm.product_id
-                WHERE (
-                        t.available_in_pos
-                    AND t.sale_ok
-                    AND (t.company_id=%(company_id)s OR t.company_id IS NULL)
-                    AND (%(available_categ_ids)s IS NULL OR EXISTS (
-                        SELECT 1 FROM pos_category_product_template_rel
-                        WHERE product_template_id = t.id
-                        AND pos_category_id = ANY(%(available_categ_ids)s)))
-                )    OR p.id=%(tip_product_id)s
-             ORDER BY t.priority DESC,
-                      t.detailed_type DESC,
-                      COALESCE(pm.date,p.write_date) DESC
-                LIMIT %(limit)s
+               SELECT product_product.id
+                 FROM {tables}
+            LEFT JOIN pm ON product_product.id=pm.product_id
+                WHERE {where_clause}
+             ORDER BY product_product__product_tmpl_id.priority DESC,
+                      product_product__product_tmpl_id.detailed_type DESC,
+                      COALESCE(pm.date, product_product.write_date) DESC
+                LIMIT %s
         """
-        params = {
-            'company_id': self.company_id.id,
-            'available_categ_ids': self.iface_available_categ_ids.mapped('id') if self.iface_available_categ_ids else None,
-            'tip_product_id': self.tip_product_id.id if self.tip_product_id else None,
-            'limit': 20000
-        }
-        self.env.cr.execute(query, params)
+        self.env.cr.execute(query, params + [20000])
         product_ids = self.env.cr.fetchall()
         products = self.env['product.product'].search_read([('id', 'in', product_ids)], fields=fields)
         return products

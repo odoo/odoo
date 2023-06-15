@@ -17,7 +17,6 @@ class TestAr(AccountTestInvoicingCommon):
 
         # ==== Company ====
         cls.company_data['company'].write({
-            'parent_id': cls.env.ref('base.main_company').id,
             'currency_id': cls.env.ref('base.ARS').id,
             'name': '(AR) Responsable Inscripto (Unit Tests)',
             "l10n_ar_afip_start_date": time.strftime('%Y-01-01'),
@@ -45,7 +44,6 @@ class TestAr(AccountTestInvoicingCommon):
         # ==== Company MONO ====
         cls.company_mono = cls.setup_company_data('(AR) Monotributista (Unit Tests)', chart_template=chart_template_ref)['company']
         cls.company_mono.write({
-            'parent_id': cls.env.ref('base.main_company').id,
             'currency_id': cls.env.ref('base.ARS').id,
             'name': '(AR) Monotributista (Unit Tests)',
             "l10n_ar_afip_start_date": time.strftime('%Y-01-01'),

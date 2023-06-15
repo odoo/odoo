@@ -6,10 +6,10 @@ from odoo.tools import float_compare
 
 
 class HrExpenseSplit(models.TransientModel):
-
     _name = 'hr.expense.split'
     _inherit = ['analytic.mixin']
     _description = 'Expense Split'
+    _check_company_auto = True
 
     def default_get(self, fields):
         result = super(HrExpenseSplit, self).default_get(fields)
@@ -28,8 +28,12 @@ class HrExpenseSplit(models.TransientModel):
     name = fields.Char('Description', required=True)
     wizard_id = fields.Many2one('hr.expense.split.wizard')
     expense_id = fields.Many2one('hr.expense', string='Expense')
-    product_id = fields.Many2one('product.product', string='Product', required=True)
-    tax_ids = fields.Many2many('account.tax', domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase')]")
+    product_id = fields.Many2one('product.product', string='Product', required=True, check_company=True)
+    tax_ids = fields.Many2many(
+        'account.tax',
+        check_company=True,
+        domain="[('type_tax_use', '=', 'purchase')]",
+    )
     total_amount = fields.Monetary("Total In Currency", required=True, compute='_compute_from_product_id', store=True, readonly=False)
     amount_tax = fields.Monetary(string='Tax amount in Currency', compute='_compute_amount_tax')
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True)
@@ -57,12 +61,12 @@ class HrExpenseSplit(models.TransientModel):
         In case we switch to the product without taxes defined on it, taxes should be removed.
         Computed method won't be good for this purpose, as we don't want to recompute and reset taxes in case they are removed on purpose during splitting.
         """
-        self.tax_ids = self.tax_ids if self.product_has_tax and self.tax_ids else self.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == self.company_id)
+        self.tax_ids = self.tax_ids if self.product_has_tax and self.tax_ids else self.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(self.company_id))
 
     @api.depends('product_id')
     def _compute_product_has_tax(self):
         for split in self:
-            split.product_has_tax = split.product_id and split.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == split.company_id)
+            split.product_has_tax = split.product_id and split.product_id.supplier_taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(split.company_id))
 
     def _get_values(self):
         self.ensure_one()

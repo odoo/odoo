@@ -92,7 +92,7 @@ class TestItEdi(AccountEdiTestCommon):
         })
 
         cls.default_tax = cls.env['account.tax'].with_company(cls.company).create({
-            'name': "22%",
+            'name': "22% default",
             'amount': 22.0,
             'amount_type': 'percent',
         })

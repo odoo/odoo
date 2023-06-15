@@ -29,7 +29,7 @@ class PosOrder(models.Model):
 
     @api.model
     def _amount_line_tax(self, line, fiscal_position_id):
-        taxes = line.tax_ids.filtered(lambda t: t.company_id.id == line.order_id.company_id.id)
+        taxes = line.tax_ids.filtered_domain(self.env['account.tax']._check_company_domain(line.order_id.company_id))
         taxes = fiscal_position_id.map_tax(taxes)
         price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
         taxes = taxes.compute_all(price, line.order_id.currency_id, line.qty, product=line.product_id, partner=line.order_id.partner_id or False)['taxes']
@@ -1436,7 +1436,7 @@ class PosOrderLine(models.Model):
             price = self.order_id.pricelist_id._get_product_price(
                 self.product_id, self.qty or 1.0, currency=self.currency_id
             )
-            self.tax_ids = self.product_id.taxes_id.filtered(lambda r: not self.company_id or r.company_id == self.company_id)
+            self.tax_ids = self.product_id.taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(self.company_id))
             tax_ids_after_fiscal_position = self.order_id.fiscal_position_id.map_tax(self.tax_ids)
             self.price_unit = self.env['account.tax']._fix_tax_included_price_company(price, self.tax_ids, tax_ids_after_fiscal_position, self.company_id)
             self._onchange_qty()

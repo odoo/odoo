@@ -16,6 +16,7 @@ class ResPartnerBank(models.Model):
 
     journal_id = fields.One2many(
         'account.journal', 'bank_account_id', domain=[('type', '=', 'bank')], string='Account Journal', readonly=True,
+        check_company=True,
         help="The accounting journal corresponding to this bank account.")
     has_iban_warning = fields.Boolean(
         compute='_compute_display_account_warning',

@@ -23,7 +23,7 @@
                     <app data-string="Invoicing" string="Invoicing" name="account" groups="account.group_account_manager">
                         <field name="has_chart_of_accounts" invisible="1"/>
                         <field name="has_accounting_entries" invisible="1"/>
-                        <block title="Fiscal Localization" name="fiscal_localization_setting_container">
+                        <block title="Fiscal Localization" name="fiscal_localization_setting_container" attrs="{'invisible': [('is_root_company', '=', False)]}">
                             <setting string="Fiscal Localization" company_dependent="1" help="Taxes, fiscal positions, chart of accounts &amp; legal statements for your country"
                                 documentation="/applications/finance/fiscal_localizations.html">
                                 <div class="content-group">

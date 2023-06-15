@@ -9,7 +9,7 @@ class PaymentProvider(models.Model):
 
     website_id = fields.Many2one(
         "website",
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        check_company=True,
         ondelete="restrict",
     )
 

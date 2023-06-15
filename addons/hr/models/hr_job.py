@@ -26,7 +26,7 @@ class Job(models.Model):
     employee_ids = fields.One2many('hr.employee', 'job_id', string='Employees', groups='base.group_user')
     description = fields.Html(string='Job Description', sanitize_attributes=False)
     requirements = fields.Text('Requirements')
-    department_id = fields.Many2one('hr.department', string='Department', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    department_id = fields.Many2one('hr.department', string='Department', check_company=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     contract_type_id = fields.Many2one('hr.contract.type', string='Employment Type')
 

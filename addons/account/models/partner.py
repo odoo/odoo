@@ -19,6 +19,8 @@ class AccountFiscalPosition(models.Model):
     _name = 'account.fiscal.position'
     _description = 'Fiscal Position'
     _order = 'sequence'
+    _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
     sequence = fields.Integer()
     name = fields.Char(string='Fiscal Position', required=True, translate=True)
@@ -92,9 +94,9 @@ class AccountFiscalPosition(models.Model):
                             raise ValidationError(_("You cannot create a fiscal position with a foreign VAT within your fiscal country."))
 
                 similar_fpos_domain = [
+                    *self.env['account.fiscal.position']._check_company_domain(record.company_id),
                     ('foreign_vat', '!=', False),
                     ('country_id', '=', record.country_id.id),
-                    ('company_id', '=', record.company_id.id),
                     ('id', '!=', record.id),
                 ]
                 if record.state_ids:
@@ -174,9 +176,9 @@ class AccountFiscalPosition(models.Model):
         if not country_id:
             return False
         base_domain = [
+            *self._check_company_domain(self.env.company),
             ('auto_apply', '=', True),
             ('vat_required', '=', vat_required),
-            ('company_id', 'in', [self.env.company.id, False]),
         ]
         null_state_dom = state_domain = [('state_ids', '=', False)]
         null_zip_dom = zip_domain = [('zip_from', '=', False), ('zip_to', '=', False)]
@@ -263,6 +265,7 @@ class AccountFiscalPositionTax(models.Model):
     _description = 'Tax Mapping of Fiscal Position'
     _rec_name = 'position_id'
     _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
         required=True, ondelete='cascade')
@@ -282,16 +285,17 @@ class AccountFiscalPositionAccount(models.Model):
     _description = 'Accounts Mapping of Fiscal Position'
     _rec_name = 'position_id'
     _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
     position_id = fields.Many2one('account.fiscal.position', string='Fiscal Position',
         required=True, ondelete='cascade')
     company_id = fields.Many2one('res.company', string='Company', related='position_id.company_id', store=True)
     account_src_id = fields.Many2one('account.account', string='Account on Product',
         check_company=True, required=True,
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]")
+        domain="[('deprecated', '=', False)]")
     account_dest_id = fields.Many2one('account.account', string='Account to Use Instead',
         check_company=True, required=True,
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]")
+        domain="[('deprecated', '=', False)]")
 
     _sql_constraints = [
         ('account_src_dest_uniq',
@@ -326,7 +330,7 @@ class ResPartner(models.Model):
     def _credit_debit_get(self):
         tables, where_clause, where_params = self.env['account.move.line']._where_calc([
             ('parent_state', '=', 'posted'),
-            ('company_id', '=', self.env.company.id)
+            ('company_id', 'child_of', self.env.company.root_id.id)
         ]).get_sql()
 
         where_params = [tuple(self.ids)] + where_params
@@ -371,17 +375,21 @@ class ResPartner(models.Model):
         sign = 1
         if account_type == 'liability_payable':
             sign = -1
-        res = self._cr.execute('''
-            SELECT partner.id
-            FROM res_partner partner
-            LEFT JOIN account_move_line aml ON aml.partner_id = partner.id
-            JOIN account_move move ON move.id = aml.move_id
-            RIGHT JOIN account_account acc ON aml.account_id = acc.id
-            WHERE acc.account_type = %s
-              AND NOT acc.deprecated AND acc.company_id = %s
-              AND move.state = 'posted'
-            GROUP BY partner.id
-            HAVING %s * COALESCE(SUM(aml.amount_residual), 0) ''' + operator + ''' %s''', (account_type, self.env.company.id, sign, operand))
+        res = self._cr.execute(f'''
+            SELECT aml.partner_id
+              FROM res_partner partner
+         LEFT JOIN account_move_line aml ON aml.partner_id = partner.id
+              JOIN account_move move ON move.id = aml.move_id
+              JOIN res_company line_company ON line_company.id = line.company_id
+        RIGHT JOIN account_account acc ON aml.account_id = acc.id
+             WHERE acc.account_type = %s
+               AND NOT acc.deprecated
+               AND SPLIT_PART(line_company.parent_path, '/', 1):int == %s
+               AND move.state = 'posted'
+          GROUP BY aml.partner_id
+            HAVING %s * COALESCE(SUM(aml.amount_residual), 0) {operator} %s''',
+            (account_type, self.env.company.root_id.id, sign, operand)
+        )
         res = self._cr.fetchall()
         if not res:
             return [('id', '=', '0')]
@@ -521,25 +529,22 @@ class ResPartner(models.Model):
     journal_item_count = fields.Integer(compute='_compute_journal_item_count', string="Journal Items")
     property_account_payable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Payable",
-        domain="[('account_type', '=', 'liability_payable'), ('deprecated', '=', False), ('company_id', '=', current_company_id)]",
+        domain="[('account_type', '=', 'liability_payable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the payable account for the current partner",
         required=True)
     property_account_receivable_id = fields.Many2one('account.account', company_dependent=True,
         string="Account Receivable",
-        domain="[('account_type', '=', 'asset_receivable'), ('deprecated', '=', False), ('company_id', '=', current_company_id)]",
+        domain="[('account_type', '=', 'asset_receivable'), ('deprecated', '=', False)]",
         help="This account will be used instead of the default one as the receivable account for the current partner",
         required=True)
     property_account_position_id = fields.Many2one('account.fiscal.position', company_dependent=True,
         string="Fiscal Position",
-        domain="[('company_id', '=', current_company_id)]",
         help="The fiscal position determines the taxes/accounts used for this contact.")
     property_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Customer Payment Terms',
-        domain="[('company_id', 'in', [current_company_id, False])]",
         help="This payment term will be used instead of the default one for sales orders and customer invoices")
     property_supplier_payment_term_id = fields.Many2one('account.payment.term', company_dependent=True,
         string='Vendor Payment Terms',
-        domain="[('company_id', 'in', [current_company_id, False])]",
         help="This payment term will be used instead of the default one for purchase orders and vendor bills")
     ref_company_ids = fields.One2many('res.company', 'partner_id',
         string='Companies that refers to partner')
@@ -849,8 +854,9 @@ class ResPartner(models.Model):
                 return None
             return self.env['res.partner'].search(domain + extra_domain, limit=1)
 
+        company = company or self.env.company
         for search_method in (search_with_vat, search_with_domain, search_with_phone_mail, search_with_name):
-            for extra_domain in ([('company_id', '=', (company or self.env.company).id)], []):
+            for extra_domain in (self.env['res.partner']._check_company_domain(company), []):
                 partner = search_method(extra_domain)
                 if partner:
                     return partner

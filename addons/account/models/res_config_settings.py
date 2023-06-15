@@ -14,26 +14,39 @@ class ResConfigSettings(models.TransientModel):
         comodel_name='account.journal',
         related='company_id.currency_exchange_journal_id', readonly=False,
         string="Currency Exchange Journal",
-        domain="[('company_id', '=', company_id), ('type', '=', 'general')]",
+        check_company=True,
+        domain="[('type', '=', 'general')]",
         help='The accounting journal where automatic exchange differences will be registered')
     income_currency_exchange_account_id = fields.Many2one(
         comodel_name="account.account",
         related="company_id.income_currency_exchange_account_id",
         string="Gain Exchange Rate Account",
         readonly=False,
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id),\
-                ('account_type', 'in', ('income', 'income_other'))]")
+        check_company=True,
+        domain="[('deprecated', '=', False), ('account_type', 'in', ('income', 'income_other'))]")
     expense_currency_exchange_account_id = fields.Many2one(
         comodel_name="account.account",
         related="company_id.expense_currency_exchange_account_id",
         string="Loss Exchange Rate Account",
         readonly=False,
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id),\
-                ('account_type', '=', 'expense')]")
+        check_company=True,
+        domain="[('deprecated', '=', False), ('account_type', '=', 'expense')]")
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template = fields.Selection(selection=lambda self: self.env.company._chart_template_selection(), default=lambda self: self.env.company.chart_template)
-    sale_tax_id = fields.Many2one('account.tax', string="Default Sale Tax", related='company_id.account_sale_tax_id', readonly=False)
-    purchase_tax_id = fields.Many2one('account.tax', string="Default Purchase Tax", related='company_id.account_purchase_tax_id', readonly=False)
+    sale_tax_id = fields.Many2one(
+        'account.tax',
+        string="Default Sale Tax",
+        related='company_id.account_sale_tax_id',
+        readonly=False,
+        check_company=True,
+    )
+    purchase_tax_id = fields.Many2one(
+        'account.tax',
+        string="Default Purchase Tax",
+        related='company_id.account_purchase_tax_id',
+        readonly=False,
+        check_company=True,
+    )
     tax_calculation_rounding_method = fields.Selection(
         related='company_id.tax_calculation_rounding_method', string='Tax calculation rounding method', readonly=False)
     account_journal_suspense_account_id = fields.Many2one(
@@ -41,7 +54,8 @@ class ResConfigSettings(models.TransientModel):
         string='Bank Suspense',
         readonly=False,
         related='company_id.account_journal_suspense_account_id',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'in', ('asset_current', 'liability_current'))]",
+        check_company=True,
+        domain="[('deprecated', '=', False), ('account_type', 'in', ('asset_current', 'liability_current'))]",
         help='Bank Transactions are posted immediately after import or synchronization. '
              'Their counterparty is the bank suspense account.\n'
              'Reconciliation replaces the latter by the definitive account(s).')
@@ -49,8 +63,9 @@ class ResConfigSettings(models.TransientModel):
         comodel_name='account.account',
         string='Outstanding Receipts',
         readonly=False,
+        check_company=True,
         related='company_id.account_journal_payment_debit_account_id',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', '=', 'asset_current')]",
+        domain="[('deprecated', '=', False), ('account_type', '=', 'asset_current')]",
         help='Incoming payments are posted on an Outstanding Receipts Account. '
              'In the bank reconciliation widget, they appear as blue lines.\n'
              'Bank transactions are then reconciled on the Outstanding Receipts Accounts rather than the Receivable '
@@ -59,13 +74,15 @@ class ResConfigSettings(models.TransientModel):
         comodel_name='account.account',
         string='Outstanding Payments',
         readonly=False,
+        check_company=True,
         related='company_id.account_journal_payment_credit_account_id',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', '=', 'asset_current')]",
+        domain="[('deprecated', '=', False), ('account_type', '=', 'asset_current')]",
         help='Outgoing Payments are posted on an Outstanding Payments Account. '
              'In the bank reconciliation widget, they appear as blue lines.\n'
              'Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account.')
     transfer_account_id = fields.Many2one('account.account', string="Internal Transfer",
         related='company_id.transfer_account_id', readonly=False,
+        check_company=True,
         domain=[
             ('reconcile', '=', True),
             ('account_type', '=', 'asset_current'),
@@ -100,11 +117,18 @@ class ResConfigSettings(models.TransientModel):
     module_account_invoice_extract = fields.Boolean(string="Document Digitization")
     module_snailmail_account = fields.Boolean(string="Snailmail")
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', readonly=False)
-    tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal", readonly=False)
+    tax_cash_basis_journal_id = fields.Many2one(
+        'account.journal',
+        string="Tax Cash Basis Journal",
+        related='company_id.tax_cash_basis_journal_id',
+        readonly=False,
+        check_company=True,
+    )
     account_cash_basis_base_account_id = fields.Many2one(
         comodel_name='account.account',
         string="Base Tax Received Account",
         readonly=False,
+        check_company=True,
         related='company_id.account_cash_basis_base_account_id',
         domain=[('deprecated', '=', False)])
     account_fiscal_country_id = fields.Many2one(string="Fiscal Country Code", related="company_id.account_fiscal_country_id", readonly=False, store=False)
@@ -154,15 +178,17 @@ class ResConfigSettings(models.TransientModel):
         help='Account for the difference amount after the expense discount has been granted',
         readonly=False,
         related='company_id.account_journal_early_pay_discount_loss_account_id',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'in', ('expense', 'income', 'income_other'))]",
+        check_company=True,
+        domain="[('deprecated', '=', False), ('account_type', 'in', ('expense', 'income', 'income_other'))]",
     )
     account_journal_early_pay_discount_gain_account_id = fields.Many2one(
         comodel_name='account.account',
         string='Cash Discount Gain',
         help='Account for the difference amount after the income discount has been granted',
         readonly=False,
+        check_company=True,
         related='company_id.account_journal_early_pay_discount_gain_account_id',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', 'in', ('income', 'income_other', 'expense'))]",
+        domain="[('deprecated', '=', False), ('account_type', 'in', ('income', 'income_other', 'expense'))]",
     )
 
     def set_values(self):
@@ -208,7 +234,8 @@ class ResConfigSettings(models.TransientModel):
     def _onchange_tax_exigibility(self):
         res = {}
         tax = self.env['account.tax'].search([
-            ('company_id', '=', self.env.company.id), ('tax_exigibility', '=', 'on_payment')
+            *self.env['account.tax']._check_company_domain(self.env.company),
+            ('tax_exigibility', '=', 'on_payment'),
         ], limit=1)
         if not self.tax_exigibility and tax:
             self.tax_exigibility = True

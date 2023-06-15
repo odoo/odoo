@@ -17,17 +17,18 @@ class ProductReplenish(models.TransientModel):
         if res.get('product_id'):
             product_id = self.env['product.product'].browse(res['product_id'])
             product_tmpl_id = product_id.product_tmpl_id
+            company = product_tmpl_id.company_id or self.env.company
             if 'warehouse_id' not in res:
-                company = product_tmpl_id.company_id or self.env.company
-                res['warehouse_id'] = self.env['stock.warehouse'].search([('company_id', '=', company.id)], limit=1).id
+                res['warehouse_id'] = self.env['stock.warehouse'].search([
+                    *self.env['stock.warehouse']._check_company_domain(company),
+                ], limit=1).id
             orderpoint = self.env['stock.warehouse.orderpoint'].search([('product_id', 'in', [product_tmpl_id.product_variant_id.id, product_id.id]), ("warehouse_id", "=", res['warehouse_id'])], limit=1)
             if orderpoint:
                 res['supplier_id'] = orderpoint.supplier_id.id
             elif product_tmpl_id.seller_ids:
                 res['supplier_id'] = product_tmpl_id.seller_ids[0].id
             if not product_tmpl_id.seller_ids:
-                company = product_tmpl_id.company_id or self.env.company
-                domain = ['|', ('company_id', '=', False), ('company_id', '=', company.id)] + self._get_allowed_route_domain()
+                domain = self.env['stock.route']._check_company_domain(company) + self._get_allowed_route_domain()
                 domain = AND([domain, [('id', '!=', self.env.ref('purchase_stock.route_warehouse0_buy', raise_if_not_found=False).id)]])
                 res['route_id'] = self.env['stock.route'].search(domain, limit=1).id
         return res

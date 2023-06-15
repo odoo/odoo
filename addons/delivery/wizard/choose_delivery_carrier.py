@@ -61,7 +61,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     @api.depends('partner_id')
     def _compute_available_carrier(self):
         for rec in self:
-            carriers = self.env['delivery.carrier'].search(['|', ('company_id', '=', False), ('company_id', '=', rec.order_id.company_id.id)])
+            carriers = self.env['delivery.carrier'].search(self.env['delivery.carrier']._check_company_domain(rec.order_id.company_id))
             rec.available_carrier_ids = carriers.available_carriers(rec.order_id.partner_shipping_id) if rec.partner_id else carriers
 
     def _get_shipment_rate(self):

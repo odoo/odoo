@@ -63,7 +63,12 @@ class IrModule(models.Model):
         res = super().write(vals)
         is_installed = len(self) == 1 and self.state == 'installed'
         if not was_installed and is_installed and not self.env.company.chart_template and self.account_templates:
-            self.env.registry._auto_install_template = next(iter(self.account_templates))
+            def try_loading(env):
+                env['account.chart.template'].try_loading(
+                    next(iter(self.account_templates)),
+                    env.company,
+                )
+            self.env.registry._auto_install_template = try_loading
         return res
 
     def _load_module_terms(self, modules, langs, overwrite=False):
@@ -82,10 +87,7 @@ class IrModule(models.Model):
             self.env.registry._delayed_account_translator(self.env)
             del self.env.registry._delayed_account_translator
         if hasattr(self.env.registry, '_auto_install_template'):
-            self.env['account.chart.template'].try_loading(
-                self.env.registry._auto_install_template,
-                self.env.company,
-            )
+            self.env.registry._auto_install_template(self.env)
             del self.env.registry._auto_install_template
 
     def module_uninstall(self):

@@ -21,7 +21,7 @@ class SaleOrderTemplateOption(models.Model):
     product_id = fields.Many2one(
         comodel_name='product.product',
         required=True, check_company=True,
-        domain="[('sale_ok', '=', True), ('company_id', 'in', [company_id, False])]")
+        domain="[('sale_ok', '=', True)]")
 
     name = fields.Text(
         string="Description",

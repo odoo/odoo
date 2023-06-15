@@ -41,8 +41,9 @@ class AccountClosing(models.Model):
             JOIN account_journal j ON aml.journal_id = j.id
             JOIN account_account acc ON acc.id = aml.account_id
             JOIN account_move m ON m.id = aml.move_id
+            JOIN res_company move_company ON move_company.id = m.company_id
             WHERE j.type = 'sale'
-                AND aml.company_id = %(company_id)s
+                AND SPLIT_PART(move_company.parent_path, '/', 1)::int = %(company_id)s
                 AND m.state = 'posted'
                 AND acc.account_type = 'asset_receivable' '''
 

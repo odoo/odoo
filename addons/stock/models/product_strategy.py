@@ -28,7 +28,7 @@ class StockPutawayRule(models.Model):
         if self.env.context.get('active_model') == 'stock.location':
             return self.env.context.get('active_id')
         if not self.env.user.has_group('stock.group_stock_multi_warehouses'):
-            wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+            wh = self.env['stock.warehouse'].search(self.env['stock.warehouse']._check_company_domain(self.env.company), limit=1)
             input_loc, _ = wh._get_input_output_locations(wh.reception_steps, wh.delivery_steps)
             return input_loc
 
@@ -51,7 +51,7 @@ class StockPutawayRule(models.Model):
         return []
 
     def _domain_product_id(self):
-        domain = "[('type', '!=', 'service'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]"
+        domain = "[('type', '!=', 'service')]"
         if self.env.context.get('active_model') == 'product.template':
             return [('product_tmpl_id', '=', self.env.context.get('active_id'))]
         return domain
@@ -63,11 +63,11 @@ class StockPutawayRule(models.Model):
         default=_default_category_id, domain=_domain_category_id, ondelete='cascade')
     location_in_id = fields.Many2one(
         'stock.location', 'When product arrives in', check_company=True,
-        domain="[('child_ids', '!=', False), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="[('child_ids', '!=', False)]",
         default=_default_location_id, required=True, ondelete='cascade', index=True)
     location_out_id = fields.Many2one(
         'stock.location', 'Store to sublocation', check_company=True,
-        domain="[('id', 'child_of', location_in_id), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="[('id', 'child_of', location_in_id)]",
         required=True, ondelete='cascade')
     sequence = fields.Integer('Priority', help="Give to the more specialized category, a higher priority to have them in top of the list.")
     company_id = fields.Many2one(

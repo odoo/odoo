@@ -16,6 +16,7 @@ class AccountAccount(models.Model):
     _description = "Account"
     _order = "code, company_id"
     _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
     @api.constrains('account_type', 'reconcile')
     def _check_reconcile(self):
@@ -92,13 +93,18 @@ class AccountAccount(models.Model):
         check_company=True,
         context={'append_type_to_tax_name': True})
     note = fields.Text('Internal Notes', tracking=True)
-    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True,
+    company_id = fields.Many2one('res.company', string='Company', required=True, readonly=False,
         default=lambda self: self.env.company)
     tag_ids = fields.Many2many('account.account.tag', 'account_account_account_tag', string='Tags', help="Optional tags you may want to assign for custom reporting", ondelete='restrict')
     group_id = fields.Many2one('account.group', compute='_compute_account_group', store=True, readonly=True,
                                help="Account prefixes can determine account groups.")
     root_id = fields.Many2one('account.root', compute='_compute_account_root', store=True, precompute=True)
-    allowed_journal_ids = fields.Many2many('account.journal', string="Allowed Journals", help="Define in which journals this account can be used. If empty, can be used in all journals.")
+    allowed_journal_ids = fields.Many2many(
+        'account.journal',
+        string="Allowed Journals",
+        help="Define in which journals this account can be used. If empty, can be used in all journals.",
+        check_company=True,
+    )
     opening_debit = fields.Monetary(string="Opening Debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit')
     opening_credit = fields.Monetary(string="Opening Credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit')
     opening_balance = fields.Monetary(string="Opening Balance", compute='_compute_opening_debit_credit', inverse='_set_opening_balance')
@@ -106,13 +112,24 @@ class AccountAccount(models.Model):
     current_balance = fields.Float(compute='_compute_current_balance')
     related_taxes_amount = fields.Integer(compute='_compute_related_taxes_amount')
 
-    _sql_constraints = [
-        ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company!')
-    ]
-
     non_trade = fields.Boolean(default=False,
                                help="If set, this account will belong to Non Trade Receivable/Payable in reports and filters.\n"
                                     "If not, this account will belong to Trade Receivable/Payable in reports and filters.")
+
+    @api.constrains('company_id', 'code')
+    def _constrains_code(self):
+        domains = []
+        for record in self:
+            domains.append([
+                ('company_id', 'child_of', record.company_id.root_id.id),
+                ('code', '=', record.code),
+                ('id', '!=', record.id),
+            ])
+        if duplicates := self.search(expression.OR(domains)):
+            raise ValidationError(
+                _("The code of the account must be unique per company!")
+                + "\n" + "\n".join(f"- {duplicate.code} in {duplicate.company_id.name}" for duplicate in duplicates)
+            )
 
     @api.constrains('reconcile', 'internal_group', 'tax_ids')
     def _constrains_reconcile(self):
@@ -213,20 +230,12 @@ class AccountAccount(models.Model):
 
     @api.constrains('company_id')
     def _check_company_consistency(self):
-        if not self:
-            return
-
-        self.env['account.move.line'].flush_model(['account_id', 'company_id'])
-        self.flush_recordset(['company_id'])
-        self._cr.execute('''
-            SELECT line.id
-            FROM account_move_line line
-            JOIN account_account account ON account.id = line.account_id
-            WHERE line.account_id IN %s
-            AND line.company_id != account.company_id
-        ''', [tuple(self.ids)])
-        if self._cr.fetchone():
-            raise UserError(_("You can't change the company of your account since there are some journal items linked to it."))
+        for company, accounts in tools.groupby(self, lambda account: account.company_id):
+            if self.env['account.move.line'].search([
+                ('account_id', 'in', [account.id for account in accounts]),
+                '!', ('company_id', 'child_of', company.id)
+            ], limit=1):
+                raise UserError(_("You can't change the company of your account since there are some journal items linked to it."))
 
     @api.constrains('account_type')
     def _check_account_type_sales_purchase_journal(self):
@@ -347,7 +356,7 @@ class AccountAccount(models.Model):
             new_code = str(prefix.ljust(digits - 1, '0')) + str(num)
             if new_code in (cache or []):
                 continue
-            rec = self.search([('code', '=', new_code), ('company_id', '=', company.id)], limit=1)
+            rec = self.search([('code', '=', new_code), ('company_id', 'child_of', company.root_id.id)], limit=1)
             if not rec:
                 return new_code
         raise UserError(_('Cannot generate an unused account code.'))
@@ -531,28 +540,31 @@ class AccountAccount(models.Model):
         :param limit: the maximum number of accounts to retrieve
         :returns: List of account ids, ordered by frequency (from most to least frequent)
         """
-        join = "INNER JOIN" if filter_never_user_accounts else "LEFT JOIN"
-        limit = f"LIMIT {limit:d}" if limit else ""
-        where_internal_group = ""
+        domain = [
+            *self.env['account.move.line']._check_company_domain(company_id),
+            ('partner_id', '=', partner_id),
+            ('account_id.deprecated', '=', False),
+            ('date', '>=', fields.Date.add(fields.Date.today(), days=-365 * 2)),
+        ]
         if move_type in self.env['account.move'].get_inbound_types(include_receipts=True):
-            where_internal_group = "AND account.internal_group = 'income'"
+            domain.append(('account_id.internal_group', '=', 'income'))
         elif move_type in self.env['account.move'].get_outbound_types(include_receipts=True):
-            where_internal_group = "AND account.internal_group = 'expense'"
+            domain.append(('account_id.internal_group', '=', 'expense'))
+
+        query = self.env['account.move.line']._where_calc(domain)
+        if not filter_never_user_accounts:
+            _kind, rhs_table, condition, condition_params = query._joins['account_move_line__account_id']
+            query._joins['account_move_line__account_id'] = ("RIGHT JOIN", rhs_table, condition, condition_params)
+
+        from_clause, where_clause, params = query.get_sql()
         self._cr.execute(f"""
-            SELECT account.id
-              FROM account_account account
-            {join} account_move_line aml
-                ON aml.account_id  = account.id
-                AND aml.partner_id = %s
-                AND account.deprecated = FALSE
-                AND account.company_id = aml.company_id
-                AND aml.date >= now() - interval '2 years'
-              WHERE account.company_id = %s
-                   {where_internal_group}
-            GROUP BY account.id
-            ORDER BY COUNT(aml.id) DESC, account.code
-                   {limit}
-        """, [partner_id, company_id])
+            SELECT account_move_line__account_id.id
+              FROM {from_clause}
+             WHERE {where_clause}
+          GROUP BY account_move_line__account_id.id
+          ORDER BY COUNT(account_move_line.id) DESC, account_move_line__account_id.code
+                   {f"LIMIT {limit:d}" if limit else ""}
+        """, params)
         return [r[0] for r in self._cr.fetchall()]
 
     @api.model
@@ -610,8 +622,10 @@ class AccountAccount(models.Model):
         try:
             default['code'] = (str(int(self.code) + 10) or '').zfill(len(self.code))
             default.setdefault('name', _("%s (copy)") % (self.name or ''))
-            while self.env['account.account'].search([('code', '=', default['code']),
-                                                      ('company_id', '=', default.get('company_id', False) or self.company_id.id)], limit=1):
+            while self.env['account.account'].search([
+                *self.env['account.account']._check_company_domain(default.get('company_id', False) or self.company_id),
+                ('code', '=', default['code']),
+            ], limit=1):
                 default['code'] = (str(int(default['code']) + 10) or '')
                 default['name'] = _("%s (copy)") % (self.name or '')
         except ValueError:
@@ -715,12 +729,6 @@ class AccountAccount(models.Model):
         return super().create(vals_list)
 
     def write(self, vals):
-        # Do not allow changing the company_id when account_move_line already exist
-        if vals.get('company_id', False):
-            move_lines = self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1)
-            for account in self:
-                if (account.company_id.id != vals['company_id']) and move_lines:
-                    raise UserError(_('You cannot change the owner company of an account that already contains journal items.'))
         if 'reconcile' in vals:
             if vals['reconcile']:
                 self.filtered(lambda r: not r.reconcile)._toggle_reconcile_to_true()
@@ -799,8 +807,10 @@ class AccountGroup(models.Model):
     _description = 'Account Group'
     _parent_store = True
     _order = 'code_prefix_start'
+    _check_company_auto = True
+    _check_company_domain = models.check_company_domain_parent_of
 
-    parent_id = fields.Many2one('account.group', index=True, ondelete='cascade', readonly=True)
+    parent_id = fields.Many2one('account.group', index=True, ondelete='cascade', readonly=True, check_company=True)
     parent_path = fields.Char(index=True, unaccent=False)
     name = fields.Char(required=True, translate=True)
     code_prefix_start = fields.Char(compute='_compute_code_prefix_start', readonly=False, store=True, precompute=True)
@@ -906,7 +916,7 @@ class AccountGroup(models.Model):
         """
         if self.env.context.get('delay_account_group_sync'):
             return
-        company_ids = account_ids.company_id.ids if account_ids else self.company_id.ids
+        company_ids = account_ids.company_id.root_id.ids if account_ids else self.company_id.ids
         account_ids = account_ids.ids if account_ids else []
         if not company_ids and not account_ids:
             return
@@ -925,10 +935,11 @@ class AccountGroup(models.Model):
                         account.id AS account_id,
                         agroup.id AS group_id
                    FROM account_account account
+                   JOIN res_company account_company ON account_company.id = account.company_id
               LEFT JOIN account_group agroup
                      ON agroup.code_prefix_start <= LEFT(account.code, char_length(agroup.code_prefix_start))
                     AND agroup.code_prefix_end >= LEFT(account.code, char_length(agroup.code_prefix_end))
-                    AND agroup.company_id = account.company_id
+                    AND agroup.company_id = split_part(account_company.parent_path, '/', 1)::int
                   WHERE account.company_id IN %s {account_where_clause}
                ORDER BY account.id, char_length(agroup.code_prefix_start) DESC, agroup.id
             )

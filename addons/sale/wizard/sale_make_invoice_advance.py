@@ -68,11 +68,13 @@ class SaleAdvancePaymentInv(models.TransientModel):
         comodel_name='account.account',
         string="Income Account",
         domain=[('deprecated', '=', False)],
+        check_company=True,
         help="Account used for deposits")
     deposit_taxes_id = fields.Many2many(
         comodel_name='account.tax',
         string="Customer Taxes",
         domain=[('type_tax_use', '=', 'sale')],
+        check_company=True,
         help="Taxes used for deposits")
 
     # UI

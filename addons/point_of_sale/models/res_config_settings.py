@@ -256,7 +256,10 @@ class ResConfigSettings(models.TransientModel):
     def _compute_pos_pricelist_id(self):
         for res_config in self:
             currency_id = res_config.pos_journal_id.currency_id.id if res_config.pos_journal_id.currency_id else res_config.pos_config_id.company_id.currency_id.id
-            pricelists_in_current_currency = self.env['product.pricelist'].search([('company_id', 'in', (False, res_config.pos_config_id.company_id.id)), ('currency_id', '=', currency_id)])
+            pricelists_in_current_currency = self.env['product.pricelist'].search([
+                *self.env['product.pricelist']._check_company_domain(res_config.pos_config_id.company_id),
+                ('currency_id', '=', currency_id),
+            ])
             if not res_config.pos_use_pricelist:
                 res_config.pos_available_pricelist_ids = pricelists_in_current_currency[:1]
                 res_config.pos_pricelist_id = pricelists_in_current_currency[:1]

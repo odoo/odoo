@@ -27,22 +27,21 @@ class Company(models.Model):
         for company in self:
             invoice_repartition_lines, refund_repartition_lines = company._get_repartition_lines_oss()
             taxes = self.env['account.tax'].search([
+                *self.env['account.tax']._check_company_domain(company),
                 ('type_tax_use', '=', 'sale'),
                 ('amount_type', '=', 'percent'),
-                ('company_id', '=', company.id),
                 ('country_id', '=', company.account_fiscal_country_id.id),
                 ('tax_group_id', 'not in', oss_tax_groups.mapped('res_id'))])
 
             multi_tax_reports_countries_fpos = self.env['account.fiscal.position'].search([
-                ('company_id', '=', company.id),
                 ('foreign_vat', '!=', False),
             ])
             oss_countries = eu_countries - company.account_fiscal_country_id - multi_tax_reports_countries_fpos.country_id
             for destination_country in oss_countries:
                 mapping = []
                 fpos = self.env['account.fiscal.position'].search([
+                            *self.env['account.fiscal.position']._check_company_domain(company),
                             ('country_id', '=', destination_country.id),
-                            ('company_id', '=', company.id),
                             ('auto_apply', '=', True),
                             ('vat_required', '=', False),
                             ('foreign_vat', '=', False)], limit=1)
@@ -62,7 +61,9 @@ class Company(models.Model):
                         if not foreign_taxes.get(tax_amount, False):
                             oss_tax_group_local_xml_id = f"{company.id}_oss_tax_group_{str(tax_amount).replace('.', '_')}_{company.account_fiscal_country_id.code}"
                             if not self.env.ref(f"account.{oss_tax_group_local_xml_id}", raise_if_not_found=False):
-                                tg = self.env['account.tax.group'].search([('company_id', '=', company.id)])
+                                tg = self.env['account.tax.group'].search([
+                                    *self.env['account.tax.group']._check_company_domain(company),
+                                ])
                                 self.env['ir.model.data'].create({
                                     'name': oss_tax_group_local_xml_id,
                                     'module': 'account',
@@ -113,8 +114,8 @@ class Company(models.Model):
         self.ensure_one()
         if not self.env.ref(f'l10n_eu_oss.oss_tax_account_company_{self.id}', raise_if_not_found=False):
             sales_tax_accounts = self.env['account.tax'].search([
+                    *self.env['account.tax']._check_company_domain(self),
                     ('type_tax_use', '=', 'sale'),
-                    ('company_id', '=', self.id)
                 ]).invoice_repartition_line_ids.mapped('account_id')
             if not sales_tax_accounts:
                 return False

@@ -151,10 +151,10 @@ class ResCompany(models.Model):
     def _compute_peppol_purchase_journal_id(self):
         for company in self:
             if company.is_account_peppol_participant and not company.peppol_purchase_journal_id:
-                company.peppol_purchase_journal_id = self.env['account.journal'].search(
-                    [('company_id', '=', company.id), ('type', '=', 'purchase')],
-                    limit=1,
-                )
+                company.peppol_purchase_journal_id = self.env['account.journal'].search([
+                    *self.env['account.journal']._check_company_domain(company),
+                    ('type', '=', 'purchase'),
+                ], limit=1)
             else:
                 company.peppol_purchase_journal_id = False
 

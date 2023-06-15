@@ -53,9 +53,10 @@ class ResConfigSettings(models.TransientModel):
 
     def action_configure_first_provider(self):
         self.ensure_one()
-        stripe = self.env['payment.provider'].search(
-            [('company_id', '=', self.env.company.id), ('code', '=', 'stripe')], limit=1
-        )
+        stripe = self.env['payment.provider'].search([
+            *self.env['payment.provider']._check_company_domain(self.env.company),
+            ('code', '=', 'stripe')
+        ], limit=1)
         providers = self._get_activated_providers()
         return {
             'name': self.first_provider_label,

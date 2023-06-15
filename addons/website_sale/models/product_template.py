@@ -268,7 +268,7 @@ class ProductTemplate(models.Model):
 
             fpos_id = self.env['website'].sudo()._get_current_fiscal_position_id(partner)
             fiscal_position = self.env['account.fiscal.position'].sudo().browse(fpos_id)
-            product_taxes = product.sudo().taxes_id.filtered(lambda x: x.company_id == company_id)
+            product_taxes = product.sudo().taxes_id.filtered_domain(self.env['account.tax']._check_company_domain(company_id))
             taxes = fiscal_position.map_tax(product_taxes)
 
             price = self._price_with_tax_computed(

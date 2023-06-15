@@ -7,6 +7,7 @@
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//form" position="inside">
+                    <field name="is_root_company" invisible="1"/>
                     <app data-string="General Settings" string="General Settings" name="general_settings" logo="/base/static/description/settings.png">
 
                         <div id="invite_users">

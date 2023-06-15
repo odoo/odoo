@@ -12,12 +12,13 @@ from odoo.tools.misc import formatLang
 class AccruedExpenseRevenue(models.TransientModel):
     _name = 'account.accrued.orders.wizard'
     _description = 'Accrued Orders Wizard'
+    _check_company_auto = True
 
     def _get_account_domain(self):
         if self.env.context.get('active_model') == 'purchase.order':
-            return [('account_type', '=', 'liability_current'), ('company_id', '=', self._get_default_company())]
+            return [('account_type', '=', 'liability_current')]
         else:
-            return [('account_type', '=', 'asset_current'), ('company_id', '=', self._get_default_company())]
+            return [('account_type', '=', 'asset_current')]
 
     def _get_default_company(self):
         if not self._context.get('active_model'):
@@ -32,7 +33,7 @@ class AccruedExpenseRevenue(models.TransientModel):
     journal_id = fields.Many2one(
         comodel_name='account.journal',
         compute='_compute_journal_id', store=True, readonly=False, precompute=True,
-        domain="[('type', '=', 'general'), ('company_id', '=', company_id)]",
+        domain="[('type', '=', 'general')]",
         required=True,
         check_company=True,
         string='Journal',
@@ -78,11 +79,11 @@ class AccruedExpenseRevenue(models.TransientModel):
 
     @api.depends('company_id')
     def _compute_journal_id(self):
-        journal = self.env['account.journal'].search(
-            [('type', '=', 'general'), ('company_id', '=', self.company_id.id)], limit=1
-        )
         for record in self:
-            record.journal_id = journal
+            record.journal_id = self.env['account.journal'].search([
+                *self.env['account.journal']._check_company_domain(record.company_id),
+                ('type', '=', 'general')
+            ], limit=1)
 
     @api.depends('date', 'journal_id', 'account_id', 'amount')
     def _compute_preview_data(self):

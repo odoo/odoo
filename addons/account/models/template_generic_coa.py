@@ -12,8 +12,6 @@ class AccountChartTemplate(models.AbstractModel):
 
         :return: all the values that are not stored but are used to instancieate
                  the chart of accounts. Common keys are:
-                 * anglo_saxon_accounting
-                 * transfer_account_code_prefix
                  * property_*
                  * code_digits
         :rtype: dict
@@ -21,9 +19,6 @@ class AccountChartTemplate(models.AbstractModel):
         return {
             'name': "Generic Chart Template",
             'country': None,
-            'anglo_saxon_accounting': True,
-            'transfer_account_code_prefix': '1017',
-            'default_pos_receivable_account_id': 'pos_receivable',
             'property_account_receivable_id': 'receivable',
             'property_account_payable_id': 'payable',
             'property_account_expense_id': 'expense',
@@ -46,9 +41,11 @@ class AccountChartTemplate(models.AbstractModel):
         """
         return {
             self.env.company.id: {
+                'anglo_saxon_accounting': True,
                 'account_fiscal_country_id': 'base.us',
                 'bank_account_code_prefix': '1014',
                 'cash_account_code_prefix': '1015',
+                'transfer_account_code_prefix': '1017',
                 'account_default_pos_receivable_account_id': 'pos_receivable',
                 'income_currency_exchange_account_id': 'income_currency_exchange',
                 'expense_currency_exchange_account_id': 'expense_currency_exchange',

@@ -64,7 +64,7 @@ class AccountPayment(models.Model):
         for payment in self:
             if payment.use_electronic_payment_method:
                 payment.suitable_payment_token_ids = self.env['payment.token'].sudo().search([
-                    ('company_id', '=', payment.company_id.id),
+                    *self.env['payment.token']._check_company_domain(payment.company_id),
                     ('provider_id.capture_manually', '=', False),
                     ('partner_id', '=', payment.partner_id.id),
                     ('provider_id', '=', payment.payment_method_line_id.payment_provider_id.id),
@@ -103,7 +103,7 @@ class AccountPayment(models.Model):
             return
 
         self.payment_token_id = self.env['payment.token'].search([
-            ('company_id', '=', self.company_id.id),
+            *self.env['payment.token']._check_company_domain(self.company_id),
             ('partner_id', '=', self.partner_id.id),
             ('provider_id.capture_manually', '=', False),
             ('provider_id', '=', self.payment_method_line_id.payment_provider_id.id),

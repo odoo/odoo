@@ -5,6 +5,7 @@ from collections import defaultdict
 import itertools
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.tools import groupby
 
 
 class AccountAnalyticAccount(models.Model):
@@ -96,24 +97,12 @@ class AccountAnalyticAccount(models.Model):
 
     @api.constrains('company_id')
     def _check_company_consistency(self):
-        analytic_accounts = self.filtered('company_id')
-
-        if not analytic_accounts:
-            return
-
-        self.flush_recordset(['company_id'])
-        self.env['account.analytic.line'].flush_model(['account_id', 'company_id'])
-
-        self._cr.execute('''
-            SELECT line.account_id
-            FROM account_analytic_line line
-            JOIN account_analytic_account account ON line.account_id = account.id
-            WHERE line.company_id != account.company_id and account.company_id IS NOT NULL
-            AND account.id IN %s
-        ''', [tuple(self.ids)])
-
-        if self._cr.fetchone():
-            raise UserError(_("You can't set a different company on your analytic account since there are some analytic items linked to it."))
+        for company, accounts in groupby(self, lambda account: account.company_id):
+            if company and self.env['account.analytic.line'].search([
+                ('account_id', 'in', [account.id for account in accounts]),
+                '!', ('company_id', 'child_of', company.id),
+            ], limit=1):
+                raise UserError(_("You can't set a different company on your analytic account since there are some analytic items linked to it."))
 
     @api.depends('code', 'partner_id')
     def _compute_display_name(self):

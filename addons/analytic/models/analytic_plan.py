@@ -21,7 +21,8 @@ class AccountAnalyticPlan(models.Model):
         'account.analytic.plan',
         string="Parent",
         ondelete='cascade',
-        domain="[('id', '!=', id), ('company_id', 'in', [False, company_id])]",
+        check_company=True,
+        domain="[('id', '!=', id)]",
     )
     parent_path = fields.Char(
         index='btree',
@@ -135,8 +136,8 @@ class AccountAnalyticPlan(models.Model):
         company_id = kwargs.get('company_id', self.env.company.id)
         record_account_ids = kwargs.get('existing_account_ids', [])
         all_plans = self.search([
+            *self._check_company_domain(company_id),
             ('account_ids', '!=', False),
-            '|', ('company_id', '=', company_id), ('company_id', '=', False),
         ])
         root_plans = self.browse({
             int(plan.parent_path.split('/')[0])

@@ -84,7 +84,7 @@ class AccountMoveLine(models.Model):
         index=True,
         auto_join=True,
         ondelete="cascade",
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('account_type', '!=', 'off_balance')]",
+        domain="[('deprecated', '=', False), ('account_type', '!=', 'off_balance')]",
         check_company=True,
         tracking=True,
     )
@@ -178,6 +178,7 @@ class AccountMoveLine(models.Model):
         comodel_name='account.tax',
         string="Originator Group of Taxes",
         index='btree_not_null',
+        check_company=True,
     )
     tax_line_id = fields.Many2one(
         comodel_name='account.tax',
@@ -295,6 +296,7 @@ class AccountMoveLine(models.Model):
         string='Product',
         inverse='_inverse_product_id',
         ondelete='restrict',
+        check_company=True,
     )
     product_uom_id = fields.Many2one(
         comodel_name='uom.uom',
@@ -850,17 +852,18 @@ class AccountMoveLine(models.Model):
     def _get_computed_taxes(self):
         self.ensure_one()
 
+        company_domain = self.env['account.tax']._check_company_domain(self.move_id.company_id)
         if self.move_id.is_sale_document(include_receipts=True):
             # Out invoice.
             if self.product_id.taxes_id:
-                tax_ids = self.product_id.taxes_id.filtered(lambda tax: tax.company_id == self.move_id.company_id)
+                tax_ids = self.product_id.taxes_id.filtered_domain(company_domain)
             else:
                 tax_ids = self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'sale')
 
         elif self.move_id.is_purchase_document(include_receipts=True):
             # In invoice.
             if self.product_id.supplier_taxes_id:
-                tax_ids = self.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == self.move_id.company_id)
+                tax_ids = self.product_id.supplier_taxes_id.filtered_domain(company_domain)
             else:
                 tax_ids = self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'purchase')
 
@@ -868,7 +871,7 @@ class AccountMoveLine(models.Model):
             tax_ids = self.account_id.tax_ids
 
         if self.company_id and tax_ids:
-            tax_ids = tax_ids.filtered(lambda tax: tax.company_id == self.company_id)
+            tax_ids = tax_ids.filtered_domain(company_domain)
 
         if tax_ids and self.move_id.fiscal_position_id:
             tax_ids = self.move_id.fiscal_position_id.map_tax(tax_ids)
@@ -1192,10 +1195,10 @@ class AccountMoveLine(models.Model):
     def _check_tax_lock_date(self):
         for line in self.filtered(lambda l: l.move_id.state == 'posted'):
             move = line.move_id
-            if move.company_id.tax_lock_date and move.date <= move.company_id.tax_lock_date and line._affect_tax_report():
+            if move.company_id.max_tax_lock_date and move.date <= move.company_id.max_tax_lock_date and line._affect_tax_report():
                 raise UserError(_("The operation is refused as it would impact an already issued tax statement. "
                                   "Please change the journal entry date or the tax lock date set in the settings (%s) to proceed.")
-                                % format_date(self.env, move.company_id.tax_lock_date))
+                                % format_date(self.env, move.company_id.max_tax_lock_date))
 
     def _check_reconciliation(self):
         for line in self:
@@ -2026,7 +2029,7 @@ class AccountMoveLine(models.Model):
                 "Entries are not from the same account: %s",
                 ", ".join(accounts.mapped('display_name')),
             ))
-        if len(self.company_id) > 1:
+        if len(self.company_id.root_id) > 1:
             raise UserError(_(
                 "Entries don't belong to the same company: %s",
                 ", ".join(self.company_id.mapped('display_name')),
@@ -2417,7 +2420,10 @@ class AccountMoveLine(models.Model):
             * to_reconcile: A list of tuple <move_line, sequence> in order to perform the reconciliation after the move
                             creation.
         """
-        company = self.company_id or company
+        company = (
+            (self.move_id.filtered(lambda m: m.is_invoice(True)) or self.move_id).company_id
+            or company
+        )[:1]
         if not company:
             return
 

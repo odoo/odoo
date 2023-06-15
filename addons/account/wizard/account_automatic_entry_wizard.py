@@ -12,6 +12,7 @@ import json
 class AutomaticEntryWizard(models.TransientModel):
     _name = 'account.automatic.entry.wizard'
     _description = 'Create Automatic Entries'
+    _check_company_auto = True
 
     # General
     action = fields.Selection([('change_period', 'Change Period'), ('change_account', 'Change Account')], required=True)
@@ -24,7 +25,8 @@ class AutomaticEntryWizard(models.TransientModel):
     percentage = fields.Float("Percentage", compute='_compute_percentage', readonly=False, store=True, help="Percentage of each line to execute the action on.")
     total_amount = fields.Monetary(compute='_compute_total_amount', store=True, readonly=False, currency_field='company_currency_id', help="Total amount impacted by the automatic entry.")
     journal_id = fields.Many2one('account.journal', required=True, readonly=False, string="Journal",
-        domain="[('company_id', '=', company_id), ('type', '=', 'general')]",
+        check_company=True,
+        domain="[('type', '=', 'general')]",
         compute="_compute_journal_id",
         inverse="_inverse_journal_id",
         help="Journal where to create the entry.")
@@ -32,21 +34,21 @@ class AutomaticEntryWizard(models.TransientModel):
     # change period
     account_type = fields.Selection([('income', 'Revenue'), ('expense', 'Expense')], compute='_compute_account_type', store=True)
     expense_accrual_account = fields.Many2one('account.account', readonly=False,
-        domain="[('company_id', '=', company_id),"
-               "('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
+        check_company=True,
+        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
         compute="_compute_expense_accrual_account",
         inverse="_inverse_expense_accrual_account",
     )
     revenue_accrual_account = fields.Many2one('account.account', readonly=False,
-        domain="[('company_id', '=', company_id),"
-               "('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
+        check_company=True,
+        domain="[('account_type', 'not in', ('asset_receivable', 'liability_payable', 'off_balance'))]",
         compute="_compute_revenue_accrual_account",
         inverse="_inverse_revenue_accrual_account",
     )
     lock_date_message = fields.Char(string="Lock Date Message", compute="_compute_lock_date_message")
 
     # change account
-    destination_account_id = fields.Many2one(string="To", comodel_name='account.account', help="Account to transfer to.")
+    destination_account_id = fields.Many2one(string="To", comodel_name='account.account', help="Account to transfer to.", check_company=True)
     display_currency_helper = fields.Boolean(string="Currency Conversion Helper", compute='_compute_display_currency_helper')
     # Technical field. Used to indicate whether or not to display the currency conversion tooltip. The tooltip informs a currency conversion will be performed with the transfer.
 
@@ -139,9 +141,9 @@ class AutomaticEntryWizard(models.TransientModel):
             raise UserError(_('You can only change the period/account for posted journal items.'))
         if any(move_line.reconciled for move_line in move_line_ids):
             raise UserError(_('You can only change the period/account for items that are not yet reconciled.'))
-        if any(line.company_id != move_line_ids[0].company_id for line in move_line_ids):
+        if any(line.company_id.root_id != move_line_ids[0].company_id.root_id for line in move_line_ids):
             raise UserError(_('You cannot use this wizard on journal entries belonging to different companies.'))
-        res['company_id'] = move_line_ids[0].company_id.id
+        res['company_id'] = move_line_ids[0].company_id.root_id.id
 
         allowed_actions = set(dict(self._fields['action'].selection))
         if self.env.context.get('default_action'):

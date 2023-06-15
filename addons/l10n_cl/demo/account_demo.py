@@ -31,8 +31,8 @@ class AccountChartTemplate(models.AbstractModel):
         if company.account_fiscal_country_id.code == "CL":
             foreign = ref('l10n_cl.dc_fe_dte').id
             self.env['account.journal'].search([
+                *self.env['account.journal']._check_company_domain(company),
                 ('type', '=', 'purchase'),
-                ('company_id', '=', self.env.company.id),
             ]).l10n_latam_use_documents = False
             move_data['demo_invoice_1']['l10n_latam_document_type_id'] = foreign
             move_data['demo_invoice_2']['l10n_latam_document_type_id'] = foreign

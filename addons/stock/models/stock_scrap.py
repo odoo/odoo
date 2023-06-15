@@ -20,7 +20,7 @@ class StockScrap(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company, required=True, states={'done': [('readonly', True)]})
     origin = fields.Char(string='Source Document')
     product_id = fields.Many2one(
-        'product.product', 'Product', domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        'product.product', 'Product', domain="[('type', 'in', ['product', 'consu'])]",
         required=True, states={'done': [('readonly', True)]}, check_company=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
@@ -30,7 +30,7 @@ class StockScrap(models.Model):
     tracking = fields.Selection(string='Product Tracking', readonly=True, related="product_id.tracking")
     lot_id = fields.Many2one(
         'stock.lot', 'Lot/Serial',
-        states={'done': [('readonly', True)]}, domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True)
+        states={'done': [('readonly', True)]}, domain="[('product_id', '=', product_id)]", check_company=True)
     package_id = fields.Many2one(
         'stock.quant.package', 'Package',
         states={'done': [('readonly', True)]}, check_company=True)
@@ -40,11 +40,11 @@ class StockScrap(models.Model):
     location_id = fields.Many2one(
         'stock.location', 'Source Location',
         compute='_compute_location_id', store=True, required=True, precompute=True, states={'done': [('readonly', True)]},
-        domain="[('usage', '=', 'internal'), ('company_id', 'in', [company_id, False])]", check_company=True, readonly=False)
+        domain="[('usage', '=', 'internal')]", check_company=True, readonly=False)
     scrap_location_id = fields.Many2one(
         'stock.location', 'Scrap Location',
         compute='_compute_scrap_location_id', store=True, required=True, precompute=True, states={'done': [('readonly', True)]},
-        domain="[('scrap_location', '=', True), ('company_id', 'in', [company_id, False])]", check_company=True, readonly=False)
+        domain="[('scrap_location', '=', True)]", check_company=True, readonly=False)
     scrap_qty = fields.Float(
         'Quantity', required=True, states={'done': [('readonly', True)]}, digits='Product Unit of Measure',
         compute='_compute_scrap_qty', default=0.0, readonly=False, store=True)
@@ -125,11 +125,11 @@ class StockScrap(models.Model):
             'scrap_id': self.id,
             'location_dest_id': self.scrap_location_id.id,
             'move_line_ids': [(0, 0, {'product_id': self.product_id.id,
-                                           'product_uom_id': self.product_uom_id.id, 
+                                           'product_uom_id': self.product_uom_id.id,
                                            'qty_done': self.scrap_qty,
                                            'location_id': self.location_id.id,
                                            'location_dest_id': self.scrap_location_id.id,
-                                           'package_id': self.package_id.id, 
+                                           'package_id': self.package_id.id,
                                            'owner_id': self.owner_id.id,
                                            'lot_id': self.lot_id.id, })],
 #             'restrict_partner_id': self.owner_id.id,
