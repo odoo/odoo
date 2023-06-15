@@ -414,7 +414,8 @@ class ir_cron(models.Model):
         return super(ir_cron, self).write(vals)
 
     def unlink(self):
-        self._try_lock(lockfk=True)
+        if len(self) > 0:
+            self._try_lock(lockfk=True)
         return super(ir_cron, self).unlink()
 
     def try_write(self, values):
