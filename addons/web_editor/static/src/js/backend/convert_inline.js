@@ -510,6 +510,10 @@ function toInline($editable, cssRules, $iframe) {
             centeredImage.parentElement.style.setProperty('text-align', 'center');
         }
     }
+    // Ensure preservation of aspect-ratio.
+    for (const loneImage of editable.querySelectorAll('img:only-child:not(.img-fluid,[data-class*=fa-])')) {
+        loneImage.style.setProperty('object-fit', 'cover');
+    }
     // Fix img-fluid.
     for (const image of editable.querySelectorAll('img.img-fluid')) {
         // Outlook requires absolute width/height.
