@@ -73,7 +73,7 @@ class ProjectTaskType(models.Model):
     description = fields.Text(translate=True)
     sequence = fields.Integer(default=1)
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
-        default=_get_default_project_ids)
+        default=lambda self: self._get_default_project_ids())
     legend_blocked = fields.Char(
         'Red Kanban Label', default=lambda s: _('Blocked'), translate=True, required=True,
         help='Override the default value displayed for the blocked state for kanban selection when the task or issue is in that stage.')
