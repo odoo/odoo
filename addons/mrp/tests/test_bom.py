@@ -1154,3 +1154,73 @@ class TestBoM(TestMrpCommon):
         self.assertEqual(p1.qty_available, 5.0)
         self.assertEqual(p2.qty_available, 10.0)
         self.assertEqual(p3.qty_available, 10.0)
+
+    def test_operation_blocked_by_another_operation(self):
+        """ Test that an operation is not blocked by another operation if the variant is different
+            Product with 4 variants (red big, red medium, blue big, blue medium)
+            BoM:
+                - OP1 (apply on Red)
+                - OP2 (blocked by OP1)
+            Create a MO for Red big, OP1 is started, OP2 should be blocked
+            Create a Mo for Blue big, OP1 is not applied, OP2 should not be blocked
+        """
+        ProductAttribute = self.env['product.attribute']
+        ProductAttributeValue = self.env['product.attribute.value']
+
+        # Product Attribute
+        att_color = ProductAttribute.create({'name': 'Color', 'sequence': 1})
+        att_size = ProductAttribute.create({'name': 'size', 'sequence': 2})
+
+        # Product Attribute color Value
+        att_color_red = ProductAttributeValue.create({'name': 'red', 'attribute_id': att_color.id, 'sequence': 1})
+        att_color_blue = ProductAttributeValue.create({'name': 'blue', 'attribute_id': att_color.id, 'sequence': 2})
+        # Product Attribute size Value
+        att_size_big = ProductAttributeValue.create({'name': 'big', 'attribute_id': att_size.id, 'sequence': 1})
+        att_size_medium = ProductAttributeValue.create({'name': 'medium', 'attribute_id': att_size.id, 'sequence': 2})
+
+        # Create create a product with 4 variants
+        product_template = self.env['product.template'].create({
+            'name': 'Sofa',
+            'attribute_line_ids': [
+                (0, 0, {
+                    'attribute_id': att_color.id,
+                    'value_ids': [(6, 0, [att_color_red.id, att_color_blue.id])]
+                }),
+                (0, 0, {
+                    'attribute_id': att_size.id,
+                    'value_ids': [(6, 0, [att_size_big.id, att_size_medium.id])]
+                })
+            ]
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_tmpl_id': product_template.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'allow_operation_dependencies': True,
+            'operation_ids': [(0, 0, {'name': 'op1', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 1.0, 'bom_product_template_attribute_value_ids': [(4, att_color_blue.pav_attribute_line_ids.product_template_value_ids[0].id)]}),
+                                (0, 0, {'name': 'op2', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 1.0})],
+        })
+        # Make 1st workorder depend on 2nd
+        bom.operation_ids[1].blocked_by_operation_ids = [Command.link(bom.operation_ids[0].id)]
+
+        # Make MO for red big
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_template.product_variant_ids[0]
+        mo_form.bom_id = bom
+        mo_form.product_qty = 1.0
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        # Make MO for blue big
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_template.product_variant_ids[2]
+        mo_form.bom_id = bom
+        mo_form.product_qty = 1.0
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertEqual(mo.state, 'confirmed')
+        mo.qty_producing = 1.0
+        mo.action_assign()
+        mo.button_plan()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
