@@ -218,7 +218,8 @@ export class MessageService {
         } else {
             message = new Message();
             message._store = this.store;
-            message = this.store.messages[data.id] = message;
+            this.store.messages[data.id] = message;
+            message = this.store.messages[data.id];
         }
         this.update(message, data);
         // return reactive version
