@@ -1763,7 +1763,16 @@ actual arch.
                 self._validate_classes(node, expr)
 
             elif attr == 'attrs':
-                for key, val_ast in get_dict_asts(expr).items():
+                try:
+                    parsed_dict = get_dict_asts(expr)
+                except ValueError:
+                    msg = _(
+                        '"attrs" value must be dictionary %(attribute)s=%(value)r',
+                        attribute=attr, value=expr,
+                    )
+                    self._raise_view_error(msg, node)
+
+                for key, val_ast in parsed_dict.items():
                     if isinstance(val_ast, ast.List):
                         # domains in attrs are used for readonly, invisible, ...
                         # and thus are only executed client side
