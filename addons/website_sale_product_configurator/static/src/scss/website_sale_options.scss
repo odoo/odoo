@@ -13,3 +13,27 @@ div#modal_optional_products table tr td {
         display: none;
     }
 }
+
+.o_total_row ~ tr {
+    background-color: $o-gray-100;
+
+    &:last-child {
+        .td-img {
+            border-bottom-left-radius: $o-border-radius;
+        }
+
+        .td-price {
+            border-bottom-right-radius: $o-border-radius;
+        }
+    }
+}
+
+.o_wsale_modal_table {
+    tr:not(.o_total_row):not(.o_select_options) + tr:not(.o_total_row) {
+        border-top: $border-width solid $border-color;
+
+        td {
+            padding-top: map-get($spacers, 4);
+        }
+    }
+}

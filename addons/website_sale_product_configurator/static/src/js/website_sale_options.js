@@ -22,9 +22,9 @@ publicWidget.registry.WebsiteSale.include({
         this.optionalProductsModal = new OptionalProductsModal(this.$form, {
             rootProduct: this.rootProduct,
             isWebsite: true,
-            okButtonText: _t('Proceed to Checkout'),
-            cancelButtonText: _t('Continue Shopping'),
-            title: _t('Add to cart'),
+            okButtonText: _t('Proceed to checkout'),
+            cancelButtonText: _t('Continue shopping'),
+            title: _t('Item added to your cart!'),
             context: this._getContext(),
             forceDialog: this.forceDialog,
         }).open();
