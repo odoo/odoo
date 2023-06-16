@@ -403,6 +403,43 @@ function classToStyle($editable, cssRules) {
         } else if (node.nodeName === 'IMG' && node.classList.contains('mx-auto') && node.classList.contains('d-block')) {
             writes.push(() => { _wrap(node, 'p', 'o_outlook_hack', 'text-align:center;margin:0'); });
         }
+
+        //Gmail CheckList
+
+        // Approcach 1: Replacing '::before by <span>'
+        /*
+        if(node.nodeName === 'LI' && node.parentElement.classList.contains('o_checklist')){
+            writes.push(() => {
+                const styleSheets = document.styleSheets
+                let unchecked = '';
+                let checked = ''
+                for (const styleSheet of styleSheets) {
+                    const cssRules = styleSheet.cssRules || styleSheet.rules;
+                    for (const rule of cssRules) {
+                        if (rule.selectorText === 'ul.o_checklist > li:not(.oe-nested)::before') {
+                        unchecked  = rule.style;
+                        }
+                        if (rule.selectorText === 'ul.o_checklist > li.o_checked::before') {
+                        checked  = rule.style;
+                        }
+                    }
+                }
+                node.classList.contains('o_checked') ? span.style.cssText = checked.cssText : span.style.cssText = unchecked.cssText;
+            }
+        }
+        */
+
+        //Approach 2: Using input Element
+        if(node.nodeName === 'LI' && node.parentElement.classList.contains('o_checklist')){
+            writes.push(() => {
+                const check = document.createElement('INPUT');
+                check.setAttribute('type','checkbox');
+                check.setAttribute('readonly','true');
+                node.classList.contains('o_checked') ? check.setAttribute('checked',true) : check.setAttribute('disabled', true)
+                node.insertBefore(check,node.childNodes[0]);
+            })
+        }
+
     };
     writes.forEach(fn => fn());
 }
