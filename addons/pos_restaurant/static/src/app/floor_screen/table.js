@@ -99,12 +99,15 @@ export class Table extends Component {
                 // do not count the orders that are already finalized
                 !o.finalized
         );
+        let result;
         if (table.changes_count > 0) {
-            return table.changes_count;
+            result = table.changes_count;
         } else if (table.skip_changes > 0) {
-            return table.skip_changes;
+            result = table.skip_changes;
+        } else {
+            result = table.order_count + unsynced_orders.length;
         }
-        return table.order_count + unsynced_orders.length;
+        return !Number.isNaN(result) ? result : 0;
     }
     get orderCountClass() {
         const countClass = { "order-count": true };

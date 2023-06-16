@@ -243,6 +243,7 @@ export class PosStore extends Reactive {
         this._loadPosPaymentMethod();
         this.fiscal_positions = loadedData["account.fiscal.position"];
         this.base_url = loadedData["base_url"];
+        this.pos_has_valid_product = loadedData["pos_has_valid_product"];
         await this._loadPictures();
         await this._loadPosPrinters(loadedData["pos.printer"]);
     }
@@ -391,6 +392,53 @@ export class PosStore extends Reactive {
             [[odoo.pos_session_id], search_params]
         );
         return this.addPartners(partners);
+    }
+
+    async updateModelsData(models_data) {
+        const products = models_data["product.product"];
+        const categories = models_data["pos.category"];
+
+        let removed_categories_id;
+        if (categories) {
+            const previous_categories_id = Object.values(this.db.category_by_id).map((c) => c.id);
+            const received_categories_id = new Set(categories.map((c) => c.id));
+            this.db.add_categories(categories);
+            removed_categories_id = previous_categories_id.filter(
+                (p) => !received_categories_id.has(p)
+            );
+        }
+        if (products) {
+            const previous_products_id = Object.values(this.db.product_by_id).map((p) => p.id);
+            const received_products_id = new Set(products.map((p) => p.id));
+            this._loadProductProduct(products);
+
+            const removed_products_id = previous_products_id.filter(
+                (p) => !received_products_id.has(p)
+            );
+            this.db.remove_products(removed_products_id);
+
+            if (
+                Object.values(this.db.product_by_id).some(
+                    (p) => p.available_in_pos && p.lst_price > 0
+                )
+            ) {
+                this.pos_has_valid_product = true;
+            }
+        }
+
+        if (categories) {
+            this.db.remove_categories(removed_categories_id);
+        }
+    }
+
+    /**
+     * @returns true if the POS app (not only this POS config) has at least one valid product.
+     */
+    posHasValidProduct() {
+        return (
+            this.pos_has_valid_product ||
+            Object.values(this.db.product_by_id).some((p) => p.available_in_pos && p.lst_price > 0)
+        );
     }
 
     setSelectedCategoryId(categoryId) {

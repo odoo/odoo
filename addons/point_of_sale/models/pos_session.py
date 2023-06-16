@@ -1563,8 +1563,8 @@ class PosSession(models.Model):
 
     def get_onboarding_data(self):
         return {
-            "categories": self._load_model('pos.category'),
-            "products": self._load_model('product.product'),
+            'pos.category': self._load_model('pos.category'),
+            'product.product': self._load_model('product.product'),
         }
 
     def _load_model(self, model):
@@ -1636,6 +1636,7 @@ class PosSession(models.Model):
 
         loaded_data['attributes_by_ptal_id'] = self._get_attributes_by_ptal_id()
         loaded_data['base_url'] = self.get_base_url()
+        loaded_data['pos_has_valid_product'] = self._pos_has_valid_product()
 
     @api.model
     def _pos_ui_models_to_load(self):
@@ -2094,10 +2095,21 @@ class PosSession(models.Model):
 
         self.message_post(body=body, author_id=partner_id)
 
+    def _pos_has_valid_product(self):
+        return self.env['product.product'].sudo().search_count(['&', ('available_in_pos', '=', True), ('list_price', '>', 0)], limit=1) > 0
+
+    def _load_onboarding_data(self):
+        convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init', kind='data')
+
     def load_product_frontend(self):
-        convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init',
-                             kind='data')
-        return self.get_onboarding_data()
+        allowed = not self._pos_has_valid_product()
+        if allowed:
+            self._load_onboarding_data()
+
+        return {
+            'models_data': self.get_onboarding_data(),
+            'successful': allowed,
+        }
 
 
 class ProcurementGroup(models.Model):

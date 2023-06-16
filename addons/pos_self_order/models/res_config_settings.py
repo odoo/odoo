@@ -16,7 +16,7 @@ class ResConfigSettings(models.TransientModel):
     pos_self_order_pay_after = fields.Selection(
         [("each", "Each Order"), ("meal", "Meal")],
         string="Pay After:",
-        default="each",
+        default="meal",
         help="Choose when the customer will pay",
         readonly=False,
         required=True,

@@ -10,6 +10,7 @@ import { ProductsWidgetControlPanel } from "@point_of_sale/app/screens/product_s
 import { Component, useState } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
 import { OfflineErrorPopup } from "@point_of_sale/app/errors/popups/offline_error_popup";
+import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
 
 export class ProductsWidget extends Component {
     static components = { ProductItem, ProductsWidgetControlPanel };
@@ -30,8 +31,8 @@ export class ProductsWidget extends Component {
         this.notification = useService("pos_notification");
         this.orm = useService("orm");
     }
-    get hasProducts() {
-        return Object.keys(this.pos.db.product_by_id).length > 0;
+    get posHasValidProduct() {
+        return this.pos.posHasValidProduct();
     }
     get selectedCategoryId() {
         return this.pos.selectedCategoryId;
@@ -166,17 +167,42 @@ export class ProductsWidget extends Component {
         }
     }
     async loadDemoDataProducts() {
-        const { products, categories } = await this.orm.call(
+        const { models_data, successful } = await this.orm.call(
             "pos.session",
             "load_product_frontend",
             [this.pos.pos_session.id]
         );
-        this.pos.db.add_categories(categories);
-        this.pos._loadProductProduct(products);
+        if (!successful) {
+            this.popup.add(ErrorPopup, {
+                title: this.env._t("Demo products are no longer available"),
+                body: this.env._t(
+                    "A valid product already exists for Point of Sale. Therefore, demonstration products cannot be loaded."
+                ),
+            });
+            // But the received models_data is still used to update the current session.
+        }
+        if (!models_data) {
+            this._showLoadDemoDataMissingDataError("models_data");
+            return;
+        }
+        for (const dataName of ["pos.category", "product.product"]) {
+            if (!models_data[dataName]) {
+                this._showLoadDemoDataMissingDataError(dataName);
+                return;
+            }
+        }
+        this.pos.updateModelsData(models_data);
+    }
+    _showLoadDemoDataMissingDataError(missingData) {
+        console.error(
+            "Missing '",
+            missingData,
+            "' in pos.session:load_product_frontend server answer."
+        );
     }
 
     createNewProducts() {
-        window.open("/web#action=point_of_sale.action_client_product_menu", "_blank");
+        window.open("/web#action=point_of_sale.action_client_product_menu", "_self");
         this.state.showReloadMessage = true;
     }
 }
