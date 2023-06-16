@@ -405,9 +405,8 @@ class Picking(models.Model):
         compute="_compute_location_id", store=True, precompute=True, readonly=False,
         check_company=True, required=True)
     move_ids = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
-    move_ids_without_package = fields.Many2many(
-        'stock.move', string="Stock moves not in package", compute='_compute_move_without_package',
-        inverse='_set_move_without_package', compute_sudo=True)
+    move_ids_without_package = fields.One2many(
+        'stock.move', 'picking_id', string="Stock moves not in package", domain=['|', ('package_level_id', '=', False), ('picking_type_entire_packs', '=', False)])
     has_scrap_move = fields.Boolean(
         'Has Scrap Moves', compute='_has_scrap_move')
     picking_type_id = fields.Many2one(
@@ -971,35 +970,6 @@ class Picking(models.Model):
                 subtype_id=subtype_id,
             )
 
-    @api.depends('state', 'move_ids', 'move_ids.state', 'move_ids.package_level_id', 'move_ids.move_line_ids.package_level_id')
-    def _compute_move_without_package(self):
-        for picking in self:
-            picking.move_ids_without_package = picking._get_move_ids_without_package()
-
-    def _set_move_without_package(self):
-        new_mwp = self[0].move_ids_without_package
-        for picking in self:
-            old_mwp = picking._get_move_ids_without_package()
-            picking.move_ids = (picking.move_ids - old_mwp) | new_mwp
-            moves_to_unlink = old_mwp - new_mwp
-            if moves_to_unlink:
-                moves_to_unlink.unlink()
-
-    def _get_move_ids_without_package(self):
-        self.ensure_one()
-        move_ids_without_package = self.env['stock.move']
-        if not self.picking_type_entire_packs:
-            move_ids_without_package = self.move_ids
-        else:
-            for move in self.move_ids:
-                if not move.package_level_id:
-                    if move.state == 'assigned' and move.picking_id or move.state == 'done':
-                        if any(not ml.package_level_id for ml in move.move_line_ids):
-                            move_ids_without_package |= move
-                    else:
-                        move_ids_without_package |= move
-        return move_ids_without_package.filtered(lambda move: not move.scrap_id)
-
     def _check_move_lines_map_quant_package(self, package):
         return package._check_move_lines_map_quant(self.move_line_ids.filtered(lambda ml: ml.package_id == package), 'reserved_qty')
 
@@ -1048,6 +1018,10 @@ class Picking(models.Model):
                         })
                         for pl in package_level_ids:
                             pl.location_dest_id = self._get_entire_pack_location_dest(pl.move_line_ids) or picking.location_dest_id.id
+                        for move in move_lines_to_pack.move_id:
+                            if all(line.package_level_id for line in move.move_line_ids) \
+                                    and len(move.move_line_ids.package_level_id) == 1:
+                                move.package_level_id = move.move_line_ids.package_level_id
 
     def _get_lot_move_lines_for_sanity_check(self, none_done_picking_ids, separate_pickings=True):
         """ Get all move_lines with tracked products that need to be checked over in the sanity check.
@@ -1569,6 +1543,10 @@ class Picking(models.Model):
     def action_put_in_pack(self):
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
+            if self.immediate_transfer:
+                for move in self.move_ids:
+                    if float_is_zero(move.quantity_done, precision_rounding=move.product_uom.rounding):
+                        move.quantity_done = move.product_qty
             picking_move_lines = self.move_line_ids
             if (
                 not self.picking_type_id.show_reserved
