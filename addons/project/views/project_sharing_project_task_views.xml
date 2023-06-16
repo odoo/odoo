@@ -45,7 +45,6 @@
                 <progressbar field="state" colors='{"1_done": "success", "03_approved": "success", "02_changes_requested": "warning", "1_canceled": "danger", "04_waiting_normal": "200", "01_in_progress": "200"}'/>
                 <templates>
                 <t t-name="kanban-menu" t-if="!selection_mode">
-                    <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
                     <div role="separator" class="dropdown-divider"></div>
                     <ul class="oe_kanban_colorpicker" data-field="color"/>
                 </t>
