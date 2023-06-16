@@ -22,6 +22,29 @@ class TestSlideInternals(slides_common.SlidesCase):
                 'vote': 2,
             })
 
+    @users('user_manager')
+    def test_slide_user_has_completed_category(self):
+        # As an uncategorized slide doesn't have a category, the method should always return False
+        uncategorized_slide = self.channel.slide_ids.filtered(lambda s: not s.is_category and not s.category_id)
+        self.assertEqual(len(uncategorized_slide), 1)
+        self.assertFalse(uncategorized_slide.user_has_completed)
+        self.assertFalse(uncategorized_slide.user_has_completed_category)
+        uncategorized_slide.user_has_completed = True
+        self.assertFalse(uncategorized_slide.user_has_completed_category)
+
+        category_slides = self.category.slide_ids
+        self.assertEqual(len(category_slides), 2)
+        # No slide completed in the category
+        self.assertFalse(any(category_slides.mapped('user_has_completed')))
+        self.assertFalse(category_slides[0].user_has_completed_category)
+        # One slide completed in the category
+        category_slides[0].user_has_completed = True
+        self.assertFalse(category_slides[0].user_has_completed_category)
+        # All slides completed in the category
+        for slide in category_slides:
+            slide.user_has_completed = True
+        self.assertTrue(category_slides[0].user_has_completed_category)
+
 class TestVideoFromURL(slides_common.SlidesCase):
     def test_video_youtube(self):
         youtube_urls = {
