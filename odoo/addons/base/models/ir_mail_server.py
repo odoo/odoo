@@ -733,6 +733,8 @@ class IrMailServer(models.Model):
 
         if mail_servers is None:
             mail_servers = self.sudo().search([], order='sequence')
+        # 0. Archived mail server should never be used
+        mail_servers = mail_servers.filtered('active')
 
         def first_match(target, normalize_method):
             for mail_server in mail_servers:
