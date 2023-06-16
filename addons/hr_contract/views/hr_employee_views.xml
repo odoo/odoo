@@ -10,4 +10,28 @@
             </xpath>
         </field>
     </record>
+
+    <record id="hr_employee_view_graph_inherit_hr_contract" model="ir.ui.view">
+        <field name="name">hr.employee.view.graph</field>
+        <field name="inherit_id" ref="hr.hr_employee_view_graph"/>
+        <field name="model">hr.employee</field>
+        <field name="priority">0</field>
+        <field name="arch" type="xml">
+            <field name="create_date" position="replace">
+                <field name="first_contract_date" interval="month"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="hr_employee_view_pivot_inherit_hr_contract" model="ir.ui.view">
+        <field name="name">hr.employee.view.pivot</field>
+        <field name="inherit_id" ref="hr.hr_employee_view_pivot"/>
+        <field name="model">hr.employee</field>
+        <field name="priority">0</field>
+        <field name="arch" type="xml">
+            <field name="create_date" position="replace">
+                <field name="first_contract_date" interval="month" type="row"/>
+            </field>
+        </field>
+    </record>
 </odoo>
