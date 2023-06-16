@@ -14,6 +14,7 @@ from odoo.tools import float_compare, float_round, format_datetime
 class MrpWorkorder(models.Model):
     _name = 'mrp.workorder'
     _description = 'Work Order'
+    _order = 'leave_id, date_start, id'
 
     def _read_group_workcenter_id(self, workcenters, domain, order):
         workcenter_ids = self.env.context.get('default_workcenter_id')
