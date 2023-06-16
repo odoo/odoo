@@ -163,6 +163,34 @@ class Do {
             },
         ];
     }
+    scan_barcode(barcode) {
+        return [
+            {
+                content: `input barcode '${barcode}'`,
+                trigger: "input.ean",
+                run: `text ${barcode}`,
+            },
+            {
+                content: `button scan barcode '${barcode}'`,
+                trigger: "li.barcode",
+                run: 'click',
+            }
+        ];
+    }
+    scan_ean13_barcode(barcode) {
+        return [
+            {
+                content: `input barcode '${barcode}'`,
+                trigger: "input.ean",
+                run: `text ${barcode}`,
+            },
+            {
+                content: `button scan EAN-13 barcode '${barcode}'`,
+                trigger: "li.custom_ean",
+                run: 'click',
+            }
+        ];
+    }
 }
 
 class Check {
