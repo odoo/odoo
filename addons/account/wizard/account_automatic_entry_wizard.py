@@ -358,6 +358,8 @@ class AutomaticEntryWizard(models.TransientModel):
         for move in self.move_line_ids.move_id:
             amount = sum((self.move_line_ids._origin & move.line_ids).mapped('balance'))
             accrual_move = created_moves[1:].filtered(lambda m: m.date == m._get_accounting_date(move.date, move._affect_tax_report()))
+            if not accrual_move:
+                continue
 
             if accrual_account.reconcile and accrual_move.state == 'posted' and destination_move.state == 'posted':
                 destination_move_lines = destination_move.mapped('line_ids').filtered(lambda line: line.account_id == accrual_account)[destination_move_offset:destination_move_offset+2]
