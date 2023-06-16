@@ -19,7 +19,7 @@ class ProjectTaskType(models.Model):
     description = fields.Text(translate=True)
     sequence = fields.Integer(default=1)
     project_ids = fields.Many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', string='Projects',
-        default=_get_default_project_ids,
+        default=lambda self: self._get_default_project_ids(),
         help="Projects in which this stage is present. If you follow a similar workflow in several projects,"
             " you can share this stage among them and get consolidated information this way.")
     mail_template_id = fields.Many2one(
