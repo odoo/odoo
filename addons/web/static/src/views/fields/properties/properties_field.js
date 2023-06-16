@@ -294,10 +294,13 @@ export class PropertiesField extends Component {
             confirm: () => {
                 this.popover.close();
                 const propertiesDefinitions = this.propertiesList;
-                propertiesDefinitions.find(
+                const foundPropertyDefinition = propertiesDefinitions.find(
                     (property) => property.name === propertyName
-                ).definition_deleted = true;
-                this.props.record.update({ [this.props.name]: propertiesDefinitions });
+                );
+                if (foundPropertyDefinition) {
+                    foundPropertyDefinition.definition_deleted = true;
+                    this.props.record.update({ [this.props.name]: propertiesDefinitions });
+                }
             },
             cancel: () => {},
         };
