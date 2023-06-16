@@ -568,10 +568,9 @@ class Project(models.Model):
         action['context'] = context
         return action
 
+    # TODO to remove in master
     def action_project_timesheets(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('hr_timesheet.act_hr_timesheet_line_by_project')
-        action['display_name'] = _("%(name)s's Timesheets", name=self.name)
-        return action
+        pass
 
     def project_update_all_action(self):
         action = self.env['ir.actions.act_window']._for_xml_id('project.project_update_all_action')
