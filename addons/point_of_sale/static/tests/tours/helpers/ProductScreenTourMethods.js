@@ -163,6 +163,29 @@ class Do {
             },
         ];
     }
+    scan_barcode(barcode) {
+        return [
+            {
+                content: `PoS model scan barcode '${barcode}'`,
+                trigger: '.pos', // The element here does not really matter as long as it is present
+                run: () => { window.posmodel.env.barcode_reader.scan(barcode); },
+            },
+        ];
+    }
+    scan_ean13_barcode(barcode) {
+        return [
+            {
+                content: `PoS model scan EAN13 barcode '${barcode}'`,
+                trigger: '.pos', // The element here does not really matter as long as it is present
+                run: () => {
+                    const barcode_reader = window.posmodel.env.barcode_reader;
+                    barcode_reader.scan(
+                        barcode_reader.barcode_parser.sanitize_ean(barcode)
+                    );
+                },
+            },
+        ];
+    }
 }
 
 class Check {
