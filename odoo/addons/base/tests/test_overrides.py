@@ -10,6 +10,22 @@ class TestOverrides(TransactionCase):
     # Ensure all main ORM methods behavior works fine even on empty recordset
     # and that their returned value(s) follow the expected format.
 
+    # TODO move
+    def test_correct_depends(self):
+        for model_env in self.env.values():
+            if model_env._abstract:
+                continue
+            for field in model_env._fields.values():
+                with self.subTest(field=str(field)):
+                    depends, _ = field.get_depends(model_env)
+                    for depend in depends:
+                        model = model_env
+                        for field_name in depend.split('.'):
+                            if field_name not in model:
+                                self.fail(f"Depend '{depend}' are not correct for {field} because {field_name} doesn't not exist in {model}")
+                            if model._fields[field_name].type in ('one2many', 'many2many', 'many2one'):
+                                model = self.env[model._fields[field_name].comodel_name]
+
     def test_creates(self):
         for model_env in self.env.values():
             if model_env._abstract:
