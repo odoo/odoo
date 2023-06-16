@@ -804,7 +804,7 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         if self.product_id.tracking == "serial" and self.state == "assigned":
             self.next_serial = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
-        quant_mode = self.picking_type_id.code != 'incoming' or self.product_id.detailed_type != 'product'
+        quant_mode = self.picking_type_id.code != 'incoming' and self.product_id.detailed_type == 'product'
         return {
             'name': _('Detailed Operations'),
             'type': 'ir.actions.act_window',
