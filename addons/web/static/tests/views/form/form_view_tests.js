@@ -13090,4 +13090,318 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_list_view");
         assert.containsNone(target, ".o_data_row");
     });
+<<<<<<< HEAD
+||||||| parent of 958f7173719 (temp)
+
+    QUnit.test(
+        "coming to an action with an error from a form view with a dirty x2m",
+        async function (assert) {
+            class TestClientAction extends Component {
+                setup() {
+                    throw new RPCError("Something went wrong");
+                }
+            }
+            TestClientAction.template = xml`<div></div>`;
+            registry.category("actions").add("TestClientAction", TestClientAction);
+
+            class MyWidget extends Component {
+                setup() {
+                    this.actionService = useService("action");
+                }
+                onClick() {
+                    this.actionService.doAction({
+                        tag: "TestClientAction",
+                        target: "main",
+                        type: "ir.actions.client",
+                    });
+                }
+            }
+            MyWidget.template = xml`
+                <div class="test_widget">
+                    <button t-on-click="onClick">MyButton</button>
+                </div>`;
+            widgetRegistry.add("test_widget", MyWidget);
+            registry.category("services").add("error", errorService);
+
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "test",
+                    res_model: "partner",
+                    res_id: 1,
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                },
+            };
+            serverData.views = {
+                "partner,false,list": `
+                    <tree editable="bottom">
+                        <field name="foo"/>
+                    </tree>`,
+                "partner,false,search": `<search></search>`,
+                "partner,false,form": `
+                    <form>
+                        <widget name="test_widget"/>
+                        <field name="foo"/>
+                        <field name="p"/>
+                    </form>`,
+            };
+
+            const mockRPC = async (route, args) => {
+                if ((args.method === "read" || args.method === "write") && args.args[0][0] === 1) {
+                    assert.step(args.method);
+                }
+            };
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, 1);
+            await addRow(target, "[name='p']");
+            await editInput(target, "[name='p'] input", "new");
+            assert.verifySteps(["read"]);
+
+            await click(target, ".test_widget button");
+            await nextTick();
+
+            // Close ErrorDialog
+            await click(target, ".o_dialog .btn-close");
+            assert.deepEqual(target.querySelectorAll("[name='p'] .o_data_row").length, 1);
+            assert.verifySteps(["write", "read"]);
+
+            await editInput(target, "[name=foo] input", "new value");
+            await clickSave(target);
+            assert.deepEqual(target.querySelectorAll("[name='p'] .o_data_row").length, 1);
+            assert.verifySteps(["write", "read"]);
+        }
+    );
+
+    QUnit.test(
+        "coming to an action with an error from a form view with a record in creation",
+        async function (assert) {
+            class TestClientAction extends Component {
+                setup() {
+                    throw new RPCError("Something went wrong");
+                }
+            }
+            TestClientAction.template = xml`<div></div>`;
+            registry.category("actions").add("TestClientAction", TestClientAction);
+
+            class MyWidget extends Component {
+                setup() {
+                    this.actionService = useService("action");
+                }
+                onClick() {
+                    this.actionService.doAction({
+                        tag: "TestClientAction",
+                        target: "main",
+                        type: "ir.actions.client",
+                    });
+                }
+            }
+            MyWidget.template = xml`
+                <div class="test_widget">
+                    <button t-on-click="onClick">MyButton</button>
+                </div>`;
+            widgetRegistry.add("test_widget", MyWidget);
+            registry.category("services").add("error", errorService);
+
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "test",
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                },
+            };
+            serverData.views = {
+                "partner,false,search": `<search></search>`,
+                "partner,false,form": `
+                    <form>
+                        <widget name="test_widget"/>
+                        <field name="foo"/>
+                    </form>`,
+            };
+
+            const mockRPC = async (route, args) => {
+                if (args.method === "read") {
+                    assert.step(args.method);
+                    assert.deepEqual(args.args[0], [6]);
+                } else if (args.method === "create") {
+                    assert.step(args.method);
+                    assert.deepEqual(args.args[0], {
+                        foo: "new value",
+                    });
+                }
+            };
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, 1);
+            await editInput(target, "[name=foo] input", "new value");
+            assert.strictEqual(target.querySelector("[name=foo] input").value, "new value");
+
+            await click(target, ".test_widget button");
+            await nextTick();
+
+            // Close ErrorDialog
+            await click(target, ".o_dialog .btn-close");
+            assert.strictEqual(target.querySelector("[name=foo] input").value, "new value");
+            assert.verifySteps(["create", "read"]);
+        }
+    );
+=======
+
+    QUnit.test(
+        "coming to an action with an error from a form view with a dirty x2m",
+        async function (assert) {
+            class TestClientAction extends Component {
+                setup() {
+                    const e = new RPCError("Something went wrong");
+                    e.data = {};
+                    throw e;
+                }
+            }
+            TestClientAction.template = xml`<div></div>`;
+            registry.category("actions").add("TestClientAction", TestClientAction);
+
+            class MyWidget extends Component {
+                setup() {
+                    this.actionService = useService("action");
+                }
+                onClick() {
+                    this.actionService.doAction({
+                        tag: "TestClientAction",
+                        target: "main",
+                        type: "ir.actions.client",
+                    });
+                }
+            }
+            MyWidget.template = xml`
+                <div class="test_widget">
+                    <button t-on-click="onClick">MyButton</button>
+                </div>`;
+            widgetRegistry.add("test_widget", MyWidget);
+            registry.category("services").add("error", errorService);
+
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "test",
+                    res_model: "partner",
+                    res_id: 1,
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                },
+            };
+            serverData.views = {
+                "partner,false,list": `
+                    <tree editable="bottom">
+                        <field name="foo"/>
+                    </tree>`,
+                "partner,false,search": `<search></search>`,
+                "partner,false,form": `
+                    <form>
+                        <widget name="test_widget"/>
+                        <field name="foo"/>
+                        <field name="p"/>
+                    </form>`,
+            };
+
+            const mockRPC = async (route, args) => {
+                if ((args.method === "read" || args.method === "write") && args.args[0][0] === 1) {
+                    assert.step(args.method);
+                }
+            };
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, 1);
+            await addRow(target, "[name='p']");
+            await editInput(target, "[name='p'] input", "new");
+            assert.verifySteps(["read"]);
+
+            await click(target, ".test_widget button");
+            await nextTick();
+
+            // Close ErrorDialog
+            await click(target, ".o_dialog .btn-close");
+            assert.deepEqual(target.querySelectorAll("[name='p'] .o_data_row").length, 1);
+            assert.verifySteps(["write", "read"]);
+
+            await editInput(target, "[name=foo] input", "new value");
+            await clickSave(target);
+            assert.deepEqual(target.querySelectorAll("[name='p'] .o_data_row").length, 1);
+            assert.verifySteps(["write", "read"]);
+        }
+    );
+
+    QUnit.test(
+        "coming to an action with an error from a form view with a record in creation",
+        async function (assert) {
+            class TestClientAction extends Component {
+                setup() {
+                    throw new RPCError("Something went wrong");
+                }
+            }
+            TestClientAction.template = xml`<div></div>`;
+            registry.category("actions").add("TestClientAction", TestClientAction);
+
+            class MyWidget extends Component {
+                setup() {
+                    this.actionService = useService("action");
+                }
+                onClick() {
+                    this.actionService.doAction({
+                        tag: "TestClientAction",
+                        target: "main",
+                        type: "ir.actions.client",
+                    });
+                }
+            }
+            MyWidget.template = xml`
+                <div class="test_widget">
+                    <button t-on-click="onClick">MyButton</button>
+                </div>`;
+            widgetRegistry.add("test_widget", MyWidget);
+            registry.category("services").add("error", errorService);
+
+            serverData.actions = {
+                1: {
+                    id: 1,
+                    name: "test",
+                    res_model: "partner",
+                    type: "ir.actions.act_window",
+                    views: [[false, "form"]],
+                },
+            };
+            serverData.views = {
+                "partner,false,search": `<search></search>`,
+                "partner,false,form": `
+                    <form>
+                        <widget name="test_widget"/>
+                        <field name="foo"/>
+                    </form>`,
+            };
+
+            const mockRPC = async (route, args) => {
+                if (args.method === "read") {
+                    assert.step(args.method);
+                    assert.deepEqual(args.args[0], [6]);
+                } else if (args.method === "create") {
+                    assert.step(args.method);
+                    assert.deepEqual(args.args[0], {
+                        foo: "new value",
+                    });
+                }
+            };
+            const webClient = await createWebClient({ serverData, mockRPC });
+            await doAction(webClient, 1);
+            await editInput(target, "[name=foo] input", "new value");
+            assert.strictEqual(target.querySelector("[name=foo] input").value, "new value");
+
+            await click(target, ".test_widget button");
+            await nextTick();
+
+            // Close ErrorDialog
+            await click(target, ".o_dialog .btn-close");
+            assert.strictEqual(target.querySelector("[name=foo] input").value, "new value");
+            assert.verifySteps(["create", "read"]);
+        }
+    );
+>>>>>>> 958f7173719 (temp)
 });
