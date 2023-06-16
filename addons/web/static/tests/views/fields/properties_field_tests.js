@@ -1662,4 +1662,45 @@ QUnit.module("Fields", (hooks) => {
             assert.ok(target.querySelector(".o_test_properties_not_empty"));
         }
     );
+
+    QUnit.test(
+        "properties: confirm the delete of an already deleted property does not throw an error",
+        async function (assert) {
+            async function mockRPC(route, { method, model, kwargs }) {
+                if (["check_access_rights", "check_access_rule"].includes(method)) {
+                    return true;
+                }
+            }
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 3,
+                serverData,
+                arch: `
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="company_id"/>
+                            <field name="display_name"/>
+                            <field name="properties" widget="properties"/>
+                        </group>
+                    </sheet>
+                </form>`,
+                mockRPC,
+            });
+
+            // We open the property popover
+            await click(target, ".o_property_field:first-child .o_field_property_open_popover");
+
+            // We click on the delete button 2 times to get 2 confirmation popovers
+            await click(target, ".o_field_property_definition_delete");
+            await click(target, ".o_field_property_definition_delete");
+
+            // We confirm both confirmation popovers
+            await click(target.querySelector(".modal-content .btn-primary"));
+            await click(target.querySelector(".modal-content .btn-primary"));
+
+            assert.containsNone(target, ".modal-content");
+        }
+    );
 });
