@@ -13163,4 +13163,43 @@ QUnit.module("Views", (hooks) => {
             await click(target, ".o_form_button_save");
         }
     );
+
+    QUnit.test("containing a nested x2many list view should not overflow", async function (assert) {
+        serverData.models.partner_type.records.push({
+            id: 3, display_name: 'very'.repeat(30) + '_long_name', color: 10,
+        });
+
+        const record = serverData.models.partner.records[0];
+        record.timmy = [3];
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            resId: record.id,
+            serverData,
+            arch: `
+            <form>
+                <sheet>
+                    <group>
+                        <group/>
+                        <group>
+                            <field name="timmy" widget="many2many">
+                                <tree>
+                                    <field name="display_name"/>
+                                    <field name="color"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </group>
+                </sheet>
+            </form>`,
+        });
+
+        const table = target.querySelector('table');
+        const group = target.querySelector('.o_inner_group:last-child');
+
+        assert.equal(group.clientWidth, group.scrollWidth);
+        table.style.tableLayout = 'auto';
+        assert.ok(group.clientWidth < group.scrollWidth);
+    });
 });
