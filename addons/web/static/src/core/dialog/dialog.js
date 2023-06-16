@@ -36,9 +36,7 @@ export class Dialog extends Component {
         this.modalRef = useForwardRefToParent("modalRef");
         useActiveElement("modalRef");
         this.data = useState(this.env.dialogData);
-        useHotkey("escape", () => {
-            this.data.close();
-        });
+        useHotkey("escape", () => this.onEscape());
         this.id = `dialog_${this.data.id}`;
         useChildSubEnv({ inDialog: true, dialogId: this.id, closeDialog: () => this.data.close() });
         this.position = useState({ left: 0, top: 0 });
@@ -73,6 +71,10 @@ export class Dialog extends Component {
     onResize() {
         this.position.left = 0;
         this.position.top = 0;
+    }
+
+    onEscape() {
+        this.data.close();
     }
 }
 Dialog.template = "web.Dialog";
