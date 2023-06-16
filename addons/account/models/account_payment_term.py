@@ -234,6 +234,8 @@ class AccountPaymentTerm(models.Model):
 
     def _get_last_discount_date_formatted(self, date_ref):
         self.ensure_one()
+        if not date_ref:
+            return None
         return format_date(self.env, self._get_last_discount_date(date_ref))
 
 class AccountPaymentTermLine(models.Model):
