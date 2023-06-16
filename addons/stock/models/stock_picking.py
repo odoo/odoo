@@ -405,8 +405,8 @@ class Picking(models.Model):
         compute="_compute_location_id", store=True, precompute=True, readonly=False,
         check_company=True, required=True)
     move_ids = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
-    move_ids_without_package = fields.One2many(
-        'stock.move', 'picking_id', string="Stock moves not in package", compute='_compute_move_without_package',
+    move_ids_without_package = fields.Many2many(
+        'stock.move', string="Stock moves not in package", compute='_compute_move_without_package',
         inverse='_set_move_without_package', compute_sudo=True)
     has_scrap_move = fields.Boolean(
         'Has Scrap Moves', compute='_has_scrap_move')
@@ -864,7 +864,7 @@ class Picking(models.Model):
             after_vals['partner_id'] = vals['partner_id']
         if after_vals:
             self.move_ids.filtered(lambda move: not move.scrapped).write(after_vals)
-        if vals.get('move_ids'):
+        if vals.get('move_ids') or vals.get('move_ids_without_package'):
             self._autoconfirm_picking()
 
         return res
@@ -1093,7 +1093,7 @@ class Picking(models.Model):
                 no_quantities_done_ids.add(picking.id)
             if all(float_is_zero(move_line.reserved_qty, precision_rounding=move_line.product_uom_id.rounding) for move_line in picking.move_line_ids):
                 no_reserved_quantities_ids.add(picking.id)
-        pickings_without_quantities = self.filtered(lambda p: p.id in no_quantities_done_ids and p.id in no_reserved_quantities_ids)
+        pickings_without_quantities = self.filtered(lambda p: p.id in no_quantities_done_ids and p.id in no_reserved_quantities_ids and not p.immediate_transfer)
 
         pickings_using_lots = self.filtered(lambda p: p.picking_type_id.use_create_lots or p.picking_type_id.use_existing_lots)
         if pickings_using_lots:
@@ -1190,6 +1190,18 @@ class Picking(models.Model):
             pickings_to_backorder = self._check_backorder()
             if pickings_to_backorder:
                 return pickings_to_backorder._action_generate_backorder_wizard(show_transfers=self._should_show_transfers())
+
+        message = ''
+        for move in self.move_ids:
+            if float_compare(move.quantity_done, move.product_uom_qty, precision_rounding=move.product_uom.rounding) > 0 \
+                    and not float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding) \
+                    and move.from_immediate_transfer:
+                message += _('%(name)s has a quantity of %(initial_qty)s %(uom)s done, but %(done_qty)s %(uom)s reserved\n', name=move.product_id.display_name, initial_qty=move.product_uom_qty, done_qty=move.quantity_done, uom=move.product_uom.name)
+            if move.from_immediate_transfer and float_compare(move.product_qty, move.quantity_done, precision_rounding=move.product_uom.rounding) > 0:
+                move.quantity_done = move.product_qty
+        if message:
+            message = _('The product(s)\n') + message + _('Update quantities of those products.')
+            raise UserError(message)
         return True
 
     def _should_show_transfers(self):
@@ -1265,6 +1277,8 @@ class Picking(models.Model):
         immediate_pickings = self.browse()
         precision_digits = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for picking in self:
+            if picking.immediate_transfer:
+                continue
             if all(float_is_zero(move_line.qty_done, precision_digits=precision_digits) for move_line in picking.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel'))):
                 immediate_pickings |= picking
         return immediate_pickings

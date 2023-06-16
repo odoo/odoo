@@ -57,7 +57,7 @@ class TestPickShip(TestStockCommon):
 
     def create_pick_pack_ship(self):
         picking_ship = self.env['stock.picking'].create({
-            'location_id': self.pack_location,
+            'location_id': self.output_location,
             'location_dest_id': self.customer_location,
             'picking_type_id': self.picking_type_out,
             'state': 'draft',
@@ -75,8 +75,8 @@ class TestPickShip(TestStockCommon):
         })
 
         picking_pack = self.env['stock.picking'].create({
-            'location_id': self.stock_location,
-            'location_dest_id': self.pack_location,
+            'location_id': self.pack_location,
+            'location_dest_id': self.output_location,
             'picking_type_id': self.picking_type_out,
             'state': 'draft',
             'immediate_transfer': False,

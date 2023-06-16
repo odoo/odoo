@@ -470,10 +470,10 @@ class TestPacking(TestPackingCommon):
         # Add 2 lines
         with receipt_form.move_ids_without_package.new() as move_line:
             move_line.product_id = self.productA
-            move_line.quantity_done = 1
+            move_line.product_uom_qty = 1
         with receipt_form.move_ids_without_package.new() as move_line:
             move_line.product_id = self.productB
-            move_line.quantity_done = 1
+            move_line.product_uom_qty = 1
         receipt = receipt_form.save()
         receipt.action_reset_draft()
         receipt.action_confirm()
@@ -622,10 +622,10 @@ class TestPacking(TestPackingCommon):
         # Add 2 lines
         with receipt_form.move_ids_without_package.new() as move_line:
             move_line.product_id = self.productA
-            move_line.quantity_done = 1
+            move_line.product_uom_qty = 1
         with receipt_form.move_ids_without_package.new() as move_line:
             move_line.product_id = self.productB
-            move_line.quantity_done = 1
+            move_line.product_uom_qty = 1
         receipt = receipt_form.save()
         receipt.action_reset_draft()
         receipt.action_confirm()
@@ -906,6 +906,7 @@ class TestPacking(TestPackingCommon):
         self.assertEqual(len(picking.move_ids), 1, 'Should have only 1 stock move')
 
     def test_picking_state_with_null_qty(self):
+        """ Exclude empty stock move of the picking state computation """
         delivery_form = Form(self.env['stock.picking'])
         picking_type_id = self.warehouse.out_type_id
         delivery_form.picking_type_id = picking_type_id
