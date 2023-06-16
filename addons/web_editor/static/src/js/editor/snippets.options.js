@@ -8969,6 +8969,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                                 ? _t("Custom %s", this.data.snippetName)
                                 : _t("Custom Button");
                             const targetCopyEl = this.$target[0].cloneNode(true);
+                            targetCopyEl.classList.add('s_custom_snippet');
                             delete targetCopyEl.dataset.name;
                             if (isButton) {
                                 targetCopyEl.classList.remove("mb-2");
@@ -8978,6 +8979,18 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                             // current widget has been destroyed and is orphaned, so this._rpc
                             // will not work as it can't trigger_up. For this reason, we need
                             // to bypass the service provider and use the global RPC directly
+
+                            // Get editable parent TODO find proper method to get it directly
+                            let editableParentEl;
+                            for (const parentEl of this.options.getContentEditableAreas()) {
+                                if (parentEl.contains(this.$target[0])) {
+                                    editableParentEl = parentEl;
+                                    break;
+                                }
+                            }
+                            context['model'] = editableParentEl.dataset.oeModel;
+                            context['field'] = editableParentEl.dataset.oeField;
+                            context['resId'] = editableParentEl.dataset.oeId;
                             await rpc(`/web/dataset/call_kw/ir.ui.view/save_snippet`, {
                                 model: "ir.ui.view",
                                 method: "save_snippet",
