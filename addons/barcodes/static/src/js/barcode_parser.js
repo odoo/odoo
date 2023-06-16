@@ -158,9 +158,9 @@ export class BarcodeParser {
             match.base_code = base_code.join('');
         }
 
-        if (base_pattern[0] !== '^') {
-            base_pattern = "^" + base_pattern;
-        }
+        base_pattern = base_pattern.split('|')
+            .map(part => part.startsWith('^') ? part : '^' + part)
+            .join('|');
         match.match = match.base_code.match(base_pattern);
 
         return match;
