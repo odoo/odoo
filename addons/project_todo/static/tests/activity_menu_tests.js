@@ -32,7 +32,7 @@ QUnit.test("create todo from activity menu without date", async function (assert
     assert.containsOnce(target, ".o-mail-ActivityMenu-counter:contains(1)");
     assert.containsOnce(target, ".o-mail-ActivityGroup");
     assert.containsOnce(target, ".o-mail-ActivityGroup:contains(project.task)");
-    assert.containsOnce(target, ".btn:contains(1 Today)");
+    assert.containsOnce(target, "span:contains(1 Today)");
     assert.containsOnce(target, ".btn:contains(Add a To-do)");
     assert.containsNone(target, ".o-mail-ActivityMenu-show");
     assert.containsNone(target, ".o-mail-ActivityMenu-input");
@@ -44,7 +44,7 @@ QUnit.test("create todo from activity menu without date", async function (assert
     assert.containsOnce(target, ".o_menu_systray i[aria-label='Activities']");
     await click(".o_menu_systray i[aria-label='Activities']");
     assert.containsOnce(target, ".o-mail-ActivityMenu-counter:contains(2)");
-    assert.containsOnce(target, ".btn:contains(2 Today)");
+    assert.containsOnce(target, "span:contains(2 Today)");
 });
 
 QUnit.test("create to-do from activity menu with date", async function (assert) {
@@ -71,5 +71,5 @@ QUnit.test("create to-do from activity menu with date", async function (assert) 
     assert.containsOnce(target, ".o-mail-ActivityMenu-counter:contains(1)");
     assert.containsOnce(target, ".o-mail-ActivityGroup");
     assert.containsOnce(target, ".o-mail-ActivityGroup:contains(project.task)");
-    assert.containsOnce(target, ".btn:contains(1 Future)");
+    assert.containsOnce(target, "span:contains(1 Future)");
 });

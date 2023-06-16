@@ -67,27 +67,34 @@ export class ActivityMenu extends Component {
                     type: "ir.actions.act_window",
                     views: this.availableViews(group),
                 },
-                { clearBreadcrumbs: true, viewType: "activity" }
+                { clearBreadcrumbs: true , viewType: "activity" }
             );
         }
     }
 
-    openActivityGroup(group, filter = "all") {
+    /**
+     * Allow to define the view type used for opening an activity group.
+     *
+     * Meant to be overridden by other modules to define custom view type per model.
+     *
+     * @param {string} model The model for which the view type needs to be determined.
+     * @returns {string} view type for the given model.
+     */
+    getActivityGroupViewType(model) {
+        return "list";
+    }
+
+    openActivityGroup(group) {
         document.body.click(); // hack to close dropdown
         const context = {
             // Necessary because activity_ids of mail.activity.mixin has auto_join
             // So, duplicates are faking the count and "Load more" doesn't show up
             force_search_count: 1,
         };
-        if (filter === "all") {
-            context.search_default_activities_overdue = 1;
-            context.search_default_activities_today = 1;
-        } else {
-            context["search_default_activities_" + filter] = 1;
-        }
         const domain = [["activity_ids.user_id", "=", this.userId]];
         const views = this.availableViews(group);
 
+        const viewType = this.getActivityGroupViewType(group.model);
         this.action.doAction(
             {
                 context,
@@ -98,7 +105,7 @@ export class ActivityMenu extends Component {
                 type: "ir.actions.act_window",
                 views,
             },
-            { clearBreadcrumbs: true }
+            { clearBreadcrumbs: true, viewType: viewType }
         );
     }
 }
