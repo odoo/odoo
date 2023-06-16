@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="mail.ChatWindow" owl="1">
+    <div class="o-mail-ChatWindow border border-bottom-0"
+        t-att-style="style"
+        t-att-class="{
+                'w-100 h-100': store.isSmall,
+                'o-folded': props.chatWindow.folded,
+                'position-absolute bottom-0 overflow-hidden d-flex flex-column': !props.chatWindow.hidden,
+                'rounded-top-3': !props.chatWindow.hidden and !store.isSmall,
+                }"
+        t-on-keydown.stop="onKeydown"
+        tabindex="1"
+    >
+        <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0 bg-100" t-on-click="toggleFold" t-att-class="{ 'cursor-pointer': !store.isSmall, 'border-bottom': !props.chatWindow.folded }">
+            <div t-if="store.isSmall" class="cursor-pointer d-flex align-items-center h-100 px-3 py-0 me-2" title="Close conversation" t-on-click="() => this.close()">
+                <i class="oi oi-arrow-left"/>
+            </div>
+            <div t-if="thread" class="o-mail-ChatWindow-threadAvatar my-0" t-att-class="{ 'ms-3': !store.isSmall, 'me-1': thread.type === 'chat', 'me-3': thread.type !== 'chat' }">
+                <img class="rounded" t-att-src="thread.imgUrl" alt="Thread Image"/>
+            </div>
+            <ThreadIcon t-if="thread and thread.type === 'chat' and thread.correspondent" thread="thread" className="'me-1'"/>
+            <span class="o-mail-ChatWindow-name text-truncate fw-bold" t-att-title="props.chatWindow.displayName" t-esc="props.chatWindow.displayName" t-att-class="{
+                    'ms-3 me-1 my-0': !thread,
+                }"
+            />
+            <div t-if="thread and thread.isChannel and thread.message_unread_counter > 0" class="mx-1 my-0">
+                (<t t-out="thread.message_unread_counter"/>)
+            </div>
+            <div class="flex-grow-1"/>
+            <t t-if="actions.length > 1">
+                <t t-set="firstAction" t-value="orderedActions[0]"/>
+                <button class="o-mail-ChatWindow-command btn d-flex p-2 opacity-75 opacity-100-hover" t-att-title="firstAction.name" t-on-click.stop="firstAction.onSelect"><i t-att-class="firstAction.icon"/></button>
+            </t>
+            <t t-if="actions.length === 3">
+                <t t-set="secondAction" t-value="orderedActions[1]"/>
+                <button class="o-mail-ChatWindow-command btn d-flex p-2 opacity-75 opacity-100-hover" t-att-title="secondAction.name" t-on-click.stop="secondAction.onSelect"><i t-att-class="secondAction.icon"/></button>
+            </t>
+            <t t-elif="actions.length > 3">
+                <Dropdown position="'bottom-end'" onStateChanged="state => this.onMoreActionsStateChanged(state)" togglerClass="'o-mail-ChatWindow-command d-flex btn p-0 p-2'" menuClass="'d-flex flex-column py-0'" class="'d-flex'" title="moreMenuText">
+                    <t t-set-slot="toggler">
+                        <i class="fa fa-fw fa-ellipsis-h" tabindex="1"/>
+                    </t>
+                    <t t-set-slot="default">
+                        <DropdownItem t-foreach="orderedActions.slice(1, -1)" t-as="action" t-key="action.id" class="'o-mail-ChatWindow-command btn rounded-0 d-flex align-items-center px-2 py-2 m-0 opacity-75 opacity-100-hover'" title="action.name" onSelected="action.onSelect"><i t-att-class="action.icon"/><span class="mx-2" t-out="action.name"/></DropdownItem>
+                    </t>
+                </Dropdown>
+            </t>
+            <t t-if="actions.length > 0">
+                <t t-set="lastAction" t-value="orderedActions.at(-1)"/>
+                <button class="o-mail-ChatWindow-command btn d-flex p-2 me-1 opacity-75 opacity-100-hover" t-att-title="lastAction.name" t-on-click.stop="lastAction.onSelect"><i t-att-class="lastAction.icon"/></button>
+            </t>
+        </div>
+        <div t-if="!props.chatWindow.folded" class="o-mail-ChatWindow-content bg-view d-flex flex-column h-100 overflow-auto position-relative" t-ref="content">
+            <button t-if="state.activeMode" class="o-mail-ChatWindow-closePanel btn position-absolute top-0 end-0 btn opacity-75 opacity-100-hover" title="Close panel" t-on-click.stop="() => state.activeMode = ''"><i class="fa fa-close"/></button>
+            <t t-if="thread">
+                <PinnedMessagesPanel t-if="state.activeMode === 'pinned-messages'" thread="thread"/>
+                <t t-else="">
+                    <Call t-if="Object.keys(thread.rtcSessions).length > 0" thread="thread" compact="true"/>
+                    <Thread isInChatWindow="true" thread="thread" t-key="thread.localId" jumpPresent="state.jumpThreadPresent" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
+                    <Composer composer="thread.composer" autofocus="props.chatWindow.autofocus" mode="'compact'" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onPostCallback.bind="() => this.state.jumpThreadPresent++" dropzoneRef="contentRef"/>
+                </t>
+            </t>
+            <div t-else="" class="d-flex align-items-center m-3">
+                <span class="flex-shrink-0 me-2">To :</span>
+                <ChannelSelector category="store.discuss.chats" onValidate="() => chatWindowService.closeNewMessage()" multiple="false" autofocus="true"/>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>
