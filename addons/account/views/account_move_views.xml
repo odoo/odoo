@@ -372,6 +372,7 @@
             <field name="model">account.move</field>
             <field name="arch" type="xml">
                 <tree string="Journal Entries" sample="1" decoration-info="state == 'draft'" expand="context.get('expand', False)">
+                    <field name="company_currency_id" invisible="1"/>
                     <field name="made_sequence_hole" invisible="1"/>
                     <field name="date"/>
                     <field name="name" decoration-danger="made_sequence_hole"/>
