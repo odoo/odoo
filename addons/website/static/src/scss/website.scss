@@ -425,6 +425,19 @@ h1, h2, h3, h4, h5, h6 {
     }
 }
 
+// Adding an `toggle` button style
+@each $color, $value in $theme-colors {
+    .btn-toggle-#{$color}{
+        border-color: $border-color;
+        color: o-color($color);
+        &:hover, &:active, &.active {
+            color: o-color($color);
+            background-color: mix(o-color($color), o-color('o-color-4'), 20%);
+            border-color: o-color($color) !important;
+        }
+    }
+}
+
 // Texts
 p {
     margin-top: $paragraph-margin-top;
