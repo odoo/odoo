@@ -15,6 +15,8 @@ from odoo.exceptions import ValidationError, AccessError, MissingError, UserErro
 from odoo.http import content_disposition, Controller, request, route
 from odoo.tools import consteq
 
+from odoo.addons.web.models.ir_qweb import IMAGE_RAW
+
 # --------------------------------------------------
 # Misc tools
 # --------------------------------------------------
@@ -423,7 +425,7 @@ class CustomerPortal(Controller):
         if report_type not in ('html', 'pdf', 'text'):
             raise UserError(_("Invalid report type: %s", report_type))
 
-        report_sudo = request.env.ref(report_ref).with_user(SUPERUSER_ID)
+        report_sudo = request.env.ref(report_ref).with_user(SUPERUSER_ID).with_context(qweb_img_raw_data=IMAGE_RAW)
 
         if not isinstance(report_sudo, type(request.env['ir.actions.report'])):
             raise UserError(_("%s is not the reference of a report", report_ref))

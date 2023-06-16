@@ -10,6 +10,8 @@ from odoo import api, models
 from odoo.tools import pycompat
 from odoo.tools import html_escape as escape
 
+IMAGE_RAW = object()
+
 
 class Image(models.AbstractModel):
     """
@@ -64,7 +66,7 @@ class Image(models.AbstractModel):
             "That is because the image goes into the tag, or it gets the " \
             "hose again."
 
-        if options.get('qweb_img_raw_data', False):
+        if options.get('qweb_img_raw_data', False) or self.env.context.get('qweb_img_raw_data') is IMAGE_RAW:
             return super(Image, self).record_to_html(record, field_name, options)
 
         aclasses = ['img', 'img-fluid'] if options.get('qweb_img_responsive', True) else ['img']
