@@ -118,8 +118,9 @@ functionRegistry
                     return "#,##0.00";
                 case "date":
                 case "datetime":
+                    console.log(this.locale.dateFormat);
                     if (aggregateOperator === "day") {
-                        return "mm/dd/yyyy";
+                        return this.locale.dateFormat;
                     }
                     return undefined;
                 default:

@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import * as spreadsheet from "@odoo/o-spreadsheet";
-const { arg, toString, toJSDate } = spreadsheet.helpers;
+const { arg, toString, toJsDate } = spreadsheet.helpers;
 const { functionRegistry } = spreadsheet.registries;
 
 functionRegistry.add("ODOO.CURRENCY.RATE", {
@@ -12,7 +12,7 @@ functionRegistry.add("ODOO.CURRENCY.RATE", {
     compute: function (currencyFrom, currencyTo, date) {
         const from = toString(currencyFrom);
         const to = toString(currencyTo);
-        const _date = date ? toJSDate(date) : undefined;
+        const _date = date ? toJsDate(date, this.locale) : undefined;
         return this.getters.getCurrencyRate(from, to, _date);
     },
     args: [
