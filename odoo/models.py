@@ -61,6 +61,7 @@ from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang
 from .tools.translate import _
 from .tools import date_utils
+from .tools import float_compare
 from .tools import populate
 from .tools import unique
 from .tools.lru import LRU
@@ -6124,6 +6125,11 @@ Fields:
                     if not force and other.get(name) == self[name]:
                         continue
                     field = record._fields[name]
+                    if not force and field.type == "float" and other.get(name) and self[name]:
+                        digits = field.get_digits(record.env)
+                        if digits and float_compare(self[name], other.get(name), precision_digits=digits[1]) == 0:
+                            continue
+
                     if field.type not in ('one2many', 'many2many'):
                         result[name] = field.convert_to_onchange(self[name], record, {})
                     else:
