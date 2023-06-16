@@ -953,8 +953,7 @@ stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons('.o_control_panel .o_br
 }, {
     mobile: false,
     edition: "enterprise",
-    trigger: "button[name='button_validate'].btn-primary",
-    extra_trigger: "button[name='button_validate'].btn-primary",
+    trigger: "button.btn-primary:contains('Validate')",
     content: _t("Reconcile the bank transaction"),
 },
 // exit reconciliation widget
