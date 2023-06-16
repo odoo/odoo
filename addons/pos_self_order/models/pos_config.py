@@ -36,7 +36,7 @@ class PosConfig(models.Model):
     self_order_pay_after = fields.Selection(
         [("each", "Each Order"), ("meal", "Meal")],
         string="Pay After:",
-        default="each",
+        default="meal",
         help="Choose when the customer will pay",
         required=True,
     )

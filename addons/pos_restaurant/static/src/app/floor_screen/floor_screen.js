@@ -363,7 +363,8 @@ export class FloorScreen extends Component {
     }
     async addFloor() {
         const { confirmed, payload: newName } = await this.popup.add(TextInputPopup, {
-            title: this.env._t("Floor Name"),
+            title: this.env._t("New Floor"),
+            placeholder: this.env._t("Floor name"),
         });
         if (!confirmed) {
             return;

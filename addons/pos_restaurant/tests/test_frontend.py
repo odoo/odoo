@@ -49,6 +49,7 @@ class TestFrontend(odoo.tests.HttpCase):
             'start_category': True,
             'is_order_printer': True,
             'printer_ids': [(4, printer.id)],
+            'iface_tipproduct': False,
         })
 
         main_floor = self.env['restaurant.floor'].create({

@@ -59,10 +59,33 @@ class PosConfig(models.Model):
         forbidden_keys.append('floor_ids')
         return forbidden_keys
 
+    def _set_tips_after_payment_if_country_custom(self):
+        self.ensure_one()
+        company = self.company_id or self.env.company or self.env['res.company']._get_main_company()
+        if company and company.country_id and company.country_id.code == 'US':
+            self.update({
+                'iface_tipproduct': True,
+                'set_tip_after_payment': True,
+            })
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            is_restaurant = 'module_pos_restaurant' not in vals or vals['module_pos_restaurant']
+            if is_restaurant and 'iface_splitbill' not in vals:
+                vals['iface_splitbill'] = True
+            if not is_restaurant or not vals.get('iface_tipproduct', False):
+                vals['set_tip_after_payment'] = False
+        return super(PosConfig, self).create(vals_list)
+
     def write(self, vals):
         if ('module_pos_restaurant' in vals and vals['module_pos_restaurant'] is False):
             vals['floor_ids'] = [(5, 0, 0)]
-        return super(PosConfig, self).write(vals)
+
+        if ('module_pos_restaurant' in vals and not vals['module_pos_restaurant']) or ('iface_tipproduct' in vals and not vals['iface_tipproduct']):
+            vals['set_tip_after_payment'] = False
+
+        return super().write(vals)
 
     @api.model
     def add_cash_payment_method(self):

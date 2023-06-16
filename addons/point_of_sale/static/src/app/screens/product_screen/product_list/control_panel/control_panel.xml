@@ -4,18 +4,20 @@
     <t t-name="point_of_sale.ProductsWidgetControlPanel" owl="1">
         <div class="products-widget-control" t-ref="products-widget-control">
             <div class="rightpane-header">
-                <div class="search-bar-container sb-product">
-                    <span t-if="state.isMobile" class="oe_status oe_icon icon" t-on-click="toggleMobileSearchBar">
-                        <i t-attf-class="fa {{state.mobileSearchBarIsShown ? 'fa-arrow-right' : 'fa-search'}}"/>
-                    </span>
-                    <t t-if="!state.isMobile || state.mobileSearchBarIsShown">
-                        <div class="pos-search-bar">
-                            <i class="fa fa-search"/>
-                            <input t-model="this.pos.searchProductWord" placeholder="Search Products..." type="text" autofocus="autofocus" t-on-keyup="updateSearch" />
-                            <i t-if="this.pos.searchProductWord" class="fa fa-times" t-on-click="_clearSearch"/>
-                        </div>
-                    </t>
-                </div>
+                <t t-if="this.pos.posHasValidProduct()">
+                    <div class="search-bar-container sb-product">
+                        <span t-if="state.isMobile" class="oe_status oe_icon icon" t-on-click="toggleMobileSearchBar">
+                            <i t-attf-class="fa {{state.mobileSearchBarIsShown ? 'fa-arrow-right' : 'fa-search'}}"/>
+                        </span>
+                        <t t-if="!state.isMobile || state.mobileSearchBarIsShown">
+                            <div class="pos-search-bar">
+                                <i class="fa fa-search"/>
+                                <input t-model="this.pos.searchProductWord" placeholder="Search Products..." type="text" autofocus="autofocus" t-on-keyup="updateSearch" />
+                                <i t-if="this.pos.searchProductWord" class="fa fa-times" t-on-click="_clearSearch"/>
+                            </div>
+                        </t>
+                    </div>
+                </t>
                 <t t-if="!props.hasNoCategories">
                     <div class="categories-header">
                     <!-- Breadcrumbs -->

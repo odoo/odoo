@@ -117,7 +117,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         }
     },
     async setNoTip(serverId) {
-        await this.orm.call("set_no_tip", "pos.order", [serverId]);
+        await this.orm.call("pos.order", "set_no_tip", [serverId]);
     },
     _getOrderStates() {
         const result = this._super(...arguments);

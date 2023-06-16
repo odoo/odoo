@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import models, Command
+from odoo.tools import convert
 from itertools import groupby
 from odoo.osv.expression import AND
 
@@ -52,3 +53,12 @@ class PosSession(models.Model):
 
     def get_pos_ui_restaurant_floor(self):
         return self._get_pos_ui_restaurant_floor(self._loader_params_restaurant_floor())
+
+    def _load_onboarding_data(self):
+        super()._load_onboarding_data()
+        convert.convert_file(self.env, 'pos_restaurant', 'data/pos_restaurant_onboarding.xml', None, mode='init', kind='data')
+        configs = self.config_id.filtered('module_pos_restaurant').union(self.env.ref('pos_restaurant.pos_config_main_restaurant', raise_if_not_found=False))
+        configs.with_context(bypass_categories_forbidden_change=True).write({
+            'limit_categories': True,
+            'iface_available_categ_ids': [Command.link(self.env.ref('pos_restaurant.onboarding_drinks_category').id), Command.link(self.env.ref('pos_restaurant.onboarding_food_category').id)]
+        })
