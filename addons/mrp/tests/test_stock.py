@@ -308,7 +308,7 @@ class TestKitPicking(common.TestMrpCommon):
         move_receipt_1 = self.env['stock.move'].create({
             'name': self.kit_parent.name,
             'product_id': self.kit_parent.id,
-            'quantity_done': 3,
+            'product_uom_qty': 3,
             'product_uom': self.kit_parent.uom_id.id,
             'picking_id': picking.id,
             'picking_type_id': self.env.ref('stock.picking_type_in').id,

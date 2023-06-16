@@ -545,11 +545,11 @@ class StockQuant(models.Model):
         """name that will be displayed in the detailed operation"""
         for record in self:
             name = [record.location_id.display_name]
-            if self.env.user.has_group('stock.group_production_lot') and record.lot_id:
+            if record.lot_id:
                 name.append(record.lot_id.name)
-            if self.env.user.has_group('stock.group_tracking_lot') and record.package_id:
+            if record.package_id:
                 name.append(record.package_id.name)
-            if self.env.user.has_group('stock.group_tracking_owner') and record.owner_id:
+            if record.owner_id:
                 name.append(record.owner_id.name)
             record.display_name = ' - '.join(name)
 

@@ -140,8 +140,7 @@ class StockMoveLine(models.Model):
                 if (record.move_id.product_qty - record.move_id.quantity_done):
                     record.qty_done = min(record.quant_id.available_quantity, max(record.move_id.product_qty - record.move_id.quantity_done, 0))
                 else:
-                    record.qty_done = record.quant_id.quantity
-
+                    record.qty_done = record.quant_id.available_quantity
 
     @api.constrains('lot_id', 'product_id')
     def _check_lot_product(self):
@@ -319,7 +318,10 @@ class StockMoveLine(models.Model):
                 moves = move_line.picking_id.move_ids.filtered(lambda x: x.product_id == move_line.product_id)
                 moves = sorted(moves, key=lambda m: m.quantity_done < m.product_qty, reverse=True)
                 if moves:
-                    move_line.move_id = moves[0].id
+                    move_line.write({
+                        'move_id': moves[0].id,
+                        'picking_id': moves[0].picking_id.id,
+                    })
                 else:
                     create_move(move_line)
             else:
@@ -352,11 +354,8 @@ class StockMoveLine(models.Model):
         moves_to_update = mls.filtered(
             lambda ml:
             ml.move_id and
-            ml.qty_done and (
-                ml.move_id.state == 'done' or (
-                    ml.move_id.picking_id and
-                    ml.move_id.picking_id.immediate_transfer
-                ))
+            ml.qty_done and
+            ml.move_id.state == 'done'
         ).move_id
         for move in moves_to_update:
             move.with_context(avoid_putaway_rules=True).product_uom_qty = move.quantity_done
@@ -512,7 +511,6 @@ class StockMoveLine(models.Model):
         # this is what move's `action_done` will do. So, we replicate the behavior here.
         if updates or 'qty_done' in vals:
             moves = self.filtered(lambda ml: ml.move_id.state == 'done').mapped('move_id')
-            moves |= self.filtered(lambda ml: ml.move_id.state not in ('done', 'cancel') and ml.move_id.picking_id.immediate_transfer).mapped('move_id')
             for move in moves:
                 move.product_uom_qty = move.quantity_done
             next_moves._do_unreserve()

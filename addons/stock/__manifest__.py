@@ -112,7 +112,7 @@
             'stock/static/src/scss/stock_traceability_report.scss',
         ],
         'web.assets_tests': [
-            'stock/static/tests/tours/stock_report_tests.js',
+            'stock/static/tests/tours/*.js',
         ],
         'web.qunit_suite_tests': [
             'stock/static/tests/inventory_report_list_tests.js',

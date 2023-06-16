@@ -18,7 +18,7 @@ export class SMLX2ManyField extends X2ManyField {
         this.selectCreate = (params) => {
             return selectCreate(params);
         };
-        this.openRecord = useOpenMany2XRecord({
+        this.openQuantRecord = useOpenMany2XRecord({
             resModel: "stock.quant",
             activeActions: this.activeActions,
             onRecordSaved: (record) => this.selectRecord([record.resId]),
@@ -29,6 +29,9 @@ export class SMLX2ManyField extends X2ManyField {
     }
 
     async onAdd({ context, editable } = {}) {
+        if (!this.props.record.data.show_quant) {
+            return super.onAdd(...arguments);
+        }
         context = {
             ...context,
             single_product: true,
@@ -51,12 +54,16 @@ export class SMLX2ManyField extends X2ManyField {
         const params = {
             context: { default_quant_id: res_ids[0] },
         };
-        this.addInLine(params);
+        this.list.addNewRecord(params).then((record) => {
+            // Make it dirty to force the save of the record. addNewRecord make
+            // the new record dirty === False by default to remove them at unfocus event
+            record.dirty = true;
+        });
     }
 
     createOpenRecord() {
         const activeElement = document.activeElement;
-        this.openRecord({
+        this.openQuantRecord({
             context: {
                 ...this.props.context,
                 form_view_ref: "stock.view_stock_quant_form",

@@ -132,7 +132,7 @@ class StockMove(models.Model):
         'Propagate cancel and split', default=True,
         help='If checked, when this move is cancelled, cancel the linked move too')
     delay_alert_date = fields.Datetime('Delay Alert Date', help='Process at this date to be on time', compute="_compute_delay_alert_date", store=True)
-    picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', compute='_compute_picking_type_id', store=True, check_company=True)
+    picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', compute='_compute_picking_type_id', store=True, readonly=False, check_company=True)
     is_inventory = fields.Boolean('Inventory')
     move_line_ids = fields.One2many('stock.move.line', 'move_id')
     move_line_nosuggest_ids = fields.One2many('stock.move.line', 'move_id', domain=['|', ('reserved_qty', '=', 0.0), ('qty_done', '!=', 0.0)])
@@ -173,7 +173,6 @@ class StockMove(models.Model):
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs', readonly=True)
     display_assign_serial = fields.Boolean(compute='_compute_display_assign_serial')
     display_import_lot = fields.Boolean(compute='_compute_display_assign_serial')
-    display_clear_serial = fields.Boolean(compute='_compute_display_clear_serial')
     next_serial = fields.Char('First SN')
     next_serial_count = fields.Integer('Number of SN')
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Original Reordering Rule', index=True)
@@ -185,6 +184,9 @@ class StockMove(models.Model):
     product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
     from_immediate_transfer = fields.Boolean(related="picking_id.immediate_transfer")
     show_reserved = fields.Boolean(compute='_compute_show_reserved')
+    show_quant = fields.Boolean("Show Quant", compute="_compute_show_info")
+    show_lots_m2o = fields.Boolean("Show lot_id", compute="_compute_show_info")
+    show_lots_text = fields.Boolean("Show lot_name", compute="_compute_show_info")
 
     @api.depends('product_id')
     def _compute_product_uom(self):
@@ -197,15 +199,10 @@ class StockMove(models.Model):
             move.display_import_lot = (
                 move.has_tracking != 'none' and
                 move.picking_type_id.use_create_lots and
-                not move.origin_returned_move_id.id
+                not move.origin_returned_move_id.id and
+                move.state not in ('done', 'cancel')
             )
             move.display_assign_serial = move.has_tracking == 'serial' and move.display_import_lot
-
-    @api.depends('display_assign_serial', 'move_line_ids', 'move_line_nosuggest_ids')
-    def _compute_display_clear_serial(self):
-        self.display_clear_serial = False
-        for move in self:
-            move.display_clear_serial = move.display_assign_serial and move._get_move_lines()
 
     @api.depends('picking_id.priority')
     def _compute_priority(self):
@@ -255,15 +252,16 @@ class StockMove(models.Model):
         for move in self:
             move.show_reserved_availability = not move.location_id.usage == 'supplier'
 
-    @api.depends('state', 'picking_id')
+    @api.depends('state', 'picking_id.is_locked', 'picking_id.immediate_transfer')
     def _compute_is_initial_demand_editable(self):
+        self.is_initial_demand_editable = False
         for move in self:
-            if not move.picking_id.immediate_transfer and move.state == 'draft':
+            if move.state == 'done' and move.picking_id.is_locked:
                 move.is_initial_demand_editable = True
-            elif not move.picking_id.is_locked and move.state != 'done' and move.picking_id:
+            elif move.state not in ('done', 'cancel') and move.picking_id.immediate_transfer:
                 move.is_initial_demand_editable = True
-            else:
-                move.is_initial_demand_editable = False
+            elif move.state == 'draft':
+                move.is_initial_demand_editable = True
 
     @api.depends('state', 'picking_id', 'product_id')
     def _compute_is_quantity_done_editable(self):
@@ -536,7 +534,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 else:
                     move_update.date_deadline = new_deadline
 
-    @api.depends('move_line_ids', 'move_line_ids.lot_id', 'move_line_ids.qty_done')
+    @api.depends('move_line_ids.lot_id', 'move_line_ids.qty_done')
     def _compute_lot_ids(self):
         domain_nosuggest = [('move_id', 'in', self.ids), ('lot_id', '!=', False), '|', ('qty_done', '!=', 0.0), ('reserved_qty', '=', 0.0)]
         domain_suggest = [('move_id', 'in', self.ids), ('lot_id', '!=', False), ('qty_done', '!=', 0.0)]
@@ -588,7 +586,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                     move_line.qty_done = 1
             move.write({'move_line_ids': move_lines_commands})
 
-    @api.depends('picking_type_id', 'date', 'priority')
+    @api.depends('picking_type_id', 'date', 'priority', 'state')
     def _compute_reservation_date(self):
         for move in self:
             if move.picking_type_id.reservation_method == 'by_date' and move.state in ['draft', 'confirmed', 'waiting', 'partially_available']:
@@ -596,6 +594,20 @@ Please change the quantity done or the rounding precision of your unit of measur
                 if move.priority == '1':
                     days = move.picking_type_id.reservation_days_before_priority
                 move.reservation_date = fields.Date.to_date(move.date) - timedelta(days=days)
+
+    @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'state', 'origin_returned_move_id', 'product_id.detailed_type', 'picking_code')
+    def _compute_show_info(self):
+        for move in self:
+            move.show_quant = move.picking_code != 'incoming'\
+                           and move.product_id.detailed_type == 'product'
+            move.show_lots_m2o = not move.show_quant\
+                and move.has_tracking != 'none'\
+                and (move.picking_type_id.use_existing_lots or move.state == 'done' or move.origin_returned_move_id.id)
+            move.show_lots_text = move.has_tracking != 'none'\
+                and move.picking_type_id.use_create_lots\
+                and not move.picking_type_id.use_existing_lots \
+                and move.state != 'done' \
+                and not move.origin_returned_move_id.id
 
     @api.constrains('product_uom')
     def _check_uom(self):
@@ -643,7 +655,7 @@ Please change the quantity done or the rounding precision of your unit of measur
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if vals.get('quantity_done') and 'lot_ids' in vals:
+            if (vals.get('quantity_done') or vals.get('move_line_ids')) and 'lot_ids' in vals:
                 vals.pop('lot_ids')
             picking_id = self.env['stock.picking'].browse(vals.get('picking_id'))
             if picking_id and picking_id.immediate_transfer and not vals.get('qty_done'):
@@ -787,14 +799,11 @@ Please change the quantity done or the rounding precision of your unit of measur
         # reserved move lines. We do this by displaying `move_line_nosuggest_ids`. We use
         # different views to display one field or another so that the webclient doesn't have to
         # fetch both.
-        if self.show_reserved:
-            view = self.env.ref('stock.view_stock_move_operations')
+        if self.from_immediate_transfer:
+            view = self.env.ref('stock.view_stock_move_operations_immediate')
         else:
-            view = self.env.ref('stock.view_stock_move_nosuggest_operations')
+            view = self.env.ref('stock.view_stock_move_operations')
 
-        if self.product_id.tracking == "serial" and self.state == "assigned":
-            self.next_serial = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
-        quant_mode = self.picking_type_id.code != 'incoming' and self.product_id.detailed_type == 'product'
         return {
             'name': _('Detailed Operations'),
             'type': 'ir.actions.act_window',
@@ -806,13 +815,6 @@ Please change the quantity done or the rounding precision of your unit of measur
             'res_id': self.id,
             'context': dict(
                 self.env.context,
-                show_owner=not quant_mode,
-                show_quant=quant_mode,
-                show_lots_m2o=not quant_mode and self.has_tracking != 'none' and (self.picking_type_id.use_existing_lots or self.state == 'done' or self.origin_returned_move_id.id),  # able to create lots, whatever the value of ` use_create_lots`.
-                show_lots_text=self.has_tracking != 'none' and self.picking_type_id.use_create_lots and not self.picking_type_id.use_existing_lots and self.state != 'done' and not self.origin_returned_move_id.id,
-                show_destination_location=not quant_mode,
-                show_package=not quant_mode,
-                show_reserved_quantity=self.state != 'done' and quant_mode
             ),
         }
 
@@ -1820,7 +1822,7 @@ Please change the quantity done or the rounding precision of your unit of measur
             new_push_moves._action_confirm()
 
     def _action_done(self, cancel_backorder=False):
-        moves = self.filtered(lambda move: move.state == 'draft')._action_confirm()  # MRP allows scrapping draft moves
+        moves = self.filtered(lambda move: move.state == 'draft' or move.state == 'assigned' and move.from_immediate_transfer)._action_confirm()  # MRP allows scrapping draft moves
         moves = (self | moves).exists().filtered(lambda x: x.state not in ('done', 'cancel'))
         moves_ids_todo = OrderedSet()
 
@@ -1931,7 +1933,8 @@ Please change the quantity done or the rounding precision of your unit of measur
             # we restrict the split of a draft move because if not confirmed yet, it may be replaced by several other moves in
             # case of phantom bom (with mrp module). And we don't want to deal with this complexity by copying the product that will explode.
             raise UserError(_('You cannot split a draft move. It needs to be confirmed first.'))
-        if float_is_zero(qty, precision_rounding=self.product_id.uom_id.rounding) or self.product_qty <= qty:
+        # exclude immediate transfer in case we want to add a move line in a wave picking
+        if float_is_zero(qty, precision_rounding=self.product_id.uom_id.rounding) or self.product_qty <= qty and not self.from_immediate_transfer:
             return []
 
         decimal_precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
@@ -1957,7 +1960,7 @@ Please change the quantity done or the rounding precision of your unit of measur
         # Update the original `product_qty` of the move. Use the general product's decimal
         # precision and not the move's UOM to handle case where the `quantity_done` is not
         # compatible with the move's UOM.
-        new_product_qty = self.product_id.uom_id._compute_quantity(self.product_qty - qty, self.product_uom, round=False)
+        new_product_qty = self.product_id.uom_id._compute_quantity(max(0, self.product_qty - qty), self.product_uom, round=False)
         new_product_qty = float_round(new_product_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure'))
         self.with_context(do_not_unreserve=True).write({'product_uom_qty': new_product_qty})
         return new_move_vals
