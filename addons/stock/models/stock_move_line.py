@@ -895,6 +895,7 @@ class StockMoveLine(models.Model):
             'restrict_partner_id': self.picking_id.owner_id.id,
             'company_id': self.picking_id.company_id.id,
             'partner_id': self.picking_id.partner_id.id,
+            'package_level_id': self.package_level_id.id,
         }
 
     def _copy_quant_info(self, vals):
