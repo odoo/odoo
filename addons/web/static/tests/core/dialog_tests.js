@@ -6,7 +6,15 @@ import { uiService } from "@web/core/ui/ui_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { Dialog } from "@web/core/dialog/dialog";
 import { makeTestEnv } from "../helpers/mock_env";
-import { click, destroy, getFixture, mount, triggerEvent, dragAndDrop } from "../helpers/utils";
+import {
+    click,
+    destroy,
+    getFixture,
+    mount,
+    triggerEvent,
+    triggerHotkey,
+    dragAndDrop,
+} from "../helpers/utils";
 import { makeFakeDialogService } from "../helpers/mock_services";
 
 import { Component, useState, onMounted, xml } from "@odoo/owl";
@@ -69,6 +77,31 @@ QUnit.module("Components", (hooks) => {
             "the footer is rendered with a single button 'Ok' by default"
         );
         assert.strictEqual(target.querySelector("footer button").textContent, "Ok");
+    });
+
+    QUnit.test("hotkeys work on dialogs", async function (assert) {
+        class Parent extends Component {}
+        Parent.components = { Dialog };
+        Parent.template = xml`
+            <Dialog title="'Wow(l) Effect'">
+                Hello!
+            </Dialog>
+            `;
+
+        const env = await makeDialogTestEnv();
+        env.dialogData.close = () => assert.step("close");
+        parent = await mount(Parent, target, { env });
+        assert.strictEqual(
+            target.querySelector("header .modal-title").textContent,
+            "Wow(l) Effect"
+        );
+        assert.strictEqual(target.querySelector("footer button").textContent, "Ok");
+        // Same effect as clicking on the x button
+        triggerHotkey("escape");
+        assert.verifySteps(["close"]);
+        // Same effect as clicking on the Ok button
+        triggerHotkey("control+enter");
+        assert.verifySteps(["close"]);
     });
 
     QUnit.test("simple rendering with two dialogs", async function (assert) {
