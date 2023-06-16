@@ -117,7 +117,7 @@ class ProjectTaskType(models.Model):
             while next_replacement_stage and next_replacement_stage['seq'] < stage['seq']:
                 replacement_stage_id = next_replacement_stage['id']
                 next_replacement_stage = remaining_stages_dict.pop() if len(remaining_stages_dict) else False
-            self.env['project.task.stage.personal'].search([('stage_id', '=', stage['id'])]).stage_id = replacement_stage_id
+            self.env['project.task'].with_context({'active_test': False}).search([('personal_stage_type_ids', 'in', [stage['id']])]).personal_stage_type_id = replacement_stage_id #with_user needed ????
 
     def toggle_active(self):
         res = super().toggle_active()
