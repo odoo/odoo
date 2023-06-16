@@ -324,6 +324,12 @@ class HrEmployeePrivate(models.Model):
             if employee.pin and not employee.pin.isdigit():
                 raise ValidationError(_("The PIN must be a sequence of digits."))
 
+    @api.constrains('ssnid')
+    def _check_ssnid(self):
+        # By default, an Social Security Number is always valid, but each localization
+        # may want to add its own constraints
+        pass
+
     @api.onchange('user_id')
     def _onchange_user(self):
         if self.user_id:
