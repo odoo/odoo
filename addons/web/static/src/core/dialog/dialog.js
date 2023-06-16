@@ -37,6 +37,22 @@ export class Dialog extends Component {
         useActiveElement("modalRef");
         this.data = useState(this.env.dialogData);
         useHotkey("escape", () => this.onEscape());
+        useHotkey(
+            "control+enter",
+            () => {
+                const btns = document.querySelectorAll(
+                    ".o_dialog:not(.o_inactive_modal) .modal-footer button"
+                );
+                const firstVisibleBtn = Array.from(btns).find((btn) => {
+                    const styles = getComputedStyle(btn);
+                    return styles.display !== "none";
+                });
+                if (firstVisibleBtn) {
+                    firstVisibleBtn.click();
+                }
+            },
+            { bypassEditableProtection: true }
+        );
         this.id = `dialog_${this.data.id}`;
         useChildSubEnv({ inDialog: true, dialogId: this.id, closeDialog: () => this.data.close() });
         this.position = useState({ left: 0, top: 0 });
@@ -84,7 +100,11 @@ Dialog.props = {
     fullscreen: { type: Boolean, optional: true },
     footer: { type: Boolean, optional: true },
     header: { type: Boolean, optional: true },
-    size: { type: String, optional: true, validate: (s) => ["sm", "md", "lg", "xl", "fs"].includes(s) },
+    size: {
+        type: String,
+        optional: true,
+        validate: (s) => ["sm", "md", "lg", "xl", "fs"].includes(s),
+    },
     technical: { type: Boolean, optional: true },
     title: { type: String, optional: true },
     modalRef: { type: Function, optional: true },
