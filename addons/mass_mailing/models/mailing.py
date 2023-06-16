@@ -46,6 +46,7 @@ class MassMailing(models.Model):
     ]
     _order = 'calendar_date DESC'
     _rec_name = "subject"
+    _systray_view = 'list'
 
     @api.model
     def default_get(self, fields_list):
