@@ -152,8 +152,8 @@ class Task(models.Model):
         index=True, tracking=True, check_company=True, change_default=True)
     project_root_id = fields.Many2one('project.project', compute='_compute_project_root_id', search='_search_project_root_id', recursive=True)
     task_properties = fields.Properties('Properties', definition='project_id.task_properties_definition', copy=True)
-    planned_hours = fields.Float("Allocated Time", tracking=True)
-    subtask_planned_hours = fields.Float("Sub-tasks Planned Hours", compute='_compute_subtask_planned_hours',
+    hours_allocated = fields.Float("Allocated Time", tracking=True)
+    subtask_allocated_hours = fields.Float("Sub-tasks Allocated Time", compute='_compute_subtask_allocated_hours',
         help="Sum of the hours allocated for all the sub-tasks (and their own sub-tasks) linked to this task. Usually less than or equal to the allocated hours of this task.")
     # Tracking of this field is done in the write function
     user_ids = fields.Many2many('res.users', relation='project_task_user_rel', column1='task_id', column2='user_id', string='Assignees', context={'active_test': False}, tracking=True)
@@ -586,10 +586,10 @@ class Task(models.Model):
             task.access_warning = _(
                 "The task cannot be shared with the recipient(s) because the privacy of the project is too restricted. Set the privacy of the project to 'Visible by following customers' in order to make it accessible by the recipient(s).")
 
-    @api.depends('child_ids.planned_hours')
-    def _compute_subtask_planned_hours(self):
+    @api.depends('child_ids.hours_allocated')
+    def _compute_subtask_allocated_hours(self):
         for task in self:
-            task.subtask_planned_hours = sum(child_task.planned_hours + child_task.subtask_planned_hours for child_task in task.child_ids)
+            task.subtask_allocated_hours = sum(child_task.hours_allocated + child_task.subtask_allocated_hours for child_task in task.child_ids)
 
     @api.depends('child_ids')
     def _compute_subtask_count(self):
@@ -1353,7 +1353,7 @@ class Task(models.Model):
 
         defaults = {
             'name': msg.get('subject') or _("No Subject"),
-            'planned_hours': 0.0,
+            'hours_allocated': 0.0,
             'partner_id': msg.get('author_id'),
         }
         defaults.update(custom_values)

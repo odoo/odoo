@@ -165,7 +165,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
             'user_ids': self.user_projectuser,
             'project_id': self.project_pigs.id,
             'partner_id': self.partner_2.id,
-            'planned_hours': 12,
+            'hours_allocated': 12,
         })
 
         another_parent_task = Task.create({
@@ -173,7 +173,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
             'user_ids': self.user_projectuser,
             'project_id': self.project_pigs.id,
             'partner_id': self.partner_3.id,
-            'planned_hours': 0,
+            'hours_allocated': 0,
         })
 
         # remove the partner_id of the 'goats' project
@@ -186,7 +186,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         # the child task 1 is linked to a project without partner_id (goats project)
         child_task_1 = Task.with_context(default_project_id=self.project_goats.id, default_parent_id=parent_task.id).create({
             'name': 'Task Child with project',
-            'planned_hours': 3,
+            'hours_allocated': 3,
         })
 
         # the child task 2 is linked to a project with a partner_id (pigs project)
@@ -194,7 +194,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
             'name': 'Task Child without project',
             'parent_id': parent_task.id,
             'project_id': self.project_pigs.id,
-            'planned_hours': 5,
+            'hours_allocated': 5,
         })
 
         self.assertEqual(
@@ -210,7 +210,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
             "Parent task should have 2 children")
 
         self.assertEqual(
-            parent_task.subtask_planned_hours, 8,
+            parent_task.subtask_allocated_hours, 8,
             "Planned hours of subtask should impact parent task")
 
         # change the parent of a subtask without a project partner_id

@@ -501,7 +501,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         task = Task.with_context(default_project_id=self.project_template.id).create({
             'name': 'first task',
             'partner_id': self.partner_b.id,
-            'planned_hours': 10,
+            'hours_allocated': 10,
             'sale_line_id': self.so.order_line[0].id
         })
 

@@ -3,7 +3,7 @@
 import { GraphModel } from "@web/views/graph/graph_model";
 
 const FIELDS = [
-    'unit_amount', 'effective_hours', 'planned_hours', 'remaining_hours', 'total_hours_spent', 'subtask_effective_hours',
+    'unit_amount', 'effective_hours', 'hours_allocated', 'remaining_hours', 'total_hours_spent', 'subtask_effective_hours',
     'overtime', 'number_hours', 'difference', 'timesheet_unit_amount'
 ];
 

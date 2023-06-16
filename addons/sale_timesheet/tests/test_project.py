@@ -165,7 +165,7 @@ class TestProject(TestCommonSaleTimesheet):
         self.env['project.task'].create({
             'name': 'task A',
             'project_id': self.project_global.id,
-            'planned_hours': 10,
+            'hours_allocated': 10,
             'timesheet_ids': [
                 Command.create({
                     'name': '/',

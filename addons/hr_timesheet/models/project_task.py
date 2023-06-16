@@ -11,12 +11,12 @@ PROJECT_TASK_READABLE_FIELDS = {
     'analytic_account_active',
     'effective_hours',
     'encode_uom_in_days',
-    'planned_hours',
+    'hours_allocated',
     'progress',
     'overtime',
     'remaining_hours',
     'subtask_effective_hours',
-    'subtask_planned_hours',
+    'subtask_allocated_hours',
     'timesheet_ids',
     'total_hours_spent',
 }
@@ -72,22 +72,22 @@ class Task(models.Model):
         for task in self:
             task.effective_hours = round(timesheets_per_task.get(task.id, 0.0), 2)
 
-    @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
+    @api.depends('effective_hours', 'subtask_effective_hours', 'hours_allocated')
     def _compute_progress_hours(self):
         for task in self:
-            if (task.planned_hours > 0.0):
+            if (task.hours_allocated > 0.0):
                 task_total_hours = task.effective_hours + task.subtask_effective_hours
-                task.overtime = max(task_total_hours - task.planned_hours, 0)
-                task.progress = round(100.0 * task_total_hours / task.planned_hours, 2)
+                task.overtime = max(task_total_hours - task.hours_allocated, 0)
+                task.progress = round(100.0 * task_total_hours / task.hours_allocated, 2)
             else:
                 task.progress = 0.0
                 task.overtime = 0
 
-    @api.depends('planned_hours', 'remaining_hours')
+    @api.depends('hours_allocated', 'remaining_hours')
     def _compute_remaining_hours_percentage(self):
         for task in self:
-            if task.planned_hours > 0.0:
-                task.remaining_hours_percentage = task.remaining_hours / task.planned_hours
+            if task.hours_allocated > 0.0:
+                task.remaining_hours_percentage = task.remaining_hours / task.hours_allocated
             else:
                 task.remaining_hours_percentage = 0.0
 
@@ -98,15 +98,15 @@ class Task(models.Model):
             SELECT id
               FROM {self._table}
              WHERE remaining_hours > 0
-               AND planned_hours > 0
-               AND remaining_hours / planned_hours {operator} %s
+               AND hours_allocated > 0
+               AND remaining_hours / hours_allocated {operator} %s
             """
         return [('id', 'inselect', (query, (value,)))]
 
-    @api.depends('effective_hours', 'subtask_effective_hours', 'planned_hours')
+    @api.depends('effective_hours', 'subtask_effective_hours', 'hours_allocated')
     def _compute_remaining_hours(self):
         for task in self:
-            task.remaining_hours = task.planned_hours - task.effective_hours - task.subtask_effective_hours
+            task.remaining_hours = task.hours_allocated - task.effective_hours - task.subtask_effective_hours
 
     @api.depends('effective_hours', 'subtask_effective_hours')
     def _compute_total_hours_spent(self):
@@ -121,23 +121,23 @@ class Task(models.Model):
     def _get_group_pattern(self):
         return {
             **super()._get_group_pattern(),
-            'planned_hours': r'\s(\d+(?:\.\d+)?)[hH]',
+            'hours_allocated': r'\s(\d+(?:\.\d+)?)[hH]',
         }
 
     def _get_groups_patterns(self):
-        return ['(?:%s)*' % self._get_group_pattern()['planned_hours']] + super()._get_groups_patterns()
+        return ['(?:%s)*' % self._get_group_pattern()['hours_allocated']] + super()._get_groups_patterns()
 
     def _get_cannot_start_with_patterns(self):
         return super()._get_cannot_start_with_patterns() + [r'(?!\d+(?:\.\d+)?(?:h|H))']
 
-    def _extract_planned_hours(self):
-        planned_hours_group = self._get_group_pattern()['planned_hours']
+    def _extract_allocated_hours(self):
+        allocated_hours_group = self._get_group_pattern()['hours_allocated']
         if self.allow_timesheets:
-            self.planned_hours = sum(float(num) for num in re.findall(planned_hours_group, self.display_name))
-            self.display_name, dummy = re.subn(planned_hours_group, '', self.display_name)
+            self.hours_allocated = sum(float(num) for num in re.findall(allocated_hours_group, self.display_name))
+            self.display_name, dummy = re.subn(allocated_hours_group, '', self.display_name)
 
     def _get_groups(self):
-        return [lambda task: task._extract_planned_hours()] + super()._get_groups()
+        return [lambda task: task._extract_allocated_hours()] + super()._get_groups()
 
     def action_view_subtask_timesheet(self):
         self.ensure_one()
@@ -185,10 +185,10 @@ class Task(models.Model):
         if self.env.context.get('hr_timesheet_display_remaining_hours'):
             name_mapping = dict(super().name_get())
             for task in self:
-                if task.allow_timesheets and task.planned_hours > 0 and task.encode_uom_in_days:
+                if task.allow_timesheets and task.hours_allocated > 0 and task.encode_uom_in_days:
                     days_left = _("(%s days remaining)") % task._convert_hours_to_days(task.remaining_hours)
                     name_mapping[task.id] = name_mapping.get(task.id, '') + u"\u00A0" + days_left
-                elif task.allow_timesheets and task.planned_hours > 0:
+                elif task.allow_timesheets and task.hours_allocated > 0:
                     hours, mins = (str(int(duration)).rjust(2, '0') for duration in divmod(abs(task.remaining_hours) * 60, 60))
                     hours_left = _(
                         "(%(sign)s%(hours)s:%(minutes)s remaining)",

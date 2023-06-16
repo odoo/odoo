@@ -81,7 +81,7 @@ class SaleOrderLine(models.Model):
             for line in self:
                 if line.task_id and line.product_id.type == 'service':
                     planned_hours = line._convert_qty_company_hours(line.task_id.company_id)
-                    line.task_id.write({'planned_hours': planned_hours})
+                    line.task_id.write({'hours_allocated': planned_hours})
         return result
 
     ###########################################
@@ -170,7 +170,7 @@ class SaleOrderLine(models.Model):
         return {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
             'analytic_account_id': project.analytic_account_id.id,
-            'planned_hours': planned_hours,
+            'hours_allocated': planned_hours,
             'partner_id': self.order_id.partner_id.id,
             'description': description,
             'project_id': project.id,

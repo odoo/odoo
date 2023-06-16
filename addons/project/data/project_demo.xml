@@ -258,7 +258,7 @@
         <!-- Project 1 Tasks -->
         <record id="project_1_task_1" model="project.task">
             <field name="sequence">20</field>
-            <field name="planned_hours">20.0</field>
+            <field name="hours_allocated">20.0</field>
             <field name="user_ids" eval="False"/>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Office planning</field>
@@ -269,7 +269,7 @@
         </record>
 
         <record id="project_1_task_2" model="project.task">
-            <field name="planned_hours" eval="32.0"/>
+            <field name="hours_allocated" eval="32.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_1"/>
@@ -316,7 +316,7 @@
         </record>
 
         <record id="project_1_task_3" model="project.task">
-            <field name="planned_hours" eval="10.0"/>
+            <field name="hours_allocated" eval="10.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_1"/>
@@ -367,7 +367,7 @@
 
         <record id="project_1_task_4" model="project.task">
             <field name="sequence">17</field>
-            <field name="planned_hours">8.0</field>
+            <field name="hours_allocated">8.0</field>
             <field name="stage_id" ref="project_stage_2"/>
             <field name="user_ids" eval="False"/>
             <field name="priority">1</field>
@@ -416,7 +416,7 @@
         </record>
 
         <record id="project_1_task_5" model="project.task">
-            <field name="planned_hours" eval="15.0"/>
+            <field name="hours_allocated" eval="15.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_1"/>
@@ -457,7 +457,7 @@
         </record>
 
         <record id="project_1_task_6" model="project.task">
-            <field name="planned_hours" eval="76.0"/>
+            <field name="hours_allocated" eval="76.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_1"/>
@@ -500,7 +500,7 @@
         </record>
 
         <record id="project_1_task_7" model="project.task">
-            <field name="planned_hours" eval="24.0"/>
+            <field name="hours_allocated" eval="24.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_1"/>
@@ -531,7 +531,7 @@
         </record>
 
         <record id="project_1_task_8" model="project.task">
-            <field name="planned_hours" eval="60.0"/>
+            <field name="hours_allocated" eval="60.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_1"/>
@@ -584,7 +584,7 @@
         </record>
 
         <record id="project_1_task_9" model="project.task">
-            <field name="planned_hours" eval="40.0"/>
+            <field name="hours_allocated" eval="40.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_1"/>
@@ -640,7 +640,7 @@
         </record>
         <record id="project_1_task_10" model="project.task">
             <field name="sequence">20</field>
-            <field name="planned_hours">20.0</field>
+            <field name="hours_allocated">20.0</field>
             <field name="user_ids" eval="False"/>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Customer review</field>
@@ -652,7 +652,7 @@
         </record>
         <record id="project_1_task_11" model="project.task">
             <field name="sequence">20</field>
-            <field name="planned_hours">0.25</field>
+            <field name="hours_allocated">0.25</field>
             <field name="user_ids" eval="False"/>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Daily stand-up meeting - Send minutes</field>
@@ -663,7 +663,7 @@
         </record>
         <record id="project_1_task_12" model="project.task">
             <field name="sequence">20</field>
-            <field name="planned_hours">8.0</field>
+            <field name="hours_allocated">8.0</field>
             <field name="user_ids" eval="False"/>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="parent_id" ref="project.project_1_task_10"/>
@@ -672,7 +672,7 @@
         </record>
         <record id="project_1_task_13" model="project.task">
             <field name="sequence">10</field>
-            <field name="planned_hours">2.0</field>
+            <field name="hours_allocated">2.0</field>
             <field name="user_ids" eval="False"/>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="parent_id" ref="project.project_1_task_12"/>
@@ -681,7 +681,7 @@
         </record>
         <record id="project_1_task_14" model="project.task">
             <field name="sequence">20</field>
-            <field name="planned_hours">2.0</field>
+            <field name="hours_allocated">2.0</field>
             <field name="user_ids" eval="False"/>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="parent_id" ref="project.project_1_task_12"/>
@@ -690,7 +690,7 @@
         </record>
         <record id="project_1_task_15" model="project.task">
             <field name="sequence">30</field>
-            <field name="planned_hours">2.0</field>
+            <field name="hours_allocated">2.0</field>
             <field name="user_ids" eval="False"/>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="parent_id" ref="project.project_1_task_12"/>
@@ -698,7 +698,7 @@
             <field name="stage_id" ref="project_stage_1"/>
         </record>
         <record id="project_1_task_16" model="project.task">
-            <field name="planned_hours" eval="24.0"/>
+            <field name="hours_allocated" eval="24.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Chair Cabinet</field>
@@ -711,7 +711,7 @@
         <record id="project_1_task_17" model="project.task">
             <field name="name">Plywood requirement</field>
             <field name="sequence">40</field>
-            <field name="planned_hours">2.0</field>
+            <field name="hours_allocated">2.0</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="parent_id" ref="project.project_1_task_16"/>
             <field name="stage_id" ref="project_stage_2"/>
@@ -719,7 +719,7 @@
 
         <!-- Project 2 Tasks-->
         <record id="project_2_task_1" model="project.task">
-            <field name="planned_hours">12.0</field>
+            <field name="hours_allocated">12.0</field>
             <field name="stage_id" ref="project_stage_2"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin')), Command.link(ref('base.user_demo'))]"/>
             <field name="priority">0</field>
@@ -767,7 +767,7 @@
         </record>
 
         <record id="project_2_task_2" model="project.task">
-            <field name="planned_hours">24.0</field>
+            <field name="hours_allocated">24.0</field>
             <field name="stage_id" ref="project_stage_2"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="project_id" ref="project.project_project_2"/>
@@ -815,7 +815,7 @@
         </record>
 
         <record id="project_2_task_3" model="project.task">
-            <field name="planned_hours" eval="40.0"/>
+            <field name="hours_allocated" eval="40.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin')), Command.link(ref('base.user_demo'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_2"/>
@@ -877,7 +877,7 @@ Send it ASAP, its urgent.</field>
         </record>
 
         <record id="project_2_task_4" model="project.task">
-            <field name="planned_hours" eval="16.0"/>
+            <field name="hours_allocated" eval="16.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_2"/>
@@ -912,7 +912,7 @@ Send it ASAP, its urgent.</field>
         </record>
 
         <record id="project_2_task_5" model="project.task">
-            <field name="planned_hours" eval="38.0"/>
+            <field name="hours_allocated" eval="38.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_2"/>
@@ -944,7 +944,7 @@ Send it ASAP, its urgent.</field>
         </record>
 
         <record id="project_2_task_6" model="project.task">
-            <field name="planned_hours">42.0</field>
+            <field name="hours_allocated">42.0</field>
             <field name="user_ids" eval="False"/>
             <field name="stage_id" ref="project_stage_1"/>
             <field name="project_id" ref="project.project_project_2"/>
@@ -974,7 +974,7 @@ Send it ASAP, its urgent.</field>
         </record>
 
         <record id="project_2_task_7" model="project.task">
-            <field name="planned_hours" eval="22.0"/>
+            <field name="hours_allocated" eval="22.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin')), Command.link(ref('base.user_demo'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_2"/>
@@ -1024,7 +1024,7 @@ Send it ASAP, its urgent.</field>
         </record>
 
         <record id="project_2_task_8" model="project.task">
-            <field name="planned_hours">14.0</field>
+            <field name="hours_allocated">14.0</field>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin')), Command.link(ref('base.user_demo'))]"/>
             <field name="stage_id" ref="project_stage_0"/>
             <field name="project_id" ref="project.project_project_2"/>
@@ -1056,7 +1056,7 @@ Send it ASAP, its urgent.</field>
         </record>
 
         <record id="project_2_task_9" model="project.task">
-            <field name="planned_hours" eval="18.0"/>
+            <field name="hours_allocated" eval="18.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin')), Command.link(ref('base.user_demo'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_2"/>
@@ -1071,7 +1071,7 @@ Send it ASAP, its urgent.</field>
 
         <record id="project_2_task_10" model="project.task">
             <field name="sequence">20</field>
-            <field name="planned_hours">35.0</field>
+            <field name="hours_allocated">35.0</field>
             <field name="user_ids" eval="False"/>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">Unit Testing</field>
@@ -1084,7 +1084,7 @@ Send it ASAP, its urgent.</field>
         </record>
 
         <record id="project_2_task_11" model="project.task">
-            <field name="planned_hours" eval="20.0"/>
+            <field name="hours_allocated" eval="20.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="stage_id" ref="project_stage_3"/>
             <field name="priority">0</field>
@@ -1096,7 +1096,7 @@ Send it ASAP, its urgent.</field>
 
         <!-- Project 3 Tasks -->
         <record id="project_3_task_1" model="project.task">
-            <field name="planned_hours" eval="40.0"/>
+            <field name="hours_allocated" eval="40.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_3"/>
@@ -1106,7 +1106,7 @@ Send it ASAP, its urgent.</field>
         </record>
 
         <record id="project_3_task_2" model="project.task">
-            <field name="planned_hours" eval="10.0"/>
+            <field name="hours_allocated" eval="10.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="priority">0</field>
             <field name="project_id" ref="project.project_project_3"/>
@@ -1143,7 +1143,7 @@ Send it ASAP, its urgent.</field>
         </record>
 
         <record id="project_3_task_3" model="project.task">
-            <field name="planned_hours" eval="24.0"/>
+            <field name="hours_allocated" eval="24.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_3"/>
@@ -1158,7 +1158,7 @@ Send it ASAP, its urgent.</field>
         </record>
 
         <record id="project_3_task_4" model="project.task">
-            <field name="planned_hours" eval="76.0"/>
+            <field name="hours_allocated" eval="76.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_admin'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_3"/>
@@ -1167,7 +1167,7 @@ Send it ASAP, its urgent.</field>
         </record>
 
         <record id="project_3_task_5" model="project.task">
-            <field name="planned_hours" eval="40.0"/>
+            <field name="hours_allocated" eval="40.0"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
             <field name="priority">1</field>
             <field name="project_id" ref="project.project_project_3"/>

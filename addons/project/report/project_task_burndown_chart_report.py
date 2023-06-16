@@ -12,7 +12,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
     _auto = False
     _order = 'date'
 
-    planned_hours = fields.Float(string='Allocated Hours', readonly=True)
+    hours_allocated = fields.Float(string='Allocated Time', readonly=True)
     date = fields.Datetime('Date', readonly=True)
     date_assign = fields.Datetime(string='Assignment Date', readonly=True)
     date_deadline = fields.Date(string='Deadline', readonly=True)
@@ -94,7 +94,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
               ),
               all_stage_task_moves AS (
                  SELECT count(*) as __count,
-                        sum(planned_hours) as planned_hours,
+                        sum(hours_allocated) as hours_allocated,
                         project_id,
                         %(date_begin)s as date_begin,
                         %(date_end)s as date_end,
@@ -106,14 +106,14 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                             -- * The stage at creation for those for which we do not have any mail message and a
                             --   mail tracking value on project.task stage_id.
                             SELECT DISTINCT task_id,
-                                   planned_hours,
+                                   hours_allocated,
                                    project_id,
                                    %(date_begin)s as date_begin,
                                    %(date_end)s as date_end,
                                    first_value(stage_id) OVER task_date_begin_window AS stage_id
                               FROM (
                                      SELECT pt.id as task_id,
-                                            pt.planned_hours,
+                                            pt.hours_allocated,
                                             pt.project_id,
                                             COALESCE(LAG(mm.date) OVER (PARTITION BY mm.res_id ORDER BY mm.id), pt.create_date) as date_begin,
                                             CASE WHEN mtv.id IS NOT NULL THEN mm.date
@@ -134,7 +134,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                                       WHERE pt.active=true AND pt.id IN (SELECT id from task_ids)
                                    ) task_stage_id_history
                           GROUP BY task_id,
-                                   planned_hours,
+                                   hours_allocated,
                                    project_id,
                                    %(date_begin)s,
                                    %(date_end)s,
@@ -145,7 +145,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                             -- once (=those for which we have at least a mail message and a mail tracking value
                             -- on project.task stage_id).
                             SELECT pt.id as task_id,
-                                   pt.planned_hours,
+                                   pt.hours_allocated,
                                    pt.project_id,
                                    last_stage_id_change_mail_message.date as date_begin,
                                    (now() at time zone 'utc')::date + INTERVAL '%(interval)s' as date_end,
@@ -165,14 +165,14 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
                                    ) AS last_stage_id_change_mail_message ON TRUE
                              WHERE pt.active=true AND pt.id IN (SELECT id from task_ids)
                         ) AS project_task_burndown_chart
-               GROUP BY planned_hours,
+               GROUP BY hours_allocated,
                         project_id,
                         %(date_begin)s,
                         %(date_end)s,
                         stage_id
               )
               SELECT (project_id*10^13 + stage_id*10^7 + to_char(date, 'YYMMDD')::integer)::bigint as id,
-                     planned_hours,
+                     hours_allocated,
                      project_id,
                      stage_id,
                      date,
