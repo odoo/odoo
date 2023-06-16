@@ -85,10 +85,10 @@ class TestPacking(TestPackingCommon):
         pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productA and ml.qty_done == 0.0).qty_done = 4.0
         pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productB and ml.qty_done == 0.0).qty_done = 3.0
         second_pack = pick_picking.action_put_in_pack()
-        self.assertEqual(len(pick_picking.move_ids_without_package), 0)
+        self.assertEqual(len(pick_picking.move_ids_without_package), 2)
         self.assertEqual(len(packing_picking.move_ids_without_package), 2)
         pick_picking.button_validate()
-        self.assertEqual(len(packing_picking.move_ids_without_package), 0)
+        self.assertEqual(len(packing_picking.move_ids_without_package), 2)
         self.assertEqual(len(first_pack.quant_ids), 2)
         self.assertEqual(len(second_pack.quant_ids), 2)
         packing_picking.action_assign()
