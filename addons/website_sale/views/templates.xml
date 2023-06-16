@@ -935,7 +935,7 @@
                             <t t-call="website_sale.shop_product_images"/>
                         </div>
                         <div id="product_details" t-attf-class="{{'row m-0 p-0' if o_product_width_fw else 'offset-xl-1 col-lg-' + str(image_cols[1])}} mt-lg-4">
-                            <div t-attf-class="{{'sticky-lg-top' if not o_product_width_fw and website.product_page_image_layout == 'grid' else ''}}">
+                            <div t-attf-class="{{'sticky-top' if not o_product_width_fw and website.product_page_image_layout == 'grid' else 'row'}}">
                                 <div t-attf-class="d-flex {{'gap-3' if o_product_width_fw else ''}}">
                                     <div t-attf-class="{{'flex-grow-1'if not o_product_width_fw else ''}} mb-3">
                                         <h1 itemprop="name" t-field="product.name">Product Name</h1>
@@ -955,79 +955,80 @@
                                 <div id="o_product_description_div" t-attf-class="{{'col-lg-6' if o_product_width_fw else ''}} d-flex flex-column mb-2">
                                     <t t-set="base_url" t-value="product.get_base_url()"/>
 
-                                <span itemprop="url" style="display:none;" t-out="base_url + product.website_url"/>
-                                <span itemprop="image" style="display:none;" t-out="base_url + website.image_url(product, 'image_1920')" />
-                                <p t-field="product.description_sale" class="text-muted" placeholder="A short description that will also appear on documents."/>
-                            </div>
-                            <form t-attf-class="{{'col-lg-6 offset-xl-1 col-xl-5' if o_product_width_fw else ''}}" t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
-                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
-                                <div class="js_product js_main_product">
-                                    <t t-placeholder="select">
-                                        <input type="hidden" class="product_id" name="product_id" t-att-value="product_variant.id" />
-                                        <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id" />
-                                        <input t-if="product.public_categ_ids.ids" type="hidden" class="product_category_id" name="product_category_id" t-att-value="product.public_categ_ids.ids[0]" />
-                                        <input t-if="product.product_tag_ids.ids" type="hidden" class="product_tag_id" name="product_tag_id" t-att-value="product.product_tag_ids.ids[0]" />
-                                        <t t-if="combination" t-call="website_sale.variants">
-                                            <t t-set="ul_class" t-valuef="flex-column" />
-                                            <t t-set="parent_combination" t-value="None" />
+                                    <span itemprop="url" style="display:none;" t-out="base_url + product.website_url"/>
+                                    <span itemprop="image" style="display:none;" t-out="base_url + website.image_url(product, 'image_1920')" />
+                                    <p t-field="product.description_sale" class="text-muted" placeholder="A short description that will also appear on documents."/>
+                                </div>
+                                <form t-attf-class="{{'col-lg-6 offset-xl-1 col-xl-5' if o_product_width_fw else ''}}" t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
+                                    <div class="js_product js_main_product">
+                                        <t t-placeholder="select">
+                                            <input type="hidden" class="product_id" name="product_id" t-att-value="product_variant.id" />
+                                            <input type="hidden" class="product_template_id" name="product_template_id" t-att-value="product.id" />
+                                            <input t-if="product.public_categ_ids.ids" type="hidden" class="product_category_id" name="product_category_id" t-att-value="product.public_categ_ids.ids[0]" />
+                                            <input t-if="product.product_tag_ids.ids" type="hidden" class="product_tag_id" name="product_tag_id" t-att-value="product.product_tag_ids.ids[0]" />
+                                            <t t-if="combination" t-call="website_sale.variants">
+                                                <t t-set="ul_class" t-valuef="flex-column" />
+                                                <t t-set="parent_combination" t-value="None" />
+                                            </t>
+                                            <t t-else="">
+                                                <ul class="d-none js_add_cart_variants mb-0" t-att-data-attribute_exclusions="{'exclusions: []'}"/>
+                                            </t>
                                         </t>
-                                        <t t-else="">
-                                            <ul class="d-none js_add_cart_variants mb-0" t-att-data-attribute_exclusions="{'exclusions: []'}"/>
-                                        </t>
-                                    </t>
-                                    <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
-                                    <div id="o_wsale_cta_wrapper" class="d-flex flex-wrap align-items-center flex-grow-1 mb-4">
-                                        <t t-set="hasQuantities" t-value="false"/>
-                                        <t t-set="hasBuyNow" t-value="false"/>
+                                        <p t-if="True" class="css_not_available_msg alert alert-warning">This combination does not exist.</p>
+                                        <div id="o_wsale_cta_wrapper" class="d-flex flex-wrap align-items-center flex-grow-1 mb-4">
+                                            <t t-set="hasQuantities" t-value="false"/>
+                                            <t t-set="hasBuyNow" t-value="false"/>
 
-                                        <div id="o_price_container_div" t-attf-class="w-100 me-2 {{'' if combination_info['base_unit_price'] else ''}}">
-                                            <t t-call="website_sale.product_price"/>
-                                            <small t-if="combination_info['base_unit_price']"
-                                                   class="ms-1 me-2 text-muted o_base_unit_price_wrapper d-none" groups="website_sale.group_show_uom_price">
-                                                <t t-call='website_sale.base_unit_price'/>
-                                            </small>
-                                        </div>
-                                        <div id="add_to_cart_wrap" t-attf-class="flex-grow-1 {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}}">
-                                            <a data-animation-selector=".o_wsale_product_images"
-                                                href="#"
-                                                id="add_to_cart"
-                                                role="button"
-                                                t-attf-class="js_check_product btn btn-primary a-submit flex-grow-1 text-nowrap {{'mw-100' if not hasBuyNow and o_product_width == '66_pc' else 'mw-md-50' if not hasBuyNow else ''}}">Add to cart
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <div id="contact_us_wrapper"
-                                         t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}} oe_structure oe_structure_solo #{_div_classes}">
-                                        <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
-                                            <div class="container">
-                                                <a t-att-href="website.contact_us_button_url"
-                                                   class="btn btn-primary btn_cta">Contact Us
+                                            <div id="o_price_container_div" t-attf-class="w-100 me-2 {{'' if combination_info['base_unit_price'] else ''}}">
+                                                <t t-call="website_sale.product_price"/>
+                                                <small t-if="combination_info['base_unit_price']"
+                                                       class="ms-1 me-2 text-muted o_base_unit_price_wrapper d-none" groups="website_sale.group_show_uom_price">
+                                                    <t t-call='website_sale.base_unit_price'/>
+                                                </small>
+                                            </div>
+                                            <div id="add_to_cart_wrap" t-attf-class="flex-grow-1 {{'d-none' if combination_info['prevent_zero_price_sale'] else 'd-inline-flex'}}">
+                                                <a data-animation-selector=".o_wsale_product_images"
+                                                    href="#"
+                                                    id="add_to_cart"
+                                                    role="button"
+                                                    t-attf-class="js_check_product btn btn-primary a-submit flex-grow-1 text-nowrap {{'mw-100' if not hasBuyNow and o_product_width == '66_pc' else 'mw-md-50' if not hasBuyNow else ''}}">Add to cart
                                                 </a>
                                             </div>
-                                        </section>
+                                        </div>
+                                        <div id="contact_us_wrapper"
+                                             t-attf-class="{{'d-flex' if combination_info['prevent_zero_price_sale'] else 'd-none'}} oe_structure oe_structure_solo #{_div_classes}">
+                                            <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
+                                                <div class="container">
+                                                    <a t-att-href="website.contact_us_button_url"
+                                                       class="btn btn-primary btn_cta">Contact Us
+                                                    </a>
+                                                </div>
+                                            </section>
+                                        </div>
                                     </div>
+                                </form>
+                                <p t-elif="not product.active" class="alert alert-warning">This product is no longer available.</p>
+                                <p t-else="" class="alert alert-warning">This product has no valid combination.</p>
+                                <div id="product_attributes_simple">
+                                    <t t-set="single_value_attributes" t-value="product.valid_product_template_attribute_line_ids._prepare_single_value_for_display()"/>
+                                    <table t-attf-class="table table-sm text-muted {{'' if single_value_attributes else 'd-none'}}">
+                                        <t t-foreach="single_value_attributes" t-as="attribute">
+                                            <tr>
+                                                <td>
+                                                    <span t-field="attribute.name"/>:
+                                                    <t t-foreach="single_value_attributes[attribute]" t-as="ptal">
+                                                        <span t-field="ptal.product_template_value_ids._only_active().name"/><t t-if="not ptal_last">, </t>
+                                                    </t>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </table>
                                 </div>
-                            </form>
-                            <p t-elif="not product.active" class="alert alert-warning">This product is no longer available.</p>
-                            <p t-else="" class="alert alert-warning">This product has no valid combination.</p>
-                            <div id="product_attributes_simple">
-                                <t t-set="single_value_attributes" t-value="product.valid_product_template_attribute_line_ids._prepare_single_value_for_display()"/>
-                                <table t-attf-class="table table-sm text-muted {{'' if single_value_attributes else 'd-none'}}">
-                                    <t t-foreach="single_value_attributes" t-as="attribute">
-                                        <tr>
-                                            <td>
-                                                <span t-field="attribute.name"/>:
-                                                <t t-foreach="single_value_attributes[attribute]" t-as="ptal">
-                                                    <span t-field="ptal.product_template_value_ids._only_active().name"/><t t-if="not ptal_last">, </t>
-                                                </t>
-                                            </td>
-                                        </tr>
-                                    </t>
-                                </table>
-                            </div>
-                            <!-- terms and conditions change position according to the image layout -->
-                            <div t-attf-class="{{'d-lg-none' if o_product_width_fw else ''}}">
-                                <t t-call="website_sale.product_custom_text"/>
+                                <!-- terms and conditions change position according to the image layout -->
+                                <div t-attf-class="{{'d-lg-none' if o_product_width_fw else ''}}">
+                                    <t t-call="website_sale.product_custom_text"/>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -2341,7 +2342,7 @@
         <div t-if="product_image._name == 'product.image' and product_image.embed_code" t-att-class="image_classes + ' ratio ratio-16x9'">
             <t t-out="product_image.embed_code"/>
         </div>
-        <div t-else="" t-field="product_image.image_1920" t-att-class="image_classes + ' oe_unmovable'" t-options='{"widget": "image", "preview_image": "image_1024", "class": "oe_unmovable product_detail_img mh-100", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920"}'/>
+        <div t-else="" t-field="product_image.image_1920" t-att-class="image_classes + ' oe_unmovable'" t-options='{"widget": "image", "preview_image": "image_1024", "class":  o_image_classes_img + " oe_unmovable product_detail_img carousel-outer", "alt-field": "name", "zoom": product_image.can_image_1024_be_zoomed and "image_1920"}'/>
     </template>
 
     <!-- Product page images: Carousel -->
@@ -2350,10 +2351,12 @@
         <div id="o-carousel-product" class="carousel slide position-sticky mb-3 overflow-hidden" data-bs-ride="carousel" data-bs-interval="0" t-att-data-name="product_carousel_block_name">
             <div class="o_carousel_product_outer carousel-outer position-relative flex-grow-1">
                 <div class="carousel-inner h-100">
-                    <t t-set="image_classes" t-value="'d-flex align-items-center justify-content-center h-100'"/>
                     <t t-foreach="product_images" t-as="product_image">
                         <div t-attf-class="carousel-item h-100#{' active' if product_image_first else ''}">
-                            <t t-call="website_sale.shop_product_image"/>
+                            <t t-call="website_sale.shop_product_image">
+                                <t t-set="image_classes" t-value="'d-flex align-items-center justify-content-center h-100'"/>
+                                <t t-set="o_image_classes_img" t-value="'o_object_fit_cover w-100' if website.product_page_image_width == '100_pc' else ''"/>
+                            </t>
                         </div>
                     </t>
                 </div>
@@ -2372,7 +2375,7 @@
     <template id="carousel_product_indicators_bottom" inherit_id="website_sale.shop_product_carousel" name="Carousel Product Indicators Bottom">
         <xpath expr="//div[hasclass('o_carousel_product_outer')]" position="after">
             <t t-call="website_sale.carousel_product_indicators">
-                <t t-set="indicators_div_class" t-value="'pt-2 overflow-hidden'"/>
+                <t t-set="indicators_div_class" t-value="'d-flex justify-content-center pt-2 overflow-hidden'"/>
             </t>
         </xpath>
     </template>
@@ -2407,14 +2410,16 @@
         <div id="o-grid-product" class="o_wsale_product_page_grid mb-3" data-name="Product Grid" t-att-data-image_spacing="website.product_page_image_spacing" t-att-data-grid_columns="website.product_page_grid_columns">
             <div class="container">
                 <!-- One row for every two images -->
-                <t t-set="image_classes" t-value="'w-100'"/>
                 <t t-set="col_classes" t-value="website._get_product_page_grid_image_classes()"/>
                 <t t-foreach="range(ceil(len(product_images) / website.product_page_grid_columns))" t-as="row_idx">
                     <div class="row m-0">
                         <t t-foreach="range(row_idx * website.product_page_grid_columns, (row_idx + 1) * website.product_page_grid_columns)" t-as="image_idx">
                             <t t-set="product_image" t-value="image_idx &lt; len(product_images) and product_images[image_idx] or False"/>
-                            <div t-if="product_image" t-att-class="col_classes">
-                                <t t-call="website_sale.shop_product_image"/>
+                            <div t-if="product_image" t-attf-class="{{col_classes}} {{'ps-0' if image_idx_first else 'pe-0' if image_idx_last else ''}}">
+                                <t t-call="website_sale.shop_product_image">
+                                    <t t-set="image_classes" t-value="'h-100 ratio ratio-1x1'"/>
+                                    <t t-set="o_image_classes_img" t-value="'o_object_fit_cover w-100'"/>
+                                </t>
                             </div>
                         </t>
                     </div>
