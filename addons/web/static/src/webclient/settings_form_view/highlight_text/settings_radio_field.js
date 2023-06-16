@@ -12,10 +12,6 @@ export class SettingsRadioField extends RadioField {
 export const settingsRadioField = {
     ...radioField,
     component: SettingsRadioField,
-    extractStringExpr(fieldName, record) {
-        const radioItems = SettingsRadioField.getItems(fieldName, record);
-        return radioItems.map((r) => r[1]);
-    },
 };
 
 registry.category("fields").add("base_settings.radio", settingsRadioField);
