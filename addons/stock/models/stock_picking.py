@@ -324,7 +324,7 @@ class Picking(models.Model):
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type',
         required=True, readonly=True,
-        states={'draft': [('readonly', False)]})
+        states={'draft': [('readonly', False)]}, ondelete='cascade')
     picking_type_code = fields.Selection(
         related='picking_type_id.code',
         readonly=True)
