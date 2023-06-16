@@ -77,6 +77,7 @@ class Task(models.Model):
     _mail_post_access = 'read'
     _order = "priority desc, sequence, date_deadline asc, id desc"
     _primary_email = 'email_from'
+    _systray_view = 'activity'
     _track_duration_field = 'stage_id'
 
     @api.model
