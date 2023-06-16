@@ -2993,11 +2993,11 @@ class TestMrpOrder(TestMrpCommon):
             mo_01 = mo_01_form.save()
         mo_01.action_confirm()
 
-        op_1, op_2 = mo_01.workorder_ids
+        op_1, op_2 = mo_01.workorder_ids.sorted('id')
         self.assertEqual(op_2.date_start, datetime(2022, 10, 23, 12))
 
         with Form(mo_01) as mo_01_form:
-            with mo_01_form.workorder_ids.edit(0) as workorder:
+            with mo_01_form.workorder_ids.edit(1) as workorder:
                 workorder.date_start = datetime(2022, 10, 18, 12)
             mo_01 = mo_01_form.save()
 
@@ -3022,7 +3022,7 @@ class TestMrpOrder(TestMrpCommon):
                 workorder.date_start = datetime(2022, 10, 18, 12)
             mo_02 = mo_02_form.save()
 
-        op_1, op_2 = mo_02.workorder_ids
+        op_1, op_2 = mo_02.workorder_ids.sorted('id')
         self.assertEqual(op_1.date_start, datetime(2022, 10, 20, 12))
         self.assertTrue(op_2.show_json_popover)
 
