@@ -61,6 +61,25 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                     fields.Date.from_string('2019-01-11') or False
                 )
 
+    def test_invoice_report_without_invoice_date(self):
+        """
+        Ensure that an invoice with an early discount payment term
+        and no invoice date can be previewed or printed.
+        """
+        out_invoice = self.env['account.move'].create([{
+            'move_type': 'out_invoice',
+            'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+            'invoice_line_ids': [Command.create({
+                'name': 'line1',
+            })]
+        }])
+
+        # Assert that the invoice date is not set
+        self.assertEqual(out_invoice.invoice_date, False)
+
+        report = self.env['ir.actions.report'].with_context(force_report_rendering=True)._render_qweb_pdf('account.account_invoices', res_ids=out_invoice.id)
+        self.assertTrue(report)
+
     # ========================== Tests Taxes Amounts =============================
     def test_fixed_tax_amount_discounted_payment_mixed(self):
         fixed_tax = self.env['account.tax'].create({
