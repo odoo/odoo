@@ -73,7 +73,7 @@ class LivechatController(http.Controller):
 
     @http.route('/im_livechat/init', type='json', auth="public", cors="*")
     def livechat_init(self, channel_id):
-        operator_available = len(request.env['im_livechat.channel'].sudo().browse(channel_id)._get_available_users())
+        operator_available = len(request.env['im_livechat.channel'].sudo().browse(channel_id).available_operator_ids)
         rule = {}
         # find the country from the request
         country_id = False
@@ -160,7 +160,8 @@ class LivechatController(http.Controller):
             chatbot_script=chatbot_script,
             user_id=user_id,
             country_id=country_id,
-            persisted=persisted
+            persisted=persisted,
+            lang=request.httprequest.cookies.get('frontend_lang', None if request.env.user._is_public() else request.env.user.lang)
         )
 
     @http.route('/im_livechat/feedback', type='json', auth='public', cors="*")
@@ -233,7 +234,7 @@ class LivechatController(http.Controller):
             discuss_channel._close_livechat_session()
 
     @http.route('/im_livechat/chat_post', type="json", auth="public", cors="*")
-    def im_livechat_chat_post(self, uuid, message_content, context=None):
+    def im_livechat_chat_post(self, uuid, message_content, subtype_xmlid='mail.mt_comment', context=None):
         if context:
             request.update_context(**context)
         channel = request.env["discuss.channel"].sudo().search([('uuid', '=', uuid)], limit=1)
@@ -254,7 +255,7 @@ class LivechatController(http.Controller):
             email_from=email_from,
             body=body,
             message_type='comment',
-            subtype_xmlid='mail.mt_comment'
+            subtype_xmlid=subtype_xmlid
         )
         message_format = message.message_format()[0]
         if 'temporary_id' in request.context:

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="im_livechat.Composer" t-inherit="mail.Composer" t-inherit-mode="extension" owl="1">
+        <xpath expr="//*[hasclass('o-mail-Composer-coreHeader')]" position="inside">
+            <span t-if="thread?.type === 'livechat'" class="text-muted form-text">Press tab to go to the oldest unread thread</span>
+        </xpath>
+    </t>
+</templates>

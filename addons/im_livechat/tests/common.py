@@ -42,7 +42,8 @@ class TestImLivechatCommon(TransactionCase):
     def setUp(self):
         super().setUp()
 
-        def get_available_users(_):
-            return self.operators
+        def _compute_available_operator_ids(channel_self):
+            for record in channel_self:
+                record.available_operator_ids = type(self).operators
 
-        self.patch(type(self.env['im_livechat.channel']), '_get_available_users', get_available_users)
+        self.patch(type(self.env['im_livechat.channel']), '_compute_available_operator_ids', _compute_available_operator_ids)

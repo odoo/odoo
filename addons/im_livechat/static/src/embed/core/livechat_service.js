@@ -21,12 +21,6 @@ export const RATING = Object.freeze({
     BAD: 1,
 });
 
-export const RATING_TO_EMOJI = {
-    [RATING.GOOD]: "😊",
-    [RATING.OK]: "😐",
-    [RATING.BAD]: "😞",
-};
-
 export const SESSION_STATE = Object.freeze({
     NONE: "NONE",
     CREATED: "CREATED",
@@ -173,16 +167,17 @@ export class LivechatService {
      */
     async sendFeedback(uuid, rate, reason) {
         await this.rpc("/im_livechat/feedback", { reason, rate, uuid });
+        const emojiSrc = `${session.origin}/rating/static/src/img/rating_${
+            RATING[Object.keys(RATING).find((key) => RATING[key] === rate)]
+        }.png`;
         await this.rpc("/im_livechat/chat_post", {
             uuid,
-            message_content: sprintf(_t("Rating: %s"), RATING_TO_EMOJI[rate]),
+            message_content: sprintf(
+                _t("Rating: %s"),
+                `<img height="25" width="25" src="${emojiSrc}" alt="rating_${rate}" /> ${reason}`
+            ),
+            subtype_xmlid: "mail.mt_note",
         });
-        if (reason) {
-            await this.rpc("/im_livechat/chat_post", {
-                uuid,
-                message_content: sprintf(_t("Rating reason: %s"), reason),
-            });
-        }
     }
 
     /**

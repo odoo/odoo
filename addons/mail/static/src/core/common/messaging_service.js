@@ -669,17 +669,6 @@ export const messagingService = {
         "mail.out_of_focus",
     ],
     start(env, services) {
-        // compute initial discuss thread if not on public page
-        if (!services["mail.store"].inPublicPage) {
-            const activeId = services.router.current.hash.active_id ?? "mail.box_inbox";
-            let [model, id] =
-                typeof activeId === "number" ? ["discuss.channel", activeId] : activeId.split("_");
-            if (model === "mail.channel") {
-                // legacy format (sent in old emails, shared links, ...)
-                model = "discuss.channel";
-            }
-            services["mail.store"].discuss.threadLocalId = createLocalId(model, id);
-        }
         const messaging = new Messaging(env, services);
         messaging.initialize();
         messaging.isReady.then(() => {

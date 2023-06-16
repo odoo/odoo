@@ -5,13 +5,13 @@ import { MockServer } from "@web/../tests/helpers/mock_server";
 
 patch(MockServer.prototype, "im_livechat/models/im_livechat_channel", {
     /**
-     * Simulates `_get_available_users` on `im_livechat.channel`.
+     * Simulates `_compute_available_operator_ids` on `im_livechat.channel`.
      *
      * @private
      * @param {integer} id
      * @returns {Object}
      */
-    _mockImLivechatChannel_getAvailableUsers(id) {
+    _mockImLivechatChannel__computeAvailableOperatorIds(id) {
         const livechatChannel = this.getRecords("im_livechat.channel", [["id", "=", id]])[0];
         const users = this.getRecords("res.users", [["id", "in", livechatChannel.user_ids]]);
         return users.filter((user) => user.im_status === "online");
@@ -77,7 +77,7 @@ patch(MockServer.prototype, "im_livechat/models/im_livechat_channel", {
      * @returns {Object}
      */
     _mockImLivechatChannel_getRandomOperator(id) {
-        const availableUsers = this._mockImLivechatChannel_getAvailableUsers(id);
+        const availableUsers = this._mockImLivechatChannel__computeAvailableOperatorIds(id);
         return availableUsers[0];
     },
     /**
@@ -101,7 +101,7 @@ patch(MockServer.prototype, "im_livechat/models/im_livechat_channel", {
     ) {
         let operator;
         if (previous_operator_id) {
-            const availableUsers = this._mockImLivechatChannel_getAvailableUsers(id);
+            const availableUsers = this._mockImLivechatChannel__computeAvailableOperatorIds(id);
             operator = availableUsers.find((user) => user.partner_id === previous_operator_id);
         }
         if (!operator) {

@@ -25,3 +25,28 @@ class Rating(models.Model):
             view_id = self.env.ref('im_livechat.discuss_channel_view_form').id
             action['views'] = [[view_id, 'form']]
         return action
+
+    def action_open_in_discuss_or_form_view(self):
+        """ Return the "Open in Discuss" action if the rated object is a
+        channel and the user is a member of it, otherwise return the
+        form view action of the rating.
+        """
+        self.ensure_one()
+        is_member = (
+            self.env[self.res_model].browse(self.res_id).is_member
+            if self.res_model == 'discuss.channel' else False
+        )
+        if is_member:
+            ctx = self.env.context.copy()
+            ctx.update({'active_id': self.res_id})
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'mail.action_discuss',
+                'context': ctx,
+            }
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': self._name,
+            'res_id': self.id,
+            'views': [[False, 'form']],
+        }

@@ -329,7 +329,10 @@ class ChatbotScriptStep(models.Model):
         posted_message = False
 
         if discuss_channel.livechat_channel_id:
-            human_operator = discuss_channel.livechat_channel_id._get_random_operator()
+            human_operator = discuss_channel.livechat_channel_id._get_random_operator(
+                lang=discuss_channel.livechat_visitor_id.lang_id.code,
+                country_id=discuss_channel.country_id.id
+            )
 
         # handle edge case where we found yourself as available operator -> don't do anything
         # it will act as if no-one is available (which is fine)

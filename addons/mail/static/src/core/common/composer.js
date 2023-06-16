@@ -94,6 +94,7 @@ export class Composer extends Component {
                 { composer: this.props.composer }
             );
         }
+        this.cannedReponses = new Set();
         this.messageService = useState(useService("mail.message"));
         /** @type {import("@mail/core/common/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
@@ -323,6 +324,7 @@ export class Composer extends Component {
                     optionTemplate: "mail.Composer.suggestionCannedResponse",
                     options: suggestions.map((suggestion) => {
                         return {
+                            cannedResponse: suggestion,
                             name: suggestion.name,
                             label: suggestion.substitution,
                             classList: "o-mail-Composer-suggestion",
@@ -482,6 +484,7 @@ export class Composer extends Component {
                     this.props.composer.type === "note" ||
                     this.props.messageToReplyTo?.message?.isNote,
                 rawMentions: this.props.composer.rawMentions,
+                cannedResponseIds: [...this.props.composer.cannedResponseIds],
                 parentId: this.props.messageToReplyTo?.message?.id,
             };
             const message = await this.threadService.post(thread, value, postData);
@@ -492,6 +495,7 @@ export class Composer extends Component {
                 );
             }
             this.suggestion?.clearRawMentions();
+            this.suggestion?.clearCannedReponses();
             this.props.messageToReplyTo?.cancel();
         });
     }

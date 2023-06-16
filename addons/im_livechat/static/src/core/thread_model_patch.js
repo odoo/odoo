@@ -29,15 +29,19 @@ patch(Thread.prototype, "im_livechat", {
         return this.type === "livechat" ? false : this._super();
     },
 
+    get correspondents() {
+        return this._super().filter(({ is_bot: isBot }) => !isBot);
+    },
+
     get displayName() {
         if (this.type !== "livechat" || !this.correspondent) {
             return this._super();
         }
         if (!this.correspondent.is_public && this.correspondent.country) {
-            return `${this.getMemberName(this.correspondent)} (${this.correspondent.country.name})`;
+            return `${this.getMemberName(this.correspondent)}, ${this.correspondent.country.code}`;
         }
         if (this.anonymous_country) {
-            return `${this.getMemberName(this.correspondent)} (${this.anonymous_country.name})`;
+            return `${this.getMemberName(this.correspondent)}, ${this.anonymous_country.code}`;
         }
         return this.getMemberName(this.correspondent);
     },

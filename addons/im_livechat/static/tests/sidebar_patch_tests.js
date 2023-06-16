@@ -44,7 +44,7 @@ QUnit.test("Known user with country", async (assert) => {
     });
     const { openDiscuss } = await start();
     await openDiscuss();
-    assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(Jean (Belgium))");
+    assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(Jean, be)");
 });
 
 QUnit.test("Do not show channel when visitor is typing", async (assert) => {

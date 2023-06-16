@@ -194,11 +194,19 @@ function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {})
                 { force: true }
             );
             return afterNextRender(async () => {
-                await doAction(webClient, actionOpenDiscuss, { props });
+                await doAction(webClient, actionOpenDiscuss, {
+                    props,
+                    additionalContext: { active_id: activeId },
+                });
                 await messagesLoadedPromise;
             });
         }
-        return afterNextRender(() => doAction(webClient, actionOpenDiscuss, { props }));
+        return afterNextRender(() =>
+            doAction(webClient, actionOpenDiscuss, {
+                props,
+                additionalContext: { active_id: activeId },
+            })
+        );
     };
 }
 

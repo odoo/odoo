@@ -439,6 +439,9 @@ export class ThreadService {
     }
 
     unpin(thread) {
+        if (this.store.discuss.threadLocalId === thread.localId) {
+            this.router.replaceState({ active_id: undefined });
+        }
         if (thread.model !== "discuss.channel") {
             return;
         }
@@ -652,6 +655,20 @@ export class ThreadService {
 
     /**
      * @param {import("@mail/core/common/thread_model").Thread} thread
+     * @param {number} id
+     * @returns {Promise<Thread>}
+     */
+    async fetchChannel(id) {
+        const [channelData] = await this.orm.call("discuss.channel", "channel_info", [id]);
+        return this.insert({
+            ...channelData,
+            model: "discuss.channel",
+            type: channelData.channel.channel_type,
+        });
+    }
+
+    /**
+     * @param {import("@mail/core/thread_model").Thread} thread
      * @param {Object} data
      */
     update(thread, data) {
@@ -847,11 +864,16 @@ export class ThreadService {
      * @param {Thread} thread
      * @param {string} body
      */
-    async post(thread, body, { attachments = [], isNote = false, parentId, rawMentions }) {
+    async post(
+        thread,
+        body,
+        { attachments = [], isNote = false, parentId, rawMentions, cannedResponseIds }
+    ) {
         let tmpMsg;
         const params = await this.getMessagePostParams({
             attachments,
             body,
+            cannedResponseIds,
             isNote,
             rawMentions,
             thread,
@@ -935,7 +957,14 @@ export class ThreadService {
     /**
      * Get the parameters to pass to the message post route.
      */
-    async getMessagePostParams({ attachments, body, isNote, rawMentions, thread }) {
+    async getMessagePostParams({
+        attachments,
+        body,
+        cannedResponseIds,
+        isNote,
+        rawMentions,
+        thread,
+    }) {
         const subtype = isNote ? "mail.mt_note" : "mail.mt_comment";
         const validMentions = this.store.user
             ? this.messageService.getMentionsFromText(rawMentions, body)
@@ -954,6 +983,7 @@ export class ThreadService {
             post_data: {
                 body: await prettifyMessageContent(body, validMentions),
                 attachment_ids: attachments.map(({ id }) => id),
+                canned_response_ids: cannedResponseIds,
                 message_type: "comment",
                 partner_ids,
                 subtype_xmlid: subtype,

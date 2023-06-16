@@ -18,6 +18,7 @@ class DiscussChannel(models.Model):
 
     anonymous_name = fields.Char('Anonymous Name')
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')], ondelete={'livechat': 'cascade'})
+    duration = fields.Float('Duration', compute='_compute_duration', help='Duration of the session in minutes')
     livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is active until visitor leaves the conversation.')
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel')
     livechat_operator_id = fields.Many2one('res.partner', string='Operator')
@@ -33,6 +34,12 @@ class DiscussChannel(models.Model):
         for record in self:
             if record.channel_type == 'livechat':
                 record.is_chat = True
+
+    def _compute_duration(self):
+        for record in self:
+            start = record.message_ids[-1].date if record.message_ids else record.create_date
+            end = record.message_ids[0].date if record.message_ids else fields.Datetime.now()
+            record.duration = (end - start).total_seconds() / 60
 
     def _channel_message_notifications(self, message, message_format=False):
         """ When a anonymous user create a discuss.channel, the operator is not notify (to avoid massive polling when
@@ -112,7 +119,7 @@ class DiscussChannel(models.Model):
             })
 
     def _get_visitor_leave_message(self, operator=False, cancel=False):
-        return _('Visitor has left the conversation.')
+        return _('Visitor left the conversation.')
 
     def _close_livechat_session(self, **kwargs):
         """ Set deactivate the livechat channel and notify (the operator) the reason of closing the session."""
@@ -124,7 +131,7 @@ class DiscussChannel(models.Model):
                 return
             # Notify that the visitor has left the conversation
             self.message_post(author_id=self.env.ref('base.partner_root').id,
-                              body=self._get_visitor_leave_message(**kwargs), message_type='comment', subtype_xmlid='mail.mt_comment')
+                              body=self._get_visitor_leave_message(**kwargs), message_type='comment', subtype_xmlid='mail.mt_note')
 
     # Rating Mixin
 

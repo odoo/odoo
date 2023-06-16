@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
 from markupsafe import Markup
 from werkzeug.exceptions import NotFound
 
@@ -64,6 +65,9 @@ class ThreadController(http.Controller):
     def mail_message_post(self, thread_model, thread_id, post_data, context=None):
         if context:
             request.update_context(**context)
+        if "canned_response_ids" in post_data:
+            canned_response_ids = request.env['mail.shortcode'].browse(post_data.pop('canned_response_ids'))
+            canned_response_ids.write({'last_used': datetime.now()})
         thread = request.env[thread_model]._get_from_request_or_raise(request, int(thread_id))
         if "body" in post_data:
             post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions

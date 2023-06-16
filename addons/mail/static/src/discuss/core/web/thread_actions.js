@@ -16,14 +16,18 @@ threadActionsRegistry.add("expand-discuss", {
     icon: "fa fa-fw fa-expand",
     name: _t("Open in Discuss"),
     open(component) {
-        component.threadService.setDiscussThread(component.thread);
         component.actionService.doAction(
             {
                 type: "ir.actions.client",
                 tag: "mail.action_discuss",
                 name: _t("Discuss"),
             },
-            { clearBreadcrumbs: true }
+            {
+                additionalContext: {
+                    active_id: component.thread.id,
+                },
+                clearBreadcrumbs: true,
+            }
         );
     },
     sequence: 51,

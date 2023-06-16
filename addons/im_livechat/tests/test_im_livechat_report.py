@@ -12,7 +12,11 @@ class TestImLivechatReport(TestImLivechatCommon):
         super().setUpClass()
         cls.env['discuss.channel'].search([('livechat_channel_id', '!=', False)]).unlink()
 
-        with patch.object(type(cls.env['im_livechat.channel']), '_get_available_users', lambda _: cls.operators):
+        def _compute_available_operator_ids(channel_self):
+            for record in channel_self:
+                record.available_operator_ids = cls.operators
+
+        with patch.object(type(cls.env['im_livechat.channel']), '_compute_available_operator_ids', _compute_available_operator_ids):
             channel_id = cls.livechat_channel._open_livechat_discuss_channel('Anonymous')['id']
 
         channel = cls.env['discuss.channel'].browse(channel_id)

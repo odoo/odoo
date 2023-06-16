@@ -59,6 +59,7 @@ QUnit.test("can post a message on a record thread", async (assert) => {
                     context: args.context,
                     post_data: {
                         body: "hey",
+                        canned_response_ids: [],
                         attachment_ids: [],
                         message_type: "comment",
                         partner_ids: [],
@@ -97,6 +98,7 @@ QUnit.test("can post a note on a record thread", async (assert) => {
                     post_data: {
                         attachment_ids: [],
                         body: "hey",
+                        canned_response_ids: [],
                         message_type: "comment",
                         partner_ids: [],
                         subtype_xmlid: "mail.mt_note",
